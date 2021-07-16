@@ -4,7 +4,7 @@ education (compulsory, further and higher education), apprenticeships and wider 
 Concerns Casework is the activity undertaken by both AMSD and RDD to help Trusts and Academies resolve issues
 with financial management, governance, irregularity, and educational performance.
 
-Trusts are required to adhere to the terms laid out in the DFE's financial and governance hanbooks
+Trusts are required to adhere to the terms laid out in the DFE's financial and governance handbooks
 as well as their Funding Agreement which is a document that lays out the terms of the funding they
 receive from us to run their Academies.
 
