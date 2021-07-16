@@ -1,0 +1,227 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.15" />
+    <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Pages\Partials\Back.cshtml.cs">
+      <DependentUpon>Back.cshtml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\dist\helpers\_all.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\helpers\_hidden.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\govuk-logotype-crown.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-alert-information.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-alert-success.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-alert-warning.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-arrow-black-down.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-arrow-black-up.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-arrow-white-down.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-arrow-white-up.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-close-cross-black.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-document.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-document.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-progress-tick.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-progress-tick.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-search-black.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-search-blue.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-search-white.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-tag-remove-cross-white.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-tag-remove-cross.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-toggle-plus-minus.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-wysiwyg-bold.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-wysiwyg-italic.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-wysiwyg-ordered-list.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-wysiwyg-underline.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\icon-wysiwyg-unordered-list.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\moj-logotype-crest.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\assets\images\moj-logotype-crest.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\action-bar\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\action-bar\_action-bar.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\add-another\add-another.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\add-another\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\add-another\_add-another.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\badge\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\badge\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\badge\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\badge\_badge.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\banner\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\banner\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\banner\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\banner\_banner.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\button-menu\button-menu.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\button-menu\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\button-menu\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\button-menu\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\button-menu\_button-menu.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\cookie-banner\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\cookie-banner\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\cookie-banner\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\cookie-banner\_cookie-banner.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\currency-input\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\currency-input\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\currency-input\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\currency-input\_currency-input.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\filter-toggle-button\filter-toggle-button.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\filter-toggle-button\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\filter\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\filter\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\filter\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\filter\_filter.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\form-validator\form-validator.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\form-validator\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\header\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\header\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\header\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\header\_header.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\identity-bar\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\identity-bar\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\identity-bar\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\identity-bar\_identity-bar.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\messages\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\messages\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\messages\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\messages\_messages.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\multi-file-upload\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\multi-file-upload\multi-file-upload.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\multi-file-upload\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\multi-file-upload\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\multi-file-upload\_multi-file-upload.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\multi-select\multi-select.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\multi-select\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\multi-select\_multi-select.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\notification-badge\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\notification-badge\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\notification-badge\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\notification-badge\_notification-badge.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\organisation-switcher\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\organisation-switcher\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\organisation-switcher\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\organisation-switcher\_organisation-switcher.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\page-header-actions\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\page-header-actions\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\page-header-actions\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\page-header-actions\_page-header-actions.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\pagination\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\pagination\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\pagination\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\pagination\_pagination.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\password-reveal\password-reveal.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\password-reveal\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\password-reveal\_password-reveal.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\primary-navigation\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\primary-navigation\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\primary-navigation\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\primary-navigation\_primary-navigation.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\progress-bar\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\progress-bar\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\progress-bar\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\progress-bar\_progress-bar.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\rich-text-editor\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\rich-text-editor\rich-text-editor.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\rich-text-editor\_rich-text-editor.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\search-toggle\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\search-toggle\search-toggle.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\search-toggle\search-toggle.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\search\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\search\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\search\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\search\_search.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\side-navigation\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\side-navigation\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\side-navigation\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\side-navigation\_side-navigation.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\sortable-table\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\sortable-table\sortable-table.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\sortable-table\_sortable-table.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\sub-navigation\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\sub-navigation\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\sub-navigation\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\sub-navigation\_sub-navigation.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\tag\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\tag\_tag.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\task-list\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\task-list\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\task-list\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\task-list\_task-list.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\ticket-panel\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\ticket-panel\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\ticket-panel\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\ticket-panel\_ticket-panel.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\timeline\macro.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\timeline\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\timeline\template.njk" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\timeline\_timeline.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\components\_all.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\utilities\_all.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\utilities\_hidden.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\utilities\_width-container.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\application-ie8.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\application.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_all-records-header.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_all-records-search.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_application-card.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_autocomplete.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_banner.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_button-as-link.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_cookie-banner.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_dashboard.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_footer.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_primary-navigation-dark.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_record-actions.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_record-header.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_status-card.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_sub-navigation.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_summary-card.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_task-list.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\components\_timeline.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\helpers\_field-widths.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\helpers\_width-container.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\overrides\_dash-list.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\overrides\_govuk-error-summary.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\overrides\_govuk-header.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\overrides\_govuk-panel.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\overrides\_moj-filter.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\overrides\_moj-pagination.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\overrides\_summary-card.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\overrides\_tabs.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\patterns\_related-items.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\patterns\_start-page.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\patterns\_step-by-step-header.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\patterns\_step-by-step-nav.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\patterns\_step-by-step-related.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\patterns\_task-list.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\unbranded-ie8.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\unbranded.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\css\_helpers.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\images\search-button.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\images\separator-2x.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\images\separator.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\images\unbranded.ico" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\js\application.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\js\auto-store-data.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\js\autocomplete.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\js\jquery-1.11.3.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\js\rich-text-editor\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\js\rich-text-editor\rich-text-editor.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\js\rich-text-editor\_rich-text-editor.scss" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\js\step-by-step-nav.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\public\js\validation.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Service.TRAMS\Service.TRAMS.csproj" />
+  </ItemGroup>
+	
+</Project>

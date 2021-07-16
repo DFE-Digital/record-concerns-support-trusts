@@ -1,0 +1,34 @@
+﻿name: Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy_to_dev:
+    runs-on: ubuntu-latest
+    environment: Dev
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - name: Build Frontend
+        run: cd ConcernsCaseWork/ConcernsCaseWork/wwwroot; npm install; npm run build:assets; npm run build:frontend
+      - name: Install CloudFoundry CLI
+        shell: bash
+        id: install-cf-cli
+        run: |
+          wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
+          echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+          sudo apt-get update
+          sudo apt-get install cf7-cli
+      - name: Deploy Code
+        run: |
+          cf api https://api.london.cloud.service.gov.uk
+          cf auth "${{ secrets.CF_USER }}" "${{ secrets.CF_PASSWORD }}"
+          cf target -o dfe -s concerns-casework-internal-dev
+          cf push -f cf-manifest.yml \
+          --var username=${{ secrets.USERNAME }} \
+          --var password=${{ secrets.PASSWORD }} 

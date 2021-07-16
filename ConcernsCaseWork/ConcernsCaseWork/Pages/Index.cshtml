@@ -1,0 +1,79 @@
+﻿@page
+@model IndexModel
+@{
+	ViewData["Title"] = "Home";
+}
+
+<div class="govuk-!-margin-top-0">
+
+	<div class="govuk-button-group flexalign__right">
+		<a class="govuk-link" href="#">Case history</a>
+		<button class="govuk-button" data-module="govuk-button">
+			New Case
+		</button>
+	</div>
+
+	@if (@Model.Cases.Count == 0)
+	{
+		<span>There are no cases available.</span>
+	}
+	else
+	{
+		<table class="govuk-table">
+			<caption class="govuk-table__caption govuk-table__caption--m">
+				Your active casework (<span>@Model.Cases.Count</span>)
+			</caption>
+			<thead class="govuk-table__head">
+			<tr class="govuk-table__row tr__large">
+				<th class="govuk-table__header govuk-table__header__cases"
+				    scope="col">
+					Case ID
+				</th>
+				<th class="govuk-table__header govuk-table__header__cases"
+				    scope="col">
+					Trust
+				</th>
+				<th class="govuk-table__header govuk-table__header__cases"
+				    scope="col">
+					Primary case type
+				</th>
+				<th class="govuk-table__header govuk-table__header__cases"
+				    scope="col">
+					RAG rating
+				</th>
+				<th class="govuk-table__header govuk-table__header__cases govuk-table__header__right"
+				    scope="col">
+					Days open
+				</th>
+			</tr>
+			</thead>
+			<tbody class="govuk-table__body">
+			@{
+				foreach (var caseModel in @Model.Cases)
+				{
+					<tr class="govuk-table__row tr__large">
+						<td class="govuk-table__cell govuk-table__cell__cases">
+							<a href="#">@caseModel.Id</a>
+						</td>
+						<th class="govuk-table__header govuk-table__header__cases" scope="row">
+							@caseModel.TrustName
+						</th>
+						<td class="govuk-table__cell govuk-table__cell__cases">@caseModel.Type</td>
+						<td class="govuk-table__cell govuk-table__cell__cases">
+							@if (@caseModel.Rag == 0)
+							{
+								@Model.Rags[@caseModel.Rag]
+							}
+							else
+							{
+								<span class="govuk-tag ragtag @Model.RagsCss[@caseModel.Rag]">@Model.Rags[@caseModel.Rag]</span>
+							}
+						</td>
+						<td class="govuk-table__cell govuk-table__cell__cases govuk-table__cell--numeric">@caseModel.DaysOpen</td>
+					</tr>
+				}
+			}
+			</tbody>
+		</table>
+	}
+</div>
