@@ -1,6 +1,6 @@
 ﻿---
 applications:
-  - name: concerns-casework-internal
+  - name: amsd-casework-internal
     buildpacks:
       - dotnet_core_buildpack
     memory: 512M

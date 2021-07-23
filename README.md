@@ -63,10 +63,10 @@ For integration with TRAMS API a member of the team will make available an API k
 Include header 'ApiKey' with the service key provided by TRAMS team.
 ```
 
-### GitHub
+## GitHub
 [Here to go to TRAMS API repository](https://github.com/DFE-Digital/trams-data-api)
 
-### Docker SQLServer
+## Docker SQLServer
 ```
 Based on the GitHub username configured to access TRAMS API repository, a few steps are required to
 download the docker image from Container registry.
@@ -78,4 +78,10 @@ download the docker image from Container registry.
 3. Open docker container, should see a image running on port 1443, click on it, will open a log window, on the middle right top there is a button "inspect"
 	click on it and will display the MSSQL_USER and MSSQL_SA_PASSWORD
 4. Install SSMS or Azure Data Studio and Login using the credentials from step 3
+```
+
+## PaaS Account
+```
+The section is well-described in the playbook, leaving the link to the documentation 
+https://docs.cloud.service.gov.uk/get_started.html?_ga=2.255108360.1068852604.1627038231-1095670286.1624019946#get-started
 ```
