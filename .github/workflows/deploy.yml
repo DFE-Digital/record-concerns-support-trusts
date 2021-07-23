@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: '14.x'
       - name: Build Frontend
-        run: cd ConcernsCaseWork/ConcernsCaseWork/wwwroot; npm install; npm run build:assets; npm run build:frontend
+        run: cd ConcernsCaseWork/ConcernsCaseWork/wwwroot; npm install; npm run build;
       - name: Install CloudFoundry CLI
         shell: bash
         id: install-cf-cli
