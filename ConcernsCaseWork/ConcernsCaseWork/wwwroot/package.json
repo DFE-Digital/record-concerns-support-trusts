@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "build": "npm run build:frontend -- --env mode=production && npm run build:sass-migrator",
-    "build:dev": "npm run build:frontend -- --env mode=development && npm run build:sass-migrator",
-    "build:frontend": "webpack --env mode=production",
+    "build": "npm run build:assets && npm run build:frontend && npm run build:sass-migrator",
+    "build:frontend": "webpack",
+	"build:assets": "webpack --config webpack.assets.config.js",
     "build:watch": "webpack --watch",
     "build:sass-migrator": "sass-migrator division **/*.scss"
   },
