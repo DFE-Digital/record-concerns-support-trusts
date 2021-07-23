@@ -1,13 +1,12 @@
-﻿name: Deploy to Dev
+name: Deploy to production
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  deploy_to_dev:
+  deploy_to_production:
     runs-on: ubuntu-latest
-    environment: Dev
+    environment: Production
     steps:
       - uses: actions/checkout@v2
       - name: Setup node.js
@@ -28,7 +27,11 @@ jobs:
         run: |
           cf api https://api.london.cloud.service.gov.uk
           cf auth "${{ secrets.CF_USER }}" "${{ secrets.CF_PASSWORD }}"
-          cf target -o dfe -s amsd-casework-dev
-          cf push -f cf-manifest.yml \
+          cf target -o dfe -s academy-transfers
+          cf push -f deploy-manifests/production.yml \
+          --strategy rolling \
+          --var aad_instance=${{ secrets.AAD_INSTANCE }} \
+          --var aad_resource_id=${{ secrets.AAD_RESOURCEID }} \
+          --var aad_tenant_id=${{ secrets.AAD_TENANTID }} \
           --var username=${{ secrets.USERNAME }} \
           --var password=${{ secrets.PASSWORD }} 
