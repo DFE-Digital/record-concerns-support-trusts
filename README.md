@@ -29,8 +29,8 @@ RDD - Regional Delivery Directorate
 ## Create razor pages
 ```
 e.g. dotnet new page --name Cookies --namespace ConcernsCaseWork.Pages --output Pages
-Link - https://www.learnrazorpages.com/
 ```
+[Razor pages](https://www.learnrazorpages.com/)
 
 ## Node and Design system Setup
 ```
@@ -51,9 +51,8 @@ of bringing the library over to the project update this document.
 ## Logging Configuration
 ```
 Project configuration based on other internal streams for consistency.
-Following development guidance
-https://github.com/DFE-Digital/sdd-technical-documentation/blob/main/development_guidance/logging.md
 ```
+[GitHub Repo](https://github.com/DFE-Digital/sdd-technical-documentation/blob/main/development_guidance/logging.md)
 
 ## TRAMS API
 ```
@@ -82,6 +81,10 @@ download the docker image from Container registry.
 
 ## PaaS Account
 ```
-The section is well-described in the playbook, leaving the link to the documentation 
-https://docs.cloud.service.gov.uk/get_started.html?_ga=2.255108360.1068852604.1627038231-1095670286.1624019946#get-started
+The section is well-described in the playbook, link to oficial documentation
+Note: Don't enable SSO in your account if you are using the account credentials to login to PaaS.
 ```
+[Gov PaaS](https://docs.cloud.service.gov.uk/get_started.html?_ga=2.255108360.1068852604.1627038231-1095670286.1624019946#get-started)
+
+### Useful commands
+// TODO add some commands

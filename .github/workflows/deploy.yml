@@ -29,6 +29,6 @@ jobs:
           cf api https://api.london.cloud.service.gov.uk
           cf auth "${{ secrets.CF_USER }}" "${{ secrets.CF_PASSWORD }}"
           cf target -o dfe -s amsd-casework-dev
-          cf push -f cf-manifest.yml \
+          cf push -f deploy-manifests/dev.yml \
           --var username=${{ secrets.USERNAME }} \
           --var password=${{ secrets.PASSWORD }} 
