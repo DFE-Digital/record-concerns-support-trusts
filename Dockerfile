@@ -9,6 +9,7 @@ RUN dotnet restore
 
 # copy everything else and build app
 COPY ConcernsCaseWork/* ./app
+WORKDIR /app
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
