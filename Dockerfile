@@ -8,7 +8,7 @@ COPY amsd-casework/ConcernsCaseWork/ConcernsCaseWork/*.csproj ./amsd-casework/
 RUN dotnet restore
 
 # copy everything else and build app
-COPY amsd-casework/. ./amsd-casework/
+COPY amsd-casework/. ./
 WORKDIR /source/amsd-casework
 RUN dotnet publish -c release -o /app --no-restore
 
