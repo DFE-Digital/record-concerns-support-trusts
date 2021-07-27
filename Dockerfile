@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /source
 
 # Copy csproj and restore as distinct layers
-COPY *.sln .
+COPY amsd-casework/ConcernsCaseWork/*.sln .
 COPY amsd-casework/ConcernsCaseWork/ConcernsCaseWork/*.csproj ./amsd-casework/
 RUN dotnet restore
 
