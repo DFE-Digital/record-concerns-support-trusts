@@ -3,12 +3,12 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
-COPY ConcernsCaseWork/*.sln ./
-COPY ConcernsCaseWork/ConcernsCaseWork/*.csproj ./
+COPY ConcernsCaseWork/*.sln ./app
+COPY ConcernsCaseWork/ConcernsCaseWork/*.csproj ./app
 RUN dotnet restore
 
 # copy everything else and build app
-COPY ConcernsCaseWork/* ./
+COPY ConcernsCaseWork/* ./app
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
