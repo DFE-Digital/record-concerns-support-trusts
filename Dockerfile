@@ -4,6 +4,10 @@ WORKDIR /app
 
 # Copy csproj and restore as distinct layers
 COPY ConcernsCaseWork/*.sln ./
+COPY ConcernsCaseWork/ConcernsCaseWork/*.csproj ./
+COPY ConcernsCaseWork/ConcernsCaseWork.Tests/*.csproj ./
+COPY ConcernsCaseWork/Service.TRAMS/*.csproj ./
+COPY ConcernsCaseWork/Service.TRAMS.Tests/*.csproj ./
 RUN dotnet restore
 
 # copy everything else and build app
