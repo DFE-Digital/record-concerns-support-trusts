@@ -3,8 +3,8 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
-COPY ConcernsCaseWork/*.sln .
-COPY ConcernsCaseWork/ConcernsCaseWork/*.csproj .
+COPY ConcernsCaseWork/*.sln ./
+COPY ConcernsCaseWork/**/*.csproj ./
 RUN dotnet restore
 
 # copy everything else and build app
