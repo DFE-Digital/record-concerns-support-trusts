@@ -28,7 +28,7 @@ jobs:
           cf api https://api.london.cloud.service.gov.uk
           cf auth "${{ secrets.CF_USER }}" "${{ secrets.CF_PASSWORD }}"
           cf target -o dfe -s amsd-casework-staging
-          cf push --docker-image amsd-casework-staging -f deploy-manifests/staging.yml \
+          cf push amsd-casework-staging --docker-image amsd-casework-staging -f deploy-manifests/staging.yml \
           --var aad_instance=${{ secrets.AAD_INSTANCE }} \
           --var aad_resource_id=${{ secrets.AAD_RESOURCEID }} \
           --var aad_tenant_id=${{ secrets.AAD_TENANTID }} \

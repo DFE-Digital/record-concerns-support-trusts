@@ -3,8 +3,6 @@ applications:
 - name: amsd-casework-staging
   services:
     - amsd-casework-staging-redis
-  buildpacks:
-    - dotnet_core_buildpack
   env:
     "AAD:Instance": ((aad_instance))
     "AAD:ResourceId": ((aad_resource_id))
