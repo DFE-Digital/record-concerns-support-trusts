@@ -85,6 +85,3 @@ The section is well-described in the playbook, link to oficial documentation
 Note: Don't enable SSO in your account if you are using the account credentials to login to PaaS.
 ```
 [Gov PaaS](https://docs.cloud.service.gov.uk/get_started.html?_ga=2.255108360.1068852604.1627038231-1095670286.1624019946#get-started)
-
-### Useful commands
-// TODO add some commands

@@ -1,8 +1,8 @@
 ---
 applications:
-- name: academy-transfers-staging
+- name: amsd-casework-staging
   services:
-    - academy-transfers-staging-redis
+    - amsd-casework-staging-redis
   buildpacks:
     - dotnet_core_buildpack
   env:
@@ -11,4 +11,4 @@ applications:
     "AAD:TenantId": ((aad_tenant_id))
     username: ((username))
     password: ((password))
-    ASPNETCORE_ENVIRONMENT: Development
+    ASPNETCORE_ENVIRONMENT: Staging

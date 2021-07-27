@@ -1,8 +1,8 @@
 ---
 applications:
-- name: academy-transfers-production
+- name: amsd-casework-production
   services:
-    - academy-transfers-production-redis
+    - amsd-casework-production-redis
   buildpacks:
     - dotnet_core_buildpack
   env:
