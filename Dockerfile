@@ -8,7 +8,7 @@ COPY ConcernsCaseWork/ConcernsCaseWork/*.csproj ./
 COPY ConcernsCaseWork/ConcernsCaseWork.Tests/*.csproj ./
 COPY ConcernsCaseWork/Service.TRAMS/*.csproj ./
 COPY ConcernsCaseWork/Service.TRAMS.Tests/*.csproj ./
-RUN dotnet restore
+RUN dotnet restore ConcernsCaseWork.sln
 
 # copy everything else and build app
 COPY ConcernsCaseWork/. ./
