@@ -4,6 +4,7 @@ WORKDIR /source
 
 # Copy csproj and restore as distinct layers
 COPY ConcernsCaseWork/ConcernsCaseWork/*.csproj ./
+COPY ConcernsCaseWork/Service.TRAMS/*.csproj ./
 RUN dotnet restore
 
 # copy everything else and build app
