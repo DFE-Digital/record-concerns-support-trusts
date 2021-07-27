@@ -1,8 +1,6 @@
-﻿name: AMSD Casework build, test and create docker image
+﻿name: Build, test and create docker image
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -27,6 +25,7 @@ jobs:
         run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity diagnostic
   
   build-and-push-image:
+    needs: build-test
     runs-on: ubuntu-latest
     permissions:
       contents: read
