@@ -8,8 +8,8 @@ COPY amsd-casework/ConcernsCaseWork/ConcernsCaseWork/*.csproj ./amsd-casework/
 RUN dotnet restore
 
 # copy everything else and build app
-COPY amsd-casework/. ./
-WORKDIR /source/amsd-casework
+COPY amsd-casework/. ./amsd-casework/
+WORKDIR /source
 RUN dotnet publish -c release -o /app --no-restore
 
 # Build runtime image
