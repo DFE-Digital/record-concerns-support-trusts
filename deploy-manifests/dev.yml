@@ -3,8 +3,6 @@ applications:
 - name: amsd-casework-dev
   services:
     - amsd-casework-dev-redis
-  buildpacks:
-    - dotnet_core_buildpack
   env:
     "AAD:Instance": ((aad_instance))
     "AAD:ResourceId": ((aad_resource_id))
