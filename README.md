@@ -94,7 +94,7 @@ cf spaces
 ### Create a public AWS S3 bucket
 The main objective of this section is to keep some information on how AWS S3 bucket was created to store terraform state within GitHub actions.
 ```
-1º Login to Cloud Foundry - cf login -a api.london.cloud.service.gov.uk
+1º Login to Cloud Foundry:: cf login -a api.london.cloud.service.gov.uk -u <email-address>
 2º 
 ```
 [Gov PaaS](https://docs.cloud.service.gov.uk/deploying_services/s3/#unbind-an-s3-bucket-from-your-app)
