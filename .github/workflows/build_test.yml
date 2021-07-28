@@ -17,8 +17,8 @@ jobs:
         with:
           string: ${{ env.REPO_NAME }}
       - run: |
-          echo "REPO_LOWER_NAME=${{steps.lowercase.outputs.lowercase}},," >>${GITHUB_ENV}
-          echo "Repo lower case:: ${REPO_LOWER_NAME}"
+          echo "REPO_LOWER_NAME=${{ steps.lowercase.outputs.lowercase }}" >> ${GITHUB_ENV}
+          echo "Repo lower case:: ${{ env.REPO_LOWER_NAME }}"
       - uses: actions/checkout@v2
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
