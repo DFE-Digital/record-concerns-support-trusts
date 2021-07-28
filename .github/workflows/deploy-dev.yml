@@ -14,10 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: Dev
     steps:
-      - id: lowercase
-        uses: ASzc/change-string-case-action@v1
-        with:
-          string: ${{ env.IMAGE_NAME }}
       - uses: actions/checkout@v2
       - name: Setup node.js
         uses: actions/setup-node@v1
@@ -38,5 +34,5 @@ jobs:
           cf api ${{ env.PAAS_URL }}
           cf auth "${{ secrets.CF_USER }}" "${{ secrets.CF_PASSWORD }}"
           cf target -o dfe -s amsd-casework-dev
-          echo "${{ steps.lowercase.outputs.lowercase }}"
-          cf push amsd-casework-dev --docker-image ${{ steps.lowercase.outputs.lowercase }}:latest -f deploy-manifests/dev.yml
+          echo "REPO_URL:: ${{ env.REGISTRY }}/${{ REPO_LOWER_NAME }}"
+          cf push amsd-casework-dev --docker-image ${{ env.REGISTRY }}/${{ REPO_LOWER_NAME }}:latest -f deploy-manifests/dev.yml

@@ -1,5 +1,7 @@
 ﻿---
 applications:
 - name: amsd-casework-dev
+  routes:
+    - route: amsd-casework-dev.london.cloudapps.digital
   env:
     ASPNETCORE_ENVIRONMENT: Development
