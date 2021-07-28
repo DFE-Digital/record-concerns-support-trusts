@@ -60,8 +60,3 @@ jobs:
         run: |
           echo "TAGS::${{ steps.meta.outputs.tags }}"
           echo "TAG_URL=${{ steps.meta.outputs.tags }}" >> $GITHUB_ENV
-          
-
-      - name: Can use environment variables
-        run: |
-          echo "TAG_URL::$TAG_URL"

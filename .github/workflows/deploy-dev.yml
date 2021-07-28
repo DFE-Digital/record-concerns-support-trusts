@@ -19,8 +19,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '14.x'
+      
       - name: Build Frontend
         run: make build-frontend
+      
       - name: Install CloudFoundry CLI
         shell: bash
         id: install-cf-cli
@@ -29,10 +31,15 @@ jobs:
           echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
           sudo apt-get update
           sudo apt-get install cf7-cli
+
+      - name: Can use environment variables
+        run: |
+          echo "TAG_URL::$TAG_URL"
+          
       - name: Deploy Code
         run: |
           cf api ${{ env.PAAS_URL }}
           cf auth "${{ secrets.CF_USER }}" "${{ secrets.CF_PASSWORD }}"
           cf target -o dfe -s amsd-casework-dev
-          echo "REPO_URL:: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}"
-          cf push amsd-casework-dev --docker-image ghcr.io/dfe-digital/amsd-casework:pr-29 -f deploy-manifests/dev.yml
+          echo "REPO_URL:: $TAG_URL"
+          cf push amsd-casework-dev --docker-image $TAG_URL -f deploy-manifests/dev.yml
