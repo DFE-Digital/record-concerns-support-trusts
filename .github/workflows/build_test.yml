@@ -6,19 +6,12 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  REPO_NAME: ${{ github.repository }}
+  REPO_NAME: dfe-digital/amsd-casework
 
 jobs:
   build-test:
     runs-on: ubuntu-latest
     steps:
-      - id: lowercase
-        uses: ASzc/change-string-case-action@v1
-        with:
-          string: ${{ env.REPO_NAME }}
-      - run: |
-          echo "REPO_LOWER_NAME=${{ steps.lowercase.outputs.lowercase }}" >> ${GITHUB_ENV}
-          echo "Repo lower case:: ${{ env.REPO_LOWER_NAME }}"
       - uses: actions/checkout@v2
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
