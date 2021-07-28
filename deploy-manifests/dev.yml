@@ -1,7 +1,5 @@
 ﻿---
 applications:
 - name: amsd-casework-dev
-  services:
-    - amsd-casework-dev-redis
   env:
     ASPNETCORE_ENVIRONMENT: Development
