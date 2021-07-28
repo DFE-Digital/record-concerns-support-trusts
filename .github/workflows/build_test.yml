@@ -57,7 +57,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
     
   build-and-push-image-latest:
-    needs: build-test
+    needs: build-and-push-image-version
     runs-on: ubuntu-latest
     permissions:
       contents: read
