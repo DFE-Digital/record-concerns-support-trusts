@@ -1,4 +1,4 @@
-﻿name: Build, test and create docker image
+﻿name: Build, Test and Create Docker Image
 
 on:
   pull_request:
