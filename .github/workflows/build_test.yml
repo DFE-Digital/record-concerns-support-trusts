@@ -55,8 +55,13 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      - name: "Set Tags env variables"
+      
+      - name: Set Tags env variables
         run: |
           echo "TAGS::${{ steps.meta.outputs.tags }}"
-          echo "DOCKER_IMAGE_URL=${{ steps.meta.outputs.tags }}" >> $GITHUB_ENV
-          echo "TAGS_ENV::${{ env.DOCKER_IMAGE_URL }} or ${{ DOCKER_IMAGE_URL }}"
+          echo "TAG_URL=${{ steps.meta.outputs.tags }}" >> $GITHUB_ENV
+          
+
+      - name: Can use environment variables
+        run: |
+          echo "TAG_URL::$TAG_URL"
