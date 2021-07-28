@@ -4,9 +4,4 @@ applications:
   services:
     - amsd-casework-dev-redis
   env:
-    "AAD:Instance": ((aad_instance))
-    "AAD:ResourceId": ((aad_resource_id))
-    "AAD:TenantId": ((aad_tenant_id))
-    username: ((username))
-    password: ((password))
     ASPNETCORE_ENVIRONMENT: Development
