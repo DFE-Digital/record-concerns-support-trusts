@@ -12,12 +12,6 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
     steps:
-      - id: lowercase
-        uses: ASzc/change-string-case-action@v1
-        with:
-          string: ${{ env.IMAGE_NAME }}
-        - id: github-env
-          run: echo "IMAGE_NAME_LOWERCASE=${{ steps.lowercase.outputs.lowercase }}" >>${GITHUB_ENV}
       - uses: actions/checkout@v2
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
