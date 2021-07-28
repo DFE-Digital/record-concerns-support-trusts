@@ -38,5 +38,5 @@ jobs:
           cf api ${{ env.PAAS_URL }}
           cf auth "${{ secrets.CF_USER }}" "${{ secrets.CF_PASSWORD }}"
           cf target -o dfe -s amsd-casework-dev
-          echo "${{ env.REGISTRY }}/${{ steps.lowercase.outputs.lowercase }}"
-          cf push amsd-casework-dev --docker-image ${{ env.REGISTRY }}/${{ steps.lowercase.outputs.lowercase }}:latest -f deploy-manifests/dev.yml
+          echo "${{ steps.lowercase.outputs.lowercase }}"
+          cf push amsd-casework-dev --docker-image ${{ steps.lowercase.outputs.lowercase }}:latest -f deploy-manifests/dev.yml

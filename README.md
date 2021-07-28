@@ -88,7 +88,8 @@ Note: Don't enable SSO in your account if you are using the account credentials 
 ```
 cf help
 cf spaces
-
+cf target -o dfe -s amsd-casework-dev --> switch spaces
+cf logs --recent amsd-casework-dev --> see logs
 ```
 
 ### Create a public AWS S3 bucket
