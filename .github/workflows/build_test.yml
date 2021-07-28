@@ -57,5 +57,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       - run: |
           echo "TAGS::${{ steps.meta.outputs.tags }}"
-          echo ::set-output name=docker_image_url::$(echo ${{ steps.meta.outputs.tags }} )
+          echo "docker_image_url=${{ steps.meta.outputs.tags }}" >> $GITHUB_ENV
           echo "TAGS_ENV::${{ env.docker_image_url }} or ${{ docker_image_url }}"
