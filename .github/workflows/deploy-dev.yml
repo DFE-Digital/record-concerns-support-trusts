@@ -10,6 +10,20 @@ env:
   REPO_NAME: dfe-digital/amsd-casework
 
 jobs:
+  download_artifact:
+    runs-on: ubuntu-latest
+    environment: Dev
+    steps:
+      - name: Download artifact url
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact-url
+      - shell: bash
+        run: |
+          value=`cat ${{ github.workspace }}/artifact/tag.txt`
+          echo '::set-output name=artifact_tag::$value'
+        id: tagurl
+  
   deploy_to_dev:
     runs-on: ubuntu-latest
     environment: Dev
@@ -31,17 +45,11 @@ jobs:
           echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
           sudo apt-get update
           sudo apt-get install cf7-cli
-        
-      - uses: actions/upload-artifact@v2
-        with:
-          name: artifact-url
-          path: ${{ github.workspace }}/artifact/tag.txt
-          retention-days: 1
-        
+                
       - name: Deploy Code
         run: |
           cf api ${{ env.PAAS_URL }}
           cf auth "${{ secrets.CF_USER }}" "${{ secrets.CF_PASSWORD }}"
           cf target -o dfe -s amsd-casework-dev
-          echo "REPO_URL:: ${{ artifact-url }}"
-          cf push amsd-casework-dev --docker-image ${{ artifact-url }} -f deploy-manifests/dev.yml
+          echo "REPO_URL:: ${{ steps.tagurl.outputs.artifact_tag }}"
+          cf push amsd-casework-dev --docker-image ${{ steps.tagurl.outputs.artifact_tag }} -f deploy-manifests/dev.yml
