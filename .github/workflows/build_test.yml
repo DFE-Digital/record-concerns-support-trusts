@@ -30,6 +30,8 @@ jobs:
     permissions:
       contents: read
       packages: write
+    outputs: 
+      tagurl: ${{ steps.meta.outputs.tags }}
 
     steps:
       - name: Checkout repository
@@ -55,8 +57,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      
-      - name: Set Tags env variables
-        run: |
-          echo "TAGS::${{ steps.meta.outputs.tags }}"
-          echo "TAG_URL=${{ steps.meta.outputs.tags }}" >> $GITHUB_ENV
