@@ -6,7 +6,8 @@ on:
 
 env:
   PAAS_URL: https://api.london.cloud.service.gov.uk
-  IMAGE_NAME: ${{ github.repository }}
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ lowercase(github.repository) }}
 
 jobs:
   deploy_to_dev:
@@ -33,4 +34,5 @@ jobs:
           cf api ${{ env.PAAS_URL }}
           cf auth "${{ secrets.CF_USER }}" "${{ secrets.CF_PASSWORD }}"
           cf target -o dfe -s amsd-casework-dev
-          cf push amsd-casework-dev --docker-image amsd-casework:latest -f deploy-manifests/dev.yml
+          echo "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          cf push amsd-casework-dev --docker-image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest -f deploy-manifests/dev.yml
