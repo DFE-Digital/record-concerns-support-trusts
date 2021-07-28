@@ -1,6 +1,8 @@
 ---
 applications:
 - name: amsd-casework-staging
+  routes:
+    - route: amsd-casework-staging.london.cloudapps.digital
   services:
     - amsd-casework-staging-redis
   env:

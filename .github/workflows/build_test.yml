@@ -55,3 +55,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      - run: |
+          echo "TAGS::${{ steps.meta.outputs.tags }}"
+          echo "Labels::${{ steps.meta.outputs.labels }}"
