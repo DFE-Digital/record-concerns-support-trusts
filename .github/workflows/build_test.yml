@@ -24,7 +24,7 @@ jobs:
       - name: Test
         run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity diagnostic
   
-  build-and-push-image:
+  build-and-push-image-version:
     needs: build-test
     runs-on: ubuntu-latest
     permissions:
@@ -56,7 +56,6 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
-            type=latest
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
@@ -64,4 +63,36 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+    
+  build-and-push-image-latest:
+    needs: build-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: latest
           labels: ${{ steps.meta.outputs.labels }}
