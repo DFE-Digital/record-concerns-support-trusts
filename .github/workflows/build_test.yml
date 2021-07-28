@@ -6,12 +6,18 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  REPO_NAME: ${{ github.repository }}
 
 jobs:
   build-test:
     runs-on: ubuntu-latest
     steps:
+      - id: lowercase
+        uses: ASzc/change-string-case-action@v1
+        with:
+          string: ${{ env.REPO_NAME }}
+          run: |
+            echo "REPO_LOWER_NAME=${{ steps.lowercase.outputs.lowercase }}" >>${GITHUB_ENV}
       - uses: actions/checkout@v2
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -46,7 +52,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
