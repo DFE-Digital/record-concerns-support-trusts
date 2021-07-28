@@ -30,7 +30,7 @@ RDD - Regional Delivery Directorate
 ```
 e.g. dotnet new page --name Cookies --namespace ConcernsCaseWork.Pages --output Pages
 ```
-[Razor pages](https://www.learnrazorpages.com/)
+[Razor pages tutorial](https://www.learnrazorpages.com/)
 
 ## Node and Design system Setup
 ```
@@ -52,7 +52,7 @@ of bringing the library over to the project update this document.
 ```
 Project configuration based on other internal streams for consistency.
 ```
-[GitHub Repo](https://github.com/DFE-Digital/sdd-technical-documentation/blob/main/development_guidance/logging.md)
+[GitHub Repository](https://github.com/DFE-Digital/sdd-technical-documentation/blob/main/development_guidance/logging.md)
 
 ## TRAMS API
 ```
@@ -61,9 +61,7 @@ TRAMS API is designed to replace dynamics365 were most of the legacy systems are
 For integration with TRAMS API a member of the team will make available an API key (per environment).
 Include header 'ApiKey' with the service key provided by TRAMS team.
 ```
-
-## GitHub
-[Here to go to TRAMS API repository](https://github.com/DFE-Digital/trams-data-api)
+[GitHub Repository](https://github.com/DFE-Digital/trams-data-api)
 
 ## Docker SQLServer
 ```
@@ -85,3 +83,18 @@ The section is well-described in the playbook, link to oficial documentation
 Note: Don't enable SSO in your account if you are using the account credentials to login to PaaS.
 ```
 [Gov PaaS](https://docs.cloud.service.gov.uk/get_started.html?_ga=2.255108360.1068852604.1627038231-1095670286.1624019946#get-started)
+
+### Useful CF Commands
+```
+cf help
+cf spaces
+
+```
+
+### Create a public AWS S3 bucket
+The main objective of this section is to keep some information on how AWS S3 bucket was created to store terraform state within GitHub actions.
+```
+1º Login to Cloud Foundry - cf login -a api.london.cloud.service.gov.uk
+2º 
+```
+[Gov PaaS](https://docs.cloud.service.gov.uk/deploying_services/s3/#unbind-an-s3-bucket-from-your-app)
