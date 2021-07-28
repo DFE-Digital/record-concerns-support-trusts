@@ -16,9 +16,9 @@ jobs:
         uses: ASzc/change-string-case-action@v1
         with:
           string: ${{ env.REPO_NAME }}
-          run: |
-            echo "REPO_LOWER_NAME=${{ steps.lowercase.outputs.lowercase }}" >>${GITHUB_ENV}
-            echo "The value of REPO is: ${REPO_LOWER_NAME}"
+      - run: |
+          echo "REPO_LOWER_NAME=${{ steps.lowercase.outputs.lowercase }}" >>${GITHUB_ENV}
+          echo "Repo lower case:: ${REPO_LOWER_NAME}"
       - uses: actions/checkout@v2
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
