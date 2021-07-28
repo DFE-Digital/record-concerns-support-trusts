@@ -55,7 +55,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      - run: |
+        run: |
           echo "TAGS::${{ steps.meta.outputs.tags }}"
           echo "DOCKER_IMAGE_URL=${{ steps.meta.outputs.tags }}" >> $GITHUB_ENV
           echo "TAGS_ENV::${{ env.DOCKER_IMAGE_URL }} or ${{ DOCKER_IMAGE_URL }}"
