@@ -48,7 +48,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.REPO_NAME }}
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image PR
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -56,12 +56,10 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
         
-      - name: Upload meta outputs
-        run: |
-          mkdir -p ${{ github.workspace }}/artifact
-          echo ${{ steps.meta.outputs.tags }} > ${{ github.workspace }}/artifact/tag.txt
-      - uses: actions/upload-artifact@v2
+      - name: Build and push Docker image Latest
+        uses: docker/build-push-action@v2
         with:
-          name: artifact-url
-          path: ${{ github.workspace }}/artifact/tag.txt
-          retention-days: 1
+          context: .
+          push: true
+          tags: latest
+          labels: ${{ steps.meta.outputs.labels }}
