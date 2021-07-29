@@ -5,3 +5,4 @@ applications:
     - route: amsd-casework-dev.london.cloudapps.digital
   env:
     ASPNETCORE_ENVIRONMENT: Development
+    ASPNETCORE_URLS: http://+:8080

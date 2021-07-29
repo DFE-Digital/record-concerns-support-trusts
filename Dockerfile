@@ -7,9 +7,6 @@ COPY ConcernsCaseWork/ConcernsCaseWork/*.csproj .
 COPY ConcernsCaseWork/. .
 
 RUN dotnet restore
-
-# copy everything else and build app
-#COPY ConcernsCaseWork/. ./
 RUN dotnet publish -c Release -o /app
 
 # Stage 2
