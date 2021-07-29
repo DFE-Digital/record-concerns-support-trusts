@@ -88,6 +88,8 @@ Note: Don't enable SSO in your account if you are using the account credentials 
 ```
 cf help
 cf spaces
+cf login -a api.london.cloud.service.gov.uk -u
+cf logout
 cf target -o dfe -s amsd-casework-dev --> switch spaces
 cf logs --recent amsd-casework-dev --> see logs
 ```
@@ -95,7 +97,7 @@ cf logs --recent amsd-casework-dev --> see logs
 ### Create a public AWS S3 bucket
 The main objective of this section is to keep some information on how AWS S3 bucket was created to store terraform state within GitHub actions.
 ```
-1º Login to Cloud Foundry:: cf login -a api.london.cloud.service.gov.uk -u <email-address>
+1º Login to Cloud Foundry
 2º 
 ```
 [Gov PaaS](https://docs.cloud.service.gov.uk/deploying_services/s3/#unbind-an-s3-bucket-from-your-app)

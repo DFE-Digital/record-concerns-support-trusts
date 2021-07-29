@@ -2,14 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <!--<CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>-->
+    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
   </PropertyGroup>
-
-	<ItemGroup>
-		<FrameworkReference Update="Microsoft.AspNetCore.App">
-			<TargetingPackVersion>3.1.0</TargetingPackVersion>
-		</FrameworkReference>
-	</ItemGroup>
 	
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
