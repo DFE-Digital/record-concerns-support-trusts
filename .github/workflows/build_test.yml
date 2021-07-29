@@ -15,12 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Setup node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '14.x'
-      - name: Build Frontend
-        run: make build-frontend
         
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -32,6 +26,13 @@ jobs:
         run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
       - name: Test
         run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity diagnostic
+
+      - name: Setup node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - name: Build Frontend
+        run: make build-frontend
   
   build-and-push-image:
     needs: build-test
