@@ -3,6 +3,11 @@ name: Deploy to Staging
 on:
   workflow_dispatch:
 
+env:
+  PAAS_URL: https://api.london.cloud.service.gov.uk
+  REGISTRY: ghcr.io
+  REPO_NAME: dfe-digital/amsd-casework
+
 jobs:
   deploy_to_staging:
     runs-on: ubuntu-latest
@@ -25,12 +30,8 @@ jobs:
           sudo apt-get install cf7-cli
       - name: Deploy Code
         run: |
-          cf api https://api.london.cloud.service.gov.uk
+          cf api ${{ env.PAAS_URL }}
           cf auth "${{ secrets.CF_USER }}" "${{ secrets.CF_PASSWORD }}"
           cf target -o dfe -s amsd-casework-staging
-          cf push amsd-casework-staging --docker-image amsd-casework -f deploy-manifests/staging.yml \
-          --var aad_instance=${{ secrets.AAD_INSTANCE }} \
-          --var aad_resource_id=${{ secrets.AAD_RESOURCEID }} \
-          --var aad_tenant_id=${{ secrets.AAD_TENANTID }} \
-          --var username=${{ secrets.USERNAME }} \
-          --var password=${{ secrets.PASSWORD }} 
+          cf push amsd-casework-staging --docker-image ${{ env.REGISTRY }}/${{ env.REPO_NAME }}:latest -f deploy-manifests/staging.yml \
+          --strategy rolling
