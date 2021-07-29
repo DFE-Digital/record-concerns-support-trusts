@@ -13,13 +13,7 @@ jobs:
   deploy_to_dev:
     runs-on: ubuntu-latest
     environment: Dev
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '14.x'
-            
+    steps:      
       - name: Install CloudFoundry CLI
         shell: bash
         id: install-cf-cli
