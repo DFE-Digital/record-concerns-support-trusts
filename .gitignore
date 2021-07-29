@@ -450,6 +450,3 @@ $RECYCLE.BIN/
 # govuk frontend stuff
 /ConcernsCaseWork/ConcernsCaseWork/wwwroot/assets
 /ConcernsCaseWork/ConcernsCaseWork/wwwroot/dist
-
-# minified js
-*.min.js

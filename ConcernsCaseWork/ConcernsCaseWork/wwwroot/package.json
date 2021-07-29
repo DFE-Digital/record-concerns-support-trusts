@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "npm run build:assets && npm run build:frontend && npm run build:sass-migrator",
+    "build": "npm run build:assets && npm run build:frontend --env.NODE_ENV=production && npm run build:sass-migrator",
     "build:frontend": "webpack",
 	"build:assets": "webpack --config webpack.assets.config.js",
     "build:watch": "webpack --watch",
