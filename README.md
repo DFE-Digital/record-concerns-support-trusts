@@ -77,6 +77,19 @@ download the docker image from Container registry.
 4. Install SSMS or Azure Data Studio and Login using the credentials from step 3
 ```
 
+### Docker Application Image
+```
+Testing docker image locally,
+1. Have Docker running
+2. Build image from command line
+	2.1 docker build . -t amsd-casework
+3. Verify image produced
+	3.1 docker images
+4. Run docker image
+	4.1 docker run -e -p 8080:80
+5. Browse localhost:8080
+```
+
 ## PaaS Account
 ```
 The section is well-described in the playbook, link to oficial documentation
@@ -93,11 +106,3 @@ cf logout
 cf target -o dfe -s amsd-casework-dev --> switch spaces
 cf logs --recent amsd-casework-dev --> see logs
 ```
-
-### Create a public AWS S3 bucket
-The main objective of this section is to keep some information on how AWS S3 bucket was created to store terraform state within GitHub actions.
-```
-1º Login to Cloud Foundry
-2º 
-```
-[Gov PaaS](https://docs.cloud.service.gov.uk/deploying_services/s3/#unbind-an-s3-bucket-from-your-app)

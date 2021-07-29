@@ -25,6 +25,8 @@ jobs:
         run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
       - name: Test
         run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity diagnostic
+      - name: Build Frontend
+        run: make build-frontend
   
   build-and-push-image:
     needs: build-test
