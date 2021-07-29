@@ -13,13 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: Staging
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '14.x'
-      - name: Build Frontend
-        run: make build-frontend
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
       - name: Install CloudFoundry CLI
         shell: bash
         id: install-cf-cli
