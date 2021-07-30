@@ -2,7 +2,9 @@
   name               = local.web_app_name
   space              = data.cloudfoundry_space.space.id
   
-  service_binding = [ cloudfoundry_service_instance.redis.id ]
+  service_binding {
+	service_instance = cloudfoundry_service_instance.redis.id
+  }
 }
 
 resource cloudfoundry_route web_app_cloudapp_digital_route {

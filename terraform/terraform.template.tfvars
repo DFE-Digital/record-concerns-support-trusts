@@ -4,6 +4,9 @@ aws_bucket_name 			= ""
 aws_bucket_key 				= "amsd-casework/terraform.tfstate"
 aws_bucket_state_encrypt 	= true
 
+## Environment
+app_environment				= "development"
+
 ## PaaS
 cf_api_url 					= "https://api.london.cloud.service.gov.uk"
 cf_user 					= ""
