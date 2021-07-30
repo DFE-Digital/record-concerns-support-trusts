@@ -5,4 +5,4 @@ applications:
     - route: amsd-casework-staging.london.cloudapps.digital
   env:
     ASPNETCORE_ENVIRONMENT: Staging
-    ASPNETCORE_URLS: http://+:8080
+    ASPNETCORE_URLS: https://+:8080
