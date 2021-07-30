@@ -47,7 +47,13 @@ jobs:
       # Init pulls credentials from the .aws/credentials file by default
       - name: "Run - Terraform Init"
         run: terraform init -input=false ${{ env.BACKEND_CONFIG }}
+        env:
+          TF_VAR_cf_user: ${{ secrets.CF_USER }}
+          TF_VAR_cf_password: ${{ secrets.CF_PASSWORD }}
 
       # Auto-approve prevents the requirement of human interaction
       - name: "Run - Terraform Apply"
-        run: terraform apply -input=false -auto-approve 
+        run: terraform apply -input=false -auto-approve
+        env:
+          TF_VAR_cf_user: ${{ secrets.CF_USER }}
+          TF_VAR_cf_password: ${{ secrets.CF_PASSWORD }}
