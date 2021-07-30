@@ -26,12 +26,12 @@ terraform {
 }
 
 provider "aws" {
-  region = var.aws_region
+  region 	= var.aws_region
 }
 
 provider cloudfoundry {
-  api_url           = var.cf_api_url
-  user              = var.cf_user
-  password          = var.cf_password
+  api_url	= var.cf_api_url
+  user      = var.cf_user
+  password  = var.cf_password
 }
 
