@@ -54,12 +54,18 @@ jobs:
       # Init pulls credentials from the .aws/credentials file by default
       - name: "Run - Terraform Init"
         run: terraform init -input=false ${{ env.BACKEND_CONFIG }}
+        env:
+          TF_VAR_cf_user: ${{ secrets.CF_USER }}
+          TF_VAR_cf_password: ${{ secrets.CF_PASSWORD }}
 
       # The id value is used for reference in the comment step via "steps.plan.outputs.stdout"
       # Note: Color is disabled to prevent messy characters from appearing in the pull request comment
       - name: "Run - Terraform Plan"
         id: plan
         run: terraform plan -input=false -no-color ${{ env.BACKEND_CONFIG }}
+        env:
+          TF_VAR_cf_user: ${{ secrets.CF_USER }}
+          TF_VAR_cf_password: ${{ secrets.CF_PASSWORD }}
 
       # Submit a comment with the plan output to the pull request
       - name: "Run - Terraform Comment"

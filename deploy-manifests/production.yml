@@ -4,4 +4,4 @@ applications:
   routes:
     - route: amsd-casework.london.cloudapps.digital
   env:
-    ASPNETCORE_URLS: https://+:8080
+    ASPNETCORE_URLS: http://+:8080
