@@ -97,7 +97,7 @@ Note: Don't enable SSO in your account if you are using the account credentials 
 ```
 [Gov PaaS](https://docs.cloud.service.gov.uk/get_started.html?_ga=2.255108360.1068852604.1627038231-1095670286.1624019946#get-started)
 
-### Useful CF Commands
+### Useful Cloud Foundry Commands
 ```
 cf help
 cf spaces
@@ -106,3 +106,16 @@ cf logout
 cf target -o dfe -s amsd-casework-dev --> switch spaces
 cf logs --recent amsd-casework-dev --> see logs
 ```
+
+## Terraform AWS S3 storage
+After some research two options are available, AWS S3 (no versioning) and Azure (with versioniong)
+Until Concerns as an Azure account we will use AWS S3 bucket to store terraform state.
+
+### Cloud Foundry Commands
+```
+cf target -o dfe -s amsd-casework-dev
+cf create-service aws-s3-bucket default amsd-casework-tf-state
+cf create-service-key amsd-casework-tf-state amsd-casework-tf-state-key -c '{"allow_external_access": true}'
+cf service-key amsd-casework-tf-state amsd-casework-tf-state-key
+```
+[Gov PaaS](https://docs.cloud.service.gov.uk/deploying_services/s3/#amazon-s3)
