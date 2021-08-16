@@ -7,12 +7,8 @@
 data "aws_caller_identity" "current" {}
 
 terraform {
-  required_version = "~> 0.14"
   required_providers {
-	aws = {
-	  source  = "hashicorp/aws"
-	  version = "~> 3.0"
-	}
+	aws = "~> 2.59"
 	cloudfoundry = {
 	  source  = "cloudfoundry-community/cloudfoundry"
 	  version = ">= 0.12.6"
@@ -22,7 +18,7 @@ terraform {
   #  Terraform State S3 Bucket                                                   #
   ## ========================================================================== ##
   backend s3 {
-	key    	= local.aws_bucket_key
+	key    	= "tf-state"
 	encrypt = true
   }
 }
