@@ -108,6 +108,9 @@ cf logs --recent amsd-casework-dev --> see logs
 cf service amsd-casework-tf-state --> AWS S3 terraform state
 cf stop amsd-casework-dev
 cf delete -r amsd-casework-dev
+
+cf install-plugin conduit
+cf conduit amsd-casework-redis-dev --> Run Redis locally
 ```
 
 ## Terraform AWS S3 storage
