@@ -80,7 +80,7 @@ download the docker image from Container registry.
 ### Docker Application Image
 ```
 Testing docker image locally,
-1. Have Docker running
+1. Check Docker running
 2. Build image from command line
 	2.1 docker build . -t amsd-casework
 3. Verify image produced
@@ -120,16 +120,3 @@ cf create-service-key amsd-casework-tf-state amsd-casework-tf-state-key -c '{"al
 cf service-key amsd-casework-tf-state amsd-casework-tf-state-key
 ```
 [Gov PaaS](https://docs.cloud.service.gov.uk/deploying_services/s3/#amazon-s3)
-
-### Terraform Local
-```
-If you want to run terraform locally to test the scripts a few steps are required,
-1º Create new profile under ~/.aws/credentials e.g. [dfe]
-2º Request bucket credentials and update step 1
-3º Run the comand,
-	terraform init \
-    	-backend-config="bucket=<BUCKET_NAME>>" \
-    	-backend-config="key=<KEY>>" \
-    	-backend-config="region=eu-west-2" \
-    	-backend-config="profile=dfe"
-```

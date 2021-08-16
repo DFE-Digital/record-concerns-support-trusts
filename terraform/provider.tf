@@ -22,18 +22,12 @@ terraform {
   #  Terraform State S3 Bucket                                                   #
   ## ========================================================================== ##
   backend s3 {
-	bucket 	= local.aws_bucket_name
 	key    	= local.aws_bucket_key
-	region 	= local.aws_region
 	encrypt = true
   }
 }
 
-provider aws {
-  region 	= var.aws_region
-  shared_credentials_file = "~/.aws/credentials"
-  profile = "dfe"
-}
+provider aws {}
 
 provider cloudfoundry {
   api_url	= var.cf_api_url
