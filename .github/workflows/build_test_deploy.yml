@@ -1,0 +1,140 @@
+﻿name: Build, Test and Deploy
+
+on:
+  push:
+    branches: [ main ]
+    
+env:
+  REGISTRY: ghcr.io
+  DOCKER_IMAGE: dfe-digital/amsd-casework
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+      - name: Restore dependencies
+        run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
+      - name: Build
+        run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
+      - name: Test
+        run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity diagnostic
+  
+  build-and-push-image:
+    needs: build-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set environment variables
+        run: |
+          GIT_REF=${{ github.ref }}
+          GIT_BRANCH=${GIT_REF##*/}
+          echo "BRANCH_TAG=$GIT_BRANCH" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE_TAG=$GITHUB_SHA" >> $GITHUB_ENV
+
+      - name: Setup node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - name: Build Frontend
+        run: make build-frontend
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and push docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.DOCKER_IMAGE}}:${{ env.DOCKER_IMAGE_TAG }}
+            ${{ env.REGISTRY }}/${{ env.DOCKER_IMAGE}}:${{ env.BRANCH_TAG }}
+          push: true
+          cache-from: |
+            ${{ env.REGISTRY }}/${{ env.DOCKER_IMAGE}}:${{ env.BRANCH_TAG }}
+            ${{ env.REGISTRY }}/${{ env.DOCKER_IMAGE}}:${{ env.DOCKER_IMAGE_TAG }}
+            ${{ env.REGISTRY }}/${{ env.DOCKER_IMAGE}}:main
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+            COMMIT_SHA=${{ env.DOCKER_IMAGE_TAG }}
+        
+  deploy-image:
+    needs: build-and-push-image
+    runs-on: ubuntu-latest
+    environment: dev
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      # Checkout the code
+      # Marketplace: https://github.com/marketplace/actions/checkout
+      - name: "Setup - Checkout"
+        uses: actions/checkout@v2
+
+      # Provides AWS credentials to Terraform
+      # By default, Terraform checks the home directory for a .aws folder with a credential file
+      # Documentation: https://docs.aws.amazon.com/ses/latest/DeveloperGuide/create-shared-credentials-file.html
+      - name: "Setup - Build AWS Credentials"
+        run: |
+          mkdir -p ~/.aws
+          echo "[default]" > ~/.aws/credentials
+          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+      
+      - name: Set environment variables
+        run: |
+          echo "DOCKER_IMAGE_TAG=$GITHUB_SHA" >> $GITHUB_ENV
+          
+      # Downloads a specific version of Terraform CLI and adds it to PATH
+      # Marketplace: https://github.com/marketplace/actions/hashicorp-setup-terraform
+      - name: "Setup - Terraform CLI"
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.3
+
+      - name: Set environment variables for environments
+        run: |
+          BACKEND_CONFIG='-backend-config="key=dev/app.tfstate" -backend-config="bucket=${{ secrets.AWS_BUCKET_NAME }}"'
+          PARAMETER_STORE_ENVIRONMENT=dev
+          VAR_FILE=dev.tfvars
+          echo "BACKEND_CONFIG=${BACKEND_CONFIG}" >> $GITHUB_ENV
+          echo "PARAMETER_STORE_ENVIRONMENT=${PARAMETER_STORE_ENVIRONMENT}" >> $GITHUB_ENV
+          echo "VAR_FILE=${VAR_FILE}" >> $GITHUB_ENV
+          
+      # Init pulls credentials from the .aws/credentials file by default
+      - name: "Run - Terraform Init"
+        run: terraform init -input=false ${{ env.BACKEND_CONFIG }}
+        env:
+          TF_VAR_cf_user: ${{ secrets.CF_USER }}
+          TF_VAR_cf_password: ${{ secrets.CF_PASSWORD }}
+
+      # The id value is used for reference in the comment step via "steps.plan.outputs.stdout"
+      # Note: Color is disabled to prevent messy characters from appearing in the pull request comment
+      - name: "Run - Terraform Apply"
+        id: plan
+        run: terraform apply -input=false -auto-approve -var-file=${{env.VAR_FILE}}
+        env:
+          TF_VAR_cf_user: ${{ secrets.CF_USER }}
+          TF_VAR_cf_password: ${{ secrets.CF_PASSWORD }}
+          TF_VAR_cf_api_url: ${{ secrets.CF_API_URL }}
+          TF_VAR_cf_app_image_tag: ${{ env.DOCKER_IMAGE_TAG }}

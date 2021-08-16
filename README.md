@@ -80,7 +80,7 @@ download the docker image from Container registry.
 ### Docker Application Image
 ```
 Testing docker image locally,
-1. Have Docker running
+1. Check Docker running
 2. Build image from command line
 	2.1 docker build . -t amsd-casework
 3. Verify image produced

@@ -1,8 +1,21 @@
 ﻿resource cloudfoundry_app worker_app {
   name               = local.web_app_name
   space              = data.cloudfoundry_space.space.id
+  docker_image		 = local.docker_image
+  strategy           = local.cloudfoundry_app_strategy
   
-  service_binding = [ cloudfoundry_service_instance.redis.id ]
+  service_binding {
+	service_instance = cloudfoundry_service_instance.redis.id
+  }
+
+  routes {
+	route = cloudfoundry_route.web_app_cloudapp_digital_route.id
+  }
+
+  environment = {
+	"ASPNETCORE_ENVIRONMENT" = local.app_name_suffix
+	"ASPNETCORE_URLS"        = local.cloudfoundry_app_urls
+  }
 }
 
 resource cloudfoundry_route web_app_cloudapp_digital_route {
