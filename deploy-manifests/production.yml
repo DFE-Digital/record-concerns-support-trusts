@@ -1,7 +1,0 @@
----
-applications:
-- name: amsd-casework-production
-  routes:
-    - route: amsd-casework.london.cloudapps.digital
-  env:
-    ASPNETCORE_URLS: http://+:8080
