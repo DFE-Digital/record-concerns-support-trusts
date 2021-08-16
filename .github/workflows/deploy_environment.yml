@@ -71,3 +71,4 @@ jobs:
           TF_VAR_cf_password: ${{ secrets.CF_PASSWORD }}
           TF_VAR_cf_api_url: ${{ secrets.CF_API_URL }}
           TF_VAR_cf_app_image_tag: ${{ env.DOCKER_IMAGE_TAG }}
+          TF_VAR_app_environment: ${{ github.event.inputs.environment }}

@@ -9,4 +9,7 @@ locals {
   docker_image         		= "ghcr.io/dfe-digital/amsd-casework:${var.cf_app_image_tag}"
   cloudfoundry_app_strategy	= "blue-green-v2"
   cloudfoundry_app_urls		= "http://+:8080"
+  
+  ## Created manually see README.md
+  aws_service_key			= "amsd-casework-tf-state"
 }

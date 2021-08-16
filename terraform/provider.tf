@@ -18,7 +18,7 @@ terraform {
   #  Terraform State S3 Bucket                                                   #
   ## ========================================================================== ##
   backend s3 {
-	key    	= "tf-state"
+	key    	= local.aws_service_key
 	encrypt = true
   }
 }

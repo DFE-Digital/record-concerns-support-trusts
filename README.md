@@ -106,6 +106,8 @@ cf logout
 cf target -o dfe -s amsd-casework-dev --> switch spaces
 cf logs --recent amsd-casework-dev --> see logs
 cf service amsd-casework-tf-state --> AWS S3 terraform state
+cf stop amsd-casework-dev
+cf delete -r amsd-casework-dev
 ```
 
 ## Terraform AWS S3 storage
