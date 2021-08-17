@@ -12,6 +12,7 @@ If a Trust does falls foul of this and the DFE either notices financial irregula
 monitoring or is alerted to issues by external or internal parties a Concerns Case is created.
 
 ## Glossary
+***
 ```
 FNTI - Finantial notice to improve
 ESFA - Education and skills funding agency
@@ -26,13 +27,21 @@ AMSD - Academies & Maintained Schools Directorate
 RDD - Regional Delivery Directorate
 ```
 
+## Login
+***
+```
+Request login credentials within the team.
+```
+
 ## Create razor pages
+***
 ```
 e.g. dotnet new page --name Cookies --namespace ConcernsCaseWork.Pages --output Pages
 ```
 [Razor pages tutorial](https://www.learnrazorpages.com/)
 
 ## Node and Design system Setup
+***
 ```
 https://design-system.service.gov.uk/community/resources-and-tools/
 Go to project root -> ConcernsCaseWork directory -> wwwroot directory and run the command,
@@ -49,12 +58,14 @@ of bringing the library over to the project update this document.
 ```
 
 ## Logging Configuration
+***
 ```
 Project configuration based on other internal streams for consistency.
 ```
 [GitHub Repository](https://github.com/DFE-Digital/sdd-technical-documentation/blob/main/development_guidance/logging.md)
 
 ## TRAMS API
+***
 ```
 TRAMS API is designed to replace dynamics365 were most of the legacy systems are feeding data from.
 
@@ -64,6 +75,7 @@ Include header 'ApiKey' with the service key provided by TRAMS team.
 [GitHub Repository](https://github.com/DFE-Digital/trams-data-api)
 
 ## Docker SQLServer
+***
 ```
 Based on the GitHub username configured to access TRAMS API repository, a few steps are required to
 download the docker image from Container registry.
@@ -78,6 +90,7 @@ download the docker image from Container registry.
 ```
 
 ### Docker Application Image
+***
 ```
 Testing docker image locally,
 1. Check Docker running
@@ -90,7 +103,16 @@ Testing docker image locally,
 5. Browse localhost:8080
 ```
 
+### Docker Redis
+***
+```
+Running web application locally will need a Docker redis instance runnning.
+docker run -p 6379:6379 --name redis -d redis
+redis://user:password@localhost:6379
+```
+
 ## PaaS Account
+***
 ```
 The section is well-described in the playbook, link to oficial documentation
 Note: Don't enable SSO in your account if you are using the account credentials to login to PaaS.
@@ -98,6 +120,7 @@ Note: Don't enable SSO in your account if you are using the account credentials 
 [Gov PaaS](https://docs.cloud.service.gov.uk/get_started.html?_ga=2.255108360.1068852604.1627038231-1095670286.1624019946#get-started)
 
 ### Redis
+***
 ```
 Redis resource is created via terraform and bind to the app.
 Eviction policy is set by default to volatile-lru
@@ -108,6 +131,7 @@ but only among keys that have an expire set, in order to make space for the new 
 ```
 
 ### Useful Cloud Foundry Commands
+***
 ```
 cf help
 cf spaces
@@ -126,10 +150,12 @@ cf conduit amsd-casework-redis-dev --> Run Redis locally
 ```
 
 ## Terraform AWS S3 storage
+***
 After some research two options are available, AWS S3 (no versioning) and Azure (with versioniong)
 Until Concerns as an Azure account we will use AWS S3 bucket to store terraform state.
 
 ### Cloud Foundry Commands
+***
 ```
 cf target -o dfe -s amsd-casework-dev
 cf create-service aws-s3-bucket default amsd-casework-tf-state
