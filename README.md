@@ -119,6 +119,7 @@ cf service amsd-casework-tf-state --> AWS S3 terraform state
 cf stop amsd-casework-dev
 cf delete -r amsd-casework-dev
 cf env amsd-casework-dev --> see environment variables of the target space
+cf set-space-role USERNAME ORGNAME SPACE ROLE --> Grant roles to user
 
 cf install-plugin conduit
 cf conduit amsd-casework-redis-dev --> Run Redis locally
