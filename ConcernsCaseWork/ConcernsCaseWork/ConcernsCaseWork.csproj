@@ -221,6 +221,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Service.Redis\Service.Redis.csproj" />
     <ProjectReference Include="..\Service.TRAMS\Service.TRAMS.csproj" />
   </ItemGroup>
 	

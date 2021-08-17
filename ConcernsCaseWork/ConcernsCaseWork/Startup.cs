@@ -1,11 +1,15 @@
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Service.TRAMS.Cases;
+using StackExchange.Redis;
 using System;
 using System.Net.Mime;
 
@@ -23,11 +27,30 @@ namespace ConcernsCaseWork
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+            services.AddRazorPages().AddViewOptions(options =>
+            {
+				options.HtmlHelperOptions.ClientValidationEnabled = false;
+            });
             services.Configure<RazorViewEngineOptions>(options =>
             {
 	            options.PageViewLocationFormats.Add("/Pages/Partials/{0}" + RazorViewEngine.ViewExtension);
             });
+            services.AddControllersWithViews(options => 
+	            options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute())
+	        ).AddSessionStateTempDataProvider();
+            
+            // Redis
+            var vcapConfiguration = Configuration.GetSection("VCAP_SERVICES:redis:0");
+            var redisCredentials = vcapConfiguration.GetSection("credentials");
+            
+            services.AddStackExchangeRedisCache(options =>
+            {
+	            options.Configuration = redisCredentials["uri"];
+	            options.InstanceName = vcapConfiguration["instance_name"];
+            });
+            
+            // Azure AD
+            // TODO
             
             // HttpFactory for TRAMS API.
             services.AddHttpClient("TramsClient", client =>
@@ -42,6 +65,9 @@ namespace ConcernsCaseWork
             
             // AutoMapper.
             services.AddAutoMapper(typeof(Startup));
+            
+            // Route options.
+            services.Configure<RouteOptions>(options => { options.LowercaseUrls = true; });
             
             // Cases service model and external TRAMS.
             services.AddSingleton<ICaseModelService, CaseModelService>();

@@ -97,6 +97,16 @@ Note: Don't enable SSO in your account if you are using the account credentials 
 ```
 [Gov PaaS](https://docs.cloud.service.gov.uk/get_started.html?_ga=2.255108360.1068852604.1627038231-1095670286.1624019946#get-started)
 
+### Redis
+```
+Redis resource is created via terraform and bind to the app.
+Eviction policy is set by default to volatile-lru
+
+Volatile-lru:
+evict keys by trying to remove the least recently used (LRU) keys first, 
+but only among keys that have an expire set, in order to make space for the new data added
+```
+
 ### Useful Cloud Foundry Commands
 ```
 cf help
@@ -108,6 +118,7 @@ cf logs --recent amsd-casework-dev --> see logs
 cf service amsd-casework-tf-state --> AWS S3 terraform state
 cf stop amsd-casework-dev
 cf delete -r amsd-casework-dev
+cf env amsd-casework-dev --> see environment variables of the target space
 
 cf install-plugin conduit
 cf conduit amsd-casework-redis-dev --> Run Redis locally
