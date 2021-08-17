@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace Service.Redis.Services
 {
-	public interface IUserService
+	public interface ICachedUserService
 	{
-		Task<UserClaims>GetUserAsync(UserCredentials userCredentials);
+		Task<UserClaims> GetUserAsync(UserCredentials userCredentials);
 	}
 }

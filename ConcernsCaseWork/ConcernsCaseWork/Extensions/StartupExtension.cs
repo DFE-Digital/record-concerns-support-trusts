@@ -16,10 +16,12 @@ namespace ConcernsCaseWork.Extensions
 		public static void AddRedis(this IServiceCollection services, IConfiguration configuration)
 		{
 			var vcapConfiguration = configuration.GetSection("VCAP_SERVICES:redis:0");
-			if (vcapConfiguration is null) throw new ConfigurationErrorsException("AddRedis::vcapConfiguration::redis:0");
+			if (vcapConfiguration is null) 
+				throw new ConfigurationErrorsException("AddRedis::vcapConfiguration::redis:0");
             
 			var redisCredentials = vcapConfiguration.GetSection("credentials");
-			if (redisCredentials is null) throw new ConfigurationErrorsException("AddRedis::redisCredentials::credentials");
+			if (redisCredentials is null) 
+				throw new ConfigurationErrorsException("AddRedis::redisCredentials::credentials");
 			
 			var redisConfigurationOptions = new ConfigurationOptions()
 			{
@@ -42,17 +44,15 @@ namespace ConcernsCaseWork.Extensions
 		/// <exception cref="ConfigurationErrorsException"></exception>
 		public static void AddTramsApi(this IServiceCollection services, IConfiguration configuration)
 		{
-			var tramsApiBase = configuration["TRAMS_API_ENDPOINT"];
+			var tramsApiEndpoint = configuration["TRAMS_API_ENDPOINT"];
 			var tramsApiKey = configuration["TRAMS_API_KEY"];
-			if (string.IsNullOrEmpty(tramsApiBase) || string.IsNullOrEmpty(tramsApiKey)) throw new ConfigurationErrorsException("AddTramsApi::missing configuration");
+			if (string.IsNullOrEmpty(tramsApiEndpoint) || string.IsNullOrEmpty(tramsApiKey)) 
+				throw new ConfigurationErrorsException("AddTramsApi::missing configuration");
 			
 			services.AddHttpClient("TramsClient", client =>
 			{
-				var apiKey = configuration["TRAMS_API_ENDPOINT"];
-				var endpoint = configuration["TRAMS_API_KEY"];
-	            
-				client.BaseAddress = new Uri(endpoint);
-				client.DefaultRequestHeaders.Add("ApiKey", apiKey);
+				client.BaseAddress = new Uri(tramsApiEndpoint);
+				client.DefaultRequestHeaders.Add("ApiKey", tramsApiKey);
 				client.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
 			});
 		}
@@ -65,9 +65,8 @@ namespace ConcernsCaseWork.Extensions
 			
 			// Redis service model
 			services.AddTransient<ICacheProvider, CacheProvider>();
-			services.AddTransient<ICacheUserService, CacheUserService>();
-			services.AddTransient<IUserService, UserService>();
-			services.AddTransient<IUserService, CachedUserService>();
+			services.AddTransient<IActiveDirectoryService, ActiveDirectoryService>();
+			services.AddTransient<ICachedUserService, CachedUserService>();
 		}
 	}
 }

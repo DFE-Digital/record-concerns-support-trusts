@@ -24,7 +24,10 @@ namespace ConcernsCaseWork
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages().AddViewOptions(options =>
+            services.AddRazorPages(options =>
+            {
+	            options.Conventions.AuthorizeFolder("/Pages");
+            }).AddViewOptions(options =>
             {
 				options.HtmlHelperOptions.ClientValidationEnabled = false;
             });
@@ -67,7 +70,7 @@ namespace ConcernsCaseWork
 			// Authentication
 			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 			{
-				options.LoginPath = "/home/login";
+				options.LoginPath = "/login";
 				options.Cookie.Name = ".ConcernsCasework.Login";
 				options.Cookie.HttpOnly = true;
 				options.Cookie.IsEssential = true;

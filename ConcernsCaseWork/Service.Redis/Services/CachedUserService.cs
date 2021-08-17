@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 
 namespace Service.Redis.Services
 {
-	public sealed class CachedUserService : IUserService
+	public sealed class CachedUserService : ICachedUserService
 	{
 		private const int CacheTimeToLive = 120;
-		private readonly UserService _userService;
+		private readonly IActiveDirectoryService _activeDirectoryService;
 		private readonly ICacheProvider _cacheProvider;
 		
-		public CachedUserService(UserService userService, ICacheProvider cacheProvider)
+		public CachedUserService(IActiveDirectoryService activeDirectoryService, ICacheProvider cacheProvider)
 		{
-			_userService = userService;
+			_activeDirectoryService = activeDirectoryService;
 			_cacheProvider = cacheProvider;
 		}
 		
@@ -27,7 +27,7 @@ namespace Service.Redis.Services
 			var userClaims = await _cacheProvider.GetFromCache<UserClaims>(userCredentials.Email);
 			if (userClaims != null) return userClaims;
 
-			userClaims = await _userService.GetUserAsync(userCredentials);
+			userClaims = await _activeDirectoryService.GetUserAsync(userCredentials);
 			
 			var cacheEntryOptions = new DistributedCacheEntryOptions()
 				.SetSlidingExpiration(TimeSpan.FromSeconds(CacheTimeToLive)); 

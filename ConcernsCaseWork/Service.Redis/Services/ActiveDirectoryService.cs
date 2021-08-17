@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 
 namespace Service.Redis.Services
 {
-	public sealed class UserService : IUserService
+	public sealed class ActiveDirectoryService : IActiveDirectoryService
 	{
 		// TODO DI Integrate Azure AD
-		public UserService()
+		public ActiveDirectoryService()
 		{
 			
 		}

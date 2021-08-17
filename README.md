@@ -33,6 +33,22 @@ RDD - Regional Delivery Directorate
 Request login credentials within the team.
 ```
 
+## Enable secret storage
+***
+```
+Secret storage is used only for local development avoiding adding secure properties
+into appsettings files.
+
+dotnet user-secrets init
+The preceding command adds a UserSecretsId element within a PropertyGroup of the project file. 
+By default, the inner text of UserSecretsId is a GUID. The inner text is arbitrary, but is unique to the project.
+
+Set a secret:
+dotnet user-secrets set "TRAMS_API_ENDPOINT" "secret_here"
+dotnet user-secrets set "TRAMS_API_KEY" "secret_here"
+```
+[Microsoft page](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1&tabs=windows)
+
 ## Create razor pages
 ***
 ```
