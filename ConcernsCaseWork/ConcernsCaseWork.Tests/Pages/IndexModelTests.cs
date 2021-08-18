@@ -22,11 +22,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			var cases = CaseModelFactory.CreateCaseModels();
 
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<IndexModel>>();
+			var mockLogger = new Mock<ILogger<HomeModel>>();
 			mockCaseModelService.Setup(model => model.GetCasesByCaseworker(It.IsAny<string>())).ReturnsAsync(cases);
 			
 			// act
-			var indexModel = new IndexModel(mockLogger.Object, mockCaseModelService.Object);
+			var indexModel = new HomeModel(mockCaseModelService.Object, mockLogger.Object);
 			await indexModel.OnGetAsync();
 			
 			// assert
@@ -59,11 +59,11 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<IndexModel>>();
+			var mockLogger = new Mock<ILogger<HomeModel>>();
 			mockCaseModelService.Setup(model => model.GetCasesByCaseworker(It.IsAny<string>())).ReturnsAsync(new List<CaseModel>());
 			
 			// act
-			var indexModel = new IndexModel(mockLogger.Object, mockCaseModelService.Object);
+			var indexModel = new HomeModel(mockCaseModelService.Object, mockLogger.Object);
 			await indexModel.OnGetAsync();
 			
 			// assert
@@ -86,8 +86,8 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// act
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<IndexModel>>();
-			var indexModel = new IndexModel(mockLogger.Object, mockCaseModelService.Object);
+			var mockLogger = new Mock<ILogger<HomeModel>>();
+			var indexModel = new HomeModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			// assert
 			Assert.That(indexModel.Rags.Count, Is.EqualTo(5));
@@ -102,8 +102,8 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// act
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<IndexModel>>();
-			var indexModel = new IndexModel(mockLogger.Object, mockCaseModelService.Object);
+			var mockLogger = new Mock<ILogger<HomeModel>>();
+			var indexModel = new HomeModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			// assert
 			Assert.That(indexModel.RagsCss.Count, Is.EqualTo(5));

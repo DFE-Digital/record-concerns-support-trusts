@@ -2,7 +2,6 @@ using ConcernsCaseWork.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
@@ -26,7 +25,10 @@ namespace ConcernsCaseWork
         {
             services.AddRazorPages(options =>
             {
-	            options.Conventions.AuthorizeFolder("/Pages");
+	            options.Conventions.AddPageRoute("/home", "");
+	            options.Conventions.AddPageRoute("/notfound", "/error/404");
+	            options.Conventions.AddPageRoute("/notfound", "/error/{code:int}");
+	            
             }).AddViewOptions(options =>
             {
 				options.HtmlHelperOptions.ClientValidationEnabled = false;
@@ -35,10 +37,6 @@ namespace ConcernsCaseWork
             {
 	            options.PageViewLocationFormats.Add($"/Pages/Partials/{RazorViewEngine.ViewExtension}");
             });
-            
-            services.AddControllersWithViews(options => 
-	            options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute())
-	        ).AddSessionStateTempDataProvider();
             
             // Azure AD
             // TODO
@@ -70,7 +68,7 @@ namespace ConcernsCaseWork
 			// Authentication
 			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 			{
-				options.LoginPath = "/login";
+				options.LoginPath = "/account/login";
 				options.Cookie.Name = ".ConcernsCasework.Login";
 				options.Cookie.HttpOnly = true;
 				options.Cookie.IsEssential = true;
@@ -91,6 +89,9 @@ namespace ConcernsCaseWork
                 app.UseHsts();
             }
 
+            // Combined with razor routing 404 display custom page NotFound
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -98,13 +99,12 @@ namespace ConcernsCaseWork
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
             app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
-                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/");
             });
         }
     }

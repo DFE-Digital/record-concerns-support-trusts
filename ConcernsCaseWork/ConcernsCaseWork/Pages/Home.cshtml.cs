@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.Cases;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -9,10 +10,11 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages
 {
+	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public class IndexModel : PageModel
+    public class HomeModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        private readonly ILogger<HomeModel> _logger;
         private readonly ICaseModelService _caseModelService;
      
         public IList<CaseModel> Cases { get; private set; }
@@ -25,10 +27,10 @@ namespace ConcernsCaseWork.Pages
 	        {0, ""}, {1, "ragtag__red"}, {2, "ragtag__redamber"}, {3, "ragtag__ambergreen"}, {4, "ragtag__redplus"}
         };
 
-        public IndexModel(ILogger<IndexModel> logger, ICaseModelService caseModelService)
+        public HomeModel(ICaseModelService caseModelService, ILogger<HomeModel> logger)
         {
-            _logger = logger;
             _caseModelService = caseModelService;
+            _logger = logger;
         }
 
         public async Task OnGetAsync()
