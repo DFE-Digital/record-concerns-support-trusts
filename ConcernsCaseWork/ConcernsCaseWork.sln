@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.TRAMS", "Service.TR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.TRAMS.Tests", "Service.TRAMS.Tests\Service.TRAMS.Tests.csproj", "{648B68C6-27EE-4211-BC27-49D8E146829C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Redis", "Service.Redis\Service.Redis.csproj", "{E340BEC0-5744-459A-99B7-B0339D38F647}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Redis.Tests", "Service.Redis.Tests\Service.Redis.Tests.csproj", "{C40689B1-9551-4364-91CB-FA8CD55F11BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{648B68C6-27EE-4211-BC27-49D8E146829C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{648B68C6-27EE-4211-BC27-49D8E146829C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{648B68C6-27EE-4211-BC27-49D8E146829C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E340BEC0-5744-459A-99B7-B0339D38F647}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E340BEC0-5744-459A-99B7-B0339D38F647}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E340BEC0-5744-459A-99B7-B0339D38F647}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E340BEC0-5744-459A-99B7-B0339D38F647}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C40689B1-9551-4364-91CB-FA8CD55F11BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C40689B1-9551-4364-91CB-FA8CD55F11BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C40689B1-9551-4364-91CB-FA8CD55F11BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C40689B1-9551-4364-91CB-FA8CD55F11BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

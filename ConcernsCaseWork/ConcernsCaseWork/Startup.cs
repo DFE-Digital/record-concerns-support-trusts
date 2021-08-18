@@ -1,13 +1,13 @@
-using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Extensions;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Service.TRAMS.Cases;
 using System;
-using System.Net.Mime;
 
 namespace ConcernsCaseWork
 {
@@ -23,29 +23,56 @@ namespace ConcernsCaseWork
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+            services.AddRazorPages(options =>
+            {
+	            options.Conventions.AddPageRoute("/home", "");
+	            options.Conventions.AddPageRoute("/notfound", "/error/404");
+	            options.Conventions.AddPageRoute("/notfound", "/error/{code:int}");
+	            
+            }).AddViewOptions(options =>
+            {
+				options.HtmlHelperOptions.ClientValidationEnabled = false;
+            });
             services.Configure<RazorViewEngineOptions>(options =>
             {
-	            options.PageViewLocationFormats.Add("/Pages/Partials/{0}" + RazorViewEngine.ViewExtension);
+	            options.PageViewLocationFormats.Add($"/Pages/Partials/{RazorViewEngine.ViewExtension}");
             });
             
-            // HttpFactory for TRAMS API.
-            services.AddHttpClient("TramsClient", client =>
-            {
-	            var apiKey = Configuration["TramsApi:ApiKey"];
-	            var endpoint = Configuration["TramsApi:Endpoint"];
-	            
-	            client.BaseAddress = new Uri(endpoint);
-	            client.DefaultRequestHeaders.Add("ApiKey", apiKey);
-	            client.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
-            });
+            // Azure AD
+            // TODO
+            
+            // Redis
+			services.AddRedis(Configuration);
+			
+            // TRAMS API.
+            services.AddTramsApi(Configuration);
             
             // AutoMapper.
             services.AddAutoMapper(typeof(Startup));
             
-            // Cases service model and external TRAMS.
-            services.AddSingleton<ICaseModelService, CaseModelService>();
-            services.AddSingleton<ICaseService, CaseService>();
+            // Route options.
+            services.Configure<RouteOptions>(options => { options.LowercaseUrls = true; });
+            
+			// Internal Services
+			services.AddInternalServices();
+			
+			// Session
+			services.AddSession(options =>
+			{
+				options.IdleTimeout = TimeSpan.FromHours(24);
+				options.Cookie.Name = ".ConcernsCasework.Session";
+				options.Cookie.HttpOnly = true;
+				options.Cookie.IsEssential = true;
+			});
+
+			// Authentication
+			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+			{
+				options.LoginPath = "/login";
+				options.Cookie.Name = ".ConcernsCasework.Login";
+				options.Cookie.HttpOnly = true;
+				options.Cookie.IsEssential = true;
+			});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,12 +89,18 @@ namespace ConcernsCaseWork
                 app.UseHsts();
             }
 
+            // Combined with razor routing 404 display custom page NotFound
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+            
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
