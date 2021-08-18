@@ -58,7 +58,7 @@ namespace ConcernsCaseWork.Pages
 
 			var claims = new List<Claim>
 			{
-				new Claim(ClaimTypes.Name, "Name")
+				new Claim(ClaimTypes.Name, Credentials.UserName)
 			};
 
 			var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -74,13 +74,6 @@ namespace ConcernsCaseWork.Pages
 			}
 
 			return Redirect(Url.IsLocalUrl(decodedUrl) ? Credentials.ReturnUrl : HomePage);
-		}
-
-		public async Task<IActionResult> SignOutAsync()
-		{
-			await HttpContext.SignOutAsync();
-			TempData["Success.Message"] = "Successfully signed out";
-			return Page();
 		}
 		
 		public class Credential
