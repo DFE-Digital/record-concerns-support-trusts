@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.Extensions
 			{
 				Password = redisCredentials?["password"],
 				EndPoints = {$"{redisCredentials["host"]}:{redisCredentials["port"]}"},
-				Ssl = Boolean.Parse(redisCredentials["tls_enabled"])
+				Ssl = redisCredentials["tls_enabled"] is { } && Boolean.Parse(redisCredentials["tls_enabled"])
 			};
 			var redisConnection = ConnectionMultiplexer.Connect(redisConfigurationOptions);
             

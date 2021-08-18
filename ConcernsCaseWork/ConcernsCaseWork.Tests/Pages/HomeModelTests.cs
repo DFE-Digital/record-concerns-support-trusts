@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Tests.Pages
 {
 	[Parallelizable(ParallelScope.All)]
-	public class IndexModelTests
+	public class HomeModelTests
 	{
 		[Test]
 		public async Task WhenInstanceOfIndexPageOnGetAsyncReturnCases()
