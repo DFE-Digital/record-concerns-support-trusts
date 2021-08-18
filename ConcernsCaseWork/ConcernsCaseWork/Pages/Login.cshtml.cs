@@ -10,7 +10,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Pages.Account
+namespace ConcernsCaseWork.Pages
 {
 	public class LoginModel : PageModel
 	{
@@ -76,6 +76,13 @@ namespace ConcernsCaseWork.Pages.Account
 			return Redirect(Url.IsLocalUrl(decodedUrl) ? Credentials.ReturnUrl : HomePage);
 		}
 
+		public async Task<IActionResult> SignOutAsync()
+		{
+			await HttpContext.SignOutAsync();
+			TempData["Success.Message"] = "Successfully signed out";
+			return Page();
+		}
+		
 		public class Credential
 		{
 			[Required]

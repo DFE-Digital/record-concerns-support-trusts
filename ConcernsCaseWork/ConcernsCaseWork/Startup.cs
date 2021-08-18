@@ -68,7 +68,7 @@ namespace ConcernsCaseWork
 			// Authentication
 			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 			{
-				options.LoginPath = "/account/login";
+				options.LoginPath = "/login";
 				options.Cookie.Name = ".ConcernsCasework.Login";
 				options.Cookie.HttpOnly = true;
 				options.Cookie.IsEssential = true;
