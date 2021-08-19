@@ -18,7 +18,7 @@ namespace ConcernsCaseWork.Extensions
 		public static void AddRedis(this IServiceCollection services, IConfiguration configuration)
 		{
 			// Check if we are running locally using user secrets
-			var redisLocal = configuration["redis:local"] is { };
+			var redisLocal = configuration["redis:local"] is { } && Boolean.Parse(configuration["redis:local"]);
 			string host;
 			string password;
 			string port;
@@ -61,7 +61,11 @@ namespace ConcernsCaseWork.Extensions
 			var redisConnection = ConnectionMultiplexer.Connect(redisConfigurationOptions);
             
 			services.AddStackExchangeRedisCache(
-				options => { options.ConfigurationOptions = redisConfigurationOptions; });
+				options =>
+				{
+					options.ConfigurationOptions = redisConfigurationOptions;
+					options.InstanceName = $"Redis-{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}";
+				});
 			services.AddDataProtection().PersistKeysToStackExchangeRedis(redisConnection, "DataProtectionKeys");
 		}
 

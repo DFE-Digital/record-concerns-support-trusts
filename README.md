@@ -49,13 +49,19 @@ dotnet user-secrets list
 Set a secret:
 dotnet user-secrets set "trams_api_endpoint" "secret_here"
 dotnet user-secrets set "trams_api_key" "secret_here"
-dotnet user-secrets set "username" "secret_here"
+dotnet user-secrets set "username" "secret_here" --> By default will use your USERNAME environment variable (printenv USERNAME)
 dotnet user-secrets set "password" "secret_here"
 dotnet user-secrets set "redis:local" "true"
 dotnet user-secrets set "redis:host" "secret_here"
 dotnet user-secrets set "redis:password" "secret_here"
 dotnet user-secrets set "redis:port" "secret_here"
 dotnet user-secrets set "redis:tls" "secret_here"
+
+Remove a secret:
+dotnet user-secrets remove "redis:local"
+
+Remove all secrets:
+dotnet user-secrets clear
 ```
 [Microsoft page](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1&tabs=windows)
 
@@ -173,7 +179,9 @@ cf set-space-role USERNAME ORGNAME SPACE ROLE --> Grant roles to user
 
 cf install-plugin conduit
 cf conduit amsd-casework-redis-dev --> Run Redis locally
+cf conduit amsd-casework-redis-dev -- redis-cli
 ```
+[Redis-CLI](https://redis.io/download)
 
 ## Terraform AWS S3 storage
 ***

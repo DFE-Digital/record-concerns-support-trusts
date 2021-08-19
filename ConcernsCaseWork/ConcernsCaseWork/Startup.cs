@@ -32,7 +32,8 @@ namespace ConcernsCaseWork
             }).AddViewOptions(options =>
             {
 				options.HtmlHelperOptions.ClientValidationEnabled = false;
-            });
+            }).AddSessionStateTempDataProvider();
+	        
             services.Configure<RazorViewEngineOptions>(options =>
             {
 	            options.PageViewLocationFormats.Add($"/Pages/Partials/{RazorViewEngine.ViewExtension}");
@@ -95,13 +96,14 @@ namespace ConcernsCaseWork
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            // Enable session for the application
+            app.UseSession();
+            
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
             
-            app.UseSession();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();

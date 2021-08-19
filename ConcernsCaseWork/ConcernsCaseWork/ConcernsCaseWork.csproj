@@ -226,10 +226,5 @@
     <ProjectReference Include="..\Service.Redis\Service.Redis.csproj" />
     <ProjectReference Include="..\Service.TRAMS\Service.TRAMS.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers" />
-    <Folder Include="Views" />
-  </ItemGroup>
 	
 </Project>
