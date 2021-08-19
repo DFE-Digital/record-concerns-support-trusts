@@ -138,7 +138,7 @@ jobs:
           TF_VAR_cf_password: ${{ secrets.CF_PASSWORD }}
           TF_VAR_cf_api_url: ${{ secrets.CF_API_URL }}
           TF_VAR_cf_app_image_tag: ${{ env.DOCKER_IMAGE_TAG }}
-          TF_VAR_trams_api_endpoint: ${{ secrets.TRAMS_API_ENDPOINT }}
-          TF_VAR_trams_api_key: ${{ secrets.TRAMS_API_KEY }}
+          TF_VAR_app_trams_api_endpoint: ${{ secrets.TRAMS_API_ENDPOINT }}
+          TF_VAR_app_trams_api_key: ${{ secrets.TRAMS_API_KEY }}
           TF_VAR_app_username: ${{ secrets.APP_USERNAME }}
           TF_VAR_app_password: ${{ secrets.APP_PASSWORD }}
