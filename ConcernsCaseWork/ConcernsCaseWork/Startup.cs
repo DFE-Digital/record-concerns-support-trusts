@@ -45,16 +45,16 @@ namespace ConcernsCaseWork
             // Redis
 			services.AddRedis(Configuration);
 			
-            // TRAMS API.
+            // TRAMS API
             services.AddTramsApi(Configuration);
             
-            // AutoMapper.
+            // AutoMapper
             services.AddAutoMapper(typeof(Startup));
             
-            // Route options.
+            // Route options
             services.Configure<RouteOptions>(options => { options.LowercaseUrls = true; });
             
-			// Internal Services
+			// Internal Service
 			services.AddInternalServices();
 			
 			// Session
