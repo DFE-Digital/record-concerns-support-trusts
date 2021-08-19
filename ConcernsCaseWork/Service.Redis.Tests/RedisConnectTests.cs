@@ -2,7 +2,7 @@ using NUnit.Framework;
 
 namespace Service.Redis.Tests
 {
-	public class Tests
+	public class RedisConnectTests
 	{
 		[SetUp]
 		public void Setup()
@@ -10,9 +10,9 @@ namespace Service.Redis.Tests
 		}
 
 		[Test]
-		public void Test1()
+		public void RedisConnectSuccessTest()
 		{
-			Assert.Pass();
+
 		}
 	}
 }
