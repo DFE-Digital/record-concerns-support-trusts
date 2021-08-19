@@ -23,7 +23,7 @@ namespace ConcernsCaseWork
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages(options =>
+	        services.AddRazorPages(options =>
             {
 	            options.Conventions.AddPageRoute("/home", "");
 	            options.Conventions.AddPageRoute("/notfound", "/error/404");

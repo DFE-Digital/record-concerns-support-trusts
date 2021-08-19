@@ -43,9 +43,19 @@ dotnet user-secrets init
 The preceding command adds a UserSecretsId element within a PropertyGroup of the project file. 
 By default, the inner text of UserSecretsId is a GUID. The inner text is arbitrary, but is unique to the project.
 
+List of secrets:
+dotnet user-secrets list
+
 Set a secret:
 dotnet user-secrets set "TRAMS_API_ENDPOINT" "secret_here"
 dotnet user-secrets set "TRAMS_API_KEY" "secret_here"
+dotnet user-secrets set "app_username" "secret_here"
+dotnet user-secrets set "app_password" "secret_here"
+dotnet user-secrets set "redis:local" "true"
+dotnet user-secrets set "redis:host" "secret_here"
+dotnet user-secrets set "redis:password" "secret_here"
+dotnet user-secrets set "redis:port" "secret_here"
+dotnet user-secrets set "redis:tls" "secret_here"
 ```
 [Microsoft page](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1&tabs=windows)
 
