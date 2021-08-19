@@ -47,8 +47,8 @@ List of secrets:
 dotnet user-secrets list
 
 Set a secret:
-dotnet user-secrets set "TRAMS_API_ENDPOINT" "secret_here"
-dotnet user-secrets set "TRAMS_API_KEY" "secret_here"
+dotnet user-secrets set "trams_api_endpoint" "secret_here"
+dotnet user-secrets set "trams_api_key" "secret_here"
 dotnet user-secrets set "app_username" "secret_here"
 dotnet user-secrets set "app_password" "secret_here"
 dotnet user-secrets set "redis:local" "true"

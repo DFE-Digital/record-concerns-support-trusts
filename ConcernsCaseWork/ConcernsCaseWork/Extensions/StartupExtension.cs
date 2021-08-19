@@ -73,8 +73,8 @@ namespace ConcernsCaseWork.Extensions
 		/// <exception cref="ConfigurationErrorsException"></exception>
 		public static void AddTramsApi(this IServiceCollection services, IConfiguration configuration)
 		{
-			var tramsApiEndpoint = configuration["TRAMS_API_ENDPOINT"];
-			var tramsApiKey = configuration["TRAMS_API_KEY"];
+			var tramsApiEndpoint = configuration["trams_api_endpoint"];
+			var tramsApiKey = configuration["trams_api_key"];
 			if (string.IsNullOrEmpty(tramsApiEndpoint) || string.IsNullOrEmpty(tramsApiKey)) 
 				throw new ConfigurationErrorsException("AddTramsApi::missing configuration");
 			
