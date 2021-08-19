@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using Service.Redis.Services;
 using Service.TRAMS.Cases;
 using StackExchange.Redis;
@@ -23,9 +24,13 @@ namespace ConcernsCaseWork.Extensions
 			if (redisCredentials is null) 
 				throw new ConfigurationErrorsException("AddRedis::redisCredentials::credentials");
 			
-			var redisConfigurationOptions = new ConfigurationOptions()
+			Log.Information($"Starting Redis Server Host - {redisCredentials["host"]}");
+			Log.Information($"Starting Redis Server Port - {redisCredentials["port"]}");
+			Log.Information($"Starting Redis Server TLS - {redisCredentials["tls_enabled"]}");
+			
+			var redisConfigurationOptions = new ConfigurationOptions
 			{
-				Password = redisCredentials?["password"],
+				Password = redisCredentials["password"],
 				EndPoints = {$"{redisCredentials["host"]}:{redisCredentials["port"]}"},
 				Ssl = redisCredentials["tls_enabled"] is { } && Boolean.Parse(redisCredentials["tls_enabled"])
 			};
