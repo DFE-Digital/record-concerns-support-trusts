@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Linq;
 using Serilog;
 using Service.Redis.Services;
 using Service.TRAMS.Cases;
@@ -16,23 +17,46 @@ namespace ConcernsCaseWork.Extensions
 	{
 		public static void AddRedis(this IServiceCollection services, IConfiguration configuration)
 		{
-			var vcapConfiguration = configuration.GetSection("VCAP_SERVICES:redis:0");
-			if (vcapConfiguration is null) 
-				throw new ConfigurationErrorsException("AddRedis::vcapConfiguration::redis:0");
-            
-			var redisCredentials = vcapConfiguration.GetSection("credentials");
-			if (redisCredentials is null) 
-				throw new ConfigurationErrorsException("AddRedis::redisCredentials::credentials");
+			// Check if we are running locally using user secrets
+			var redisLocal = configuration["redis:local"] is { };
+			string host;
+			string password;
+			string port;
+			bool tls;
 			
-			Log.Information($"Starting Redis Server Host - {redisCredentials["host"]}");
-			Log.Information($"Starting Redis Server Port - {redisCredentials["port"]}");
-			Log.Information($"Starting Redis Server TLS - {redisCredentials["tls_enabled"]}");
+			// Local feeds from user secrets configurations
+			if (redisLocal)
+			{
+				host = configuration["redis:host"];
+				password = configuration["redis:password"];
+				port = configuration["redis:port"];
+				tls = configuration["redis:tls"] is { } && Boolean.Parse(configuration["redis:tls"]);
+			}
+			else
+			{
+				var vcapConfiguration = JObject.Parse(configuration["VCAP_SERVICES"]);
+				if (vcapConfiguration is null) 
+					throw new ConfigurationErrorsException("AddRedis::VCAP_SERVICES missing");
+				
+				var redisCredentials = vcapConfiguration["redis"]?[0]?["credentials"];
+				if (redisCredentials is null) 
+					throw new ConfigurationErrorsException("AddRedis::redisCredentials missing");
+				
+				host = (string) redisCredentials["host"];
+				password = (string) redisCredentials["password"];
+				port = (string) redisCredentials["port"];
+				tls = (bool) redisCredentials["tls_enabled"];
+			}
+			
+			Log.Information($"Starting Redis Server Host - {host}");
+			Log.Information($"Starting Redis Server Port - {port}");
+			Log.Information($"Starting Redis Server TLS - {tls}");
 			
 			var redisConfigurationOptions = new ConfigurationOptions
 			{
-				Password = redisCredentials["password"],
-				EndPoints = {$"{redisCredentials["host"]}:{redisCredentials["port"]}"},
-				Ssl = redisCredentials["tls_enabled"] is { } && Boolean.Parse(redisCredentials["tls_enabled"])
+				Password = password,
+				EndPoints = {$"{host}:{port}"},
+				Ssl = tls
 			};
 			var redisConnection = ConnectionMultiplexer.Connect(redisConfigurationOptions);
             
