@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.Pages
 		{
 			Credentials.ReturnUrl = returnUrl ?? HomePage;
 			
-			if (Credentials.UserName != _configuration["app_username"] || Credentials.Password != _configuration["app_password"])
+			if (Credentials.UserName != _configuration["username"] || Credentials.Password != _configuration["password"])
 			{
 				_logger.LogInformation($"LoginModel::Invalid username or password - {Credentials.UserName}");
 				
