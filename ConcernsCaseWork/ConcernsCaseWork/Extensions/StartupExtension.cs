@@ -78,6 +78,8 @@ namespace ConcernsCaseWork.Extensions
 			if (string.IsNullOrEmpty(tramsApiEndpoint) || string.IsNullOrEmpty(tramsApiKey)) 
 				throw new ConfigurationErrorsException("AddTramsApi::missing configuration");
 			
+			Log.Information($"Starting Trams API Endpoint - {tramsApiEndpoint}");
+			
 			services.AddHttpClient("TramsClient", client =>
 			{
 				client.BaseAddress = new Uri(tramsApiEndpoint);

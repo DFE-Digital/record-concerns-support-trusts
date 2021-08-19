@@ -38,3 +38,23 @@ variable app_environment {
   type			= string
   description 	= "Application environment development, staging, production"
 }
+
+variable app_trams_api_endpoint {
+  type = string
+  description = "Application variable for the TRAMS API URL"
+}
+
+variable app_trams_api_key {
+  type = string
+  description = "Application variable for the TRAMS API Key"
+}
+
+variable app_username {
+  type = string
+  description = "Application variable for the username for the service"
+}
+
+variable app_password {
+  type = string
+  description = "Application variable for the password for the service"
+}
