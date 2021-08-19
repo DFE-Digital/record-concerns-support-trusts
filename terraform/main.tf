@@ -15,6 +15,10 @@
   environment = {
 	"ASPNETCORE_ENVIRONMENT" = local.app_name_suffix
 	"ASPNETCORE_URLS"        = local.cloudfoundry_app_urls
+	"TRAMS_API_ENDPOINT"     = var.app_trams_api_endpoint
+	"TRAMS_API_KEY"          = var.app_trams_api_key
+	"USERNAME"               = var.app_username
+	"PASSWORD"               = var.app_password
   }
 }
 
