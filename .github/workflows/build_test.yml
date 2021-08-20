@@ -13,14 +13,9 @@ jobs:
 
     steps:
       - name: Start Redis v${{ matrix.redis-version }}
-        uses: superchargejs/redis-github-action@1.1.0
+        uses: superchargejs/redis-github-action@1.2.0
         with:
           redis-version: ${{ matrix.redis-version }}
-      options: >-
-        --health-cmd "redis-cli ping"
-        --health-interval 10s
-        --health-timeout 5s
-        --health-retries 5
   
   build-test:
     needs: start-redis
