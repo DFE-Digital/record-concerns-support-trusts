@@ -5,29 +5,28 @@ on:
     branches: [ main ]
         
 jobs:
-  # Label of the runner job
-  runner-job:
-    # You must use a Linux environment when using service containers or container jobs
+  # Label of the container job
+  container-job:
+    # Containers must run in Linux based operating systems
     runs-on: ubuntu-latest
+    # Docker Hub image that `container-job` executes in
+    container: node:10.18-jessie
 
-    # Service containers to run with `runner-job`
+    # Service containers to run with `container-job`
     services:
       # Label used to access the service container
       redis:
-        # Docker image
-        image: redis:alpine
+        # Docker Hub image
+        image: redis
         # Set health checks to wait until redis has started
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        ports:
-          # Maps port 6379 on service container to the host
-          - 6379:6379
   
   build-test:
-    needs: runner-job
+    needs: container-job
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
