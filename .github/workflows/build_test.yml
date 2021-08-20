@@ -5,28 +5,24 @@ on:
     branches: [ main ]
         
 jobs:
-  # Label of the container job
-  container-job:
-    # Containers must run in Linux based operating systems
+  build-test:
     runs-on: ubuntu-latest
-    # Docker Hub image that `container-job` executes in
-    container: node:10.18-jessie
 
-    # Service containers to run with `container-job`
     services:
       # Label used to access the service container
       redis:
         # Docker Hub image
-        image: redis
+        image: redis:alpine
         # Set health checks to wait until redis has started
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-  
-  build-test:
-    runs-on: ubuntu-latest
+        ports:
+          # Maps port 6379 on service container to the host
+          - 6379:6379 
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
