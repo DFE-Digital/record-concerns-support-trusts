@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages
 {
-	[TestFixture]
+	[SetUpFixture]
 	public class LoginModelIntegrationTests
 	{
 		private WebAppFactory _factory;
