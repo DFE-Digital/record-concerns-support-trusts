@@ -9,7 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Factory
+namespace ConcernsCaseWork.Tests.Pages
 {
 	[TestFixture]
 	public class LoginModelIntegrationTests
