@@ -32,7 +32,8 @@ namespace ConcernsCaseWork
             }).AddViewOptions(options =>
             {
 				options.HtmlHelperOptions.ClientValidationEnabled = false;
-            });
+            }).AddSessionStateTempDataProvider();
+	        
             services.Configure<RazorViewEngineOptions>(options =>
             {
 	            options.PageViewLocationFormats.Add($"/Pages/Partials/{RazorViewEngine.ViewExtension}");
@@ -44,16 +45,16 @@ namespace ConcernsCaseWork
             // Redis
 			services.AddRedis(Configuration);
 			
-            // TRAMS API.
+            // TRAMS API
             services.AddTramsApi(Configuration);
             
-            // AutoMapper.
+            // AutoMapper
             services.AddAutoMapper(typeof(Startup));
             
-            // Route options.
+            // Route options
             services.Configure<RouteOptions>(options => { options.LowercaseUrls = true; });
             
-			// Internal Services
+			// Internal Service
 			services.AddInternalServices();
 			
 			// Session
@@ -95,13 +96,14 @@ namespace ConcernsCaseWork
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            // Enable session for the application
+            app.UseSession();
+            
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
             
-            app.UseSession();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
