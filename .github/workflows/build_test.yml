@@ -5,7 +5,21 @@ on:
     branches: [ main ]
         
 jobs:
+  start-redis:
+    runs-on: ubuntu-latest
+    container: node:10.18-jessie
+    
+    services: 
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+  
   build-test:
+    needs: start-redis
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -14,7 +28,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.301
+          dotnet-version: 3.1.x
       - name: Restore dependencies
         run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
       - name: Build

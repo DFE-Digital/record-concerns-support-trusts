@@ -15,6 +15,9 @@ namespace ConcernsCaseWork.Extensions
 {
 	public static class StartupExtension
 	{
+		private static readonly IRedisMultiplexer RedisMultiplexer = new RedisMultiplexer();
+		public static IRedisMultiplexer Implementation { private get; set; } = RedisMultiplexer;
+		
 		public static void AddRedis(this IServiceCollection services, IConfiguration configuration)
 		{
 			// Check if we are running locally using user secrets
@@ -24,21 +27,22 @@ namespace ConcernsCaseWork.Extensions
 			string port;
 			bool tls;
 			
-			// Local feeds from user secrets configurations
+			// Local feeds from user secrets, environment variables
 			if (redisLocal)
 			{
-				host = configuration["redis:host"];
-				password = configuration["redis:password"];
-				port = configuration["redis:port"];
+				host = configuration["redis:host"] ?? throw new ConfigurationErrorsException("AddRedis::Local Host missing");
+				password = configuration["redis:password"] ?? throw new ConfigurationErrorsException("AddRedis::Local Password missing");
+				port = configuration["redis:port"] ?? throw new ConfigurationErrorsException("AddRedis::Local Port missing");
 				tls = configuration["redis:tls"] is { } && Boolean.Parse(configuration["redis:tls"]);
 			}
 			else
 			{
-				var vcapConfiguration = JObject.Parse(configuration["VCAP_SERVICES"]);
-				if (vcapConfiguration is null) 
+				var vCapJson = configuration["VCAP_SERVICES"] ?? throw new ConfigurationErrorsException("AddRedis::VCAP_SERVICES missing");
+				var vCapConfiguration = JObject.Parse(vCapJson);
+				if (vCapConfiguration is null) 
 					throw new ConfigurationErrorsException("AddRedis::VCAP_SERVICES missing");
 				
-				var redisCredentials = vcapConfiguration["redis"]?[0]?["credentials"];
+				var redisCredentials = vCapConfiguration["redis"]?[0]?["credentials"];
 				if (redisCredentials is null) 
 					throw new ConfigurationErrorsException("AddRedis::redisCredentials missing");
 				
@@ -58,7 +62,7 @@ namespace ConcernsCaseWork.Extensions
 				EndPoints = {$"{host}:{port}"},
 				Ssl = tls
 			};
-			var redisConnection = ConnectionMultiplexer.Connect(redisConfigurationOptions);
+			var redisConnection = Implementation.Connect(redisConfigurationOptions);
             
 			services.AddStackExchangeRedisCache(
 				options =>

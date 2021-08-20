@@ -14,6 +14,8 @@ namespace ConcernsCaseWork.Tests.Pages
 	[TestFixture]
 	public class LoginModelIntegrationTests
 	{
+		/// Testing the class requires a running Redis,
+		/// because startup is configured to use Redis with session storage.
 		private WebAppFactory _factory;
 		private HttpClient _client;
 		
@@ -23,13 +25,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			_factory = new WebAppFactory(SetupConfiguration());
 			_client = _factory.CreateClient();
 		}
-
-		private static IConfigurationRoot SetupConfiguration()
-		{
-			var configuration = new Dictionary<string, string> { { "username", "username" }, { "password", "password" } };
-			return new ConfigurationBuilder().AddInMemoryCollection(configuration).Build();
-		}
-
+		
 		[OneTimeTearDown]
 		public void OneTimeTearDown()
 		{
@@ -44,6 +40,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			// extract cookies for http client
 			var login = await _client.GetAsync("/login");
+			Assert.That(login.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 			var foundCookie = login.Headers.TryGetValues("Set-Cookie", out IEnumerable<string> setCookie);
 			
 			// extract request verification token
@@ -83,6 +80,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			// extract cookies for http client
 			var login = await _client.GetAsync("/login");
+			Assert.That(login.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 			var foundCookie = login.Headers.TryGetValues("Set-Cookie", out IEnumerable<string> setCookie);
 			
 			// extract request verification token
@@ -113,6 +111,17 @@ namespace ConcernsCaseWork.Tests.Pages
 			// Logout
 			var logout = await _client.GetAsync("/logout");
 			Assert.That(logout.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+		}
+		
+		private static IConfigurationRoot SetupConfiguration()
+		{
+			var configuration = new Dictionary<string, string>
+			{
+				{ "username", "username" }, { "password", "password" },
+				{ "redis:local", "true" }, { "redis:host", "127.0.0.1" }, { "redis:password", "password" }, { "redis:port", "6379" },
+				{ "trams_api_endpoint", "localhost" }, { "trams_api_key", "123" }
+			};
+			return new ConfigurationBuilder().AddInMemoryCollection(configuration).Build();
 		}
 	}
 }
