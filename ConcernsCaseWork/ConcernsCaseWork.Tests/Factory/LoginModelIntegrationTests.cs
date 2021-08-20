@@ -9,9 +9,9 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages
+namespace ConcernsCaseWork.Tests.Factory
 {
-	[SetUpFixture]
+	[TestFixture]
 	public class LoginModelIntegrationTests
 	{
 		private WebAppFactory _factory;
