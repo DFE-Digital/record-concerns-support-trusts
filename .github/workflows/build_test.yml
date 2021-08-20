@@ -26,7 +26,6 @@ jobs:
           --health-retries 5
   
   build-test:
-    needs: container-job
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
