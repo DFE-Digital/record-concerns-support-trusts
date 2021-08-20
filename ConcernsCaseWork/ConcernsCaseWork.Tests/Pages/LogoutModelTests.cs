@@ -17,7 +17,14 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenRequestOnGetAsyncIsAuthenticated_ReturnLogoutPage()
 		{
 			// arrange
-			var pageModel = SetupLogoutModel(true);
+			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(true);
+
+			var pageModel = new LogoutModel
+			{
+				PageContext = pageContext,
+				TempData = tempData,
+				Url = new UrlHelper(actionContext)
+			};
 			
 			// act
 			var result = await pageModel.OnGetAsync();
@@ -26,18 +33,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.IsInstanceOf(typeof(PageResult), result);
 			Assert.That(pageModel.TempData.First().Key, Is.EqualTo("Message.UserName"));
 			Assert.That(pageModel.TempData.First().Value, Is.EqualTo(PageContextFactory.ClaimName));
-		}
-		
-		private static LogoutModel SetupLogoutModel(bool isAuthenticated = false)
-		{
-			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
-
-			return new LogoutModel
-			{
-				PageContext = pageContext,
-				TempData = tempData,
-				Url = new UrlHelper(actionContext)
-			};
 		}
 	}
 }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace ConcernsCaseWork.Tests.Factory
 {
-	internal class WebAppFactory : WebApplicationFactory<Startup>
+	public class WebAppFactory : WebApplicationFactory<Startup>
 	{
 		private IConfigurationRoot Configuration { get; }
 
