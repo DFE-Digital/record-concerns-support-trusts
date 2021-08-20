@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using ConcernsCaseWork.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Pages
 		private const string HomePage = "/home";
 
 		[BindProperty]
-		public Credential Credentials { get; set; } = new Credential{ ReturnUrl = HomePage};
+		public CredentialModel Credentials { get; set; } = new CredentialModel{ ReturnUrl = HomePage};
 
 		public LoginModel(IConfiguration configuration, ILogger<LoginModel> logger)
 		{
@@ -34,7 +34,7 @@ namespace ConcernsCaseWork.Pages
 				return Redirect(Credentials.ReturnUrl);
 			}
 				
-			Credentials.ReturnUrl = returnUrl;
+			Credentials.ReturnUrl = returnUrl ?? HomePage;
 
 			return Page();
 		}
@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.Pages
 		{
 			Credentials.ReturnUrl = returnUrl ?? HomePage;
 			
-			if (Credentials.UserName != _configuration["username"] || Credentials.Password != _configuration["password"])
+			if (Credentials.Validate() || Credentials.UserName != _configuration["username"] || Credentials.Password != _configuration["password"])
 			{
 				_logger.LogInformation($"LoginModel::Invalid username or password - {Credentials.UserName}");
 				
@@ -74,18 +74,6 @@ namespace ConcernsCaseWork.Pages
 			}
 
 			return Redirect(Url.IsLocalUrl(decodedUrl) ? Credentials.ReturnUrl : HomePage);
-		}
-		
-		public class Credential
-		{
-			[Required]
-			public string UserName { get; set; }
-			
-			[Required]
-			[DataType(DataType.Password)]
-			public string Password { get; set; }
-			
-			public string ReturnUrl { get; set; }
 		}
 	}
 }

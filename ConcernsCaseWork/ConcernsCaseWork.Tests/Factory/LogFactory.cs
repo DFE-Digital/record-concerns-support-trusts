@@ -2,7 +2,7 @@
 
 namespace ConcernsCaseWork.Tests.Factory
 {
-	public static class LogFactory
+	internal static class LogFactory
 	{
 		public static ILogger<T> CreateLog<T>()
 		{

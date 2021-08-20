@@ -8,7 +8,7 @@ namespace ConcernsCaseWork.Pages
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public class ErrorModel : PageModel
     {
-        public string RequestId { get; set; }
+        public string RequestId { get; private set; }
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
@@ -22,6 +22,7 @@ namespace ConcernsCaseWork.Pages
         public void OnGet()
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            _logger.LogInformation($"ErrorModel::Something went wrong - {RequestId}");
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Tests.Factory
 {
-	public static class CaseModelFactory
+	internal static class CaseModelFactory
 	{
 		public static List<CaseModel> CreateCaseModels()
 		{

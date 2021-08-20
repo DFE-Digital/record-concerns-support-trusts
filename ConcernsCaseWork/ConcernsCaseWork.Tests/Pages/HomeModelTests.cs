@@ -16,7 +16,7 @@ namespace ConcernsCaseWork.Tests.Pages
 	public class HomeModelTests
 	{
 		[Test]
-		public async Task WhenInstanceOfIndexPageOnGetAsyncReturnCases()
+		public async Task WhenInstanceOfIndexPageOnGetAsync_ReturnCases()
 		{
 			// arrange
 			var cases = CaseModelFactory.CreateCaseModels();
@@ -55,7 +55,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 
 		[Test]
-		public async Task WhenInstanceOfIndexPageOnGetAsyncReturnEmptyCases()
+		public async Task WhenInstanceOfIndexPageOnGetAsync_ReturnEmptyCases()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -82,7 +82,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		[Test]
-		public void WhenInstanceOfIndexPageCheckReturnRags()
+		public void WhenInstanceOfIndexPageCheck_ReturnRags()
 		{
 			// act
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -98,7 +98,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		[Test]
-		public void WhenInstanceOfIndexPageCheckReturnRagCss()
+		public void WhenInstanceOfIndexPageCheck_ReturnRagCss()
 		{
 			// act
 			var mockCaseModelService = new Mock<ICaseModelService>();
