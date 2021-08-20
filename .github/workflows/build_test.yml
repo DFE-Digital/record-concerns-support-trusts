@@ -7,15 +7,19 @@ on:
 jobs:
   start-redis:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        redis-version: [ 6 ]
-
     steps:
-      - name: Start Redis v${{ matrix.redis-version }}
-        uses: superchargejs/redis-github-action@1.2.0
+      - uses: actions/checkout@v2
+
+      - name: Setup redis
+        uses: supercharge/redis-github-action@1.2.0
         with:
-          redis-version: ${{ matrix.redis-version }}
+          redis-version: 6
+
+      - name: Install redis cli # so we can test the server
+        run: sudo apt-get install -y redis-tools
+
+      - name: Verify that redis is up
+        run: redis-cli ping
   
   build-test:
     needs: start-redis
