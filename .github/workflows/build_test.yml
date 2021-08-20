@@ -6,7 +6,7 @@ on:
         
 jobs:
   # Label of the runner job
-  start-redis:
+  runner-job:
     # You must use a Linux environment when using service containers or container jobs
     runs-on: ubuntu-latest
 
@@ -27,7 +27,7 @@ jobs:
           - 6379:6379
   
   build-test:
-    needs: start-redis
+    needs: runner-job
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
