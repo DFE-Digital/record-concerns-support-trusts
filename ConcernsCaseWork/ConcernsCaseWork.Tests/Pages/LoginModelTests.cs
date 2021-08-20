@@ -4,11 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,7 +33,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public void WhenRequestOnGetIsNotAuthenticated_ReturnLoginPage()
 		{
 			// arrange
-			var pageModel = SetupLoginModel(false);
+			var pageModel = SetupLoginModel();
 			
 			// act
 			var returnUrl = string.Empty;
@@ -92,18 +90,12 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<LoginModel>>();
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new LoginModel(SetupConfiguration(), mockLogger.Object)
+			return new LoginModel(ConfigurationFactory.LoginConfigurationBuilder(), mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
 				Url = new UrlHelper(actionContext)
 			};
-		}
-
-		private static IConfigurationRoot SetupConfiguration()
-		{
-			var configuration = new Dictionary<string, string> { { "username", "username" }, { "password", "password" } };
-			return new ConfigurationBuilder().AddInMemoryCollection(configuration).Build();
 		}
 	}
 }

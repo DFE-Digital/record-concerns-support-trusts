@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.Tests.Factory;
 using HtmlAgilityPack;
-using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -22,7 +21,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		[OneTimeSetUp]
 		public void OneTimeSetup()
 		{
-			_factory = new WebAppFactory(SetupConfiguration());
+			_factory = new WebAppFactory(ConfigurationFactory.LoginIntegrationConfigurationBuilder());
 			_client = _factory.CreateClient();
 		}
 		
@@ -55,7 +54,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			var body = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
 			{
-				new KeyValuePair<string, string>("username", Environment.GetEnvironmentVariable("username")),
+				new KeyValuePair<string, string>("username", "username"),
 				new KeyValuePair<string, string>("password", "password"),
 				new KeyValuePair<string, string>("__RequestVerificationToken", tokenValue)
 			});
@@ -95,8 +94,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			var body = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
 			{
-				new KeyValuePair<string, string>("username", "username"),
-				new KeyValuePair<string, string>("password", "password"),
+				new KeyValuePair<string, string>("username", "test"),
+				new KeyValuePair<string, string>("password", "test"),
 				new KeyValuePair<string, string>("__RequestVerificationToken", tokenValue)
 			});
 			
@@ -111,17 +110,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			// Logout
 			var logout = await _client.GetAsync("/logout");
 			Assert.That(logout.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-		}
-		
-		private static IConfigurationRoot SetupConfiguration()
-		{
-			var configuration = new Dictionary<string, string>
-			{
-				{ "username", "username" }, { "password", "password" },
-				{ "redis:local", "true" }, { "redis:host", "127.0.0.1" }, { "redis:password", "password" }, { "redis:port", "6379" },
-				{ "trams_api_endpoint", "localhost" }, { "trams_api_key", "123" }
-			};
-			return new ConfigurationBuilder().AddInMemoryCollection(configuration).Build();
 		}
 	}
 }

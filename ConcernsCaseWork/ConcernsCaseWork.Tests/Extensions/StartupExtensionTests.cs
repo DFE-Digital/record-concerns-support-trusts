@@ -75,7 +75,7 @@ namespace ConcernsCaseWork.Tests.Extensions
 		{
 			// arrange
 			var serviceCollection = new ServiceCollection();
-			var configDic = new Dictionary<string, string> { { "trams_api_endpoint", "localhost" }, { "trams_api_key", "123" } };
+			var configDic = new Dictionary<string, string> { { "trams:api_endpoint", "localhost" }, { "trams:api_key", "123" } };
 			var configuration = new ConfigurationBuilder().AddInMemoryCollection(configDic).Build();
 			
 			// act
