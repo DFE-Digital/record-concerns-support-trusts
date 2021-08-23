@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -27,6 +28,10 @@ namespace Service.Redis.Services
 
 		public async Task ClearCache(string key)
 		{
+			if (key == null)
+			{
+				throw new ArgumentNullException(nameof(key));
+			}
 			await _cache.RemoveAsync(key);
 		}
 	}
