@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Tests
+namespace Service.Redis.Tests.Services
 {
 	[Parallelizable(ParallelScope.All)]
 	public class CacheProviderTests

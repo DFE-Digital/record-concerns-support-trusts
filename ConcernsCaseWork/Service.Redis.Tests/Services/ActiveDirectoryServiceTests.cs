@@ -3,7 +3,7 @@ using Service.Redis.Models;
 using Service.Redis.Services;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Tests
+namespace Service.Redis.Tests.Services
 {
 	/// <summary>
 	/// TODO after integration with Azure AD update test.

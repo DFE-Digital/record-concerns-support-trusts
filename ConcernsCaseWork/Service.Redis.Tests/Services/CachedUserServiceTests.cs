@@ -4,7 +4,7 @@ using Service.Redis.Models;
 using Service.Redis.Services;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Tests
+namespace Service.Redis.Tests.Services
 {
 	[Parallelizable(ParallelScope.All)]
 	public class CachedUserServiceTests
