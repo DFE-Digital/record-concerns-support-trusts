@@ -47,18 +47,17 @@ List of secrets:
 dotnet user-secrets list
 
 Set a secret:
-dotnet user-secrets set "trams_api_endpoint" "secret_here"
-dotnet user-secrets set "trams_api_key" "secret_here"
-dotnet user-secrets set "username" "secret_here" --> By default will use your USERNAME environment variable (printenv USERNAME)
-dotnet user-secrets set "password" "secret_here"
-dotnet user-secrets set "redis:local" "true"
-dotnet user-secrets set "redis:host" "secret_here"
-dotnet user-secrets set "redis:password" "secret_here"
-dotnet user-secrets set "redis:port" "secret_here"
-dotnet user-secrets set "redis:tls" "secret_here"
+dotnet user-secrets set "trams:api_endpoint" "secret_here"
+dotnet user-secrets set "trams:api_key" "secret_here"
+dotnet user-secrets set "app:username" "username" --> By default will use your USERNAME environment variable (printenv USERNAME)
+dotnet user-secrets set "app:password" "secret_here"
+dotnet user-secrets set "VCAP_SERVICES:redis:0:credentials:host" "127.0.0.1"
+dotnet user-secrets set "VCAP_SERVICES:redis:0:credentials:password" "password"
+dotnet user-secrets set "VCAP_SERVICES:redis:0:credentials:port" "6379"
+dotnet user-secrets set "VCAP_SERVICES:redis:0:credentials:tls_enabled" "false"
 
 Remove a secret:
-dotnet user-secrets remove "redis:local"
+dotnet user-secrets remove "app:username"
 
 Remove all secrets:
 dotnet user-secrets clear

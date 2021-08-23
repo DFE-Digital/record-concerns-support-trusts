@@ -1,7 +1,6 @@
 ﻿using ConcernsCaseWork.Tests.Factory;
 using HtmlAgilityPack;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -21,7 +20,13 @@ namespace ConcernsCaseWork.Tests.Pages
 		[OneTimeSetUp]
 		public void OneTimeSetup()
 		{
-			_factory = new WebAppFactory(ConfigurationFactory.LoginIntegrationConfigurationBuilder());
+			var initialData = new Dictionary<string, string>
+			{
+				{ "app:username", "username" }, { "app:password", "password" },
+				{ "VCAP_SERVICES:redis:0:credentials:host", "127.0.0.1" }, { "VCAP_SERVICES:redis:0:credentials:password", "password" }, { "VCAP_SERVICES:redis:0:credentials:port", "6379" },
+				{ "trams:api_endpoint", "localhost" }, { "trams:api_key", "123" }
+			};
+			_factory = new WebAppFactory(ConfigurationFactory.ConfigurationBuilder(initialData));
 			_client = _factory.CreateClient();
 		}
 		

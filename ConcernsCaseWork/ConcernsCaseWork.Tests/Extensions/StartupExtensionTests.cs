@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Extensions;
-using Microsoft.Extensions.Configuration;
+using ConcernsCaseWork.Tests.Factory;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
@@ -13,36 +13,44 @@ namespace ConcernsCaseWork.Tests.Extensions
 	public class StartupExtensionTests
 	{
 		[Test]
-		public void WhenAddRedisLocal_MissingConfiguration_ThrowException()
+		public void WhenAddRedis_MissingConfiguration_ThrowException()
 		{
 			// arrange
 			var serviceCollection = new ServiceCollection();
-			var configDic = new Dictionary<string, string> { { "redis:local", "true" } };
-			var configuration = new ConfigurationBuilder().AddInMemoryCollection(configDic).Build();
+			var configuration = ConfigurationFactory.ConfigurationBuilder(new Dictionary<string, string>());
 			
 			// act
 			Assert.Throws<ConfigurationErrorsException>(() => serviceCollection.AddRedis(configuration));
 		}
 		
 		[Test]
-		public void WhenAddRedisLocal_MissingPartialConfiguration_ThrowException()
+		public void WhenAddRedis_MissingPartialConfiguration_ThrowException()
 		{
 			// arrange
 			var serviceCollection = new ServiceCollection();
-			var configDic = new Dictionary<string, string> { { "redis:local", "true" }, { "redis:host", "1234" }, { "redis:password", "password" } };
-			var configuration = new ConfigurationBuilder().AddInMemoryCollection(configDic).Build();
+			var initialData = new Dictionary<string, string>
+			{
+				{ "VCAP_SERVICES:redis:0:credentials:host", "1234" }, 
+				{ "VCAP_SERVICES:redis:0:credentials:password", "password" }
+			};
+			var configuration = ConfigurationFactory.ConfigurationBuilder(initialData);
 			
 			// act
 			Assert.Throws<ConfigurationErrorsException>(() => serviceCollection.AddRedis(configuration));
 		}
 		
 		[Test]
-		public void WhenAddRedisLocal_Configuration_Success()
+		public void WhenAddRedis_Configuration_Success()
 		{
 			// arrange
 			var serviceCollection = new ServiceCollection();
-			var configDic = new Dictionary<string, string> { { "redis:local", "true" }, { "redis:host", "127.0.0.1" }, { "redis:password", "password" }, { "redis:port", "1234" } };
-			var configuration = new ConfigurationBuilder().AddInMemoryCollection(configDic).Build();
+			var initialData = new Dictionary<string, string>
+			{
+				{ "VCAP_SERVICES:redis:0:credentials:host", "127.0.0.1" }, 
+				{ "VCAP_SERVICES:redis:0:credentials:password", "password" }, 
+				{ "VCAP_SERVICES:redis:0:credentials:port", "1234" }
+			};
+			var configuration = ConfigurationFactory.ConfigurationBuilder(initialData);
 
 			var mockConnectionMultiplexer = new Mock<IConnectionMultiplexer>();
 			var mockMultiplexer = new Mock<IRedisMultiplexer>();
@@ -64,7 +72,7 @@ namespace ConcernsCaseWork.Tests.Extensions
 		{
 			// arrange
 			var serviceCollection = new ServiceCollection();
-			var configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string>()).Build();
+			var configuration = ConfigurationFactory.ConfigurationBuilder(new Dictionary<string, string>());
 			
 			// act
 			Assert.Throws<ConfigurationErrorsException>(() => serviceCollection.AddTramsApi(configuration));
@@ -75,8 +83,8 @@ namespace ConcernsCaseWork.Tests.Extensions
 		{
 			// arrange
 			var serviceCollection = new ServiceCollection();
-			var configDic = new Dictionary<string, string> { { "trams:api_endpoint", "localhost" }, { "trams:api_key", "123" } };
-			var configuration = new ConfigurationBuilder().AddInMemoryCollection(configDic).Build();
+			var initialData = new Dictionary<string, string> { { "trams:api_endpoint", "localhost" }, { "trams:api_key", "123" } };
+			var configuration = ConfigurationFactory.ConfigurationBuilder(initialData);
 			
 			// act
 			serviceCollection.AddTramsApi(configuration);
