@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -90,7 +91,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<LoginModel>>();
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new LoginModel(ConfigurationFactory.LoginConfigurationBuilder(), mockLogger.Object)
+			var initialData = new Dictionary<string, string> { { "app:username", "username" }, { "app:password", "password" } };
+			return new LoginModel(ConfigurationFactory.ConfigurationBuilder(initialData), mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
