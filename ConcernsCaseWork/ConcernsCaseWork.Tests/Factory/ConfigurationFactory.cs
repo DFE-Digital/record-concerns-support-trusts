@@ -9,5 +9,10 @@ namespace ConcernsCaseWork.Tests.Factory
 		{
 			return new ConfigurationBuilder().AddInMemoryCollection(initialData).Build();
 		}
+		
+		public static IConfigurationRoot ConfigurationUserSecretsBuilder()
+		{
+			return new ConfigurationBuilder().AddUserSecrets<Startup>().Build();
+		}
 	}
 }
