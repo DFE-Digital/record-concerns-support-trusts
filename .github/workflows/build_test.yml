@@ -45,6 +45,6 @@ jobs:
       - name: Test
         run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity diagnostic
         env: 
-          "VCAP_SERVICES" : ${{ secrets.VCAP_SERVICES }}
-          "trams:api_endpoint" : ${{ secrets.TRAMS_API_ENDPOINT }}
-          "trams:api_key" : ${{ secrets.TRAMS_API_KEY }}
+          "VCAP_SERVICES" : ${{ env.VCAP_SERVICES }}
+          "trams:api_endpoint" : ${{ env.TRAMS_API_ENDPOINT }}
+          "trams:api_key" : ${{ env.TRAMS_API_KEY }}
