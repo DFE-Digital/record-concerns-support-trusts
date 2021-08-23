@@ -12,6 +12,7 @@ env:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    environment: dev
     
     services:
       # Label used to access the service container
