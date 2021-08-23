@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.Extensions
 				var password = (string)redisCredentials["password"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials::password missing");
 				var host = (string)redisCredentials["host"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials::host missing");
 				var port = (string)redisCredentials["port"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials::port missing");
-				var tls = redisCredentials["tls_enabled"] is null && (bool)redisCredentials["tls_enabled"];
+				var tls = (bool)redisCredentials["tls_enabled"];
 
 				Log.Information($"Starting Redis Server Host - {host}");
 				Log.Information($"Starting Redis Server Port - {port}");
