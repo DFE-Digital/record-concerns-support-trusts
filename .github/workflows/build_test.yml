@@ -37,3 +37,5 @@ jobs:
         run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
       - name: Test
         run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity diagnostic
+        env: 
+          "VCAP_SERVICES" : ${{ secrets.VCAP_SERVICES }}
