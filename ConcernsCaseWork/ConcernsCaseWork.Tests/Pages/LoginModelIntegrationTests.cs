@@ -20,13 +20,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		[OneTimeSetUp]
 		public void OneTimeSetup()
 		{
-			var initialData = new Dictionary<string, string>
-			{
-				{ "app:username", "username" }, { "app:password", "password" },
-				{ "VCAP_SERVICES:redis:0:credentials:host", "127.0.0.1" }, { "VCAP_SERVICES:redis:0:credentials:password", "password" }, { "VCAP_SERVICES:redis:0:credentials:port", "6379" },
-				{ "trams:api_endpoint", "localhost" }, { "trams:api_key", "123" }
-			};
-			_factory = new WebAppFactory(ConfigurationFactory.ConfigurationBuilder(initialData));
+			_factory = new WebAppFactory(ConfigurationFactory.ConfigurationUserSecretsBuilder());
 			_client = _factory.CreateClient();
 		}
 		
@@ -56,11 +50,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			// http client headers
 			_client.DefaultRequestHeaders.Clear();
 			_client.DefaultRequestHeaders.Add("Cookie", foundCookie ? setCookie : Enumerable.Empty<string>());
+
+			var configuration = ConfigurationFactory.ConfigurationUserSecretsBuilder();
 			
 			var body = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
 			{
-				new KeyValuePair<string, string>("username", "username"),
-				new KeyValuePair<string, string>("password", "password"),
+				new KeyValuePair<string, string>("username", configuration["app:username"]),
+				new KeyValuePair<string, string>("password", configuration["app:password"]),
 				new KeyValuePair<string, string>("__RequestVerificationToken", tokenValue)
 			});
 			

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Linq;
 using Serilog;
 using Service.Redis.Services;
 using Service.TRAMS.Cases;
@@ -19,31 +20,36 @@ namespace ConcernsCaseWork.Extensions
 		
 		public static void AddRedis(this IServiceCollection services, IConfiguration configuration)
 		{
-			var redisCredential = configuration.GetSection("VCAP_SERVICES:redis:0") ?? throw new ConfigurationErrorsException("AddRedis::VCAP_SERVICES missing");
-			var host = redisCredential["credentials:host"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials Host missing");
-			var password = redisCredential["credentials:password"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials Password missing");
-			var port = redisCredential["credentials:port"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials Port missing");
-			var tls = redisCredential["credentials:tls_enabled"] is { } && Boolean.Parse(redisCredential["credentials:tls_enabled"]);
-			
-			Log.Information($"Starting Redis Server Host - {host}");
-			Log.Information($"Starting Redis Server Port - {port}");
-			Log.Information($"Starting Redis Server TLS - {tls}");
-			
-			var redisConfigurationOptions = new ConfigurationOptions
+			try
 			{
-				Password = password,
-				EndPoints = {$"{host}:{port}"},
-				Ssl = tls
-			};
-			var redisConnection = Implementation.Connect(redisConfigurationOptions);
-            
-			services.AddStackExchangeRedisCache(
-				options =>
-				{
-					options.ConfigurationOptions = redisConfigurationOptions;
-					options.InstanceName = $"Redis-{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}";
-				});
-			services.AddDataProtection().PersistKeysToStackExchangeRedis(redisConnection, "DataProtectionKeys");
+				var vCapConfiguration = JObject.Parse(configuration["VCAP_SERVICES"]) ?? throw new ConfigurationErrorsException("AddRedis::VCAP_SERVICES missing");
+				var redisCredentials = vCapConfiguration["redis"]?[0]?["credentials"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials missing");
+				var password = (string)redisCredentials["password"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials::password missing");
+				var host = (string)redisCredentials["host"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials::host missing");
+				var port = (string)redisCredentials["port"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials::port missing");
+				var tls = redisCredentials["tls_enabled"] is null && (bool)redisCredentials["tls_enabled"];
+
+				Log.Information($"Starting Redis Server Host - {host}");
+				Log.Information($"Starting Redis Server Port - {port}");
+				Log.Information($"Starting Redis Server TLS - {tls}");
+
+				var redisConfigurationOptions = new ConfigurationOptions { Password = password, EndPoints = { $"{host}:{port}" }, Ssl = tls };
+				var redisConnection = Implementation.Connect(redisConfigurationOptions);
+
+				services.AddStackExchangeRedisCache(
+					options =>
+					{
+						options.ConfigurationOptions = redisConfigurationOptions;
+						options.InstanceName = $"Redis-{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}";
+					});
+				services.AddDataProtection().PersistKeysToStackExchangeRedis(redisConnection, "DataProtectionKeys");
+			}
+			catch (Exception ex)
+			{
+				var errorMessage = $"AddRedis::Exception::{ex.Message}";
+				Log.Error(errorMessage);
+				throw new ConfigurationErrorsException(errorMessage);
+			}
 		}
 
 		/// <summary>
