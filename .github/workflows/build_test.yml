@@ -35,7 +35,11 @@ jobs:
         run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
       - name: Build
         run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
+      - name: Set environment variables
+        run: |
+          echo "VCAP_SERVICES=${{ secrets.VCAP_SERVICES }}" >> $GITHUB_ENV
+      
       - name: Test
         run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity diagnostic
         env: 
-          "VCAP_SERVICES" : ${{ secrets.VCAP_SERVICES }}
+          "VCAP_SERVICES" : ${{ env.VCAP_SERVICES }}
