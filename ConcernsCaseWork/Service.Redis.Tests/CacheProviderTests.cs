@@ -112,7 +112,7 @@ namespace Service.Redis.Tests
 		}
 		
 		[Test]
-		public async Task WhenClearCacheKeyIsNull_IsFailure()
+		public void WhenClearCacheKeyIsNull_IsFailure()
 		{
 			// arrange
 			var mockCache = new Mock<IDistributedCache>();
