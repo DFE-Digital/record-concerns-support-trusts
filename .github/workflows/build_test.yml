@@ -37,9 +37,9 @@ jobs:
         run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
       - name: Set environment variables
         run: |
-          echo "VCAP_SERVICES=${{ secrets.VCAP_SERVICES }}" >> $GITHUB_ENV
-          echo "TRAMS_API_ENDPOINT=${{ secrets.TRAMS_API_ENDPOINT }}" >> $GITHUB_ENV
-          echo "TRAMS_API_KEY=${{ secrets.TRAMS_API_KEY }}" >> $GITHUB_ENV
+          echo "VCAP_SERVICES=$secrets.VCAP_SERVICES" >> $GITHUB_ENV
+          echo "TRAMS_API_ENDPOINT=$secrets.TRAMS_API_ENDPOINT" >> $GITHUB_ENV
+          echo "TRAMS_API_KEY=$secrets.TRAMS_API_KEY" >> $GITHUB_ENV
       
       - name: Test
         run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity diagnostic
