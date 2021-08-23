@@ -40,6 +40,14 @@ jobs:
         run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
       - name: Build
         run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
+      - name: Set User secrets
+        run: |
+          cd ConcernsCaseWork/ConcernsCaseWork
+          dotnet user-secrets set "VCAP_SERVICES" "${{ secrets.VCAP_SERVICES }}"
+          dotnet user-secrets set "trams:api_endpoint" "${{ secrets.TRAMS_API_ENDPOINT }}"
+          dotnet user-secrets set "trams:api_key" "${{ secrets.TRAMS_API_KEY }}"
+          dotnet user-secrets set "app:username" "${{ secrets.APP_USERNAME }}"
+          dotnet user-secrets set "app:password" "${{ secrets.APP_PASSWORD }}"
       - name: Test
         run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity diagnostic
   

@@ -49,7 +49,7 @@ dotnet user-secrets list
 Set a secret:
 dotnet user-secrets set "trams:api_endpoint" "secret_here"
 dotnet user-secrets set "trams:api_key" "secret_here"
-dotnet user-secrets set "app:username" "username" --> By default will use your USERNAME environment variable (printenv USERNAME)
+dotnet user-secrets set "app:username" "secret_here" --> By default will use your USERNAME environment variable (printenv USERNAME)
 dotnet user-secrets set "app:password" "secret_here"
 dotnet user-secrets set "VCAP_SERVICES" "{'redis': [{'credentials': {'host': '127.0.0.1','password': 'password','port': '6379','tls_enabled': 'false'}}]}"
 

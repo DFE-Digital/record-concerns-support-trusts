@@ -50,11 +50,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			// http client headers
 			_client.DefaultRequestHeaders.Clear();
 			_client.DefaultRequestHeaders.Add("Cookie", foundCookie ? setCookie : Enumerable.Empty<string>());
+
+			var configuration = ConfigurationFactory.ConfigurationUserSecretsBuilder();
 			
 			var body = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
 			{
-				new KeyValuePair<string, string>("username", "username"),
-				new KeyValuePair<string, string>("password", "password"),
+				new KeyValuePair<string, string>("username", configuration["app:username"]),
+				new KeyValuePair<string, string>("password", configuration["app:password"]),
 				new KeyValuePair<string, string>("__RequestVerificationToken", tokenValue)
 			});
 			

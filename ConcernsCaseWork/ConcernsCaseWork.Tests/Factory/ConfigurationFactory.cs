@@ -7,7 +7,7 @@ namespace ConcernsCaseWork.Tests.Factory
 	{
 		public static IConfigurationRoot ConfigurationBuilder(Dictionary<string, string> initialData)
 		{
-			return new ConfigurationBuilder().AddInMemoryCollection(initialData).AddEnvironmentVariables().Build();
+			return new ConfigurationBuilder().AddInMemoryCollection(initialData).Build();
 		}
 		
 		public static IConfigurationRoot ConfigurationUserSecretsBuilder()
