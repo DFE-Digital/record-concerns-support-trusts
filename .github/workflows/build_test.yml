@@ -38,8 +38,12 @@ jobs:
       - name: Set environment variables
         run: |
           echo "VCAP_SERVICES=${{ secrets.VCAP_SERVICES }}" >> $GITHUB_ENV
+          echo "TRAMS_API_ENDPOINT=${{ secrets.TRAMS_API_ENDPOINT }}" >> $GITHUB_ENV
+          echo "TRAMS_API_KEY=${{ secrets.TRAMS_API_KEY }}" >> $GITHUB_ENV
       
       - name: Test
         run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity diagnostic
         env: 
           "VCAP_SERVICES" : ${{ env.VCAP_SERVICES }}
+          "trams:api_endpoint" : ${{ env.TRAMS_API_ENDPOINT }}
+          "trams:api_key" : ${{ env.TRAMS_API_KEY }}
