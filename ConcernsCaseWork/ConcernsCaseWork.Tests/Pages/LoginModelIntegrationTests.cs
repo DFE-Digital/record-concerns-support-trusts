@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Tests.Factory;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +15,16 @@ namespace ConcernsCaseWork.Tests.Pages
 	{
 		/// Testing the class requires a running Redis,
 		/// because startup is configured to use Redis with session storage.
+		private IConfigurationRoot _configuration;
 		private WebAppFactory _factory;
 		private HttpClient _client;
+		
 		
 		[OneTimeSetUp]
 		public void OneTimeSetup()
 		{
-			_factory = new WebAppFactory(ConfigurationFactory.ConfigurationUserSecretsBuilder());
+			_configuration = ConfigurationFactory.ConfigurationUserSecretsBuilder();
+			_factory = new WebAppFactory(_configuration);
 			_client = _factory.CreateClient();
 		}
 		
@@ -50,13 +54,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			// http client headers
 			_client.DefaultRequestHeaders.Clear();
 			_client.DefaultRequestHeaders.Add("Cookie", foundCookie ? setCookie : Enumerable.Empty<string>());
-
-			var configuration = ConfigurationFactory.ConfigurationUserSecretsBuilder();
 			
 			var body = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
 			{
-				new KeyValuePair<string, string>("username", configuration["app:username"]),
-				new KeyValuePair<string, string>("password", configuration["app:password"]),
+				new KeyValuePair<string, string>("username", _configuration["app:username"]),
+				new KeyValuePair<string, string>("password", _configuration["app:password"]),
 				new KeyValuePair<string, string>("__RequestVerificationToken", tokenValue)
 			});
 			
