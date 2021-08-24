@@ -15,7 +15,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ConcernsCaseWork.Base.Tests\ConcernsCaseWork.Base.Tests.csproj" />
+      <ProjectReference Include="..\ConcernsCaseWork.Shared.Tests\ConcernsCaseWork.Shared.Tests.csproj" />
+      <ProjectReference Include="..\Service.TRAMS\Service.TRAMS.csproj" />
     </ItemGroup>
 
 </Project>

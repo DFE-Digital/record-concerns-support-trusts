@@ -1,11 +1,11 @@
 ﻿using Service.TRAMS.Models;
 using System.Collections.Generic;
 
-namespace ConcernsCaseWork.Tests.Factory
+namespace ConcernsCaseWork.Shared.Tests.Factory
 {
-	internal static class CaseDtoFactory
+	public static class CaseDtoFactory
 	{
-		public static List<CaseDto> CreateCaseModels()
+		public static List<CaseDto> CreateListCaseDto()
 		{
 			return new List<CaseDto>
 			{

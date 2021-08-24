@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
 			
-			var casesDto = CaseDtoFactory.CreateCaseModels();
+			var casesDto = CaseDtoFactory.CreateListCaseDto();
 			
 			// act
 			var casesModel = mapper.Map<IList<CaseModel>>(casesDto);

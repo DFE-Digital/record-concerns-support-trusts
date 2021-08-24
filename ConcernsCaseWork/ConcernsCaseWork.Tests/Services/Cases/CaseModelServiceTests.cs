@@ -2,7 +2,7 @@
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
-			var casesDto = CaseDtoFactory.CreateCaseModels();
+			var casesDto = CaseDtoFactory.CreateListCaseDto();
 
 			mockCaseService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>())).ReturnsAsync(casesDto);
 

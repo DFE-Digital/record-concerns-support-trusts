@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 
-namespace ConcernsCaseWork.Tests.Factory
+namespace ConcernsCaseWork.Shared.Tests.Factory
 {
-	internal static class ConfigurationFactory
+	public static class ConfigurationFactory
 	{
 		public static IConfigurationRoot ConfigurationBuilder(Dictionary<string, string> initialData)
 		{
