@@ -7,15 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="HtmlAgilityPack" Version="1.11.36" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.18" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
-        <PackageReference Include="Moq" Version="4.16.1" />
         <PackageReference Include="NUnit" Version="3.13.1" />
         <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
         <PackageReference Include="coverlet.collector" Version="3.0.2" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ConcernsCaseWork\ConcernsCaseWork.csproj" />
       <ProjectReference Include="..\Service.Redis\Service.Redis.csproj" />
+      <ProjectReference Include="..\Service.TRAMS\Service.TRAMS.csproj" />
     </ItemGroup>
-	
+
 </Project>

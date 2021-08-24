@@ -1,18 +1,17 @@
-﻿using Newtonsoft.Json;
+﻿using Service.TRAMS.Base;
 using Service.TRAMS.Models;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.Cases
 {
-	public sealed class CaseService : ICaseService
+	public sealed class CaseService : AbstractService, ICaseService
 	{
-		private readonly IHttpClientFactory _clientFactory;
-		
-		public CaseService(IHttpClientFactory clientFactory)
+		public CaseService(IHttpClientFactory clientFactory) : base(clientFactory)
 		{
-			_clientFactory = clientFactory;
+			
 		}
 		
 		public async Task<IEnumerable<CaseDto>> GetCasesByCaseworker(string caseworker)
@@ -22,7 +21,7 @@ namespace Service.TRAMS.Cases
 				"https://api.github.com/repos/dotnet/AspNetCore.Docs/branches");
 			
 			// Create http client
-			var client = _clientFactory.CreateClient("TramsClient");
+			var client = ClientFactory.CreateClient("TramsClient");
 			
 			// Execute request
 			var response = await client.SendAsync(request);
@@ -42,7 +41,7 @@ namespace Service.TRAMS.Cases
 			}
 			
 			var content = await response.Content.ReadAsStringAsync();
-			return JsonConvert.DeserializeObject<IEnumerable<CaseDto>>(content);
+			return JsonSerializer.Deserialize<IEnumerable<CaseDto>>(content);
 		}
 	}
 }

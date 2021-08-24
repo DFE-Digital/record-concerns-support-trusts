@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;

@@ -27,13 +27,17 @@ AMSD - Academies & Maintained Schools Directorate
 RDD - Regional Delivery Directorate
 ```
 
-## Login
+## Local Setup
+
+### Docker Redis
 ***
 ```
-Request login credentials within the team.
+Running web application locally will need a Docker redis instance runnning.
+docker run -p 6379:6379 --name redis -d redis
+redis://user:password@localhost:6379
 ```
 
-## Enable secret storage
+### Secret storage
 ***
 ```
 Secret storage is used only for local development avoiding adding secure properties
@@ -60,6 +64,41 @@ Remove all secrets:
 dotnet user-secrets clear
 ```
 [Microsoft page](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1&tabs=windows)
+
+### Docker SQLServer
+***
+```
+Based on the GitHub username configured to access TRAMS API repository, a few steps are required to
+download the docker image from Container registry.
+1. Docker installed on local machine
+2. Authentication with ghcr.io
+	1.1. Create a PAT (personal access token) https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token
+	1.2. Run command - $ echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
+		 > Login Succeeded
+3. Open docker container, should see a image running on port 1443, click on it, will open a log window, on the middle right top there is a button "inspect"
+	click on it and will display the MSSQL_USER and MSSQL_SA_PASSWORD
+4. Install SSMS or Azure Data Studio and Login using the credentials from step 3
+```
+
+### Docker Application Image
+***
+```
+Testing docker image locally,
+1. Check Docker running
+2. Build image from command line
+	2.1 docker build . -t amsd-casework
+3. Verify image produced
+	3.1 docker images
+4. Run docker image
+	4.1 docker run -e -p 8080:80
+5. Browse localhost:8080
+```
+
+## Login
+***
+```
+Request login credentials within the team.
+```
 
 ## Create razor pages
 ***
@@ -101,43 +140,6 @@ For integration with TRAMS API a member of the team will make available an API k
 Include header 'ApiKey' with the service key provided by TRAMS team.
 ```
 [GitHub Repository](https://github.com/DFE-Digital/trams-data-api)
-
-## Docker SQLServer
-***
-```
-Based on the GitHub username configured to access TRAMS API repository, a few steps are required to
-download the docker image from Container registry.
-1. Docker installed on local machine
-2. Authentication with ghcr.io
-	1.1. Create a PAT (personal access token) https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token
-	1.2. Run command - $ echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
-		 > Login Succeeded
-3. Open docker container, should see a image running on port 1443, click on it, will open a log window, on the middle right top there is a button "inspect"
-	click on it and will display the MSSQL_USER and MSSQL_SA_PASSWORD
-4. Install SSMS or Azure Data Studio and Login using the credentials from step 3
-```
-
-### Docker Application Image
-***
-```
-Testing docker image locally,
-1. Check Docker running
-2. Build image from command line
-	2.1 docker build . -t amsd-casework
-3. Verify image produced
-	3.1 docker images
-4. Run docker image
-	4.1 docker run -e -p 8080:80
-5. Browse localhost:8080
-```
-
-### Docker Redis
-***
-```
-Running web application locally will need a Docker redis instance runnning.
-docker run -p 6379:6379 --name redis -d redis
-redis://user:password@localhost:6379
-```
 
 ## PaaS Account
 ***

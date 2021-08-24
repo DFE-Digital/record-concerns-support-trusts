@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using Serilog;
 using Service.Redis.Services;
 using Service.TRAMS.Cases;
+using Service.TRAMS.Trusts;
 using StackExchange.Redis;
 using System;
 using System.Configuration;
@@ -80,6 +81,7 @@ namespace ConcernsCaseWork.Extensions
 			// Cases service model and external TRAMS.
 			services.AddSingleton<ICaseModelService, CaseModelService>();
 			services.AddSingleton<ICaseService, CaseService>();
+			services.AddSingleton<ITrustService, TrustService>();
 			
 			// Redis service model
 			services.AddTransient<ICacheProvider, CacheProvider>();

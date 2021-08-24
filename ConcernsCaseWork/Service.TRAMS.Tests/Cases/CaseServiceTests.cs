@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace Service.TRAMS.Tests
+namespace Service.TRAMS.Tests.Cases
 {
 	[Parallelizable(ParallelScope.All)]
 	public class CaseServiceTests

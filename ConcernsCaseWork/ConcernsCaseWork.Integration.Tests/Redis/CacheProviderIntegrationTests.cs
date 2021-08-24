@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Tests.Services
+namespace ConcernsCaseWork.Integration.Tests.Redis
 {
 	[Parallelizable(ParallelScope.All)]
 	public class CacheProviderIntegrationTests
