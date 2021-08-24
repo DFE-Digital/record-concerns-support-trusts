@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 
-namespace ConcernsCaseWork.Tests.Factory
+namespace ConcernsCaseWork.Integration.Tests.Factory
 {
 	public class WebAppFactory : WebApplicationFactory<Startup>
 	{

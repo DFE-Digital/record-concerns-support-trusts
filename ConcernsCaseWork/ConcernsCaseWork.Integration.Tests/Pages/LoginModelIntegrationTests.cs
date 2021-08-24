@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Tests.Factory;
+﻿using ConcernsCaseWork.Integration.Tests.Factory;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
@@ -8,17 +8,16 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages
+namespace ConcernsCaseWork.Integration.Tests.Pages
 {
 	[TestFixture]
 	public class LoginModelIntegrationTests
 	{
 		/// Testing the class requires a running Redis,
-		/// because startup is configured to use Redis with session storage.
+		/// startup is configured to use Redis with session storage.
 		private IConfigurationRoot _configuration;
 		private WebAppFactory _factory;
 		private HttpClient _client;
-		
 		
 		[OneTimeSetUp]
 		public void OneTimeSetup()

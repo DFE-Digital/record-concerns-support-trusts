@@ -56,6 +56,7 @@ namespace ConcernsCaseWork.Pages
 				return Page();
 			}
 
+			// TODO move code to security package
 			var claims = new List<Claim>
 			{
 				new Claim(ClaimTypes.Name, Credentials.UserName)
