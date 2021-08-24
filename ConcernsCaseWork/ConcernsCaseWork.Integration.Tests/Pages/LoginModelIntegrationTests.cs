@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;

@@ -1,10 +1,9 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using Service.TRAMS.Models;
 using Service.TRAMS.Trusts;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -41,9 +40,8 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			var trustsPage = await trustService.GetTrustsByPagination();
 
 			// assert
-			IEnumerable<TrustDto> trustDtos = trustsPage.ToList();
-			Assert.That(trustDtos, Is.Not.Null);
-			Assert.That(trustDtos.Count(), Is.EqualTo(10));
+			Assert.That(trustsPage, Is.Not.Null);
+			Assert.That(trustsPage.Count(), Is.EqualTo(10));
 		}
 	}
 }
