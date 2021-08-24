@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using Service.TRAMS.Base;
+﻿using Service.TRAMS.Base;
 using Service.TRAMS.Models;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.Cases
@@ -41,7 +41,7 @@ namespace Service.TRAMS.Cases
 			}
 			
 			var content = await response.Content.ReadAsStringAsync();
-			return JsonConvert.DeserializeObject<IEnumerable<CaseDto>>(content);
+			return JsonSerializer.Deserialize<IEnumerable<CaseDto>>(content);
 		}
 	}
 }

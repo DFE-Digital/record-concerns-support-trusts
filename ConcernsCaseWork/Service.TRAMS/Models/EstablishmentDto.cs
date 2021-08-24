@@ -1,28 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Service.TRAMS.Models
 {
-	/// <summary>
-	/// TODO missing mappings from the real response.
-	/// </summary>
 	public sealed class EstablishmentDto
 	{
-		public AddressDto Address { get; }
-		public NameAndCodeDto AdministrativeWard { get; }
-		public NameAndCodeDto AdmissionsPolicy { get; }
-		public NameAndCodeDto Boarders { get; }
-		public string BoardingEstablishment { get; }
-		public string Ccf { get; }
-
+		public string Urn { get; }
+		public string Name { get; }
+		public string UkPrn { get; }
+		
 		[JsonConstructor]
-		public EstablishmentDto(AddressDto address, NameAndCodeDto administrativeWard, NameAndCodeDto admissionsPolicy, NameAndCodeDto boarders, string boardingEstablishment, string ccf)
+		public EstablishmentDto(string urn, string name, string ukprn)
 		{
-			Address = address;
-			AdministrativeWard = administrativeWard;
-			AdmissionsPolicy = admissionsPolicy;
-			Boarders = boarders;
-			BoardingEstablishment = boardingEstablishment;
-			Ccf = ccf;
+			Urn = urn;
+			Name = name;
+			UkPrn = ukprn;
 		}
 	}
 }

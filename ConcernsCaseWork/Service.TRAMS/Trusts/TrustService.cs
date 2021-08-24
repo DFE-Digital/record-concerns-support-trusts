@@ -4,6 +4,7 @@ using Service.TRAMS.Models;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Service.TRAMS.Trusts
 {
@@ -18,6 +19,7 @@ namespace Service.TRAMS.Trusts
 		
 		public async Task<IEnumerable<TrustDto>> GetTrustsByPagination(int page)
 		{
+			
 			// TODO create TrustPagination options class
 			
 			// Create a request
@@ -30,8 +32,13 @@ namespace Service.TRAMS.Trusts
 			// Execute request
 			var response = await client.SendAsync(request);
 
+			response.EnsureSuccessStatusCode();
 
-			return null;
+			var content = await response.Content.ReadAsStringAsync();
+
+			var trusts = JsonSerializer.Deserialize<IEnumerable<TrustDto>>(content);
+			
+			return trusts;
 		}
 	}
 }
