@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
 using Service.TRAMS.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -17,28 +20,39 @@ namespace Service.TRAMS.Trusts
 			_logger = logger;
 		}
 		
-		public async Task<IEnumerable<TrustDto>> GetTrustsByPagination(int page)
+		public async Task<IEnumerable<TrustDto>> GetTrustsByPagination(int page = 1)
 		{
-			
-			// TODO create TrustPagination options class
-			
-			// Create a request
-			// groupName=acer&ukprn=TR01414&companiesHouseNumber=09591931&
-			using var request = new HttpRequestMessage(HttpMethod.Get, $"/trusts?page={page}");
-			
-			// Create http client
-			var client = ClientFactory.CreateClient("TramsClient");
+			try
+			{
+				_logger.LogInformation("TrustService::GetTrustsByPagination");
+
+				// Create a request
+				using var request = new HttpRequestMessage(HttpMethod.Get, $"/trusts?page={page}");
 				
-			// Execute request
-			var response = await client.SendAsync(request);
+				// Create http client
+				var client = ClientFactory.CreateClient(HttpClientName);
+					
+				// Execute request
+				var response = await client.SendAsync(request);
 
-			response.EnsureSuccessStatusCode();
+				// Check status code
+				response.EnsureSuccessStatusCode();
 
-			var content = await response.Content.ReadAsStringAsync();
+				// Read response content
+				var content = await response.Content.ReadAsStringAsync();
 
-			var trusts = JsonSerializer.Deserialize<IEnumerable<TrustDto>>(content);
+				// Deserialize content to POJO
+				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+				var trusts = JsonSerializer.Deserialize<IEnumerable<TrustDto>>(content, options);
+				
+				return trusts;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"TrustService::GetTrustsByPagination::Exception message::{ex.Message}");
+			}
 			
-			return trusts;
+			return Enumerable.Empty<TrustDto>();
 		}
 	}
 }

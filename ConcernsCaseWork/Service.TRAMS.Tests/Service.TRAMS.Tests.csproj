@@ -18,8 +18,4 @@
       <ProjectReference Include="..\ConcernsCaseWork.Base.Tests\ConcernsCaseWork.Base.Tests.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Trusts" />
-    </ItemGroup>
-
 </Project>
