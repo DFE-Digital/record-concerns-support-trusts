@@ -6,6 +6,6 @@ namespace Service.TRAMS.Trusts
 {
 	public interface ITrustService
 	{
-		Task<IEnumerable<TrustDto>> GetTrustsByPagination(int page = 1);
+		Task<IList<TrustDto>> GetTrustsByPagination(int page = 1);
 	}
 }

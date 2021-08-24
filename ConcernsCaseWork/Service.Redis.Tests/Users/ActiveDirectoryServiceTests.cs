@@ -1,9 +1,9 @@
 ﻿using NUnit.Framework;
 using Service.Redis.Models;
-using Service.Redis.Services;
+using Service.Redis.Users;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Tests.Services
+namespace Service.Redis.Tests.Users
 {
 	/// <summary>
 	/// TODO after integration with Azure AD update test.

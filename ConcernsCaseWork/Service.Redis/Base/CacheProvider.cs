@@ -3,17 +3,23 @@ using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Services
+namespace Service.Redis.Base
 {
 	public sealed class CacheProvider : ICacheProvider
 	{
 		private readonly IDistributedCache _cache;
+		private const int CacheTimeToLive = 120;
 
 		public CacheProvider(IDistributedCache cache)
 		{
 			_cache = cache;
 		}
-		
+
+		int ICacheProvider.CacheTimeToLive()
+		{
+			return CacheTimeToLive;
+		}
+
 		public async Task<T> GetFromCache<T>(string key) where T : class
 		{
 			var cachedUsers = await _cache.GetStringAsync(key);

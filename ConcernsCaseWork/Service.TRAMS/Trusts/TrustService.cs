@@ -3,7 +3,6 @@ using Service.TRAMS.Base;
 using Service.TRAMS.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -20,7 +19,7 @@ namespace Service.TRAMS.Trusts
 			_logger = logger;
 		}
 		
-		public async Task<IEnumerable<TrustDto>> GetTrustsByPagination(int page = 1)
+		public async Task<IList<TrustDto>> GetTrustsByPagination(int page = 1)
 		{
 			try
 			{
@@ -43,7 +42,7 @@ namespace Service.TRAMS.Trusts
 
 				// Deserialize content to POJO
 				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var trusts = JsonSerializer.Deserialize<IEnumerable<TrustDto>>(content, options);
+				var trusts = JsonSerializer.Deserialize<IList<TrustDto>>(content, options);
 				
 				return trusts;
 			}
@@ -51,8 +50,8 @@ namespace Service.TRAMS.Trusts
 			{
 				_logger.LogError($"TrustService::GetTrustsByPagination::Exception message::{ex.Message}");
 			}
-			
-			return Enumerable.Empty<TrustDto>();
+
+			return Array.Empty<TrustDto>();
 		}
 	}
 }

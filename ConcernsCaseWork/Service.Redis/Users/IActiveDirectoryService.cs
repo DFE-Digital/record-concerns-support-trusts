@@ -1,7 +1,7 @@
 ﻿using Service.Redis.Models;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Services
+namespace Service.Redis.Users
 {
 	public interface IActiveDirectoryService
 	{

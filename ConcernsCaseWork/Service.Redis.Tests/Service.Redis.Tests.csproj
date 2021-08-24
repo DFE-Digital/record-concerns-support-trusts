@@ -17,5 +17,9 @@
     <ItemGroup>
       <ProjectReference Include="..\Service.Redis\Service.Redis.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Trusts" />
+    </ItemGroup>
 	
 </Project>

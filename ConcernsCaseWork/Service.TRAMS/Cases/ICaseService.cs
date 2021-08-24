@@ -7,6 +7,6 @@ namespace Service.TRAMS.Cases
 	public interface ICaseService
 	{
 		// TODO - for example only...
-		Task<IEnumerable<CaseDto>> GetCasesByCaseworker(string caseworker);
+		Task<IList<CaseDto>> GetCasesByCaseworker(string caseworker);
 	}
 }

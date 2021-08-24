@@ -3,11 +3,8 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
-using Service.TRAMS.Models;
 using Service.TRAMS.Trusts;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -48,11 +45,10 @@ namespace Service.TRAMS.Tests.Trusts
 			var trusts = await trustService.GetTrustsByPagination();
 
 			// assert
-			IEnumerable<TrustDto> trustDtos = trusts.ToList();
-			Assert.That(trustDtos, Is.Not.Null);
-			Assert.That(trustDtos.Count(), Is.EqualTo(expectedTrusts.Count));
+			Assert.That(trusts, Is.Not.Null);
+			Assert.That(trusts.Count, Is.EqualTo(expectedTrusts.Count));
 
-			foreach (var trust in trustDtos)
+			foreach (var trust in trusts)
 			{
 				foreach (var expectedTrust in expectedTrusts)
 				{
@@ -102,9 +98,8 @@ namespace Service.TRAMS.Tests.Trusts
 			var trusts = await trustService.GetTrustsByPagination();
 
 			// assert
-			IEnumerable<TrustDto> trustDtos = trusts.ToList();
-			Assert.That(trustDtos, Is.Not.Null);
-			Assert.That(trustDtos.Count(), Is.EqualTo(0));
+			Assert.That(trusts, Is.Not.Null);
+			Assert.That(trusts.Count, Is.EqualTo(0));
 		}
 	}
 }

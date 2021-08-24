@@ -1,15 +1,15 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
 using NUnit.Framework;
+using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.Redis.Services;
 using System;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Tests.Services
+namespace Service.Redis.Tests.Base
 {
 	[Parallelizable(ParallelScope.All)]
 	public class CacheProviderTests

@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
+using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.Redis.Services;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;

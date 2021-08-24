@@ -1,13 +1,14 @@
 ﻿using Moq;
 using NUnit.Framework;
+using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.Redis.Services;
+using Service.Redis.Users;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Tests.Services
+namespace Service.Redis.Tests.Users
 {
 	[Parallelizable(ParallelScope.All)]
-	public class CachedUserServiceTests
+	public class UserCachedServiceTests
 	{
 		[Test]
 		public async Task WhenGetUserAsyncFromCache_IsSuccessful()
@@ -15,7 +16,7 @@ namespace Service.Redis.Tests.Services
 			// arrange
 			var mockActiveDirectoryService = new Mock<IActiveDirectoryService>();
 			var mockCacheProvider = new Mock<ICacheProvider>();
-			var cachedUserService = new CachedUserService(mockActiveDirectoryService.Object, mockCacheProvider.Object);
+			var cachedUserService = new UserCachedService(mockActiveDirectoryService.Object, mockCacheProvider.Object);
 			var userClaims = new UserClaims
 			{
 				Email = "test@email.com", 
@@ -42,7 +43,7 @@ namespace Service.Redis.Tests.Services
 			// arrange
 			var mockActiveDirectoryService = new Mock<IActiveDirectoryService>();
 			var mockCacheProvider = new Mock<ICacheProvider>();
-			var cachedUserService = new CachedUserService(mockActiveDirectoryService.Object, mockCacheProvider.Object);
+			var cachedUserService = new UserCachedService(mockActiveDirectoryService.Object, mockCacheProvider.Object);
 			var userClaims = new UserClaims
 			{
 				Email = "test@email.com", 
@@ -52,6 +53,7 @@ namespace Service.Redis.Tests.Services
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<UserClaims>(It.IsAny<string>())).
 				Returns(Task.FromResult<UserClaims>(null));
+			mockCacheProvider.Setup(c => c.CacheTimeToLive()).Returns(120);
 
 			mockActiveDirectoryService.Setup(ad => ad.GetUserAsync(It.IsAny<UserCredentials>())).
 				Returns(Task.FromResult(userClaims));
@@ -72,7 +74,7 @@ namespace Service.Redis.Tests.Services
 			// arrange
 			var mockActiveDirectoryService = new Mock<IActiveDirectoryService>();
 			var mockCacheProvider = new Mock<ICacheProvider>();
-			var cachedUserService = new CachedUserService(mockActiveDirectoryService.Object, mockCacheProvider.Object);
+			var cachedUserService = new UserCachedService(mockActiveDirectoryService.Object, mockCacheProvider.Object);
 			var userCredentials = new UserCredentials("test@email.com", "password");
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<UserClaims>(It.IsAny<string>())).
