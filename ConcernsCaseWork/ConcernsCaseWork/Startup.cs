@@ -39,6 +39,9 @@ namespace ConcernsCaseWork
 	            options.PageViewLocationFormats.Add($"/Pages/Partials/{RazorViewEngine.ViewExtension}");
             });
             
+            // Configuration options
+            services.AddConfigurationOptions(Configuration);
+            
             // Azure AD
             // TODO
             

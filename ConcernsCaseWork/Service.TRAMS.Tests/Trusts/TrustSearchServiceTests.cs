@@ -67,7 +67,6 @@ namespace Service.TRAMS.Tests.Trusts
 			var mockLogger = new Mock<ILogger<TrustSearchService>>();
 
 			var expectedTrusts = TrustDtoFactory.CreateListTrustDto();
-			IList<TrustDto> emptyList = Array.Empty<TrustDto>();
 
 			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>()))
 				.Returns(Task.FromResult(expectedTrusts))

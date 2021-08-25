@@ -5,14 +5,19 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class ConfigurationFactory
 	{
-		public static IConfigurationRoot ConfigurationBuilder(Dictionary<string, string> initialData)
+		public static IConfigurationBuilder ConfigurationInMemoryBuilder(this IConfigurationBuilder configurationBuilder, Dictionary<string, string> initialData)
 		{
-			return new ConfigurationBuilder().AddInMemoryCollection(initialData).Build();
+			return configurationBuilder.AddInMemoryCollection(initialData);
 		}
 		
-		public static IConfigurationRoot ConfigurationUserSecretsBuilder()
+		public static IConfigurationBuilder ConfigurationUserSecretsBuilder(this IConfigurationBuilder configurationBuilder)
 		{
-			return new ConfigurationBuilder().AddUserSecrets<Startup>().Build();
+			return configurationBuilder.AddUserSecrets<Startup>();
+		}
+		
+		public static IConfigurationBuilder ConfigurationJsonFile(this IConfigurationBuilder configurationBuilder)
+		{
+			return configurationBuilder.AddJsonFile("appsettings.json");
 		}
 	}
 }

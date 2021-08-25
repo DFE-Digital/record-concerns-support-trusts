@@ -1,7 +1,9 @@
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
+using Service.Redis.Configuration;
 using Service.Redis.Models;
 using System;
 using System.Text;
@@ -19,7 +21,7 @@ namespace Service.Redis.Tests.Base
 		{
 			// arrange
 			var mockCache = new Mock<IDistributedCache>();
-			var cacheProvider = new CacheProvider(mockCache.Object);
+			var mockIOptionsCache = new Mock<IOptions<CacheOptions>>();
 			var userClaims = new UserClaims
 			{
 				Email = "test@email.com", 
@@ -27,9 +29,12 @@ namespace Service.Redis.Tests.Base
 			};
 			var userClaimsSerialize = JsonSerializer.Serialize(userClaims);
 
+			mockIOptionsCache.Setup(o => o.Value).Returns(new CacheOptions { TimeToLive = 120});
 			mockCache.Setup(c => c.GetAsync(It.IsAny<string>(), CancellationToken.None)).
 				Returns(Task.FromResult(Encoding.UTF8.GetBytes(userClaimsSerialize)));
 
+			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
+			
 			// act
 			var cachedUser = await cacheProvider.GetFromCache<UserClaims>(userClaims.Email);
 
@@ -45,11 +50,14 @@ namespace Service.Redis.Tests.Base
 		{
 			// arrange
 			var mockCache = new Mock<IDistributedCache>();
-			var cacheProvider = new CacheProvider(mockCache.Object);
-			
+			var mockIOptionsCache = new Mock<IOptions<CacheOptions>>();
+
+			mockIOptionsCache.Setup(o => o.Value).Returns(new CacheOptions { TimeToLive = 120});
 			mockCache.Setup(c => c.GetAsync(It.IsAny<string>(), CancellationToken.None)).
 				Returns(Task.FromResult<byte[]>(null));
 
+			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
+			
 			// act
 			var cachedUser = await cacheProvider.GetFromCache<UserClaims>("test@email.com");
 
@@ -63,7 +71,7 @@ namespace Service.Redis.Tests.Base
 			// arrange
 			const int cacheTimeToLive = 120;
 			var mockCache = new Mock<IDistributedCache>();
-			var cacheProvider = new CacheProvider(mockCache.Object);
+			var mockIOptionsCache = new Mock<IOptions<CacheOptions>>();
 			var userClaims = new UserClaims
 			{
 				Email = "test@email.com", 
@@ -73,9 +81,12 @@ namespace Service.Redis.Tests.Base
 			var cacheEntryOptions = new DistributedCacheEntryOptions()
 				.SetSlidingExpiration(TimeSpan.FromSeconds(cacheTimeToLive));
 			
+			mockIOptionsCache.Setup(o => o.Value).Returns(new CacheOptions { TimeToLive = cacheTimeToLive});
 			mockCache.Setup(c => 
 					c.SetAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<DistributedCacheEntryOptions>(), CancellationToken.None)).
 				Returns(Task.FromResult<object>(null));
+			
+			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
 			
 			// act
 			await cacheProvider.SetCache(userClaims.Email, userClaims, cacheEntryOptions);
@@ -87,10 +98,13 @@ namespace Service.Redis.Tests.Base
 			// arrange
 			const int cacheTimeToLive = 120;
 			var mockCache = new Mock<IDistributedCache>();
-			var cacheProvider = new CacheProvider(mockCache.Object);
-
+			var mockIOptionsCache = new Mock<IOptions<CacheOptions>>();
+			
+			mockIOptionsCache.Setup(o => o.Value).Returns(new CacheOptions { TimeToLive = cacheTimeToLive});
 			var cacheEntryOptions = new DistributedCacheEntryOptions()
 				.SetSlidingExpiration(TimeSpan.FromSeconds(cacheTimeToLive));
+			
+			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
 			
 			// act, assert
 			Assert.ThrowsAsync<ArgumentNullException>(() => cacheProvider.SetCache(null, default(object), cacheEntryOptions));
@@ -101,11 +115,14 @@ namespace Service.Redis.Tests.Base
 		{
 			// arrange
 			var mockCache = new Mock<IDistributedCache>();
-			var cacheProvider = new CacheProvider(mockCache.Object);
+			var mockIOptionsCache = new Mock<IOptions<CacheOptions>>();
 			
+			mockIOptionsCache.Setup(o => o.Value).Returns(new CacheOptions { TimeToLive = 120});
 			mockCache.Setup(c => 
 					c.RemoveAsync(It.IsAny<string>(), CancellationToken.None)).
 				Returns(Task.FromResult<object>(null));
+			
+			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
 			
 			// act
 			await cacheProvider.ClearCache("test@email.com");
@@ -116,11 +133,14 @@ namespace Service.Redis.Tests.Base
 		{
 			// arrange
 			var mockCache = new Mock<IDistributedCache>();
-			var cacheProvider = new CacheProvider(mockCache.Object);
+			var mockIOptionsCache = new Mock<IOptions<CacheOptions>>();
 			
+			mockIOptionsCache.Setup(o => o.Value).Returns(new CacheOptions { TimeToLive = 120});
 			mockCache.Setup(c => 
 					c.RemoveAsync(It.IsAny<string>(), CancellationToken.None)).
 				Returns(Task.FromResult<object>(null));
+			
+			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
 			
 			// act
 			Assert.ThrowsAsync<ArgumentNullException>(() => cacheProvider.ClearCache(null));
@@ -129,8 +149,14 @@ namespace Service.Redis.Tests.Base
 		[Test]
 		public void WhenCacheTimeToLive_ReturnDefaultTTL()
 		{
+			// arrange
+			var mockCache = new Mock<IDistributedCache>();
+			var mockIOptionsCache = new Mock<IOptions<CacheOptions>>();
+			
+			mockIOptionsCache.Setup(o => o.Value).Returns(new CacheOptions { TimeToLive = 120});
+			
 			// act
-			var cacheProvider = new CacheProvider(null);
+			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
 			var cacheTtl = cacheProvider.CacheTimeToLive();
 
 			// assert
