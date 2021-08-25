@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Service.TRAMS.Trusts
@@ -19,14 +20,14 @@ namespace Service.TRAMS.Trusts
 			_logger = logger;
 		}
 		
-		public async Task<IList<TrustDto>> GetTrustsByPagination(int page = 1)
+		public async Task<IList<TrustDto>> GetTrustsByPagination(TrustSearch trustSearch)
 		{
 			try
 			{
 				_logger.LogInformation("TrustService::GetTrustsByPagination");
 
 				// Create a request
-				using var request = new HttpRequestMessage(HttpMethod.Get, $"/trusts?page={page}");
+				using var request = new HttpRequestMessage(HttpMethod.Get, BuildRequestUri(trustSearch));
 				
 				// Create http client
 				var client = ClientFactory.CreateClient(HttpClientName);
@@ -52,6 +53,32 @@ namespace Service.TRAMS.Trusts
 			}
 
 			return Array.Empty<TrustDto>();
+		}
+
+		/// <summary>
+		/// TramsAPI doesn't support Url encode.
+		/// HttpUtility.UrlEncode(queryParams.ToString())
+		/// </summary>
+		/// <param name="trustSearch"></param>
+		/// <returns></returns>
+		public string BuildRequestUri(TrustSearch trustSearch)
+		{
+			var queryParams = HttpUtility.ParseQueryString(string.Empty);
+			if (!string.IsNullOrEmpty(trustSearch.GroupName))
+			{
+				queryParams.Add("groupName", trustSearch.GroupName);
+			}
+			if (!string.IsNullOrEmpty(trustSearch.Ukprn))
+			{
+				queryParams.Add("ukprn", trustSearch.Ukprn);
+			}
+			if (!string.IsNullOrEmpty(trustSearch.CompaniesHouseNumber))
+			{
+				queryParams.Add("companiesHouseNumber", trustSearch.CompaniesHouseNumber);
+			}
+			queryParams.Add("page", trustSearch.Page.ToString());
+			
+			return $"/trusts?{queryParams}";
 		}
 	}
 }

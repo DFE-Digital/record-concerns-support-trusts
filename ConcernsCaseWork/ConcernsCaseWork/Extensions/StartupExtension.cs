@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using Service.Redis.Base;
-using Service.Redis.Trusts;
 using Service.Redis.Users;
 using Service.TRAMS.Cases;
 using Service.TRAMS.Trusts;
@@ -86,12 +85,12 @@ namespace ConcernsCaseWork.Extensions
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
 			services.AddSingleton<ITrustService, TrustService>();
+			services.AddSingleton<ITrustSearchService, TrustSearchService>();
 			
 			// Redis services
 			services.AddTransient<ICacheProvider, CacheProvider>();
 			services.AddTransient<IActiveDirectoryService, ActiveDirectoryService>();
 			services.AddTransient<IUserCachedService, UserCachedService>();
-			services.AddTransient<ITrustCachedService, TrustCachedService>();
 		}
 	}
 }
