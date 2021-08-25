@@ -125,5 +125,16 @@ namespace Service.Redis.Tests.Base
 			// act
 			Assert.ThrowsAsync<ArgumentNullException>(() => cacheProvider.ClearCache(null));
 		}
+
+		[Test]
+		public void WhenCacheTimeToLive_ReturnDefaultTTL()
+		{
+			// act
+			var cacheProvider = new CacheProvider(null);
+			var cacheTtl = cacheProvider.CacheTimeToLive();
+
+			// assert
+			Assert.That(cacheTtl, Is.EqualTo(120));
+		}
 	}
 }

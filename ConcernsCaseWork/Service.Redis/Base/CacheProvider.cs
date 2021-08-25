@@ -8,16 +8,16 @@ namespace Service.Redis.Base
 	public sealed class CacheProvider : ICacheProvider
 	{
 		private readonly IDistributedCache _cache;
-		private const int CacheTimeToLive = 120;
+		private const int CacheTtl = 120;
 
 		public CacheProvider(IDistributedCache cache)
 		{
 			_cache = cache;
 		}
 
-		int ICacheProvider.CacheTimeToLive()
+		public int CacheTimeToLive()
 		{
-			return CacheTimeToLive;
+			return CacheTtl;
 		}
 
 		public async Task<T> GetFromCache<T>(string key) where T : class

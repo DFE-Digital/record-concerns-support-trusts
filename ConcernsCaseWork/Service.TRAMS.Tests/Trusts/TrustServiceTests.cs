@@ -107,18 +107,18 @@ namespace Service.TRAMS.Tests.Trusts
 		[TestCase("", "ukprn", "", "/trusts?ukprn=ukprn&page=1")]
 		[TestCase("", "", "companieshousenumber", "/trusts?companiesHouseNumber=companieshousenumber&page=1")]
 		[TestCase("groupname", "ukprn", "", "/trusts?groupName=groupname&ukprn=ukprn&page=1")]
-		public void WhenBuildRequestUri_ReturnsUrlEncoded(string groupName, string ukprn, string companiesHouseNumber, string expectedRequestEncodedUri)
+		public void WhenBuildRequestUri_ReturnsRequestUrl(string groupName, string ukprn, string companiesHouseNumber, string expectedRequestUri)
 		{
 			// arrange
 			var trustService = new TrustService(null, null);
 			var trustSearch = TrustSearchFactory.CreateTrustSearch(groupName, ukprn, companiesHouseNumber);
 
 			// act
-			var requestEncodedUri = trustService.BuildRequestUri(trustSearch);
+			var requestUri = trustService.BuildRequestUri(trustSearch);
 
 			// assert
-			Assert.That(requestEncodedUri, Is.Not.Null);
-			Assert.That(requestEncodedUri, Is.EqualTo(expectedRequestEncodedUri));
+			Assert.That(requestUri, Is.Not.Null);
+			Assert.That(requestUri, Is.EqualTo(expectedRequestUri));
 		}
 	}
 }
