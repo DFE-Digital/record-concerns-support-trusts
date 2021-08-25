@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
+﻿using ConcernsCaseWork.Shared.Tests.Factory;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
-using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.Redis.Services;
 using StackExchange.Redis;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Integration.Tests.Redis
@@ -19,19 +19,17 @@ namespace ConcernsCaseWork.Integration.Tests.Redis
 		{
 			// arrange
 			const int cacheTimeToLive = 120;
-			var initialData = new Dictionary<string, string>
-			{
-				{ "VCAP_SERVICES:redis:0:credentials:host", "127.0.0.1" }, 
-				{ "VCAP_SERVICES:redis:0:credentials:password", "password" }, 
-				{ "VCAP_SERVICES:redis:0:credentials:port", "6379" }
-			};
+			var configuration = ConfigurationFactory.ConfigurationUserSecretsBuilder();
 			
-			var configuration = new ConfigurationBuilder().AddInMemoryCollection(initialData).Build();
-			var redisCredential = configuration.GetSection("VCAP_SERVICES:redis:0");
-			var host = redisCredential["credentials:host"];
-			var password = redisCredential["credentials:password"];
-			var port = redisCredential["credentials:port"];
-			var tls = redisCredential["credentials:tls_enabled"] is { } && Boolean.Parse(redisCredential["credentials:tls_enabled"]);
+			var vCapConfiguration = JObject.Parse(configuration["VCAP_SERVICES"]);
+			var redisCredentials = vCapConfiguration["redis"]?[0]?["credentials"];
+			
+			Assert.NotNull(redisCredentials);
+			
+			var password = (string)redisCredentials["password"];
+			var host = (string)redisCredentials["host"];
+			var port = (string)redisCredentials["port"];
+			var tls = (bool)redisCredentials["tls_enabled"];
 
 			var redisConfigurationOptions = new ConfigurationOptions
 			{

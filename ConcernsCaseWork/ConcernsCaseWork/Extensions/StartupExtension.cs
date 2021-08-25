@@ -4,7 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using Serilog;
-using Service.Redis.Services;
+using Service.Redis.Base;
+using Service.Redis.Users;
 using Service.TRAMS.Cases;
 using Service.TRAMS.Trusts;
 using StackExchange.Redis;
@@ -78,15 +79,18 @@ namespace ConcernsCaseWork.Extensions
 
 		public static void AddInternalServices(this IServiceCollection services)
 		{
-			// Cases service model and external TRAMS.
+			// Web application services
 			services.AddSingleton<ICaseModelService, CaseModelService>();
+			
+			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
 			services.AddSingleton<ITrustService, TrustService>();
+			services.AddSingleton<ITrustSearchService, TrustSearchService>();
 			
-			// Redis service model
+			// Redis services
 			services.AddTransient<ICacheProvider, CacheProvider>();
 			services.AddTransient<IActiveDirectoryService, ActiveDirectoryService>();
-			services.AddTransient<ICachedUserService, CachedUserService>();
+			services.AddTransient<IUserCachedService, UserCachedService>();
 		}
 	}
 }

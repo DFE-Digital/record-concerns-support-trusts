@@ -1,17 +1,17 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using Service.Redis.Base;
 using Service.Redis.Models;
 using System;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Services
+namespace Service.Redis.Users
 {
-	public sealed class CachedUserService : ICachedUserService
+	public sealed class UserCachedService : IUserCachedService
 	{
-		private const int CacheTimeToLive = 120;
 		private readonly IActiveDirectoryService _activeDirectoryService;
 		private readonly ICacheProvider _cacheProvider;
 		
-		public CachedUserService(IActiveDirectoryService activeDirectoryService, ICacheProvider cacheProvider)
+		public UserCachedService(IActiveDirectoryService activeDirectoryService, ICacheProvider cacheProvider)
 		{
 			_activeDirectoryService = activeDirectoryService;
 			_cacheProvider = cacheProvider;
@@ -28,10 +28,12 @@ namespace Service.Redis.Services
 			if (userClaims != null) return userClaims;
 
 			userClaims = await _activeDirectoryService.GetUserAsync(userCredentials);
+
+			if (userClaims == null) return null;
 			
 			var cacheEntryOptions = new DistributedCacheEntryOptions()
-				.SetSlidingExpiration(TimeSpan.FromSeconds(CacheTimeToLive)); 
-                
+				.SetSlidingExpiration(TimeSpan.FromSeconds(_cacheProvider.CacheTimeToLive())); 
+	                
 			await _cacheProvider.SetCache(userCredentials.Email, userClaims, cacheEntryOptions);
 
 			return userClaims;

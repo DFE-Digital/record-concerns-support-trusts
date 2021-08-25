@@ -3,11 +3,8 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
-using Service.TRAMS.Models;
 using Service.TRAMS.Trusts;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -45,14 +42,13 @@ namespace Service.TRAMS.Tests.Trusts
 			var trustService = new TrustService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var trusts = await trustService.GetTrustsByPagination();
+			var trusts = await trustService.GetTrustsByPagination(TrustSearchFactory.CreateTrustSearch());
 
 			// assert
-			IEnumerable<TrustDto> trustDtos = trusts.ToList();
-			Assert.That(trustDtos, Is.Not.Null);
-			Assert.That(trustDtos.Count(), Is.EqualTo(expectedTrusts.Count));
+			Assert.That(trusts, Is.Not.Null);
+			Assert.That(trusts.Count, Is.EqualTo(expectedTrusts.Count));
 
-			foreach (var trust in trustDtos)
+			foreach (var trust in trusts)
 			{
 				foreach (var expectedTrust in expectedTrusts)
 				{
@@ -99,12 +95,30 @@ namespace Service.TRAMS.Tests.Trusts
 			var trustService = new TrustService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var trusts = await trustService.GetTrustsByPagination();
+			var trusts = await trustService.GetTrustsByPagination(TrustSearchFactory.CreateTrustSearch());
 
 			// assert
-			IEnumerable<TrustDto> trustDtos = trusts.ToList();
-			Assert.That(trustDtos, Is.Not.Null);
-			Assert.That(trustDtos.Count(), Is.EqualTo(0));
+			Assert.That(trusts, Is.Not.Null);
+			Assert.That(trusts.Count, Is.EqualTo(0));
+		}
+
+		[TestCase("", "", "", "/trusts?page=1")]
+		[TestCase("groupname", "", "", "/trusts?groupName=groupname&page=1")]
+		[TestCase("", "ukprn", "", "/trusts?ukprn=ukprn&page=1")]
+		[TestCase("", "", "companieshousenumber", "/trusts?companiesHouseNumber=companieshousenumber&page=1")]
+		[TestCase("groupname", "ukprn", "", "/trusts?groupName=groupname&ukprn=ukprn&page=1")]
+		public void WhenBuildRequestUri_ReturnsRequestUrl(string groupName, string ukprn, string companiesHouseNumber, string expectedRequestUri)
+		{
+			// arrange
+			var trustService = new TrustService(null, null);
+			var trustSearch = TrustSearchFactory.CreateTrustSearch(groupName, ukprn, companiesHouseNumber);
+
+			// act
+			var requestUri = trustService.BuildRequestUri(trustSearch);
+
+			// assert
+			Assert.That(requestUri, Is.Not.Null);
+			Assert.That(requestUri, Is.EqualTo(expectedRequestUri));
 		}
 	}
 }

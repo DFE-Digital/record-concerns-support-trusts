@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Integration.Tests.Trams
 {
 	[TestFixture]
-	public class TrustServiceIntegrationTests
+	public class TrustSearchServiceIntegrationTests
 	{
 		/// Testing the class requires a running Redis,
 		/// startup is configured to use Redis with session storage.
@@ -30,18 +30,18 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		}
 
 		[Test]
-		public async Task WhenRequestTrusts_ReturnsTrustsWithPagination()
+		public async Task WhenGetTrustsCached_ReturnsTrustsFromTrams()
 		{
 			// arrange
-			var trustService = _factory.Services.GetRequiredService<ITrustService>();
+			var trustService = _factory.Services.GetRequiredService<ITrustSearchService>();
 			const string searchParameter = "Northwood";
 			
 			// act
-			var trustsPage = await trustService.GetTrustsByPagination(TrustSearchFactory.CreateTrustSearch(searchParameter, searchParameter, searchParameter));
+			var trusts = await trustService.GetTrustsBySearchCriteria(TrustSearchFactory.CreateTrustSearch(searchParameter));
 
 			// assert
-			Assert.That(trustsPage, Is.Not.Null);
-			Assert.That(trustsPage.Count, Is.GreaterThanOrEqualTo(1));
+			Assert.That(trusts, Is.Not.Null);
+			Assert.That(trusts.Count, Is.GreaterThanOrEqualTo(1));
 		}
 	}
 }

@@ -14,7 +14,7 @@ namespace Service.TRAMS.Cases
 			
 		}
 		
-		public async Task<IEnumerable<CaseDto>> GetCasesByCaseworker(string caseworker)
+		public async Task<IList<CaseDto>> GetCasesByCaseworker(string caseworker)
 		{
 			// Create a request
 			var request = new HttpRequestMessage(HttpMethod.Get,
@@ -41,7 +41,7 @@ namespace Service.TRAMS.Cases
 			}
 			
 			var content = await response.Content.ReadAsStringAsync();
-			return JsonSerializer.Deserialize<IEnumerable<CaseDto>>(content);
+			return JsonSerializer.Deserialize<IList<CaseDto>>(content);
 		}
 	}
 }

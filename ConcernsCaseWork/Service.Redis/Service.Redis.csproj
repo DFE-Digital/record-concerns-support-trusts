@@ -9,4 +9,8 @@
       <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="5.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Service.TRAMS\Service.TRAMS.csproj" />
+    </ItemGroup>
+
 </Project>

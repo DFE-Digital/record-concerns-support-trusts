@@ -5,7 +5,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class TrustDtoFactory
 	{
-		public static List<TrustDto> CreateListTrustDto()
+		public static IList<TrustDto> CreateListTrustDto()
 		{
 			return new List<TrustDto>
 			{
