@@ -1,7 +1,9 @@
 ﻿using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
+using Service.TRAMS.Configuration;
 using Service.TRAMS.Models;
 using Service.TRAMS.Trusts;
 using System;
@@ -18,16 +20,18 @@ namespace Service.TRAMS.Tests.Trusts
 		{
 			// arrange
 			var mockTrustService = new Mock<ITrustService>();
+			var mockIOptionsTrustSearch = new Mock<IOptions<TrustSearchOptions>>();
 			var mockLogger = new Mock<ILogger<TrustSearchService>>();
 
 			var expectedTrusts = TrustDtoFactory.CreateListTrustDto();
 			IList<TrustDto> emptyList = Array.Empty<TrustDto>();
 
+			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>()))
 				.Returns(Task.FromResult(expectedTrusts))
 				.Returns(Task.FromResult(emptyList));
 			
-			var trustSearchService = new TrustSearchService(mockTrustService.Object, mockLogger.Object);
+			var trustSearchService = new TrustSearchService(mockTrustService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
 			// act
 			var trusts = await trustSearchService.GetTrustsBySearchCriteria(TrustSearchFactory.CreateTrustSearch());
@@ -64,10 +68,12 @@ namespace Service.TRAMS.Tests.Trusts
 		{
 			// arrange
 			var mockTrustService = new Mock<ITrustService>();
+			var mockIOptionsTrustSearch = new Mock<IOptions<TrustSearchOptions>>();
 			var mockLogger = new Mock<ILogger<TrustSearchService>>();
 
 			var expectedTrusts = TrustDtoFactory.CreateListTrustDto();
 
+			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>()))
 				.Returns(Task.FromResult(expectedTrusts))
 				.Returns(Task.FromResult(expectedTrusts))
@@ -81,7 +87,7 @@ namespace Service.TRAMS.Tests.Trusts
 				.Returns(Task.FromResult(expectedTrusts))
 				.Returns(Task.FromResult(expectedTrusts));
 			
-			var trustSearchService = new TrustSearchService(mockTrustService.Object, mockLogger.Object);
+			var trustSearchService = new TrustSearchService(mockTrustService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
 			// act
 			var trusts = await trustSearchService.GetTrustsBySearchCriteria(TrustSearchFactory.CreateTrustSearch());
