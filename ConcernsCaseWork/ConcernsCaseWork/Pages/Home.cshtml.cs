@@ -17,7 +17,8 @@ namespace ConcernsCaseWork.Pages
         private readonly ILogger<HomeModel> _logger;
         private readonly ICaseModelService _caseModelService;
      
-        public IList<CaseModel> Cases { get; private set; }
+        public IList<CaseModel> CasesActive { get; private set; }
+        public IList<CaseModel> CasesMonitoring { get; private set; }
         public readonly Dictionary<int, string> Rags = new Dictionary<int, string>(5)
         {
 	        {0, "-"}, {1, "Red"}, {2, "Red | Amber"}, {3, "Amber | Green"}, {4, "Red Plus"}
@@ -37,7 +38,9 @@ namespace ConcernsCaseWork.Pages
         {
 	        _logger.LogInformation("IndexModel executed at {Date}", DateTime.UtcNow);
 	        // TODO Get caseworker ID or name to query the cases against it.
-	        Cases = await _caseModelService.GetCasesByCaseworker("testing");
+	        CasesActive = await _caseModelService.GetCasesByCaseworker("testing");
+	        // TODO Filter cases per status
+	        CasesMonitoring = CasesActive;
         }
     }
 }

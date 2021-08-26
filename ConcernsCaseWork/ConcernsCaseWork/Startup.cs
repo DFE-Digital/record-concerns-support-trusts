@@ -23,6 +23,11 @@ namespace ConcernsCaseWork
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+	        // Use internal resources with localization, avoiding hardcoded strings in pages,
+	        // even when the web application will be always in english.
+	        services.AddLocalization(options => options.ResourcesPath = "Resources");
+	        services.AddMvc().AddViewLocalization();
+
 	        services.AddRazorPages(options =>
             {
 	            options.Conventions.AddPageRoute("/home", "");
@@ -92,7 +97,7 @@ namespace ConcernsCaseWork
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            
             // Combined with razor routing 404 display custom page NotFound
             app.UseStatusCodePagesWithReExecute("/error/{0}");
 

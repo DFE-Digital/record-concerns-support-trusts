@@ -6,15 +6,19 @@
 		public string Type { get; }
 		public string TrustName { get; }
 		public int Rag { get; }
-		public int DaysOpen { get; }
+		public string Created { get; }
+		public string LastUpdate { get; }
+		public string Closed { get; }
 
-		public CaseModel(string id, string type, string trustName, int rag, int daysOpen)
+		public CaseModel(string id, string type, string trustName, int rag, string created, string lastUpdate, string closed)
 		{
 			Id = id;
 			Type = type;
 			TrustName = trustName;
 			Rag = rag;
-			DaysOpen = daysOpen;
+			Created = created;
+			LastUpdate = lastUpdate;
+			Closed = closed;
 		}
 	}
 }

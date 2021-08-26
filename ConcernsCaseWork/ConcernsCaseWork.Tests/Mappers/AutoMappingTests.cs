@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 					Assert.That(expected.TrustName, Is.EqualTo(actual.TrustName));
 					Assert.That(expected.Rag, Is.EqualTo(actual.Rag));
 					Assert.That(expected.Type, Is.EqualTo(actual.Type));
-					Assert.That(expected.DaysOpen, Is.EqualTo(actual.DaysOpen));
+					Assert.That(expected.Created, Is.EqualTo(actual.Created));
 				}
 			}
 		}

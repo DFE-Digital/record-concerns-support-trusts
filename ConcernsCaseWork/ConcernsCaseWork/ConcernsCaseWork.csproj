@@ -19,6 +19,11 @@
     <Compile Update="Pages\Partials\Back.cshtml.cs">
       <DependentUpon>Back.cshtml</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Pages\Home.en.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Home.en.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -226,6 +231,17 @@
   <ItemGroup>
     <ProjectReference Include="..\Service.Redis\Service.Redis.csproj" />
     <ProjectReference Include="..\Service.TRAMS\Service.TRAMS.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Pages\Home.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Home.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\dist" />
   </ItemGroup>
 	
 </Project>
