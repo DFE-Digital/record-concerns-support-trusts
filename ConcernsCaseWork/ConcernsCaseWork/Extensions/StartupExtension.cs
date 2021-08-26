@@ -8,6 +8,7 @@ using Service.Redis.Base;
 using Service.Redis.Configuration;
 using Service.Redis.Users;
 using Service.TRAMS.Cases;
+using Service.TRAMS.Configuration;
 using Service.TRAMS.Trusts;
 using StackExchange.Redis;
 using System;
@@ -97,6 +98,7 @@ namespace ConcernsCaseWork.Extensions
 		public static void AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.Configure<CacheOptions>(configuration.GetSection(CacheOptions.Cache));
+			services.Configure<TrustSearchOptions>(configuration.GetSection(TrustSearchOptions.Cache));
 		}
 	}
 }
