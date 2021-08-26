@@ -16,11 +16,17 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("rag")]
 		public int Rag { get; }
 		
-		[JsonPropertyName("daysOpen")]
-		public int DaysOpen { get; }
+		[JsonPropertyName("created")]
+		public string Created { get; }
 
+		[JsonPropertyName("lastUpdate")]
+		public string LastUpdate { get; }
+		
+		[JsonPropertyName("closed")]
+		public string Closed { get; }
+		
 		[JsonConstructor]
-		public CaseDto(string id, string type, string trustName, int rag, int daysOpen) => 
-			(Id, Type, TrustName, Rag, DaysOpen) = (id, type, trustName, rag, daysOpen);
+		public CaseDto(string id, string type, string trustName, int rag, string created, string lastUpdate, string closed) => 
+			(Id, Type, TrustName, Rag, Created, LastUpdate, Closed) = (id, type, trustName, rag, created, lastUpdate, closed);
 	}
 }

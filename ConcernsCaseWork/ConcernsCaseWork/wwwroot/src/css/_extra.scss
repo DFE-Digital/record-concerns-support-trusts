@@ -1,4 +1,9 @@
-﻿h1.register-main-heading {
+﻿// Create a class for a wider container
+.govuk-width-container-override {
+  max-width: 1200px;
+}
+
+h1.register-main-heading {
   font-size: 3rem;
 
   .govuk-tag {
@@ -158,6 +163,7 @@ span.summary-validation-symbol {
   text-transform: none;
   color: #000;
   margin: 0px 10px;
+  padding: 10px;
 
   &__redplus {
 	color: rgb(240, 240,240);

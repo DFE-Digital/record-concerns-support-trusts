@@ -57,8 +57,10 @@ namespace Service.TRAMS.Tests.Cases
 					Assert.That(caseDto.Id, Is.EqualTo(expectedCase.Id));
 					Assert.That(caseDto.Rag, Is.EqualTo(expectedCase.Rag));
 					Assert.That(caseDto.Type, Is.EqualTo(expectedCase.Type));
-					Assert.That(caseDto.DaysOpen, Is.EqualTo(expectedCase.DaysOpen));
+					Assert.That(caseDto.Created, Is.EqualTo(expectedCase.Created));
+					Assert.That(caseDto.LastUpdate, Is.EqualTo(expectedCase.LastUpdate));
 					Assert.That(caseDto.TrustName, Is.EqualTo(expectedCase.TrustName));
+					Assert.That(caseDto.Closed, Is.EqualTo(expectedCase.Closed));
 				}
 			}
 		}

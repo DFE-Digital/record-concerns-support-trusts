@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Service.TRAMS.Cases;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 	public class CaseModelServiceTests
 	{
 		[Test]
-		public async Task WhenGetCasesByCaseworkerReturnsCases()
+		public async Task WhenGetCasesByCaseworker_ReturnsCases()
 		{
 			// arrange
 			var mockCaseService = new Mock<ICaseService>();
@@ -42,9 +43,32 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.TrustName, Is.EqualTo(actual.TrustName));
 					Assert.That(expected.Rag, Is.EqualTo(actual.Rag));
 					Assert.That(expected.Type, Is.EqualTo(actual.Type));
-					Assert.That(expected.DaysOpen, Is.EqualTo(actual.DaysOpen));
+					Assert.That(expected.Created, Is.EqualTo(actual.Created));
+					Assert.That(expected.LastUpdate, Is.EqualTo(actual.LastUpdate));
+					Assert.That(expected.Closed, Is.EqualTo(actual.Closed));
 				}
 			}
+		}
+		
+		[Test]
+		public async Task WhenGetCasesByCaseworker_ThrowsException_ReturnEmptyCases()
+		{
+			// arrange
+			var mockCaseService = new Mock<ICaseService>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
+			var mapper = config.CreateMapper();
+			var casesDto = CaseDtoFactory.CreateListCaseDto();
+
+			mockCaseService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>())).ThrowsAsync(new Exception());
+
+			// act
+			var caseModelService = new CaseModelService(mockLogger.Object, mockCaseService.Object, mapper);
+			var casesModel = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
+
+			// assert
+			Assert.IsAssignableFrom<List<CaseModel>>(casesModel.ToList());
+			Assert.That(casesModel.Count, Is.EqualTo(0));
 		}
 	}
 }

@@ -30,16 +30,16 @@ namespace ConcernsCaseWork.Tests.Pages
 			await indexModel.OnGetAsync();
 			
 			// assert
-			Assert.IsAssignableFrom<List<CaseModel>>(indexModel.Cases);
-			Assert.That(indexModel.Cases.Count, Is.EqualTo(cases.Count));
-			foreach (var expected in indexModel.Cases)
+			Assert.IsAssignableFrom<List<CaseModel>>(indexModel.CasesActive);
+			Assert.That(indexModel.CasesActive.Count, Is.EqualTo(cases.Count));
+			foreach (var expected in indexModel.CasesActive)
 			{
 				foreach (var actual in cases.Where(actual => expected.Id.Equals(actual.Id)))
 				{
 					Assert.That(expected.TrustName, Is.EqualTo(actual.TrustName));
 					Assert.That(expected.Rag, Is.EqualTo(actual.Rag));
 					Assert.That(expected.Type, Is.EqualTo(actual.Type));
-					Assert.That(expected.DaysOpen, Is.EqualTo(actual.DaysOpen));
+					Assert.That(expected.Created, Is.EqualTo(actual.Created));
 				}
 			}
 			
@@ -67,8 +67,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			await indexModel.OnGetAsync();
 			
 			// assert
-			Assert.IsAssignableFrom<List<CaseModel>>(indexModel.Cases);
-			Assert.That(indexModel.Cases.Count, Is.Zero);
+			Assert.IsAssignableFrom<List<CaseModel>>(indexModel.CasesActive);
+			Assert.That(indexModel.CasesActive.Count, Is.Zero);
 			
 			// Verify ILogger
 			mockLogger.Verify(

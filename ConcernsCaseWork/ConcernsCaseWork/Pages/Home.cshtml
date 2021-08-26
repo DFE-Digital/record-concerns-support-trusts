@@ -1,4 +1,7 @@
 ﻿@page
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer _localizer
 @model ConcernsCaseWork.Pages.HomeModel
 
 @{
@@ -8,59 +11,63 @@
 <div class="govuk-!-margin-top-0">
 
 	<div class="govuk-button-group flexalign__right">
-		<a class="govuk-link" href="#">Case history</a>
+		<a class="govuk-link" href="#">@_localizer["Button:ClosedCases"]</a>
 		<button class="govuk-button" data-module="govuk-button">
-			New Case
+			@_localizer["Button:CreateCase"]
 		</button>
 	</div>
 
-	@if (@Model.Cases.Count == 0)
+	<!-- Active casework -->
+	@if (@Model.CasesActive.Count == 0)
 	{
-		<span>There are no cases available.</span>
+		<span>@_localizer["Table:EmptyCases"]</span>
 	}
 	else
 	{
 		<table class="govuk-table">
 			<caption class="govuk-table__caption govuk-table__caption--m">
-				Your active casework (<span>@Model.Cases.Count</span>)
+				@_localizer["Table:Header:ActiveCases"]
 			</caption>
 			<thead class="govuk-table__head">
-			<tr class="govuk-table__row tr__large">
-				<th class="govuk-table__header govuk-table__header__cases"
-				    scope="col">
-					Case ID
-				</th>
-				<th class="govuk-table__header govuk-table__header__cases"
-				    scope="col">
-					Trust
-				</th>
-				<th class="govuk-table__header govuk-table__header__cases"
-				    scope="col">
-					Primary case type
-				</th>
-				<th class="govuk-table__header govuk-table__header__cases"
-				    scope="col">
-					RAG rating
-				</th>
-				<th class="govuk-table__header govuk-table__header__cases govuk-table__header__right"
-				    scope="col">
-					Days open
-				</th>
-			</tr>
+				<tr class="govuk-table__row tr__large">
+					<th class="govuk-table__header" scope="col">
+						@_localizer["Table:Column:ID"]
+					</th>
+					<th class="govuk-table__header" scope="col">
+						@_localizer["Table:Column:LastUpdate"]
+					</th>
+					<th class="govuk-table__header" scope="col">
+						@_localizer["Table:Column:TrustAcademy"]
+					</th>
+					<th class="govuk-table__header" scope="col">
+						@_localizer["Table:Column:PrimaryCaseType"]
+					</th>
+					<th class="govuk-table__header" scope="col">
+						@_localizer["Table:Column:RagRating"]
+					</th>
+					<th class="govuk-table__header" scope="col">
+						@_localizer["Table:Column:Created"]
+					</th>
+				</tr>
 			</thead>
 			<tbody class="govuk-table__body">
 			@{
-				foreach (var caseModel in @Model.Cases)
+				foreach (var caseModel in Model.CasesActive)
 				{
 					<tr class="govuk-table__row tr__large">
-						<td class="govuk-table__cell govuk-table__cell__cases">
+						<td class="govuk-table__cell">
 							<a href="#">@caseModel.Id</a>
 						</td>
-						<th class="govuk-table__header govuk-table__header__cases" scope="row">
+						<td class="govuk-table__cell">
+							@caseModel.LastUpdate
+						</td>
+						<td class="govuk-table__cell">
 							@caseModel.TrustName
-						</th>
-						<td class="govuk-table__cell govuk-table__cell__cases">@caseModel.Type</td>
-						<td class="govuk-table__cell govuk-table__cell__cases">
+							<br>
+							@caseModel.TrustName
+						</td>
+						<td class="govuk-table__cell">@caseModel.Type</td>
+						<td class="govuk-table__cell">
 							@if (@caseModel.Rag == 0)
 							{
 								@Model.Rags[@caseModel.Rag]
@@ -70,11 +77,69 @@
 								<span class="govuk-tag ragtag @Model.RagsCss[@caseModel.Rag]">@Model.Rags[@caseModel.Rag]</span>
 							}
 						</td>
-						<td class="govuk-table__cell govuk-table__cell__cases govuk-table__cell--numeric">@caseModel.DaysOpen</td>
+						<td class="govuk-table__cell">
+							@caseModel.Created
+						</td>
 					</tr>
 				}
 			}
 			</tbody>
 		</table>
 	}
+	
+	<!-- Closed for monitoring -->
+	@if (@Model.CasesMonitoring.Count == 0)
+    {
+    	<span>@_localizer["Table:EmptyCases"]</span>
+    }
+	else
+	{
+		<table class="govuk-table  govuk-!-margin-top-9">
+			<caption class="govuk-table__caption govuk-table__caption--m">
+				@_localizer["Table:Header:MonitoringCases"]
+			</caption>
+
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row tr__large">
+					<th class="govuk-table__header" scope="col">
+						@_localizer["Table:Column:ID"]
+					</th>
+					<th class="govuk-table__header" scope="col">
+						@_localizer["Table:Column:TrustAcademy"]
+					</th>
+					<th class="govuk-table__header" scope="col">
+						@_localizer["Table:Column:PrimaryCaseType"]
+					</th>
+					<th class="govuk-table__header" scope="col">
+						@_localizer["Table:Column:Closed"]
+					</th>
+				</tr>
+			</thead>
+
+			<tbody class="govuk-table__body">
+            @{
+            	foreach (var caseModel in Model.CasesMonitoring)
+            	{
+            		<tr class="govuk-table__row tr__large">
+            			<td class="govuk-table__cell">
+            				<a href="#">@caseModel.Id</a>
+            			</td>
+			            <td class="govuk-table__cell">
+            				@caseModel.TrustName
+            				<br>
+            				@caseModel.TrustName
+            			</td>
+			            <td class="govuk-table__cell">
+				            @caseModel.Type
+			            </td>
+			            <td class="govuk-table__cell">
+				            @caseModel.Closed
+			            </td>
+            		</tr>
+            	}
+            }
+            </tbody>
+		</table>
+	}
+	
 </div>
