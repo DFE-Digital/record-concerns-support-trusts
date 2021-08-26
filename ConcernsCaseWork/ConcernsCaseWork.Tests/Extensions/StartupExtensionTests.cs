@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
@@ -23,7 +24,7 @@ namespace ConcernsCaseWork.Tests.Extensions
 			{
 				{ "VCAP_SERVICES", "{}" }
 			};
-			var configuration = ConfigurationFactory.ConfigurationBuilder(initialData);
+			var configuration = new ConfigurationBuilder().ConfigurationInMemoryBuilder(initialData).Build();
 			
 			// act
 			Assert.Throws<ConfigurationErrorsException>(() => serviceCollection.AddRedis(configuration));
@@ -38,7 +39,7 @@ namespace ConcernsCaseWork.Tests.Extensions
 			{
 				{ "VCAP_SERVICES", "{'redis': [{'credentials': {'host': '127.0.0.1', 'port': '6379', 'tls_enabled': 'false'}}]}" }
 			};
-			var configuration = ConfigurationFactory.ConfigurationBuilder(initialData);
+			var configuration = new ConfigurationBuilder().ConfigurationInMemoryBuilder(initialData).Build();
 			
 			// act
 			Assert.Throws<ConfigurationErrorsException>(() => serviceCollection.AddRedis(configuration));
@@ -57,7 +58,7 @@ namespace ConcernsCaseWork.Tests.Extensions
 			StartupExtension.Implementation = mockMultiplexer.Object;
 			
 			// act
-			serviceCollection.AddRedis(ConfigurationFactory.ConfigurationUserSecretsBuilder());
+			serviceCollection.AddRedis(new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build());
 			
 			// assert
 			Assert.That(serviceCollection, Is.Not.Null);
@@ -69,7 +70,7 @@ namespace ConcernsCaseWork.Tests.Extensions
 		{
 			// arrange
 			var serviceCollection = new ServiceCollection();
-			var configuration = ConfigurationFactory.ConfigurationBuilder(new Dictionary<string, string>());
+			var configuration = new ConfigurationBuilder().ConfigurationInMemoryBuilder(new Dictionary<string, string>()).Build();
 			
 			// act
 			Assert.Throws<ConfigurationErrorsException>(() => serviceCollection.AddTramsApi(configuration));
@@ -82,7 +83,7 @@ namespace ConcernsCaseWork.Tests.Extensions
 			var serviceCollection = new ServiceCollection();
 			
 			// act
-			serviceCollection.AddTramsApi(ConfigurationFactory.ConfigurationUserSecretsBuilder());
+			serviceCollection.AddTramsApi(new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build());
 			
 			// assert
 			Assert.That(serviceCollection, Is.Not.Null);

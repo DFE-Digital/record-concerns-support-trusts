@@ -23,7 +23,7 @@ namespace ConcernsCaseWork.Integration.Tests.Pages
 		[OneTimeSetUp]
 		public void OneTimeSetup()
 		{
-			_configuration = ConfigurationFactory.ConfigurationUserSecretsBuilder();
+			_configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			_factory = new WebAppFactory(_configuration);
 			_client = _factory.CreateClient();
 		}

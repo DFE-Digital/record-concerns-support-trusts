@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
+using Service.Redis.Configuration;
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -8,16 +10,17 @@ namespace Service.Redis.Base
 	public sealed class CacheProvider : ICacheProvider
 	{
 		private readonly IDistributedCache _cache;
-		private const int CacheTtl = 120;
+		private readonly int _cacheTtl;
 
-		public CacheProvider(IDistributedCache cache)
+		public CacheProvider(IDistributedCache cache, IOptions<CacheOptions> options)
 		{
 			_cache = cache;
+			_cacheTtl = options.Value.TimeToLive;
 		}
 
 		public int CacheTimeToLive()
 		{
-			return CacheTtl;
+			return _cacheTtl;
 		}
 
 		public async Task<T> GetFromCache<T>(string key) where T : class

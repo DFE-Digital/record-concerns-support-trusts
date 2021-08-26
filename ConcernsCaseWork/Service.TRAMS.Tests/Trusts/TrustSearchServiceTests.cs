@@ -58,5 +58,37 @@ namespace Service.TRAMS.Tests.Trusts
 				}
 			}
 		}
+		
+		[Test]
+		public async Task WhenGetTrustsBySearchCriteria_ReturnsTrustsFromTrams_LimitedByMaxPages()
+		{
+			// arrange
+			var mockTrustService = new Mock<ITrustService>();
+			var mockLogger = new Mock<ILogger<TrustSearchService>>();
+
+			var expectedTrusts = TrustDtoFactory.CreateListTrustDto();
+
+			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>()))
+				.Returns(Task.FromResult(expectedTrusts))
+				.Returns(Task.FromResult(expectedTrusts))
+				.Returns(Task.FromResult(expectedTrusts))
+				.Returns(Task.FromResult(expectedTrusts))
+				.Returns(Task.FromResult(expectedTrusts))
+				.Returns(Task.FromResult(expectedTrusts))
+				.Returns(Task.FromResult(expectedTrusts))
+				.Returns(Task.FromResult(expectedTrusts))
+				.Returns(Task.FromResult(expectedTrusts))
+				.Returns(Task.FromResult(expectedTrusts))
+				.Returns(Task.FromResult(expectedTrusts));
+			
+			var trustSearchService = new TrustSearchService(mockTrustService.Object, mockLogger.Object);
+
+			// act
+			var trusts = await trustSearchService.GetTrustsBySearchCriteria(TrustSearchFactory.CreateTrustSearch());
+
+			// assert
+			Assert.That(trusts, Is.Not.Null);
+			Assert.That(trusts.Count, Is.EqualTo(expectedTrusts.Count * 11));
+		}
 	}
 }

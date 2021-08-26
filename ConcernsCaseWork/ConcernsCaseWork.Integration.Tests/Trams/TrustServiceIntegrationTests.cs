@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		[OneTimeSetUp]
 		public void OneTimeSetup()
 		{
-			_configuration = ConfigurationFactory.ConfigurationUserSecretsBuilder();
+			_configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			_factory = new WebAppFactory(_configuration);
 		}
 		

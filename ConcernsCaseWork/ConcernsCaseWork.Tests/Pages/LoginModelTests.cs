@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -93,7 +94,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
 			var initialData = new Dictionary<string, string> { { "app:username", "username" }, { "app:password", "password" } };
-			return new LoginModel(ConfigurationFactory.ConfigurationBuilder(initialData), mockLogger.Object)
+			return new LoginModel(new ConfigurationBuilder().ConfigurationInMemoryBuilder(initialData).Build(), mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

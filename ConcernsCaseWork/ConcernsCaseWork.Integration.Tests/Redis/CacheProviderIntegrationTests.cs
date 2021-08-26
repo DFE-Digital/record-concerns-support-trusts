@@ -1,9 +1,13 @@
-﻿using ConcernsCaseWork.Shared.Tests.Factory;
+﻿using ConcernsCaseWork.Integration.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Service.Redis.Base;
+using Service.Redis.Configuration;
 using Service.Redis.Models;
 using StackExchange.Redis;
 using System;
@@ -11,19 +15,38 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Integration.Tests.Redis
 {
-	[Parallelizable(ParallelScope.All)]
+	[TestFixture]
 	public class CacheProviderIntegrationTests
 	{
+		/// Testing the class requires a running Redis,
+		/// startup is configured to use Redis with session storage.
+		private IConfigurationRoot _configuration;
+		private WebAppFactory _factory;
+		
+		[OneTimeSetUp]
+		public void OneTimeSetup()
+		{
+			_configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().ConfigurationJsonFile().Build();
+			_factory = new WebAppFactory(_configuration);
+		}
+		
+		[OneTimeTearDown]
+		public void OneTimeTearDown()
+		{
+			_factory.Dispose();
+		}
+		
 		[Test]
 		public async Task WhenGetFromCache_IsSuccessful()
 		{
 			// arrange
 			const int cacheTimeToLive = 120;
-			var configuration = ConfigurationFactory.ConfigurationUserSecretsBuilder();
 			
-			var vCapConfiguration = JObject.Parse(configuration["VCAP_SERVICES"]);
+			var cacheTtl = _configuration.GetSection(CacheOptions.Cache).Get<CacheOptions>();
+			Assert.NotNull(cacheTtl);
+			
+			var vCapConfiguration = JObject.Parse(_configuration["VCAP_SERVICES"]);
 			var redisCredentials = vCapConfiguration["redis"]?[0]?["credentials"];
-			
 			Assert.NotNull(redisCredentials);
 			
 			var password = (string)redisCredentials["password"];
@@ -39,7 +62,7 @@ namespace ConcernsCaseWork.Integration.Tests.Redis
 			};
 			var redisCacheOptions = new RedisCacheOptions { ConfigurationOptions = redisConfigurationOptions };
 			var redisCache = new RedisCache(redisCacheOptions);
-			var cacheProvider = new CacheProvider(redisCache);
+			var cacheProvider = new CacheProvider(redisCache, Options.Create(cacheTtl));
 
 			var cacheEntryOptions = new DistributedCacheEntryOptions()
 				.SetSlidingExpiration(TimeSpan.FromSeconds(cacheTimeToLive));

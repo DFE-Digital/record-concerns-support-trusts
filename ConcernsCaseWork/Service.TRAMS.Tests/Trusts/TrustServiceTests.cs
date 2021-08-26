@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Shared.Tests.Factory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
@@ -21,7 +22,7 @@ namespace Service.TRAMS.Tests.Trusts
 		{
 			// arrange
 			var expectedTrusts = TrustDtoFactory.CreateListTrustDto();
-			var configuration = ConfigurationFactory.ConfigurationUserSecretsBuilder();
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
@@ -75,7 +76,7 @@ namespace Service.TRAMS.Tests.Trusts
 		public async Task WhenGetTrustsByPagination_ThrowsException_ReturnsEmptyTrusts()
 		{
 			// arrange
-			var configuration = ConfigurationFactory.ConfigurationUserSecretsBuilder();
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
