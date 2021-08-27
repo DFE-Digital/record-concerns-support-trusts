@@ -1,3 +1,5 @@
 ﻿@model string
 
-<a href="@Model" class="govuk-back-link">Back</a>
+@if (BackModel.CanRender(Context.Request.Path.Value)) {
+	<a href="@Model" class="govuk-back-link">Back</a>
+}

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using ConcernsCaseWork.Pages.Partials
+<!DOCTYPE html>
 <html class="govuk-template" lang="en">
 <head>
 	<meta charset="utf-8"/>
@@ -19,7 +20,7 @@
 
 </head>
 <body class="govuk-template__body ">
-
+<script src="~/dist/jquery.min.js"></script>
 <script>
 	document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
 </script>
@@ -50,6 +51,7 @@
 
 <div class="govuk-width-container govuk-width-container-override">
 	@await RenderSectionAsync("BeforeMain", required: false)
+	<partial name="Partials/Back" model="BackModel.BrowserBackPage"/>
 	<main class="govuk-main-wrapper wrapper_padding-top-20 govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 		@RenderBody()
 	</main>
@@ -99,7 +101,6 @@
 		</div>
 	</div>
 </footer>
-<script src="~/dist/jquery.min.js"></script>
 <script src="~/dist/site.js"></script>
 </body>
 </html>
