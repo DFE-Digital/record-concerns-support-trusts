@@ -1,0 +1,105 @@
+﻿@page
+@using ConcernsCaseWork.Pages.Partials
+@model ConcernsCaseWork.Pages.Case.CaseModel
+
+@{
+	ViewData["Title"] = "New Case";
+}
+
+<partial name="Partials/Back" model="BackModel.BrowserBackPage"/>
+
+<div class="govuk-width-container govuk-width-container-override">
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+
+			<h1 class="govuk-heading-m">Create case</h1>
+
+			<div class="gem-c-search__item-wrapper" data-children-count="1">
+                <input aria-controls="js-search-results-info" class="gem-c-search__item gem-c-search__input js-class-toggle" id="finder-keyword-search" name="keywords" title="Search" type="search" value="asdasdasdasd">
+                <div class="gem-c-search__item gem-c-search__submit-wrapper">
+                  <button class="gem-c-search__submit" type="submit" data-module="gem-track-click">
+                    Search
+            </button>    </div>
+              </div>
+			
+			
+			
+			
+			<form method="post">
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset" data-required data-error="Search cannot be blank" aria-required="true">
+
+						<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+							<h2 class="govuk-fieldset__heading govuk-heading-m">
+								Find Trust
+							</h2>
+						</legend>
+
+						<label class="govuk-hint" for="outgoing-trust-search-query" id="outgoing-trust-search-query-hint">
+							Search by name, trust reference number or companies house number
+						</label>
+
+						<input class="govuk-input form-control" name="searchQuery" id="outgoing-trust-search-query" type="text" aria-describedby="outgoing-trust-search-query-hint">
+
+						<div id="autocomplete-container">
+						</div>
+
+					</fieldset>
+				</div>
+
+				<button class="govuk-button" type="submit">Next</button>
+
+			</form>
+
+		</div>
+	</div>
+</div>
+
+<script src="~/dist/accessible-autocomplete.min.js"></script>
+<script type="application/javascript">
+
+	$(function () {
+		$("#outgoing-trust-search-query").on('change', function() {
+			console.log("Input text changed!");
+			console.log(this.value);
+		});
+
+
+
+        @*$.get('/GetCars/').done(function (cars) {
+            
+        });*@
+        
+        
+          try {
+        	const trusts = @Html.Raw(Json.Serialize(Model.TrustSearch)) || [];
+        	const trustNames = trusts.map(trust => trust.name)
+        	const $input = document.getElementById('outgoing-trust-search-query')
+        
+        	accessibleAutocomplete({
+        	  element: document.querySelector('#autocomplete-container'),
+        	  id: $input.id,
+        	  name: $input.name,
+        	  source: trustNames,
+        	  confirmOnBlur: false,
+        	  onConfirm: (selected) => {
+        	  	console.log(selected);
+        	  	console.log(trusts);
+        	  	($input.value = selected ? trusts.find(item => item.Name === selected).id : '')
+        	  	},
+        	  minLength: 4
+        	})
+        
+        	$input.id = `old-${$input.id}`
+        	$input.name = 'outgoing-trust-id'
+        	$input.type = 'hidden'
+          } catch(err) {
+        	console.log('Autocomplete failed to initialize...', err)
+          }
+    });
+
+
+
+</script>
+
+
