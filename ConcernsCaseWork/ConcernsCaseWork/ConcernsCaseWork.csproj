@@ -29,11 +29,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Login.en.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\Pages\Back.en.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Back.en.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -251,10 +246,6 @@
     <EmbeddedResource Update="Resources\Pages\Login.en.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Login.en.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Pages\Back.en.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Back.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
