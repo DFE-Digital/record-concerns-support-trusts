@@ -8,7 +8,7 @@
 
 <partial name="Partials/Back" model="BackModel.BrowserBackPage"/>
 
-<div class="govuk-width-container govuk-width-container-override">
+<div class="govuk-width-container">
 	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds">
 
@@ -55,51 +55,27 @@
 	</div>
 </div>
 
-<script src="~/dist/accessible-autocomplete.min.js"></script>
 <script type="application/javascript">
-
 	$(function () {
-		$("#outgoing-trust-search-query").on('change', function() {
-			console.log("Input text changed!");
-			console.log(this.value);
-		});
+		try {
+			$("#outgoing-trust-search-query").on('change', function() {
+				console.log("Input text changed!");
+				console.log(this.value);
+			});
+	
+	
+	
+			@*$.get('/GetCars/').done(function (cars) {
+				
+			});*@
+        
+        
+          
 
-
-
-        @*$.get('/GetCars/').done(function (cars) {
-            
-        });*@
-        
-        
-          try {
-        	const trusts = @Html.Raw(Json.Serialize(Model.TrustSearch)) || [];
-        	const trustNames = trusts.map(trust => trust.name)
-        	const $input = document.getElementById('outgoing-trust-search-query')
-        
-        	accessibleAutocomplete({
-        	  element: document.querySelector('#autocomplete-container'),
-        	  id: $input.id,
-        	  name: $input.name,
-        	  source: trustNames,
-        	  confirmOnBlur: false,
-        	  onConfirm: (selected) => {
-        	  	console.log(selected);
-        	  	console.log(trusts);
-        	  	($input.value = selected ? trusts.find(item => item.Name === selected).id : '')
-        	  	},
-        	  minLength: 4
-        	})
-        
-        	$input.id = `old-${$input.id}`
-        	$input.name = 'outgoing-trust-id'
-        	$input.type = 'hidden'
           } catch(err) {
         	console.log('Autocomplete failed to initialize...', err)
           }
     });
-
-
-
 </script>
 
 

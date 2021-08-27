@@ -20,7 +20,7 @@
 	</div>
 
 	<!-- Active casework -->
-	@if (@Model.CasesActive.Count == 0)
+	@if (Model.CasesActive.Count == 0)
 	{
 		<span>@_localizer["Table:EmptyCases"]</span>
 	}
@@ -90,7 +90,7 @@
 	}
 	
 	<!-- Closed for monitoring -->
-	@if (@Model.CasesMonitoring.Count == 0)
+	@if (Model.CasesMonitoring.Count == 0)
     {
     	<span>@_localizer["Table:EmptyCases"]</span>
     }
