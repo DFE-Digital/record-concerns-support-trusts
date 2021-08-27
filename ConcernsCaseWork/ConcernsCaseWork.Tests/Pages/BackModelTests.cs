@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Pages.Partials;
+﻿using ConcernsCaseWork.Pages.Shared;
 using NUnit.Framework;
 
 namespace ConcernsCaseWork.Tests.Pages

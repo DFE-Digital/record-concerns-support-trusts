@@ -1,50 +1,86 @@
-﻿@page
-@model ConcernsCaseWork.Pages.Case.CaseModel
+﻿@page "{handler?}"
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer _localizer
+@model ConcernsCaseWork.Pages.Case.IndexModel
 
 @{
 	ViewData["Title"] = "New Case";
 }
 
 <div class="govuk-width-container">
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
-			<p class="govuk-heading-m">Create case</p>
+	<div class="moj-search govuk-form-group">
+		<p class="govuk-heading-m">@_localizer["Header"]</p>
+		<form role="search" id="search-form">
 			<div class="govuk-form-group">
-				<h1 class="govuk-label-wrapper"><label class="govuk-label govuk-label--l" for="event-name">
-						Find Trust
-					</label>
-				</h1>
-				<div id="event-name-hint" class="govuk-hint">
-					Search by name, trust reference number or companies house number
+				<label class="govuk-label moj-search__label govuk-!-font-weight-bold" for="search">
+					@_localizer["Header:SearchTrust"]
+				</label>
+				<div id="search-hint" class="govuk-hint moj-search__hint">
+					@_localizer["Header:Hint:SearchTrust"]
 				</div>
-				<input class="govuk-input" id="event-name" name="event-name" type="text" aria-describedby="event-name-hint">
+
+				<span id="search-error" class="">
+					<span class="govuk-visually-hidden">Error:</span> Enter search criteria higher than three characters
+				</span>
+				<input class="govuk-input moj-search__input" id="search" name="search" type="text" aria-describedby="search-hint search-error" placeholder="Search Trusts">
 			</div>
-			<button class="govuk-button" type="submit">Next</button>
-		</div>
+
+			<button class="govuk-button moj-search__button" data-module="govuk-button">
+				@_localizer["Button:Search"]
+			</button>
+		</form>
 	</div>
+	<div id="trusts-partial-results"></div>
 </div>
 
-<script type="application/javascript">
-	$(function () {
-		try {
-			$("#event-name").on('change', function() {
-				console.log("Input text changed!");
-				console.log(this.value);
-			});
-	
-	
-	
-			@*$.get('/GetCars/').done(function (cars) {
+@section BeforeMain {
+	<script>
+		$(function () {
+			try {
+				let showError = function () {
+					$(".govuk-form-group").addClass("govuk-form-group--error");
+					$("#search").addClass("govuk-input--error");
+					$("#search-error").addClass("govuk-error-message");
+				};
+				let removeError = function () {
+            		$(".govuk-form-group").removeClass("govuk-form-group--error");
+            		$("#search").removeClass("govuk-input--error");
+            		$("#search-error").removeClass("govuk-error-message");
+				};
 				
-			});*@
-        
-        
-          
-
-          } catch(err) {
-        	console.log('Search for trusts error...', err)
-          }
-    });
-</script>
-
+				$("#search").keyup(function() {
+					if (this.value.length > 2) {
+						// disable errors
+						removeError();
+					}
+				});
+				
+				$("#search-form").submit(function (event) {
+					event.preventDefault();
+					
+					let search = $("#search").val();
+					
+					// Send request if valid
+					if (search !== "" && search.length > 2) {
+						removeError();
+						
+						// Ajax Get Trusts						
+						$.get("case/TrustsPartial", { searchQuery: search}).done(function (trustsPartial) {
+							$("#trusts-partial-results").html(trustsPartial);
+						}).fail(function() {
+							console.log("Get error");
+				  		});
+					}
+					else 
+					{
+						showError();
+					}
+				});
+       		} catch(err) {
+				console.log("Search for trusts error...", err)
+	  		}
+	    });
+	</script>
+}
 

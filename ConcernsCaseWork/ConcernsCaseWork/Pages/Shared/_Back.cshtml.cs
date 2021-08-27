@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ConcernsCaseWork.Pages.Partials
+namespace ConcernsCaseWork.Pages.Shared
 {
 	public class BackModel : PageModel
 	{

@@ -16,9 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Pages\Partials\Back.cshtml.cs">
-      <DependentUpon>Back.cshtml</DependentUpon>
-    </Compile>
     <Compile Update="Resources\Pages\Home.en.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -28,6 +25,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Login.en.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Pages\Case\Index.en.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Index.en.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -247,9 +249,15 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Login.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Pages\Case\Index.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\Partials" />
+    <Folder Include="Resources\Shared" />
     <Folder Include="wwwroot\dist" />
   </ItemGroup>
 	

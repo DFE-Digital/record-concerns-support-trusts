@@ -1,0 +1,32 @@
+﻿@model List<ConcernsCaseWork.Models.TrustModel>
+
+<div class="govuk-form-group">
+	<fieldset class="govuk-fieldset">
+		<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+			<h1 class="govuk-fieldset__heading">
+				Trusts
+			</h1>
+		</legend>
+		@if (Model.Count == 0)
+		{
+			<span>Couldn't find trusts!!!</span>
+		}
+		else
+		{
+			<div class="govuk-radios">
+				@{
+					foreach (var trustModel in Model)
+					{
+						<div class="govuk-radios__item">
+							<input class="govuk-radios__input" id="trust" name="trust-name" type="radio" value="@trustModel.Id">
+							<label class="govuk-label govuk-radios__label" for="trust">
+								@trustModel.Name
+							</label>
+						</div>
+					}
+				}
+			</div>
+		}
+	</fieldset>
+</div>
+<button class="govuk-button" type="submit">Next</button>

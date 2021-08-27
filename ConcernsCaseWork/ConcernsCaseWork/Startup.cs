@@ -2,7 +2,6 @@ using ConcernsCaseWork.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,11 +38,6 @@ namespace ConcernsCaseWork
 				options.HtmlHelperOptions.ClientValidationEnabled = false;
             }).AddSessionStateTempDataProvider();
 	        
-            services.Configure<RazorViewEngineOptions>(options =>
-            {
-	            options.PageViewLocationFormats.Add($"/Pages/Partials/{RazorViewEngine.ViewExtension}");
-            });
-            
             // Configuration options
             services.AddConfigurationOptions(Configuration);
             

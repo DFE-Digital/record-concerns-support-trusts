@@ -1,5 +1,4 @@
-﻿@using ConcernsCaseWork.Pages.Partials
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="govuk-template" lang="en">
 <head>
 	<meta charset="utf-8"/>
@@ -26,7 +25,7 @@
 </script>
 
 <header class="moj-header " role="banner">
-	<div class="govuk-width-container govuk-width-container-override">
+	<div class="govuk-width-container">
 		<div class="govuk-grid-row">
 			<div class="govuk-grid-column-three-quarters">
 				<svg focusable="false" class="moj-header__logotype-crest" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" height="40" width="40">
@@ -49,15 +48,15 @@
 	</div>
 </header>
 
-<div class="govuk-width-container govuk-width-container-override">
+<div class="govuk-width-container">
 	@await RenderSectionAsync("BeforeMain", required: false)
-	<partial name="Partials/Back" model="BackModel.BrowserBackPage"/>
+	<partial name="_Back" model="BackModel.BrowserBackPage"/>
 	<main class="govuk-main-wrapper wrapper_padding-top-20 govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 		@RenderBody()
 	</main>
 </div>
 <footer class="govuk-footer " role="contentinfo">
-	<div class="govuk-width-container govuk-width-container-override">
+	<div class="govuk-width-container">
 		<div class="govuk-footer__meta">
 			<div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
 				<h2 class="govuk-heading-m">Get support</h2>
