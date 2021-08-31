@@ -55,10 +55,10 @@
 				$("#trusts-partial-results").empty();
 			};
 			let showGlobalError = function () {
-				$(".moj-banner").show();	
+				$(".moj-banner").removeClass("govuk-!-display-none");	
 			};
 			let hideGlobalError = function () {
-				$(".moj-banner").hide();	
+				$(".moj-banner").addClass("govuk-!-display-none");	
 			};
 			
 			try {
@@ -81,8 +81,8 @@
 					if (validator.validate()) {
 						event.preventDefault();
 						
-						// Ajax Get Trusts						
-						$.get("case/TrustsPartial", { searchQuery: $("#search").val()}).done(function (trustsPartial) {
+						// Ajax Get Trusts		
+						$.get("case/TrustsPartial", { searchQuery: $("#search").val()}).done(function (trustsPartial) {							
 							$("#trusts-partial-results").html(trustsPartial);
 							hideGlobalError();
 						}).fail(function() {

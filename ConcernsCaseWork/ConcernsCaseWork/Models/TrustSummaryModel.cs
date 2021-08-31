@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace ConcernsCaseWork.Models
 {
@@ -7,7 +8,7 @@ namespace ConcernsCaseWork.Models
 	/// </summary>
 	public sealed class TrustSummaryModel
 	{
-		private const string IsNullOrEmpty = "-";
+		private readonly string _isNullOrEmpty = "-".PadRight(2);
 		
 		public string UkPrn { get; }
 		
@@ -23,9 +24,14 @@ namespace ConcernsCaseWork.Models
 		{
 			get
 			{
-				return (string.IsNullOrEmpty(GroupName) ? IsNullOrEmpty : GroupName) + "," + 
-				       (string.IsNullOrEmpty(Urn) ? IsNullOrEmpty : Urn) + "," + 
-				       (string.IsNullOrEmpty(CompaniesHouseNumber) ? IsNullOrEmpty : CompaniesHouseNumber);
+				var sb = new StringBuilder();
+				sb.Append(string.IsNullOrEmpty(GroupName) ? _isNullOrEmpty : GroupName);
+				sb.Append(",").Append(" ");
+				sb.Append(string.IsNullOrEmpty(UkPrn) ? _isNullOrEmpty : UkPrn);
+				sb.Append(",").Append(" ");
+				sb.Append(string.IsNullOrEmpty(CompaniesHouseNumber) ? _isNullOrEmpty : CompaniesHouseNumber);
+				
+				return sb.ToString();
 			}
 		}
 

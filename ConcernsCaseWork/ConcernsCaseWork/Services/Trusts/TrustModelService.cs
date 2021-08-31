@@ -25,6 +25,7 @@ namespace ConcernsCaseWork.Services.Trusts
 		{
 			_logger.LogInformation("TrustModelService::GetTrustsBySearchCriteria");
 			
+			// Fetch trusts by criteria
 			var trustsDto = await _trustSearchService.GetTrustsBySearchCriteria(trustSearch);
 			
 			// Map trusts dto to model

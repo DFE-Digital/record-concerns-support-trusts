@@ -11,6 +11,7 @@ using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Services.Trusts
@@ -46,7 +47,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 					Assert.That(expected.UkPrn, Is.EqualTo(actual.UkPrn));
 					Assert.That(expected.GroupName, Is.EqualTo(actual.GroupName));
 					Assert.That(expected.CompaniesHouseNumber, Is.EqualTo(actual.CompaniesHouseNumber));
-					Assert.That(expected.DisplayName, Is.EqualTo(actual.GroupName + "," + actual.Urn + "," + actual.CompaniesHouseNumber));
+					Assert.That(expected.DisplayName, Is.EqualTo(BuildDisplayName(actual)));
 					
 					foreach (var establishment in actual.Establishments)
 					{
@@ -79,6 +80,18 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			// assert
 			Assert.IsAssignableFrom<List<TrustSummaryModel>>(trustsSummaryModel.ToList());
 			Assert.That(trustsSummaryModel.Count, Is.EqualTo(0));
+		}
+		
+		private static string BuildDisplayName(TrustSummaryDto trustSummaryDto)
+		{
+			var sb = new StringBuilder();
+			sb.Append(string.IsNullOrEmpty(trustSummaryDto.GroupName) ? "-".PadRight(2) : trustSummaryDto.GroupName);
+			sb.Append(",").Append(" ");
+			sb.Append(string.IsNullOrEmpty(trustSummaryDto.UkPrn) ? "-".PadRight(2) : trustSummaryDto.UkPrn);
+			sb.Append(",").Append(" ");
+			sb.Append(string.IsNullOrEmpty(trustSummaryDto.CompaniesHouseNumber) ? "-".PadRight(2) : trustSummaryDto.CompaniesHouseNumber);
+				
+			return sb.ToString();
 		}
 	}
 }

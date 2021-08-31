@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Service.TRAMS.Models;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -23,25 +24,29 @@ namespace ConcernsCaseWork.Pages.Case
 			_logger = logger;
 		}
 		
-		public async Task<PartialViewResult> OnGetTrustsPartial(string searchQuery)
+		public async Task<ActionResult> OnGetTrustsPartial(string searchQuery)
 		{
-			_logger.LogInformation("IndexModel::OnGetTrustsPartial");
-			
-			// Double check search query.
-			if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < 2)
+			try
 			{
-				return Partial("_TrustsSearchResult", Array.Empty<TrustSummaryModel>());
-			}
-
-			var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);
-			var trustSearchResponse = await _trustModelService.GetTrustsBySearchCriteria(trustSearch);
+				_logger.LogInformation("IndexModel::OnGetTrustsPartial");
 			
-			return Partial("_TrustsSearchResult", trustSearchResponse);
-		}
-		
-		public async Task<JsonResult> OnPostAsync(string searchQuery)
-		{
-			return new JsonResult(string.Empty);
+				// Double check search query.
+				if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < 2)
+				{
+					return Partial("_TrustsSearchResult", Array.Empty<TrustSummaryModel>());
+				}
+
+				var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);
+				var trustSearchResponse = await _trustModelService.GetTrustsBySearchCriteria(trustSearch);
+				
+				return Partial("_TrustsSearchResult", trustSearchResponse);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Case::IndexModel::Exception - {ex.Message}");
+				
+				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+			}
 		}
 	}
 }
