@@ -8,7 +8,10 @@ namespace ConcernsCaseWork.Mappers
 	{
 		public AutoMapping()
 		{
-			CreateMap<CaseDto, CaseModel>(); // means you want to map from CaseDto to CaseModel
+			// means you want to map from CaseDto to CaseModel
+			CreateMap<CaseDto, CaseModel>();
+			CreateMap<TrustSummaryDto, TrustSummaryModel>();
+			CreateMap<EstablishmentSummaryDto, EstablishmentSummaryModel>();
 		}
 	}
 }

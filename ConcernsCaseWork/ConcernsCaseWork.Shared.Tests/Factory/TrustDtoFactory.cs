@@ -5,16 +5,16 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class TrustDtoFactory
 	{
-		public static IList<TrustDto> CreateListTrustDto()
+		public static IList<TrustSummaryDto> CreateListTrustSummaryDto()
 		{
-			return new List<TrustDto>
+			return new List<TrustSummaryDto>
 			{
-				new TrustDto(
+				new TrustSummaryDto(
 					"trust-ukprn", 
 					"trust-urn", 
 					"trust-groupname", 
 					"trust-companieshousenumber", 
-					EstablishmentDtoFactory.CreateListEstablishmentDto())
+					EstablishmentDtoFactory.CreateListEstablishmentSummaryDto())
 			};
 		}
 	}

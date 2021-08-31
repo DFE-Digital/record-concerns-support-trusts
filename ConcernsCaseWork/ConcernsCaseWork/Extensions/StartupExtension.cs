@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Trust;
+using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

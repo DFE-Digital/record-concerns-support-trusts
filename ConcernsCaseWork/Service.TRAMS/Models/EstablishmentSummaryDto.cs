@@ -2,7 +2,7 @@
 
 namespace Service.TRAMS.Models
 {
-	public sealed class EstablishmentDto
+	public sealed class EstablishmentSummaryDto
 	{
 		[JsonPropertyName("urn")]
 		public string Urn { get; }
@@ -14,7 +14,7 @@ namespace Service.TRAMS.Models
 		public string UkPrn { get; }
 		
 		[JsonConstructor]
-		public EstablishmentDto(string urn, string name, string ukprn) => 
+		public EstablishmentSummaryDto(string urn, string name, string ukprn) => 
 			(Urn, Name, UkPrn) = (urn, name, ukprn);
 	}
 }

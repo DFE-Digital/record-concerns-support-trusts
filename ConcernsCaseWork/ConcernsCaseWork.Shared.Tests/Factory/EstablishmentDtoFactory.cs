@@ -5,11 +5,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class EstablishmentDtoFactory
 	{
-		public static List<EstablishmentDto> CreateListEstablishmentDto()
+		public static List<EstablishmentSummaryDto> CreateListEstablishmentSummaryDto()
 		{
-			return new List<EstablishmentDto>
+			return new List<EstablishmentSummaryDto>
 			{
-				new EstablishmentDto("establishment-urn", "establishment-name", "establishment-ukprn")
+				new EstablishmentSummaryDto("establishment-urn", "establishment-name", "establishment-ukprn")
 			};
 		}
 	}

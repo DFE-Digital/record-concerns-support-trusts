@@ -6,7 +6,7 @@ using Service.TRAMS.Trusts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Services.Trust
+namespace ConcernsCaseWork.Services.Trusts
 {
 	public sealed class TrustModelService : ITrustModelService
 	{
@@ -21,14 +21,14 @@ namespace ConcernsCaseWork.Services.Trust
 			_logger = logger;
 		}
 		
-		public async Task<IList<TrustModel>> GetTrustsBySearchCriteria(TrustSearch trustSearch)
+		public async Task<IList<TrustSummaryModel>> GetTrustsBySearchCriteria(TrustSearch trustSearch)
 		{
 			_logger.LogInformation("TrustModelService::GetTrustsBySearchCriteria");
 			
 			var trustsDto = await _trustSearchService.GetTrustsBySearchCriteria(trustSearch);
 			
 			// Map trusts dto to model
-			return _mapper.Map<IList<TrustModel>>(trustsDto);
+			return _mapper.Map<IList<TrustSummaryModel>>(trustsDto);
 		}
 	}
 }

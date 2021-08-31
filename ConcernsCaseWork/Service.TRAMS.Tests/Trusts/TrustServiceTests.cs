@@ -21,7 +21,7 @@ namespace Service.TRAMS.Tests.Trusts
 		public async Task WhenGetTrustsByPagination_ReturnsTrusts()
 		{
 			// arrange
-			var expectedTrusts = TrustDtoFactory.CreateListTrustDto();
+			var expectedTrusts = TrustDtoFactory.CreateListTrustSummaryDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			

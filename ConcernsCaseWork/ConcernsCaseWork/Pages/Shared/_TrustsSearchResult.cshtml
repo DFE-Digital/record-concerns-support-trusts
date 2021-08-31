@@ -1,4 +1,4 @@
-﻿@model List<ConcernsCaseWork.Models.TrustModel>
+﻿@model List<ConcernsCaseWork.Models.TrustSummaryModel>
 
 <div class="govuk-form-group">
 	<fieldset class="govuk-fieldset">
@@ -18,9 +18,9 @@
 					foreach (var trustModel in Model)
 					{
 						<div class="govuk-radios__item">
-							<input class="govuk-radios__input" id="trust" name="trust-name" type="radio" value="@trustModel.Id">
+							<input class="govuk-radios__input" id="trust" name="trust-name" type="radio" value="@trustModel.UkPrn">
 							<label class="govuk-label govuk-radios__label" for="trust">
-								@trustModel.Name
+								@trustModel.DisplayName
 							</label>
 						</div>
 					}

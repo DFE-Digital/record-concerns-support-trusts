@@ -9,7 +9,7 @@ using System.Linq;
 namespace ConcernsCaseWork.Tests.Mappers
 {
 	[Parallelizable(ParallelScope.All)]
-	public class AutoMappingTests
+	public class AutoMapperCasesTests
 	{
 		[Test]
 		public void ConfigurationIsValid()

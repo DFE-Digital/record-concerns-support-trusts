@@ -23,8 +23,8 @@ namespace Service.TRAMS.Tests.Trusts
 			var mockIOptionsTrustSearch = new Mock<IOptions<TrustSearchOptions>>();
 			var mockLogger = new Mock<ILogger<TrustSearchService>>();
 
-			var expectedTrusts = TrustDtoFactory.CreateListTrustDto();
-			IList<TrustDto> emptyList = Array.Empty<TrustDto>();
+			var expectedTrusts = TrustDtoFactory.CreateListTrustSummaryDto();
+			IList<TrustSummaryDto> emptyList = Array.Empty<TrustSummaryDto>();
 
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>()))
@@ -71,7 +71,7 @@ namespace Service.TRAMS.Tests.Trusts
 			var mockIOptionsTrustSearch = new Mock<IOptions<TrustSearchOptions>>();
 			var mockLogger = new Mock<ILogger<TrustSearchService>>();
 
-			var expectedTrusts = TrustDtoFactory.CreateListTrustDto();
+			var expectedTrusts = TrustDtoFactory.CreateListTrustSummaryDto();
 
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>()))

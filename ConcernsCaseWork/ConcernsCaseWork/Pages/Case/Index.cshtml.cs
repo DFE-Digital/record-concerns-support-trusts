@@ -1,12 +1,11 @@
 ﻿using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Services.Trust;
+using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Service.TRAMS.Models;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -31,7 +30,7 @@ namespace ConcernsCaseWork.Pages.Case
 			// Double check search query.
 			if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < 2)
 			{
-				return Partial("_TrustsSearchResult", Array.Empty<TrustModel>());
+				return Partial("_TrustsSearchResult", Array.Empty<TrustSummaryModel>());
 			}
 
 			var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);
@@ -42,15 +41,7 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public async Task<JsonResult> OnPostAsync(string searchQuery)
 		{
-			var trustSearch = new List<TrustModel>
-			{
-				new TrustModel { Id = 1, Name = "Test1"},
-				new TrustModel { Id = 2, Name = "Test2"},
-				new TrustModel { Id = 3, Name = "Test3"},
-				new TrustModel { Id = 4, Name = "Test4"}
-			};
-
-			return new JsonResult(trustSearch);
+			return new JsonResult(string.Empty);
 		}
 	}
 }

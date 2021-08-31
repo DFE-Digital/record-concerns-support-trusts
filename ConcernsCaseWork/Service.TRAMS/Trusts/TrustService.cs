@@ -20,7 +20,7 @@ namespace Service.TRAMS.Trusts
 			_logger = logger;
 		}
 		
-		public async Task<IList<TrustDto>> GetTrustsByPagination(TrustSearch trustSearch)
+		public async Task<IList<TrustSummaryDto>> GetTrustsByPagination(TrustSearch trustSearch)
 		{
 			try
 			{
@@ -43,7 +43,7 @@ namespace Service.TRAMS.Trusts
 
 				// Deserialize content to POJO
 				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var trusts = JsonSerializer.Deserialize<IList<TrustDto>>(content, options);
+				var trusts = JsonSerializer.Deserialize<IList<TrustSummaryDto>>(content, options);
 				
 				return trusts;
 			}
@@ -52,7 +52,7 @@ namespace Service.TRAMS.Trusts
 				_logger.LogError($"TrustService::GetTrustsByPagination::Exception message::{ex.Message}");
 			}
 
-			return Array.Empty<TrustDto>();
+			return Array.Empty<TrustSummaryDto>();
 		}
 
 		/// <summary>
