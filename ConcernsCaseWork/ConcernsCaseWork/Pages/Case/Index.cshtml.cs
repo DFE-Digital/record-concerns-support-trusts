@@ -24,6 +24,8 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public PartialViewResult OnGetTrustsPartial(string searchQuery)
 		{
+			// Double check search query.
+			
 			var trustSearch = new List<TrustModel>
 			{
 				new TrustModel { Id = 1, Name = "Test1"},

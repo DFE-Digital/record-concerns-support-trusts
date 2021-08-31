@@ -11,7 +11,24 @@
 <div class="govuk-width-container">
 	<div class="moj-search govuk-form-group">
 		<p class="govuk-heading-m">@_localizer["Header"]</p>
-		<form role="search" id="search-form">
+		
+		<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary">
+        
+        </div>
+		
+		<div class="moj-banner moj-banner--warning govuk-!-display-none">
+        
+          <svg class="moj-banner__icon" fill="currentColor" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
+            <path d="M13.6,15.4h-2.3v-4.5h2.3V15.4z M13.6,19.8h-2.3v-2.2h2.3V19.8z M0,23.2h25L12.5,2L0,23.2z" />
+          </svg>
+        
+          <div class="moj-banner__message">
+            <span class="moj-banner__assistive">Warning</span>Something went wrong – try again.
+          </div>
+        
+        </div>
+		
+		<form role="search" id="search-form" novalidate>
 			<div class="govuk-form-group">
 				<label class="govuk-label moj-search__label govuk-!-font-weight-bold" for="search">
 					@_localizer["Header:SearchTrust"]
@@ -19,10 +36,6 @@
 				<div id="search-hint" class="govuk-hint moj-search__hint">
 					@_localizer["Header:Hint:SearchTrust"]
 				</div>
-
-				<span id="search-error" class="">
-					<span class="govuk-visually-hidden">Error:</span> Enter search criteria higher than three characters
-				</span>
 				<input class="govuk-input moj-search__input" id="search" name="search" type="text" aria-describedby="search-hint search-error" placeholder="Search Trusts">
 			</div>
 
@@ -34,53 +47,60 @@
 	<div id="trusts-partial-results"></div>
 </div>
 
-@section BeforeMain {
+
 	<script>
 		$(function () {
+			
+			let clearResults = function () {
+				$("#trusts-partial-results").empty();
+			};
+			let showGlobalError = function () {
+				$(".moj-banner").show();	
+			};
+			let hideGlobalError = function () {
+				$(".moj-banner").hide();	
+			};
+			
 			try {
-				let showError = function () {
-					$(".govuk-form-group").addClass("govuk-form-group--error");
-					$("#search").addClass("govuk-input--error");
-					$("#search-error").addClass("govuk-error-message");
-				};
-				let removeError = function () {
-            		$(".govuk-form-group").removeClass("govuk-form-group--error");
-            		$("#search").removeClass("govuk-input--error");
-            		$("#search-error").removeClass("govuk-error-message");
-				};
+				let searchForm = $("#search-form");			
+				const validator = new MOJFrontend.FormValidator(searchForm[0]);
+				validator.addValidator('search', [{
+                  method: function(field) {
+                    return field.value.trim().length > 0;
+                  },
+                  message: 'Enter your search'
+                }, {
+                  method: function(field) {
+                    return (field.value.length > 2);
+                  },
+                  message: 'Enter search criteria higher than three characters'
+                }]);
 				
-				$("#search").keyup(function() {
-					if (this.value.length > 2) {
-						// disable errors
-						removeError();
-					}
-				});
-				
-				$("#search-form").submit(function (event) {
-					event.preventDefault();
-					
-					let search = $("#search").val();
-					
-					// Send request if valid
-					if (search !== "" && search.length > 2) {
-						removeError();
+				searchForm.submit(function (event) {
+					validator.onSubmit(event);
+					if (validator.validate()) {
+						event.preventDefault();
 						
 						// Ajax Get Trusts						
-						$.get("case/TrustsPartial", { searchQuery: search}).done(function (trustsPartial) {
+						$.get("case/TrustsPartial", { searchQuery: $("#search").val()}).done(function (trustsPartial) {
 							$("#trusts-partial-results").html(trustsPartial);
+							hideGlobalError();
 						}).fail(function() {
-							console.log("Get error");
-				  		});
-					}
-					else 
-					{
-						showError();
+							clearResults();
+							showGlobalError();
+						});
+					} else {
+						clearResults();
+						hideGlobalError();
 					}
 				});
+				
        		} catch(err) {
-				console.log("Search for trusts error...", err)
+				console.log("Search for trusts error...", err);
+				clearResults();
+				showGlobalError();
 	  		}
 	    });
 	</script>
-}
+
 

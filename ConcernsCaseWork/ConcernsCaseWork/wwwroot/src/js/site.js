@@ -3,7 +3,3 @@
 
 // Write your JavaScript code.
 
-import GOVUKFrontend from "govuk-frontend/govuk/all";
-GOVUKFrontend.initAll();
-import MOJFrontend from "@ministryofjustice/frontend/moj/all";
-MOJFrontend.initAll();
