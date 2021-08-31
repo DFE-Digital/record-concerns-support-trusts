@@ -33,4 +33,10 @@
 	<data name="Button:Search" xml:space="preserve">
 		<value>Search</value>
 	</data>
+	<data name="Error:Warning" xml:space="preserve">
+		<value>Warning</value>
+	</data>
+	<data name="Error:Message" xml:space="preserve">
+		<value>Something went wrong – try again.</value>
+	</data>
 </root>

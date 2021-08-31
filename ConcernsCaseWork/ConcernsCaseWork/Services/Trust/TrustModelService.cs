@@ -1,17 +1,34 @@
-﻿using ConcernsCaseWork.Models;
+﻿using AutoMapper;
+using ConcernsCaseWork.Models;
+using Microsoft.Extensions.Logging;
 using Service.TRAMS.Models;
+using Service.TRAMS.Trusts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Trust
 {
-	public sealed class TrustModelService :ITrustModelService
+	public sealed class TrustModelService : ITrustModelService
 	{
-		
-		
-		public Task<IList<TrustModel>> GetTrustsBySearchCriteria(TrustSearch trustSearch)
+		private readonly ITrustSearchService _trustSearchService;
+		private readonly ILogger<TrustModelService> _logger;
+		private readonly IMapper _mapper;
+
+		public TrustModelService(ITrustSearchService trustSearchService, IMapper mapper, ILogger<TrustModelService> logger)
 		{
-			throw new System.NotImplementedException();
+			_trustSearchService = trustSearchService;
+			_mapper = mapper;
+			_logger = logger;
+		}
+		
+		public async Task<IList<TrustModel>> GetTrustsBySearchCriteria(TrustSearch trustSearch)
+		{
+			_logger.LogInformation("TrustModelService::GetTrustsBySearchCriteria");
+			
+			var trustsDto = await _trustSearchService.GetTrustsBySearchCriteria(trustSearch);
+			
+			// Map trusts dto to model
+			return _mapper.Map<IList<TrustModel>>(trustsDto);
 		}
 	}
 }

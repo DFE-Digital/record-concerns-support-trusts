@@ -23,7 +23,7 @@
           </svg>
         
           <div class="moj-banner__message">
-            <span class="moj-banner__assistive">Warning</span>Something went wrong – try again.
+            <span class="moj-banner__assistive">@_localizer["Error:Warning"]</span>@_localizer["Error:Message"]
           </div>
         
         </div>
@@ -96,7 +96,6 @@
 				});
 				
        		} catch(err) {
-				console.log("Search for trusts error...", err);
 				clearResults();
 				showGlobalError();
 	  		}

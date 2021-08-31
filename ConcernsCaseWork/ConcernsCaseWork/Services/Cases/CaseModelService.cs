@@ -14,11 +14,11 @@ namespace ConcernsCaseWork.Services.Cases
 		private readonly ICaseService _caseService;
 		private readonly IMapper _mapper;
 		
-		public CaseModelService(ILogger<CaseModelService> logger, ICaseService caseService, IMapper mapper)
+		public CaseModelService(ICaseService caseService, IMapper mapper, ILogger<CaseModelService> logger)
 		{
-			_logger = logger;
 			_caseService = caseService;
 			_mapper = mapper;
+			_logger = logger;
 		}
 		
 		public async Task<IList<CaseModel>> GetCasesByCaseworker(string caseworker)

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Service.TRAMS.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,18 +24,20 @@ namespace ConcernsCaseWork.Pages.Case
 			_logger = logger;
 		}
 		
-		public PartialViewResult OnGetTrustsPartial(string searchQuery)
+		public async Task<PartialViewResult> OnGetTrustsPartial(string searchQuery)
 		{
-			// Double check search query.
+			_logger.LogInformation("IndexModel::OnGetTrustsPartial");
 			
-			var trustSearch = new List<TrustModel>
+			// Double check search query.
+			if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < 2)
 			{
-				new TrustModel { Id = 1, Name = "Test1"},
-				new TrustModel { Id = 2, Name = "Test2"},
-				new TrustModel { Id = 3, Name = "Test3"},
-				new TrustModel { Id = 4, Name = "Test4"}
-			};
-			return Partial("_TrustsSearchResult", trustSearch);
+				return Partial("_TrustsSearchResult", Array.Empty<TrustModel>());
+			}
+
+			var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);
+			var trustSearchResponse = await _trustModelService.GetTrustsBySearchCriteria(trustSearch);
+			
+			return Partial("_TrustsSearchResult", trustSearchResponse);
 		}
 		
 		public async Task<JsonResult> OnPostAsync(string searchQuery)

@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			mockCaseService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>())).ReturnsAsync(casesDto);
 
 			// act
-			var caseModelService = new CaseModelService(mockLogger.Object, mockCaseService.Object, mapper);
+			var caseModelService = new CaseModelService(mockCaseService.Object, mapper, mockLogger.Object);
 			var casesModel = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
 
 			// assert
@@ -58,12 +58,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
-			var casesDto = CaseDtoFactory.CreateListCaseDto();
 
 			mockCaseService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>())).ThrowsAsync(new Exception());
 
 			// act
-			var caseModelService = new CaseModelService(mockLogger.Object, mockCaseService.Object, mapper);
+			var caseModelService = new CaseModelService(mockCaseService.Object, mapper, mockLogger.Object);
 			var casesModel = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
 
 			// assert

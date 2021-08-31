@@ -26,4 +26,10 @@
 	<data name="Header:SearchTrust" xml:space="preserve">
 		<value>en</value>
 	</data>
+	<data name="Error:Warning" xml:space="preserve">
+		<value>en</value>
+	</data>
+	<data name="Error:Message" xml:space="preserve">
+		<value>en</value>
+	</data>
 </root>

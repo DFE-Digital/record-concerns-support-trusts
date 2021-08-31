@@ -79,6 +79,24 @@ namespace ConcernsCaseWork.Resources.Pages.Case {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something went wrong – try again..
+        /// </summary>
+        internal static string Error_Message {
+            get {
+                return ResourceManager.GetString("Error:Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        internal static string Error_Warning {
+            get {
+                return ResourceManager.GetString("Error:Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create case.
         /// </summary>
         internal static string Header {
