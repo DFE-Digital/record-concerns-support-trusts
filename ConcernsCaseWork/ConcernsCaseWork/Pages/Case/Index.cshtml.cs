@@ -43,8 +43,24 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::IndexModel::Exception - {ex.Message}");
+				_logger.LogError($"Case::IndexModel::OnGetTrustsPartial::Exception - {ex.Message}");
 				
+				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+			}
+		}
+		
+		public ActionResult OnGetSelectedTrust(string selectedTrust)
+		{
+			try
+			{
+				_logger.LogInformation("IndexModel::OnGetSelectedTrust");
+				
+				return RedirectToPage("", "", new { selectedTrust });
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Case::IndexModel::OnGetSelectedTrust::Exception - {ex.Message}");
+					
 				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 			}
 		}

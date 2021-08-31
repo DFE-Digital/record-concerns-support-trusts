@@ -32,4 +32,10 @@
 	<data name="Error:Message" xml:space="preserve">
 		<value>en</value>
 	</data>
+	<data name="Validator:Message:Empty" xml:space="preserve">
+		<value>en</value>
+	</data>
+	<data name="Validator:Message:Min" xml:space="preserve">
+		<value>en</value>
+	</data>
 </root>

@@ -122,5 +122,23 @@ namespace ConcernsCaseWork.Resources.Pages.Case {
                 return ResourceManager.GetString("Header:SearchTrust", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search cannot be blank.
+        /// </summary>
+        internal static string Validator_Message_Empty {
+            get {
+                return ResourceManager.GetString("Validator:Message:Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter search criteria higher than three characters.
+        /// </summary>
+        internal static string Validator_Message_Min {
+            get {
+                return ResourceManager.GetString("Validator:Message:Min", resourceCulture);
+            }
+        }
     }
 }
