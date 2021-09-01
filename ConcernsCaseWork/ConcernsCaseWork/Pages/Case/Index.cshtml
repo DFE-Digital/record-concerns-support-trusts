@@ -1,7 +1,4 @@
 ﻿@page "{handler?}"
-@using Microsoft.AspNetCore.Mvc.Localization
-
-@inject IViewLocalizer _localizer
 @model ConcernsCaseWork.Pages.Case.IndexModel
 
 @{
@@ -13,21 +10,21 @@
 	<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 	
 	<div class="moj-search govuk-form-group">
-		<h1 class="govuk-heading-l">@_localizer["Header"]</h1>
+		<h1 class="govuk-heading-l">Create case</h1>
 		
 		<form role="search" id="search-form" novalidate>
 			<div class="govuk-form-group">
 				<label class="govuk-label moj-search__label govuk-!-font-weight-bold" for="search">
-					@_localizer["Header:SearchTrust"]
+					Find Trust
 				</label>
 				<div id="search-hint" class="govuk-hint moj-search__hint">
-					@_localizer["Header:Hint:SearchTrust"]
+					Search by name, trust reference number or companies house number
 				</div>
 				<input class="govuk-input moj-search__input" id="search" name="search" type="text" aria-describedby="search-hint search-error" placeholder="Search Trusts">
 			</div>
 
 			<button class="govuk-button moj-search__button" data-module="govuk-button">
-				@_localizer["Button:Search"]
+				Search
 			</button>
 		</form>
 	</div>
@@ -50,12 +47,12 @@
 		  		method: function(field) {
                 	return field.value.trim().length > 0;
               	},
-              	message: '@_localizer["Validator:Message:Empty"]'
+              	message: 'Search cannot be blank'
             }, {
               	method: function(field) {
                 	return (field.value.length > 2);
               	},
-              	message: '@_localizer["Validator:Message:Min"]'
+              	message: 'Enter search criteria higher than three characters'
             }]);
 			
 			searchForm.submit(function (event) {

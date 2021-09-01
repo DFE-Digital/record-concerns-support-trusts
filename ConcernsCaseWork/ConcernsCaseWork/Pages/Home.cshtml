@@ -1,7 +1,4 @@
 ﻿@page
-@using Microsoft.AspNetCore.Mvc.Localization
-
-@inject IViewLocalizer _localizer
 @model ConcernsCaseWork.Pages.HomeModel
 
 @{
@@ -12,43 +9,43 @@
 
 	<div class="govuk-button-group flexalign__right">
 		<a class="govuk-link" href="#">
-			@_localizer["Button:ClosedCases"]
+			Closed cases
 		</a>
 		<a class="govuk-button" asp-page="/case/index" role="button">
-			@_localizer["Button:CreateCase"]
+			Create case
 		</a>
 	</div>
 
 	<!-- Active casework -->
 	@if (Model.CasesActive.Count == 0)
 	{
-		<span>@_localizer["Table:EmptyCases"]</span>
+		<span>There are no cases available.</span>
 	}
 	else
 	{
 		<table class="govuk-table">
 			<caption class="govuk-table__caption govuk-table__caption--m">
-				@_localizer["Table:Header:ActiveCases"]
+				Your active casework
 			</caption>
 			<thead class="govuk-table__head">
 				<tr class="govuk-table__row tr__large">
 					<th class="govuk-table__header" scope="col">
-						@_localizer["Table:Column:ID"]
+						Case ID
 					</th>
 					<th class="govuk-table__header" scope="col">
-						@_localizer["Table:Column:LastUpdate"]
+						Last update
 					</th>
 					<th class="govuk-table__header" scope="col">
-						@_localizer["Table:Column:TrustAcademy"]
+						Trust/Academy
 					</th>
 					<th class="govuk-table__header" scope="col">
-						@_localizer["Table:Column:PrimaryCaseType"]
+						Primary case type
 					</th>
 					<th class="govuk-table__header" scope="col">
-						@_localizer["Table:Column:RagRating"]
+						RAG rating
 					</th>
 					<th class="govuk-table__header" scope="col">
-						@_localizer["Table:Column:Created"]
+						Created
 					</th>
 				</tr>
 			</thead>
@@ -92,28 +89,28 @@
 	<!-- Closed for monitoring -->
 	@if (Model.CasesMonitoring.Count == 0)
     {
-    	<span>@_localizer["Table:EmptyCases"]</span>
+    	<span>There are no cases available.</span>
     }
 	else
 	{
 		<table class="govuk-table  govuk-!-margin-top-9">
 			<caption class="govuk-table__caption govuk-table__caption--m">
-				@_localizer["Table:Header:MonitoringCases"]
+				Closed for monitoring
 			</caption>
 
 			<thead class="govuk-table__head">
 				<tr class="govuk-table__row tr__large">
 					<th class="govuk-table__header" scope="col">
-						@_localizer["Table:Column:ID"]
+						Case ID
 					</th>
 					<th class="govuk-table__header" scope="col">
-						@_localizer["Table:Column:TrustAcademy"]
+						Trust/Academy
 					</th>
 					<th class="govuk-table__header" scope="col">
-						@_localizer["Table:Column:PrimaryCaseType"]
+						Primary case type
 					</th>
 					<th class="govuk-table__header" scope="col">
-						@_localizer["Table:Column:Closed"]
+						Closed
 					</th>
 				</tr>
 			</thead>

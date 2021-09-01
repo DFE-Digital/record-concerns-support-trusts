@@ -22,10 +22,7 @@ namespace ConcernsCaseWork
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-	        // Use internal resources with localization, avoiding hardcoded strings in pages,
-	        // even when the web application will be always in english.
-	        services.AddLocalization(options => options.ResourcesPath = "Resources");
-	        services.AddMvc().AddViewLocalization().AddSessionStateTempDataProvider();
+	        services.AddMvc().AddSessionStateTempDataProvider();
 
 	        services.AddRazorPages(options =>
             {

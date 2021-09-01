@@ -1,10 +1,10 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Service.TRAMS.Models;
 using System;
 using System.Net;
@@ -18,9 +18,6 @@ namespace ConcernsCaseWork.Pages.Case
 	{
 		private readonly ITrustModelService _trustModelService;
 		private readonly ILogger<IndexModel> _logger;
-
-		[TempData]
-		public string CaseState { get; set; }
 		
 		private const int SearchQueryMinLength = 3;
 		
@@ -67,8 +64,8 @@ namespace ConcernsCaseWork.Pages.Case
 					throw new Exception($"Selected trust is incorrect - {selectedTrust}");
 				}
 
-				// Store in request cookies
-				CaseState = JsonConvert.SerializeObject(new CaseStateData { TrustUkPrn = selectedTrust });
+				// Store CaseState into TempDate.
+				TempData.Set("CaseStateData", new CaseStateData { TrustUkPrn = selectedTrust });
 				
 				return new JsonResult(new { redirectUrl = Url.Page("Details") });
 			}
