@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Pages.Case
 			_logger = logger;
 		}
 		
-		public async Task<ActionResult> OnGetTrustsPartial(string searchQuery)
+		public async Task<ActionResult> OnGetTrustsSearchResult(string searchQuery)
 		{
 			try
 			{

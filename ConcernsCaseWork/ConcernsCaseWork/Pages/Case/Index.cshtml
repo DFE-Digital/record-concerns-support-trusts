@@ -37,25 +37,10 @@
 </div>
 
 <script type="application/javascript">
-
-	let showGlobalError;
-	let hideGlobalError;
-	
 	$(function () {
-		(function() {
-			showGlobalError = function(){
-				$("#moj-banner-error").removeClass("govuk-!-display-none");
-			};
-		}());
-		(function() {
-			hideGlobalError = function(){
-				$("#moj-banner-error").addClass("govuk-!-display-none");
-			};
-		}());
 		let clearResults = function () {
 			$("#trusts-partial-results").empty();
 		};
-					
 		try {
 			let searchForm = $("#search-form");
 			const validator = new MOJFrontend.FormValidator(searchForm[0]);
@@ -76,23 +61,30 @@
 				if (validator.validate()) {
 					event.preventDefault();
 					
+					clearResults();
+					showLoader();
+					
 					// Ajax Get Trusts
-					$.get("case/TrustsPartial", { searchQuery: $("#search").val() }).done(function (trustsPartial) {							
+					$.get("case/TrustsSearchResult", { searchQuery: $("#search").val() }).done(function (trustsPartial) {							
 						$("#trusts-partial-results").html(trustsPartial);
 						hideGlobalError();
+						hideLoader();
 					}).fail(function() {
 						clearResults();
 						showGlobalError();
+						hideLoader();
 					});
 				} else {
 					clearResults();
-					hideGlobalError();
+					hideGlobalError()
+					hideLoader();
 				}
 			});
 			
        	} catch(err) {
 			clearResults();
 			showGlobalError();
+			hideLoader();
 	  	}
     });
 </script>

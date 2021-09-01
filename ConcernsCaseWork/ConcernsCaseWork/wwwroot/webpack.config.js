@@ -1,4 +1,3 @@
-const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
@@ -59,8 +58,4 @@ module.exports = {
 			},
 		]
 	},
-	output: {
-		path: path.resolve(__dirname, 'dist'),
-		filename: 'site.js',
-	}
 };

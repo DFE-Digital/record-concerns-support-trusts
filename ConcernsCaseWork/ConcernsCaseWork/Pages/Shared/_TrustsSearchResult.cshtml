@@ -40,7 +40,6 @@ else
 	
 	<script type="application/javascript">
 		$(function () {
-						
 			let trustForm = $("#trust-form");		
 			const trustValidator = new MOJFrontend.FormValidator(trustForm[0]);
 			trustValidator.addValidator('trust-ukprn', [{
@@ -54,15 +53,19 @@ else
 				trustValidator.onSubmit(event);
 				if (trustValidator.validate()) {
 					event.preventDefault();
-										
+					
+					showLoader();
+					
 					// Ajax Post Trust
 					$.get("case?handler=SelectedTrust", 
 						{ selectedTrust: $('input[name=trust-ukprn]:checked').val() })
 					.fail(function() {
 						showGlobalError();
+						hideLoader();
 					});
 				} else {
 					hideGlobalError();
+					hideLoader();
 				}
 			});
 		});
