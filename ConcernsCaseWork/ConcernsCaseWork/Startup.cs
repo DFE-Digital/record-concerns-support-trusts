@@ -25,7 +25,7 @@ namespace ConcernsCaseWork
 	        // Use internal resources with localization, avoiding hardcoded strings in pages,
 	        // even when the web application will be always in english.
 	        services.AddLocalization(options => options.ResourcesPath = "Resources");
-	        services.AddMvc().AddViewLocalization();
+	        services.AddMvc().AddViewLocalization().AddSessionStateTempDataProvider();
 
 	        services.AddRazorPages(options =>
             {
