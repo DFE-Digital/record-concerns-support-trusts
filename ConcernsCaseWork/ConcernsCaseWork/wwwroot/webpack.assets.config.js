@@ -13,6 +13,6 @@ module.exports = {
 				{ from: path.resolve(__dirname, 'node_modules/@ministryofjustice/frontend/moj'), to: path.resolve(__dirname, 'dist/moj') },
 				{ from: path.resolve(__dirname, 'src/js'), to: path.resolve(__dirname, 'dist') },
 			]
-		})
+		}),
 	],
 };
