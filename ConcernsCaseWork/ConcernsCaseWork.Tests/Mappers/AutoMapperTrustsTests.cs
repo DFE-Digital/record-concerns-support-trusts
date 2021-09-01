@@ -18,7 +18,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
 
-			var trustsDto = TrustDtoFactory.CreateListTrustSummaryDto();
+			var trustsDto = TrustFactory.CreateListTrustSummaryDto();
 			
 			// act
 			var trustsModel = mapper.Map<IList<TrustSummaryModel>>(trustsDto);

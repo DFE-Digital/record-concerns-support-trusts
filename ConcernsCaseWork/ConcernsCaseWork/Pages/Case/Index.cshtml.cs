@@ -17,6 +17,8 @@ namespace ConcernsCaseWork.Pages.Case
 	{
 		private readonly ITrustModelService _trustModelService;
 		private readonly ILogger<IndexModel> _logger;
+
+		private const int SearchQueryMinLength = 3;
 		
 		public IndexModel(ITrustModelService trustModelService, ILogger<IndexModel> logger)
 		{
@@ -28,10 +30,10 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			try
 			{
-				_logger.LogInformation("IndexModel::OnGetTrustsPartial");
+				_logger.LogInformation("Case::IndexModel::OnGetTrustsPartial");
 			
 				// Double check search query.
-				if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < 2)
+				if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < SearchQueryMinLength)
 				{
 					return Partial("_TrustsSearchResult", Array.Empty<TrustSummaryModel>());
 				}
@@ -53,7 +55,7 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			try
 			{
-				_logger.LogInformation("IndexModel::OnGetSelectedTrust");
+				_logger.LogInformation("Case::IndexModel::OnGetSelectedTrust");
 				
 				return RedirectToPage("", "", new { selectedTrust });
 			}

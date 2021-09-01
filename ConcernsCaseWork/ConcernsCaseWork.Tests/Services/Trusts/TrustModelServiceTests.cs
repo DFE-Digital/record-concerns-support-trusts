@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			var mockLogger = new Mock<ILogger<TrustModelService>>();
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
-			var trustSummaryDto = TrustDtoFactory.CreateListTrustSummaryDto();
+			var trustSummaryDto = TrustFactory.CreateListTrustSummaryDto();
 
 			mockTrustService.Setup(ts => ts.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(trustSummaryDto);
 
