@@ -19,14 +19,14 @@
 
 </head>
 <body class="govuk-template__body ">
-
-<script src="~/src/js/jquery.min.js"></script>
+<script src="~/dist/vendor/jquery.min.js"></script>
+<script src="~/dist/moj/all.js"></script>
 <script>
 	document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
 </script>
 
 <header class="moj-header " role="banner">
-	<div class="govuk-width-container govuk-width-container-override">
+	<div class="govuk-width-container">
 		<div class="govuk-grid-row">
 			<div class="govuk-grid-column-three-quarters">
 				<svg focusable="false" class="moj-header__logotype-crest" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" height="40" width="40">
@@ -49,14 +49,25 @@
 	</div>
 </header>
 
-<div class="govuk-width-container govuk-width-container-override">
+<div class="govuk-width-container">
 	@await RenderSectionAsync("BeforeMain", required: false)
+	<partial name="_Back" model="BackModel.BrowserBackPage"/>
 	<main class="govuk-main-wrapper wrapper_padding-top-20 govuk-main-wrapper--auto-spacing" id="main-content" role="main">
+		
+		<div id="moj-banner-error" class="moj-banner moj-banner--warning govuk-!-display-none">
+            <svg class="moj-banner__icon" fill="currentColor" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
+                <path d="M13.6,15.4h-2.3v-4.5h2.3V15.4z M13.6,19.8h-2.3v-2.2h2.3V19.8z M0,23.2h25L12.5,2L0,23.2z" />
+            </svg>
+    
+            <div class="moj-banner__message">
+                <span class="moj-banner__assistive">Warning"</span>Something went wrong - Please try again.
+            </div>
+        </div>
 		@RenderBody()
 	</main>
 </div>
 <footer class="govuk-footer " role="contentinfo">
-	<div class="govuk-width-container govuk-width-container-override">
+	<div class="govuk-width-container">
 		<div class="govuk-footer__meta">
 			<div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
 				<h2 class="govuk-heading-m">Get support</h2>
@@ -88,7 +99,7 @@
 						</a>
 					</li>
 					<li class="govuk-footer__inline-list-item">
-						<a class="govuk-footer__link" href="/admin">
+						<a class="govuk-footer__link" asp-page="/admin">
 							Admin
 						</a>
 					</li>

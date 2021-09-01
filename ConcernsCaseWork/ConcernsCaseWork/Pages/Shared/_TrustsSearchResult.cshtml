@@ -1,0 +1,77 @@
+﻿@model List<ConcernsCaseWork.Models.TrustSummaryModel>
+
+@if (Model.Count == 0)
+{
+	<div class="govuk-form-group">
+		<span>No results found.</span>
+	</div>
+}
+else
+{
+	<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+	<form role="search" id="trust-form" novalidate>
+		<div class="govuk-form-group">
+			<fieldset class="govuk-fieldset">
+	            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+				Trusts
+              </legend>
+        
+              <div class="govuk-radios">
+	              @{
+	                var checkedStr = Model.Count == 1 ? "checked" : "";
+	                foreach (var trustModel in Model)
+	                {
+	                    <div class="govuk-radios__item">
+	                        <input class="govuk-radios__input" id="trustukprn" name="trustukprn" type="radio" value="@trustModel.UkPrn" @checkedStr>
+	                        <label class="govuk-label govuk-radios__label" for="trustukprn">
+	                            @trustModel.DisplayName
+	                        </label>
+	                    </div>
+	                }
+	            }
+              </div>
+			</fieldset>
+		</div>
+		<button class="govuk-button" data-module="govuk-button">
+			Next
+		</button>
+	</form>
+	
+	<script type="application/javascript">
+		$(function () {
+			let trustForm = $("#trust-form");		
+			const trustValidator = new MOJFrontend.FormValidator(trustForm[0]);
+			trustValidator.addValidator('trustukprn', [{
+				method: function(field) {
+					return field.value.trim().length > 0;
+			  	},
+			  	message: 'Select a trust'
+			}]);
+					
+			trustForm.submit(function (event) {
+				trustValidator.onSubmit(event);
+				if (trustValidator.validate()) {
+					event.preventDefault();
+					
+					showLoader();
+					
+					// Ajax Post Trust
+					$.get("case?handler=SelectedTrust", 
+						{ selectedTrust: $('input[name=trustukprn]:checked').val() })
+					.done(function (result) {
+						hideLoader();
+					 	window.location.replace(result.redirectUrl);
+					})
+					.fail(function() {
+						showGlobalError();
+						hideLoader();
+					});
+				} else {
+					hideGlobalError();
+					hideLoader();
+				}
+			});
+		});
+	</script>
+}

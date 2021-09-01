@@ -7,6 +7,6 @@ namespace Service.TRAMS.Trusts
 	public interface ITrustService
 	{
 		string BuildRequestUri(TrustSearch trustSearch);
-		Task<IList<TrustDto>> GetTrustsByPagination(TrustSearch trustSearch);
+		Task<IList<TrustSummaryDto>> GetTrustsByPagination(TrustSearch trustSearch);
 	}
 }

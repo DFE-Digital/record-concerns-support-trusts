@@ -11,14 +11,16 @@
 <div class="govuk-!-margin-top-0">
 
 	<div class="govuk-button-group flexalign__right">
-		<a class="govuk-link" href="#">@_localizer["Button:ClosedCases"]</a>
-		<button class="govuk-button" data-module="govuk-button">
+		<a class="govuk-link" href="#">
+			@_localizer["Button:ClosedCases"]
+		</a>
+		<a class="govuk-button" asp-page="/case/index" role="button">
 			@_localizer["Button:CreateCase"]
-		</button>
+		</a>
 	</div>
 
 	<!-- Active casework -->
-	@if (@Model.CasesActive.Count == 0)
+	@if (Model.CasesActive.Count == 0)
 	{
 		<span>@_localizer["Table:EmptyCases"]</span>
 	}
@@ -88,7 +90,7 @@
 	}
 	
 	<!-- Closed for monitoring -->
-	@if (@Model.CasesMonitoring.Count == 0)
+	@if (Model.CasesMonitoring.Count == 0)
     {
     	<span>@_localizer["Table:EmptyCases"]</span>
     }

@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Service.TRAMS.Models
 {
-	public sealed class TrustDto
+	public sealed class TrustSummaryDto
 	{		
 		[JsonPropertyName("ukprn")]
 		public string UkPrn { get; }
@@ -18,10 +18,10 @@ namespace Service.TRAMS.Models
 		public string CompaniesHouseNumber { get; }
 		
 		[JsonPropertyName("establishments")]
-		public List<EstablishmentDto> Establishments { get; }
+		public List<EstablishmentSummaryDto> Establishments { get; }
 
 		[JsonConstructor]
-		public TrustDto(string ukprn, string urn, string groupName, string companiesHouseNumber, List<EstablishmentDto> establishments) => 
+		public TrustSummaryDto(string ukprn, string urn, string groupName, string companiesHouseNumber, List<EstablishmentSummaryDto> establishments) => 
 			(UkPrn, Urn, GroupName, CompaniesHouseNumber, Establishments) = (ukprn, urn, groupName, companiesHouseNumber, establishments);
 	}
 }

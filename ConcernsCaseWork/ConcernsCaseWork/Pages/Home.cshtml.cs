@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.Pages
 
         public async Task OnGetAsync()
         {
-	        _logger.LogInformation("IndexModel executed at {Date}", DateTime.UtcNow);
+	        _logger.LogInformation("HomeModel::OnGetAsync executed at {Date}", DateTime.UtcNow);
 	        // TODO Get caseworker ID or name to query the cases against it.
 	        CasesActive = await _caseModelService.GetCasesByCaseworker("testing");
 	        // TODO Filter cases per status

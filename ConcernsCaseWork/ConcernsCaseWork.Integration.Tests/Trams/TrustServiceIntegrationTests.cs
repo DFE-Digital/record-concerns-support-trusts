@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			const string searchParameter = "Northwood";
 			
 			// act
-			var trustsPage = await trustService.GetTrustsByPagination(TrustSearchFactory.CreateTrustSearch(searchParameter, searchParameter, searchParameter));
+			var trustsPage = await trustService.GetTrustsByPagination(TrustFactory.CreateTrustSearch(searchParameter, searchParameter, searchParameter));
 
 			// assert
 			Assert.That(trustsPage, Is.Not.Null);

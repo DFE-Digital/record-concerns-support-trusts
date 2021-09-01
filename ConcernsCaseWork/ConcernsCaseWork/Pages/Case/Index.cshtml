@@ -1,0 +1,94 @@
+﻿@page "{handler?}"
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer _localizer
+@model ConcernsCaseWork.Pages.Case.IndexModel
+
+@{
+	ViewData["Title"] = "New Case";
+}
+
+<div class="govuk-width-container">
+	
+	<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+	
+	<div class="moj-search govuk-form-group">
+		<h1 class="govuk-heading-l">@_localizer["Header"]</h1>
+		
+		<form role="search" id="search-form" novalidate>
+			<div class="govuk-form-group">
+				<label class="govuk-label moj-search__label govuk-!-font-weight-bold" for="search">
+					@_localizer["Header:SearchTrust"]
+				</label>
+				<div id="search-hint" class="govuk-hint moj-search__hint">
+					@_localizer["Header:Hint:SearchTrust"]
+				</div>
+				<input class="govuk-input moj-search__input" id="search" name="search" type="text" aria-describedby="search-hint search-error" placeholder="Search Trusts">
+			</div>
+
+			<button class="govuk-button moj-search__button" data-module="govuk-button">
+				@_localizer["Button:Search"]
+			</button>
+		</form>
+	</div>
+</div>
+
+<div class="govuk-width-container">
+	<div class="ccms-loader govuk-!-display-none"></div>
+	<div id="trusts-partial-results"></div>
+</div>
+
+<script type="application/javascript">
+	$(function () {
+		let clearResults = function () {
+			$("#trusts-partial-results").empty();
+		};
+		try {
+			let searchForm = $("#search-form");
+			const validator = new MOJFrontend.FormValidator(searchForm[0]);
+			validator.addValidator('search', [{
+		  		method: function(field) {
+                	return field.value.trim().length > 0;
+              	},
+              	message: '@_localizer["Validator:Message:Empty"]'
+            }, {
+              	method: function(field) {
+                	return (field.value.length > 2);
+              	},
+              	message: '@_localizer["Validator:Message:Min"]'
+            }]);
+			
+			searchForm.submit(function (event) {
+				validator.onSubmit(event);
+				if (validator.validate()) {
+					event.preventDefault();
+					
+					clearResults();
+					showLoader();
+					
+					// Ajax Get Trusts
+					$.get("case/TrustsSearchResult", { searchQuery: $("#search").val() })
+					.done(function (trustsPartial) {							
+						hideGlobalError();
+                        hideLoader();
+						$("#trusts-partial-results").html(trustsPartial);
+					}).fail(function() {
+						clearResults();
+						showGlobalError();
+						hideLoader();
+					});
+				} else {
+					clearResults();
+					hideGlobalError()
+					hideLoader();
+				}
+			});
+			
+       	} catch(err) {
+			clearResults();
+			showGlobalError();
+			hideLoader();
+	  	}
+    });
+</script>
+

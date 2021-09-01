@@ -22,12 +22,12 @@ namespace Service.TRAMS.Trusts
 			_hardLimitTrustsByPagination = options.Value.TrustsLimitByPage;
 		}
 		
-		public async Task<IList<TrustDto>> GetTrustsBySearchCriteria(TrustSearch trustSearch)
+		public async Task<IList<TrustSummaryDto>> GetTrustsBySearchCriteria(TrustSearch trustSearch)
 		{
 			_logger.LogInformation("TrustSearchService::GetTrustsBySearchCriteria execution");
 			
-			var trustList = new List<TrustDto>();
-			IList<TrustDto> trusts;
+			var trustList = new List<TrustSummaryDto>();
+			IList<TrustSummaryDto> trusts;
 			var nrRequests = 0;
 			
 			do

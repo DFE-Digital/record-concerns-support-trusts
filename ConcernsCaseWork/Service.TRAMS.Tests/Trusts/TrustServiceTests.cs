@@ -21,7 +21,7 @@ namespace Service.TRAMS.Tests.Trusts
 		public async Task WhenGetTrustsByPagination_ReturnsTrusts()
 		{
 			// arrange
-			var expectedTrusts = TrustDtoFactory.CreateListTrustDto();
+			var expectedTrusts = TrustFactory.CreateListTrustSummaryDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -43,7 +43,7 @@ namespace Service.TRAMS.Tests.Trusts
 			var trustService = new TrustService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var trusts = await trustService.GetTrustsByPagination(TrustSearchFactory.CreateTrustSearch());
+			var trusts = await trustService.GetTrustsByPagination(TrustFactory.CreateTrustSearch());
 
 			// assert
 			Assert.That(trusts, Is.Not.Null);
@@ -96,7 +96,7 @@ namespace Service.TRAMS.Tests.Trusts
 			var trustService = new TrustService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var trusts = await trustService.GetTrustsByPagination(TrustSearchFactory.CreateTrustSearch());
+			var trusts = await trustService.GetTrustsByPagination(TrustFactory.CreateTrustSearch());
 
 			// assert
 			Assert.That(trusts, Is.Not.Null);
@@ -112,7 +112,7 @@ namespace Service.TRAMS.Tests.Trusts
 		{
 			// arrange
 			var trustService = new TrustService(null, null);
-			var trustSearch = TrustSearchFactory.CreateTrustSearch(groupName, ukprn, companiesHouseNumber);
+			var trustSearch = TrustFactory.CreateTrustSearch(groupName, ukprn, companiesHouseNumber);
 
 			// act
 			var requestUri = trustService.BuildRequestUri(trustSearch);

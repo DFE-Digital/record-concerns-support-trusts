@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>1.3</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="Header" xml:space="preserve">
+		<value>Create case</value>
+	</data>
+	<data name="Header:SearchTrust" xml:space="preserve">
+		<value>Find Trust</value>
+	</data>
+	<data name="Header:Hint:SearchTrust" xml:space="preserve">
+		<value>Search by name, trust reference number or companies house number</value>
+	</data>
+	<data name="Button:Next" xml:space="preserve">
+		<value>Next</value>
+	</data>
+	<data name="Button:Search" xml:space="preserve">
+		<value>Search</value>
+	</data>
+	<data name="Validator:Message:Empty" xml:space="preserve">
+		<value>Search cannot be blank</value>
+	</data>
+	<data name="Validator:Message:Min" xml:space="preserve">
+		<value>Enter search criteria higher than three characters</value>
+	</data>
+</root>
