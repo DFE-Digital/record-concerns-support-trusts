@@ -147,7 +147,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		[Test]
-		public void WhenOnGetSelectedTrust_ReturnRedirectToPage()
+		public void WhenOnGetSelectedTrust_ReturnJsonResultWithRedirectUrl()
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexModel>>();
@@ -158,12 +158,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			var response = pageModel.OnGetSelectedTrust("selectedTrust");
 			
 			// assert
-			Assert.IsInstanceOf(typeof(RedirectToPageResult), response);
-			var redirectPage = response as RedirectToPageResult;
+			Assert.IsInstanceOf(typeof(ObjectResult), response);
+			var jsonPageResponse = response as ObjectResult;
 			
-			Assert.That(redirectPage, Is.Not.Null);
-			Assert.That(redirectPage.PageName, Is.EqualTo("Details"));
-			
+			Assert.That(jsonPageResponse, Is.Not.Null);
+
 			// Verify ILogger
 			mockLogger.Verify(
 				m => m.Log(
