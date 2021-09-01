@@ -57,7 +57,13 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				_logger.LogInformation("Case::IndexModel::OnGetSelectedTrust");
 				
-				return RedirectToPage("", "", new { selectedTrust });
+				// Double check selected trust.
+				if (string.IsNullOrEmpty(selectedTrust) || selectedTrust.Contains("-") || selectedTrust.Length < SearchQueryMinLength)
+				{
+					throw new Exception($"Selected trust is incorrect - {selectedTrust}");
+				}
+				
+				return RedirectToPage("Details", new { selectedTrust });
 			}
 			catch (Exception ex)
 			{

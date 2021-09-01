@@ -108,7 +108,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				Times.Once);
 		}
 		
-				[Test]
+		[Test]
 		public async Task WhenOnGetTrustsSearchResult_ReturnStatusCodeException()
 		{
 			// arrange
@@ -120,6 +120,76 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			// act
 			var response = await pageModel.OnGetTrustsSearchResult("north");
+			
+			// assert
+			Assert.That(response, Is.TypeOf<ObjectResult>());
+			var objectResponse = response as ObjectResult;
+			Assert.That(objectResponse?.StatusCode, Is.EqualTo(500));
+			
+			// Verify ILogger
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Information,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+			
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Error,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+		}
+		
+		[Test]
+		public void WhenOnGetSelectedTrust_ReturnRedirectToPage()
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<IndexModel>>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockLogger.Object, true);
+			
+			// act
+			var response = pageModel.OnGetSelectedTrust("selectedTrust");
+			
+			// assert
+			Assert.IsInstanceOf(typeof(RedirectToPageResult), response);
+			var redirectPage = response as RedirectToPageResult;
+			
+			Assert.That(redirectPage, Is.Not.Null);
+			Assert.That(redirectPage.PageName, Is.EqualTo("Details"));
+			
+			// Verify ILogger
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Information,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+		}
+		
+		[TestCase("")]
+		[TestCase(null)]
+		[TestCase("a")]
+		[TestCase("as")]
+		public void WhenOnGetSelectedTrust_ReturnStatusCodeException(string selectedTrust)
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<IndexModel>>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+
+			mockTrustModelService.Setup(t => t.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).Throws<Exception>();
+			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockLogger.Object, true);
+			
+			// act
+			var response = pageModel.OnGetSelectedTrust(selectedTrust);
 			
 			// assert
 			Assert.That(response, Is.TypeOf<ObjectResult>());
