@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Service.TRAMS.Models;
 using Service.TRAMS.Trusts;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Trusts
@@ -29,7 +30,14 @@ namespace ConcernsCaseWork.Services.Trusts
 			var trustsDto = await _trustSearchService.GetTrustsBySearchCriteria(trustSearch);
 			
 			// Map trusts dto to model
-			return _mapper.Map<IList<TrustSummaryModel>>(trustsDto);
+			var trustsSummary = _mapper.Map<IList<TrustSummaryModel>>(trustsDto);
+
+			// Filter trusts that haven't correct properties and sort
+			var trustsSummaryOrderedFiltered = from t in trustsSummary 
+				where (t.GroupName != null && t.UkPrn != null) 
+				orderby t.GroupName select t;
+
+			return trustsSummaryOrderedFiltered.ToList();
 		}
 	}
 }

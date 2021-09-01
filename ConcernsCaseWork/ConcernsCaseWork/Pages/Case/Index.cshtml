@@ -11,19 +11,8 @@
 <div class="govuk-width-container">
 	
 	<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
-
-	<div id="moj-banner" class="moj-banner moj-banner--warning govuk-!-display-none">
-	    <svg class="moj-banner__icon" fill="currentColor" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
-	        <path d="M13.6,15.4h-2.3v-4.5h2.3V15.4z M13.6,19.8h-2.3v-2.2h2.3V19.8z M0,23.2h25L12.5,2L0,23.2z" />
-	    </svg>
-
-	    <div class="moj-banner__message">
-	        <span class="moj-banner__assistive">@_localizer["Error:Warning"]</span>@_localizer["Error:Message"]
-	    </div>
-	</div>
 	
 	<div class="moj-search govuk-form-group">
-		
 		<h1 class="govuk-heading-l">@_localizer["Header"]</h1>
 		
 		<form role="search" id="search-form" novalidate>
@@ -42,69 +31,69 @@
 			</button>
 		</form>
 	</div>
+	
+	<div class="ccms-loader govuk-!-display-none"></div>
 	<div id="trusts-partial-results"></div>
 </div>
 
-@section BeforeMain {
-	<script type="application/javascript">
+<script type="application/javascript">
+
+	let showGlobalError;
+	let hideGlobalError;
 	
-		let showGlobalError;
-		let hideGlobalError;
-		
-		$(function () {
-			(function() {
-				showGlobalError = function(){
-					$("#moj-banner").removeClass("govuk-!-display-none");
-				};
-			}());
-			(function() {
-				hideGlobalError = function(){
-					$("#moj-banner").addClass("govuk-!-display-none");
-				};
-			}());
-			let clearResults = function () {
-				$("#trusts-partial-results").empty();
+	$(function () {
+		(function() {
+			showGlobalError = function(){
+				$("#moj-banner-error").removeClass("govuk-!-display-none");
 			};
-						
-			try {
-				let searchForm = $("#search-form");
-				const validator = new MOJFrontend.FormValidator(searchForm[0]);
-				validator.addValidator('search', [{
-                  method: function(field) {
-                    return field.value.trim().length > 0;
-                  },
-                  message: '@_localizer["Validator:Message:Empty"]'
-                }, {
-                  method: function(field) {
-                    return (field.value.length > 2);
-                  },
-                  message: '@_localizer["Validator:Message:Min"]'
-                }]);
-				
-				searchForm.submit(function (event) {
-					validator.onSubmit(event);
-					if (validator.validate()) {
-						event.preventDefault();
-						
-						// Ajax Get Trusts
-						$.get("case/TrustsPartial", { searchQuery: $("#search").val() }).done(function (trustsPartial) {							
-							$("#trusts-partial-results").html(trustsPartial);
-							hideGlobalError();
-						}).fail(function() {
-							clearResults();
-							showGlobalError();
-						});
-					} else {
-						clearResults();
+		}());
+		(function() {
+			hideGlobalError = function(){
+				$("#moj-banner-error").addClass("govuk-!-display-none");
+			};
+		}());
+		let clearResults = function () {
+			$("#trusts-partial-results").empty();
+		};
+					
+		try {
+			let searchForm = $("#search-form");
+			const validator = new MOJFrontend.FormValidator(searchForm[0]);
+			validator.addValidator('search', [{
+              method: function(field) {
+                return field.value.trim().length > 0;
+              },
+              message: '@_localizer["Validator:Message:Empty"]'
+            }, {
+              method: function(field) {
+                return (field.value.length > 2);
+              },
+              message: '@_localizer["Validator:Message:Min"]'
+            }]);
+			
+			searchForm.submit(function (event) {
+				validator.onSubmit(event);
+				if (validator.validate()) {
+					event.preventDefault();
+					
+					// Ajax Get Trusts
+					$.get("case/TrustsPartial", { searchQuery: $("#search").val() }).done(function (trustsPartial) {							
+						$("#trusts-partial-results").html(trustsPartial);
 						hideGlobalError();
-					}
-				});
-				
-       		} catch(err) {
-				clearResults();
-				showGlobalError();
-	  		}
-	    });
-	</script>
-}
+					}).fail(function() {
+						clearResults();
+						showGlobalError();
+					});
+				} else {
+					clearResults();
+					hideGlobalError();
+				}
+			});
+			
+       	} catch(err) {
+			clearResults();
+			showGlobalError();
+	  	}
+    });
+</script>
 

@@ -31,6 +31,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Index.en.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Shared\_Layout.en.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>_Layout.en.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -253,11 +258,14 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Shared\_Layout.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>_Layout.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Pages\Partials" />
-    <Folder Include="Resources\Shared" />
     <Folder Include="wwwroot\dist" />
   </ItemGroup>
 	

@@ -15,8 +15,8 @@ namespace ConcernsCaseWork.Pages.Case
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class IndexModel : PageModel
 	{
-		private readonly ILogger<IndexModel> _logger;
 		private readonly ITrustModelService _trustModelService;
+		private readonly ILogger<IndexModel> _logger;
 		
 		public IndexModel(ITrustModelService trustModelService, ILogger<IndexModel> logger)
 		{
