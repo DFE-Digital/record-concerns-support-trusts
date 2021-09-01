@@ -31,7 +31,9 @@
 			</button>
 		</form>
 	</div>
-	
+</div>
+
+<div class="govuk-width-container">
 	<div class="ccms-loader govuk-!-display-none"></div>
 	<div id="trusts-partial-results"></div>
 </div>
@@ -45,15 +47,15 @@
 			let searchForm = $("#search-form");
 			const validator = new MOJFrontend.FormValidator(searchForm[0]);
 			validator.addValidator('search', [{
-              method: function(field) {
-                return field.value.trim().length > 0;
-              },
-              message: '@_localizer["Validator:Message:Empty"]'
+		  		method: function(field) {
+                	return field.value.trim().length > 0;
+              	},
+              	message: '@_localizer["Validator:Message:Empty"]'
             }, {
-              method: function(field) {
-                return (field.value.length > 2);
-              },
-              message: '@_localizer["Validator:Message:Min"]'
+              	method: function(field) {
+                	return (field.value.length > 2);
+              	},
+              	message: '@_localizer["Validator:Message:Min"]'
             }]);
 			
 			searchForm.submit(function (event) {
@@ -65,10 +67,11 @@
 					showLoader();
 					
 					// Ajax Get Trusts
-					$.get("case/TrustsSearchResult", { searchQuery: $("#search").val() }).done(function (trustsPartial) {							
-						$("#trusts-partial-results").html(trustsPartial);
+					$.get("case/TrustsSearchResult", { searchQuery: $("#search").val() })
+					.done(function (trustsPartial) {							
 						hideGlobalError();
-						hideLoader();
+                        hideLoader();
+						$("#trusts-partial-results").html(trustsPartial);
 					}).fail(function() {
 						clearResults();
 						showGlobalError();

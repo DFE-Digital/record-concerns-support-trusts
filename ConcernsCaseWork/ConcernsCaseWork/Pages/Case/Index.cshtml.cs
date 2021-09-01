@@ -63,7 +63,7 @@ namespace ConcernsCaseWork.Pages.Case
 					throw new Exception($"Selected trust is incorrect - {selectedTrust}");
 				}
 				
-				return RedirectToPage("Details", new { selectedTrust });
+				return new JsonResult(new { redirectUrl = Url.Page("Details", new { selectedTrust }) });
 			}
 			catch (Exception ex)
 			{
