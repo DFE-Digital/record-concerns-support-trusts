@@ -121,5 +121,76 @@ namespace Service.TRAMS.Tests.Trusts
 			Assert.That(requestUri, Is.Not.Null);
 			Assert.That(requestUri, Is.EqualTo(expectedRequestUri));
 		}
+
+		[Test]
+		public async Task WhenGetTrustByUkPrn_ReturnsTrust()
+		{
+			// arrange
+			var expectedTrust = TrustFactory.CreateTrustDetailsDto();
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedTrust))
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<TrustService>>();
+			var trustService = new TrustService(httpClientFactory.Object, logger.Object);
+			
+			// act
+			var trustDetailDto = await trustService.GetTrustByUkPrn("999999");
+
+			// assert
+			Assert.That(trustDetailDto, Is.Not.Null);
+			Assert.That(trustDetailDto.Gias, Is.Not.Null);
+			Assert.That(trustDetailDto.Gias.GroupId, Is.EqualTo(expectedTrust.Gias.GroupId));
+			Assert.That(trustDetailDto.Gias.GroupName, Is.EqualTo(expectedTrust.Gias.GroupName));
+			Assert.That(trustDetailDto.Gias.UkPrn, Is.EqualTo(expectedTrust.Gias.UkPrn));
+			Assert.That(trustDetailDto.Gias.CompaniesHouseNumber, Is.EqualTo(expectedTrust.Gias.CompaniesHouseNumber));
+			Assert.That(trustDetailDto.Gias.GroupContactAddress, Is.Not.Null);
+			Assert.That(trustDetailDto.Gias.GroupContactAddress.County, Is.EqualTo(expectedTrust.Gias.GroupContactAddress.County));
+			Assert.That(trustDetailDto.Gias.GroupContactAddress.Locality, Is.EqualTo(expectedTrust.Gias.GroupContactAddress.Locality));
+			Assert.That(trustDetailDto.Gias.GroupContactAddress.Postcode, Is.EqualTo(expectedTrust.Gias.GroupContactAddress.Postcode));
+			Assert.That(trustDetailDto.Gias.GroupContactAddress.Street, Is.EqualTo(expectedTrust.Gias.GroupContactAddress.Street));
+			Assert.That(trustDetailDto.Gias.GroupContactAddress.Town, Is.EqualTo(expectedTrust.Gias.GroupContactAddress.Town));
+			Assert.That(trustDetailDto.Gias.GroupContactAddress.AdditionalLine, Is.EqualTo(expectedTrust.Gias.GroupContactAddress.AdditionalLine));
+		}
+		
+		[Test]
+		public void WhenGetTrustByUkPrn_ThrowsException()
+		{
+			// arrange
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.BadRequest
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<TrustService>>();
+			var trustService = new TrustService(httpClientFactory.Object, logger.Object);
+			
+			// act / assert
+			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustByUkPrn("9999999"));
+		}
 	}
 }

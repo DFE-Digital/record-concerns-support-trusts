@@ -36,5 +36,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					EstablishmentFactory.CreateListEstablishmentSummaryModel())
 			};
 		}
+
+		public static TrustDetailsDto CreateTrustDetailsDto()
+		{
+			return new TrustDetailsDto(new TrustDetailsDto.GiasData("ukprn", "groupid", "groupname", "companieshousenumber", 
+				new TrustDetailsDto.GroupContactAddress("street", "locality", "additionalline", "town", "county", "postcode")));
+		}
 	}
 }
