@@ -89,5 +89,57 @@ namespace ConcernsCaseWork.Integration.Tests.Redis
 			
 			Assert.That(cachedUserClaim, Is.Null);
 		}
+		
+		[Test]
+		public async Task WhenGetCasesStateDataFromCache_IsSuccessful()
+		{
+			// arrange
+			const int cacheTimeToLive = 120;
+			
+			var cacheTtl = _configuration.GetSection(CacheOptions.Cache).Get<CacheOptions>();
+			Assert.NotNull(cacheTtl);
+			
+			var vCapConfiguration = JObject.Parse(_configuration["VCAP_SERVICES"]);
+			var redisCredentials = vCapConfiguration["redis"]?[0]?["credentials"];
+			Assert.NotNull(redisCredentials);
+			
+			var password = (string)redisCredentials["password"];
+			var host = (string)redisCredentials["host"];
+			var port = (string)redisCredentials["port"];
+			var tls = (bool)redisCredentials["tls_enabled"];
+
+			var redisConfigurationOptions = new ConfigurationOptions
+			{
+				Password = password,
+				EndPoints = {$"{host}:{port}"},
+				Ssl = tls
+			};
+			var redisCacheOptions = new RedisCacheOptions { ConfigurationOptions = redisConfigurationOptions };
+			var redisCache = new RedisCache(redisCacheOptions);
+			var cacheProvider = new CacheProvider(redisCache, Options.Create(cacheTtl));
+
+			var cacheEntryOptions = new DistributedCacheEntryOptions()
+				.SetSlidingExpiration(TimeSpan.FromSeconds(cacheTimeToLive));
+			
+			var caseStateData = new CaseStateData
+			{
+				TrustUkPrn = "999999"
+			};
+			
+			// act
+			await cacheProvider.SetCache("test@email.com", caseStateData, cacheEntryOptions);
+			var cachedCaseStateData = await cacheProvider.GetFromCache<CaseStateData>("test@email.com");
+
+			// assert
+			Assert.That(cachedCaseStateData, Is.Not.Null);
+			Assert.That(cachedCaseStateData, Is.InstanceOf<CaseStateData>());
+			Assert.That(cachedCaseStateData.TrustUkPrn, Is.EqualTo(caseStateData.TrustUkPrn));
+
+			// clean up
+			await cacheProvider.ClearCache("test@email.com");
+			cachedCaseStateData = await cacheProvider.GetFromCache<CaseStateData>("test@email.com");
+			
+			Assert.That(cachedCaseStateData, Is.Null);
+		}
 	}
 }
