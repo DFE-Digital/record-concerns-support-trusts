@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "/case/details"
 @model ConcernsCaseWork.Pages.Case.DetailsModel
 
 @{
@@ -11,7 +11,8 @@
 
 			<h1 class="govuk-heading-l">Create case</h1>
 
-			@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")))
+			@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")) ||
+			     Model.TrustDetailsModel is null)
             {
             	<p class="govuk-body">Error: @TempData["Error.Message"]</p>
             }
@@ -32,7 +33,7 @@
 
 					<div class="govuk-summary-list__row">
 						<dt class="govuk-summary-list__key">Type</dt>
-						<dd class="govuk-summary-list__value">trust.establishment_type</dd>
+						<dd class="govuk-summary-list__value">TODO FIND trust.establishment_type</dd>
 					</div>
 
 					<div class="govuk-summary-list__row">
@@ -63,7 +64,7 @@
 				</dl>
 				
 				<!-- FORM -->
-				<form action="/case/details" method="post" role="search" id="case-type-form" novalidate>
+				<form method="post" role="search" id="case-type-form" novalidate>
 
 					<div class="govuk-form-group govuk-!-margin-top-9">
 						<fieldset class="govuk-fieldset">
@@ -75,22 +76,22 @@
 							<div class="govuk-radios">
 
 								<div class="govuk-radios__item">
-									<input class="govuk-radios__input" id="case-type" name="case-type" type="radio" value="record" aria-describedby="case-type-item-hint">
-									<label class="govuk-label govuk-radios__label" for="case-type">
+									<input class="govuk-radios__input" id="casetype" name="casetype" type="radio" value="record" aria-describedby="casetype-item-hint">
+									<label class="govuk-label govuk-radios__label" for="casetype">
 										Record
 									</label>
 								</div>
 
 								<div class="govuk-radios__item">
-									<input class="govuk-radios__input" id="case-type-3" name="case-type" type="radio" value="safeguarding" aria-describedby="case-type-3-item-hint">
-									<label class="govuk-label govuk-radios__label" for="case-type-3">
+									<input class="govuk-radios__input" id="casetype-1" name="casetype" type="radio" value="safeguarding" aria-describedby="casetype-1-item-hint">
+									<label class="govuk-label govuk-radios__label" for="case-type-1">
 										Safeguarding Incident
 									</label>
 								</div>
 
 								<div class="govuk-radios__item">
-									<input class="govuk-radios__input" id="case-type-2" name="case-type" type="radio" value="concern" aria-describedby="case-type-2-item-hint">
-									<label class="govuk-label govuk-radios__label" for="case-type-2">
+									<input class="govuk-radios__input" id="casetype-2" name="casetype" type="radio" value="concern" aria-describedby="casetype-2-item-hint">
+									<label class="govuk-label govuk-radios__label" for="casetype-2">
 										Concern
 									</label>
 								</div>
@@ -105,8 +106,18 @@
 
 				</form>
 				
-				
-				
+				<script type="application/javascript">
+					$(function () {
+						let caseTypeForm = $("#case-type-form");		
+						const trustValidator = new MOJFrontend.FormValidator(caseTypeForm[0]);
+						trustValidator.addValidator('casetype', [{
+							method: function(field) {
+								return field.value.trim().length > 0;
+							},
+							message: 'Select a case type'
+						}]);
+					});
+				</script>
 			}
 		</div>
 	</div>

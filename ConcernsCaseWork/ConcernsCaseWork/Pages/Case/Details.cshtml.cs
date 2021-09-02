@@ -38,7 +38,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var caseStateData = await _casesCachedService.GetCaseData<CaseStateData>(User.Identity.Name);
 				if (caseStateData is null)
 				{
-					throw new Exception("DetailsModel::OnGetAsync::Cache CaseStateData is null");
+					throw new Exception("Cache CaseStateData is null");
 				}
 
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(caseStateData.TrustUkPrn);
@@ -50,20 +50,23 @@ namespace ConcernsCaseWork.Pages.Case
 				TempData["Error.Message"] = "Something went wrong loading the page, please try again.";
 			}
 		}
-
-		public void OnPost()
+		
+		public IActionResult OnPost(string caseType)
 		{
 			try
 			{
 				_logger.LogInformation("Case::DetailsModel::OnPost");
 				
+				if (!string.IsNullOrEmpty(caseType)) return new RedirectToPageResult("Record");
 				
-				
+				TempData["Error.Message"] = "Something went wrong posting the form, please try again.";
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Case::DetailsModel::OnPost::Exception - { ex.Message }");
 			}
+			
+			return Page();
 		}
 	}
 }

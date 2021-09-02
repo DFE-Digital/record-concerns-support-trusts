@@ -54,22 +54,17 @@ else
 				if (trustValidator.validate()) {
 					event.preventDefault();
 					
-					showLoader();
-					
 					// Ajax Post Trust
 					$.get("case?handler=SelectedTrust", 
 						{ selectedTrust: $('input[name=trustukprn]:checked').val() })
 					.done(function (result) {
-						hideLoader();
 					 	window.location.replace(result.redirectUrl);
 					})
 					.fail(function() {
 						showGlobalError();
-						hideLoader();
 					});
 				} else {
 					hideGlobalError();
-					hideLoader();
 				}
 			});
 		});
