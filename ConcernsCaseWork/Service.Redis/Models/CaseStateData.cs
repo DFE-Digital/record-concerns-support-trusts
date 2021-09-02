@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace ConcernsCaseWork.Models
+namespace Service.Redis.Models
 {
 	[Serializable]
-	public class CaseStateData
+	public sealed class CaseStateData
 	{
 		public string TrustUkPrn { get; set; }
 	}

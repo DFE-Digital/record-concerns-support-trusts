@@ -5,6 +5,111 @@
 	ViewData["Title"] = "New Case Details";
 }
 
-<div>
-	testing details
+<div class="govuk-width-container">
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+
+			<h1 class="govuk-heading-l">Create case</h1>
+
+			@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")))
+            {
+            	<p class="govuk-body">Error: @TempData["Error.Message"]</p>
+            }
+			else
+			{
+				<!-- Trust details -->
+				<a asp-page="index" class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 govuk-!-margin-top-6" style="float:right;">Change trust</a>
+				<h2 class="govuk-heading-m govuk-!-margin-top-9">Check trust details</h2>
+
+				<dl class="govuk-summary-list">
+
+					<div class="govuk-summary-list__row">
+						<dt class="govuk-summary-list__key">Name</dt>
+						<dd class="govuk-summary-list__value">
+							@Model.TrustDetailsModel.GiasData.GroupName
+						</dd>
+					</div>
+
+					<div class="govuk-summary-list__row">
+						<dt class="govuk-summary-list__key">Type</dt>
+						<dd class="govuk-summary-list__value">trust.establishment_type</dd>
+					</div>
+
+					<div class="govuk-summary-list__row">
+						<dt class="govuk-summary-list__key">Address</dt>
+						<dd class="govuk-summary-list__value">
+							<p class="govuk-body">
+								@Model.TrustDetailsModel.GiasData.GroupContactAddress.AdditionalLine
+								@Model.TrustDetailsModel.GiasData.GroupContactAddress.Street
+								@Model.TrustDetailsModel.GiasData.GroupContactAddress.Locality
+								@Model.TrustDetailsModel.GiasData.GroupContactAddress.County
+								@Model.TrustDetailsModel.GiasData.GroupContactAddress.Postcode
+								@Model.TrustDetailsModel.GiasData.GroupContactAddress.Town
+							</p>
+						</dd>
+					</div>
+
+					<div class="govuk-summary-list__row">
+						<dt class="govuk-summary-list__key">Region</dt>
+						<dd class="govuk-summary-list__value">
+							@Model.TrustDetailsModel.GiasData.GroupContactAddress.County
+						</dd>
+					</div>
+
+					<div class="govuk-summary-list__row">
+						<dt class="govuk-summary-list__key">Companies House</dt>
+						<dd class="govuk-summary-list__value">
+							<a href="#">
+								@Model.TrustDetailsModel.GiasData.CompaniesHouseNumber
+							</a>
+						</dd>
+					</div>
+
+				</dl>
+				
+				<!-- FORM -->
+				<form action="/case/details" method="post" role="search" id="case-type-form" novalidate>
+
+					<div class="govuk-form-group govuk-!-margin-top-9">
+						<fieldset class="govuk-fieldset">
+
+							<legend class="govuk-heading-m govuk-heading-m govuk-!-font-weight-bold">
+								What type of case is this?
+							</legend>
+
+							<div class="govuk-radios">
+
+								<div class="govuk-radios__item">
+									<input class="govuk-radios__input" id="case-type" name="case-type" type="radio" value="record" aria-describedby="case-type-item-hint">
+									<label class="govuk-label govuk-radios__label" for="case-type">
+										Record
+									</label>
+								</div>
+
+								<div class="govuk-radios__item">
+									<input class="govuk-radios__input" id="case-type-3" name="case-type" type="radio" value="safeguarding" aria-describedby="case-type-3-item-hint">
+									<label class="govuk-label govuk-radios__label" for="case-type-3">
+										Safeguarding Incident
+									</label>
+								</div>
+
+								<div class="govuk-radios__item">
+									<input class="govuk-radios__input" id="case-type-2" name="case-type" type="radio" value="concern" aria-describedby="case-type-2-item-hint">
+									<label class="govuk-label govuk-radios__label" for="case-type-2">
+										Concern
+									</label>
+								</div>
+
+							</div>
+						</fieldset>
+					</div>
+
+					<button class="govuk-button" data-module="govuk-button">
+						Continue
+					</button>
+
+				</form>
+			}
+		</div>
+	</div>
 </div>

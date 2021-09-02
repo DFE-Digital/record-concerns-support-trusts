@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Service.Redis.Cases;
 using Service.TRAMS.Models;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,9 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockLogger.Object, true);
+			var mockCasesCachedService = new Mock<ICasesCachedService>();
+			
+			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
 			
 			// act
 			var response = await pageModel.OnGetTrustsSearchResult(searchQuery);
@@ -59,10 +62,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockCasesCachedService = new Mock<ICasesCachedService>();
 			var trustSummaryModel = TrustFactory.CreateListTrustSummaryModel();
 
 			mockTrustModelService.Setup(t => t.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(trustSummaryModel);
-			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
 			
 			// act
 			var response = await pageModel.OnGetTrustsSearchResult("north");
@@ -114,9 +118,10 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockCasesCachedService = new Mock<ICasesCachedService>();
 
 			mockTrustModelService.Setup(t => t.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).Throws<Exception>();
-			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
 			
 			// act
 			var response = await pageModel.OnGetTrustsSearchResult("north");
@@ -152,7 +157,9 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockLogger.Object, true);
+			var mockCasesCachedService = new Mock<ICasesCachedService>();
+			
+			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
 			
 			// act
 			var response = pageModel.OnGetSelectedTrust("selectedTrust");
@@ -183,9 +190,10 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockCasesCachedService = new Mock<ICasesCachedService>();
 
 			mockTrustModelService.Setup(t => t.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).Throws<Exception>();
-			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
 			
 			// act
 			var response = pageModel.OnGetSelectedTrust(selectedTrust);
@@ -227,11 +235,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			return sb.ToString();
 		}
 		
-		private static IndexModel SetupIndexModel(ITrustModelService mockTrustModelService, ILogger<IndexModel> mockLogger, bool isAuthenticated = false)
+		private static IndexModel SetupIndexModel(ITrustModelService mockTrustModelService, ICasesCachedService mockCasesCachedService, ILogger<IndexModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new IndexModel(mockTrustModelService, mockLogger)
+			return new IndexModel(mockTrustModelService, mockCasesCachedService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

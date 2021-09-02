@@ -1,10 +1,11 @@
-﻿using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Service.Redis.Cases;
+using Service.Redis.Models;
 using Service.TRAMS.Models;
 using System;
 using System.Net;
@@ -17,13 +18,15 @@ namespace ConcernsCaseWork.Pages.Case
 	public class IndexModel : PageModel
 	{
 		private readonly ITrustModelService _trustModelService;
+		private readonly ICasesCachedService _casesCachedService;
 		private readonly ILogger<IndexModel> _logger;
 		
 		private const int SearchQueryMinLength = 3;
 		
-		public IndexModel(ITrustModelService trustModelService, ILogger<IndexModel> logger)
+		public IndexModel(ITrustModelService trustModelService, ICasesCachedService casesCachedService, ILogger<IndexModel> logger)
 		{
 			_trustModelService = trustModelService;
+			_casesCachedService = casesCachedService;
 			_logger = logger;
 		}
 		
@@ -46,7 +49,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::IndexModel::OnGetTrustsPartial::Exception - {ex.Message}");
+				_logger.LogError($"Case::IndexModel::OnGetTrustsSearchResult::Exception - {ex.Message}");
 				
 				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 			}
@@ -61,12 +64,12 @@ namespace ConcernsCaseWork.Pages.Case
 				// Double check selected trust.
 				if (string.IsNullOrEmpty(selectedTrust) || selectedTrust.Contains("-") || selectedTrust.Length < SearchQueryMinLength)
 				{
-					throw new Exception($"Selected trust is incorrect - {selectedTrust}");
+					throw new Exception($"Case::IndexModel::OnGetSelectedTrust::Selected trust is incorrect - {selectedTrust}");
 				}
 
-				// Store CaseState into TempDate.
-				TempData.Set("CaseStateData", new CaseStateData { TrustUkPrn = selectedTrust });
-				
+				// Store CaseState into cache.
+				_casesCachedService.CreateCaseData(User.Identity.Name, new CaseStateData { TrustUkPrn = selectedTrust });
+
 				return new JsonResult(new { redirectUrl = Url.Page("Details") });
 			}
 			catch (Exception ex)
