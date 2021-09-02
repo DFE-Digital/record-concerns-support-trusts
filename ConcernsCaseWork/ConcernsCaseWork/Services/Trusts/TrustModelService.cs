@@ -12,12 +12,14 @@ namespace ConcernsCaseWork.Services.Trusts
 	public sealed class TrustModelService : ITrustModelService
 	{
 		private readonly ITrustSearchService _trustSearchService;
-		private readonly ILogger<TrustModelService> _logger;
+		private readonly ITrustService _trustService;
 		private readonly IMapper _mapper;
+		private readonly ILogger<TrustModelService> _logger;
 
-		public TrustModelService(ITrustSearchService trustSearchService, IMapper mapper, ILogger<TrustModelService> logger)
+		public TrustModelService(ITrustSearchService trustSearchService, ITrustService trustService, IMapper mapper, ILogger<TrustModelService> logger)
 		{
 			_trustSearchService = trustSearchService;
+			_trustService = trustService;
 			_mapper = mapper;
 			_logger = logger;
 		}
@@ -38,6 +40,19 @@ namespace ConcernsCaseWork.Services.Trusts
 				orderby t.GroupName select t;
 
 			return trustsSummaryOrderedFiltered.ToList();
+		}
+
+		public async Task<TrustDetailsModel> GetTrustByUkPrn(string ukPrn)
+		{
+			_logger.LogInformation("TrustModelService::GetTrustByUkPrn");
+			
+			// Fetch trust by ukprn
+			var trustsDetailsDto = await _trustService.GetTrustByUkPrn(ukPrn);
+			
+			// Map trust to model
+			var trustDetailsModel = _mapper.Map<TrustDetailsModel>(trustsDetailsDto);
+
+			return trustDetailsModel;
 		}
 	}
 }

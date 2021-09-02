@@ -152,18 +152,18 @@ namespace Service.TRAMS.Tests.Trusts
 
 			// assert
 			Assert.That(trustDetailDto, Is.Not.Null);
-			Assert.That(trustDetailDto.Gias, Is.Not.Null);
-			Assert.That(trustDetailDto.Gias.GroupId, Is.EqualTo(expectedTrust.Gias.GroupId));
-			Assert.That(trustDetailDto.Gias.GroupName, Is.EqualTo(expectedTrust.Gias.GroupName));
-			Assert.That(trustDetailDto.Gias.UkPrn, Is.EqualTo(expectedTrust.Gias.UkPrn));
-			Assert.That(trustDetailDto.Gias.CompaniesHouseNumber, Is.EqualTo(expectedTrust.Gias.CompaniesHouseNumber));
-			Assert.That(trustDetailDto.Gias.GroupContactAddress, Is.Not.Null);
-			Assert.That(trustDetailDto.Gias.GroupContactAddress.County, Is.EqualTo(expectedTrust.Gias.GroupContactAddress.County));
-			Assert.That(trustDetailDto.Gias.GroupContactAddress.Locality, Is.EqualTo(expectedTrust.Gias.GroupContactAddress.Locality));
-			Assert.That(trustDetailDto.Gias.GroupContactAddress.Postcode, Is.EqualTo(expectedTrust.Gias.GroupContactAddress.Postcode));
-			Assert.That(trustDetailDto.Gias.GroupContactAddress.Street, Is.EqualTo(expectedTrust.Gias.GroupContactAddress.Street));
-			Assert.That(trustDetailDto.Gias.GroupContactAddress.Town, Is.EqualTo(expectedTrust.Gias.GroupContactAddress.Town));
-			Assert.That(trustDetailDto.Gias.GroupContactAddress.AdditionalLine, Is.EqualTo(expectedTrust.Gias.GroupContactAddress.AdditionalLine));
+			Assert.That(trustDetailDto.GiasData, Is.Not.Null);
+			Assert.That(trustDetailDto.GiasData.GroupId, Is.EqualTo(expectedTrust.GiasData.GroupId));
+			Assert.That(trustDetailDto.GiasData.GroupName, Is.EqualTo(expectedTrust.GiasData.GroupName));
+			Assert.That(trustDetailDto.GiasData.UkPrn, Is.EqualTo(expectedTrust.GiasData.UkPrn));
+			Assert.That(trustDetailDto.GiasData.CompaniesHouseNumber, Is.EqualTo(expectedTrust.GiasData.CompaniesHouseNumber));
+			Assert.That(trustDetailDto.GiasData.GroupContactAddress, Is.Not.Null);
+			Assert.That(trustDetailDto.GiasData.GroupContactAddress.County, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress.County));
+			Assert.That(trustDetailDto.GiasData.GroupContactAddress.Locality, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress.Locality));
+			Assert.That(trustDetailDto.GiasData.GroupContactAddress.Postcode, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress.Postcode));
+			Assert.That(trustDetailDto.GiasData.GroupContactAddress.Street, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress.Street));
+			Assert.That(trustDetailDto.GiasData.GroupContactAddress.Town, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress.Town));
+			Assert.That(trustDetailDto.GiasData.GroupContactAddress.AdditionalLine, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress.AdditionalLine));
 		}
 		
 		[Test]
