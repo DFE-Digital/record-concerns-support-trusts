@@ -39,12 +39,7 @@
 						<dt class="govuk-summary-list__key">Address</dt>
 						<dd class="govuk-summary-list__value">
 							<p class="govuk-body">
-								@Model.TrustDetailsModel.GiasData.GroupContactAddress.AdditionalLine
-								@Model.TrustDetailsModel.GiasData.GroupContactAddress.Street
-								@Model.TrustDetailsModel.GiasData.GroupContactAddress.Locality
-								@Model.TrustDetailsModel.GiasData.GroupContactAddress.County
-								@Model.TrustDetailsModel.GiasData.GroupContactAddress.Postcode
-								@Model.TrustDetailsModel.GiasData.GroupContactAddress.Town
+								@Model.TrustDetailsModel.GiasData.GroupContactAddress.DisplayAddress
 							</p>
 						</dd>
 					</div>
@@ -52,7 +47,7 @@
 					<div class="govuk-summary-list__row">
 						<dt class="govuk-summary-list__key">Region</dt>
 						<dd class="govuk-summary-list__value">
-							@Model.TrustDetailsModel.GiasData.GroupContactAddress.County
+							@Model.TrustDetailsModel.GiasData.GroupContactAddress.Town
 						</dd>
 					</div>
 
@@ -109,6 +104,9 @@
 					</button>
 
 				</form>
+				
+				
+				
 			}
 		</div>
 	</div>

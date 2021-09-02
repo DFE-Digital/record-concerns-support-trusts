@@ -50,5 +50,20 @@ namespace ConcernsCaseWork.Pages.Case
 				TempData["Error.Message"] = "Something went wrong loading the page, please try again.";
 			}
 		}
+
+		public void OnPost()
+		{
+			try
+			{
+				_logger.LogInformation("Case::DetailsModel::OnPost");
+				
+				
+				
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Case::DetailsModel::OnPost::Exception - { ex.Message }");
+			}
+		}
 	}
 }
