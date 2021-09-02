@@ -30,24 +30,23 @@ namespace ConcernsCaseWork.Pages.Case
 				_logger.LogInformation("Case::DetailsModel::OnGetAsync");
 				
 				// Get temp data from case page.
-				var caseStateDate = TempData.Get<CaseStateData>("CaseStateData");
-				if (caseStateDate is null)
+				var caseStateData = TempData.Get<CaseStateData>("CaseStateData");
+				if (caseStateData is null)
 				{
 					throw new Exception("TempData CaseStateData is null");
 				}
 				
-				
-				Console.WriteLine($@"DetailsPAGE::OnGet::SelectedTrust - { caseStateDate.TrustUkPrn }");
-				
+				var trustDetailsModel = await _trustModelService.GetTrustByUkPrn(caseStateData.TrustUkPrn);
 				
 				
+				
+
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Case::DetailsModel::OnGetAsync::Exception - { ex.Message }");
 			}
-
-
+			
 			return Page();
 		}
 	}
