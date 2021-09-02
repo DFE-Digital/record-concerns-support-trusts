@@ -56,10 +56,21 @@ namespace ConcernsCaseWork.Pages.Case
 			try
 			{
 				_logger.LogInformation("Case::DetailsModel::OnPost");
-				
-				if (!string.IsNullOrEmpty(caseType)) return new RedirectToPageResult("Record");
-				
-				TempData["Error.Message"] = "Something went wrong posting the form, please try again.";
+
+				if (string.IsNullOrEmpty(caseType))
+				{
+					TempData["Error.Message"] = "Something went wrong posting the form, please try again.";
+				}
+				else
+				{
+					return caseType switch
+					{
+						"record" => new RedirectToPageResult("Record"),
+						"safeguarding" => new RedirectToPageResult("Safeguarding"),
+						"concern" => new RedirectToPageResult("Concern"),
+						_ => new RedirectToPageResult("Record")
+					};
+				}
 			}
 			catch (Exception ex)
 			{
