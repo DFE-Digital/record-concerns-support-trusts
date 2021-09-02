@@ -55,6 +55,40 @@ namespace Service.TRAMS.Trusts
 			return Array.Empty<TrustSummaryDto>();
 		}
 
+		public async Task<TrustDetailsDto> GetTrustByUkPrn(string ukPrn)
+		{
+			try
+			{
+				_logger.LogInformation("TrustService::GetTrustByUkPrn");
+
+				// Create a request
+				using var request = new HttpRequestMessage(HttpMethod.Get, $"/trust/{ukPrn}");
+				
+				// Create http client
+				var client = ClientFactory.CreateClient(HttpClientName);
+					
+				// Execute request
+				var response = await client.SendAsync(request);
+
+				// Check status code
+				response.EnsureSuccessStatusCode();
+
+				// Read response content
+				var content = await response.Content.ReadAsStringAsync();
+
+				// Deserialize content to POJO
+				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+				var trustDetails = JsonSerializer.Deserialize<TrustDetailsDto>(content, options);
+				
+				return trustDetails;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"TrustService::GetTrustByUkPrn::Exception message::{ex.Message}");
+				throw;
+			}
+		}
+
 		/// <summary>
 		/// TramsAPI doesn't support Url encode.
 		/// HttpUtility.UrlEncode(queryParams.ToString())

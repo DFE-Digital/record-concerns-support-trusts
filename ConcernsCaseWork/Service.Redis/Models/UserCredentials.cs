@@ -5,10 +5,6 @@
 		public string Email { get; }
 		public string Password { get; }
 		
-		public UserCredentials(string email, string password)
-		{
-			Email = email;
-			Password = password;
-		}
+		public UserCredentials(string email, string password) => (Email, Password) = (email, password);
 	}
 }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using Service.Redis.Base;
+using Service.Redis.Cases;
 using Service.Redis.Configuration;
 using Service.Redis.Users;
 using Service.TRAMS.Cases;
@@ -95,6 +96,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddTransient<ICacheProvider, CacheProvider>();
 			services.AddTransient<IActiveDirectoryService, ActiveDirectoryService>();
 			services.AddTransient<IUserCachedService, UserCachedService>();
+			services.AddTransient<ICasesCachedService, CasesCachedService>();
 		}
 
 		public static void AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)

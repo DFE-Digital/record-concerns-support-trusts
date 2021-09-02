@@ -8,5 +8,6 @@ namespace Service.TRAMS.Trusts
 	{
 		string BuildRequestUri(TrustSearch trustSearch);
 		Task<IList<TrustSummaryDto>> GetTrustsByPagination(TrustSearch trustSearch);
+		Task<TrustDetailsDto> GetTrustByUkPrn(string ukPrn);
 	}
 }

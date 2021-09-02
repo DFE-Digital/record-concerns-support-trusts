@@ -48,5 +48,33 @@ namespace ConcernsCaseWork.Tests.Mappers
 				}
 			}
 		}
+		
+		[Test]
+		public void ConvertFromTrustDetailsDtoToTrustsDetailsModelIsValid()
+		{
+			// arrange
+			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
+			var mapper = config.CreateMapper();
+
+			var trustDetailsDto = TrustFactory.CreateTrustDetailsDto();
+			
+			// act
+			var trustDetailsModel = mapper.Map<TrustDetailsModel>(trustDetailsDto);
+			
+			// assert
+			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsModel);
+			Assert.That(trustDetailsModel.GiasData, Is.Not.Null);
+			Assert.That(trustDetailsModel.GiasData.GroupId, Is.EqualTo(trustDetailsDto.GiasData.GroupId));
+			Assert.That(trustDetailsModel.GiasData.GroupName, Is.EqualTo(trustDetailsDto.GiasData.GroupName));
+			Assert.That(trustDetailsModel.GiasData.UkPrn, Is.EqualTo(trustDetailsDto.GiasData.UkPrn));
+			Assert.That(trustDetailsModel.GiasData.CompaniesHouseNumber, Is.EqualTo(trustDetailsDto.GiasData.CompaniesHouseNumber));
+			Assert.That(trustDetailsModel.GiasData.GroupContactAddress, Is.Not.Null);
+			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.County, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.County));
+			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.Locality, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Locality));
+			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.Postcode, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Postcode));
+			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.Street, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Street));
+			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.Town, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Town));
+			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.AdditionalLine, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.AdditionalLine));
+		}
 	}
 }

@@ -1603,3 +1603,8 @@ span.summary-validation-symbol {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+// Home page wider screen
+.govuk-width-1000-container {
+  width: 1000px;
+}

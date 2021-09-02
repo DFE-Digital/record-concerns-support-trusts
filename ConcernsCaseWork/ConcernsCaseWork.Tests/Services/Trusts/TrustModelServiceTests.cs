@@ -23,16 +23,17 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 		public async Task WhenGetTrustsBySearchCriteria_ReturnsTrusts()
 		{
 			// arrange
-			var mockTrustService = new Mock<ITrustSearchService>();
+			var mockTrustSearchService = new Mock<ITrustSearchService>();
+			var mockTrustService = new Mock<ITrustService>();
 			var mockLogger = new Mock<ILogger<TrustModelService>>();
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
 			var trustSummaryDto = TrustFactory.CreateListTrustSummaryDto();
 
-			mockTrustService.Setup(ts => ts.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(trustSummaryDto);
+			mockTrustSearchService.Setup(ts => ts.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(trustSummaryDto);
 
 			// act
-			var trustModelService = new TrustModelService(mockTrustService.Object, mapper, mockLogger.Object);
+			var trustModelService = new TrustModelService(mockTrustSearchService.Object, mockTrustService.Object, mapper, mockLogger.Object);
 			var trustsSummaryModel = await trustModelService.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>());
 
 			// assert
@@ -66,15 +67,16 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 		public async Task WhenGetTrustsBySearchCriteria_ThrowsException_ReturnEmptyTrusts()
 		{
 			// arrange
-			var mockTrustService = new Mock<ITrustSearchService>();
+			var mockTrustSearchService = new Mock<ITrustSearchService>();
+			var mockTrustService = new Mock<ITrustService>();
 			var mockLogger = new Mock<ILogger<TrustModelService>>();
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
 
-			mockTrustService.Setup(ts => ts.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(Array.Empty<TrustSummaryDto>());
+			mockTrustSearchService.Setup(ts => ts.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(Array.Empty<TrustSummaryDto>());
 
 			// act
-			var trustModelService = new TrustModelService(mockTrustService.Object, mapper, mockLogger.Object);
+			var trustModelService = new TrustModelService(mockTrustSearchService.Object, mockTrustService.Object, mapper, mockLogger.Object);
 			var trustsSummaryModel = await trustModelService.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>());
 
 			// assert
@@ -82,6 +84,41 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			Assert.That(trustsSummaryModel.Count, Is.EqualTo(0));
 		}
 		
+		[Test]
+		public async Task WhenGetTrustByUkPrn_ReturnsTrust()
+		{
+			// arrange
+			var mockTrustSearchService = new Mock<ITrustSearchService>();
+			var mockTrustService = new Mock<ITrustService>();
+			var mockLogger = new Mock<ILogger<TrustModelService>>();
+			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
+			var mapper = config.CreateMapper();
+			var trustDetailsDto = TrustFactory.CreateTrustDetailsDto();
+
+			mockTrustService.Setup(ts => ts.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetailsDto);
+
+			// act
+			var trustModelService = new TrustModelService(mockTrustSearchService.Object, mockTrustService.Object, mapper, mockLogger.Object);
+			var trustsDetailsModel = await trustModelService.GetTrustByUkPrn(It.IsAny<string>());
+
+			// assert
+			Assert.IsAssignableFrom<TrustDetailsModel>(trustsDetailsModel);
+			Assert.That(trustsDetailsModel, Is.Not.Null);
+			Assert.That(trustsDetailsModel.GiasData, Is.Not.Null);
+			Assert.That(trustsDetailsModel.GiasData.GroupId, Is.EqualTo(trustDetailsDto.GiasData.GroupId));
+			Assert.That(trustsDetailsModel.GiasData.GroupName, Is.EqualTo(trustDetailsDto.GiasData.GroupName));
+			Assert.That(trustsDetailsModel.GiasData.UkPrn, Is.EqualTo(trustDetailsDto.GiasData.UkPrn));
+			Assert.That(trustsDetailsModel.GiasData.CompaniesHouseNumber, Is.EqualTo(trustDetailsDto.GiasData.CompaniesHouseNumber));
+			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress, Is.Not.Null);
+			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.County, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.County));
+			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.Locality, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Locality));
+			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.Postcode, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Postcode));
+			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.Street, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Street));
+			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.Town, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Town));
+			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.AdditionalLine, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.AdditionalLine));
+			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.DisplayAddress, Is.EqualTo(DisplayAddress(trustDetailsDto.GiasData.GroupContactAddress)));
+		}
+
 		private static string BuildDisplayName(TrustSummaryDto trustSummaryDto)
 		{
 			var sb = new StringBuilder();
@@ -90,6 +127,20 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			sb.Append(string.IsNullOrEmpty(trustSummaryDto.UkPrn) ? "-".PadRight(2) : trustSummaryDto.UkPrn);
 			sb.Append(",").Append(" ");
 			sb.Append(string.IsNullOrEmpty(trustSummaryDto.CompaniesHouseNumber) ? "-".PadRight(2) : trustSummaryDto.CompaniesHouseNumber);
+				
+			return sb.ToString();
+		}
+		
+		private static string DisplayAddress(GroupContactAddressDto groupContactAddressDto)
+		{
+			var sb = new StringBuilder();
+			sb.Append(string.IsNullOrEmpty(groupContactAddressDto.Street) ? "-".PadRight(2) : groupContactAddressDto.Street);
+			sb.Append(",").Append(" ");
+			sb.Append(string.IsNullOrEmpty(groupContactAddressDto.AdditionalLine) ? "-".PadRight(2) : groupContactAddressDto.AdditionalLine);
+			sb.Append(",").Append(" ");
+			sb.Append(string.IsNullOrEmpty(groupContactAddressDto.Locality) ? "-".PadRight(2) : groupContactAddressDto.Locality);
+			sb.Append(",").Append(" ");
+			sb.Append(string.IsNullOrEmpty(groupContactAddressDto.Postcode) ? "-".PadRight(2) : groupContactAddressDto.Postcode);
 				
 			return sb.ToString();
 		}

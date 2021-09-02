@@ -1,10 +1,124 @@
-﻿@page
+﻿@page "/case/details"
 @model ConcernsCaseWork.Pages.Case.DetailsModel
 
 @{
 	ViewData["Title"] = "New Case Details";
 }
 
-<div>
-	testing details
+<div class="govuk-width-container">
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+
+			<h1 class="govuk-heading-l">Create case</h1>
+
+			@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")) ||
+			     Model.TrustDetailsModel is null)
+            {
+            	<p class="govuk-body">Error: @TempData["Error.Message"]</p>
+            }
+			else
+			{
+				<!-- Trust details -->
+				<a asp-page="index" class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 govuk-!-margin-top-6" style="float:right;">Change trust</a>
+				<h2 class="govuk-heading-m govuk-!-margin-top-9">Check trust details</h2>
+
+				<dl class="govuk-summary-list">
+
+					<div class="govuk-summary-list__row">
+						<dt class="govuk-summary-list__key">Name</dt>
+						<dd class="govuk-summary-list__value">
+							@Model.TrustDetailsModel.GiasData.GroupName
+						</dd>
+					</div>
+
+					<div class="govuk-summary-list__row">
+						<dt class="govuk-summary-list__key">Type</dt>
+						<dd class="govuk-summary-list__value">TODO FIND trust.establishment_type</dd>
+					</div>
+
+					<div class="govuk-summary-list__row">
+						<dt class="govuk-summary-list__key">Address</dt>
+						<dd class="govuk-summary-list__value">
+							<p class="govuk-body">
+								@Model.TrustDetailsModel.GiasData.GroupContactAddress.DisplayAddress
+							</p>
+						</dd>
+					</div>
+
+					<div class="govuk-summary-list__row">
+						<dt class="govuk-summary-list__key">Region</dt>
+						<dd class="govuk-summary-list__value">
+							@Model.TrustDetailsModel.GiasData.GroupContactAddress.Town
+						</dd>
+					</div>
+
+					<div class="govuk-summary-list__row">
+						<dt class="govuk-summary-list__key">Companies House</dt>
+						<dd class="govuk-summary-list__value">
+							<a href="#">
+								@Model.TrustDetailsModel.GiasData.CompaniesHouseNumber
+							</a>
+						</dd>
+					</div>
+
+				</dl>
+				
+				<!-- FORM -->
+				<form method="post" role="search" id="case-type-form" novalidate>
+
+					<div class="govuk-form-group govuk-!-margin-top-9">
+						<fieldset class="govuk-fieldset">
+
+							<legend class="govuk-heading-m govuk-heading-m govuk-!-font-weight-bold">
+								What type of case is this?
+							</legend>
+
+							<div class="govuk-radios">
+
+								<div class="govuk-radios__item">
+									<input class="govuk-radios__input" id="casetype" name="casetype" type="radio" value="record" aria-describedby="casetype-item-hint">
+									<label class="govuk-label govuk-radios__label" for="casetype">
+										Record
+									</label>
+								</div>
+
+								<div class="govuk-radios__item">
+									<input class="govuk-radios__input" id="casetype-1" name="casetype" type="radio" value="safeguarding" aria-describedby="casetype-1-item-hint">
+									<label class="govuk-label govuk-radios__label" for="case-type-1">
+										Safeguarding Incident
+									</label>
+								</div>
+
+								<div class="govuk-radios__item">
+									<input class="govuk-radios__input" id="casetype-2" name="casetype" type="radio" value="concern" aria-describedby="casetype-2-item-hint">
+									<label class="govuk-label govuk-radios__label" for="casetype-2">
+										Concern
+									</label>
+								</div>
+
+							</div>
+						</fieldset>
+					</div>
+
+					<button class="govuk-button" data-module="govuk-button">
+						Continue
+					</button>
+
+				</form>
+				
+				<script type="application/javascript">
+					$(function () {
+						let caseTypeForm = $("#case-type-form");		
+						const trustValidator = new MOJFrontend.FormValidator(caseTypeForm[0]);
+						trustValidator.addValidator('casetype', [{
+							method: function(field) {
+								return field.value.trim().length > 0;
+							},
+							message: 'Select a case type'
+						}]);
+					});
+				</script>
+			}
+		</div>
+	</div>
 </div>
