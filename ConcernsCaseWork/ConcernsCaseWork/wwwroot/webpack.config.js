@@ -1,23 +1,10 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path');
 
 module.exports = {
 	mode: 'production',
-	entry: ['./src/css/site.scss'],
-	optimization: {
-		splitChunks: {
-			cacheGroups: {
-				styles: {
-					name: "styles",
-					type: "css/mini-extract",
-					chunks: "all",
-					enforce: true,
-				},
-			},
-		},
-	},
-	plugins: [
-		new MiniCssExtractPlugin({filename: 'site.css'}),
-	],
+	entry: ['./src/js/site.js', './src/css/site.scss'],
+	plugins: [new MiniCssExtractPlugin({filename: 'site.css'})],
 	module: {
 		rules: [
 			{
@@ -31,31 +18,13 @@ module.exports = {
 					"sass-loader",
 				],
 			},
-			{ test: /\.css$/, use: ['style-loader', 'css-loader'] },
-			{
-				test: /\.(woff2?)$/i,
-				use: [
-					{
-						loader: 'file-loader',
-						options: {
-							emitFile: false,
-							name: '/assets/fonts/[name].[ext]'
-						}
-					}
-				]
-			},
-			{
-				test: /\.(jpe?g|png|gif|svg)$/i,
-				use: [
-					{
-						loader: 'file-loader',
-						options: {
-							emitFile: false,
-							name: '/assets/images/[name].[ext]'
-						}
-					}
-				]
-			},
+			{test: /\.css$/, use: ['style-loader', 'css-loader']},
+			{test: /\.(jpe?g|png|gif|svg)$/i, use: 'file-loader'},
+			{test: /\.(woff2?)$/i, use: 'file-loader'}
 		]
 	},
+	output: {
+		path: path.resolve(__dirname, 'dist'),
+		filename: 'index.bundle.js',
+	}
 };
