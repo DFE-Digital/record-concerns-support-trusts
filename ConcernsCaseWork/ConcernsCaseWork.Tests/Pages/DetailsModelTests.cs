@@ -69,7 +69,46 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		[Test]
-		public async Task WhenOnGetAsync_ReturnsErrorLoadingPageMissingRedisCaseStateData()
+		public async Task WhenOnGetAsync_ReturnsErrorLoadingPage_ExceptionTrustByUkPrnService()
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<DetailsModel>>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockCasesCachedService = new Mock<ICasesCachedService>();
+			
+			mockCasesCachedService.Setup(c => c.GetCaseData<CaseStateData>(It.IsAny<string>())).ReturnsAsync(new CaseStateData { TrustUkPrn = "trustukprn" });
+			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ThrowsAsync(new Exception("some error"));
+			
+			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
+			
+			// act
+			await pageModel.OnGetAsync();
+			
+			// assert
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			
+			// Verify ILogger
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Information,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsModel")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+			
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Error,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsModel")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+		}
+		
+		[Test]
+		public async Task WhenOnGetAsync_ReturnsErrorLoadingPage_MissingRedisCaseStateData()
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<DetailsModel>>();
@@ -102,6 +141,51 @@ namespace ConcernsCaseWork.Tests.Pages
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
+		}
+
+		[TestCase("record", "Record")]
+		[TestCase("safeguarding", "Safeguarding")]
+		[TestCase("concern", "Concern")]
+		public void WhenOnPost_RedirectToPageSuccess(string caseType, string expectedRedirect)
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<DetailsModel>>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockCasesCachedService = new Mock<ICasesCachedService>();
+			
+			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
+			
+			// act
+			var pageResponse = pageModel.OnPost(caseType);
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<RedirectToPageResult>());
+			var page = pageResponse as RedirectToPageResult;
+			
+			Assert.That(page, Is.Not.Null);
+			Assert.That(page.PageName, Is.EqualTo(expectedRedirect));
+		}
+
+		[TestCase("")]
+		[TestCase(null)]
+		public void WhenOnPost_ReturnPageWhenCaseTypeInput_IsEmptyOrNull(string caseType)
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<DetailsModel>>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockCasesCachedService = new Mock<ICasesCachedService>();
+			
+			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
+			
+			// act
+			var pageResponse = pageModel.OnPost(caseType);
+
+			// assert
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			var page = pageResponse as PageResult;
+			
+			Assert.That(page, Is.Not.Null);
 		}
 		
 		private static DetailsModel SetupDetailsModel(ITrustModelService mockTrustModelService, ICasesCachedService mockCasesCachedService, ILogger<DetailsModel> mockLogger, bool isAuthenticated = false)
