@@ -35,9 +35,9 @@ namespace ConcernsCaseWork.Shared.Tests.Shared
 			var sb = new StringBuilder();
 			sb.Append(string.IsNullOrEmpty(groupContactAddressDto.Street) ? "-".PadRight(2) : groupContactAddressDto.Street);
 			sb.Append(",").Append(" ");
-			sb.Append(string.IsNullOrEmpty(groupContactAddressDto.AdditionalLine) ? "-".PadRight(2) : groupContactAddressDto.AdditionalLine);
-			sb.Append(",").Append(" ");
 			sb.Append(string.IsNullOrEmpty(groupContactAddressDto.Locality) ? "-".PadRight(2) : groupContactAddressDto.Locality);
+			sb.Append(",").Append(" ");
+			sb.Append(string.IsNullOrEmpty(groupContactAddressDto.Town) ? "-".PadRight(2) : groupContactAddressDto.Town);
 			sb.Append(",").Append(" ");
 			sb.Append(string.IsNullOrEmpty(groupContactAddressDto.Postcode) ? "-".PadRight(2) : groupContactAddressDto.Postcode);
 				
@@ -49,9 +49,9 @@ namespace ConcernsCaseWork.Shared.Tests.Shared
 			var sb = new StringBuilder();
 			sb.Append(string.IsNullOrEmpty(groupContactAddressModel.Street) ? "-".PadRight(2) : groupContactAddressModel.Street);
 			sb.Append(",").Append(" ");
-			sb.Append(string.IsNullOrEmpty(groupContactAddressModel.AdditionalLine) ? "-".PadRight(2) : groupContactAddressModel.AdditionalLine);
-			sb.Append(",").Append(" ");
 			sb.Append(string.IsNullOrEmpty(groupContactAddressModel.Locality) ? "-".PadRight(2) : groupContactAddressModel.Locality);
+			sb.Append(",").Append(" ");
+			sb.Append(string.IsNullOrEmpty(groupContactAddressModel.Town) ? "-".PadRight(2) : groupContactAddressModel.Town);
 			sb.Append(",").Append(" ");
 			sb.Append(string.IsNullOrEmpty(groupContactAddressModel.Postcode) ? "-".PadRight(2) : groupContactAddressModel.Postcode);
 				

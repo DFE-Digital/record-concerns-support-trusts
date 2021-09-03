@@ -25,9 +25,9 @@ namespace ConcernsCaseWork.Models
 				var sb = new StringBuilder();
 				sb.Append(string.IsNullOrEmpty(Street) ? _isNullOrEmpty : Street);
 				sb.Append(",").Append(" ");
-				sb.Append(string.IsNullOrEmpty(AdditionalLine) ? _isNullOrEmpty : AdditionalLine);
-				sb.Append(",").Append(" ");
 				sb.Append(string.IsNullOrEmpty(Locality) ? _isNullOrEmpty : Locality);
+				sb.Append(",").Append(" ");
+				sb.Append(string.IsNullOrEmpty(Town) ? _isNullOrEmpty : Town);
 				sb.Append(",").Append(" ");
 				sb.Append(string.IsNullOrEmpty(Postcode) ? _isNullOrEmpty : Postcode);
 				
