@@ -9,7 +9,7 @@
 
 	<div class="govuk-button-group flexalign__right">
 		<a class="govuk-link" href="#">
-			Closed cases
+			Closed cases (TRAMS)
 		</a>
 		<a class="govuk-button" asp-page="/case/index" role="button">
 			Create case
@@ -67,13 +67,13 @@
 						</td>
 						<td class="govuk-table__cell">@caseModel.Type</td>
 						<td class="govuk-table__cell">
-							@if (@caseModel.Rag == 0)
+							@if (caseModel.Rag == 0)
 							{
-								@Model.Rags[@caseModel.Rag]
+								@Model.Rags[caseModel.Rag]
 							}
 							else
 							{
-								<span class="govuk-tag ragtag @Model.RagsCss[@caseModel.Rag]">@Model.Rags[@caseModel.Rag]</span>
+								<span class="govuk-tag ragtag @Model.RagsCss[caseModel.Rag]">@Model.Rags[caseModel.Rag]</span>
 							}
 						</td>
 						<td class="govuk-table__cell">

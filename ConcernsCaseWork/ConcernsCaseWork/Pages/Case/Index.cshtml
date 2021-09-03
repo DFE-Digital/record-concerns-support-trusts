@@ -6,30 +6,42 @@
 }
 
 <div class="govuk-width-container">
-	
-	<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
-	
-	<div class="moj-search govuk-form-group">
-		<h1 class="govuk-heading-l">Create case</h1>
-		
-		<h2 class="govuk-heading-m govuk-!-margin-top-9">Find Trust</h2>
-		
-		<form role="form" id="search-form" novalidate>
-			<div class="govuk-form-group">
-				<div id="search-hint" class="govuk-hint moj-search__hint">
-					Search by name, trust reference number or companies house number
-				</div>
-				<input class="govuk-input moj-search__input" id="search" name="search" type="text" aria-describedby="search-hint search-error" placeholder="Search Trusts">
-			</div>
+	<div class="moj-search govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
 
-			<button class="govuk-button moj-search__button" data-module="govuk-button">
-				Search
-			</button>
-		</form>
+			<h1 class="govuk-heading-m">Create case</h1>
+
+			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+			<form role="form" id="search-form" novalidate>
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset" data-required data-error="Search cannot be blank" aria-required="true">
+
+						<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+							<h2 class="govuk-fieldset__heading govuk-heading-m">
+								Find Trust
+							</h2>
+						</legend>
+
+						<label class="govuk-hint" for="search" id="outgoing-trust-search-query-hint">
+							Search by name, trust reference number or companies house number
+						</label>
+						<input class="govuk-input form-control" id="search" name="search" type="text" aria-describedby="search-hint search-error" placeholder="Search Trusts">
+
+					</fieldset>
+				</div>
+
+				<button class="govuk-button moj-search__button" data-module="govuk-button">
+					Search
+				</button>
+			</form>
+		</div>
 	</div>
 </div>
 
+
 <div class="govuk-width-container">
+	<div class="govuk-heading-m"></div>
 	<div class="ccms-loader govuk-!-display-none"></div>
 	<div id="trusts-partial-results"></div>
 </div>
