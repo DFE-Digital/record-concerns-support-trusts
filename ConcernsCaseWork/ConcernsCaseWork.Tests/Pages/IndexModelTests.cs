@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.Shared;
 using ConcernsCaseWork.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -15,7 +16,6 @@ using Service.TRAMS.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages
@@ -87,7 +87,7 @@ namespace ConcernsCaseWork.Tests.Pages
 					Assert.That(expected.UkPrn, Is.EqualTo(actual.UkPrn));
 					Assert.That(expected.GroupName, Is.EqualTo(actual.GroupName));
 					Assert.That(expected.CompaniesHouseNumber, Is.EqualTo(actual.CompaniesHouseNumber));
-					Assert.That(expected.DisplayName, Is.EqualTo(BuildDisplayName(actual)));
+					Assert.That(expected.DisplayName, Is.EqualTo(SharedBuilders.BuildDisplayName(actual)));
 					
 					foreach (var establishment in actual.Establishments)
 					{
@@ -221,18 +221,6 @@ namespace ConcernsCaseWork.Tests.Pages
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
-		}
-		
-		private static string BuildDisplayName(TrustSummaryModel trustSummaryModel)
-		{
-			var sb = new StringBuilder();
-			sb.Append(string.IsNullOrEmpty(trustSummaryModel.GroupName) ? "-".PadRight(2) : trustSummaryModel.GroupName);
-			sb.Append(",").Append(" ");
-			sb.Append(string.IsNullOrEmpty(trustSummaryModel.UkPrn) ? "-".PadRight(2) : trustSummaryModel.UkPrn);
-			sb.Append(",").Append(" ");
-			sb.Append(string.IsNullOrEmpty(trustSummaryModel.CompaniesHouseNumber) ? "-".PadRight(2) : trustSummaryModel.CompaniesHouseNumber);
-				
-			return sb.ToString();
 		}
 		
 		private static IndexModel SetupIndexModel(ITrustModelService mockTrustModelService, ICasesCachedService mockCasesCachedService, ILogger<IndexModel> mockLogger, bool isAuthenticated = false)

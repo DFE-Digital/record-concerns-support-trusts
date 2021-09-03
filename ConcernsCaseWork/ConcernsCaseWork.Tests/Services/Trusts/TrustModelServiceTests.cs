@@ -3,6 +3,7 @@ using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.Shared;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -11,7 +12,6 @@ using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Services.Trusts
@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 					Assert.That(expected.UkPrn, Is.EqualTo(actual.UkPrn));
 					Assert.That(expected.GroupName, Is.EqualTo(actual.GroupName));
 					Assert.That(expected.CompaniesHouseNumber, Is.EqualTo(actual.CompaniesHouseNumber));
-					Assert.That(expected.DisplayName, Is.EqualTo(BuildDisplayName(actual)));
+					Assert.That(expected.DisplayName, Is.EqualTo(SharedBuilders.BuildDisplayName(actual)));
 					
 					foreach (var establishment in actual.Establishments)
 					{
@@ -116,33 +116,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.Street, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Street));
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.Town, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Town));
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.AdditionalLine, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.AdditionalLine));
-			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.DisplayAddress, Is.EqualTo(DisplayAddress(trustDetailsDto.GiasData.GroupContactAddress)));
-		}
-
-		private static string BuildDisplayName(TrustSummaryDto trustSummaryDto)
-		{
-			var sb = new StringBuilder();
-			sb.Append(string.IsNullOrEmpty(trustSummaryDto.GroupName) ? "-".PadRight(2) : trustSummaryDto.GroupName);
-			sb.Append(",").Append(" ");
-			sb.Append(string.IsNullOrEmpty(trustSummaryDto.UkPrn) ? "-".PadRight(2) : trustSummaryDto.UkPrn);
-			sb.Append(",").Append(" ");
-			sb.Append(string.IsNullOrEmpty(trustSummaryDto.CompaniesHouseNumber) ? "-".PadRight(2) : trustSummaryDto.CompaniesHouseNumber);
-				
-			return sb.ToString();
-		}
-		
-		private static string DisplayAddress(GroupContactAddressDto groupContactAddressDto)
-		{
-			var sb = new StringBuilder();
-			sb.Append(string.IsNullOrEmpty(groupContactAddressDto.Street) ? "-".PadRight(2) : groupContactAddressDto.Street);
-			sb.Append(",").Append(" ");
-			sb.Append(string.IsNullOrEmpty(groupContactAddressDto.AdditionalLine) ? "-".PadRight(2) : groupContactAddressDto.AdditionalLine);
-			sb.Append(",").Append(" ");
-			sb.Append(string.IsNullOrEmpty(groupContactAddressDto.Locality) ? "-".PadRight(2) : groupContactAddressDto.Locality);
-			sb.Append(",").Append(" ");
-			sb.Append(string.IsNullOrEmpty(groupContactAddressDto.Postcode) ? "-".PadRight(2) : groupContactAddressDto.Postcode);
-				
-			return sb.ToString();
+			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.DisplayAddress, Is.EqualTo(SharedBuilders.BuildDisplayAddress(trustDetailsDto.GiasData.GroupContactAddress)));
 		}
 	}
 }

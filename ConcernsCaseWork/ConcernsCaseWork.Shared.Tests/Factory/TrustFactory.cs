@@ -42,5 +42,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new TrustDetailsDto(new GiasDataDto("ukprn", "groupid", "groupname", "companieshousenumber", 
 				new GroupContactAddressDto("street", "locality", "additionalline", "town", "county", "postcode")));
 		}
+		
+		public static TrustDetailsModel CreateTrustDetailsModel()
+		{
+			return new TrustDetailsModel(new GiasDataModel("ukprn", "groupid", "groupname", "companieshousenumber", 
+				new GroupContactAddressModel("street", "locality", "additionalline", "town", "county", "postcode")));
+		}
 	}
 }
