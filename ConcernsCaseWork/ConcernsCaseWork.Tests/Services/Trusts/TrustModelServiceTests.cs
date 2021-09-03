@@ -107,6 +107,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			Assert.That(trustsDetailsModel.GiasData, Is.Not.Null);
 			Assert.That(trustsDetailsModel.GiasData.GroupId, Is.EqualTo(trustDetailsDto.GiasData.GroupId));
 			Assert.That(trustsDetailsModel.GiasData.GroupName, Is.EqualTo(trustDetailsDto.GiasData.GroupName));
+			Assert.That(trustsDetailsModel.GiasData.GroupTypeCode, Is.EqualTo(trustsDetailsModel.GiasData.GroupTypeCode));
 			Assert.That(trustsDetailsModel.GiasData.UkPrn, Is.EqualTo(trustDetailsDto.GiasData.UkPrn));
 			Assert.That(trustsDetailsModel.GiasData.CompaniesHouseNumber, Is.EqualTo(trustDetailsDto.GiasData.CompaniesHouseNumber));
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress, Is.Not.Null);

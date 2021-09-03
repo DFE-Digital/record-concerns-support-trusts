@@ -12,6 +12,9 @@ namespace Service.TRAMS.Models
 			
 		[JsonPropertyName("groupName")]
 		public string GroupName { get; }
+		
+		[JsonPropertyName("groupTypeCode")]
+		public string GroupTypeCode { get; }
 			
 		[JsonPropertyName("companiesHouseNumber")]
 		public string CompaniesHouseNumber { get; }
@@ -19,7 +22,7 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("groupContactAddress")]
 		public GroupContactAddressDto GroupContactAddress { get; }
 			
-		public GiasDataDto(string ukprn, string groupId, string groupName, string companiesHouseNumber, GroupContactAddressDto groupContactAddress) => 
-			(UkPrn, GroupId, GroupName, CompaniesHouseNumber, GroupContactAddress) = (ukprn, groupId, groupName, companiesHouseNumber, groupContactAddress);
+		public GiasDataDto(string ukprn, string groupId, string groupName, string groupTypeCode, string companiesHouseNumber, GroupContactAddressDto groupContactAddress) => 
+			(UkPrn, GroupId, GroupName, GroupTypeCode, CompaniesHouseNumber, GroupContactAddress) = (ukprn, groupId, groupName, groupTypeCode, companiesHouseNumber, groupContactAddress);
 	}
 }
