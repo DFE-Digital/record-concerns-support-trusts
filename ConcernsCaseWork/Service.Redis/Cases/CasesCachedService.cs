@@ -8,6 +8,7 @@ namespace Service.Redis.Cases
 	public sealed class CasesCachedService : ICasesCachedService
 	{
 		private readonly ICacheProvider _cacheProvider;
+		private const int CaseStateDateExpiration = 24;
 		
 		public CasesCachedService(ICacheProvider cacheProvider)
 		{
@@ -17,7 +18,7 @@ namespace Service.Redis.Cases
 		public async Task CreateCaseData<T>(string key, T data) where T : class
 		{
 			var cacheEntryOptions = new DistributedCacheEntryOptions()
-				.SetSlidingExpiration(TimeSpan.FromSeconds(_cacheProvider.CacheTimeToLive()));
+				.SetSlidingExpiration(TimeSpan.FromHours(CaseStateDateExpiration));
 			await _cacheProvider.SetCache(key, data, cacheEntryOptions);
 		}
 

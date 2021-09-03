@@ -16,7 +16,7 @@
 		
 		@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")))
 		{
-			<p class="govuk-body">Error: @TempData["Error.Message"]</p>
+			<p class="govuk-body">@TempData["Error.Message"]</p>
 		}
 		
 		<form method="post">

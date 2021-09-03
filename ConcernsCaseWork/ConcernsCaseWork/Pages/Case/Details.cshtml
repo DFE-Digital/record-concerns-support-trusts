@@ -14,7 +14,14 @@
 			@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")) ||
 			     Model.TrustDetailsModel is null)
             {
-            	<p class="govuk-body">Error: @TempData["Error.Message"]</p>
+	            <div class="moj-banner__message">
+		            <p class="govuk-body">@TempData["Error.Message"]</p>
+		        </div>
+	            <script type="application/javascript">
+	            	$(function () {
+	            		showGlobalError();
+					});
+	            </script>
             }
 			else
 			{
@@ -33,7 +40,11 @@
 
 					<div class="govuk-summary-list__row">
 						<dt class="govuk-summary-list__key">Type</dt>
-						<dd class="govuk-summary-list__value">TODO FIND trust.establishment_type</dd>
+						<dd class="govuk-summary-list__value">
+							<p class="govuk-body">
+	                            @Model.TrustDetailsModel.GiasData.GroupTypeCode
+	                        </p>
+						</dd>
 					</div>
 
 					<div class="govuk-summary-list__row">
@@ -84,7 +95,7 @@
 
 								<div class="govuk-radios__item">
 									<input class="govuk-radios__input" id="casetype-1" name="casetype" type="radio" value="safeguarding" aria-describedby="casetype-1-item-hint">
-									<label class="govuk-label govuk-radios__label" for="case-type-1">
+									<label class="govuk-label govuk-radios__label" for="casetype-1">
 										Safeguarding Incident
 									</label>
 								</div>

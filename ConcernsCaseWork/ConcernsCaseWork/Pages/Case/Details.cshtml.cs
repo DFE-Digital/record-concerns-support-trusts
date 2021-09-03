@@ -17,11 +17,17 @@ namespace ConcernsCaseWork.Pages.Case
 	{
 		private readonly ITrustModelService _trustModelService;
 		private readonly ICasesCachedService _casesCachedService;
-		private readonly ILogger<IndexModel> _logger;
+		private readonly ILogger<DetailsModel> _logger;
 
+		private const string ErrorOnGetPage = "An error occurred loading the page, please try again. If the error persists contact the service administrator.";
+		private const string ErrorOnPostPage = "An error occurred posting the form, please try again. If the error persists contact the service administrator.";
+		private const string RedirectToPageCaseDetailsRecord = "Record";
+		private const string RedirectToPageCaseDetailsSafeguarding = "Safeguarding";
+		private const string RedirectToPageCaseDetailsConcern = "Concern";
+		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 
-		public DetailsModel(ITrustModelService trustModelService, ICasesCachedService casesCachedService, ILogger<IndexModel> logger)
+		public DetailsModel(ITrustModelService trustModelService, ICasesCachedService casesCachedService, ILogger<DetailsModel> logger)
 		{
 			_trustModelService = trustModelService;
 			_casesCachedService = casesCachedService;
@@ -47,7 +53,7 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				_logger.LogError($"Case::DetailsModel::OnGetAsync::Exception - { ex.Message }");
 				
-				TempData["Error.Message"] = "Something went wrong loading the page, please try again.";
+				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 		}
 		
@@ -56,25 +62,25 @@ namespace ConcernsCaseWork.Pages.Case
 			try
 			{
 				_logger.LogInformation("Case::DetailsModel::OnPost");
-
+				
 				if (string.IsNullOrEmpty(caseType))
 				{
-					TempData["Error.Message"] = "Something went wrong posting the form, please try again.";
+					throw new Exception("Case type is null or empty");
 				}
-				else
+
+				return caseType switch
 				{
-					return caseType switch
-					{
-						"record" => new RedirectToPageResult("Record"),
-						"safeguarding" => new RedirectToPageResult("Safeguarding"),
-						"concern" => new RedirectToPageResult("Concern"),
-						_ => new RedirectToPageResult("Record")
-					};
-				}
+					"record" => new RedirectToPageResult(RedirectToPageCaseDetailsRecord),
+					"safeguarding" => new RedirectToPageResult(RedirectToPageCaseDetailsSafeguarding),
+					"concern" => new RedirectToPageResult(RedirectToPageCaseDetailsConcern),
+					_ => new RedirectToPageResult(RedirectToPageCaseDetailsRecord)
+				};
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"Case::DetailsModel::OnPost::Exception - { ex.Message }");
+				
+				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 			
 			return Page();

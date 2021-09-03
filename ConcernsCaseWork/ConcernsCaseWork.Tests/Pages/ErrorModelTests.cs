@@ -31,6 +31,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			pageModel.OnGet();
 
 			// assert
+			Assert.That(pageModel.ShowRequestId, Is.Not.Null);
+			
 			mockLogger.Verify(
 				m => m.Log(
 					LogLevel.Information,

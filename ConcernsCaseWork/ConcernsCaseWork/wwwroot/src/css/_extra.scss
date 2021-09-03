@@ -1576,7 +1576,9 @@ span.summary-validation-symbol {
   resize: vertical;
 }
 
-// Back button
+/* ==========================================================================
+   #Back button
+   ========================================================================== */
 .govuk-back-link:hover {
   text-decoration-thickness: calc(max(3px, .1875rem, .12em));
   -webkit-text-decoration-skip-ink: none;
@@ -1585,13 +1587,15 @@ span.summary-validation-symbol {
   text-decoration-skip: none;
 }
 
-// Spinner
+/* ==========================================================================
+   #Spinner
+   ========================================================================== */
 .ccms-loader {
   border: 12px solid #DEE0E2;
   border-radius: 50%;
   border-top-color: #005EA5;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   -webkit-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;
 }
@@ -1604,7 +1608,9 @@ span.summary-validation-symbol {
   100% { transform: rotate(360deg); }
 }
 
-// Home page wider screen
+/* ==========================================================================
+   #Home page wider screen
+   ========================================================================== */
 .govuk-width-1000-container {
   width: 1000px;
 }
