@@ -406,5 +406,15 @@
     <Folder Include="wwwroot\assets" />
     <Folder Include="wwwroot\dist" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Risk_Management_Framework.pdf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\files\Risk_Management_Framework.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 	
 </Project>

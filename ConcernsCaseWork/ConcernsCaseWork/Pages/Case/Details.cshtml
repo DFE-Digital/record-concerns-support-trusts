@@ -75,45 +75,285 @@
 
 				</dl>
 				
+				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+				
+				<h2 class="govuk-heading-m govuk-!-margin-top-9">Concern type</h2>
+				                                                                                                                                                          
 				<!-- FORM -->
 				<form role="form" method="post" id="case-type-form" novalidate>
 
-					<div class="govuk-form-group govuk-!-margin-top-9">
+					<!--Q Concern type-->
+					<div class="govuk-form-group">
 						<fieldset class="govuk-fieldset">
 
-							<legend class="govuk-heading-m govuk-heading-m govuk-!-font-weight-bold">
-								What type of case is this?
+							<legend class="govuk-fieldset__legend govuk-!-font-weight-bold">
+								What type of Concern is it?
 							</legend>
 
-							<div class="govuk-radios">
+							<div class="govuk-hint" id="case-issue-hint">
+								Use the <a target="_blank" href="@Url.Page("../FileResource", "DownloadRiskManagementPdf")" class="govuk-link" rel="noreferrer noopener">Risk Management Framework (opens in new tab)</a> to assess the type of Concern
+							</div>
+
+							<!--Concern radios-->
+							<div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+
+								<!--Compliance-->
+								<div class="govuk-radios__item">
+									<input class="govuk-radios__input" data-aria-controls="conditional-concernType" id="concernType" name="concernType" type="radio" value="compliance">
+									<label class="govuk-label govuk-radios__label" for="concernType">
+										Compliance
+									</label>
+								</div>
+
+								<div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-concernType">
+									<div class="govuk-form-group">
+										<div class="govuk-radios__item">
+											<input class="govuk-radios__input" id="concernSubType-1" name="concernSubType" type="radio" value="compliance-financial-reporting">
+											<label class="govuk-label govuk-radios__label" for="concernSubType-1">
+												Compliance: Financial reporting
+											</label>
+										</div>
+
+										<div class="govuk-radios__item">
+											<input class="govuk-radios__input" id="concernSubType-2" name="concernSubType" type="radio" value="compliance-financial-returns">
+											<label class="govuk-label govuk-radios__label" for="concernSubType-2">
+												Compliance: Financial returns
+											</label>
+										</div>
+									</div>
+								</div>
+
+								<!--Finance-->
+								<div class="govuk-radios__item">
+									<input class="govuk-radios__input" data-aria-controls="conditional-concernType-1" id="concernType-1" name="concernType" type="radio" value="financial">
+									<label class="govuk-label govuk-radios__label" for="concernType-1">
+										Financial
+									</label>
+								</div>
+
+								<div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-concernType-1">
+									<div class="govuk-form-group">
+										<div class="govuk-radios__item">
+											<input class="govuk-radios__input" id="concernSubType-3" name="concernSubType" type="radio" value="financial-deficit">
+											<label class="govuk-label govuk-radios__label" for="concernSubType-3">
+												Financial: Deficit
+											</label>
+										</div>
+
+										<div class="govuk-radios__item">
+											<input class="govuk-radios__input" id="concernSubType-4" name="concernSubType" type="radio" value="financial-projected-deficit">
+											<label class="govuk-label govuk-radios__label" for="concernSubType-4">
+												Financial: Projected deficit / Low future surplus
+											</label>
+										</div>
+
+										<div class="govuk-radios__item">
+											<input class="govuk-radios__input" id="concernSubType-5" name="concernSubType" type="radio" value="financial-cash-flow-shortfall">
+											<label class="govuk-label govuk-radios__label" for="concernSubType-5">
+												Financial: Cash flow shortfall
+											</label>
+										</div>
+
+										<div class="govuk-radios__item">
+											<input class="govuk-radios__input" id="concernSubType-6" name="concernSubType" type="radio" value="financial-clawback">
+											<label class="govuk-label govuk-radios__label" for="concernSubType-6">
+												Financial: Clawback
+											</label>
+										</div>
+									</div>
+								</div>
+
+								<!--Force Majure-->
+								<div class="govuk-radios__item">
+									<input class="govuk-radios__input" data-aria-controls="conditional-concernType-2" id="concernType-2" name="concernType" type="radio" value="force-majeure">
+									<label class="govuk-label govuk-radios__label" for="concernType-2">
+										Force Majeure
+									</label>
+								</div>
+
+								<!--Governance-->
+								<div class="govuk-radios__item">
+									<input class="govuk-radios__input" data-aria-controls="conditional-concernType-3" id="concernType-3" name="concernType" type="radio" value="governance">
+									<label class="govuk-label govuk-radios__label" for="concernType-3">
+										Governance
+									</label>
+								</div>
+
+								<div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-concernType-3">
+									<div class="govuk-form-group">
+										<div class="govuk-radios__item">
+											<input class="govuk-radios__input" id="concernSubType-7" name="concernSubType" type="radio" value="governance-governance">
+											<label class="govuk-label govuk-radios__label" for="concernSubType-7">
+												Governance: Governance
+											</label>
+										</div>
+
+										<div class="govuk-radios__item">
+											<input class="govuk-radios__input" id="concernSubType-8" name="concernSubType" type="radio" value="governance-closure">
+											<label class="govuk-label govuk-radios__label" for="concernSubType-8">
+												Governance: Closure
+											</label>
+										</div>
+
+										<div class="govuk-radios__item">
+											<input class="govuk-radios__input" id="concernSubType-9" name="concernSubType" type="radio" value="governance-executive-pay">
+											<label class="govuk-label govuk-radios__label" for="concernSubType-9">
+												Governance: Executive Pay
+											</label>
+										</div>
+
+										<div class="govuk-radios__item">
+											<input class="govuk-radios__input" id="concernSubType-10" name="concernSubType" type="radio" value="governance-safeguarding">
+											<label class="govuk-label govuk-radios__label" for="concernSubType-10">
+												Governance: Safeguarding
+											</label>
+										</div>
+									</div>
+								</div>
+
+								<!--Irregularity-->
+								<div class="govuk-radios__item">
+									<input class="govuk-radios__input" data-aria-controls="conditional-concernType-4" id="concernType-4" name="concernType" type="radio" value="irregularity">
+									<label class="govuk-label govuk-radios__label" for="concernType-4">
+										Irregularity
+									</label>
+								</div>
+
+								<div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-concernType-4">
+									<div class="govuk-form-group">
+
+										<div class="govuk-radios__item">
+											<input class="govuk-radios__input" id="concernSubType-11" name="concernSubType" type="radio" value="irregularity-allegations">
+											<label class="govuk-label govuk-radios__label" for="concernSubType-11">
+												Irregularity: Allegations and self reported concerns
+											</label>
+										</div>
+
+										<div class="govuk-radios__item">
+											<input class="govuk-radios__input" id="concernSubType-12" name="concernSubType" type="radio" value="irregularity-related-party-transactions">
+											<label class="govuk-label govuk-radios__label" for="concernSubType-12">
+												Irregularity: Related party transactions - in year
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+					
+					<!-- Q Risk rating -->
+					<div class="govuk-form-group govuk-!-margin-top-6">
+						<fieldset class="govuk-fieldset">
+
+							<legend class="govuk-fieldset__legend govuk-!-font-weight-bold">
+								What is the risk rating?
+							</legend>
+
+							<!--Risk rating radios-->
+							<div class="govuk-radios" data-module="govuk-radios">
 
 								<div class="govuk-radios__item">
-									<input class="govuk-radios__input" id="casetype" name="casetype" type="radio" value="record" aria-describedby="casetype-item-hint">
-									<label class="govuk-label govuk-radios__label" for="casetype">
-										Record
+									<input class="govuk-radios__input" id="riskType" name="riskType" type="radio" value="amberGreen">
+									<label class="govuk-label govuk-radios__label" for="riskType">
+										<span class="govuk-tag ragtag ragtag__amber">Amber</span>
+										<span class="govuk-tag ragtag ragtag__green">Green</span>
 									</label>
 								</div>
 
 								<div class="govuk-radios__item">
-									<input class="govuk-radios__input" id="casetype-1" name="casetype" type="radio" value="safeguarding" aria-describedby="casetype-1-item-hint">
-									<label class="govuk-label govuk-radios__label" for="casetype-1">
-										Safeguarding Incident
+									<input class="govuk-radios__input" id="riskType-1" name="riskType" type="radio" value="redAmber">
+									<label class="govuk-label govuk-radios__label" for="riskType-1">
+										<span class="govuk-tag ragtag ragtag__red">Red</span>
+										<span class="govuk-tag ragtag ragtag__amber">Amber</span>
 									</label>
 								</div>
 
 								<div class="govuk-radios__item">
-									<input class="govuk-radios__input" id="casetype-2" name="casetype" type="radio" value="concern" aria-describedby="casetype-2-item-hint">
-									<label class="govuk-label govuk-radios__label" for="casetype-2">
-										Concern
+									<input class="govuk-radios__input" id="riskType-2" name="riskType" type="radio" value="red">
+									<label class="govuk-label govuk-radios__label" for="riskType-2">
+										<span class="govuk-tag ragtag ragtag__red">Red</span>
+									</label>
+								</div>
+
+								<div class="govuk-radios__item">
+									<input class="govuk-radios__input" id="riskType-3" name="riskType" type="radio" value="redPlus">
+									<label class="govuk-label govuk-radios__label" for="riskType-3">
+										<span class="govuk-tag ragtag ragtag__redplus">Red Plus</span>
 									</label>
 								</div>
 
 							</div>
+
 						</fieldset>
 					</div>
 
-					<button class="govuk-button" data-module="govuk-button">
-						Continue
+					<h2 class="govuk-heading-m govuk-!-margin-top-9">Initial details</h2>
+					<div id="initial-details-hint" class="govuk-hint">
+						You will have an opportunity to enter more details on the final case page.
+					</div>
+
+					<!-- Q Issue -->
+					<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="1000">
+						<div class="govuk-form-group">
+							<label class="govuk-label govuk-!-font-weight-bold" for="issue-detail">
+								Issue
+							</label>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="issue-detail" name="issue-detail" rows="3" aria-describedby="issue-detail-info"></textarea>
+						</div>
+
+						<div id="issue-detail-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+							You can enter up to 1000 characters
+						</div>
+
+					</div>
+
+					<!-- Q Current status -->
+					<div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="1000">
+						<div class="govuk-form-group">
+							<label class="govuk-label govuk-!-font-weight-bold" for="case-status">
+								Current status <span class="govuk-body">(optional)</span>
+							</label>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-status" name="current-status-detail" rows="3" aria-describedby="case-status-info"></textarea>
+						</div>
+
+						<div id="case-status-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+							You can enter up to 1000 characters
+						</div>
+
+					</div>
+
+					<!-- Q Next steps -->
+					<div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="1000">
+						<div class="govuk-form-group">
+							<label class="govuk-label govuk-!-font-weight-bold" for="next-steps-detail">
+								Next steps <span class="govuk-body">(optional)</span>
+							</label>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="next-steps-detail" name="next-steps-detail" rows="3" aria-describedby="next-steps-detail-info"></textarea>
+						</div>
+
+						<div id="next-steps-detail-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+							You can enter up to 1000 characters
+						</div>
+
+					</div>
+
+					<!-- Q Resolution strategy-->
+					<div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="1000">
+						<div class="govuk-form-group">
+							<label class="govuk-label govuk-!-font-weight-bold" for="resolution-strategy">
+								Case resolution <span class="govuk-body">(optional)</span>
+							</label>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="resolution-strategy" name="resolution-strategy-detail" rows="3" aria-describedby="resolution-strategy-info"></textarea>
+						</div>
+
+						<div id="resolution-strategy-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+							You can enter up to 1000 characters
+						</div>
+
+					</div>
+					
+					<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+						Create case
 					</button>
 
 				</form>
@@ -121,13 +361,74 @@
 				<script type="application/javascript">
 					$(function () {
 						let caseTypeForm = $("#case-type-form");		
-						const trustValidator = new MOJFrontend.FormValidator(caseTypeForm[0]);
-						trustValidator.addValidator('casetype', [{
+						const validator = new MOJFrontend.FormValidator(caseTypeForm[0]);
+						validator.addValidator('concernType', [{
 							method: function(field) {
 								return field.value.trim().length > 0;
 							},
-							message: 'Select a case type'
+							message: 'Select concern type'
+						}, {
+							method: function() {
+								let concernTypeChecked = $('input[name="concernType"]:checked');
+								if (concernTypeChecked !== undefined) {
+									let concernTypeAriaControl = concernTypeChecked.attr('aria-controls');
+									if (concernTypeAriaControl !== undefined) {
+										let concernAriaControlElem = $("#" + concernTypeAriaControl + "");
+										let concernSubTypeChildren = concernAriaControlElem.find("input[name='concernSubType']");
+										if (concernSubTypeChildren.length > 0) {
+											let concernSubTypeChecked = concernAriaControlElem.find("input[name='concernSubType']:checked");
+											if (concernSubTypeChecked.length === 0) {
+												return false;	
+											}
+										}
+									}
+								}
+								
+								return true;
+						  	},
+						  	message: 'Select concern sub type'
 						}]);
+						validator.addValidator('riskType', [{
+							method: function(field) {
+								return field.value.trim().length > 0;
+							},
+							message: 'Select risk rating'
+					 	}]);
+						validator.addValidator('issue-detail', [{
+							method: function(field) {
+								return field.value.trim().length > 0;
+							},
+							message: 'Issue is required'
+						}]);
+						
+						
+						let multipleFields=document.querySelectorAll('.concern-auto-resize');
+						for(let i=0; i < multipleFields.length; i++){
+							multipleFields[i].addEventListener('input', autoResizeHeight);
+						}
+						// auto resize multiple textarea
+						function autoResizeHeight() {							
+							this.style.height="auto";
+						  	this.style.height= this.scrollHeight + "px";
+						  	
+							if ($("#" + this.id + "").val().length > 0) {
+								this.style.borderColor="green";
+							} else {
+								this.style.borderColor="black";
+							}
+						}
+						
+						caseTypeForm.submit(function (event) {
+							validator.onSubmit(event);
+							if (validator.validate()) {
+								event.preventDefault();
+								
+								console.log("Submit form");
+								
+								
+								
+							}
+						});
 					});
 				</script>
 			}

@@ -157,7 +157,6 @@ span.summary-validation-symbol {
   text-align: center;
   text-transform: none;
   color: #000;
-  margin: 0px 10px;
   padding: 10px;
 
   &__redplus {
@@ -177,6 +176,10 @@ span.summary-validation-symbol {
 	background: linear-gradient(90deg,#f89360 50.5%, #2bbf7a 50.5%);
   }
 
+  &__amber {
+	background-color: #f89360;
+  }
+  
   &__green {
 	background-color:#2bbf7a;
   }
@@ -1613,4 +1616,14 @@ span.summary-validation-symbol {
    ========================================================================== */
 .govuk-width-1000-container {
   width: 1000px;
+}
+
+/* ==========================================================================
+   #Case details concern screen
+   ========================================================================== */
+.concern-auto-resize {
+  overflow: hidden;
+  resize: none;
+  padding: 15px;
+  line-height: 1.45;
 }
