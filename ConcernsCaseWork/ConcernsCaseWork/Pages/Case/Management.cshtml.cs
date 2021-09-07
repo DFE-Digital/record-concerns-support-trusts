@@ -12,13 +12,13 @@ namespace ConcernsCaseWork.Pages.Case
 	public class ManagementModel : PageModel
 	{
 		private readonly ITrustModelService _trustModelService;
-		private readonly ICasesCachedService _casesCachedService;
+		private readonly ICaseCachedService _caseCachedService;
 		private readonly ILogger<DetailsModel> _logger;
 		
-		public ManagementModel(ITrustModelService trustModelService, ICasesCachedService casesCachedService, ILogger<DetailsModel> logger)
+		public ManagementModel(ITrustModelService trustModelService, ICaseCachedService caseCachedService, ILogger<DetailsModel> logger)
 		{
 			_trustModelService = trustModelService;
-			_casesCachedService = casesCachedService;
+			_caseCachedService = caseCachedService;
 			_logger = logger;
 		}
 		

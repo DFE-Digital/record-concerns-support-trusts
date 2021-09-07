@@ -6,9 +6,6 @@ namespace Service.TRAMS.Models
 {
 	public sealed class RecordDto
 	{
-		[JsonPropertyName("id")]
-		public int Id { get; }
-		
 		[JsonPropertyName("created_at")]
 		public DateTimeOffset CreatedAt { get; }
 
@@ -30,14 +27,14 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("reason")]
 		public string Reason { get; }
 		
-		[JsonPropertyName("case_id")]
-		public int CaseId { get; }
+		[JsonPropertyName("case_urn")]
+		public BigInteger CaseUrn { get; }
 		
-		[JsonPropertyName("type_id")]
-		public int TypeId { get; }
+		[JsonPropertyName("type_urn")]
+		public BigInteger TypeUrn { get; }
 
-		[JsonPropertyName("rating_id")]
-		public int RatingId { get; }
+		[JsonPropertyName("rating_urn")]
+		public BigInteger RatingUrn { get; }
 		
 		[JsonPropertyName("primary")]
 		public bool Primary { get; }
@@ -48,10 +45,10 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("status")]
 		public int Status { get; }
 		
-		public RecordDto(int id, DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
-			DateTimeOffset closedAt, string name, string description, string reason, int caseId, int typeId, 
-			int ratingId, bool primary, BigInteger urn, int status) => 
-			(Id, CreatedAt, UpdateAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseId, TypeId, RatingId, Primary, Urn, Status) = 
-			(id, createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseId, typeId, ratingId, primary, urn, status);
+		public RecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
+			DateTimeOffset closedAt, string name, string description, string reason, BigInteger caseUrn, BigInteger typeUrn, 
+			BigInteger ratingUrn, bool primary, BigInteger urn, int status) => 
+			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Urn, Status) = 
+			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, primary, urn, status);
 	}
 }

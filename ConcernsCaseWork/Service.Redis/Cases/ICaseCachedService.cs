@@ -2,7 +2,7 @@
 
 namespace Service.Redis.Cases
 {
-	public interface ICasesCachedService
+	public interface ICaseCachedService
 	{
 		Task CreateCaseData<T>(string key, T data) where T : class;
 		Task<T> GetCaseData<T>(string key) where T : class;

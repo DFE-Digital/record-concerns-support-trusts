@@ -5,9 +5,6 @@ namespace Service.TRAMS.Models
 {
 	public sealed class RecordWhistleblowerDto
 	{
-		[JsonPropertyName("id")]
-		public int Id { get; }
-		
 		[JsonPropertyName("name")]
 		public string Name { get; }
 		
@@ -17,13 +14,13 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("reason")]
 		public string Reason { get; }
 		
-		[JsonPropertyName("record_id")]
-		public int RecordId { get; }
+		[JsonPropertyName("record_urn")]
+		public int RecordUrn { get; }
 		
 		[JsonPropertyName("urn")]
 		public BigInteger Urn { get; }
 		
-		public RecordWhistleblowerDto(int id, string name, string details, string reason, int recordId, BigInteger urn) => 
-			(Id, Name, Details, Reason, RecordId, Urn) = (id, name, details, reason, recordId, urn);
+		public RecordWhistleblowerDto(string name, string details, string reason, int recordUrn, BigInteger urn) => 
+			(Name, Details, Reason, RecordUrn, Urn) = (name, details, reason, recordUrn, urn);
 	}
 }

@@ -5,9 +5,6 @@ namespace Service.TRAMS.Models
 {
 	public sealed class RecordSrmaDto
 	{
-		[JsonPropertyName("id")]
-		public int Id { get; }
-		
 		[JsonPropertyName("name")]
 		public string Name { get; }
 		
@@ -17,13 +14,13 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("reason")]
 		public string Reason { get; }
 		
-		[JsonPropertyName("record_id")]
-		public int RecordId { get; }
+		[JsonPropertyName("record_urn")]
+		public BigInteger RecordUrn { get; }
 		
 		[JsonPropertyName("urn")]
 		public BigInteger Urn { get; }
 		
-		public RecordSrmaDto(int id, string name, string details, string reason, int recordId, BigInteger urn) => 
-			(Id, Name, Details, Reason, RecordId, Urn) = (id, name, details, reason, recordId, urn);
+		public RecordSrmaDto(int id, string name, string details, string reason, BigInteger recordUrn, BigInteger urn) => 
+			(Name, Details, Reason, RecordUrn, Urn) = (name, details, reason, recordUrn, urn);
 	}
 }

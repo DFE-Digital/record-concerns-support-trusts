@@ -5,11 +5,8 @@ namespace Service.TRAMS.Models
 {
 	public sealed class RecordAcademyDto
 	{
-		[JsonPropertyName("id")]
-		public int Id { get; }
-		
-		[JsonPropertyName("record_id")]
-		public int RecordId { get; }
+		[JsonPropertyName("record_urn")]
+		public BigInteger RecordUrn { get; }
 		
 		[JsonPropertyName("academy_urn")]
 		public int AcademyUrn { get; }
@@ -17,7 +14,7 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("urn")]
 		public BigInteger Urn { get; }
 		
-		public RecordAcademyDto(int id, int recordId, int academyUrn, BigInteger urn) => 
-			(Id, RecordId, AcademyUrn, Urn) = (id, recordId, academyUrn, urn);
+		public RecordAcademyDto(BigInteger recordUrn, int academyUrn, BigInteger urn) => 
+			(RecordUrn, AcademyUrn, Urn) = (recordUrn, academyUrn, urn);
 	}
 }

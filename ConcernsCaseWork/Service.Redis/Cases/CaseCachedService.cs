@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace Service.Redis.Cases
 {
-	public sealed class CasesCachedService : ICasesCachedService
+	public sealed class CaseCachedService : ICaseCachedService
 	{
 		private readonly ICacheProvider _cacheProvider;
 		private const int CaseStateDateExpiration = 24;
 		
-		public CasesCachedService(ICacheProvider cacheProvider)
+		public CaseCachedService(ICacheProvider cacheProvider)
 		{
 			_cacheProvider = cacheProvider;
 		}

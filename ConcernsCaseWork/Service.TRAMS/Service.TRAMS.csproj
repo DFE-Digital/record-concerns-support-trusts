@@ -9,4 +9,10 @@
       <PackageReference Include="System.Text.Json" Version="5.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Rating" />
+      <Folder Include="Status" />
+      <Folder Include="Type" />
+    </ItemGroup>
+
 </Project>

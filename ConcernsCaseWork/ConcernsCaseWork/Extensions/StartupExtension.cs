@@ -96,7 +96,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddTransient<ICacheProvider, CacheProvider>();
 			services.AddTransient<IActiveDirectoryService, ActiveDirectoryService>();
 			services.AddTransient<IUserCachedService, UserCachedService>();
-			services.AddTransient<ICasesCachedService, CasesCachedService>();
+			services.AddTransient<ICaseCachedService, CaseCachedService>();
 		}
 
 		public static void AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)

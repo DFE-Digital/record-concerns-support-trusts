@@ -6,9 +6,6 @@ namespace Service.TRAMS.Models
 {
 	public sealed class CaseDto
 	{
-		[JsonPropertyName("id")]
-		public int Id { get; }
-		
 		[JsonPropertyName("created_at")]
 		public DateTimeOffset CreatedAt { get; }
 
@@ -35,6 +32,9 @@ namespace Service.TRAMS.Models
 		
 		[JsonPropertyName("trust_ukprn")]
 		public string TrustUkPrn { get; }
+		
+		[JsonPropertyName("trust_name")]
+		public string TrustName { get; }
 		
 		[JsonPropertyName("reason_at_review")]
 		public string ReasonAtReview { get; }
@@ -67,13 +67,15 @@ namespace Service.TRAMS.Models
 		public int Status { get; }
 
 		[JsonConstructor]
-		public CaseDto(int id, DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
+		public CaseDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
 			DateTimeOffset closedAt, string createdBy, string description, string crmEnquiry, string trustUkPrn, 
-			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, string nextSteps,
-			string resolutionStrategy, string directionOfTravel, BigInteger urn, int status) => 
-			(Id, CreatedAt, UpdateAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn, 
-				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, ResolutionStrategy, DirectionOfTravel, Urn, Status) = 
-			(id, createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn, reasonAtReview, deEscalation,
-				issue, currentStatus, nextSteps, resolutionStrategy, directionOfTravel, urn, status);
+			string trustName, string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
+			string nextSteps, string resolutionStrategy, string directionOfTravel, BigInteger urn, int status) => 
+			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn, TrustName,
+				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, ResolutionStrategy, DirectionOfTravel, 
+				Urn, Status) = 
+			(createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn, trustName,
+				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, resolutionStrategy, directionOfTravel, 
+				urn, status);
 	}
 }

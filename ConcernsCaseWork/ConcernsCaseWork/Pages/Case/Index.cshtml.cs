@@ -18,15 +18,15 @@ namespace ConcernsCaseWork.Pages.Case
 	public class IndexModel : PageModel
 	{
 		private readonly ITrustModelService _trustModelService;
-		private readonly ICasesCachedService _casesCachedService;
+		private readonly ICaseCachedService _caseCachedService;
 		private readonly ILogger<IndexModel> _logger;
 		
 		private const int SearchQueryMinLength = 3;
 		
-		public IndexModel(ITrustModelService trustModelService, ICasesCachedService casesCachedService, ILogger<IndexModel> logger)
+		public IndexModel(ITrustModelService trustModelService, ICaseCachedService caseCachedService, ILogger<IndexModel> logger)
 		{
 			_trustModelService = trustModelService;
-			_casesCachedService = casesCachedService;
+			_caseCachedService = caseCachedService;
 			_logger = logger;
 		}
 		
@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Pages.Case
 				}
 
 				// Store CaseState into cache.
-				_casesCachedService.CreateCaseData(User.Identity.Name, new CaseStateModel { TrustUkPrn = selectedTrust });
+				_caseCachedService.CreateCaseData(User.Identity.Name, new CaseStateModel { TrustUkPrn = selectedTrust });
 
 				return new JsonResult(new { redirectUrl = Url.Page("Details") });
 			}

@@ -16,7 +16,7 @@ namespace ConcernsCaseWork.Pages.Case
 	public class DetailsModel : PageModel
 	{
 		private readonly ITrustModelService _trustModelService;
-		private readonly ICasesCachedService _casesCachedService;
+		private readonly ICaseCachedService _caseCachedService;
 		private readonly ILogger<DetailsModel> _logger;
 
 		private const string ErrorOnGetPage = "An error occurred loading the page, please try again. If the error persists contact the service administrator.";
@@ -24,10 +24,10 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 
-		public DetailsModel(ITrustModelService trustModelService, ICasesCachedService casesCachedService, ILogger<DetailsModel> logger)
+		public DetailsModel(ITrustModelService trustModelService, ICaseCachedService caseCachedService, ILogger<DetailsModel> logger)
 		{
 			_trustModelService = trustModelService;
-			_casesCachedService = casesCachedService;
+			_caseCachedService = caseCachedService;
 			_logger = logger;
 		}
 		
@@ -38,7 +38,7 @@ namespace ConcernsCaseWork.Pages.Case
 				_logger.LogInformation("Case::DetailsModel::OnGetAsync");
 				
 				// Get cached data from case page.
-				var caseStateModel = await _casesCachedService.GetCaseData<CaseStateModel>(User.Identity.Name);
+				var caseStateModel = await _caseCachedService.GetCaseData<CaseStateModel>(User.Identity.Name);
 				if (caseStateModel is null)
 				{
 					throw new Exception("Cache CaseStateData is null");
@@ -75,7 +75,7 @@ namespace ConcernsCaseWork.Pages.Case
 					var uuid = Guid.NewGuid();
 
 					// Store in cache for now
-					var caseStateModel = await _casesCachedService.GetCaseData<CaseStateModel>(User.Identity.Name);
+					var caseStateModel = await _caseCachedService.GetCaseData<CaseStateModel>(User.Identity.Name);
 					
 					
 					

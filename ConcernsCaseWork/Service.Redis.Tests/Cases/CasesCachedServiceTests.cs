@@ -15,7 +15,7 @@ namespace Service.Redis.Tests.Cases
 		{
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
-			var casesCachedService = new CasesCachedService(mockCacheProvider.Object);
+			var casesCachedService = new CaseCachedService(mockCacheProvider.Object);
 			var caseStateModel = new CaseStateModel
 			{
 				TrustUkPrn = "999999"

@@ -88,13 +88,7 @@ namespace Service.TRAMS.Trusts
 				throw;
 			}
 		}
-
-		/// <summary>
-		/// TramsAPI doesn't support Url encode.
-		/// HttpUtility.UrlEncode(queryParams.ToString())
-		/// </summary>
-		/// <param name="trustSearch"></param>
-		/// <returns></returns>
+		
 		public string BuildRequestUri(TrustSearch trustSearch)
 		{
 			var queryParams = HttpUtility.ParseQueryString(string.Empty);
@@ -112,7 +106,7 @@ namespace Service.TRAMS.Trusts
 			}
 			queryParams.Add("page", trustSearch.Page.ToString());
 			
-			return $"/trusts?{queryParams}";
+			return $"/trusts?{HttpUtility.UrlEncode(queryParams.ToString())}";
 		}
 	}
 }
