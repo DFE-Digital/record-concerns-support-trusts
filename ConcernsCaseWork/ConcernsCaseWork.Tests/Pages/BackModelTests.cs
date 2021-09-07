@@ -16,6 +16,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		[TestCase("/case", true)]
 		[TestCase("home", false)]
 		[TestCase("/home", false)]
+		[TestCase("/case/details", false)]
 		public void WhenCanRender_ReturnsExpected(string requestPath, bool expected)
 		{
 			// act

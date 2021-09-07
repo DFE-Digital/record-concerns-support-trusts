@@ -16,22 +16,22 @@ namespace Service.Redis.Tests.Cases
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			var casesCachedService = new CasesCachedService(mockCacheProvider.Object);
-			var caseStateData = new CaseStateData
+			var caseStateData = new CasesStateData
 			{
 				TrustUkPrn = "999999"
 			};
 			
 			mockCacheProvider.Setup(c => c.CacheTimeToLive()).Returns(120);
-			mockCacheProvider.Setup(c => c.GetFromCache<CaseStateData>(It.IsAny<string>())).
+			mockCacheProvider.Setup(c => c.GetFromCache<CasesStateData>(It.IsAny<string>())).
 				Returns(Task.FromResult(caseStateData));
 
 			// act
 			await casesCachedService.CreateCaseData("username", caseStateData);
-			var cachedCaseStateData = await casesCachedService.GetCaseData<CaseStateData>("username");
+			var cachedCaseStateData = await casesCachedService.GetCaseData<CasesStateData>("username");
 
 			// assert
 			Assert.That(cachedCaseStateData, Is.Not.Null);
-			Assert.That(cachedCaseStateData, Is.InstanceOf<CaseStateData>());
+			Assert.That(cachedCaseStateData, Is.InstanceOf<CasesStateData>());
 			Assert.That(cachedCaseStateData.TrustUkPrn, Is.EqualTo(caseStateData.TrustUkPrn));
 		}
 	}

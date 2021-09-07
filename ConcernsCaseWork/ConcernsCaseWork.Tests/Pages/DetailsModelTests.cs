@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCasesCachedService = new Mock<ICasesCachedService>();
 			var expected = TrustFactory.CreateTrustDetailsModel();
 
-			mockCasesCachedService.Setup(c => c.GetCaseData<CaseStateData>(It.IsAny<string>())).ReturnsAsync(new CaseStateData { TrustUkPrn = "trustukprn" });
+			mockCasesCachedService.Setup(c => c.GetCaseData<CasesStateData>(It.IsAny<string>())).ReturnsAsync(new CasesStateData { TrustUkPrn = "trustukprn" });
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
 			
 			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
@@ -76,7 +76,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICasesCachedService>();
 			
-			mockCasesCachedService.Setup(c => c.GetCaseData<CaseStateData>(It.IsAny<string>())).ReturnsAsync(new CaseStateData { TrustUkPrn = "trustukprn" });
+			mockCasesCachedService.Setup(c => c.GetCaseData<CasesStateData>(It.IsAny<string>())).ReturnsAsync(new CasesStateData { TrustUkPrn = "trustukprn" });
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ThrowsAsync(new Exception("some error"));
 			
 			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);

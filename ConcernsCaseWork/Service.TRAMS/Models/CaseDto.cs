@@ -1,32 +1,79 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace Service.TRAMS.Models
 {
 	public sealed class CaseDto
 	{
 		[JsonPropertyName("id")]
-		public string Id { get; }
+		public int Id { get; }
 		
-		[JsonPropertyName("type")]
-		public string Type { get; }
-		
-		[JsonPropertyName("trustName")]
-		public string TrustName { get; }
-		
-		[JsonPropertyName("rag")]
-		public int Rag { get; }
-		
-		[JsonPropertyName("created")]
-		public string Created { get; }
+		[JsonPropertyName("created_at")]
+		public DateTimeOffset CreatedAt { get; }
 
-		[JsonPropertyName("lastUpdate")]
-		public string LastUpdate { get; }
+		[JsonPropertyName("updated_at")]
+		public DateTimeOffset UpdateAt { get; }
 		
-		[JsonPropertyName("closed")]
-		public string Closed { get; }
+		[JsonPropertyName("review_at")]
+		public DateTimeOffset ReviewAt { get; }
 		
+		[JsonPropertyName("closed_at")]
+		public DateTimeOffset ClosedAt { get; }
+		
+		/// <summary>
+		/// Case owner from azure AD some unique identifier
+		/// </summary>
+		[JsonPropertyName("created_by")]
+		public string CreatedBy { get; }
+		
+		[JsonPropertyName("description")]
+		public string Description { get; }
+		
+		[JsonPropertyName("crm_enquiry")]
+		public string CrmEnquiry { get; }
+		
+		[JsonPropertyName("trust_ukprn")]
+		public string TrustUkPrn { get; }
+		
+		[JsonPropertyName("reason_at_review")]
+		public string ReasonAtReview { get; }
+
+		[JsonPropertyName("de_escalation")]
+		public DateTimeOffset DeEscalation { get; }
+		
+		[JsonPropertyName("issue")]
+		public string Issue { get; }
+
+		[JsonPropertyName("current_status")]
+		public string CurrentStatus { get; }
+
+		[JsonPropertyName("next_steps")]
+		public string NextSteps { get; }
+		
+		[JsonPropertyName("resolution_strategy")]
+		public string ResolutionStrategy { get; }
+		
+		/// <summary>
+		/// Deteriorating, unchanged, improved
+		/// </summary>
+		[JsonPropertyName("direction_of_travel")]
+		public string DirectionOfTravel { get; }
+		
+		[JsonPropertyName("urn")]
+		public BigInteger Urn { get; }
+		
+		[JsonPropertyName("status")]
+		public int Status { get; }
+
 		[JsonConstructor]
-		public CaseDto(string id, string type, string trustName, int rag, string created, string lastUpdate, string closed) => 
-			(Id, Type, TrustName, Rag, Created, LastUpdate, Closed) = (id, type, trustName, rag, created, lastUpdate, closed);
+		public CaseDto(int id, DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
+			DateTimeOffset closedAt, string createdBy, string description, string crmEnquiry, string trustUkPrn, 
+			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, string nextSteps,
+			string resolutionStrategy, string directionOfTravel, BigInteger urn, int status) => 
+			(Id, CreatedAt, UpdateAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn, 
+				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, ResolutionStrategy, DirectionOfTravel, Urn, Status) = 
+			(id, createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn, reasonAtReview, deEscalation,
+				issue, currentStatus, nextSteps, resolutionStrategy, directionOfTravel, urn, status);
 	}
 }
