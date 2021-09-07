@@ -6,9 +6,6 @@ namespace Service.TRAMS.Models
 {
 	public sealed class StatusDto
 	{
-		[JsonPropertyName("id")]
-		public int Id { get; }
-		
 		/// <summary>
 		/// Live, Monitoring, Close
 		/// </summary>
@@ -24,7 +21,7 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("urn")]
 		public BigInteger Urn { get; }
 		
-		public StatusDto(int id, string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, BigInteger urn) => 
-			(Id, Name, CreatedAt, UpdatedAt, Urn) = (id, name, createdAt, updatedAt, urn);
+		public StatusDto(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, BigInteger urn) => 
+			(Name, CreatedAt, UpdatedAt, Urn) = (name, createdAt, updatedAt, urn);
 	}
 }

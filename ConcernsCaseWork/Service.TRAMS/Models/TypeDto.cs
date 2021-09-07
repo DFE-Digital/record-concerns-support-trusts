@@ -6,9 +6,6 @@ namespace Service.TRAMS.Models
 {
 	public sealed class TypeDto
 	{
-		[JsonPropertyName("id")]
-		public int Id { get; }
-		
 		/// <summary>
 		/// Record, SRMA, Safeguarding, Concern
 		/// </summary>
@@ -30,8 +27,8 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("urn")]
 		public BigInteger Urn { get; }
 		
-		public TypeDto(int id, string name, string description, DateTimeOffset createdAt, 
+		public TypeDto(string name, string description, DateTimeOffset createdAt, 
 			DateTimeOffset updatedAt, BigInteger urn) => 
-			(Id, Name, Description, CreatedAt, UpdatedAt, Urn) = (id, name, description, createdAt, updatedAt, urn);
+			(Name, Description, CreatedAt, UpdatedAt, Urn) = (name, description, createdAt, updatedAt, urn);
 	}
 }

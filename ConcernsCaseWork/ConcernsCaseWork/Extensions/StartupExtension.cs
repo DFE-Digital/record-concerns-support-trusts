@@ -11,7 +11,15 @@ using Service.Redis.Configuration;
 using Service.Redis.Users;
 using Service.TRAMS.Cases;
 using Service.TRAMS.Configuration;
+using Service.TRAMS.Rating;
+using Service.TRAMS.RecordAcademy;
+using Service.TRAMS.RecordRatingHistory;
+using Service.TRAMS.Records;
+using Service.TRAMS.RecordSrma;
+using Service.TRAMS.RecordWhistleblower;
+using Service.TRAMS.Status;
 using Service.TRAMS.Trusts;
+using Service.TRAMS.Type;
 using StackExchange.Redis;
 using System;
 using System.Configuration;
@@ -89,8 +97,16 @@ namespace ConcernsCaseWork.Extensions
 			
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
+			services.AddSingleton<IRatingService, RatingService>();
+			services.AddSingleton<IRecordAcademyService, RecordAcademyService>();
+			services.AddSingleton<IRecordRatingHistory, RecordRatingHistory>();
+			services.AddSingleton<IRecordService, RecordService>();
+			services.AddSingleton<IRecordSrmaService, RecordSrmaService>();
+			services.AddSingleton<IRecordWhistleblowerService, RecordWhistleblowerService>();
+			services.AddSingleton<IStatusService, StatusService>();
 			services.AddSingleton<ITrustService, TrustService>();
 			services.AddSingleton<ITrustSearchService, TrustSearchService>();
+			services.AddSingleton<ITypeService, TypeService>();
 			
 			// Redis services
 			services.AddTransient<ICacheProvider, CacheProvider>();
