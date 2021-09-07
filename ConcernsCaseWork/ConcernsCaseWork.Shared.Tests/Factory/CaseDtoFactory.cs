@@ -13,28 +13,28 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new List<CaseDto>
 			{
 				new CaseDto(
-					1, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
-					"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
+					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
 					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
 				),
 				new CaseDto(
-					2, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
-					"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
+					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
 					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
 				),
 				new CaseDto(
-					3, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
-					"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
+					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
 					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
 				),
 				new CaseDto(
-					4, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
-					"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
+					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
 					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
 				),
 				new CaseDto(
-					5, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
-					"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
+					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
 					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
 				)
 			};
@@ -44,8 +44,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			var dateTimeNow = DateTimeOffset.Now;
 			return new CaseDto(
-				1, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crmenquiry",
-				"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps",
+				dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crmenquiry",
+				"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps",
 				"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
 			);
 		}

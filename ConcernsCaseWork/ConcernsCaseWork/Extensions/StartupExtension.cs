@@ -6,8 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using Service.Redis.Base;
-using Service.Redis.Cases;
 using Service.Redis.Configuration;
+using Service.Redis.Services;
 using Service.Redis.Users;
 using Service.TRAMS.Cases;
 using Service.TRAMS.Configuration;
@@ -71,7 +71,7 @@ namespace ConcernsCaseWork.Extensions
 		/// </summary>
 		/// <param name="services"></param>
 		/// <param name="configuration"></param>
-		/// <exception cref="ConfigurationErrorsException"></exception>
+		/// <exception cref="System.Configuration.ConfigurationErrorsException"></exception>
 		public static void AddTramsApi(this IServiceCollection services, IConfiguration configuration)
 		{
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
@@ -112,7 +112,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddTransient<ICacheProvider, CacheProvider>();
 			services.AddTransient<IActiveDirectoryService, ActiveDirectoryService>();
 			services.AddTransient<IUserCachedService, UserCachedService>();
-			services.AddTransient<ICaseCachedService, CaseCachedService>();
+			services.AddTransient<ICachedService, CachedService>();
 		}
 
 		public static void AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Cases;
+using Service.Redis.Services;
 
 namespace ConcernsCaseWork.Pages.Case
 {
@@ -12,13 +12,13 @@ namespace ConcernsCaseWork.Pages.Case
 	public class ManagementModel : PageModel
 	{
 		private readonly ITrustModelService _trustModelService;
-		private readonly ICaseCachedService _caseCachedService;
+		private readonly ICachedService _cachedService;
 		private readonly ILogger<DetailsModel> _logger;
 		
-		public ManagementModel(ITrustModelService trustModelService, ICaseCachedService caseCachedService, ILogger<DetailsModel> logger)
+		public ManagementModel(ITrustModelService trustModelService, ICachedService cachedService, ILogger<DetailsModel> logger)
 		{
 			_trustModelService = trustModelService;
-			_caseCachedService = caseCachedService;
+			_cachedService = cachedService;
 			_logger = logger;
 		}
 		

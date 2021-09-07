@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Service.TRAMS.Models
 {
@@ -6,8 +7,12 @@ namespace Service.TRAMS.Models
 	{
 		[JsonPropertyName("giasData")]
 		public GiasDataDto GiasData { get; }
+		
+		[JsonPropertyName("establishments")]
+		public List<EstablishmentDto> Establishments { get; } 
 
 		[JsonConstructor]
-		public TrustDetailsDto(GiasDataDto giasData) => (GiasData) = (giasData);
+		public TrustDetailsDto(GiasDataDto giasData, List<EstablishmentDto> establishments) => 
+			(GiasData, Establishments) = (giasData, establishments);
 	}
 }

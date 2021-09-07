@@ -20,7 +20,6 @@ namespace Service.TRAMS.Tests.Models
 			// assert
 			Assert.That(caseDto, Is.Not.Null);
 			Assert.That(expectedCaseDto, Is.Not.Null);
-			Assert.That(caseDto.Id, Is.EqualTo(expectedCaseDto.Id));
 			Assert.That(caseDto.Description, Is.EqualTo(expectedCaseDto.Description));
 			Assert.That(caseDto.Issue, Is.EqualTo(expectedCaseDto.Issue));
 			Assert.That(caseDto.Status, Is.EqualTo(expectedCaseDto.Status));
@@ -38,6 +37,7 @@ namespace Service.TRAMS.Tests.Models
 			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCaseDto.DirectionOfTravel));
 			Assert.That(caseDto.ReasonAtReview, Is.EqualTo(expectedCaseDto.ReasonAtReview));
 			Assert.That(caseDto.TrustUkPrn, Is.EqualTo(expectedCaseDto.TrustUkPrn));
+			Assert.That(caseDto.TrustName, Is.EqualTo(expectedCaseDto.TrustName));
 		}
 	}
 }

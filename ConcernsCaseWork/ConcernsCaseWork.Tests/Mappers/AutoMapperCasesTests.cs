@@ -38,7 +38,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(casesModel.Count, Is.EqualTo(casesDto.Count));
 			foreach (var expected in casesModel)
 			{
-				foreach (var actual in casesDto.Where(actual => expected.Id.Equals(actual.Id)))
+				foreach (var actual in casesDto.Where(actual => expected.Urn.Equals(actual.Urn)))
 				{
 					Assert.That(expected.Description, Is.EqualTo(actual.Description));
 					Assert.That(expected.Issue, Is.EqualTo(actual.Issue));

@@ -1,11 +1,11 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Models.Redis;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
-using Service.Redis.Cases;
+using Service.Redis.Services;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Tests.Cases
+namespace Service.Redis.Tests.Services
 {
 	[Parallelizable(ParallelScope.All)]
 	public class CasesCachedServiceTests
@@ -15,7 +15,7 @@ namespace Service.Redis.Tests.Cases
 		{
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
-			var casesCachedService = new CaseCachedService(mockCacheProvider.Object);
+			var casesCachedService = new CachedService(mockCacheProvider.Object);
 			var caseStateModel = new CaseStateModel
 			{
 				TrustUkPrn = "999999"
@@ -26,8 +26,8 @@ namespace Service.Redis.Tests.Cases
 				Returns(Task.FromResult(caseStateModel));
 
 			// act
-			await casesCachedService.CreateCaseData("username", caseStateModel);
-			var cachedCaseStateData = await casesCachedService.GetCaseData<CaseStateModel>("username");
+			await casesCachedService.StoreData("username", caseStateModel);
+			var cachedCaseStateData = await casesCachedService.GetData<CaseStateModel>("username");
 
 			// assert
 			Assert.That(cachedCaseStateData, Is.Not.Null);

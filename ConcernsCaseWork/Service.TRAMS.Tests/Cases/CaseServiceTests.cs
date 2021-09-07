@@ -52,9 +52,8 @@ namespace Service.TRAMS.Tests.Cases
 			
 			foreach (var caseDto in cases)
 			{
-				foreach (var expectedCase in expectedCases.Where(expectedCase => caseDto.Id == expectedCase.Id))
+				foreach (var expectedCase in expectedCases.Where(expectedCase => caseDto.Urn == expectedCase.Urn))
 				{
-					Assert.That(caseDto.Id, Is.EqualTo(expectedCase.Id));
 					Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
 					Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
 					Assert.That(caseDto.Status, Is.EqualTo(expectedCase.Status));
@@ -72,6 +71,7 @@ namespace Service.TRAMS.Tests.Cases
 					Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
 					Assert.That(caseDto.ReasonAtReview, Is.EqualTo(expectedCase.ReasonAtReview));
 					Assert.That(caseDto.TrustUkPrn, Is.EqualTo(expectedCase.TrustUkPrn));
+					Assert.That(caseDto.TrustName, Is.EqualTo(expectedCase.TrustName));
 				}
 			}
 		}

@@ -3,26 +3,25 @@ using Service.Redis.Base;
 using System;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Cases
+namespace Service.Redis.Services
 {
-	public sealed class CaseCachedService : ICaseCachedService
+	public sealed class CachedService : ICachedService
 	{
 		private readonly ICacheProvider _cacheProvider;
-		private const int CaseStateDateExpiration = 24;
-		
-		public CaseCachedService(ICacheProvider cacheProvider)
+
+		public CachedService(ICacheProvider cacheProvider)
 		{
 			_cacheProvider = cacheProvider;
 		}
 		
-		public async Task CreateCaseData<T>(string key, T data) where T : class
+		public async Task StoreData<T>(string key, T data, int expirationTimeInHours = 24) where T : class
 		{
 			var cacheEntryOptions = new DistributedCacheEntryOptions()
-				.SetSlidingExpiration(TimeSpan.FromHours(CaseStateDateExpiration));
+				.SetSlidingExpiration(TimeSpan.FromHours(expirationTimeInHours));
 			await _cacheProvider.SetCache(key, data, cacheEntryOptions);
 		}
-
-		public async Task<T> GetCaseData<T>(string key) where T : class
+		
+		public async Task<T> GetData<T>(string key) where T : class
 		{
 			return await _cacheProvider.GetFromCache<T>(key);
 		}

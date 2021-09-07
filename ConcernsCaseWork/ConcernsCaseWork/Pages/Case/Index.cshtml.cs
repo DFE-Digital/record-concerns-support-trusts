@@ -1,11 +1,11 @@
 ﻿using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.Redis;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Cases;
-using Service.Redis.Models;
+using Service.Redis.Services;
 using Service.TRAMS.Models;
 using System;
 using System.Net;
@@ -18,15 +18,15 @@ namespace ConcernsCaseWork.Pages.Case
 	public class IndexModel : PageModel
 	{
 		private readonly ITrustModelService _trustModelService;
-		private readonly ICaseCachedService _caseCachedService;
+		private readonly ICachedService _cachedService;
 		private readonly ILogger<IndexModel> _logger;
 		
 		private const int SearchQueryMinLength = 3;
 		
-		public IndexModel(ITrustModelService trustModelService, ICaseCachedService caseCachedService, ILogger<IndexModel> logger)
+		public IndexModel(ITrustModelService trustModelService, ICachedService cachedService, ILogger<IndexModel> logger)
 		{
 			_trustModelService = trustModelService;
-			_caseCachedService = caseCachedService;
+			_cachedService = cachedService;
 			_logger = logger;
 		}
 		
@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Pages.Case
 				}
 
 				// Store CaseState into cache.
-				_caseCachedService.CreateCaseData(User.Identity.Name, new CaseStateModel { TrustUkPrn = selectedTrust });
+				_cachedService.StoreData(User.Identity.Name, new CaseStateModel { TrustUkPrn = selectedTrust });
 
 				return new JsonResult(new { redirectUrl = Url.Page("Details") });
 			}
