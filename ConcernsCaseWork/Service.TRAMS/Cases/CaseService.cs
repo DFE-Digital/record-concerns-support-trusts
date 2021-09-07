@@ -4,6 +4,7 @@ using Service.TRAMS.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Numerics;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -48,19 +49,40 @@ namespace Service.TRAMS.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"TrustService::GetTrustsByPagination::Exception message::{ex.Message}");
+				_logger.LogError($"CaseService::GetCasesByCaseworker::Exception message::{ex.Message}");
 			}
 
 			// Uncomment when pointing service to real trams api
 			//return Array.Empty<CaseDto>();
 			
+			var dateTimeNow = DateTimeOffset.Now;
 			return new List<CaseDto>
 			{
-				new CaseDto("CI-1004634", "-", "Wintermute Academy Trust", 0, "09-08-2021", "09-08-2021", "09-08-2021"),
-				new CaseDto("CI-1004635", "Safeguarding", "Straylight Academies", 1, "09-08-2021", "09-08-2021", "09-08-2021"),
-				new CaseDto("CI-1004636", "Finance", "The Linda Lee Academies Trust", 2, "09-08-2021", "09-08-2021", "09-08-2021"),
-				new CaseDto("CI-1004637", "Governance", "Wintermute Academy Trust", 3, "09-08-2021", "09-08-2021", "09-08-2021"),
-				new CaseDto("CI-1004638", "Finance", "Armitage Education Trust", 4, "09-08-2021", "09-08-2021", "09-08-2021")
+				new CaseDto(
+					1, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
+					"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
+					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+				),
+				new CaseDto(
+					2, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
+					"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
+					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+				),
+				new CaseDto(
+					3, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
+					"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
+					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+				),
+				new CaseDto(
+					4, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
+					"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
+					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+				),
+				new CaseDto(
+					5, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
+					"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
+					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+				)
 			};
 		}
 	}

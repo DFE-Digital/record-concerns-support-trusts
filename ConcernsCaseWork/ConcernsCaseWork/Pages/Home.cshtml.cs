@@ -14,9 +14,9 @@ namespace ConcernsCaseWork.Pages
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public class HomeModel : PageModel
     {
-        private readonly ILogger<HomeModel> _logger;
-        private readonly ICaseModelService _caseModelService;
-     
+	    private readonly ICaseModelService _caseModelService;
+	    private readonly ILogger<HomeModel> _logger;
+	    
         public IList<CaseModel> CasesActive { get; private set; }
         public IList<CaseModel> CasesMonitoring { get; private set; }
         public readonly Dictionary<int, string> Rags = new Dictionary<int, string>(5)
@@ -36,9 +36,10 @@ namespace ConcernsCaseWork.Pages
 
         public async Task OnGetAsync()
         {
-	        _logger.LogInformation("HomeModel::OnGetAsync executed at {Date}", DateTime.UtcNow);
+	        _logger.LogInformation("HomeModel::OnGetAsync executed");
+	        
 	        // TODO Get caseworker ID or name to query the cases against it.
-	        CasesActive = await _caseModelService.GetCasesByCaseworker("testing");
+	        CasesActive = await _caseModelService.GetCasesByCaseworker(User.Identity.Name);
 	        // TODO Filter cases per status
 	        CasesMonitoring = CasesActive;
         }

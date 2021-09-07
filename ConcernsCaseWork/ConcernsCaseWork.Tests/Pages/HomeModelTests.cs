@@ -1,7 +1,7 @@
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -36,10 +36,23 @@ namespace ConcernsCaseWork.Tests.Pages
 			{
 				foreach (var actual in cases.Where(actual => expected.Id.Equals(actual.Id)))
 				{
-					Assert.That(expected.TrustName, Is.EqualTo(actual.TrustName));
-					Assert.That(expected.Rag, Is.EqualTo(actual.Rag));
-					Assert.That(expected.Type, Is.EqualTo(actual.Type));
-					Assert.That(expected.Created, Is.EqualTo(actual.Created));
+					Assert.That(expected.Description, Is.EqualTo(actual.Description));
+					Assert.That(expected.Issue, Is.EqualTo(actual.Issue));
+					Assert.That(expected.Status, Is.EqualTo(actual.Status));
+					Assert.That(expected.Urn, Is.EqualTo(actual.Urn));
+					Assert.That(expected.ClosedAt, Is.EqualTo(actual.ClosedAt));
+					Assert.That(expected.CreatedAt, Is.EqualTo(actual.CreatedAt));
+					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
+					Assert.That(expected.CrmEnquiry, Is.EqualTo(actual.CrmEnquiry));
+					Assert.That(expected.CurrentStatus, Is.EqualTo(actual.CurrentStatus));
+					Assert.That(expected.DeEscalation, Is.EqualTo(actual.DeEscalation));
+					Assert.That(expected.NextSteps, Is.EqualTo(actual.NextSteps));
+					Assert.That(expected.ResolutionStrategy, Is.EqualTo(actual.ResolutionStrategy));
+					Assert.That(expected.ReviewAt, Is.EqualTo(actual.ReviewAt));
+					Assert.That(expected.UpdateAt, Is.EqualTo(actual.UpdateAt));
+					Assert.That(expected.DirectionOfTravel, Is.EqualTo(actual.DirectionOfTravel));
+					Assert.That(expected.ReasonAtReview, Is.EqualTo(actual.ReasonAtReview));
+					Assert.That(expected.TrustUkPrn, Is.EqualTo(actual.TrustUkPrn));
 				}
 			}
 			

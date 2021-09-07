@@ -1,8 +1,8 @@
-﻿using Moq;
+﻿using ConcernsCaseWork.Models;
+using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
 using Service.Redis.Cases;
-using Service.Redis.Models;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Tests.Cases
@@ -16,23 +16,23 @@ namespace Service.Redis.Tests.Cases
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			var casesCachedService = new CasesCachedService(mockCacheProvider.Object);
-			var caseStateData = new CasesStateData
+			var caseStateModel = new CaseStateModel
 			{
 				TrustUkPrn = "999999"
 			};
 			
 			mockCacheProvider.Setup(c => c.CacheTimeToLive()).Returns(120);
-			mockCacheProvider.Setup(c => c.GetFromCache<CasesStateData>(It.IsAny<string>())).
-				Returns(Task.FromResult(caseStateData));
+			mockCacheProvider.Setup(c => c.GetFromCache<CaseStateModel>(It.IsAny<string>())).
+				Returns(Task.FromResult(caseStateModel));
 
 			// act
-			await casesCachedService.CreateCaseData("username", caseStateData);
-			var cachedCaseStateData = await casesCachedService.GetCaseData<CasesStateData>("username");
+			await casesCachedService.CreateCaseData("username", caseStateModel);
+			var cachedCaseStateData = await casesCachedService.GetCaseData<CaseStateModel>("username");
 
 			// assert
 			Assert.That(cachedCaseStateData, Is.Not.Null);
-			Assert.That(cachedCaseStateData, Is.InstanceOf<CasesStateData>());
-			Assert.That(cachedCaseStateData.TrustUkPrn, Is.EqualTo(caseStateData.TrustUkPrn));
+			Assert.That(cachedCaseStateData, Is.InstanceOf<CaseStateModel>());
+			Assert.That(cachedCaseStateData.TrustUkPrn, Is.EqualTo(caseStateModel.TrustUkPrn));
 		}
 	}
 }

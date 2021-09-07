@@ -10,9 +10,9 @@ using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Factory
+namespace ConcernsCaseWork.Shared.Tests.Factory
 {
-	internal static class PageContextFactory
+	public static class PageContextFactory
 	{
 		public const string ClaimName = "Tester";
 		private const string ClaimNameIdentifier = "1";

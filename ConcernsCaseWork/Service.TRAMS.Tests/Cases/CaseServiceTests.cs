@@ -55,12 +55,23 @@ namespace Service.TRAMS.Tests.Cases
 				foreach (var expectedCase in expectedCases.Where(expectedCase => caseDto.Id == expectedCase.Id))
 				{
 					Assert.That(caseDto.Id, Is.EqualTo(expectedCase.Id));
-					Assert.That(caseDto.Rag, Is.EqualTo(expectedCase.Rag));
-					Assert.That(caseDto.Type, Is.EqualTo(expectedCase.Type));
-					Assert.That(caseDto.Created, Is.EqualTo(expectedCase.Created));
-					Assert.That(caseDto.LastUpdate, Is.EqualTo(expectedCase.LastUpdate));
-					Assert.That(caseDto.TrustName, Is.EqualTo(expectedCase.TrustName));
-					Assert.That(caseDto.Closed, Is.EqualTo(expectedCase.Closed));
+					Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
+					Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
+					Assert.That(caseDto.Status, Is.EqualTo(expectedCase.Status));
+					Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
+					Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
+					Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
+					Assert.That(caseDto.CreatedBy, Is.EqualTo(expectedCase.CreatedBy));
+					Assert.That(caseDto.CrmEnquiry, Is.EqualTo(expectedCase.CrmEnquiry));
+					Assert.That(caseDto.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
+					Assert.That(caseDto.DeEscalation, Is.EqualTo(expectedCase.DeEscalation));
+					Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCase.NextSteps));
+					Assert.That(caseDto.ResolutionStrategy, Is.EqualTo(expectedCase.ResolutionStrategy));
+					Assert.That(caseDto.ReviewAt, Is.EqualTo(expectedCase.ReviewAt));
+					Assert.That(caseDto.UpdateAt, Is.EqualTo(expectedCase.UpdateAt));
+					Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
+					Assert.That(caseDto.ReasonAtReview, Is.EqualTo(expectedCase.ReasonAtReview));
+					Assert.That(caseDto.TrustUkPrn, Is.EqualTo(expectedCase.TrustUkPrn));
 				}
 			}
 		}

@@ -3,7 +3,6 @@ using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.Shared;
-using ConcernsCaseWork.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -30,7 +29,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCasesCachedService = new Mock<ICasesCachedService>();
 			var expected = TrustFactory.CreateTrustDetailsModel();
 
-			mockCasesCachedService.Setup(c => c.GetCaseData<CasesStateData>(It.IsAny<string>())).ReturnsAsync(new CasesStateData { TrustUkPrn = "trustukprn" });
+			mockCasesCachedService.Setup(c => c.GetCaseData<CaseStateModel>(It.IsAny<string>())).ReturnsAsync(new CaseStateModel { TrustUkPrn = "trustukprn" });
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
 			
 			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
@@ -76,7 +75,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICasesCachedService>();
 			
-			mockCasesCachedService.Setup(c => c.GetCaseData<CasesStateData>(It.IsAny<string>())).ReturnsAsync(new CasesStateData { TrustUkPrn = "trustukprn" });
+			mockCasesCachedService.Setup(c => c.GetCaseData<CaseStateModel>(It.IsAny<string>())).ReturnsAsync(new CaseStateModel { TrustUkPrn = "trustukprn" });
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ThrowsAsync(new Exception("some error"));
 			
 			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
@@ -143,10 +142,8 @@ namespace ConcernsCaseWork.Tests.Pages
 				Times.Once);
 		}
 
-		[TestCase("record", "Record")]
-		[TestCase("safeguarding", "Safeguarding")]
-		[TestCase("concern", "Concern")]
-		public void WhenOnPost_RedirectToPageSuccess(string caseType, string expectedRedirect)
+		[Test]
+		public void WhenOnPost_RedirectToPageSuccess()
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<DetailsModel>>();
@@ -156,7 +153,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
 			
 			// act
-			var pageResponse = pageModel.OnPost(caseType);
+			var pageResponse = pageModel.OnPost();
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<RedirectToPageResult>());
@@ -166,9 +163,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(page.PageName, Is.EqualTo(expectedRedirect));
 		}
 
-		[TestCase("")]
-		[TestCase(null)]
-		public void WhenOnPost_ReturnPageWhenCaseTypeInput_IsEmptyOrNull(string caseType)
+		[Test]
+		public void WhenOnPost_ReturnPageWhenCaseTypeInput_IsEmptyOrNull()
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<DetailsModel>>();
@@ -178,7 +174,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
 			
 			// act
-			var pageResponse = pageModel.OnPost(caseType);
+			var pageResponse = pageModel.OnPost();
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));

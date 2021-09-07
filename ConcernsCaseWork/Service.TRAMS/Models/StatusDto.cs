@@ -9,6 +9,9 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("id")]
 		public int Id { get; }
 		
+		/// <summary>
+		/// Live, Monitoring, Close
+		/// </summary>
 		[JsonPropertyName("name")]
 		public string Name { get; }
 		

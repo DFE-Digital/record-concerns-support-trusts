@@ -9,9 +9,15 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("id")]
 		public int Id { get; }
 		
+		/// <summary>
+		/// Record, SRMA, Safeguarding, Concern
+		/// </summary>
 		[JsonPropertyName("name")]
 		public string Name { get; }
 		
+		/// <summary>
+		/// Record (Log information when it is not a Concern)
+		/// </summary>
 		[JsonPropertyName("description")]
 		public string Description { get; }
 		

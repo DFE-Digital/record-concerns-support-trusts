@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.Services.Cases
 {
 	public interface ICaseModelService
 	{
-		// TODO - for example only...
-		Task<IList<CaseModel>> GetCasesByCaseworker(string caseworker);
+		Task<(IList<HomeModel>, IList<HomeModel>)> GetCasesByCaseworker(string caseworker);
+		
 	}
 }

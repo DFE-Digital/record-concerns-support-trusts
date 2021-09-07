@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.Pages;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using ConcernsCaseWork.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
