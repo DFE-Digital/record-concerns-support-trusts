@@ -13,29 +13,29 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new List<CaseModel>
 			{
 				new CaseModel(
-					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
-					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
-					"resolutionstrategy", "directionoftravel", BigIntegerSequence.Generator(), "Live"
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
+					"trust-ukprn", "trust-name", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
+					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), "Live"
 				),
 				new CaseModel(
-					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
-					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
-					"resolutionstrategy", "directionoftravel", BigIntegerSequence.Generator(), "Live"
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
+					"trust-ukprn", "trust-name", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
+					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), "Live"
 				),
 				new CaseModel(
-					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
-					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
-					"resolutionstrategy", "directionoftravel", BigIntegerSequence.Generator(), "Close"
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
+					"trust-ukprn", "trust-name", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
+					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), "Close"
 				),
 				new CaseModel(
-					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
-					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
-					"resolutionstrategy", "directionoftravel", BigIntegerSequence.Generator(), "Monitoring"
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
+					"trust-ukprn", "trust-name", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
+					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), "Monitoring"
 				),
 				new CaseModel(
-					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
-					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
-					"resolutionstrategy", "directionoftravel", BigIntegerSequence.Generator(), "Monitoring"
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
+					"trust-ukprn", "trust-name", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
+					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), "Monitoring"
 				)			
 			};
 		}

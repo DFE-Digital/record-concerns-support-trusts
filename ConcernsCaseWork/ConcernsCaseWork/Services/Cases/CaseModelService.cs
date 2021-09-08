@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Services.Cases
 		/// </summary>
 		/// <param name="caseworker"></param>
 		/// <returns></returns>
-		public async Task<(IList<HomeUiModel>, IList<HomeUiModel>)> GetCasesByCaseworker(string caseworker)
+		public async Task<(IList<HomeModel>, IList<HomeModel>)> GetCasesByCaseworker(string caseworker)
 		{
 			try
 			{
@@ -71,33 +71,33 @@ namespace ConcernsCaseWork.Services.Cases
 			return Empty();
 		}
 
-		public Task<HomeUiModel> GetCasesByUrn(string urn)
+		public Task<HomeModel> GetCasesByUrn(string urn)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<IList<HomeUiModel>> GetCasesByTrustUkPrn(string trustUkprn)
+		public Task<IList<HomeModel>> GetCasesByTrustUkPrn(string trustUkprn)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<IList<HomeUiModel>> GetCasesByPagination(CaseSearch caseSearch)
+		public Task<IList<HomeModel>> GetCasesByPagination(CaseSearch caseSearch)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<HomeUiModel> PostCase(HomeUiModel caseDto)
+		public Task<HomeModel> PostCase(HomeModel caseDto)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task<HomeUiModel> PatchCaseByUrn(HomeUiModel caseDto)
+		public Task<HomeModel> PatchCaseByUrn(HomeModel caseDto)
 		{
 			throw new NotImplementedException();
 		}
 
 
-		private async Task<(IList<HomeUiModel>, IList<HomeUiModel>)> FetchFromTramsApi(string caseworker)
+		private async Task<(IList<HomeModel>, IList<HomeModel>)> FetchFromTramsApi(string caseworker)
 		{
 			// Get from TRAMS API all trusts for the caseworker
 			var casesDto = await _caseService.GetCasesByCaseworker(caseworker);
@@ -134,7 +134,7 @@ namespace ConcernsCaseWork.Services.Cases
 			return Empty();
 		}
 
-		private async Task<(IList<HomeUiModel>, IList<HomeUiModel>)> FetchFromCache(CaseState caseState)
+		private async Task<(IList<HomeModel>, IList<HomeModel>)> FetchFromCache(CaseState caseState)
 		{
 			// Get cases for case worker
 			var caseDetails = caseState.CasesDetails;
@@ -169,9 +169,9 @@ namespace ConcernsCaseWork.Services.Cases
 				ragsRatingModel, typesModel);
 		}
 
-		private static (IList<HomeUiModel>, IList<HomeUiModel>) Empty()
+		private static (IList<HomeModel>, IList<HomeModel>) Empty()
 		{
-			var emptyResults = Array.Empty<HomeUiModel>();
+			var emptyResults = Array.Empty<HomeModel>();
 			return (emptyResults, emptyResults);
 		}
 	}

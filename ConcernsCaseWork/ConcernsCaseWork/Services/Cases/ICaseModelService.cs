@@ -7,11 +7,11 @@ namespace ConcernsCaseWork.Services.Cases
 {
 	public interface ICaseModelService
 	{
-		Task<(IList<HomeUiModel>, IList<HomeUiModel>)> GetCasesByCaseworker(string caseworker);
-		Task<HomeUiModel> GetCasesByUrn(string urn);
-		Task<IList<HomeUiModel>> GetCasesByTrustUkPrn(string trustUkprn);
-		Task<IList<HomeUiModel>> GetCasesByPagination(CaseSearch caseSearch);
-		Task<HomeUiModel> PostCase(HomeUiModel caseDto);
-		Task<HomeUiModel> PatchCaseByUrn(HomeUiModel caseDto);
+		Task<(IList<HomeModel>, IList<HomeModel>)> GetCasesByCaseworker(string caseworker);
+		Task<HomeModel> GetCasesByUrn(string urn);
+		Task<IList<HomeModel>> GetCasesByTrustUkPrn(string trustUkprn);
+		Task<IList<HomeModel>> GetCasesByPagination(CaseSearch caseSearch);
+		Task<HomeModel> PostCase(HomeModel caseDto);
+		Task<HomeModel> PatchCaseByUrn(HomeModel caseDto);
 	}
 }

@@ -19,11 +19,11 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenInstanceOfIndexPageOnGetAsync_ReturnCases()
 		{
 			// arrange
-			var cases = CaseModelFactory.CreateCaseModels();
+			var homeModels = HomeModelFactory.CreateHomeModels();
 
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
-			mockCaseModelService.Setup(model => model.GetCasesByCaseworker(It.IsAny<string>())).ReturnsAsync(cases, cases);
+			mockCaseModelService.Setup(model => model.GetCasesByCaseworker(It.IsAny<string>())).ReturnsAsync((homeModels, homeModels));
 			
 			// act
 			var indexModel = new HomePageModel(mockCaseModelService.Object, mockLogger.Object);

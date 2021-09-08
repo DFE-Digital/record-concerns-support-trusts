@@ -13,8 +13,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				new TrustSummaryDto(
 					"trust-ukprn", 
 					"trust-urn", 
-					"trust-groupname", 
-					"trust-companieshousenumber", 
+					"trust-group-name", 
+					"trust-companies-house-number", 
 					EstablishmentFactory.CreateListEstablishmentSummaryDto())
 			};
 		}
@@ -31,23 +31,23 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				new TrustSummaryModel(
 					"trust-ukprn", 
 					"trust-urn", 
-					"trust-groupname", 
-					"trust-companieshousenumber", 
+					"trust-group-name", 
+					"trust-companies-house-number", 
 					EstablishmentFactory.CreateListEstablishmentSummaryModel())
 			};
 		}
 
 		public static TrustDetailsDto CreateTrustDetailsDto()
 		{
-			return new TrustDetailsDto(new GiasDataDto("ukprn", "groupid", "groupname", "Multi-academy trust", "companieshousenumber", 
-				new GroupContactAddressDto("street", "locality", "additionalline", "town", "county", "postcode")),
+			return new TrustDetailsDto(new GiasDataDto("ukprn", "group-id", "group-name", "Multi-academy trust", "companies-house-number", 
+				new GroupContactAddressDto("street", "locality", "additional-line", "town", "county", "postcode")),
 				EstablishmentFactory.CreateListEstablishmentDto());
 		}
 		
 		public static TrustDetailsModel CreateTrustDetailsModel()
 		{
-			return new TrustDetailsModel(new GiasDataModel("ukprn", "groupid", "groupname", "Multi-academy trust", "companieshousenumber", 
-				new GroupContactAddressModel("street", "locality", "additionalline", "town", "county", "postcode")),
+			return new TrustDetailsModel(new GiasDataModel("ukprn", "group-id", "group-name", "Multi-academy trust", "companies-house-number", 
+				new GroupContactAddressModel("street", "locality", "additional-line", "town", "county", "postcode")),
 				EstablishmentFactory.CreateListEstablishmentModel());
 		}
 	}

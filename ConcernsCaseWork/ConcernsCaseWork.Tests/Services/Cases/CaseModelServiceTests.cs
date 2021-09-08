@@ -43,11 +43,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			// act
 			var caseModelService = new CaseModelService(mockCaseService.Object, mockTrustService.Object, mockRecordService.Object,
 				mockRatingService.Object, mockTypeService.Object, mockCachedService.Object, mapper, mockLogger.Object);
-			(IList<HomeUiModel> activeCasesModel, IList<HomeUiModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
+			(IList<HomeModel> activeCasesModel, IList<HomeModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
 
 			// assert
-			Assert.IsAssignableFrom<List<HomeUiModel>>(activeCasesModel);
-			Assert.IsAssignableFrom<List<HomeUiModel>>(monitoringCasesModel);
+			Assert.IsAssignableFrom<List<HomeModel>>(activeCasesModel);
+			Assert.IsAssignableFrom<List<HomeModel>>(monitoringCasesModel);
 			Assert.That(activeCasesModel.Count, Is.EqualTo(2));
 			Assert.That(monitoringCasesModel.Count, Is.EqualTo(2));
 			
@@ -88,11 +88,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			// act
 			var caseModelService = new CaseModelService(mockCaseService.Object, mockTrustService.Object, mockRecordService.Object,
 				mockRatingService.Object, mockTypeService.Object, mockCachedService.Object, mapper, mockLogger.Object);
-			(IList<HomeUiModel> activeCasesModel, IList<HomeUiModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
+			(IList<HomeModel> activeCasesModel, IList<HomeModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
 
 			// assert
-			Assert.IsAssignableFrom<List<HomeUiModel>>(activeCasesModel);
-			Assert.IsAssignableFrom<List<HomeUiModel>>(monitoringCasesModel);
+			Assert.IsAssignableFrom<List<HomeModel>>(activeCasesModel);
+			Assert.IsAssignableFrom<List<HomeModel>>(monitoringCasesModel);
 			Assert.That(activeCasesModel.Count, Is.Empty);
 			Assert.That(monitoringCasesModel.Count, Is.Empty);
 		}

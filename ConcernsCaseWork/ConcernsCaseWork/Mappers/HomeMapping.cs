@@ -22,13 +22,14 @@ namespace ConcernsCaseWork.Mappers
 
 		private const string StatusLive = "Live";
 		private const string StatusMonitoring = "Monitoring";
+		private const string DateFormat = "dd-MM-yyyy";
 		
-		public static (IList<HomeUiModel>, IList<HomeUiModel>) Map(IList<CaseModel> casesModel,
+		public static (IList<HomeModel>, IList<HomeModel>) Map(IList<CaseModel> casesModel,
 			IList<TrustDetailsModel> trustsDetailsModel, IList<RecordModel> recordsModel,
 			IList<RatingModel> ragsRatingModel, IList<TypeModel> typesModel)
 		{
-			var activeCases = new List<HomeUiModel>();
-			var monitoringCases = new List<HomeUiModel>();
+			var activeCases = new List<HomeModel>();
+			var monitoringCases = new List<HomeModel>();
 
 			foreach (var caseModel in casesModel)
 			{
@@ -57,10 +58,11 @@ namespace ConcernsCaseWork.Mappers
 				// Filter per status
 				if (string.Equals(caseModel.Status, StatusLive, StringComparison.CurrentCultureIgnoreCase))
 				{
-					activeCases.Add(new HomeUiModel(
+					activeCases.Add(new HomeModel(
 						caseModel.Urn.ToString(), 
-						caseModel.CreatedAt.ToString("dd-MM-yyyy"),
-						caseModel.UpdateAt.ToString("dd-MM-yyyy"),
+						caseModel.CreatedAt.ToString(DateFormat),
+						caseModel.UpdateAt.ToString(DateFormat),
+						caseModel.ClosedAt.ToString(DateFormat),
 						trustName,
 						academies,
 						primaryCaseType.Name,
@@ -71,10 +73,11 @@ namespace ConcernsCaseWork.Mappers
 				}
 				else if (string.Equals(caseModel.Status, StatusMonitoring, StringComparison.CurrentCultureIgnoreCase))
 				{
-					monitoringCases.Add(new HomeUiModel(
+					monitoringCases.Add(new HomeModel(
 						caseModel.Urn.ToString(), 
-						caseModel.CreatedAt.ToString("dd-MM-yyyy"),
-						caseModel.UpdateAt.ToString("dd-MM-yyyy"),
+						caseModel.CreatedAt.ToString(DateFormat),
+						caseModel.UpdateAt.ToString(DateFormat),
+						caseModel.ClosedAt.ToString(DateFormat),
 						trustName,
 						academies,
 						primaryCaseType.Name,

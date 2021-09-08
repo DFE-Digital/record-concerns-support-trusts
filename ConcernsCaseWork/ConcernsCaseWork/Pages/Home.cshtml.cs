@@ -16,8 +16,8 @@ namespace ConcernsCaseWork.Pages
 	    private readonly ICaseModelService _caseModelService;
 	    private readonly ILogger<HomePageModel> _logger;
 	    
-        public IList<HomeUiModel> CasesActive { get; private set; }
-        public IList<HomeUiModel> CasesMonitoring { get; private set; }
+        public IList<HomeModel> CasesActive { get; private set; }
+        public IList<HomeModel> CasesMonitoring { get; private set; }
         
         public HomePageModel(ICaseModelService caseModelService, ILogger<HomePageModel> logger)
         {

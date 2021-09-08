@@ -3,13 +3,15 @@
 	/// <summary>
 	/// Frontend model classes used only for UI rendering
 	/// </summary>
-	public sealed class HomeUiModel
+	public sealed class HomeModel
 	{
 		public string CaseUrn { get; }
 		
 		public string Created { get; }
 		
 		public string Updated { get; }
+		
+		public string Closed { get; }
 		
 		public string TrustName { get; }
 		
@@ -23,9 +25,9 @@
 		
 		public string RagRatingCss { get; }
 		
-		public HomeUiModel(string caseUrn, string created, string updated, string trustName, string academyNames, 
+		public HomeModel(string caseUrn, string created, string updated, string closed, string trustName, string academyNames, 
 			string caseType, string caseSubType, string ragRating, string ragRatingCss) => 
-			(CaseUrn, Created, Updated, TrustName, AcademyNames, CaseType, CaseSubType, RagRating, RagRatingCss) = 
-			(caseUrn, created, updated, trustName, academyNames, caseType, caseSubType, ragRating, ragRatingCss);
+			(CaseUrn, Created, Updated, Closed, TrustName, AcademyNames, CaseType, CaseSubType, RagRating, RagRatingCss) = 
+			(caseUrn, created, updated, closed, trustName, academyNames, caseType, caseSubType, ragRating, ragRatingCss);
 	}
 }
