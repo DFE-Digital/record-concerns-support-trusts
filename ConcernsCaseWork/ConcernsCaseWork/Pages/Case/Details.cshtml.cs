@@ -16,8 +16,8 @@ namespace ConcernsCaseWork.Pages.Case
 	public class DetailsPageModel : PageModel
 	{
 		private readonly ITrustModelService _trustModelService;
-		private readonly ICachedService _cachedService;
 		private readonly ILogger<DetailsPageModel> _logger;
+		private readonly ICachedService _cachedService;
 
 		private const string ErrorOnGetPage = "An error occurred loading the page, please try again. If the error persists contact the service administrator.";
 		private const string ErrorOnPostPage = "An error occurred posting the form, please try again. If the error persists contact the service administrator.";

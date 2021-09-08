@@ -3,16 +3,19 @@ using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.Shared;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
 using Service.Redis.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages
@@ -143,7 +146,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 
 		[Test]
-		public void WhenOnPost_RedirectToPageSuccess()
+		public async Task WhenOnPost_RedirectToManagementPage()
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
@@ -151,20 +154,32 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCasesCachedService = new Mock<ICachedService>();
 			
 			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "type", new StringValues("type") },
+					{ "subType", new StringValues("subType") },
+					{ "riskRating", new StringValues("riskRating") },
+					{ "issue-detail", new StringValues("issue-detail") },
+					{ "current-status-detail", new StringValues("current-status-detail") },
+					{ "next-steps-detail", new StringValues("next-steps-detail") },
+					{ "resolution-strategy-detail", new StringValues("resolution-strategy-detail") }
+				});
+			
 			
 			// act
-			var pageResponse = pageModel.OnPost();
+			var pageResponse = await pageModel.OnPost();
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<RedirectToPageResult>());
 			var page = pageResponse as RedirectToPageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(page.PageName, Is.EqualTo(expectedRedirect));
+			Assert.That(page.PageName, Is.EqualTo("Management"));
 		}
 
 		[Test]
-		public void WhenOnPost_ReturnPageWhenCaseTypeInput_IsEmptyOrNull()
+		public async Task WhenOnPost_ReturnPageWhenCaseTypeInput_IsEmptyOrNull()
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
@@ -174,7 +189,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
 			
 			// act
-			var pageResponse = pageModel.OnPost();
+			var pageResponse = await pageModel.OnPost();
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
