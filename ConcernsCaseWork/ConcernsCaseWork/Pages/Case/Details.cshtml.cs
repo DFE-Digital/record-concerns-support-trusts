@@ -1,10 +1,10 @@
 ﻿using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Models.Redis;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Service.Redis.Models;
 using Service.Redis.Services;
 using System;
 using System.Threading.Tasks;
@@ -38,7 +38,7 @@ namespace ConcernsCaseWork.Pages.Case
 				_logger.LogInformation("Case::DetailsModel::OnGetAsync");
 				
 				// Get cached data from case page.
-				var caseStateModel = await _cachedService.GetData<CaseStateModel>(User.Identity.Name);
+				var caseStateModel = await _cachedService.GetData<CaseState>(User.Identity.Name);
 				if (caseStateModel is null)
 				{
 					throw new Exception("Cache CaseStateData is null");
@@ -75,7 +75,7 @@ namespace ConcernsCaseWork.Pages.Case
 					var uuid = Guid.NewGuid();
 
 					// Store in cache for now
-					var caseStateModel = await _cachedService.GetData<CaseStateModel>(User.Identity.Name);
+					var caseStateModel = await _cachedService.GetData<CaseState>(User.Identity.Name);
 					
 					
 					

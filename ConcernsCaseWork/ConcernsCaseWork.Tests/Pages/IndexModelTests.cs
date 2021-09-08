@@ -86,7 +86,7 @@ namespace ConcernsCaseWork.Tests.Pages
 					Assert.That(expected.UkPrn, Is.EqualTo(actual.UkPrn));
 					Assert.That(expected.GroupName, Is.EqualTo(actual.GroupName));
 					Assert.That(expected.CompaniesHouseNumber, Is.EqualTo(actual.CompaniesHouseNumber));
-					Assert.That(expected.DisplayName, Is.EqualTo(SharedBuilders.BuildDisplayName(actual)));
+					Assert.That(expected.DisplayName, Is.EqualTo(SharedBuilder.BuildDisplayName(actual)));
 					
 					foreach (var establishment in actual.Establishments)
 					{

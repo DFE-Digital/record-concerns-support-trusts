@@ -8,11 +8,12 @@ namespace ConcernsCaseWork.Mappers
 	{
 		public AutoMapping()
 		{
-			// Case | Record | Rating | Status
+			// Case | Record | Rating | Status | Types
 			CreateMap<CaseDto, CaseModel>();
 			CreateMap<RecordDto, RecordModel>();
 			CreateMap<RatingDto, RatingModel>();
 			CreateMap<StatusDto, StatusModel>();
+			CreateMap<TypeDto, TypeModel>();
 			
 			// Trust summary
 			CreateMap<TrustSummaryDto, TrustSummaryModel>();

@@ -1,10 +1,10 @@
 ﻿using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Models.Redis;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Service.Redis.Models;
 using Service.Redis.Services;
 using Service.TRAMS.Models;
 using System;
@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Pages.Case
 				}
 
 				// Store CaseState into cache.
-				_cachedService.StoreData(User.Identity.Name, new CaseStateModel { TrustUkPrn = selectedTrust });
+				_cachedService.StoreData(User.Identity.Name, new CaseState { TrustUkPrn = selectedTrust });
 
 				return new JsonResult(new { redirectUrl = Url.Page("Details") });
 			}

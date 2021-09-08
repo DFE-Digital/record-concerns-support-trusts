@@ -56,7 +56,7 @@ namespace Service.TRAMS.Status
 			{
 				new StatusDto("Live", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(1)),
 				new StatusDto("Monitoring", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(2)),
-				new StatusDto("Close", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(3)),
+				new StatusDto("Close", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(3))
 			};
 
 			//return Array.Empty<StatusDto>();

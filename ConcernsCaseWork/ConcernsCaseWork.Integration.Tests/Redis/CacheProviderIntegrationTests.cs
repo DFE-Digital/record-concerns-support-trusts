@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
-using ConcernsCaseWork.Models.Redis;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
@@ -122,23 +121,23 @@ namespace ConcernsCaseWork.Integration.Tests.Redis
 			var cacheEntryOptions = new DistributedCacheEntryOptions()
 				.SetSlidingExpiration(TimeSpan.FromSeconds(cacheTimeToLive));
 			
-			var caseStateData = new CaseStateModel
+			var caseStateData = new CaseState
 			{
 				TrustUkPrn = "999999"
 			};
 			
 			// act
 			await cacheProvider.SetCache("test@email.com", caseStateData, cacheEntryOptions);
-			var cachedCaseStateData = await cacheProvider.GetFromCache<CaseStateModel>("test@email.com");
+			var cachedCaseStateData = await cacheProvider.GetFromCache<CaseState>("test@email.com");
 
 			// assert
 			Assert.That(cachedCaseStateData, Is.Not.Null);
-			Assert.That(cachedCaseStateData, Is.InstanceOf<CaseStateModel>());
+			Assert.That(cachedCaseStateData, Is.InstanceOf<CaseState>());
 			Assert.That(cachedCaseStateData.TrustUkPrn, Is.EqualTo(caseStateData.TrustUkPrn));
 
 			// clean up
 			await cacheProvider.ClearCache("test@email.com");
-			cachedCaseStateData = await cacheProvider.GetFromCache<CaseStateModel>("test@email.com");
+			cachedCaseStateData = await cacheProvider.GetFromCache<CaseState>("test@email.com");
 			
 			Assert.That(cachedCaseStateData, Is.Null);
 		}

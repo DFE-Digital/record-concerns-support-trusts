@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 					Assert.That(expected.UkPrn, Is.EqualTo(actual.UkPrn));
 					Assert.That(expected.GroupName, Is.EqualTo(actual.GroupName));
 					Assert.That(expected.CompaniesHouseNumber, Is.EqualTo(actual.CompaniesHouseNumber));
-					Assert.That(expected.DisplayName, Is.EqualTo(SharedBuilders.BuildDisplayName(actual)));
+					Assert.That(expected.DisplayName, Is.EqualTo(SharedBuilder.BuildDisplayName(actual)));
 					
 					foreach (var establishment in actual.Establishments)
 					{
@@ -117,7 +117,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.Street, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Street));
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.Town, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Town));
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.AdditionalLine, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.AdditionalLine));
-			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.DisplayAddress, Is.EqualTo(SharedBuilders.BuildDisplayAddress(trustDetailsDto.GiasData.GroupContactAddress)));
+			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.DisplayAddress, Is.EqualTo(SharedBuilder.BuildDisplayAddress(trustDetailsDto.GiasData.GroupContactAddress)));
 		}
 	}
 }

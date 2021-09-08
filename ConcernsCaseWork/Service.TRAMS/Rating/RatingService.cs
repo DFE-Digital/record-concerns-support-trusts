@@ -4,6 +4,7 @@ using Service.TRAMS.Dto;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Numerics;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -50,7 +51,17 @@ namespace Service.TRAMS.Rating
 				_logger.LogError($"RatingService::GetRatings::Exception message::{ex.Message}");
 			}
 			
-			return Array.Empty<RatingDto>();
+			// TODO replace return when TRAMS API endpoints are live
+			return new List<RatingDto>
+			{
+				new RatingDto("n/a", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(1)),
+				new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(2)),
+				new RatingDto("Red", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(3)),
+				new RatingDto("Red-Amber", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(4)),
+				new RatingDto("Amber-Green", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(5))
+			};
+
+			//return Array.Empty<RatingDto>();
 		}
 	}
 }

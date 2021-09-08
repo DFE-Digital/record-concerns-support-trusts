@@ -1,10 +1,10 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.TRAMS.Models;
+using Service.TRAMS.Dto;
 using System.Text;
 
 namespace ConcernsCaseWork.Shared.Tests.Shared
 {
-	public static class SharedBuilders
+	public static class SharedBuilder
 	{
 		public static string BuildDisplayName(TrustSummaryDto trustSummaryDto)
 		{

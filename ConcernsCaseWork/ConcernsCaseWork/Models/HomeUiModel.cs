@@ -17,13 +17,15 @@
 		
 		public string CaseType { get; }
 		
+		public string CaseSubType { get; }
+		
 		public string RagRating { get; }
 		
 		public string RagRatingCss { get; }
 		
 		public HomeUiModel(string caseId, string created, string updated, string trustName, string academyNames, 
-			string caseType, string ragRating, string ragRatingCss) => 
-			(CaseId, Created, Updated, TrustName, AcademyNames, CaseType, RagRating, RagRatingCss) = 
-			(caseId, created, updated, trustName, academyNames, caseType, ragRating, ragRatingCss);
+			string caseType, string caseSubType, string ragRating, string ragRatingCss) => 
+			(CaseId, Created, Updated, TrustName, AcademyNames, CaseType, CaseSubType, RagRating, RagRatingCss) = 
+			(caseId, created, updated, trustName, academyNames, caseType, caseSubType, ragRating, ragRatingCss);
 	}
 }

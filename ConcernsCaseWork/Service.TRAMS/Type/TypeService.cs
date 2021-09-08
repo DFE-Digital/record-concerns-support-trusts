@@ -61,7 +61,7 @@ namespace Service.TRAMS.Type
 				new TypeDto("Safeguarding Incident", "", DateTimeOffset.Now, 
 					DateTimeOffset.Now, new BigInteger(3)),
 				new TypeDto("Concern", "", DateTimeOffset.Now, 
-					DateTimeOffset.Now, new BigInteger(4)),
+					DateTimeOffset.Now, new BigInteger(4))
 			};
 			
 			//return Array.Empty<TypeDto>();

@@ -1,7 +1,7 @@
 ﻿using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Shared.Tests.Shared;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory
 {
@@ -13,29 +13,29 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new List<CaseModel>
 			{
 				new CaseModel(
-					1, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
-					"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
-					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
+					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
+					"resolutionstrategy", "directionoftravel", BigIntegerSequence.Generator(), "Live"
 				),
 				new CaseModel(
-					2, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
-					"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
-					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
+					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
+					"resolutionstrategy", "directionoftravel", BigIntegerSequence.Generator(), "Live"
 				),
 				new CaseModel(
-					3, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
-					"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
-					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
+					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
+					"resolutionstrategy", "directionoftravel", BigIntegerSequence.Generator(), "Close"
 				),
 				new CaseModel(
-					4, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
-					"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
-					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
+					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
+					"resolutionstrategy", "directionoftravel", BigIntegerSequence.Generator(), "Monitoring"
 				),
 				new CaseModel(
-					5, dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
-					"trustukprn", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
-					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
+					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
+					"resolutionstrategy", "directionoftravel", BigIntegerSequence.Generator(), "Monitoring"
 				)			
 			};
 		}

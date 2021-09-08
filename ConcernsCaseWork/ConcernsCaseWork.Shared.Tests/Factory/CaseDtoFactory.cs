@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.Models;
+﻿using Service.TRAMS.Dto;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -15,27 +15,27 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
 					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
-					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+					"resolutionstrategy", "directionoftravel", BigInteger.One, "Live"
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
 					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
-					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+					"resolutionstrategy", "directionoftravel", BigInteger.One, "Close"
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
 					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
-					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+					"resolutionstrategy", "directionoftravel", BigInteger.One, "Monitoring"
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
 					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
-					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+					"resolutionstrategy", "directionoftravel", BigInteger.One, "Live"
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crmenquiry",
 					"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps", 
-					"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+					"resolutionstrategy", "directionoftravel", BigInteger.One, "Monitoring"
 				)
 			};
 		}
@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new CaseDto(
 				dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crmenquiry",
 				"trustukprn", "trustname", "reasonatreview", dateTimeNow, "issue", "currentstatus", "nextSteps",
-				"resolutionstrategy", "directionoftravel", BigInteger.One, Int32.MinValue
+				"resolutionstrategy", "directionoftravel", BigInteger.One, "Live"
 			);
 		}
 	}

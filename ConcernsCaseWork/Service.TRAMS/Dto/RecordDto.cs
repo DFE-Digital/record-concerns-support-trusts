@@ -43,12 +43,12 @@ namespace Service.TRAMS.Dto
 		public BigInteger Urn { get; }
 		
 		[JsonPropertyName("status")]
-		public int Status { get; }
+		public string Status { get; }
 		
 		[JsonConstructor]
 		public RecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
 			DateTimeOffset closedAt, string name, string description, string reason, BigInteger caseUrn, BigInteger typeUrn, 
-			BigInteger ratingUrn, bool primary, BigInteger urn, int status) => 
+			BigInteger ratingUrn, bool primary, BigInteger urn, string status) => 
 			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Urn, Status) = 
 			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, primary, urn, status);
 	}
