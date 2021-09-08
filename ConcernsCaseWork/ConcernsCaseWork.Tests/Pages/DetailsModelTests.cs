@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.Redis.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenOnGetAsync_ReturnsTrustDetailsModel()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<DetailsModel>>();
+			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
 			var expected = TrustFactory.CreateTrustDetailsModel();
@@ -71,7 +71,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenOnGetAsync_ReturnsErrorLoadingPage_ExceptionTrustByUkPrnService()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<DetailsModel>>();
+			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
 			
@@ -110,7 +110,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenOnGetAsync_ReturnsErrorLoadingPage_MissingRedisCaseStateData()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<DetailsModel>>();
+			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
 			
@@ -146,7 +146,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public void WhenOnPost_RedirectToPageSuccess()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<DetailsModel>>();
+			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
 			
@@ -167,7 +167,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public void WhenOnPost_ReturnPageWhenCaseTypeInput_IsEmptyOrNull()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<DetailsModel>>();
+			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
 			
@@ -184,11 +184,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(page, Is.Not.Null);
 		}
 		
-		private static DetailsModel SetupDetailsModel(ITrustModelService mockTrustModelService, ICachedService mockCachedService, ILogger<DetailsModel> mockLogger, bool isAuthenticated = false)
+		private static DetailsPageModel SetupDetailsModel(ITrustModelService mockTrustModelService, ICachedService mockCachedService, ILogger<DetailsPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new DetailsModel(mockTrustModelService, mockCachedService, mockLogger)
+			return new DetailsPageModel(mockTrustModelService, mockCachedService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

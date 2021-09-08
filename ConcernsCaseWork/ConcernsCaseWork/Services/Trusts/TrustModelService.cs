@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
 using Microsoft.Extensions.Logging;
-using Service.TRAMS.Models;
+using Service.TRAMS.Dto;
 using Service.TRAMS.Trusts;
 using System.Collections.Generic;
 using System.Linq;

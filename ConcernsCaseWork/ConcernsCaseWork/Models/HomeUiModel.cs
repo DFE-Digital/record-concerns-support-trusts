@@ -5,7 +5,7 @@
 	/// </summary>
 	public sealed class HomeUiModel
 	{
-		public string CaseId { get; }
+		public string CaseUrn { get; }
 		
 		public string Created { get; }
 		
@@ -23,9 +23,9 @@
 		
 		public string RagRatingCss { get; }
 		
-		public HomeUiModel(string caseId, string created, string updated, string trustName, string academyNames, 
+		public HomeUiModel(string caseUrn, string created, string updated, string trustName, string academyNames, 
 			string caseType, string caseSubType, string ragRating, string ragRatingCss) => 
-			(CaseId, Created, Updated, TrustName, AcademyNames, CaseType, CaseSubType, RagRating, RagRatingCss) = 
-			(caseId, created, updated, trustName, academyNames, caseType, caseSubType, ragRating, ragRatingCss);
+			(CaseUrn, Created, Updated, TrustName, AcademyNames, CaseType, CaseSubType, RagRating, RagRatingCss) = 
+			(caseUrn, created, updated, trustName, academyNames, caseType, caseSubType, ragRating, ragRatingCss);
 	}
 }

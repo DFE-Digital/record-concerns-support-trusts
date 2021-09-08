@@ -18,9 +18,9 @@ namespace ConcernsCaseWork.Tests.Pages
 		public void WhenRequestOnGet_ReturnErrorPage()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<ErrorModel>>();
+			var mockLogger = new Mock<ILogger<ErrorPageModel>>();
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(true);
-			var pageModel = new ErrorModel(mockLogger.Object)
+			var pageModel = new ErrorPageModel(mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

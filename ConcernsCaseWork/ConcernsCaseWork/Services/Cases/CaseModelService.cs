@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.Redis.Rating;
-using Service.Redis.Status;
 using Service.Redis.Type;
 using Service.TRAMS.Cases;
+using Service.TRAMS.Dto;
 using Service.TRAMS.Records;
 using Service.TRAMS.Trusts;
 using System;
@@ -20,7 +20,6 @@ namespace ConcernsCaseWork.Services.Cases
 	public sealed class CaseModelService : ICaseModelService
 	{
 		private readonly IRatingCachedService _ratingCachedService;
-		private readonly IStatusCachedService _statusCachedService;
 		private readonly ITypeCachedService _typeCachedService;
 		private readonly ILogger<CaseModelService> _logger;
 		private readonly ICachedService _cachedService;
@@ -31,11 +30,10 @@ namespace ConcernsCaseWork.Services.Cases
 		
 		public CaseModelService(ICaseService caseService, ITrustService trustService, 
 			IRecordService recordService, IRatingCachedService ratingCachedService, 
-			IStatusCachedService statusCachedService, ITypeCachedService typeCachedService,
-			ICachedService cachedService, IMapper mapper, ILogger<CaseModelService> logger)
+			ITypeCachedService typeCachedService, ICachedService cachedService, 
+			IMapper mapper, ILogger<CaseModelService> logger)
 		{
 			_ratingCachedService = ratingCachedService;
-			_statusCachedService = statusCachedService;
 			_typeCachedService = typeCachedService;
 			_cachedService = cachedService;
 			_recordService = recordService;
@@ -71,6 +69,31 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 
 			return Empty();
+		}
+
+		public Task<HomeUiModel> GetCasesByUrn(string urn)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<IList<HomeUiModel>> GetCasesByTrustUkPrn(string trustUkprn)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<IList<HomeUiModel>> GetCasesByPagination(CaseSearch caseSearch)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<HomeUiModel> PostCase(HomeUiModel caseDto)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task<HomeUiModel> PatchCaseByUrn(HomeUiModel caseDto)
+		{
+			throw new NotImplementedException();
 		}
 
 

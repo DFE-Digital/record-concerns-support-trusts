@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Services;
-using Service.TRAMS.Models;
+using Service.Redis.Base;
+using Service.TRAMS.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenOnGetTrustsSearchResult_ReturnEmptyPartialPage(string searchQuery)
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<IndexModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
 			
@@ -59,7 +59,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenOnGetTrustsSearchResult_ReturnResultsToPartialPage()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<IndexModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
 			var trustSummaryModel = TrustFactory.CreateListTrustSummaryModel();
@@ -115,7 +115,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenOnGetTrustsSearchResult_ReturnStatusCodeException()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<IndexModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
 
@@ -154,7 +154,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public void WhenOnGetSelectedTrust_ReturnJsonResultWithRedirectUrl()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<IndexModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
 			
@@ -187,7 +187,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public void WhenOnGetSelectedTrust_ReturnStatusCodeException(string selectedTrust)
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<IndexModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
 
@@ -222,11 +222,11 @@ namespace ConcernsCaseWork.Tests.Pages
 				Times.Once);
 		}
 		
-		private static IndexModel SetupIndexModel(ITrustModelService mockTrustModelService, ICachedService mockCachedService, ILogger<IndexModel> mockLogger, bool isAuthenticated = false)
+		private static IndexPageModel SetupIndexModel(ITrustModelService mockTrustModelService, ICachedService mockCachedService, ILogger<IndexPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new IndexModel(mockTrustModelService, mockCachedService, mockLogger)
+			return new IndexPageModel(mockTrustModelService, mockCachedService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

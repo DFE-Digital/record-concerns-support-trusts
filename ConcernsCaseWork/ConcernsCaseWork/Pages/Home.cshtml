@@ -1,5 +1,5 @@
 ﻿@page
-@model ConcernsCaseWork.Pages.HomeModel
+@model ConcernsCaseWork.Pages.HomePageModel
 
 @{
 	ViewData["Title"] = "Home";
@@ -55,26 +55,23 @@
 				{
 					<tr class="govuk-table__row tr__large">
 						<td class="govuk-table__cell">
-							<a href="#">@caseModel.Id</a>
+							<a href="#">@caseModel.CaseUrn</a>
 						</td>
 						<td class="govuk-table__cell">
-							@caseModel.LastUpdate
+							@caseModel.Updated
 						</td>
 						<td class="govuk-table__cell">
 							@caseModel.TrustName
 							<br>
-							@caseModel.TrustName
+							@caseModel.AcademyNames
 						</td>
-						<td class="govuk-table__cell">@caseModel.Type</td>
 						<td class="govuk-table__cell">
-							@if (caseModel.Rag == 0)
-							{
-								@Model.Rags[caseModel.Rag]
-							}
-							else
-							{
-								<span class="govuk-tag ragtag @Model.RagsCss[caseModel.Rag]">@Model.Rags[caseModel.Rag]</span>
-							}
+							@caseModel.CaseType
+							<br>
+							@caseModel.CaseSubType
+						</td>
+						<td class="govuk-table__cell">
+							<span class="govuk-tag ragtag @caseModel.RagRatingCss">@caseModel.RagRating</span>
 						</td>
 						<td class="govuk-table__cell">
 							@caseModel.Created
@@ -121,18 +118,18 @@
             	{
             		<tr class="govuk-table__row tr__large">
             			<td class="govuk-table__cell">
-            				<a href="#">@caseModel.Id</a>
+            				<a href="#">@caseModel.CaseUrn</a>
             			</td>
 			            <td class="govuk-table__cell">
             				@caseModel.TrustName
             				<br>
-            				@caseModel.TrustName
+            				@caseModel.AcademyNames
             			</td>
 			            <td class="govuk-table__cell">
-				            @caseModel.Type
+				            @caseModel.CaseType
 			            </td>
 			            <td class="govuk-table__cell">
-				            @caseModel.Closed
+				            @caseModel.
 			            </td>
             		</tr>
             	}

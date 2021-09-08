@@ -11,15 +11,15 @@ namespace ConcernsCaseWork.Pages
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public class HomeModel : PageModel
+    public class HomePageModel : PageModel
     {
 	    private readonly ICaseModelService _caseModelService;
-	    private readonly ILogger<HomeModel> _logger;
+	    private readonly ILogger<HomePageModel> _logger;
 	    
         public IList<HomeUiModel> CasesActive { get; private set; }
         public IList<HomeUiModel> CasesMonitoring { get; private set; }
         
-        public HomeModel(ICaseModelService caseModelService, ILogger<HomeModel> logger)
+        public HomePageModel(ICaseModelService caseModelService, ILogger<HomePageModel> logger)
         {
             _caseModelService = caseModelService;
             _logger = logger;

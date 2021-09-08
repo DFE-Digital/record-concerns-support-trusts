@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.Redis.Services;
-using Service.TRAMS.Models;
+using Service.TRAMS.Dto;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -15,15 +15,15 @@ namespace ConcernsCaseWork.Pages.Case
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class IndexModel : PageModel
+	public class IndexPageModel : PageModel
 	{
 		private readonly ITrustModelService _trustModelService;
 		private readonly ICachedService _cachedService;
-		private readonly ILogger<IndexModel> _logger;
+		private readonly ILogger<IndexPageModel> _logger;
 		
 		private const int SearchQueryMinLength = 3;
 		
-		public IndexModel(ITrustModelService trustModelService, ICachedService cachedService, ILogger<IndexModel> logger)
+		public IndexPageModel(ITrustModelService trustModelService, ICachedService cachedService, ILogger<IndexPageModel> logger)
 		{
 			_trustModelService = trustModelService;
 			_cachedService = cachedService;

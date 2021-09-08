@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(true);
 
-			var pageModel = new LogoutModel
+			var pageModel = new LogoutPageModel
 			{
 				PageContext = pageContext,
 				TempData = tempData,

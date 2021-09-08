@@ -87,13 +87,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.Credentials.ReturnUrl, Is.EqualTo(actualReturnUrl));
 		}
 		
-		private static LoginModel SetupLoginModel(bool isAuthenticated = false)
+		private static LoginPageModel SetupLoginModel(bool isAuthenticated = false)
 		{
-			var mockLogger = new Mock<ILogger<LoginModel>>();
+			var mockLogger = new Mock<ILogger<LoginPageModel>>();
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
 			var initialData = new Dictionary<string, string> { { "app:username", "username" }, { "app:password", "password" } };
-			return new LoginModel(new ConfigurationBuilder().ConfigurationInMemoryBuilder(initialData).Build(), mockLogger.Object)
+			return new LoginPageModel(new ConfigurationBuilder().ConfigurationInMemoryBuilder(initialData).Build(), mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

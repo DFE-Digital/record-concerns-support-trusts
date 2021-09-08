@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.Redis.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -13,18 +13,18 @@ namespace ConcernsCaseWork.Pages.Case
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class DetailsModel : PageModel
+	public class DetailsPageModel : PageModel
 	{
 		private readonly ITrustModelService _trustModelService;
 		private readonly ICachedService _cachedService;
-		private readonly ILogger<DetailsModel> _logger;
+		private readonly ILogger<DetailsPageModel> _logger;
 
 		private const string ErrorOnGetPage = "An error occurred loading the page, please try again. If the error persists contact the service administrator.";
 		private const string ErrorOnPostPage = "An error occurred posting the form, please try again. If the error persists contact the service administrator.";
 		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 
-		public DetailsModel(ITrustModelService trustModelService, ICachedService cachedService, ILogger<DetailsModel> logger)
+		public DetailsPageModel(ITrustModelService trustModelService, ICachedService cachedService, ILogger<DetailsPageModel> logger)
 		{
 			_trustModelService = trustModelService;
 			_cachedService = cachedService;

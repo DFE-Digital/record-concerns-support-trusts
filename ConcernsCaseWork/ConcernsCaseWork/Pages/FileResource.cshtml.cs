@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.Pages
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class FileResource : PageModel
+	public class FileResourcePageModel : PageModel
 	{
 		public IActionResult OnGetDownloadRiskManagementPdf()
 		{

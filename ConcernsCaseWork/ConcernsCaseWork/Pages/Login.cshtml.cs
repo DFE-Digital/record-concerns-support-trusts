@@ -12,16 +12,16 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages
 {
-	public class LoginModel : PageModel
+	public class LoginPageModel : PageModel
 	{
 		private readonly IConfiguration _configuration;
-		private readonly ILogger<LoginModel> _logger;
+		private readonly ILogger<LoginPageModel> _logger;
 		private const string HomePage = "/home";
 
 		[BindProperty]
 		public CredentialModel Credentials { get; set; } = new CredentialModel{ ReturnUrl = HomePage};
 
-		public LoginModel(IConfiguration configuration, ILogger<LoginModel> logger)
+		public LoginPageModel(IConfiguration configuration, ILogger<LoginPageModel> logger)
 		{
 			_configuration = configuration;
 			_logger = logger;
