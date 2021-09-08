@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Redis;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Services;
 using Service.TRAMS.Cases;
+using Service.TRAMS.Rating;
+using Service.TRAMS.Records;
+using Service.TRAMS.Status;
 using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
@@ -16,14 +20,21 @@ namespace ConcernsCaseWork.Services.Cases
 	{
 		private readonly ILogger<CaseModelService> _logger;
 		private readonly ICachedService _cachedService;
+		private readonly IRatingService _ratingService;
+		private readonly IRecordService _recordService;
+		private readonly IStatusService _statusService;
 		private readonly ITrustService _trustService;
 		private readonly ICaseService _caseService;
 		private readonly IMapper _mapper;
 		
-		public CaseModelService(ICaseService caseService, ICachedService cachedService, 
-			ITrustService trustService, IMapper mapper, ILogger<CaseModelService> logger)
+		public CaseModelService(ICaseService caseService, ITrustService trustService, 
+			IRecordService recordService, IRatingService ratingService, IStatusService statusService,
+			ICachedService cachedService, IMapper mapper, ILogger<CaseModelService> logger)
 		{
 			_cachedService = cachedService;
+			_recordService = recordService;
+			_ratingService = ratingService;
+			_statusService = statusService;
 			_trustService = trustService;
 			_caseService = caseService;
 			_mapper = mapper;
@@ -50,8 +61,6 @@ namespace ConcernsCaseWork.Services.Cases
 					
 				}
 				
-				
-				
 				// Get from TRAMS API all trusts for the caseworker
 				var casesDto = await _caseService.GetCasesByCaseworker(caseworker);
 				
@@ -59,30 +68,36 @@ namespace ConcernsCaseWork.Services.Cases
 				if (casesDto.Any())
 				{
 					// Fetch trusts by ukprn
-					var trusts = casesDto.Where(c => c.TrustUkPrn != null)
+					var trustsDetailsDto = casesDto.Where(c => c.TrustUkPrn != null)
 						.Select(c => _trustService.GetTrustByUkPrn(c.TrustUkPrn));
-					await Task.WhenAll(trusts);
+					await Task.WhenAll(trustsDetailsDto);
+					
+					// Fetch records by case urn
+					var recordsDto = casesDto.Select(c => _recordService.GetRecordsByCaseUrn(c.Urn));
+					await Task.WhenAll(recordsDto);
 					
 					// Fetch rag rating
+					var ragsRatingDto = await _ratingService.GetRatings();
 					
+					// Fetch status
 					
 
+					// Map trusts dto to model
+					var casesModel = _mapper.Map<IList<CaseModel>>(casesDto);
+					var trustsDetailsModel = _mapper.Map<IList<TrustDetailsModel>>(trustsDetailsDto);
+					var recordsModel = _mapper.Map<IList<RecordModel>>(recordsDto);
+					var ragsRatingModel = _mapper.Map<IList<RatingModel>>(ragsRatingDto);
 
+					return HomeMapping.Map(casesModel, trustsDetailsModel, recordsModel, ragsRatingModel);
 				}
-				
-				
-				// Map trusts dto to model
-				_mapper.Map<IList<CaseModel>>(casesDto);
-				
-				
-				return (null, null);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"CaseModelService::GetCasesByCaseworker exception {ex.Message}");
 			}
 			
-			return (Array.Empty<HomeUiModel>(), Array.Empty<HomeUiModel>());
+			var emptyResults = Array.Empty<HomeUiModel>();
+			return (emptyResults, emptyResults);
 		}
 	}
 }

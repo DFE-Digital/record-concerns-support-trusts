@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
-using Service.TRAMS.Models;
+using Service.TRAMS.Dto;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;

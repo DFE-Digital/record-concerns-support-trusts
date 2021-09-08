@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Models
+namespace Service.TRAMS.Dto
 {
 	public sealed class GroupContactAddressDto
 	{
@@ -22,6 +22,7 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("postcode")]
 		public string Postcode { get; }
 			
+		[JsonConstructor]
 		public GroupContactAddressDto(string street, string locality, string additionalLine, string town, string county, string postcode) => 
 			(Street, Locality, AdditionalLine, Town, County, Postcode) = (street, locality, additionalLine, town, county, postcode);
 	}

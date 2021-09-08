@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Models
+namespace Service.TRAMS.Dto
 {
 	public sealed class RecordAcademyDto
 	{
@@ -14,6 +14,7 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("urn")]
 		public BigInteger Urn { get; }
 		
+		[JsonConstructor]
 		public RecordAcademyDto(BigInteger recordUrn, int academyUrn, BigInteger urn) => 
 			(RecordUrn, AcademyUrn, Urn) = (recordUrn, academyUrn, urn);
 	}

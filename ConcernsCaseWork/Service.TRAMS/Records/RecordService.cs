@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
-using Service.TRAMS.Models;
+using Service.TRAMS.Dto;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
+using System.Numerics;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace Service.TRAMS.Records
 			_logger = logger;
 		}
 		
-		public async Task<IList<RecordDto>> GetRecordsByCaseUrn(string caseUrn)
+		public async Task<IList<RecordDto>> GetRecordsByCaseUrn(BigInteger caseUrn)
 		{
 			try
 			{

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Models
+namespace Service.TRAMS.Dto
 {
 	public sealed class EstablishmentSummaryDto
 	{

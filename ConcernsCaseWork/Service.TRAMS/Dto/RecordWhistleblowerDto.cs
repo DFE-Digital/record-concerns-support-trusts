@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Models
+namespace Service.TRAMS.Dto
 {
 	public sealed class RecordWhistleblowerDto
 	{
@@ -20,6 +20,7 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("urn")]
 		public BigInteger Urn { get; }
 		
+		[JsonConstructor]
 		public RecordWhistleblowerDto(string name, string details, string reason, int recordUrn, BigInteger urn) => 
 			(Name, Details, Reason, RecordUrn, Urn) = (name, details, reason, recordUrn, urn);
 	}

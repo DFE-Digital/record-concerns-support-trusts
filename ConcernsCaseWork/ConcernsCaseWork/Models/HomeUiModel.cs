@@ -25,6 +25,5 @@
 			string caseType, string ragRating, string ragRatingCss) => 
 			(CaseId, Created, Updated, TrustName, AcademyNames, CaseType, RagRating, RagRatingCss) = 
 			(caseId, created, updated, trustName, academyNames, caseType, ragRating, ragRatingCss);
-
 	}
 }

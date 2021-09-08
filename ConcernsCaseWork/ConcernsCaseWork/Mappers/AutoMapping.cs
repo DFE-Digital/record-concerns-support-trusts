@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
-using Service.TRAMS.Models;
+using Service.TRAMS.Dto;
 
 namespace ConcernsCaseWork.Mappers
 {
@@ -8,8 +8,11 @@ namespace ConcernsCaseWork.Mappers
 	{
 		public AutoMapping()
 		{
-			// means you want to map from CaseDto to CaseModel
+			// Case | Record | Rating | Status
 			CreateMap<CaseDto, CaseModel>();
+			CreateMap<RecordDto, RecordModel>();
+			CreateMap<RatingDto, RatingModel>();
+			CreateMap<StatusDto, StatusModel>();
 			
 			// Trust summary
 			CreateMap<TrustSummaryDto, TrustSummaryModel>();
@@ -19,6 +22,7 @@ namespace ConcernsCaseWork.Mappers
 			CreateMap<TrustDetailsDto, TrustDetailsModel>();
 			CreateMap<GiasDataDto, GiasDataModel>();
 			CreateMap<GroupContactAddressDto, GroupContactAddressModel>();
+			CreateMap<EstablishmentDto, EstablishmentModel>();
 		}
 	}
 }

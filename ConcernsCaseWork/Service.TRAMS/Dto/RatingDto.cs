@@ -2,13 +2,10 @@
 using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Models
+namespace Service.TRAMS.Dto
 {
 	public sealed class RatingDto
 	{
-		[JsonPropertyName("id")]
-		public int Id { get; }
-		
 		/// <summary>
 		/// n/a, Red-Plus, Red, Red-Amber, Amber-Green
 		/// </summary>
@@ -24,7 +21,7 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("urn")]
 		public BigInteger Urn { get; }
 		
-		public RatingDto(int id, string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, BigInteger urn) => 
-			(Id, Name, CreatedAt, UpdatedAt, Urn) = (id, name, createdAt, updatedAt, urn);
+		public RatingDto(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, BigInteger urn) => 
+			(Name, CreatedAt, UpdatedAt, Urn) = (name, createdAt, updatedAt, urn);
 	}
 }

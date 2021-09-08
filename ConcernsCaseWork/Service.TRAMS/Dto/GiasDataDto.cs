@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Models
+namespace Service.TRAMS.Dto
 {
 	public sealed class GiasDataDto
 	{
@@ -22,6 +22,7 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("groupContactAddress")]
 		public GroupContactAddressDto GroupContactAddress { get; }
 			
+		[JsonConstructor]
 		public GiasDataDto(string ukprn, string groupId, string groupName, string groupTypeCode, string companiesHouseNumber, GroupContactAddressDto groupContactAddress) => 
 			(UkPrn, GroupId, GroupName, GroupTypeCode, CompaniesHouseNumber, GroupContactAddress) = (ukprn, groupId, groupName, groupTypeCode, companiesHouseNumber, groupContactAddress);
 	}

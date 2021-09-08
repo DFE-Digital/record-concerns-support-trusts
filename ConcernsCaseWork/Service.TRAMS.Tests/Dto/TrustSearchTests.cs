@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Tests.Models
+namespace Service.TRAMS.Tests.Dto
 {
 	[Parallelizable(ParallelScope.All)]
 	public class TrustSearchTests

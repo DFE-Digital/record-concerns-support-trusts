@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.Models;
+﻿using Service.TRAMS.Dto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

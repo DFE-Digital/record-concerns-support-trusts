@@ -402,6 +402,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Services\Rating" />
     <Folder Include="wwwroot\assets" />
     <Folder Include="wwwroot\dist" />
   </ItemGroup>

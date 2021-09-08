@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Models
+namespace Service.TRAMS.Dto
 {
 	public sealed class RecordRatingHistoryDto
 	{
@@ -18,6 +18,7 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("rating_urn")]
 		public BigInteger RatingUrn { get; }
 		
+		[JsonConstructor]
 		public RecordRatingHistoryDto(DateTimeOffset createdAt, BigInteger recordUrn, string ratingName, BigInteger ratingUrn) => 
 			(CreatedAt, RecordUrn, RatingName, RatingUrn) = (createdAt, recordUrn, ratingName, ratingUrn);
 	}

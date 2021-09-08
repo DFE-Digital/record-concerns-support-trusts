@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Models
+namespace Service.TRAMS.Dto
 {
 	public sealed class StatusDto
 	{
@@ -21,6 +21,7 @@ namespace Service.TRAMS.Models
 		[JsonPropertyName("urn")]
 		public BigInteger Urn { get; }
 		
+		[JsonConstructor]
 		public StatusDto(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, BigInteger urn) => 
 			(Name, CreatedAt, UpdatedAt, Urn) = (name, createdAt, updatedAt, urn);
 	}
