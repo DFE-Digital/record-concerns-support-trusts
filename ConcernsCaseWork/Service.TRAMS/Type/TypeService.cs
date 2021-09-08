@@ -4,6 +4,7 @@ using Service.TRAMS.Dto;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Numerics;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -50,7 +51,20 @@ namespace Service.TRAMS.Type
 				_logger.LogError($"TypeService::GetTypes::Exception message::{ex.Message}");
 			}
 			
-			return Array.Empty<TypeDto>();
+			// TODO replace return when TRAMS API endpoints are live
+			return new List<TypeDto>
+			{
+				new TypeDto("Record", "Log information when it is not a Concern", DateTimeOffset.Now, 
+					DateTimeOffset.Now, new BigInteger(1)),
+				new TypeDto("SRMA", "A proactive SRMA visit", DateTimeOffset.Now, 
+					DateTimeOffset.Now, new BigInteger(2)),
+				new TypeDto("Safeguarding Incident", "", DateTimeOffset.Now, 
+					DateTimeOffset.Now, new BigInteger(3)),
+				new TypeDto("Concern", "", DateTimeOffset.Now, 
+					DateTimeOffset.Now, new BigInteger(4)),
+			};
+			
+			//return Array.Empty<TypeDto>();
 		}
 	}
 }

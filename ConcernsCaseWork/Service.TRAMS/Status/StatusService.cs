@@ -4,6 +4,7 @@ using Service.TRAMS.Dto;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Numerics;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -50,7 +51,15 @@ namespace Service.TRAMS.Status
 				_logger.LogError($"StatusService::GetStatuses::Exception message::{ex.Message}");
 			}
 			
-			return Array.Empty<StatusDto>();
+			// TODO replace return when TRAMS API endpoints are live
+			return new List<StatusDto>
+			{
+				new StatusDto("Live", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(1)),
+				new StatusDto("Monitoring", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(2)),
+				new StatusDto("Close", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(3)),
+			};
+
+			//return Array.Empty<StatusDto>();
 		}
 	}
 }

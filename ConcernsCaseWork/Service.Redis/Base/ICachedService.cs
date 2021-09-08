@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Service.Redis.Services
+namespace Service.Redis.Base
 {
 	public interface ICachedService
 	{

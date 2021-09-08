@@ -1,11 +1,10 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
-using Service.Redis.Base;
 using System;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Services
+namespace Service.Redis.Base
 {
-	public sealed class CachedService : ICachedService
+	public class CachedService : ICachedService
 	{
 		private readonly ICacheProvider _cacheProvider;
 

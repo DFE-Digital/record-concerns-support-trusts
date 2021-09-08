@@ -7,7 +7,9 @@ using Newtonsoft.Json.Linq;
 using Serilog;
 using Service.Redis.Base;
 using Service.Redis.Configuration;
-using Service.Redis.Services;
+using Service.Redis.Rating;
+using Service.Redis.Status;
+using Service.Redis.Type;
 using Service.Redis.Users;
 using Service.TRAMS.Cases;
 using Service.TRAMS.Configuration;
@@ -113,6 +115,9 @@ namespace ConcernsCaseWork.Extensions
 			services.AddTransient<IActiveDirectoryService, ActiveDirectoryService>();
 			services.AddTransient<IUserCachedService, UserCachedService>();
 			services.AddTransient<ICachedService, CachedService>();
+			services.AddTransient<ITypeCachedService, TypeCachedService>();
+			services.AddTransient<IStatusCachedService, StatusCachedService>();
+			services.AddTransient<IRatingCachedService, RatingCachedService>();
 		}
 
 		public static void AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)
