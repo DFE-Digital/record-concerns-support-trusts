@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.Services.Cases
 		Task<HomeModel> GetCasesByUrn(string urn);
 		Task<IList<HomeModel>> GetCasesByTrustUkPrn(string trustUkprn);
 		Task<IList<HomeModel>> GetCasesByPagination(CaseSearch caseSearch);
-		Task<HomeModel> PostCase(HomeModel caseDto);
-		Task<HomeModel> PatchCaseByUrn(HomeModel caseDto);
+		Task<HomeModel> PostCase(HomeModel homeModel);
+		Task<HomeModel> PatchCaseByUrn(HomeModel homeModel);
 	}
 }

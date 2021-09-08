@@ -8,11 +8,13 @@ using Service.Redis.Rating;
 using Service.Redis.Type;
 using Service.TRAMS.Cases;
 using Service.TRAMS.Dto;
+using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
 using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Cases
@@ -20,6 +22,7 @@ namespace ConcernsCaseWork.Services.Cases
 	public sealed class CaseModelService : ICaseModelService
 	{
 		private readonly IRatingCachedService _ratingCachedService;
+		private readonly IRecordRatingHistory _recordRatingHistory;
 		private readonly ITypeCachedService _typeCachedService;
 		private readonly ILogger<CaseModelService> _logger;
 		private readonly ICachedService _cachedService;
@@ -31,9 +34,11 @@ namespace ConcernsCaseWork.Services.Cases
 		public CaseModelService(ICaseService caseService, ITrustService trustService, 
 			IRecordService recordService, IRatingCachedService ratingCachedService, 
 			ITypeCachedService typeCachedService, ICachedService cachedService, 
-			IMapper mapper, ILogger<CaseModelService> logger)
+			IRecordRatingHistory recordRatingHistory, IMapper mapper, 
+			ILogger<CaseModelService> logger)
 		{
 			_ratingCachedService = ratingCachedService;
+			_recordRatingHistory = recordRatingHistory;
 			_typeCachedService = typeCachedService;
 			_cachedService = cachedService;
 			_recordService = recordService;
@@ -83,15 +88,49 @@ namespace ConcernsCaseWork.Services.Cases
 
 		public Task<IList<HomeModel>> GetCasesByPagination(CaseSearch caseSearch)
 		{
+			// TODO when Admin page is created.
 			throw new NotImplementedException();
 		}
 
-		public Task<HomeModel> PostCase(HomeModel caseDto)
+		public async Task<HomeModel> PostCase(HomeModel homeModel)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				// Create a case
+				// TODO status urn, created by
+				
+				var currentDate = DateTimeOffset.Now;
+				var caseDto = new CaseDto(currentDate, currentDate, currentDate, currentDate, "created-by",
+					"description", "crm-enquiry", "trust-ukprn", "trust-name", "reason-at-review",
+					currentDate, "issue", "current-status", "next-steps", "resolution-strategy",
+					"direction-of-travel", BigInteger.Zero, "status");
+				var newCase = await _caseService.PostCase(caseDto);
+
+				// Create a record
+				// TODO get type urn, rating urn, status urn, is it primary?
+				
+				var recordDto = new RecordDto(currentDate, currentDate, currentDate, currentDate, "name",
+					"description", "reason", BigInteger.Zero, BigInteger.Zero, BigInteger.Zero, true, 
+					BigInteger.Zero, "status");
+				var newRecord = await _recordService.PostRecordByCaseUrn(recordDto);
+
+				// Create a rating history
+
+				//var recordRatingHistory = new RecordRatingHistoryDto(currentDate, newRecord.Urn, ) 
+				var newRecordRatingHistory = await _recordRatingHistory.PostRecordRatingHistoryByRecordUrn(null);
+
+
+
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"CaseModelService::GetCasesByPagination exception {ex.Message}");
+			}
+
+			return null;
 		}
 
-		public Task<HomeModel> PatchCaseByUrn(HomeModel caseDto)
+		public Task<HomeModel> PatchCaseByUrn(HomeModel homeModel)
 		{
 			throw new NotImplementedException();
 		}

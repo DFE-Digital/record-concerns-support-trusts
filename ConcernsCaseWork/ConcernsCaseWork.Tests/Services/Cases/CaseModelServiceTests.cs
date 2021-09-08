@@ -10,6 +10,7 @@ using Service.Redis.Base;
 using Service.Redis.Rating;
 using Service.Redis.Type;
 using Service.TRAMS.Cases;
+using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
 using Service.TRAMS.Trusts;
 using System;
@@ -29,6 +30,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockCaseService = new Mock<ICaseService>();
 			var mockTrustService = new Mock<ITrustService>();
 			var mockRecordService = new Mock<IRecordService>();
+			var mockRecordRatingHistoryService = new Mock<IRecordRatingHistory>();
 			var mockRatingService = new Mock<IRatingCachedService>();
 			var mockTypeService = new Mock<ITypeCachedService>();
 			var mockCachedService = new Mock<ICachedService>();
@@ -42,7 +44,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			// act
 			var caseModelService = new CaseModelService(mockCaseService.Object, mockTrustService.Object, mockRecordService.Object,
-				mockRatingService.Object, mockTypeService.Object, mockCachedService.Object, mapper, mockLogger.Object);
+				mockRatingService.Object, mockTypeService.Object, mockCachedService.Object,  mockRecordRatingHistoryService.Object, mapper, mockLogger.Object);
 			(IList<HomeModel> activeCasesModel, IList<HomeModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
 
 			// assert
@@ -75,6 +77,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockCaseService = new Mock<ICaseService>();
 			var mockTrustService = new Mock<ITrustService>();
 			var mockRecordService = new Mock<IRecordService>();
+			var mockRecordRatingHistoryService = new Mock<IRecordRatingHistory>();
 			var mockRatingService = new Mock<IRatingCachedService>();
 			var mockTypeService = new Mock<ITypeCachedService>();
 			var mockCachedService = new Mock<ICachedService>();
@@ -87,7 +90,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseService.Object, mockTrustService.Object, mockRecordService.Object,
-				mockRatingService.Object, mockTypeService.Object, mockCachedService.Object, mapper, mockLogger.Object);
+				mockRatingService.Object, mockTypeService.Object, mockCachedService.Object,  mockRecordRatingHistoryService.Object, mapper, mockLogger.Object);
 			(IList<HomeModel> activeCasesModel, IList<HomeModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
 
 			// assert
