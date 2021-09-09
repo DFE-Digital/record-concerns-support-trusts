@@ -119,7 +119,7 @@ namespace ConcernsCaseWork.Services.Cases
 				// Create a rating history
 				// TODO get rating urn
 				
-				var createRecordRatingHistoryDto = new CreateRecordRatingHistoryDto(currentDate, newRecord.Urn, BigInteger.Zero);
+				var createRecordRatingHistoryDto = new RecordRatingHistoryDto(currentDate, newRecord.Urn, BigInteger.Zero);
 				await _recordRatingHistory.PostRecordRatingHistory(createRecordRatingHistoryDto);
 
 
