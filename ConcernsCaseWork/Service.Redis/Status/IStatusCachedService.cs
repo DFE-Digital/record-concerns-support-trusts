@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.Trusts;
+﻿using Service.TRAMS.RecordWhistleblower;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Trusts
+namespace Service.TRAMS.RecordWhistleblower
 {
 	public sealed class CaseService : AbstractService, ICaseService
 	{

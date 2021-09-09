@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Service.TRAMS.Configuration;
-using Service.TRAMS.Trusts;
+using Service.TRAMS.RecordWhistleblower;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Trusts
+namespace Service.TRAMS.RecordWhistleblower
 {
 	public sealed class TrustSearchService : ITrustSearchService
 	{

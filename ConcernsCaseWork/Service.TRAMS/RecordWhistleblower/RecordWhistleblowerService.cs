@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
-using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
+using System.Numerics;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -20,14 +20,15 @@ namespace Service.TRAMS.RecordWhistleblower
 			_logger = logger;
 		}
 		
-		public async Task<IList<RecordWhistleblowerDto>> GetRecordsWhistleblowerByRecordUrn(string recordUrn)
+		public async Task<IList<RecordWhistleblowerDto>> GetRecordsWhistleblowerByRecordUrn(BigInteger recordUrn)
 		{
 			try
 			{
 				_logger.LogInformation("RecordWhistleblowerService::GetRecordsWhistleBlowingByRecordUrn");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/record-whistleblower/record/urn/{recordUrn}");
+				var request = new HttpRequestMessage(HttpMethod.Get, 
+					$"{EndpointsVersion}/record-whistleblower/record/urn/{recordUrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -55,7 +56,7 @@ namespace Service.TRAMS.RecordWhistleblower
 			return Array.Empty<RecordWhistleblowerDto>();
 		}
 
-		public async Task<RecordWhistleblowerDto> PostRecordWhistleblowerByRecordUrn(RecordWhistleblowerDto recordWhistleblowerDto)
+		public async Task<RecordWhistleblowerDto> PostRecordWhistleblowerByRecordUrn(CreateRecordWhistleblowerDto createRecordWhistleblowerDto)
 		{
 			try
 			{
@@ -64,7 +65,7 @@ namespace Service.TRAMS.RecordWhistleblower
 				// Create a request
 				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(recordWhistleblowerDto, options),
+					JsonSerializer.Serialize(createRecordWhistleblowerDto, options),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 				
@@ -72,7 +73,8 @@ namespace Service.TRAMS.RecordWhistleblower
 				var client = ClientFactory.CreateClient("TramsClient");
 				
 				// Execute request
-				var response = await client.PostAsync($"/record-whistleblower/record/urn/{recordWhistleblowerDto.RecordUrn}", request);
+				var response = await client.PostAsync(
+					$"{EndpointsVersion}/record-whistleblower/record/urn/{createRecordWhistleblowerDto.RecordUrn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -110,7 +112,8 @@ namespace Service.TRAMS.RecordWhistleblower
 				var client = ClientFactory.CreateClient("TramsClient");
 				
 				// Execute request
-				var response = await client.PatchAsync($"/record-whistleblower/urn/{recordWhistleblowerDto.Urn}", request);
+				var response = await client.PatchAsync(
+					$"{EndpointsVersion}/record-whistleblower/urn/{recordWhistleblowerDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();

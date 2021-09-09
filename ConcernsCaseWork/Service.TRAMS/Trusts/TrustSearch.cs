@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Service.TRAMS.Trusts
+namespace Service.TRAMS.RecordWhistleblower
 {
 	public sealed class TrustSearch
 	{

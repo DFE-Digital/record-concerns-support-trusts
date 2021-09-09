@@ -3,7 +3,7 @@ using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using Service.TRAMS.Trusts;
+using Service.TRAMS.RecordWhistleblower;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Integration.Tests.Trams

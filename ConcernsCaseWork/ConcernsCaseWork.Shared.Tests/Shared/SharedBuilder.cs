@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.TRAMS.Trusts;
+using Service.TRAMS.RecordWhistleblower;
 using System.Text;
 
 namespace ConcernsCaseWork.Shared.Tests.Shared

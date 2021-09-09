@@ -1,8 +1,8 @@
-﻿using Service.TRAMS.Trusts;
+﻿using Service.TRAMS.RecordWhistleblower;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Trusts
+namespace Service.TRAMS.RecordWhistleblower
 {
 	public interface ITrustSearchService
 	{
