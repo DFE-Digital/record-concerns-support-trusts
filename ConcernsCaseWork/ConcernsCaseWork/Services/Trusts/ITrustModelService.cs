@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.TRAMS.Dto;
+using Service.TRAMS.Cases;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

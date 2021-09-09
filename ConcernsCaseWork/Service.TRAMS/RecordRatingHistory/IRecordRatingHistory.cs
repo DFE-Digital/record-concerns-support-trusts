@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.Dto;
+﻿using Service.TRAMS.Cases;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,6 +8,6 @@ namespace Service.TRAMS.RecordRatingHistory
 	{
 		Task<IList<RecordRatingHistoryDto>> GetRecordsRatingHistoryByCaseUrn(string caseUrn);
 		Task<IList<RecordRatingHistoryDto>> GetRecordsRatingHistoryByRecordUrn(string recordUrn);
-		Task<RecordRatingHistoryDto> PostRecordRatingHistoryByRecordUrn(RecordRatingHistoryDto recordRatingHistoryDto);
+		Task PostRecordRatingHistory(CreateRecordRatingHistoryDto createRecordRatingHistoryDto);
 	}
 }

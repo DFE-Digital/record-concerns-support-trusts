@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Dto
+namespace Service.TRAMS.Cases
 {
 	public sealed class CaseDto
 	{
@@ -64,13 +64,13 @@ namespace Service.TRAMS.Dto
 		public BigInteger Urn { get; }
 		
 		[JsonPropertyName("status")]
-		public string Status { get; }
+		public BigInteger Status { get; }
 
 		[JsonConstructor]
 		public CaseDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
 			DateTimeOffset closedAt, string createdBy, string description, string crmEnquiry, string trustUkPrn, 
 			string trustName, string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
-			string nextSteps, string resolutionStrategy, string directionOfTravel, BigInteger urn, string status) => 
+			string nextSteps, string resolutionStrategy, string directionOfTravel, BigInteger urn, BigInteger status) => 
 			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn, TrustName,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, ResolutionStrategy, DirectionOfTravel, 
 				Urn, Status) = 

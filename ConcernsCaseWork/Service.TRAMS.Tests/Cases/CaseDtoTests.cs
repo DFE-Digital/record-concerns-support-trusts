@@ -1,9 +1,9 @@
 ﻿using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
-using Service.TRAMS.Dto;
+using Service.TRAMS.Cases;
 using System.Text.Json;
 
-namespace Service.TRAMS.Tests.Dto
+namespace Service.TRAMS.Tests.Cases
 {
 	[Parallelizable(ParallelScope.All)]
 	public class CaseDtoTests

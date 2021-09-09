@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
-using Service.TRAMS.Dto;
+using Service.TRAMS.Cases;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -90,7 +90,7 @@ namespace Service.TRAMS.RecordRatingHistory
 			return Array.Empty<RecordRatingHistoryDto>();
 		}
 
-		public async Task<RecordRatingHistoryDto> PostRecordRatingHistoryByRecordUrn(RecordRatingHistoryDto recordRatingHistoryDto)
+		public async Task PostRecordRatingHistory(CreateRecordRatingHistoryDto createRecordRatingHistoryDto)
 		{
 			try
 			{
@@ -99,7 +99,7 @@ namespace Service.TRAMS.RecordRatingHistory
 				// Create a request
 				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(recordRatingHistoryDto, options),
+					JsonSerializer.Serialize(createRecordRatingHistoryDto, options),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 				
@@ -111,21 +111,11 @@ namespace Service.TRAMS.RecordRatingHistory
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
-				
-				// Read response content
-				var content = await response.Content.ReadAsStringAsync();
-				
-				// Deserialize content to POJO
-				var newRecordRatingHistoryDto = JsonSerializer.Deserialize<RecordRatingHistoryDto>(content, options);
-
-				return newRecordRatingHistoryDto;
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError($"RecordRatingHistory::PostRecordRatingHistoryByRecordUrn::Exception message::{ex.Message}");
 			}
-			
-			return null;
 		}
 	}
 }

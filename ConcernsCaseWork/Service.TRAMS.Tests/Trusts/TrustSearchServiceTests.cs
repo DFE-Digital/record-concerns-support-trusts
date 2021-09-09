@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using Service.TRAMS.Configuration;
-using Service.TRAMS.Dto;
+using Service.TRAMS.Cases;
 using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.TRAMS.Dto;
+using Service.TRAMS.Cases;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory

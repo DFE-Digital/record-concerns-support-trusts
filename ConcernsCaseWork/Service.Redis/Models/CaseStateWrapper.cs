@@ -1,4 +1,5 @@
-﻿using Service.TRAMS.Dto;
+﻿using Service.TRAMS.Cases;
+using Service.TRAMS.RecordRatingHistory;
 using System;
 using System.Collections.Generic;
 using System.Numerics;

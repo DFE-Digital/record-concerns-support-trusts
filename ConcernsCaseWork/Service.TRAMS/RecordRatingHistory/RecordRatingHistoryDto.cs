@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Dto
+namespace Service.TRAMS.RecordRatingHistory
 {
 	public sealed class RecordRatingHistoryDto
 	{

@@ -7,7 +7,6 @@ using Service.Redis.Models;
 using Service.Redis.Rating;
 using Service.Redis.Type;
 using Service.TRAMS.Cases;
-using Service.TRAMS.Dto;
 using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
 using Service.TRAMS.Trusts;
@@ -96,6 +95,9 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
+				// TODO Enable only when TRAMS API Concerns endpoints are live.
+				
+				
 				// Create a case
 				// TODO status urn, created by
 				
@@ -103,7 +105,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var caseDto = new CaseDto(currentDate, currentDate, currentDate, currentDate, "created-by",
 					"description", "crm-enquiry", "trust-ukprn", "trust-name", "reason-at-review",
 					currentDate, "issue", "current-status", "next-steps", "resolution-strategy",
-					"direction-of-travel", BigInteger.Zero, "status");
+					"direction-of-travel", BigInteger.Zero, BigInteger.Zero);
 				var newCase = await _caseService.PostCase(caseDto);
 
 				// Create a record
@@ -115,12 +117,17 @@ namespace ConcernsCaseWork.Services.Cases
 				var newRecord = await _recordService.PostRecordByCaseUrn(recordDto);
 
 				// Create a rating history
+				// TODO get rating urn
+				
+				var createRecordRatingHistoryDto = new CreateRecordRatingHistoryDto(currentDate, newRecord.Urn, BigInteger.Zero);
+				await _recordRatingHistory.PostRecordRatingHistory(createRecordRatingHistoryDto);
 
-				//var recordRatingHistory = new RecordRatingHistoryDto(currentDate, newRecord.Urn, ) 
-				var newRecordRatingHistory = await _recordRatingHistory.PostRecordRatingHistoryByRecordUrn(null);
 
-
-
+				// Store all records in cache
+				
+				
+				
+				
 			}
 			catch (Exception ex)
 			{
