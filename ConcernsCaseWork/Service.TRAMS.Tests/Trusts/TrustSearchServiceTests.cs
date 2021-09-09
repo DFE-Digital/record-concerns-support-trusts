@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using Service.TRAMS.Configuration;
-using Service.TRAMS.RecordSrma;
+using Service.TRAMS.RecordAcademy;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

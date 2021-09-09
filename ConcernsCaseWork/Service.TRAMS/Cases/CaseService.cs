@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.RecordSrma
+namespace Service.TRAMS.RecordAcademy
 {
 	public sealed class CaseService : AbstractService, ICaseService
 	{

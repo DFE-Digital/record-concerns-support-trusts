@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Shared.Tests.Shared;
-using Service.TRAMS.RecordSrma;
+using Service.TRAMS.RecordAcademy;
 using System;
 using System.Collections.Generic;
 using System.Numerics;

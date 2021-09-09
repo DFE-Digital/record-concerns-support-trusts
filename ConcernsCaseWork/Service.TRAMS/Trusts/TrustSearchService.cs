@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Service.TRAMS.Configuration;
-using Service.TRAMS.RecordSrma;
+using Service.TRAMS.RecordAcademy;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.RecordSrma
+namespace Service.TRAMS.RecordAcademy
 {
 	public sealed class TrustSearchService : ITrustSearchService
 	{

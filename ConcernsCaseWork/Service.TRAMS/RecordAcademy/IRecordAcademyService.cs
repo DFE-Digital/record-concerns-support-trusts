@@ -1,13 +1,13 @@
-﻿using Service.TRAMS.RecordSrma;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.RecordAcademy
 {
 	public interface IRecordAcademyService
 	{
-		Task<IList<RecordAcademyDto>> GetRecordsAcademyByRecordUrn(string recordUrn);
-		Task<RecordAcademyDto> PostRecordAcademyByRecordUrn(RecordAcademyDto recordAcademyDto);
+		Task<IList<RecordAcademyDto>> GetRecordsAcademyByRecordUrn(BigInteger recordUrn);
+		Task<RecordAcademyDto> PostRecordAcademyByRecordUrn(CreateRecordAcademyDto createRecordAcademyDto);
 		Task<RecordAcademyDto> PatchRecordAcademyByUrn(RecordAcademyDto recordAcademyDto);
 	}
 }

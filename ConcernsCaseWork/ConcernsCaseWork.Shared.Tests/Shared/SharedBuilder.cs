@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.TRAMS.RecordSrma;
+using Service.TRAMS.RecordAcademy;
 using System.Text;
 
 namespace ConcernsCaseWork.Shared.Tests.Shared

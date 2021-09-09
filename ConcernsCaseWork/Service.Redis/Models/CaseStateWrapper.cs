@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.RecordSrma;
+﻿using Service.TRAMS.RecordAcademy;
 using Service.TRAMS.RecordRatingHistory;
 using System;
 using System.Collections.Generic;

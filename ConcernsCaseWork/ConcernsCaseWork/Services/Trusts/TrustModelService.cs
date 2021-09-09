@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
 using Microsoft.Extensions.Logging;
-using Service.TRAMS.RecordSrma;
+using Service.TRAMS.RecordAcademy;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

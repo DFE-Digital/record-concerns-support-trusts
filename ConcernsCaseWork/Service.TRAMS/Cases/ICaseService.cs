@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.RecordSrma
+namespace Service.TRAMS.RecordAcademy
 {
 	public interface ICaseService
 	{

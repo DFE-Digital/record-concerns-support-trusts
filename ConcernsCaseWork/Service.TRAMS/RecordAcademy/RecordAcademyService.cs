@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
-using Service.TRAMS.RecordSrma;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
+using System.Numerics;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -20,14 +20,15 @@ namespace Service.TRAMS.RecordAcademy
 			_logger = logger;
 		}
 
-		public async Task<IList<RecordAcademyDto>> GetRecordsAcademyByRecordUrn(string recordUrn)
+		public async Task<IList<RecordAcademyDto>> GetRecordsAcademyByRecordUrn(BigInteger recordUrn)
 		{
 			try
 			{
 				_logger.LogInformation("RecordAcademyService::GetRecordsAcademyByRecordUrn");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/record-academy/record/urn/{recordUrn}");
+				var request = new HttpRequestMessage(HttpMethod.Get, 
+					$"{EndpointsVersion}/record-academy/record/urn/{recordUrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -55,7 +56,7 @@ namespace Service.TRAMS.RecordAcademy
 			return Array.Empty<RecordAcademyDto>();
 		}
 
-		public async Task<RecordAcademyDto> PostRecordAcademyByRecordUrn(RecordAcademyDto recordAcademyDto)
+		public async Task<RecordAcademyDto> PostRecordAcademyByRecordUrn(CreateRecordAcademyDto createRecordAcademyDto)
 		{
 			try
 			{
@@ -64,7 +65,7 @@ namespace Service.TRAMS.RecordAcademy
 				// Create a request
 				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(recordAcademyDto, options),
+					JsonSerializer.Serialize(createRecordAcademyDto, options),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 				
@@ -72,7 +73,8 @@ namespace Service.TRAMS.RecordAcademy
 				var client = ClientFactory.CreateClient("TramsClient");
 				
 				// Execute request
-				var response = await client.PostAsync($"/record-academy/record/urn/{recordAcademyDto.RecordUrn}", request);
+				var response = await client.PostAsync(
+					$"{EndpointsVersion}/record-academy/record/urn/{createRecordAcademyDto.RecordUrn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -110,7 +112,8 @@ namespace Service.TRAMS.RecordAcademy
 				var client = ClientFactory.CreateClient("TramsClient");
 				
 				// Execute request
-				var response = await client.PatchAsync($"/record-academy/urn/{recordAcademyDto.Urn}", request);
+				var response = await client.PatchAsync(
+					$"{EndpointsVersion}/record-academy/urn/{recordAcademyDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();

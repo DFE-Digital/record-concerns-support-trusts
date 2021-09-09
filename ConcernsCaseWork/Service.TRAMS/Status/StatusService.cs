@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
-using Service.TRAMS.RecordSrma;
+using Service.TRAMS.RecordAcademy;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
