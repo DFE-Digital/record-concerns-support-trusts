@@ -19,17 +19,17 @@ namespace Service.TRAMS.Type
 		public string Description { get; }
 		
 		[JsonPropertyName("created_at")]
-		public DateTime CreatedAt { get; }
+		public DateTimeOffset CreatedAt { get; }
 		
 		[JsonPropertyName("updated_at")]
-		public DateTime UpdatedAt { get; }
+		public DateTimeOffset UpdatedAt { get; }
 		
 		[JsonPropertyName("urn")]
 		public BigInteger Urn { get; }
 		
 		[JsonConstructor]
-		public TypeDto(string name, string description, DateTime createdAt, 
-			DateTime updatedAt, BigInteger urn) => 
+		public TypeDto(string name, string description, DateTimeOffset createdAt, 
+			DateTimeOffset updatedAt, BigInteger urn) => 
 			(Name, Description, CreatedAt, UpdatedAt, Urn) = (name, description, createdAt, updatedAt, urn);
 	}
 }

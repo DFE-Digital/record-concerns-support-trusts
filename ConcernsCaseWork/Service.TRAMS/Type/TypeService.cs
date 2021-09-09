@@ -51,34 +51,35 @@ namespace Service.TRAMS.Type
 			}
 			
 			// TODO replace return when TRAMS API endpoints are live
+			var currentDate = DateTimeOffset.Now;
 			return new List<TypeDto>
 			{
-				new TypeDto("Compliance", "Compliance: Financial reporting", DateTime.Now, 
-					DateTime.Now, new BigInteger(1)),
-				new TypeDto("Compliance", "Compliance: Financial returns", DateTime.Now, 
-					DateTime.Now, new BigInteger(2)),
-				new TypeDto("Financial", "Financial: Deficit", DateTime.Now, 
-					DateTime.Now, new BigInteger(3)),
-				new TypeDto("Financial", "Financial: Projected deficit / Low future surplus", DateTime.Now, 
-					DateTime.Now, new BigInteger(4)),
-				new TypeDto("Financial", "Financial: Cash flow shortfall", DateTime.Now, 
-					DateTime.Now, new BigInteger(5)),
-				new TypeDto("Financial", "Financial: Clawback", DateTime.Now, 
-					DateTime.Now, new BigInteger(6)),
-				new TypeDto("Force Majeure", "", DateTime.Now, 
-					DateTime.Now, new BigInteger(7)),
-				new TypeDto("Governance", "Governance: Governance", DateTime.Now, 
-					DateTime.Now, new BigInteger(8)),
-				new TypeDto("Governance", "Governance: Closure", DateTime.Now, 
-					DateTime.Now, new BigInteger(9)),
-				new TypeDto("Governance", "Governance: Executive Pay", DateTime.Now, 
-					DateTime.Now, new BigInteger(10)),
-				new TypeDto("Governance", "Governance: Safeguarding", DateTime.Now, 
-					DateTime.Now, new BigInteger(11)),
-				new TypeDto("Irregularity", "Irregularity: Allegations and self reported concerns", DateTime.Now, 
-					DateTime.Now, new BigInteger(12)),
-				new TypeDto("Irregularity", "Irregularity: Related party transactions - in year", DateTime.Now, 
-					DateTime.Now, new BigInteger(13))
+				new TypeDto("Compliance", "Compliance: Financial reporting", currentDate, 
+					currentDate, new BigInteger(1)),
+				new TypeDto("Compliance", "Compliance: Financial returns", currentDate, 
+					currentDate, new BigInteger(2)),
+				new TypeDto("Financial", "Financial: Deficit", currentDate, 
+					currentDate, new BigInteger(3)),
+				new TypeDto("Financial", "Financial: Projected deficit / Low future surplus", currentDate, 
+					currentDate, new BigInteger(4)),
+				new TypeDto("Financial", "Financial: Cash flow shortfall", currentDate, 
+					currentDate, new BigInteger(5)),
+				new TypeDto("Financial", "Financial: Clawback", currentDate, 
+					currentDate, new BigInteger(6)),
+				new TypeDto("Force Majeure", "", currentDate, 
+					currentDate, new BigInteger(7)),
+				new TypeDto("Governance", "Governance: Governance", currentDate, 
+					currentDate, new BigInteger(8)),
+				new TypeDto("Governance", "Governance: Closure", currentDate, 
+					currentDate, new BigInteger(9)),
+				new TypeDto("Governance", "Governance: Executive Pay", currentDate, 
+					currentDate, new BigInteger(10)),
+				new TypeDto("Governance", "Governance: Safeguarding", currentDate, 
+					currentDate, new BigInteger(11)),
+				new TypeDto("Irregularity", "Irregularity: Allegations and self reported concerns", currentDate, 
+					currentDate, new BigInteger(12)),
+				new TypeDto("Irregularity", "Irregularity: Related party transactions - in year", currentDate, 
+					currentDate, new BigInteger(13))
 			};
 			
 			//return Array.Empty<TypeDto>();
