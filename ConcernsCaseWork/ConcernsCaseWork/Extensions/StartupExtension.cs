@@ -17,7 +17,6 @@ using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Type;
 using StackExchange.Redis;
 using System;
-using System.Configuration;
 using System.Net.Mime;
 
 namespace ConcernsCaseWork.Extensions
@@ -31,11 +30,11 @@ namespace ConcernsCaseWork.Extensions
 		{
 			try
 			{
-				var vCapConfiguration = JObject.Parse(configuration["VCAP_SERVICES"]) ?? throw new ConfigurationErrorsException("AddRedis::VCAP_SERVICES missing");
-				var redisCredentials = vCapConfiguration["redis"]?[0]?["credentials"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials missing");
-				var password = (string)redisCredentials["password"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials::password missing");
-				var host = (string)redisCredentials["host"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials::host missing");
-				var port = (string)redisCredentials["port"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials::port missing");
+				var vCapConfiguration = JObject.Parse(configuration["VCAP_SERVICES"]) ?? throw new Exception("AddRedis::VCAP_SERVICES missing");
+				var redisCredentials = vCapConfiguration["redis"]?[0]?["credentials"] ?? throw new Exception("AddRedis::Credentials missing");
+				var password = (string)redisCredentials["password"] ?? throw new Exception("AddRedis::Credentials::password missing");
+				var host = (string)redisCredentials["host"] ?? throw new Exception("AddRedis::Credentials::host missing");
+				var port = (string)redisCredentials["port"] ?? throw new Exception("AddRedis::Credentials::port missing");
 				var tls = (bool)redisCredentials["tls_enabled"];
 
 				Log.Information($"Starting Redis Server Host - {host}");
@@ -57,7 +56,7 @@ namespace ConcernsCaseWork.Extensions
 			{
 				var errorMessage = $"AddRedis::Exception::{ex.Message}";
 				Log.Error(errorMessage);
-				throw new ConfigurationErrorsException(errorMessage);
+				throw new Exception(errorMessage);
 			}
 		}
 
@@ -66,13 +65,13 @@ namespace ConcernsCaseWork.Extensions
 		/// </summary>
 		/// <param name="services"></param>
 		/// <param name="configuration"></param>
-		/// <exception cref="System.Configuration.ConfigurationErrorsException"></exception>
+		/// <exception cref="Exception"></exception>
 		public static void AddTramsApi(this IServiceCollection services, IConfiguration configuration)
 		{
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			var tramsApiKey = configuration["trams:api_key"];
 			if (string.IsNullOrEmpty(tramsApiEndpoint) || string.IsNullOrEmpty(tramsApiKey)) 
-				throw new ConfigurationErrorsException("AddTramsApi::missing configuration");
+				throw new Exception("AddTramsApi::missing configuration");
 			
 			Log.Information($"Starting Trams API Endpoint - {tramsApiEndpoint}");
 			
