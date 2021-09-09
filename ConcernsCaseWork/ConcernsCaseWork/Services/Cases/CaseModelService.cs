@@ -101,12 +101,14 @@ namespace ConcernsCaseWork.Services.Cases
 				// Create a case
 				// TODO status urn, created by
 				
-				var currentDate = DateTimeOffset.Now;
-				var caseDto = new CaseDto(currentDate, currentDate, currentDate, currentDate, "created-by",
-					"description", "crm-enquiry", "trust-ukprn", "trust-name", "reason-at-review",
+				var currentDate = DateTime.Now;
+				
+				
+				var createCaseDto = new CreateCaseDto(currentDate, currentDate, currentDate, currentDate, "created-by",
+					"description", "crm-enquiry", "trust-ukprn", "reason-at-review",
 					currentDate, "issue", "current-status", "next-steps", "resolution-strategy",
-					"direction-of-travel", BigInteger.Zero, BigInteger.Zero);
-				var newCase = await _caseService.PostCase(caseDto);
+					"direction-of-travel", BigInteger.Zero);
+				var newCase = await _caseService.PostCase(createCaseDto);
 
 				// Create a record
 				// TODO get type urn, rating urn, status urn, is it primary?

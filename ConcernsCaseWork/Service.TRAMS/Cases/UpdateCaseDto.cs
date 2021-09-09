@@ -4,11 +4,8 @@ using System.Text.Json.Serialization;
 
 namespace Service.TRAMS.Cases
 {
-	public sealed class CaseDto
+	public sealed class UpdateCaseDto
 	{
-		[JsonPropertyName("created_at")]
-		public DateTime CreatedAt { get; }
-
 		[JsonPropertyName("updated_at")]
 		public DateTime UpdateAt { get; }
 		
@@ -64,14 +61,14 @@ namespace Service.TRAMS.Cases
 		public BigInteger Status { get; }
 
 		[JsonConstructor]
-		public CaseDto(DateTime createdAt, DateTime updatedAt, DateTime reviewAt, DateTime closedAt, 
+		public UpdateCaseDto(DateTime updatedAt, DateTime reviewAt, DateTime closedAt, 
 			string createdBy, string description, string crmEnquiry, string trustUkPrn, string reasonAtReview, 
 			DateTime deEscalation, string issue, string currentStatus, string nextSteps, string resolutionStrategy, 
 			string directionOfTravel, BigInteger urn, BigInteger status) => 
-			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
+			(UpdateAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, ResolutionStrategy, DirectionOfTravel, 
 				Urn, Status) = 
-			(createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn,
+			(updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn,
 				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, resolutionStrategy, directionOfTravel, 
 				urn, status);
 	}

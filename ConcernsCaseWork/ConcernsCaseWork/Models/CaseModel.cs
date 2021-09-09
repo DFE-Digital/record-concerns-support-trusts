@@ -8,13 +8,13 @@ namespace ConcernsCaseWork.Models
 	/// </summary>
 	public sealed class CaseModel
 	{
-		public DateTimeOffset CreatedAt { get; }
+		public DateTime CreatedAt { get; }
 
-		public DateTimeOffset UpdateAt { get; }
+		public DateTime UpdateAt { get; }
 
-		public DateTimeOffset ReviewAt { get; }
+		public DateTime ReviewAt { get; }
 
-		public DateTimeOffset ClosedAt { get; }
+		public DateTime ClosedAt { get; }
 		
 		/// <summary>
 		/// Case owner from azure AD some unique identifier
@@ -26,12 +26,10 @@ namespace ConcernsCaseWork.Models
 		public string CrmEnquiry { get; }
 
 		public string TrustUkPrn { get; }
-
-		public string TrustName { get; }
-
+		
 		public string ReasonAtReview { get; }
 
-		public DateTimeOffset DeEscalation { get; }
+		public DateTime DeEscalation { get; }
 
 		public string Issue { get; }
 
@@ -50,14 +48,14 @@ namespace ConcernsCaseWork.Models
 
 		public string Status { get; }
 
-		public CaseModel(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
-			DateTimeOffset closedAt, string createdBy, string description, string crmEnquiry, string trustUkPrn, 
-			string trustName, string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
-			string nextSteps, string resolutionStrategy, string directionOfTravel, BigInteger urn, string status) => 
-			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn, TrustName,
+		public CaseModel(DateTime createdAt, DateTime updatedAt, DateTime reviewAt, DateTime closedAt, 
+			string createdBy, string description, string crmEnquiry, string trustUkPrn, string reasonAtReview, 
+			DateTime deEscalation, string issue, string currentStatus, string nextSteps, string resolutionStrategy, 
+			string directionOfTravel, BigInteger urn, string status) => 
+			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, ResolutionStrategy, DirectionOfTravel, 
 				Urn, Status) = 
-			(createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn, trustName,
+			(createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn,
 				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, resolutionStrategy, directionOfTravel, 
 				urn, status);
 	}

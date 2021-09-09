@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 	{
 		public static List<CaseDto> CreateListCaseDto()
 		{
-			var dateTimeNow = DateTimeOffset.Now;
+			var dateTimeNow = DateTime.Now;
 			return new List<CaseDto>
 			{
 				// Status
@@ -19,27 +19,27 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				// 3 - Close
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
-					"trust-ukprn", "trust-name", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
+					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
 					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), new BigInteger(1)
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
-					"trust-ukprn", "trust-name", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
+					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
 					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), new BigInteger(3)
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
-					"trust-ukprn", "trust-name", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
+					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
 					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), new BigInteger(2)
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
-					"trust-ukprn", "trust-name", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
+					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
 					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), new BigInteger(1)
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
-					"trust-ukprn", "trust-name", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
+					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
 					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), new BigInteger(2)
 				)
 			};
@@ -47,10 +47,10 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 
 		public static CaseDto CreateCaseDto()
 		{
-			var dateTimeNow = DateTimeOffset.Now;
+			var dateTimeNow = DateTime.Now;
 			return new CaseDto(
 				dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
-				"trust-ukprn", "trust-name", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
+				"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
 				"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), new BigInteger(1)
 			);
 		}

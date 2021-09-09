@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Service.TRAMS.Cases
 {
-	public sealed class CaseDto
+	public sealed class CreateCaseDto
 	{
 		[JsonPropertyName("created_at")]
 		public DateTime CreatedAt { get; }
@@ -57,22 +57,19 @@ namespace Service.TRAMS.Cases
 		[JsonPropertyName("direction_of_travel")]
 		public string DirectionOfTravel { get; }
 		
-		[JsonPropertyName("urn")]
-		public BigInteger Urn { get; }
-		
 		[JsonPropertyName("status")]
 		public BigInteger Status { get; }
 
 		[JsonConstructor]
-		public CaseDto(DateTime createdAt, DateTime updatedAt, DateTime reviewAt, DateTime closedAt, 
-			string createdBy, string description, string crmEnquiry, string trustUkPrn, string reasonAtReview, 
-			DateTime deEscalation, string issue, string currentStatus, string nextSteps, string resolutionStrategy, 
-			string directionOfTravel, BigInteger urn, BigInteger status) => 
+		public CreateCaseDto(DateTime createdAt, DateTime updatedAt, DateTime reviewAt, 
+			DateTime closedAt, string createdBy, string description, string crmEnquiry, string trustUkPrn, 
+			string reasonAtReview, DateTime deEscalation, string issue, string currentStatus, 
+			string nextSteps, string resolutionStrategy, string directionOfTravel, BigInteger status) => 
 			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, ResolutionStrategy, DirectionOfTravel, 
-				Urn, Status) = 
+				Status) = 
 			(createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn,
 				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, resolutionStrategy, directionOfTravel, 
-				urn, status);
+				status);
 	}
 }

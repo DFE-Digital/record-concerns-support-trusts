@@ -37,7 +37,6 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCaseDto.DirectionOfTravel));
 			Assert.That(caseDto.ReasonAtReview, Is.EqualTo(expectedCaseDto.ReasonAtReview));
 			Assert.That(caseDto.TrustUkPrn, Is.EqualTo(expectedCaseDto.TrustUkPrn));
-			Assert.That(caseDto.TrustName, Is.EqualTo(expectedCaseDto.TrustName));
 		}
 	}
 }

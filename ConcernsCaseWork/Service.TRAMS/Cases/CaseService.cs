@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
-using Service.TRAMS.Cases;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -14,20 +13,21 @@ namespace Service.TRAMS.Cases
 	public sealed class CaseService : AbstractService, ICaseService
 	{
 		private readonly ILogger<CaseService> _logger;
-		
+
 		public CaseService(IHttpClientFactory clientFactory, ILogger<CaseService> logger) : base(clientFactory)
 		{
 			_logger = logger;
 		}
 		
-		public async Task<IList<CaseDto>> GetCasesByCaseworker(string caseworker)
+		public async Task<IList<CaseDto>> GetCasesByCaseworker(string caseworker, string statusUrn = "Live")
 		{
 			try
 			{
 				_logger.LogInformation("CaseService::GetCasesByCaseworker");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/cases/owner/{caseworker}");
+				var request = new HttpRequestMessage(HttpMethod.Get, 
+					$"{EndpointsVersion}/cases/owner/{caseworker}?status={statusUrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -55,14 +55,14 @@ namespace Service.TRAMS.Cases
 			return Array.Empty<CaseDto>();
 		}
 
-		public async Task<CaseDto> GetCasesByUrn(string urn)
+		public async Task<CaseDto> GetCaseByUrn(string urn)
 		{
 			try
 			{
 				_logger.LogInformation("CaseService::GetCasesByUrn");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/case/urn/{urn}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"{EndpointsVersion}/case/urn/{urn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -97,7 +97,7 @@ namespace Service.TRAMS.Cases
 				_logger.LogInformation("CaseService::GetCasesByTrustUkPrn");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/cases/trust/{trustUkprn}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"{EndpointsVersion}/cases/trust/{trustUkprn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -132,7 +132,7 @@ namespace Service.TRAMS.Cases
 				_logger.LogInformation("CaseService::GetCasesByPagination");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/cases?page={caseSearch.Page}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"{EndpointsVersion}/cases?page={caseSearch.Page}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -160,7 +160,7 @@ namespace Service.TRAMS.Cases
 			return Array.Empty<CaseDto>();
 		}
 
-		public async Task<CaseDto> PostCase(CaseDto caseDto)
+		public async Task<CaseDto> PostCase(CreateCaseDto createCaseDto)
 		{
 			try
 			{
@@ -169,7 +169,7 @@ namespace Service.TRAMS.Cases
 				// Create a request
 				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(caseDto, options),
+					JsonSerializer.Serialize(createCaseDto, options),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 
@@ -177,7 +177,7 @@ namespace Service.TRAMS.Cases
 				var client = ClientFactory.CreateClient("TramsClient");
 				
 				// Execute request
-				var response = await client.PostAsync("/case", request);
+				var response = await client.PostAsync($"{EndpointsVersion}/case", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -193,12 +193,12 @@ namespace Service.TRAMS.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError($"CaseService::PostCase::Exception message::{ex.Message}");
-
-				throw;
 			}
+
+			return null;
 		}
 
-		public async Task<CaseDto> PatchCaseByUrn(CaseDto caseDto)
+		public async Task<CaseDto> PatchCaseByUrn(UpdateCaseDto updateCaseDto)
 		{
 			try
 			{
@@ -207,7 +207,7 @@ namespace Service.TRAMS.Cases
 				// Create a request
 				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(caseDto, options),
+					JsonSerializer.Serialize(updateCaseDto, options),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 
@@ -215,7 +215,7 @@ namespace Service.TRAMS.Cases
 				var client = ClientFactory.CreateClient("TramsClient");
 				
 				// Execute request
-				var response = await client.PatchAsync($"/case/urn/{caseDto.Urn}", request);
+				var response = await client.PatchAsync($"{EndpointsVersion}/case/urn/{updateCaseDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -231,9 +231,9 @@ namespace Service.TRAMS.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError($"CaseService::PatchCaseByUrn::Exception message::{ex.Message}");
-
-				throw;
 			}
+
+			return null;
 		}
 	}
 }

@@ -40,7 +40,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mapper = config.CreateMapper();
 			var casesDto = CaseDtoFactory.CreateListCaseDto();
 
-			mockCaseService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>())).ReturnsAsync(casesDto);
+			mockCaseService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()))
+				.ReturnsAsync(casesDto);
 			
 			// act
 			var caseModelService = new CaseModelService(mockCaseService.Object, mockTrustService.Object, mockRecordService.Object,
@@ -86,7 +87,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
 
-			mockCaseService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>())).ThrowsAsync(new Exception());
+			mockCaseService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()))
+				.ThrowsAsync(new Exception());
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseService.Object, mockTrustService.Object, mockRecordService.Object,
