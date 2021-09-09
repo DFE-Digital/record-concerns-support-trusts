@@ -7,7 +7,7 @@ using Service.Redis.Models;
 using Service.Redis.Rating;
 using Service.Redis.Type;
 using Service.TRAMS.RecordRatingHistory;
-using Service.TRAMS.Type;
+using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Type
+namespace Service.TRAMS.Status
 {
 	public sealed class RecordWhistleblowerDto
 	{

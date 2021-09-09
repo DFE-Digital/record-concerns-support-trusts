@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Type
+namespace Service.TRAMS.Status
 {
 	public sealed class RecordAcademyService : AbstractService, IRecordAcademyService
 	{

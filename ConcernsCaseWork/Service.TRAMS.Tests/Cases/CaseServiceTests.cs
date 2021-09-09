@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
-using Service.TRAMS.Type;
+using Service.TRAMS.Status;
 using System;
 using System.Linq;
 using System.Net;

@@ -15,7 +15,6 @@ using Service.TRAMS.Configuration;
 using Service.TRAMS.Rating;
 using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Status;
-using Service.TRAMS.Type;
 using StackExchange.Redis;
 using System;
 using System.Configuration;

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
-using Service.TRAMS.Type;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -26,7 +25,7 @@ namespace Service.TRAMS.Status
 				_logger.LogInformation("StatusService::GetStatuses");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, "/statuses");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"{EndpointsVersion}/statuses");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -54,9 +53,9 @@ namespace Service.TRAMS.Status
 			// TODO replace return when TRAMS API endpoints are live
 			return new List<StatusDto>
 			{
-				new StatusDto("Live", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(1)),
-				new StatusDto("Monitoring", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(2)),
-				new StatusDto("Close", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(3))
+				new StatusDto("Live", DateTime.Now, DateTime.Now, new BigInteger(1)),
+				new StatusDto("Monitoring", DateTime.Now, DateTime.Now, new BigInteger(2)),
+				new StatusDto("Close", DateTime.Now, DateTime.Now, new BigInteger(3))
 			};
 
 			//return Array.Empty<StatusDto>();

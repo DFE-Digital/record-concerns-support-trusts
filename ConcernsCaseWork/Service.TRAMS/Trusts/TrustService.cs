@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
-using Service.TRAMS.Type;
+using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
-namespace Service.TRAMS.Type
+namespace Service.TRAMS.Status
 {
 	public sealed class TrustService : AbstractService, ITrustService
 	{

@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Shared.Tests.Shared;
-using Service.TRAMS.Type;
+using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
 using System.Numerics;

@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.Type;
+﻿using Service.TRAMS.Status;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
