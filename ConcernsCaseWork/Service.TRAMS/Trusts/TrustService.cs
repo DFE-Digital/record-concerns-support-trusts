@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
-using Service.TRAMS.RecordAcademy;
+using Service.TRAMS.Type;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
-namespace Service.TRAMS.RecordAcademy
+namespace Service.TRAMS.Type
 {
 	public sealed class TrustService : AbstractService, ITrustService
 	{

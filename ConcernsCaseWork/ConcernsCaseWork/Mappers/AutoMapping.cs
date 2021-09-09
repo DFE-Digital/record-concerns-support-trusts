@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
-using Service.TRAMS.RecordAcademy;
+using Service.TRAMS.Type;
 
 namespace ConcernsCaseWork.Mappers
 {

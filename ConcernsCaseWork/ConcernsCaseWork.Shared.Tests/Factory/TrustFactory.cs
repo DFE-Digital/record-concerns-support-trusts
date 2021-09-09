@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.TRAMS.RecordAcademy;
+using Service.TRAMS.Type;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory

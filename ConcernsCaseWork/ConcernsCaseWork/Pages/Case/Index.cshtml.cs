@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.TRAMS.RecordAcademy;
+using Service.TRAMS.Type;
 using System;
 using System.Net;
 using System.Threading.Tasks;

@@ -1,5 +1,4 @@
-﻿using Service.TRAMS.RecordAcademy;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.Type

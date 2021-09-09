@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
-using Service.TRAMS.RecordAcademy;
+using Service.TRAMS.Type;
 using System;
 using System.Collections.Generic;
 using System.Linq;

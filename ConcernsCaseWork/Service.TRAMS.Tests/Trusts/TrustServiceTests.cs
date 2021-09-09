@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
-using Service.TRAMS.RecordAcademy;
+using Service.TRAMS.Type;
 using System;
 using System.Net;
 using System.Net.Http;

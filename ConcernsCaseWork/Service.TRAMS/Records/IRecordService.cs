@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.RecordAcademy
+namespace Service.TRAMS.Type
 {
 	public interface IRecordService
 	{

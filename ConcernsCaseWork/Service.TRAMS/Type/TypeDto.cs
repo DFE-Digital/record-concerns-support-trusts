@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.RecordAcademy
+namespace Service.TRAMS.Type
 {
 	public sealed class TypeDto
 	{
@@ -19,17 +19,17 @@ namespace Service.TRAMS.RecordAcademy
 		public string Description { get; }
 		
 		[JsonPropertyName("created_at")]
-		public DateTimeOffset CreatedAt { get; }
+		public DateTime CreatedAt { get; }
 		
 		[JsonPropertyName("updated_at")]
-		public DateTimeOffset UpdatedAt { get; }
+		public DateTime UpdatedAt { get; }
 		
 		[JsonPropertyName("urn")]
 		public BigInteger Urn { get; }
 		
 		[JsonConstructor]
-		public TypeDto(string name, string description, DateTimeOffset createdAt, 
-			DateTimeOffset updatedAt, BigInteger urn) => 
+		public TypeDto(string name, string description, DateTime createdAt, 
+			DateTime updatedAt, BigInteger urn) => 
 			(Name, Description, CreatedAt, UpdatedAt, Urn) = (name, description, createdAt, updatedAt, urn);
 	}
 }

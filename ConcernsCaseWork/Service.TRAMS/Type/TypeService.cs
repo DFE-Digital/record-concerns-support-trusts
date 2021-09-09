@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
-using Service.TRAMS.RecordAcademy;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -26,7 +25,7 @@ namespace Service.TRAMS.Type
 				_logger.LogInformation("TypeService::GetTypes");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, "/types");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"{EndpointsVersion}/types");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -54,14 +53,16 @@ namespace Service.TRAMS.Type
 			// TODO replace return when TRAMS API endpoints are live
 			return new List<TypeDto>
 			{
-				new TypeDto("Record", "Log information when it is not a Concern", DateTimeOffset.Now, 
-					DateTimeOffset.Now, new BigInteger(1)),
-				new TypeDto("SRMA", "A proactive SRMA visit", DateTimeOffset.Now, 
-					DateTimeOffset.Now, new BigInteger(2)),
-				new TypeDto("Safeguarding Incident", "", DateTimeOffset.Now, 
-					DateTimeOffset.Now, new BigInteger(3)),
-				new TypeDto("Concern", "", DateTimeOffset.Now, 
-					DateTimeOffset.Now, new BigInteger(4))
+				new TypeDto("Record", "SRMA", DateTime.Now, 
+					DateTime.Now, new BigInteger(1)),
+				new TypeDto("Concern", "Financial: Deficit", DateTime.Now, 
+					DateTime.Now, new BigInteger(2)),
+				new TypeDto("Safeguarding Incident", "", DateTime.Now, 
+					DateTime.Now, new BigInteger(3)),
+				new TypeDto("Concern", "Governance: Executive Pay", DateTime.Now, 
+					DateTime.Now, new BigInteger(4)),
+				new TypeDto("Concern", "Financial: Clawback", DateTime.Now, 
+					DateTime.Now, new BigInteger(5))
 			};
 			
 			//return Array.Empty<TypeDto>();

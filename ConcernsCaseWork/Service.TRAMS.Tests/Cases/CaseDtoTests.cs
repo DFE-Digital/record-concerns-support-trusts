@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
-using Service.TRAMS.RecordAcademy;
+using Service.TRAMS.Type;
 using System.Text.Json;
 
 namespace Service.TRAMS.Tests.Cases

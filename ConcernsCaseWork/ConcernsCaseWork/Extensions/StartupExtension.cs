@@ -13,7 +13,6 @@ using Service.Redis.Type;
 using Service.Redis.Users;
 using Service.TRAMS.Configuration;
 using Service.TRAMS.Rating;
-using Service.TRAMS.RecordAcademy;
 using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Status;
 using Service.TRAMS.Type;

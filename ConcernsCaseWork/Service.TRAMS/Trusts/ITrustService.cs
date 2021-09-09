@@ -1,8 +1,8 @@
-﻿using Service.TRAMS.RecordAcademy;
+﻿using Service.TRAMS.Type;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.RecordAcademy
+namespace Service.TRAMS.Type
 {
 	public interface ITrustService
 	{
