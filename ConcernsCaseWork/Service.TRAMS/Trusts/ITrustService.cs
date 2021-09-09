@@ -1,8 +1,8 @@
-﻿using Service.TRAMS.Status;
+﻿using Service.TRAMS.Type;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Status
+namespace Service.TRAMS.Type
 {
 	public interface ITrustService
 	{

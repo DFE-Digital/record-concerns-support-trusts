@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Status
+namespace Service.TRAMS.Type
 {
 	public interface ITypeService
 	{

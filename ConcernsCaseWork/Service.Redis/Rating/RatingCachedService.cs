@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
-using Service.TRAMS.Status;
+using Service.TRAMS.Type;
 using Service.TRAMS.Rating;
 using System.Collections.Generic;
 using System.Threading.Tasks;

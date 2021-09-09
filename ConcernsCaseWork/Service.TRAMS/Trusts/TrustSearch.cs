@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Service.TRAMS.Status
+namespace Service.TRAMS.Type
 {
 	public sealed class TrustSearch
 	{

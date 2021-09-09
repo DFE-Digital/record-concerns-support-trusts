@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.TRAMS.Status;
+using Service.TRAMS.Type;
 using System.Text;
 
 namespace ConcernsCaseWork.Shared.Tests.Shared

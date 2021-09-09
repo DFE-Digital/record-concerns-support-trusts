@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Status
+namespace Service.TRAMS.Type
 {
 	public interface IRecordSrmaService
 	{

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Status
+namespace Service.TRAMS.Type
 {
 	public sealed class TrustSummaryDto
 	{		

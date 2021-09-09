@@ -3,7 +3,7 @@ using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using Service.TRAMS.Status;
+using Service.TRAMS.Type;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Integration.Tests.Trams

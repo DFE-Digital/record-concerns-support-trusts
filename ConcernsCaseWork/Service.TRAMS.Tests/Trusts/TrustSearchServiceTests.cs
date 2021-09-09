@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using Service.TRAMS.Configuration;
-using Service.TRAMS.Status;
+using Service.TRAMS.Type;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
