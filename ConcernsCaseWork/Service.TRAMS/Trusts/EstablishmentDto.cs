@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Type
+namespace Service.TRAMS.Trusts
 {
 	public sealed class EstablishmentDto
 	{

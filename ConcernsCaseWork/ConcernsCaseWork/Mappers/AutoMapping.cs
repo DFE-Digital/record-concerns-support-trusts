@@ -1,6 +1,10 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
+using Service.TRAMS.Cases;
 using Service.TRAMS.Rating;
+using Service.TRAMS.Records;
+using Service.TRAMS.Status;
+using Service.TRAMS.Trusts;
 using Service.TRAMS.Type;
 
 namespace ConcernsCaseWork.Mappers

@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Type
+namespace Service.TRAMS.Status
 {
 	public sealed class StatusDto
 	{
@@ -13,16 +13,16 @@ namespace Service.TRAMS.Type
 		public string Name { get; }
 		
 		[JsonPropertyName("created_at")]
-		public DateTime CreatedAt { get; }
+		public DateTimeOffset CreatedAt { get; }
 		
 		[JsonPropertyName("updated_at")]
-		public DateTime UpdatedAt { get; }
+		public DateTimeOffset UpdatedAt { get; }
 		
 		[JsonPropertyName("urn")]
 		public BigInteger Urn { get; }
 		
 		[JsonConstructor]
-		public StatusDto(string name, DateTime createdAt, DateTime updatedAt, BigInteger urn) => 
+		public StatusDto(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, BigInteger urn) => 
 			(Name, CreatedAt, UpdatedAt, Urn) = (name, createdAt, updatedAt, urn);
 	}
 }

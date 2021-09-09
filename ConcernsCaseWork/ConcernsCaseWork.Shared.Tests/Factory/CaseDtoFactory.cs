@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Shared.Tests.Shared;
-using Service.TRAMS.Type;
+using Service.TRAMS.Cases;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 	{
 		public static List<CaseDto> CreateListCaseDto()
 		{
-			var dateTimeNow = DateTime.Now;
+			var dateTimeNow = DateTimeOffset.Now;
 			return new List<CaseDto>
 			{
 				// Status

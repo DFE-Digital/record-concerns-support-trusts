@@ -13,15 +13,15 @@ namespace Service.TRAMS.Rating
 		public string Name { get; }
 		
 		[JsonPropertyName("created_at")]
-		public DateTime CreatedAt { get; }
+		public DateTimeOffset CreatedAt { get; }
 		
 		[JsonPropertyName("updated_at")]
-		public DateTime UpdatedAt { get; }
+		public DateTimeOffset UpdatedAt { get; }
 		
 		[JsonPropertyName("urn")]
 		public BigInteger Urn { get; }
 		
-		public RatingDto(string name, DateTime createdAt, DateTime updatedAt, BigInteger urn) => 
+		public RatingDto(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, BigInteger urn) => 
 			(Name, CreatedAt, UpdatedAt, Urn) = (name, createdAt, updatedAt, urn);
 	}
 }

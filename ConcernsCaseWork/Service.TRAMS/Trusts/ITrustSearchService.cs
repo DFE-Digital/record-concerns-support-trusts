@@ -1,8 +1,7 @@
-﻿using Service.TRAMS.Type;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Type
+namespace Service.TRAMS.Trusts
 {
 	public interface ITrustSearchService
 	{

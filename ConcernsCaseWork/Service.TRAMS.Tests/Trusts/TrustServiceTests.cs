@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
-using Service.TRAMS.Type;
+using Service.TRAMS.Trusts;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -104,10 +104,10 @@ namespace Service.TRAMS.Tests.Trusts
 		}
 
 		[TestCase("", "", "", "/trusts?page=1")]
-		[TestCase("groupname", "", "", "/trusts?groupName=groupname&page=1")]
+		[TestCase("group-name", "", "", "/trusts?groupName=group-name&page=1")]
 		[TestCase("", "ukprn", "", "/trusts?ukprn=ukprn&page=1")]
-		[TestCase("", "", "companieshousenumber", "/trusts?companiesHouseNumber=companieshousenumber&page=1")]
-		[TestCase("groupname", "ukprn", "", "/trusts?groupName=groupname&ukprn=ukprn&page=1")]
+		[TestCase("", "", "companies-house-number", "/trusts?companiesHouseNumber=companies-house-number&page=1")]
+		[TestCase("group-name", "ukprn", "", "/trusts?groupName=group-name&ukprn=ukprn&page=1")]
 		public void WhenBuildRequestUri_ReturnsRequestUrl(string groupName, string ukprn, string companiesHouseNumber, string expectedRequestUri)
 		{
 			// arrange

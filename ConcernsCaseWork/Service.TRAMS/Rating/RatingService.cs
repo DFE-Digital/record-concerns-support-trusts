@@ -51,13 +51,14 @@ namespace Service.TRAMS.Rating
 			}
 			
 			// TODO replace return when TRAMS API endpoints are live
+			var currentDate = DateTimeOffset.Now;
 			return new List<RatingDto>
 			{
-				new RatingDto("n/a", DateTime.Now, DateTime.Now, new BigInteger(1)),
-				new RatingDto("Red-Plus", DateTime.Now, DateTime.Now, new BigInteger(2)),
-				new RatingDto("Red", DateTime.Now, DateTime.Now, new BigInteger(3)),
-				new RatingDto("Red-Amber", DateTime.Now, DateTime.Now, new BigInteger(4)),
-				new RatingDto("Amber-Green", DateTime.Now, DateTime.Now, new BigInteger(5))
+				new RatingDto("n/a", currentDate, currentDate, new BigInteger(1)),
+				new RatingDto("Red-Plus", currentDate, currentDate, new BigInteger(2)),
+				new RatingDto("Red", currentDate, currentDate, new BigInteger(3)),
+				new RatingDto("Red-Amber", currentDate, currentDate, new BigInteger(4)),
+				new RatingDto("Amber-Green", currentDate, currentDate, new BigInteger(5))
 			};
 
 			//return Array.Empty<RatingDto>();

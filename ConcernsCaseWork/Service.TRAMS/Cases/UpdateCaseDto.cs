@@ -2,18 +2,18 @@
 using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Type
+namespace Service.TRAMS.Cases
 {
 	public sealed class UpdateCaseDto
 	{
 		[JsonPropertyName("updated_at")]
-		public DateTime UpdateAt { get; }
+		public DateTimeOffset UpdateAt { get; }
 		
 		[JsonPropertyName("review_at")]
-		public DateTime ReviewAt { get; }
+		public DateTimeOffset ReviewAt { get; }
 		
 		[JsonPropertyName("closed_at")]
-		public DateTime ClosedAt { get; }
+		public DateTimeOffset ClosedAt { get; }
 		
 		/// <summary>
 		/// Case owner from azure AD some unique identifier
@@ -34,7 +34,7 @@ namespace Service.TRAMS.Type
 		public string ReasonAtReview { get; }
 
 		[JsonPropertyName("de_escalation")]
-		public DateTime DeEscalation { get; }
+		public DateTimeOffset DeEscalation { get; }
 		
 		[JsonPropertyName("issue")]
 		public string Issue { get; }
@@ -61,9 +61,9 @@ namespace Service.TRAMS.Type
 		public BigInteger Status { get; }
 
 		[JsonConstructor]
-		public UpdateCaseDto(DateTime updatedAt, DateTime reviewAt, DateTime closedAt, 
+		public UpdateCaseDto(DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
 			string createdBy, string description, string crmEnquiry, string trustUkPrn, string reasonAtReview, 
-			DateTime deEscalation, string issue, string currentStatus, string nextSteps, string resolutionStrategy, 
+			DateTimeOffset deEscalation, string issue, string currentStatus, string nextSteps, string resolutionStrategy, 
 			string directionOfTravel, BigInteger urn, BigInteger status) => 
 			(UpdateAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, ResolutionStrategy, DirectionOfTravel, 

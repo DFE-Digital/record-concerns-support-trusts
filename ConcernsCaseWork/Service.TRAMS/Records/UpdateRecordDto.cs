@@ -2,18 +2,18 @@
 using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Type
+namespace Service.TRAMS.Records
 {
 	public sealed class UpdateRecordDto
 	{
 		[JsonPropertyName("updated_at")]
-		public DateTime UpdateAt { get; }
+		public DateTimeOffset UpdateAt { get; }
 		
 		[JsonPropertyName("review_at")]
-		public DateTime ReviewAt { get; }
+		public DateTimeOffset ReviewAt { get; }
 		
 		[JsonPropertyName("closed_at")]
-		public DateTime ClosedAt { get; }
+		public DateTimeOffset ClosedAt { get; }
 		
 		[JsonPropertyName("name")]
 		public string Name { get; }
@@ -43,7 +43,7 @@ namespace Service.TRAMS.Type
 		public BigInteger Status { get; }
 		
 		[JsonConstructor]
-		public UpdateRecordDto(DateTime updatedAt, DateTime reviewAt, DateTime closedAt, 
+		public UpdateRecordDto(DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
 			string name, string description, string reason, BigInteger caseUrn, BigInteger typeUrn, 
 			BigInteger ratingUrn, bool primary, BigInteger urn, BigInteger status) => 
 			(UpdateAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Urn, Status) = 

@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.TRAMS.Type;
+using Service.TRAMS.Trusts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

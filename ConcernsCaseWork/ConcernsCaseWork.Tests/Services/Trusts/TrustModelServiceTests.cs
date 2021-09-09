@@ -7,7 +7,7 @@ using ConcernsCaseWork.Shared.Tests.Shared;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.TRAMS.Type;
+using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

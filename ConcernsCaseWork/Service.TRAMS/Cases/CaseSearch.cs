@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Service.TRAMS.Type
+namespace Service.TRAMS.Cases
 {
 	public sealed class CaseSearch
 	{
