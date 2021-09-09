@@ -16,7 +16,6 @@ using Service.TRAMS.Rating;
 using Service.TRAMS.RecordAcademy;
 using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.RecordSrma;
-using Service.TRAMS.RecordWhistleblower;
 using Service.TRAMS.Status;
 using Service.TRAMS.Type;
 using StackExchange.Redis;

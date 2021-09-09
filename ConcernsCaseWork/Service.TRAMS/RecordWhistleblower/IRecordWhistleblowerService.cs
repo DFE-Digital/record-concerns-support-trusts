@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.RecordWhistleblower
+namespace Service.TRAMS.RecordSrma
 {
 	public interface IRecordWhistleblowerService
 	{

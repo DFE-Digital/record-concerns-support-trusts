@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.TRAMS.RecordWhistleblower;
+using Service.TRAMS.RecordSrma;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory

@@ -1,13 +1,13 @@
-﻿using Service.TRAMS.RecordWhistleblower;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.RecordSrma
 {
 	public interface IRecordSrmaService
 	{
-		Task<IList<RecordSrmaDto>> GetRecordsSrmaByRecordUrn(string recordUrn);
-		Task<RecordSrmaDto> PostRecordSrmaByRecordUrn(RecordSrmaDto recordSrmaDto);
+		Task<IList<RecordSrmaDto>> GetRecordsSrmaByRecordUrn(BigInteger recordUrn);
+		Task<RecordSrmaDto> PostRecordSrmaByRecordUrn(CreateRecordSrmaDto createRecordSrmaDto);
 		Task<RecordSrmaDto> PatchRecordSrmaByUrn(RecordSrmaDto recordSrmaDto);
 	}
 }

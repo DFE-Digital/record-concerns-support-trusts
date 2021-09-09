@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
-using Service.TRAMS.RecordWhistleblower;
+using Service.TRAMS.RecordSrma;
 
 namespace ConcernsCaseWork.Mappers
 {

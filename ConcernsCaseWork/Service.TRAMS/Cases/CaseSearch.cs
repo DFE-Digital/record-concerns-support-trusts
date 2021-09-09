@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Service.TRAMS.RecordWhistleblower
+namespace Service.TRAMS.RecordSrma
 {
 	public sealed class CaseSearch
 	{

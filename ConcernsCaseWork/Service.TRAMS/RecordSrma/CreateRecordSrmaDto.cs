@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Service.TRAMS.RecordSrma
 {
-	public sealed class RecordWhistleblowerDto
+	public sealed class CreateRecordSrmaDto
 	{
 		[JsonPropertyName("name")]
 		public string Name { get; }
@@ -17,11 +17,8 @@ namespace Service.TRAMS.RecordSrma
 		[JsonPropertyName("record_urn")]
 		public BigInteger RecordUrn { get; }
 		
-		[JsonPropertyName("urn")]
-		public BigInteger Urn { get; }
-		
 		[JsonConstructor]
-		public RecordWhistleblowerDto(string name, string details, string reason, BigInteger recordUrn, BigInteger urn) => 
-			(Name, Details, Reason, RecordUrn, Urn) = (name, details, reason, recordUrn, urn);
+		public CreateRecordSrmaDto(int id, string name, string details, string reason, BigInteger recordUrn) => 
+			(Name, Details, Reason, RecordUrn) = (name, details, reason, recordUrn);
 	}
 }

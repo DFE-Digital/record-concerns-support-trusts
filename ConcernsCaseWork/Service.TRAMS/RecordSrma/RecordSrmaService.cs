@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
-using Service.TRAMS.RecordWhistleblower;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
+using System.Numerics;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -20,14 +20,15 @@ namespace Service.TRAMS.RecordSrma
 			_logger = logger;
 		}
 
-		public async Task<IList<RecordSrmaDto>> GetRecordsSrmaByRecordUrn(string recordUrn)
+		public async Task<IList<RecordSrmaDto>> GetRecordsSrmaByRecordUrn(BigInteger recordUrn)
 		{
 			try
 			{
 				_logger.LogInformation("RecordSrmaService::GetRecordsSrmaByRecordUrn");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/record-srma/record/urn/{recordUrn}");
+				var request = new HttpRequestMessage(HttpMethod.Get, 
+					$"{EndpointsVersion}/record-srma/record/urn/{recordUrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -55,7 +56,7 @@ namespace Service.TRAMS.RecordSrma
 			return Array.Empty<RecordSrmaDto>();
 		}
 
-		public async Task<RecordSrmaDto> PostRecordSrmaByRecordUrn(RecordSrmaDto recordSrmaDto)
+		public async Task<RecordSrmaDto> PostRecordSrmaByRecordUrn(CreateRecordSrmaDto createRecordSrmaDto)
 		{
 			try
 			{
@@ -64,7 +65,7 @@ namespace Service.TRAMS.RecordSrma
 				// Create a request
 				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(recordSrmaDto, options),
+					JsonSerializer.Serialize(createRecordSrmaDto, options),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 				
@@ -72,7 +73,8 @@ namespace Service.TRAMS.RecordSrma
 				var client = ClientFactory.CreateClient("TramsClient");
 				
 				// Execute request
-				var response = await client.PostAsync($"/record-srma/record/urn/{recordSrmaDto.RecordUrn}", request);
+				var response = await client.PostAsync(
+					$"{EndpointsVersion}/record-srma/record/urn/{createRecordSrmaDto.RecordUrn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -110,7 +112,8 @@ namespace Service.TRAMS.RecordSrma
 				var client = ClientFactory.CreateClient("TramsClient");
 				
 				// Execute request
-				var response = await client.PatchAsync($"/record-srma/urn/{recordSrmaDto.RecordUrn}", request);
+				var response = await client.PatchAsync(
+					$"{EndpointsVersion}/record-srma/urn/{recordSrmaDto.RecordUrn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();

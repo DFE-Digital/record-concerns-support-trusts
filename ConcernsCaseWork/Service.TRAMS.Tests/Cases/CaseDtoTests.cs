@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
-using Service.TRAMS.RecordWhistleblower;
+using Service.TRAMS.RecordSrma;
 using System.Text.Json;
 
 namespace Service.TRAMS.Tests.Cases

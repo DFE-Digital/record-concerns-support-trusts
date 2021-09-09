@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.RecordWhistleblower;
+﻿using Service.TRAMS.RecordSrma;
 using Service.TRAMS.RecordRatingHistory;
 using System;
 using System.Collections.Generic;

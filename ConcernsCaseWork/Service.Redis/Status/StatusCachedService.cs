@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
-using Service.TRAMS.RecordWhistleblower;
+using Service.TRAMS.RecordSrma;
 using Service.TRAMS.Status;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -7,7 +7,7 @@ using ConcernsCaseWork.Shared.Tests.Shared;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.TRAMS.RecordWhistleblower;
+using Service.TRAMS.RecordSrma;
 using System;
 using System.Collections.Generic;
 using System.Linq;
