@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Type
+namespace Service.TRAMS.Rating
 {
 	public sealed class RatingDto
 	{
@@ -13,15 +13,15 @@ namespace Service.TRAMS.Type
 		public string Name { get; }
 		
 		[JsonPropertyName("created_at")]
-		public DateTimeOffset CreatedAt { get; }
+		public DateTime CreatedAt { get; }
 		
 		[JsonPropertyName("updated_at")]
-		public DateTimeOffset UpdatedAt { get; }
+		public DateTime UpdatedAt { get; }
 		
 		[JsonPropertyName("urn")]
 		public BigInteger Urn { get; }
 		
-		public RatingDto(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, BigInteger urn) => 
+		public RatingDto(string name, DateTime createdAt, DateTime updatedAt, BigInteger urn) => 
 			(Name, CreatedAt, UpdatedAt, Urn) = (name, createdAt, updatedAt, urn);
 	}
 }

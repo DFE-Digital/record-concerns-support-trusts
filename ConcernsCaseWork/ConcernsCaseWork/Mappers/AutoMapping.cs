@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
+using Service.TRAMS.Rating;
 using Service.TRAMS.Type;
 
 namespace ConcernsCaseWork.Mappers

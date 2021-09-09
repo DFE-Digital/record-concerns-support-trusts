@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
-using Service.TRAMS.Type;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -26,7 +25,7 @@ namespace Service.TRAMS.Rating
 				_logger.LogInformation("RatingService::GetRatings");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, "/ratings");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"{EndpointsVersion}/ratings");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -54,11 +53,11 @@ namespace Service.TRAMS.Rating
 			// TODO replace return when TRAMS API endpoints are live
 			return new List<RatingDto>
 			{
-				new RatingDto("n/a", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(1)),
-				new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(2)),
-				new RatingDto("Red", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(3)),
-				new RatingDto("Red-Amber", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(4)),
-				new RatingDto("Amber-Green", DateTimeOffset.Now, DateTimeOffset.Now, new BigInteger(5))
+				new RatingDto("n/a", DateTime.Now, DateTime.Now, new BigInteger(1)),
+				new RatingDto("Red-Plus", DateTime.Now, DateTime.Now, new BigInteger(2)),
+				new RatingDto("Red", DateTime.Now, DateTime.Now, new BigInteger(3)),
+				new RatingDto("Red-Amber", DateTime.Now, DateTime.Now, new BigInteger(4)),
+				new RatingDto("Amber-Green", DateTime.Now, DateTime.Now, new BigInteger(5))
 			};
 
 			//return Array.Empty<RatingDto>();
