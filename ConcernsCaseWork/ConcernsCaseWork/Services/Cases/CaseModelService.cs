@@ -6,9 +6,7 @@ using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.Redis.Rating;
 using Service.Redis.Type;
-using Service.TRAMS.Cases;
 using Service.TRAMS.RecordRatingHistory;
-using Service.TRAMS.Records;
 using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
@@ -113,10 +111,10 @@ namespace ConcernsCaseWork.Services.Cases
 				// Create a record
 				// TODO get type urn, rating urn, status urn, is it primary?
 				
-				var recordDto = new RecordDto(currentDate, currentDate, currentDate, currentDate, "name",
+				var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, currentDate, "name",
 					"description", "reason", BigInteger.Zero, BigInteger.Zero, BigInteger.Zero, true, 
-					BigInteger.Zero, "status");
-				var newRecord = await _recordService.PostRecordByCaseUrn(recordDto);
+					BigInteger.Zero);
+				var newRecord = await _recordService.PostRecordByCaseUrn(createRecordDto);
 
 				// Create a rating history
 				// TODO get rating urn

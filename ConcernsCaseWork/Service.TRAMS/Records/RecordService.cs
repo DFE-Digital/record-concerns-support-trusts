@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
-using Service.TRAMS.Cases;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -10,7 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Records
+namespace Service.TRAMS.Trusts
 {
 	public sealed class RecordService : AbstractService, IRecordService
 	{
@@ -28,7 +27,8 @@ namespace Service.TRAMS.Records
 				_logger.LogInformation("RecordService::GetRecordsByCaseUrn");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/records/case/urn/{caseUrn}");
+				var request = new HttpRequestMessage(HttpMethod.Get, 
+					$"{EndpointsVersion}/records/case/urn/{caseUrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -56,7 +56,7 @@ namespace Service.TRAMS.Records
 			return Array.Empty<RecordDto>();
 		}
 
-		public async Task<RecordDto> PostRecordByCaseUrn(RecordDto recordDto)
+		public async Task<RecordDto> PostRecordByCaseUrn(CreateRecordDto createRecordDto)
 		{
 			try
 			{
@@ -65,7 +65,7 @@ namespace Service.TRAMS.Records
 				// Create a request
 				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(recordDto, options),
+					JsonSerializer.Serialize(createRecordDto, options),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 				
@@ -73,7 +73,8 @@ namespace Service.TRAMS.Records
 				var client = ClientFactory.CreateClient("TramsClient");
 				
 				// Execute request
-				var response = await client.PostAsync($"/record/case/urn/{recordDto.CaseUrn}", request);
+				var response = await client.PostAsync(
+					$"{EndpointsVersion}/record/case/urn/{createRecordDto.CaseUrn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -94,7 +95,7 @@ namespace Service.TRAMS.Records
 			return null;
 		}
 
-		public async Task<RecordDto> PatchRecordByUrn(RecordDto recordDto)
+		public async Task<RecordDto> PatchRecordByUrn(UpdateRecordDto updateRecordDto)
 		{
 			try
 			{
@@ -103,7 +104,7 @@ namespace Service.TRAMS.Records
 				// Create a request
 				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(recordDto, options),
+					JsonSerializer.Serialize(updateRecordDto, options),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 
@@ -111,7 +112,8 @@ namespace Service.TRAMS.Records
 				var client = ClientFactory.CreateClient("TramsClient");
 				
 				// Execute request
-				var response = await client.PatchAsync($"/record/urn/{recordDto.Urn}", request);
+				var response = await client.PatchAsync(
+					$"{EndpointsVersion}/record/urn/{updateRecordDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -127,9 +129,9 @@ namespace Service.TRAMS.Records
 			catch (Exception ex)
 			{
 				_logger.LogError($"RecordService::PatchRecordByUrn::Exception message::{ex.Message}");
-
-				throw;
 			}
+
+			return null;
 		}
 	}
 }

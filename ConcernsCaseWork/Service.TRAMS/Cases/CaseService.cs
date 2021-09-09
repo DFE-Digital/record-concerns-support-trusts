@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Cases
+namespace Service.TRAMS.Trusts
 {
 	public sealed class CaseService : AbstractService, ICaseService
 	{

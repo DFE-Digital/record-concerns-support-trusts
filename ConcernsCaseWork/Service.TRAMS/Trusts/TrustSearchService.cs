@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Service.TRAMS.Configuration;
-using Service.TRAMS.Cases;
+using Service.TRAMS.Trusts;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;

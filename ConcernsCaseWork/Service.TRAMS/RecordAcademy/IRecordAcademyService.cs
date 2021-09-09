@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.Cases;
+﻿using Service.TRAMS.Trusts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

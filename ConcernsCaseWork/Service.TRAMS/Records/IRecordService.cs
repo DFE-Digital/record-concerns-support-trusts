@@ -1,14 +1,13 @@
-﻿using Service.TRAMS.Cases;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Numerics;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Records
+namespace Service.TRAMS.Trusts
 {
 	public interface IRecordService
 	{
 		Task<IList<RecordDto>> GetRecordsByCaseUrn(BigInteger caseUrn);
-		Task<RecordDto> PostRecordByCaseUrn(RecordDto recordDto);
-		Task<RecordDto> PatchRecordByUrn(RecordDto recordDto);
+		Task<RecordDto> PostRecordByCaseUrn(CreateRecordDto createRecordDto);
+		Task<RecordDto> PatchRecordByUrn(UpdateRecordDto updateRecordDto);
 	}
 }

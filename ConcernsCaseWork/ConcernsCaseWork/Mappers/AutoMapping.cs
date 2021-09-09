@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
-using Service.TRAMS.Cases;
+using Service.TRAMS.Trusts;
 
 namespace ConcernsCaseWork.Mappers
 {

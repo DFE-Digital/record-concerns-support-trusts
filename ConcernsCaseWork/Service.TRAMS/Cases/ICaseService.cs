@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Cases
+namespace Service.TRAMS.Trusts
 {
 	public interface ICaseService
 	{

@@ -2,21 +2,21 @@
 using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace Service.TRAMS.Cases
+namespace Service.TRAMS.Trusts
 {
 	public sealed class RecordDto
 	{
 		[JsonPropertyName("created_at")]
-		public DateTimeOffset CreatedAt { get; }
+		public DateTime CreatedAt { get; }
 
 		[JsonPropertyName("updated_at")]
-		public DateTimeOffset UpdateAt { get; }
+		public DateTime UpdateAt { get; }
 		
 		[JsonPropertyName("review_at")]
-		public DateTimeOffset ReviewAt { get; }
+		public DateTime ReviewAt { get; }
 		
 		[JsonPropertyName("closed_at")]
-		public DateTimeOffset ClosedAt { get; }
+		public DateTime ClosedAt { get; }
 		
 		[JsonPropertyName("name")]
 		public string Name { get; }
@@ -43,12 +43,12 @@ namespace Service.TRAMS.Cases
 		public BigInteger Urn { get; }
 		
 		[JsonPropertyName("status")]
-		public string Status { get; }
+		public BigInteger Status { get; }
 		
 		[JsonConstructor]
-		public RecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
-			DateTimeOffset closedAt, string name, string description, string reason, BigInteger caseUrn, BigInteger typeUrn, 
-			BigInteger ratingUrn, bool primary, BigInteger urn, string status) => 
+		public RecordDto(DateTime createdAt, DateTime updatedAt, DateTime reviewAt, DateTime closedAt, 
+			string name, string description, string reason, BigInteger caseUrn, BigInteger typeUrn, 
+			BigInteger ratingUrn, bool primary, BigInteger urn, BigInteger status) => 
 			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Urn, Status) = 
 			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, primary, urn, status);
 	}
