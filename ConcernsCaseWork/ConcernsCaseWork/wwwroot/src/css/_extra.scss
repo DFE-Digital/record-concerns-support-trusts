@@ -11,6 +11,12 @@
   }
 }
 
+label.govuk-label {
+  .govuk-tag {
+	display: inline;
+  }
+}
+
 div.govuk-tabs__panel {
   border: none !important;
 }

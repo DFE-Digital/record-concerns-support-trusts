@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
 using System;
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -72,7 +73,7 @@ namespace ConcernsCaseWork.Pages.Case
 				    !string.IsNullOrEmpty(ragRating) && !string.IsNullOrEmpty(issueDetail))
 				{
 					// Generate UUID
-					var uuid = Guid.NewGuid();
+					var id = BigInteger.Zero;
 
 					// Store in cache for now
 					var caseStateModel = await _cachedService.GetData<CaseState>(User.Identity.Name);
@@ -80,7 +81,7 @@ namespace ConcernsCaseWork.Pages.Case
 					
 					
 					
-					return RedirectToPage("Management", new { id = uuid });
+					return RedirectToPage($"Management", new { id });
 				}
 			}
 			catch (Exception ex)
