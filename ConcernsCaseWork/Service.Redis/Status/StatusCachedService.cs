@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.TRAMS.Status;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Status
@@ -35,6 +37,15 @@ namespace Service.Redis.Status
 			await StoreData(StatusesKey, statuses);
 			
 			return statuses;
+		}
+
+		public async Task<StatusDto> GetStatusByName(string name)
+		{
+			_logger.LogInformation("StatusCachedService::GetStatusByName");
+
+			var statuses = await GetStatuses();
+
+			return statuses.FirstOrDefault(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 		}
 	}
 }

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.TRAMS.Rating;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Rating
@@ -35,6 +37,15 @@ namespace Service.Redis.Rating
 			await StoreData(RatingsKey, ratings);
 			
 			return ratings;
+		}
+
+		public async Task<RatingDto> GetRatingByName(string name)
+		{
+			_logger.LogInformation("RatingCachedService::GetRatingByName");
+			
+			var ratings = await GetRatings();
+			
+			return ratings.FirstOrDefault(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 		}
 	}
 }

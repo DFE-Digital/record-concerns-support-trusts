@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
 using System;
-using System.Numerics;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -17,6 +17,7 @@ namespace ConcernsCaseWork.Pages.Case
 	public class DetailsPageModel : PageModel
 	{
 		private readonly ITrustModelService _trustModelService;
+		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<DetailsPageModel> _logger;
 		private readonly ICachedService _cachedService;
 
@@ -25,9 +26,10 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 
-		public DetailsPageModel(ITrustModelService trustModelService, ICachedService cachedService, ILogger<DetailsPageModel> logger)
+		public DetailsPageModel(ITrustModelService trustModelService, ICaseModelService caseModelService, ICachedService cachedService, ILogger<DetailsPageModel> logger)
 		{
 			_trustModelService = trustModelService;
+			_caseModelService = caseModelService;
 			_cachedService = cachedService;
 			_logger = logger;
 		}
@@ -45,6 +47,7 @@ namespace ConcernsCaseWork.Pages.Case
 					throw new Exception("Cache CaseStateData is null");
 				}
 
+				// Fetch Trust details
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(caseStateModel.TrustUkPrn);
 			}
 			catch (Exception ex)
@@ -72,16 +75,30 @@ namespace ConcernsCaseWork.Pages.Case
 				if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(subType) && 
 				    !string.IsNullOrEmpty(ragRating) && !string.IsNullOrEmpty(issueDetail))
 				{
-					// Generate UUID
-					var id = BigInteger.Zero;
-
-					// Store in cache for now
-					var caseStateModel = await _cachedService.GetData<UserState>(User.Identity.Name);
+					// Create a case post model
+					var currentDate = DateTimeOffset.Now;
+					var createCaseModel = new CreateCaseModel
+					{
+						Description = $"{type}-{subType}",
+						Issue = issueDetail,
+						ClosedAt = currentDate,
+						CreatedAt = currentDate,
+						CreatedBy = User.Identity.Name,
+						CurrentStatus = currentStatusDetail,
+						DeEscalation = currentDate,
+						NextSteps = nextStepsDetail,
+						RagRating = ragRating,
+						RecordType = type,
+						ResolutionStrategy = resolutionStrategyDetail,
+						ReviewAt = currentDate,
+						UpdateAt = currentDate,
+						RecordSubType = subType,
+						TrustUkPrn = TrustDetailsModel.GiasData.UkPrn
+					};
 					
+					var newCase = await _caseModelService.PostCase(createCaseModel);
 					
-					
-					
-					return RedirectToPage("Management", new { id });
+					return RedirectToPage("Management", new { id = newCase.Urn });
 				}
 			}
 			catch (Exception ex)

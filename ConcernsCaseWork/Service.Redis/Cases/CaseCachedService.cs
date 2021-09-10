@@ -4,6 +4,10 @@ using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.Redis.Shared;
 using Service.TRAMS.Cases;
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Cases
@@ -25,7 +29,26 @@ namespace Service.Redis.Cases
 			_logger = logger;
 		}
 
-		public async Task<CaseDto> PostCase(CreateCaseDto createCaseDto, string caseworker)
+		public async Task<IList<CaseDto>> GetCasesByCaseworker(string caseworker, string statusUrn = "Live")
+		{
+			_logger.LogInformation("CaseCachedService::GetCasesByCaseworker");
+
+			var caseState = await GetData<UserState>(caseworker);
+			if (caseState is { }) return caseState.CasesDetails.Values.Select(c => c.CaseDto).ToImmutableList();
+			
+			var cases = await _caseService.GetCasesByCaseworker(caseworker, statusUrn);
+			var userState = new UserState();
+			foreach (var caseDto in cases)
+			{
+				userState.CasesDetails.Add(caseDto.Urn, new CaseWrapper { CaseDto = caseDto });
+			}
+				
+			await StoreData(caseworker, userState);
+
+			return cases;
+		}
+
+		public async Task<CaseDto> PostCase(CreateCaseDto createCaseDto)
 		{
 			_logger.LogInformation("CaseCachedService::PostCase");
 
@@ -39,7 +62,7 @@ namespace Service.Redis.Cases
 			newCase.Urn = BigIntegerSequence.Generator();
 			
 			// Store in cache for 24 hours (default)
-			var caseState = await GetData<UserState>(caseworker);
+			var caseState = await GetData<UserState>(createCaseDto.CreatedBy);
 			if (caseState is null)
 			{
 				caseState = new UserState { CasesDetails = { { newCase.Urn, new CaseWrapper { CaseDto = newCase } } } };
@@ -48,9 +71,28 @@ namespace Service.Redis.Cases
 			{
 				caseState.CasesDetails.Add(newCase.Urn, new CaseWrapper { CaseDto = newCase });
 			}
-			await StoreData(caseworker, caseState);
+			await StoreData(createCaseDto.CreatedBy, caseState);
 			
 			return newCase;
+		}
+
+		public async Task<Boolean> IsCasePrimary(string caseworker)
+		{
+			_logger.LogInformation("CaseCachedService::IsCasePrimary");
+			
+			// Fetch from cache expiration 24 hours (default)
+			var caseState = await GetData<UserState>(caseworker);
+			if (caseState is null) {
+			
+				// TODO Enable only when TRAMS API is live
+				// Fetch cases by user
+				//var cases = await _caseService.GetCasesByCaseworker(caseworker);
+				//return !cases.Any();
+
+				return true;
+			}
+
+			return !caseState.CasesDetails.Any();
 		}
 	}
 }

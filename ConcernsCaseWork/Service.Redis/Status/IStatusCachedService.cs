@@ -7,5 +7,6 @@ namespace Service.Redis.Status
 	public interface IStatusCachedService
 	{
 		Task<IList<StatusDto>> GetStatuses();
+		Task<StatusDto> GetStatusByName(string name);
 	}
 }

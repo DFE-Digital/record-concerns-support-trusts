@@ -7,5 +7,6 @@ namespace Service.Redis.Type
 	public interface ITypeCachedService
 	{
 		Task<IList<TypeDto>> GetTypes();
+		Task<TypeDto> GetTypeByNameAndDescription(string name, string description);
 	}
 }

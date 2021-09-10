@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Mappers
 			CreateMap<RatingDto, RatingModel>();
 			CreateMap<StatusDto, StatusModel>();
 			CreateMap<TypeDto, TypeModel>();
-			
+
 			// Trust summary
 			CreateMap<TrustSummaryDto, TrustSummaryModel>();
 			CreateMap<EstablishmentSummaryDto, EstablishmentSummaryModel>();

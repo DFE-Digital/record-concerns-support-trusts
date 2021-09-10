@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.TRAMS.Type;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Type
@@ -35,6 +37,17 @@ namespace Service.Redis.Type
 			await StoreData(TypesKey, types);
 			
 			return types;
+		}
+
+		public async Task<TypeDto> GetTypeByNameAndDescription(string name, string description)
+		{
+			_logger.LogInformation("TypeCachedService::GetTypeByNameAndDescription");
+			
+			var types = await GetTypes();
+			
+			return types.FirstOrDefault(t => 
+				t.Name.Equals(name, StringComparison.OrdinalIgnoreCase) && 
+				t.Description.Equals(description, StringComparison.OrdinalIgnoreCase));
 		}
 	}
 }
