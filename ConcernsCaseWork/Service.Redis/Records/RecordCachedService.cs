@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
+using Service.Redis.Shared;
 using Service.TRAMS.Records;
-using System;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Records
@@ -11,11 +12,16 @@ namespace Service.Redis.Records
 	{
 		private readonly ILogger<RecordCachedService> _logger;
 		private readonly IRecordService _recordService;
+		private readonly IMapper _mapper;
 		
-		public RecordCachedService(ICacheProvider cacheProvider, IRecordService recordService, ILogger<RecordCachedService> logger) 
+		/// <summary>
+		/// TODO Remove IMapper and project references when TRAMS API is live
+		/// </summary>
+		public RecordCachedService(IMapper mapper, ICacheProvider cacheProvider, IRecordService recordService, ILogger<RecordCachedService> logger) 
 			: base(cacheProvider)
 		{
 			_recordService = recordService;
+			_mapper = mapper;
 			_logger = logger;
 		}
 		
@@ -23,9 +29,14 @@ namespace Service.Redis.Records
 		{
 			_logger.LogInformation("RecordCachedService::PostRecordByCaseUrn");
 
+			// TODO Enable only when TRAMS API is live
 			// Create record on TRAMS API
-			var newRecord = await _recordService.PostRecordByCaseUrn(createRecordDto);
-			if (newRecord is null) throw new ApplicationException("Error::RecordCachedService::PostRecordByCaseUrn");
+			//var newRecord = await _recordService.PostRecordByCaseUrn(createRecordDto);
+			//if (newRecord is null) throw new ApplicationException("Error::RecordCachedService::PostRecordByCaseUrn");
+
+			// TODO Remove when TRAMS API is live
+			var newRecord = _mapper.Map<RecordDto>(createRecordDto);
+			newRecord.Urn = BigIntegerSequence.Generator();
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);

@@ -34,7 +34,7 @@ namespace ConcernsCaseWork.Services.Cases
 		public CaseModelService(ICaseService caseService, ITrustService trustService, 
 			IRecordService recordService, IRatingCachedService ratingCachedService, 
 			ITypeCachedService typeCachedService, ICachedService cachedService, 
-			IRecordRatingHistoryService recordRatingHistoryService, IMapper mapper, 
+			IRecordRatingHistoryService recordRatingHistoryService, IMapper mapper,
 			ILogger<CaseModelService> logger)
 		{
 			_ratingCachedService = ratingCachedService;

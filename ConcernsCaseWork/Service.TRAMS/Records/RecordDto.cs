@@ -40,7 +40,7 @@ namespace Service.TRAMS.Records
 		public bool Primary { get; }
 		
 		[JsonPropertyName("urn")]
-		public BigInteger Urn { get; }
+		public BigInteger Urn { get; set; } // TODO Remove setter when TRAMS API is live
 		
 		[JsonPropertyName("status")]
 		public BigInteger Status { get; }

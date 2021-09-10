@@ -58,7 +58,7 @@ namespace Service.TRAMS.Cases
 		public string DirectionOfTravel { get; }
 		
 		[JsonPropertyName("urn")]
-		public BigInteger Urn { get; }
+		public BigInteger Urn { get; set; } // TODO Remove setter when TRAMS API is live
 		
 		[JsonPropertyName("status")]
 		public BigInteger Status { get; }

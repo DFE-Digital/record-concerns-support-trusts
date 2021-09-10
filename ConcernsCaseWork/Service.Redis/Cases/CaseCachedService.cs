@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
+using Service.Redis.Shared;
 using Service.TRAMS.Cases;
-using System;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Cases
@@ -11,11 +12,16 @@ namespace Service.Redis.Cases
 	{
 		private readonly ILogger<CaseCachedService> _logger;
 		private readonly ICaseService _caseService;
+		private readonly IMapper _mapper;
 		
-		public CaseCachedService(ICacheProvider cacheProvider, ICaseService caseService, ILogger<CaseCachedService> logger) 
+		/// <summary>
+		/// TODO Remove IMapper and project references when TRAMS API is live
+		/// </summary>
+		public CaseCachedService(IMapper mapper, ICacheProvider cacheProvider, ICaseService caseService, ILogger<CaseCachedService> logger) 
 			: base(cacheProvider)
 		{
 			_caseService = caseService;
+			_mapper = mapper;
 			_logger = logger;
 		}
 
@@ -23,9 +29,14 @@ namespace Service.Redis.Cases
 		{
 			_logger.LogInformation("CaseCachedService::PostCase");
 
+			// TODO Enable only when TRAMS API is live
 			// Create case on TRAMS API
-			var newCase = await _caseService.PostCase(createCaseDto);
-			if (newCase is null) throw new ApplicationException("Error::CaseCachedService::PostCase");
+			//var newCase = await _caseService.PostCase(createCaseDto);
+			//if (newCase is null) throw new ApplicationException("Error::CaseCachedService::PostCase");
+			
+			// TODO Remove when TRAMS API is live
+			var newCase = _mapper.Map<CaseDto>(createCaseDto);
+			newCase.Urn = BigIntegerSequence.Generator();
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);
