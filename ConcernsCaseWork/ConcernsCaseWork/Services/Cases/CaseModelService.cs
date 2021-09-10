@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.Services.Cases
 	public sealed class CaseModelService : ICaseModelService
 	{
 		private readonly IRatingCachedService _ratingCachedService;
-		private readonly IRecordRatingHistory _recordRatingHistory;
+		private readonly IRecordRatingHistoryService _recordRatingHistoryService;
 		private readonly ITypeCachedService _typeCachedService;
 		private readonly ILogger<CaseModelService> _logger;
 		private readonly ICachedService _cachedService;
@@ -34,11 +34,11 @@ namespace ConcernsCaseWork.Services.Cases
 		public CaseModelService(ICaseService caseService, ITrustService trustService, 
 			IRecordService recordService, IRatingCachedService ratingCachedService, 
 			ITypeCachedService typeCachedService, ICachedService cachedService, 
-			IRecordRatingHistory recordRatingHistory, IMapper mapper, 
+			IRecordRatingHistoryService recordRatingHistoryService, IMapper mapper, 
 			ILogger<CaseModelService> logger)
 		{
 			_ratingCachedService = ratingCachedService;
-			_recordRatingHistory = recordRatingHistory;
+			_recordRatingHistoryService = recordRatingHistoryService;
 			_typeCachedService = typeCachedService;
 			_cachedService = cachedService;
 			_recordService = recordService;
@@ -123,7 +123,7 @@ namespace ConcernsCaseWork.Services.Cases
 				// TODO get rating urn
 				
 				var createRecordRatingHistoryDto = new RecordRatingHistoryDto(currentDate, newRecord.Urn, BigInteger.Zero);
-				await _recordRatingHistory.PostRecordRatingHistory(createRecordRatingHistoryDto);
+				await _recordRatingHistoryService.PostRecordRatingHistory(createRecordRatingHistoryDto);
 
 
 				// Store all records in cache

@@ -2,6 +2,7 @@
 using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.TRAMS.Cases;
+using System;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Cases
@@ -24,6 +25,7 @@ namespace Service.Redis.Cases
 
 			// Create case on TRAMS API
 			var newCase = await _caseService.PostCase(createCaseDto);
+			if (newCase is null) throw new ApplicationException("Error::CaseCachedService::PostCase");
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);

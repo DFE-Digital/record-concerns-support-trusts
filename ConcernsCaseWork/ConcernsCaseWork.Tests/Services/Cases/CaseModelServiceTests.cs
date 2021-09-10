@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockCaseService = new Mock<ICaseService>();
 			var mockTrustService = new Mock<ITrustService>();
 			var mockRecordService = new Mock<IRecordService>();
-			var mockRecordRatingHistoryService = new Mock<IRecordRatingHistory>();
+			var mockRecordRatingHistoryService = new Mock<IRecordRatingHistoryService>();
 			var mockRatingService = new Mock<IRatingCachedService>();
 			var mockTypeService = new Mock<ITypeCachedService>();
 			var mockCachedService = new Mock<ICachedService>();
@@ -79,7 +79,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockCaseService = new Mock<ICaseService>();
 			var mockTrustService = new Mock<ITrustService>();
 			var mockRecordService = new Mock<IRecordService>();
-			var mockRecordRatingHistoryService = new Mock<IRecordRatingHistory>();
+			var mockRecordRatingHistoryService = new Mock<IRecordRatingHistoryService>();
 			var mockRatingService = new Mock<IRatingCachedService>();
 			var mockTypeService = new Mock<ITypeCachedService>();
 			var mockCachedService = new Mock<ICachedService>();

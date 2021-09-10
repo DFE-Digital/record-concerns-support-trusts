@@ -2,6 +2,7 @@
 using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.TRAMS.Records;
+using System;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Records
@@ -24,7 +25,8 @@ namespace Service.Redis.Records
 
 			// Create record on TRAMS API
 			var newRecord = await _recordService.PostRecordByCaseUrn(createRecordDto);
-
+			if (newRecord is null) throw new ApplicationException("Error::RecordCachedService::PostRecordByCaseUrn");
+			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);
 			if (caseState is null)
@@ -33,7 +35,8 @@ namespace Service.Redis.Records
 				{
 					CasesDetails = { { newRecord.CaseUrn, 
 						new CaseWrapper { 
-							Records = { { newRecord.Urn, newRecord }} 
+							Records = { { newRecord.Urn, 
+								new RecordWrapper { RecordDto = newRecord } }} 
 						} 
 					} }
 				};
@@ -43,12 +46,12 @@ namespace Service.Redis.Records
 				if (caseState.CasesDetails.ContainsKey(newRecord.CaseUrn) 
 				    && caseState.CasesDetails.TryGetValue(newRecord.CaseUrn, out var caseWrapper))
 				{
-					caseWrapper.Records.Add(newRecord.Urn, newRecord );
+					caseWrapper.Records.Add(newRecord.Urn, new RecordWrapper {  RecordDto = newRecord });
 				}
 				else
 				{
 					caseWrapper = new CaseWrapper();
-					caseWrapper.Records.Add(newRecord.Urn, newRecord);
+					caseWrapper.Records.Add(newRecord.Urn, new RecordWrapper {  RecordDto = newRecord });
 					
 					caseState.CasesDetails.Add(newRecord.CaseUrn, caseWrapper);
 				}

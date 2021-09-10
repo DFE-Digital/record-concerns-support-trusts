@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace Service.TRAMS.RecordRatingHistory
 {
-	public sealed class RecordRatingHistory : AbstractService, IRecordRatingHistory
+	public sealed class RecordRatingHistoryService : AbstractService, IRecordRatingHistoryService
 	{
-		private readonly ILogger<RecordRatingHistory> _logger;
+		private readonly ILogger<RecordRatingHistoryService> _logger;
 		
-		public RecordRatingHistory(IHttpClientFactory clientFactory, ILogger<RecordRatingHistory> logger) : base(clientFactory)
+		public RecordRatingHistoryService(IHttpClientFactory clientFactory, ILogger<RecordRatingHistoryService> logger) : base(clientFactory)
 		{
 			_logger = logger;
 		}

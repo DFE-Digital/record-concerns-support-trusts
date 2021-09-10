@@ -6,8 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using Service.Redis.Base;
+using Service.Redis.Cases;
 using Service.Redis.Configuration;
 using Service.Redis.Rating;
+using Service.Redis.RecordRatingHistory;
+using Service.Redis.Records;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
 using Service.Redis.Type;
@@ -101,7 +104,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ICaseService, CaseService>();
 			services.AddSingleton<IRatingService, RatingService>();
 			services.AddSingleton<IRecordAcademyService, RecordAcademyService>();
-			services.AddSingleton<IRecordRatingHistory, RecordRatingHistory>();
+			services.AddSingleton<IRecordRatingHistoryService, RecordRatingHistoryService>();
 			services.AddSingleton<IRecordService, RecordService>();
 			services.AddSingleton<IRecordSrmaService, RecordSrmaService>();
 			services.AddSingleton<IRecordWhistleblowerService, RecordWhistleblowerService>();
@@ -119,6 +122,9 @@ namespace ConcernsCaseWork.Extensions
 			services.AddTransient<IStatusCachedService, StatusCachedService>();
 			services.AddTransient<IRatingCachedService, RatingCachedService>();
 			services.AddTransient<ITrustCachedService, TrustCachedService>();
+			services.AddTransient<ICaseCachedService, CaseCachedService>();
+			services.AddTransient<IRecordCachedService, RecordCachedService>();
+			services.AddTransient<IRecordRatingHistoryCachedService, RecordRatingHistoryCachedService>();
 		}
 
 		public static void AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)
