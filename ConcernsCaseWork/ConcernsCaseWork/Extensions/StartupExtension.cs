@@ -9,6 +9,7 @@ using Service.Redis.Base;
 using Service.Redis.Configuration;
 using Service.Redis.Rating;
 using Service.Redis.Status;
+using Service.Redis.Trusts;
 using Service.Redis.Type;
 using Service.Redis.Users;
 using Service.TRAMS.Cases;
@@ -117,6 +118,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddTransient<ITypeCachedService, TypeCachedService>();
 			services.AddTransient<IStatusCachedService, StatusCachedService>();
 			services.AddTransient<IRatingCachedService, RatingCachedService>();
+			services.AddTransient<ITrustCachedService, TrustCachedService>();
 		}
 
 		public static void AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)
