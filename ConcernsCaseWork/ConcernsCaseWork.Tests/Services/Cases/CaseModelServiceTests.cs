@@ -7,13 +7,13 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
+using Service.Redis.Cases;
 using Service.Redis.Rating;
+using Service.Redis.RecordRatingHistory;
+using Service.Redis.Status;
+using Service.Redis.Trusts;
 using Service.Redis.Type;
-using Service.TRAMS.Cases;
-using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
-using Service.TRAMS.Trusts;
-using Service.TRAMS.Type;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,25 +28,27 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		public async Task WhenGetCasesByCaseworker_ReturnsCases()
 		{
 			// arrange
-			var mockCaseService = new Mock<ICaseService>();
-			var mockTrustService = new Mock<ITrustService>();
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
 			var mockRecordService = new Mock<IRecordService>();
-			var mockRecordRatingHistoryService = new Mock<IRecordRatingHistoryService>();
-			var mockRatingService = new Mock<IRatingCachedService>();
-			var mockTypeService = new Mock<ITypeCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockCachedService = new Mock<ICachedService>();
+			var mockRecordRatingHistoryCachedService = new Mock<IRecordRatingHistoryCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
 			var casesDto = CaseDtoFactory.CreateListCaseDto();
 
-			mockCaseService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()))
+			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()))
 				.ReturnsAsync(casesDto);
 			
 			// act
-			var caseModelService = new CaseModelService(mockCaseService.Object, mockTrustService.Object, mockRecordService.Object,
-				mockRatingService.Object, mockTypeService.Object, mockCachedService.Object,  mockRecordRatingHistoryService.Object, mapper, mockLogger.Object);
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object,  mockRecordRatingHistoryCachedService.Object, 
+				mockStatusCachedService.Object, mapper, mockLogger.Object);
 			(IList<HomeModel> activeCasesModel, IList<HomeModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
 
 			// assert
@@ -76,24 +78,26 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		public async Task WhenGetCasesByCaseworker_ThrowsException_ReturnEmptyCases()
 		{
 			// arrange
-			var mockCaseService = new Mock<ICaseService>();
-			var mockTrustService = new Mock<ITrustService>();
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
 			var mockRecordService = new Mock<IRecordService>();
-			var mockRecordRatingHistoryService = new Mock<IRecordRatingHistoryService>();
-			var mockRatingService = new Mock<IRatingCachedService>();
-			var mockTypeService = new Mock<ITypeCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockCachedService = new Mock<ICachedService>();
+			var mockRecordRatingHistoryCachedService = new Mock<IRecordRatingHistoryCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
 
-			mockCaseService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()))
+			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()))
 				.ThrowsAsync(new Exception());
 
 			// act
-			var caseModelService = new CaseModelService(mockCaseService.Object, mockTrustService.Object, mockRecordService.Object,
-				mockRatingService.Object, mockTypeService.Object, mockCachedService.Object,  mockRecordRatingHistoryService.Object, mapper, mockLogger.Object);
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object,  mockRecordRatingHistoryCachedService.Object, 
+				mockStatusCachedService.Object, mapper, mockLogger.Object);
 			(IList<HomeModel> activeCasesModel, IList<HomeModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
 
 			// assert
