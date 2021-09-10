@@ -34,7 +34,7 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			try
 			{
-				_logger.LogInformation("Case::IndexModel::OnGetTrustsPartial");
+				_logger.LogInformation("Case::IndexPageModel::OnGetTrustsPartial");
 			
 				// Double check search query.
 				if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < SearchQueryMinLength)
@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::IndexModel::OnGetTrustsSearchResult::Exception - {ex.Message}");
+				_logger.LogError($"Case::IndexPageModel::OnGetTrustsSearchResult::Exception - {ex.Message}");
 				
 				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 			}
@@ -59,7 +59,7 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			try
 			{
-				_logger.LogInformation("Case::IndexModel::OnGetSelectedTrust");
+				_logger.LogInformation("Case::IndexPageModel::OnGetSelectedTrust");
 				
 				// Double check selected trust.
 				if (string.IsNullOrEmpty(selectedTrust) || selectedTrust.Contains("-") || selectedTrust.Length < SearchQueryMinLength)
@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::IndexModel::OnGetSelectedTrust::Exception - {ex.Message}");
+				_logger.LogError($"Case::IndexPageModel::OnGetSelectedTrust::Exception - {ex.Message}");
 					
 				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 			}

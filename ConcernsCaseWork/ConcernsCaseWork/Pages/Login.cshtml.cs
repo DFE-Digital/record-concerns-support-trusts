@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Pages
 			
 			if (Credentials.Validate() || Credentials.UserName != _configuration["app:username"] || Credentials.Password != _configuration["app:password"])
 			{
-				_logger.LogInformation($"LoginModel::Invalid username or password - {Credentials.UserName}");
+				_logger.LogInformation($"LoginPageModel::Invalid username or password - {Credentials.UserName}");
 				
 				TempData["Error.Message"] = "Incorrect username and password";
 				return Page();

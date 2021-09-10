@@ -38,13 +38,12 @@ namespace Service.Redis.Trusts
 			if (trustsCached is null)
 			{
 				trustsCached = new Dictionary<string, TrustDetailsDto> { { ukPrn, trustDetailsDto } };
-				await StoreData(TrustsKey, trustsCached);
 			}
 			else
 			{
 				trustsCached.Add(ukPrn, trustDetailsDto);
-				await StoreData(TrustsKey, trustsCached);
 			}
+			await StoreData(TrustsKey, trustsCached);
 			
 			return trustDetailsDto;
 		}

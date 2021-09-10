@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.Pages
         public void OnGet()
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
-            _logger.LogInformation($"ErrorModel::Something went wrong - {RequestId}");
+            _logger.LogInformation($"ErrorPageModel::Something went wrong - {RequestId}");
         }
     }
 }

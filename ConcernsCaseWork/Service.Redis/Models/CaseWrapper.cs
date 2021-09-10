@@ -1,5 +1,4 @@
 ﻿using Service.TRAMS.Cases;
-using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
 using System;
 using System.Collections.Generic;
@@ -11,6 +10,6 @@ namespace Service.Redis.Models
 	public sealed class CaseWrapper
 	{
 		public CaseDto CaseDto { get; set; }
-		public IDictionary<BigInteger, RecordWrapper> Records { get; set; } = new Dictionary<BigInteger, RecordWrapper>();
+		public IDictionary<BigInteger, RecordDto> Records { get; set; } = new Dictionary<BigInteger, RecordDto>();
 	}
 }
