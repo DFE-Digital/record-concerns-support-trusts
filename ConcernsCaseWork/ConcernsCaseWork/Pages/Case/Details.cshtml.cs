@@ -36,10 +36,10 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			try
 			{
-				_logger.LogInformation("Case::DetailsModel::OnGetAsync");
+				_logger.LogInformation("Case::DetailsPageModel::OnGetAsync");
 				
 				// Get cached data from case page.
-				var caseStateModel = await _cachedService.GetData<CaseState>(User.Identity.Name);
+				var caseStateModel = await _cachedService.GetData<UserState>(User.Identity.Name);
 				if (caseStateModel is null)
 				{
 					throw new Exception("Cache CaseStateData is null");
@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::DetailsModel::OnGetAsync::Exception - { ex.Message }");
+				_logger.LogError($"Case::DetailsPageModel::OnGetAsync::Exception - { ex.Message }");
 				
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
@@ -59,7 +59,7 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			try
 			{
-				_logger.LogInformation("Case::DetailsModel::OnPost");
+				_logger.LogInformation("Case::DetailsPageModel::OnPost");
 
 				var type = Request.Form["type"];
 				var subType = Request.Form["subType"];
@@ -76,17 +76,17 @@ namespace ConcernsCaseWork.Pages.Case
 					var id = BigInteger.Zero;
 
 					// Store in cache for now
-					var caseStateModel = await _cachedService.GetData<CaseState>(User.Identity.Name);
+					var caseStateModel = await _cachedService.GetData<UserState>(User.Identity.Name);
 					
 					
 					
 					
-					return RedirectToPage($"Management", new { id });
+					return RedirectToPage("Management", new { id });
 				}
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::DetailsModel::OnPost::Exception - { ex.Message }");
+				_logger.LogError($"Case::DetailsPageModel::OnPost::Exception - { ex.Message }");
 				
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}

@@ -5,9 +5,9 @@ using System.Numerics;
 namespace Service.Redis.Models
 {
 	[Serializable]
-	public sealed class CaseState
+	public sealed class UserState
 	{
 		public string TrustUkPrn { get; set; }
-		public IDictionary<BigInteger, CaseStateWrapper> CasesDetails { get; } = new Dictionary<BigInteger, CaseStateWrapper>();
+		public IDictionary<BigInteger, CaseWrapper> CasesDetails { get; } = new Dictionary<BigInteger, CaseWrapper>();
 	}
 }

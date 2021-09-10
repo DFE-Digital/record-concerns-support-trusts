@@ -9,6 +9,7 @@ using Service.Redis.Type;
 using Service.TRAMS.Cases;
 using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
+using Service.TRAMS.Status;
 using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,7 @@ namespace ConcernsCaseWork.Services.Cases
 			try
 			{
 				// Find cases redis cache
-				var caseState = await _cachedService.GetData<CaseState>(caseworker);
+				var caseState = await _cachedService.GetData<UserState>(caseworker);
 				if (caseState != null)
 				{
 					return await FetchFromCache(caseState);
@@ -101,7 +102,7 @@ namespace ConcernsCaseWork.Services.Cases
 				// Create a case
 				// TODO status urn, created by
 				
-				var currentDate = DateTime.Now;
+				var currentDate = DateTimeOffset.Now;
 				
 				
 				var createCaseDto = new CreateCaseDto(currentDate, currentDate, currentDate, currentDate, "created-by",
@@ -143,28 +144,31 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			throw new NotImplementedException();
 		}
-
-
+		
 		private async Task<(IList<HomeModel>, IList<HomeModel>)> FetchFromTramsApi(string caseworker)
 		{
 			// Get from TRAMS API all trusts for the caseworker
-			var casesDto = await _caseService.GetCasesByCaseworker(caseworker);
-					
-			// If cases available, fetch trust by ukprn data.
-			if (casesDto.Any())
+			var caseStatus = new List<string> { Status.Live.ToString(), Status.Monitoring.ToString() };
+			var tasksCasesDto = caseStatus.Select(status => _caseService.GetCasesByCaseworker(caseworker, status)).ToList();
+			
+			var resultTasksCasesDto = await Task.WhenAll(tasksCasesDto);
+			foreach (IList<CaseDto> casesDto in resultTasksCasesDto)
 			{
+				// If cases available, fetch trust by ukprn data.
+				if (!casesDto.Any()) continue;
+				
 				// Fetch trusts by ukprn
 				var trustsDetailsDto = casesDto.Where(c => c.TrustUkPrn != null)
 					.Select(c => _trustService.GetTrustByUkPrn(c.TrustUkPrn));
 				await Task.WhenAll(trustsDetailsDto);
-							
+								
 				// Fetch records by case urn
 				var recordsDto = casesDto.Select(c => _recordService.GetRecordsByCaseUrn(c.Urn));
 				await Task.WhenAll(recordsDto);
-							
+								
 				// Fetch rag rating
 				var ragsRatingDto = await _ratingCachedService.GetRatings();
-							
+								
 				// Fetch types
 				var typesDto = await _typeCachedService.GetTypes();
 
@@ -178,17 +182,17 @@ namespace ConcernsCaseWork.Services.Cases
 				return HomeMapping.Map(casesModel, trustsDetailsModel, recordsModel, 
 					ragsRatingModel, typesModel);
 			}
-
+			
 			return Empty();
 		}
 
-		private async Task<(IList<HomeModel>, IList<HomeModel>)> FetchFromCache(CaseState caseState)
+		private async Task<(IList<HomeModel>, IList<HomeModel>)> FetchFromCache(UserState userState)
 		{
 			// Get cases for case worker
-			var caseDetails = caseState.CasesDetails;
+			var caseDetails = userState.CasesDetails;
 					
 			// Get cases from cache
-			var casesDto = caseDetails.Select(c => c.Value.Cases);
+			var casesDto = caseDetails.Select(c => c.Value.CaseDto);
 					
 			// Fetch trusts by ukprn
 			var trustsDetailsDto = casesDto.Where(c => c.TrustUkPrn != null)
