@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.TRAMS.Sequence;
 using System;
 using System.Threading.Tasks;
 
@@ -95,8 +94,7 @@ namespace ConcernsCaseWork.Pages.Case
 						ReviewAt = currentDate,
 						UpdateAt = currentDate,
 						RecordSubType = subType,
-						TrustUkPrn = trustUkPrn,
-						Urn = LongSequence.Generator()	// Remove when Trams API is live
+						TrustUkPrn = trustUkPrn
 					};
 					
 					var newCase = await _caseModelService.PostCase(createCaseModel);

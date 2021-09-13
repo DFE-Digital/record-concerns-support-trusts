@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
-using Service.TRAMS.Sequence;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -54,31 +53,31 @@ namespace Service.TRAMS.Type
 			return new List<TypeDto>
 			{
 				new TypeDto("Compliance", "Compliance: Financial reporting", currentDate, 
-					currentDate, LongSequence.Generator()),
+					currentDate, 1),
 				new TypeDto("Compliance", "Compliance: Financial returns", currentDate, 
-					currentDate, LongSequence.Generator()),
+					currentDate, 2),
 				new TypeDto("Financial", "Financial: Deficit", currentDate, 
-					currentDate, LongSequence.Generator()),
+					currentDate, 3),
 				new TypeDto("Financial", "Financial: Projected deficit / Low future surplus", currentDate, 
-					currentDate, LongSequence.Generator()),
+					currentDate, 4),
 				new TypeDto("Financial", "Financial: Cash flow shortfall", currentDate, 
-					currentDate, LongSequence.Generator()),
+					currentDate, 5),
 				new TypeDto("Financial", "Financial: Clawback", currentDate, 
-					currentDate, LongSequence.Generator()),
+					currentDate, 6),
 				new TypeDto("Force Majeure", "", currentDate, 
-					currentDate, LongSequence.Generator()),
+					currentDate, 7),
 				new TypeDto("Governance", "Governance: Governance", currentDate, 
-					currentDate, LongSequence.Generator()),
+					currentDate, 8),
 				new TypeDto("Governance", "Governance: Closure", currentDate, 
-					currentDate, LongSequence.Generator()),
+					currentDate, 9),
 				new TypeDto("Governance", "Governance: Executive Pay", currentDate, 
-					currentDate, LongSequence.Generator()),
+					currentDate, 10),
 				new TypeDto("Governance", "Governance: Safeguarding", currentDate, 
-					currentDate, LongSequence.Generator()),
+					currentDate, 11),
 				new TypeDto("Irregularity", "Irregularity: Allegations and self reported concerns", currentDate, 
-					currentDate, LongSequence.Generator()),
+					currentDate, 12),
 				new TypeDto("Irregularity", "Irregularity: Related party transactions - in year", currentDate, 
-					currentDate, LongSequence.Generator())
+					currentDate, 13)
 			};
 			
 			//return Array.Empty<TypeDto>();

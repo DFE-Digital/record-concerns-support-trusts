@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
-using Service.TRAMS.Sequence;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -53,11 +52,11 @@ namespace Service.TRAMS.Rating
 			var currentDate = DateTimeOffset.Now;
 			return new List<RatingDto>
 			{
-				new RatingDto("n/a", currentDate, currentDate, LongSequence.Generator()),
-				new RatingDto("Red-Plus", currentDate, currentDate, LongSequence.Generator()),
-				new RatingDto("Red", currentDate, currentDate, LongSequence.Generator()),
-				new RatingDto("Red-Amber", currentDate, currentDate, LongSequence.Generator()),
-				new RatingDto("Amber-Green", currentDate, currentDate, LongSequence.Generator())
+				new RatingDto("n/a", currentDate, currentDate, 1),
+				new RatingDto("Red-Plus", currentDate, currentDate, 2),
+				new RatingDto("Red", currentDate, currentDate, 3),
+				new RatingDto("Red-Amber", currentDate, currentDate, 4),
+				new RatingDto("Amber-Green", currentDate, currentDate, 5)
 			};
 
 			//return Array.Empty<RatingDto>();

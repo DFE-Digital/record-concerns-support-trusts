@@ -4,7 +4,6 @@ using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.TRAMS.Cases;
 using Service.TRAMS.Records;
-using Service.TRAMS.Sequence;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,7 +34,6 @@ namespace Service.Redis.Records
 			// TODO Remove when TRAMS API is live
 			var createRecordDtoStr = JsonConvert.SerializeObject(createRecordDto);
 			var newRecord = JsonConvert.DeserializeObject<RecordDto>(createRecordDtoStr);
-			newRecord.Urn = LongSequence.Generator();
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);

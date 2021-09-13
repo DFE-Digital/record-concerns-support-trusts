@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
@@ -8,11 +7,13 @@ using Service.Redis.Models;
 using Service.Redis.Rating;
 using Service.Redis.RecordRatingHistory;
 using Service.Redis.Records;
+using Service.Redis.Sequence;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
 using Service.Redis.Type;
 using Service.TRAMS.Cases;
 using Service.TRAMS.RecordRatingHistory;
+using Service.TRAMS.Records;
 using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,7 @@ namespace ConcernsCaseWork.Services.Cases
 	public sealed class CaseModelService : ICaseModelService
 	{
 		private readonly IRecordRatingHistoryCachedService _recordRatingHistoryCachedService;
+		private readonly ISequenceCachedService _sequenceCachedService;
 		private readonly IRatingCachedService _ratingCachedService;
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly IRecordCachedService _recordCachedService;
@@ -32,16 +34,17 @@ namespace ConcernsCaseWork.Services.Cases
 		private readonly ITypeCachedService _typeCachedService;
 		private readonly ILogger<CaseModelService> _logger;
 		private readonly ICachedService _cachedService;
-		private readonly IMapper _mapper;
 		
 		public CaseModelService(ICaseCachedService caseCachedService, ITrustCachedService trustCachedService, 
 			IRecordCachedService recordCachedService, IRatingCachedService ratingCachedService,
 			ITypeCachedService typeCachedService, ICachedService cachedService, 
 			IRecordRatingHistoryCachedService recordRatingHistoryCachedService,
 			IStatusCachedService statusCachedService, 
-			IMapper mapper, ILogger<CaseModelService> logger)
+			ISequenceCachedService sequenceCachedService,
+			ILogger<CaseModelService> logger)
 		{
 			_recordRatingHistoryCachedService = recordRatingHistoryCachedService;
+			_sequenceCachedService = sequenceCachedService;
 			_statusCachedService = statusCachedService;
 			_ratingCachedService = ratingCachedService;
 			_recordCachedService = recordCachedService;
@@ -49,7 +52,6 @@ namespace ConcernsCaseWork.Services.Cases
 			_caseCachedService = caseCachedService;
 			_typeCachedService = typeCachedService;
 			_cachedService = cachedService;
-			_mapper = mapper;
 			_logger = logger;
 		}
 		
@@ -85,6 +87,9 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
+				// TODO Remove when Trams API is live
+				createCaseModel.Urn = await _sequenceCachedService.Generator();
+
 				// Fetch Status
 				var statusDto = await _statusCachedService.GetStatusByName(Status.Live.ToString());
 
@@ -103,7 +108,12 @@ namespace ConcernsCaseWork.Services.Cases
 				var newCase = await _caseCachedService.PostCase(CaseMapping.Map(createCaseModel));
 
 				// Create a record
-				var newRecord = await _recordCachedService.PostRecordByCaseUrn(RecordMapping.Map(typeDto, newCase.Urn, ratingDto.Urn, statusDto.Urn, isCasePrimary), createCaseModel.CreatedBy);
+				var currentDate = DateTimeOffset.Now;
+				var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, 
+					currentDate, typeDto.Name, typeDto.Description, string.Empty, newCase.Urn, typeDto.Urn, ratingDto.Urn, isCasePrimary,
+					await _sequenceCachedService.Generator(), statusDto.Urn);
+				
+				var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 
 				// Create a rating history
 				var createRecordRatingHistoryDto = new RecordRatingHistoryDto(DateTimeOffset.Now, newRecord.Urn, ratingDto.Urn);

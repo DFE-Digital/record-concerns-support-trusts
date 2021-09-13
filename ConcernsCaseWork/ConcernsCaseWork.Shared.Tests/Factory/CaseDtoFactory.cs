@@ -1,5 +1,4 @@
 ﻿using Service.TRAMS.Cases;
-using Service.TRAMS.Sequence;
 using System;
 using System.Collections.Generic;
 
@@ -19,27 +18,27 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
 					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
-					"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 1
+					"resolution-strategy", "direction-of-travel", 1, 1
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
 					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
-					"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 3
+					"resolution-strategy", "direction-of-travel", 2, 3
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
 					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
-					"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 2
+					"resolution-strategy", "direction-of-travel", 3, 2
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
 					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
-					"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 1
+					"resolution-strategy", "direction-of-travel", 4, 1
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
 					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
-					"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 2
+					"resolution-strategy", "direction-of-travel", 5, 2
 				)
 			};
 		}
@@ -50,7 +49,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new CaseDto(
 				dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
 				"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
-				"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 1
+				"resolution-strategy", "direction-of-travel", 1, 1
 			);
 		}
 		
@@ -60,7 +59,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new CreateCaseDto(
 				dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
 				"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
-				"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 1
+				"resolution-strategy", "direction-of-travel", 1, 1
 			);
 		}
 	}

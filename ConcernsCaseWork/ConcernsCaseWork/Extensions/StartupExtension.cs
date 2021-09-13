@@ -11,6 +11,7 @@ using Service.Redis.Configuration;
 using Service.Redis.Rating;
 using Service.Redis.RecordRatingHistory;
 using Service.Redis.Records;
+using Service.Redis.Sequence;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
 using Service.Redis.Type;
@@ -125,6 +126,9 @@ namespace ConcernsCaseWork.Extensions
 			services.AddTransient<ICaseCachedService, CaseCachedService>();
 			services.AddTransient<IRecordCachedService, RecordCachedService>();
 			services.AddTransient<IRecordRatingHistoryCachedService, RecordRatingHistoryCachedService>();
+			
+			// Redis Sequence
+			services.AddSingleton<ISequenceCachedService, SequenceCachedService>();
 		}
 
 		public static void AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)
