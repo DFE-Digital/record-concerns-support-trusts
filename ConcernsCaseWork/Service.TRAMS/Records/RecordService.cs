@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,6 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Numerics;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.Records
@@ -43,8 +43,7 @@ namespace Service.TRAMS.Records
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var recordsDto = JsonSerializer.Deserialize<IList<RecordDto>>(content, options);
+				var recordsDto = JsonConvert.DeserializeObject<IList<RecordDto>>(content);
 
 				return recordsDto;
 			}
@@ -63,9 +62,8 @@ namespace Service.TRAMS.Records
 				_logger.LogInformation("RecordService::PostRecordByCaseUrn");
 				
 				// Create a request
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(createRecordDto, options),
+					JsonConvert.SerializeObject(createRecordDto),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 				
@@ -83,7 +81,7 @@ namespace Service.TRAMS.Records
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var newRecordDto = JsonSerializer.Deserialize<RecordDto>(content, options);
+				var newRecordDto = JsonConvert.DeserializeObject<RecordDto>(content);
 
 				return newRecordDto;
 			}
@@ -102,9 +100,8 @@ namespace Service.TRAMS.Records
 				_logger.LogInformation("RecordService::PatchRecordByUrn");
 				
 				// Create a request
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(updateRecordDto, options),
+					JsonConvert.SerializeObject(updateRecordDto),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 
@@ -122,7 +119,7 @@ namespace Service.TRAMS.Records
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var updatedRecordDto = JsonSerializer.Deserialize<RecordDto>(content, options);
+				var updatedRecordDto = JsonConvert.DeserializeObject<RecordDto>(content);
 
 				return updatedRecordDto;
 			}

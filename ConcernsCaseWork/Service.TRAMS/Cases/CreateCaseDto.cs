@@ -1,71 +1,74 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Service.TRAMS.Cases
 {
 	public sealed class CreateCaseDto
 	{
-		[JsonPropertyName("created_at")]
+		[JsonProperty("created_at")]
 		public DateTimeOffset CreatedAt { get; }
 
-		[JsonPropertyName("updated_at")]
+		[JsonProperty("updated_at")]
 		public DateTimeOffset UpdateAt { get; }
 		
-		[JsonPropertyName("review_at")]
+		[JsonProperty("review_at")]
 		public DateTimeOffset ReviewAt { get; }
 		
-		[JsonPropertyName("closed_at")]
+		[JsonProperty("closed_at")]
 		public DateTimeOffset ClosedAt { get; }
 		
-		[JsonPropertyName("created_by")]
+		[JsonProperty("created_by")]
 		public string CreatedBy { get; }
 		
-		[JsonPropertyName("description")]
+		[JsonProperty("description")]
 		public string Description { get; }
 		
-		[JsonPropertyName("crm_enquiry")]
+		[JsonProperty("crm_enquiry")]
 		public string CrmEnquiry { get; }
 		
-		[JsonPropertyName("trust_ukprn")]
+		[JsonProperty("trust_ukprn")]
 		public string TrustUkPrn { get; }
 		
-		[JsonPropertyName("reason_at_review")]
+		[JsonProperty("reason_at_review")]
 		public string ReasonAtReview { get; }
 
-		[JsonPropertyName("de_escalation")]
+		[JsonProperty("de_escalation")]
 		public DateTimeOffset DeEscalation { get; }
 		
-		[JsonPropertyName("issue")]
+		[JsonProperty("issue")]
 		public string Issue { get; }
 
-		[JsonPropertyName("current_status")]
+		[JsonProperty("current_status")]
 		public string CurrentStatus { get; }
 
-		[JsonPropertyName("next_steps")]
+		[JsonProperty("next_steps")]
 		public string NextSteps { get; }
 		
-		[JsonPropertyName("resolution_strategy")]
+		[JsonProperty("resolution_strategy")]
 		public string ResolutionStrategy { get; }
 		
 		/// <summary>
 		/// Deteriorating, unchanged, improved
 		/// </summary>
-		[JsonPropertyName("direction_of_travel")]
+		[JsonProperty("direction_of_travel")]
 		public string DirectionOfTravel { get; }
 		
-		[JsonPropertyName("status")]
+		[JsonProperty("urn")]
+		public long Urn { get; } // TODO Remove property when TRAMS API is live
+		
+		[JsonProperty("status")]
 		public long Status { get; }
 
 		[JsonConstructor]
 		public CreateCaseDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
 			DateTimeOffset closedAt, string createdBy, string description, string crmEnquiry, string trustUkPrn, 
 			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
-			string nextSteps, string resolutionStrategy, string directionOfTravel, long status) => 
+			string nextSteps, string resolutionStrategy, string directionOfTravel, long urn, long status) => 
 			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, ResolutionStrategy, DirectionOfTravel, 
-				Status) = 
+				Urn, Status) = 
 			(createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn,
 				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, resolutionStrategy, directionOfTravel, 
-				status);
+				urn, status);
 	}
 }

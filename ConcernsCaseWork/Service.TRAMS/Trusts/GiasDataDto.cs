@@ -1,25 +1,25 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Service.TRAMS.Trusts
 {
 	public sealed class GiasDataDto
 	{
-		[JsonPropertyName("ukprn")]
+		[JsonProperty("ukprn")]
 		public string UkPrn { get; }
 			
-		[JsonPropertyName("groupId")]
+		[JsonProperty("groupId")]
 		public string GroupId { get; }
 			
-		[JsonPropertyName("groupName")]
+		[JsonProperty("groupName")]
 		public string GroupName { get; }
 		
-		[JsonPropertyName("groupTypeCode")]
+		[JsonProperty("groupTypeCode")]
 		public string GroupTypeCode { get; }
 			
-		[JsonPropertyName("companiesHouseNumber")]
+		[JsonProperty("companiesHouseNumber")]
 		public string CompaniesHouseNumber { get; }
 			
-		[JsonPropertyName("groupContactAddress")]
+		[JsonProperty("groupContactAddress")]
 		public GroupContactAddressDto GroupContactAddress { get; }
 			
 		[JsonConstructor]

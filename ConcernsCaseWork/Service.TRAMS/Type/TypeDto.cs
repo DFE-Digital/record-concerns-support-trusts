@@ -1,5 +1,5 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Service.TRAMS.Type
 {
@@ -8,22 +8,22 @@ namespace Service.TRAMS.Type
 		/// <summary>
 		/// Record, SRMA, Safeguarding, Concern
 		/// </summary>
-		[JsonPropertyName("name")]
+		[JsonProperty("name")]
 		public string Name { get; }
 		
 		/// <summary>
 		/// Record (Log information when it is not a Concern)
 		/// </summary>
-		[JsonPropertyName("description")]
+		[JsonProperty("description")]
 		public string Description { get; }
 		
-		[JsonPropertyName("created_at")]
+		[JsonProperty("created_at")]
 		public DateTimeOffset CreatedAt { get; }
 		
-		[JsonPropertyName("updated_at")]
+		[JsonProperty("updated_at")]
 		public DateTimeOffset UpdatedAt { get; }
 		
-		[JsonPropertyName("urn")]
+		[JsonProperty("urn")]
 		public long Urn { get; }
 		
 		[JsonConstructor]

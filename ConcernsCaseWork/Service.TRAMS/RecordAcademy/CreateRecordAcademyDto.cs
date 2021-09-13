@@ -1,18 +1,17 @@
-﻿using System.Numerics;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Service.TRAMS.RecordAcademy
 {
 	public sealed class CreateRecordAcademyDto
 	{
-		[JsonPropertyName("record_urn")]
-		public BigInteger RecordUrn { get; }
+		[JsonProperty("record_urn")]
+		public long RecordUrn { get; }
 		
-		[JsonPropertyName("academy_urn")]
+		[JsonProperty("academy_urn")]
 		public int AcademyUrn { get; }
 		
 		[JsonConstructor]
-		public CreateRecordAcademyDto(BigInteger recordUrn, int academyUrn) => 
+		public CreateRecordAcademyDto(long recordUrn, int academyUrn) => 
 			(RecordUrn, AcademyUrn) = (recordUrn, academyUrn);
 	}
 }

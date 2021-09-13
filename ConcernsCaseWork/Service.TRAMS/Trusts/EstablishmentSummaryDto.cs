@@ -1,16 +1,16 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Service.TRAMS.Trusts
 {
 	public sealed class EstablishmentSummaryDto
 	{
-		[JsonPropertyName("urn")]
+		[JsonProperty("urn")]
 		public string Urn { get; }
 		
-		[JsonPropertyName("name")]
+		[JsonProperty("name")]
 		public string Name { get; }
 		
-		[JsonPropertyName("ukprn")]
+		[JsonProperty("ukprn")]
 		public string UkPrn { get; }
 		
 		[JsonConstructor]

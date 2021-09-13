@@ -1,25 +1,25 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Service.TRAMS.Trusts
 {
 	public sealed class GroupContactAddressDto
 	{
-		[JsonPropertyName("street")]
+		[JsonProperty("street")]
 		public string Street { get; }
 			
-		[JsonPropertyName("locality")]
+		[JsonProperty("locality")]
 		public string Locality { get; }
 			
-		[JsonPropertyName("additionalLine")]
+		[JsonProperty("additionalLine")]
 		public string AdditionalLine { get; }
 			
-		[JsonPropertyName("town")]
+		[JsonProperty("town")]
 		public string Town { get; }
 			
-		[JsonPropertyName("county")]
+		[JsonProperty("county")]
 		public string County { get; }
 			
-		[JsonPropertyName("postcode")]
+		[JsonProperty("postcode")]
 		public string Postcode { get; }
 			
 		[JsonConstructor]

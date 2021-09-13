@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,6 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Numerics;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.RecordAcademy
@@ -43,8 +43,7 @@ namespace Service.TRAMS.RecordAcademy
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var recordsAcademyDto = JsonSerializer.Deserialize<IList<RecordAcademyDto>>(content, options);
+				var recordsAcademyDto = JsonConvert.DeserializeObject<IList<RecordAcademyDto>>(content);
 
 				return recordsAcademyDto;
 			}
@@ -63,9 +62,8 @@ namespace Service.TRAMS.RecordAcademy
 				_logger.LogInformation("RecordAcademyService::PostRecordAcademyByRecordUrn");
 				
 				// Create a request
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(createRecordAcademyDto, options),
+					JsonConvert.SerializeObject(createRecordAcademyDto),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 				
@@ -83,7 +81,7 @@ namespace Service.TRAMS.RecordAcademy
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var newRecordAcademyDto = JsonSerializer.Deserialize<RecordAcademyDto>(content, options);
+				var newRecordAcademyDto = JsonConvert.DeserializeObject<RecordAcademyDto>(content);
 
 				return newRecordAcademyDto;
 			}
@@ -102,9 +100,8 @@ namespace Service.TRAMS.RecordAcademy
 				_logger.LogInformation("RecordAcademyService::PatchRecordAcademyByUrn");
 				
 				// Create a request
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(recordAcademyDto, options),
+					JsonConvert.SerializeObject(recordAcademyDto),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 				
@@ -122,7 +119,7 @@ namespace Service.TRAMS.RecordAcademy
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var updatedRecordAcademyDto = JsonSerializer.Deserialize<RecordAcademyDto>(content, options);
+				var updatedRecordAcademyDto = JsonConvert.DeserializeObject<RecordAcademyDto>(content);
 
 				return updatedRecordAcademyDto;
 			}

@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.Cases
@@ -42,8 +42,7 @@ namespace Service.TRAMS.Cases
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var casesDto = JsonSerializer.Deserialize<IList<CaseDto>>(content, options);
+				var casesDto = JsonConvert.DeserializeObject<IList<CaseDto>>(content);
 
 				return casesDto;
 			}
@@ -77,8 +76,7 @@ namespace Service.TRAMS.Cases
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var caseDto = JsonSerializer.Deserialize<CaseDto>(content, options);
+				var caseDto = JsonConvert.DeserializeObject<CaseDto>(content);
 
 				return caseDto;
 			}
@@ -112,8 +110,7 @@ namespace Service.TRAMS.Cases
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var casesDto = JsonSerializer.Deserialize<IList<CaseDto>>(content, options);
+				var casesDto = JsonConvert.DeserializeObject<IList<CaseDto>>(content);
 
 				return casesDto;
 			}
@@ -147,8 +144,7 @@ namespace Service.TRAMS.Cases
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var casesDto = JsonSerializer.Deserialize<IList<CaseDto>>(content, options);
+				var casesDto = JsonConvert.DeserializeObject<IList<CaseDto>>(content);
 
 				return casesDto;
 			}
@@ -167,9 +163,8 @@ namespace Service.TRAMS.Cases
 				_logger.LogInformation("CaseService::PostCase");
 				
 				// Create a request
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(createCaseDto, options),
+					JsonConvert.SerializeObject(createCaseDto),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 
@@ -186,7 +181,7 @@ namespace Service.TRAMS.Cases
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var newCaseDto = JsonSerializer.Deserialize<CaseDto>(content, options);
+				var newCaseDto = JsonConvert.DeserializeObject<CaseDto>(content);
 
 				return newCaseDto;
 			}
@@ -205,9 +200,8 @@ namespace Service.TRAMS.Cases
 				_logger.LogInformation("CaseService::PatchCaseByUrn");
 				
 				// Create a request
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(updateCaseDto, options),
+					JsonConvert.SerializeObject(updateCaseDto),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 
@@ -224,7 +218,7 @@ namespace Service.TRAMS.Cases
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var updatedCaseDto = JsonSerializer.Deserialize<CaseDto>(content, options);
+				var updatedCaseDto = JsonConvert.DeserializeObject<CaseDto>(content);
 
 				return updatedCaseDto;
 			}

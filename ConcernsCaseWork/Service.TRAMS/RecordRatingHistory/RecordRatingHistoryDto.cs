@@ -1,17 +1,17 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Service.TRAMS.RecordRatingHistory
 {
 	public sealed class RecordRatingHistoryDto
 	{
-		[JsonPropertyName("created_at")]
+		[JsonProperty("created_at")]
 		public DateTimeOffset CreatedAt { get; }
 
-		[JsonPropertyName("record_urn")]
+		[JsonProperty("record_urn")]
 		public long RecordUrn { get; }
 		
-		[JsonPropertyName("rating_urn")]
+		[JsonProperty("rating_urn")]
 		public long RatingUrn { get; }
 		
 		[JsonConstructor]

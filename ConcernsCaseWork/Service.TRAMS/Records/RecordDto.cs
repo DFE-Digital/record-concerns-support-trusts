@@ -1,47 +1,47 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Service.TRAMS.Records
 {
 	public sealed class RecordDto
 	{
-		[JsonPropertyName("created_at")]
+		[JsonProperty("created_at")]
 		public DateTimeOffset CreatedAt { get; }
 
-		[JsonPropertyName("updated_at")]
+		[JsonProperty("updated_at")]
 		public DateTimeOffset UpdateAt { get; }
 		
-		[JsonPropertyName("review_at")]
+		[JsonProperty("review_at")]
 		public DateTimeOffset ReviewAt { get; }
 		
-		[JsonPropertyName("closed_at")]
+		[JsonProperty("closed_at")]
 		public DateTimeOffset ClosedAt { get; }
 		
-		[JsonPropertyName("name")]
+		[JsonProperty("name")]
 		public string Name { get; }
 		
-		[JsonPropertyName("description")]
+		[JsonProperty("description")]
 		public string Description { get; }
 		
-		[JsonPropertyName("reason")]
+		[JsonProperty("reason")]
 		public string Reason { get; }
 		
-		[JsonPropertyName("case_urn")]
+		[JsonProperty("case_urn")]
 		public long CaseUrn { get; }
 		
-		[JsonPropertyName("type_urn")]
+		[JsonProperty("type_urn")]
 		public long TypeUrn { get; }
 
-		[JsonPropertyName("rating_urn")]
+		[JsonProperty("rating_urn")]
 		public long RatingUrn { get; }
 		
-		[JsonPropertyName("primary")]
+		[JsonProperty("primary")]
 		public bool Primary { get; }
 		
-		[JsonPropertyName("urn")]
+		[JsonProperty("urn")]
 		public long Urn { get; set; } // TODO Remove setter when TRAMS API is live
 		
-		[JsonPropertyName("status")]
+		[JsonProperty("status")]
 		public long Status { get; }
 		
 		[JsonConstructor]

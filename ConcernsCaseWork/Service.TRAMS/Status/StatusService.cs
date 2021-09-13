@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using Service.TRAMS.Sequence;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.Status
@@ -40,8 +40,7 @@ namespace Service.TRAMS.Status
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var statusDto = JsonSerializer.Deserialize<IList<StatusDto>>(content, options);
+				var statusDto = JsonConvert.DeserializeObject<IList<StatusDto>>(content);
 
 				return statusDto;
 			}

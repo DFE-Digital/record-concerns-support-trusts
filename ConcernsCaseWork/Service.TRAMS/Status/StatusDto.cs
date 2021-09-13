@@ -1,5 +1,5 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Service.TRAMS.Status
 {
@@ -8,16 +8,16 @@ namespace Service.TRAMS.Status
 		/// <summary>
 		/// Live, Monitoring, Close
 		/// </summary>
-		[JsonPropertyName("name")]
+		[JsonProperty("name")]
 		public string Name { get; }
 		
-		[JsonPropertyName("created_at")]
+		[JsonProperty("created_at")]
 		public DateTimeOffset CreatedAt { get; }
 		
-		[JsonPropertyName("updated_at")]
+		[JsonProperty("updated_at")]
 		public DateTimeOffset UpdatedAt { get; }
 		
-		[JsonPropertyName("urn")]
+		[JsonProperty("urn")]
 		public long Urn { get; }
 		
 		[JsonConstructor]

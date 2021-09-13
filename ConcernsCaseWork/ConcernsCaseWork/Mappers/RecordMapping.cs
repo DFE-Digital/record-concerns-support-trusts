@@ -1,13 +1,12 @@
 ﻿using Service.TRAMS.Records;
 using Service.TRAMS.Type;
 using System;
-using System.Numerics;
 
 namespace ConcernsCaseWork.Mappers
 {
 	public static class RecordMapping
 	{
-		public static CreateRecordDto Map(TypeDto typeDto, BigInteger caseUrn, BigInteger ratingUrn, BigInteger statusUrn, bool isPrimary)
+		public static CreateRecordDto Map(TypeDto typeDto, long caseUrn, long ratingUrn, long statusUrn, bool isPrimary)
 		{
 			var currentDate = DateTimeOffset.Now;
 

@@ -1,23 +1,23 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Service.TRAMS.Trusts
 {
 	public sealed class TrustSummaryDto
 	{		
-		[JsonPropertyName("ukprn")]
+		[JsonProperty("ukprn")]
 		public string UkPrn { get; }
 		
-		[JsonPropertyName("urn")]
+		[JsonProperty("urn")]
 		public string Urn { get; }
 		
-		[JsonPropertyName("groupName")]
+		[JsonProperty("groupName")]
 		public string GroupName { get; }
 		
-		[JsonPropertyName("companiesHouseNumber")]
+		[JsonProperty("companiesHouseNumber")]
 		public string CompaniesHouseNumber { get; }
 		
-		[JsonPropertyName("establishments")]
+		[JsonProperty("establishments")]
 		public List<EstablishmentSummaryDto> Establishments { get; }
 
 		[JsonConstructor]

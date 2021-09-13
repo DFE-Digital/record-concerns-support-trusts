@@ -1,7 +1,7 @@
 ﻿using ConcernsCaseWork.Shared.Tests.Factory;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using Service.TRAMS.Cases;
-using System.Text.Json;
 
 namespace Service.TRAMS.Tests.Cases
 {
@@ -13,9 +13,8 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var caseDto = CaseDtoFactory.BuildCaseDto();
-			var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-			var caseStrDto = JsonSerializer.Serialize(caseDto, options);
-			var expectedCaseDto = JsonSerializer.Deserialize<CaseDto>(caseStrDto, options);
+			var caseStrDto = JsonConvert.SerializeObject(caseDto);
+			var expectedCaseDto = JsonConvert.DeserializeObject<CaseDto>(caseStrDto);
 			
 			// assert
 			Assert.That(caseDto, Is.Not.Null);

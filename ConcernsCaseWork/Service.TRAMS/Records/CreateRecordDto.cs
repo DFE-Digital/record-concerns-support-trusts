@@ -1,51 +1,50 @@
-﻿using System;
-using System.Numerics;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Service.TRAMS.Records
 {
 	public sealed class CreateRecordDto
 	{
-		[JsonPropertyName("created_at")]
+		[JsonProperty("created_at")]
 		public DateTimeOffset CreatedAt { get; }
 
-		[JsonPropertyName("updated_at")]
+		[JsonProperty("updated_at")]
 		public DateTimeOffset UpdateAt { get; }
 		
-		[JsonPropertyName("review_at")]
+		[JsonProperty("review_at")]
 		public DateTimeOffset ReviewAt { get; }
 		
-		[JsonPropertyName("closed_at")]
+		[JsonProperty("closed_at")]
 		public DateTimeOffset ClosedAt { get; }
 		
-		[JsonPropertyName("name")]
+		[JsonProperty("name")]
 		public string Name { get; }
 		
-		[JsonPropertyName("description")]
+		[JsonProperty("description")]
 		public string Description { get; }
 		
-		[JsonPropertyName("reason")]
+		[JsonProperty("reason")]
 		public string Reason { get; }
 		
-		[JsonPropertyName("case_urn")]
-		public BigInteger CaseUrn { get; }
+		[JsonProperty("case_urn")]
+		public long CaseUrn { get; }
 		
-		[JsonPropertyName("type_urn")]
-		public BigInteger TypeUrn { get; }
+		[JsonProperty("type_urn")]
+		public long TypeUrn { get; }
 
-		[JsonPropertyName("rating_urn")]
-		public BigInteger RatingUrn { get; }
+		[JsonProperty("rating_urn")]
+		public long RatingUrn { get; }
 		
-		[JsonPropertyName("primary")]
+		[JsonProperty("primary")]
 		public bool Primary { get; }
 		
-		[JsonPropertyName("status")]
-		public BigInteger Status { get; }
+		[JsonProperty("status")]
+		public long Status { get; }
 		
 		[JsonConstructor]
 		public CreateRecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
-			string name, string description, string reason, BigInteger caseUrn, BigInteger typeUrn, 
-			BigInteger ratingUrn, bool primary, BigInteger status) => 
+			string name, string description, string reason, long caseUrn, long typeUrn, 
+			long ratingUrn, bool primary, long status) => 
 			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Status) = 
 			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, primary, status);
 	}

@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Service.TRAMS.Trusts
 {
@@ -41,8 +40,7 @@ namespace Service.TRAMS.Trusts
 				var content = await response.Content.ReadAsStringAsync();
 
 				// Deserialize content to POJO
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var trusts = JsonSerializer.Deserialize<IList<TrustSummaryDto>>(content, options);
+				var trusts = JsonConvert.DeserializeObject<IList<TrustSummaryDto>>(content);
 				
 				return trusts;
 			}
@@ -76,8 +74,7 @@ namespace Service.TRAMS.Trusts
 				var content = await response.Content.ReadAsStringAsync();
 
 				// Deserialize content to POJO
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var trustDetails = JsonSerializer.Deserialize<TrustDetailsDto>(content, options);
+				var trustDetails = JsonConvert.DeserializeObject<TrustDetailsDto>(content);
 				
 				return trustDetails;
 			}

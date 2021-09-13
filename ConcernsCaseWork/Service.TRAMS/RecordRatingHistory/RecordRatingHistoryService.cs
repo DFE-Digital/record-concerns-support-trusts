@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,6 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Numerics;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.RecordRatingHistory
@@ -43,8 +43,7 @@ namespace Service.TRAMS.RecordRatingHistory
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var recordsRatingHistoryDto = JsonSerializer.Deserialize<IList<RecordRatingHistoryDto>>(content, options);
+				var recordsRatingHistoryDto = JsonConvert.DeserializeObject<IList<RecordRatingHistoryDto>>(content);
 
 				return recordsRatingHistoryDto;
 			}
@@ -79,8 +78,7 @@ namespace Service.TRAMS.RecordRatingHistory
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var recordsRatingHistoryDto = JsonSerializer.Deserialize<IList<RecordRatingHistoryDto>>(content, options);
+				var recordsRatingHistoryDto = JsonConvert.DeserializeObject<IList<RecordRatingHistoryDto>>(content);
 
 				return recordsRatingHistoryDto;
 			}
@@ -99,9 +97,8 @@ namespace Service.TRAMS.RecordRatingHistory
 				_logger.LogInformation("RecordRatingHistory::PostRecordRatingHistoryByRecordUrn");
 				
 				// Create a request
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(recordRatingHistoryDto, options),
+					JsonConvert.SerializeObject(recordRatingHistoryDto),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 				
@@ -118,7 +115,7 @@ namespace Service.TRAMS.RecordRatingHistory
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var recordsRatingHistoryDto = JsonSerializer.Deserialize<RecordRatingHistoryDto>(content, options);
+				var recordsRatingHistoryDto = JsonConvert.DeserializeObject<RecordRatingHistoryDto>(content);
 
 				return recordsRatingHistoryDto;
 			}

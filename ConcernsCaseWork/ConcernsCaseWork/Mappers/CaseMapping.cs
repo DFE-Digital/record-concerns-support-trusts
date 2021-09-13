@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Mappers
 			return new CreateCaseDto(createCaseModel.CreatedAt, createCaseModel.UpdateAt, createCaseModel.ReviewAt, createCaseModel.ClosedAt, 
 				createCaseModel.CreatedBy, createCaseModel.Description, string.Empty, createCaseModel.TrustUkPrn, string.Empty,
 				createCaseModel.DeEscalation, createCaseModel.Issue, createCaseModel.CurrentStatus, createCaseModel.NextSteps, createCaseModel.ResolutionStrategy,
-				string.Empty, createCaseModel.Status);
+				string.Empty, createCaseModel.Urn, createCaseModel.Status);
 		}
 	}
 }

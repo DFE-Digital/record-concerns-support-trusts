@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using Service.TRAMS.Sequence;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.Type
@@ -40,8 +40,7 @@ namespace Service.TRAMS.Type
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var typesDto = JsonSerializer.Deserialize<IList<TypeDto>>(content, options);
+				var typesDto = JsonConvert.DeserializeObject<IList<TypeDto>>(content);
 
 				return typesDto;
 			}

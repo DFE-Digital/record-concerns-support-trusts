@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,6 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Numerics;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.RecordWhistleblower
@@ -43,8 +43,7 @@ namespace Service.TRAMS.RecordWhistleblower
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var recordsWhistleblowerDto = JsonSerializer.Deserialize<IList<RecordWhistleblowerDto>>(content, options);
+				var recordsWhistleblowerDto = JsonConvert.DeserializeObject<IList<RecordWhistleblowerDto>>(content);
 
 				return recordsWhistleblowerDto;
 			}
@@ -63,9 +62,8 @@ namespace Service.TRAMS.RecordWhistleblower
 				_logger.LogInformation("RecordWhistleblowerService::PostRecordWhistleblowerByRecordUrn");
 				
 				// Create a request
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(createRecordWhistleblowerDto, options),
+					JsonConvert.SerializeObject(createRecordWhistleblowerDto),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 				
@@ -83,7 +81,7 @@ namespace Service.TRAMS.RecordWhistleblower
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var newRecordWhistleblowerDto = JsonSerializer.Deserialize<RecordWhistleblowerDto>(content, options);
+				var newRecordWhistleblowerDto = JsonConvert.DeserializeObject<RecordWhistleblowerDto>(content);
 
 				return newRecordWhistleblowerDto;
 			}
@@ -102,9 +100,8 @@ namespace Service.TRAMS.RecordWhistleblower
 				_logger.LogInformation("RecordWhistleblowerService::PatchRecordWhistleblowerByUrn");
 				
 				// Create a request
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(recordWhistleblowerDto, options),
+					JsonConvert.SerializeObject(recordWhistleblowerDto),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 				
@@ -122,7 +119,7 @@ namespace Service.TRAMS.RecordWhistleblower
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var updatedRecordWhistleblowerDto = JsonSerializer.Deserialize<RecordWhistleblowerDto>(content, options);
+				var updatedRecordWhistleblowerDto = JsonConvert.DeserializeObject<RecordWhistleblowerDto>(content);
 
 				return updatedRecordWhistleblowerDto;
 			}

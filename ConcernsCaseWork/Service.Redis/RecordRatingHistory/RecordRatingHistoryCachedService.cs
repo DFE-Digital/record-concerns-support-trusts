@@ -2,7 +2,6 @@
 using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.TRAMS.RecordRatingHistory;
-using System.Numerics;
 using System.Threading.Tasks;
 
 namespace Service.Redis.RecordRatingHistory
@@ -19,7 +18,7 @@ namespace Service.Redis.RecordRatingHistory
 			_logger = logger;
 		}
 
-		public async Task<RecordRatingHistoryDto> PostRecordRatingHistory(RecordRatingHistoryDto recordRatingHistoryDto, string caseworker, BigInteger caseUrn)
+		public async Task<RecordRatingHistoryDto> PostRecordRatingHistory(RecordRatingHistoryDto recordRatingHistoryDto, string caseworker, long caseUrn)
 		{
 			_logger.LogInformation("RecordRatingHistoryCachedService::PostRecordRatingHistory");
 			

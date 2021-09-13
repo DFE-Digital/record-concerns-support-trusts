@@ -1,22 +1,22 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Service.TRAMS.RecordSrma
 {
 	public sealed class RecordSrmaDto
 	{
-		[JsonPropertyName("name")]
+		[JsonProperty("name")]
 		public string Name { get; }
 		
-		[JsonPropertyName("details")]
+		[JsonProperty("details")]
 		public string Details { get; }
 		
-		[JsonPropertyName("reason")]
+		[JsonProperty("reason")]
 		public string Reason { get; }
 		
-		[JsonPropertyName("record_urn")]
+		[JsonProperty("record_urn")]
 		public long RecordUrn { get; }
 		
-		[JsonPropertyName("urn")]
+		[JsonProperty("urn")]
 		public long Urn { get; }
 		
 		[JsonConstructor]

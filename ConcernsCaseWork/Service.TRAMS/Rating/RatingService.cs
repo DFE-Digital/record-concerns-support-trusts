@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using Service.TRAMS.Sequence;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.Rating
@@ -40,8 +40,7 @@ namespace Service.TRAMS.Rating
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var ratingsDto = JsonSerializer.Deserialize<IList<RatingDto>>(content, options);
+				var ratingsDto = JsonConvert.DeserializeObject<IList<RatingDto>>(content);
 
 				return ratingsDto;
 			}

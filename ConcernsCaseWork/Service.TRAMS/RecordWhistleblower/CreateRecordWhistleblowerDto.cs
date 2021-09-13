@@ -1,20 +1,20 @@
-﻿using System.Numerics;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using System.Numerics;
 
 namespace Service.TRAMS.RecordWhistleblower
 {
 	public sealed class CreateRecordWhistleblowerDto
 	{
-		[JsonPropertyName("name")]
+		[JsonProperty("name")]
 		public string Name { get; }
 		
-		[JsonPropertyName("details")]
+		[JsonProperty("details")]
 		public string Details { get; }
 		
-		[JsonPropertyName("reason")]
+		[JsonProperty("reason")]
 		public string Reason { get; }
 		
-		[JsonPropertyName("record_urn")]
+		[JsonProperty("record_urn")]
 		public BigInteger RecordUrn { get; }
 		
 		[JsonConstructor]

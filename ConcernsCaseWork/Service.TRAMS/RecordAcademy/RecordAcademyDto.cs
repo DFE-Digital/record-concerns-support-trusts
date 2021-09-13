@@ -1,16 +1,16 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Service.TRAMS.RecordAcademy
 {
 	public sealed class RecordAcademyDto
 	{
-		[JsonPropertyName("record_urn")]
+		[JsonProperty("record_urn")]
 		public long RecordUrn { get; }
 		
-		[JsonPropertyName("academy_urn")]
+		[JsonProperty("academy_urn")]
 		public int AcademyUrn { get; }
 		
-		[JsonPropertyName("urn")]
+		[JsonProperty("urn")]
 		public long Urn { get; }
 		
 		[JsonConstructor]

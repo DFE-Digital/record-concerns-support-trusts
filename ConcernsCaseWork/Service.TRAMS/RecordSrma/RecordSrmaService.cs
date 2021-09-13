@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,6 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Numerics;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.RecordSrma
@@ -43,8 +43,7 @@ namespace Service.TRAMS.RecordSrma
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-				var recordsSrmaDto = JsonSerializer.Deserialize<IList<RecordSrmaDto>>(content, options);
+				var recordsSrmaDto = JsonConvert.DeserializeObject<IList<RecordSrmaDto>>(content);
 
 				return recordsSrmaDto;
 			}
@@ -63,9 +62,8 @@ namespace Service.TRAMS.RecordSrma
 				_logger.LogInformation("RecordSrmaService::PostRecordSrmaByRecordUrn");
 				
 				// Create a request
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(createRecordSrmaDto, options),
+					JsonConvert.SerializeObject(createRecordSrmaDto),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 				
@@ -83,7 +81,7 @@ namespace Service.TRAMS.RecordSrma
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var newRecordSrmaDto = JsonSerializer.Deserialize<RecordSrmaDto>(content, options);
+				var newRecordSrmaDto = JsonConvert.DeserializeObject<RecordSrmaDto>(content);
 
 				return newRecordSrmaDto;
 			}
@@ -102,9 +100,8 @@ namespace Service.TRAMS.RecordSrma
 				_logger.LogInformation("RecordSrmaService::PatchRecordSrmaByUrn");
 				
 				// Create a request
-				var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 				var request = new StringContent(
-					JsonSerializer.Serialize(recordSrmaDto, options),
+					JsonConvert.SerializeObject(recordSrmaDto),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 				
@@ -122,7 +119,7 @@ namespace Service.TRAMS.RecordSrma
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var updatedRecordSrmaDto = JsonSerializer.Deserialize<RecordSrmaDto>(content, options);
+				var updatedRecordSrmaDto = JsonConvert.DeserializeObject<RecordSrmaDto>(content);
 
 				return updatedRecordSrmaDto;
 			}
