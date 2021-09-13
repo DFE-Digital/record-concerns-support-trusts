@@ -6,8 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Extensions
@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.Tests.Extensions
 			var configuration = new ConfigurationBuilder().ConfigurationInMemoryBuilder(initialData).Build();
 			
 			// act
-			Assert.Throws<ConfigurationErrorsException>(() => serviceCollection.AddRedis(configuration));
+			Assert.Throws<Exception>(() => serviceCollection.AddRedis(configuration));
 		}
 		
 		[Test]
@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Tests.Extensions
 			var configuration = new ConfigurationBuilder().ConfigurationInMemoryBuilder(initialData).Build();
 			
 			// act
-			Assert.Throws<ConfigurationErrorsException>(() => serviceCollection.AddRedis(configuration));
+			Assert.Throws<Exception>(() => serviceCollection.AddRedis(configuration));
 		}
 		
 		[Test]
@@ -73,7 +73,7 @@ namespace ConcernsCaseWork.Tests.Extensions
 			var configuration = new ConfigurationBuilder().ConfigurationInMemoryBuilder(new Dictionary<string, string>()).Build();
 			
 			// act
-			Assert.Throws<ConfigurationErrorsException>(() => serviceCollection.AddTramsApi(configuration));
+			Assert.Throws<Exception>(() => serviceCollection.AddTramsApi(configuration));
 		}
 
 		[Test]

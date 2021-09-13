@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 using System.Text.Json.Serialization;
 
 namespace Service.TRAMS.Rating
@@ -19,9 +18,9 @@ namespace Service.TRAMS.Rating
 		public DateTimeOffset UpdatedAt { get; }
 		
 		[JsonPropertyName("urn")]
-		public BigInteger Urn { get; }
+		public long Urn { get; }
 		
-		public RatingDto(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, BigInteger urn) => 
+		public RatingDto(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, long urn) => 
 			(Name, CreatedAt, UpdatedAt, Urn) = (name, createdAt, updatedAt, urn);
 	}
 }

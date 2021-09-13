@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
+using Service.TRAMS.Sequence;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Numerics;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -55,31 +55,31 @@ namespace Service.TRAMS.Type
 			return new List<TypeDto>
 			{
 				new TypeDto("Compliance", "Compliance: Financial reporting", currentDate, 
-					currentDate, new BigInteger(1)),
+					currentDate, LongSequence.Generator()),
 				new TypeDto("Compliance", "Compliance: Financial returns", currentDate, 
-					currentDate, new BigInteger(2)),
+					currentDate, LongSequence.Generator()),
 				new TypeDto("Financial", "Financial: Deficit", currentDate, 
-					currentDate, new BigInteger(3)),
+					currentDate, LongSequence.Generator()),
 				new TypeDto("Financial", "Financial: Projected deficit / Low future surplus", currentDate, 
-					currentDate, new BigInteger(4)),
+					currentDate, LongSequence.Generator()),
 				new TypeDto("Financial", "Financial: Cash flow shortfall", currentDate, 
-					currentDate, new BigInteger(5)),
+					currentDate, LongSequence.Generator()),
 				new TypeDto("Financial", "Financial: Clawback", currentDate, 
-					currentDate, new BigInteger(6)),
+					currentDate, LongSequence.Generator()),
 				new TypeDto("Force Majeure", "", currentDate, 
-					currentDate, new BigInteger(7)),
+					currentDate, LongSequence.Generator()),
 				new TypeDto("Governance", "Governance: Governance", currentDate, 
-					currentDate, new BigInteger(8)),
+					currentDate, LongSequence.Generator()),
 				new TypeDto("Governance", "Governance: Closure", currentDate, 
-					currentDate, new BigInteger(9)),
+					currentDate, LongSequence.Generator()),
 				new TypeDto("Governance", "Governance: Executive Pay", currentDate, 
-					currentDate, new BigInteger(10)),
+					currentDate, LongSequence.Generator()),
 				new TypeDto("Governance", "Governance: Safeguarding", currentDate, 
-					currentDate, new BigInteger(11)),
+					currentDate, LongSequence.Generator()),
 				new TypeDto("Irregularity", "Irregularity: Allegations and self reported concerns", currentDate, 
-					currentDate, new BigInteger(12)),
+					currentDate, LongSequence.Generator()),
 				new TypeDto("Irregularity", "Irregularity: Related party transactions - in year", currentDate, 
-					currentDate, new BigInteger(13))
+					currentDate, LongSequence.Generator())
 			};
 			
 			//return Array.Empty<TypeDto>();

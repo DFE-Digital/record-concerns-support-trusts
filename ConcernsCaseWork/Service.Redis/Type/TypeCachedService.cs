@@ -20,6 +20,9 @@ namespace Service.Redis.Type
 		{
 			_typeService = typeService;
 			_logger = logger;
+			
+			// TODO Reset for development only
+			ClearData(TypesKey).GetAwaiter();
 		}
 		
 		public async Task<IList<TypeDto>> GetTypes()

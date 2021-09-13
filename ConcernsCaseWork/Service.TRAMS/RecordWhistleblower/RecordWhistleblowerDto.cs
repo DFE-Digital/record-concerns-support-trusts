@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Service.TRAMS.RecordWhistleblower
 {
@@ -15,13 +14,13 @@ namespace Service.TRAMS.RecordWhistleblower
 		public string Reason { get; }
 		
 		[JsonPropertyName("record_urn")]
-		public BigInteger RecordUrn { get; }
+		public long RecordUrn { get; }
 		
 		[JsonPropertyName("urn")]
-		public BigInteger Urn { get; }
+		public long Urn { get; }
 		
 		[JsonConstructor]
-		public RecordWhistleblowerDto(string name, string details, string reason, BigInteger recordUrn, BigInteger urn) => 
+		public RecordWhistleblowerDto(string name, string details, string reason, long recordUrn, long urn) => 
 			(Name, Details, Reason, RecordUrn, Urn) = (name, details, reason, recordUrn, urn);
 	}
 }

@@ -20,6 +20,9 @@ namespace Service.Redis.Status
 		{
 			_statusService = statusService;
 			_logger = logger;
+			
+			// TODO Reset for development only
+			ClearData(StatusesKey).GetAwaiter();
 		}
 
 		public async Task<IList<StatusDto>> GetStatuses()

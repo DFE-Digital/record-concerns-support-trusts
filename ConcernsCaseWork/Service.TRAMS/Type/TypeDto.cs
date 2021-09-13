@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 using System.Text.Json.Serialization;
 
 namespace Service.TRAMS.Type
@@ -25,11 +24,10 @@ namespace Service.TRAMS.Type
 		public DateTimeOffset UpdatedAt { get; }
 		
 		[JsonPropertyName("urn")]
-		public BigInteger Urn { get; }
+		public long Urn { get; }
 		
 		[JsonConstructor]
-		public TypeDto(string name, string description, DateTimeOffset createdAt, 
-			DateTimeOffset updatedAt, BigInteger urn) => 
+		public TypeDto(string name, string description, DateTimeOffset createdAt, DateTimeOffset updatedAt, long urn) => 
 			(Name, Description, CreatedAt, UpdatedAt, Urn) = (name, description, createdAt, updatedAt, urn);
 	}
 }

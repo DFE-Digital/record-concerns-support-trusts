@@ -15,7 +15,6 @@ namespace ConcernsCaseWork.Mappers
 		{
 			// Case | Record | Rating | Status | Types
 			CreateMap<CaseDto, CaseModel>();
-			CreateMap<CreateCaseDto, CaseDto>();
 			CreateMap<RecordDto, RecordModel>();
 			CreateMap<CreateRecordDto, RecordDto>();
 			CreateMap<RatingDto, RatingModel>();

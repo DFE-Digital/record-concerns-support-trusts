@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
+using Service.TRAMS.Sequence;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Numerics;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -53,9 +53,9 @@ namespace Service.TRAMS.Status
 			// TODO replace return when TRAMS API endpoints are live
 			return new List<StatusDto>
 			{
-				new StatusDto("Live", DateTime.Now, DateTime.Now, new BigInteger(1)),
-				new StatusDto("Monitoring", DateTime.Now, DateTime.Now, new BigInteger(2)),
-				new StatusDto("Close", DateTime.Now, DateTime.Now, new BigInteger(3))
+				new StatusDto("Live", DateTime.Now, DateTime.Now, LongSequence.Generator()),
+				new StatusDto("Monitoring", DateTime.Now, DateTime.Now, LongSequence.Generator()),
+				new StatusDto("Close", DateTime.Now, DateTime.Now, LongSequence.Generator())
 			};
 
 			//return Array.Empty<StatusDto>();

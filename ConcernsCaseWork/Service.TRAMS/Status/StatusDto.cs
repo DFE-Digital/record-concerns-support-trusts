@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 using System.Text.Json.Serialization;
 
 namespace Service.TRAMS.Status
@@ -19,10 +18,10 @@ namespace Service.TRAMS.Status
 		public DateTimeOffset UpdatedAt { get; }
 		
 		[JsonPropertyName("urn")]
-		public BigInteger Urn { get; }
+		public long Urn { get; }
 		
 		[JsonConstructor]
-		public StatusDto(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, BigInteger urn) => 
+		public StatusDto(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, long urn) => 
 			(Name, CreatedAt, UpdatedAt, Urn) = (name, createdAt, updatedAt, urn);
 	}
 }

@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.Redis.Shared;
 using Service.TRAMS.Records;
+using Service.TRAMS.Sequence;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Records
@@ -36,7 +36,7 @@ namespace Service.Redis.Records
 
 			// TODO Remove when TRAMS API is live
 			var newRecord = _mapper.Map<RecordDto>(createRecordDto);
-			newRecord.Urn = BigIntegerSequence.Generator();
+			newRecord.Urn = LongSequence.Generator();
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);

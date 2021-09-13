@@ -24,5 +24,10 @@ namespace Service.Redis.Base
 		{
 			return await _cacheProvider.GetFromCache<T>(key);
 		}
+
+		public async Task ClearData(string key)
+		{
+			await _cacheProvider.ClearCache(key);
+		}
 	}
 }

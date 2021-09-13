@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
 			
-			var casesDto = CaseDtoFactory.CreateListCaseDto();
+			var casesDto = CaseDtoFactory.BuildListCaseDto();
 			
 			// act
 			var casesModel = mapper.Map<IList<CaseModel>>(casesDto);

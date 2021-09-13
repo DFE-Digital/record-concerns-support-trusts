@@ -12,7 +12,7 @@ namespace Service.TRAMS.Tests.Cases
 		public void WhenCaseDtoSerializeAndDeserialize_IsSuccessful()
 		{
 			// arrange
-			var caseDto = CaseDtoFactory.CreateCaseDto();
+			var caseDto = CaseDtoFactory.BuildCaseDto();
 			var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 			var caseStrDto = JsonSerializer.Serialize(caseDto, options);
 			var expectedCaseDto = JsonSerializer.Deserialize<CaseDto>(caseStrDto, options);

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 using System.Text.Json.Serialization;
 
 namespace Service.TRAMS.Cases
@@ -55,16 +54,16 @@ namespace Service.TRAMS.Cases
 		public string DirectionOfTravel { get; }
 		
 		[JsonPropertyName("urn")]
-		public BigInteger Urn { get; }
+		public long Urn { get; }
 		
 		[JsonPropertyName("status")]
-		public BigInteger Status { get; }
+		public long Status { get; }
 
 		[JsonConstructor]
 		public UpdateCaseDto(DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
 			string createdBy, string description, string crmEnquiry, string trustUkPrn, string reasonAtReview, 
 			DateTimeOffset deEscalation, string issue, string currentStatus, string nextSteps, string resolutionStrategy, 
-			string directionOfTravel, BigInteger urn, BigInteger status) => 
+			string directionOfTravel, long urn, long status) => 
 			(UpdateAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, ResolutionStrategy, DirectionOfTravel, 
 				Urn, Status) = 

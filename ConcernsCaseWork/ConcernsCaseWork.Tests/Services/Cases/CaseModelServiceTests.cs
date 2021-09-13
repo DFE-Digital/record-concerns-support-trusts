@@ -40,7 +40,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
-			var casesDto = CaseDtoFactory.CreateListCaseDto();
+			var casesDto = CaseDtoFactory.BuildListCaseDto();
 
 			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()))
 				.ReturnsAsync(casesDto);

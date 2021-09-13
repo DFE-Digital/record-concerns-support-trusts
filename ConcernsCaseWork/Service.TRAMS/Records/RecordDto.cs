@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 using System.Text.Json.Serialization;
 
 namespace Service.TRAMS.Records
@@ -28,27 +27,27 @@ namespace Service.TRAMS.Records
 		public string Reason { get; }
 		
 		[JsonPropertyName("case_urn")]
-		public BigInteger CaseUrn { get; }
+		public long CaseUrn { get; }
 		
 		[JsonPropertyName("type_urn")]
-		public BigInteger TypeUrn { get; }
+		public long TypeUrn { get; }
 
 		[JsonPropertyName("rating_urn")]
-		public BigInteger RatingUrn { get; }
+		public long RatingUrn { get; }
 		
 		[JsonPropertyName("primary")]
 		public bool Primary { get; }
 		
 		[JsonPropertyName("urn")]
-		public BigInteger Urn { get; set; } // TODO Remove setter when TRAMS API is live
+		public long Urn { get; set; } // TODO Remove setter when TRAMS API is live
 		
 		[JsonPropertyName("status")]
-		public BigInteger Status { get; }
+		public long Status { get; }
 		
 		[JsonConstructor]
 		public RecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
-			string name, string description, string reason, BigInteger caseUrn, BigInteger typeUrn, 
-			BigInteger ratingUrn, bool primary, BigInteger urn, BigInteger status) => 
+			string name, string description, string reason, long caseUrn, long typeUrn, 
+			long ratingUrn, bool primary, long urn, long status) => 
 			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Urn, Status) = 
 			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, primary, urn, status);
 	}

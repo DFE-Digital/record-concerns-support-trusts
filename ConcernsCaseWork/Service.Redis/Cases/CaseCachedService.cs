@@ -2,12 +2,13 @@
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.Redis.Shared;
 using Service.TRAMS.Cases;
+using Service.TRAMS.Sequence;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Cases
@@ -58,8 +59,10 @@ namespace Service.Redis.Cases
 			//if (newCase is null) throw new ApplicationException("Error::CaseCachedService::PostCase");
 			
 			// TODO Remove when TRAMS API is live
-			var newCase = _mapper.Map<CaseDto>(createCaseDto);
-			newCase.Urn = BigIntegerSequence.Generator();
+			var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+			var createCaseDtoStr = JsonSerializer.Serialize(createCaseDto, options);
+			var newCase = JsonSerializer.Deserialize<CaseDto>(createCaseDtoStr, options);
+			newCase.Urn = LongSequence.Generator();
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(createCaseDto.CreatedBy);

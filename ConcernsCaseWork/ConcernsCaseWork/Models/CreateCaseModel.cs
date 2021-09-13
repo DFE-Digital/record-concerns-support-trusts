@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 
 namespace ConcernsCaseWork.Models
 {
@@ -29,7 +28,9 @@ namespace ConcernsCaseWork.Models
 
 		public string ResolutionStrategy { get; set; }
 		
-		public BigInteger Status { get; set; }
+		public long Urn { get; set; }
+		
+		public long Status { get; set; }
 		
 		public string RecordType { get; set; }
 		

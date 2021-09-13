@@ -71,6 +71,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var currentStatusDetail = Request.Form["current-status-detail"];
 				var nextStepsDetail = Request.Form["next-steps-detail"];
 				var resolutionStrategyDetail = Request.Form["resolution-strategy-detail"];
+				var trustUkPrn = Request.Form["trust-Ukprn"];
 
 				if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(subType) && 
 				    !string.IsNullOrEmpty(ragRating) && !string.IsNullOrEmpty(issueDetail))
@@ -93,7 +94,7 @@ namespace ConcernsCaseWork.Pages.Case
 						ReviewAt = currentDate,
 						UpdateAt = currentDate,
 						RecordSubType = subType,
-						TrustUkPrn = TrustDetailsModel.GiasData.UkPrn
+						TrustUkPrn = trustUkPrn
 					};
 					
 					var newCase = await _caseModelService.PostCase(createCaseModel);
