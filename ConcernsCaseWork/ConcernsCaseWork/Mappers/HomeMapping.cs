@@ -46,15 +46,15 @@ namespace ConcernsCaseWork.Mappers
 					.FirstOrDefault();
 
 				// Find primary case type urn
-				var recordModel = recordsDto.FirstOrDefault(r => r.CaseUrn == caseModel.Urn && r.Primary);
+				var recordModel = recordsDto.First(r => r.CaseUrn.CompareTo(caseModel.Urn) == 0 && r.Primary);
 
 				// Find primary type
-				var primaryCaseType = typesDto.FirstOrDefault(t => t.Urn == recordModel?.TypeUrn);
+				var primaryCaseType = typesDto.First(t => t.Urn.CompareTo(recordModel.TypeUrn) == 0);
 
 				// Rag rating
-				var rating = ratingsDto.Where(r => r.Urn == recordModel?.RatingUrn)
+				var rating = ratingsDto.Where(r => r.Urn.CompareTo(recordModel.RatingUrn) == 0)
 					.Select(r => r.Name)
-					.FirstOrDefault();
+					.First();
 
 				Rags.TryGetValue(rating ?? "n/a", out var rag);
 				RagsCss.TryGetValue(rating ?? "n/a", out var ragCss);

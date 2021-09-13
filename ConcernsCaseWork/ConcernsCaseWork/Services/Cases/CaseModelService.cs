@@ -110,7 +110,7 @@ namespace ConcernsCaseWork.Services.Cases
 				await _recordRatingHistoryCachedService.PostRecordRatingHistory(createRecordRatingHistoryDto, createCaseModel.CreatedBy, newCase.Urn);
 
 				// Return case model
-				return CaseMapping.Map(_mapper, newCase, statusDto.Name);
+				return CaseMapping.Map(newCase, statusDto.Name);
 			}
 			catch (Exception ex)
 			{

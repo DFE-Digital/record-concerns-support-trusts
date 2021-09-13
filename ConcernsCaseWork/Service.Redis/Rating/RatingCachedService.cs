@@ -20,9 +20,11 @@ namespace Service.Redis.Rating
 		{
 			_ratingService = ratingService;
 			_logger = logger;
-			
-			// TODO Reset for development only
-			ClearData(RatingsKey).GetAwaiter();
+		}
+
+		public async Task ClearData()
+		{
+			await ClearData(RatingsKey);
 		}
 
 		public async Task<IList<RatingDto>> GetRatings()
