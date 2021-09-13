@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.Redis.Base;
 using Service.Redis.Models;
@@ -16,16 +15,14 @@ namespace Service.Redis.Cases
 	{
 		private readonly ILogger<CaseCachedService> _logger;
 		private readonly ICaseService _caseService;
-		private readonly IMapper _mapper;
-		
+
 		/// <summary>
 		/// TODO Remove IMapper and project references when TRAMS API is live
 		/// </summary>
-		public CaseCachedService(IMapper mapper, ICacheProvider cacheProvider, ICaseService caseService, ILogger<CaseCachedService> logger) 
+		public CaseCachedService(ICacheProvider cacheProvider, ICaseService caseService, ILogger<CaseCachedService> logger) 
 			: base(cacheProvider)
 		{
 			_caseService = caseService;
-			_mapper = mapper;
 			_logger = logger;
 		}
 
@@ -58,7 +55,6 @@ namespace Service.Redis.Cases
 			//if (newCase is null) throw new ApplicationException("Error::CaseCachedService::PostCase");
 			
 			// TODO Remove when TRAMS API is live
-
 			var createCaseDtoStr = JsonConvert.SerializeObject(createCaseDto);
 			var newCase = JsonConvert.DeserializeObject<CaseDto>(createCaseDtoStr);
 			

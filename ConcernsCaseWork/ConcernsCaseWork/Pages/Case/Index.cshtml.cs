@@ -55,7 +55,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 		}
 		
-		public ActionResult OnGetSelectedTrust(string selectedTrust)
+		public async Task<ActionResult> OnGetSelectedTrust(string selectedTrust)
 		{
 			try
 			{
@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Pages.Case
 				}
 
 				// Store CaseState into cache.
-				_cachedService.StoreData(User.Identity.Name, new UserState { TrustUkPrn = selectedTrust });
+				await _cachedService.StoreData(User.Identity.Name, new UserState { TrustUkPrn = selectedTrust });
 
 				return new JsonResult(new { redirectUrl = Url.Page("Details") });
 			}

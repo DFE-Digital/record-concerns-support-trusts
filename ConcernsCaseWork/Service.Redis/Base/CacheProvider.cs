@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Service.Redis.Configuration;
 using System;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Base
@@ -26,12 +26,12 @@ namespace Service.Redis.Base
 		public async Task<T> GetFromCache<T>(string key) where T : class
 		{
 			var cachedUsers = await _cache.GetStringAsync(key);
-			return cachedUsers == null ? null : JsonSerializer.Deserialize<T>(cachedUsers);
+			return cachedUsers == null ? null : JsonConvert.DeserializeObject<T>(cachedUsers);
 		}
 
 		public async Task SetCache<T>(string key, T value, DistributedCacheEntryOptions options) where T : class
 		{
-			var user = JsonSerializer.Serialize(value);
+			var user = JsonConvert.SerializeObject(value);
 			await _cache.SetStringAsync(key, user , options);
 		}
 

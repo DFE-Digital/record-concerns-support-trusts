@@ -151,7 +151,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		[Test]
-		public void WhenOnGetSelectedTrust_ReturnJsonResultWithRedirectUrl()
+		public async Task WhenOnGetSelectedTrust_ReturnJsonResultWithRedirectUrl()
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
@@ -161,7 +161,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
 			
 			// act
-			var response = pageModel.OnGetSelectedTrust("selectedTrust");
+			var response = await pageModel.OnGetSelectedTrust("selectedTrust");
 			
 			// assert
 			Assert.IsInstanceOf(typeof(ObjectResult), response);
@@ -184,7 +184,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		[TestCase(null)]
 		[TestCase("a")]
 		[TestCase("as")]
-		public void WhenOnGetSelectedTrust_ReturnStatusCodeException(string selectedTrust)
+		public async Task WhenOnGetSelectedTrust_ReturnStatusCodeException(string selectedTrust)
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
@@ -195,7 +195,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
 			
 			// act
-			var response = pageModel.OnGetSelectedTrust(selectedTrust);
+			var response = await pageModel.OnGetSelectedTrust(selectedTrust);
 			
 			// assert
 			Assert.That(response, Is.TypeOf<ObjectResult>());
