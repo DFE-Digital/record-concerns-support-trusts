@@ -72,7 +72,7 @@ namespace Service.Redis.Cases
 			return newCase;
 		}
 
-		public async Task<Boolean> IsCasePrimary(string caseworker)
+		public async Task<Boolean> IsCasePrimary(string caseworker, long caseUrn)
 		{
 			_logger.LogInformation("CaseCachedService::IsCasePrimary");
 			
@@ -88,7 +88,12 @@ namespace Service.Redis.Cases
 				return true;
 			}
 
-			return !caseState.CasesDetails.Any();
+			if (caseState.CasesDetails.ContainsKey(caseUrn) && caseState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper))
+			{
+				return !caseWrapper.Records.Any();
+			}
+
+			return true;
 		}
 	}
 }

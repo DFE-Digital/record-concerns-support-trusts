@@ -32,7 +32,7 @@ namespace Service.Redis.Users
 			if (userClaims == null) return null;
 			
 			var cacheEntryOptions = new DistributedCacheEntryOptions()
-				.SetSlidingExpiration(TimeSpan.FromSeconds(_cacheProvider.CacheTimeToLive())); 
+				.SetSlidingExpiration(TimeSpan.FromHours(_cacheProvider.CacheTimeToLive())); 
 	                
 			await _cacheProvider.SetCache(userCredentials.Email, userClaims, cacheEntryOptions);
 

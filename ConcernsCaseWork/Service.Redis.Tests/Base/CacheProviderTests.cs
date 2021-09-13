@@ -160,7 +160,7 @@ namespace Service.Redis.Tests.Base
 			var cacheTtl = cacheProvider.CacheTimeToLive();
 
 			// assert
-			Assert.That(cacheTtl, Is.EqualTo(120));
+			Assert.That(cacheTtl, Is.EqualTo(24));
 		}
 	}
 }

@@ -101,7 +101,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var ratingDto = await _ratingCachedService.GetRatingByName(createCaseModel.RagRating);
 
 				// Is first case
-				var isCasePrimary = await _caseCachedService.IsCasePrimary(createCaseModel.CreatedBy);
+				var isCasePrimary = await _caseCachedService.IsCasePrimary(createCaseModel.CreatedBy, createCaseModel.Urn);
 				
 				// Create a case
 				createCaseModel.Status = statusDto.Urn;

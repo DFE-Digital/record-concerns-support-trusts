@@ -68,7 +68,9 @@ namespace ConcernsCaseWork.Pages.Case
 				}
 
 				// Store CaseState into cache.
-				await _cachedService.StoreData(User.Identity.Name, new UserState { TrustUkPrn = selectedTrust });
+				var userState = await _cachedService.GetData<UserState>(User.Identity.Name);
+				userState.TrustUkPrn = selectedTrust;
+				await _cachedService.StoreData(User.Identity.Name, userState);
 
 				return new JsonResult(new { redirectUrl = Url.Page("Details") });
 			}

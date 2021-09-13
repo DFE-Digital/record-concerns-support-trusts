@@ -20,7 +20,7 @@ namespace Service.Redis.Tests.Services
 				TrustUkPrn = "999999"
 			};
 			
-			mockCacheProvider.Setup(c => c.CacheTimeToLive()).Returns(120);
+			mockCacheProvider.Setup(c => c.CacheTimeToLive()).Returns(24);
 			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
 				Returns(Task.FromResult(caseStateModel));
 

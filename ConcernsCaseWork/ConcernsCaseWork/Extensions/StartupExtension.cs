@@ -115,17 +115,17 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ITypeService, TypeService>();
 			
 			// Redis services
-			services.AddTransient<ICacheProvider, CacheProvider>();
-			services.AddTransient<IActiveDirectoryService, ActiveDirectoryService>();
-			services.AddTransient<IUserCachedService, UserCachedService>();
-			services.AddTransient<ICachedService, CachedService>();
-			services.AddTransient<ITypeCachedService, TypeCachedService>();
-			services.AddTransient<IStatusCachedService, StatusCachedService>();
-			services.AddTransient<IRatingCachedService, RatingCachedService>();
-			services.AddTransient<ITrustCachedService, TrustCachedService>();
-			services.AddTransient<ICaseCachedService, CaseCachedService>();
-			services.AddTransient<IRecordCachedService, RecordCachedService>();
-			services.AddTransient<IRecordRatingHistoryCachedService, RecordRatingHistoryCachedService>();
+			services.AddSingleton<ICacheProvider, CacheProvider>();
+			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
+			services.AddSingleton<IUserCachedService, UserCachedService>();
+			services.AddSingleton<ICachedService, CachedService>();
+			services.AddSingleton<ITypeCachedService, TypeCachedService>();
+			services.AddSingleton<IStatusCachedService, StatusCachedService>();
+			services.AddSingleton<IRatingCachedService, RatingCachedService>();
+			services.AddSingleton<ITrustCachedService, TrustCachedService>();
+			services.AddSingleton<ICaseCachedService, CaseCachedService>();
+			services.AddSingleton<IRecordCachedService, RecordCachedService>();
+			services.AddSingleton<IRecordRatingHistoryCachedService, RecordRatingHistoryCachedService>();
 			
 			// Redis Sequence
 			services.AddSingleton<ISequenceCachedService, SequenceCachedService>();

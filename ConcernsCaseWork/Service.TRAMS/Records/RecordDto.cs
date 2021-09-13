@@ -3,6 +3,7 @@ using System;
 
 namespace Service.TRAMS.Records
 {
+	[Serializable]
 	public sealed class RecordDto
 	{
 		[JsonProperty("created_at")]

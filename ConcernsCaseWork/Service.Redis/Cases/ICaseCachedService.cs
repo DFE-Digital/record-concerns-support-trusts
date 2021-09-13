@@ -9,6 +9,6 @@ namespace Service.Redis.Cases
 	{
 		Task<IList<CaseDto>> GetCasesByCaseworker(string caseworker, string statusUrn = "Live");
 		Task<CaseDto> PostCase(CreateCaseDto createCaseDto);
-		Task<Boolean> IsCasePrimary(string caseworker);
+		Task<Boolean> IsCasePrimary(string caseworker, long caseUrn);
 	}
 }

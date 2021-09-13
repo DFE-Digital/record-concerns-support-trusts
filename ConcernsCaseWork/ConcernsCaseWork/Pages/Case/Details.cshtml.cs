@@ -73,8 +73,9 @@ namespace ConcernsCaseWork.Pages.Case
 				var resolutionStrategyDetail = Request.Form["resolution-strategy-detail"];
 				var trustUkPrn = Request.Form["trust-Ukprn"];
 
-				if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(subType) && 
-				    !string.IsNullOrEmpty(ragRating) && !string.IsNullOrEmpty(issueDetail))
+				// TODO find a way to identity when typo selected is -> Sub type is null when type is 'Force Majeure'
+				if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(ragRating) && 
+				    !string.IsNullOrEmpty(issueDetail))
 				{
 					// Create a case post model
 					var currentDate = DateTimeOffset.Now;

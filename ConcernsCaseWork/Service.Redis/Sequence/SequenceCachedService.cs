@@ -7,7 +7,7 @@ namespace Service.Redis.Sequence
 	public sealed class SequenceCachedService : CachedService, ISequenceCachedService
 	{
 		private const string SequenceKey = "Concerns.Sequence";
-		private readonly Mutex _mutex = new Mutex();
+		private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 		private long _sequence;
 		
 		public SequenceCachedService(ICacheProvider cacheProvider) : base(cacheProvider)
@@ -17,20 +17,20 @@ namespace Service.Redis.Sequence
 		public async Task<long> Generator()
 		{
 			// Wait until it is safe to enter.
-			_mutex.WaitOne();
+			await _semaphore.WaitAsync();
 			
 			// Fetch from cache
 			var sequence = await GetData<string>(SequenceKey);
 			
 			// Generate new value
-			var longSeq = long.Parse(sequence);
+			long.TryParse(sequence, out var longSeq);
 			_sequence = Interlocked.Increment(ref longSeq);
 			
 			// Store in cache
 			await StoreData(SequenceKey, _sequence.ToString());
 			
 			// Release the Mutex.
-			_mutex.ReleaseMutex();
+			_semaphore.Release();
 			
 			return _sequence;
 		}
