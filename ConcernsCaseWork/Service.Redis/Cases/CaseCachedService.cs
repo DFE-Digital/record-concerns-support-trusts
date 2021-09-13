@@ -5,7 +5,6 @@ using Service.Redis.Models;
 using Service.TRAMS.Cases;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,7 +30,7 @@ namespace Service.Redis.Cases
 			_logger.LogInformation("CaseCachedService::GetCasesByCaseworker");
 
 			var caseState = await GetData<UserState>(caseworker);
-			if (caseState is { }) return caseState.CasesDetails.Values.Select(c => c.CaseDto).ToImmutableList();
+			if (caseState is { }) return caseState.CasesDetails.Values.Select(c => c.CaseDto).ToList();
 			
 			var cases = await _caseService.GetCasesByCaseworker(caseworker, statusUrn);
 			var userState = new UserState();

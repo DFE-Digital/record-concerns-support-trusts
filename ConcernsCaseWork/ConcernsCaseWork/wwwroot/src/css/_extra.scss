@@ -214,6 +214,10 @@ span.summary-validation-symbol {
 
 /// Tables ///
 
+.govuk-table__header, .govuk-table__cell {
+  padding: 10px;
+}
+
 .govuk-table__header__cases, .govuk-table__cell__cases {
   vertical-align: middle;
   padding: 10px;
@@ -1620,8 +1624,8 @@ span.summary-validation-symbol {
 /* ==========================================================================
    #Home page wider screen
    ========================================================================== */
-.govuk-width-1000-container {
-  width: 1000px;
+.govuk-width-container {
+  max-width: 1200px;
 }
 
 /* ==========================================================================

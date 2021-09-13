@@ -16,7 +16,11 @@ namespace ConcernsCaseWork.Models
 
 		public string Description { get; set; }
 		
+		public string CrmEnquiry { get; set; }
+		
 		public string TrustUkPrn { get; set; }
+		
+		public string ReasonAtReview { get; set; }
 		
 		public DateTimeOffset DeEscalation { get; set; }
 
@@ -27,6 +31,8 @@ namespace ConcernsCaseWork.Models
 		public string NextSteps { get; set; }
 
 		public string ResolutionStrategy { get; set; }
+		
+		public string DirectionOfTravel { get; set; }
 		
 		public long Urn { get; set; }
 		

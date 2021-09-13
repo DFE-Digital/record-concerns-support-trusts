@@ -48,16 +48,5 @@ namespace ConcernsCaseWork.Models
 		public long Status { get; set; }
 		
 		public string StatusName { get; set; }
-
-		// public CaseModel(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
-		// 	string createdBy, string description, string crmEnquiry, string trustUkPrn, string reasonAtReview, 
-		// 	DateTimeOffset deEscalation, string issue, string currentStatus, string nextSteps, string resolutionStrategy, 
-		// 	string directionOfTravel, long urn, string status) => 
-		// 	(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
-		// 		ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, ResolutionStrategy, DirectionOfTravel, 
-		// 		Urn, Status) = 
-		// 	(createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn,
-		// 		reasonAtReview, deEscalation, issue, currentStatus, nextSteps, resolutionStrategy, directionOfTravel, 
-		// 		urn, status);
 	}
 }

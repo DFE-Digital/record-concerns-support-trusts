@@ -155,14 +155,7 @@ namespace ConcernsCaseWork.Services.Cases
 								
 				// Fetch types
 				var typesDto = await _typeCachedService.GetTypes();
-
-				// Map dto to model
-				// var casesModel = _mapper.Map<IList<CaseModel>>(casesDto);
-				// var trustsDetailsModel = _mapper.Map<IList<TrustDetailsModel>>(trustsDetailsDto);
-				// var recordsModel = _mapper.Map<IList<RecordModel>>(recordsDto);
-				// var ragsRatingModel = _mapper.Map<IList<RatingModel>>(ragsRatingDto);
-				// var typesModel = _mapper.Map<IList<TypeModel>>(typesDto);
-
+				
 				return HomeMapping.Map(casesDto, trustsDetailsDto, recordsDto, ragsRatingDto, typesDto, statusLiveDto, statusMonitoringDto);
 			}
 			
@@ -198,14 +191,7 @@ namespace ConcernsCaseWork.Services.Cases
 						
 			// Fetch types
 			var typesDto = await _typeCachedService.GetTypes();
-					
-			// Map dto to model
-			// var casesModel = _mapper.Map<IList<CaseModel>>(casesDto);
-			// var trustsDetailsModel = _mapper.Map<IList<TrustDetailsModel>>(trustsDetailsDto);
-			// var recordsModel = _mapper.Map<IList<RecordModel>>(recordsDto);
-			// var ragsRatingModel = _mapper.Map<IList<RatingModel>>(ragsRatingDto);
-			// var typesModel = _mapper.Map<IList<TypeModel>>(typesDto);
-
+			
 			return HomeMapping.Map(casesDto, trustsDetailsDto, recordsDto, ragsRatingDto, typesDto, statusLiveDto, statusMonitoringDto);
 		}
 
