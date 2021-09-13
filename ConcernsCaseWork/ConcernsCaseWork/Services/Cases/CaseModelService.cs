@@ -110,7 +110,7 @@ namespace ConcernsCaseWork.Services.Cases
 				await _recordRatingHistoryCachedService.PostRecordRatingHistory(createRecordRatingHistoryDto, createCaseModel.CreatedBy, newCase.Urn);
 
 				// Return case model
-				return CaseMapping.Map(newCase, statusDto.Name);
+				return CaseMapping.Map(_mapper, newCase, statusDto.Name);
 			}
 			catch (Exception ex)
 			{
@@ -122,8 +122,12 @@ namespace ConcernsCaseWork.Services.Cases
 		
 		private async Task<(IList<HomeModel>, IList<HomeModel>)> FetchFromTramsApi(string caseworker)
 		{
+			// Fetch Status
+			var statusLiveDto = await _statusCachedService.GetStatusByName(Status.Live.ToString());
+			var statusMonitoringDto = await _statusCachedService.GetStatusByName(Status.Monitoring.ToString());
+			
 			// Get from TRAMS API all trusts for the caseworker
-			var caseStatus = new List<string> { Status.Live.ToString(), Status.Monitoring.ToString() };
+			var caseStatus = new List<string> { statusLiveDto.Name, statusMonitoringDto.Name };
 			var tasksCasesDto = caseStatus.Select(status => _caseCachedService.GetCasesByCaseworker(caseworker, status));
 			
 			var resultTasksCasesDto = await Task.WhenAll(tasksCasesDto);
@@ -137,13 +141,14 @@ namespace ConcernsCaseWork.Services.Cases
 					.Select(c => _trustCachedService.GetTrustByUkPrn(c.TrustUkPrn)).ToList();
 				await Task.WhenAll(trustsDetailsTasks);
 				// Get results from tasks
-				var trustsDetailsDto = trustsDetailsTasks.Select(trustDetailsTask => trustDetailsTask.Result);
+				var trustsDetailsDto = trustsDetailsTasks.Select(trustDetailsTask => trustDetailsTask.Result)
+					.ToList();
 
 				// Fetch records by case urn
 				var recordsTasks = casesDto.Select(c => _recordCachedService.GetRecordsByCaseUrn(c)).ToList();
 				await Task.WhenAll(recordsTasks);
 				// Get results from tasks
-				var recordsDto = recordsTasks.Select(recordTask => recordTask.Result);
+				var recordsDto = recordsTasks.SelectMany(recordTask => recordTask.Result).ToList();
 								
 				// Fetch rag rating
 				var ragsRatingDto = await _ratingCachedService.GetRatings();
@@ -152,14 +157,13 @@ namespace ConcernsCaseWork.Services.Cases
 				var typesDto = await _typeCachedService.GetTypes();
 
 				// Map dto to model
-				var casesModel = _mapper.Map<IList<CaseModel>>(casesDto);
-				var trustsDetailsModel = _mapper.Map<IList<TrustDetailsModel>>(trustsDetailsDto);
-				var recordsModel = _mapper.Map<IList<RecordModel>>(recordsDto);
-				var ragsRatingModel = _mapper.Map<IList<RatingModel>>(ragsRatingDto);
-				var typesModel = _mapper.Map<IList<TypeModel>>(typesDto);
+				// var casesModel = _mapper.Map<IList<CaseModel>>(casesDto);
+				// var trustsDetailsModel = _mapper.Map<IList<TrustDetailsModel>>(trustsDetailsDto);
+				// var recordsModel = _mapper.Map<IList<RecordModel>>(recordsDto);
+				// var ragsRatingModel = _mapper.Map<IList<RatingModel>>(ragsRatingDto);
+				// var typesModel = _mapper.Map<IList<TypeModel>>(typesDto);
 
-				return HomeMapping.Map(casesModel, trustsDetailsModel, recordsModel, 
-					ragsRatingModel, typesModel);
+				return HomeMapping.Map(casesDto, trustsDetailsDto, recordsDto, ragsRatingDto, typesDto, statusLiveDto, statusMonitoringDto);
 			}
 			
 			return Empty();
@@ -167,23 +171,27 @@ namespace ConcernsCaseWork.Services.Cases
 
 		private async Task<(IList<HomeModel>, IList<HomeModel>)> FetchFromCache(UserState userState)
 		{
-			// Get cases
+			// Fetch Status
+			var statusLiveDto = await _statusCachedService.GetStatusByName(Status.Live.ToString());
+			var statusMonitoringDto = await _statusCachedService.GetStatusByName(Status.Monitoring.ToString());
+			
+			// Fetch cases
 			var caseDetails = userState.CasesDetails;
 					
-			// Get cases from cache
-			var casesDto = caseDetails.Select(c => c.Value.CaseDto);
+			// Fetch cases from cache
+			var casesDto = caseDetails.Select(c => c.Value.CaseDto).ToList();
 					
 			// Fetch trusts by ukprn
 			var trustsDetailsTasks = casesDto.Where(c => c.TrustUkPrn != null)
 				.Select(c => _trustCachedService.GetTrustByUkPrn(c.TrustUkPrn)).ToList();
-			await Task.WhenAll(trustsDetailsTasks);
-			// Get results from tasks
-			var trustsDetailsDto = trustsDetailsTasks.Select(trustDetailsTask => trustDetailsTask.Result);
+			var trustsDetailsTasksResults = await Task.WhenAll(trustsDetailsTasks);
+			
+			// Fetch results from tasks
+			var trustsDetailsDto = trustsDetailsTasksResults.ToList();
 
 			// Fetch records by case urn
-			var recordsDto = caseDetails.Select(c => c.Value.Records)
-				.Select(r => r.Values)
-				.FirstOrDefault();
+			var recordsDto = caseDetails.SelectMany(c => c.Value.Records.Values.Select(r => r.RecordDto))
+				.ToList();
 					
 			// Fetch rag rating
 			var ragsRatingDto = await _ratingCachedService.GetRatings();
@@ -192,14 +200,13 @@ namespace ConcernsCaseWork.Services.Cases
 			var typesDto = await _typeCachedService.GetTypes();
 					
 			// Map dto to model
-			var casesModel = _mapper.Map<IList<CaseModel>>(casesDto);
-			var trustsDetailsModel = _mapper.Map<IList<TrustDetailsModel>>(trustsDetailsDto);
-			var recordsModel = _mapper.Map<IList<RecordModel>>(recordsDto);
-			var ragsRatingModel = _mapper.Map<IList<RatingModel>>(ragsRatingDto);
-			var typesModel = _mapper.Map<IList<TypeModel>>(typesDto);
+			// var casesModel = _mapper.Map<IList<CaseModel>>(casesDto);
+			// var trustsDetailsModel = _mapper.Map<IList<TrustDetailsModel>>(trustsDetailsDto);
+			// var recordsModel = _mapper.Map<IList<RecordModel>>(recordsDto);
+			// var ragsRatingModel = _mapper.Map<IList<RatingModel>>(ragsRatingDto);
+			// var typesModel = _mapper.Map<IList<TypeModel>>(typesDto);
 
-			return HomeMapping.Map(casesModel, trustsDetailsModel, recordsModel, 
-				ragsRatingModel, typesModel);
+			return HomeMapping.Map(casesDto, trustsDetailsDto, recordsDto, ragsRatingDto, typesDto, statusLiveDto, statusMonitoringDto);
 		}
 
 		private static (IList<HomeModel>, IList<HomeModel>) Empty()

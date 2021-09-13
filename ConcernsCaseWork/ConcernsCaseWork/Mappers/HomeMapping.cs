@@ -1,6 +1,10 @@
 ﻿using ConcernsCaseWork.Models;
+using Service.TRAMS.Cases;
+using Service.TRAMS.Rating;
+using Service.TRAMS.Records;
 using Service.TRAMS.Status;
-using System;
+using Service.TRAMS.Trusts;
+using Service.TRAMS.Type;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,31 +27,32 @@ namespace ConcernsCaseWork.Mappers
 		
 		private const string DateFormat = "dd-MM-yyyy";
 		
-		public static (IList<HomeModel>, IList<HomeModel>) Map(IList<CaseModel> casesModel,
-			IList<TrustDetailsModel> trustsDetailsModel, IList<RecordModel> recordsModel,
-			IList<RatingModel> ragsRatingModel, IList<TypeModel> typesModel)
+		public static (IList<HomeModel>, IList<HomeModel>) Map(IList<CaseDto> casesDto,
+			IList<TrustDetailsDto> trustsDetailsDto, IList<RecordDto> recordsDto,
+			IList<RatingDto> ratingsDto, IList<TypeDto> typesDto, StatusDto statusLiveDto,
+			StatusDto statusMonitoringDto)
 		{
 			var activeCases = new List<HomeModel>();
 			var monitoringCases = new List<HomeModel>();
 
-			foreach (var caseModel in casesModel)
+			foreach (var caseModel in casesDto)
 			{
 				// Find trust / academies
-				var trustName = trustsDetailsModel.Where(t => t.GiasData.UkPrn == caseModel.TrustUkPrn)
+				var trustName = trustsDetailsDto.Where(t => t.GiasData.UkPrn == caseModel.TrustUkPrn)
 					.Select(t => t.GiasData.GroupName)
 					.FirstOrDefault();
-				var academies = trustsDetailsModel.Where(t => t.GiasData.UkPrn == caseModel.TrustUkPrn && t.Establishments != null)
+				var academies = trustsDetailsDto.Where(t => t.GiasData.UkPrn == caseModel.TrustUkPrn && t.Establishments != null)
 					.Select(t => string.Join(",", t.Establishments.Select(e => e.EstablishmentName)))
 					.FirstOrDefault();
 
 				// Find primary case type urn
-				var recordModel = recordsModel.FirstOrDefault(r => r.CaseUrn == caseModel.Urn && r.Primary);
+				var recordModel = recordsDto.FirstOrDefault(r => r.CaseUrn == caseModel.Urn && r.Primary);
 
 				// Find primary type
-				var primaryCaseType = typesModel.FirstOrDefault(t => t.Urn == recordModel?.TypeUrn);
+				var primaryCaseType = typesDto.FirstOrDefault(t => t.Urn == recordModel?.TypeUrn);
 
 				// Rag rating
-				var rating = ragsRatingModel.Where(r => r.Urn == recordModel?.RatingUrn)
+				var rating = ratingsDto.Where(r => r.Urn == recordModel?.RatingUrn)
 					.Select(r => r.Name)
 					.FirstOrDefault();
 
@@ -55,7 +60,7 @@ namespace ConcernsCaseWork.Mappers
 				RagsCss.TryGetValue(rating ?? "n/a", out var ragCss);
 
 				// Filter per status
-				if (string.Equals(caseModel.Status, Status.Live.ToString(), StringComparison.CurrentCultureIgnoreCase))
+				if (caseModel.Status.CompareTo(statusLiveDto.Urn) == 0)
 				{
 					activeCases.Add(new HomeModel(
 						caseModel.Urn.ToString(), 
@@ -70,7 +75,7 @@ namespace ConcernsCaseWork.Mappers
 						ragCss
 					));
 				}
-				else if (string.Equals(caseModel.Status, Status.Monitoring.ToString(), StringComparison.CurrentCultureIgnoreCase))
+				else if (caseModel.Status.CompareTo(statusMonitoringDto.Urn) == 0)
 				{
 					monitoringCases.Add(new HomeModel(
 						caseModel.Urn.ToString(), 

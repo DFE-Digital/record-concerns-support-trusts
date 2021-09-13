@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using AutoMapper;
+using ConcernsCaseWork.Models;
 using Service.TRAMS.Cases;
 
 namespace ConcernsCaseWork.Mappers
@@ -13,12 +14,11 @@ namespace ConcernsCaseWork.Mappers
 				string.Empty, createCaseModel.Urn, createCaseModel.Status);
 		}
 		
-		public static CaseModel Map(CaseDto caseDto, string status)
+		public static CaseModel Map(IMapper mapper, CaseDto caseDto, string statusName)
 		{
-			return new CaseModel(caseDto.CreatedAt, caseDto.UpdatedAt, caseDto.ReviewAt, caseDto.ClosedAt, 
-				caseDto.CreatedBy, caseDto.Description, caseDto.CrmEnquiry, caseDto.TrustUkPrn, caseDto.ReasonAtReview,
-				caseDto.DeEscalation, caseDto.Issue, caseDto.CurrentStatus, caseDto.NextSteps, caseDto.ResolutionStrategy,
-				caseDto.DirectionOfTravel, caseDto.Urn, status);
+			var caseModel = mapper.Map<CaseModel>(caseDto);
+			caseModel.StatusName = statusName;
+			return caseModel;
 		}
 	}
 }

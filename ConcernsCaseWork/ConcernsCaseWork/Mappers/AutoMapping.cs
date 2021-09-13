@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
-using Service.TRAMS.Rating;
-using Service.TRAMS.Records;
-using Service.TRAMS.Status;
 using Service.TRAMS.Trusts;
-using Service.TRAMS.Type;
 
 namespace ConcernsCaseWork.Mappers
 {
@@ -12,12 +8,6 @@ namespace ConcernsCaseWork.Mappers
 	{
 		public AutoMapping()
 		{
-			// Case | Record | Rating | Status | Types
-			CreateMap<RecordDto, RecordModel>();
-			CreateMap<RatingDto, RatingModel>();
-			CreateMap<StatusDto, StatusModel>();
-			CreateMap<TypeDto, TypeModel>();
-
 			// Trust summary
 			CreateMap<TrustSummaryDto, TrustSummaryModel>();
 			CreateMap<EstablishmentSummaryDto, EstablishmentSummaryModel>();
