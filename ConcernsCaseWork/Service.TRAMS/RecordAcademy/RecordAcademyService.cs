@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,7 +19,7 @@ namespace Service.TRAMS.RecordAcademy
 			_logger = logger;
 		}
 
-		public async Task<IList<RecordAcademyDto>> GetRecordsAcademyByRecordUrn(BigInteger recordUrn)
+		public async Task<IList<RecordAcademyDto>> GetRecordsAcademyByRecordUrn(long recordUrn)
 		{
 			try
 			{

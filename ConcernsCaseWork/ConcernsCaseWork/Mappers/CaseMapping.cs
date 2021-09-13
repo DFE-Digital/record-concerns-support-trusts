@@ -12,5 +12,13 @@ namespace ConcernsCaseWork.Mappers
 				createCaseModel.DeEscalation, createCaseModel.Issue, createCaseModel.CurrentStatus, createCaseModel.NextSteps, createCaseModel.ResolutionStrategy,
 				string.Empty, createCaseModel.Urn, createCaseModel.Status);
 		}
+		
+		public static CaseModel Map(CaseDto caseDto, string status)
+		{
+			return new CaseModel(caseDto.CreatedAt, caseDto.UpdatedAt, caseDto.ReviewAt, caseDto.ClosedAt, 
+				caseDto.CreatedBy, caseDto.Description, caseDto.CrmEnquiry, caseDto.TrustUkPrn, caseDto.ReasonAtReview,
+				caseDto.DeEscalation, caseDto.Issue, caseDto.CurrentStatus, caseDto.NextSteps, caseDto.ResolutionStrategy,
+				caseDto.DirectionOfTravel, caseDto.Urn, status);
+		}
 	}
 }

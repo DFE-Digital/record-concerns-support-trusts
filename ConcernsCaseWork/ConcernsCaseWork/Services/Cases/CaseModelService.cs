@@ -7,12 +7,12 @@ using Service.Redis.Cases;
 using Service.Redis.Models;
 using Service.Redis.Rating;
 using Service.Redis.RecordRatingHistory;
+using Service.Redis.Records;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
 using Service.Redis.Type;
 using Service.TRAMS.Cases;
 using Service.TRAMS.RecordRatingHistory;
-using Service.TRAMS.Records;
 using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
@@ -26,16 +26,16 @@ namespace ConcernsCaseWork.Services.Cases
 		private readonly IRecordRatingHistoryCachedService _recordRatingHistoryCachedService;
 		private readonly IRatingCachedService _ratingCachedService;
 		private readonly IStatusCachedService _statusCachedService;
+		private readonly IRecordCachedService _recordCachedService;
 		private readonly ITrustCachedService _trustCachedService;
 		private readonly ICaseCachedService _caseCachedService;
 		private readonly ITypeCachedService _typeCachedService;
 		private readonly ILogger<CaseModelService> _logger;
 		private readonly ICachedService _cachedService;
-		private readonly IRecordService _recordService;
 		private readonly IMapper _mapper;
 		
 		public CaseModelService(ICaseCachedService caseCachedService, ITrustCachedService trustCachedService, 
-			IRecordService recordService, IRatingCachedService ratingCachedService,
+			IRecordCachedService recordCachedService, IRatingCachedService ratingCachedService,
 			ITypeCachedService typeCachedService, ICachedService cachedService, 
 			IRecordRatingHistoryCachedService recordRatingHistoryCachedService,
 			IStatusCachedService statusCachedService, 
@@ -44,11 +44,11 @@ namespace ConcernsCaseWork.Services.Cases
 			_recordRatingHistoryCachedService = recordRatingHistoryCachedService;
 			_statusCachedService = statusCachedService;
 			_ratingCachedService = ratingCachedService;
+			_recordCachedService = recordCachedService;
 			_trustCachedService = trustCachedService;
 			_caseCachedService = caseCachedService;
 			_typeCachedService = typeCachedService;
 			_cachedService = cachedService;
-			_recordService = recordService;
 			_mapper = mapper;
 			_logger = logger;
 		}
@@ -103,14 +103,14 @@ namespace ConcernsCaseWork.Services.Cases
 				var newCase = await _caseCachedService.PostCase(CaseMapping.Map(createCaseModel));
 
 				// Create a record
-				var newRecord = await _recordService.PostRecordByCaseUrn(RecordMapping.Map(typeDto, newCase.Urn, ratingDto.Urn, statusDto.Urn, isCasePrimary));
+				var newRecord = await _recordCachedService.PostRecordByCaseUrn(RecordMapping.Map(typeDto, newCase.Urn, ratingDto.Urn, statusDto.Urn, isCasePrimary), createCaseModel.CreatedBy);
 
 				// Create a rating history
 				var createRecordRatingHistoryDto = new RecordRatingHistoryDto(DateTimeOffset.Now, newRecord.Urn, ratingDto.Urn);
 				await _recordRatingHistoryCachedService.PostRecordRatingHistory(createRecordRatingHistoryDto, createCaseModel.CreatedBy, newCase.Urn);
 
 				// Return case model
-				return _mapper.Map<CaseModel>(newCase);
+				return CaseMapping.Map(newCase, statusDto.Name);
 			}
 			catch (Exception ex)
 			{
@@ -140,7 +140,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var trustsDetailsDto = trustsDetailsTasks.Select(trustDetailsTask => trustDetailsTask.Result);
 
 				// Fetch records by case urn
-				var recordsTasks = casesDto.Select(c => _recordService.GetRecordsByCaseUrn(c.Urn)).ToList();
+				var recordsTasks = casesDto.Select(c => _recordCachedService.GetRecordsByCaseUrn(c)).ToList();
 				await Task.WhenAll(recordsTasks);
 				// Get results from tasks
 				var recordsDto = recordsTasks.Select(recordTask => recordTask.Result);

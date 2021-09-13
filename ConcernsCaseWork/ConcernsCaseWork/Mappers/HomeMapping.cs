@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
+using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +20,7 @@ namespace ConcernsCaseWork.Mappers
 			{"Red", "ragtag__red"}, {"Red-Amber", "ragtag__redamber"}, 
 			{"Amber-Green", "ragtag__ambergreen"}
 		};
-
-		private const string StatusLive = "Live";
-		private const string StatusMonitoring = "Monitoring";
+		
 		private const string DateFormat = "dd-MM-yyyy";
 		
 		public static (IList<HomeModel>, IList<HomeModel>) Map(IList<CaseModel> casesModel,
@@ -56,12 +55,12 @@ namespace ConcernsCaseWork.Mappers
 				RagsCss.TryGetValue(rating ?? "n/a", out var ragCss);
 
 				// Filter per status
-				if (string.Equals(caseModel.Status, StatusLive, StringComparison.CurrentCultureIgnoreCase))
+				if (string.Equals(caseModel.Status, Status.Live.ToString(), StringComparison.CurrentCultureIgnoreCase))
 				{
 					activeCases.Add(new HomeModel(
 						caseModel.Urn.ToString(), 
 						caseModel.CreatedAt.ToString(DateFormat),
-						caseModel.UpdateAt.ToString(DateFormat),
+						caseModel.UpdatedAt.ToString(DateFormat),
 						caseModel.ClosedAt.ToString(DateFormat),
 						trustName,
 						academies,
@@ -71,12 +70,12 @@ namespace ConcernsCaseWork.Mappers
 						ragCss
 					));
 				}
-				else if (string.Equals(caseModel.Status, StatusMonitoring, StringComparison.CurrentCultureIgnoreCase))
+				else if (string.Equals(caseModel.Status, Status.Monitoring.ToString(), StringComparison.CurrentCultureIgnoreCase))
 				{
 					monitoringCases.Add(new HomeModel(
 						caseModel.Urn.ToString(), 
 						caseModel.CreatedAt.ToString(DateFormat),
-						caseModel.UpdateAt.ToString(DateFormat),
+						caseModel.UpdatedAt.ToString(DateFormat),
 						caseModel.ClosedAt.ToString(DateFormat),
 						trustName,
 						academies,

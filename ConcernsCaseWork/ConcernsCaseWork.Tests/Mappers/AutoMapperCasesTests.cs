@@ -53,7 +53,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 					Assert.That(expected.NextSteps, Is.EqualTo(actual.NextSteps));
 					Assert.That(expected.ResolutionStrategy, Is.EqualTo(actual.ResolutionStrategy));
 					Assert.That(expected.ReviewAt, Is.EqualTo(actual.ReviewAt));
-					Assert.That(expected.UpdateAt, Is.EqualTo(actual.UpdateAt));
+					Assert.That(expected.UpdatedAt, Is.EqualTo(actual.UpdatedAt));
 					Assert.That(expected.DirectionOfTravel, Is.EqualTo(actual.DirectionOfTravel));
 					Assert.That(expected.ReasonAtReview, Is.EqualTo(actual.ReasonAtReview));
 					Assert.That(expected.TrustUkPrn, Is.EqualTo(actual.TrustUkPrn));

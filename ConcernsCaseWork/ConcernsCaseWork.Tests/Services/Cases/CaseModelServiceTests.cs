@@ -10,10 +10,10 @@ using Service.Redis.Base;
 using Service.Redis.Cases;
 using Service.Redis.Rating;
 using Service.Redis.RecordRatingHistory;
+using Service.Redis.Records;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
 using Service.Redis.Type;
-using Service.TRAMS.Records;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			// arrange
 			var mockCaseCachedService = new Mock<ICaseCachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
-			var mockRecordService = new Mock<IRecordService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
 			var mockRatingCachedService = new Mock<IRatingCachedService>();
 			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockCachedService = new Mock<ICachedService>();
@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 				.ReturnsAsync(casesDto);
 			
 			// act
-			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordService.Object,
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object,  mockRecordRatingHistoryCachedService.Object, 
 				mockStatusCachedService.Object, mapper, mockLogger.Object);
 			(IList<HomeModel> activeCasesModel, IList<HomeModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 				foreach (var actual in casesDto.Where(actual => expected.CaseUrn.Equals(actual.Urn.ToString())))
 				{
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
-					Assert.That(expected.Updated, Is.EqualTo(actual.UpdateAt.ToString("dd-MM-yyyy")));
+					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.AcademyNames, Is.Empty);
 					Assert.That(expected.CaseType, Is.Empty);
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn));
@@ -80,7 +80,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			// arrange
 			var mockCaseCachedService = new Mock<ICaseCachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
-			var mockRecordService = new Mock<IRecordService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
 			var mockRatingCachedService = new Mock<IRatingCachedService>();
 			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockCachedService = new Mock<ICachedService>();
@@ -95,7 +95,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 				.ThrowsAsync(new Exception());
 
 			// act
-			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordService.Object,
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object,  mockRecordRatingHistoryCachedService.Object, 
 				mockStatusCachedService.Object, mapper, mockLogger.Object);
 			(IList<HomeModel> activeCasesModel, IList<HomeModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());

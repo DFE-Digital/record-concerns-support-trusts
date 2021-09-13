@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,7 +19,7 @@ namespace Service.TRAMS.RecordWhistleblower
 			_logger = logger;
 		}
 		
-		public async Task<IList<RecordWhistleblowerDto>> GetRecordsWhistleblowerByRecordUrn(BigInteger recordUrn)
+		public async Task<IList<RecordWhistleblowerDto>> GetRecordsWhistleblowerByRecordUrn(long recordUrn)
 		{
 			try
 			{

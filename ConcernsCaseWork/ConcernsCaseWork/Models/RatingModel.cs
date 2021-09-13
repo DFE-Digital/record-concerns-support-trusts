@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 
 namespace ConcernsCaseWork.Models
 {
@@ -14,9 +13,9 @@ namespace ConcernsCaseWork.Models
 		
 		public DateTimeOffset UpdatedAt { get; }
 		
-		public BigInteger Urn { get; }
+		public long Urn { get; }
 		
-		public RatingModel(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, BigInteger urn) => 
+		public RatingModel(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, long urn) => 
 			(Name, CreatedAt, UpdatedAt, Urn) = (name, createdAt, updatedAt, urn);
 	}
 }

@@ -7,15 +7,13 @@ namespace ConcernsCaseWork.Models
 	/// </summary>
 	public sealed class RecordRatingHistoryModel
 	{
-		public int Id { get; }
-		
 		public DateTimeOffset CreatedAt { get; }
 		
-		public int RecordId { get; }
+		public long RecordUrn { get; }
 		
-		public int RatingId { get; }
+		public long RatingUrn { get; }
 		
-		public RecordRatingHistoryModel(int id, DateTimeOffset createdAt, int recordId, int ratingId) => 
-			(Id, CreatedAt, RecordId, RatingId) = (id, createdAt, recordId, ratingId);
+		public RecordRatingHistoryModel(DateTimeOffset createdAt, long recordUrn, long ratingUrn) => 
+			(CreatedAt, RecordUrn, RatingUrn) = (createdAt, recordUrn, ratingUrn);
 	}
 }

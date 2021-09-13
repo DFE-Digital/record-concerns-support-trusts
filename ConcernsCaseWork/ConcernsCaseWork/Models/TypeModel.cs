@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 
 namespace ConcernsCaseWork.Models
 {
@@ -22,10 +21,10 @@ namespace ConcernsCaseWork.Models
 		
 		public DateTimeOffset UpdatedAt { get; }
 		
-		public BigInteger Urn { get; }
+		public long Urn { get; }
 		
 		public TypeModel(string name, string description, DateTimeOffset createdAt, 
-			DateTimeOffset updatedAt, BigInteger urn) => 
+			DateTimeOffset updatedAt, long urn) => 
 			(Name, Description, CreatedAt, UpdatedAt, Urn) = (name, description, createdAt, updatedAt, urn);
 	}
 }

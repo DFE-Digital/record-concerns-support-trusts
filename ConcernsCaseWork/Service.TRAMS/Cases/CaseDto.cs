@@ -9,7 +9,7 @@ namespace Service.TRAMS.Cases
 		public DateTimeOffset CreatedAt { get; }
 
 		[JsonProperty("updated_at")]
-		public DateTimeOffset UpdateAt { get; }
+		public DateTimeOffset UpdatedAt { get; }
 		
 		[JsonProperty("review_at")]
 		public DateTimeOffset ReviewAt { get; }
@@ -64,7 +64,7 @@ namespace Service.TRAMS.Cases
 			DateTimeOffset closedAt, string createdBy, string description, string crmEnquiry, string trustUkPrn, 
 			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
 			string nextSteps, string resolutionStrategy, string directionOfTravel, long urn, long status) => 
-			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
+			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, ResolutionStrategy, DirectionOfTravel, 
 				Urn, Status) = 
 			(createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn,

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 
 namespace ConcernsCaseWork.Models
 {
@@ -22,21 +21,21 @@ namespace ConcernsCaseWork.Models
 
 		public string Reason { get; }
 	
-		public BigInteger CaseUrn { get; }
+		public long CaseUrn { get; }
 
-		public BigInteger TypeUrn { get; }
+		public long TypeUrn { get; }
 
-		public BigInteger RatingUrn { get; }
+		public long RatingUrn { get; }
 		
 		public bool Primary { get; }
 		
-		public BigInteger Urn { get; }
+		public long Urn { get; }
 		
-		public int Status { get; }
+		public long Status { get; }
 		
 		public RecordModel(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
-			DateTimeOffset closedAt, string name, string description, string reason, BigInteger caseUrn, BigInteger typeUrn, 
-			BigInteger ratingUrn, bool primary, BigInteger urn, int status) => 
+			DateTimeOffset closedAt, string name, string description, string reason, long caseUrn, long typeUrn, 
+			long ratingUrn, bool primary, long urn, long status) => 
 			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Urn, Status) = 
 			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, primary, urn, status);
 	}

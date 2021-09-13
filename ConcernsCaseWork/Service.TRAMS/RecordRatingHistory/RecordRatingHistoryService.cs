@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,7 +19,7 @@ namespace Service.TRAMS.RecordRatingHistory
 			_logger = logger;
 		}
 
-		public async Task<IList<RecordRatingHistoryDto>> GetRecordsRatingHistoryByCaseUrn(BigInteger caseUrn)
+		public async Task<IList<RecordRatingHistoryDto>> GetRecordsRatingHistoryByCaseUrn(long caseUrn)
 		{
 			try
 			{
@@ -55,7 +54,7 @@ namespace Service.TRAMS.RecordRatingHistory
 			return Array.Empty<RecordRatingHistoryDto>();
 		}
 
-		public async Task<IList<RecordRatingHistoryDto>> GetRecordsRatingHistoryByRecordUrn(BigInteger recordUrn)
+		public async Task<IList<RecordRatingHistoryDto>> GetRecordsRatingHistoryByRecordUrn(long recordUrn)
 		{
 			try
 			{

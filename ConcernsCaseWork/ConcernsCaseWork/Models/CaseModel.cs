@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 
 namespace ConcernsCaseWork.Models
 {
@@ -8,13 +7,13 @@ namespace ConcernsCaseWork.Models
 	/// </summary>
 	public sealed class CaseModel
 	{
-		public DateTime CreatedAt { get; }
+		public DateTimeOffset CreatedAt { get; }
 
-		public DateTime UpdateAt { get; }
+		public DateTimeOffset UpdatedAt { get; }
 
-		public DateTime ReviewAt { get; }
+		public DateTimeOffset ReviewAt { get; }
 
-		public DateTime ClosedAt { get; }
+		public DateTimeOffset ClosedAt { get; }
 		
 		/// <summary>
 		/// Case owner from azure AD some unique identifier
@@ -29,7 +28,7 @@ namespace ConcernsCaseWork.Models
 		
 		public string ReasonAtReview { get; }
 
-		public DateTime DeEscalation { get; }
+		public DateTimeOffset DeEscalation { get; }
 
 		public string Issue { get; }
 
@@ -44,15 +43,15 @@ namespace ConcernsCaseWork.Models
 		/// </summary>
 		public string DirectionOfTravel { get; }
 
-		public BigInteger Urn { get; }
+		public long Urn { get; }
 
 		public string Status { get; }
 
-		public CaseModel(DateTime createdAt, DateTime updatedAt, DateTime reviewAt, DateTime closedAt, 
+		public CaseModel(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
 			string createdBy, string description, string crmEnquiry, string trustUkPrn, string reasonAtReview, 
-			DateTime deEscalation, string issue, string currentStatus, string nextSteps, string resolutionStrategy, 
-			string directionOfTravel, BigInteger urn, string status) => 
-			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
+			DateTimeOffset deEscalation, string issue, string currentStatus, string nextSteps, string resolutionStrategy, 
+			string directionOfTravel, long urn, string status) => 
+			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, ResolutionStrategy, DirectionOfTravel, 
 				Urn, Status) = 
 			(createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn,

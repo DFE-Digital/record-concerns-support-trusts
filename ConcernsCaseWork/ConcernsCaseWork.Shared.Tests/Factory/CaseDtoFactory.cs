@@ -1,8 +1,7 @@
-﻿using ConcernsCaseWork.Shared.Tests.Shared;
-using Service.TRAMS.Cases;
+﻿using Service.TRAMS.Cases;
+using Service.TRAMS.Sequence;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory
 {
@@ -20,27 +19,27 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
 					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
-					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), new BigInteger(1)
+					"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 1
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
 					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
-					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), new BigInteger(3)
+					"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 3
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
 					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
-					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), new BigInteger(2)
+					"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 2
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
 					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
-					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), new BigInteger(1)
+					"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 1
 				),
 				new CaseDto(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
 					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
-					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), new BigInteger(2)
+					"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 2
 				)
 			};
 		}
@@ -51,7 +50,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new CaseDto(
 				dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
 				"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
-				"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), new BigInteger(1)
+				"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 1
 			);
 		}
 		
@@ -61,7 +60,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new CreateCaseDto(
 				dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
 				"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
-				"resolution-strategy", "direction-of-travel", new BigInteger(1)
+				"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 1
 			);
 		}
 	}

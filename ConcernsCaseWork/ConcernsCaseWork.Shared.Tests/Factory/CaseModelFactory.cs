@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Shared.Tests.Shared;
+using Service.TRAMS.Sequence;
 using System;
 using System.Collections.Generic;
 
@@ -15,27 +15,27 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				new CaseModel(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
 					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
-					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), "Live"
+					"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 1
 				),
 				new CaseModel(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
 					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
-					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), "Live"
+					"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 1
 				),
 				new CaseModel(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
 					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
-					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), "Close"
+					"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 3
 				),
 				new CaseModel(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
 					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
-					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), "Monitoring"
+					"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 2
 				),
 				new CaseModel(
 					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
 					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
-					"resolution-strategy", "direction-of-travel", BigIntegerSequence.Generator(), "Monitoring"
+					"resolution-strategy", "direction-of-travel", LongSequence.Generator(), 2
 				)
 			};
 		}

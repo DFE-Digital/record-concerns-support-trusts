@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,7 +19,7 @@ namespace Service.TRAMS.Records
 			_logger = logger;
 		}
 		
-		public async Task<IList<RecordDto>> GetRecordsByCaseUrn(BigInteger caseUrn)
+		public async Task<IList<RecordDto>> GetRecordsByCaseUrn(long caseUrn)
 		{
 			try
 			{
