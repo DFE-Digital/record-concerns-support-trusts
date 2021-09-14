@@ -12,7 +12,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 	public class AutoMapperTrustsTests
 	{
 		[Test]
-		public void ConvertFromTrustsSummaryDtoToTrustsSummaryModelIsValid()
+		public void ConvertFrom_TrustsSummaryDto_To_TrustsSummaryModel_IsValid()
 		{
 			// arrange
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 		}
 		
 		[Test]
-		public void ConvertFromTrustDetailsDtoToTrustsDetailsModelIsValid()
+		public void ConvertFrom_TrustDetailsDto_To_TrustsDetailsModel_IsValid()
 		{
 			// arrange
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
@@ -75,6 +75,74 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.Street, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Street));
 			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.Town, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Town));
 			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.AdditionalLine, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.AdditionalLine));
+		}
+		
+		[Test]
+		public void ConvertFrom_EstablishmentSummaryDto_To_EstablishmentSummaryModel_IsValid()
+		{
+			// arrange
+			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
+			var mapper = config.CreateMapper();
+
+			var establishmentSummaryDto = EstablishmentFactory.BuildEstablishmentSummaryDto();
+			
+			// act
+			var establishmentSummaryModel = mapper.Map<EstablishmentSummaryModel>(establishmentSummaryDto);
+			
+			// assert
+			Assert.IsAssignableFrom<EstablishmentSummaryModel>(establishmentSummaryModel);
+			Assert.That(establishmentSummaryModel.Name, Is.EqualTo(establishmentSummaryDto.Name));
+			Assert.That(establishmentSummaryModel.Urn, Is.EqualTo(establishmentSummaryDto.Urn));
+			Assert.That(establishmentSummaryModel.UkPrn, Is.EqualTo(establishmentSummaryDto.UkPrn));
+		}
+		
+		[Test]
+		public void ConvertFrom_GiasDataDto_To_GiasDataModel_IsValid()
+		{
+			// arrange
+			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
+			var mapper = config.CreateMapper();
+
+			var giasDataDto = GiasDataFactory.BuildGiasDataDto();
+			
+			// act
+			var giasDataModel = mapper.Map<GiasDataModel>(giasDataDto);
+			
+			// assert
+			Assert.IsAssignableFrom<GiasDataModel>(giasDataModel);
+			Assert.That(giasDataModel, Is.Not.Null);
+			Assert.That(giasDataModel.GroupId, Is.EqualTo(giasDataDto.GroupId));
+			Assert.That(giasDataModel.GroupName, Is.EqualTo(giasDataDto.GroupName));
+			Assert.That(giasDataModel.UkPrn, Is.EqualTo(giasDataDto.UkPrn));
+			Assert.That(giasDataModel.CompaniesHouseNumber, Is.EqualTo(giasDataDto.CompaniesHouseNumber));
+			Assert.That(giasDataModel.GroupContactAddress, Is.Not.Null);
+			Assert.That(giasDataModel.GroupContactAddress.County, Is.EqualTo(giasDataDto.GroupContactAddress.County));
+			Assert.That(giasDataModel.GroupContactAddress.Locality, Is.EqualTo(giasDataDto.GroupContactAddress.Locality));
+			Assert.That(giasDataModel.GroupContactAddress.Postcode, Is.EqualTo(giasDataDto.GroupContactAddress.Postcode));
+			Assert.That(giasDataModel.GroupContactAddress.Street, Is.EqualTo(giasDataDto.GroupContactAddress.Street));
+			Assert.That(giasDataModel.GroupContactAddress.Town, Is.EqualTo(giasDataDto.GroupContactAddress.Town));
+			Assert.That(giasDataModel.GroupContactAddress.AdditionalLine, Is.EqualTo(giasDataDto.GroupContactAddress.AdditionalLine));
+		}
+		
+		[Test]
+		public void ConvertFrom_EstablishmentDto_To_EstablishmentModel_IsValid()
+		{
+			// arrange
+			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
+			var mapper = config.CreateMapper();
+
+			var establishmentDto = EstablishmentFactory.BuildEstablishmentDto();
+			
+			// act
+			var establishmentModel = mapper.Map<EstablishmentModel>(establishmentDto);
+			
+			// assert
+			Assert.IsAssignableFrom<EstablishmentModel>(establishmentModel);
+			Assert.That(establishmentModel.Urn, Is.EqualTo(establishmentDto.Urn));
+			Assert.That(establishmentModel.EstablishmentName, Is.EqualTo(establishmentDto.EstablishmentName));
+			Assert.That(establishmentModel.EstablishmentNumber, Is.EqualTo(establishmentDto.EstablishmentNumber));
+			Assert.That(establishmentModel.LocalAuthorityCode, Is.EqualTo(establishmentDto.LocalAuthorityCode));
+			Assert.That(establishmentModel.LocalAuthorityName, Is.EqualTo(establishmentDto.LocalAuthorityName));
 		}
 	}
 }
