@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("ErrorModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("ErrorPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);

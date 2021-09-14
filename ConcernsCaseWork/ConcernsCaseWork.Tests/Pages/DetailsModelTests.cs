@@ -66,7 +66,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -97,7 +97,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -106,7 +106,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Error,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -134,7 +134,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -143,7 +143,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Error,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -157,6 +157,10 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
+
+			var caseModel = CaseModelFactory.BuildCaseModel();
+			
+			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(caseModel);
 			
 			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCaseModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
 			pageModel.HttpContext.Request.Form = new FormCollection(
@@ -170,7 +174,6 @@ namespace ConcernsCaseWork.Tests.Pages
 					{ "next-steps-detail", new StringValues("next-steps-detail") },
 					{ "resolution-strategy-detail", new StringValues("resolution-strategy-detail") }
 				});
-			
 			
 			// act
 			var pageResponse = await pageModel.OnPost();

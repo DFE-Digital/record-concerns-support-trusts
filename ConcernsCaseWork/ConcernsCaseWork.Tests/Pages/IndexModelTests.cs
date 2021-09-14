@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -105,7 +105,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -135,7 +135,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -144,7 +144,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Error,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -174,7 +174,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -207,7 +207,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -216,7 +216,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Error,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);

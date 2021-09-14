@@ -6,9 +6,35 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class CaseModelFactory
 	{
-		public static List<CaseModel> BuildCaseModels()
+		public static CaseModel BuildCaseModel()
 		{
-			var dateTimeNow = DateTime.Now;
+			var dateTimeNow = DateTimeOffset.Now;
+			return new CaseModel
+			{
+				CreatedAt = dateTimeNow,
+				UpdatedAt = dateTimeNow,
+				ReviewAt = dateTimeNow,
+				ClosedAt = dateTimeNow,
+				CreatedBy = "testing",
+				Description = "description",
+				CrmEnquiry = "crm-enquiry",
+				TrustUkPrn = "trust-ukprn",
+				ReasonAtReview = "reason-at-review",
+				DeEscalation = dateTimeNow,
+				Issue = "issue",
+				CurrentStatus = "current-status",
+				NextSteps = "nextSteps",
+				ResolutionStrategy = "resolution-strategy",
+				DirectionOfTravel = "direction-of-travel",
+				Urn = 1,
+				Status = 1,
+				StatusName = "Live"
+			};
+		}
+		
+		public static IEnumerable<CaseModel> BuildListCaseModels()
+		{
+			var dateTimeNow = DateTimeOffset.Now;
 			return new List<CaseModel>
 			{
 				new CaseModel
