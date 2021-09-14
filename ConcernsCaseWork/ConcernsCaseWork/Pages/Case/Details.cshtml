@@ -1,4 +1,5 @@
 ﻿@page "/case/details"
+@using ConcernsCaseWork.Pages.Shared
 @model ConcernsCaseWork.Pages.Case.DetailsPageModel
 
 @{
@@ -257,30 +258,38 @@
 								<div class="govuk-radios__item">
 									<input class="govuk-radios__input" id="riskRating" name="riskRating" type="radio" value="Amber-Green">
 									<label class="govuk-label govuk-radios__label" for="riskRating">
-										<span class="govuk-tag ragtag ragtag__amber">Amber</span>
-										<span class="govuk-tag ragtag ragtag__green">Green</span>
+										<div class="govuk-label-wrapper">
+											<span class="govuk-tag ragtag ragtag__amber">Amber</span>
+											<span class="govuk-tag ragtag ragtag__green">Green</span>
+										</div>
 									</label>
 								</div>
 
 								<div class="govuk-radios__item">
 									<input class="govuk-radios__input" id="riskRating-1" name="riskRating" type="radio" value="Red-Amber">
-									<label class="govuk-label govuk-radios__label" for="riskRating-1">
-										<span class="govuk-tag ragtag ragtag__red">Red</span>
-										<span class="govuk-tag ragtag ragtag__amber">Amber</span>
+									<label class="govuk-label govuk-radios__label" for="riskRating-1" style="font-size: 0;">
+										<div class="govuk-label-wrapper">
+											<span class="govuk-tag ragtag ragtag__red">Red</span>
+											<span class="govuk-tag ragtag ragtag__amber">Amber</span>
+										</div>
 									</label>
 								</div>
 
 								<div class="govuk-radios__item">
 									<input class="govuk-radios__input" id="riskRating-2" name="riskRating" type="radio" value="Red">
-									<label class="govuk-label govuk-radios__label" for="riskRating-2">
-										<span class="govuk-tag ragtag ragtag__red">Red</span>
+									<label class="govuk-label govuk-radios__label" for="riskRating-2" style="font-size: 0;">
+										<div class="govuk-label-wrapper">
+											<span class="govuk-tag ragtag ragtag__red">Red</span>
+										</div>
 									</label>
 								</div>
 
 								<div class="govuk-radios__item">
 									<input class="govuk-radios__input" id="riskRating-3" name="riskRating" type="radio" value="Red-Plus">
-									<label class="govuk-label govuk-radios__label" for="riskRating-3">
-										<span class="govuk-tag ragtag ragtag__redplus">Red Plus</span>
+									<label class="govuk-label govuk-radios__label" for="riskRating-3" style="font-size: 0;">
+										<div class="govuk-label-wrapper">
+											<span class="govuk-tag ragtag ragtag__redplus">Red Plus</span>
+										</div>
 									</label>
 								</div>
 

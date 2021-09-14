@@ -15,14 +15,16 @@ namespace ConcernsCaseWork.Mappers
 		private static readonly Dictionary<string, string> Rags = new Dictionary<string, string>(5)
 		{
 			{"n/a", "-"}, {"Red-Plus", "Red Plus"}, 
-			{"Red", "Red"}, {"Red-Amber", "Red | Amber"}, 
-			{"Amber-Green", "Amber | Green"}
+			{"Red", "Red"}, {"Red-Amber", "Red Amber"}, 
+			{"Amber-Green", "Amber Green"},
+			{"Green", "Green"}
 		};
 		private static readonly Dictionary<string, string> RagsCss = new Dictionary<string, string>(5)
 		{
 			{"n/a", ""}, {"Red-Plus", "ragtag__redplus"}, 
 			{"Red", "ragtag__red"}, {"Red-Amber", "ragtag__redamber"}, 
-			{"Amber-Green", "ragtag__ambergreen"}
+			{"Amber-Green", "ragtag__ambergreen"},
+			{"Green", "ragtag__green"}
 		};
 		
 		private const string DateFormat = "dd-MM-yyyy";

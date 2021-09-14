@@ -19,7 +19,7 @@ namespace Service.TRAMS.Cases
 			_logger = logger;
 		}
 		
-		public async Task<IList<CaseDto>> GetCasesByCaseworker(string caseworker, string statusUrn = "Live")
+		public async Task<IList<CaseDto>> GetCasesByCaseworker(string caseworker, string statusName = "Live")
 		{
 			try
 			{
@@ -27,7 +27,7 @@ namespace Service.TRAMS.Cases
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"{EndpointsVersion}/cases/owner/{caseworker}?status={statusUrn}");
+					$"{EndpointsVersion}/cases/owner/{caseworker}?status={statusName}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");

@@ -231,6 +231,22 @@ span.summary-validation-symbol {
   padding-right: 10px;
 }
 
+.govuk-table__header.govuk-table__header__width_4 {
+  width: 4em;
+}
+
+.govuk-table__header.govuk-table__header__width_6 {
+  width: 6em;
+}
+
+.govuk-table__header.govuk-table__header__width_8 {
+  width: 8em;
+}
+
+.govuk-table__header.govuk-table__header__width_10 {
+  width: 10em;
+}
+
 .govuk-table__head{
   background-color:#f2f5f7;
 }
@@ -1624,8 +1640,14 @@ span.summary-validation-symbol {
 /* ==========================================================================
    #Home page wider screen
    ========================================================================== */
-.govuk-width-container {
+.govuk-width-container .govuk-width-container-override {
   max-width: 1200px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.govuk-word-spacing {
+  word-spacing: 10px;
 }
 
 /* ==========================================================================
@@ -1636,4 +1658,9 @@ span.summary-validation-symbol {
   resize: none;
   padding: 15px;
   line-height: 1.45;
+}
+
+.govuk-label-wrapper {
+  margin: 5px 0;
+  font-size: 0;
 }
