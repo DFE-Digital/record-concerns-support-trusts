@@ -5,7 +5,6 @@ using Moq;
 using Moq.Protected;
 using NUnit.Framework;
 using Service.TRAMS.Status;
-using Service.TRAMS.Type;
 using System;
 using System.Linq;
 using System.Net;
