@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using Service.TRAMS.Status;
 using Service.TRAMS.Type;
 using System;
 using System.Linq;
@@ -13,16 +14,16 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Tests.Type
+namespace Service.TRAMS.Tests.Status
 {
 	[Parallelizable(ParallelScope.All)]
-	public class TypeServiceTests
+	public class StatusServiceTests
 	{
 		[Test]
-		public async Task WhenGetTypes_ReturnsTypes()
+		public async Task WhenGetStatus_ReturnsStatus()
 		{
 			// arrange
-			var expectedTypes = TypeDtoFactory.BuildTypesDto();
+			var expectedStatus = StatusDtoFactory.BuildListStatusDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -33,38 +34,37 @@ namespace Service.TRAMS.Tests.Type
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedTypes))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedStatus))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
-			var logger = new Mock<ILogger<TypeService>>();
-			var typeService = new TypeService(httpClientFactory.Object, logger.Object);
+			var logger = new Mock<ILogger<StatusService>>();
+			var statusService = new StatusService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var types = await typeService.GetTypes();
+			var statuses = await statusService.GetStatuses();
 
 			// assert
-			Assert.That(types, Is.Not.Null);
-			Assert.That(types.Count, Is.EqualTo(expectedTypes.Count));
+			Assert.That(statuses, Is.Not.Null);
+			Assert.That(statuses.Count, Is.EqualTo(expectedStatus.Count));
 
-			foreach (var actualType in types)
+			foreach (var actualStatus in statuses)
 			{
-				foreach (var expectedType in expectedTypes.Where(expectedType => actualType.Urn.CompareTo(expectedType.Urn) == 0))
+				foreach (var expectedType in expectedStatus.Where(expectedType => actualStatus.Urn.CompareTo(expectedType.Urn) == 0))
 				{
-					Assert.That(actualType.Name, Is.EqualTo(expectedType.Name));
-					Assert.That(actualType.Description, Is.EqualTo(expectedType.Description));
-					Assert.That(actualType.Urn, Is.EqualTo(expectedType.Urn));
-					Assert.That(actualType.CreatedAt, Is.EqualTo(expectedType.CreatedAt));
-					Assert.That(actualType.UpdatedAt, Is.EqualTo(expectedType.UpdatedAt));
+					Assert.That(actualStatus.Name, Is.EqualTo(expectedType.Name));
+					Assert.That(actualStatus.Urn, Is.EqualTo(expectedType.Urn));
+					Assert.That(actualStatus.CreatedAt, Is.EqualTo(expectedType.CreatedAt));
+					Assert.That(actualStatus.UpdatedAt, Is.EqualTo(expectedType.UpdatedAt));
 				}
 			}
 		}
 		
 		[Test]
-		public async Task WhenGetTypes_ThrowsException_ReturnsEmptyTypes()
+		public async Task WhenGetStatus_ThrowsException_ReturnsEmptyStatuses()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -83,17 +83,17 @@ namespace Service.TRAMS.Tests.Type
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
-			var logger = new Mock<ILogger<TypeService>>();
-			var typeService = new TypeService(httpClientFactory.Object, logger.Object);
+			var logger = new Mock<ILogger<StatusService>>();
+			var statusService = new StatusService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var types = await typeService.GetTypes();
+			var statuses = await statusService.GetStatuses();
 
 			// assert
-			Assert.That(types, Is.Not.Null);
+			Assert.That(statuses, Is.Not.Null);
 			// TODO uncomment when trams api is live
-			//Assert.That(types.Count, Is.EqualTo(0));
-			Assert.That(types.Count, Is.EqualTo(13));
+			//Assert.That(statuses.Count, Is.EqualTo(0));
+			Assert.That(statuses.Count, Is.EqualTo(3));
 		}
 	}
 }
