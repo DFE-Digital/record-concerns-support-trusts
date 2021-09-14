@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			const string searchParameter = "Northwood";
 			
 			// act
-			var trusts = await trustService.GetTrustsBySearchCriteria(TrustFactory.CreateTrustSearch(searchParameter));
+			var trusts = await trustService.GetTrustsBySearchCriteria(TrustFactory.BuildTrustSearch(searchParameter));
 
 			// assert
 			Assert.That(trusts, Is.Not.Null);
@@ -52,7 +52,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			const string searchParameter = "Northwood";
 			
 			// act
-			var trusts = await trustService.GetTrustsBySearchCriteria(TrustFactory.CreateTrustSearch(searchParameter, searchParameter));
+			var trusts = await trustService.GetTrustsBySearchCriteria(TrustFactory.BuildTrustSearch(searchParameter, searchParameter));
 
 			// assert
 			Assert.That(trusts, Is.Not.Null);
@@ -67,7 +67,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			const string searchParameter = "Northwood";
 			
 			// act
-			var trusts = await trustService.GetTrustsBySearchCriteria(TrustFactory.CreateTrustSearch(searchParameter, searchParameter, searchParameter));
+			var trusts = await trustService.GetTrustsBySearchCriteria(TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
 
 			// assert
 			Assert.That(trusts, Is.Not.Null);

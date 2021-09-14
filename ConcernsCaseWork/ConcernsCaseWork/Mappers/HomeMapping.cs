@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.Mappers
 		
 		private const string DateFormat = "dd-MM-yyyy";
 		
-		public static (IList<HomeModel>, IList<HomeModel>) Map(IList<CaseDto> casesDto,
+		public static (IList<HomeModel>, IList<HomeModel>) Map(IEnumerable<CaseDto> casesDto,
 			IList<TrustDetailsDto> trustsDetailsDto, IList<RecordDto> recordsDto,
 			IList<RatingDto> ratingsDto, IList<TypeDto> typesDto, StatusDto statusLiveDto,
 			StatusDto statusMonitoringDto)
@@ -35,18 +35,14 @@ namespace ConcernsCaseWork.Mappers
 			var activeCases = new List<HomeModel>();
 			var monitoringCases = new List<HomeModel>();
 
-			foreach (var caseModel in casesDto)
+			foreach (var caseDto in casesDto)
 			{
 				// Find trust / academies
-				var trustName = trustsDetailsDto.Where(t => t.GiasData.UkPrn == caseModel.TrustUkPrn)
-					.Select(t => t.GiasData.GroupName)
-					.FirstOrDefault();
-				var academies = trustsDetailsDto.Where(t => t.GiasData.UkPrn == caseModel.TrustUkPrn && t.Establishments != null)
-					.Select(t => string.Join(",", t.Establishments.Select(e => e.EstablishmentName)))
-					.FirstOrDefault();
+				var trustName = FetchTrustName(trustsDetailsDto, caseDto);
+				var academies = FetchAcademies(trustsDetailsDto, caseDto);
 
 				// Find primary case record
-				var primaryRecordModel = recordsDto.FirstOrDefault(r => r.CaseUrn.CompareTo(caseModel.Urn) == 0 && r.Primary);
+				var primaryRecordModel = recordsDto.FirstOrDefault(r => r.CaseUrn.CompareTo(caseDto.Urn) == 0 && r.Primary);
 				if (primaryRecordModel is null) continue;
 				
 				// Find primary type
@@ -54,7 +50,7 @@ namespace ConcernsCaseWork.Mappers
 				if (primaryCaseType is null) continue;
 				
 				// Find primary case type urn
-				var recordDto = recordsDto.FirstOrDefault(r => r.CaseUrn.CompareTo(caseModel.Urn) == 0);
+				var recordDto = recordsDto.FirstOrDefault(r => r.CaseUrn.CompareTo(caseDto.Urn) == 0);
 				if (recordDto is null) continue;
 				
 				// Rag rating
@@ -62,17 +58,17 @@ namespace ConcernsCaseWork.Mappers
 					.Select(r => r.Name)
 					.First();
 
-				Rags.TryGetValue(rating ?? "n/a", out var rag);
-				RagsCss.TryGetValue(rating ?? "n/a", out var ragCss);
-
+				var rag = FetchRag(rating);
+				var ragCss = FetchRagCss(rating);
+				
 				// Filter per status
-				if (caseModel.Status.CompareTo(statusLiveDto.Urn) == 0)
+				if (caseDto.Status.CompareTo(statusLiveDto.Urn) == 0)
 				{
 					activeCases.Add(new HomeModel(
-						caseModel.Urn.ToString(), 
-						caseModel.CreatedAt.ToString(DateFormat),
-						caseModel.UpdatedAt.ToString(DateFormat),
-						caseModel.ClosedAt.ToString(DateFormat),
+						caseDto.Urn.ToString(), 
+						caseDto.CreatedAt.ToString(DateFormat),
+						caseDto.UpdatedAt.ToString(DateFormat),
+						caseDto.ClosedAt.ToString(DateFormat),
 						trustName,
 						academies,
 						primaryCaseType.Name,
@@ -81,13 +77,13 @@ namespace ConcernsCaseWork.Mappers
 						ragCss
 					));
 				}
-				else if (caseModel.Status.CompareTo(statusMonitoringDto.Urn) == 0)
+				else if (caseDto.Status.CompareTo(statusMonitoringDto.Urn) == 0)
 				{
 					monitoringCases.Add(new HomeModel(
-						caseModel.Urn.ToString(), 
-						caseModel.CreatedAt.ToString(DateFormat),
-						caseModel.UpdatedAt.ToString(DateFormat),
-						caseModel.ClosedAt.ToString(DateFormat),
+						caseDto.Urn.ToString(), 
+						caseDto.CreatedAt.ToString(DateFormat),
+						caseDto.UpdatedAt.ToString(DateFormat),
+						caseDto.ClosedAt.ToString(DateFormat),
 						trustName,
 						academies,
 						primaryCaseType.Name,
@@ -99,6 +95,32 @@ namespace ConcernsCaseWork.Mappers
 			}
 
 			return (activeCases, monitoringCases);
+		}
+
+		public static string FetchRag(string rating)
+		{
+			var defaultRating = "n/a";
+			return Rags.TryGetValue(rating ?? defaultRating, out var rag) ? rag : defaultRating;
+		}
+		
+		public static string FetchRagCss(string rating)
+		{
+			var defaultRating = "n/a";
+			return RagsCss.TryGetValue(rating ?? "n/a", out var ragCss) ? ragCss : defaultRating;
+		}
+		
+		public static string FetchTrustName(IEnumerable<TrustDetailsDto> trustsDetailsDto, CaseDto caseDto)
+		{
+			 return trustsDetailsDto.Where(t => t.GiasData.UkPrn == caseDto.TrustUkPrn)
+				 .Select(t => t.GiasData.GroupName)
+				 .FirstOrDefault();
+		}
+
+		private static string FetchAcademies(IEnumerable<TrustDetailsDto> trustsDetailsDto, CaseDto caseDto)
+		{
+			return trustsDetailsDto.Where(t => t.GiasData.UkPrn == caseDto.TrustUkPrn && t.Establishments != null)
+				.Select(t => string.Join(",", t.Establishments.Select(e => e.EstablishmentName)))
+				.FirstOrDefault();
 		}
 	}
 }

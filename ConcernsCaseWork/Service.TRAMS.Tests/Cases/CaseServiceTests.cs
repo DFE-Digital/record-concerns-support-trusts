@@ -103,9 +103,7 @@ namespace Service.TRAMS.Tests.Cases
 
 			// assert
 			Assert.That(trusts, Is.Not.Null);
-			// Uncomment when pointing service to real trams api
-			// Assert.That(trusts.Count, Is.EqualTo(0));
-			Assert.That(trusts.Count, Is.EqualTo(5));
+			Assert.That(trusts.Count, Is.EqualTo(0));
 		}
 	}
 }

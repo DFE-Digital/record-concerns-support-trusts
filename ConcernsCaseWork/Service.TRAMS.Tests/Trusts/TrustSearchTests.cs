@@ -13,7 +13,7 @@ namespace Service.TRAMS.Tests.Trusts
 		public void WhenTrustSearchInterlockIncrement_ReturnsPageIncremented()
 		{
 			// act
-			var trustSearch = TrustFactory.CreateTrustSearch("group-name", "ukprn", "companies-house-number");
+			var trustSearch = TrustFactory.BuildTrustSearch("group-name", "ukprn", "companies-house-number");
 			var nextPage = trustSearch.PageIncrement();
 
 			// assert
@@ -27,7 +27,7 @@ namespace Service.TRAMS.Tests.Trusts
 		public void WhenTrustSearchInterlockMultipleIncrement_ReturnsPageIncremented()
 		{
 			// act
-			var trustSearch = TrustFactory.CreateTrustSearch("group-name", "ukprn", "companies-house-number");
+			var trustSearch = TrustFactory.BuildTrustSearch("group-name", "ukprn", "companies-house-number");
 			trustSearch.PageIncrement();
 			trustSearch.PageIncrement();
 			trustSearch.PageIncrement();
@@ -44,7 +44,7 @@ namespace Service.TRAMS.Tests.Trusts
 		public void WhenTrustSearchInterlockParallelIncrement_ReturnsPageIncremented()
 		{
 			// act
-			var trustSearch = TrustFactory.CreateTrustSearch("group-name", "ukprn", "companies-house-number");
+			var trustSearch = TrustFactory.BuildTrustSearch("group-name", "ukprn", "companies-house-number");
 
 			var tasks = new List<Task<int>>();
 			for (var i = 0; i < 10; ++i)

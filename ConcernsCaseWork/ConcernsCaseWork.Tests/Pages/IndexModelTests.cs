@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
-			var trustSummaryModel = TrustFactory.CreateListTrustSummaryModel();
+			var trustSummaryModel = TrustFactory.BuildListTrustSummaryModel();
 
 			mockTrustModelService.Setup(t => t.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(trustSummaryModel);
 			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);

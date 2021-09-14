@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
-			var expected = TrustFactory.CreateTrustDetailsModel();
+			var expected = TrustFactory.BuildTrustDetailsModel();
 
 			mockCasesCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(new UserState { TrustUkPrn = "trust-ukprn" });
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);

@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class EstablishmentFactory
 	{
-		public static List<EstablishmentSummaryDto> CreateListEstablishmentSummaryDto()
+		public static List<EstablishmentSummaryDto> BuildListEstablishmentSummaryDto()
 		{
 			return new List<EstablishmentSummaryDto>
 			{
@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			};
 		}
 
-		public static List<EstablishmentSummaryModel> CreateListEstablishmentSummaryModel()
+		public static List<EstablishmentSummaryModel> BuildListEstablishmentSummaryModel()
 		{
 			return new List<EstablishmentSummaryModel>
 			{
@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			};
 		}
 		
-		public static List<EstablishmentDto> CreateListEstablishmentDto()
+		public static List<EstablishmentDto> BuildListEstablishmentDto()
 		{
 			return new List<EstablishmentDto>
 			{
@@ -35,7 +35,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			};
 		}
 		
-		public static List<EstablishmentModel> CreateListEstablishmentModel()
+		public static List<EstablishmentModel> BuildListEstablishmentModel()
 		{
 			return new List<EstablishmentModel>
 			{

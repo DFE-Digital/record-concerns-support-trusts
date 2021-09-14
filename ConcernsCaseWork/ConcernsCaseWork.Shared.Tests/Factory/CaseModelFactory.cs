@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class CaseModelFactory
 	{
-		public static List<CaseModel> CreateCaseModels()
+		public static List<CaseModel> BuildCaseModels()
 		{
 			var dateTimeNow = DateTime.Now;
 			return new List<CaseModel>

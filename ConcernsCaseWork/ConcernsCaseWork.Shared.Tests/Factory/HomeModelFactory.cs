@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class HomeModelFactory
 	{
-		public static List<HomeModel> CreateHomeModels()
+		public static List<HomeModel> BuildHomeModels()
 		{
 			var dateTimeNow = DateTimeOffset.Now;
 			return new List<HomeModel>

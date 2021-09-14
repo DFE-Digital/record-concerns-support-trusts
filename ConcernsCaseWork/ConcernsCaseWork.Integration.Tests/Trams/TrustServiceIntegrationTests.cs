@@ -40,7 +40,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			
 			// act
 			var trustsPage = await trustService.GetTrustsByPagination(
-				TrustFactory.CreateTrustSearch(searchParameter, searchParameter, searchParameter));
+				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
 
 			// assert
 			Assert.That(trustsPage, Is.Not.Null);
@@ -56,7 +56,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			
 			// act
 			var trustsSummaryModel = await trustModelService.GetTrustsBySearchCriteria(
-				TrustFactory.CreateTrustSearch(searchParameter, searchParameter, searchParameter));
+				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
 
 			// assert
 			Assert.That(trustsSummaryModel, Is.Not.Null);
@@ -71,7 +71,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			const string searchParameter = "Northwood";
 			
 			// act
-			var trustsSummaryDto = await trustService.GetTrustsByPagination(TrustFactory.CreateTrustSearch(searchParameter, searchParameter, searchParameter));
+			var trustsSummaryDto = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
 
 			// assert
 			Assert.That(trustsSummaryDto, Is.Not.Null);
@@ -98,7 +98,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			
 			// act
 			var trustsSummaryModel = await trustModelService.GetTrustsBySearchCriteria(
-				TrustFactory.CreateTrustSearch(searchParameter, searchParameter, searchParameter));
+				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
 
 			// assert
 			Assert.That(trustsSummaryModel, Is.Not.Null);
