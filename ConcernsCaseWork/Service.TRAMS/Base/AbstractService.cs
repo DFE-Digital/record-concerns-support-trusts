@@ -6,6 +6,7 @@ namespace Service.TRAMS.Base
 	{
 		internal readonly IHttpClientFactory ClientFactory;
 		internal const string HttpClientName = "TramsClient";
+		internal const string EndpointsVersion = "/v2";
 		
 		protected AbstractService(IHttpClientFactory clientFactory)
 		{

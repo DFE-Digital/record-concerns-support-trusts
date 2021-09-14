@@ -1,24 +1,59 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.TRAMS.Models;
+using Service.TRAMS.Trusts;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class EstablishmentFactory
 	{
-		public static List<EstablishmentSummaryDto> CreateListEstablishmentSummaryDto()
+		public static EstablishmentSummaryDto BuildEstablishmentSummaryDto()
 		{
-			return new List<EstablishmentSummaryDto>
+			return new EstablishmentSummaryDto("establishment-urn", "establishment-name", "establishment-ukprn");
+		}
+
+		public static List<EstablishmentSummaryDto> BuildListEstablishmentSummaryDto()
+		{
+			return new List<EstablishmentSummaryDto> { new EstablishmentSummaryDto("establishment-urn", "establishment-name", "establishment-ukprn") };
+		}
+
+		public static List<EstablishmentSummaryModel> BuildListEstablishmentSummaryModel()
+		{
+			return new List<EstablishmentSummaryModel> { new EstablishmentSummaryModel("establishment-urn", "establishment-name", "establishment-ukprn") };
+		}
+
+		public static EstablishmentDto BuildEstablishmentDto()
+		{
+			return new EstablishmentDto(
+				"establishment-urn",
+				"establishment-local-authority-code",
+				"establishment-local-authority-name",
+				"establishment-number",
+				"establishment-name");
+		}
+
+		public static List<EstablishmentDto> BuildListEstablishmentDto()
+		{
+			return new List<EstablishmentDto>
 			{
-				new EstablishmentSummaryDto("establishment-urn", "establishment-name", "establishment-ukprn")
+				new EstablishmentDto(
+					"establishment-urn",
+					"establishment-local-authority-code",
+					"establishment-local-authority-name",
+					"establishment-number",
+					"establishment-name")
 			};
 		}
 
-		public static List<EstablishmentSummaryModel> CreateListEstablishmentSummaryModel()
+		public static List<EstablishmentModel> BuildListEstablishmentModel()
 		{
-			return new List<EstablishmentSummaryModel>
+			return new List<EstablishmentModel>
 			{
-				new EstablishmentSummaryModel("establishment-urn", "establishment-name", "establishment-ukprn")
+				new EstablishmentModel(
+					"establishment-urn",
+					"establishment-local-authority-code",
+					"establishment-local-authority-name",
+					"establishment-number",
+					"establishment-name")
 			};
 		}
 	}

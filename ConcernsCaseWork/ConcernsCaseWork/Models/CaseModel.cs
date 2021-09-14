@@ -1,27 +1,52 @@
-﻿namespace ConcernsCaseWork.Models
+﻿using System;
+
+namespace ConcernsCaseWork.Models
 {
 	/// <summary>
 	/// Frontend model classes used only for UI rendering
 	/// </summary>
 	public sealed class CaseModel
 	{
-		public string Id { get; }
-		public string Type { get; }
-		public string TrustName { get; }
-		public int Rag { get; }
-		public string Created { get; }
-		public string LastUpdate { get; }
-		public string Closed { get; }
+		public DateTimeOffset CreatedAt { get; set; }
 
-		public CaseModel(string id, string type, string trustName, int rag, string created, string lastUpdate, string closed)
-		{
-			Id = id;
-			Type = type;
-			TrustName = trustName;
-			Rag = rag;
-			Created = created;
-			LastUpdate = lastUpdate;
-			Closed = closed;
-		}
+		public DateTimeOffset UpdatedAt { get; set; }
+
+		public DateTimeOffset ReviewAt { get; set; }
+
+		public DateTimeOffset ClosedAt { get; set; }
+		
+		/// <summary>
+		/// Case owner from azure AD some unique identifier
+		/// </summary>
+		public string CreatedBy { get; set; }
+
+		public string Description { get; set; }
+
+		public string CrmEnquiry { get; set; }
+
+		public string TrustUkPrn { get; set; }
+		
+		public string ReasonAtReview { get; set; }
+
+		public DateTimeOffset DeEscalation { get; set; }
+
+		public string Issue { get; set; }
+
+		public string CurrentStatus { get; set; }
+
+		public string NextSteps { get; set; }
+	
+		public string ResolutionStrategy { get; set; }
+		
+		/// <summary>
+		/// Deteriorating, unchanged, improved
+		/// </summary>
+		public string DirectionOfTravel { get; set; }
+
+		public long Urn { get; set; }
+
+		public long Status { get; set; }
+		
+		public string StatusName { get; set; }
 	}
 }

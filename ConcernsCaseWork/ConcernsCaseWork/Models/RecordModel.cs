@@ -1,0 +1,42 @@
+﻿using System;
+
+namespace ConcernsCaseWork.Models
+{
+	/// <summary>
+	/// Frontend model classes used only for UI rendering
+	/// </summary>
+	public sealed class RecordModel
+	{
+		public DateTimeOffset CreatedAt { get; }
+
+		public DateTimeOffset UpdateAt { get; }
+
+		public DateTimeOffset ReviewAt { get; }
+
+		public DateTimeOffset ClosedAt { get; }
+
+		public string Name { get; }
+	
+		public string Description { get; }
+
+		public string Reason { get; }
+	
+		public long CaseUrn { get; }
+
+		public long TypeUrn { get; }
+
+		public long RatingUrn { get; }
+		
+		public bool Primary { get; }
+		
+		public long Urn { get; }
+		
+		public long Status { get; }
+		
+		public RecordModel(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
+			DateTimeOffset closedAt, string name, string description, string reason, long caseUrn, long typeUrn, 
+			long ratingUrn, bool primary, long urn, long status) => 
+			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Urn, Status) = 
+			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, primary, urn, status);
+	}
+}

@@ -53,7 +53,7 @@ namespace Service.Redis.Tests.Users
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<UserClaims>(It.IsAny<string>())).
 				Returns(Task.FromResult<UserClaims>(null));
-			mockCacheProvider.Setup(c => c.CacheTimeToLive()).Returns(120);
+			mockCacheProvider.Setup(c => c.CacheTimeToLive()).Returns(24);
 
 			mockActiveDirectoryService.Setup(ad => ad.GetUserAsync(It.IsAny<UserCredentials>())).
 				Returns(Task.FromResult(userClaims));

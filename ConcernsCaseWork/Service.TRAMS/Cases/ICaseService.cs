@@ -1,12 +1,15 @@
-﻿using Service.TRAMS.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.Cases
 {
 	public interface ICaseService
 	{
-		// TODO - for example only...
-		Task<IList<CaseDto>> GetCasesByCaseworker(string caseworker);
+		Task<IList<CaseDto>> GetCasesByCaseworker(string caseworker, string statusName = "Live");
+		Task<CaseDto> GetCaseByUrn(string urn);
+		Task<IList<CaseDto>> GetCasesByTrustUkPrn(string trustUkprn);
+		Task<IList<CaseDto>> GetCasesByPagination(CaseSearch caseSearch);
+		Task<CaseDto> PostCase(CreateCaseDto createCaseDto);
+		Task<CaseDto> PatchCaseByUrn(UpdateCaseDto updateCaseDto);
 	}
 }

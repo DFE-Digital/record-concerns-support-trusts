@@ -3,7 +3,6 @@ using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.Shared;
-using ConcernsCaseWork.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -11,8 +10,8 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Cases;
-using Service.TRAMS.Models;
+using Service.Redis.Base;
+using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,9 +28,9 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenOnGetTrustsSearchResult_ReturnEmptyPartialPage(string searchQuery)
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<IndexModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockCasesCachedService = new Mock<ICasesCachedService>();
+			var mockCasesCachedService = new Mock<ICachedService>();
 			
 			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
 			
@@ -50,7 +49,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -60,10 +59,10 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenOnGetTrustsSearchResult_ReturnResultsToPartialPage()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<IndexModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockCasesCachedService = new Mock<ICasesCachedService>();
-			var trustSummaryModel = TrustFactory.CreateListTrustSummaryModel();
+			var mockCasesCachedService = new Mock<ICachedService>();
+			var trustSummaryModel = TrustFactory.BuildListTrustSummaryModel();
 
 			mockTrustModelService.Setup(t => t.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(trustSummaryModel);
 			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
@@ -87,7 +86,7 @@ namespace ConcernsCaseWork.Tests.Pages
 					Assert.That(expected.UkPrn, Is.EqualTo(actual.UkPrn));
 					Assert.That(expected.GroupName, Is.EqualTo(actual.GroupName));
 					Assert.That(expected.CompaniesHouseNumber, Is.EqualTo(actual.CompaniesHouseNumber));
-					Assert.That(expected.DisplayName, Is.EqualTo(SharedBuilders.BuildDisplayName(actual)));
+					Assert.That(expected.DisplayName, Is.EqualTo(SharedBuilder.BuildDisplayName(actual)));
 					
 					foreach (var establishment in actual.Establishments)
 					{
@@ -106,7 +105,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -116,9 +115,9 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenOnGetTrustsSearchResult_ReturnStatusCodeException()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<IndexModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockCasesCachedService = new Mock<ICasesCachedService>();
+			var mockCasesCachedService = new Mock<ICachedService>();
 
 			mockTrustModelService.Setup(t => t.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).Throws<Exception>();
 			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
@@ -136,7 +135,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -145,24 +144,24 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Error,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 		}
 		
 		[Test]
-		public void WhenOnGetSelectedTrust_ReturnJsonResultWithRedirectUrl()
+		public async Task WhenOnGetSelectedTrust_ReturnJsonResultWithRedirectUrl()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<IndexModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockCasesCachedService = new Mock<ICasesCachedService>();
+			var mockCasesCachedService = new Mock<ICachedService>();
 			
 			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
 			
 			// act
-			var response = pageModel.OnGetSelectedTrust("selectedTrust");
+			var response = await pageModel.OnGetSelectedTrust("selectedTrust");
 			
 			// assert
 			Assert.IsInstanceOf(typeof(ObjectResult), response);
@@ -175,7 +174,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -185,18 +184,18 @@ namespace ConcernsCaseWork.Tests.Pages
 		[TestCase(null)]
 		[TestCase("a")]
 		[TestCase("as")]
-		public void WhenOnGetSelectedTrust_ReturnStatusCodeException(string selectedTrust)
+		public async Task WhenOnGetSelectedTrust_ReturnStatusCodeException(string selectedTrust)
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<IndexModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockCasesCachedService = new Mock<ICasesCachedService>();
+			var mockCasesCachedService = new Mock<ICachedService>();
 
 			mockTrustModelService.Setup(t => t.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).Throws<Exception>();
 			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
 			
 			// act
-			var response = pageModel.OnGetSelectedTrust(selectedTrust);
+			var response = await pageModel.OnGetSelectedTrust(selectedTrust);
 			
 			// assert
 			Assert.That(response, Is.TypeOf<ObjectResult>());
@@ -208,7 +207,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -217,17 +216,17 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Error,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 		}
 		
-		private static IndexModel SetupIndexModel(ITrustModelService mockTrustModelService, ICasesCachedService mockCasesCachedService, ILogger<IndexModel> mockLogger, bool isAuthenticated = false)
+		private static IndexPageModel SetupIndexModel(ITrustModelService mockTrustModelService, ICachedService mockCachedService, ILogger<IndexPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new IndexModel(mockTrustModelService, mockCasesCachedService, mockLogger)
+			return new IndexPageModel(mockTrustModelService, mockCachedService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

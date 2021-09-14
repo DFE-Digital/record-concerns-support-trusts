@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages
 {
-	public class LogoutModel : PageModel
+	public class LogoutPageModel : PageModel
 	{
 		public async Task<IActionResult> OnGetAsync()
 		{

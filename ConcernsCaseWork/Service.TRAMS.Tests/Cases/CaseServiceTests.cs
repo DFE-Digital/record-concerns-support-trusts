@@ -22,7 +22,7 @@ namespace Service.TRAMS.Tests.Cases
 		public async Task WhenGetCasesByCaseworker_ReturnsCases()
 		{
 			// arrange
-			var expectedCases = CaseDtoFactory.CreateListCaseDto();
+			var expectedCases = CaseDtoFactory.BuildListCaseDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -52,15 +52,25 @@ namespace Service.TRAMS.Tests.Cases
 			
 			foreach (var caseDto in cases)
 			{
-				foreach (var expectedCase in expectedCases.Where(expectedCase => caseDto.Id == expectedCase.Id))
+				foreach (var expectedCase in expectedCases.Where(expectedCase => caseDto.Urn == expectedCase.Urn))
 				{
-					Assert.That(caseDto.Id, Is.EqualTo(expectedCase.Id));
-					Assert.That(caseDto.Rag, Is.EqualTo(expectedCase.Rag));
-					Assert.That(caseDto.Type, Is.EqualTo(expectedCase.Type));
-					Assert.That(caseDto.Created, Is.EqualTo(expectedCase.Created));
-					Assert.That(caseDto.LastUpdate, Is.EqualTo(expectedCase.LastUpdate));
-					Assert.That(caseDto.TrustName, Is.EqualTo(expectedCase.TrustName));
-					Assert.That(caseDto.Closed, Is.EqualTo(expectedCase.Closed));
+					Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
+					Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
+					Assert.That(caseDto.Status, Is.EqualTo(expectedCase.Status));
+					Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
+					Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
+					Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
+					Assert.That(caseDto.CreatedBy, Is.EqualTo(expectedCase.CreatedBy));
+					Assert.That(caseDto.CrmEnquiry, Is.EqualTo(expectedCase.CrmEnquiry));
+					Assert.That(caseDto.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
+					Assert.That(caseDto.DeEscalation, Is.EqualTo(expectedCase.DeEscalation));
+					Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCase.NextSteps));
+					Assert.That(caseDto.ResolutionStrategy, Is.EqualTo(expectedCase.ResolutionStrategy));
+					Assert.That(caseDto.ReviewAt, Is.EqualTo(expectedCase.ReviewAt));
+					Assert.That(caseDto.UpdatedAt, Is.EqualTo(expectedCase.UpdatedAt));
+					Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
+					Assert.That(caseDto.ReasonAtReview, Is.EqualTo(expectedCase.ReasonAtReview));
+					Assert.That(caseDto.TrustUkPrn, Is.EqualTo(expectedCase.TrustUkPrn));
 				}
 			}
 		}
@@ -93,9 +103,7 @@ namespace Service.TRAMS.Tests.Cases
 
 			// assert
 			Assert.That(trusts, Is.Not.Null);
-			// Uncomment when pointing service to real trams api
-			// Assert.That(trusts.Count, Is.EqualTo(0));
-			Assert.That(trusts.Count, Is.EqualTo(5));
+			Assert.That(trusts.Count, Is.EqualTo(0));
 		}
 	}
 }

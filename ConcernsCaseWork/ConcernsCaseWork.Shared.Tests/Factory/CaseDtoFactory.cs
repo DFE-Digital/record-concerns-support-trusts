@@ -1,20 +1,66 @@
-﻿using Service.TRAMS.Models;
+﻿using Service.TRAMS.Cases;
+using System;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class CaseDtoFactory
 	{
-		public static List<CaseDto> CreateListCaseDto()
+		public static List<CaseDto> BuildListCaseDto()
 		{
+			var dateTimeNow = DateTimeOffset.Now;
 			return new List<CaseDto>
 			{
-				new CaseDto("CI-1004634", "-", "Wintermute Academy Trust", 0, "09-08-2021", "09-08-2021", "09-08-2021"),
-				new CaseDto("CI-1004635", "Safeguarding", "Straylight Academies", 1, "09-08-2021", "09-08-2021", "09-08-2021"),
-				new CaseDto("CI-1004636", "Finance", "The Linda Lee Academies Trust", 2, "09-08-2021", "09-08-2021", "09-08-2021"),
-				new CaseDto("CI-1004637", "Governance", "Wintermute Academy Trust", 3, "09-08-2021", "09-08-2021", "09-08-2021"),
-				new CaseDto("CI-1004638", "Finance", "Armitage Education Trust", 4, "09-08-2021", "09-08-2021", "09-08-2021")
+				// Status
+				// 1 - Live
+				// 2 - Monitoring
+				// 3 - Close
+				new CaseDto(
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
+					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
+					"resolution-strategy", "direction-of-travel", 1, 1
+				),
+				new CaseDto(
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
+					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
+					"resolution-strategy", "direction-of-travel", 2, 3
+				),
+				new CaseDto(
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
+					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
+					"resolution-strategy", "direction-of-travel", 3, 2
+				),
+				new CaseDto(
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
+					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
+					"resolution-strategy", "direction-of-travel", 4, 1
+				),
+				new CaseDto(
+					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
+					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
+					"resolution-strategy", "direction-of-travel", 5, 2
+				)
 			};
+		}
+
+		public static CaseDto BuildCaseDto()
+		{
+			var dateTimeNow = DateTime.Now;
+			return new CaseDto(
+				dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
+				"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
+				"resolution-strategy", "direction-of-travel", 1, 1
+			);
+		}
+		
+		public static CreateCaseDto BuildCreateCaseDto()
+		{
+			var dateTimeNow = DateTime.Now;
+			return new CreateCaseDto(
+				dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
+				"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
+				"resolution-strategy", "direction-of-travel", 1, 1
+			);
 		}
 	}
 }

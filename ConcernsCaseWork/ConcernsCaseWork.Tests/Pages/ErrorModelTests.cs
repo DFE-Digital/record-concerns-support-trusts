@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Pages;
-using ConcernsCaseWork.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -18,9 +18,9 @@ namespace ConcernsCaseWork.Tests.Pages
 		public void WhenRequestOnGet_ReturnErrorPage()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<ErrorModel>>();
+			var mockLogger = new Mock<ILogger<ErrorPageModel>>();
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(true);
-			var pageModel = new ErrorModel(mockLogger.Object)
+			var pageModel = new ErrorPageModel(mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("ErrorModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("ErrorPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);

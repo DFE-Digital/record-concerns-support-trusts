@@ -21,7 +21,7 @@ namespace Service.TRAMS.Tests.Trusts
 		public async Task WhenGetTrustsByPagination_ReturnsTrusts()
 		{
 			// arrange
-			var expectedTrusts = TrustFactory.CreateListTrustSummaryDto();
+			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -43,7 +43,7 @@ namespace Service.TRAMS.Tests.Trusts
 			var trustService = new TrustService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var trusts = await trustService.GetTrustsByPagination(TrustFactory.CreateTrustSearch());
+			var trusts = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch());
 
 			// assert
 			Assert.That(trusts, Is.Not.Null);
@@ -96,23 +96,23 @@ namespace Service.TRAMS.Tests.Trusts
 			var trustService = new TrustService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var trusts = await trustService.GetTrustsByPagination(TrustFactory.CreateTrustSearch());
+			var trusts = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch());
 
 			// assert
 			Assert.That(trusts, Is.Not.Null);
 			Assert.That(trusts.Count, Is.EqualTo(0));
 		}
 
-		[TestCase("", "", "", "/trusts?page=1")]
-		[TestCase("groupname", "", "", "/trusts?groupName=groupname&page=1")]
-		[TestCase("", "ukprn", "", "/trusts?ukprn=ukprn&page=1")]
-		[TestCase("", "", "companieshousenumber", "/trusts?companiesHouseNumber=companieshousenumber&page=1")]
-		[TestCase("groupname", "ukprn", "", "/trusts?groupName=groupname&ukprn=ukprn&page=1")]
+		[TestCase("", "", "", "/trusts?page%3d1")]
+		[TestCase("group-name", "", "", "/trusts?groupName%3dgroup-name%26page%3d1")]
+		[TestCase("", "ukprn", "", "/trusts?ukprn%3dukprn%26page%3d1")]
+		[TestCase("", "", "companies-house-number", "/trusts?companiesHouseNumber%3dcompanies-house-number%26page%3d1")]
+		[TestCase("group-name", "ukprn", "", "/trusts?groupName%3dgroup-name%26ukprn%3dukprn%26page%3d1")]
 		public void WhenBuildRequestUri_ReturnsRequestUrl(string groupName, string ukprn, string companiesHouseNumber, string expectedRequestUri)
 		{
 			// arrange
 			var trustService = new TrustService(null, null);
-			var trustSearch = TrustFactory.CreateTrustSearch(groupName, ukprn, companiesHouseNumber);
+			var trustSearch = TrustFactory.BuildTrustSearch(groupName, ukprn, companiesHouseNumber);
 
 			// act
 			var requestUri = trustService.BuildRequestUri(trustSearch);
@@ -126,7 +126,7 @@ namespace Service.TRAMS.Tests.Trusts
 		public async Task WhenGetTrustByUkPrn_ReturnsTrust()
 		{
 			// arrange
-			var expectedTrust = TrustFactory.CreateTrustDetailsDto();
+			var expectedTrust = TrustFactory.BuildTrustDetailsDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			

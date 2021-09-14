@@ -153,14 +153,14 @@ namespace Service.Redis.Tests.Base
 			var mockCache = new Mock<IDistributedCache>();
 			var mockIOptionsCache = new Mock<IOptions<CacheOptions>>();
 			
-			mockIOptionsCache.Setup(o => o.Value).Returns(new CacheOptions { TimeToLive = 120});
+			mockIOptionsCache.Setup(o => o.Value).Returns(new CacheOptions { TimeToLive = 24});
 			
 			// act
 			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
 			var cacheTtl = cacheProvider.CacheTimeToLive();
 
 			// assert
-			Assert.That(cacheTtl, Is.EqualTo(120));
+			Assert.That(cacheTtl, Is.EqualTo(24));
 		}
 	}
 }

@@ -12,16 +12,16 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages
 {
-	public class LoginModel : PageModel
+	public class LoginPageModel : PageModel
 	{
 		private readonly IConfiguration _configuration;
-		private readonly ILogger<LoginModel> _logger;
+		private readonly ILogger<LoginPageModel> _logger;
 		private const string HomePage = "/home";
 
 		[BindProperty]
 		public CredentialModel Credentials { get; set; } = new CredentialModel{ ReturnUrl = HomePage};
 
-		public LoginModel(IConfiguration configuration, ILogger<LoginModel> logger)
+		public LoginPageModel(IConfiguration configuration, ILogger<LoginPageModel> logger)
 		{
 			_configuration = configuration;
 			_logger = logger;
@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Pages
 			
 			if (Credentials.Validate() || Credentials.UserName != _configuration["app:username"] || Credentials.Password != _configuration["app:password"])
 			{
-				_logger.LogInformation($"LoginModel::Invalid username or password - {Credentials.UserName}");
+				_logger.LogInformation($"LoginPageModel::Invalid username or password - {Credentials.UserName}");
 				
 				TempData["Error.Message"] = "Incorrect username and password";
 				return Page();

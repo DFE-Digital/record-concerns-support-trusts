@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Pages;
-using ConcernsCaseWork.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(true);
 
-			var pageModel = new LogoutModel
+			var pageModel = new LogoutPageModel
 			{
 				PageContext = pageContext,
 				TempData = tempData,

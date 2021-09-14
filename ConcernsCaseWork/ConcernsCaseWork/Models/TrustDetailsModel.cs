@@ -1,4 +1,6 @@
-﻿namespace ConcernsCaseWork.Models
+﻿using System.Collections.Generic;
+
+namespace ConcernsCaseWork.Models
 {
 	/// <summary>
 	/// Frontend model classes used only for UI rendering
@@ -7,6 +9,9 @@
 	{
 		public GiasDataModel GiasData { get; }
 		
-		public TrustDetailsModel(GiasDataModel giasData) => (GiasData) = (giasData);
+		public List<EstablishmentModel> Establishments { get; } 
+		
+		public TrustDetailsModel(GiasDataModel giasData, List<EstablishmentModel> establishments) => 
+			(GiasData, Establishments) = (giasData, establishments);
 	}
 }

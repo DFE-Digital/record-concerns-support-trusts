@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace ConcernsCaseWork.Pages
 {
 	[Authorize]
-    public class AdminModel : PageModel
+    public class AdminPageModel : PageModel
     {
         public void OnGet()
         {

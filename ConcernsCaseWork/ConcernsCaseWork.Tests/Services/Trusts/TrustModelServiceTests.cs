@@ -7,7 +7,6 @@ using ConcernsCaseWork.Shared.Tests.Shared;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.TRAMS.Models;
 using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
@@ -28,7 +27,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			var mockLogger = new Mock<ILogger<TrustModelService>>();
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
-			var trustSummaryDto = TrustFactory.CreateListTrustSummaryDto();
+			var trustSummaryDto = TrustFactory.BuildListTrustSummaryDto();
 
 			mockTrustSearchService.Setup(ts => ts.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(trustSummaryDto);
 
@@ -48,7 +47,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 					Assert.That(expected.UkPrn, Is.EqualTo(actual.UkPrn));
 					Assert.That(expected.GroupName, Is.EqualTo(actual.GroupName));
 					Assert.That(expected.CompaniesHouseNumber, Is.EqualTo(actual.CompaniesHouseNumber));
-					Assert.That(expected.DisplayName, Is.EqualTo(SharedBuilders.BuildDisplayName(actual)));
+					Assert.That(expected.DisplayName, Is.EqualTo(SharedBuilder.BuildDisplayName(actual)));
 					
 					foreach (var establishment in actual.Establishments)
 					{
@@ -93,7 +92,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			var mockLogger = new Mock<ILogger<TrustModelService>>();
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
-			var trustDetailsDto = TrustFactory.CreateTrustDetailsDto();
+			var trustDetailsDto = TrustFactory.BuildTrustDetailsDto();
 
 			mockTrustService.Setup(ts => ts.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetailsDto);
 
@@ -117,7 +116,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.Street, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Street));
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.Town, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Town));
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.AdditionalLine, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.AdditionalLine));
-			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.DisplayAddress, Is.EqualTo(SharedBuilders.BuildDisplayAddress(trustDetailsDto.GiasData.GroupContactAddress)));
+			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.DisplayAddress, Is.EqualTo(SharedBuilder.BuildDisplayAddress(trustDetailsDto.GiasData.GroupContactAddress)));
 		}
 	}
 }

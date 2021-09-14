@@ -8,13 +8,27 @@ using Serilog;
 using Service.Redis.Base;
 using Service.Redis.Cases;
 using Service.Redis.Configuration;
+using Service.Redis.Rating;
+using Service.Redis.RecordRatingHistory;
+using Service.Redis.Records;
+using Service.Redis.Sequence;
+using Service.Redis.Status;
+using Service.Redis.Trusts;
+using Service.Redis.Type;
 using Service.Redis.Users;
 using Service.TRAMS.Cases;
 using Service.TRAMS.Configuration;
+using Service.TRAMS.Rating;
+using Service.TRAMS.RecordAcademy;
+using Service.TRAMS.RecordRatingHistory;
+using Service.TRAMS.Records;
+using Service.TRAMS.RecordSrma;
+using Service.TRAMS.RecordWhistleblower;
+using Service.TRAMS.Status;
 using Service.TRAMS.Trusts;
+using Service.TRAMS.Type;
 using StackExchange.Redis;
 using System;
-using System.Configuration;
 using System.Net.Mime;
 
 namespace ConcernsCaseWork.Extensions
@@ -28,11 +42,11 @@ namespace ConcernsCaseWork.Extensions
 		{
 			try
 			{
-				var vCapConfiguration = JObject.Parse(configuration["VCAP_SERVICES"]) ?? throw new ConfigurationErrorsException("AddRedis::VCAP_SERVICES missing");
-				var redisCredentials = vCapConfiguration["redis"]?[0]?["credentials"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials missing");
-				var password = (string)redisCredentials["password"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials::password missing");
-				var host = (string)redisCredentials["host"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials::host missing");
-				var port = (string)redisCredentials["port"] ?? throw new ConfigurationErrorsException("AddRedis::Credentials::port missing");
+				var vCapConfiguration = JObject.Parse(configuration["VCAP_SERVICES"]) ?? throw new Exception("AddRedis::VCAP_SERVICES missing");
+				var redisCredentials = vCapConfiguration["redis"]?[0]?["credentials"] ?? throw new Exception("AddRedis::Credentials missing");
+				var password = (string)redisCredentials["password"] ?? throw new Exception("AddRedis::Credentials::password missing");
+				var host = (string)redisCredentials["host"] ?? throw new Exception("AddRedis::Credentials::host missing");
+				var port = (string)redisCredentials["port"] ?? throw new Exception("AddRedis::Credentials::port missing");
 				var tls = (bool)redisCredentials["tls_enabled"];
 
 				Log.Information($"Starting Redis Server Host - {host}");
@@ -54,7 +68,7 @@ namespace ConcernsCaseWork.Extensions
 			{
 				var errorMessage = $"AddRedis::Exception::{ex.Message}";
 				Log.Error(errorMessage);
-				throw new ConfigurationErrorsException(errorMessage);
+				throw new Exception(errorMessage);
 			}
 		}
 
@@ -63,13 +77,13 @@ namespace ConcernsCaseWork.Extensions
 		/// </summary>
 		/// <param name="services"></param>
 		/// <param name="configuration"></param>
-		/// <exception cref="ConfigurationErrorsException"></exception>
+		/// <exception cref="Exception"></exception>
 		public static void AddTramsApi(this IServiceCollection services, IConfiguration configuration)
 		{
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			var tramsApiKey = configuration["trams:api_key"];
 			if (string.IsNullOrEmpty(tramsApiEndpoint) || string.IsNullOrEmpty(tramsApiKey)) 
-				throw new ConfigurationErrorsException("AddTramsApi::missing configuration");
+				throw new Exception("AddTramsApi::missing configuration");
 			
 			Log.Information($"Starting Trams API Endpoint - {tramsApiEndpoint}");
 			
@@ -89,14 +103,32 @@ namespace ConcernsCaseWork.Extensions
 			
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
+			services.AddSingleton<IRatingService, RatingService>();
+			services.AddSingleton<IRecordAcademyService, RecordAcademyService>();
+			services.AddSingleton<IRecordRatingHistoryService, RecordRatingHistoryService>();
+			services.AddSingleton<IRecordService, RecordService>();
+			services.AddSingleton<IRecordSrmaService, RecordSrmaService>();
+			services.AddSingleton<IRecordWhistleblowerService, RecordWhistleblowerService>();
+			services.AddSingleton<IStatusService, StatusService>();
 			services.AddSingleton<ITrustService, TrustService>();
 			services.AddSingleton<ITrustSearchService, TrustSearchService>();
+			services.AddSingleton<ITypeService, TypeService>();
 			
 			// Redis services
-			services.AddTransient<ICacheProvider, CacheProvider>();
-			services.AddTransient<IActiveDirectoryService, ActiveDirectoryService>();
-			services.AddTransient<IUserCachedService, UserCachedService>();
-			services.AddTransient<ICasesCachedService, CasesCachedService>();
+			services.AddSingleton<ICacheProvider, CacheProvider>();
+			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
+			services.AddSingleton<IUserCachedService, UserCachedService>();
+			services.AddSingleton<ICachedService, CachedService>();
+			services.AddSingleton<ITypeCachedService, TypeCachedService>();
+			services.AddSingleton<IStatusCachedService, StatusCachedService>();
+			services.AddSingleton<IRatingCachedService, RatingCachedService>();
+			services.AddSingleton<ITrustCachedService, TrustCachedService>();
+			services.AddSingleton<ICaseCachedService, CaseCachedService>();
+			services.AddSingleton<IRecordCachedService, RecordCachedService>();
+			services.AddSingleton<IRecordRatingHistoryCachedService, RecordRatingHistoryCachedService>();
+			
+			// Redis Sequence
+			services.AddSingleton<ISequenceCachedService, SequenceCachedService>();
 		}
 
 		public static void AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)

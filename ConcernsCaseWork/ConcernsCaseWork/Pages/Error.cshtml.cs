@@ -6,15 +6,15 @@ using System.Diagnostics;
 namespace ConcernsCaseWork.Pages
 {
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public class ErrorModel : PageModel
+    public class ErrorPageModel : PageModel
     {
         public string RequestId { get; private set; }
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
-        private readonly ILogger<ErrorModel> _logger;
+        private readonly ILogger<ErrorPageModel> _logger;
 
-        public ErrorModel(ILogger<ErrorModel> logger)
+        public ErrorPageModel(ILogger<ErrorPageModel> logger)
         {
             _logger = logger;
         }
@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.Pages
         public void OnGet()
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
-            _logger.LogInformation($"ErrorModel::Something went wrong - {RequestId}");
+            _logger.LogInformation($"ErrorPageModel::Something went wrong - {RequestId}");
         }
     }
 }
