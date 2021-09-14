@@ -2,6 +2,10 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -23,14 +27,14 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
-			mockCaseModelService.Setup(model => model.GetCasesByCaseworker(It.IsAny<string>())).ReturnsAsync((homeModels, homeModels));
+			mockCaseModelService.Setup(c => c.GetCasesByCaseworker(It.IsAny<string>())).ReturnsAsync((homeModels, homeModels));
 			
 			// act
-			var homePageModel = new HomePageModel(mockCaseModelService.Object, mockLogger.Object);
+			var homePageModel = SetupHomeModel(mockCaseModelService.Object, mockLogger.Object);
 			await homePageModel.OnGetAsync();
 			
 			// assert
-			Assert.IsAssignableFrom<List<CaseModel>>(homePageModel.CasesActive);
+			Assert.IsAssignableFrom<List<HomeModel>>(homePageModel.CasesActive);
 			Assert.That(homePageModel.CasesActive.Count, Is.EqualTo(homeModels.Count));
 			foreach (var expected in homePageModel.CasesActive)
 			{
@@ -71,11 +75,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCaseModelService.Setup(model => model.GetCasesByCaseworker(It.IsAny<string>())).ReturnsAsync((emptyList, emptyList));
 			
 			// act
-			var indexModel = new HomePageModel(mockCaseModelService.Object, mockLogger.Object);
+			var indexModel = SetupHomeModel(mockCaseModelService.Object, mockLogger.Object);
 			await indexModel.OnGetAsync();
 			
 			// assert
-			Assert.IsAssignableFrom<List<CaseModel>>(indexModel.CasesActive);
+			Assert.IsAssignableFrom<List<HomeModel>>(indexModel.CasesActive);
 			Assert.That(indexModel.CasesActive.Count, Is.Zero);
 			
 			// Verify ILogger
@@ -87,6 +91,19 @@ namespace ConcernsCaseWork.Tests.Pages
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
+		}
+		
+		private static HomePageModel SetupHomeModel(ICaseModelService mockCaseModelService, ILogger<HomePageModel> mockLogger, bool isAuthenticated = false)
+		{
+			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
+			
+			return new HomePageModel(mockCaseModelService, mockLogger)
+			{
+				PageContext = pageContext,
+				TempData = tempData,
+				Url = new UrlHelper(actionContext),
+				MetadataProvider = pageContext.ViewData.ModelMetadata
+			};
 		}
 	}
 }

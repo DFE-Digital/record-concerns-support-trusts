@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
@@ -9,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages
 {
+	[Authorize]
+	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class ClearDataPageModel : PageModel
 	{
 		private readonly IStatusCachedService _statusCachedService;
