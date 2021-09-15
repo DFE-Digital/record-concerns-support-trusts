@@ -15,10 +15,10 @@ namespace Service.TRAMS.RecordWhistleblower
 		public string Reason { get; }
 		
 		[JsonProperty("record_urn")]
-		public BigInteger RecordUrn { get; }
+		public long RecordUrn { get; }
 		
 		[JsonConstructor]
-		public CreateRecordWhistleblowerDto(string name, string details, string reason, BigInteger recordUrn) => 
+		public CreateRecordWhistleblowerDto(string name, string details, string reason, long recordUrn) => 
 			(Name, Details, Reason, RecordUrn) = (name, details, reason, recordUrn);
 	}
 }

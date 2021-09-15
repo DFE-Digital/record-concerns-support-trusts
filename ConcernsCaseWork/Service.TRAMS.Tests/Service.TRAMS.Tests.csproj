@@ -20,8 +20,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="RecordRatingHistory" />
       <Folder Include="RecordSrma" />
-      <Folder Include="RecordWhistleblower" />
     </ItemGroup>
 
 </Project>
