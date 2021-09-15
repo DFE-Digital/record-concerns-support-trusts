@@ -99,11 +99,424 @@ namespace Service.TRAMS.Tests.Cases
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var trusts = await caseService.GetCasesByCaseworker("caseworker");
+			var cases = await caseService.GetCasesByCaseworker("caseworker");
 
 			// assert
-			Assert.That(trusts, Is.Not.Null);
-			Assert.That(trusts.Count, Is.EqualTo(0));
+			Assert.That(cases, Is.Not.Null);
+			Assert.That(cases.Count, Is.EqualTo(0));
+		}
+		
+		[Test]
+		public async Task WhenGetCaseByUrn_ReturnsCase()
+		{
+			// arrange
+			var expectedCase = CaseFactory.BuildCaseDto();
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCase))
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act
+			var actualCase = await caseService.GetCaseByUrn(1);
+
+			// assert
+			Assert.That(actualCase, Is.Not.Null);
+			Assert.That(actualCase.Description, Is.EqualTo(expectedCase.Description));
+			Assert.That(actualCase.Issue, Is.EqualTo(expectedCase.Issue));
+			Assert.That(actualCase.Status, Is.EqualTo(expectedCase.Status));
+			Assert.That(actualCase.Urn, Is.EqualTo(expectedCase.Urn));
+			Assert.That(actualCase.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
+			Assert.That(actualCase.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
+			Assert.That(actualCase.CreatedBy, Is.EqualTo(expectedCase.CreatedBy));
+			Assert.That(actualCase.CrmEnquiry, Is.EqualTo(expectedCase.CrmEnquiry));
+			Assert.That(actualCase.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
+			Assert.That(actualCase.DeEscalation, Is.EqualTo(expectedCase.DeEscalation));
+			Assert.That(actualCase.NextSteps, Is.EqualTo(expectedCase.NextSteps));
+			Assert.That(actualCase.ResolutionStrategy, Is.EqualTo(expectedCase.ResolutionStrategy));
+			Assert.That(actualCase.ReviewAt, Is.EqualTo(expectedCase.ReviewAt));
+			Assert.That(actualCase.UpdatedAt, Is.EqualTo(expectedCase.UpdatedAt));
+			Assert.That(actualCase.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
+			Assert.That(actualCase.ReasonAtReview, Is.EqualTo(expectedCase.ReasonAtReview));
+			Assert.That(actualCase.TrustUkPrn, Is.EqualTo(expectedCase.TrustUkPrn));
+		}
+		
+		[Test]
+		public async Task WhenGetCaseByUrn_ReturnsNull()
+		{
+			// arrange
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.BadRequest
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act
+			var actualCase = await caseService.GetCaseByUrn(1);
+
+			// assert
+			Assert.That(actualCase, Is.Null);
+		}
+		
+		[Test]
+		public async Task WhenGetCasesByTrustUkPrn_ReturnsCases()
+		{
+			// arrange
+			var expectedCases = CaseFactory.BuildListCaseDto();
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCases))
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act
+			var cases = await caseService.GetCasesByTrustUkPrn("trust-ukprn");
+
+			// assert
+			Assert.That(cases, Is.Not.Null);
+			Assert.That(cases.Count, Is.EqualTo(expectedCases.Count));
+			
+			foreach (var caseDto in cases)
+			{
+				foreach (var expectedCase in expectedCases.Where(expectedCase => caseDto.Urn == expectedCase.Urn))
+				{
+					Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
+					Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
+					Assert.That(caseDto.Status, Is.EqualTo(expectedCase.Status));
+					Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
+					Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
+					Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
+					Assert.That(caseDto.CreatedBy, Is.EqualTo(expectedCase.CreatedBy));
+					Assert.That(caseDto.CrmEnquiry, Is.EqualTo(expectedCase.CrmEnquiry));
+					Assert.That(caseDto.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
+					Assert.That(caseDto.DeEscalation, Is.EqualTo(expectedCase.DeEscalation));
+					Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCase.NextSteps));
+					Assert.That(caseDto.ResolutionStrategy, Is.EqualTo(expectedCase.ResolutionStrategy));
+					Assert.That(caseDto.ReviewAt, Is.EqualTo(expectedCase.ReviewAt));
+					Assert.That(caseDto.UpdatedAt, Is.EqualTo(expectedCase.UpdatedAt));
+					Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
+					Assert.That(caseDto.ReasonAtReview, Is.EqualTo(expectedCase.ReasonAtReview));
+					Assert.That(caseDto.TrustUkPrn, Is.EqualTo(expectedCase.TrustUkPrn));
+				}
+			}
+		}
+		
+		[Test]
+		public async Task WhenGetCasesByTrustUkPrn_ThrowsException_ReturnsEmptyCases()
+		{
+			// arrange
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.BadRequest
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act
+			var cases = await caseService.GetCasesByTrustUkPrn("trust-ukprn");
+
+			// assert
+			Assert.That(cases, Is.Not.Null);
+			Assert.That(cases.Count, Is.EqualTo(0));
+		}
+		
+		[Test]
+		public async Task WhenGetCasesByPagination_ReturnsCases()
+		{
+			// arrange
+			var expectedCases = CaseFactory.BuildListCaseDto();
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCases))
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act
+			var cases = await caseService.GetCasesByPagination(new CaseSearch());
+
+			// assert
+			Assert.That(cases, Is.Not.Null);
+			Assert.That(cases.Count, Is.EqualTo(expectedCases.Count));
+			
+			foreach (var caseDto in cases)
+			{
+				foreach (var expectedCase in expectedCases.Where(expectedCase => caseDto.Urn == expectedCase.Urn))
+				{
+					Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
+					Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
+					Assert.That(caseDto.Status, Is.EqualTo(expectedCase.Status));
+					Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
+					Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
+					Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
+					Assert.That(caseDto.CreatedBy, Is.EqualTo(expectedCase.CreatedBy));
+					Assert.That(caseDto.CrmEnquiry, Is.EqualTo(expectedCase.CrmEnquiry));
+					Assert.That(caseDto.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
+					Assert.That(caseDto.DeEscalation, Is.EqualTo(expectedCase.DeEscalation));
+					Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCase.NextSteps));
+					Assert.That(caseDto.ResolutionStrategy, Is.EqualTo(expectedCase.ResolutionStrategy));
+					Assert.That(caseDto.ReviewAt, Is.EqualTo(expectedCase.ReviewAt));
+					Assert.That(caseDto.UpdatedAt, Is.EqualTo(expectedCase.UpdatedAt));
+					Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
+					Assert.That(caseDto.ReasonAtReview, Is.EqualTo(expectedCase.ReasonAtReview));
+					Assert.That(caseDto.TrustUkPrn, Is.EqualTo(expectedCase.TrustUkPrn));
+				}
+			}
+		}
+		
+		[Test]
+		public async Task WhenGetCasesByPagination_ThrowsException_ReturnsEmptyCases()
+		{
+			// arrange
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.BadRequest
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act
+			var cases = await caseService.GetCasesByPagination(new CaseSearch());
+
+			// assert
+			Assert.That(cases, Is.Not.Null);
+			Assert.That(cases.Count, Is.EqualTo(0));
+		}
+		
+		[Test]
+		public async Task WhenPostCase_ReturnsCase()
+		{
+			// arrange
+			var expectedCase = CaseFactory.BuildCaseDto();
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCase))
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act
+			var actualCase = await caseService.PostCase(CaseFactory.BuildCreateCaseDto());
+
+			// assert
+			Assert.That(actualCase, Is.Not.Null);
+			Assert.That(actualCase.Description, Is.EqualTo(expectedCase.Description));
+			Assert.That(actualCase.Issue, Is.EqualTo(expectedCase.Issue));
+			Assert.That(actualCase.Status, Is.EqualTo(expectedCase.Status));
+			Assert.That(actualCase.Urn, Is.EqualTo(expectedCase.Urn));
+			Assert.That(actualCase.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
+			Assert.That(actualCase.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
+			Assert.That(actualCase.CreatedBy, Is.EqualTo(expectedCase.CreatedBy));
+			Assert.That(actualCase.CrmEnquiry, Is.EqualTo(expectedCase.CrmEnquiry));
+			Assert.That(actualCase.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
+			Assert.That(actualCase.DeEscalation, Is.EqualTo(expectedCase.DeEscalation));
+			Assert.That(actualCase.NextSteps, Is.EqualTo(expectedCase.NextSteps));
+			Assert.That(actualCase.ResolutionStrategy, Is.EqualTo(expectedCase.ResolutionStrategy));
+			Assert.That(actualCase.ReviewAt, Is.EqualTo(expectedCase.ReviewAt));
+			Assert.That(actualCase.UpdatedAt, Is.EqualTo(expectedCase.UpdatedAt));
+			Assert.That(actualCase.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
+			Assert.That(actualCase.ReasonAtReview, Is.EqualTo(expectedCase.ReasonAtReview));
+			Assert.That(actualCase.TrustUkPrn, Is.EqualTo(expectedCase.TrustUkPrn));
+		}
+		
+		[Test]
+		public async Task WhenPostCase_ReturnsNull()
+		{
+			// arrange
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.BadRequest
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act
+			var actualCase = await caseService.PostCase(CaseFactory.BuildCreateCaseDto());
+
+			// assert
+			Assert.That(actualCase, Is.Null);
+		}
+		
+				[Test]
+		public async Task WhenPatchCaseByUrn_ReturnsCase()
+		{
+			// arrange
+			var expectedCase = CaseFactory.BuildCaseDto();
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCase))
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act
+			var actualCase = await caseService.PatchCaseByUrn(CaseFactory.BuildUpdateCaseDto());
+
+			// assert
+			Assert.That(actualCase, Is.Not.Null);
+			Assert.That(actualCase.Description, Is.EqualTo(expectedCase.Description));
+			Assert.That(actualCase.Issue, Is.EqualTo(expectedCase.Issue));
+			Assert.That(actualCase.Status, Is.EqualTo(expectedCase.Status));
+			Assert.That(actualCase.Urn, Is.EqualTo(expectedCase.Urn));
+			Assert.That(actualCase.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
+			Assert.That(actualCase.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
+			Assert.That(actualCase.CreatedBy, Is.EqualTo(expectedCase.CreatedBy));
+			Assert.That(actualCase.CrmEnquiry, Is.EqualTo(expectedCase.CrmEnquiry));
+			Assert.That(actualCase.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
+			Assert.That(actualCase.DeEscalation, Is.EqualTo(expectedCase.DeEscalation));
+			Assert.That(actualCase.NextSteps, Is.EqualTo(expectedCase.NextSteps));
+			Assert.That(actualCase.ResolutionStrategy, Is.EqualTo(expectedCase.ResolutionStrategy));
+			Assert.That(actualCase.ReviewAt, Is.EqualTo(expectedCase.ReviewAt));
+			Assert.That(actualCase.UpdatedAt, Is.EqualTo(expectedCase.UpdatedAt));
+			Assert.That(actualCase.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
+			Assert.That(actualCase.ReasonAtReview, Is.EqualTo(expectedCase.ReasonAtReview));
+			Assert.That(actualCase.TrustUkPrn, Is.EqualTo(expectedCase.TrustUkPrn));
+		}
+		
+		[Test]
+		public async Task WhenPatchCaseByUrn_ReturnsNull()
+		{
+			// arrange
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.BadRequest
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act
+			var actualCase = await caseService.PatchCaseByUrn(CaseFactory.BuildUpdateCaseDto());
+
+			// assert
+			Assert.That(actualCase, Is.Null);
 		}
 	}
 }

@@ -54,7 +54,7 @@ namespace Service.TRAMS.Cases
 			return Array.Empty<CaseDto>();
 		}
 
-		public async Task<CaseDto> GetCaseByUrn(string urn)
+		public async Task<CaseDto> GetCaseByUrn(long urn)
 		{
 			try
 			{
