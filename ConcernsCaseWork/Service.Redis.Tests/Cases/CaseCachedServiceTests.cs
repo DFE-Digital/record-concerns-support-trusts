@@ -65,6 +65,7 @@ namespace Service.Redis.Tests.Cases
 			Assert.That(casesDto, Is.Not.Null);
 			Assert.That(casesDto.Count, Is.EqualTo(1));
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
 			mockCaseService.Verify(c => c.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
 		}
 		
