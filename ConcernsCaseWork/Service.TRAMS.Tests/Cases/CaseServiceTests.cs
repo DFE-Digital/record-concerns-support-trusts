@@ -518,5 +518,20 @@ namespace Service.TRAMS.Tests.Cases
 			// assert
 			Assert.That(actualCase, Is.Null);
 		}
+
+		[Test]
+		public void WhenCaseSearchIncrements_ReturnsNextPage()
+		{
+			// arrange
+			var caseSearch = new CaseSearch();
+
+			// act
+			var page = caseSearch.Page;
+			var nextPage = caseSearch.PageIncrement();
+
+			// assert
+			Assert.That(page, Is.EqualTo(1));
+			Assert.That(nextPage, Is.EqualTo(2));
+		}
 	}
 }

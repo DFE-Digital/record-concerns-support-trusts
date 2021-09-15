@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
+using Service.Redis.Models;
 using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
@@ -156,9 +157,15 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockCasesCachedService = new Mock<ICachedService>();
+			var mockCachedService = new Mock<ICachedService>();
+
+			var userState = new UserState();
 			
-			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
+			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
+			mockCachedService.Setup(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()))
+				.Returns(Task.FromResult(true));
+			
+			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockCachedService.Object, mockLogger.Object, true);
 			
 			// act
 			var response = await pageModel.OnGetSelectedTrust("selectedTrust");
