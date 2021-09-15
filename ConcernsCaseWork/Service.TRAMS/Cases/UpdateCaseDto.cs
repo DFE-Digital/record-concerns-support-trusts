@@ -6,7 +6,7 @@ namespace Service.TRAMS.Cases
 	public sealed class UpdateCaseDto
 	{
 		[JsonProperty("updated_at")]
-		public DateTimeOffset UpdateAt { get; }
+		public DateTimeOffset UpdatedAt { get; }
 		
 		[JsonProperty("review_at")]
 		public DateTimeOffset ReviewAt { get; }
@@ -64,7 +64,7 @@ namespace Service.TRAMS.Cases
 			string createdBy, string description, string crmEnquiry, string trustUkPrn, string reasonAtReview, 
 			DateTimeOffset deEscalation, string issue, string currentStatus, string nextSteps, string resolutionStrategy, 
 			string directionOfTravel, long urn, long status) => 
-			(UpdateAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
+			(UpdatedAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, ResolutionStrategy, DirectionOfTravel, 
 				Urn, Status) = 
 			(updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn,

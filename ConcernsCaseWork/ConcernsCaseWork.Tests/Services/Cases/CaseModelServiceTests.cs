@@ -42,12 +42,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 
-			var casesDto = CaseDtoFactory.BuildListCaseDto();
-			var recordsDto = RecordDtoFactory.BuildListRecordDto();
-			var statusLiveDto = StatusDtoFactory.BuildStatusDto(Status.Live.ToString(), 1);
-			var statusMonitoringDto = StatusDtoFactory.BuildStatusDto(Status.Monitoring.ToString(), 2);
-			var ratingsDto = RatingDtoFactory.BuildRatingsDto();
-			var typesDto = TypeDtoFactory.BuildTypesDto();
+			var casesDto = CaseFactory.BuildListCaseDto();
+			var recordsDto = RecordFactory.BuildListRecordDto();
+			var statusLiveDto = StatusFactory.BuildStatusDto(Status.Live.ToString(), 1);
+			var statusMonitoringDto = StatusFactory.BuildStatusDto(Status.Monitoring.ToString(), 2);
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = TypeFactory.BuildListTypeDto();
 			var trustDto = TrustFactory.BuildTrustDetailsDto();
 			
 			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
@@ -114,9 +114,9 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			
-			var casesDto = CaseDtoFactory.BuildListCaseDto();
-			var statusLiveDto = StatusDtoFactory.BuildStatusDto(Status.Live.ToString(), 1);
-			var statusMonitoringDto = StatusDtoFactory.BuildStatusDto(Status.Monitoring.ToString(), 2);
+			var casesDto = CaseFactory.BuildListCaseDto();
+			var statusLiveDto = StatusFactory.BuildStatusDto(Status.Live.ToString(), 1);
+			var statusMonitoringDto = StatusFactory.BuildStatusDto(Status.Monitoring.ToString(), 2);
 			
 			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()))
 				.ReturnsAsync(casesDto);

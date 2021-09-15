@@ -23,7 +23,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenInstanceOfIndexPageOnGetAsync_ReturnCases()
 		{
 			// arrange
-			var homeModels = HomeModelFactory.BuildHomeModels();
+			var homeModels = HomePageFactory.BuildHomeModels();
 
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<HomePageModel>>();

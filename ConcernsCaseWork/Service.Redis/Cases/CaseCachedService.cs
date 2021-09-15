@@ -14,10 +14,7 @@ namespace Service.Redis.Cases
 	{
 		private readonly ILogger<CaseCachedService> _logger;
 		private readonly ICaseService _caseService;
-
-		/// <summary>
-		/// TODO Remove IMapper and project references when TRAMS API is live
-		/// </summary>
+		
 		public CaseCachedService(ICacheProvider cacheProvider, ICaseService caseService, ILogger<CaseCachedService> logger) 
 			: base(cacheProvider)
 		{
@@ -30,7 +27,10 @@ namespace Service.Redis.Cases
 			_logger.LogInformation("CaseCachedService::GetCasesByCaseworker");
 
 			var caseState = await GetData<UserState>(caseworker);
-			if (caseState is { }) return caseState.CasesDetails.Values.Select(c => c.CaseDto).ToList();
+			if (caseState != null)
+			{
+				return caseState.CasesDetails.Values.Select(c => c.CaseDto).ToList();
+			}
 			
 			var cases = await _caseService.GetCasesByCaseworker(caseworker, statusUrn);
 			var userState = new UserState();

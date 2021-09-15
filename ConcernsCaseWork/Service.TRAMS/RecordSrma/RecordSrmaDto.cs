@@ -20,7 +20,7 @@ namespace Service.TRAMS.RecordSrma
 		public long Urn { get; }
 		
 		[JsonConstructor]
-		public RecordSrmaDto(int id, string name, string details, string reason, long recordUrn, long urn) => 
+		public RecordSrmaDto(string name, string details, string reason, long recordUrn, long urn) => 
 			(Name, Details, Reason, RecordUrn, Urn) = (name, details, reason, recordUrn, urn);
 	}
 }

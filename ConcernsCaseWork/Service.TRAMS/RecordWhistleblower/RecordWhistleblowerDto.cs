@@ -2,6 +2,7 @@
 
 namespace Service.TRAMS.RecordWhistleblower
 {
+	
 	public sealed class RecordWhistleblowerDto
 	{
 		[JsonProperty("name")]
