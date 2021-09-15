@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages
 {
+	[Parallelizable(ParallelScope.All)]
 	public class ClearDataModelTests
 	{
 		[Test]
@@ -27,7 +28,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCachedService = new Mock<ICachedService>();
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
-			var pageModel = SetupIndexModel(mockStatusCachedService.Object, mockRatingCachedService.Object, 
+			var pageModel = SetupClearDataModel(mockStatusCachedService.Object, mockRatingCachedService.Object, 
 				mockTypeCachedService.Object, mockCachedService.Object,
 				mockLogger.Object, true);
 
@@ -57,7 +58,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCachedService = new Mock<ICachedService>();
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
-			var pageModel = SetupIndexModel(mockStatusCachedService.Object, mockRatingCachedService.Object, 
+			var pageModel = SetupClearDataModel(mockStatusCachedService.Object, mockRatingCachedService.Object, 
 				mockTypeCachedService.Object, mockCachedService.Object,
 				mockLogger.Object);
 
@@ -77,7 +78,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Never);
 		}
 		
-		private static ClearDataPageModel SetupIndexModel(IStatusCachedService mockStatusCachedService, IRatingCachedService mockRatingCachedService, 
+		private static ClearDataPageModel SetupClearDataModel(IStatusCachedService mockStatusCachedService, IRatingCachedService mockRatingCachedService, 
 			ITypeCachedService mockTypeCachedService, ICachedService mockCachedService,
 			ILogger<ClearDataPageModel> mockLogger, bool isAuthenticated = false)
 		{
