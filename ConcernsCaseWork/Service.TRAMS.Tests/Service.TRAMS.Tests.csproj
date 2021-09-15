@@ -21,7 +21,6 @@
 
     <ItemGroup>
       <Folder Include="RecordRatingHistory" />
-      <Folder Include="RecordSrma" />
     </ItemGroup>
 
 </Project>

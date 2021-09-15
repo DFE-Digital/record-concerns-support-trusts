@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Numerics;
 
 namespace Service.TRAMS.RecordSrma
 {
@@ -15,10 +14,10 @@ namespace Service.TRAMS.RecordSrma
 		public string Reason { get; }
 		
 		[JsonProperty("record_urn")]
-		public BigInteger RecordUrn { get; }
+		public long RecordUrn { get; }
 		
 		[JsonConstructor]
-		public CreateRecordSrmaDto(int id, string name, string details, string reason, BigInteger recordUrn) => 
+		public CreateRecordSrmaDto(string name, string details, string reason, long recordUrn) => 
 			(Name, Details, Reason, RecordUrn) = (name, details, reason, recordUrn);
 	}
 }
