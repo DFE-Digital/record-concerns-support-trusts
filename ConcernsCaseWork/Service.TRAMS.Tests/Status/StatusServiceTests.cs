@@ -22,7 +22,7 @@ namespace Service.TRAMS.Tests.Status
 		public async Task WhenGetStatus_ReturnsStatus()
 		{
 			// arrange
-			var expectedStatus = StatusDtoFactory.BuildListStatusDto();
+			var expectedStatuses = StatusDtoFactory.BuildListStatusDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -33,7 +33,7 @@ namespace Service.TRAMS.Tests.Status
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedStatus))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedStatuses))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
@@ -48,16 +48,16 @@ namespace Service.TRAMS.Tests.Status
 
 			// assert
 			Assert.That(statuses, Is.Not.Null);
-			Assert.That(statuses.Count, Is.EqualTo(expectedStatus.Count));
+			Assert.That(statuses.Count, Is.EqualTo(expectedStatuses.Count));
 
 			foreach (var actualStatus in statuses)
 			{
-				foreach (var expectedType in expectedStatus.Where(expectedType => actualStatus.Urn.CompareTo(expectedType.Urn) == 0))
+				foreach (var expectedStatus in expectedStatuses.Where(s => actualStatus.Urn.CompareTo(s.Urn) == 0))
 				{
-					Assert.That(actualStatus.Name, Is.EqualTo(expectedType.Name));
-					Assert.That(actualStatus.Urn, Is.EqualTo(expectedType.Urn));
-					Assert.That(actualStatus.CreatedAt, Is.EqualTo(expectedType.CreatedAt));
-					Assert.That(actualStatus.UpdatedAt, Is.EqualTo(expectedType.UpdatedAt));
+					Assert.That(actualStatus.Name, Is.EqualTo(expectedStatus.Name));
+					Assert.That(actualStatus.Urn, Is.EqualTo(expectedStatus.Urn));
+					Assert.That(actualStatus.CreatedAt, Is.EqualTo(expectedStatus.CreatedAt));
+					Assert.That(actualStatus.UpdatedAt, Is.EqualTo(expectedStatus.UpdatedAt));
 				}
 			}
 		}

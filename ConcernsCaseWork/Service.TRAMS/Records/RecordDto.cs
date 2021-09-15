@@ -10,7 +10,7 @@ namespace Service.TRAMS.Records
 		public DateTimeOffset CreatedAt { get; }
 
 		[JsonProperty("updated_at")]
-		public DateTimeOffset UpdateAt { get; }
+		public DateTimeOffset UpdatedAt { get; }
 		
 		[JsonProperty("review_at")]
 		public DateTimeOffset ReviewAt { get; }
@@ -49,7 +49,7 @@ namespace Service.TRAMS.Records
 		public RecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
 			string name, string description, string reason, long caseUrn, long typeUrn, 
 			long ratingUrn, bool primary, long urn, long status) => 
-			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Urn, Status) = 
+			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Urn, Status) = 
 			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, primary, urn, status);
 	}
 }

@@ -19,4 +19,9 @@
       <ProjectReference Include="..\Service.TRAMS\Service.TRAMS.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="RecordSrma" />
+      <Folder Include="RecordWhistleblower" />
+    </ItemGroup>
+
 </Project>
