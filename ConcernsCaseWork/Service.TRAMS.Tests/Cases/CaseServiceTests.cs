@@ -22,7 +22,7 @@ namespace Service.TRAMS.Tests.Cases
 		public async Task WhenGetCasesByCaseworker_ReturnsCases()
 		{
 			// arrange
-			var expectedCases = CaseDtoFactory.BuildListCaseDto();
+			var expectedCases = CaseFactory.BuildListCaseDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			

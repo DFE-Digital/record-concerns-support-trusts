@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory
 {
-	public static class StatusDtoFactory
+	public static class StatusFactory
 	{
 		public static StatusDto BuildStatusDto(string statusName, long urn)
 		{

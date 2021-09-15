@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory
 {
-	public static class HomeModelFactory
+	public static class HomePageFactory
 	{
 		public static List<HomeModel> BuildHomeModels()
 		{

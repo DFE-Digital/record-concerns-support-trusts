@@ -22,7 +22,7 @@ namespace Service.TRAMS.Tests.Type
 		public async Task WhenGetTypes_ReturnsTypes()
 		{
 			// arrange
-			var expectedTypes = TypeDtoFactory.BuildTypesDto();
+			var expectedTypes = TypeFactory.BuildListTypeDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			

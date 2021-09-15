@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory
 {
-	public static class RecordDtoFactory
+	public static class RecordFactory
 	{
 		public static List<RecordDto> BuildListRecordDto()
 		{

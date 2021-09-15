@@ -22,7 +22,7 @@ namespace Service.TRAMS.Tests.Status
 		public async Task WhenGetStatus_ReturnsStatus()
 		{
 			// arrange
-			var expectedStatuses = StatusDtoFactory.BuildListStatusDto();
+			var expectedStatuses = StatusFactory.BuildListStatusDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			

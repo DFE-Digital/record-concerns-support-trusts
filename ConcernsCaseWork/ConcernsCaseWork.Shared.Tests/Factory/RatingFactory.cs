@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory
 {
-	public static class RatingDtoFactory
+	public static class RatingFactory
 	{
-		public static List<RatingDto> BuildRatingsDto()
+		public static List<RatingDto> BuildListRatingDto()
 		{
 			var currentDate = DateTimeOffset.Now;
 			return new List<RatingDto>

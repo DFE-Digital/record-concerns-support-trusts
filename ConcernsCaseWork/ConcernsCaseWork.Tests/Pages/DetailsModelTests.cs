@@ -158,7 +158,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
 
-			var caseModel = CaseModelFactory.BuildCaseModel();
+			var caseModel = CaseFactory.BuildCaseModel();
 			
 			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(caseModel);
 			

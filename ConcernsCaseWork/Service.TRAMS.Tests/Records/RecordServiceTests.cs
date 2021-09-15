@@ -22,7 +22,7 @@ namespace Service.TRAMS.Tests.Records
 		public async Task WhenGetRecordsByCaseUrn_ReturnsRecords()
 		{
 			// arrange
-			var expectedRecords = RecordDtoFactory.BuildListRecordDto();
+			var expectedRecords = RecordFactory.BuildListRecordDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -106,7 +106,7 @@ namespace Service.TRAMS.Tests.Records
 		public async Task WhenPostRecordByCaseUrn_ReturnsRecord()
 		{
 			// arrange
-			var expectedRecord = RecordDtoFactory.BuildCreateRecordDto();
+			var expectedRecord = RecordFactory.BuildCreateRecordDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -171,7 +171,7 @@ namespace Service.TRAMS.Tests.Records
 			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var actualRecord = await recordService.PostRecordByCaseUrn(RecordDtoFactory.BuildCreateRecordDto());
+			var actualRecord = await recordService.PostRecordByCaseUrn(RecordFactory.BuildCreateRecordDto());
 
 			// assert
 			Assert.That(actualRecord, Is.Null);
@@ -181,7 +181,7 @@ namespace Service.TRAMS.Tests.Records
 		public async Task WhenPatchRecordByUrn_ReturnsRecord()
 		{
 			// arrange
-			var expectedRecord = RecordDtoFactory.BuildUpdateRecordDto();
+			var expectedRecord = RecordFactory.BuildUpdateRecordDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -246,7 +246,7 @@ namespace Service.TRAMS.Tests.Records
 			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var actualRecord = await recordService.PatchRecordByUrn(RecordDtoFactory.BuildUpdateRecordDto());
+			var actualRecord = await recordService.PatchRecordByUrn(RecordFactory.BuildUpdateRecordDto());
 
 			// assert
 			Assert.That(actualRecord, Is.Null);
