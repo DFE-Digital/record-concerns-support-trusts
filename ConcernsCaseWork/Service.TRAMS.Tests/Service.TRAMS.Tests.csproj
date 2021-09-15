@@ -19,8 +19,4 @@
       <ProjectReference Include="..\Service.TRAMS\Service.TRAMS.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="RecordRatingHistory" />
-    </ItemGroup>
-
 </Project>
