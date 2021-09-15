@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
-using Service.TRAMS.RecordRatingHistory;
+using Service.TRAMS.RecordAcademy;
 using System;
 using System.Linq;
 using System.Net;
@@ -13,16 +13,16 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Tests.RecordRatingHistory
+namespace Service.TRAMS.Tests.RecordAcademy
 {
 	[Parallelizable(ParallelScope.All)]
-	public class RecordRatingHistoryTests
+	public class RecordAcademyServiceTests
 	{
 		[Test]
-		public async Task WhenGetRecordsRatingHistoryByCaseUrn_ReturnsRecordsRatingHistoryDto()
+		public async Task WhenGetRecordsAcademyByRecordUrn_ReturnsRecordsAcademyDto()
 		{
 			// arrange
-			var expectedRecordsRatingHistory = RecordRatingHistoryFactory.BuildListRecordRatingHistoryDto();
+			var expectedRecordsAcademy = RecordAcademyFactory.BuildListRecordAcademyDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -33,36 +33,36 @@ namespace Service.TRAMS.Tests.RecordRatingHistory
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedRecordsRatingHistory))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedRecordsAcademy))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
-			var logger = new Mock<ILogger<RecordRatingHistoryService>>();
-			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object);
+			var logger = new Mock<ILogger<RecordAcademyService>>();
+			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var actualRecordsRatingHistory = await recordRatingHistoryService.GetRecordsRatingHistoryByCaseUrn(1);
+			var actualRecordsAcademy = await recordSrmaService.GetRecordsAcademyByRecordUrn(1);
 
 			// assert
-			Assert.That(actualRecordsRatingHistory, Is.Not.Null);
-			Assert.That(actualRecordsRatingHistory.Count, Is.EqualTo(expectedRecordsRatingHistory.Count));
+			Assert.That(actualRecordsAcademy, Is.Not.Null);
+			Assert.That(actualRecordsAcademy.Count, Is.EqualTo(expectedRecordsAcademy.Count));
 			
-			foreach (var actualRecord in actualRecordsRatingHistory)
+			foreach (var actualRecordAcademy in actualRecordsAcademy)
 			{
-				foreach (var expectedRecord in expectedRecordsRatingHistory.Where(r => r.RecordUrn.CompareTo(actualRecord.RecordUrn) == 0))
+				foreach (var expectedRecordAcademy in expectedRecordsAcademy.Where(r => r.Urn.CompareTo(actualRecordAcademy.Urn) == 0))
 				{
-					Assert.That(actualRecord.CreatedAt, Is.EqualTo(expectedRecord.CreatedAt));
-					Assert.That(actualRecord.RatingUrn, Is.EqualTo(expectedRecord.RatingUrn));
-					Assert.That(actualRecord.RecordUrn, Is.EqualTo(expectedRecord.RecordUrn));
+					Assert.That(actualRecordAcademy.AcademyUrn, Is.EqualTo(expectedRecordAcademy.AcademyUrn));
+					Assert.That(actualRecordAcademy.Urn, Is.EqualTo(expectedRecordAcademy.Urn));
+					Assert.That(actualRecordAcademy.RecordUrn, Is.EqualTo(expectedRecordAcademy.RecordUrn));
 				}
 			}
 		}
-		
+
 		[Test]
-		public async Task WhenGetRecordsRatingHistoryByCaseUrn_ReturnsEmptyRecordsRatingHistoryDto()
+		public async Task WhenGetRecordsAcademyByRecordUrn_ThrowsException_ReturnsEmptyRecordAcademyDto()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -81,22 +81,22 @@ namespace Service.TRAMS.Tests.RecordRatingHistory
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
-			var logger = new Mock<ILogger<RecordRatingHistoryService>>();
-			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object);
+			var logger = new Mock<ILogger<RecordAcademyService>>();
+			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var actualRecordsRatingHistory = await recordRatingHistoryService.GetRecordsRatingHistoryByCaseUrn(1);
+			var actualRecordsAcademy = await recordSrmaService.GetRecordsAcademyByRecordUrn(1);
 
 			// assert
-			Assert.That(actualRecordsRatingHistory, Is.Not.Null);
-			Assert.That(actualRecordsRatingHistory.Count, Is.EqualTo(0));
+			Assert.That(actualRecordsAcademy, Is.Not.Null);
+			Assert.That(actualRecordsAcademy.Count, Is.EqualTo(0));
 		}
 		
 		[Test]
-		public async Task WhenGetRecordsRatingHistoryByRecordUrn_ReturnsRecordsRatingHistoryDto()
+		public async Task WhenPostRecordAcademyByRecordUrn_ReturnsRecordAcademyDto()
 		{
 			// arrange
-			var expectedRecordsRatingHistory = RecordRatingHistoryFactory.BuildListRecordRatingHistoryDto();
+			var expectedRecordAcademy = RecordAcademyFactory.BuildRecordAcademyDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -107,36 +107,27 @@ namespace Service.TRAMS.Tests.RecordRatingHistory
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedRecordsRatingHistory))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(RecordSrmaFactory.BuildRecordSrmaDto()))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
-			var logger = new Mock<ILogger<RecordRatingHistoryService>>();
-			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object);
+			var logger = new Mock<ILogger<RecordAcademyService>>();
+			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var actualRecordsRatingHistory = await recordRatingHistoryService.GetRecordsRatingHistoryByRecordUrn(1);
+			var actualRecordAcademy = await recordSrmaService.PostRecordAcademyByRecordUrn(RecordAcademyFactory.BuildCreateRecordAcademyDto());
 
 			// assert
-			Assert.That(actualRecordsRatingHistory, Is.Not.Null);
-			Assert.That(actualRecordsRatingHistory.Count, Is.EqualTo(expectedRecordsRatingHistory.Count));
-			
-			foreach (var actualRecord in actualRecordsRatingHistory)
-			{
-				foreach (var expectedRecord in expectedRecordsRatingHistory.Where(r => r.RecordUrn.CompareTo(actualRecord.RecordUrn) == 0))
-				{
-					Assert.That(actualRecord.CreatedAt, Is.EqualTo(expectedRecord.CreatedAt));
-					Assert.That(actualRecord.RatingUrn, Is.EqualTo(expectedRecord.RatingUrn));
-					Assert.That(actualRecord.RecordUrn, Is.EqualTo(expectedRecord.RecordUrn));
-				}
-			}
+			Assert.That(actualRecordAcademy.AcademyUrn, Is.Not.Null);
+			Assert.That(actualRecordAcademy.Urn, Is.EqualTo(expectedRecordAcademy.Urn));
+			Assert.That(actualRecordAcademy.RecordUrn, Is.EqualTo(expectedRecordAcademy.RecordUrn));
 		}
-		
+
 		[Test]
-		public async Task WhenGetRecordsRatingHistoryByRecordUrn_ReturnsEmptyRecordsRatingHistoryDto()
+		public async Task WhenPostRecordAcademyByRecordUrn_ThrowsException_ReturnsNull()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -155,22 +146,21 @@ namespace Service.TRAMS.Tests.RecordRatingHistory
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
-			var logger = new Mock<ILogger<RecordRatingHistoryService>>();
-			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object);
+			var logger = new Mock<ILogger<RecordAcademyService>>();
+			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var actualRecordsRatingHistory = await recordRatingHistoryService.GetRecordsRatingHistoryByRecordUrn(1);
+			var actualRecordAcademy = await recordSrmaService.PostRecordAcademyByRecordUrn(RecordAcademyFactory.BuildCreateRecordAcademyDto());
 
 			// assert
-			Assert.That(actualRecordsRatingHistory, Is.Not.Null);
-			Assert.That(actualRecordsRatingHistory.Count, Is.EqualTo(0));
+			Assert.That(actualRecordAcademy, Is.Null);
 		}
 		
 		[Test]
-		public async Task WhenPostRecordRatingHistory_ReturnsRecordRatingHistoryDto()
+		public async Task WhenPatchRecordAcademyByUrn_ReturnsRecordAcademyDto()
 		{
 			// arrange
-			var expectedRecordRatingHistory = RecordRatingHistoryFactory.BuildRecordRatingHistoryDto();
+			var expectedRecordAcademy = RecordAcademyFactory.BuildRecordAcademyDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -181,28 +171,27 @@ namespace Service.TRAMS.Tests.RecordRatingHistory
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedRecordRatingHistory))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedRecordAcademy))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
-			var logger = new Mock<ILogger<RecordRatingHistoryService>>();
-			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object);
+			var logger = new Mock<ILogger<RecordAcademyService>>();
+			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var actualRecordsRatingHistory = await recordRatingHistoryService.PostRecordRatingHistory(expectedRecordRatingHistory);
+			var actualRecordAcademy = await recordSrmaService.PatchRecordAcademyByUrn(expectedRecordAcademy);
 
 			// assert
-			Assert.That(actualRecordsRatingHistory, Is.Not.Null);
-			Assert.That(actualRecordsRatingHistory.CreatedAt, Is.EqualTo(expectedRecordRatingHistory.CreatedAt));
-			Assert.That(actualRecordsRatingHistory.RatingUrn, Is.EqualTo(expectedRecordRatingHistory.RatingUrn));
-			Assert.That(actualRecordsRatingHistory.RecordUrn, Is.EqualTo(expectedRecordRatingHistory.RecordUrn));
+			Assert.That(actualRecordAcademy.AcademyUrn, Is.EqualTo(expectedRecordAcademy.AcademyUrn));
+			Assert.That(actualRecordAcademy.Urn, Is.EqualTo(expectedRecordAcademy.Urn));
+			Assert.That(actualRecordAcademy.RecordUrn, Is.EqualTo(expectedRecordAcademy.RecordUrn));
 		}
-		
+
 		[Test]
-		public async Task WhenPostRecordRatingHistory_ReturnsNull()
+		public async Task WhenPatchRecordAcademyByUrn_ThrowsException_ReturnsNull()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -221,14 +210,14 @@ namespace Service.TRAMS.Tests.RecordRatingHistory
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
-			var logger = new Mock<ILogger<RecordRatingHistoryService>>();
-			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object);
+			var logger = new Mock<ILogger<RecordAcademyService>>();
+			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var actualRecordsRatingHistory = await recordRatingHistoryService.PostRecordRatingHistory(RecordRatingHistoryFactory.BuildRecordRatingHistoryDto());
+			var actualRecordAcademy = await recordSrmaService.PatchRecordAcademyByUrn(RecordAcademyFactory.BuildRecordAcademyDto());
 
 			// assert
-			Assert.That(actualRecordsRatingHistory, Is.Null);
+			Assert.That(actualRecordAcademy, Is.Null);
 		}
 	}
 }
