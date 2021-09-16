@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
+using ConcernsCaseWork.Services.Type;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -17,6 +19,7 @@ namespace ConcernsCaseWork.Pages.Case
 	public class DetailsPageModel : PageModel
 	{
 		private readonly ITrustModelService _trustModelService;
+		private readonly ITypeModelService _typeModelService;
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<DetailsPageModel> _logger;
 		private readonly ICachedService _cachedService;
@@ -25,10 +28,13 @@ namespace ConcernsCaseWork.Pages.Case
 		private const string ErrorOnPostPage = "An error occurred posting the form, please try again. If the error persists contact the service administrator.";
 		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
+		public IDictionary<string, IList<string>> TypesDictionary { get; private set; }
 
-		public DetailsPageModel(ITrustModelService trustModelService, ICaseModelService caseModelService, ICachedService cachedService, ILogger<DetailsPageModel> logger)
+		public DetailsPageModel(ITrustModelService trustModelService, ICaseModelService caseModelService, 
+			ICachedService cachedService, ITypeModelService typeModelService, ILogger<DetailsPageModel> logger)
 		{
 			_trustModelService = trustModelService;
+			_typeModelService = typeModelService;
 			_caseModelService = caseModelService;
 			_cachedService = cachedService;
 			_logger = logger;
@@ -47,8 +53,9 @@ namespace ConcernsCaseWork.Pages.Case
 					throw new Exception("Cache CaseStateData is null");
 				}
 
-				// Fetch Trust details
+				// Fetch UI data
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(caseStateModel.TrustUkPrn);
+				TypesDictionary = await _typeModelService.GetTypes();
 			}
 			catch (Exception ex)
 			{

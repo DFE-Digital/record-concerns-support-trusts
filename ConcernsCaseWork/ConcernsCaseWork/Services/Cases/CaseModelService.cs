@@ -111,8 +111,8 @@ namespace ConcernsCaseWork.Services.Cases
 				// Create a record
 				var currentDate = DateTimeOffset.Now;
 				var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, 
-					currentDate, typeDto.Name, typeDto.Description, string.Empty, newCase.Urn, typeDto.Urn, ratingDto.Urn, isCasePrimary,
-					await _sequenceCachedService.Generator(), statusDto.Urn);
+					currentDate, typeDto.Name, typeDto.Description, createCaseModel.Description, newCase.Urn, 
+					typeDto.Urn, ratingDto.Urn, isCasePrimary, await _sequenceCachedService.Generator(), statusDto.Urn);
 				
 				var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 

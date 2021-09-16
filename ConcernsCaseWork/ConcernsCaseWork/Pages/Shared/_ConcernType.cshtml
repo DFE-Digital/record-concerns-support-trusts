@@ -1,0 +1,42 @@
+﻿@model IDictionary<string, IList<string>>
+@{
+	var typeIndex = 1;
+	var subTypeIndex = 1;
+}
+
+<div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+	@{
+		foreach (var (key, value) in Model)
+		{
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" data-aria-controls="conditional-type-@typeIndex" id="type" name="type" type="radio" value="@key">
+				<label class="govuk-label govuk-radios__label" for="type">
+					@key
+				</label>
+			</div>
+			
+			@if (value.Any())
+			{
+				<div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-type-@typeIndex">
+					<div class="govuk-form-group">
+						
+						@foreach (var subtype in value)
+						{
+							<div class="govuk-radios__item">
+								<input class="govuk-radios__input" id="subType-@subTypeIndex" name="subType" type="radio" value="@subtype">
+								<label class="govuk-label govuk-radios__label" for="subType-@subTypeIndex">
+									@subtype
+								</label>
+							</div>
+
+							subTypeIndex++;
+						}
+
+					</div>
+				</div>
+			}
+			
+			typeIndex++;
+		}
+	}
+</div>

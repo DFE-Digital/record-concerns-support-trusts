@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
+using ConcernsCaseWork.Services.Type;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -100,6 +101,7 @@ namespace ConcernsCaseWork.Extensions
 			// Web application services
 			services.AddSingleton<ICaseModelService, CaseModelService>();
 			services.AddSingleton<ITrustModelService, TrustModelService>();
+			services.AddSingleton<ITypeModelService, TypeModelService>();
 			
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();

@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
+using ConcernsCaseWork.Services.Type;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.Shared;
 using Microsoft.AspNetCore.Http;
@@ -32,12 +33,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
 			var expected = TrustFactory.BuildTrustDetailsModel();
 
 			mockCasesCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(new UserState { TrustUkPrn = "trust-ukprn" });
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
 			
-			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCaseModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
+			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCaseModelService.Object, mockCasesCachedService.Object, mockTypeModelService.Object, mockLogger.Object, true);
 			
 			// act
 			await pageModel.OnGetAsync();
@@ -80,11 +82,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
 			
 			mockCasesCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(new UserState { TrustUkPrn = "trust-ukprn" });
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ThrowsAsync(new Exception("some error"));
 			
-			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCaseModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
+			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCaseModelService.Object, 
+				mockCasesCachedService.Object, mockTypeModelService.Object, mockLogger.Object, true);
 			
 			// act
 			await pageModel.OnGetAsync();
@@ -120,8 +124,10 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
 			
-			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCaseModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
+			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCaseModelService.Object, 
+				mockCasesCachedService.Object, mockTypeModelService.Object, mockLogger.Object, true);
 			
 			// act
 			await pageModel.OnGetAsync();
@@ -157,12 +163,15 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			
 			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(caseModel);
 			
-			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCaseModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
+			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCaseModelService.Object, 
+				mockCasesCachedService.Object, mockTypeModelService.Object, mockLogger.Object, true);
+			
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
@@ -194,8 +203,10 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCasesCachedService = new Mock<ICachedService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
 			
-			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCaseModelService.Object, mockCasesCachedService.Object, mockLogger.Object, true);
+			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCaseModelService.Object, 
+				mockCasesCachedService.Object, mockTypeModelService.Object, mockLogger.Object, true);
 			
 			// act
 			var pageResponse = await pageModel.OnPost();
@@ -209,11 +220,12 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		private static DetailsPageModel SetupDetailsModel(
-			ITrustModelService mockTrustModelService, ICaseModelService mockCaseModelService, ICachedService mockCachedService, ILogger<DetailsPageModel> mockLogger, bool isAuthenticated = false)
+			ITrustModelService mockTrustModelService, ICaseModelService mockCaseModelService, ICachedService mockCachedService, 
+			ITypeModelService mockTypeModelService, ILogger<DetailsPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new DetailsPageModel(mockTrustModelService, mockCaseModelService, mockCachedService, mockLogger)
+			return new DetailsPageModel(mockTrustModelService, mockCaseModelService, mockCachedService, mockTypeModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
