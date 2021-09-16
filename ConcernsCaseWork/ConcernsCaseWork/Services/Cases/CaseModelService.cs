@@ -87,9 +87,10 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				// TODO Remove when Trams API is live
+				// TODO Start Remove when Trams API is live
 				createCaseModel.Urn = await _sequenceCachedService.Generator();
-
+				// TODO End Remove when Trams API is live
+				
 				// Fetch Status
 				var statusDto = await _statusCachedService.GetStatusByName(Status.Live.ToString());
 
