@@ -77,7 +77,7 @@ namespace Service.Redis.Tests.Status
 			mockStatusService.Verify(c => c.GetStatuses(), Times.Never);
 		}
 		
-				[Test]
+		[Test]
 		public async Task WhenGetStatusByName_ReturnsStatus_CacheIsNull()
 		{
 			// arrange
