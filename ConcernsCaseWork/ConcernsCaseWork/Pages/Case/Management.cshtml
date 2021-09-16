@@ -1,6 +1,161 @@
 ﻿@page "/case/{id:long}/management"
 @model ConcernsCaseWork.Pages.Case.ManagementPageModel
 
-<div>
-	Management
+<div class="buttons-topOfPage">
+	<a asp-page="../home" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+		Back to casework
+	</a>
+	<a href="#" role="button" class="govuk-button govuk-button--warning float__right" data-module="govuk-button">
+		Close case
+	</a>
 </div>
+
+<h1 class="govuk-heading-l" name="caseID">
+	<span class="govuk-caption-m">Case ID</span>
+	10483AC
+</h1>
+
+<h2 class="govuk-heading-m">TODO Replace TrustName</h2>
+<a href="#" class="govuk-link">Trust overview (TRAMS)</a>
+
+<dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-6">
+
+	<!-- Concern -->
+	<div class="govuk-summary-list__row">
+		<dt class="dfe-width-30percent govuk-summary-list__key">
+			Primary Concern
+		</dt>
+		<dd class="govuk-summary-list__value">
+			<span class="caseDetail_type">Compliance: Financial reporting</span>
+		</dd>
+		<dd class="dfe-width-15percent govuk-summary-list__actions">
+			<a class="govuk-link" href="#">
+				Change<span class="govuk-visually-hidden"> primary concern</span>
+			</a>
+		</dd>
+	</div>
+
+	<!-- Risk Rating -->
+	<div class="govuk-summary-list__row">
+		<dt class="dfe-width-30percent govuk-summary-list__key">
+			Risk rating
+		</dt>
+		<dd class="govuk-summary-list__value">
+			<span class="govuk-tag ragtag ragtag__amber">Amber</span><span class="govuk-tag ragtag ragtag__green">Green</span>
+			<span class="govuk-tag ragtag ragtag__red">Red</span><span class="govuk-tag ragtag ragtag__amber">Amber</span>
+			<span class="govuk-tag ragtag ragtag__red">Red</span>
+			<span class="govuk-tag ragtag ragtag__redplus">Red Plus</span>
+		</dd>
+		<dd class="dfe-width-15percent govuk-summary-list__actions">
+			<a class="govuk-link" href="#">
+				Change<span class="govuk-visually-hidden"> risk rating</span>
+			</a>
+		</dd>
+	</div>
+
+	<!-- Direction of travel -->
+	<div class="govuk-summary-list__row">
+		<dt class="dfe-width-30percent govuk-summary-list__key">
+			Direction of travel
+		</dt>
+		<dd class="govuk-summary-list__value">
+			Deteriorating
+			Unchanged
+			Improving
+		</dd>
+		<dd class="dfe-width-15percent govuk-summary-list__actions">
+			<a class="govuk-link" href="#">
+				Change<span class="govuk-visually-hidden"> direction of travel</span>
+			</a>
+		</dd>
+	</div>
+	
+</dl>
+
+<!--Accordions-->
+<div class="govuk-accordion"
+     data-module="govuk-accordion"
+     id="accordion-default">
+
+	<div class="govuk-accordion__section govuk-accordion__section--expanded">
+		<div class="govuk-accordion__section-header">
+			<h2 class="govuk-accordion__section-heading">
+				<span class="govuk-accordion__section-button" id="accordion-default-heading-1">Issue</span>
+			</h2>
+		</div>
+		<div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1">
+			<a class="govuk-link float__right" href="edit_issue?from=concerns/management/index">Edit</a>
+			<div class="details">
+				<p>{{ data['issue-detail'] }}</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="govuk-accordion__section govuk-accordion__section--expanded">
+		<div class="govuk-accordion__section-header">
+			<h2 class="govuk-accordion__section-heading">
+				<span class="govuk-accordion__section-button" id="accordion-default-heading-2">Current status</span>
+			</h2>
+		</div>
+		<div aria-labelledby="accordion-default-heading-2" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-2">
+			<a class="govuk-link float__right" href="edit_current_status?from=concerns/management/index">Edit</a>
+			<div class="details">
+				<p>{{ data['current-status-detail'] }}</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="govuk-accordion__section govuk-accordion__section--expanded">
+		<div class="govuk-accordion__section-header">
+			<h2 class="govuk-accordion__section-heading">
+				<span class="govuk-accordion__section-button" id="accordion-default-heading-3">Case aim</span>
+			</h2>
+		</div>
+		<div aria-labelledby="accordion-default-heading-3" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-3">
+			<a class="govuk-link float__right" href="edit_case_aim?from=concerns/management/index">Edit</a>
+			<div class="details">
+				<p>{{ data['case-aim-detail'] }}</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="govuk-accordion__section govuk-accordion__section--expanded">
+		<div class="govuk-accordion__section-header">
+			<h2 class="govuk-accordion__section-heading">
+				<span class="govuk-accordion__section-button" id="accordion-default-heading-4">De-escalation point</span>
+			</h2>
+		</div>
+		<div aria-labelledby="accordion-default-heading-4" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-4">
+			<a class="govuk-link float__right" href="edit_deescalation_point?from=concerns/management/index">Edit</a>
+			<div class="details">
+				<p>{{ data['deescalation-point-detail'] }}</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="govuk-accordion__section govuk-accordion__section--expanded">
+		<div class="govuk-accordion__section-header">
+			<h2 class="govuk-accordion__section-heading">
+				<span class="govuk-accordion__section-button" id="accordion-default-heading-5">Next steps</span>
+			</h2>
+		</div>
+		<div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
+			<a class="govuk-link float__right" href="edit_next_steps?from=concerns/management/index">Edit</a>
+			<div class="details">
+				<p>{{ data['next-steps-detail'] }}</p>
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+<button class="govuk-button govuk-button--secondary" data-module="govuk-button">
+	Add to case
+</button>
+
+<script type="application/javascript">
+	$(function () {
+		
+		
+	});
+</script>

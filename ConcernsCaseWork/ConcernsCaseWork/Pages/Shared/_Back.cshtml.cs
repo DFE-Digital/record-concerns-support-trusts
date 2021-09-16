@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.Pages.Shared
 		/// <summary>
 		/// Don't render component for this paths
 		/// </summary>
-		private static readonly IList<string> PathExclusions = new List<string> { "home", "login", "logout", "details" };
+		private static readonly IList<string> PathExclusions = new List<string> { "home", "login", "logout", "details", "management" };
 
 		public static bool CanRender(string requestPath)
 		{

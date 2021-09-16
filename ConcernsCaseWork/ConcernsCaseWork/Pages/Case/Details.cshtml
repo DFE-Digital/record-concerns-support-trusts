@@ -27,7 +27,7 @@
 			else
 			{
 				<!-- Trust details -->
-				<a asp-page="index" class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 govuk-!-margin-top-6" style="float:right;">Change trust</a>
+				<a asp-page="index" class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 govuk-!-margin-top-6 float__right">Change trust</a>
 				<h2 class="govuk-heading-m govuk-!-margin-top-9">Check trust details</h2>
 
 				<dl class="govuk-summary-list">
@@ -67,7 +67,7 @@
 					<div class="govuk-summary-list__row">
 						<dt class="govuk-summary-list__key">Companies House</dt>
 						<dd class="govuk-summary-list__value">
-							<a href="#">
+							<a class="govuk-link" href="#">
 								@Model.TrustDetailsModel.GiasData.CompaniesHouseNumber
 							</a>
 						</dd>
@@ -266,7 +266,7 @@
 
 								<div class="govuk-radios__item">
 									<input class="govuk-radios__input" id="riskRating-1" name="riskRating" type="radio" value="Red-Amber">
-									<label class="govuk-label govuk-radios__label" for="riskRating-1" style="font-size: 0;">
+									<label class="govuk-label govuk-radios__label" for="riskRating-1">
 										<div class="govuk-label-wrapper">
 											<span class="govuk-tag ragtag ragtag__red">Red</span>
 											<span class="govuk-tag ragtag ragtag__amber">Amber</span>
@@ -276,7 +276,7 @@
 
 								<div class="govuk-radios__item">
 									<input class="govuk-radios__input" id="riskRating-2" name="riskRating" type="radio" value="Red">
-									<label class="govuk-label govuk-radios__label" for="riskRating-2" style="font-size: 0;">
+									<label class="govuk-label govuk-radios__label" for="riskRating-2">
 										<div class="govuk-label-wrapper">
 											<span class="govuk-tag ragtag ragtag__red">Red</span>
 										</div>
@@ -285,7 +285,7 @@
 
 								<div class="govuk-radios__item">
 									<input class="govuk-radios__input" id="riskRating-3" name="riskRating" type="radio" value="Red-Plus">
-									<label class="govuk-label govuk-radios__label" for="riskRating-3" style="font-size: 0;">
+									<label class="govuk-label govuk-radios__label" for="riskRating-3">
 										<div class="govuk-label-wrapper">
 											<span class="govuk-tag ragtag ragtag__redplus">Red Plus</span>
 										</div>
@@ -415,7 +415,7 @@
 						}]);
 						
 						
-						let multipleFields=document.querySelectorAll('.concern-auto-resize');
+						let multipleFields = document.querySelectorAll('.concern-auto-resize');
 						for(let i = 0; i < multipleFields.length; i++){
 							multipleFields[i].addEventListener('input', autoResizeHeight);
 						}
