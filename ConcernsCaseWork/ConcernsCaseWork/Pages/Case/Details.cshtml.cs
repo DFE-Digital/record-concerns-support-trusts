@@ -93,7 +93,7 @@ namespace ConcernsCaseWork.Pages.Case
 						RecordType = type,
 						ResolutionStrategy = resolutionStrategyDetail,
 						ReviewAt = currentDate,
-						UpdateAt = currentDate,
+						UpdatedAt = currentDate,
 						RecordSubType = subType,
 						TrustUkPrn = trustUkPrn
 					};

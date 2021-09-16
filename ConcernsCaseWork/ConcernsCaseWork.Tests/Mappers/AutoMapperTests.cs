@@ -9,7 +9,7 @@ using System.Linq;
 namespace ConcernsCaseWork.Tests.Mappers
 {
 	[Parallelizable(ParallelScope.All)]
-	public class AutoMapperTrustsTests
+	public class AutoMapperTests
 	{
 		[Test]
 		public void ConvertFrom_TrustsSummaryDto_To_TrustsSummaryModel_IsValid()
