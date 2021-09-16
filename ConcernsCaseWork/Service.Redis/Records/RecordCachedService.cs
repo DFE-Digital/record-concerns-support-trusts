@@ -85,6 +85,8 @@ namespace Service.Redis.Records
 				// if (records is null) throw new ApplicationException("Error::RecordCachedService::GetRecordsByCaseUrn");
 				
 				// TODO Finish cache logic
+				caseState = new UserState();
+				await StoreData(caseDto.CreatedBy, caseState);
 			}
 			else
 			{
@@ -93,8 +95,7 @@ namespace Service.Redis.Records
 					return caseWrapper.Records.Values.Select(r => r.RecordDto).ToList();
 				}
 			}
-			await StoreData(caseDto.CreatedBy, caseState);
-
+			
 			return records;
 		}
 	}
