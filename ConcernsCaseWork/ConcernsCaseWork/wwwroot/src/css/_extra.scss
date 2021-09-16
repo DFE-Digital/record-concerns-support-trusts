@@ -1623,10 +1623,11 @@ span.summary-validation-symbol {
   border: 12px solid #DEE0E2;
   border-radius: 50%;
   border-top-color: #005EA5;
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 10px;
   -webkit-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;
+  margin-top: 10px;
 }
 @-webkit-keyframes spin {
   0% { -webkit-transform: rotate(0deg); }
@@ -1668,4 +1669,13 @@ span.summary-validation-symbol {
 .govuk-label-wrapper {
   margin: 5px 0;
   font-size: 0;
+}
+
+/* ==========================================================================
+   #Search Trusts screen
+   ========================================================================== */
+.search-results {
+  background-color: whitesmoke;
+  padding: 5px;
+  border: 1px solid black;
 }

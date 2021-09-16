@@ -39,18 +39,19 @@
 	</div>
 </div>
 
-
-<div class="govuk-width-container">
-	<div class="govuk-heading-m"></div>
-	<div class="ccms-loader govuk-!-display-none"></div>
-	<div id="trusts-partial-results"></div>
-</div>
+<div class="ccms-loader govuk-!-display-none"></div>
+<div id="trusts-partial-results"></div>
 
 <script type="application/javascript">
 	$(function () {
 		let clearResults = function () {
 			$("#trusts-partial-results").empty();
 		};
+		
+		$("#search").focusin(function() {
+		  clearResults();
+		});
+		
 		try {
 			let searchForm = $("#search-form");
 			const validator = new MOJFrontend.FormValidator(searchForm[0]);
