@@ -48,6 +48,7 @@ namespace Service.Redis.Records
 						} 
 					} }
 				};
+				await StoreData(caseworker, caseState);
 			}
 			else
 			{
@@ -64,8 +65,7 @@ namespace Service.Redis.Records
 					caseState.CasesDetails.Add(newRecord.CaseUrn, caseWrapper);
 				}
 			}
-			await StoreData(caseworker, caseState);
-			
+
 			return newRecord;
 		}
 
@@ -85,16 +85,14 @@ namespace Service.Redis.Records
 				// if (records is null) throw new ApplicationException("Error::RecordCachedService::GetRecordsByCaseUrn");
 				
 				// TODO Finish cache logic
+				caseState = new UserState();
+				await StoreData(caseDto.CreatedBy, caseState);
 			}
-			else
+			else if (caseState.CasesDetails.ContainsKey(caseDto.Urn) && caseState.CasesDetails.TryGetValue(caseDto.Urn, out var caseWrapper))
 			{
-				if (caseState.CasesDetails.ContainsKey(caseDto.Urn) && caseState.CasesDetails.TryGetValue(caseDto.Urn, out var caseWrapper))
-				{
-					return caseWrapper.Records.Values.Select(r => r.RecordDto).ToList();
-				}
+				return caseWrapper.Records.Values.Select(r => r.RecordDto).ToList();
 			}
-			await StoreData(caseDto.CreatedBy, caseState);
-
+			
 			return records;
 		}
 	}

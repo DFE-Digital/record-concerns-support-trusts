@@ -63,6 +63,33 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				"resolution-strategy", "direction-of-travel", 1, 1
 			);
 		}
+		
+		public static CreateCaseModel BuildCreateCaseModel()
+		{
+			var dateTimeNow = DateTime.Now;
+			return new CreateCaseModel {
+				CreatedAt = dateTimeNow, 
+				UpdatedAt = dateTimeNow, 
+				ReviewAt = dateTimeNow, 
+				ClosedAt = dateTimeNow, 
+				CreatedBy = "testing", 
+				Description = "description", 
+				CrmEnquiry = "crm-enquiry",
+				TrustUkPrn = "trust-ukprn", 
+				ReasonAtReview = "reason-at-review", 
+				DeEscalation = dateTimeNow, 
+				Issue = "issue", 
+				CurrentStatus = "current-status", 
+				NextSteps = "nextSteps",
+				ResolutionStrategy = "resolution-strategy", 
+				DirectionOfTravel = "direction-of-travel", 
+				Urn = 1, 
+				Status = 1, 
+				RecordType = "record-type", 
+				RecordSubType = "record-sub-.type", 
+				RagRating = "rag-rating"
+			};
+		}
 
 		public static UpdateCaseDto BuildUpdateCaseDto()
 		{

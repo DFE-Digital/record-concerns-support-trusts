@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.Models
 	{
 		public DateTimeOffset CreatedAt { get; set; }
 
-		public DateTimeOffset UpdateAt { get; set; }
+		public DateTimeOffset UpdatedAt { get; set; }
 
 		public DateTimeOffset ReviewAt { get; set; }
 

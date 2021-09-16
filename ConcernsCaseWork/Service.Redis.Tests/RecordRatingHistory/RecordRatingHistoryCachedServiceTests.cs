@@ -73,7 +73,7 @@ namespace Service.Redis.Tests.RecordRatingHistory
 			Assert.That(recordRatingHistoryDto.RecordUrn, Is.EqualTo(expectedRecordRatingHistory.RecordUrn));
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
-			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
 			mockRecordRatingHistoryService.Verify(c => 
 				c.PostRecordRatingHistory(It.IsAny<RecordRatingHistoryDto>()), Times.Never);
 		}
@@ -127,7 +127,7 @@ namespace Service.Redis.Tests.RecordRatingHistory
 			Assert.That(recordRatingHistoryDto.RecordUrn, Is.EqualTo(expectedRecordRatingHistory.RecordUrn));
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
-			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
 			mockRecordRatingHistoryService.Verify(c => 
 				c.PostRecordRatingHistory(It.IsAny<RecordRatingHistoryDto>()), Times.Never);
 		}

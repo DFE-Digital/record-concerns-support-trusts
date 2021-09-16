@@ -7,6 +7,7 @@ using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
 using Service.Redis.Cases;
+using Service.Redis.Models;
 using Service.Redis.Rating;
 using Service.Redis.RecordRatingHistory;
 using Service.Redis.Records;
@@ -15,6 +16,8 @@ using Service.Redis.Status;
 using Service.Redis.Trusts;
 using Service.Redis.Type;
 using Service.TRAMS.Cases;
+using Service.TRAMS.RecordRatingHistory;
+using Service.TRAMS.Records;
 using Service.TRAMS.Status;
 using Service.TRAMS.Trusts;
 using System;
@@ -100,6 +103,44 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		}
 		
 		[Test]
+		public async Task WhenGetCasesByCaseworker_FetchFromTramsApi_ReturnEmptyCases()
+		{
+			// arrange
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
+			var mockCachedService = new Mock<ICachedService>();
+			var mockSequenceCachedService = new Mock<ISequenceCachedService>();
+			var mockRecordRatingHistoryCachedService = new Mock<IRecordRatingHistoryCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+			
+			var casesDto = CaseFactory.BuildListCaseDto();
+			var statusLiveDto = StatusFactory.BuildStatusDto(Status.Live.ToString(), 1);
+			var statusMonitoringDto = StatusFactory.BuildStatusDto(Status.Monitoring.ToString(), 2);
+			
+			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()))
+				.ReturnsAsync(casesDto);
+			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
+			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()))
+				.ReturnsAsync(new List<CaseDto>());
+
+			// act
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object,  mockRecordRatingHistoryCachedService.Object, 
+				mockStatusCachedService.Object, mockSequenceCachedService.Object, mockLogger.Object);
+			(IList<HomeModel> activeCasesModel, IList<HomeModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
+
+			// assert
+			Assert.IsAssignableFrom<HomeModel[]>(activeCasesModel);
+			Assert.IsAssignableFrom<HomeModel[]>(monitoringCasesModel);
+			Assert.That(activeCasesModel.Count, Is.EqualTo(0));
+			Assert.That(monitoringCasesModel.Count, Is.EqualTo(0));
+		}
+		
+		[Test]
 		public async Task WhenGetCasesByCaseworker_FetchFromTramsApi_ThrowsException_ReturnEmptyCases()
 		{
 			// arrange
@@ -135,6 +176,199 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			Assert.IsAssignableFrom<HomeModel[]>(monitoringCasesModel);
 			Assert.That(activeCasesModel.Count, Is.EqualTo(0));
 			Assert.That(monitoringCasesModel.Count, Is.EqualTo(0));
+		}
+		
+		[Test]
+		public async Task WhenGetCasesByCaseworker_FetchFromCache_ReturnsCases()
+		{
+			// arrange
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
+			var mockCachedService = new Mock<ICachedService>();
+			var mockSequenceCachedService = new Mock<ISequenceCachedService>();
+			var mockRecordRatingHistoryCachedService = new Mock<IRecordRatingHistoryCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+
+			var casesDto = CaseFactory.BuildListCaseDto();
+			var recordsDto = RecordFactory.BuildListRecordDto();
+			var statusLiveDto = StatusFactory.BuildStatusDto(Status.Live.ToString(), 1);
+			var statusMonitoringDto = StatusFactory.BuildStatusDto(Status.Monitoring.ToString(), 2);
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = TypeFactory.BuildListTypeDto();
+			var trustDto = TrustFactory.BuildTrustDetailsDto();
+			
+			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
+			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<CaseDto>())).ReturnsAsync(recordsDto);
+			mockRatingCachedService.Setup(r => r.GetRatings()).ReturnsAsync(ratingsDto);
+			mockTypeCachedService.Setup(t => t.GetTypes()).ReturnsAsync(typesDto);
+			mockTrustCachedService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDto);
+			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(casesDto);
+
+			var userState = new UserState
+			{
+				TrustUkPrn = "trust-ukprn",
+				CasesDetails =
+				{
+					{ 1, new CaseWrapper { 
+						CaseDto = CaseFactory.BuildCaseDto(), 
+						Records =
+						{
+							{ 1, new RecordWrapper
+							{
+								RecordDto = RecordFactory.BuildRecordDto(), 
+								RecordsRatingHistory = new List<RecordRatingHistoryDto>
+								{
+									new RecordRatingHistoryDto(DateTimeOffset.Now, 1, 1)
+								}
+							} }
+						}
+					} }
+				}
+			};
+			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
+			
+			// act
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object,  mockRecordRatingHistoryCachedService.Object, 
+				mockStatusCachedService.Object, mockSequenceCachedService.Object, mockLogger.Object);
+			(IList<HomeModel> activeCasesModel, IList<HomeModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
+
+			// assert
+			Assert.IsAssignableFrom<List<HomeModel>>(activeCasesModel);
+			Assert.IsAssignableFrom<List<HomeModel>>(monitoringCasesModel);
+			Assert.That(activeCasesModel.Count, Is.EqualTo(1));
+			Assert.That(monitoringCasesModel.Count, Is.EqualTo(0));
+			
+			foreach (var expected in activeCasesModel)
+			{
+				foreach (var actual in casesDto.Where(actual => expected.CaseUrn.Equals(actual.Urn.ToString())))
+				{
+					var establishmentNames = string.Join(",", trustDto.Establishments.Select(e => e.EstablishmentName));
+					var recordDto = recordsDto.FirstOrDefault(r => r.CaseUrn.CompareTo(actual.Urn) == 0);
+					Assert.IsNotNull(recordDto);
+
+					var caseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(recordDto.TypeUrn) == 0);
+					Assert.IsNotNull(caseType);
+					
+					var rating = ratingsDto.Where(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0)
+						.Select(r => r.Name)
+						.First();
+					Assert.IsNotNull(rating);
+					
+					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
+					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
+					Assert.That(expected.AcademyNames, Is.EqualTo(establishmentNames));
+					Assert.That(expected.CaseType, Is.EqualTo(caseType.Name));
+					Assert.That(expected.CaseSubType, Is.EqualTo(caseType.Description));
+					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
+					Assert.That(expected.TrustName, Is.EqualTo(HomeMapping.FetchTrustName(new List<TrustDetailsDto>{ trustDto }, actual)));
+					Assert.That(expected.RagRating, Is.EqualTo(HomeMapping.FetchRag(rating)));
+					Assert.That(expected.RagRatingCss, Is.EqualTo(HomeMapping.FetchRagCss(rating)));
+				}
+			}
+		}
+		
+		[Test]
+		public async Task WhenPostCase_ReturnsCaseModel()
+		{
+			// arrange
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
+			var mockCachedService = new Mock<ICachedService>();
+			var mockSequenceCachedService = new Mock<ISequenceCachedService>();
+			var mockRecordRatingHistoryCachedService = new Mock<IRecordRatingHistoryCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+
+			var caseDto = CaseFactory.BuildCaseDto();
+			var recordDto = RecordFactory.BuildRecordDto();
+			var statusLiveDto = StatusFactory.BuildStatusDto(Status.Live.ToString(), 1);
+			var statusMonitoringDto = StatusFactory.BuildStatusDto(Status.Monitoring.ToString(), 2);
+			var ratingDto = RatingFactory.BuildRatingDto();
+			var typeDto = TypeFactory.BuildTypeDto();
+			var createCaseModel = CaseFactory.BuildCreateCaseModel();
+			var recordRatingHistoryDto = RecordRatingHistoryFactory.BuildRecordRatingHistoryDto();
+			
+			mockSequenceCachedService.Setup(s => s.Generator()).ReturnsAsync(1);
+			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
+			mockTypeCachedService.Setup(t => t.GetTypeByNameAndDescription(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(typeDto);
+			mockRatingCachedService.Setup(r => r.GetRatingByName(It.IsAny<string>())).ReturnsAsync(ratingDto);
+			mockCaseCachedService.Setup(c => c.IsCasePrimary(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(true);
+			mockCaseCachedService.Setup(cs => cs.PostCase(It.IsAny<CreateCaseDto>())).ReturnsAsync(caseDto);
+			mockRecordCachedService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordDto>(), It.IsAny<string>())).ReturnsAsync(recordDto);
+			mockRecordRatingHistoryCachedService.Setup(r => r.PostRecordRatingHistory(It.IsAny<RecordRatingHistoryDto>(), It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(recordRatingHistoryDto);
+			
+			// act
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object,  mockRecordRatingHistoryCachedService.Object, 
+				mockStatusCachedService.Object, mockSequenceCachedService.Object, mockLogger.Object);
+			
+			var actualCaseModel = await caseModelService.PostCase(createCaseModel);
+
+			// assert
+			Assert.IsAssignableFrom<CaseModel>(actualCaseModel);
+			Assert.That(actualCaseModel, Is.Not.Null);
+			Assert.That(actualCaseModel.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
+			Assert.That(actualCaseModel.UpdatedAt, Is.EqualTo(caseDto.UpdatedAt));
+			Assert.That(actualCaseModel.ReviewAt, Is.EqualTo(caseDto.ReviewAt));
+			Assert.That(actualCaseModel.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
+			Assert.That(actualCaseModel.CreatedBy, Is.EqualTo(caseDto.CreatedBy));
+			Assert.That(actualCaseModel.Description, Is.EqualTo(caseDto.Description));
+			Assert.That(actualCaseModel.CrmEnquiry, Is.EqualTo(caseDto.CrmEnquiry));
+			Assert.That(actualCaseModel.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
+			Assert.That(actualCaseModel.ReasonAtReview, Is.EqualTo(caseDto.ReasonAtReview));
+			Assert.That(actualCaseModel.DeEscalation, Is.EqualTo(caseDto.DeEscalation));
+			Assert.That(actualCaseModel.Issue, Is.EqualTo(caseDto.Issue));
+			Assert.That(actualCaseModel.CurrentStatus, Is.EqualTo(caseDto.CurrentStatus));
+			Assert.That(actualCaseModel.NextSteps, Is.EqualTo(caseDto.NextSteps));
+			Assert.That(actualCaseModel.ResolutionStrategy, Is.EqualTo(caseDto.ResolutionStrategy));
+			Assert.That(actualCaseModel.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
+			Assert.That(actualCaseModel.Urn, Is.EqualTo(1));
+			Assert.That(actualCaseModel.Status, Is.EqualTo(1));
+			Assert.That(actualCaseModel.StatusName, Is.EqualTo(Status.Live.ToString()));
+		}
+		
+		[Test]
+		public void WhenPostCase_ThrowsException()
+		{
+			// arrange
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
+			var mockCachedService = new Mock<ICachedService>();
+			var mockSequenceCachedService = new Mock<ISequenceCachedService>();
+			var mockRecordRatingHistoryCachedService = new Mock<IRecordRatingHistoryCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+			
+			var statusLiveDto = StatusFactory.BuildStatusDto(Status.Live.ToString(), 1);
+			var statusMonitoringDto = StatusFactory.BuildStatusDto(Status.Monitoring.ToString(), 2);
+			var ratingDto = RatingFactory.BuildRatingDto();
+			var typeDto = TypeFactory.BuildTypeDto();
+			var createCaseModel = CaseFactory.BuildCreateCaseModel();
+
+			mockSequenceCachedService.Setup(s => s.Generator()).ReturnsAsync(1);
+			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
+			mockTypeCachedService.Setup(t => t.GetTypeByNameAndDescription(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(typeDto);
+			mockRatingCachedService.Setup(r => r.GetRatingByName(It.IsAny<string>())).ReturnsAsync(ratingDto);
+
+			// act
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object,  mockRecordRatingHistoryCachedService.Object, 
+				mockStatusCachedService.Object, mockSequenceCachedService.Object, mockLogger.Object);
+			
+			// assert
+			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PostCase(createCaseModel));
 		}
 	}
 }

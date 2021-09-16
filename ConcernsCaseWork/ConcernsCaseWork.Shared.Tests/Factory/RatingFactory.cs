@@ -18,5 +18,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				new RatingDto("Amber-Green", currentDate, currentDate, 5)
 			};
 		}
+
+		public static RatingDto BuildRatingDto()
+		{
+			var currentDate = DateTimeOffset.Now;
+			return new RatingDto("Red-Plus", currentDate, currentDate, 2);
+		}
 	}
 }

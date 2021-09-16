@@ -27,12 +27,11 @@ namespace Service.Redis.Cases
 			_logger.LogInformation("CaseCachedService::GetCasesByCaseworker");
 
 			var caseState = await GetData<UserState>(caseworker);
-			if (caseState != null)
-			{
-				return caseState.CasesDetails.Values.Select(c => c.CaseDto).ToList();
-			}
+			if (caseState != null) return caseState.CasesDetails.Values.Select(c => c.CaseDto).ToList();
 			
 			var cases = await _caseService.GetCasesByCaseworker(caseworker, statusUrn);
+			if (!cases.Any()) return cases;
+			
 			var userState = new UserState();
 			foreach (var caseDto in cases)
 			{
@@ -53,22 +52,23 @@ namespace Service.Redis.Cases
 			//var newCase = await _caseService.PostCase(createCaseDto);
 			//if (newCase is null) throw new ApplicationException("Error::CaseCachedService::PostCase");
 			
-			// TODO Remove when TRAMS API is live
+			// TODO Start Remove when TRAMS API is live
 			var createCaseDtoStr = JsonConvert.SerializeObject(createCaseDto);
 			var newCase = JsonConvert.DeserializeObject<CaseDto>(createCaseDtoStr);
+			// TODO End Remove when TRAMS API is live
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(createCaseDto.CreatedBy);
 			if (caseState is null)
 			{
 				caseState = new UserState { CasesDetails = { { newCase.Urn, new CaseWrapper { CaseDto = newCase } } } };
+				await StoreData(createCaseDto.CreatedBy, caseState);
 			}
 			else
 			{
 				caseState.CasesDetails.Add(newCase.Urn, new CaseWrapper { CaseDto = newCase });
 			}
-			await StoreData(createCaseDto.CreatedBy, caseState);
-			
+
 			return newCase;
 		}
 
