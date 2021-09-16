@@ -62,12 +62,12 @@ namespace Service.Redis.Cases
 			if (caseState is null)
 			{
 				caseState = new UserState { CasesDetails = { { newCase.Urn, new CaseWrapper { CaseDto = newCase } } } };
-				await StoreData(createCaseDto.CreatedBy, caseState);
 			}
 			else
 			{
 				caseState.CasesDetails.Add(newCase.Urn, new CaseWrapper { CaseDto = newCase });
 			}
+			await StoreData(createCaseDto.CreatedBy, caseState);
 
 			return newCase;
 		}
