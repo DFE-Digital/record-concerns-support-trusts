@@ -38,7 +38,6 @@ namespace Service.Redis.RecordRatingHistory
 				{
 					CasesDetails = { { caseUrn, caseWrapper } }
 				};
-				await StoreData(caseworker, caseState);
 			}
 			else
 			{
@@ -59,6 +58,7 @@ namespace Service.Redis.RecordRatingHistory
 					caseState.CasesDetails.Add(caseUrn, caseWrapper);
 				}
 			}
+			await StoreData(caseworker, caseState);
 
 			return recordRatingHistoryDto;
 		}

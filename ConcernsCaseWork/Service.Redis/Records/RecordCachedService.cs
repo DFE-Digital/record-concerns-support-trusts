@@ -48,7 +48,6 @@ namespace Service.Redis.Records
 						} 
 					} }
 				};
-				await StoreData(caseworker, caseState);
 			}
 			else
 			{
@@ -65,6 +64,7 @@ namespace Service.Redis.Records
 					caseState.CasesDetails.Add(newRecord.CaseUrn, caseWrapper);
 				}
 			}
+			await StoreData(caseworker, caseState);
 
 			return newRecord;
 		}
