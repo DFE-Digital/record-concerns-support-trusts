@@ -1650,6 +1650,11 @@ span.summary-validation-symbol {
   word-spacing: 10px;
 }
 
+.govuk-oneline-row {
+  overflow:hidden; 
+  white-space:nowrap
+}
+
 /* ==========================================================================
    #Case details concern screen
    ========================================================================== */

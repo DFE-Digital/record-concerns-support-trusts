@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Pages.Case
 				}
 
 				// Store CaseState into cache.
-				var userState = await _cachedService.GetData<UserState>(User.Identity.Name);
+				var userState = await _cachedService.GetData<UserState>(User.Identity.Name) ?? new UserState();
 				userState.TrustUkPrn = selectedTrust;
 				await _cachedService.StoreData(User.Identity.Name, userState);
 
