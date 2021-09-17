@@ -43,6 +43,23 @@ namespace Service.Redis.Cases
 			return cases;
 		}
 
+		public async Task<CaseDto> GetCaseByUrn(string caseworker, long urn)
+		{
+			_logger.LogInformation("CaseCachedService::GetCaseByUrn");
+			
+			var caseState = await GetData<UserState>(caseworker);
+			if (caseState != null && caseState.CasesDetails.TryGetValue(urn, out var caseWrapper))
+			{
+				return caseWrapper.CaseDto;
+			}
+
+			var caseDto = await _caseService.GetCaseByUrn(urn);
+			caseState ??= new UserState();
+			caseState.CasesDetails.Add(urn, new CaseWrapper { CaseDto = caseDto });
+
+			return caseDto;
+		}
+
 		public async Task<CaseDto> PostCase(CreateCaseDto createCaseDto)
 		{
 			_logger.LogInformation("CaseCachedService::PostCase");

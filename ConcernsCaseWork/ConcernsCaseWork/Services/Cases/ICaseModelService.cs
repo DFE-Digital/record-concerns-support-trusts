@@ -7,6 +7,7 @@ namespace ConcernsCaseWork.Services.Cases
 	public interface ICaseModelService
 	{
 		Task<(IList<HomeModel>, IList<HomeModel>)> GetCasesByCaseworker(string caseworker);
+		Task<CaseModel> GetCaseByUrn(string caseworker, long urn);
 		Task<CaseModel> PostCase(CreateCaseModel createCaseModel);
 	}
 }

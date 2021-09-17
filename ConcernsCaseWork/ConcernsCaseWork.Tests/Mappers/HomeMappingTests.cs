@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var splitExpected = expected.Split(",").ToList();
 			
 			// act
-			var rags = HomeMapping.FetchRag(rating);
+			var rags = RagMapping.FetchRag(rating);
 
 			// assert
 			CollectionAssert.AreEqual(rags, splitExpected);
@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var splitExpected = expected.Split(",").ToList();
 			
 			// act
-			var rags = HomeMapping.FetchRagCss(rating);
+			var rags = RagMapping.FetchRagCss(rating);
 
 			// assert
 			CollectionAssert.AreEqual(rags, splitExpected);

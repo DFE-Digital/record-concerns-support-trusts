@@ -83,9 +83,9 @@ namespace Service.TRAMS.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError($"CaseService::GetCasesByUrn::Exception message::{ex.Message}");
+
+				throw;
 			}
-			
-			return null;
 		}
 
 		public async Task<IList<CaseDto>> GetCasesByTrustUkPrn(string trustUkprn)
@@ -188,9 +188,9 @@ namespace Service.TRAMS.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError($"CaseService::PostCase::Exception message::{ex.Message}");
-			}
 
-			return null;
+				throw;
+			}
 		}
 
 		public async Task<CaseDto> PatchCaseByUrn(UpdateCaseDto updateCaseDto)
@@ -225,9 +225,9 @@ namespace Service.TRAMS.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError($"CaseService::PatchCaseByUrn::Exception message::{ex.Message}");
-			}
 
-			return null;
+				throw;
+			}
 		}
 	}
 }

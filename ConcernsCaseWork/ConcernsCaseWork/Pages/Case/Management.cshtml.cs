@@ -1,9 +1,11 @@
-﻿using ConcernsCaseWork.Services.Trusts;
+﻿using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Base;
+using System;
+using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
 {
@@ -11,20 +13,33 @@ namespace ConcernsCaseWork.Pages.Case
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class ManagementPageModel : PageModel
 	{
-		private readonly ITrustModelService _trustModelService;
-		private readonly ICachedService _cachedService;
+		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<DetailsPageModel> _logger;
 		
-		public ManagementPageModel(ITrustModelService trustModelService, ICachedService cachedService, ILogger<DetailsPageModel> logger)
+		private const string ErrorOnGetPage = "An error occurred loading the page, please try again. If the error persists contact the service administrator.";
+		
+		public CaseModel CaseModel { get; private set; }
+		
+		public ManagementPageModel(ICaseModelService caseModelService, ILogger<DetailsPageModel> logger)
 		{
-			_trustModelService = trustModelService;
-			_cachedService = cachedService;
+			_caseModelService = caseModelService;
 			_logger = logger;
 		}
 		
-		public void OnGet(string id)
+		public async Task OnGetAsync(long urn)
 		{
-			_logger.LogInformation($"ID - {id}");
+			try
+			{
+				_logger.LogInformation("Case::ManagementPageModel::OnGetAsync");
+
+				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, urn);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Case::ManagementPageModel::OnGetAsync::Exception - { ex.Message }");
+				
+				TempData["Error.Message"] = ErrorOnGetPage;
+			}
 		}
 	}
 }

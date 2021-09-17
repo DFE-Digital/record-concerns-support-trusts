@@ -13,7 +13,7 @@ namespace ConcernsCaseWork.Mappers
 				createCaseModel.DirectionOfTravel, createCaseModel.Urn, createCaseModel.Status);
 		}
 		
-		public static CaseModel Map(CaseDto caseDto, string status)
+		public static CaseModel Map(CaseDto caseDto, string status = null)
 		{
 			return new CaseModel
 			{

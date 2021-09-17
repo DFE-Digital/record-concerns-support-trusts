@@ -96,8 +96,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.CaseSubType, Is.EqualTo(caseType.Description));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(HomeMapping.FetchTrustName(new List<TrustDetailsDto>{ trustDto }, actual)));
-					Assert.That(expected.RagRating, Is.EqualTo(HomeMapping.FetchRag(rating)));
-					Assert.That(expected.RagRatingCss, Is.EqualTo(HomeMapping.FetchRagCss(rating)));
+					Assert.That(expected.RagRating, Is.EqualTo(RagMapping.FetchRag(rating)));
+					Assert.That(expected.RagRatingCss, Is.EqualTo(RagMapping.FetchRagCss(rating)));
 				}
 			}
 		}
@@ -266,8 +266,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.CaseSubType, Is.EqualTo(caseType.Description));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(HomeMapping.FetchTrustName(new List<TrustDetailsDto>{ trustDto }, actual)));
-					Assert.That(expected.RagRating, Is.EqualTo(HomeMapping.FetchRag(rating)));
-					Assert.That(expected.RagRatingCss, Is.EqualTo(HomeMapping.FetchRagCss(rating)));
+					Assert.That(expected.RagRating, Is.EqualTo(RagMapping.FetchRag(rating)));
+					Assert.That(expected.RagRatingCss, Is.EqualTo(RagMapping.FetchRagCss(rating)));
 				}
 			}
 		}

@@ -83,6 +83,38 @@ namespace ConcernsCaseWork.Services.Cases
 			return Empty();
 		}
 
+		public async Task<CaseModel> GetCaseByUrn(string caseworker, long urn)
+		{
+			try
+			{
+				var caseDto = await _caseCachedService.GetCaseByUrn(caseworker, urn);
+				var caseModel = CaseMapping.Map(caseDto);
+
+				// Fetch Trust
+				var trustDto = await _trustCachedService.GetTrustByUkPrn(caseModel.TrustUkPrn);
+				caseModel.TrustName = trustDto?.GiasData?.GroupName;
+				
+				// Fetch type
+				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
+				var recordDto = recordsDto.First(r => r.Primary);
+				caseModel.CaseType = recordDto.Name;
+				caseModel.CaseSubType = recordDto.Description;
+				
+				// Fetch Ratings
+				var ragsRatingDto = await _ratingCachedService.GetRatings();
+				var ragRating = ragsRatingDto.First(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0);
+				caseModel.RagRating = RagMapping.FetchRag(ragRating.Name);
+				caseModel.RagRatingCss = RagMapping.FetchRagCss(ragRating.Name);
+				
+				return caseModel;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"CaseModelService::GetCaseByUrn exception {ex.Message}");
+				throw;
+			}
+		}
+
 		public async Task<CaseModel> PostCase(CreateCaseModel createCaseModel)
 		{
 			try

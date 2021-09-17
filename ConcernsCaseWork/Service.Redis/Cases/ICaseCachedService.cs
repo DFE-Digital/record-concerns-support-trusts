@@ -8,6 +8,7 @@ namespace Service.Redis.Cases
 	public interface ICaseCachedService
 	{
 		Task<IList<CaseDto>> GetCasesByCaseworker(string caseworker, string statusUrn = "Live");
+		Task<CaseDto> GetCaseByUrn(string caseworker, long urn);
 		Task<CaseDto> PostCase(CreateCaseDto createCaseDto);
 		Task<Boolean> IsCasePrimary(string caseworker, long caseUrn);
 	}

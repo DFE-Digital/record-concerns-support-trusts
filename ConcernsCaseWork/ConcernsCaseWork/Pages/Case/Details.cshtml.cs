@@ -79,8 +79,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var nextStepsDetail = Request.Form["next-steps-detail"];
 				var resolutionStrategyDetail = Request.Form["resolution-strategy-detail"];
 				var trustUkPrn = Request.Form["trust-Ukprn"];
-
-				// TODO find a way to identity when typo selected is -> Sub type is null when type is 'Force Majeure'
+				
 				if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(ragRating) && 
 				    !string.IsNullOrEmpty(issueDetail))
 				{

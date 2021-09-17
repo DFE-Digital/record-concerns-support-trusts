@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Models
 {
@@ -24,6 +25,9 @@ namespace ConcernsCaseWork.Models
 
 		public string CrmEnquiry { get; set; }
 
+		
+		public string TrustName { get; set; }
+		
 		public string TrustUkPrn { get; set; }
 		
 		public string ReasonAtReview { get; set; }
@@ -48,5 +52,17 @@ namespace ConcernsCaseWork.Models
 		public long Status { get; set; }
 		
 		public string StatusName { get; set; }
+		
+		
+		public string CaseType { get; set; }
+		
+		
+		public string CaseSubType { get; set; }
+		
+		
+		public IList<string> RagRating { get; set; }
+		
+		
+		public IList<string> RagRatingCss { get; set; }
 	}
 }
