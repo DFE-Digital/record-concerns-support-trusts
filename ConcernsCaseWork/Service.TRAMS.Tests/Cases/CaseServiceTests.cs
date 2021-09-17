@@ -156,7 +156,7 @@ namespace Service.TRAMS.Tests.Cases
 		}
 		
 		[Test]
-		public async Task WhenGetCaseByUrn_ReturnsNull()
+		public void WhenGetCaseByUrn_ReturnsException()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -178,11 +178,8 @@ namespace Service.TRAMS.Tests.Cases
 			var logger = new Mock<ILogger<CaseService>>();
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
-			// act
-			var actualCase = await caseService.GetCaseByUrn(1);
-
-			// assert
-			Assert.That(actualCase, Is.Null);
+			// act / assert
+			Assert.ThrowsAsync<HttpRequestException>(() => caseService.GetCaseByUrn(1));
 		}
 		
 		[Test]
@@ -411,7 +408,7 @@ namespace Service.TRAMS.Tests.Cases
 		}
 		
 		[Test]
-		public async Task WhenPostCase_ReturnsNull()
+		public void WhenPostCase_ReturnsException()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -434,10 +431,7 @@ namespace Service.TRAMS.Tests.Cases
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var actualCase = await caseService.PostCase(CaseFactory.BuildCreateCaseDto());
-
-			// assert
-			Assert.That(actualCase, Is.Null);
+			Assert.ThrowsAsync<HttpRequestException>(() => caseService.PostCase(CaseFactory.BuildCreateCaseDto()));
 		}
 		
 				[Test]
@@ -490,7 +484,7 @@ namespace Service.TRAMS.Tests.Cases
 		}
 		
 		[Test]
-		public async Task WhenPatchCaseByUrn_ReturnsNull()
+		public void WhenPatchCaseByUrn_ReturnsException()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -512,11 +506,8 @@ namespace Service.TRAMS.Tests.Cases
 			var logger = new Mock<ILogger<CaseService>>();
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
-			// act
-			var actualCase = await caseService.PatchCaseByUrn(CaseFactory.BuildUpdateCaseDto());
-
-			// assert
-			Assert.That(actualCase, Is.Null);
+			// act / assert
+			Assert.ThrowsAsync<HttpRequestException>(() => caseService.PatchCaseByUrn(CaseFactory.BuildUpdateCaseDto()));
 		}
 
 		[Test]
