@@ -1641,10 +1641,8 @@ span.summary-validation-symbol {
 /* ==========================================================================
    #Home page wider screen
    ========================================================================== */
-.govuk-width-container .govuk-width-container-override {
-  max-width: 1200px;
-  margin-right: auto;
-  margin-left: auto;
+.govuk-width-container {
+  max-width: 1200px !important;
 }
 
 .govuk-word-spacing {
@@ -1654,6 +1652,17 @@ span.summary-validation-symbol {
 .govuk-oneline-row {
   overflow:hidden; 
   white-space:nowrap
+}
+
+tbody {
+  display: block;
+  max-height: 350px;
+  overflow: auto;
+}
+thead, tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;/* even columns width , fix width of table too*/
 }
 
 /* ==========================================================================

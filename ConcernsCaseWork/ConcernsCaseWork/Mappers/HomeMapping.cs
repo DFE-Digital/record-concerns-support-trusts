@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Mappers
 			var activeCases = new List<HomeModel>();
 			var monitoringCases = new List<HomeModel>();
 
-			foreach (var caseDto in casesDto)
+			foreach (var caseDto in casesDto.OrderByDescending(c => c.UpdatedAt))
 			{
 				// Find trust / academies
 				var trustName = FetchTrustName(trustsDetailsDto, caseDto);
@@ -101,7 +101,7 @@ namespace ConcernsCaseWork.Mappers
 					));
 				}
 			}
-
+			
 			return (activeCases, monitoringCases);
 		}
 
