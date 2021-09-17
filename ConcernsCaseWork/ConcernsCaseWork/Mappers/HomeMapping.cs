@@ -12,25 +12,25 @@ namespace ConcernsCaseWork.Mappers
 {
 	public static class HomeMapping
 	{
-		private static readonly Dictionary<string, string> Rags = new Dictionary<string, string>(7)
+		private static readonly Dictionary<string, IList<string>> Rags = new Dictionary<string, IList<string>>(7)
 		{
-			{"n/a", "-"}, 
-			{"Red-Plus", "Red Plus"}, 
-			{"Red", "Red"}, 
-			{"Red-Amber", "Red Amber"}, 
-			{"Amber-Green", "Amber Green"},
-			{"Amber", "Amber"},
-			{"Green", "Green"}
+			{"n/a", new List<string> { "-" }}, 
+			{"Red-Plus", new List<string> { "Red Plus" }}, 
+			{"Red", new List<string> { "Red" }}, 
+			{"Red-Amber", new List<string> { "Red", "Amber" }}, 
+			{"Amber-Green", new List<string> { "Amber", "Green" }},
+			{"Amber", new List<string> { "Amber" }},
+			{"Green", new List<string> { "Green" }}
 		};
-		private static readonly Dictionary<string, string> RagsCss = new Dictionary<string, string>(7)
+		private static readonly Dictionary<string, IList<string>> RagsCss = new Dictionary<string, IList<string>>(7)
 		{
-			{"n/a", ""}, 
-			{"Red-Plus", "ragtag__redplus"}, 
-			{"Red", "ragtag__red"}, 
-			{"Red-Amber", "ragtag__redamber"}, 
-			{"Amber-Green", "ragtag__ambergreen"},
-			{"Amber", "ragtag__amber"},
-			{"Green", "ragtag__green"}
+			{"n/a", new List<string> { "" }}, 
+			{"Red-Plus", new List<string> { "ragtag__redplus" }}, 
+			{"Red", new List<string> { "ragtag__red" }}, 
+			{"Red-Amber", new List<string> { "ragtag__red", "ragtag__amber" }}, 
+			{"Amber-Green", new List<string> { "ragtag__amber", "ragtag__green" }},
+			{"Amber", new List<string> { "ragtag__amber" }},
+			{"Green", new List<string> { "ragtag__green" }}
 		};
 		
 		private const string DateFormat = "dd-MM-yyyy";
@@ -105,15 +105,15 @@ namespace ConcernsCaseWork.Mappers
 			return (activeCases, monitoringCases);
 		}
 
-		public static string FetchRag(string rating)
+		public static IList<string> FetchRag(string rating)
 		{
-			var defaultRating = "n/a";
-			return Rags.TryGetValue(rating ?? defaultRating, out var rag) ? rag : defaultRating;
+			var defaultRating = new List<string> { "n/a" };
+			return Rags.TryGetValue(rating ?? "n/a", out var rag) ? rag : defaultRating;
 		}
 		
-		public static string FetchRagCss(string rating)
+		public static IList<string> FetchRagCss(string rating)
 		{
-			var defaultRating = "n/a";
+			var defaultRating = new List<string> { "n/a" };
 			return RagsCss.TryGetValue(rating ?? "n/a", out var ragCss) ? ragCss : defaultRating;
 		}
 		
