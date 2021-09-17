@@ -18,6 +18,9 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		private const string ErrorOnGetPage = "An error occurred loading the page, please try again. If the error persists contact the service administrator.";
 		
+		[BindProperty(SupportsGet = true)]
+		public long Id { get; set; }
+		
 		public CaseModel CaseModel { get; private set; }
 		
 		public ManagementPageModel(ICaseModelService caseModelService, ILogger<DetailsPageModel> logger)
@@ -26,13 +29,13 @@ namespace ConcernsCaseWork.Pages.Case
 			_logger = logger;
 		}
 		
-		public async Task OnGetAsync(long urn)
+		public async Task OnGetAsync()
 		{
 			try
 			{
 				_logger.LogInformation("Case::ManagementPageModel::OnGetAsync");
-
-				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, urn);
+				
+				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, Id);
 			}
 			catch (Exception ex)
 			{
