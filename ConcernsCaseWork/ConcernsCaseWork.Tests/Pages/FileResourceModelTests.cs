@@ -26,8 +26,8 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			Assert.That(virtualFileResult, Is.Not.Null);
 			Assert.That(virtualFileResult.FileName, Is.EqualTo("/files/Risk_Management_Framework.pdf"));
-			Assert.That(virtualFileResult.FileDownloadName, Is.EqualTo("Risk_Management_Framework.pdf"));
-			Assert.That(virtualFileResult.ContentType, Is.EqualTo("application/octet-stream"));
+			Assert.That(virtualFileResult.FileDownloadName, Is.Empty);
+			Assert.That(virtualFileResult.ContentType, Is.EqualTo("application/pdf"));
 		}
 		
 		private static FileResourcePageModel SetupFileResourceModel(bool isAuthenticated = false)

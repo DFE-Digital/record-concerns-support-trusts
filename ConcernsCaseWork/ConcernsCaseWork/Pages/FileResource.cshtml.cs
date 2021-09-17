@@ -10,10 +10,9 @@ namespace ConcernsCaseWork.Pages
 	{
 		public IActionResult OnGetDownloadRiskManagementPdf()
 		{
-			Response.Headers.Add("content-disposition", "inline; filename=Risk_Management_Framework.pdf");
+			Response.Headers.Add("Content-Disposition", "inline; filename=Risk_Management_Framework.pdf");
 			
-			return File("/files/Risk_Management_Framework.pdf", "application/octet-stream", 
-				"Risk_Management_Framework.pdf");
+			return File("/files/Risk_Management_Framework.pdf", "application/pdf");
 		}
 	}
 }
