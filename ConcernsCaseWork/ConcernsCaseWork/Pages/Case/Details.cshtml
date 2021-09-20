@@ -186,34 +186,7 @@
 				
 				<script type="application/javascript">
 					$(function () {
-						let caseTypeForm = $("#case-type-form");		
-						const validator = new MOJFrontend.FormValidator(caseTypeForm[0]);
-						validator.addValidator('type', [{
-							method: function(field) {
-								return field.value.trim().length > 0;
-							},
-							message: 'Select concern type'
-						}, {
-							method: function() {
-								let typeChecked = $('input[name="type"]:checked');
-								if (typeChecked !== undefined) {
-									let typeAriaControl = typeChecked.attr('aria-controls');
-									if (typeAriaControl !== undefined) {
-										let concernAriaControlElem = $("#" + typeAriaControl + "");
-										let subTypeChildren = concernAriaControlElem.find("input[name='subType']");
-										if (subTypeChildren.length > 0) {
-											let subTypeChecked = concernAriaControlElem.find("input[name='subType']:checked");
-											if (subTypeChecked.length === 0) {
-												return false;	
-											}
-										}
-									}
-								}
-								
-								return true;
-						  	},
-						  	message: 'Select concern sub type'
-						}]);
+						let validator = formValidatorConcernType($("#case-type-form")[0]);
 						validator.addValidator('riskRating', [{
 							method: function(field) {
 								return field.value.trim().length > 0;
@@ -226,7 +199,6 @@
 							},
 							message: 'Issue is required'
 						}]);
-						
 						
 						let multipleFields = document.querySelectorAll('.concern-auto-resize');
 						for(let i = 0; i < multipleFields.length; i++){

@@ -25,35 +25,8 @@
 </form>
 
 <script type="application/javascript">
-	$(function () {
-		let concernTypeForm = $("#concern-type-form");		
-		const validator = new MOJFrontend.FormValidator(concernTypeForm[0]);
-		validator.addValidator('type', [{
-			method: function(field) {
-				return field.value.trim().length > 0;
-			},
-			message: 'Select concern type'
-		}, {
-			method: function() {
-				let typeChecked = $('input[name="type"]:checked');				
-				if (typeChecked !== undefined) {
-					let typeAriaControl = typeChecked.attr('aria-controls');
-					if (typeAriaControl !== undefined) {
-						let concernAriaControlElem = $("#" + typeAriaControl + "");
-						let subTypeChildren = concernAriaControlElem.find("input[name='subType']");
-						if (subTypeChildren.length > 0) {
-							let subTypeChecked = concernAriaControlElem.find("input[name='subType']:checked");
-							if (subTypeChecked.length === 0) {
-								return false;	
-							}
-						}
-					}
-				}
-				
-				return true;
-			},
-			message: 'Select concern sub type'
-		}]);
+	$(function () {	
+		formValidatorConcernType($("#concern-type-form")[0]);
 	});
 </script>
 
