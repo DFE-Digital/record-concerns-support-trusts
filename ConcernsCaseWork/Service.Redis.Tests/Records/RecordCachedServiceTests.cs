@@ -263,5 +263,115 @@ namespace Service.Redis.Tests.Records
 			mockRecordService.Verify(c => 
 				c.GetRecordsByCaseUrn(It.IsAny<long>()), Times.Never);
 		}
+		
+		[Test]
+		public async Task WhenPatchRecordByUrn_ReturnsTask_CacheIsNotNull_KeyExists()
+		{
+			// arrange
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockRecordService = new Mock<IRecordService>();
+			var mockLogger = new Mock<ILogger<RecordCachedService>>();
+
+			var userState = new UserState
+			{
+				TrustUkPrn = "trust-ukprn",
+				CasesDetails =
+				{
+					{ 1, new CaseWrapper { 
+						CaseDto = CaseFactory.BuildCaseDto(), 
+						Records =
+						{
+							{ 1, new RecordWrapper
+							{
+								RecordDto = RecordFactory.BuildRecordDto(), 
+								RecordsRatingHistory = new List<RecordRatingHistoryDto>
+								{
+									new RecordRatingHistoryDto(DateTimeOffset.Now, 1, 1)
+								}
+							} }
+						}
+					} }
+				}
+			}; 
+			
+			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
+				ReturnsAsync(userState);
+			
+			var recordRecordCachedService = new RecordCachedService(
+				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
+			
+			// act
+			await recordRecordCachedService.PatchRecordByUrn(RecordFactory.BuildRecordDto(), "testing");
+
+			// assert
+			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
+			mockRecordService.Verify(c => c.PatchRecordByUrn(It.IsAny<RecordDto>()), Times.Never);
+		}
+		
+		[Test]
+		public async Task WhenPatchRecordByUrn_ReturnsTask_CacheIsNotNull_KeyMissing()
+		{
+			// arrange
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockRecordService = new Mock<IRecordService>();
+			var mockLogger = new Mock<ILogger<RecordCachedService>>();
+
+			var userState = new UserState
+			{
+				TrustUkPrn = "trust-ukprn",
+				CasesDetails =
+				{
+					{ 99, new CaseWrapper { 
+						CaseDto = CaseFactory.BuildCaseDto(), 
+						Records =
+						{
+							{ 99, new RecordWrapper
+							{
+								RecordDto = RecordFactory.BuildRecordDto(), 
+								RecordsRatingHistory = new List<RecordRatingHistoryDto>
+								{
+									new RecordRatingHistoryDto(DateTimeOffset.Now, 1, 1)
+								}
+							} }
+						}
+					} }
+				}
+			}; 
+			
+			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
+				ReturnsAsync(userState);
+			
+			var recordRecordCachedService = new RecordCachedService(
+				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
+			
+			// act
+			await recordRecordCachedService.PatchRecordByUrn(RecordFactory.BuildRecordDto(), "testing");
+
+			// assert
+			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
+			mockRecordService.Verify(c => c.PatchRecordByUrn(It.IsAny<RecordDto>()), Times.Never);
+		}
+		
+		[Test]
+		public async Task WhenPatchRecordByUrn_ReturnsTask_CacheIsNull()
+		{
+			// arrange
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockRecordService = new Mock<IRecordService>();
+			var mockLogger = new Mock<ILogger<RecordCachedService>>();
+			
+			var recordRecordCachedService = new RecordCachedService(
+				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
+			
+			// act
+			await recordRecordCachedService.PatchRecordByUrn(RecordFactory.BuildRecordDto(), "testing");
+
+			// assert
+			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
+			mockRecordService.Verify(c => c.PatchRecordByUrn(It.IsAny<RecordDto>()), Times.Never);
+		}
 	}
 }

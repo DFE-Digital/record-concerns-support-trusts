@@ -51,8 +51,8 @@ namespace Service.Redis.Type
 			var types = await GetTypes();
 			
 			return types.FirstOrDefault(t => 
-				t.Name.Equals(name, StringComparison.OrdinalIgnoreCase) || 
-				t.Description.Equals(description, StringComparison.OrdinalIgnoreCase));
+				t.Name.Equals(name, StringComparison.OrdinalIgnoreCase) && 
+				(string.IsNullOrEmpty(t.Description) || t.Description.Equals(description, StringComparison.OrdinalIgnoreCase)));
 		}
 	}
 }
