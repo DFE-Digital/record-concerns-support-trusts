@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ConcernsCaseWork.Pages.Shared
 {
-	public class BackModel : PageModel
+	public class BackPageModel : PageModel
 	{
 		/// <summary>
 		/// Store here all the go back options

@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Type;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -15,32 +16,36 @@ namespace ConcernsCaseWork.Pages.Case
 	{
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<DetailsPageModel> _logger;
-		
+
 		private const string ErrorOnGetPage = "An error occurred loading the page, please try again. If the error persists contact the service administrator.";
-		
-		[BindProperty(SupportsGet = true)]
-		public long Id { get; set; }
-		
+
 		public CaseModel CaseModel { get; private set; }
-		
-		public ManagementPageModel(ICaseModelService caseModelService, ILogger<DetailsPageModel> logger)
+
+		public ManagementPageModel(ICaseModelService caseModelService, ITypeModelService typeModelService,
+			ILogger<DetailsPageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_logger = logger;
 		}
-		
+
 		public async Task OnGetAsync()
 		{
 			try
 			{
 				_logger.LogInformation("Case::ManagementPageModel::OnGetAsync");
-				
-				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, Id);
+
+				var caseUrnValue = RouteData.Values["id"];
+				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn))
+				{
+					throw new Exception("ManagementPageModel::CaseUrn is null or invalid to parse");
+				}
+
+				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::ManagementPageModel::OnGetAsync::Exception - { ex.Message }");
-				
+				_logger.LogError($"Case::ManagementPageModel::OnGetAsync::Exception - {ex.Message}");
+
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 		}
