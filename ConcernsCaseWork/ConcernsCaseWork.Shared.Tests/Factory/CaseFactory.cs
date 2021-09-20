@@ -90,14 +90,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				RagRating = "rag-rating"
 			};
 		}
-
-		public static UpdateCaseDto BuildUpdateCaseDto()
-		{
-			var dateTimeNow = DateTime.Now;
-			return new UpdateCaseDto(dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
-				"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
-				"resolution-strategy", "direction-of-travel", 1, 1);
-		}
 		
 		public static CaseModel BuildCaseModel()
 		{

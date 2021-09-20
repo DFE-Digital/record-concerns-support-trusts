@@ -94,11 +94,17 @@ namespace ConcernsCaseWork.Services.Cases
 				var trustDto = await _trustCachedService.GetTrustByUkPrn(caseModel.TrustUkPrn);
 				caseModel.TrustName = trustDto?.GiasData?.GroupName;
 				
-				// Fetch type
+				// Fetch records
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
 				var recordDto = recordsDto.First(r => r.Primary);
-				caseModel.CaseType = recordDto.Name;
-				caseModel.CaseSubType = recordDto.Description;
+				
+				// Fetch type
+				var typesDto = await _typeCachedService.GetTypes();
+				var typeDto = typesDto.First(t => t.Urn.CompareTo(recordDto.TypeUrn) == 0);
+				
+				// Map case model
+				caseModel.CaseType = typeDto.Name;
+				caseModel.CaseSubType = typeDto.Description;
 				
 				// Fetch Ratings
 				var ragsRatingDto = await _ratingCachedService.GetRatings();
@@ -111,6 +117,34 @@ namespace ConcernsCaseWork.Services.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError($"CaseModelService::GetCaseByUrn exception {ex.Message}");
+				throw;
+			}
+		}
+
+		public async Task UpdateCase(PatchCaseModel patchCaseModel)
+		{
+			try
+			{
+				// Fetch Type
+				var typeDto = await _typeCachedService.GetTypeByNameAndDescription(
+					patchCaseModel.RecordType, patchCaseModel.RecordSubType);
+				patchCaseModel.TypeUrn = typeDto.Urn;
+				
+				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
+				var recordDto = recordsDto.First(r => r.Primary);
+				
+				// Patch original dtos
+				recordDto = RecordMapping.Map(patchCaseModel, recordDto);
+				caseDto = CaseMapping.Map(patchCaseModel, caseDto);
+				
+				await _recordCachedService.PatchRecordByUrn(recordDto, patchCaseModel.CreatedBy);
+				await _caseCachedService.PatchCaseByUrn(caseDto);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"CaseModelService::UpdateCase exception {ex.Message}");
+
 				throw;
 			}
 		}

@@ -89,6 +89,35 @@ namespace Service.Redis.Cases
 			return newCase;
 		}
 
+		public async Task PatchCaseByUrn(CaseDto caseDto)
+		{
+			_logger.LogInformation("CaseCachedService::PatchCaseByUrn");
+			
+			// TODO Enable only when TRAMS API is live
+			// Patch case on TRAMS API
+			//var patchCase = await _caseService.PatchCaseByUrn(caseDto);
+			//if (patchCase is null) throw new ApplicationException("Error::CaseCachedService::PatchCaseByUrn");
+			
+			// Store in cache for 24 hours (default)
+			var caseState = await GetData<UserState>(caseDto.CreatedBy);
+			if (caseState is null)
+			{
+				caseState = new UserState { CasesDetails = { { caseDto.Urn, new CaseWrapper { CaseDto = caseDto } } } };
+			}
+			else
+			{
+				if (caseState.CasesDetails.TryGetValue(caseDto.Urn, out var caseWrapper))
+				{
+					caseWrapper.CaseDto = caseDto;
+				}
+				else
+				{
+					caseState.CasesDetails.Add(caseDto.Urn, new CaseWrapper { CaseDto = caseDto });
+				}
+			}
+			await StoreData(caseDto.CreatedBy, caseState);
+		}
+
 		public async Task<Boolean> IsCasePrimary(string caseworker, long caseUrn)
 		{
 			_logger.LogInformation("CaseCachedService::IsCasePrimary");

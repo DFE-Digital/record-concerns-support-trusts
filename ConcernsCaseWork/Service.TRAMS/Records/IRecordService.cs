@@ -7,6 +7,6 @@ namespace Service.TRAMS.Records
 	{
 		Task<IList<RecordDto>> GetRecordsByCaseUrn(long caseUrn);
 		Task<RecordDto> PostRecordByCaseUrn(CreateRecordDto createRecordDto);
-		Task<RecordDto> PatchRecordByUrn(UpdateRecordDto updateRecordDto);
+		Task<RecordDto> PatchRecordByUrn(RecordDto recordDto);
 	}
 }

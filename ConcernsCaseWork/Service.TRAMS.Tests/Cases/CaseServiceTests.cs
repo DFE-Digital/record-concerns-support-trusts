@@ -460,7 +460,7 @@ namespace Service.TRAMS.Tests.Cases
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var actualCase = await caseService.PatchCaseByUrn(CaseFactory.BuildUpdateCaseDto());
+			var actualCase = await caseService.PatchCaseByUrn(CaseFactory.BuildCaseDto());
 
 			// assert
 			Assert.That(actualCase, Is.Not.Null);
@@ -507,7 +507,7 @@ namespace Service.TRAMS.Tests.Cases
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
 			// act / assert
-			Assert.ThrowsAsync<HttpRequestException>(() => caseService.PatchCaseByUrn(CaseFactory.BuildUpdateCaseDto()));
+			Assert.ThrowsAsync<HttpRequestException>(() => caseService.PatchCaseByUrn(CaseFactory.BuildCaseDto()));
 		}
 
 		[Test]
