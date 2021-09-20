@@ -26,13 +26,13 @@ namespace Service.Redis.Cases
 		{
 			_logger.LogInformation("CaseCachedService::GetCasesByCaseworker");
 
-			var caseState = await GetData<UserState>(caseworker);
-			if (caseState != null) return caseState.CasesDetails.Values.Select(c => c.CaseDto).ToList();
+			var userState = await GetData<UserState>(caseworker);
+			if (userState != null) return userState.CasesDetails.Values.Select(c => c.CaseDto).ToList();
 			
 			var cases = await _caseService.GetCasesByCaseworker(caseworker, statusUrn);
 			if (!cases.Any()) return cases;
 			
-			var userState = new UserState();
+			userState = new UserState();
 			foreach (var caseDto in cases)
 			{
 				userState.CasesDetails.Add(caseDto.Urn, new CaseWrapper { CaseDto = caseDto });
@@ -47,16 +47,18 @@ namespace Service.Redis.Cases
 		{
 			_logger.LogInformation("CaseCachedService::GetCaseByUrn");
 			
-			var caseState = await GetData<UserState>(caseworker);
-			if (caseState != null && caseState.CasesDetails.TryGetValue(urn, out var caseWrapper))
+			var userState = await GetData<UserState>(caseworker);
+			if (userState != null && userState.CasesDetails.TryGetValue(urn, out var caseWrapper))
 			{
 				return caseWrapper.CaseDto;
 			}
 
 			var caseDto = await _caseService.GetCaseByUrn(urn);
-			caseState ??= new UserState();
-			caseState.CasesDetails.Add(urn, new CaseWrapper { CaseDto = caseDto });
+			userState ??= new UserState();
+			userState.CasesDetails.Add(urn, new CaseWrapper { CaseDto = caseDto });
 
+			await StoreData(caseworker, userState);
+			
 			return caseDto;
 		}
 
@@ -75,16 +77,16 @@ namespace Service.Redis.Cases
 			// TODO End Remove when TRAMS API is live
 			
 			// Store in cache for 24 hours (default)
-			var caseState = await GetData<UserState>(createCaseDto.CreatedBy);
-			if (caseState is null)
+			var userState = await GetData<UserState>(createCaseDto.CreatedBy);
+			if (userState is null)
 			{
-				caseState = new UserState { CasesDetails = { { newCase.Urn, new CaseWrapper { CaseDto = newCase } } } };
+				userState = new UserState { CasesDetails = { { newCase.Urn, new CaseWrapper { CaseDto = newCase } } } };
 			}
 			else
 			{
-				caseState.CasesDetails.Add(newCase.Urn, new CaseWrapper { CaseDto = newCase });
+				userState.CasesDetails.Add(newCase.Urn, new CaseWrapper { CaseDto = newCase });
 			}
-			await StoreData(createCaseDto.CreatedBy, caseState);
+			await StoreData(createCaseDto.CreatedBy, userState);
 
 			return newCase;
 		}
@@ -99,23 +101,23 @@ namespace Service.Redis.Cases
 			//if (patchCase is null) throw new ApplicationException("Error::CaseCachedService::PatchCaseByUrn");
 			
 			// Store in cache for 24 hours (default)
-			var caseState = await GetData<UserState>(caseDto.CreatedBy);
-			if (caseState is null)
+			var userState = await GetData<UserState>(caseDto.CreatedBy);
+			if (userState is null)
 			{
-				caseState = new UserState { CasesDetails = { { caseDto.Urn, new CaseWrapper { CaseDto = caseDto } } } };
+				userState = new UserState { CasesDetails = { { caseDto.Urn, new CaseWrapper { CaseDto = caseDto } } } };
 			}
 			else
 			{
-				if (caseState.CasesDetails.TryGetValue(caseDto.Urn, out var caseWrapper))
+				if (userState.CasesDetails.TryGetValue(caseDto.Urn, out var caseWrapper))
 				{
 					caseWrapper.CaseDto = caseDto;
 				}
 				else
 				{
-					caseState.CasesDetails.Add(caseDto.Urn, new CaseWrapper { CaseDto = caseDto });
+					userState.CasesDetails.Add(caseDto.Urn, new CaseWrapper { CaseDto = caseDto });
 				}
 			}
-			await StoreData(caseDto.CreatedBy, caseState);
+			await StoreData(caseDto.CreatedBy, userState);
 		}
 
 		public async Task<Boolean> IsCasePrimary(string caseworker, long caseUrn)
@@ -123,8 +125,8 @@ namespace Service.Redis.Cases
 			_logger.LogInformation("CaseCachedService::IsCasePrimary");
 			
 			// Fetch from cache expiration 24 hours (default)
-			var caseState = await GetData<UserState>(caseworker);
-			if (caseState is null) {
+			var userState = await GetData<UserState>(caseworker);
+			if (userState is null) {
 			
 				// TODO Enable only when TRAMS API is live
 				// Fetch cases by user
@@ -134,7 +136,7 @@ namespace Service.Redis.Cases
 				return true;
 			}
 
-			if (caseState.CasesDetails.ContainsKey(caseUrn) && caseState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper))
+			if (userState.CasesDetails.ContainsKey(caseUrn) && userState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper))
 			{
 				return !caseWrapper.Records.Any();
 			}
