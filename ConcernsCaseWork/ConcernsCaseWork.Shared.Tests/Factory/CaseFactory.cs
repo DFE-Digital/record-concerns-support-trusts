@@ -116,6 +116,19 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				StatusName = "Live"
 			};
 		}
+
+		public static PatchCaseModel BuildPatchCaseModel()
+		{
+			return new PatchCaseModel
+			{
+				Urn = 1,
+				CreatedBy = "testing",
+				RecordType = "record-type",
+				TypeUrn = 1,
+				UpdatedAt = DateTimeOffset.Now,
+				RecordSubType = "record-sub-type"
+			};
+		}
 		
 		public static IEnumerable<CaseModel> BuildListCaseModels()
 		{
