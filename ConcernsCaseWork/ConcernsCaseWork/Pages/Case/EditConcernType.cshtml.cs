@@ -52,24 +52,22 @@ namespace ConcernsCaseWork.Pages.Case
 				var type = Request.Form["type"];
 				var subType = Request.Form["subType"];
 
-				if (!string.IsNullOrEmpty(type))
-				{
-					// Create patch case model
-					var patchCaseModel = new PatchCaseModel
-					{
-						Urn = caseUrn,
-						CreatedBy = User.Identity.Name,
-						UpdatedAt = DateTimeOffset.Now,
-						RecordType = type,
-						RecordSubType = subType
-					};
-					
-					await _caseModelService.PatchConcernType(patchCaseModel);
-					
-					return Redirect(url);
-				}
+				if (string.IsNullOrEmpty(type)) throw new Exception("Missing form values");
 				
-				throw new Exception("Missing form values");
+				// Create patch case model
+				var patchCaseModel = new PatchCaseModel
+				{
+					Urn = caseUrn,
+					CreatedBy = User.Identity.Name,
+					UpdatedAt = DateTimeOffset.Now,
+					RecordType = type,
+					RecordSubType = subType
+				};
+					
+				await _caseModelService.PatchConcernType(patchCaseModel);
+					
+				return Redirect(url);
+
 			}
 			catch (Exception ex)
 			{

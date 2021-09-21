@@ -45,23 +45,21 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				var riskRating = Request.Form["riskRating"];
 
-				if (!string.IsNullOrEmpty(riskRating))
+				if (string.IsNullOrEmpty(riskRating)) throw new Exception("Missing form values");
+				
+				// Create patch case model
+				var patchCaseModel = new PatchCaseModel
 				{
-					// Create patch case model
-					var patchCaseModel = new PatchCaseModel
-					{
-						Urn = caseUrn,
-						CreatedBy = User.Identity.Name,
-						UpdatedAt = DateTimeOffset.Now,
-						RiskRating = riskRating
-					};
+					Urn = caseUrn,
+					CreatedBy = User.Identity.Name,
+					UpdatedAt = DateTimeOffset.Now,
+					RiskRating = riskRating
+				};
 					
-					await _caseModelService.PatchRiskRating(patchCaseModel);
+				await _caseModelService.PatchRiskRating(patchCaseModel);
 					
-					return Redirect(url);
-				}
+				return Redirect(url);
 
-				throw new Exception("Missing form values");
 			}
 			catch (Exception ex)
 			{
