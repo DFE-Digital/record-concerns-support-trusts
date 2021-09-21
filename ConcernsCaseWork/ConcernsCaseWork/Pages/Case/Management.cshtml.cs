@@ -1,9 +1,9 @@
 ﻿using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Type;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -12,17 +12,15 @@ namespace ConcernsCaseWork.Pages.Case
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class ManagementPageModel : PageModel
+	public class ManagementPageModel : AbstractPageModel
 	{
 		private readonly ICaseModelService _caseModelService;
-		private readonly ILogger<DetailsPageModel> _logger;
-
-		private const string ErrorOnGetPage = "An error occurred loading the page, please try again. If the error persists contact the service administrator.";
-
+		private readonly ILogger<ManagementPageModel> _logger;
+		
 		public CaseModel CaseModel { get; private set; }
 
 		public ManagementPageModel(ICaseModelService caseModelService, ITypeModelService typeModelService,
-			ILogger<DetailsPageModel> logger)
+			ILogger<ManagementPageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_logger = logger;

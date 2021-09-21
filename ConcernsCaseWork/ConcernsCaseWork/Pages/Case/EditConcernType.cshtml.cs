@@ -55,7 +55,7 @@ namespace ConcernsCaseWork.Pages.Case
 				if (!string.IsNullOrEmpty(type))
 				{
 					// Create update case model
-					var updateCaseModel = new PatchCaseModel
+					var patchCaseModel = new PatchCaseModel
 					{
 						Urn = caseUrn,
 						CreatedBy = User.Identity.Name,
@@ -64,7 +64,7 @@ namespace ConcernsCaseWork.Pages.Case
 						RecordSubType = subType
 					};
 					
-					await _caseModelService.UpdateCase(updateCaseModel);
+					await _caseModelService.UpdateCase(patchCaseModel);
 					
 					return Redirect(url);
 				}
