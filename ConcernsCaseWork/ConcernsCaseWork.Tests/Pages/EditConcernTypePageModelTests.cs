@@ -113,7 +113,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
 
-			mockCaseModelService.Setup(c => c.UpdateCase(It.IsAny<PatchCaseModel>()));
+			mockCaseModelService.Setup(c => c.PatchConcernType(It.IsAny<PatchCaseModel>()));
 			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
 			
 			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);

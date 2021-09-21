@@ -19,8 +19,12 @@ window.hideLoader = function() {
 };
 
 // Form validator
+window.formValidator = function(form) {
+	return new MOJFrontend.FormValidator(form);
+}
+
 window.formValidatorConcernType = function(form) {
-	const validator = new MOJFrontend.FormValidator(form);
+	const validator = formValidator(form);
 	validator.addValidator('type', [{
 		method: function(field) {
 			return field.value.trim().length > 0;

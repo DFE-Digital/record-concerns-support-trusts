@@ -121,7 +121,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 		}
 
-		public async Task UpdateCase(PatchCaseModel patchCaseModel)
+		public async Task PatchConcernType(PatchCaseModel patchCaseModel)
 		{
 			try
 			{
@@ -135,7 +135,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var recordDto = recordsDto.First(r => r.Primary);
 				
 				// Patch original dtos
-				recordDto = RecordMapping.Map(patchCaseModel, recordDto);
+				recordDto = RecordMapping.MapConcernType(patchCaseModel, recordDto);
 				caseDto = CaseMapping.Map(patchCaseModel, caseDto);
 				
 				await _recordCachedService.PatchRecordByUrn(recordDto, patchCaseModel.CreatedBy);
@@ -143,7 +143,37 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseModelService::UpdateCase exception {ex.Message}");
+				_logger.LogError($"CaseModelService::PatchConcernType exception {ex.Message}");
+
+				throw;
+			}
+		}
+
+		public async Task PatchRiskRating(PatchCaseModel patchCaseModel)
+		{
+			try
+			{
+				// Fetch Rating
+				var ratingDto = await _ratingCachedService.GetRatingByName(patchCaseModel.RiskRating);
+				patchCaseModel.RatingUrn = ratingDto.Urn;
+				
+				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
+				var recordDto = recordsDto.First(r => r.Primary);
+				
+				// Patch original dtos
+				recordDto = RecordMapping.MapRiskRating(patchCaseModel, recordDto);
+				caseDto = CaseMapping.Map(patchCaseModel, caseDto);
+
+				var recordRatingHistory = new RecordRatingHistoryDto(DateTimeOffset.Now, recordDto.Urn, ratingDto.Urn);
+				
+				await _recordCachedService.PatchRecordByUrn(recordDto, patchCaseModel.CreatedBy);
+				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _recordRatingHistoryCachedService.PostRecordRatingHistory(recordRatingHistory, patchCaseModel.CreatedBy, patchCaseModel.Urn);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"CaseModelService::PatchRiskRating exception {ex.Message}");
 
 				throw;
 			}

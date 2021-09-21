@@ -482,7 +482,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object,  mockRecordRatingHistoryCachedService.Object, 
 				mockStatusCachedService.Object, mockSequenceCachedService.Object, mockLogger.Object);
 			
-			await caseModelService.UpdateCase(CaseFactory.BuildPatchCaseModel());
+			await caseModelService.PatchConcernType(CaseFactory.BuildPatchCaseModel());
 
 			// assert
 			mockRecordCachedService.Verify(r => r.PatchRecordByUrn(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Once);
@@ -509,7 +509,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object,  mockRecordRatingHistoryCachedService.Object, 
 				mockStatusCachedService.Object, mockSequenceCachedService.Object, mockLogger.Object);
 			
-			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.UpdateCase(CaseFactory.BuildPatchCaseModel()));
+			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PatchConcernType(CaseFactory.BuildPatchCaseModel()));
 
 			// assert
 			mockRecordCachedService.Verify(r => r.PatchRecordByUrn(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Never);

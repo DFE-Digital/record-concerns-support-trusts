@@ -14,7 +14,10 @@ namespace ConcernsCaseWork.Models
 		
 		public string RecordSubType { get; set; }
 		
-		
 		public long TypeUrn { get; set; }
+		
+		public string RiskRating { get; set; }
+		
+		public long RatingUrn { get; set; }
 	}
 }

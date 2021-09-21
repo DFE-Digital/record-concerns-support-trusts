@@ -8,7 +8,8 @@ namespace ConcernsCaseWork.Services.Cases
 	{
 		Task<(IList<HomeModel>, IList<HomeModel>)> GetCasesByCaseworker(string caseworker);
 		Task<CaseModel> GetCaseByUrn(string caseworker, long urn);
-		Task UpdateCase(PatchCaseModel patchCaseModel);
+		Task PatchConcernType(PatchCaseModel patchCaseModel);
+		Task PatchRiskRating(PatchCaseModel patchCaseModel);
 		Task<CaseModel> PostCase(CreateCaseModel createCaseModel);
 	}
 }

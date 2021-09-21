@@ -84,7 +84,7 @@ namespace ConcernsCaseWork.Pages.Case
 					var currentDate = DateTimeOffset.Now;
 					var createCaseModel = new CreateCaseModel
 					{
-						Description = $"{type}-{subType}",
+						Description = $"{type} {subType}",
 						Issue = issueDetail,
 						ClosedAt = currentDate,
 						CreatedAt = currentDate,
