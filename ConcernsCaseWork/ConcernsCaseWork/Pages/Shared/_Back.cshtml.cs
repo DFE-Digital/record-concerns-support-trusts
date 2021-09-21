@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Collections.Generic;
-using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ConcernsCaseWork.Pages.Shared
 {
@@ -14,13 +13,13 @@ namespace ConcernsCaseWork.Pages.Shared
 		/// <summary>
 		/// Don't render component for this paths
 		/// </summary>
-		private static readonly IList<string> PathExclusions = new List<string> { "home", "login", "logout", "details", "management" };
+		private const string Pattern = ".*\\+/([.\\w+]+)|management(?!.*closure)|details|home|login|logout";
 
 		public static bool CanRender(string requestPath)
 		{
 			return !string.IsNullOrEmpty(requestPath) 
 			       && !requestPath.Equals("/") 
-			       && PathExclusions.All(exclude => !requestPath.Contains(exclude));
+			       && Regex.Matches(requestPath, Pattern, RegexOptions.IgnoreCase).Count == 0;
 		}
 	}
 }

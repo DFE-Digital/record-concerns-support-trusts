@@ -50,9 +50,26 @@ namespace ConcernsCaseWork.Pages.Case
 
 		public async Task<IActionResult> OnPostCloseCase()
 		{
+			try
+			{
+				_logger.LogInformation("Case::ClosurePageModel::OnPost");
+				
+				var caseOutcomes = Request.Form["case-outcomes"];
+				var dayToReview = Request.Form["dtr-day"];
+				var monthToReview = Request.Form["dtr-month"];
+				var yearToReview = Request.Form["dtr-year"];
+				
+				
+				return Redirect("/");
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Case::ClosurePageModel::OnPostCloseCase::Exception - { ex.Message }");
+				
+				TempData["Error.Message"] = ErrorOnPostPage;
+			}
 
-
-			return Redirect("/");
+			return Page();
 		}
 	}
 }
