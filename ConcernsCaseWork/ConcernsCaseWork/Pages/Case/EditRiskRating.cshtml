@@ -1,17 +1,7 @@
 ﻿@page "/case/{id:long}/management/editriskrating"
 @model ConcernsCaseWork.Pages.Case.EditRiskRatingPageModel
 
-@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")))
-{
-    <div class="govuk-heading-l moj-banner__message">
-        <p class="govuk-body">@TempData["Error.Message"]</p>
-    </div>
-    <script type="application/javascript">
-        $(function () {
-            showGlobalError();
-		});
-    </script>
-}
+<partial name="_Error"></partial>
 
 <h1 class="govuk-heading-l">
 	Change risk rating

@@ -18,12 +18,11 @@ else
 		<a asp-page="../home" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
 			Back to casework
 		</a>
-		<a href="#" role="button" class="govuk-button govuk-button--warning float__right" data-module="govuk-button">
+		<a href="@Request.Path/closure" role="button" class="govuk-button govuk-button--warning float__right" data-module="govuk-button">
 			Close case
 		</a>
 	</div>
-
-
+	
 	<h1 class="govuk-heading-l" name="caseID">
 		<span class="govuk-caption-m">Case ID</span>
 		@Model.CaseModel.Urn

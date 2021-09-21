@@ -18,7 +18,9 @@ namespace ConcernsCaseWork.Pages.Shared
 
 		public static bool CanRender(string requestPath)
 		{
-			return !string.IsNullOrEmpty(requestPath) && !requestPath.Equals("/") && PathExclusions.All(exclude => !requestPath.Contains(exclude));
+			return !string.IsNullOrEmpty(requestPath) 
+			       && !requestPath.Equals("/") 
+			       && PathExclusions.All(exclude => !requestPath.Contains(exclude));
 		}
 	}
 }
