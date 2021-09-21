@@ -22,6 +22,33 @@ namespace Service.Redis.Records
 			_logger = logger;
 		}
 		
+		public async Task<IList<RecordDto>> GetRecordsByCaseUrn(CaseDto caseDto)
+		{
+			_logger.LogInformation("RecordCachedService::GetRecordsByCaseUrn");
+
+			var records = new List<RecordDto>();
+			
+			// Store in cache for 24 hours (default)
+			var caseState = await GetData<UserState>(caseDto.CreatedBy);
+			if (caseState is null)
+			{
+				// TODO Enable only when TRAMS API is live
+				// Fetch records from TRAMS API
+				// var records = await _recordService.GetRecordsByCaseUrn(caseDto.Urn);
+				// if (records is null) throw new ApplicationException("Error::RecordCachedService::GetRecordsByCaseUrn");
+				
+				// TODO Finish cache logic
+				caseState = new UserState();
+				await StoreData(caseDto.CreatedBy, caseState);
+			}
+			else if (caseState.CasesDetails.ContainsKey(caseDto.Urn) && caseState.CasesDetails.TryGetValue(caseDto.Urn, out var caseWrapper))
+			{
+				return caseWrapper.Records.Values.Select(r => r.RecordDto).ToList();
+			}
+			
+			return records;
+		}
+		
 		public async Task<RecordDto> PostRecordByCaseUrn(CreateRecordDto createRecordDto, string caseworker)
 		{
 			_logger.LogInformation("RecordCachedService::PostRecordByCaseUrn");
@@ -69,31 +96,46 @@ namespace Service.Redis.Records
 			return newRecord;
 		}
 
-		public async Task<IList<RecordDto>> GetRecordsByCaseUrn(CaseDto caseDto)
+		public async Task PatchRecordByUrn(RecordDto recordDto, string caseworker)
 		{
-			_logger.LogInformation("RecordCachedService::GetRecordsByCaseUrn");
-
-			var records = new List<RecordDto>();
+			_logger.LogInformation("RecordCachedService::PatchRecordByUrn");
+			
+			// TODO Enable only when TRAMS API is live
+			// Patch record on TRAMS API
+			//var patchRecord = await _recordService.PatchRecordByUrn(recordDto);
+			//if (patchRecord is null) throw new ApplicationException("Error::RecordCachedService::PatchRecordByUrn");
 			
 			// Store in cache for 24 hours (default)
-			var caseState = await GetData<UserState>(caseDto.CreatedBy);
+			var caseState = await GetData<UserState>(caseworker);
 			if (caseState is null)
 			{
-				// TODO Enable only when TRAMS API is live
-				// Fetch records from TRAMS API
-				// var records = await _recordService.GetRecordsByCaseUrn(caseDto.Urn);
-				// if (records is null) throw new ApplicationException("Error::RecordCachedService::GetRecordsByCaseUrn");
-				
-				// TODO Finish cache logic
-				caseState = new UserState();
-				await StoreData(caseDto.CreatedBy, caseState);
+				caseState = new UserState
+				{
+					CasesDetails = { { recordDto.CaseUrn, 
+						new CaseWrapper { 
+							Records = { { recordDto.Urn, 
+								new RecordWrapper { RecordDto = recordDto } }} 
+						} 
+					} }
+				};
 			}
-			else if (caseState.CasesDetails.ContainsKey(caseDto.Urn) && caseState.CasesDetails.TryGetValue(caseDto.Urn, out var caseWrapper))
+			else
 			{
-				return caseWrapper.Records.Values.Select(r => r.RecordDto).ToList();
+				if (caseState.CasesDetails.ContainsKey(recordDto.CaseUrn) 
+				    && caseState.CasesDetails.TryGetValue(recordDto.CaseUrn, out var caseWrapper)
+				    && caseWrapper.Records.TryGetValue(recordDto.Urn, out var recordWrapper))
+				{
+					recordWrapper.RecordDto = recordDto;
+				}
+				else
+				{
+					caseWrapper = new CaseWrapper();
+					caseWrapper.Records.Add(recordDto.Urn, new RecordWrapper {  RecordDto = recordDto });
+					
+					caseState.CasesDetails.Add(recordDto.CaseUrn, caseWrapper);
+				}
 			}
-			
-			return records;
+			await StoreData(caseworker, caseState);
 		}
 	}
 }

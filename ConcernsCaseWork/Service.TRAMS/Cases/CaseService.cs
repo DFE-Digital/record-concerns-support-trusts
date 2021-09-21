@@ -83,9 +83,9 @@ namespace Service.TRAMS.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError($"CaseService::GetCasesByUrn::Exception message::{ex.Message}");
+
+				throw;
 			}
-			
-			return null;
 		}
 
 		public async Task<IList<CaseDto>> GetCasesByTrustUkPrn(string trustUkprn)
@@ -188,12 +188,12 @@ namespace Service.TRAMS.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError($"CaseService::PostCase::Exception message::{ex.Message}");
-			}
 
-			return null;
+				throw;
+			}
 		}
 
-		public async Task<CaseDto> PatchCaseByUrn(UpdateCaseDto updateCaseDto)
+		public async Task<CaseDto> PatchCaseByUrn(CaseDto caseDto)
 		{
 			try
 			{
@@ -201,7 +201,7 @@ namespace Service.TRAMS.Cases
 				
 				// Create a request
 				var request = new StringContent(
-					JsonConvert.SerializeObject(updateCaseDto),
+					JsonConvert.SerializeObject(caseDto),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 
@@ -209,7 +209,7 @@ namespace Service.TRAMS.Cases
 				var client = ClientFactory.CreateClient("TramsClient");
 				
 				// Execute request
-				var response = await client.PatchAsync($"{EndpointsVersion}/case/urn/{updateCaseDto.Urn}", request);
+				var response = await client.PatchAsync($"{EndpointsVersion}/case/urn/{caseDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -225,9 +225,9 @@ namespace Service.TRAMS.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError($"CaseService::PatchCaseByUrn::Exception message::{ex.Message}");
-			}
 
-			return null;
+				throw;
+			}
 		}
 	}
 }

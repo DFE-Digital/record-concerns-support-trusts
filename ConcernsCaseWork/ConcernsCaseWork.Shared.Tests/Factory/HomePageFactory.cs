@@ -19,8 +19,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					"academy-names",
 					"case-type",
 					"case-subtype",
-					"rag-rating",
-					"rag-rating-css")
+					new List<string> { "rag-rating" },
+					new List<string> { "rag-rating-css" })
 			};
 		}
 	}

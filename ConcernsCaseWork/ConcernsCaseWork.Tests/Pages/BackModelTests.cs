@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public void WhenCanRender_ReturnsExpected(string requestPath, bool expected)
 		{
 			// act
-			var canRender = BackModel.CanRender(requestPath);
+			var canRender = BackPageModel.CanRender(requestPath);
 
 			// assert
 			Assert.That(canRender, Is.EqualTo(expected));

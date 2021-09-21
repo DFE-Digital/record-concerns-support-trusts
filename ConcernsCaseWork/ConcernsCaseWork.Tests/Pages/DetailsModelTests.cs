@@ -26,7 +26,7 @@ namespace ConcernsCaseWork.Tests.Pages
 	public class DetailsModelTests
 	{
 		[Test]
-		public async Task WhenOnGetAsync_ReturnsTrustDetailsModel()
+		public async Task WhenOnGetAsync_ReturnsModel()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -36,6 +36,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var expected = TrustFactory.BuildTrustDetailsModel();
 
+			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
 			mockCasesCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(new UserState { TrustUkPrn = "trust-ukprn" });
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
 			
@@ -44,10 +45,14 @@ namespace ConcernsCaseWork.Tests.Pages
 			// act
 			await pageModel.OnGetAsync();
 			var trustsDetailsModel = pageModel.TrustDetailsModel;
+			var typesDictionary = pageModel.TypesDictionary;
 			
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			Assert.IsAssignableFrom<TrustDetailsModel>(trustsDetailsModel);
+			Assert.IsAssignableFrom<Dictionary<string, IList<string>>>(typesDictionary);
+			
+			Assert.That(typesDictionary, Is.Not.Null);
 			Assert.That(trustsDetailsModel, Is.Not.Null);
 			Assert.That(trustsDetailsModel.GiasData, Is.Not.Null);
 			Assert.That(trustsDetailsModel.GiasData.GroupId, Is.EqualTo(expected.GiasData.GroupId));
@@ -193,6 +198,44 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			Assert.That(page, Is.Not.Null);
 			Assert.That(page.PageName, Is.EqualTo("Management"));
+		}
+		
+		[Test]
+		public async Task WhenOnPost_MissingFormParameters_ReturnsPage()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockCasesCachedService = new Mock<ICachedService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
+
+			var caseModel = CaseFactory.BuildCaseModel();
+			
+			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(caseModel);
+			
+			var pageModel = SetupDetailsModel(mockTrustModelService.Object, mockCaseModelService.Object, 
+				mockCasesCachedService.Object, mockTypeModelService.Object, mockLogger.Object, true);
+			
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "subType", new StringValues("subType") },
+					{ "riskRating", new StringValues("riskRating") },
+					{ "issue-detail", new StringValues("issue-detail") },
+					{ "current-status-detail", new StringValues("current-status-detail") },
+					{ "next-steps-detail", new StringValues("next-steps-detail") },
+					{ "resolution-strategy-detail", new StringValues("resolution-strategy-detail") }
+				});
+			
+			// act
+			var pageResponse = await pageModel.OnPost();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			var page = pageResponse as PageResult;
+			
+			Assert.That(page, Is.Not.Null);
 		}
 
 		[Test]

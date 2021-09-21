@@ -44,13 +44,5 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				"record-name", "record-description", "record-reason", 1, 1, 1,
 				true, 1, 1);
 		}
-
-		public static UpdateRecordDto BuildUpdateRecordDto()
-		{
-			var currentDate = DateTimeOffset.Now;
-			return new UpdateRecordDto(currentDate, currentDate, currentDate,
-				"record-name", "record-description", "record-reason", 1, 1, 1,
-				true, 1, 1);
-		}
 	}
 }

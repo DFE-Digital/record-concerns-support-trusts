@@ -148,7 +148,7 @@ namespace Service.TRAMS.Tests.Records
 		}
 
 		[Test]
-		public async Task WhenPostRecordByCaseUrn_ThrowsException_ReturnsNull()
+		public void WhenPostRecordByCaseUrn_ThrowsException_ThrowsException()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -170,18 +170,15 @@ namespace Service.TRAMS.Tests.Records
 			var logger = new Mock<ILogger<RecordService>>();
 			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
 			
-			// act
-			var actualRecord = await recordService.PostRecordByCaseUrn(RecordFactory.BuildCreateRecordDto());
-
-			// assert
-			Assert.That(actualRecord, Is.Null);
+			// act / assert
+			Assert.ThrowsAsync<HttpRequestException>(() => recordService.PostRecordByCaseUrn(RecordFactory.BuildCreateRecordDto()));
 		}
 		
 		[Test]
 		public async Task WhenPatchRecordByUrn_ReturnsRecord()
 		{
 			// arrange
-			var expectedRecord = RecordFactory.BuildUpdateRecordDto();
+			var expectedRecord = RecordFactory.BuildRecordDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -223,7 +220,7 @@ namespace Service.TRAMS.Tests.Records
 		}
 
 		[Test]
-		public async Task WhenPatchRecordByUrn_ThrowsException_ReturnsNull()
+		public void WhenPatchRecordByUrn_ThrowsException_ThrowsException()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -245,11 +242,8 @@ namespace Service.TRAMS.Tests.Records
 			var logger = new Mock<ILogger<RecordService>>();
 			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
 			
-			// act
-			var actualRecord = await recordService.PatchRecordByUrn(RecordFactory.BuildUpdateRecordDto());
-
-			// assert
-			Assert.That(actualRecord, Is.Null);
+			// act / assert
+			Assert.ThrowsAsync<HttpRequestException>(() => recordService.PatchRecordByUrn(RecordFactory.BuildRecordDto()));
 		}
 	}
 }

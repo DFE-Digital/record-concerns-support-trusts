@@ -18,3 +18,36 @@ window.hideLoader = function() {
 	$(".ccms-loader").addClass("govuk-!-display-none");
 };
 
+// Form validator
+window.formValidatorConcernType = function(form) {
+	const validator = new MOJFrontend.FormValidator(form);
+	validator.addValidator('type', [{
+		method: function(field) {
+			return field.value.trim().length > 0;
+		},
+		message: 'Select concern type'
+	}, {
+		method: function() {
+			let typeChecked = $('input[name="type"]:checked');
+			if (typeChecked !== undefined) {
+				let typeAriaControl = typeChecked.attr('aria-controls');
+				if (typeAriaControl !== undefined) {
+					let concernAriaControlElem = $("#" + typeAriaControl + "");
+					let subTypeChildren = concernAriaControlElem.find("input[name='subType']");
+					if (subTypeChildren.length > 0) {
+						let subTypeChecked = concernAriaControlElem.find("input[name='subType']:checked");
+						if (subTypeChecked.length === 0) {
+							return false;
+						}
+					}
+				}
+			}
+
+			return true;
+		},
+		message: 'Select concern sub type'
+	}]);
+	
+	return validator;
+}
+

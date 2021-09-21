@@ -90,14 +90,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				RagRating = "rag-rating"
 			};
 		}
-
-		public static UpdateCaseDto BuildUpdateCaseDto()
-		{
-			var dateTimeNow = DateTime.Now;
-			return new UpdateCaseDto(dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
-				"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
-				"resolution-strategy", "direction-of-travel", 1, 1);
-		}
 		
 		public static CaseModel BuildCaseModel()
 		{
@@ -122,6 +114,19 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Urn = 1,
 				Status = 1,
 				StatusName = "Live"
+			};
+		}
+
+		public static PatchCaseModel BuildPatchCaseModel()
+		{
+			return new PatchCaseModel
+			{
+				Urn = 1,
+				CreatedBy = "testing",
+				RecordType = "record-type",
+				TypeUrn = 1,
+				UpdatedAt = DateTimeOffset.Now,
+				RecordSubType = "record-sub-type"
 			};
 		}
 		

@@ -7,7 +7,8 @@ namespace Service.Redis.Records
 {
 	public interface IRecordCachedService
 	{
-		Task<RecordDto> PostRecordByCaseUrn(CreateRecordDto createRecordDto, string caseworker);
 		Task<IList<RecordDto>> GetRecordsByCaseUrn(CaseDto caseDto);
+		Task<RecordDto> PostRecordByCaseUrn(CreateRecordDto createRecordDto, string caseworker);
+		Task PatchRecordByUrn(RecordDto recordDto, string caseworker);
 	}
 }

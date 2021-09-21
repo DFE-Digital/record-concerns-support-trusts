@@ -12,27 +12,6 @@ namespace ConcernsCaseWork.Mappers
 {
 	public static class HomeMapping
 	{
-		private static readonly Dictionary<string, string> Rags = new Dictionary<string, string>(7)
-		{
-			{"n/a", "-"}, 
-			{"Red-Plus", "Red Plus"}, 
-			{"Red", "Red"}, 
-			{"Red-Amber", "Red Amber"}, 
-			{"Amber-Green", "Amber Green"},
-			{"Amber", "Amber"},
-			{"Green", "Green"}
-		};
-		private static readonly Dictionary<string, string> RagsCss = new Dictionary<string, string>(7)
-		{
-			{"n/a", ""}, 
-			{"Red-Plus", "ragtag__redplus"}, 
-			{"Red", "ragtag__red"}, 
-			{"Red-Amber", "ragtag__redamber"}, 
-			{"Amber-Green", "ragtag__ambergreen"},
-			{"Amber", "ragtag__amber"},
-			{"Green", "ragtag__green"}
-		};
-		
 		private const string DateFormat = "dd-MM-yyyy";
 		
 		public static (IList<HomeModel>, IList<HomeModel>) Map(IEnumerable<CaseDto> casesDto,
@@ -66,8 +45,8 @@ namespace ConcernsCaseWork.Mappers
 					.Select(r => r.Name)
 					.First();
 
-				var rag = FetchRag(rating);
-				var ragCss = FetchRagCss(rating);
+				var rag = RagMapping.FetchRag(rating);
+				var ragCss = RagMapping.FetchRagCss(rating);
 				
 				// Filter per status
 				if (caseDto.Status.CompareTo(statusLiveDto.Urn) == 0)
@@ -103,18 +82,6 @@ namespace ConcernsCaseWork.Mappers
 			}
 			
 			return (activeCases, monitoringCases);
-		}
-
-		public static string FetchRag(string rating)
-		{
-			var defaultRating = "n/a";
-			return Rags.TryGetValue(rating ?? defaultRating, out var rag) ? rag : defaultRating;
-		}
-		
-		public static string FetchRagCss(string rating)
-		{
-			var defaultRating = "n/a";
-			return RagsCss.TryGetValue(rating ?? "n/a", out var ragCss) ? ragCss : defaultRating;
 		}
 		
 		public static string FetchTrustName(IEnumerable<TrustDetailsDto> trustsDetailsDto, CaseDto caseDto)

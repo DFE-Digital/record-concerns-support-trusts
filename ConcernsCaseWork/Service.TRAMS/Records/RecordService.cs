@@ -87,12 +87,12 @@ namespace Service.TRAMS.Records
 			catch (Exception ex)
 			{
 				_logger.LogError($"RecordService::PostRecordByCaseUrn::Exception message::{ex.Message}");
+				
+				throw;
 			}
-			
-			return null;
 		}
 
-		public async Task<RecordDto> PatchRecordByUrn(UpdateRecordDto updateRecordDto)
+		public async Task<RecordDto> PatchRecordByUrn(RecordDto recordDto)
 		{
 			try
 			{
@@ -100,7 +100,7 @@ namespace Service.TRAMS.Records
 				
 				// Create a request
 				var request = new StringContent(
-					JsonConvert.SerializeObject(updateRecordDto),
+					JsonConvert.SerializeObject(recordDto),
 					Encoding.UTF8,
 					MediaTypeNames.Application.Json);
 
@@ -109,7 +109,7 @@ namespace Service.TRAMS.Records
 				
 				// Execute request
 				var response = await client.PatchAsync(
-					$"{EndpointsVersion}/record/urn/{updateRecordDto.Urn}", request);
+					$"{EndpointsVersion}/record/urn/{recordDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -125,9 +125,9 @@ namespace Service.TRAMS.Records
 			catch (Exception ex)
 			{
 				_logger.LogError($"RecordService::PatchRecordByUrn::Exception message::{ex.Message}");
-			}
 
-			return null;
+				throw;
+			}
 		}
 	}
 }

@@ -1,10 +1,10 @@
 ﻿using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Type;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
@@ -16,16 +16,13 @@ namespace ConcernsCaseWork.Pages.Case
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class DetailsPageModel : PageModel
+	public class DetailsPageModel : AbstractPageModel
 	{
 		private readonly ITrustModelService _trustModelService;
 		private readonly ITypeModelService _typeModelService;
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<DetailsPageModel> _logger;
 		private readonly ICachedService _cachedService;
-
-		private const string ErrorOnGetPage = "An error occurred loading the page, please try again. If the error persists contact the service administrator.";
-		private const string ErrorOnPostPage = "An error occurred posting the form, please try again. If the error persists contact the service administrator.";
 		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IDictionary<string, IList<string>> TypesDictionary { get; private set; }
@@ -79,8 +76,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var nextStepsDetail = Request.Form["next-steps-detail"];
 				var resolutionStrategyDetail = Request.Form["resolution-strategy-detail"];
 				var trustUkPrn = Request.Form["trust-Ukprn"];
-
-				// TODO find a way to identity when typo selected is -> Sub type is null when type is 'Force Majeure'
+				
 				if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(ragRating) && 
 				    !string.IsNullOrEmpty(issueDetail))
 				{

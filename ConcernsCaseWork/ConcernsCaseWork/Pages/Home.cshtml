@@ -71,8 +71,13 @@
 						<br>
 						@caseModel.CaseSubType
 					</td>
-					<td class="govuk-table__cell">
-						<span class="govuk-tag ragtag govuk-word-spacing @caseModel.RagRatingCss">@caseModel.RagRating</span>
+					<td class="govuk-table__cell govuk-label-wrapper">
+						@for (var index = 0; index < caseModel.RagRating.Count; ++index)
+						{
+							<span class="govuk-tag ragtag @caseModel.RagRatingCss.ElementAt(index)">
+								@caseModel.RagRating.ElementAt(index)
+							</span>
+						}
 					</td>
 					<td class="govuk-table__cell">
 						@caseModel.Created

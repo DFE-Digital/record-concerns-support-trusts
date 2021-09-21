@@ -10,6 +10,6 @@ namespace Service.TRAMS.Cases
 		Task<IList<CaseDto>> GetCasesByTrustUkPrn(string trustUkprn);
 		Task<IList<CaseDto>> GetCasesByPagination(CaseSearch caseSearch);
 		Task<CaseDto> PostCase(CreateCaseDto createCaseDto);
-		Task<CaseDto> PatchCaseByUrn(UpdateCaseDto updateCaseDto);
+		Task<CaseDto> PatchCaseByUrn(CaseDto caseDto);
 	}
 }

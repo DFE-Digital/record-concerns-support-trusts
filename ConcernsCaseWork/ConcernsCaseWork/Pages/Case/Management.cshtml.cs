@@ -1,30 +1,51 @@
-﻿using ConcernsCaseWork.Services.Trusts;
+﻿using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Type;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Base;
+using System;
+using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class ManagementPageModel : PageModel
+	public class ManagementPageModel : AbstractPageModel
 	{
-		private readonly ITrustModelService _trustModelService;
-		private readonly ICachedService _cachedService;
-		private readonly ILogger<DetailsPageModel> _logger;
+		private readonly ICaseModelService _caseModelService;
+		private readonly ILogger<ManagementPageModel> _logger;
 		
-		public ManagementPageModel(ITrustModelService trustModelService, ICachedService cachedService, ILogger<DetailsPageModel> logger)
+		public CaseModel CaseModel { get; private set; }
+
+		public ManagementPageModel(ICaseModelService caseModelService, ITypeModelService typeModelService,
+			ILogger<ManagementPageModel> logger)
 		{
-			_trustModelService = trustModelService;
-			_cachedService = cachedService;
+			_caseModelService = caseModelService;
 			_logger = logger;
 		}
-		
-		public void OnGet(string id)
+
+		public async Task OnGetAsync()
 		{
-			_logger.LogInformation($"ID - {id}");
+			try
+			{
+				_logger.LogInformation("Case::ManagementPageModel::OnGetAsync");
+
+				var caseUrnValue = RouteData.Values["id"];
+				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn))
+				{
+					throw new Exception("ManagementPageModel::CaseUrn is null or invalid to parse");
+				}
+
+				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Case::ManagementPageModel::OnGetAsync::Exception - {ex.Message}");
+
+				TempData["Error.Message"] = ErrorOnGetPage;
+			}
 		}
 	}
 }

@@ -91,7 +91,7 @@
 							<div class="govuk-hint" id="case-issue-hint">
 								Use the <a target="_blank" href="@Url.Page("../FileResource", "DownloadRiskManagementPdf")" class="govuk-link" rel="noreferrer noopener">Risk Management Framework (opens in new tab)</a> to assess the type of Concern
 							</div>
-
+							
 							<partial name="_ConcernType" model="Model.TypesDictionary"></partial>
 							
 						</fieldset>
@@ -105,48 +105,7 @@
 								What is the risk rating?
 							</legend>
 
-							<!--Risk rating radios-->
-							<div class="govuk-radios" data-module="govuk-radios">
-
-								<div class="govuk-radios__item">
-									<input class="govuk-radios__input" id="riskRating" name="riskRating" type="radio" value="Amber-Green">
-									<label class="govuk-label govuk-radios__label" for="riskRating">
-										<div class="govuk-label-wrapper">
-											<span class="govuk-tag ragtag ragtag__amber">Amber</span>
-											<span class="govuk-tag ragtag ragtag__green">Green</span>
-										</div>
-									</label>
-								</div>
-
-								<div class="govuk-radios__item">
-									<input class="govuk-radios__input" id="riskRating-1" name="riskRating" type="radio" value="Red-Amber">
-									<label class="govuk-label govuk-radios__label" for="riskRating-1">
-										<div class="govuk-label-wrapper">
-											<span class="govuk-tag ragtag ragtag__red">Red</span>
-											<span class="govuk-tag ragtag ragtag__amber">Amber</span>
-										</div>
-									</label>
-								</div>
-
-								<div class="govuk-radios__item">
-									<input class="govuk-radios__input" id="riskRating-2" name="riskRating" type="radio" value="Red">
-									<label class="govuk-label govuk-radios__label" for="riskRating-2">
-										<div class="govuk-label-wrapper">
-											<span class="govuk-tag ragtag ragtag__red">Red</span>
-										</div>
-									</label>
-								</div>
-
-								<div class="govuk-radios__item">
-									<input class="govuk-radios__input" id="riskRating-3" name="riskRating" type="radio" value="Red-Plus">
-									<label class="govuk-label govuk-radios__label" for="riskRating-3">
-										<div class="govuk-label-wrapper">
-											<span class="govuk-tag ragtag ragtag__redplus">Red Plus</span>
-										</div>
-									</label>
-								</div>
-
-							</div>
+							<partial name="_RiskRating"></partial>
 
 						</fieldset>
 					</div>
@@ -227,34 +186,7 @@
 				
 				<script type="application/javascript">
 					$(function () {
-						let caseTypeForm = $("#case-type-form");		
-						const validator = new MOJFrontend.FormValidator(caseTypeForm[0]);
-						validator.addValidator('type', [{
-							method: function(field) {
-								return field.value.trim().length > 0;
-							},
-							message: 'Select concern type'
-						}, {
-							method: function() {
-								let typeChecked = $('input[name="type"]:checked');
-								if (typeChecked !== undefined) {
-									let typeAriaControl = typeChecked.attr('aria-controls');
-									if (typeAriaControl !== undefined) {
-										let concernAriaControlElem = $("#" + typeAriaControl + "");
-										let subTypeChildren = concernAriaControlElem.find("input[name='subType']");
-										if (subTypeChildren.length > 0) {
-											let subTypeChecked = concernAriaControlElem.find("input[name='subType']:checked");
-											if (subTypeChecked.length === 0) {
-												return false;	
-											}
-										}
-									}
-								}
-								
-								return true;
-						  	},
-						  	message: 'Select concern sub type'
-						}]);
+						let validator = formValidatorConcernType($("#case-type-form")[0]);
 						validator.addValidator('riskRating', [{
 							method: function(field) {
 								return field.value.trim().length > 0;
@@ -267,7 +199,6 @@
 							},
 							message: 'Issue is required'
 						}]);
-						
 						
 						let multipleFields = document.querySelectorAll('.concern-auto-resize');
 						for(let i = 0; i < multipleFields.length; i++){
