@@ -347,9 +347,27 @@ namespace Service.Redis.Tests.Records
 			
 			// act
 			await recordRecordCachedService.PatchRecordByUrn(RecordFactory.BuildRecordDto(), "testing");
-
+			var cachedUserState = await mockCacheProvider.Object.GetFromCache<UserState>(It.IsAny<string>());
+			
 			// assert
-			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
+			var caseDetails = cachedUserState.CasesDetails.TryGetValue(99, out var caseWrapper);
+			
+			Assert.That(caseDetails, Is.True);
+			Assert.That(caseWrapper, Is.Not.Null);
+			Assert.That(caseWrapper.Records, Is.Not.Null);
+			
+			caseWrapper.Records.Add(999, new RecordWrapper
+			{
+				RecordDto = RecordFactory.BuildRecordDto(), 
+				RecordsRatingHistory = new List<RecordRatingHistoryDto>
+				{
+					new RecordRatingHistoryDto(DateTimeOffset.Now, 2, 1)
+				}
+			});
+			
+			Assert.That(caseWrapper.Records.Count, Is.EqualTo(2));
+			
+			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Exactly(2));
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
 			mockRecordService.Verify(c => c.PatchRecordByUrn(It.IsAny<RecordDto>()), Times.Never);
 		}

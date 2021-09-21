@@ -8,6 +8,6 @@ namespace Service.Redis.Models
 	public sealed class CaseWrapper
 	{
 		public CaseDto CaseDto { get; set; }
-		public IDictionary<long, RecordWrapper> Records { get; set; } = new Dictionary<long, RecordWrapper>();
+		public IDictionary<long, RecordWrapper> Records { get; } = new Dictionary<long, RecordWrapper>();
 	}
 }
