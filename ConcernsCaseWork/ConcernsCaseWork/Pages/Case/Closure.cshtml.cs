@@ -52,7 +52,7 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 
 
-			return Redirect("home");
+			return Redirect("/");
 		}
 	}
 }
