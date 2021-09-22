@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Service.TRAMS.Status;
 using System;
+using ConcernsCaseWork.Extensions;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -53,7 +54,7 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			try
 			{
-				_logger.LogInformation("Case::ClosurePageModel::OnPost");
+				_logger.LogInformation("Case::ClosurePageModel::OnPostCloseCase");
 				
 				var caseUrnValue = RouteData.Values["id"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn))
@@ -67,9 +68,9 @@ namespace ConcernsCaseWork.Pages.Case
 				var monthToReview = Request.Form["dtr-month"];
 				var yearToReview = Request.Form["dtr-year"];
 
-				if (string.IsNullOrEmpty(caseOutcomes) 
-				    || !bool.TryParse(monitoring, out var isMonitoring)) throw new Exception("Missing form values");
+				if (string.IsNullOrEmpty(caseOutcomes)) throw new Exception("Missing form values");
 				
+				var isMonitoring = monitoring.ToString().ToBoolean();
 				var patchCaseModel = new PatchCaseModel();
 					
 				if (isMonitoring
