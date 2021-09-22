@@ -57,7 +57,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		[Test]
-		public async Task WhenOnGetTrustsSearchResult_ReturnResultsToPartialPage()
+		public async Task WhenOnGetTrustsSearchResult_ReturnJsonResult()
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
@@ -72,13 +72,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			var response = await pageModel.OnGetTrustsSearchResult("north");
 			
 			// assert
-			Assert.IsInstanceOf(typeof(PartialViewResult), response);
-			var partialPage = response as PartialViewResult;
+			Assert.IsInstanceOf(typeof(JsonResult), response);
+			var partialPage = response as JsonResult;
 			
 			Assert.That(partialPage, Is.Not.Null);
-			Assert.That(partialPage.Model, Is.InstanceOf<IList<TrustSummaryModel>>());
+			Assert.That(partialPage.Value, Is.InstanceOf<IList<TrustSummaryModel>>());
 			
-			foreach (var expected in (IList<TrustSummaryModel>)partialPage.Model)
+			foreach (var expected in (IList<TrustSummaryModel>)partialPage.Value)
 			{
 				foreach (var actual in trustSummaryModel.Where(actual => expected.UkPrn.Equals(actual.UkPrn)))
 				{
