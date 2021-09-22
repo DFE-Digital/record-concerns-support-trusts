@@ -232,10 +232,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageResponse = await pageModel.OnPost();
 
 			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
+			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
+			var page = pageResponse as RedirectResult;
 			
 			Assert.That(page, Is.Not.Null);
+			Assert.That(page.Url, Is.EqualTo("details"));
 		}
 
 		[Test]
@@ -256,10 +257,11 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
+			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
+			var page = pageResponse as RedirectResult;
 			
 			Assert.That(page, Is.Not.Null);
+			Assert.That(page.Url, Is.EqualTo("details"));
 		}
 		
 		private static DetailsPageModel SetupDetailsModel(
