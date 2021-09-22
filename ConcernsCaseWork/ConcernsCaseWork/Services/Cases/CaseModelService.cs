@@ -121,6 +121,32 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 		}
 
+		public async Task PatchClosure(PatchCaseModel patchCaseModel)
+		{
+			try
+			{
+				// Fetch Status
+				var statusDto = await _statusCachedService.GetStatusByName(patchCaseModel.StatusName);
+				
+				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
+				var recordDto = recordsDto.First(r => r.Primary);
+				
+				// Patch source dtos
+				recordDto = RecordMapping.MapClosure(patchCaseModel, recordDto, statusDto);
+				caseDto = CaseMapping.MapClosure(patchCaseModel, caseDto, statusDto);
+				
+				await _recordCachedService.PatchRecordByUrn(recordDto, patchCaseModel.CreatedBy);
+				await _caseCachedService.PatchCaseByUrn(caseDto);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"CaseModelService::PatchClosure exception {ex.Message}");
+
+				throw;
+			}
+		}
+
 		public async Task PatchConcernType(PatchCaseModel patchCaseModel)
 		{
 			try
@@ -134,7 +160,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
 				var recordDto = recordsDto.First(r => r.Primary);
 				
-				// Patch original dtos
+				// Patch source dtos
 				recordDto = RecordMapping.MapConcernType(patchCaseModel, recordDto);
 				caseDto = CaseMapping.Map(patchCaseModel, caseDto);
 				
@@ -161,7 +187,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
 				var recordDto = recordsDto.First(r => r.Primary);
 				
-				// Patch original dtos
+				// Patch source dtos
 				recordDto = RecordMapping.MapRiskRating(patchCaseModel, recordDto);
 				caseDto = CaseMapping.Map(patchCaseModel, caseDto);
 

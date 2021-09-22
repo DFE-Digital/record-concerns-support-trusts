@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Models;
 using Service.TRAMS.Cases;
+using Service.TRAMS.Status;
 
 namespace ConcernsCaseWork.Mappers
 {
@@ -46,6 +47,18 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.DeEscalation, caseDto.Issue, caseDto.CurrentStatus,
 				caseDto.NextSteps, caseDto.ResolutionStrategy, caseDto.DirectionOfTravel,
 				caseDto.Urn, caseDto.Status);
+		}
+		
+		public static CaseDto MapClosure(PatchCaseModel patchCaseModel, CaseDto caseDto, StatusDto statusDto)
+		{
+			return new CaseDto(caseDto.CreatedAt, patchCaseModel.UpdatedAt,
+				patchCaseModel.ReviewAt ?? caseDto.ReviewAt, 
+				patchCaseModel.ClosedAt ?? caseDto.ClosedAt, 
+				caseDto.CreatedBy, caseDto.Description,
+				caseDto.CrmEnquiry, caseDto.TrustUkPrn, patchCaseModel.ReasonAtReview,
+				caseDto.DeEscalation, caseDto.Issue, caseDto.CurrentStatus,
+				caseDto.NextSteps, caseDto.ResolutionStrategy, caseDto.DirectionOfTravel,
+				caseDto.Urn, statusDto.Urn);
 		}
 	}
 }

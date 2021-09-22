@@ -6,6 +6,10 @@ namespace ConcernsCaseWork.Models
 	{
 		public DateTimeOffset UpdatedAt { get; set; }
 		
+		public DateTimeOffset? ReviewAt { get; set; }
+		
+		public DateTimeOffset? ClosedAt { get; set; }
+		
 		public string CreatedBy { get; set; }
 		
 		public long Urn { get; set; }
@@ -19,5 +23,9 @@ namespace ConcernsCaseWork.Models
 		public string RiskRating { get; set; }
 		
 		public long RatingUrn { get; set; }
+		
+		public string ReasonAtReview { get; set; }
+		
+		public string StatusName { get; set; }
 	}
 }

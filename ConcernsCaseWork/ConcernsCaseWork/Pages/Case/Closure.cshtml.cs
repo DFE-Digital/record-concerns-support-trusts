@@ -4,6 +4,7 @@ using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Service.TRAMS.Status;
 using System;
 using System.Threading.Tasks;
 
@@ -54,12 +55,53 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				_logger.LogInformation("Case::ClosurePageModel::OnPost");
 				
+				var caseUrnValue = RouteData.Values["id"];
+				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn))
+				{
+					throw new Exception("ClosurePageModel::CaseUrn is null or invalid to parse");
+				}
+				
 				var caseOutcomes = Request.Form["case-outcomes"];
+				var monitoring = Request.Form["monitoring"];
 				var dayToReview = Request.Form["dtr-day"];
 				var monthToReview = Request.Form["dtr-month"];
 				var yearToReview = Request.Form["dtr-year"];
+
+				if (string.IsNullOrEmpty(caseOutcomes) 
+				    || !bool.TryParse(monitoring, out var isMonitoring)) throw new Exception("Missing form values");
 				
+				var patchCaseModel = new PatchCaseModel();
+					
+				if (isMonitoring
+				    && !string.IsNullOrEmpty(dayToReview)
+				    && !string.IsNullOrEmpty(monthToReview)
+				    && !string.IsNullOrEmpty(yearToReview))
+				{
+					// Validate date
+					var year = int.Parse(yearToReview);
+					var month = int.Parse(monthToReview);
+					var day = int.Parse(dayToReview);
+						
+					DateTime sourceDate = new DateTime(year, month, day, 0, 0, 0);
+					DateTime utcTime = DateTime.SpecifyKind(sourceDate, DateTimeKind.Utc);
+						
+					// Set review at
+					patchCaseModel.ReviewAt = new DateTimeOffset(utcTime);
+				}
+				else
+				{
+					patchCaseModel.ClosedAt = DateTimeOffset.Now;
+				}
+					
+				// Update patch case model
+				patchCaseModel.Urn = caseUrn;
+				patchCaseModel.CreatedBy = User.Identity.Name;
+				patchCaseModel.UpdatedAt = DateTimeOffset.Now;
+				patchCaseModel.StatusName = isMonitoring ? Status.Monitoring.ToString() : Status.Close.ToString();
+				patchCaseModel.ReasonAtReview = caseOutcomes;
 				
+				await _caseModelService.PatchClosure(patchCaseModel);
+					
 				return Redirect("/");
 			}
 			catch (Exception ex)
@@ -69,7 +111,7 @@ namespace ConcernsCaseWork.Pages.Case
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
-			return Page();
+			return Redirect("closure");
 		}
 	}
 }
