@@ -1,6 +1,10 @@
 ﻿@page "/case/{id:long}/management"
 @model ConcernsCaseWork.Pages.Case.ManagementPageModel
 
+@{
+	ViewData["Title"] = "Case management";
+}
+
 @if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")) || Model.CaseModel is null)
 {
 	<div class="govuk-width-container">
