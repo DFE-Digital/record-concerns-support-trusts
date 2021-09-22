@@ -1,34 +1,45 @@
 ﻿@page "/case/{id:long}/management/editriskrating"
 @model ConcernsCaseWork.Pages.Case.EditRiskRatingPageModel
 
-<partial name="_Error"></partial>
+@{
+	ViewData["Title"] = "Edit Risk rating";
+}
 
-<h1 class="govuk-heading-l">
-	Change risk rating
-</h1>
+<div class="govuk-width-container">
+	<partial name="_BannerError"/>
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+			<partial name="_Error"></partial>
 
-<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+			<h1 class="govuk-heading-l">
+				Change risk rating
+			</h1>
 
-<form role="form" asp-page-handler="editRiskRating" method="post" id="risk-rating-form" novalidate>
+			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-	<input type="hidden" value="@Model.PreviousUrl" name="url"/>
-	
-	<div class="govuk-form-group">
-		<fieldset class="govuk-fieldset">
-			<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
-			<partial name="_RiskRating"></partial>
-		</fieldset>
+			<form role="form" asp-page-handler="editRiskRating" method="post" id="risk-rating-form" novalidate>
+
+				<input type="hidden" value="@Model.PreviousUrl" name="url"/>
+
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset">
+						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
+						<partial name="_RiskRating"></partial>
+					</fieldset>
+				</div>
+
+				<!--Button group-->
+				<div class="govuk-button-group">
+					<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+						Apply
+					</button>
+					<partial name="_Cancel"></partial>
+				</div>
+			</form>
+		</div>
 	</div>
-
-	<!--Button group-->
-	<div class="govuk-button-group">
-		<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
-			Apply
-		</button>
-		<partial name="_Cancel"></partial>
-	</div>
-</form>
-
+</div>
+		
 <script type="application/javascript">
 	$(function () {	
 		let validator = formValidator($("#risk-rating-form")[0]);

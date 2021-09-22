@@ -1,33 +1,44 @@
 ﻿@page "/case/{id:long}/management/editconcerntype"
 @model ConcernsCaseWork.Pages.Case.EditConcernTypePageModel
 
-<partial name="_Error"></partial>
+@{
+	ViewData["Title"] = "Edit Concern type";
+}
 
-<h1 class="govuk-heading-l">
-	Change concern
-</h1>
+<div class="govuk-width-container">
+	<partial name="_BannerError"/>
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+			<partial name="_Error"></partial>
 
-<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+			<h1 class="govuk-heading-l">
+				Change concern
+			</h1>
 
-<form role="form" asp-page-handler="editConcernType" method="post" id="concern-type-form" novalidate>
+			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-	<input type="hidden" value="@Model.PreviousUrl" name="url"/>
-	
-	<div class="govuk-form-group">
-		<fieldset class="govuk-fieldset">
-			<partial name="_ConcernType" model="Model.TypesDictionary"></partial>
-		</fieldset>
+			<form role="form" asp-page-handler="editConcernType" method="post" id="concern-type-form" novalidate>
+
+				<input type="hidden" value="@Model.PreviousUrl" name="url"/>
+
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset">
+						<partial name="_ConcernType" model="Model.TypesDictionary"></partial>
+					</fieldset>
+				</div>
+
+				<!--Button group-->
+				<div class="govuk-button-group">
+					<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+						Apply
+					</button>
+					<partial name="_Cancel"></partial>
+				</div>
+			</form>
+		</div>
 	</div>
-
-	<!--Button group-->
-	<div class="govuk-button-group">
-		<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
-			Apply
-		</button>
-		<partial name="_Cancel"></partial>
-	</div>
-</form>
-
+</div>
+		
 <script type="application/javascript">
 	$(function () {	
 		formValidatorConcernType($("#concern-type-form")[0]);

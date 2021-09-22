@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
+using Service.TRAMS.Cases;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -99,7 +100,8 @@ namespace ConcernsCaseWork.Pages.Case
 					ReviewAt = currentDate,
 					UpdatedAt = currentDate,
 					RecordSubType = subType,
-					TrustUkPrn = trustUkPrn
+					TrustUkPrn = trustUkPrn,
+					DirectionOfTravel = DirectionOfTravel.Deteriorating.ToString()
 				};
 					
 				var newCase = await _caseModelService.PostCase(createCaseModel);
