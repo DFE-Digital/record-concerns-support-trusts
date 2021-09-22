@@ -5,41 +5,44 @@
 	ViewData["Title"] = "Login";
 }
 
-<div class="govuk-grid-row">
-	<div class="govuk-grid-column-full">
-		<h1 class="govuk-heading-xl">Sign in to your DfE account</h1>
-	</div>
-</div>
+<div class="govuk-width-container">
 
-<div class="govuk-grid-row">
-	<div class="govuk-grid-column-one-half">
-		
-		@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")))
-		{
-			<p class="govuk-body">@TempData["Error.Message"]</p>
-		}
-		
-		<form method="post">
-			<input type="hidden" asp-for="Credentials.ReturnUrl" name="returnUrl"/>
-			<div class="govuk-form-group">
-				<label class="govuk-label" for="username">
-					Username
-				</label>
-				<span id="username-hint" class="govuk-hint">
-					Sign in using your username
-				</span>
-				<input class="govuk-input" id="username" asp-for="Credentials.UserName" name="username" type="text" aria-describedby="username-hint">
-			</div>
-			<div class="govuk-form-group">
-				<label class="govuk-label" for="password">
-					Password
-				</label>
-				<span id="password-hint" class="govuk-hint">
-					Sign in using your previously created password
-				</span>
-				<input class="govuk-input" id="password" asp-for="Credentials.Password" name="password" type="password" aria-describedby="email-hint">
-			</div>
-			<button type="submit" class="govuk-button govuk-button--primary">Sign in</button>
-		</form>
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-full">
+			<h1 class="govuk-heading-xl">Sign in to your DfE account</h1>
+		</div>
+	</div>
+
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-one-half">
+
+			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+			{
+				<p class="govuk-body">@TempData["Error.Message"]</p>
+			}
+
+			<form method="post">
+				<input type="hidden" asp-for="Credentials.ReturnUrl" name="returnUrl"/>
+				<div class="govuk-form-group">
+					<label class="govuk-label" for="username">
+						Username
+					</label>
+					<span id="username-hint" class="govuk-hint">
+						Sign in using your username
+					</span>
+					<input class="govuk-input" id="username" asp-for="Credentials.UserName" name="username" type="text" aria-describedby="username-hint">
+				</div>
+				<div class="govuk-form-group">
+					<label class="govuk-label" for="password">
+						Password
+					</label>
+					<span id="password-hint" class="govuk-hint">
+						Sign in using your previously created password
+					</span>
+					<input class="govuk-input" id="password" asp-for="Credentials.Password" name="password" type="password" aria-describedby="email-hint">
+				</div>
+				<button type="submit" class="govuk-button govuk-button--primary">Sign in</button>
+			</form>
+		</div>
 	</div>
 </div>
