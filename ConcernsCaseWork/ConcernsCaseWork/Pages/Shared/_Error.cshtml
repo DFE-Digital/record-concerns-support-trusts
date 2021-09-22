@@ -1,0 +1,12 @@
+﻿@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")))
+{
+	<div class="govuk-heading-l moj-banner__message">
+		<p class="govuk-body">@TempData["Error.Message"]</p>
+	</div>
+	<script type="application/javascript">
+        $(function () {
+            showGlobalError();
+		});
+    </script>
+}
+

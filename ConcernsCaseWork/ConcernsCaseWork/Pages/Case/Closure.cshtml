@@ -1,0 +1,168 @@
+﻿@page "/case/{id:long}/management/closure"
+@model ConcernsCaseWork.Pages.Case.ClosurePageModel
+
+@{
+	ViewData["Title"] = "Case closure";
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError"/>
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+			<partial name="_Error"></partial>
+
+			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+			<h1 class="govuk-heading-l"> Close case @Model.CaseModel.Urn </h1>
+			<h2 class="govuk-heading-s">@Model.CaseModel.TrustName</h2>
+
+			<form role="form" asp-page-handler="closeCase" method="post" id="close-case-form" novalidate>
+
+				<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="200">
+					<div class="govuk-form-group">
+						<label class="govuk-label govuk-!-font-weight-bold" for="case-outcomes">
+							Case outcomes
+						</label>
+						<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-outcomes" name="case-outcomes" rows="3" aria-describedby="case-outcomes-info"></textarea>
+					</div>
+					<div id="case-outcomes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+						You can enter up to 200 characters
+					</div>
+				</div>
+
+				<div class="govuk-form-group govuk-!-margin-top-9">
+					<fieldset class="govuk-fieldset">
+
+						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+							Do you need to close this case for monitoring?
+						</legend>
+
+						<div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+
+							<div class="govuk-radios__item">
+								<input class="govuk-radios__input" data-aria-controls="conditional-monitoring-yes" id="monitoring" name="monitoring" type="radio" value="yes">
+								<label class="govuk-label govuk-radios__label" for="monitoring">
+									Yes
+								</label>
+							</div>
+
+							<div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-monitoring-yes">
+								<div class="govuk-form-group">
+									<fieldset class="govuk-fieldset" role="group" aria-describedby="dtr-hint">
+
+										<legend class="govuk-fieldset__legend govuk-!-font-weight-bold">
+											Date to review
+										</legend>
+
+										<div id="dtr-hint" class="govuk-hint">
+											For example, 31 3 1980
+										</div>
+
+										<div class="govuk-date-input" id="dtr">
+											<div class="govuk-date-input__item">
+												<div class="govuk-form-group">
+													<label class="govuk-label govuk-date-input__label" for="dtr-day">
+														Day
+													</label>
+													<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day" name="dtr-day" type="text" pattern="[0-9]*" inputmode="numeric">
+												</div>
+											</div>
+											<div class="govuk-date-input__item">
+												<div class="govuk-form-group">
+													<label class="govuk-label govuk-date-input__label" for="dtr-month">
+														Month
+													</label>
+													<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month" name="dtr-month" type="text" pattern="[0-9]*" inputmode="numeric">
+												</div>
+											</div>
+											<div class="govuk-date-input__item">
+												<div class="govuk-form-group">
+													<label class="govuk-label govuk-date-input__label" for="dtr-year">
+														Year
+													</label>
+													<input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year" name="dtr-year" type="text" pattern="[0-9]*" inputmode="numeric">
+												</div>
+											</div>
+										</div>
+									</fieldset>
+								</div>
+							</div>
+
+							<div class="govuk-radios__item">
+								<input class="govuk-radios__input" data-aria-controls="conditional-monitoring-no" id="monitoring-no" name="monitoring" type="radio" value="no">
+								<label class="govuk-label govuk-radios__label" for="monitoring-no">
+									No
+								</label>
+							</div>
+
+						</div>
+
+					</fieldset>
+				</div>
+
+				<!--Close case-->
+				<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+					Close case
+				</button>
+
+			</form>
+		</div>
+	</div>
+</div>
+		
+<script type="application/javascript">
+	$(function () {	
+		let validator = formValidator($("#close-case-form")[0]);
+		validator.addValidator('case-outcomes', [{
+			method: function(field) {
+				return field.value.trim().length > 0;
+			},
+			message: 'You have not recorded an outcome'
+		}]);
+		validator.addValidator('monitoring', [{
+			method: function(field) {
+				if (field.value === 'yes') {
+					
+					// Adds validator if doesn't exist
+					if(!validator.validators.some(validator => validator.fieldName === "dtr-day")) {
+						
+						validator.addValidator('dtr-day', [{
+							method: function(field, params) {							
+								return (params.day.value.length !== 0 && params.month.value.length !== 0 && params.year.value !== 0);
+							},
+							message: 'Enter date to review',
+							params: {
+								day: document.getElementById('dtr-day'),
+								month: document.getElementById('dtr-month'),
+								year: document.getElementById('dtr-year')
+							}
+						}, {
+							method: function(field, params) {
+								let d = new Date(parseInt(params.year.value, 10), parseInt(params.month.value, 10) - 1, parseInt(params.day.value, 10) - 1);
+								return d instanceof Date && !isNaN(d);
+							},
+							message: 'Enter a valid date to review',
+							params: {
+								day: document.getElementById('dtr-day'),
+								month: document.getElementById('dtr-month'),
+								year: document.getElementById('dtr-year')
+							}
+						}]);
+					}
+				}
+				else
+				{
+					// Remove validator from array
+					validator.validators = validator.validators.filter(function(value) {
+						return value.fieldName !== "dtr-day";
+					});
+				}
+				
+				return field.value.trim().length > 0;
+			},
+			message: 'Select monitoring'
+		}]);
+		
+		autoResizer();
+	});
+</script>

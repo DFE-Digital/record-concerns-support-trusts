@@ -1,5 +1,7 @@
 ﻿@model string
 
 @if (BackPageModel.CanRender(Context.Request.Path.Value)) {
-	<a href="@Model" class="govuk-back-link">Back</a>
+	<div class="govuk-width-container">
+		<a class="govuk-back-link" href="@Model">Back</a>
+	</div>
 }

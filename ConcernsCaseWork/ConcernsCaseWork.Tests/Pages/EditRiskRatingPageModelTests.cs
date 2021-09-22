@@ -1,7 +1,6 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Type;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,24 +17,21 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Tests.Pages
 {
 	[Parallelizable(ParallelScope.All)]
-	public class EditConcernTypePageModelTests
+	public class EditRiskRatingPageModelTests
 	{
 		[Test]
-		public async Task WhenOnGetAsync_ReturnsPage()
+		public void WhenOnGet_ReturnsPage()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
-			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
+			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
 			
-			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
-			
-			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
 			// act
-			var pageResponse = await pageModel.OnGetAsync();
+			var pageResponse = pageModel.OnGet();
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
@@ -43,23 +39,19 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
-			Assert.That(pageModel.TypesDictionary, Is.Empty);
 		}
 		
 		[Test]
-		public async Task WhenOnPostEditConcernType_MissingRouteData_ThrowsException_ReloadPage()
+		public async Task WhenOnPostEditRiskRating_MissingRouteData_ThrowsException_ReloadPage()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
-			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
-			
-			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
-			
-			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
+
+			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			// act
-			var pageResponse = await pageModel.OnPostEditConcernType("https://returnto/thispage");
+			var pageResponse = await pageModel.OnPostEditRiskRating("https://returnto/thispage");
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
@@ -67,34 +59,28 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
-			Assert.That(pageModel.TypesDictionary, Is.Empty);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 		}
 
 		[Test]
-		public async Task WhenOnPostEditConcernType_RouteData_MissingRequestForm_ReloadPage()
+		public async Task WhenOnPostEditRiskRating_RouteData_MissingRequestForm_ReloadPage()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
-			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
-			
-			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
-			
-			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
+
+			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
-					{ "type", new StringValues("") },
-					{ "subType", new StringValues("")
-				}
+					{ "riskRating", new StringValues("") }
 				});
 			
 			// act
-			var pageResponse = await pageModel.OnPostEditConcernType("https://returnto/thispage");
+			var pageResponse = await pageModel.OnPostEditRiskRating("https://returnto/thispage");
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
@@ -102,34 +88,29 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
-			Assert.That(pageModel.TypesDictionary, Is.Empty);
 		}
 		
 		[Test]
-		public async Task WhenOnPostEditConcernType_RouteData_RequestForm_ReturnsToPreviousUrl()
+		public async Task WhenOnPostEditRiskRating_RouteData_RequestForm_ReturnsToPreviousUrl()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
-			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
+			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
 
 			mockCaseModelService.Setup(c => c.PatchConcernType(It.IsAny<PatchCaseModel>()));
-			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
-			
-			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+
+			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
-					{ "type", new StringValues("type") },
-					{ "subType", new StringValues("subtype")
-					}
+					{ "riskRating", new StringValues("riskRating") }
 				});
 			
 			// act
-			var pageResponse = await pageModel.OnPostEditConcernType("https://returnto/thispage");
+			var pageResponse = await pageModel.OnPostEditRiskRating("https://returnto/thispage");
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
@@ -137,16 +118,15 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Null);
-			Assert.That(pageModel.TypesDictionary, Is.Null);
 			Assert.That(page.Url, Is.EqualTo("https://returnto/thispage"));
 		}
 		
-		private static EditConcernTypePageModel SetupEditConcernTypePageModel(
-			ICaseModelService mockCaseModelService, ITypeModelService mockTypeModelService, ILogger<EditConcernTypePageModel> mockLogger, bool isAuthenticated = false)
+		private static EditRiskRatingPageModel SetupEditRiskRatingPageModel(
+			ICaseModelService mockCaseModelService, ILogger<EditRiskRatingPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new EditConcernTypePageModel(mockTypeModelService, mockCaseModelService, mockLogger)
+			return new EditRiskRatingPageModel(mockCaseModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

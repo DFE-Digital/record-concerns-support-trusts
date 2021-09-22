@@ -1,8 +1,8 @@
-﻿@page "/case/{id:long}/management/editconcerntype"
-@model ConcernsCaseWork.Pages.Case.EditConcernTypePageModel
+﻿@page "/case/{id:long}/management/editriskrating"
+@model ConcernsCaseWork.Pages.Case.EditRiskRatingPageModel
 
 @{
-	ViewData["Title"] = "Edit Concern type";
+	ViewData["Title"] = "Edit Risk rating";
 }
 
 <div class="govuk-width-container">
@@ -12,18 +12,19 @@
 			<partial name="_Error"></partial>
 
 			<h1 class="govuk-heading-l">
-				Change concern
+				Change risk rating
 			</h1>
 
 			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-			<form role="form" asp-page-handler="editConcernType" method="post" id="concern-type-form" novalidate>
+			<form role="form" asp-page-handler="editRiskRating" method="post" id="risk-rating-form" novalidate>
 
 				<input type="hidden" value="@Model.PreviousUrl" name="url"/>
 
 				<div class="govuk-form-group">
 					<fieldset class="govuk-fieldset">
-						<partial name="_ConcernType" model="Model.TypesDictionary"></partial>
+						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
+						<partial name="_RiskRating"></partial>
 					</fieldset>
 				</div>
 
@@ -41,7 +42,12 @@
 		
 <script type="application/javascript">
 	$(function () {	
-		formValidatorConcernType($("#concern-type-form")[0]);
+		let validator = formValidator($("#risk-rating-form")[0]);
+		validator.addValidator('riskRating', [{
+			method: function(field) {
+				return field.value.trim().length > 0;
+			},
+			message: 'Select risk rating'
+		}]);
 	});
 </script>
-

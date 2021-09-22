@@ -46,32 +46,32 @@ namespace ConcernsCaseWork.Pages.Case
 				var caseUrnValue = RouteData.Values["id"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn))
 				{
-					throw new Exception("ManagementPageModel::CaseUrn is null or invalid to parse");
+					throw new Exception("EditConcernTypePageModel::CaseUrn is null or invalid to parse");
 				}
 				
 				var type = Request.Form["type"];
 				var subType = Request.Form["subType"];
 
-				if (!string.IsNullOrEmpty(type))
+				if (string.IsNullOrEmpty(type)) throw new Exception("Missing form values");
+				
+				// Create patch case model
+				var patchCaseModel = new PatchCaseModel
 				{
-					// Create update case model
-					var patchCaseModel = new PatchCaseModel
-					{
-						Urn = caseUrn,
-						CreatedBy = User.Identity.Name,
-						UpdatedAt = DateTimeOffset.Now,
-						RecordType = type,
-						RecordSubType = subType
-					};
+					Urn = caseUrn,
+					CreatedBy = User.Identity.Name,
+					UpdatedAt = DateTimeOffset.Now,
+					RecordType = type,
+					RecordSubType = subType
+				};
 					
-					await _caseModelService.UpdateCase(patchCaseModel);
+				await _caseModelService.PatchConcernType(patchCaseModel);
 					
-					return Redirect(url);
-				}
+				return Redirect(url);
+
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::ManagementPageModel::OnGetAsync::Exception - {ex.Message}");
+				_logger.LogError($"Case::EditConcernTypePageModel::OnPostEditConcernType::Exception - {ex.Message}");
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}

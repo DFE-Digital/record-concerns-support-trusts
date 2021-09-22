@@ -5,141 +5,143 @@
 	ViewData["Title"] = "Home";
 }
 
-<div class="govuk-!-margin-top-0">
+<div class="govuk-width-homepage-container">
+	<div class="govuk-!-margin-top-0">
 
-	<div class="govuk-button-group flexalign__right">
-		<a class="govuk-link" href="#">
-			Closed cases (TRAMS)
-		</a>
-		<a class="govuk-button" asp-page="/case/index" role="button">
-			Create case
-		</a>
+		<div class="govuk-button-group flexalign__right">
+			<a class="govuk-link" href="#">
+				Closed cases (TRAMS)
+			</a>
+			<a class="govuk-button" asp-page="/case/index" role="button">
+				Create case
+			</a>
+		</div>
+
+		<!-- Active casework -->
+		<table class="govuk-table">
+			<caption class="govuk-table__caption govuk-table__caption--m">
+				Your active casework
+			</caption>
+			<thead class="govuk-table__head">
+			<tr class="govuk-table__row tr__large">
+				<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+					Case ID
+				</th>
+				<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+					Last update
+				</th>
+				<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+					Trust/Academy
+				</th>
+				<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+					Primary case type
+				</th>
+				<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+					RAG rating
+				</th>
+				<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+					Created
+				</th>
+			</tr>
+			</thead>
+			<tbody class="govuk-table__body">
+			@if (Model.CasesActive.Count == 0)
+			{
+				<tr class="govuk-table__row tr__large">
+					<td class="govuk-table__cell__cases govuk-oneline-row">
+						<span>There are no cases available.</span>
+					</td>
+				</tr>
+			}
+			else
+			{
+				foreach (var caseModel in Model.CasesActive)
+				{
+					<tr class="govuk-table__row tr__large">
+						<td class="govuk-table__cell">
+							<a class="govuk-link" href="case/@caseModel.CaseUrn/management">@caseModel.CaseUrn</a>
+						</td>
+						<td class="govuk-table__cell">
+							@caseModel.Updated
+						</td>
+						<td class="govuk-table__cell">
+							@caseModel.TrustName
+						</td>
+						<td class="govuk-table__cell">
+							@caseModel.CaseType
+							<br>
+							@caseModel.CaseSubType
+						</td>
+						<td class="govuk-table__cell govuk-label-wrapper">
+							@for (var index = 0; index < caseModel.RagRating.Count; ++index)
+							{
+								<span class="govuk-tag ragtag @caseModel.RagRatingCss.ElementAt(index)">
+									@caseModel.RagRating.ElementAt(index)
+								</span>
+							}
+						</td>
+						<td class="govuk-table__cell">
+							@caseModel.Created
+						</td>
+					</tr>
+				}
+			}
+			</tbody>
+		</table>
+
+		<!-- Closed for monitoring -->
+		<table class="govuk-table  govuk-!-margin-top-9">
+			<caption class="govuk-table__caption govuk-table__caption--m">
+				Closed for monitoring
+			</caption>
+
+			<thead class="govuk-table__head">
+			<tr class="govuk-table__row tr__large">
+				<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+					Case ID
+				</th>
+				<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+					Trust/Academy
+				</th>
+				<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+					Primary case type
+				</th>
+				<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+					Closed
+				</th>
+			</tr>
+			</thead>
+
+			<tbody class="govuk-table__body">
+			@if (Model.CasesMonitoring.Count == 0)
+			{
+				<tr class="govuk-table__row tr__large">
+					<td class="govuk-table__cell__cases govuk-oneline-row">
+						<span>There are no cases available.</span>
+					</td>
+				</tr>
+			}
+			else
+			{
+				foreach (var caseModel in Model.CasesMonitoring)
+				{
+					<tr class="govuk-table__row tr__large">
+						<td class="govuk-table__cell">
+							<a class="govuk-link" href="case/@caseModel.CaseUrn/management">@caseModel.CaseUrn</a>
+						</td>
+						<td class="govuk-table__cell">
+							@caseModel.TrustName
+						</td>
+						<td class="govuk-table__cell">
+							@caseModel.CaseType
+						</td>
+						<td class="govuk-table__cell">
+							@caseModel.Closed
+						</td>
+					</tr>
+				}
+			}
+			</tbody>
+		</table>
 	</div>
-
-	<!-- Active casework -->
-	<table class="govuk-table">
-		<caption class="govuk-table__caption govuk-table__caption--m">
-			Your active casework
-		</caption>
-		<thead class="govuk-table__head">
-		<tr class="govuk-table__row tr__large">
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				Case ID
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				Last update
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				Trust/Academy
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				Primary case type
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				RAG rating
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				Created
-			</th>
-		</tr>
-		</thead>
-		<tbody class="govuk-table__body">
-		@if (Model.CasesActive.Count == 0)
-		{
-			<tr class="govuk-table__row tr__large">
-				<td class="govuk-table__cell__cases govuk-oneline-row">
-					<span>There are no cases available.</span>
-				</td>
-			</tr>
-		}
-		else
-		{
-			foreach (var caseModel in Model.CasesActive)
-			{
-				<tr class="govuk-table__row tr__large">
-					<td class="govuk-table__cell">
-						<a class="govuk-link" href="case/@caseModel.CaseUrn/management">@caseModel.CaseUrn</a>
-					</td>
-					<td class="govuk-table__cell">
-						@caseModel.Updated
-					</td>
-					<td class="govuk-table__cell">
-						@caseModel.TrustName
-					</td>
-					<td class="govuk-table__cell">
-						@caseModel.CaseType
-						<br>
-						@caseModel.CaseSubType
-					</td>
-					<td class="govuk-table__cell govuk-label-wrapper">
-						@for (var index = 0; index < caseModel.RagRating.Count; ++index)
-						{
-							<span class="govuk-tag ragtag @caseModel.RagRatingCss.ElementAt(index)">
-								@caseModel.RagRating.ElementAt(index)
-							</span>
-						}
-					</td>
-					<td class="govuk-table__cell">
-						@caseModel.Created
-					</td>
-				</tr>
-			}
-		}
-		</tbody>
-	</table>
-
-	<!-- Closed for monitoring -->
-	<table class="govuk-table  govuk-!-margin-top-9">
-		<caption class="govuk-table__caption govuk-table__caption--m">
-			Closed for monitoring
-		</caption>
-
-		<thead class="govuk-table__head">
-		<tr class="govuk-table__row tr__large">
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				Case ID
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				Trust/Academy
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				Primary case type
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				Closed
-			</th>
-		</tr>
-		</thead>
-
-		<tbody class="govuk-table__body">
-		@if (Model.CasesMonitoring.Count == 0)
-		{
-			<tr class="govuk-table__row tr__large">
-				<td class="govuk-table__cell__cases govuk-oneline-row">
-					<span>There are no cases available.</span>
-				</td>
-			</tr>
-		}
-		else
-		{
-			foreach (var caseModel in Model.CasesMonitoring)
-			{
-				<tr class="govuk-table__row tr__large">
-					<td class="govuk-table__cell">
-						<a class="govuk-link" href="case/@caseModel.CaseUrn/management">@caseModel.CaseUrn</a>
-					</td>
-					<td class="govuk-table__cell">
-						@caseModel.TrustName
-					</td>
-					<td class="govuk-table__cell">
-						@caseModel.CaseType
-					</td>
-					<td class="govuk-table__cell">
-						@caseModel.Closed
-					</td>
-				</tr>
-			}
-		}
-		</tbody>
-	</table>
 </div>

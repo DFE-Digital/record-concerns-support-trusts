@@ -17,11 +17,13 @@ namespace ConcernsCaseWork.Tests.Pages
 		[TestCase("home", false)]
 		[TestCase("/home", false)]
 		[TestCase("/case/details", false)]
+		[TestCase("/case/1/management", false)]
+		[TestCase("/case/1/management/closure", true)]
 		public void WhenCanRender_ReturnsExpected(string requestPath, bool expected)
 		{
 			// act
 			var canRender = BackPageModel.CanRender(requestPath);
-
+			
 			// assert
 			Assert.That(canRender, Is.EqualTo(expected));
 		}

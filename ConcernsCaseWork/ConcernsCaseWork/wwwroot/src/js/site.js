@@ -19,8 +19,11 @@ window.hideLoader = function() {
 };
 
 // Form validator
+window.formValidator = function(form) {
+	return new MOJFrontend.FormValidator(form);
+}
 window.formValidatorConcernType = function(form) {
-	const validator = new MOJFrontend.FormValidator(form);
+	const validator = formValidator(form);
 	validator.addValidator('type', [{
 		method: function(field) {
 			return field.value.trim().length > 0;
@@ -51,3 +54,21 @@ window.formValidatorConcernType = function(form) {
 	return validator;
 }
 
+// Auto resizer textBox
+window.autoResizer = function() {
+	let multipleFields = document.querySelectorAll('.concern-auto-resize');
+	for(let i = 0; i < multipleFields.length; i++){
+		multipleFields[i].addEventListener('input', autoResizeHeight);
+	}
+	// auto resize multiple textarea
+	function autoResizeHeight() {
+		this.style.height="auto";
+		this.style.height= this.scrollHeight + "px";
+
+		if ($("#" + this.id + "").val().length > 0) {
+			this.style.borderColor="green";
+		} else {
+			this.style.borderColor="black";
+		}
+	}
+}

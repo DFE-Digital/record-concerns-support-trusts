@@ -1,0 +1,31 @@
+﻿using ConcernsCaseWork.Extensions;
+using NUnit.Framework;
+
+namespace ConcernsCaseWork.Tests.Extensions
+{
+	[Parallelizable(ParallelScope.All)]
+	public class StringExtensionsTests
+	{
+		[TestCase("", false)]
+		[TestCase("xpto", false)]
+		[TestCase("true", true)]
+		[TestCase("True", true)]
+		[TestCase("t", true)]
+		[TestCase("yes", true)]
+		[TestCase("Yes", true)]
+		[TestCase("y", true)]
+		[TestCase("1", true)]
+		[TestCase("false", false)]
+		[TestCase("False", false)]
+		[TestCase("f", false)]
+		[TestCase("no", false)]
+		[TestCase("No", false)]
+		[TestCase("n", false)]
+		[TestCase("0", false)]
+		public void WhenToBoolean_ReturnsExpected(string actual, bool expected)
+		{
+			// assert
+			Assert.That(actual.ToBoolean(), Is.EqualTo(expected));
+		}
+	}
+}

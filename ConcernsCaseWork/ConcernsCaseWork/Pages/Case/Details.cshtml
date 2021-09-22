@@ -6,8 +6,9 @@
 }
 
 <div class="govuk-width-container">
+	<partial name="_BannerError"/>
 	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-full">
+		<div class="govuk-grid-column-two-thirds">
 
 			<span class="govuk-caption-l">Create case</span>
 			<h1 class="govuk-heading-l">Concern </h1>
@@ -139,7 +140,7 @@
 							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="current-status-detail" name="current-status-detail" rows="3" aria-describedby="case-status-info"></textarea>
 						</div>
 
-						<div id="case-status-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+						<div id="current-status-detail-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
 							You can enter up to 1000 characters
 						</div>
 
@@ -169,7 +170,7 @@
 							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="resolution-strategy-detail" name="resolution-strategy-detail" rows="3" aria-describedby="resolution-strategy-info"></textarea>
 						</div>
 
-						<div id="resolution-strategy-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+						<div id="resolution-strategy-detail-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
 							You can enter up to 1000 characters
 						</div>
 
@@ -200,21 +201,7 @@
 							message: 'Issue is required'
 						}]);
 						
-						let multipleFields = document.querySelectorAll('.concern-auto-resize');
-						for(let i = 0; i < multipleFields.length; i++){
-							multipleFields[i].addEventListener('input', autoResizeHeight);
-						}
-						// auto resize multiple textarea
-						function autoResizeHeight() {							
-							this.style.height="auto";
-						  	this.style.height= this.scrollHeight + "px";
-						  	
-							if ($("#" + this.id + "").val().length > 0) {
-								this.style.borderColor="green";
-							} else {
-								this.style.borderColor="black";
-							}
-						}
+						autoResizer();
 					});
 				</script>
 			}

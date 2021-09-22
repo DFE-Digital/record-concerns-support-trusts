@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
+using Service.TRAMS.Cases;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -76,35 +77,36 @@ namespace ConcernsCaseWork.Pages.Case
 				var nextStepsDetail = Request.Form["next-steps-detail"];
 				var resolutionStrategyDetail = Request.Form["resolution-strategy-detail"];
 				var trustUkPrn = Request.Form["trust-Ukprn"];
+
+				if (string.IsNullOrEmpty(type) 
+				    || string.IsNullOrEmpty(ragRating) 
+				    || string.IsNullOrEmpty(issueDetail)) throw new Exception("Missing form values");
 				
-				if (!string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(ragRating) && 
-				    !string.IsNullOrEmpty(issueDetail))
+				// Create a case post model
+				var currentDate = DateTimeOffset.Now;
+				var createCaseModel = new CreateCaseModel
 				{
-					// Create a case post model
-					var currentDate = DateTimeOffset.Now;
-					var createCaseModel = new CreateCaseModel
-					{
-						Description = $"{type}-{subType}",
-						Issue = issueDetail,
-						ClosedAt = currentDate,
-						CreatedAt = currentDate,
-						CreatedBy = User.Identity.Name,
-						CurrentStatus = currentStatusDetail,
-						DeEscalation = currentDate,
-						NextSteps = nextStepsDetail,
-						RagRating = ragRating,
-						RecordType = type,
-						ResolutionStrategy = resolutionStrategyDetail,
-						ReviewAt = currentDate,
-						UpdatedAt = currentDate,
-						RecordSubType = subType,
-						TrustUkPrn = trustUkPrn
-					};
+					Description = $"{type} {subType}",
+					Issue = issueDetail,
+					ClosedAt = currentDate,
+					CreatedAt = currentDate,
+					CreatedBy = User.Identity.Name,
+					CurrentStatus = currentStatusDetail,
+					DeEscalation = currentDate,
+					NextSteps = nextStepsDetail,
+					RagRating = ragRating,
+					RecordType = type,
+					ResolutionStrategy = resolutionStrategyDetail,
+					ReviewAt = currentDate,
+					UpdatedAt = currentDate,
+					RecordSubType = subType,
+					TrustUkPrn = trustUkPrn,
+					DirectionOfTravel = DirectionOfTravel.Deteriorating.ToString()
+				};
 					
-					var newCase = await _caseModelService.PostCase(createCaseModel);
+				var newCase = await _caseModelService.PostCase(createCaseModel);
 					
-					return RedirectToPage("Management", new { id = newCase.Urn });
-				}
+				return RedirectToPage("Management", new { id = newCase.Urn });
 			}
 			catch (Exception ex)
 			{
@@ -113,7 +115,7 @@ namespace ConcernsCaseWork.Pages.Case
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 			
-			return Page();
+			return Redirect("details");
 		}
 	}
 }

@@ -126,7 +126,9 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				RecordType = "record-type",
 				TypeUrn = 1,
 				UpdatedAt = DateTimeOffset.Now,
-				RecordSubType = "record-sub-type"
+				RecordSubType = "record-sub-type",
+				RatingUrn = 1,
+				RiskRating = "Amber Green"
 			};
 		}
 		

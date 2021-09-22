@@ -1606,6 +1606,12 @@ span.summary-validation-symbol {
 }
 
 /* ==========================================================================
+   #Layout page
+   ========================================================================== */
+.moj-header__content {
+  padding-bottom: 0;
+}
+/* ==========================================================================
    #Back button
    ========================================================================== */
 .govuk-back-link:hover {
@@ -1641,8 +1647,10 @@ span.summary-validation-symbol {
 /* ==========================================================================
    #Home page wider screen
    ========================================================================== */
-.govuk-width-container {
-  max-width: 1200px !important;
+.govuk-width-homepage-container {
+  max-width: 1200px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .govuk-word-spacing {
@@ -1656,13 +1664,12 @@ span.summary-validation-symbol {
 
 tbody {
   display: block;
-  max-height: 350px;
   overflow: auto;
 }
 thead, tbody tr {
   display: table;
   width: 100%;
-  table-layout: fixed;/* even columns width , fix width of table too*/
+  table-layout: fixed;
 }
 
 /* ==========================================================================
