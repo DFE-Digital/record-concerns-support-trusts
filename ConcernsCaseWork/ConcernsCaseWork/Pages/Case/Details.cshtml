@@ -14,7 +14,7 @@
 			<h1 class="govuk-heading-l">Concern </h1>
 
 			@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")) ||
-			     Model.TrustDetailsModel is null)
+			     Model.CreateCaseModel is null)
             {
 	            <div class="moj-banner__message">
 		            <p class="govuk-body">@TempData["Error.Message"]</p>
@@ -29,93 +29,18 @@
 			{
 				<!-- Trust details -->
 				<a asp-page="index" class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 govuk-!-margin-top-6 float__right">Change trust</a>
-				<h2 class="govuk-heading-m govuk-!-margin-top-9">Check trust details</h2>
-
-				<dl class="govuk-summary-list">
-
-					<div class="govuk-summary-list__row">
-						<dt class="govuk-summary-list__key">Name</dt>
-						<dd class="govuk-summary-list__value">
-							@Model.TrustDetailsModel.GiasData.GroupName
-						</dd>
-					</div>
-					
-					<!-- Show when data is available ticket 75173 -->
-					<div class="govuk-summary-list__row govuk-!-display-none">
-						<dt class="govuk-summary-list__key">Type</dt>
-						<dd class="govuk-summary-list__value">
-							<p class="govuk-body">
-	                            @Model.TrustDetailsModel.GiasData.GroupTypeCode
-	                        </p>
-						</dd>
-					</div>
-
-					<div class="govuk-summary-list__row">
-						<dt class="govuk-summary-list__key">Address</dt>
-						<dd class="govuk-summary-list__value">
-							<p class="govuk-body">
-								@Model.TrustDetailsModel.GiasData.GroupContactAddress.DisplayAddress
-							</p>
-						</dd>
-					</div>
-
-					<!-- Show when data is available ticket 75173 -->
-					<div class="govuk-summary-list__row govuk-!-display-none">
-						<dt class="govuk-summary-list__key">Region</dt>
-						<dd class="govuk-summary-list__value">
-							@Model.TrustDetailsModel.GiasData.GroupContactAddress.County
-						</dd>
-					</div>
-
-					<div class="govuk-summary-list__row">
-						<dt class="govuk-summary-list__key">Companies House</dt>
-						<dd class="govuk-summary-list__value">
-							<a class="govuk-link" href="#">
-								@Model.TrustDetailsModel.GiasData.CompaniesHouseNumber
-							</a>
-						</dd>
-					</div>
-
-				</dl>
+				<partial name="_TrustSummary" model="@Model.CreateCaseModel"/>
 				
 				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 				
 				<h2 class="govuk-heading-m govuk-!-margin-top-9">Primary concern type</h2>
 				                                                                                                                                                          
 				<!-- FORM -->
-				<form role="form" method="post" id="case-type-form" novalidate>
-					<!--Trust UkPrn-->
-					<input type="hidden" name="trust-Ukprn" value="@Model.TrustDetailsModel.GiasData.UkPrn">
+				<form role="form" method="post" id="case-details-form" novalidate>
 					
-					<!--Q Concern type-->
-					<div class="govuk-form-group">
-						<fieldset class="govuk-fieldset">
-							
-							<div class="govuk-hint" id="case-issue-hint">
-								Use the <a target="_blank" href="@Url.Page("../FileResource", "DownloadRiskManagementPdf")" class="govuk-link" rel="noreferrer noopener">Risk Management Framework (opens in new tab)</a> to assess the type of Concern
-							</div>
-							
-							<partial name="_ConcernType" model="Model.TypesDictionary"></partial>
-							
-						</fieldset>
-					</div>
-					
-					<!-- Q Risk rating -->
-					<div class="govuk-form-group govuk-!-margin-top-6">
-						<fieldset class="govuk-fieldset">
-
-							<legend class="govuk-fieldset__legend govuk-!-font-weight-bold">
-								What is the risk rating?
-							</legend>
-
-							<partial name="_RiskRating"></partial>
-
-						</fieldset>
-					</div>
-
-					<h2 class="govuk-heading-m govuk-!-margin-top-9">Initial details</h2>
+					<h2 class="govuk-heading-m govuk-!-margin-top-9">Initial case details</h2>
 					<div id="initial-details-hint" class="govuk-hint">
-						You will have an opportunity to enter more details on the final case page.
+						You only need enter the issue at this stage. Further details can be included on the case management page when you have them.
 					</div>
 
 					<!-- Q Issue -->
@@ -149,35 +74,35 @@
 					</div>
 
 					<!-- Q Case aim-->
-                    <div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="1000">
-                    	<div class="govuk-form-group">
-                    		<label class="govuk-label govuk-!-font-weight-bold" for="case-aim">
-                    			Case resolution <span class="govuk-body">(optional)</span>
-                    		</label>
-                    		<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-aim" name="case-aim" rows="3" aria-describedby="case-aim"></textarea>
-                    	</div>
+					<div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="1000">
+						<div class="govuk-form-group">
+							<label class="govuk-label govuk-!-font-weight-bold" for="case-aim">
+								Case resolution <span class="govuk-body">(optional)</span>
+							</label>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-aim" name="case-aim" rows="3" aria-describedby="case-aim"></textarea>
+						</div>
 
-                    	<div id="case-aim-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-                    		You can enter up to 1000 characters
-                    	</div>
+						<div id="case-aim-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+							You can enter up to 1000 characters
+						</div>
 
-                    </div>
-					
+					</div>
+
 					<!-- Q De-escalation point-->
-                    <div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="1000">
-                    	<div class="govuk-form-group">
-                    		<label class="govuk-label govuk-!-font-weight-bold" for="de-escalation-point">
-                    			Case resolution <span class="govuk-body">(optional)</span>
-                    		</label>
-                    		<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="de-escalation-point" name="de-escalation-point" rows="3" aria-describedby="de-escalation-point"></textarea>
-                    	</div>
+					<div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="1000">
+						<div class="govuk-form-group">
+							<label class="govuk-label govuk-!-font-weight-bold" for="de-escalation-point">
+								Case resolution <span class="govuk-body">(optional)</span>
+							</label>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="de-escalation-point" name="de-escalation-point" rows="3" aria-describedby="de-escalation-point"></textarea>
+						</div>
 
-                    	<div id="de-escalation-point-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-                    		You can enter up to 1000 characters
-                    	</div>
+						<div id="de-escalation-point-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+							You can enter up to 1000 characters
+						</div>
 
-                    </div>
-					
+					</div>
+
 					<!-- Q Next steps -->
 					<div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="4000">
 						<div class="govuk-form-group">
@@ -192,10 +117,10 @@
 						</div>
 
 					</div>
-					
+
 					<div class="govuk-button-group">
 						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
-							Next step
+							Create case
 						</button>
 						<a class="govuk-link" asp-page="../home">Cancel</a>
 					</div>
@@ -204,13 +129,7 @@
 				
 				<script type="application/javascript">
 					$(function () {
-						let validator = formValidatorConcernType($("#case-type-form")[0]);
-						validator.addValidator('riskRating', [{
-							method: function(field) {
-								return field.value.trim().length > 0;
-							},
-							message: 'Select risk rating'
-					 	}]);
+						let validator = formValidator($("#case-details-form")[0]);
 						validator.addValidator('issue', [{
 							method: function(field) {
 								return field.value.trim().length > 0;

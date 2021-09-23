@@ -1,7 +1,8 @@
 ﻿using System;
 
-namespace ConcernsCaseWork.Models
+namespace Service.Redis.Models
 {
+	[Serializable]
 	public sealed class CreateCaseModel
 	{
 		public DateTimeOffset CreatedAt { get; set; }
@@ -17,6 +18,8 @@ namespace ConcernsCaseWork.Models
 		public string Description { get; set; }
 		
 		public string CrmEnquiry { get; set; }
+		
+		public string TrustName { get; set; }
 		
 		public string TrustUkPrn { get; set; }
 		

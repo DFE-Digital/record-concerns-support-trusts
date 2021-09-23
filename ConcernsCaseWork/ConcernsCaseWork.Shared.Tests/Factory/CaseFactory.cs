@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
+using Service.Redis.Models;
 using Service.TRAMS.Cases;
 using System;
 using System.Collections.Generic;

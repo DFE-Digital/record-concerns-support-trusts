@@ -1596,6 +1596,11 @@ span.summary-validation-symbol {
   text-decoration-skip: none;
 }
 
+.govuk-back-link {
+  text-decoration-thickness: max(1px, .0625rem);
+  text-underline-offset: 0.1em;
+}
+
 /* ==========================================================================
    #Spinner
    ========================================================================== */
