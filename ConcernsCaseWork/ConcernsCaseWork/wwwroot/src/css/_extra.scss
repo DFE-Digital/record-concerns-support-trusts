@@ -1585,6 +1585,11 @@ span.summary-validation-symbol {
 .moj-header__content {
   padding-bottom: 0;
 }
+
+.word-break {
+  word-break: break-word;
+}
+
 /* ==========================================================================
    #Back button
    ========================================================================== */
@@ -1594,6 +1599,11 @@ span.summary-validation-symbol {
   text-decoration-skip-ink: none;
   -webkit-text-decoration-skip: none;
   text-decoration-skip: none;
+}
+
+.govuk-back-link {
+  text-decoration-thickness: max(1px, .0625rem);
+  text-underline-offset: 0.1em;
 }
 
 /* ==========================================================================

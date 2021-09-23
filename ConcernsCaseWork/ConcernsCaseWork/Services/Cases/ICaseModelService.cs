@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
+using Service.Redis.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

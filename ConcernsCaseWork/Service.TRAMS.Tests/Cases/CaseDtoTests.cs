@@ -30,7 +30,8 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(caseDto.CurrentStatus, Is.EqualTo(expectedCaseDto.CurrentStatus));
 			Assert.That(caseDto.DeEscalation, Is.EqualTo(expectedCaseDto.DeEscalation));
 			Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCaseDto.NextSteps));
-			Assert.That(caseDto.ResolutionStrategy, Is.EqualTo(expectedCaseDto.ResolutionStrategy));
+			Assert.That(caseDto.CaseAim, Is.EqualTo(expectedCaseDto.CaseAim));
+			Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(expectedCaseDto.DeEscalationPoint));
 			Assert.That(caseDto.ReviewAt, Is.EqualTo(expectedCaseDto.ReviewAt));
 			Assert.That(caseDto.UpdatedAt, Is.EqualTo(expectedCaseDto.UpdatedAt));
 			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCaseDto.DirectionOfTravel));

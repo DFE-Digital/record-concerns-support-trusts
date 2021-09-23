@@ -65,7 +65,8 @@ namespace Service.TRAMS.Tests.Cases
 					Assert.That(caseDto.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
 					Assert.That(caseDto.DeEscalation, Is.EqualTo(expectedCase.DeEscalation));
 					Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCase.NextSteps));
-					Assert.That(caseDto.ResolutionStrategy, Is.EqualTo(expectedCase.ResolutionStrategy));
+					Assert.That(caseDto.CaseAim, Is.EqualTo(expectedCase.CaseAim));
+					Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(expectedCase.DeEscalationPoint));
 					Assert.That(caseDto.ReviewAt, Is.EqualTo(expectedCase.ReviewAt));
 					Assert.That(caseDto.UpdatedAt, Is.EqualTo(expectedCase.UpdatedAt));
 					Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
@@ -147,7 +148,8 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(actualCase.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
 			Assert.That(actualCase.DeEscalation, Is.EqualTo(expectedCase.DeEscalation));
 			Assert.That(actualCase.NextSteps, Is.EqualTo(expectedCase.NextSteps));
-			Assert.That(actualCase.ResolutionStrategy, Is.EqualTo(expectedCase.ResolutionStrategy));
+			Assert.That(actualCase.CaseAim, Is.EqualTo(expectedCase.CaseAim));
+			Assert.That(actualCase.DeEscalationPoint, Is.EqualTo(expectedCase.DeEscalationPoint));
 			Assert.That(actualCase.ReviewAt, Is.EqualTo(expectedCase.ReviewAt));
 			Assert.That(actualCase.UpdatedAt, Is.EqualTo(expectedCase.UpdatedAt));
 			Assert.That(actualCase.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
@@ -229,7 +231,8 @@ namespace Service.TRAMS.Tests.Cases
 					Assert.That(caseDto.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
 					Assert.That(caseDto.DeEscalation, Is.EqualTo(expectedCase.DeEscalation));
 					Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCase.NextSteps));
-					Assert.That(caseDto.ResolutionStrategy, Is.EqualTo(expectedCase.ResolutionStrategy));
+					Assert.That(caseDto.CaseAim, Is.EqualTo(expectedCase.CaseAim));
+					Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(expectedCase.DeEscalationPoint));
 					Assert.That(caseDto.ReviewAt, Is.EqualTo(expectedCase.ReviewAt));
 					Assert.That(caseDto.UpdatedAt, Is.EqualTo(expectedCase.UpdatedAt));
 					Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
@@ -317,7 +320,8 @@ namespace Service.TRAMS.Tests.Cases
 					Assert.That(caseDto.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
 					Assert.That(caseDto.DeEscalation, Is.EqualTo(expectedCase.DeEscalation));
 					Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCase.NextSteps));
-					Assert.That(caseDto.ResolutionStrategy, Is.EqualTo(expectedCase.ResolutionStrategy));
+					Assert.That(caseDto.CaseAim, Is.EqualTo(expectedCase.CaseAim));
+					Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(expectedCase.DeEscalationPoint));
 					Assert.That(caseDto.ReviewAt, Is.EqualTo(expectedCase.ReviewAt));
 					Assert.That(caseDto.UpdatedAt, Is.EqualTo(expectedCase.UpdatedAt));
 					Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
@@ -399,7 +403,8 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(actualCase.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
 			Assert.That(actualCase.DeEscalation, Is.EqualTo(expectedCase.DeEscalation));
 			Assert.That(actualCase.NextSteps, Is.EqualTo(expectedCase.NextSteps));
-			Assert.That(actualCase.ResolutionStrategy, Is.EqualTo(expectedCase.ResolutionStrategy));
+			Assert.That(actualCase.CaseAim, Is.EqualTo(expectedCase.CaseAim));
+			Assert.That(actualCase.DeEscalationPoint, Is.EqualTo(expectedCase.DeEscalationPoint));
 			Assert.That(actualCase.ReviewAt, Is.EqualTo(expectedCase.ReviewAt));
 			Assert.That(actualCase.UpdatedAt, Is.EqualTo(expectedCase.UpdatedAt));
 			Assert.That(actualCase.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
@@ -475,7 +480,8 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(actualCase.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
 			Assert.That(actualCase.DeEscalation, Is.EqualTo(expectedCase.DeEscalation));
 			Assert.That(actualCase.NextSteps, Is.EqualTo(expectedCase.NextSteps));
-			Assert.That(actualCase.ResolutionStrategy, Is.EqualTo(expectedCase.ResolutionStrategy));
+			Assert.That(actualCase.CaseAim, Is.EqualTo(expectedCase.CaseAim));
+			Assert.That(actualCase.DeEscalationPoint, Is.EqualTo(expectedCase.DeEscalationPoint));
 			Assert.That(actualCase.ReviewAt, Is.EqualTo(expectedCase.ReviewAt));
 			Assert.That(actualCase.UpdatedAt, Is.EqualTo(expectedCase.UpdatedAt));
 			Assert.That(actualCase.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));

@@ -7,9 +7,11 @@ using ConcernsCaseWork.Shared.Tests.Shared;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Service.Redis.Trusts;
 using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,7 +25,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 		{
 			// arrange
 			var mockTrustSearchService = new Mock<ITrustSearchService>();
-			var mockTrustService = new Mock<ITrustService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
 			var mockLogger = new Mock<ILogger<TrustModelService>>();
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
@@ -32,7 +34,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			mockTrustSearchService.Setup(ts => ts.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(trustSummaryDto);
 
 			// act
-			var trustModelService = new TrustModelService(mockTrustSearchService.Object, mockTrustService.Object, mapper, mockLogger.Object);
+			var trustModelService = new TrustModelService(mockTrustSearchService.Object, mockTrustCachedService.Object, mapper, mockLogger.Object);
 			var trustsSummaryModel = await trustModelService.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>());
 
 			// assert
@@ -67,7 +69,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 		{
 			// arrange
 			var mockTrustSearchService = new Mock<ITrustSearchService>();
-			var mockTrustService = new Mock<ITrustService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
 			var mockLogger = new Mock<ILogger<TrustModelService>>();
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
@@ -75,7 +77,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			mockTrustSearchService.Setup(ts => ts.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(Array.Empty<TrustSummaryDto>());
 
 			// act
-			var trustModelService = new TrustModelService(mockTrustSearchService.Object, mockTrustService.Object, mapper, mockLogger.Object);
+			var trustModelService = new TrustModelService(mockTrustSearchService.Object, mockTrustCachedService.Object, mapper, mockLogger.Object);
 			var trustsSummaryModel = await trustModelService.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>());
 
 			// assert
@@ -88,16 +90,16 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 		{
 			// arrange
 			var mockTrustSearchService = new Mock<ITrustSearchService>();
-			var mockTrustService = new Mock<ITrustService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
 			var mockLogger = new Mock<ILogger<TrustModelService>>();
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
 			var trustDetailsDto = TrustFactory.BuildTrustDetailsDto();
 
-			mockTrustService.Setup(ts => ts.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetailsDto);
+			mockTrustCachedService.Setup(ts => ts.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetailsDto);
 
 			// act
-			var trustModelService = new TrustModelService(mockTrustSearchService.Object, mockTrustService.Object, mapper, mockLogger.Object);
+			var trustModelService = new TrustModelService(mockTrustSearchService.Object, mockTrustCachedService.Object, mapper, mockLogger.Object);
 			var trustsDetailsModel = await trustModelService.GetTrustByUkPrn(It.IsAny<string>());
 
 			// assert
@@ -105,7 +107,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			Assert.That(trustsDetailsModel, Is.Not.Null);
 			Assert.That(trustsDetailsModel.GiasData, Is.Not.Null);
 			Assert.That(trustsDetailsModel.GiasData.GroupId, Is.EqualTo(trustDetailsDto.GiasData.GroupId));
-			Assert.That(trustsDetailsModel.GiasData.GroupName, Is.EqualTo(trustDetailsDto.GiasData.GroupName));
+			Assert.That(trustsDetailsModel.GiasData.GroupName, Is.EqualTo(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(trustDetailsDto.GiasData.GroupName)));
 			Assert.That(trustsDetailsModel.GiasData.GroupTypeCode, Is.EqualTo(trustsDetailsModel.GiasData.GroupTypeCode));
 			Assert.That(trustsDetailsModel.GiasData.UkPrn, Is.EqualTo(trustDetailsDto.GiasData.UkPrn));
 			Assert.That(trustsDetailsModel.GiasData.CompaniesHouseNumber, Is.EqualTo(trustDetailsDto.GiasData.CompaniesHouseNumber));

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
 using Microsoft.Extensions.Logging;
+using Service.Redis.Trusts;
 using Service.TRAMS.Trusts;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +12,14 @@ namespace ConcernsCaseWork.Services.Trusts
 	public sealed class TrustModelService : ITrustModelService
 	{
 		private readonly ITrustSearchService _trustSearchService;
-		private readonly ITrustService _trustService;
+		private readonly ITrustCachedService _trustCachedService;
 		private readonly IMapper _mapper;
 		private readonly ILogger<TrustModelService> _logger;
 
-		public TrustModelService(ITrustSearchService trustSearchService, ITrustService trustService, IMapper mapper, ILogger<TrustModelService> logger)
+		public TrustModelService(ITrustSearchService trustSearchService, ITrustCachedService trustCachedService, IMapper mapper, ILogger<TrustModelService> logger)
 		{
 			_trustSearchService = trustSearchService;
-			_trustService = trustService;
+			_trustCachedService = trustCachedService;
 			_mapper = mapper;
 			_logger = logger;
 		}
@@ -46,7 +47,7 @@ namespace ConcernsCaseWork.Services.Trusts
 			_logger.LogInformation("TrustModelService::GetTrustByUkPrn");
 			
 			// Fetch trust by ukprn
-			var trustsDetailsDto = await _trustService.GetTrustByUkPrn(ukPrn);
+			var trustsDetailsDto = await _trustCachedService.GetTrustByUkPrn(ukPrn);
 			
 			// Map trust to model
 			var trustDetailsModel = _mapper.Map<TrustDetailsModel>(trustsDetailsDto);

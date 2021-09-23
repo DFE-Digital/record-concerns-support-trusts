@@ -38,9 +38,11 @@ namespace ConcernsCaseWork.Models
 
 		public string CurrentStatus { get; set; }
 
+		public string CaseAim { get; set; }
+		
+		public string DeEscalationPoint { get; set; }
+		
 		public string NextSteps { get; set; }
-	
-		public string ResolutionStrategy { get; set; }
 		
 		/// <summary>
 		/// Deteriorating, unchanged, improved
@@ -52,17 +54,13 @@ namespace ConcernsCaseWork.Models
 		public long Status { get; set; }
 		
 		public string StatusName { get; set; }
-		
-		
+
 		public string CaseType { get; set; }
-		
-		
+
 		public string CaseSubType { get; set; }
-		
-		
+
 		public IList<string> RagRating { get; set; }
-		
-		
+
 		public IList<string> RagRatingCss { get; set; }
 	}
 }

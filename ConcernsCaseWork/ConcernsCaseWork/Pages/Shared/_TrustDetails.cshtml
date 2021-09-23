@@ -1,0 +1,51 @@
+﻿@model ConcernsCaseWork.Models.TrustDetailsModel
+
+<h2 class="govuk-heading-m govuk-!-margin-top-9">Check trust details</h2>
+
+<dl class="govuk-summary-list">
+
+	<div class="govuk-summary-list__row">
+		<dt class="govuk-summary-list__key">Name</dt>
+		<dd class="govuk-summary-list__value">
+			@Model.GiasData.GroupName
+		</dd>
+	</div>
+
+	<!-- Show when data is available ticket 75173 -->
+	<div class="govuk-summary-list__row govuk-!-display-none">
+		<dt class="govuk-summary-list__key">Type</dt>
+		<dd class="govuk-summary-list__value">
+			<p class="govuk-body">
+				@Model.GiasData.GroupTypeCode
+			</p>
+		</dd>
+	</div>
+
+	<div class="govuk-summary-list__row">
+		<dt class="govuk-summary-list__key">Address</dt>
+		<dd class="govuk-summary-list__value">
+			<p class="govuk-body">
+				@Model.GiasData.GroupContactAddress.DisplayAddress
+			</p>
+		</dd>
+	</div>
+
+	<!-- Show when data is available ticket 75173 -->
+	<div class="govuk-summary-list__row govuk-!-display-none">
+		<dt class="govuk-summary-list__key">Region</dt>
+		<dd class="govuk-summary-list__value">
+			@Model.GiasData.GroupContactAddress.County
+		</dd>
+	</div>
+
+	<div class="govuk-summary-list__row">
+		<dt class="govuk-summary-list__key">Companies House</dt>
+		<dd class="govuk-summary-list__value">
+			<a class="govuk-link" href="#">
+				@Model.GiasData.CompaniesHouseNumber
+			</a>
+		</dd>
+	</div>
+
+</dl>
+

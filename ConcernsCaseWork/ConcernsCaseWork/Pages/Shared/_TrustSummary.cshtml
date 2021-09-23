@@ -1,0 +1,29 @@
+﻿@model Service.Redis.Models.CreateCaseModel
+
+<h2 class="govuk-heading-m">@Model.TrustName</h2>
+
+<dl class="govuk-summary-list summary-list-margin-0">
+	
+	<div class="govuk-summary-list__row">
+		<dt class="govuk-summary-list__key">Primary Concern</dt>
+		<dd class="govuk-summary-list__value">
+			@Model.RecordType
+		</dd>
+	</div>
+
+	<div class="govuk-summary-list__row">
+		<dt class="govuk-summary-list__key">Risk rating</dt>
+		<dd class="govuk-summary-list__value">
+			@Model.RagRating
+		</dd>
+	</div>
+
+	<div class="govuk-summary-list__row">
+		<dt class="govuk-summary-list__key">Direction of travel</dt>
+		<dd class="govuk-summary-list__value">
+			@Model.DirectionOfTravel
+		</dd>
+	</div>
+
+</dl>
+

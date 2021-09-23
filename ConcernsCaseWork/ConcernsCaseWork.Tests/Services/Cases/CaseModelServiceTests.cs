@@ -329,7 +329,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			Assert.That(actualCaseModel.Issue, Is.EqualTo(caseDto.Issue));
 			Assert.That(actualCaseModel.CurrentStatus, Is.EqualTo(caseDto.CurrentStatus));
 			Assert.That(actualCaseModel.NextSteps, Is.EqualTo(caseDto.NextSteps));
-			Assert.That(actualCaseModel.ResolutionStrategy, Is.EqualTo(caseDto.ResolutionStrategy));
+			Assert.That(actualCaseModel.CaseAim, Is.EqualTo(caseDto.CaseAim));
+			Assert.That(actualCaseModel.DeEscalationPoint, Is.EqualTo(caseDto.DeEscalationPoint));
 			Assert.That(actualCaseModel.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
 			Assert.That(actualCaseModel.Urn, Is.EqualTo(1));
 			Assert.That(actualCaseModel.Status, Is.EqualTo(1));
@@ -420,7 +421,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			Assert.That(actualCaseModel.Issue, Is.EqualTo(caseDto.Issue));
 			Assert.That(actualCaseModel.CurrentStatus, Is.EqualTo(caseDto.CurrentStatus));
 			Assert.That(actualCaseModel.NextSteps, Is.EqualTo(caseDto.NextSteps));
-			Assert.That(actualCaseModel.ResolutionStrategy, Is.EqualTo(caseDto.ResolutionStrategy));
+			Assert.That(actualCaseModel.CaseAim, Is.EqualTo(caseDto.CaseAim));
+			Assert.That(actualCaseModel.DeEscalationPoint, Is.EqualTo(caseDto.DeEscalationPoint));
 			Assert.That(actualCaseModel.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
 			Assert.That(actualCaseModel.Urn, Is.EqualTo(1));
 			Assert.That(actualCaseModel.Status, Is.EqualTo(1));
