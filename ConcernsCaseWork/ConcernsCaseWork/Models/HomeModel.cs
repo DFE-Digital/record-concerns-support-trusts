@@ -15,6 +15,8 @@ namespace ConcernsCaseWork.Models
 		
 		public string Closed { get; }
 		
+		public string Review { get; }
+		
 		public string TrustName { get; }
 		
 		public string AcademyNames { get; }
@@ -27,9 +29,10 @@ namespace ConcernsCaseWork.Models
 		
 		public IList<string> RagRatingCss { get; }
 		
-		public HomeModel(string caseUrn, string created, string updated, string closed, string trustName, string academyNames, 
-			string caseType, string caseSubType, IList<string> ragRating, IList<string> ragRatingCss) => 
-			(CaseUrn, Created, Updated, Closed, TrustName, AcademyNames, CaseType, CaseSubType, RagRating, RagRatingCss) = 
-			(caseUrn, created, updated, closed, trustName, academyNames, caseType, caseSubType, ragRating, ragRatingCss);
+		public HomeModel(string caseUrn, string created, string updated, string closed, string review,
+			string trustName, string academyNames, string caseType, string caseSubType, 
+			IList<string> ragRating, IList<string> ragRatingCss) => 
+			(CaseUrn, Created, Updated, Closed, Review, TrustName, AcademyNames, CaseType, CaseSubType, RagRating, RagRatingCss) = 
+			(caseUrn, created, updated, closed, review, trustName, academyNames, caseType, caseSubType, ragRating, ragRatingCss);
 	}
 }

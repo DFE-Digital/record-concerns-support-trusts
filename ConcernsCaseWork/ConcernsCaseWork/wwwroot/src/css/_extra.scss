@@ -82,7 +82,7 @@ span.summary-validation-symbol {
   margin-bottom: 20px;
 
   button.search-button {
-	margin-bottom: 0px;
+	margin-bottom: 0;
   }
 
   input.search-input {
@@ -200,7 +200,7 @@ span.summary-validation-symbol {
 
 .govuk-accordion__section-heading, .govuk-accordion__section-button {
   font-size:19px;
-  font-size: 1.1875rem;
+  //font-size: 1.1875rem;
 }
 
 .js-enabled .govuk-accordion__controls{
@@ -247,6 +247,14 @@ span.summary-validation-symbol {
   width: 10em;
 }
 
+.govuk-table__header.govuk-table__header__width_15 {
+  width: 15em;
+}
+
+.govuk-table__header.govuk-table__header__width_30 {
+  width: 30em;
+}
+
 .govuk-table__head{
   background-color:#f2f5f7;
 }
@@ -265,7 +273,7 @@ span.summary-validation-symbol {
   line-height: 1;
   text-align: left;
   font-size: 19px;
-  font-size: 1.1875rem;
+  //font-size: 1.1875rem;
   text-decoration: none;
   padding: 8px 10px;
   background-color: transparent;
@@ -347,7 +355,7 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
   font-size: 16px;
-  font-size: 1rem;
+  //font-size: 1rem;
   line-height: 1.25;
   box-shadow: inset 0 -1px 0 #b1b4b6;
   display: block;
@@ -363,7 +371,7 @@ span.summary-validation-symbol {
 @media (min-width: 40.0625em) {
   .app-sub-navigation__item {
 	font-size: 19px;
-	font-size: 1.1875rem;
+	//font-size: 1.1875rem;
 	line-height: 1.31579;
   }
 }
@@ -508,26 +516,11 @@ span.summary-validation-symbol {
   text-align: justify;
 }
 
-//@supports (margin: max(calc(0px))) {
-//  .app-primary-navigation__container {
-//  margin-right: max(15px, calc(15px + env(safe-area-inset-right)));
-//  margin-left: max(15px, calc(15px + env(safe-area-inset-left)));
-//}
-
-//}
-
 @media (min-width: 40.0625em) {
   .app-primary-navigation__container {
 	margin-right: 30px;
 	margin-left: 30px;
   }
-
-  // @supports (margin: max(calc(0px))) {
-  //   .app-primary-navigation__container {
-  //     margin-right: max(30px, calc(15px + env(safe-area-inset-right)));
-  //     margin-left: max(30px, calc(15px + env(safe-area-inset-left)));
-  //   }
-  // }
 }
 
 @media (min-width: 1020px) {
@@ -535,13 +528,6 @@ span.summary-validation-symbol {
 	margin-right: auto;
 	margin-left: auto;
   }
-
-  // @supports (margin: max(calc(0px))) {
-  //   .app-primary-navigation__container {
-  //     margin-right: auto;
-  //     margin-left: auto;
-  //   }
-  // }
 }
 
 .app-primary-navigation__container:after {
@@ -568,7 +554,7 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
   font-size: 16px;
-  font-size: 1rem;
+  //font-size: 1rem;
   line-height: 1.25;
   margin-right: 15px;
   float: left;
@@ -584,7 +570,7 @@ span.summary-validation-symbol {
 @media (min-width: 40.0625em) {
   .app-primary-navigation__item {
 	font-size: 19px;
-	font-size: 1.1875rem;
+	//font-size: 1.1875rem;
 	line-height: 1.31579;
   }
 }
@@ -672,7 +658,6 @@ span.summary-validation-symbol {
   background-color: #003078;
 }
 
-
 .empty {
   display: inline-block;
   border: 2px solid;
@@ -687,12 +672,9 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 700;
   font-size: 14px;
-  font-size: 0.875rem;
+  //font-size: 0.875rem;
   line-height: 1;
-  padding-top: 3px;
-  padding-right: 8px;
-  padding-bottom: 3px;
-  padding-left: 8px;
+  padding: 3px 8px;
   margin-right: 8px;
 }
 
@@ -710,12 +692,9 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 700;
   font-size: 14px;
-  font-size: 0.875rem;
+  //font-size: 0.875rem;
   line-height: 1;
-  padding-top: 3px;
-  padding-right: 8px;
-  padding-bottom: 3px;
-  padding-left: 8px;
+  padding: 3px 8px;
   margin-right: 8px;
 }
 
@@ -733,12 +712,9 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 700;
   font-size: 14px;
-  font-size: 0.875rem;
+  //font-size: 0.875rem;
   line-height: 1;
-  padding-top: 3px;
-  padding-right: 8px;
-  padding-bottom: 3px;
-  padding-left: 8px;
+  padding: 3px 8px;
   margin-right: 8px;
 }
 
@@ -767,8 +743,6 @@ span.summary-validation-symbol {
   align-items: center;
   background-color: #f3f2f1;
   padding: 15px;
-
-
 }
 
 @media (min-width: 48.0625em) {
@@ -785,7 +759,7 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
   font-size: 16px;
-  font-size: 1rem;
+  //font-size: 1rem;
   line-height: 1.25;
   margin: 0;
 
@@ -800,7 +774,7 @@ span.summary-validation-symbol {
 @media (min-width: 40.0625em) {
   .app-summary-card .app-summary-card__title {
 	font-size: 19px;
-	font-size: 1.1875rem;
+	//font-size: 1.1875rem;
 	line-height: 1.31579;
   }
 }
@@ -818,7 +792,7 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
   font-size: 14px;
-  font-size: 0.875rem;
+  //font-size: 0.875rem;
   line-height: 1.14286;
   display: block;
   margin: 0;
@@ -834,7 +808,7 @@ span.summary-validation-symbol {
 @media (min-width: 40.0625em) {
   .app-summary-card .app-summary-card__meta {
 	font-size: 16px;
-	font-size: 1rem;
+	//font-size: 1rem;
 	line-height: 1.25;
   }
 }
@@ -852,7 +826,7 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
   font-size: 16px;
-  font-size: 1rem;
+  //font-size: 1rem;
   line-height: 1.25;
 
 }
@@ -866,7 +840,7 @@ span.summary-validation-symbol {
 @media (min-width: 40.0625em) {
   .app-summary-card .app-summary-card__actions {
 	font-size: 19px;
-	font-size: 1.1875rem;
+	//font-size: 1.1875rem;
 	line-height: 1.31579;
   }
 }
@@ -908,7 +882,7 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
   font-size: 16px;
-  font-size: 1rem;
+  //font-size: 1rem;
   line-height: 1.25;
   padding: 15px;
 }
@@ -922,7 +896,7 @@ span.summary-validation-symbol {
 @media (min-width: 40.0625em) {
   .app-summary-card .app-summary-card__body {
 	font-size: 19px;
-	font-size: 1.1875rem;
+	//font-size: 1.1875rem;
 	line-height: 1.31579;
   }
 }
@@ -1058,7 +1032,7 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
   font-size: 16px;
-  font-size: 1rem;
+  //font-size: 1rem;
   line-height: 1.25;
   display: block;
   overflow: hidden;
@@ -1073,7 +1047,7 @@ span.summary-validation-symbol {
 @media (min-width: 40.0625em) {
   .app-banner__message {
 	font-size: 19px;
-	font-size: 1.1875rem;
+	//font-size: 1.1875rem;
 	line-height: 1.31579;
   }
 }
@@ -1152,7 +1126,7 @@ span.summary-validation-symbol {
 	  border-bottom: 1px solid #DEE0E2;
 
 	  &:last-child {
-		margin-bottom: 0px;
+		margin-bottom: 0;
 	  }
 
 	  .timeline-reference {
@@ -1181,7 +1155,7 @@ span.summary-validation-symbol {
 		position: absolute;
 		z-index: 2;
 		left: -31px;
-		top: 0px;
+		top: 0;
 	  }
 
 	  h2 {
@@ -1660,16 +1634,6 @@ span.summary-validation-symbol {
 .govuk-oneline-row {
   overflow:hidden; 
   white-space:nowrap
-}
-
-tbody {
-  display: block;
-  overflow: auto;
-}
-thead, tbody tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
 }
 
 /* ==========================================================================

@@ -15,6 +15,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					dateTimeNow.ToString("dd-MM-yyyy"),
 					dateTimeNow.ToString("dd-MM-yyyy"),
 					dateTimeNow.ToString("dd-MM-yyyy"),
+					dateTimeNow.ToString("dd-MM-yyyy"),
 					"trust-name",
 					"academy-names",
 					"case-type",
