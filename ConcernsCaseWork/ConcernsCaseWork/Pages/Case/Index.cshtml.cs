@@ -72,7 +72,7 @@ namespace ConcernsCaseWork.Pages.Case
 				userState.TrustUkPrn = trustUkPrn;
 				await _cachedService.StoreData(User.Identity.Name, userState);
 
-				return new JsonResult(new { redirectUrl = Url.Page("Details") });
+				return new JsonResult(new { redirectUrl = Url.Page("ConcernType") });
 			}
 			catch (Exception ex)
 			{
