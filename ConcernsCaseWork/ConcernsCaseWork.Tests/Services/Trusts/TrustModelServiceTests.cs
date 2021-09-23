@@ -11,6 +11,7 @@ using Service.Redis.Trusts;
 using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -106,7 +107,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			Assert.That(trustsDetailsModel, Is.Not.Null);
 			Assert.That(trustsDetailsModel.GiasData, Is.Not.Null);
 			Assert.That(trustsDetailsModel.GiasData.GroupId, Is.EqualTo(trustDetailsDto.GiasData.GroupId));
-			Assert.That(trustsDetailsModel.GiasData.GroupName, Is.EqualTo(trustDetailsDto.GiasData.GroupName));
+			Assert.That(trustsDetailsModel.GiasData.GroupName, Is.EqualTo(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(trustDetailsDto.GiasData.GroupName)));
 			Assert.That(trustsDetailsModel.GiasData.GroupTypeCode, Is.EqualTo(trustsDetailsModel.GiasData.GroupTypeCode));
 			Assert.That(trustsDetailsModel.GiasData.UkPrn, Is.EqualTo(trustDetailsDto.GiasData.UkPrn));
 			Assert.That(trustsDetailsModel.GiasData.CompaniesHouseNumber, Is.EqualTo(trustDetailsDto.GiasData.CompaniesHouseNumber));

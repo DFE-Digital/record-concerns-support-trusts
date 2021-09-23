@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Case;
+﻿using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Type;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -45,7 +46,7 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
-			Assert.IsAssignableFrom<CreateCaseModel>(trustDetailsModel);
+			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsModel);
 			Assert.IsAssignableFrom<Dictionary<string, IList<string>>>(typesDictionary);
 
 			Assert.That(typesDictionary, Is.Not.Null);
@@ -69,7 +70,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsPageModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("ConcernTypePageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);

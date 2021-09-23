@@ -81,45 +81,6 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		[Test]
-		public async Task WhenOnGetAsync_ReturnsErrorLoadingPage_ExceptionTrustByUkPrnService()
-		{
-			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
-			var mockCasesCachedService = new Mock<ICachedService>();
-
-			mockCasesCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(new UserState { TrustUkPrn = "trust-ukprn" });
-			
-			var pageModel = SetupDetailsModel(mockCaseModelService.Object, 
-				mockCasesCachedService.Object, mockLogger.Object, true);
-			
-			// act
-			await pageModel.OnGetAsync();
-			
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
-			
-			// Verify ILogger
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsPageModel")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-			
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Error,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("DetailsPageModel")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-		}
-		
-		[Test]
 		public async Task WhenOnGetAsync_ReturnsErrorLoadingPage_MissingRedisCaseStateData()
 		{
 			// arrange
@@ -162,21 +123,27 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
-			var mockCasesCachedService = new Mock<ICachedService>();
+			var mockCachedService = new Mock<ICachedService>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			
+			var expected = CaseFactory.BuildCreateCaseModel();
+			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+
+			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
 			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(caseModel);
 			
 			var pageModel = SetupDetailsModel(mockCaseModelService.Object, 
-				mockCasesCachedService.Object, mockLogger.Object, true);
+				mockCachedService.Object, mockLogger.Object, true);
 			
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
-					{ "type", new StringValues("type") },
-					{ "subType", new StringValues("subType") },
-					{ "riskRating", new StringValues("riskRating") }
+					{ "issue", new StringValues("issue") },
+					{ "current-status", new StringValues("current-status") },
+					{ "next-steps", new StringValues("next-steps") },
+					{ "case-aim", new StringValues("case-aim") },
+					{ "de-escalation-point", new StringValues("de-escalation-point") }
 				});
 			
 			// act

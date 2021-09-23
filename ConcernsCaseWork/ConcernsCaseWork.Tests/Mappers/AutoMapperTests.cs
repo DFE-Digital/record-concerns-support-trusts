@@ -4,6 +4,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Mappers
@@ -65,7 +66,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsModel);
 			Assert.That(trustDetailsModel.GiasData, Is.Not.Null);
 			Assert.That(trustDetailsModel.GiasData.GroupId, Is.EqualTo(trustDetailsDto.GiasData.GroupId));
-			Assert.That(trustDetailsModel.GiasData.GroupName, Is.EqualTo(trustDetailsDto.GiasData.GroupName));
+			Assert.That(trustDetailsModel.GiasData.GroupName, Is.EqualTo(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(trustDetailsDto.GiasData.GroupName)));
 			Assert.That(trustDetailsModel.GiasData.UkPrn, Is.EqualTo(trustDetailsDto.GiasData.UkPrn));
 			Assert.That(trustDetailsModel.GiasData.CompaniesHouseNumber, Is.EqualTo(trustDetailsDto.GiasData.CompaniesHouseNumber));
 			Assert.That(trustDetailsModel.GiasData.GroupContactAddress, Is.Not.Null);
@@ -112,7 +113,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.IsAssignableFrom<GiasDataModel>(giasDataModel);
 			Assert.That(giasDataModel, Is.Not.Null);
 			Assert.That(giasDataModel.GroupId, Is.EqualTo(giasDataDto.GroupId));
-			Assert.That(giasDataModel.GroupName, Is.EqualTo(giasDataDto.GroupName));
+			Assert.That(giasDataModel.GroupName, Is.EqualTo(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(giasDataDto.GroupName)));
 			Assert.That(giasDataModel.UkPrn, Is.EqualTo(giasDataDto.UkPrn));
 			Assert.That(giasDataModel.CompaniesHouseNumber, Is.EqualTo(giasDataDto.CompaniesHouseNumber));
 			Assert.That(giasDataModel.GroupContactAddress, Is.Not.Null);
