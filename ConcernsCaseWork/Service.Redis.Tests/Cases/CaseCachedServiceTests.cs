@@ -182,7 +182,8 @@ namespace Service.Redis.Tests.Cases
 			Assert.That(caseDto.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
 			Assert.That(caseDto.DeEscalation, Is.GreaterThan(expectedCase.DeEscalation));
 			Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCase.NextSteps));
-			Assert.That(caseDto.ResolutionStrategy, Is.EqualTo(expectedCase.ResolutionStrategy));
+			Assert.That(caseDto.CaseAim, Is.EqualTo(expectedCase.CaseAim));
+			Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(expectedCase.DeEscalationPoint));
 			Assert.That(caseDto.ReviewAt, Is.GreaterThan(expectedCase.ReviewAt));
 			Assert.That(caseDto.UpdatedAt, Is.GreaterThan(expectedCase.UpdatedAt));
 			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
@@ -225,7 +226,8 @@ namespace Service.Redis.Tests.Cases
 			Assert.That(caseDto.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
 			Assert.That(caseDto.DeEscalation, Is.GreaterThan(expectedCase.DeEscalation));
 			Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCase.NextSteps));
-			Assert.That(caseDto.ResolutionStrategy, Is.EqualTo(expectedCase.ResolutionStrategy));
+			Assert.That(caseDto.CaseAim, Is.EqualTo(expectedCase.CaseAim));
+			Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(expectedCase.DeEscalationPoint));
 			Assert.That(caseDto.ReviewAt, Is.GreaterThan(expectedCase.ReviewAt));
 			Assert.That(caseDto.UpdatedAt, Is.GreaterThan(expectedCase.UpdatedAt));
 			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));

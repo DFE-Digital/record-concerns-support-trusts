@@ -31,7 +31,8 @@ namespace ConcernsCaseWork.Mappers
 				Issue = caseDto.Issue, 
 				CurrentStatus = caseDto.CurrentStatus, 
 				NextSteps = caseDto.NextSteps, 
-				ResolutionStrategy = caseDto.ResolutionStrategy,
+				CaseAim = caseDto.CaseAim,
+				DeEscalationPoint = caseDto.DeEscalationPoint,
 				DirectionOfTravel = caseDto.DirectionOfTravel, 
 				Urn = caseDto.Urn,
 				Status = caseDto.Status,
@@ -45,7 +46,7 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.ReviewAt, caseDto.ClosedAt, caseDto.CreatedBy, caseDto.Description,
 				caseDto.CrmEnquiry, caseDto.TrustUkPrn, caseDto.ReasonAtReview,
 				caseDto.DeEscalation, caseDto.Issue, caseDto.CurrentStatus,
-				caseDto.NextSteps, caseDto.ResolutionStrategy, caseDto.DirectionOfTravel,
+				caseDto.NextSteps, caseDto.CaseAim, caseDto.DeEscalationPoint, caseDto.DirectionOfTravel,
 				caseDto.Urn, caseDto.Status);
 		}
 		
@@ -57,7 +58,7 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.CreatedBy, caseDto.Description,
 				caseDto.CrmEnquiry, caseDto.TrustUkPrn, patchCaseModel.ReasonAtReview,
 				caseDto.DeEscalation, caseDto.Issue, caseDto.CurrentStatus,
-				caseDto.NextSteps, caseDto.ResolutionStrategy, caseDto.DirectionOfTravel,
+				caseDto.NextSteps, caseDto.CaseAim, caseDto.DeEscalationPoint, caseDto.DirectionOfTravel,
 				caseDto.Urn, statusDto.Urn);
 		}
 		
@@ -67,7 +68,7 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.ReviewAt, caseDto.ClosedAt, caseDto.CreatedBy, caseDto.Description,
 				caseDto.CrmEnquiry, caseDto.TrustUkPrn, caseDto.ReasonAtReview,
 				caseDto.DeEscalation, caseDto.Issue, caseDto.CurrentStatus,
-				caseDto.NextSteps, caseDto.ResolutionStrategy, patchCaseModel.DirectionOfTravel,
+				caseDto.NextSteps, caseDto.CaseAim, caseDto.DeEscalationPoint, patchCaseModel.DirectionOfTravel,
 				caseDto.Urn, caseDto.Status);
 		}
 	}
