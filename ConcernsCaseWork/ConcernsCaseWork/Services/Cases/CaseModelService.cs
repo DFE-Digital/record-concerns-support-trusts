@@ -205,6 +205,25 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 		}
 
+		public async Task PatchDirectionOfTravel(PatchCaseModel patchCaseModel)
+		{
+			try
+			{
+				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				
+				// Patch source dtos
+				caseDto = CaseMapping.MapDirectionOfTravel(patchCaseModel, caseDto);
+
+				await _caseCachedService.PatchCaseByUrn(caseDto);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"CaseModelService::PatchDirectionOfTravel exception {ex.Message}");
+
+				throw;
+			}
+		}
+
 		public async Task<CaseModel> PostCase(CreateCaseModel createCaseModel)
 		{
 			try

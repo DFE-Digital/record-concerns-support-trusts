@@ -114,6 +114,7 @@
 							  name: input.attr("name"),
 							  source: trustNames,
 							  confirmOnBlur: false,
+							  minLength: 3,
 							  onConfirm: (selected) => {
 								  input.attr("aria-valuetext", trustsPartial.find(item => item.displayName === selected).ukPrn);
 								  input.val(selected);

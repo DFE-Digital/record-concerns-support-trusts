@@ -1,8 +1,8 @@
-﻿@page "/case/{id:long}/management/editriskrating"
-@model ConcernsCaseWork.Pages.Case.EditRiskRatingPageModel
+﻿@page "/case/{id:long}/management/editdirectionoftravel"
+@model ConcernsCaseWork.Pages.Case.EditDirectionOfTravelPageModel
 
 @{
-	ViewData["Title"] = "Edit Risk rating";
+	ViewData["Title"] = "Direction of travel";
 }
 
 <div class="govuk-width-container">
@@ -10,21 +10,21 @@
 	<partial name="_Error"></partial>
 	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds">
-
+			
 			<h1 class="govuk-heading-l">
-				Change risk rating
+				Change direction of travel
 			</h1>
 
 			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-			<form role="form" asp-page-handler="editRiskRating" method="post" id="risk-rating-form" novalidate>
+			<form role="form" asp-page-handler="editDirectionOfTravel" method="post" id="direction-of-travel-form" novalidate>
 
 				<input type="hidden" value="@Model.PreviousUrl" name="url"/>
 
 				<div class="govuk-form-group">
 					<fieldset class="govuk-fieldset">
 						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
-						<partial name="_RiskRating"></partial>
+						<partial name="_DirectionOfTravel"></partial>
 					</fieldset>
 				</div>
 
@@ -36,18 +36,19 @@
 					<partial name="_Cancel"></partial>
 				</div>
 			</form>
+			
 		</div>
 	</div>
 </div>
-		
+
 <script type="application/javascript">
 	$(function () {	
-		let validator = formValidator($("#risk-rating-form")[0]);
-		validator.addValidator('riskRating', [{
+		let validator = formValidator($("#direction-of-travel-form")[0]);
+		validator.addValidator('direction-of-travel', [{
 			method: function(field) {
 				return field.value.trim().length > 0;
 			},
-			message: 'Select risk rating'
+			message: 'Select direction of travel'
 		}]);
 	});
 </script>

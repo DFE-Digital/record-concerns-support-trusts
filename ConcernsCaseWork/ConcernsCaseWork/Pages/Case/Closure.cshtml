@@ -7,10 +7,10 @@
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
+	<partial name="_Error"></partial>
 	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds">
-			<partial name="_Error"></partial>
-
+			
 			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
 			<h1 class="govuk-heading-l"> Close case @Model.CaseModel.Urn </h1>
@@ -118,6 +118,12 @@
 				return field.value.trim().length > 0;
 			},
 			message: 'You have not recorded an outcome'
+		},
+		{
+			method: function(field) {
+				return field.value.trim().length <= 200;
+			},
+			message: 'Your case outcome contains too many characters'
 		}]);
 		validator.addValidator('monitoring', [{
 			method: function(field) {

@@ -39,8 +39,9 @@
 							@Model.TrustDetailsModel.GiasData.GroupName
 						</dd>
 					</div>
-
-					<div class="govuk-summary-list__row">
+					
+					<!-- Show when data is available ticket 75173 -->
+					<div class="govuk-summary-list__row govuk-!-display-none">
 						<dt class="govuk-summary-list__key">Type</dt>
 						<dd class="govuk-summary-list__value">
 							<p class="govuk-body">
@@ -58,7 +59,8 @@
 						</dd>
 					</div>
 
-					<div class="govuk-summary-list__row">
+					<!-- Show when data is available ticket 75173 -->
+					<div class="govuk-summary-list__row govuk-!-display-none">
 						<dt class="govuk-summary-list__key">Region</dt>
 						<dd class="govuk-summary-list__value">
 							@Model.TrustDetailsModel.GiasData.GroupContactAddress.County
@@ -199,6 +201,30 @@
 								return field.value.trim().length > 0;
 							},
 							message: 'Issue is required'
+						},
+						{
+							method: function(field) {
+								return field.value.trim().length <= 1000;
+							},
+							message: 'You have exceeded one or more character limits'
+						}]);
+						validator.addValidator('current-status-detail', [{
+							method: function(field) {
+								return field.value.trim().length <= 1000;
+							},
+							message: 'You have exceeded one or more character limits'
+						}]);
+						validator.addValidator('next-steps-detail', [{
+							method: function(field) {
+								return field.value.trim().length <= 1000;
+							},
+							message: 'You have exceeded one or more character limits'
+						}]);
+						validator.addValidator('resolution-strategy-detail', [{
+							method: function(field) {
+								return field.value.trim().length <= 1000;
+							},
+							message: 'You have exceeded one or more character limits'
 						}]);
 						
 						autoResizer();
