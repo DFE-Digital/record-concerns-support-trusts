@@ -27,5 +27,7 @@ namespace ConcernsCaseWork.Models
 		public string ReasonAtReview { get; set; }
 		
 		public string StatusName { get; set; }
+		
+		public string DirectionOfTravel { get; set; }
 	}
 }

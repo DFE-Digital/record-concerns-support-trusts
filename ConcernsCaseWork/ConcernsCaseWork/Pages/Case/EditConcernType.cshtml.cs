@@ -67,7 +67,6 @@ namespace ConcernsCaseWork.Pages.Case
 				await _caseModelService.PatchConcernType(patchCaseModel);
 					
 				return Redirect(url);
-
 			}
 			catch (Exception ex)
 			{
@@ -85,6 +84,6 @@ namespace ConcernsCaseWork.Pages.Case
 			PreviousUrl = url;
 
 			return Page();
-		} 
+		}
 	}
 }

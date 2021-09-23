@@ -11,6 +11,7 @@ namespace ConcernsCaseWork.Services.Cases
 		Task PatchClosure(PatchCaseModel patchCaseModel);
 		Task PatchConcernType(PatchCaseModel patchCaseModel);
 		Task PatchRiskRating(PatchCaseModel patchCaseModel);
+		Task PatchDirectionOfTravel(PatchCaseModel patchCaseModel);
 		Task<CaseModel> PostCase(CreateCaseModel createCaseModel);
 	}
 }
