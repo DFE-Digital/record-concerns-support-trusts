@@ -70,7 +70,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 		}
 		
 		[Test]
-		public void WhenMapClosure_Returns_CaseModel()
+		public void WhenMapClosure_Returns_CaseDto()
 		{
 			// arrange
 			var patchCaseModel = CaseFactory.BuildPatchCaseModel();
@@ -95,8 +95,39 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(caseDto.NextSteps, Is.EqualTo(caseDto.NextSteps));
 			Assert.That(caseDto.ResolutionStrategy, Is.EqualTo(caseDto.ResolutionStrategy));
 			Assert.That(caseDto.ReviewAt, Is.EqualTo(caseDto.ReviewAt));
-			Assert.That(caseDto.UpdatedAt, Is.EqualTo(caseDto.UpdatedAt));
+			Assert.That(caseDto.UpdatedAt, Is.EqualTo(patchCaseModel.UpdatedAt));
 			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
+			Assert.That(caseDto.ReasonAtReview, Is.EqualTo(patchCaseModel.ReasonAtReview));
+			Assert.That(caseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
+		}
+
+		[Test]
+		public void WhenMapDirectionOfTravel_Returns_CaseDto()
+		{
+			// arrange
+			var patchCaseModel = CaseFactory.BuildPatchCaseModel();
+			var caseDto = CaseFactory.BuildCaseDto();
+			
+			// act
+			caseDto = CaseMapping.MapDirectionOfTravel(patchCaseModel, caseDto);
+
+			// assert
+			Assert.That(caseDto, Is.Not.Null);
+			Assert.That(caseDto.Description, Is.EqualTo(caseDto.Description));
+			Assert.That(caseDto.Issue, Is.EqualTo(caseDto.Issue));
+			Assert.That(caseDto.Status, Is.EqualTo(caseDto.Status));
+			Assert.That(caseDto.Urn, Is.EqualTo(caseDto.Urn));
+			Assert.That(caseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
+			Assert.That(caseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
+			Assert.That(caseDto.CreatedBy, Is.EqualTo(caseDto.CreatedBy));
+			Assert.That(caseDto.CrmEnquiry, Is.EqualTo(caseDto.CrmEnquiry));
+			Assert.That(caseDto.CurrentStatus, Is.EqualTo(caseDto.CurrentStatus));
+			Assert.That(caseDto.DeEscalation, Is.EqualTo(caseDto.DeEscalation));
+			Assert.That(caseDto.NextSteps, Is.EqualTo(caseDto.NextSteps));
+			Assert.That(caseDto.ResolutionStrategy, Is.EqualTo(caseDto.ResolutionStrategy));
+			Assert.That(caseDto.ReviewAt, Is.EqualTo(caseDto.ReviewAt));
+			Assert.That(caseDto.UpdatedAt, Is.EqualTo(patchCaseModel.UpdatedAt));
+			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(patchCaseModel.DirectionOfTravel));
 			Assert.That(caseDto.ReasonAtReview, Is.EqualTo(caseDto.ReasonAtReview));
 			Assert.That(caseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
 		}
