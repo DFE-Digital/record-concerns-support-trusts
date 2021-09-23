@@ -199,6 +199,30 @@
 								return field.value.trim().length > 0;
 							},
 							message: 'Issue is required'
+						},
+						{
+							method: function(field) {
+								return field.value.trim().length <= 1000;
+							},
+							message: 'Your issue contains too many characters'
+						}]);
+						validator.addValidator('current-status-detail', [{
+							method: function(field) {
+								return field.value.trim().length <= 1000;
+							},
+							message: 'Your current status contains too many characters'
+						}]);
+						validator.addValidator('next-steps-detail', [{
+							method: function(field) {
+								return field.value.trim().length <= 1000;
+							},
+							message: 'Your next steps contains too many characters'
+						}]);
+						validator.addValidator('resolution-strategy-detail', [{
+							method: function(field) {
+								return field.value.trim().length <= 1000;
+							},
+							message: 'Your case resolution contains too many characters'
 						}]);
 						
 						autoResizer();

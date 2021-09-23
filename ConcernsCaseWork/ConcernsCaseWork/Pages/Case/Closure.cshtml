@@ -118,6 +118,12 @@
 				return field.value.trim().length > 0;
 			},
 			message: 'You have not recorded an outcome'
+		},
+		{
+			method: function(field) {
+				return field.value.trim().length <= 200;
+			},
+			message: 'Your case outcome contains too many characters'
 		}]);
 		validator.addValidator('monitoring', [{
 			method: function(field) {
