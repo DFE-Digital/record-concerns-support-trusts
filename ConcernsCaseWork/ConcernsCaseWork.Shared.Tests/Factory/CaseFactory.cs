@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new CreateCaseDto(
 				dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
 				"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
-				"resolution-strategy", "direction-of-travel", 1, 1
+				"case-aim", "de-escalation-point", "direction-of-travel", 1, 1
 			);
 		}
 		
@@ -81,7 +81,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Issue = "issue", 
 				CurrentStatus = "current-status", 
 				NextSteps = "nextSteps",
-				ResolutionStrategy = "resolution-strategy", 
+				CaseAim = "case-aim",
+				DeEscalationPoint = "de-escalation-point",
 				DirectionOfTravel = "direction-of-travel", 
 				Urn = 1, 
 				Status = 1, 

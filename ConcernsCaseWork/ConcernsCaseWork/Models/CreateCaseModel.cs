@@ -28,9 +28,11 @@ namespace ConcernsCaseWork.Models
 
 		public string CurrentStatus { get; set; }
 
+		public string CaseAim { get; set; }
+		
+		public string DeEscalationPoint { get; set; }
+		
 		public string NextSteps { get; set; }
-
-		public string ResolutionStrategy { get; set; }
 		
 		public string DirectionOfTravel { get; set; }
 		

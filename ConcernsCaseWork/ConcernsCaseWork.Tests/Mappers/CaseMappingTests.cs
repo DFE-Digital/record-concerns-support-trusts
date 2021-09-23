@@ -30,7 +30,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(createCaseDto.CurrentStatus, Is.EqualTo(createCaseModel.CurrentStatus));
 			Assert.That(createCaseDto.DeEscalation, Is.EqualTo(createCaseModel.DeEscalation));
 			Assert.That(createCaseDto.NextSteps, Is.EqualTo(createCaseModel.NextSteps));
-			Assert.That(createCaseDto.ResolutionStrategy, Is.EqualTo(createCaseModel.ResolutionStrategy));
+			Assert.That(createCaseDto.CaseAim, Is.EqualTo(createCaseModel.CaseAim));
+			Assert.That(createCaseDto.DeEscalationPoint, Is.EqualTo(createCaseModel.DeEscalationPoint));
 			Assert.That(createCaseDto.ReviewAt, Is.EqualTo(createCaseModel.ReviewAt));
 			Assert.That(createCaseDto.UpdatedAt, Is.EqualTo(createCaseModel.UpdatedAt));
 			Assert.That(createCaseDto.DirectionOfTravel, Is.EqualTo(createCaseModel.DirectionOfTravel));

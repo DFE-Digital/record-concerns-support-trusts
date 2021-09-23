@@ -119,60 +119,75 @@
 					</div>
 
 					<!-- Q Issue -->
-					<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="1000">
+					<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="2000">
 						<div class="govuk-form-group">
-							<label class="govuk-label govuk-!-font-weight-bold" for="issue-detail">
+							<label class="govuk-label govuk-!-font-weight-bold" for="issue">
 								Issue
 							</label>
-							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="issue-detail" name="issue-detail" rows="3" aria-describedby="issue-detail-info"></textarea>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="issue" name="issue" rows="3" aria-describedby="issue"></textarea>
 						</div>
 
-						<div id="issue-detail-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+						<div id="issue-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
 							You can enter up to 1000 characters
 						</div>
 
 					</div>
 
 					<!-- Q Current status -->
-					<div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="1000">
+					<div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="4000">
 						<div class="govuk-form-group">
-							<label class="govuk-label govuk-!-font-weight-bold" for="current-status-detail">
+							<label class="govuk-label govuk-!-font-weight-bold" for="current-status">
 								Current status <span class="govuk-body">(optional)</span>
 							</label>
-							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="current-status-detail" name="current-status-detail" rows="3" aria-describedby="case-status-info"></textarea>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="current-status" name="current-status" rows="3" aria-describedby="case-status"></textarea>
 						</div>
 
-						<div id="current-status-detail-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+						<div id="current-status-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
 							You can enter up to 1000 characters
 						</div>
 
 					</div>
 
+					<!-- Q Case aim-->
+                    <div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="1000">
+                    	<div class="govuk-form-group">
+                    		<label class="govuk-label govuk-!-font-weight-bold" for="case-aim">
+                    			Case resolution <span class="govuk-body">(optional)</span>
+                    		</label>
+                    		<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-aim" name="case-aim" rows="3" aria-describedby="case-aim"></textarea>
+                    	</div>
+
+                    	<div id="case-aim-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+                    		You can enter up to 1000 characters
+                    	</div>
+
+                    </div>
+					
+					<!-- Q De-escalation point-->
+                    <div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="1000">
+                    	<div class="govuk-form-group">
+                    		<label class="govuk-label govuk-!-font-weight-bold" for="de-escalation-point">
+                    			Case resolution <span class="govuk-body">(optional)</span>
+                    		</label>
+                    		<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="de-escalation-point" name="de-escalation-point" rows="3" aria-describedby="de-escalation-point"></textarea>
+                    	</div>
+
+                    	<div id="de-escalation-point-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+                    		You can enter up to 1000 characters
+                    	</div>
+
+                    </div>
+					
 					<!-- Q Next steps -->
-					<div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="1000">
+					<div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="4000">
 						<div class="govuk-form-group">
-							<label class="govuk-label govuk-!-font-weight-bold" for="next-steps-detail">
+							<label class="govuk-label govuk-!-font-weight-bold" for="next-steps">
 								Next steps <span class="govuk-body">(optional)</span>
 							</label>
-							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="next-steps-detail" name="next-steps-detail" rows="3" aria-describedby="next-steps-detail-info"></textarea>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="next-steps" name="next-steps" rows="3" aria-describedby="next-steps"></textarea>
 						</div>
 
-						<div id="next-steps-detail-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-							You can enter up to 1000 characters
-						</div>
-
-					</div>
-
-					<!-- Q Resolution strategy-->
-					<div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="1000">
-						<div class="govuk-form-group">
-							<label class="govuk-label govuk-!-font-weight-bold" for="resolution-strategy-detail">
-								Case resolution <span class="govuk-body">(optional)</span>
-							</label>
-							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="resolution-strategy-detail" name="resolution-strategy-detail" rows="3" aria-describedby="resolution-strategy-info"></textarea>
-						</div>
-
-						<div id="resolution-strategy-detail-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+						<div id="next-steps-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
 							You can enter up to 1000 characters
 						</div>
 
@@ -196,7 +211,7 @@
 							},
 							message: 'Select risk rating'
 					 	}]);
-						validator.addValidator('issue-detail', [{
+						validator.addValidator('issue', [{
 							method: function(field) {
 								return field.value.trim().length > 0;
 							},
@@ -204,23 +219,29 @@
 						},
 						{
 							method: function(field) {
-								return field.value.trim().length <= 1000;
+								return field.value.trim().length <= 2000;
 							},
 							message: 'You have exceeded one or more character limits'
 						}]);
-						validator.addValidator('current-status-detail', [{
+						validator.addValidator('current-status', [{
+							method: function(field) {
+								return field.value.trim().length <= 4000;
+							},
+							message: 'You have exceeded one or more character limits'
+						}]);
+						validator.addValidator('next-steps', [{
+							method: function(field) {
+								return field.value.trim().length <= 4000;
+							},
+							message: 'You have exceeded one or more character limits'
+						}]);
+						validator.addValidator('de-escalation-point', [{
 							method: function(field) {
 								return field.value.trim().length <= 1000;
 							},
 							message: 'You have exceeded one or more character limits'
 						}]);
-						validator.addValidator('next-steps-detail', [{
-							method: function(field) {
-								return field.value.trim().length <= 1000;
-							},
-							message: 'You have exceeded one or more character limits'
-						}]);
-						validator.addValidator('resolution-strategy-detail', [{
+						validator.addValidator('case-aim', [{
 							method: function(field) {
 								return field.value.trim().length <= 1000;
 							},

@@ -72,31 +72,33 @@ namespace ConcernsCaseWork.Pages.Case
 				var type = Request.Form["type"];
 				var subType = Request.Form["subType"];
 				var ragRating = Request.Form["riskRating"];
-				var issueDetail = Request.Form["issue-detail"];
-				var currentStatusDetail = Request.Form["current-status-detail"];
-				var nextStepsDetail = Request.Form["next-steps-detail"];
-				var resolutionStrategyDetail = Request.Form["resolution-strategy-detail"];
+				var issue = Request.Form["issue"];
+				var currentStatus = Request.Form["current-status"];
+				var nextSteps = Request.Form["next-steps"];
+				var caseAim = Request.Form["case-aim"];
+				var deEscalationPoint = Request.Form["de-escalation-point"];
 				var trustUkPrn = Request.Form["trust-Ukprn"];
 
 				if (string.IsNullOrEmpty(type) 
 				    || string.IsNullOrEmpty(ragRating) 
-				    || string.IsNullOrEmpty(issueDetail)) throw new Exception("Missing form values");
+				    || string.IsNullOrEmpty(issue)) throw new Exception("Missing form values");
 				
 				// Create a case post model
 				var currentDate = DateTimeOffset.Now;
 				var createCaseModel = new CreateCaseModel
 				{
 					Description = $"{type} {subType}",
-					Issue = issueDetail,
+					Issue = issue,
 					ClosedAt = currentDate,
 					CreatedAt = currentDate,
 					CreatedBy = User.Identity.Name,
-					CurrentStatus = currentStatusDetail,
+					CurrentStatus = currentStatus,
 					DeEscalation = currentDate,
-					NextSteps = nextStepsDetail,
+					NextSteps = nextSteps,
 					RagRating = ragRating,
 					RecordType = type,
-					ResolutionStrategy = resolutionStrategyDetail,
+					CaseAim = caseAim,
+					DeEscalationPoint = deEscalationPoint,
 					ReviewAt = currentDate,
 					UpdatedAt = currentDate,
 					RecordSubType = subType,

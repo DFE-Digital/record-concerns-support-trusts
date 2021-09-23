@@ -10,8 +10,8 @@ namespace ConcernsCaseWork.Mappers
 		{
 			return new CreateCaseDto(createCaseModel.CreatedAt, createCaseModel.UpdatedAt, createCaseModel.ReviewAt, createCaseModel.ClosedAt, 
 				createCaseModel.CreatedBy, createCaseModel.Description, createCaseModel.CrmEnquiry, createCaseModel.TrustUkPrn, createCaseModel.ReasonAtReview,
-				createCaseModel.DeEscalation, createCaseModel.Issue, createCaseModel.CurrentStatus, createCaseModel.NextSteps, createCaseModel.ResolutionStrategy,
-				createCaseModel.DirectionOfTravel, createCaseModel.Urn, createCaseModel.Status);
+				createCaseModel.DeEscalation, createCaseModel.Issue, createCaseModel.CurrentStatus, createCaseModel.NextSteps, createCaseModel.CaseAim,
+				createCaseModel.DeEscalationPoint, createCaseModel.DirectionOfTravel, createCaseModel.Urn, createCaseModel.Status);
 		}
 		
 		public static CaseModel Map(CaseDto caseDto, string status = null)
