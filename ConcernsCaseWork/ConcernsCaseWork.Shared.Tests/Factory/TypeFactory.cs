@@ -40,11 +40,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			};
 		}
 
-		public static TypeDto BuildTypeDto()
+		public static TypeDto BuildTypeDto(long urn = 1)
 		{
 			var currentDate = DateTimeOffset.Now;
 			return new TypeDto("Compliance", "Compliance: Financial reporting", currentDate,
-				currentDate, 1);
+				currentDate, urn);
 		}
 	}
 }
