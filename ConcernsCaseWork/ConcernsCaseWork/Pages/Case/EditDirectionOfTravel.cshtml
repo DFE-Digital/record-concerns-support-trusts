@@ -3,6 +3,7 @@
 
 @{
 	ViewData["Title"] = "Direction of travel";
+	var directionOfTravel = Model.CaseModel.DirectionOfTravel ?? string.Empty;
 }
 
 <div class="govuk-width-container">
@@ -24,7 +25,7 @@
 				<div class="govuk-form-group">
 					<fieldset class="govuk-fieldset">
 						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
-						<partial name="_DirectionOfTravel"></partial>
+						<partial name="_DirectionOfTravel" model="@directionOfTravel"></partial>
 					</fieldset>
 				</div>
 

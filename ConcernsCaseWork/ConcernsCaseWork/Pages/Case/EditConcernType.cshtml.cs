@@ -20,6 +20,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ILogger<EditConcernTypePageModel> _logger;
 
 		public IDictionary<string, IList<string>> TypesDictionary { get; private set; }
+		public CaseModel CaseModel { get; private set; }
 		public string PreviousUrl { get; private set; }
 		
 		public EditConcernTypePageModel(ITypeModelService typeModelService, ICaseModelService caseModelService, 
@@ -34,6 +35,14 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			_logger.LogInformation("EditConcernTypePageModel::OnGetAsync");
 
+			var caseUrnValue = RouteData.Values["id"];
+			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn))
+			{
+				throw new Exception("EditConcernTypePageModel::CaseUrn is null or invalid to parse");
+			}
+
+			CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+			
 			return await LoadPage(Request.Headers["Referer"].ToString());
 		}
 		

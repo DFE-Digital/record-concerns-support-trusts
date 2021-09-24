@@ -16,6 +16,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<EditDirectionOfTravelPageModel> _logger;
 		
+		public CaseModel CaseModel { get; private set; }
 		public string PreviousUrl { get; private set; }
 
 		public EditDirectionOfTravelPageModel(ICaseModelService caseModelService, ILogger<EditDirectionOfTravelPageModel> logger)
@@ -24,10 +25,18 @@ namespace ConcernsCaseWork.Pages.Case
 			_logger = logger;
 		}
 		
-		public ActionResult OnGet()
+		public async Task<ActionResult> OnGet()
 		{
 			_logger.LogInformation("EditDirectionOfTravelPageModel::OnGet");
 
+			var caseUrnValue = RouteData.Values["id"];
+			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn))
+			{
+				throw new Exception("EditConcernTypePageModel::CaseUrn is null or invalid to parse");
+			}
+
+			CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+			
 			return LoadPage(Request.Headers["Referer"].ToString());
 		}
 		
