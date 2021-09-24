@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+﻿using ConcernsCaseWork.Extensions;
 
 namespace ConcernsCaseWork.Models
 {
@@ -21,6 +21,6 @@ namespace ConcernsCaseWork.Models
 		
 		public GiasDataModel(string ukprn, string groupId, string groupName, string groupTypeCode, string companiesHouseNumber, GroupContactAddressModel groupContactAddress) =>
 			(UkPrn, GroupId, GroupName, GroupTypeCode, CompaniesHouseNumber, GroupContactAddress) = 
-			(ukprn, groupId, CultureInfo.CurrentCulture.TextInfo.ToTitleCase(groupName.ToLower()), groupTypeCode, companiesHouseNumber, groupContactAddress);
+			(ukprn, groupId, groupName.ToTitle(), groupTypeCode, companiesHouseNumber, groupContactAddress);
 	}
 }

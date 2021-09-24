@@ -1,4 +1,6 @@
-﻿namespace ConcernsCaseWork.Extensions
+﻿using System.Globalization;
+
+namespace ConcernsCaseWork.Extensions
 {
 	public static class StringExtensions
 	{
@@ -18,6 +20,11 @@
 				"0" => false,
 				_ => false
 			};
+		}
+
+		public static string ToTitle(this string value)
+		{
+			return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLower());
 		}
 	}
 }
