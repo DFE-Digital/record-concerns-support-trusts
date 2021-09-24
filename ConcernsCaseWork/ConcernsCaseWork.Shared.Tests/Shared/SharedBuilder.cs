@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models;
 using Service.TRAMS.Trusts;
 using System.Text;
 
@@ -9,7 +10,7 @@ namespace ConcernsCaseWork.Shared.Tests.Shared
 		public static string BuildDisplayName(TrustSummaryDto trustSummaryDto)
 		{
 			var sb = new StringBuilder();
-			sb.Append(string.IsNullOrEmpty(trustSummaryDto.GroupName) ? "-".PadRight(2) : trustSummaryDto.GroupName);
+			sb.Append(string.IsNullOrEmpty(trustSummaryDto.GroupName) ? "-".PadRight(2) : trustSummaryDto.GroupName.ToTitle());
 			sb.Append(",").Append(" ");
 			sb.Append(string.IsNullOrEmpty(trustSummaryDto.UkPrn) ? "-".PadRight(2) : trustSummaryDto.UkPrn);
 			sb.Append(",").Append(" ");
@@ -21,7 +22,7 @@ namespace ConcernsCaseWork.Shared.Tests.Shared
 		public static string BuildDisplayName(TrustSummaryModel trustSummaryModel)
 		{
 			var sb = new StringBuilder();
-			sb.Append(string.IsNullOrEmpty(trustSummaryModel.GroupName) ? "-".PadRight(2) : trustSummaryModel.GroupName);
+			sb.Append(string.IsNullOrEmpty(trustSummaryModel.GroupName) ? "-".PadRight(2) : trustSummaryModel.GroupName.ToTitle());
 			sb.Append(",").Append(" ");
 			sb.Append(string.IsNullOrEmpty(trustSummaryModel.UkPrn) ? "-".PadRight(2) : trustSummaryModel.UkPrn);
 			sb.Append(",").Append(" ");
