@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Tests.Pages
 {
 	[Parallelizable(ParallelScope.All)]
-	public class ClearDataModelTests
+	public class ClearDataPageModelTests
 	{
 		[Test]
 		public async Task WhenOnGetAsync_ReturnsHomePage_ClearCache()
