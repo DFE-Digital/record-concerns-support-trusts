@@ -47,6 +47,38 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		[Test]
+		public async Task WhenOnGetAsync_RouteData_ReturnsPage()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
+			
+			var caseModel = CaseFactory.BuildCaseModel();
+			
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
+			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
+			
+			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+			
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("id", 1);
+			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
+			
+			// act
+			var pageResponse = await pageModel.OnGetAsync();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			var page = pageResponse as PageResult;
+			
+			Assert.That(page, Is.Not.Null);
+			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
+			Assert.That(pageModel.CaseModel.TypesDictionary, Is.Empty);
+		}		
+		
+		[Test]
 		public async Task WhenOnPostEditConcernType_MissingRouteData_ThrowsException_ReloadPage()
 		{
 			// arrange
