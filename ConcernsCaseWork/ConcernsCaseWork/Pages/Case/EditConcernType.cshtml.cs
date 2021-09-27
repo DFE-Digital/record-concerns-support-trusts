@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -19,9 +18,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ITypeModelService _typeModelService;
 		private readonly ILogger<EditConcernTypePageModel> _logger;
 
-		public IDictionary<string, IList<string>> TypesDictionary { get; private set; }
 		public CaseModel CaseModel { get; private set; }
-		public string PreviousUrl { get; private set; }
 		
 		public EditConcernTypePageModel(ITypeModelService typeModelService, ICaseModelService caseModelService, 
 			ILogger<EditConcernTypePageModel> logger)
@@ -33,35 +30,46 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public async Task<ActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("EditConcernTypePageModel::OnGetAsync");
-
-			var caseUrnValue = RouteData.Values["id"];
-			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn))
-			{
-				throw new Exception("EditConcernTypePageModel::CaseUrn is null or invalid to parse");
-			}
-
-			CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+			long caseUrn = 0;
 			
-			return await LoadPage(Request.Headers["Referer"].ToString());
+			try
+			{
+				_logger.LogInformation("Case::EditConcernTypePageModel::OnGetAsync");
+
+				var caseUrnValue = RouteData.Values["id"];
+				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn))
+				{
+					throw new Exception("Case::EditConcernTypePageModel::CaseUrn is null or invalid to parse");
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Case::EditConcernTypePageModel::OnGetAsync::Exception - { ex.Message }");
+				
+				TempData["Error.Message"] = ErrorOnGetPage;
+			}
+			
+			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn);
 		}
 		
 		public async Task<ActionResult> OnPostEditConcernType(string url)
 		{
+			long caseUrn = 0;
+			
 			try
 			{
-				_logger.LogInformation("EditConcernTypePageModel::OnPostEditConcernType");
+				_logger.LogInformation("Case::EditConcernTypePageModel::OnPostEditConcernType");
 				
 				var caseUrnValue = RouteData.Values["id"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn))
+				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn))
 				{
-					throw new Exception("EditConcernTypePageModel::CaseUrn is null or invalid to parse");
+					throw new Exception("Case::EditConcernTypePageModel::CaseUrn is null or invalid to parse");
 				}
 				
 				var type = Request.Form["type"];
 				var subType = Request.Form["subType"];
 
-				if (string.IsNullOrEmpty(type)) throw new Exception("Missing form values");
+				if (string.IsNullOrEmpty(type)) throw new Exception("Case::EditConcernTypePageModel::Missing form values");
 				
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel
@@ -84,13 +92,21 @@ namespace ConcernsCaseWork.Pages.Case
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
-			return await LoadPage(url);
+			return await LoadPage(url, caseUrn);
 		}
 
-		private async Task<ActionResult> LoadPage(string url)
+		private async Task<ActionResult> LoadPage(string url, long caseUrn)
 		{
-			TypesDictionary = await _typeModelService.GetTypes();
-			PreviousUrl = url;
+			if (caseUrn != 0) {
+				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+			}
+			else
+			{
+				CaseModel = new CaseModel();
+			}
+
+			CaseModel.TypesDictionary = await _typeModelService.GetTypes();
+			CaseModel.PreviousUrl = url;
 
 			return Page();
 		}

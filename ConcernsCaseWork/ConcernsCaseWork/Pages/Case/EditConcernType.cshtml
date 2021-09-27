@@ -19,11 +19,11 @@
 
 			<form role="form" asp-page-handler="editConcernType" method="post" id="concern-type-form" novalidate>
 
-				<input type="hidden" value="@Model.PreviousUrl" name="url"/>
+				<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
 
 				<div class="govuk-form-group">
 					<fieldset class="govuk-fieldset">
-						<partial name="_ConcernType" model="Model"></partial>
+						<partial name="_ConcernType" model="@Model.CaseModel"></partial>
 					</fieldset>
 				</div>
 

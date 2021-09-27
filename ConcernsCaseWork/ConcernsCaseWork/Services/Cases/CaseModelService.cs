@@ -111,6 +111,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var ragRating = ragsRatingDto.First(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0);
 				caseModel.RagRating = RagMapping.FetchRag(ragRating.Name);
 				caseModel.RagRatingCss = RagMapping.FetchRagCss(ragRating.Name);
+				caseModel.RagRatingName = ragRating.Name;
 				
 				return caseModel;
 			}

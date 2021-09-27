@@ -43,8 +43,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			// act
 			await pageModel.OnGetAsync();
-			var trustDetailsModel = pageModel.TrustDetailsModel;
-			var typesDictionary = pageModel.TypesDictionary;
+			var trustDetailsModel = pageModel.CaseModel.TrustDetailsModel;
+			var typesDictionary = pageModel.CaseModel.TypesDictionary;
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
@@ -97,8 +97,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			// act
 			await pageModel.OnGetAsync();
-			var trustDetailsModel = pageModel.TrustDetailsModel;
-			var typesDictionary = pageModel.TypesDictionary;
+			var trustDetailsModel = pageModel.CaseModel.TrustDetailsModel;
+			var typesDictionary = pageModel.CaseModel.TypesDictionary;
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);

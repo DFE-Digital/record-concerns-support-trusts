@@ -24,7 +24,6 @@ namespace ConcernsCaseWork.Models
 		public string Description { get; set; }
 
 		public string CrmEnquiry { get; set; }
-
 		
 		public string TrustName { get; set; }
 		
@@ -43,24 +42,32 @@ namespace ConcernsCaseWork.Models
 		public string DeEscalationPoint { get; set; }
 		
 		public string NextSteps { get; set; }
-		
+
 		/// <summary>
 		/// Deteriorating, unchanged, improved
 		/// </summary>
-		public string DirectionOfTravel { get; set; }
+		public string DirectionOfTravel { get; set; } = Service.TRAMS.Cases.DirectionOfTravel.Deteriorating.ToString();
 
 		public long Urn { get; set; }
 
 		public long Status { get; set; }
 		
-		public string StatusName { get; set; }
+		public string StatusName { get; set; } = string.Empty;
 
-		public string CaseType { get; set; }
+		public string CaseType { get; set; } = string.Empty;
 
-		public string CaseSubType { get; set; }
+		public string CaseSubType { get; set; } = string.Empty;
 
+		public string RagRatingName { get; set; } = string.Empty;
+		
 		public IList<string> RagRating { get; set; }
 
 		public IList<string> RagRatingCss { get; set; }
+		
+		public IDictionary<string, IList<string>> TypesDictionary { get; set; }
+		
+		public TrustDetailsModel TrustDetailsModel { get; set; }
+		
+		public string PreviousUrl { get; set; }
 	}
 }

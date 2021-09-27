@@ -9,7 +9,6 @@ using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.TRAMS.Cases;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -23,9 +22,8 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ILogger<ConcernTypePageModel> _logger;
 		private readonly ICachedService _cachedService;
 		
-		public TrustDetailsModel TrustDetailsModel { get; private set; }
-		public IDictionary<string, IList<string>> TypesDictionary { get; private set; }
-
+		public CaseModel CaseModel { get; private set; }
+		
 		public ConcernTypePageModel(ITrustModelService trustModelService, ICachedService cachedService, 
 			ITypeModelService typeModelService, ILogger<ConcernTypePageModel> logger)
 		{
@@ -43,10 +41,12 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				// Get cached data from case page.
 				var userState = await GetUserState();
-
+				
 				// Fetch UI data
-				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(userState.TrustUkPrn);
-				TypesDictionary = await _typeModelService.GetTypes();
+				CaseModel = new CaseModel {
+					TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(userState.TrustUkPrn), 
+					TypesDictionary = await _typeModelService.GetTypes() 
+				};
 			}
 			catch (Exception ex)
 			{

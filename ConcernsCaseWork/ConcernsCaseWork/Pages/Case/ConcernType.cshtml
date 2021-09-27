@@ -14,7 +14,7 @@
 			<h1 class="govuk-heading-l">Concern </h1>
 
 			@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")) ||
-			     Model.TrustDetailsModel is null)
+			     Model.CaseModel.TrustDetailsModel is null)
             {
 	            <div class="moj-banner__message">
 		            <p class="govuk-body">@TempData["Error.Message"]</p>
@@ -29,7 +29,7 @@
 			{
 				<!-- Trust details -->
 				<a asp-page="index" class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 govuk-!-margin-top-6 float__right">Change trust</a>
-				<partial name="_TrustDetails" model="@Model.TrustDetailsModel"/>
+				<partial name="_TrustDetails" model="@Model.CaseModel.TrustDetailsModel"/>
 				
 				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 				
@@ -38,8 +38,8 @@
 				<!-- FORM -->
 				<form role="form" method="post" id="case-concern-type-form" novalidate>
 					<!--Trust UkPrn-->
-					<input type="hidden" name="trust-ukprn" value="@Model.TrustDetailsModel.GiasData.UkPrn">
-					<input type="hidden" name="trust-name" value="@Model.TrustDetailsModel.GiasData.GroupName">
+					<input type="hidden" name="trust-ukprn" value="@Model.CaseModel.TrustDetailsModel.GiasData.UkPrn">
+					<input type="hidden" name="trust-name" value="@Model.CaseModel.TrustDetailsModel.GiasData.GroupName">
 					
 					<!--Q Concern type-->
 					<div class="govuk-form-group">
@@ -49,7 +49,7 @@
 								Use the <a target="_blank" href="@Url.Page("../FileResource", "DownloadRiskManagementPdf")" class="govuk-link" rel="noreferrer noopener">Risk Management Framework (opens in new tab)</a> to assess the type of Concern
 							</div>
 							
-							<partial name="_ConcernType" model="Model.TypesDictionary"></partial>
+							<partial name="_ConcernType" model="@Model.CaseModel"></partial>
 							
 						</fieldset>
 					</div>
@@ -62,7 +62,7 @@
 								What is the risk rating?
 							</legend>
 
-							<partial name="_RiskRating"></partial>
+							<partial name="_RiskRating" model="@Model.CaseModel"></partial>
 
 						</fieldset>
 					</div>
