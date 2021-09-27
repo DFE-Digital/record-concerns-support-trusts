@@ -22,8 +22,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto() };
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = new List<TypeDto> { TypeFactory.BuildTypeDto(99) };
-			var statusLiveDto = StatusFactory.BuildStatusDto(Status.Live.ToString(), 1);
-			var statusMonitoringDto = StatusFactory.BuildStatusDto(Status.Monitoring.ToString(), 2);
+			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
+			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 
 			// act
 			(IList<HomeModel> activeCases, IList<HomeModel> monitoringCases) = HomeMapping.Map(casesDto, trustDetailsDto,
@@ -43,8 +43,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var recordsDto = RecordFactory.BuildListRecordDto();
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
-			var statusLiveDto = StatusFactory.BuildStatusDto(Status.Live.ToString(), 1);
-			var statusMonitoringDto = StatusFactory.BuildStatusDto(Status.Monitoring.ToString(), 2);
+			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
+			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 
 			// act
 			(IList<HomeModel> activeCases, IList<HomeModel> monitoringCases) = HomeMapping.Map(casesDto, trustsDetailsDto,

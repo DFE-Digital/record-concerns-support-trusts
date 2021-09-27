@@ -234,7 +234,7 @@ namespace ConcernsCaseWork.Services.Cases
 				// TODO End Remove when Trams API is live
 				
 				// Fetch Status
-				var statusDto = await _statusCachedService.GetStatusByName(Status.Live.ToString());
+				var statusDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
 
 				// Fetch Type
 				var typeDto = await _typeCachedService.GetTypeByNameAndDescription(
@@ -276,8 +276,8 @@ namespace ConcernsCaseWork.Services.Cases
 		private async Task<(IList<HomeModel>, IList<HomeModel>)> FetchFromTramsApi(string caseworker)
 		{
 			// Fetch Status
-			var statusLiveDto = await _statusCachedService.GetStatusByName(Status.Live.ToString());
-			var statusMonitoringDto = await _statusCachedService.GetStatusByName(Status.Monitoring.ToString());
+			var statusLiveDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
+			var statusMonitoringDto = await _statusCachedService.GetStatusByName(StatusEnum.Monitoring.ToString());
 			
 			// Get from TRAMS API all trusts for the caseworker
 			var caseStatus = new List<string> { statusLiveDto.Name, statusMonitoringDto.Name };
@@ -318,8 +318,8 @@ namespace ConcernsCaseWork.Services.Cases
 		private async Task<(IList<HomeModel>, IList<HomeModel>)> FetchFromCache(UserState userState)
 		{
 			// Fetch Status
-			var statusLiveDto = await _statusCachedService.GetStatusByName(Status.Live.ToString());
-			var statusMonitoringDto = await _statusCachedService.GetStatusByName(Status.Monitoring.ToString());
+			var statusLiveDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
+			var statusMonitoringDto = await _statusCachedService.GetStatusByName(StatusEnum.Monitoring.ToString());
 			
 			// Fetch cases
 			var caseDetails = userState.CasesDetails;

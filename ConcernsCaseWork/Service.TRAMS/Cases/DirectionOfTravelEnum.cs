@@ -1,6 +1,6 @@
 ﻿namespace Service.TRAMS.Cases
 {
-	public enum DirectionOfTravel
+	public enum DirectionOfTravelEnum
 	{
 		Deteriorating,
 		Unchanged,

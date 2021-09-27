@@ -98,7 +98,7 @@ namespace ConcernsCaseWork.Pages.Case
 				patchCaseModel.Urn = caseUrn;
 				patchCaseModel.CreatedBy = User.Identity.Name;
 				patchCaseModel.UpdatedAt = DateTimeOffset.Now;
-				patchCaseModel.StatusName = isMonitoring ? Status.Monitoring.ToString() : Status.Close.ToString();
+				patchCaseModel.StatusName = isMonitoring ? StatusEnum.Monitoring.ToString() : StatusEnum.Close.ToString();
 				patchCaseModel.ReasonAtReview = caseOutcomes;
 				
 				await _caseModelService.PatchClosure(patchCaseModel);
