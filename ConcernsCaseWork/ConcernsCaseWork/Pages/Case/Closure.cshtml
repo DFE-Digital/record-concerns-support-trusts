@@ -191,7 +191,7 @@
 						}, {
 							method: function(field, params) {
 								let reviewAt = new Date(parseInt(params.year.value, 10), parseInt(params.month.value, 10) - 1, parseInt(params.day.value, 10));	
-								return reviewAt instanceof Date && !isNaN(reviewAt);
+								return reviewAt instanceof Date && !isNaN(reviewAt.getDate());
 							},
 							message: 'Enter a valid date to review',
 							params: {
@@ -223,8 +223,13 @@
 									let days = monthDays(year,  month);
 									if (day > days) {
 										params.day.value = '';
-										return false
+										return false;
 									}
+								}
+								
+								if (reviewAt < reviewAtTomorrow) {
+									params.year.value = '';
+									return false;
 								}
 								
 								return reviewAt >= reviewAtTomorrow;

@@ -69,6 +69,10 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
 
+			var caseModel = CaseFactory.BuildCaseModel();
+			
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
 			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
@@ -87,6 +91,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
+			Assert.That(pageModel.CaseModel, Is.Not.Null);
 			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
 		}
 		
@@ -117,7 +122,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var page = pageResponse as RedirectResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel.PreviousUrl, Is.Null);
+			Assert.That(pageModel.CaseModel, Is.Null);
 			Assert.That(page.Url, Is.EqualTo("https://returnto/thispage"));
 		}
 		
