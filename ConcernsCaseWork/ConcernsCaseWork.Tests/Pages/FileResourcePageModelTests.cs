@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace ConcernsCaseWork.Tests.Pages
 {
 	[Parallelizable(ParallelScope.All)]
-	public class FileResourceModelTests
+	public class FileResourcePageModelTests
 	{
 		[Test]
 		public void WhenOnGetDownloadRiskManagementPdf_ReturnsPdfDocument()

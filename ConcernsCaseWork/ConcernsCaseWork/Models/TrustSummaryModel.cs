@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ConcernsCaseWork.Extensions;
+using System.Collections.Generic;
 using System.Text;
 
 namespace ConcernsCaseWork.Models
@@ -25,7 +26,7 @@ namespace ConcernsCaseWork.Models
 			get
 			{
 				var sb = new StringBuilder();
-				sb.Append(string.IsNullOrEmpty(GroupName) ? _isNullOrEmpty : GroupName);
+				sb.Append(string.IsNullOrEmpty(GroupName) ? _isNullOrEmpty : GroupName.ToTitle());
 				sb.Append(",").Append(" ");
 				sb.Append(string.IsNullOrEmpty(UkPrn) ? _isNullOrEmpty : UkPrn);
 				sb.Append(",").Append(" ");

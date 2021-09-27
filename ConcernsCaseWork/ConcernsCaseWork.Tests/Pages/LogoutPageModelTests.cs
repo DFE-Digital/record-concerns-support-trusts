@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Tests.Pages
 {
 	[Parallelizable(ParallelScope.All)]
-	public class LogoutModelTests
+	public class LogoutPageModelTests
 	{
 		[Test]
 		public async Task WhenRequestOnGetAsyncIsAuthenticated_ReturnLogoutPage()

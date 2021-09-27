@@ -16,36 +16,56 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<EditDirectionOfTravelPageModel> _logger;
 		
-		public string PreviousUrl { get; private set; }
-
+		public CaseModel CaseModel { get; private set; }
+		
 		public EditDirectionOfTravelPageModel(ICaseModelService caseModelService, ILogger<EditDirectionOfTravelPageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_logger = logger;
 		}
 		
-		public ActionResult OnGet()
+		public async Task<ActionResult> OnGet()
 		{
-			_logger.LogInformation("EditDirectionOfTravelPageModel::OnGet");
+			long caseUrn = 0;
+			
+			try
+			{
+			
+				_logger.LogInformation("Case::EditDirectionOfTravelPageModel::OnGet");
 
-			return LoadPage(Request.Headers["Referer"].ToString());
+				var caseUrnValue = RouteData.Values["id"];
+				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn))
+				{
+					throw new Exception("Case::EditConcernTypePageModel::CaseUrn is null or invalid to parse");
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Case::EditDirectionOfTravelPageModel::OnGetAsync::Exception - { ex.Message }");
+				
+				TempData["Error.Message"] = ErrorOnGetPage;
+			}
+			
+			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn);
 		}
 		
 		public async Task<ActionResult> OnPostEditDirectionOfTravel(string url)
 		{
+			long caseUrn = 0;
+			
 			try
 			{
-				_logger.LogInformation("EditDirectionOfTravelPageModel::OnPostEditDirectionOfTravel");
+				_logger.LogInformation("Case::EditDirectionOfTravelPageModel::OnPostEditDirectionOfTravel");
 				
 				var caseUrnValue = RouteData.Values["id"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn))
+				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn))
 				{
-					throw new Exception("EditDirectionOfTravelPageModel::CaseUrn is null or invalid to parse");
+					throw new Exception("Case::EditDirectionOfTravelPageModel::CaseUrn is null or invalid to parse");
 				}
 				
 				var directionOfTravel = Request.Form["direction-of-travel"];
 
-				if (string.IsNullOrEmpty(directionOfTravel)) throw new Exception("Missing form values");
+				if (string.IsNullOrEmpty(directionOfTravel)) throw new Exception("Case::EditDirectionOfTravelPageModel::Missing form values");
 				
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel
@@ -67,13 +87,22 @@ namespace ConcernsCaseWork.Pages.Case
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
-			return LoadPage(url);
+			return await LoadPage(url, caseUrn);
 		}
 		
-		private ActionResult LoadPage(string url)
+		private async Task<ActionResult> LoadPage(string url, long caseUrn)
 		{
-			PreviousUrl = url;
-
+			if (caseUrn != 0)
+			{
+				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+			}
+			else
+			{
+				CaseModel = new CaseModel();
+			}
+			
+			CaseModel.PreviousUrl = url;
+			
 			return Page();
 		}
 	}

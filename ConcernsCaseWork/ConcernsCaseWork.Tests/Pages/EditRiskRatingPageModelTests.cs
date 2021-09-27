@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.Tests.Pages
 	public class EditRiskRatingPageModelTests
 	{
 		[Test]
-		public void WhenOnGet_ReturnsPage()
+		public async Task WhenOnGet_ReturnsPage()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -31,15 +31,44 @@ namespace ConcernsCaseWork.Tests.Pages
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
 			// act
-			var pageResponse = pageModel.OnGet();
+			var pageResponse = await pageModel.OnGet();
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
+			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
 		}
+		
+		[Test]
+		public async Task WhenOnGet_RouteData_ReturnsPage()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
+			
+			var caseModel = CaseFactory.BuildCaseModel();
+			
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
+			
+			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockLogger.Object);
+			
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("id", 1);
+			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
+			
+			// act
+			var pageResponse = await pageModel.OnGet();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			var page = pageResponse as PageResult;
+			
+			Assert.That(page, Is.Not.Null);
+			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
+		}		
 		
 		[Test]
 		public async Task WhenOnPostEditRiskRating_MissingRouteData_ThrowsException_ReloadPage()
@@ -58,7 +87,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
+			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 		}
 
@@ -69,6 +98,10 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
 
+			var caseModel = CaseFactory.BuildCaseModel();
+			
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
 			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
@@ -87,7 +120,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
+			Assert.That(pageModel.CaseModel, Is.Not.Null);
+			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
 		}
 		
 		[Test]
@@ -117,7 +151,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var page = pageResponse as RedirectResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.PreviousUrl, Is.Null);
+			Assert.That(pageModel.CaseModel, Is.Null);
 			Assert.That(page.Url, Is.EqualTo("https://returnto/thispage"));
 		}
 		

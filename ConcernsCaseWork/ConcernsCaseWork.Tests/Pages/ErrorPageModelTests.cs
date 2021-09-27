@@ -12,7 +12,7 @@ using System;
 namespace ConcernsCaseWork.Tests.Pages
 {
 	[Parallelizable(ParallelScope.All)]
-	public class ErrorModelTests
+	public class ErrorPageModelTests
 	{
 		[Test]
 		public void WhenRequestOnGet_ReturnErrorPage()

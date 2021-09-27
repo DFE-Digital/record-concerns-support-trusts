@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Tests.Pages
 {
 	[Parallelizable(ParallelScope.All)]
-	public class LoginModelTests
+	public class LoginPageModelTests
 	{
 		[Test]
 		public void WhenRequestOnGetIsAuthenticated_ReturnHomePage()

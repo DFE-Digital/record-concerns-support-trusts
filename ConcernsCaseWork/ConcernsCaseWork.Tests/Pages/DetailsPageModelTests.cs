@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Tests.Pages
 {
 	[Parallelizable(ParallelScope.All)]
-	public class DetailsModelTests
+	public class DetailsPageModelTests
 	{
 		[Test]
 		public async Task WhenOnGetAsync_ReturnsModel()

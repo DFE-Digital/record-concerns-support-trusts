@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var monthToReview = Request.Form["dtr-month"];
 				var yearToReview = Request.Form["dtr-year"];
 
-				if (string.IsNullOrEmpty(caseOutcomes)) throw new Exception("Missing form values");
+				if (string.IsNullOrEmpty(caseOutcomes)) throw new Exception("Case::ClosurePageModel::Missing form values");
 				
 				var isMonitoring = monitoring.ToString().ToBoolean();
 				var patchCaseModel = new PatchCaseModel();

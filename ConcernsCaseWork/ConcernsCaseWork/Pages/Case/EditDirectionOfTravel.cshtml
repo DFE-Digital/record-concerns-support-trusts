@@ -3,6 +3,7 @@
 
 @{
 	ViewData["Title"] = "Direction of travel";
+	var directionOfTravel = Model.CaseModel.DirectionOfTravel ?? string.Empty;
 }
 
 <div class="govuk-width-container">
@@ -19,12 +20,12 @@
 
 			<form role="form" asp-page-handler="editDirectionOfTravel" method="post" id="direction-of-travel-form" novalidate>
 
-				<input type="hidden" value="@Model.PreviousUrl" name="url"/>
+				<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
 
 				<div class="govuk-form-group">
 					<fieldset class="govuk-fieldset">
 						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
-						<partial name="_DirectionOfTravel"></partial>
+						<partial name="_DirectionOfTravel" model="@directionOfTravel"></partial>
 					</fieldset>
 				</div>
 

@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Tests.Pages
 {
 	[Parallelizable(ParallelScope.All)]
-	public class HomeModelTests
+	public class HomePageModelTests
 	{
 		[Test]
 		public async Task WhenInstanceOfIndexPageOnGetAsync_ReturnCases()

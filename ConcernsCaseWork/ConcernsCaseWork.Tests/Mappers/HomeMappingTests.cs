@@ -2,7 +2,9 @@
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
+using Service.TRAMS.Records;
 using Service.TRAMS.Status;
+using Service.TRAMS.Type;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,6 +13,27 @@ namespace ConcernsCaseWork.Tests.Mappers
 	[Parallelizable(ParallelScope.All)]
 	public class HomeMappingTests
 	{
+		[Test]
+		public void WhenMap_ReturnsActive_Monitoring_Cases()
+		{
+			// arrange
+			var casesDto = CaseFactory.BuildListCaseDto();
+			var trustDetailsDto = TrustFactory.BuildListTrustDetailsDto();
+			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto() };
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = new List<TypeDto> { TypeFactory.BuildTypeDto(99) };
+			var statusLiveDto = StatusFactory.BuildStatusDto(Status.Live.ToString(), 1);
+			var statusMonitoringDto = StatusFactory.BuildStatusDto(Status.Monitoring.ToString(), 2);
+
+			// act
+			(IList<HomeModel> activeCases, IList<HomeModel> monitoringCases) = HomeMapping.Map(casesDto, trustDetailsDto,
+				recordsDto, ratingsDto, typesDto, statusLiveDto, statusMonitoringDto);
+
+			// assert
+			Assert.That(activeCases, Is.Not.Null);
+			Assert.That(monitoringCases, Is.Not.Null);
+		}
+		
 		[Test]
 		public void WhenMapCases_To_HomeModels()
 		{

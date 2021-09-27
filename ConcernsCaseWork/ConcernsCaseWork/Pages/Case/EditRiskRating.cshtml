@@ -19,12 +19,12 @@
 
 			<form role="form" asp-page-handler="editRiskRating" method="post" id="risk-rating-form" novalidate>
 
-				<input type="hidden" value="@Model.PreviousUrl" name="url"/>
+				<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
 
 				<div class="govuk-form-group">
 					<fieldset class="govuk-fieldset">
 						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
-						<partial name="_RiskRating"></partial>
+						<partial name="_RiskRating" model="@Model.CaseModel"></partial>
 					</fieldset>
 				</div>
 

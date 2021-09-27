@@ -1,5 +1,8 @@
-﻿@model IDictionary<string, IList<string>>
+﻿@model ConcernsCaseWork.Models.CaseModel
 @{
+	var types = Model.TypesDictionary;
+	var type = Model.CaseType;
+	var subType = Model.CaseSubType;
 	var typeIndex = 1;
 	var subTypeIndex = 1;
 }
@@ -8,10 +11,10 @@
 
 <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
 	@{
-		foreach (var (key, value) in Model)
+		foreach (var (key, value) in types)
 		{
 			<div class="govuk-radios__item">
-				<input class="govuk-radios__input" data-aria-controls="conditional-type-@typeIndex" id="type" name="type" type="radio" value="@key">
+				<input class="govuk-radios__input" data-aria-controls="conditional-type-@typeIndex" id="type" name="type" type="radio" value="@key" checked="@type.Equals(key)">
 				<label class="govuk-label govuk-radios__label" for="type">
 					@key
 				</label>
@@ -25,7 +28,7 @@
 						@foreach (var subtype in value)
 						{
 							<div class="govuk-radios__item">
-								<input class="govuk-radios__input" id="subType-@subTypeIndex" name="subType" type="radio" value="@subtype">
+								<input class="govuk-radios__input" id="subType-@subTypeIndex" name="subType" type="radio" value="@subtype" checked="@subType.Equals(subtype)">
 								<label class="govuk-label govuk-radios__label" for="subType-@subTypeIndex">
 									@subtype
 								</label>

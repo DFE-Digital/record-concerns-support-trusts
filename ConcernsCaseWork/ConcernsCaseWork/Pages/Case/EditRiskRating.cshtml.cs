@@ -16,7 +16,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<EditRiskRatingPageModel> _logger;
 
-		public string PreviousUrl { get; private set; }
+		public CaseModel CaseModel { get; private set; }
 		
 		public EditRiskRatingPageModel(ICaseModelService caseModelService, ILogger<EditRiskRatingPageModel> logger)
 		{
@@ -24,28 +24,47 @@ namespace ConcernsCaseWork.Pages.Case
 			_logger = logger;
 		}
 		
-		public ActionResult OnGet()
+		public async Task<ActionResult> OnGet()
 		{
-			_logger.LogInformation("EditRiskRatingPageModel::OnGet");
+			long caseUrn = 0;
 			
-			return LoadPage(Request.Headers["Referer"].ToString());
+			try
+			{
+				_logger.LogInformation("Case::EditRiskRatingPageModel::OnGet");
+				
+				var caseUrnValue = RouteData.Values["id"];
+				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn))
+				{
+					throw new Exception("Case::EditConcernTypePageModel::CaseUrn is null or invalid to parse");
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Case::EditRiskRatingPageModel::OnGetAsync::Exception - { ex.Message }");
+				
+				TempData["Error.Message"] = ErrorOnGetPage;
+			}
+			
+			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn);
 		}
 		
 		public async Task<ActionResult> OnPostEditRiskRating(string url)
 		{
+			long caseUrn = 0;
+			
 			try
 			{
-				_logger.LogInformation("EditRiskRatingPageModel::OnPostEditRiskRating");
+				_logger.LogInformation("Case::EditRiskRatingPageModel::OnPostEditRiskRating");
 				
 				var caseUrnValue = RouteData.Values["id"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn))
+				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn))
 				{
-					throw new Exception("EditRiskRatingPageModel::CaseUrn is null or invalid to parse");
+					throw new Exception("Case::EditRiskRatingPageModel::CaseUrn is null or invalid to parse");
 				}
 				
 				var riskRating = Request.Form["riskRating"];
 
-				if (string.IsNullOrEmpty(riskRating)) throw new Exception("Missing form values");
+				if (string.IsNullOrEmpty(riskRating)) throw new Exception("Case::EditRiskRatingPageModel::Missing form values");
 				
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel
@@ -68,12 +87,21 @@ namespace ConcernsCaseWork.Pages.Case
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
-			return LoadPage(url);
+			return await LoadPage(url, caseUrn);
 		}
 		
-		private ActionResult LoadPage(string url)
+		private async Task<ActionResult> LoadPage(string url, long caseUrn)
 		{
-			PreviousUrl = url;
+			if (caseUrn != 0)
+			{
+				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+			}
+			else
+			{
+				CaseModel = new CaseModel();
+			}
+			
+			CaseModel.PreviousUrl = url;
 
 			return Page();
 		} 

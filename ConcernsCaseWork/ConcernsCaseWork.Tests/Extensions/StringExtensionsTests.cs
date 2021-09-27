@@ -27,5 +27,16 @@ namespace ConcernsCaseWork.Tests.Extensions
 			// assert
 			Assert.That(actual.ToBoolean(), Is.EqualTo(expected));
 		}
+
+		[TestCase("Acer Trust", "Acer Trust")]
+		[TestCase("ACER TrUst", "Acer Trust")]
+		[TestCase("acer TRUST", "Acer Trust")]
+		[TestCase("ACER TRUST", "Acer Trust")]
+		[TestCase("acer trust", "Acer Trust")]
+		public void WhenToTitle_ReturnsExpected(string actual, string expected)
+		{
+			// assert
+			Assert.That(actual.ToTitle(), Is.EqualTo(expected));
+		}
 	}
 }

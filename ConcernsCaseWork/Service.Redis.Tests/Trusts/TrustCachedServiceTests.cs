@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Service.Redis.Base;
 using Service.Redis.Trusts;
 using Service.TRAMS.Trusts;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -114,5 +115,33 @@ namespace Service.Redis.Tests.Trusts
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<IDictionary<string, TrustDetailsDto>>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
 			mockTrustService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
 		}
+		
+		[Test]
+		public async Task WhenGetTrustByUkPrn_ThrowsException_ReturnsNull()
+		{
+			// arrange
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockTrustService = new Mock<ITrustService>();
+			var mockLogger = new Mock<ILogger<TrustCachedService>>();
+
+			var expectedTrust = TrustFactory.BuildTrustDetailsDto();
+			var trusts = new Dictionary<string, TrustDetailsDto>{ { "trust-ukprn-1", expectedTrust } };
+			
+			mockCacheProvider.Setup(c => c.GetFromCache<IDictionary<string, TrustDetailsDto>>(It.IsAny<string>())).
+				ReturnsAsync(trusts);
+			mockTrustService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).Throws<Exception>();
+			
+			var trustCachedService = new TrustCachedService(mockCacheProvider.Object, mockTrustService.Object, mockLogger.Object);
+			
+			// act
+			var actualTrust = await trustCachedService.GetTrustByUkPrn("trust-ukprn");
+
+			// assert
+			Assert.That(actualTrust, Is.Null);
+			
+			mockCacheProvider.Verify(c => c.GetFromCache<IDictionary<string, TrustDetailsDto>>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<IDictionary<string, TrustDetailsDto>>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
+			mockTrustService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
+		}		
 	}
 }
