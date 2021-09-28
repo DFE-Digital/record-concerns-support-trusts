@@ -241,7 +241,7 @@ namespace ConcernsCaseWork.Services.Cases
 					createCaseModel.RecordType, createCaseModel.RecordSubType);
 
 				// Fetch Rating
-				var ratingDto = await _ratingCachedService.GetRatingByName(createCaseModel.RagRating);
+				var ratingDto = await _ratingCachedService.GetRatingByName(createCaseModel.RagRatingName);
 
 				// Is first case
 				var isCasePrimary = await _caseCachedService.IsCasePrimary(createCaseModel.CreatedBy, createCaseModel.Urn);

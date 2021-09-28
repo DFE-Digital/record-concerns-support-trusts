@@ -89,7 +89,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Status = 1, 
 				RecordType = "record-type", 
 				RecordSubType = "record-sub-.type", 
-				RagRating = "rag-rating"
+				RagRatingName = "rag-rating"
 			};
 		}
 		

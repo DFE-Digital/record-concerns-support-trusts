@@ -4,11 +4,12 @@
 @{
 	ViewData["Title"] = "Direction of travel";
 	var directionOfTravel = Model.CaseModel.DirectionOfTravel ?? string.Empty;
+	var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
-	<partial name="_Error"></partial>
+	<partial name="_Error" model="@Model.CaseModel"></partial>
 	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds">
 			
@@ -42,7 +43,7 @@
 	</div>
 </div>
 
-<script type="application/javascript">
+<script type="application/javascript" nonce="@nonce">
 	$(function () {	
 		let validator = formValidator($("#direction-of-travel-form")[0]);
 		validator.addValidator('direction-of-travel', [{

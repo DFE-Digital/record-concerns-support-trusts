@@ -3,11 +3,12 @@
 
 @{
 	ViewData["Title"] = "Case closure";
+	var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
-	<partial name="_Error"></partial>
+	<partial name="_Error" model="@Model.CaseModel"></partial>
 	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds">
 			
@@ -117,7 +118,7 @@
 	</div>
 </div>
 		
-<script type="application/javascript">
+<script type="application/javascript" nonce="@nonce">
 	$(function () {
 		// allow only numbers
 		$(".govuk-date-input__input").on('input', function () {

@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,8 @@ namespace ConcernsCaseWork.Pages.Case
 
 				// Fetch UI data
 				CreateCaseModel = caseStateModel.CreateCaseModel;
+				CreateCaseModel.RagRating = RagMapping.FetchRag(CreateCaseModel.RagRatingName);
+				CreateCaseModel.RagRatingCss = RagMapping.FetchRagCss(CreateCaseModel.RagRatingName);
 			}
 			catch (Exception ex)
 			{

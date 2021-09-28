@@ -63,9 +63,9 @@ namespace ConcernsCaseWork.Pages.Case
 
 				var type = Request.Form["type"];
 				var subType = Request.Form["subType"];
-				var ragRating = Request.Form["riskRating"];
-				var trustName = Request.Form["trust-name"];
-				trustUkPrn = Request.Form["trust-ukprn"];
+				var ragRating = Request.Form["ragRating"];
+				var trustName = Request.Form["trustName"];
+				trustUkPrn = Request.Form["trustUkprn"];
 
 				if (string.IsNullOrEmpty(type) 
 				    || string.IsNullOrEmpty(ragRating)
@@ -83,7 +83,7 @@ namespace ConcernsCaseWork.Pages.Case
 					CreatedAt = currentDate,
 					CreatedBy = User.Identity.Name,
 					DeEscalation = currentDate,
-					RagRating = ragRating,
+					RagRatingName = ragRating,
 					RecordType = type,
 					ReviewAt = currentDate,
 					UpdatedAt = currentDate,

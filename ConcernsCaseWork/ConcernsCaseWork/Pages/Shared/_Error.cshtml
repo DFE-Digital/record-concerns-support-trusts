@@ -1,7 +1,7 @@
 ﻿@model ConcernsCaseWork.Models.CaseModel
 
 @if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")) 
-     || Model.TrustDetailsModel is null)
+     && Model?.TrustDetailsModel is null)
 {
 	var nonce = Context.GetNonce();
 	<div class="govuk-heading-l moj-banner__message">

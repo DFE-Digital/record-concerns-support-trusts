@@ -29,8 +29,8 @@
 			<!-- FORM -->
 			<form role="form" method="post" id="case-concern-type-form" novalidate>
 				<!--Trust UkPrn-->
-				<input type="hidden" name="trust-ukprn" value="@Model.CaseModel.TrustDetailsModel?.GiasData.UkPrn">
-				<input type="hidden" name="trust-name" value="@Model.CaseModel.TrustDetailsModel?.GiasData.GroupName">
+				<input type="hidden" name="trustUkprn" value="@Model.CaseModel.TrustDetailsModel?.GiasData.UkPrn">
+				<input type="hidden" name="trustName" value="@Model.CaseModel.TrustDetailsModel?.GiasData.GroupName">
 				
 				<!--Q Concern type-->
 				<div class="govuk-form-group">
@@ -72,7 +72,7 @@
 			<script type="application/javascript" nonce="@nonce">
 				$(function () {
 					let validator = formValidatorConcernType($("#case-concern-type-form")[0]);
-					validator.addValidator('riskRating', [{
+					validator.addValidator('ragRating', [{
 						method: function(field) {
 							return field.value.trim().length > 0;
 						},
