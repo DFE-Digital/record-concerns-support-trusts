@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.TRAMS.Cases;
+using System;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Models
@@ -46,7 +47,7 @@ namespace ConcernsCaseWork.Models
 		/// <summary>
 		/// Deteriorating, unchanged, improved
 		/// </summary>
-		public string DirectionOfTravel { get; set; } = Service.TRAMS.Cases.DirectionOfTravel.Deteriorating.ToString();
+		public string DirectionOfTravel { get; set; } = DirectionOfTravelEnum.Deteriorating.ToString();
 
 		public long Urn { get; set; }
 

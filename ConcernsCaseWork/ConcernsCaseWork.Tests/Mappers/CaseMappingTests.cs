@@ -46,14 +46,14 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var caseDto = CaseFactory.BuildCaseDto();
 
 			// act
-			var caseModel = CaseMapping.Map(caseDto, Status.Close.ToString());
+			var caseModel = CaseMapping.Map(caseDto, StatusEnum.Close.ToString());
 
 			// assert
 			Assert.That(caseModel, Is.Not.Null);
 			Assert.That(caseModel.Description, Is.EqualTo(caseDto.Description));
 			Assert.That(caseModel.Issue, Is.EqualTo(caseDto.Issue));
 			Assert.That(caseModel.Status, Is.EqualTo(caseDto.Status));
-			Assert.That(caseModel.StatusName, Is.EqualTo(Status.Close.ToString()));
+			Assert.That(caseModel.StatusName, Is.EqualTo(StatusEnum.Close.ToString()));
 			Assert.That(caseModel.Urn, Is.EqualTo(caseDto.Urn));
 			Assert.That(caseModel.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
 			Assert.That(caseModel.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
@@ -77,7 +77,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// arrange
 			var patchCaseModel = CaseFactory.BuildPatchCaseModel();
 			var caseDto = CaseFactory.BuildCaseDto();
-			var statusDto = StatusFactory.BuildStatusDto(Status.Monitoring.ToString(), 1);
+			var statusDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 1);
 
 			// act
 			caseDto = CaseMapping.MapClosure(patchCaseModel, caseDto, statusDto);

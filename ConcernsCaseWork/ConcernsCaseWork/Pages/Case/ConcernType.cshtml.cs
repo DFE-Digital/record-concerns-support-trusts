@@ -89,7 +89,7 @@ namespace ConcernsCaseWork.Pages.Case
 					RecordSubType = subType,
 					TrustUkPrn = trustUkPrn,
 					TrustName = trustName,
-					DirectionOfTravel = DirectionOfTravel.Deteriorating.ToString()
+					DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString()
 				};
 					
 				// Store case model in cache for the details page
