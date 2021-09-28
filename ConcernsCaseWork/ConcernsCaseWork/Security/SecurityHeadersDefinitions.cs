@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Security
 					builder.AddImgSrc().Self().From("data:");
 					builder.AddFormAction().Self();
 					builder.AddFontSrc().Self();
-					builder.AddStyleSrc().Self(); // .UnsafeInline();
+					builder.AddStyleSrc().Self();
 					builder.AddBaseUri().Self();
 					builder.AddScriptSrc().UnsafeInline().WithNonce();
 					builder.AddFrameAncestors().None();
@@ -57,7 +57,7 @@ namespace ConcernsCaseWork.Security
 
 			if (!isDev)
 			{
-				// maxage = one year in seconds
+				// max age = one year in seconds
 				policy.AddStrictTransportSecurityMaxAgeIncludeSubDomains(maxAgeInSeconds: 60 * 60 * 24 * 365);
 			}
 
