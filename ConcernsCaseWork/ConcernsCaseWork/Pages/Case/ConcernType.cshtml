@@ -29,8 +29,8 @@
 			<!-- FORM -->
 			<form role="form" method="post" id="case-concern-type-form" novalidate>
 				<!--Trust UkPrn-->
-				<input type="hidden" name="trust-ukprn" value="@Model.CaseModel.TrustDetailsModel.GiasData.UkPrn">
-				<input type="hidden" name="trust-name" value="@Model.CaseModel.TrustDetailsModel.GiasData.GroupName">
+				<input type="hidden" name="trust-ukprn" value="@Model.CaseModel.TrustDetailsModel?.GiasData.UkPrn">
+				<input type="hidden" name="trust-name" value="@Model.CaseModel.TrustDetailsModel?.GiasData.GroupName">
 				
 				<!--Q Concern type-->
 				<div class="govuk-form-group">

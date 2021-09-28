@@ -67,7 +67,9 @@ namespace ConcernsCaseWork.Pages.Case
 				var trustName = Request.Form["trust-name"];
 				trustUkPrn = Request.Form["trust-ukprn"];
 
-				if (string.IsNullOrEmpty(type) || string.IsNullOrEmpty(ragRating)) 
+				if (string.IsNullOrEmpty(type) 
+				    || string.IsNullOrEmpty(ragRating)
+					|| string.IsNullOrEmpty(trustUkPrn)) 
 					throw new Exception("Case::ConcernTypePageModel::Missing form values");
 				
 				var userState = await GetUserState();

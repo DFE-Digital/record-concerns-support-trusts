@@ -3,6 +3,7 @@
 
 @{
 	ViewData["Title"] = "Case management";
+	var nonce = HttpContext.GetNonce();
 }
 
 @if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")) || Model.CaseModel is null)
@@ -184,7 +185,7 @@ else
 			</button>
 		</div>
 	</div>
-	<script type="application/javascript">
+	<script type="application/javascript" nonce="@nonce">
 		$(function () {
 			
 			
