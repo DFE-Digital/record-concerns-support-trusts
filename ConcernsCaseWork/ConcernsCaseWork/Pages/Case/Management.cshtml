@@ -104,11 +104,11 @@ else
 			</dl>
 
 			<!--Accordions-->
-			<div class="govuk-accordion govuk-accordion__section--expanded"
+			<div class="govuk-accordion"
 			     data-module="govuk-accordion"
 			     id="accordion-default">
 
-				<div class="govuk-accordion__section govuk-accordion__section--expanded">
+				<div class="govuk-accordion__section">
 					<div class="govuk-accordion__section-header">
 						<h2 class="govuk-accordion__section-heading">
 							<span class="govuk-accordion__section-button" id="accordion-default-heading-1">Issue</span>
@@ -122,7 +122,7 @@ else
 					</div>
 				</div>
 
-				<div class="govuk-accordion__section govuk-accordion__section--expanded">
+				<div class="govuk-accordion__section">
 					<div class="govuk-accordion__section-header">
 						<h2 class="govuk-accordion__section-heading">
 							<span class="govuk-accordion__section-button" id="accordion-default-heading-2">Current status</span>
@@ -136,7 +136,7 @@ else
 					</div>
 				</div>
 
-				<div class="govuk-accordion__section govuk-accordion__section--expanded">
+				<div class="govuk-accordion__section">
 					<div class="govuk-accordion__section-header">
 						<h2 class="govuk-accordion__section-heading">
 							<span class="govuk-accordion__section-button" id="accordion-default-heading-3">Case aim</span>
@@ -150,7 +150,7 @@ else
 					</div>
 				</div>
 
-				<div class="govuk-accordion__section govuk-accordion__section--expanded">
+				<div class="govuk-accordion__section">
 					<div class="govuk-accordion__section-header">
 						<h2 class="govuk-accordion__section-heading">
 							<span class="govuk-accordion__section-button" id="accordion-default-heading-4">De-escalation point</span>
@@ -164,7 +164,7 @@ else
 					</div>
 				</div>
 
-				<div class="govuk-accordion__section govuk-accordion__section--expanded">
+				<div class="govuk-accordion__section">
 					<div class="govuk-accordion__section-header">
 						<h2 class="govuk-accordion__section-heading">
 							<span class="govuk-accordion__section-button" id="accordion-default-heading-5">Next steps</span>
@@ -187,8 +187,8 @@ else
 	</div>
 	<script type="application/javascript" nonce="@nonce">
 		$(function () {
-			
-			
+			$("button[id^='accordion-default-heading']").attr("aria-expanded", "true");
+			$(".govuk-accordion__section").addClass("govuk-accordion__section--expanded");
 		});
 	</script>
 }
