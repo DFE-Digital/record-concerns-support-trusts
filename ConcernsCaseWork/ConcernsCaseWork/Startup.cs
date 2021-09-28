@@ -1,4 +1,5 @@
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Security;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -88,6 +89,10 @@ namespace ConcernsCaseWork
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
+            // Security headers
+            app.UseSecurityHeaders(
+	            SecurityHeadersDefinitions.GetHeaderPolicyCollection(env.IsDevelopment()));
             
             // Combined with razor routing 404 display custom page NotFound
             app.UseStatusCodePagesWithReExecute("/error/{0}");

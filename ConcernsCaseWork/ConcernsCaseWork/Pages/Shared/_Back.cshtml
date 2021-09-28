@@ -1,7 +1,13 @@
 ﻿@model string
 
 @if (BackPageModel.CanRender(Context.Request.Path.Value)) {
+	var nonce = Context.GetNonce();
 	<div class="govuk-width-container">
-		<a class="govuk-back-link" href="@Model">Back</a>
+		<a id="back-link-event" class="govuk-back-link" href="#">Back</a>
+		<script nonce="@nonce">
+			$("#back-link-event").click(function() {
+				@Model
+			});
+		</script>
 	</div>
 }

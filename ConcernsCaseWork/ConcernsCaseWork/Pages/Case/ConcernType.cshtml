@@ -3,6 +3,7 @@
 
 @{
 	ViewData["Title"] = "New Case Concern type";
+	var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
@@ -19,7 +20,7 @@
 	            <div class="moj-banner__message">
 		            <p class="govuk-body">@TempData["Error.Message"]</p>
 		        </div>
-	            <script type="application/javascript">
+	            <script type="application/javascript" once="@nonce">
 	            	$(function () {
 	            		showGlobalError();
 					});
@@ -76,7 +77,7 @@
 
 				</form>
 				
-				<script type="application/javascript">
+				<script type="application/javascript" once="@nonce">
 					$(function () {
 						let validator = formValidatorConcernType($("#case-concern-type-form")[0]);
 						validator.addValidator('riskRating', [{

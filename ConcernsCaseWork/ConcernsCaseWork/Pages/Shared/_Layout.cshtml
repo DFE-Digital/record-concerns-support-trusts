@@ -16,12 +16,13 @@
 	<link rel="stylesheet" href="~/dist/site.css"/>
 
 	<title>@ViewData["Title"] - Concerns casework - GOV.UK</title>
-
+	
 </head>
 <body class="govuk-template__body ">
-<script src="~/dist/vendor/jquery.min.js"></script>
-<script src="~/dist/moj/all.js"></script>
-<script>
+@{ var nonce = Context.GetNonce(); }
+<script src="~/dist/vendor/jquery.min.js" nonce="@nonce"></script>
+<script src="~/dist/moj/all.js" nonce="@nonce"></script>
+<script nonce="@nonce">
 	document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
 </script>
 
@@ -36,12 +37,12 @@
 				<a class="moj-header__link moj-header__link--organisation-name" href="/">DfE</a>
 				<a class="moj-header__link moj-header__link--service-name" asp-page="/admin">Concerns casework</a>
 			</div>
-		
+
 			@if (Context.User.Identity.IsAuthenticated)
 			{
 				<div class="moj-header__content">
 					<p class="govuk-body">
-						<a asp-page="Logout" class="govuk-header__link dfe-sign-out">Sign out (@Context.User.Identity.Name)</a>
+						<a href="/logout" class="govuk-header__link dfe-sign-out">Sign out (@Context.User.Identity.Name)</a>
 					</p>
 				</div>
 			}
@@ -49,6 +50,7 @@
 	</div>
 </header>
 
+@await RenderSectionAsync("Scripts", required: false)
 @await RenderSectionAsync("BeforeMain", required: false)
 <partial name="_Back" model="BackPageModel.BrowserBackPage"/>
 <main class="govuk-main-wrapper wrapper_padding-top-20 govuk-main-wrapper--auto-spacing" id="main-content" role="main">
@@ -100,7 +102,7 @@
 		</div>
 	</div>
 </footer>
-<script src="~/dist/main.js"></script>
-<script src="~/dist/autocomplete/accessible-autocomplete.min.js"></script>
+<script src="~/dist/main.js" nonce="@nonce"></script>
+<script src="~/dist/autocomplete/accessible-autocomplete.min.js" nonce="@nonce"></script>
 </body>
 </html>
