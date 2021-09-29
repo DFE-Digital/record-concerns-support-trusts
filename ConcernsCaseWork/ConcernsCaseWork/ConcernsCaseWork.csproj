@@ -751,6 +751,13 @@
     <_ContentIncludedByDefault Remove="wwwroot\assets\images\icon-wysiwyg-unordered-list.svg" />
     <_ContentIncludedByDefault Remove="wwwroot\assets\images\moj-logotype-crest.png" />
     <_ContentIncludedByDefault Remove="wwwroot\assets\images\moj-logotype-crest.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\accessible-autocomplete.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\accessible-autocomplete.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\accessible-autocomplete.min.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\lib\accessible-autocomplete.preact.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\lib\accessible-autocomplete.preact.min.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\lib\accessible-autocomplete.react.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\lib\accessible-autocomplete.react.min.js.map" />
   </ItemGroup>
 
   <ItemGroup>

@@ -20,6 +20,7 @@
 			<form role="form" asp-page-handler="closeCase" method="post" id="close-case-form" novalidate>
 
 				<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="200">
+					
 					<div class="govuk-form-group">
 						<label class="govuk-label govuk-!-font-weight-bold" for="case-outcomes">
 							Case outcomes
@@ -161,13 +162,13 @@
 		
 		let validator = formValidator($("#close-case-form")[0]);
 		validator.addValidator('case-outcomes', [{
-			method: function(field) {
+			method: function(field) {				
 				return field.value.trim().length > 0;
 			},
 			message: 'You have not recorded an outcome'
 		},
 		{
-			method: function(field) {
+			method: function(field) {				
 				return field.value.trim().length <= 200;
 			},
 			message: 'Your case outcome contains too many characters'
@@ -176,7 +177,7 @@
 			method: function(field) {
 				if (field.value === 'yes') {
 					
-					// Adds validator if doesn't exist
+					// Adds validator if doesnt exist
 					if(!validator.validators.some(validator => validator.fieldName === "dtr-day")) {
 						
 						validator.addValidator('dtr-day', [{

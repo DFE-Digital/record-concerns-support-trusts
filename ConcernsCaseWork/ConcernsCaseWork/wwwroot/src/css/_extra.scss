@@ -1212,6 +1212,16 @@ span.summary-validation-symbol {
   border: 0;
 }
 
+.govuk-error-message--alt {
+  font-family: "GDS Transport",arial,sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: block;
+  margin-bottom: 15px;
+  clear: both;
+  color: #d4351c;
+}
+
 .govuk-o-grid {
   margin-right: -15px;
   margin-left: -15px;

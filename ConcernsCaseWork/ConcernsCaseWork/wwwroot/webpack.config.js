@@ -24,7 +24,7 @@ module.exports = {
 		]
 	},
 	output: {
-		path: path.resolve(__dirname, 'dist'),
+		path: path.resolve(__dirname, 'dist/css'),
 		filename: 'index.bundle.js',
 	}
 };
