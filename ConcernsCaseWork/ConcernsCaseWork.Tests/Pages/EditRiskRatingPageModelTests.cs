@@ -140,7 +140,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
-					{ "riskRating", new StringValues("riskRating") }
+					{ "ragRating", new StringValues("ragRating") }
 				});
 			
 			// act
