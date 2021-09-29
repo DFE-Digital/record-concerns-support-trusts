@@ -91,8 +91,8 @@ namespace ConcernsCaseWork
             }
             
             // Security headers
-            // app.UseSecurityHeaders(
-	           //  SecurityHeadersDefinitions.GetHeaderPolicyCollection(env.IsDevelopment()));
+            app.UseSecurityHeaders(
+	            SecurityHeadersDefinitions.GetHeaderPolicyCollection(env.IsDevelopment()));
             
             // Combined with razor routing 404 display custom page NotFound
             app.UseStatusCodePagesWithReExecute("/error/{0}");
