@@ -65,6 +65,12 @@ dotnet user-secrets clear
 ```
 [Microsoft page](https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1&tabs=windows)
 
+### Build Node Dependencies
+***
+```
+npm run build
+```
+
 ### Docker SQLServer
 ***
 ```

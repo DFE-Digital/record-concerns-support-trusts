@@ -89,7 +89,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Status = 1, 
 				RecordType = "record-type", 
 				RecordSubType = "record-sub-.type", 
-				RagRating = "rag-rating"
+				RagRatingName = "rag-rating"
 			};
 		}
 		
@@ -132,124 +132,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				RecordSubType = "record-sub-type",
 				RatingUrn = 1,
 				RiskRating = "Amber Green"
-			};
-		}
-		
-		public static IEnumerable<CaseModel> BuildListCaseModels()
-		{
-			var dateTimeNow = DateTimeOffset.Now;
-			return new List<CaseModel>
-			{
-				new CaseModel
-				{
-					CreatedAt = dateTimeNow,
-					UpdatedAt = dateTimeNow,
-					ReviewAt = dateTimeNow,
-					ClosedAt = dateTimeNow,
-					CreatedBy = "testing",
-					Description = "description",
-					CrmEnquiry = "crm-enquiry",
-					TrustUkPrn = "trust-ukprn",
-					ReasonAtReview = "reason-at-review",
-					DeEscalation = dateTimeNow,
-					Issue = "issue",
-					CurrentStatus = "current-status",
-					NextSteps = "nextSteps",
-					CaseAim = "case-aim",
-					DeEscalationPoint = "de-escalation-point",
-					DirectionOfTravel = "direction-of-travel",
-					Urn = 1,
-					Status = 1,
-					StatusName = "Live"
-				},
-				new CaseModel				
-				{
-					CreatedAt = dateTimeNow,
-					UpdatedAt = dateTimeNow,
-					ReviewAt = dateTimeNow,
-					ClosedAt = dateTimeNow,
-					CreatedBy = "testing",
-					Description = "description",
-					CrmEnquiry = "crm-enquiry",
-					TrustUkPrn = "trust-ukprn",
-					ReasonAtReview = "reason-at-review",
-					DeEscalation = dateTimeNow,
-					Issue = "issue",
-					CurrentStatus = "current-status",
-					NextSteps = "nextSteps",
-					CaseAim = "case-aim",
-					DeEscalationPoint = "de-escalation-point",
-					DirectionOfTravel = "direction-of-travel",
-					Urn = 2,
-					Status = 1,
-					StatusName = "Live"
-				},
-				new CaseModel
-				{
-					CreatedAt = dateTimeNow,
-					UpdatedAt = dateTimeNow,
-					ReviewAt = dateTimeNow,
-					ClosedAt = dateTimeNow,
-					CreatedBy = "testing",
-					Description = "description",
-					CrmEnquiry = "crm-enquiry",
-					TrustUkPrn = "trust-ukprn",
-					ReasonAtReview = "reason-at-review",
-					DeEscalation = dateTimeNow,
-					Issue = "issue",
-					CurrentStatus = "current-status",
-					NextSteps = "nextSteps",
-					CaseAim = "case-aim",
-					DeEscalationPoint = "de-escalation-point",
-					DirectionOfTravel = "direction-of-travel",
-					Urn = 3,
-					Status = 3,
-					StatusName = "Close"
-				},
-				new CaseModel
-				{
-					CreatedAt = dateTimeNow,
-					UpdatedAt = dateTimeNow,
-					ReviewAt = dateTimeNow,
-					ClosedAt = dateTimeNow,
-					CreatedBy = "testing",
-					Description = "description",
-					CrmEnquiry = "crm-enquiry",
-					TrustUkPrn = "trust-ukprn",
-					ReasonAtReview = "reason-at-review",
-					DeEscalation = dateTimeNow,
-					Issue = "issue",
-					CurrentStatus = "current-status",
-					NextSteps = "nextSteps",
-					CaseAim = "case-aim",
-					DeEscalationPoint = "de-escalation-point",
-					DirectionOfTravel = "direction-of-travel",
-					Urn = 4,
-					Status = 2,
-					StatusName = "Monitoring"
-				},
-				new CaseModel
-				{
-					CreatedAt = dateTimeNow,
-					UpdatedAt = dateTimeNow,
-					ReviewAt = dateTimeNow,
-					ClosedAt = dateTimeNow,
-					CreatedBy = "testing",
-					Description = "description",
-					CrmEnquiry = "crm-enquiry",
-					TrustUkPrn = "trust-ukprn",
-					ReasonAtReview = "reason-at-review",
-					DeEscalation = dateTimeNow,
-					Issue = "issue",
-					CurrentStatus = "current-status",
-					NextSteps = "nextSteps",
-					CaseAim = "case-aim",
-					DeEscalationPoint = "de-escalation-point",
-					DirectionOfTravel = "direction-of-travel",
-					Urn = 5,
-					Status = 2,
-					StatusName = "Monitoring"
-				},
 			};
 		}
 	}

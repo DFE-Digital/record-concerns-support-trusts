@@ -43,10 +43,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var userState = await GetUserState();
 				
 				// Fetch UI data
-				CaseModel = new CaseModel {
-					TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(userState.TrustUkPrn), 
-					TypesDictionary = await _typeModelService.GetTypes() 
-				};
+				await LoadPage(userState.TrustUkPrn);
 			}
 			catch (Exception ex)
 			{
@@ -58,17 +55,21 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public async Task<IActionResult> OnPostAsync()
 		{
+			var trustUkPrn = string.Empty;
+			
 			try
 			{
 				_logger.LogInformation("Case::ConcernTypePageModel::OnPost");
 
 				var type = Request.Form["type"];
 				var subType = Request.Form["subType"];
-				var ragRating = Request.Form["riskRating"];
-				var trustUkPrn = Request.Form["trust-ukprn"];
-				var trustName = Request.Form["trust-name"];
+				var ragRating = Request.Form["ragRating"];
+				var trustName = Request.Form["trustName"];
+				trustUkPrn = Request.Form["trustUkprn"];
 
-				if (string.IsNullOrEmpty(type) || string.IsNullOrEmpty(ragRating)) 
+				if (string.IsNullOrEmpty(type) 
+				    || string.IsNullOrEmpty(ragRating)
+					|| string.IsNullOrEmpty(trustUkPrn)) 
 					throw new Exception("Case::ConcernTypePageModel::Missing form values");
 				
 				var userState = await GetUserState();
@@ -82,7 +83,7 @@ namespace ConcernsCaseWork.Pages.Case
 					CreatedAt = currentDate,
 					CreatedBy = User.Identity.Name,
 					DeEscalation = currentDate,
-					RagRating = ragRating,
+					RagRatingName = ragRating,
 					RecordType = type,
 					ReviewAt = currentDate,
 					UpdatedAt = currentDate,
@@ -104,9 +105,28 @@ namespace ConcernsCaseWork.Pages.Case
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 			
-			return Redirect("concerntype");
+			return await LoadPage(trustUkPrn);
 		}
 
+		private async Task<ActionResult> LoadPage(string trustUkPrn)
+		{
+			if (string.IsNullOrEmpty(trustUkPrn))
+			{
+				CaseModel = new CaseModel { 
+					TypesDictionary = await _typeModelService.GetTypes() 
+				};
+			}
+			else
+			{
+				CaseModel = new CaseModel {
+					TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn), 
+					TypesDictionary = await _typeModelService.GetTypes() 
+				};
+			}
+			
+			return Page();
+		}
+		
 		private async Task<UserState> GetUserState()
 		{
 			var userState = await _cachedService.GetData<UserState>(User.Identity.Name);

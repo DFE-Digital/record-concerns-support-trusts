@@ -1,2 +1,11 @@
-﻿<a class="govuk-link" href="javascript: history.back()">Cancel</a>
+﻿@{
+	var nonce = Context.GetNonce();
+}
+<a id="cancel-link-event" class="govuk-link" href="#">Cancel</a>
+<script nonce="@nonce">
+	$("#cancel-link-event").click(function() {
+		history.back();
+	});
+</script>
+
 

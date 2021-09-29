@@ -6,6 +6,9 @@ on:
       environment:
         description: "Environment (staging, production)"
         required: true
+      github_sha:
+        description: "Deploy specific version"
+        required: false
 
 env:
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
@@ -34,7 +37,13 @@ jobs:
           echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
           echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
 
-      - name: Set environment variables
+      - name: Set docker image from input
+        if: "!contains(github.event.inputs.github_sha, '')"
+        run: |
+          echo "DOCKER_IMAGE_TAG=${{ github.event.inputs.github_sha }}" >> $GITHUB_ENV
+
+      - name: Set docker image from github sha
+        if: "contains(github.event.inputs.github_sha, '')"
         run: |
           echo "DOCKER_IMAGE_TAG=$GITHUB_SHA" >> $GITHUB_ENV
 

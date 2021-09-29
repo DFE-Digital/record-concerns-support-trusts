@@ -4,6 +4,15 @@
 import { initAll } from 'govuk-frontend';
 initAll();
 
+import { Closure, Issue, CurrentStatus, CaseAim, DeEscalationPoint, NextSteps } from './textbox';
+Closure(200);
+Issue(2000);
+CurrentStatus(4000);
+CaseAim(1000);
+DeEscalationPoint(1000);
+NextSteps(4000);
+
+
 // Write your JavaScript code.
 window.showGlobalError = function() {
 	$("#moj-banner-error").removeClass("govuk-!-display-none");

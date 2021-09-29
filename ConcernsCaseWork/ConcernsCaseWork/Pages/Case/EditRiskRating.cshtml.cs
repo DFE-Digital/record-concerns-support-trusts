@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.Pages.Case
 					throw new Exception("Case::EditRiskRatingPageModel::CaseUrn is null or invalid to parse");
 				}
 				
-				var riskRating = Request.Form["riskRating"];
+				var riskRating = Request.Form["ragRating"];
 
 				if (string.IsNullOrEmpty(riskRating)) throw new Exception("Case::EditRiskRatingPageModel::Missing form values");
 				

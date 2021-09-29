@@ -107,7 +107,7 @@ namespace ConcernsCaseWork.Pages.Case
 
 			CaseModel.TypesDictionary = await _typeModelService.GetTypes();
 			CaseModel.PreviousUrl = url;
-
+			
 			return Page();
 		}
 	}

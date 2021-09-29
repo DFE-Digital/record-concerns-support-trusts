@@ -3,6 +3,7 @@
 
 @{
 	ViewData["Title"] = "New Case";
+	var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
@@ -52,7 +53,7 @@
 	</form>
 </div>
 
-<script type="application/javascript">
+<script type="application/javascript" nonce="@nonce">
 	$(function () {
 		let clearResults = function () {
 			$("#trusts-partial-results").empty();

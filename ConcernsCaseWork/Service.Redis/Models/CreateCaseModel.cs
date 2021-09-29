@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Service.Redis.Models
 {
@@ -47,6 +48,10 @@ namespace Service.Redis.Models
 		
 		public string RecordSubType { get; set; }
 		
-		public string RagRating { get; set; }
+		public string RagRatingName { get; set; }
+		
+		public IList<string> RagRating { get; set; }
+
+		public IList<string> RagRatingCss { get; set; }
 	}
 }

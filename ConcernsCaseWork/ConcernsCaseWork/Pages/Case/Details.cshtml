@@ -3,6 +3,7 @@
 
 @{
 	ViewData["Title"] = "New Case Details";
+	var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
@@ -19,7 +20,7 @@
 	            <div class="moj-banner__message">
 		            <p class="govuk-body">@TempData["Error.Message"]</p>
 		        </div>
-	            <script type="application/javascript">
+	            <script type="application/javascript" nonce="@nonce">
 	            	$(function () {
 	            		showGlobalError();
 					});
@@ -50,7 +51,7 @@
 						</div>
 
 						<div id="issue-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-							You can enter up to 1000 characters
+							You can enter up to 2000 characters
 						</div>
 
 					</div>
@@ -65,7 +66,7 @@
 						</div>
 
 						<div id="current-status-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-							You can enter up to 1000 characters
+							You can enter up to 4000 characters
 						</div>
 
 					</div>
@@ -110,7 +111,7 @@
 						</div>
 
 						<div id="next-steps-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-							You can enter up to 1000 characters
+							You can enter up to 4000 characters
 						</div>
 
 					</div>
@@ -124,7 +125,7 @@
 
 				</form>
 				
-				<script type="application/javascript">
+				<script type="application/javascript" nonce="@nonce">
 					$(function () {
 						let validator = formValidator($("#case-details-form")[0]);
 						validator.addValidator('issue', [{

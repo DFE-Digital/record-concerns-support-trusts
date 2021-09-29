@@ -2,7 +2,7 @@
 
 <h2 class="govuk-heading-m">@Model.TrustName</h2>
 
-<dl class="govuk-summary-list summary-list-margin-0">
+<dl class="govuk-summary-list">
 	
 	<div class="govuk-summary-list__row">
 		<dt class="govuk-summary-list__key">Primary Concern</dt>
@@ -13,8 +13,13 @@
 
 	<div class="govuk-summary-list__row">
 		<dt class="govuk-summary-list__key">Risk rating</dt>
-		<dd class="govuk-summary-list__value">
-			@Model.RagRating
+		<dd class="govuk-summary-list__value govuk-label-wrapper">
+			@for (var index = 0; index < Model.RagRating.Count; ++index)
+			{
+				<span class="govuk-tag ragtag @Model.RagRatingCss.ElementAt(index)">
+					@Model.RagRating.ElementAt(index)
+				</span>
+			}
 		</dd>
 	</div>
 

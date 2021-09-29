@@ -119,6 +119,17 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.Town, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Town));
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.AdditionalLine, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.AdditionalLine));
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.DisplayAddress, Is.EqualTo(SharedBuilder.BuildDisplayAddress(trustDetailsDto.GiasData.GroupContactAddress)));
+			
+			Assert.IsAssignableFrom<List<EstablishmentModel>>(trustsDetailsModel.Establishments);
+			Assert.That(trustsDetailsModel.Establishments, Is.Not.Null);
+			Assert.That(trustsDetailsModel.Establishments.Count, Is.EqualTo(1));
+			var establishment = trustsDetailsModel.Establishments.First();
+			var establishmentExpected = trustDetailsDto.Establishments.First();
+			Assert.That(establishment.Urn, Is.EqualTo(establishmentExpected.Urn));
+			Assert.That(establishment.EstablishmentName, Is.EqualTo(establishmentExpected.EstablishmentName));
+			Assert.That(establishment.EstablishmentNumber, Is.EqualTo(establishmentExpected.EstablishmentNumber));
+			Assert.That(establishment.LocalAuthorityCode, Is.EqualTo(establishmentExpected.LocalAuthorityCode));
+			Assert.That(establishment.LocalAuthorityName, Is.EqualTo(establishmentExpected.LocalAuthorityName));
 		}
 	}
 }
