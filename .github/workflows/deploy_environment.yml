@@ -38,12 +38,12 @@ jobs:
           echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
 
       - name: Set docker image from input
-        if: "!contains(github.event.inputs.github_sha, '')"
+        if: github.event.inputs.github_sha != ''
         run: |
           echo "DOCKER_IMAGE_TAG=${{ github.event.inputs.github_sha }}" >> $GITHUB_ENV
 
       - name: Set docker image from github sha
-        if: "contains(github.event.inputs.github_sha, '')"
+        if: github.event.inputs.github_sha == ''
         run: |
           echo "DOCKER_IMAGE_TAG=$GITHUB_SHA" >> $GITHUB_ENV
 
