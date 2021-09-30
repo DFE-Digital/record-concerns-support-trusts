@@ -222,6 +222,54 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		[Test]
+		public async Task WhenOnPostCloseCase_MonitoringIsTrue_DateValidationFailure_ThrowsException()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
+			
+			mockCaseModelService.Setup(c => c.PatchClosure(It.IsAny<PatchCaseModel>()));
+			
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockLogger.Object, true);
+			
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("id", 1);
+			
+			var currentDate = DateTimeOffset.Now.AddDays(-1);
+			
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "case-outcomes", new StringValues("case-outcomes") },
+					{ "monitoring", new StringValues("yes") },
+					{ "dtr-day", new StringValues(currentDate.Day.ToString()) },
+					{ "dtr-month", new StringValues(currentDate.Month.ToString()) },
+					{ "dtr-year", new StringValues(currentDate.Year.ToString()) }
+				});
+			
+			// act
+			var actionResult = await pageModel.OnPostCloseCase();
+			var redirectResult = actionResult as RedirectResult;
+
+			// assert
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(actionResult, Is.AssignableFrom<RedirectResult>());
+			Assert.That(redirectResult, Is.Not.Null);
+			Assert.That(redirectResult.Url, Is.EqualTo("closure"));
+			
+			// Verify ILogger
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Error,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("ClosurePageModel")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+		}
+		
+		[Test]
 		public async Task WhenOnPostCloseCase_MissingRequiredForm_ThrowException()
 		{
 			// arrange
