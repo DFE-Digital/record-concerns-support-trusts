@@ -59,14 +59,14 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(createCaseModel.DeEscalation, Is.EqualTo(expected.DeEscalation));
 			Assert.That(createCaseModel.NextSteps, Is.EqualTo(expected.NextSteps));
 			Assert.That(createCaseModel.RagRating, Is.EqualTo(expected.RagRating));
-			Assert.That(createCaseModel.RecordType, Is.EqualTo(expected.RecordType));
+			Assert.That(createCaseModel.CaseType, Is.EqualTo(expected.CaseType));
 			Assert.That(createCaseModel.ReviewAt, Is.EqualTo(expected.ReviewAt));
 			Assert.That(createCaseModel.TrustName, Is.EqualTo(expected.TrustName));
 			Assert.That(createCaseModel.UpdatedAt, Is.EqualTo(expected.UpdatedAt));
 			Assert.That(createCaseModel.DeEscalationPoint, Is.EqualTo(expected.DeEscalationPoint));
 			Assert.That(createCaseModel.DirectionOfTravel, Is.EqualTo(expected.DirectionOfTravel));
 			Assert.That(createCaseModel.ReasonAtReview, Is.EqualTo(expected.ReasonAtReview));
-			Assert.That(createCaseModel.RecordSubType, Is.EqualTo(expected.RecordSubType));
+			Assert.That(createCaseModel.CaseSubType, Is.EqualTo(expected.CaseSubType));
 			Assert.That(createCaseModel.TrustUkPrn, Is.EqualTo(expected.TrustUkPrn));
 
 			// Verify ILogger

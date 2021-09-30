@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Type;
@@ -66,10 +67,8 @@ namespace ConcernsCaseWork.Pages.Case
 				var ragRating = Request.Form["ragRating"];
 				var trustName = Request.Form["trustName"];
 				trustUkPrn = Request.Form["trustUkprn"];
-
-				if (string.IsNullOrEmpty(type) 
-				    || string.IsNullOrEmpty(ragRating)
-					|| string.IsNullOrEmpty(trustUkPrn)) 
+				
+				if (!IsValidConcernType(type, ref subType, ragRating, trustUkPrn))
 					throw new Exception("Case::ConcernTypePageModel::Missing form values");
 				
 				var userState = await GetUserState();
@@ -84,10 +83,12 @@ namespace ConcernsCaseWork.Pages.Case
 					CreatedBy = User.Identity.Name,
 					DeEscalation = currentDate,
 					RagRatingName = ragRating,
-					RecordType = type,
+					RagRating = RagMapping.FetchRag(ragRating),
+					RagRatingCss = RagMapping.FetchRagCss(ragRating),
+					CaseType = type,
 					ReviewAt = currentDate,
 					UpdatedAt = currentDate,
-					RecordSubType = subType,
+					CaseSubType = subType,
 					TrustUkPrn = trustUkPrn,
 					TrustName = trustName,
 					DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString()

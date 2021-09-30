@@ -25,7 +25,8 @@ namespace ConcernsCaseWork.Models
 		{
 			get
 			{
-				return string.IsNullOrEmpty(CaseSubType) ? CaseType : CaseSubType;
+				var separator = string.IsNullOrEmpty(CaseSubType) ? string.Empty : ":";
+				return $"{CaseType}{separator} {CaseSubType ?? string.Empty}";
 			}
 		}
 		

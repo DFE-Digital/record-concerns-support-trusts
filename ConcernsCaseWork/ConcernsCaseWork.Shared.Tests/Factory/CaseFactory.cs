@@ -87,8 +87,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				DirectionOfTravel = "direction-of-travel", 
 				Urn = 1, 
 				Status = 1, 
-				RecordType = "record-type", 
-				RecordSubType = "record-sub-.type", 
+				CaseType = "record-type", 
+				CaseSubType = "record-sub-.type", 
 				RagRatingName = "rag-rating"
 			};
 		}
