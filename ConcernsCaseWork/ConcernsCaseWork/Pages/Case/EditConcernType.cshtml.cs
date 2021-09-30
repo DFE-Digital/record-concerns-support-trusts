@@ -69,7 +69,8 @@ namespace ConcernsCaseWork.Pages.Case
 				var type = Request.Form["type"];
 				var subType = Request.Form["subType"];
 
-				if (string.IsNullOrEmpty(type)) throw new Exception("Case::EditConcernTypePageModel::Missing form values");
+				if (!IsValidEditConcernType(type, ref subType)) 
+					throw new Exception("Case::EditConcernTypePageModel::Missing form values");
 				
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel

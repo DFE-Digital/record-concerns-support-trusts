@@ -30,7 +30,6 @@ namespace ConcernsCaseWork.Pages.Case
 			
 			try
 			{
-			
 				_logger.LogInformation("Case::EditDirectionOfTravelPageModel::OnGet");
 
 				var caseUrnValue = RouteData.Values["id"];
@@ -65,7 +64,8 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				var directionOfTravel = Request.Form["direction-of-travel"];
 
-				if (string.IsNullOrEmpty(directionOfTravel)) throw new Exception("Case::EditDirectionOfTravelPageModel::Missing form values");
+				if (string.IsNullOrEmpty(directionOfTravel)) 
+					throw new Exception("Case::EditDirectionOfTravelPageModel::Missing form values");
 				
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel

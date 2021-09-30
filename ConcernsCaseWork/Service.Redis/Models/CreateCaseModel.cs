@@ -43,10 +43,19 @@ namespace Service.Redis.Models
 		public long Urn { get; set; }
 		
 		public long Status { get; set; }
+
+		public string CaseTypeDescription
+		{
+			get
+			{
+				var separator = string.IsNullOrEmpty(CaseSubType) ? string.Empty : ":";
+				return $"{CaseType}{separator} {CaseSubType ?? string.Empty}";
+			}
+		}
 		
-		public string RecordType { get; set; }
+		public string CaseType { get; set; }
 		
-		public string RecordSubType { get; set; }
+		public string CaseSubType { get; set; }
 		
 		public string RagRatingName { get; set; }
 		

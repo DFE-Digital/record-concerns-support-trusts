@@ -55,6 +55,15 @@ namespace ConcernsCaseWork.Models
 		
 		public string StatusName { get; set; } = string.Empty;
 
+		public string CaseTypeDescription
+		{
+			get
+			{
+				var separator = string.IsNullOrEmpty(CaseSubType) ? string.Empty : ":";
+				return $"{CaseType}{separator} {CaseSubType ?? string.Empty}";
+			}
+		}
+		
 		public string CaseType { get; set; } = string.Empty;
 
 		public string CaseSubType { get; set; } = string.Empty;

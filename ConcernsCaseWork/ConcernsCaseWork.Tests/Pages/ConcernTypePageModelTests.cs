@@ -172,7 +172,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
-					{ "type", new StringValues("type") },
+					{ "type", new StringValues("Force Majeure") },
 					{ "subType", new StringValues("subType") },
 					{ "ragRating", new StringValues("ragRating") },
 					{ "trustUkprn", new StringValues("trustUkprn") },
@@ -225,8 +225,10 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Never);
 		}
 		
-		[Test]
-		public async Task WhenOnPostAsync_InvalidFormData_ThrowsException()
+		[TestCase("", "", "", "")]
+		[TestCase(null, null, null, null)]
+		[TestCase("test", "", "ragRating", "trustUkprn")]
+		public async Task WhenOnPostAsync_InvalidFormData_ThrowsException(string type, string subType, string ragRating, string trustUkprn)
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<ConcernTypePageModel>>();
@@ -234,7 +236,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			
-			var expected = CaseFactory.BuildCreateCaseModel();
+			var expected = CaseFactory.BuildCreateCaseModel(type, subType);
 			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
@@ -245,10 +247,10 @@ namespace ConcernsCaseWork.Tests.Pages
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
-					{ "type", new StringValues() },
-					{ "subType", new StringValues() },
-					{ "ragRating", new StringValues() },
-					{ "trustUkprn", new StringValues() },
+					{ "type", new StringValues(type) },
+					{ "subType", new StringValues(subType) },
+					{ "ragRating", new StringValues(ragRating) },
+					{ "trustUkprn", new StringValues(trustUkprn) },
 					{ "trustName", new StringValues() }
 				});
 			

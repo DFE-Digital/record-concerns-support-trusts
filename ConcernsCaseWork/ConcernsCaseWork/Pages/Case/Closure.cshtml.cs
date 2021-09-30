@@ -68,17 +68,15 @@ namespace ConcernsCaseWork.Pages.Case
 				var monthToReview = Request.Form["dtr-month"];
 				var yearToReview = Request.Form["dtr-year"];
 
-				if (string.IsNullOrEmpty(caseOutcomes)) throw new Exception("Case::ClosurePageModel::Missing form values");
+				if (!IsValidClosure(caseOutcomes, monitoring, dayToReview, monthToReview, yearToReview)) 
+					throw new Exception("Case::ClosurePageModel::Missing form values");
 				
 				var isMonitoring = monitoring.ToString().ToBoolean();
 				var patchCaseModel = new PatchCaseModel();
 					
-				if (isMonitoring
-				    && !string.IsNullOrEmpty(dayToReview)
-				    && !string.IsNullOrEmpty(monthToReview)
-				    && !string.IsNullOrEmpty(yearToReview))
+				if (isMonitoring)
 				{
-					// Validate date
+					// Convert parts
 					var year = int.Parse(yearToReview);
 					var month = int.Parse(monthToReview);
 					var day = int.Parse(dayToReview);

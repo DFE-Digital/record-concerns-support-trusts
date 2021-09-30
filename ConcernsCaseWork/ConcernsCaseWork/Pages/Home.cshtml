@@ -68,9 +68,7 @@
 							@caseModel.TrustName
 						</td>
 						<td class="govuk-table__cell">
-							@caseModel.CaseType
-							<br>
-							@caseModel.CaseSubType
+							@caseModel.CaseTypeDescription
 						</td>
 						<td class="govuk-table__cell govuk-label-wrapper">
 							@for (var index = 0; index < caseModel.RagRating.Count; ++index)
@@ -133,7 +131,7 @@
 							@caseModel.TrustName
 						</td>
 						<td class="govuk-table__cell">
-							@caseModel.CaseType
+							@caseModel.CaseTypeDescription
 						</td>
 						<td class="govuk-table__cell">
 							@caseModel.Review

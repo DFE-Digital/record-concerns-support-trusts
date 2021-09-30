@@ -64,7 +64,8 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				var riskRating = Request.Form["ragRating"];
 
-				if (string.IsNullOrEmpty(riskRating)) throw new Exception("Case::EditRiskRatingPageModel::Missing form values");
+				if (string.IsNullOrEmpty(riskRating)) 
+					throw new Exception("Case::EditRiskRatingPageModel::Missing form values");
 				
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel
