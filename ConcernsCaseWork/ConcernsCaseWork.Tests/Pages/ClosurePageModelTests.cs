@@ -188,14 +188,16 @@ namespace ConcernsCaseWork.Tests.Pages
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
 			
+			var currentDate = DateTimeOffset.Now.AddDays(1);
+			
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
 					{ "case-outcomes", new StringValues("case-outcomes") },
 					{ "monitoring", new StringValues("yes") },
-					{ "dtr-day", new StringValues("1") },
-					{ "dtr-month", new StringValues("1") },
-					{ "dtr-year", new StringValues("2021") }
+					{ "dtr-day", new StringValues(currentDate.Day.ToString()) },
+					{ "dtr-month", new StringValues(currentDate.Month.ToString()) },
+					{ "dtr-year", new StringValues(currentDate.Year.ToString()) }
 				});
 			
 			// act
@@ -317,15 +319,17 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
+
+			var currentDate = DateTimeOffset.Now.AddDays(1);
 			
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
 					{ "case-outcomes", new StringValues("case-outcomes") },
 					{ "monitoring", new StringValues("false") },
-					{ "dtr-day", new StringValues("1") },
-					{ "dtr-month", new StringValues("1") },
-					{ "dtr-year", new StringValues("2021") }
+					{ "dtr-day", new StringValues(currentDate.Day.ToString()) },
+					{ "dtr-month", new StringValues(currentDate.Month.ToString()) },
+					{ "dtr-year", new StringValues(currentDate.Year.ToString()) }
 				});
 			
 			// act
