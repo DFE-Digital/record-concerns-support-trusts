@@ -1,4 +1,4 @@
-﻿@page "/case/{id:long}/management/editconcerntype"
+﻿@page "/case/{id:long}/management/edit_concerntype"
 @model ConcernsCaseWork.Pages.Case.EditConcernTypePageModel
 
 @{
@@ -42,8 +42,9 @@
 </div>
 		
 <script type="application/javascript" nonce="@nonce">
-	$(function () {	
-		formValidatorConcernType($("#concern-type-form")[0]);
+	$(function () {
+		let validator = formValidator($("#concern-type-form")[0]);
+		addConcernTypeValidator(validator);
 	});
 </script>
 

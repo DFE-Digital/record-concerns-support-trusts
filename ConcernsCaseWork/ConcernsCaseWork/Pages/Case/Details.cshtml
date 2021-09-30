@@ -42,19 +42,7 @@
 					</div>
 
 					<!-- Q Issue -->
-					<div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="2000">
-						<div class="govuk-form-group">
-							<label class="govuk-heading-m" for="issue">
-								Issue
-							</label>
-							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="issue" name="issue" rows="3" aria-describedby="issue"></textarea>
-						</div>
-
-						<div id="issue-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-							You can enter up to 2000 characters
-						</div>
-
-					</div>
+					<partial name="_Issue"/>
 
 					<!-- Q Current status -->
 					<div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="4000">
@@ -128,43 +116,12 @@
 				<script type="application/javascript" nonce="@nonce">
 					$(function () {
 						let validator = formValidator($("#case-details-form")[0]);
-						validator.addValidator('issue', [{
-							method: function(field) {
-								return field.value.trim().length > 0;
-							},
-							message: 'Issue is required'
-						},
-						{
-							method: function(field) {
-								return field.value.trim().length <= 2000;
-							},
-							message: 'You have exceeded one or more character limits'
-						}]);
-						validator.addValidator('current-status', [{
-							method: function(field) {
-								return field.value.trim().length <= 4000;
-							},
-							message: 'You have exceeded one or more character limits'
-						}]);
-						validator.addValidator('next-steps', [{
-							method: function(field) {
-								return field.value.trim().length <= 4000;
-							},
-							message: 'You have exceeded one or more character limits'
-						}]);
-						validator.addValidator('de-escalation-point', [{
-							method: function(field) {
-								return field.value.trim().length <= 1000;
-							},
-							message: 'You have exceeded one or more character limits'
-						}]);
-						validator.addValidator('case-aim', [{
-							method: function(field) {
-								return field.value.trim().length <= 1000;
-							},
-							message: 'You have exceeded one or more character limits'
-						}]);
-						
+						addIssueValidator(validator);
+						addCurrentStatusValidator(validator);
+						addNextStepsValidator(validator);
+						addDeEscalationPointValidator(validator);
+						addCaseAimPointValidator(validator);
+
 						autoResizer();
 					});
 				</script>

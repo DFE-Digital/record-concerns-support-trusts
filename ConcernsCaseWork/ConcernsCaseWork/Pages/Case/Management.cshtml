@@ -54,7 +54,7 @@ else
 						</span>
 					</dd>
 					<dd class="dfe-width-15percent govuk-summary-list__actions">
-						<a class="govuk-link" href="@Request.Path/editconcerntype">
+						<a class="govuk-link" href="@Request.Path/edit_concerntype">
 							Change<span class="govuk-visually-hidden"> primary concern</span>
 						</a>
 					</dd>
@@ -74,7 +74,7 @@ else
 						}
 					</dd>
 					<dd class="dfe-width-15percent govuk-summary-list__actions">
-						<a class="govuk-link" href="@Request.Path/editriskrating">
+						<a class="govuk-link" href="@Request.Path/edit_riskrating">
 							Change<span class="govuk-visually-hidden"> risk rating</span>
 						</a>
 					</dd>
@@ -89,7 +89,7 @@ else
 						@Model.CaseModel.DirectionOfTravel
 					</dd>
 					<dd class="dfe-width-15percent govuk-summary-list__actions">
-						<a class="govuk-link" href="@Request.Path/editdirectionoftravel">
+						<a class="govuk-link" href="@Request.Path/edit_directionoftravel">
 							Change<span class="govuk-visually-hidden"> direction of travel</span>
 						</a>
 					</dd>
@@ -109,7 +109,7 @@ else
 						</h2>
 					</div>
 					<div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1">
-						<a class="govuk-link float__right" href="#">Edit</a>
+						<a class="govuk-link float__right" href="@Request.Path/edit_issue">Edit</a>
 						<div class="govuk-body details">
 							<p class="word-break">@Model.CaseModel.Issue</p>
 						</div>

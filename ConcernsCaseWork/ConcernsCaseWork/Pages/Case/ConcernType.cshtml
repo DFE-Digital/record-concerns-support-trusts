@@ -71,13 +71,9 @@
 			
 			<script type="application/javascript" nonce="@nonce">
 				$(function () {
-					let validator = formValidatorConcernType($("#case-concern-type-form")[0]);
-					validator.addValidator('ragRating', [{
-						method: function(field) {
-							return field.value.trim().length > 0;
-						},
-						message: 'Select risk rating'
-					}]);
+					let validator = formValidator($("#case-concern-type-form")[0]);
+					addConcernTypeValidator(validator);
+					addRagRatingValidator(validator);
 				});
 			</script>
 			

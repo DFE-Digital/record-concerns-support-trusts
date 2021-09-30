@@ -1,4 +1,4 @@
-﻿@page "/case/{id:long}/management/editdirectionoftravel"
+﻿@page "/case/{id:long}/management/edit_directionoftravel"
 @model ConcernsCaseWork.Pages.Case.EditDirectionOfTravelPageModel
 
 @{
@@ -46,11 +46,6 @@
 <script type="application/javascript" nonce="@nonce">
 	$(function () {	
 		let validator = formValidator($("#direction-of-travel-form")[0]);
-		validator.addValidator('direction-of-travel', [{
-			method: function(field) {
-				return field.value.trim().length > 0;
-			},
-			message: 'Select direction of travel'
-		}]);
+		addDirectionOfTravelValidator(validator);
 	});
 </script>

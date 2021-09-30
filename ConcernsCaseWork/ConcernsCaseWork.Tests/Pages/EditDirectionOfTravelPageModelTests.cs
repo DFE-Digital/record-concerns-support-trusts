@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
 			// act
-			var pageResponse = await pageModel.OnGet();
+			var pageResponse = await pageModel.OnGetAsync();
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
@@ -59,7 +59,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
 			// act
-			var pageResponse = await pageModel.OnGet();
+			var pageResponse = await pageModel.OnGetAsync();
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
