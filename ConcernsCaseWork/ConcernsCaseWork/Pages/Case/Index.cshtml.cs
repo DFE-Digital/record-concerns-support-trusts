@@ -63,10 +63,8 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				// Double check selected trust.
 				if (string.IsNullOrEmpty(trustUkPrn) || trustUkPrn.Contains("-") || trustUkPrn.Length < SearchQueryMinLength)
-				{
 					throw new Exception($"Case::IndexModel::OnGetSelectedTrust::Selected trust is incorrect - {trustUkPrn}");
-				}
-
+				
 				// Store CaseState into cache.
 				var userState = await _cachedService.GetData<UserState>(User.Identity.Name) ?? new UserState();
 				userState.TrustUkPrn = trustUkPrn;

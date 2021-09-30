@@ -65,7 +65,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			);
 		}
 		
-		public static CreateCaseModel BuildCreateCaseModel()
+		public static CreateCaseModel BuildCreateCaseModel(string caseType = "case-type", string caseSubType = "case-sub-type")
 		{
 			var dateTimeNow = DateTime.Now;
 			return new CreateCaseModel {
@@ -87,13 +87,13 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				DirectionOfTravel = "direction-of-travel", 
 				Urn = 1, 
 				Status = 1, 
-				CaseType = "record-type", 
-				CaseSubType = "record-sub-.type", 
+				CaseType = caseType, 
+				CaseSubType = caseSubType, 
 				RagRatingName = "rag-rating"
 			};
 		}
 		
-		public static CaseModel BuildCaseModel()
+		public static CaseModel BuildCaseModel(string caseType = "case-type", string caseSubType = "case-sub-type")
 		{
 			var dateTimeNow = DateTimeOffset.Now;
 			return new CaseModel
@@ -116,7 +116,9 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				DirectionOfTravel = "direction-of-travel",
 				Urn = 1,
 				Status = 1,
-				StatusName = "Live"
+				StatusName = "Live",
+				CaseType = caseType,
+				CaseSubType = caseSubType
 			};
 		}
 

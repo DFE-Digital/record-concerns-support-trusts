@@ -50,6 +50,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(caseModel.Status, Is.EqualTo(expected.Status));
 			Assert.That(caseModel.Urn, Is.EqualTo(expected.Urn));
 			Assert.That(caseModel.CaseType, Is.EqualTo(expected.CaseType));
+			Assert.That(caseModel.CaseSubType, Is.EqualTo(expected.CaseSubType));
+			Assert.That(caseModel.CaseTypeDescription, Is.EqualTo($"{expected.CaseType}: {expected.CaseSubType}"));
 			Assert.That(caseModel.ClosedAt, Is.EqualTo(expected.ClosedAt));
 			Assert.That(caseModel.CreatedAt, Is.EqualTo(expected.CreatedAt));
 			Assert.That(caseModel.CreatedBy, Is.EqualTo(expected.CreatedBy));
@@ -64,8 +66,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(caseModel.StatusName, Is.EqualTo(expected.StatusName));
 			Assert.That(caseModel.TrustName, Is.EqualTo(expected.TrustName));
 			Assert.That(caseModel.UpdatedAt, Is.EqualTo(expected.UpdatedAt));
-			Assert.That(caseModel.CaseSubType, Is.EqualTo(expected.CaseSubType));
-			Assert.That(caseModel.CaseTypeDescription, Is.EqualTo(string.IsNullOrEmpty(expected.CaseSubType) ? expected.CaseType : expected.CaseSubType));
 			Assert.That(caseModel.DirectionOfTravel, Is.EqualTo(expected.DirectionOfTravel));
 			Assert.That(caseModel.RagRatingCss, Is.EqualTo(expected.RagRatingCss));
 			Assert.That(caseModel.ReasonAtReview, Is.EqualTo(expected.ReasonAtReview));
@@ -237,6 +237,49 @@ namespace ConcernsCaseWork.Tests.Pages
 				new Dictionary<string, StringValues>
 				{
 					{ "case-outcomes", new StringValues() }
+				});
+			
+			// act
+			var actionResult = await pageModel.OnPostCloseCase();
+			var redirectResult = actionResult as RedirectResult;
+
+			// assert
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(actionResult, Is.AssignableFrom<RedirectResult>());
+			Assert.That(redirectResult, Is.Not.Null);
+			Assert.That(redirectResult.Url, Is.EqualTo("closure"));
+			
+			// Verify ILogger
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Error,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("ClosurePageModel")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+		}
+		
+		[Test]
+		public async Task WhenOnPostCloseCase_Monitoring_True_MissingRequiredForm_ThrowException()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
+			
+			mockCaseModelService.Setup(c => c.PatchClosure(It.IsAny<PatchCaseModel>()));
+			
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockLogger.Object, true);
+			
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("id", 1);
+			
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "case-outcomes", new StringValues("case outcomes") },
+					{ "monitoring", new StringValues("true") }
 				});
 			
 			// act

@@ -103,15 +103,17 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 		}
 
-		[Test]
-		public async Task WhenOnPostEditConcernType_RouteData_MissingRequestForm_ReloadPage()
+		[TestCase("", "")]
+		[TestCase(null, null)]
+		[TestCase("test", "")]
+		public async Task WhenOnPostEditConcernType_RouteData_MissingRequestForm_ReloadPage(string type, string subType)
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
 
-			var caseModel = CaseFactory.BuildCaseModel();
+			var caseModel = CaseFactory.BuildCaseModel(type, subType);
 			
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
@@ -124,8 +126,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
-					{ "type", new StringValues("") },
-					{ "subType", new StringValues("") }
+					{ "type", new StringValues(type) },
+					{ "subType", new StringValues(subType) }
 				});
 			
 			// act
@@ -140,8 +142,18 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.CaseModel.TypesDictionary, Is.Empty);
 		}
 		
-		[Test]
-		public async Task WhenOnPostEditConcernType_RouteData_RequestForm_ReturnsToPreviousUrl()
+		[TestCase("Force Majeure", "test")]
+		[TestCase("Force Majeure", "")]
+		[TestCase("Force Majeure", null)]
+		[TestCase("Compliance", "Financial reporting")]
+		[TestCase("Compliance", "Financial returns")]
+		[TestCase("Financial", "Deficit")]
+		[TestCase("Financial", "Projected deficit / Low future surplus")]
+		[TestCase("Financial", "Cash flow shortfall")]
+		[TestCase("Financial", "Clawback")]
+		[TestCase("Governance", "Governance")]
+		[TestCase("Irregularity", "Allegations and self reported concerns")]
+		public async Task WhenOnPostEditConcernType_RouteData_RequestForm_ReturnsToPreviousUrl(string type, string subType)
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -158,8 +170,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
-					{ "type", new StringValues("type") },
-					{ "subType", new StringValues("subtype") }
+					{ "type", new StringValues(type) },
+					{ "subType", new StringValues(subType) }
 				});
 			
 			// act

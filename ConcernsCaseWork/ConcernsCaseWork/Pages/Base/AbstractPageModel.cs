@@ -14,13 +14,13 @@ namespace ConcernsCaseWork.Pages.Base
 		{
 			const string forceMajeure = "Force Majeure";
 			
-			if (string.IsNullOrEmpty(type) 
-			    || string.IsNullOrEmpty(ragRating)
-			    || string.IsNullOrEmpty(trustUkPrn)) 
+			if (StringValues.IsNullOrEmpty(type) 
+			    || StringValues.IsNullOrEmpty(ragRating)
+			    || StringValues.IsNullOrEmpty(trustUkPrn)) 
 				return false;
 
 			if (!type.ToString().Equals(forceMajeure, StringComparison.OrdinalIgnoreCase)
-			    && string.IsNullOrEmpty(subType))
+			    && StringValues.IsNullOrEmpty(subType))
 			{
 				return false;
 			}
@@ -34,15 +34,36 @@ namespace ConcernsCaseWork.Pages.Base
 			return true;
 		}
 
+		protected static bool IsValidEditConcernType(StringValues type, ref StringValues subType)
+		{
+			const string forceMajeure = "Force Majeure";
+			
+			if (StringValues.IsNullOrEmpty(type)) return false;
+
+			if (!type.ToString().Equals(forceMajeure, StringComparison.OrdinalIgnoreCase)
+			    && StringValues.IsNullOrEmpty(subType))
+			{
+				return false;
+			}
+
+			if (type.ToString().Equals(forceMajeure, StringComparison.OrdinalIgnoreCase)) {
+				// UI component when type is forceMajeure brings data on subType
+				// Forcing value to empty
+				subType = StringValues.Empty;
+			}
+
+			return true;
+		}
+		
 		protected static bool IsValidClosure(StringValues caseOutcomes, StringValues monitoring, 
 			StringValues dayToReview, StringValues monthToReview, StringValues yearToReview)
 		{
-			if (string.IsNullOrEmpty(caseOutcomes) || string.IsNullOrEmpty(monitoring)) return false;
+			if (StringValues.IsNullOrEmpty(caseOutcomes) || StringValues.IsNullOrEmpty(monitoring)) return false;
 			
 			var isMonitoring = monitoring.ToString().ToBoolean();
-			if (isMonitoring && (string.IsNullOrEmpty(dayToReview)
-			                     || string.IsNullOrEmpty(monthToReview)
-			                     || string.IsNullOrEmpty(yearToReview)))
+			if (isMonitoring && (StringValues.IsNullOrEmpty(dayToReview)
+			                     || StringValues.IsNullOrEmpty(monthToReview)
+			                     || StringValues.IsNullOrEmpty(yearToReview)))
 				return false;
 			
 			DateTime sourceDate = new DateTime(int.Parse(yearToReview), int.Parse(monthToReview), int.Parse(dayToReview), 0, 0, 0);

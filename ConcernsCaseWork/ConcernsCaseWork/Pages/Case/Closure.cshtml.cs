@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var monthToReview = Request.Form["dtr-month"];
 				var yearToReview = Request.Form["dtr-year"];
 
-				if (IsValidClosure(caseOutcomes, monitoring, dayToReview, monthToReview, yearToReview)) 
+				if (!IsValidClosure(caseOutcomes, monitoring, dayToReview, monthToReview, yearToReview)) 
 					throw new Exception("Case::ClosurePageModel::Missing form values");
 				
 				var isMonitoring = monitoring.ToString().ToBoolean();
