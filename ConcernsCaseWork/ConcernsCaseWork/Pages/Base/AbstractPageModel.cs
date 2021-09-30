@@ -72,7 +72,7 @@ namespace ConcernsCaseWork.Pages.Base
 			var reviewDate = new DateTimeOffset(utcTime);
 			var currentDate = DateTimeOffset.Now;
 			
-			return currentDate.CompareTo(reviewDate) >= 0;
+			return currentDate.CompareTo(reviewDate) < 0;
 		}
 	}
 }
