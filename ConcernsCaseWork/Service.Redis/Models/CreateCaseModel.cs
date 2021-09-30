@@ -43,6 +43,14 @@ namespace Service.Redis.Models
 		public long Urn { get; set; }
 		
 		public long Status { get; set; }
+
+		public string RecordTypeDescription
+		{
+			get
+			{
+				return string.IsNullOrEmpty(RecordSubType) ? RecordType : RecordSubType;
+			}
+		}
 		
 		public string RecordType { get; set; }
 		

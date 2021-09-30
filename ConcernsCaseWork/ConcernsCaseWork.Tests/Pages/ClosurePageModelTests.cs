@@ -65,6 +65,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(caseModel.TrustName, Is.EqualTo(expected.TrustName));
 			Assert.That(caseModel.UpdatedAt, Is.EqualTo(expected.UpdatedAt));
 			Assert.That(caseModel.CaseSubType, Is.EqualTo(expected.CaseSubType));
+			Assert.That(caseModel.CaseTypeDescription, Is.EqualTo(string.IsNullOrEmpty(expected.CaseSubType) ? expected.CaseType : expected.CaseSubType));
 			Assert.That(caseModel.DirectionOfTravel, Is.EqualTo(expected.DirectionOfTravel));
 			Assert.That(caseModel.RagRatingCss, Is.EqualTo(expected.RagRatingCss));
 			Assert.That(caseModel.ReasonAtReview, Is.EqualTo(expected.ReasonAtReview));

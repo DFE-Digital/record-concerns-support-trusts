@@ -46,6 +46,7 @@ namespace ConcernsCaseWork.Tests.Pages
 					Assert.That(expected.Review, Is.EqualTo(actual.Review));
 					Assert.That(expected.AcademyNames, Is.EqualTo(actual.AcademyNames));
 					Assert.That(expected.CaseType, Is.EqualTo(actual.CaseType));
+					Assert.That(expected.CaseTypeDescription, Is.EqualTo(string.IsNullOrEmpty(actual.CaseSubType) ? actual.CaseType : actual.CaseSubType));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.CaseUrn));
 					Assert.That(expected.RagRating, Is.EqualTo(actual.RagRating));
 					Assert.That(expected.TrustName, Is.EqualTo(actual.TrustName));

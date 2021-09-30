@@ -21,6 +21,14 @@ namespace ConcernsCaseWork.Models
 		
 		public string AcademyNames { get; }
 		
+		public string CaseTypeDescription
+		{
+			get
+			{
+				return string.IsNullOrEmpty(CaseSubType) ? CaseType : CaseSubType;
+			}
+		}
+		
 		public string CaseType { get; }
 		
 		public string CaseSubType { get; }

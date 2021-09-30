@@ -50,13 +50,7 @@ else
 					</dt>
 					<dd class="govuk-summary-list__value">
 						<span class="caseDetail_type">
-							@Model.CaseModel.CaseType
-							@if (!string.IsNullOrEmpty(Model.CaseModel.CaseSubType))
-							{
-								<span class="caseDetail_type">
-									- @Model.CaseModel.CaseSubType
-								</span>
-							}
+							@Model.CaseModel.CaseTypeDescription
 						</span>
 					</dd>
 					<dd class="dfe-width-15percent govuk-summary-list__actions">
