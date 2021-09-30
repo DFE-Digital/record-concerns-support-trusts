@@ -171,7 +171,7 @@ but only among keys that have an expire set, in order to make space for the new 
 ```
 cf help
 cf spaces
-cf login -a api.london.cloud.service.gov.uk -u
+cf login -a api.london.cloud.service.gov.uk
 cf logout
 cf target -o dfe -s amsd-casework-dev --> switch spaces
 cf logs --recent amsd-casework-dev --> see logs
