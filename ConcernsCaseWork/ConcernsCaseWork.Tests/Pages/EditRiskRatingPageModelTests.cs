@@ -131,7 +131,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
 
-			mockCaseModelService.Setup(c => c.PatchConcernType(It.IsAny<PatchCaseModel>()));
+			mockCaseModelService.Setup(c => c.PatchRiskRating(It.IsAny<PatchCaseModel>()));
 
 			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockLogger.Object);
 			

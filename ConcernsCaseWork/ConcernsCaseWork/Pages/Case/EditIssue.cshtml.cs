@@ -67,10 +67,16 @@ namespace ConcernsCaseWork.Pages.Case
 				if (string.IsNullOrEmpty(issue)) 
 					throw new Exception("Case::EditIssuePageModel::Missing form values");
 				
-				// TODO update issue
-				
-					
-				//await _caseModelService.PatchDirectionOfTravel(patchCaseModel);
+				// Create patch case model
+				var patchCaseModel = new PatchCaseModel
+				{
+					Urn = caseUrn,
+					CreatedBy = User.Identity.Name,
+					UpdatedAt = DateTimeOffset.Now,
+					Issue = issue
+				};
+
+				await _caseModelService.PatchIssue(patchCaseModel);
 					
 				return Redirect(url);
 			}

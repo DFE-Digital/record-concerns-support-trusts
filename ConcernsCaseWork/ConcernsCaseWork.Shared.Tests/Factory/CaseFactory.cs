@@ -128,10 +128,10 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			{
 				Urn = 1,
 				CreatedBy = "testing",
-				RecordType = "record-type",
+				CaseType = "record-type",
 				TypeUrn = 1,
 				UpdatedAt = DateTimeOffset.Now,
-				RecordSubType = "record-sub-type",
+				CaseSubType = "record-sub-type",
 				RatingUrn = 1,
 				RiskRating = "Amber Green"
 			};

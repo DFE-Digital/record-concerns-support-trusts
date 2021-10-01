@@ -13,6 +13,7 @@ namespace ConcernsCaseWork.Services.Cases
 		Task PatchConcernType(PatchCaseModel patchCaseModel);
 		Task PatchRiskRating(PatchCaseModel patchCaseModel);
 		Task PatchDirectionOfTravel(PatchCaseModel patchCaseModel);
+		Task PatchIssue(PatchCaseModel patchCaseModel);
 		Task<CaseModel> PostCase(CreateCaseModel createCaseModel);
 	}
 }

@@ -14,9 +14,9 @@ namespace ConcernsCaseWork.Models
 		
 		public long Urn { get; set; }
 		
-		public string RecordType { get; set; }
+		public string CaseType { get; set; }
 		
-		public string RecordSubType { get; set; }
+		public string CaseSubType { get; set; }
 		
 		public long TypeUrn { get; set; }
 		
@@ -29,5 +29,7 @@ namespace ConcernsCaseWork.Models
 		public string StatusName { get; set; }
 		
 		public string DirectionOfTravel { get; set; }
+		
+		public string Issue { get; set; }
 	}
 }

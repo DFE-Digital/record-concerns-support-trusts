@@ -78,8 +78,8 @@ namespace ConcernsCaseWork.Pages.Case
 					Urn = caseUrn,
 					CreatedBy = User.Identity.Name,
 					UpdatedAt = DateTimeOffset.Now,
-					RecordType = type,
-					RecordSubType = subType
+					CaseType = type,
+					CaseSubType = subType
 				};
 					
 				await _caseModelService.PatchConcernType(patchCaseModel);

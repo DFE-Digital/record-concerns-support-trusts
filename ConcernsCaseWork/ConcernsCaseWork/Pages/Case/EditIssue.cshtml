@@ -25,17 +25,18 @@
 				<div class="govuk-form-group">
 					<fieldset class="govuk-fieldset">
 						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
-						<partial name="_Issue"></partial>
+						<partial name="_EditIssue" model="@Model.CaseModel"></partial>
+						
+						<!--Button group-->
+						<div class="govuk-button-group govuk-!-margin-top-6">
+							<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+								Apply
+							</button>
+							<partial name="_Cancel"></partial>
+						</div>
 					</fieldset>
 				</div>
-
-				<!--Button group-->
-				<div class="govuk-button-group">
-					<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
-						Apply
-					</button>
-					<partial name="_Cancel"></partial>
-				</div>
+				
 			</form>
 
 		</div>

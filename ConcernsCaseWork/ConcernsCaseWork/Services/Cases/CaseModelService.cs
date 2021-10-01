@@ -154,7 +154,7 @@ namespace ConcernsCaseWork.Services.Cases
 			{
 				// Fetch Type
 				var typeDto = await _typeCachedService.GetTypeByNameAndDescription(
-					patchCaseModel.RecordType, patchCaseModel.RecordSubType);
+					patchCaseModel.CaseType, patchCaseModel.CaseSubType);
 				patchCaseModel.TypeUrn = typeDto.Urn;
 				
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
@@ -220,6 +220,25 @@ namespace ConcernsCaseWork.Services.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError($"CaseModelService::PatchDirectionOfTravel exception {ex.Message}");
+
+				throw;
+			}
+		}
+
+		public async Task PatchIssue(PatchCaseModel patchCaseModel)
+		{
+			try
+			{
+				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				
+				// Patch source dtos
+				caseDto = CaseMapping.MapIssue(patchCaseModel, caseDto);
+
+				await _caseCachedService.PatchCaseByUrn(caseDto);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"CaseModelService::PatchIssue exception {ex.Message}");
 
 				throw;
 			}
