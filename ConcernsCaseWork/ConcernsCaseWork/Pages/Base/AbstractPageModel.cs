@@ -61,17 +61,22 @@ namespace ConcernsCaseWork.Pages.Base
 			if (StringValues.IsNullOrEmpty(caseOutcomes) || StringValues.IsNullOrEmpty(monitoring)) return false;
 			
 			var isMonitoring = monitoring.ToString().ToBoolean();
-			if (isMonitoring && (StringValues.IsNullOrEmpty(dayToReview)
-			                     || StringValues.IsNullOrEmpty(monthToReview)
-			                     || StringValues.IsNullOrEmpty(yearToReview)))
-				return false;
-			
+			switch (isMonitoring)
+			{
+				case true when (StringValues.IsNullOrEmpty(dayToReview)
+				                || StringValues.IsNullOrEmpty(monthToReview)
+				                || StringValues.IsNullOrEmpty(yearToReview)):
+					return false;
+				case false:
+					return true;
+			}
+
 			DateTime sourceDate = new DateTime(int.Parse(yearToReview), int.Parse(monthToReview), int.Parse(dayToReview), 0, 0, 0);
 			DateTime utcTime = DateTime.SpecifyKind(sourceDate, DateTimeKind.Utc);
-			
+				
 			var reviewDate = new DateTimeOffset(utcTime);
 			var currentDate = DateTimeOffset.Now;
-			
+				
 			return currentDate.CompareTo(reviewDate) < 0;
 		}
 	}
