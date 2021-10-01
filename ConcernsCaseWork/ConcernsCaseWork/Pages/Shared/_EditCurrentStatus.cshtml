@@ -1,0 +1,11 @@
+﻿@model ConcernsCaseWork.Models.CaseModel
+
+<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="4000">
+	<div class="govuk-form-group">
+		<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="current-status" name="current-status" rows="3" aria-describedby="current-status">@Model.CurrentStatus</textarea>
+	</div>
+
+	<div id="current-status-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+		You can enter up to 4000 characters
+	</div>
+</div>

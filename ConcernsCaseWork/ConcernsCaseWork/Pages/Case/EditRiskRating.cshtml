@@ -1,4 +1,4 @@
-﻿@page "/case/{id:long}/management/editriskrating"
+﻿@page "/case/{id:long}/management/edit_riskrating"
 @model ConcernsCaseWork.Pages.Case.EditRiskRatingPageModel
 
 @{
@@ -44,11 +44,6 @@
 <script type="application/javascript" nonce="@nonce">
 	$(function () {	
 		let validator = formValidator($("#risk-rating-form")[0]);
-		validator.addValidator('ragRating', [{
-			method: function(field) {
-				return field.value.trim().length > 0;
-			},
-			message: 'Select risk rating'
-		}]);
+		addRagRatingValidator(validator);
 	});
 </script>

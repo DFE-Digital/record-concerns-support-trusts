@@ -12,7 +12,6 @@ CaseAim(1000);
 DeEscalationPoint(1000);
 NextSteps(4000);
 
-
 // Write your JavaScript code.
 window.showGlobalError = function() {
 	$("#moj-banner-error").removeClass("govuk-!-display-none");
@@ -31,8 +30,29 @@ window.hideLoader = function() {
 window.formValidator = function(form) {
 	return new MOJFrontend.FormValidator(form);
 }
-window.formValidatorConcernType = function(form) {
-	const validator = formValidator(form);
+window.addIssueValidator = function(validator) {
+	validator.addValidator('issue', [{
+		method: function(field) {
+			return field.value.trim().length > 0;
+		},
+		message: 'Issue is required'
+	},
+	{
+		method: function(field) {
+			return field.value.trim().length <= 2000;
+		},
+		message: 'You have exceeded one or more character limits'
+	}]);
+}
+window.addRagRatingValidator = function(validator) {
+	validator.addValidator('ragRating', [{
+		method: function(field) {
+			return field.value.trim().length > 0;
+		},
+		message: 'Select risk rating'
+	}]);
+}
+window.addConcernTypeValidator = function(validator) {
 	validator.addValidator('type', [{
 		method: function(field) {
 			return field.value.trim().length > 0;
@@ -59,16 +79,58 @@ window.formValidatorConcernType = function(form) {
 		},
 		message: 'Select concern sub type'
 	}]);
-	
-	return validator;
+}
+window.addCurrentStatusValidator = function(validator) {
+	validator.addValidator('current-status', [{
+		method: function(field) {
+			return field.value.trim().length <= 4000;
+		},
+		message: 'You have exceeded one or more character limits'
+	}]);
+}
+window.addNextStepsValidator = function(validator) {
+	validator.addValidator('next-steps', [{
+		method: function(field) {
+			return field.value.trim().length <= 4000;
+		},
+		message: 'You have exceeded one or more character limits'
+	}]);
+}
+window.addDeEscalationPointValidator = function(validator) {
+	validator.addValidator('de-escalation-point', [{
+		method: function(field) {
+			return field.value.trim().length <= 1000;
+		},
+		message: 'You have exceeded one or more character limits'
+	}]);
+}
+window.addCaseAimPointValidator = function(validator) {
+	validator.addValidator('case-aim', [{
+		method: function(field) {
+			return field.value.trim().length <= 1000;
+		},
+		message: 'You have exceeded one or more character limits'
+	}]);
+}
+window.addDirectionOfTravelValidator = function(validator) {
+	validator.addValidator('direction-of-travel', [{
+		method: function(field) {
+			return field.value.trim().length > 0;
+		},
+		message: 'Select direction of travel'
+	}]);
 }
 
 // Auto resizer textBox
 window.autoResizer = function() {
 	let multipleFields = document.querySelectorAll('.concern-auto-resize');
-	for(let i = 0; i < multipleFields.length; i++){
+	for(let i = 0; i < multipleFields.length; i++) {
 		multipleFields[i].addEventListener('input', autoResizeHeight);
+		
+		// Force height when textarea contains data
+		$(multipleFields[i]).height( multipleFields[i].scrollHeight );
 	}
+	
 	// auto resize multiple textarea
 	function autoResizeHeight() {
 		this.style.height="auto";

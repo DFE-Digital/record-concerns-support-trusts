@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.Tests.Pages
 	public class EditDirectionOfTravelPageModelTests
 	{
 		[Test]
-		public async Task WhenOnGet_ReturnsPage()
+		public async Task WhenOnGetAsync_ReturnsPage()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
 			// act
-			var pageResponse = await pageModel.OnGet();
+			var pageResponse = await pageModel.OnGetAsync();
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		[Test]
-		public async Task WhenOnGet_RouteData_ReturnsPage()
+		public async Task WhenOnGetAsync_RouteData_ReturnsPage()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -59,7 +59,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
 			// act
-			var pageResponse = await pageModel.OnGet();
+			var pageResponse = await pageModel.OnGetAsync();
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
@@ -130,7 +130,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<EditDirectionOfTravelPageModel>>();
 
-			mockCaseModelService.Setup(c => c.PatchConcernType(It.IsAny<PatchCaseModel>()));
+			mockCaseModelService.Setup(c => c.PatchDirectionOfTravel(It.IsAny<PatchCaseModel>()));
 
 			var pageModel = SetupEditDirectionOfTravelPageModel(mockCaseModelService.Object, mockLogger.Object);
 			

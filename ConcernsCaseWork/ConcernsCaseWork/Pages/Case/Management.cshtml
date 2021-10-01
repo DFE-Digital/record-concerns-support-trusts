@@ -54,7 +54,7 @@ else
 						</span>
 					</dd>
 					<dd class="dfe-width-15percent govuk-summary-list__actions">
-						<a class="govuk-link" href="@Request.Path/editconcerntype">
+						<a class="govuk-link" href="@Request.Path/edit_concerntype">
 							Change<span class="govuk-visually-hidden"> primary concern</span>
 						</a>
 					</dd>
@@ -74,7 +74,7 @@ else
 						}
 					</dd>
 					<dd class="dfe-width-15percent govuk-summary-list__actions">
-						<a class="govuk-link" href="@Request.Path/editriskrating">
+						<a class="govuk-link" href="@Request.Path/edit_riskrating">
 							Change<span class="govuk-visually-hidden"> risk rating</span>
 						</a>
 					</dd>
@@ -89,7 +89,7 @@ else
 						@Model.CaseModel.DirectionOfTravel
 					</dd>
 					<dd class="dfe-width-15percent govuk-summary-list__actions">
-						<a class="govuk-link" href="@Request.Path/editdirectionoftravel">
+						<a class="govuk-link" href="@Request.Path/edit_directionoftravel">
 							Change<span class="govuk-visually-hidden"> direction of travel</span>
 						</a>
 					</dd>
@@ -109,8 +109,8 @@ else
 						</h2>
 					</div>
 					<div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1">
-						<a class="govuk-link float__right" href="#">Edit</a>
-						<div class="govuk-body details">
+						<a class="govuk-link float__right" href="@Request.Path/edit_issue">Edit</a>
+						<div class="govuk-body details govuk-body-accordion-limit">
 							<p class="word-break">@Model.CaseModel.Issue</p>
 						</div>
 					</div>
@@ -123,8 +123,8 @@ else
 						</h2>
 					</div>
 					<div aria-labelledby="accordion-default-heading-2" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-2">
-						<a class="govuk-link float__right" href="#">Edit</a>
-						<div class="govuk-body details">
+						<a class="govuk-link float__right" href="@Request.Path/edit_currentstatus">Edit</a>
+						<div class="govuk-body details govuk-body-accordion-limit">
 							<p class="word-break">@Model.CaseModel.CurrentStatus</p>
 						</div>
 					</div>
@@ -138,7 +138,7 @@ else
 					</div>
 					<div aria-labelledby="accordion-default-heading-3" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-3">
 						<a class="govuk-link float__right" href="#">Edit</a>
-						<div class="govuk-body details">
+						<div class="govuk-body details govuk-body-accordion-limit">
 							<p class="word-break">@Model.CaseModel.CaseAim</p>
 						</div>
 					</div>
@@ -152,7 +152,7 @@ else
 					</div>
 					<div aria-labelledby="accordion-default-heading-4" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-4">
 						<a class="govuk-link float__right" href="#">Edit</a>
-						<div class="govuk-body details">
+						<div class="govuk-body details govuk-body-accordion-limit">
 							<p class="word-break">@Model.CaseModel.DeEscalationPoint</p>
 						</div>
 					</div>
@@ -166,7 +166,7 @@ else
 					</div>
 					<div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
 						<a class="govuk-link float__right" href="">Edit</a>
-						<div class="govuk-body details">
+						<div class="govuk-body details govuk-body-accordion-limit">
 							<p class="word-break">@Model.CaseModel.NextSteps</p>
 						</div>
 					</div>
