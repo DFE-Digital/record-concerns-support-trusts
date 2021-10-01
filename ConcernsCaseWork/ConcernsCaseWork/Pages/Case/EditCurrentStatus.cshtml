@@ -22,12 +22,7 @@
 
 				<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
 
-				<div class="govuk-form-group">
-					<fieldset class="govuk-fieldset">
-						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
-						<partial name="_EditCurrentStatus" model="@Model.CaseModel"></partial>
-					</fieldset>
-				</div>
+				<partial name="_EditCurrentStatus" model="@Model.CaseModel"></partial>
 				
 				<!--Button group-->
                 <div class="govuk-button-group">
@@ -47,5 +42,7 @@
 	$(function () {	
 		let validator = formValidator($("#current-status-form")[0]);
 		addCurrentStatusValidator(validator);
+		
+		autoResizer();
 	});
 </script>

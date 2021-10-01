@@ -124,9 +124,13 @@ window.addDirectionOfTravelValidator = function(validator) {
 // Auto resizer textBox
 window.autoResizer = function() {
 	let multipleFields = document.querySelectorAll('.concern-auto-resize');
-	for(let i = 0; i < multipleFields.length; i++){
+	for(let i = 0; i < multipleFields.length; i++) {
 		multipleFields[i].addEventListener('input', autoResizeHeight);
+		
+		// Force height when textarea contains data
+		$(multipleFields[i]).height( multipleFields[i].scrollHeight );
 	}
+	
 	// auto resize multiple textarea
 	function autoResizeHeight() {
 		this.style.height="auto";

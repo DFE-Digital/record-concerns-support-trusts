@@ -21,13 +21,8 @@
 			<form role="form" asp-page-handler="editIssue" method="post" id="issue-form" novalidate>
 
 				<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
-
-				<div class="govuk-form-group">
-					<fieldset class="govuk-fieldset">
-						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
-						<partial name="_EditIssue" model="@Model.CaseModel"></partial>
-					</fieldset>
-				</div>
+				
+				<partial name="_EditIssue" model="@Model.CaseModel"></partial>
 				
 				<!--Button group-->
                 <div class="govuk-button-group">
@@ -47,5 +42,7 @@
 	$(function () {	
 		let validator = formValidator($("#issue-form")[0]);
 		addIssueValidator(validator);
+		
+		autoResizer();
 	});
 </script>
