@@ -31,5 +31,7 @@ namespace ConcernsCaseWork.Models
 		public string DirectionOfTravel { get; set; }
 		
 		public string Issue { get; set; }
+		
+		public string CurrentStatus { get; set; }
 	}
 }

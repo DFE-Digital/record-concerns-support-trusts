@@ -133,7 +133,10 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				UpdatedAt = DateTimeOffset.Now,
 				CaseSubType = "record-sub-type",
 				RatingUrn = 1,
-				RiskRating = "Amber Green"
+				RiskRating = "Amber Green",
+				DirectionOfTravel = "direction-of-travel",
+				Issue = "issue",
+				CurrentStatus = "current-status"
 			};
 		}
 	}

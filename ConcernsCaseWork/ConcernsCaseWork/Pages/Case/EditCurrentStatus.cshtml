@@ -1,0 +1,51 @@
+﻿@page "/case/{id:long}/management/edit_currentstatus"
+@model ConcernsCaseWork.Pages.Case.EditCurrentStatusPageModel
+
+@{
+	ViewData["Title"] = "Edit Current status";
+	var nonce = HttpContext.GetNonce();
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError"/>
+	<partial name="_Error" model="@Model.CaseModel"></partial>
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+
+			<h1 class="govuk-heading-l">
+				Edit current status
+			</h1>
+
+			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+			<form role="form" asp-page-handler="editCurrentStatus" method="post" id="current-status-form" novalidate>
+
+				<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
+
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset">
+						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
+						<partial name="_EditCurrentStatus" model="@Model.CaseModel"></partial>
+					</fieldset>
+				</div>
+				
+				<!--Button group-->
+                <div class="govuk-button-group">
+                	<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
+                		Apply
+                	</button>
+                	<partial name="_Cancel"></partial>
+                </div>
+				
+			</form>
+
+		</div>
+	</div>
+</div>
+
+<script type="application/javascript" nonce="@nonce">
+	$(function () {	
+		let validator = formValidator($("#current-status-form")[0]);
+		addCurrentStatusValidator(validator);
+	});
+</script>

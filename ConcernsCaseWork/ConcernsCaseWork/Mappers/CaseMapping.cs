@@ -82,5 +82,15 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.NextSteps, caseDto.CaseAim, caseDto.DeEscalationPoint, caseDto.DirectionOfTravel,
 				caseDto.Urn, caseDto.Status);
 		}
+		
+		public static CaseDto MapCurrentStatus(PatchCaseModel patchCaseModel, CaseDto caseDto)
+		{
+			return new CaseDto(caseDto.CreatedAt, patchCaseModel.UpdatedAt,
+				caseDto.ReviewAt, caseDto.ClosedAt, caseDto.CreatedBy, caseDto.Description,
+				caseDto.CrmEnquiry, caseDto.TrustUkPrn, caseDto.ReasonAtReview,
+				caseDto.DeEscalation, caseDto.Issue, patchCaseModel.CurrentStatus,
+				caseDto.NextSteps, caseDto.CaseAim, caseDto.DeEscalationPoint, caseDto.DirectionOfTravel,
+				caseDto.Urn, caseDto.Status);
+		}
 	}
 }
