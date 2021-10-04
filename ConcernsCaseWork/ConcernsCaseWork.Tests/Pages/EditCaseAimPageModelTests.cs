@@ -123,42 +123,9 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 		}
-
-		[Test]
-		public async Task WhenOnPostEditIssue_RouteData_MissingRequestForm_ReloadPage()
-		{
-			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<EditCaseAimPageModel>>();
-
-			var caseModel = CaseFactory.BuildCaseModel();
-			
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(caseModel);
-			var pageModel = SetupEditCaseAimPageModel(mockCaseModelService.Object, mockLogger.Object);
-			
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("id", 1);
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "issue", new StringValues("") }
-				});
-			
-			// act
-			var pageResponse = await pageModel.OnPostEditCaseAim("https://returnto/thispage");
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-			
-			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel, Is.Not.Null);
-			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
-		}
 		
 		[Test]
-		public async Task WhenOnPostEditIssue_RouteData_RequestForm_ReturnsToPreviousUrl()
+		public async Task WhenOnPostEditIssue_RouteData_ReturnsToPreviousUrl()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
