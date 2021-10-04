@@ -63,9 +63,6 @@ namespace ConcernsCaseWork.Pages.Case
 				}
 				
 				var currentStatus = Request.Form["current-status"];
-
-				if (string.IsNullOrEmpty(currentStatus)) 
-					throw new Exception("Case::EditCurrentStatusPageModel::Missing form values");
 				
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel

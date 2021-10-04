@@ -63,9 +63,6 @@ namespace ConcernsCaseWork.Pages.Case
 				}
 				
 				var caseAim = Request.Form["case-aim"];
-
-				if (string.IsNullOrEmpty(caseAim)) 
-					throw new Exception("Case::EditCaseAimPageModel::Missing form values");
 				
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel

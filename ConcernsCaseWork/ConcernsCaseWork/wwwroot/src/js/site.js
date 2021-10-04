@@ -83,6 +83,7 @@ window.addConcernTypeValidator = function(validator) {
 window.addCurrentStatusValidator = function(validator) {
 	validator.addValidator('current-status', [{
 		method: function(field) {
+			console.log("Current status validator");
 			return field.value.trim().length <= 4000;
 		},
 		message: 'You have exceeded one or more character limits'
