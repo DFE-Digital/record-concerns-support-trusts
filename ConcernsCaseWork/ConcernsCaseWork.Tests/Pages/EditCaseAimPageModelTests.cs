@@ -17,16 +17,16 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Tests.Pages
 {
 	[Parallelizable(ParallelScope.All)]
-	public class EditCurrentStatusPageModelTests
+	public class EditCaseAimPageModelTests
 	{
 		[Test]
 		public async Task WhenOnGetAsync_ReturnsPage()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<EditCurrentStatusPageModel>>();
+			var mockLogger = new Mock<ILogger<EditCaseAimPageModel>>();
 
-			var pageModel = SetupEditCurrentStatusPageModel(mockCaseModelService.Object, mockLogger.Object);
+			var pageModel = SetupEditCaseAimPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
@@ -49,13 +49,13 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<EditCurrentStatusPageModel>>();
+			var mockLogger = new Mock<ILogger<EditCaseAimPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			var pageModel = SetupEditCurrentStatusPageModel(mockCaseModelService.Object, mockLogger.Object);
+			var pageModel = SetupEditCaseAimPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
@@ -108,12 +108,12 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<EditCurrentStatusPageModel>>();
+			var mockLogger = new Mock<ILogger<EditCaseAimPageModel>>();
 			
-			var pageModel = SetupEditCurrentStatusPageModel(mockCaseModelService.Object, mockLogger.Object);
+			var pageModel = SetupEditCaseAimPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			// act
-			var pageResponse = await pageModel.OnPostEditCurrentStatus("https://returnto/thispage");
+			var pageResponse = await pageModel.OnPostEditCaseAim("https://returnto/thispage");
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
@@ -125,26 +125,26 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		[Test]
-		public async Task WhenOnPostEditIssue_RouteData_RequestForm_ReturnsToPreviousUrl()
+		public async Task WhenOnPostEditIssue_RouteData_ReturnsToPreviousUrl()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<EditCurrentStatusPageModel>>();
+			var mockLogger = new Mock<ILogger<EditCaseAimPageModel>>();
 
-			mockCaseModelService.Setup(c => c.PatchIssue(It.IsAny<PatchCaseModel>()));
+			mockCaseModelService.Setup(c => c.PatchCaseAim(It.IsAny<PatchCaseModel>()));
 
-			var pageModel = SetupEditCurrentStatusPageModel(mockCaseModelService.Object, mockLogger.Object);
+			var pageModel = SetupEditCaseAimPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
-					{ "current-status", new StringValues("current-status") }
+					{ "case-aim", new StringValues("case-aim") }
 				});
 			
 			// act
-			var pageResponse = await pageModel.OnPostEditCurrentStatus("https://returnto/thispage");
+			var pageResponse = await pageModel.OnPostEditCaseAim("https://returnto/thispage");
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
@@ -153,14 +153,16 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.CaseModel, Is.Null);
 			Assert.That(page.Url, Is.EqualTo("https://returnto/thispage"));
+			
+			mockCaseModelService.Verify(c => c.PatchCaseAim(It.IsAny<PatchCaseModel>()), Times.Once);
 		}
 		
-		private static EditCurrentStatusPageModel SetupEditCurrentStatusPageModel(
-			ICaseModelService mockCaseModelService, ILogger<EditCurrentStatusPageModel> mockLogger, bool isAuthenticated = false)
+		private static EditCaseAimPageModel SetupEditCaseAimPageModel(
+			ICaseModelService mockCaseModelService, ILogger<EditCaseAimPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new EditCurrentStatusPageModel(mockCaseModelService, mockLogger)
+			return new EditCaseAimPageModel(mockCaseModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

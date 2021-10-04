@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using AutoFixture;
+using ConcernsCaseWork.Models;
 using Service.Redis.Models;
 using Service.TRAMS.Cases;
 using System;
@@ -124,6 +125,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 
 		public static PatchCaseModel BuildPatchCaseModel()
 		{
+			Fixture fixture = new Fixture();
 			return new PatchCaseModel
 			{
 				Urn = 1,
@@ -136,7 +138,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				RiskRating = "Amber Green",
 				DirectionOfTravel = "direction-of-travel",
 				Issue = "issue",
-				CurrentStatus = "current-status"
+				CurrentStatus = "current-status",
+				CaseAim = fixture.Create<string>()
 			};
 		}
 	}

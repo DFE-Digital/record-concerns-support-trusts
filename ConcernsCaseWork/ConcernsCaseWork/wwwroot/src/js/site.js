@@ -83,6 +83,7 @@ window.addConcernTypeValidator = function(validator) {
 window.addCurrentStatusValidator = function(validator) {
 	validator.addValidator('current-status', [{
 		method: function(field) {
+			console.log("Current status validator");
 			return field.value.trim().length <= 4000;
 		},
 		message: 'You have exceeded one or more character limits'
@@ -104,7 +105,7 @@ window.addDeEscalationPointValidator = function(validator) {
 		message: 'You have exceeded one or more character limits'
 	}]);
 }
-window.addCaseAimPointValidator = function(validator) {
+window.addCaseAimValidator = function(validator) {
 	validator.addValidator('case-aim', [{
 		method: function(field) {
 			return field.value.trim().length <= 1000;
@@ -128,7 +129,7 @@ window.autoResizer = function() {
 		multipleFields[i].addEventListener('input', autoResizeHeight);
 		
 		// Force height when textarea contains data
-		$(multipleFields[i]).height( multipleFields[i].scrollHeight );
+		$(multipleFields[i]).height(multipleFields[i].scrollHeight);
 	}
 	
 	// auto resize multiple textarea

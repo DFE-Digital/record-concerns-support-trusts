@@ -11,14 +11,14 @@ namespace ConcernsCaseWork.Pages.Case
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class EditCurrentStatusPageModel : AbstractPageModel
+	public class EditCaseAimPageModel : AbstractPageModel
 	{
 		private readonly ICaseModelService _caseModelService;
-		private readonly ILogger<EditCurrentStatusPageModel> _logger;
+		private readonly ILogger<EditCaseAimPageModel> _logger;
 		
 		public CaseModel CaseModel { get; private set; }
 		
-		public EditCurrentStatusPageModel(ICaseModelService caseModelService, ILogger<EditCurrentStatusPageModel> logger)
+		public EditCaseAimPageModel(ICaseModelService caseModelService, ILogger<EditCaseAimPageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_logger = logger;
@@ -30,17 +30,17 @@ namespace ConcernsCaseWork.Pages.Case
 			
 			try
 			{
-				_logger.LogInformation("Case::EditCurrentStatusPageModel::OnGetAsync");
+				_logger.LogInformation("Case::EditCaseAimPageModel::OnGetAsync");
 
 				var caseUrnValue = RouteData.Values["id"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn))
 				{
-					throw new Exception("Case::EditCurrentStatusPageModel::CaseUrn is null or invalid to parse");
+					throw new Exception("Case::EditCaseAimPageModel::CaseUrn is null or invalid to parse");
 				}
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::EditCurrentStatusPageModel::OnGetAsync::Exception - { ex.Message }");
+				_logger.LogError($"Case::EditCaseAimPageModel::OnGetAsync::Exception - { ex.Message }");
 				
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
@@ -48,21 +48,21 @@ namespace ConcernsCaseWork.Pages.Case
 			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn);
 		}
 		
-		public async Task<ActionResult> OnPostEditCurrentStatus(string url)
+		public async Task<ActionResult> OnPostEditCaseAim(string url)
 		{
 			long caseUrn = 0;
 			
 			try
 			{
-				_logger.LogInformation("Case::EditCurrentStatusPageModel::OnPostEditCurrentStatus");
+				_logger.LogInformation("Case::EditCaseAimPageModel::OnPostEditCaseAim");
 				
 				var caseUrnValue = RouteData.Values["id"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn))
 				{
-					throw new Exception("Case::EditCurrentStatusPageModel::CaseUrn is null or invalid to parse");
+					throw new Exception("Case::EditCaseAimPageModel::CaseUrn is null or invalid to parse");
 				}
 				
-				var currentStatus = Request.Form["current-status"];
+				var caseAim = Request.Form["case-aim"];
 				
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel
@@ -70,16 +70,16 @@ namespace ConcernsCaseWork.Pages.Case
 					Urn = caseUrn,
 					CreatedBy = User.Identity.Name,
 					UpdatedAt = DateTimeOffset.Now,
-					CurrentStatus = currentStatus
+					CaseAim = caseAim
 				};
 
-				await _caseModelService.PatchCurrentStatus(patchCaseModel);
+				await _caseModelService.PatchCaseAim(patchCaseModel);
 					
 				return Redirect(url);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::EditCurrentStatusPageModel::OnPostEditCurrentStatus::Exception - {ex.Message}");
+				_logger.LogError($"Case::EditCaseAimPageModel::OnPostEditCaseAim::Exception - {ex.Message}");
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}

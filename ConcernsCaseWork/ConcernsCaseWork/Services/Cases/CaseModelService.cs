@@ -244,6 +244,25 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 		}
 
+		public async Task PatchCaseAim(PatchCaseModel patchCaseModel)
+		{
+			try
+			{
+				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				
+				// Patch source dtos
+				caseDto = CaseMapping.MapCaseAim(patchCaseModel, caseDto);
+
+				await _caseCachedService.PatchCaseByUrn(caseDto);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"CaseModelService::PatchCaseAim exception {ex.Message}");
+
+				throw;
+			}
+		}
+
 		public async Task PatchCurrentStatus(PatchCaseModel patchCaseModel)
 		{
 			try
