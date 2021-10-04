@@ -159,7 +159,7 @@ namespace Service.Redis.Tests.Cases
 			var mockCaseService = new Mock<ICaseService>();
 			var mockLogger = new Mock<ILogger<CaseCachedService>>();
 
-			var expectedCase = CaseFactory.BuildCaseDto();
+			var expectedCreateCaseDto = CaseFactory.BuildCreateCaseDto();
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
 				Returns(Task.FromResult<UserState>(null));
@@ -167,28 +167,28 @@ namespace Service.Redis.Tests.Cases
 			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
 			
 			// act
-			var caseDto = await caseCachedService.PostCase(CaseFactory.BuildCreateCaseDto());
+			var caseDto = await caseCachedService.PostCase(expectedCreateCaseDto);
 			
 			// assert
 			Assert.That(caseDto, Is.Not.Null);
-			Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
-			Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
-			Assert.That(caseDto.Status, Is.EqualTo(expectedCase.Status));
-			Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
-			Assert.That(caseDto.ClosedAt, Is.GreaterThan(expectedCase.ClosedAt));
-			Assert.That(caseDto.CreatedAt, Is.GreaterThan(expectedCase.CreatedAt));
-			Assert.That(caseDto.CreatedBy, Is.EqualTo(expectedCase.CreatedBy));
-			Assert.That(caseDto.CrmEnquiry, Is.EqualTo(expectedCase.CrmEnquiry));
-			Assert.That(caseDto.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
-			Assert.That(caseDto.DeEscalation, Is.GreaterThan(expectedCase.DeEscalation));
-			Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCase.NextSteps));
-			Assert.That(caseDto.CaseAim, Is.EqualTo(expectedCase.CaseAim));
-			Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(expectedCase.DeEscalationPoint));
-			Assert.That(caseDto.ReviewAt, Is.GreaterThan(expectedCase.ReviewAt));
-			Assert.That(caseDto.UpdatedAt, Is.GreaterThan(expectedCase.UpdatedAt));
-			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
-			Assert.That(caseDto.ReasonAtReview, Is.EqualTo(expectedCase.ReasonAtReview));
-			Assert.That(caseDto.TrustUkPrn, Is.EqualTo(expectedCase.TrustUkPrn));
+			Assert.That(caseDto.Description, Is.EqualTo(expectedCreateCaseDto.Description));
+			Assert.That(caseDto.Issue, Is.EqualTo(expectedCreateCaseDto.Issue));
+			Assert.That(caseDto.Status, Is.EqualTo(expectedCreateCaseDto.Status));
+			Assert.That(caseDto.Urn, Is.EqualTo(expectedCreateCaseDto.Urn));
+			Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCreateCaseDto.ClosedAt));
+			Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCreateCaseDto.CreatedAt));
+			Assert.That(caseDto.CreatedBy, Is.EqualTo(expectedCreateCaseDto.CreatedBy));
+			Assert.That(caseDto.CrmEnquiry, Is.EqualTo(expectedCreateCaseDto.CrmEnquiry));
+			Assert.That(caseDto.CurrentStatus, Is.EqualTo(expectedCreateCaseDto.CurrentStatus));
+			Assert.That(caseDto.DeEscalation, Is.EqualTo(expectedCreateCaseDto.DeEscalation));
+			Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCreateCaseDto.NextSteps));
+			Assert.That(caseDto.CaseAim, Is.EqualTo(expectedCreateCaseDto.CaseAim));
+			Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(expectedCreateCaseDto.DeEscalationPoint));
+			Assert.That(caseDto.ReviewAt, Is.EqualTo(expectedCreateCaseDto.ReviewAt));
+			Assert.That(caseDto.UpdatedAt, Is.EqualTo(expectedCreateCaseDto.UpdatedAt));
+			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCreateCaseDto.DirectionOfTravel));
+			Assert.That(caseDto.ReasonAtReview, Is.EqualTo(expectedCreateCaseDto.ReasonAtReview));
+			Assert.That(caseDto.TrustUkPrn, Is.EqualTo(expectedCreateCaseDto.TrustUkPrn));
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
@@ -203,7 +203,7 @@ namespace Service.Redis.Tests.Cases
 			var mockCaseService = new Mock<ICaseService>();
 			var mockLogger = new Mock<ILogger<CaseCachedService>>();
 
-			var expectedCase = CaseFactory.BuildCaseDto();
+			var expectedCreateCaseDto = CaseFactory.BuildCreateCaseDto();
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
 				Returns(Task.FromResult(new UserState()));
@@ -211,28 +211,28 @@ namespace Service.Redis.Tests.Cases
 			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
 			
 			// act
-			var caseDto = await caseCachedService.PostCase(CaseFactory.BuildCreateCaseDto());
+			var caseDto = await caseCachedService.PostCase(expectedCreateCaseDto);
 			
 			// assert
 			Assert.That(caseDto, Is.Not.Null);
-			Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
-			Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
-			Assert.That(caseDto.Status, Is.EqualTo(expectedCase.Status));
-			Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
-			Assert.That(caseDto.ClosedAt, Is.GreaterThan(expectedCase.ClosedAt));
-			Assert.That(caseDto.CreatedAt, Is.GreaterThan(expectedCase.CreatedAt));
-			Assert.That(caseDto.CreatedBy, Is.EqualTo(expectedCase.CreatedBy));
-			Assert.That(caseDto.CrmEnquiry, Is.EqualTo(expectedCase.CrmEnquiry));
-			Assert.That(caseDto.CurrentStatus, Is.EqualTo(expectedCase.CurrentStatus));
-			Assert.That(caseDto.DeEscalation, Is.GreaterThan(expectedCase.DeEscalation));
-			Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCase.NextSteps));
-			Assert.That(caseDto.CaseAim, Is.EqualTo(expectedCase.CaseAim));
-			Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(expectedCase.DeEscalationPoint));
-			Assert.That(caseDto.ReviewAt, Is.GreaterThan(expectedCase.ReviewAt));
-			Assert.That(caseDto.UpdatedAt, Is.GreaterThan(expectedCase.UpdatedAt));
-			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCase.DirectionOfTravel));
-			Assert.That(caseDto.ReasonAtReview, Is.EqualTo(expectedCase.ReasonAtReview));
-			Assert.That(caseDto.TrustUkPrn, Is.EqualTo(expectedCase.TrustUkPrn));
+			Assert.That(caseDto.Description, Is.EqualTo(expectedCreateCaseDto.Description));
+			Assert.That(caseDto.Issue, Is.EqualTo(expectedCreateCaseDto.Issue));
+			Assert.That(caseDto.Status, Is.EqualTo(expectedCreateCaseDto.Status));
+			Assert.That(caseDto.Urn, Is.EqualTo(expectedCreateCaseDto.Urn));
+			Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCreateCaseDto.ClosedAt));
+			Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCreateCaseDto.CreatedAt));
+			Assert.That(caseDto.CreatedBy, Is.EqualTo(expectedCreateCaseDto.CreatedBy));
+			Assert.That(caseDto.CrmEnquiry, Is.EqualTo(expectedCreateCaseDto.CrmEnquiry));
+			Assert.That(caseDto.CurrentStatus, Is.EqualTo(expectedCreateCaseDto.CurrentStatus));
+			Assert.That(caseDto.DeEscalation, Is.EqualTo(expectedCreateCaseDto.DeEscalation));
+			Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCreateCaseDto.NextSteps));
+			Assert.That(caseDto.CaseAim, Is.EqualTo(expectedCreateCaseDto.CaseAim));
+			Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(expectedCreateCaseDto.DeEscalationPoint));
+			Assert.That(caseDto.ReviewAt, Is.EqualTo(expectedCreateCaseDto.ReviewAt));
+			Assert.That(caseDto.UpdatedAt, Is.EqualTo(expectedCreateCaseDto.UpdatedAt));
+			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCreateCaseDto.DirectionOfTravel));
+			Assert.That(caseDto.ReasonAtReview, Is.EqualTo(expectedCreateCaseDto.ReasonAtReview));
+			Assert.That(caseDto.TrustUkPrn, Is.EqualTo(expectedCreateCaseDto.TrustUkPrn));
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);

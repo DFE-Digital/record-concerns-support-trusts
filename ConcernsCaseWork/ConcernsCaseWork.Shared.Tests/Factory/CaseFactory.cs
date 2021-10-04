@@ -9,8 +9,9 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class CaseFactory
 	{
-		public static List<CaseDto> BuildListCaseDto()
+		public static List<CaseDto> BuildListCaseDto(string trustUkPrn = null)
 		{
+			Fixture fixture = new Fixture();
 			var dateTimeNow = DateTimeOffset.Now;
 			return new List<CaseDto>
 			{
@@ -19,83 +20,192 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				// 2 - Monitoring
 				// 3 - Close
 				new CaseDto(
-					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
-					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
-					"case-aim", "de-escalation-point", "direction-of-travel", 1, 1
+					dateTimeNow, 
+					dateTimeNow, 
+					dateTimeNow, 
+					dateTimeNow, 
+					fixture.Create<string>(),
+					fixture.Create<string>(), 
+					fixture.Create<string>(),
+					trustUkPrn ?? fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					dateTimeNow, 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					1, 
+					1
 				),
 				new CaseDto(
-					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
-					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
-					"case-aim", "de-escalation-point", "direction-of-travel", 2, 3
+					dateTimeNow, 
+					dateTimeNow, 
+					dateTimeNow, 
+					dateTimeNow, 
+					fixture.Create<string>(),
+					fixture.Create<string>(), 
+					fixture.Create<string>(),
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					dateTimeNow, 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					2, 
+					3
 				),
 				new CaseDto(
-					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
-					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
-					"case-aim", "de-escalation-point", "direction-of-travel", 3, 2
+					dateTimeNow, 
+					dateTimeNow, 
+					dateTimeNow, 
+					dateTimeNow, 
+					fixture.Create<string>(),
+					fixture.Create<string>(), 
+					fixture.Create<string>(),
+					trustUkPrn ?? fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					dateTimeNow, 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					3, 
+					2
 				),
 				new CaseDto(
-					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
-					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
-					"case-aim", "de-escalation-point", "direction-of-travel", 4, 1
+					dateTimeNow, 
+					dateTimeNow, 
+					dateTimeNow, 
+					dateTimeNow, 
+					fixture.Create<string>(),
+					fixture.Create<string>(), 
+					fixture.Create<string>(),
+					trustUkPrn ?? fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					dateTimeNow, 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					4, 
+					1
 				),
 				new CaseDto(
-					dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing","description", "crm-enquiry",
-					"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps", 
-					"case-aim", "de-escalation-point", "direction-of-travel", 5, 2
+					dateTimeNow, 
+					dateTimeNow, 
+					dateTimeNow, 
+					dateTimeNow, 
+					fixture.Create<string>(),
+					fixture.Create<string>(), 
+					fixture.Create<string>(),
+					trustUkPrn ?? fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					dateTimeNow, 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					5, 
+					2
 				)
 			};
 		}
 
 		public static CaseDto BuildCaseDto()
 		{
+			Fixture fixture = new Fixture();
 			var dateTimeNow = DateTime.Now;
 			return new CaseDto(
-				dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
-				"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
-				"case-aim", "de-escalation-point", "direction-of-travel", 1, 1
+				dateTimeNow, 
+				dateTimeNow, 
+				dateTimeNow, 
+				dateTimeNow, 
+				fixture.Create<string>(), 
+				fixture.Create<string>(), 
+				fixture.Create<string>(),
+				fixture.Create<string>(), 
+				fixture.Create<string>(), 
+				dateTimeNow, 
+				fixture.Create<string>(), 
+				fixture.Create<string>(), 
+				fixture.Create<string>(),
+				fixture.Create<string>(), 
+				fixture.Create<string>(), 
+				fixture.Create<string>(), 
+				1, 
+				1
 			);
 		}
 		
 		public static CreateCaseDto BuildCreateCaseDto()
 		{
+			Fixture fixture = new Fixture();
 			var dateTimeNow = DateTime.Now;
 			return new CreateCaseDto(
-				dateTimeNow, dateTimeNow, dateTimeNow, dateTimeNow, "testing", "description", "crm-enquiry",
-				"trust-ukprn", "reason-at-review", dateTimeNow, "issue", "current-status", "nextSteps",
-				"case-aim", "de-escalation-point", "direction-of-travel", 1, 1
+				dateTimeNow, 
+				dateTimeNow, 
+				dateTimeNow, 
+				dateTimeNow, 
+				fixture.Create<string>(), 
+				fixture.Create<string>(), 
+				fixture.Create<string>(),
+				fixture.Create<string>(), 
+				fixture.Create<string>(), 
+				dateTimeNow, 
+				fixture.Create<string>(), 
+				fixture.Create<string>(), 
+				fixture.Create<string>(),
+				fixture.Create<string>(), 
+				fixture.Create<string>(), 
+				fixture.Create<string>(), 
+				1, 
+				1
 			);
 		}
 		
 		public static CreateCaseModel BuildCreateCaseModel(string caseType = "case-type", string caseSubType = "case-sub-type")
 		{
+			Fixture fixture = new Fixture();
 			var dateTimeNow = DateTime.Now;
 			return new CreateCaseModel {
 				CreatedAt = dateTimeNow, 
 				UpdatedAt = dateTimeNow, 
 				ReviewAt = dateTimeNow, 
 				ClosedAt = dateTimeNow, 
-				CreatedBy = "testing", 
-				Description = "description", 
-				CrmEnquiry = "crm-enquiry",
-				TrustUkPrn = "trust-ukprn", 
-				ReasonAtReview = "reason-at-review", 
+				CreatedBy = fixture.Create<string>(), 
+				Description = fixture.Create<string>(), 
+				CrmEnquiry = fixture.Create<string>(),
+				TrustUkPrn = fixture.Create<string>(), 
+				ReasonAtReview = fixture.Create<string>(), 
 				DeEscalation = dateTimeNow, 
-				Issue = "issue", 
-				CurrentStatus = "current-status", 
-				NextSteps = "nextSteps",
-				CaseAim = "case-aim",
-				DeEscalationPoint = "de-escalation-point",
-				DirectionOfTravel = "direction-of-travel", 
+				Issue = fixture.Create<string>(), 
+				CurrentStatus = fixture.Create<string>(), 
+				NextSteps = fixture.Create<string>(),
+				CaseAim = fixture.Create<string>(),
+				DeEscalationPoint = fixture.Create<string>(),
+				DirectionOfTravel = fixture.Create<string>(), 
 				Urn = 1, 
 				Status = 1, 
 				CaseType = caseType, 
 				CaseSubType = caseSubType, 
-				RagRatingName = "rag-rating"
+				RagRatingName = fixture.Create<string>()
 			};
 		}
 		
 		public static CaseModel BuildCaseModel(string caseType = "case-type", string caseSubType = "case-sub-type")
 		{
+			Fixture fixture = new Fixture();
 			var dateTimeNow = DateTimeOffset.Now;
 			return new CaseModel
 			{
@@ -103,21 +213,21 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				UpdatedAt = dateTimeNow,
 				ReviewAt = dateTimeNow,
 				ClosedAt = dateTimeNow,
-				CreatedBy = "testing",
-				Description = "description",
-				CrmEnquiry = "crm-enquiry",
-				TrustUkPrn = "trust-ukprn",
-				ReasonAtReview = "reason-at-review",
+				CreatedBy = fixture.Create<string>(),
+				Description = fixture.Create<string>(),
+				CrmEnquiry = fixture.Create<string>(),
+				TrustUkPrn = fixture.Create<string>(),
+				ReasonAtReview = fixture.Create<string>(),
 				DeEscalation = dateTimeNow,
-				Issue = "issue",
-				CurrentStatus = "current-status",
-				NextSteps = "nextSteps",
-				CaseAim = "case-aim",
-				DeEscalationPoint = "de-escalation-point",
-				DirectionOfTravel = "direction-of-travel",
+				Issue = fixture.Create<string>(),
+				CurrentStatus = fixture.Create<string>(),
+				NextSteps = fixture.Create<string>(),
+				CaseAim = fixture.Create<string>(),
+				DeEscalationPoint = fixture.Create<string>(),
+				DirectionOfTravel = fixture.Create<string>(),
 				Urn = 1,
 				Status = 1,
-				StatusName = "Live",
+				StatusName = fixture.Create<string>(),
 				CaseType = caseType,
 				CaseSubType = caseSubType
 			};
