@@ -102,5 +102,15 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.NextSteps, patchCaseModel.CaseAim, caseDto.DeEscalationPoint, caseDto.DirectionOfTravel,
 				caseDto.Urn, caseDto.Status);
 		}
+		
+		public static CaseDto MapDeEscalationPoint(PatchCaseModel patchCaseModel, CaseDto caseDto)
+		{
+			return new CaseDto(caseDto.CreatedAt, patchCaseModel.UpdatedAt,
+				caseDto.ReviewAt, caseDto.ClosedAt, caseDto.CreatedBy, caseDto.Description,
+				caseDto.CrmEnquiry, caseDto.TrustUkPrn, caseDto.ReasonAtReview,
+				caseDto.DeEscalation, caseDto.Issue, caseDto.CurrentStatus,
+				caseDto.NextSteps, caseDto.CaseAim, patchCaseModel.DeEscalationPoint, caseDto.DirectionOfTravel,
+				caseDto.Urn, caseDto.Status);
+		}
 	}
 }

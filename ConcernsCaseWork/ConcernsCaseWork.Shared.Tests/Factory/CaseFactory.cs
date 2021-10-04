@@ -129,17 +129,18 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new PatchCaseModel
 			{
 				Urn = 1,
-				CreatedBy = "testing",
-				CaseType = "record-type",
+				CreatedBy = fixture.Create<string>(),
+				CaseType = fixture.Create<string>(),
 				TypeUrn = 1,
 				UpdatedAt = DateTimeOffset.Now,
-				CaseSubType = "record-sub-type",
+				CaseSubType = fixture.Create<string>(),
 				RatingUrn = 1,
-				RiskRating = "Amber Green",
-				DirectionOfTravel = "direction-of-travel",
-				Issue = "issue",
-				CurrentStatus = "current-status",
-				CaseAim = fixture.Create<string>()
+				RiskRating = fixture.Create<string>(),
+				DirectionOfTravel = fixture.Create<string>(),
+				Issue = fixture.Create<string>(),
+				CurrentStatus = fixture.Create<string>(),
+				CaseAim = fixture.Create<string>(),
+				DeEscalationPoint = fixture.Create<string>()
 			};
 		}
 	}
