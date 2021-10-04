@@ -33,5 +33,7 @@ namespace ConcernsCaseWork.Models
 		public string Issue { get; set; }
 		
 		public string CurrentStatus { get; set; }
+		
+		public string CaseAim { get; set; }
 	}
 }

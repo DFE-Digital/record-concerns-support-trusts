@@ -34,15 +34,15 @@ namespace ConcernsCaseWork.Models
 
 		public DateTimeOffset DeEscalation { get; set; }
 
-		public string Issue { get; set; }
+		public string Issue { get; set; } = string.Empty;
 
-		public string CurrentStatus { get; set; }
+		public string CurrentStatus { get; set; } = string.Empty;
 
-		public string CaseAim { get; set; }
+		public string CaseAim { get; set; } = string.Empty;
 		
-		public string DeEscalationPoint { get; set; }
+		public string DeEscalationPoint { get; set; } = string.Empty;
 		
-		public string NextSteps { get; set; }
+		public string NextSteps { get; set; } = string.Empty;
 
 		/// <summary>
 		/// Deteriorating, unchanged, improved

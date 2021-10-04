@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -8,7 +7,6 @@ using NUnit.Framework;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Extensions
 {
@@ -62,7 +60,6 @@ namespace ConcernsCaseWork.Tests.Extensions
 			
 			// assert
 			Assert.That(serviceCollection, Is.Not.Null);
-			Assert.That(serviceCollection.Where(t => t.ServiceType == typeof(RedisCache)), Is.Not.Null);
 		}
 		
 		[Test]
@@ -87,7 +84,6 @@ namespace ConcernsCaseWork.Tests.Extensions
 			
 			// assert
 			Assert.That(serviceCollection, Is.Not.Null);
-			Assert.That(serviceCollection.Where(t => t.ServiceType == typeof(RedisCache)), Is.Not.Null);
 		}
 	}
 }
