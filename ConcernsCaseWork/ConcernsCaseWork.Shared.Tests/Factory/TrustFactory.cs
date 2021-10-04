@@ -37,9 +37,9 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			};
 		}
 
-		public static TrustDetailsDto BuildTrustDetailsDto()
+		public static TrustDetailsDto BuildTrustDetailsDto(string ukPrn = "trust-ukprn")
 		{
-			return new TrustDetailsDto(GiasDataFactory.BuildGiasDataDto(), EstablishmentFactory.BuildListEstablishmentDto());
+			return new TrustDetailsDto(GiasDataFactory.BuildGiasDataDto(ukPrn), EstablishmentFactory.BuildListEstablishmentDto());
 		}
 		
 		public static List<TrustDetailsDto> BuildListTrustDetailsDto()

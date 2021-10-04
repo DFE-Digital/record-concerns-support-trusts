@@ -5,9 +5,9 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class GiasDataFactory
 	{
-		public static GiasDataDto BuildGiasDataDto()
+		public static GiasDataDto BuildGiasDataDto(string ukPrn = "trust-ukprn")
 		{
-			return new GiasDataDto("trust-ukprn", "group-id", "group-name", "Multi-academy trust", "companies-house-number",
+			return new GiasDataDto(ukPrn, "group-id", "group-name", "Multi-academy trust", "companies-house-number",
 				GroupContactAddressFactory.BuildGroupContactAddressDto());
 		}
 		

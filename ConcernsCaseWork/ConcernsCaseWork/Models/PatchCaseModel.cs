@@ -35,5 +35,7 @@ namespace ConcernsCaseWork.Models
 		public string CurrentStatus { get; set; }
 		
 		public string CaseAim { get; set; }
+		
+		public string DeEscalationPoint { get; set; }
 	}
 }

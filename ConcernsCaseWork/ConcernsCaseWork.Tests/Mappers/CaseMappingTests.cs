@@ -80,28 +80,28 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var statusDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 1);
 
 			// act
-			caseDto = CaseMapping.MapClosure(patchCaseModel, caseDto, statusDto);
+			var expectedCaseDto = CaseMapping.MapClosure(patchCaseModel, caseDto, statusDto);
 
 			// assert
-			Assert.That(caseDto, Is.Not.Null);
-			Assert.That(caseDto.Description, Is.EqualTo(caseDto.Description));
-			Assert.That(caseDto.Issue, Is.EqualTo(caseDto.Issue));
-			Assert.That(caseDto.Status, Is.EqualTo(caseDto.Status));
-			Assert.That(caseDto.Urn, Is.EqualTo(caseDto.Urn));
-			Assert.That(caseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
-			Assert.That(caseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
-			Assert.That(caseDto.CreatedBy, Is.EqualTo(caseDto.CreatedBy));
-			Assert.That(caseDto.CrmEnquiry, Is.EqualTo(caseDto.CrmEnquiry));
-			Assert.That(caseDto.CurrentStatus, Is.EqualTo(caseDto.CurrentStatus));
-			Assert.That(caseDto.DeEscalation, Is.EqualTo(caseDto.DeEscalation));
-			Assert.That(caseDto.NextSteps, Is.EqualTo(caseDto.NextSteps));
-			Assert.That(caseDto.CaseAim, Is.EqualTo(caseDto.CaseAim));
-			Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(caseDto.DeEscalationPoint));
-			Assert.That(caseDto.ReviewAt, Is.EqualTo(caseDto.ReviewAt));
-			Assert.That(caseDto.UpdatedAt, Is.EqualTo(patchCaseModel.UpdatedAt));
-			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
-			Assert.That(caseDto.ReasonAtReview, Is.EqualTo(patchCaseModel.ReasonAtReview));
-			Assert.That(caseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
+			Assert.That(expectedCaseDto, Is.Not.Null);
+			Assert.That(expectedCaseDto.Description, Is.EqualTo(caseDto.Description));
+			Assert.That(expectedCaseDto.Issue, Is.EqualTo(caseDto.Issue));
+			Assert.That(expectedCaseDto.Status, Is.EqualTo(caseDto.Status));
+			Assert.That(expectedCaseDto.Urn, Is.EqualTo(caseDto.Urn));
+			Assert.That(expectedCaseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
+			Assert.That(expectedCaseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
+			Assert.That(expectedCaseDto.CreatedBy, Is.EqualTo(caseDto.CreatedBy));
+			Assert.That(expectedCaseDto.CrmEnquiry, Is.EqualTo(caseDto.CrmEnquiry));
+			Assert.That(expectedCaseDto.CurrentStatus, Is.EqualTo(caseDto.CurrentStatus));
+			Assert.That(expectedCaseDto.DeEscalation, Is.EqualTo(caseDto.DeEscalation));
+			Assert.That(expectedCaseDto.NextSteps, Is.EqualTo(caseDto.NextSteps));
+			Assert.That(expectedCaseDto.CaseAim, Is.EqualTo(caseDto.CaseAim));
+			Assert.That(expectedCaseDto.DeEscalationPoint, Is.EqualTo(caseDto.DeEscalationPoint));
+			Assert.That(expectedCaseDto.ReviewAt, Is.EqualTo(caseDto.ReviewAt));
+			Assert.That(expectedCaseDto.UpdatedAt, Is.EqualTo(patchCaseModel.UpdatedAt));
+			Assert.That(expectedCaseDto.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
+			Assert.That(expectedCaseDto.ReasonAtReview, Is.EqualTo(patchCaseModel.ReasonAtReview));
+			Assert.That(expectedCaseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
 		}
 
 		[Test]
@@ -112,28 +112,28 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var caseDto = CaseFactory.BuildCaseDto();
 			
 			// act
-			caseDto = CaseMapping.MapDirectionOfTravel(patchCaseModel, caseDto);
+			var expectedCaseDto = CaseMapping.MapDirectionOfTravel(patchCaseModel, caseDto);
 
 			// assert
-			Assert.That(caseDto, Is.Not.Null);
-			Assert.That(caseDto.Description, Is.EqualTo(caseDto.Description));
-			Assert.That(caseDto.Issue, Is.EqualTo(caseDto.Issue));
-			Assert.That(caseDto.Status, Is.EqualTo(caseDto.Status));
-			Assert.That(caseDto.Urn, Is.EqualTo(caseDto.Urn));
-			Assert.That(caseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
-			Assert.That(caseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
-			Assert.That(caseDto.CreatedBy, Is.EqualTo(caseDto.CreatedBy));
-			Assert.That(caseDto.CrmEnquiry, Is.EqualTo(caseDto.CrmEnquiry));
-			Assert.That(caseDto.CurrentStatus, Is.EqualTo(caseDto.CurrentStatus));
-			Assert.That(caseDto.DeEscalation, Is.EqualTo(caseDto.DeEscalation));
-			Assert.That(caseDto.NextSteps, Is.EqualTo(caseDto.NextSteps));
-			Assert.That(caseDto.CaseAim, Is.EqualTo(caseDto.CaseAim));
-			Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(caseDto.DeEscalationPoint));
-			Assert.That(caseDto.ReviewAt, Is.EqualTo(caseDto.ReviewAt));
-			Assert.That(caseDto.UpdatedAt, Is.EqualTo(patchCaseModel.UpdatedAt));
-			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(patchCaseModel.DirectionOfTravel));
-			Assert.That(caseDto.ReasonAtReview, Is.EqualTo(caseDto.ReasonAtReview));
-			Assert.That(caseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
+			Assert.That(expectedCaseDto, Is.Not.Null);
+			Assert.That(expectedCaseDto.Description, Is.EqualTo(caseDto.Description));
+			Assert.That(expectedCaseDto.Issue, Is.EqualTo(caseDto.Issue));
+			Assert.That(expectedCaseDto.Status, Is.EqualTo(caseDto.Status));
+			Assert.That(expectedCaseDto.Urn, Is.EqualTo(caseDto.Urn));
+			Assert.That(expectedCaseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
+			Assert.That(expectedCaseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
+			Assert.That(expectedCaseDto.CreatedBy, Is.EqualTo(caseDto.CreatedBy));
+			Assert.That(expectedCaseDto.CrmEnquiry, Is.EqualTo(caseDto.CrmEnquiry));
+			Assert.That(expectedCaseDto.CurrentStatus, Is.EqualTo(caseDto.CurrentStatus));
+			Assert.That(expectedCaseDto.DeEscalation, Is.EqualTo(caseDto.DeEscalation));
+			Assert.That(expectedCaseDto.NextSteps, Is.EqualTo(caseDto.NextSteps));
+			Assert.That(expectedCaseDto.CaseAim, Is.EqualTo(caseDto.CaseAim));
+			Assert.That(expectedCaseDto.DeEscalationPoint, Is.EqualTo(caseDto.DeEscalationPoint));
+			Assert.That(expectedCaseDto.ReviewAt, Is.EqualTo(caseDto.ReviewAt));
+			Assert.That(expectedCaseDto.UpdatedAt, Is.EqualTo(patchCaseModel.UpdatedAt));
+			Assert.That(expectedCaseDto.DirectionOfTravel, Is.EqualTo(patchCaseModel.DirectionOfTravel));
+			Assert.That(expectedCaseDto.ReasonAtReview, Is.EqualTo(caseDto.ReasonAtReview));
+			Assert.That(expectedCaseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
 		}
 		
 		[Test]
@@ -144,28 +144,28 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var caseDto = CaseFactory.BuildCaseDto();
 			
 			// act
-			caseDto = CaseMapping.MapIssue(patchCaseModel, caseDto);
+			var expectedCaseDto = CaseMapping.MapIssue(patchCaseModel, caseDto);
 
 			// assert
-			Assert.That(caseDto, Is.Not.Null);
-			Assert.That(caseDto.Description, Is.EqualTo(caseDto.Description));
-			Assert.That(caseDto.Issue, Is.EqualTo(patchCaseModel.Issue));
-			Assert.That(caseDto.Status, Is.EqualTo(caseDto.Status));
-			Assert.That(caseDto.Urn, Is.EqualTo(caseDto.Urn));
-			Assert.That(caseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
-			Assert.That(caseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
-			Assert.That(caseDto.CreatedBy, Is.EqualTo(caseDto.CreatedBy));
-			Assert.That(caseDto.CrmEnquiry, Is.EqualTo(caseDto.CrmEnquiry));
-			Assert.That(caseDto.CurrentStatus, Is.EqualTo(caseDto.CurrentStatus));
-			Assert.That(caseDto.DeEscalation, Is.EqualTo(caseDto.DeEscalation));
-			Assert.That(caseDto.NextSteps, Is.EqualTo(caseDto.NextSteps));
-			Assert.That(caseDto.CaseAim, Is.EqualTo(caseDto.CaseAim));
-			Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(caseDto.DeEscalationPoint));
-			Assert.That(caseDto.ReviewAt, Is.EqualTo(caseDto.ReviewAt));
-			Assert.That(caseDto.UpdatedAt, Is.EqualTo(patchCaseModel.UpdatedAt));
-			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
-			Assert.That(caseDto.ReasonAtReview, Is.EqualTo(caseDto.ReasonAtReview));
-			Assert.That(caseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
+			Assert.That(expectedCaseDto, Is.Not.Null);
+			Assert.That(expectedCaseDto.Description, Is.EqualTo(caseDto.Description));
+			Assert.That(expectedCaseDto.Issue, Is.EqualTo(patchCaseModel.Issue));
+			Assert.That(expectedCaseDto.Status, Is.EqualTo(caseDto.Status));
+			Assert.That(expectedCaseDto.Urn, Is.EqualTo(caseDto.Urn));
+			Assert.That(expectedCaseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
+			Assert.That(expectedCaseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
+			Assert.That(expectedCaseDto.CreatedBy, Is.EqualTo(caseDto.CreatedBy));
+			Assert.That(expectedCaseDto.CrmEnquiry, Is.EqualTo(caseDto.CrmEnquiry));
+			Assert.That(expectedCaseDto.CurrentStatus, Is.EqualTo(caseDto.CurrentStatus));
+			Assert.That(expectedCaseDto.DeEscalation, Is.EqualTo(caseDto.DeEscalation));
+			Assert.That(expectedCaseDto.NextSteps, Is.EqualTo(caseDto.NextSteps));
+			Assert.That(expectedCaseDto.CaseAim, Is.EqualTo(caseDto.CaseAim));
+			Assert.That(expectedCaseDto.DeEscalationPoint, Is.EqualTo(caseDto.DeEscalationPoint));
+			Assert.That(expectedCaseDto.ReviewAt, Is.EqualTo(caseDto.ReviewAt));
+			Assert.That(expectedCaseDto.UpdatedAt, Is.EqualTo(patchCaseModel.UpdatedAt));
+			Assert.That(expectedCaseDto.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
+			Assert.That(expectedCaseDto.ReasonAtReview, Is.EqualTo(caseDto.ReasonAtReview));
+			Assert.That(expectedCaseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
 		}
 		
 		[Test]
@@ -176,28 +176,28 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var caseDto = CaseFactory.BuildCaseDto();
 			
 			// act
-			caseDto = CaseMapping.MapCurrentStatus(patchCaseModel, caseDto);
+			var expectedCaseDto = CaseMapping.MapCurrentStatus(patchCaseModel, caseDto);
 
 			// assert
-			Assert.That(caseDto, Is.Not.Null);
-			Assert.That(caseDto.Description, Is.EqualTo(caseDto.Description));
-			Assert.That(caseDto.Issue, Is.EqualTo(caseDto.Issue));
-			Assert.That(caseDto.Status, Is.EqualTo(caseDto.Status));
-			Assert.That(caseDto.Urn, Is.EqualTo(caseDto.Urn));
-			Assert.That(caseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
-			Assert.That(caseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
-			Assert.That(caseDto.CreatedBy, Is.EqualTo(caseDto.CreatedBy));
-			Assert.That(caseDto.CrmEnquiry, Is.EqualTo(caseDto.CrmEnquiry));
-			Assert.That(caseDto.CurrentStatus, Is.EqualTo(patchCaseModel.CurrentStatus));
-			Assert.That(caseDto.DeEscalation, Is.EqualTo(caseDto.DeEscalation));
-			Assert.That(caseDto.NextSteps, Is.EqualTo(caseDto.NextSteps));
-			Assert.That(caseDto.CaseAim, Is.EqualTo(caseDto.CaseAim));
-			Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(caseDto.DeEscalationPoint));
-			Assert.That(caseDto.ReviewAt, Is.EqualTo(caseDto.ReviewAt));
-			Assert.That(caseDto.UpdatedAt, Is.EqualTo(patchCaseModel.UpdatedAt));
-			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
-			Assert.That(caseDto.ReasonAtReview, Is.EqualTo(caseDto.ReasonAtReview));
-			Assert.That(caseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
+			Assert.That(expectedCaseDto, Is.Not.Null);
+			Assert.That(expectedCaseDto.Description, Is.EqualTo(caseDto.Description));
+			Assert.That(expectedCaseDto.Issue, Is.EqualTo(caseDto.Issue));
+			Assert.That(expectedCaseDto.Status, Is.EqualTo(caseDto.Status));
+			Assert.That(expectedCaseDto.Urn, Is.EqualTo(caseDto.Urn));
+			Assert.That(expectedCaseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
+			Assert.That(expectedCaseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
+			Assert.That(expectedCaseDto.CreatedBy, Is.EqualTo(caseDto.CreatedBy));
+			Assert.That(expectedCaseDto.CrmEnquiry, Is.EqualTo(caseDto.CrmEnquiry));
+			Assert.That(expectedCaseDto.CurrentStatus, Is.EqualTo(patchCaseModel.CurrentStatus));
+			Assert.That(expectedCaseDto.DeEscalation, Is.EqualTo(caseDto.DeEscalation));
+			Assert.That(expectedCaseDto.NextSteps, Is.EqualTo(caseDto.NextSteps));
+			Assert.That(expectedCaseDto.CaseAim, Is.EqualTo(caseDto.CaseAim));
+			Assert.That(expectedCaseDto.DeEscalationPoint, Is.EqualTo(caseDto.DeEscalationPoint));
+			Assert.That(expectedCaseDto.ReviewAt, Is.EqualTo(caseDto.ReviewAt));
+			Assert.That(expectedCaseDto.UpdatedAt, Is.EqualTo(patchCaseModel.UpdatedAt));
+			Assert.That(expectedCaseDto.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
+			Assert.That(expectedCaseDto.ReasonAtReview, Is.EqualTo(caseDto.ReasonAtReview));
+			Assert.That(expectedCaseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
 		}
 		
 		[Test]
@@ -211,25 +211,57 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var expectedCaseDto = CaseMapping.MapCaseAim(patchCaseModel, caseDto);
 
 			// assert
-			Assert.That(caseDto, Is.Not.Null);
-			Assert.That(caseDto.Description, Is.EqualTo(caseDto.Description));
-			Assert.That(caseDto.Issue, Is.EqualTo(caseDto.Issue));
-			Assert.That(caseDto.Status, Is.EqualTo(caseDto.Status));
-			Assert.That(caseDto.Urn, Is.EqualTo(caseDto.Urn));
-			Assert.That(caseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
-			Assert.That(caseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
-			Assert.That(caseDto.CreatedBy, Is.EqualTo(caseDto.CreatedBy));
-			Assert.That(caseDto.CrmEnquiry, Is.EqualTo(caseDto.CrmEnquiry));
-			Assert.That(caseDto.CurrentStatus, Is.EqualTo(caseDto.CurrentStatus));
-			Assert.That(caseDto.DeEscalation, Is.EqualTo(caseDto.DeEscalation));
-			Assert.That(caseDto.NextSteps, Is.EqualTo(caseDto.NextSteps));
+			Assert.That(expectedCaseDto, Is.Not.Null);
+			Assert.That(expectedCaseDto.Description, Is.EqualTo(caseDto.Description));
+			Assert.That(expectedCaseDto.Issue, Is.EqualTo(caseDto.Issue));
+			Assert.That(expectedCaseDto.Status, Is.EqualTo(caseDto.Status));
+			Assert.That(expectedCaseDto.Urn, Is.EqualTo(caseDto.Urn));
+			Assert.That(expectedCaseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
+			Assert.That(expectedCaseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
+			Assert.That(expectedCaseDto.CreatedBy, Is.EqualTo(caseDto.CreatedBy));
+			Assert.That(expectedCaseDto.CrmEnquiry, Is.EqualTo(caseDto.CrmEnquiry));
+			Assert.That(expectedCaseDto.CurrentStatus, Is.EqualTo(caseDto.CurrentStatus));
+			Assert.That(expectedCaseDto.DeEscalation, Is.EqualTo(caseDto.DeEscalation));
+			Assert.That(expectedCaseDto.NextSteps, Is.EqualTo(caseDto.NextSteps));
 			Assert.That(expectedCaseDto.CaseAim, Is.EqualTo(patchCaseModel.CaseAim));
-			Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(caseDto.DeEscalationPoint));
-			Assert.That(caseDto.ReviewAt, Is.EqualTo(caseDto.ReviewAt));
+			Assert.That(expectedCaseDto.DeEscalationPoint, Is.EqualTo(caseDto.DeEscalationPoint));
+			Assert.That(expectedCaseDto.ReviewAt, Is.EqualTo(caseDto.ReviewAt));
 			Assert.That(expectedCaseDto.UpdatedAt, Is.EqualTo(patchCaseModel.UpdatedAt));
-			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
-			Assert.That(caseDto.ReasonAtReview, Is.EqualTo(caseDto.ReasonAtReview));
-			Assert.That(caseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
+			Assert.That(expectedCaseDto.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
+			Assert.That(expectedCaseDto.ReasonAtReview, Is.EqualTo(caseDto.ReasonAtReview));
+			Assert.That(expectedCaseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
+		}
+		
+		[Test]
+		public void WhenMapDeEscalationPoint_Returns_CaseDto()
+		{
+			// arrange
+			var patchCaseModel = CaseFactory.BuildPatchCaseModel();
+			var caseDto = CaseFactory.BuildCaseDto();
+			
+			// act
+			var expectedCaseDto = CaseMapping.MapDeEscalationPoint(patchCaseModel, caseDto);
+
+			// assert
+			Assert.That(expectedCaseDto, Is.Not.Null);
+			Assert.That(expectedCaseDto.Description, Is.EqualTo(caseDto.Description));
+			Assert.That(expectedCaseDto.Issue, Is.EqualTo(caseDto.Issue));
+			Assert.That(expectedCaseDto.Status, Is.EqualTo(caseDto.Status));
+			Assert.That(expectedCaseDto.Urn, Is.EqualTo(caseDto.Urn));
+			Assert.That(expectedCaseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
+			Assert.That(expectedCaseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
+			Assert.That(expectedCaseDto.CreatedBy, Is.EqualTo(caseDto.CreatedBy));
+			Assert.That(expectedCaseDto.CrmEnquiry, Is.EqualTo(caseDto.CrmEnquiry));
+			Assert.That(expectedCaseDto.CurrentStatus, Is.EqualTo(caseDto.CurrentStatus));
+			Assert.That(expectedCaseDto.DeEscalation, Is.EqualTo(caseDto.DeEscalation));
+			Assert.That(expectedCaseDto.NextSteps, Is.EqualTo(caseDto.NextSteps));
+			Assert.That(expectedCaseDto.CaseAim, Is.EqualTo(caseDto.CaseAim));
+			Assert.That(expectedCaseDto.DeEscalationPoint, Is.EqualTo(patchCaseModel.DeEscalationPoint));
+			Assert.That(expectedCaseDto.ReviewAt, Is.EqualTo(caseDto.ReviewAt));
+			Assert.That(expectedCaseDto.UpdatedAt, Is.EqualTo(patchCaseModel.UpdatedAt));
+			Assert.That(expectedCaseDto.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
+			Assert.That(expectedCaseDto.ReasonAtReview, Is.EqualTo(caseDto.ReasonAtReview));
+			Assert.That(expectedCaseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
 		}
 	}
 }
