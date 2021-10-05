@@ -385,8 +385,11 @@ namespace ConcernsCaseWork.Services.Cases
 			var caseDetails = userState.CasesDetails;
 					
 			// Fetch cases from cache
-			var casesDto = caseDetails.Select(c => c.Value.CaseDto).ToList();
+			var casesDto = caseDetails.Select(c => c.Value.CaseDto)
+				.Where(c => c.Status.CompareTo(statusDto.Urn) == 0).ToList();
 					
+			if (!casesDto.Any()) return Array.Empty<HomeModel>();
+			
 			// Fetch trusts by ukprn
 			var trustsDetailsTasks = casesDto.Where(c => c.TrustUkPrn != null)
 				.Select(c => _trustCachedService.GetTrustByUkPrn(c.TrustUkPrn)).ToList();
