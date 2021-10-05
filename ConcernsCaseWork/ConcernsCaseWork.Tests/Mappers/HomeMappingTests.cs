@@ -18,19 +18,18 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// arrange
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var trustDetailsDto = TrustFactory.BuildListTrustDetailsDto();
-			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto() };
+			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto(), RecordFactory.BuildRecordDto(4) };
 			var ratingsDto = RatingFactory.BuildListRatingDto();
-			var typesDto = new List<TypeDto> { TypeFactory.BuildTypeDto(99) };
+			var typesDto = new List<TypeDto> { TypeFactory.BuildTypeDto() };
 			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
 
 			// act
-			var activeCases = HomeMapping.Map(casesDto, trustDetailsDto,
+			var activeCases = HomeMapping.Map(casesDto.Where(c => c.Status == 1).ToList(), trustDetailsDto,
 				recordsDto, ratingsDto, typesDto, statusLiveDto);
 
 			// assert
 			Assert.That(activeCases, Is.Not.Null);
-			
-			// TODO add more asserts
+			Assert.That(activeCases.Count, Is.EqualTo(2));
 		}
 		
 		[Test]
@@ -39,19 +38,18 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// arrange
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var trustDetailsDto = TrustFactory.BuildListTrustDetailsDto();
-			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto() };
+			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto(3), RecordFactory.BuildRecordDto(5) };
 			var ratingsDto = RatingFactory.BuildListRatingDto();
-			var typesDto = new List<TypeDto> { TypeFactory.BuildTypeDto(99) };
+			var typesDto = new List<TypeDto> { TypeFactory.BuildTypeDto() };
 			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 
 			// act
-			var monitoringCases = HomeMapping.Map(casesDto, trustDetailsDto,
+			var monitoringCases = HomeMapping.Map(casesDto.Where(c => c.Status == 2).ToList(), trustDetailsDto,
 				recordsDto, ratingsDto, typesDto, statusMonitoringDto);
 
 			// assert
 			Assert.That(monitoringCases, Is.Not.Null);
-			
-			// TODO add more asserts
+			Assert.That(monitoringCases.Count, Is.EqualTo(2));
 		}
 		
 		[Test]
@@ -65,11 +63,11 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var typesDto = TypeFactory.BuildListTypeDto();
 			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
 			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
-
+			
 			// act
-			var activeCases = HomeMapping.Map(casesDto, trustDetailsDto,
+			var activeCases = HomeMapping.Map(casesDto.Where(c => c.Status == 1).ToList(), trustDetailsDto,
 				recordsDto, ratingsDto, typesDto, statusLiveDto);
-			var monitoringCases = HomeMapping.Map(casesDto, trustDetailsDto,
+			var monitoringCases = HomeMapping.Map(casesDto.Where(c => c.Status == 2).ToList(), trustDetailsDto,
 				recordsDto, ratingsDto, typesDto, statusMonitoringDto);
 			
 			// assert

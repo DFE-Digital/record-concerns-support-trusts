@@ -23,30 +23,21 @@ namespace ConcernsCaseWork.Mappers
 			
 			if (statusDto.Name.Equals(StatusEnum.Live.ToString(), StringComparison.OrdinalIgnoreCase))
 			{
-				foreach (var caseDto in casesDto.OrderByDescending(c => c.UpdatedAt))
-				{
-					MapCases(cases, caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto);
-				}
+				cases.AddRange(casesDto.OrderByDescending(c => c.UpdatedAt).Select(caseDto => MapCases(caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto)).Where(homeModel => homeModel != null));
 			} 
 			else if (statusDto.Name.Equals(StatusEnum.Monitoring.ToString(), StringComparison.OrdinalIgnoreCase))
 			{
-				foreach (var caseDto in casesDto.OrderBy(c => c.ReviewAt))
-				{
-					MapCases(cases, caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto);
-				}
+				cases.AddRange(casesDto.OrderBy(c => c.ReviewAt).Select(caseDto => MapCases(caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto)).Where(homeModel => homeModel != null));
 			}
 			else if (statusDto.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
 			{
-				foreach (var caseDto in casesDto.OrderBy(c => c.ClosedAt))
-				{
-					MapCases(cases, caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto);
-				}
+				cases.AddRange(casesDto.OrderBy(c => c.ClosedAt).Select(caseDto => MapCases(caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto)).Where(homeModel => homeModel != null));
 			}
 			
 			return cases;
 		}
 
-		private static void MapCases(ICollection<HomeModel> cases, CaseDto caseDto, IList<TrustDetailsDto> trustsDetailsDto, 
+		private static HomeModel MapCases(CaseDto caseDto, IList<TrustDetailsDto> trustsDetailsDto, 
 			IList<RecordDto> recordsDto, IEnumerable<RatingDto> ratingsDto, IEnumerable<TypeDto> typesDto)
 		{
 			// Find trust / academies
@@ -55,15 +46,15 @@ namespace ConcernsCaseWork.Mappers
 
 			// Find primary case record
 			var primaryRecordModel = recordsDto.FirstOrDefault(r => r.CaseUrn.CompareTo(caseDto.Urn) == 0 && r.Primary);
-			if (primaryRecordModel is null) return;
+			if (primaryRecordModel is null) return null;
 				
 			// Find primary type
 			var primaryCaseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(primaryRecordModel.TypeUrn) == 0);
-			if (primaryCaseType is null) return;
+			if (primaryCaseType is null) return null;
 				
 			// Find primary case type urn
 			var recordDto = recordsDto.FirstOrDefault(r => r.CaseUrn.CompareTo(caseDto.Urn) == 0);
-			if (recordDto is null) return;
+			if (recordDto is null) return null;
 				
 			// Rag rating
 			var rating = ratingsDto.Where(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0)
@@ -73,7 +64,7 @@ namespace ConcernsCaseWork.Mappers
 			var rag = RagMapping.FetchRag(rating);
 			var ragCss = RagMapping.FetchRagCss(rating);
 				
-			cases.Add(new HomeModel(
+			return new HomeModel(
 				caseDto.Urn.ToString(), 
 				caseDto.CreatedAt.ToString(DateFormat),
 				caseDto.UpdatedAt.ToString(DateFormat),
@@ -85,7 +76,7 @@ namespace ConcernsCaseWork.Mappers
 				primaryCaseType.Description,
 				rag,
 				ragCss
-			));
+			);
 		}
 		
 		public static string FetchTrustName(IEnumerable<TrustDetailsDto> trustsDetailsDto, CaseDto caseDto)

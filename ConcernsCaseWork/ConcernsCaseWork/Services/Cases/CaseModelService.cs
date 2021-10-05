@@ -70,7 +70,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseModelService::GetCasesByCaseworker exception {ex.Message}");
+				_logger.LogError("CaseModelService::GetCasesByCaseworker exception {Message}", ex.Message);
 			}
 
 			return Array.Empty<HomeModel>();
@@ -110,7 +110,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseModelService::GetCaseByUrn exception {ex.Message}");
+				_logger.LogError("CaseModelService::GetCaseByUrn exception {Message}", ex.Message);
 				throw;
 			}
 		}
@@ -135,7 +135,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseModelService::PatchClosure exception {ex.Message}");
+				_logger.LogError("CaseModelService::PatchClosure exception {Message}", ex.Message);
 
 				throw;
 			}
@@ -163,7 +163,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseModelService::PatchConcernType exception {ex.Message}");
+				_logger.LogError("CaseModelService::PatchConcernType exception {Message}", ex.Message);
 
 				throw;
 			}
@@ -193,7 +193,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseModelService::PatchRiskRating exception {ex.Message}");
+				_logger.LogError("CaseModelService::PatchRiskRating exception {Message}", ex.Message);
 
 				throw;
 			}
@@ -212,7 +212,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseModelService::PatchDirectionOfTravel exception {ex.Message}");
+				_logger.LogError("CaseModelService::PatchDirectionOfTravel exception {Message}", ex.Message);
 
 				throw;
 			}
@@ -231,7 +231,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseModelService::PatchIssue exception {ex.Message}");
+				_logger.LogError("CaseModelService::PatchIssue exception {Message}", ex.Message);
 
 				throw;
 			}
@@ -250,7 +250,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseModelService::PatchCaseAim exception {ex.Message}");
+				_logger.LogError("CaseModelService::PatchCaseAim exception {Message}", ex.Message);
 
 				throw;
 			}
@@ -269,7 +269,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseModelService::PatchCurrentStatus exception {ex.Message}");
+				_logger.LogError("CaseModelService::PatchCurrentStatus exception {Message}", ex.Message);
 
 				throw;
 			}
@@ -288,7 +288,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseModelService::PatchCurrentStatus exception {ex.Message}");
+				_logger.LogError("CaseModelService::PatchCurrentStatus exception {Message}", ex.Message);
 
 				throw;
 			}
@@ -336,7 +336,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseModelService::PostCase exception {ex.Message}");
+				_logger.LogError("CaseModelService::PostCase exception {Message}", ex.Message);
 
 				throw;
 			}
