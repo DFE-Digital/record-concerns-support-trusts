@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.Mappers;
-using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
 using Service.TRAMS.Records;
@@ -14,7 +13,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 	public class HomeMappingTests
 	{
 		[Test]
-		public void WhenMap_ReturnsActive_Monitoring_Cases()
+		public void WhenMap_ReturnsActive_Cases()
 		{
 			// arrange
 			var casesDto = CaseFactory.BuildListCaseDto();
@@ -23,15 +22,36 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = new List<TypeDto> { TypeFactory.BuildTypeDto(99) };
 			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
-			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 
 			// act
-			(IList<HomeModel> activeCases, IList<HomeModel> monitoringCases) = HomeMapping.Map(casesDto, trustDetailsDto,
-				recordsDto, ratingsDto, typesDto, statusLiveDto, statusMonitoringDto);
+			var activeCases = HomeMapping.Map(casesDto, trustDetailsDto,
+				recordsDto, ratingsDto, typesDto, statusLiveDto);
 
 			// assert
 			Assert.That(activeCases, Is.Not.Null);
+			
+			// TODO add more asserts
+		}
+		
+		[Test]
+		public void WhenMap_ReturnsMonitoring_Cases()
+		{
+			// arrange
+			var casesDto = CaseFactory.BuildListCaseDto();
+			var trustDetailsDto = TrustFactory.BuildListTrustDetailsDto();
+			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto() };
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = new List<TypeDto> { TypeFactory.BuildTypeDto(99) };
+			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
+
+			// act
+			var monitoringCases = HomeMapping.Map(casesDto, trustDetailsDto,
+				recordsDto, ratingsDto, typesDto, statusMonitoringDto);
+
+			// assert
 			Assert.That(monitoringCases, Is.Not.Null);
+			
+			// TODO add more asserts
 		}
 		
 		[Test]
@@ -39,7 +59,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 		{
 			// arrange
 			var casesDto = CaseFactory.BuildListCaseDto();
-			var trustsDetailsDto = TrustFactory.BuildListTrustDetailsDto();
+			var trustDetailsDto = TrustFactory.BuildListTrustDetailsDto();
 			var recordsDto = RecordFactory.BuildListRecordDto();
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
@@ -47,8 +67,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 
 			// act
-			(IList<HomeModel> activeCases, IList<HomeModel> monitoringCases) = HomeMapping.Map(casesDto, trustsDetailsDto,
-				recordsDto, ratingsDto, typesDto, statusLiveDto, statusMonitoringDto);
+			var activeCases = HomeMapping.Map(casesDto, trustDetailsDto,
+				recordsDto, ratingsDto, typesDto, statusLiveDto);
+			var monitoringCases = HomeMapping.Map(casesDto, trustDetailsDto,
+				recordsDto, ratingsDto, typesDto, statusMonitoringDto);
 			
 			// assert
 			Assert.That(activeCases, Is.Not.Null);

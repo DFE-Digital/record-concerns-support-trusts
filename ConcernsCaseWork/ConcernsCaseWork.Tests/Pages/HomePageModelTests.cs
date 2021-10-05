@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,8 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
-			mockCaseModelService.Setup(c => c.GetCasesByCaseworker(It.IsAny<string>())).ReturnsAsync((homeModels, homeModels));
+			mockCaseModelService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
+				.ReturnsAsync(homeModels);
 			
 			// act
 			var homePageModel = SetupHomeModel(mockCaseModelService.Object, mockLogger.Object);
@@ -74,7 +76,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
 			var emptyList = new List<HomeModel>();
 			
-			mockCaseModelService.Setup(model => model.GetCasesByCaseworker(It.IsAny<string>())).ReturnsAsync((emptyList, emptyList));
+			mockCaseModelService.Setup(model => model.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
+				.ReturnsAsync(emptyList);
 			
 			// act
 			var indexModel = SetupHomeModel(mockCaseModelService.Object, mockLogger.Object);

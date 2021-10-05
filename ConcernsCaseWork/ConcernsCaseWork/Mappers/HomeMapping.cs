@@ -7,8 +7,7 @@ using Service.TRAMS.Trusts;
 using Service.TRAMS.Type;
 using System.Collections.Generic;
 using System.Linq;
-using ConcernsCaseWork.Extensions;
-using System.Threading.Tasks;
+using System;
 
 namespace ConcernsCaseWork.Mappers
 {
@@ -16,38 +15,35 @@ namespace ConcernsCaseWork.Mappers
 	{
 		private const string DateFormat = "dd-MM-yyyy";
 		
-		public static (IList<HomeModel>, IList<HomeModel>) Map(IEnumerable<CaseDto> casesDto,
+		public static IList<HomeModel> Map(IEnumerable<CaseDto> casesDto,
 			IList<TrustDetailsDto> trustsDetailsDto, IList<RecordDto> recordsDto,
-			IList<RatingDto> ratingsDto, IList<TypeDto> typesDto, StatusDto statusLiveDto,
-			StatusDto statusMonitoringDto)
+			IList<RatingDto> ratingsDto, IList<TypeDto> typesDto, StatusDto statusDto)
 		{
-			var activeCases = new List<HomeModel>();
-			var monitoringCases = new List<HomeModel>();
-
-			// Active and Monitoring cases split
-			(IList<CaseDto> activeCasesDto, IList<CaseDto> monitoringCasesDto) = casesDto.Split(
-				caseDto => caseDto.Status.CompareTo(statusLiveDto.Urn) == 0, 
-				caseDto => caseDto.Status.CompareTo(statusMonitoringDto.Urn) == 0);
-
-			var tasks = new List<Task>
-			{
-				Task.Run(() => {
-					foreach (var caseDto in activeCasesDto.OrderByDescending(c => c.UpdatedAt))
-					{
-						MapCases(activeCases, caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto);
-					}
-				}),
-				Task.Run(() => {
-					foreach (var caseDto in monitoringCasesDto.OrderBy(c => c.ReviewAt))
-					{
-						MapCases(monitoringCases, caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto);
-					}
-				})
-			};
-
-			Task.WaitAll(tasks.ToArray());
+			var cases = new List<HomeModel>();
 			
-			return (activeCases, monitoringCases);
+			if (statusDto.Name.Equals(StatusEnum.Live.ToString(), StringComparison.OrdinalIgnoreCase))
+			{
+				foreach (var caseDto in casesDto.OrderByDescending(c => c.UpdatedAt))
+				{
+					MapCases(cases, caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto);
+				}
+			} 
+			else if (statusDto.Name.Equals(StatusEnum.Monitoring.ToString(), StringComparison.OrdinalIgnoreCase))
+			{
+				foreach (var caseDto in casesDto.OrderBy(c => c.ReviewAt))
+				{
+					MapCases(cases, caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto);
+				}
+			}
+			else if (statusDto.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
+			{
+				foreach (var caseDto in casesDto.OrderBy(c => c.ClosedAt))
+				{
+					MapCases(cases, caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto);
+				}
+			}
+			
+			return cases;
 		}
 
 		private static void MapCases(ICollection<HomeModel> cases, CaseDto caseDto, IList<TrustDetailsDto> trustsDetailsDto, 

@@ -48,33 +48,31 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			const string trustUkPrn = "trust-ukprn";
 			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
 			var recordsDto = RecordFactory.BuildListRecordDto();
-			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
 			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
 			var trustDto = TrustFactory.BuildTrustDetailsDto();
 			
-			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
+			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusMonitoringDto);
 			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<CaseDto>())).ReturnsAsync(recordsDto);
 			mockRatingCachedService.Setup(r => r.GetRatings()).ReturnsAsync(ratingsDto);
 			mockTypeCachedService.Setup(t => t.GetTypes()).ReturnsAsync(typesDto);
 			mockTrustCachedService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDto);
-			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()))
+			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(casesDto);
 			
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object, mockRecordRatingHistoryCachedService.Object, 
 				mockStatusCachedService.Object, mockSequenceCachedService.Object, mockLogger.Object);
-			(IList<HomeModel> activeCasesModel, IList<HomeModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
+			
+			var monitoringCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>());
 
 			// assert
-			Assert.IsAssignableFrom<List<HomeModel>>(activeCasesModel);
 			Assert.IsAssignableFrom<List<HomeModel>>(monitoringCasesModel);
-			Assert.That(activeCasesModel.Count, Is.EqualTo(2));
 			Assert.That(monitoringCasesModel.Count, Is.EqualTo(2));
 			
-			foreach (var expected in activeCasesModel)
+			foreach (var expected in monitoringCasesModel)
 			{
 				foreach (var actual in casesDto.Where(actual => expected.CaseUrn.Equals(actual.Urn.ToString())))
 				{
@@ -120,25 +118,22 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
-			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 			
-			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()))
+			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(casesDto);
-			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
-			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()))
+			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto);
+			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(new List<CaseDto>());
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object, mockRecordRatingHistoryCachedService.Object, 
 				mockStatusCachedService.Object, mockSequenceCachedService.Object, mockLogger.Object);
-			(IList<HomeModel> activeCasesModel, IList<HomeModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
+			var activeCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>());
 
 			// assert
 			Assert.IsAssignableFrom<HomeModel[]>(activeCasesModel);
-			Assert.IsAssignableFrom<HomeModel[]>(monitoringCasesModel);
 			Assert.That(activeCasesModel.Count, Is.EqualTo(0));
-			Assert.That(monitoringCasesModel.Count, Is.EqualTo(0));
 		}
 		
 		[Test]
@@ -158,25 +153,22 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
-			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 			
-			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()))
+			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(casesDto);
-			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
-			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()))
+			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto);
+			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()))
 				.ThrowsAsync(new Exception());
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object, mockRecordRatingHistoryCachedService.Object, 
 				mockStatusCachedService.Object, mockSequenceCachedService.Object, mockLogger.Object);
-			(IList<HomeModel> activeCasesModel, IList<HomeModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
+			var activeCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>());
 
 			// assert
 			Assert.IsAssignableFrom<HomeModel[]>(activeCasesModel);
-			Assert.IsAssignableFrom<HomeModel[]>(monitoringCasesModel);
 			Assert.That(activeCasesModel.Count, Is.EqualTo(0));
-			Assert.That(monitoringCasesModel.Count, Is.EqualTo(0));
 		}
 		
 		[Test]
@@ -208,7 +200,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			mockRatingCachedService.Setup(r => r.GetRatings()).ReturnsAsync(ratingsDto);
 			mockTypeCachedService.Setup(t => t.GetTypes()).ReturnsAsync(typesDto);
 			mockTrustCachedService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDto);
-			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(casesDto);
+			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(casesDto);
 
 			var userState = new UserState
 			{
@@ -237,13 +229,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object, mockRecordRatingHistoryCachedService.Object, 
 				mockStatusCachedService.Object, mockSequenceCachedService.Object, mockLogger.Object);
-			(IList<HomeModel> activeCasesModel, IList<HomeModel> monitoringCasesModel) = await caseModelService.GetCasesByCaseworker(It.IsAny<string>());
+			var activeCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>());
 
 			// assert
 			Assert.IsAssignableFrom<List<HomeModel>>(activeCasesModel);
-			Assert.IsAssignableFrom<List<HomeModel>>(monitoringCasesModel);
 			Assert.That(activeCasesModel.Count, Is.EqualTo(1));
-			Assert.That(monitoringCasesModel.Count, Is.EqualTo(0));
 			
 			foreach (var expected in activeCasesModel)
 			{
