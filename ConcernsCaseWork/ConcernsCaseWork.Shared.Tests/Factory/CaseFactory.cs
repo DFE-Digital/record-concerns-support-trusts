@@ -195,8 +195,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				DirectionOfTravel = Fixture.Create<string>(), 
 				Urn = 1, 
 				Status = 1, 
-				CaseType = caseType, 
-				CaseSubType = caseSubType, 
+				Type = caseType, 
+				SubType = caseSubType, 
 				RagRatingName = Fixture.Create<string>()
 			};
 		}

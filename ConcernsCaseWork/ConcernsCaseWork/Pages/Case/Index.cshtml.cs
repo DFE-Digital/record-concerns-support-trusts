@@ -35,11 +35,11 @@ namespace ConcernsCaseWork.Pages.Case
 			try
 			{
 				_logger.LogInformation("Case::IndexPageModel::OnGetTrustsPartial");
-			
+				
 				// Double check search query.
 				if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < SearchQueryMinLength)
 				{
-					return Partial("_TrustsSearchResult", Array.Empty<TrustSummaryModel>());
+					return new JsonResult(Array.Empty<TrustSummaryModel>());
 				}
 
 				var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);

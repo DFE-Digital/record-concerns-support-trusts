@@ -314,7 +314,7 @@ namespace ConcernsCaseWork.Services.Cases
 
 				// Fetch Type
 				var typeDto = await _typeCachedService.GetTypeByNameAndDescription(
-					createCaseModel.CaseType, createCaseModel.CaseSubType);
+					createCaseModel.Type, createCaseModel.SubType);
 
 				// Fetch Rating
 				var ratingDto = await _ratingCachedService.GetRatingByName(createCaseModel.RagRatingName);
