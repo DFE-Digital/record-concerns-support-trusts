@@ -52,7 +52,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
-			var trustDto = TrustFactory.BuildTrustDetailsDto(trustUkPrn);
+			var trustDto = TrustFactory.BuildTrustDetailsDto();
 			
 			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
 			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<CaseDto>())).ReturnsAsync(recordsDto);

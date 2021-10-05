@@ -109,7 +109,7 @@ namespace Service.TRAMS.Tests.RecordWhistleblower
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(RecordWhistleblowerFactory.BuildRecordWhistleblowerDto()))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedRecordWhistleblower))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
