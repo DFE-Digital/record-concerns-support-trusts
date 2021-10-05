@@ -1,18 +1,33 @@
-﻿using ConcernsCaseWork.Models;
+﻿using AutoFixture;
+using ConcernsCaseWork.Models;
 using Service.TRAMS.Trusts;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class GroupContactAddressFactory
 	{
+		private readonly static Fixture Fixture = new Fixture();
+		
 		public static GroupContactAddressDto BuildGroupContactAddressDto()
 		{
-			return new GroupContactAddressDto("street", "locality", "additional-line", "town", "county", "postcode");
+			return new GroupContactAddressDto(
+				Fixture.Create<string>(), 
+			Fixture.Create<string>(), 
+			Fixture.Create<string>(), 
+			Fixture.Create<string>(), 
+			Fixture.Create<string>(), 
+			Fixture.Create<string>());
 		}
 		
 		public static GroupContactAddressModel BuildGroupContactAddressModel()
 		{
-			return new GroupContactAddressModel("street", "locality", "additional-line", "town", "county", "postcode");
+			return new GroupContactAddressModel(				
+				Fixture.Create<string>(), 
+				Fixture.Create<string>(), 
+				Fixture.Create<string>(), 
+				Fixture.Create<string>(), 
+				Fixture.Create<string>(), 
+				Fixture.Create<string>());
 		}
 	}
 }

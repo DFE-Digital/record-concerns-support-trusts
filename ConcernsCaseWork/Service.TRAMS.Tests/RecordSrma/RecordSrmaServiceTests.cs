@@ -98,7 +98,7 @@ namespace Service.TRAMS.Tests.RecordSrma
 		public async Task WhenPostRecordSrmaByRecordUrn_ReturnsRecordSrmaDto()
 		{
 			// arrange
-			var expectedRecordSrma = RecordSrmaFactory.BuildRecordSrmaDto();
+			var expectedRecordSrma = RecordSrmaFactory.BuildCreateRecordSrmaDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -109,7 +109,7 @@ namespace Service.TRAMS.Tests.RecordSrma
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(RecordSrmaFactory.BuildRecordSrmaDto()))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedRecordSrma))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
@@ -120,7 +120,7 @@ namespace Service.TRAMS.Tests.RecordSrma
 			var recordSrmaService = new RecordSrmaService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var actualRecordSrma = await recordSrmaService.PostRecordSrmaByRecordUrn(RecordSrmaFactory.BuildCreateRecordSrmaDto());
+			var actualRecordSrma = await recordSrmaService.PostRecordSrmaByRecordUrn(expectedRecordSrma);
 
 			// assert
 			Assert.That(actualRecordSrma.Name, Is.EqualTo(expectedRecordSrma.Name));

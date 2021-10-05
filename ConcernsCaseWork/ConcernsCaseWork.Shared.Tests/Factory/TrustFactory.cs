@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using AutoFixture;
+using ConcernsCaseWork.Models;
 using Service.TRAMS.Trusts;
 using System.Collections.Generic;
 
@@ -8,13 +9,14 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 	{
 		public static IList<TrustSummaryDto> BuildListTrustSummaryDto()
 		{
+			Fixture fixture = new Fixture();
 			return new List<TrustSummaryDto>
 			{
 				new TrustSummaryDto(
-					"trust-ukprn", 
-					"trust-urn", 
-					"trust-group-name", 
-					"trust-companies-house-number", 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
 					EstablishmentFactory.BuildListEstablishmentSummaryDto())
 			};
 		}
@@ -26,13 +28,14 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 
 		public static IList<TrustSummaryModel> BuildListTrustSummaryModel()
 		{
+			Fixture fixture = new Fixture();
 			return new List<TrustSummaryModel>
 			{
 				new TrustSummaryModel(
-					"trust-ukprn", 
-					"trust-urn", 
-					"trust-group-name", 
-					"trust-companies-house-number", 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
+					fixture.Create<string>(), 
 					EstablishmentFactory.BuildListEstablishmentSummaryModel())
 			};
 		}
