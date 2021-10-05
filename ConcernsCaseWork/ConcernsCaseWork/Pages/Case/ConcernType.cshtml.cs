@@ -85,10 +85,10 @@ namespace ConcernsCaseWork.Pages.Case
 					RagRatingName = ragRating,
 					RagRating = RagMapping.FetchRag(ragRating),
 					RagRatingCss = RagMapping.FetchRagCss(ragRating),
-					CaseType = type,
+					Type = type,
 					ReviewAt = currentDate,
 					UpdatedAt = currentDate,
-					CaseSubType = subType,
+					SubType = subType,
 					TrustUkPrn = trustUkPrn,
 					TrustName = trustName,
 					DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString()
