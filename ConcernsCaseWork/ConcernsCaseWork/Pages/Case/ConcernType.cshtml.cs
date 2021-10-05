@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.Pages.Case
 			
 			try
 			{
-				_logger.LogInformation("Case::ConcernTypePageModel::OnPost");
+				_logger.LogInformation("Case::ConcernTypePageModel::OnPostAsync");
 
 				var type = Request.Form["type"];
 				var subType = Request.Form["subType"];
@@ -101,7 +101,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::ConcernTypePageModel::OnPost::Exception - { ex.Message }");
+				_logger.LogError($"Case::ConcernTypePageModel::OnPostAsync::Exception - { ex.Message }");
 				
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
