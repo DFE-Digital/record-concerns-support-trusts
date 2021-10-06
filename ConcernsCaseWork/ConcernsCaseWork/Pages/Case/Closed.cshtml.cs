@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Service.TRAMS.Status;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -27,9 +28,19 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public async Task OnGetAsync()
 		{
-			_logger.LogInformation("ClosedPageModel::OnGetAsync executed");
-	        
-			CasesClosed = await _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Close);
+			try
+			{
+				_logger.LogInformation("ClosedPageModel::OnGetAsync executed");
+		        
+				CasesClosed = await _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Close);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::ClosedPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+
+				CasesClosed = Array.Empty<HomeModel>();
+				TempData["Error.Message"] = ErrorOnGetPage;
+			}
 		}
 	}
 }

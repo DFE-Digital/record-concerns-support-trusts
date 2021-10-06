@@ -5,7 +5,7 @@ namespace ConcernsCaseWork.Pages.Shared
 {
 	public class BackPageModel : PageModel
 	{
-		public static bool IsExtraWidthContainer; 
+		public static bool IsExtraWidthContainer;
 		
 		/// <summary>
 		/// Don't render component for this paths
