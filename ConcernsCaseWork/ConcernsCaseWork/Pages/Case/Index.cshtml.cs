@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::IndexPageModel::OnGetTrustsSearchResult::Exception - {ex.Message}");
+				_logger.LogError("Case::IndexPageModel::OnGetTrustsSearchResult::Exception - {Message}", ex.Message);
 				
 				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 			}
@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::IndexPageModel::OnGetSelectedTrust::Exception - {ex.Message}");
+				_logger.LogError("Case::IndexPageModel::OnGetSelectedTrust::Exception - {Message}", ex.Message);
 					
 				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 			}

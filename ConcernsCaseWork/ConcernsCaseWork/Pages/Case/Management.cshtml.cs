@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::ManagementPageModel::OnGetAsync::Exception - {ex.Message}");
+				_logger.LogError("Case::ManagementPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
