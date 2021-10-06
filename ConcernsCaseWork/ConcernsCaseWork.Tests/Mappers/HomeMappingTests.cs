@@ -116,5 +116,68 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// assert
 			CollectionAssert.AreEqual(rags, splitExpected);
 		}
+
+		[Test]
+		public void WhenMap_StatusClose_ReturnsListModel()
+		{
+			// arrange
+			const string trustUkPrn = "trust-ukprn";
+			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
+			var trustDetailsDto = TrustFactory.BuildListTrustDetailsDto();
+			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto(2), RecordFactory.BuildRecordDto(3) };
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = new List<TypeDto> { TypeFactory.BuildTypeDto() };
+			var statusCloseDto = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
+
+			// act
+			var closeCases = HomeMapping.Map(casesDto.Where(c => c.Status == 3).ToList(), trustDetailsDto,
+				recordsDto, ratingsDto, typesDto, statusCloseDto);
+
+			// assert
+			Assert.That(closeCases, Is.Not.Null);
+			Assert.That(closeCases.Count, Is.EqualTo(1));
+		}
+		
+		[Test]
+		public void WhenMapCases_StatusClose_RecordModelIsNotMatch_ReturnsEmptyListModel()
+		{
+			// arrange
+			const string trustUkPrn = "trust-ukprn";
+			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
+			var trustDetailsDto = TrustFactory.BuildListTrustDetailsDto();
+			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto(4), RecordFactory.BuildRecordDto(3) };
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = new List<TypeDto> { TypeFactory.BuildTypeDto() };
+			var statusCloseDto = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
+
+			// act
+			var closeCases = HomeMapping.Map(casesDto.Where(c => c.Status == 3).ToList(), trustDetailsDto,
+				recordsDto, ratingsDto, typesDto, statusCloseDto);
+
+			// assert
+			Assert.That(closeCases, Is.Not.Null);
+			Assert.That(closeCases.Count, Is.EqualTo(0));
+		}
+		
+		[Test]
+		public void WhenMapCases_StatusClose_TypeModelIsNotMatch_ReturnsEmptyListModel()
+		{
+			// arrange
+			const string trustUkPrn = "trust-ukprn";
+			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
+			var trustDetailsDto = TrustFactory.BuildListTrustDetailsDto();
+			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto(2), RecordFactory.BuildRecordDto(3) };
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = new List<TypeDto> { TypeFactory.BuildTypeDto(99) };
+			var statusCloseDto = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
+
+			// act
+			var closeCases = HomeMapping.Map(casesDto.Where(c => c.Status == 3).ToList(), trustDetailsDto,
+				recordsDto, ratingsDto, typesDto, statusCloseDto);
+
+			// assert
+			Assert.That(closeCases, Is.Not.Null);
+			Assert.That(closeCases.Count, Is.EqualTo(0));
+		}
 	}
 }

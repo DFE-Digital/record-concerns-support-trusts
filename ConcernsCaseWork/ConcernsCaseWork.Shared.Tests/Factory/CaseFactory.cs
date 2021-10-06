@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<string>(),
 					Fixture.Create<string>(), 
 					Fixture.Create<string>(),
-					Fixture.Create<string>(), 
+					trustUkPrn ?? Fixture.Create<string>(), 
 					Fixture.Create<string>(), 
 					dateTimeNow, 
 					Fixture.Create<string>(), 
@@ -226,7 +226,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Status = 1,
 				StatusName = Fixture.Create<string>(),
 				CaseType = caseType,
-				CaseSubType = caseSubType
+				CaseSubType = caseSubType,
+				TrustName = Fixture.Create<string>()
 			};
 		}
 

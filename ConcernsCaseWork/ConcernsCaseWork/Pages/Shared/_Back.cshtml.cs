@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.Pages.Shared
 
 		public static bool CanRender(string requestPath)
 		{
-			IsExtraWidthContainer = !string.IsNullOrEmpty(requestPath) && requestPath.Contains("closed");
+			IsExtraWidthContainer = !string.IsNullOrEmpty(requestPath) && requestPath.Contains("case/closed");
 			return !string.IsNullOrEmpty(requestPath) 
 			       && !requestPath.Equals("/") 
 			       && Regex.Matches(requestPath, Pattern, RegexOptions.IgnoreCase).Count == 0;

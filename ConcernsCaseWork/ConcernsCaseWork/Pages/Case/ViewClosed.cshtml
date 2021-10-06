@@ -1,38 +1,14 @@
-﻿@page "/case/{id:long}/management"
-@model ConcernsCaseWork.Pages.Case.ManagementPageModel
+﻿@page "/case/{id:long}/closed"
+@model ConcernsCaseWork.Pages.Case.ViewClosedPageModel
 
 @{
-	ViewData["Title"] = "Case management";
+	ViewData["Title"] = "View Closed case";
 	var nonce = HttpContext.GetNonce();
 }
 
-@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")) || Model.CaseModel is null)
-{
-	<div class="govuk-width-container">
-		<partial name="_BannerError"/>
-		<div class="moj-banner__message">
-			<p class="govuk-body">@TempData["Error.Message"]</p>
-		</div>
-	</div>
-    <script type="application/javascript" nonce="@nonce">
-        $(function () {
-            showGlobalError();
-		});
-    </script>
-}
-else
-{
-	<div class="govuk-width-container">
-		<div class="govuk-grid-row">
-			<div class="buttons-topOfPage">
-				<a asp-page="../home" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-					Back to casework
-				</a>
-				<a href="@Request.Path/closure" role="button" class="govuk-button govuk-button--warning float__right" data-module="govuk-button">
-					Close case
-				</a>
-			</div>
-
+<div class="govuk-width-container">
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
 			<h1 class="govuk-heading-l" name="caseID">
 				<span class="govuk-caption-m">Case ID</span>
 				@Model.CaseModel.Urn
@@ -53,48 +29,7 @@ else
 							@Model.CaseModel.CaseTypeDescription
 						</span>
 					</dd>
-					<dd class="dfe-width-15percent govuk-summary-list__actions">
-						<a class="govuk-link" href="@Request.Path/edit_concerntype">
-							Change<span class="govuk-visually-hidden"> primary concern</span>
-						</a>
-					</dd>
 				</div>
-
-				<!-- Risk Rating -->
-				<div class="govuk-summary-list__row">
-					<dt class="dfe-width-30percent govuk-summary-list__key">
-						Risk rating
-					</dt>
-					<dd class="govuk-summary-list__value govuk-label-wrapper">
-						@for (var index = 0; index < Model.CaseModel.RagRating.Count; ++index)
-						{
-							<span class="govuk-tag ragtag @Model.CaseModel.RagRatingCss.ElementAt(index)">
-								@Model.CaseModel.RagRating.ElementAt(index)
-							</span>
-						}
-					</dd>
-					<dd class="dfe-width-15percent govuk-summary-list__actions">
-						<a class="govuk-link" href="@Request.Path/edit_riskrating">
-							Change<span class="govuk-visually-hidden"> risk rating</span>
-						</a>
-					</dd>
-				</div>
-
-				<!-- Direction of travel -->
-				<div class="govuk-summary-list__row">
-					<dt class="dfe-width-30percent govuk-summary-list__key">
-						Direction of travel
-					</dt>
-					<dd class="govuk-summary-list__value">
-						@Model.CaseModel.DirectionOfTravel
-					</dd>
-					<dd class="dfe-width-15percent govuk-summary-list__actions">
-						<a class="govuk-link" href="@Request.Path/edit_directionoftravel">
-							Change<span class="govuk-visually-hidden"> direction of travel</span>
-						</a>
-					</dd>
-				</div>
-
 			</dl>
 
 			<!--Accordions-->
@@ -107,7 +42,6 @@ else
 						</h2>
 					</div>
 					<div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1">
-						<a class="govuk-link float__right" href="@Request.Path/edit_issue">Edit</a>
 						<div class="govuk-body details govuk-body-accordion-limit">
 							<p class="word-break">@Model.CaseModel.Issue</p>
 						</div>
@@ -121,7 +55,6 @@ else
 						</h2>
 					</div>
 					<div aria-labelledby="accordion-default-heading-2" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-2">
-						<a class="govuk-link float__right" href="@Request.Path/edit_current_status">Edit</a>
 						<div class="govuk-body details govuk-body-accordion-limit">
 							<p class="word-break">@Model.CaseModel.CurrentStatus</p>
 						</div>
@@ -135,7 +68,6 @@ else
 						</h2>
 					</div>
 					<div aria-labelledby="accordion-default-heading-3" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-3">
-						<a class="govuk-link float__right" href="@Request.Path/edit_case_aim">Edit</a>
 						<div class="govuk-body details govuk-body-accordion-limit">
 							<p class="word-break">@Model.CaseModel.CaseAim</p>
 						</div>
@@ -149,7 +81,6 @@ else
 						</h2>
 					</div>
 					<div aria-labelledby="accordion-default-heading-4" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-4">
-						<a class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point">Edit</a>
 						<div class="govuk-body details govuk-body-accordion-limit">
 							<p class="word-break">@Model.CaseModel.DeEscalationPoint</p>
 						</div>
@@ -163,24 +94,33 @@ else
 						</h2>
 					</div>
 					<div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
-						<a class="govuk-link float__right" href="">Edit</a>
 						<div class="govuk-body details govuk-body-accordion-limit">
 							<p class="word-break">@Model.CaseModel.NextSteps</p>
 						</div>
 					</div>
 				</div>
 
-			</div>
+				<div class="govuk-accordion__section">
+					<div class="govuk-accordion__section-header">
+						<h2 class="govuk-accordion__section-heading">
+							<span class="govuk-accordion__section-button" id="accordion-default-heading-6">Case outcome</span>
+						</h2>
+					</div>
+					<div aria-labelledby="accordion-default-heading-6" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-6">
+						<div class="govuk-body details govuk-body-accordion-limit">
+							<p class="word-break">@Model.CaseModel.ReasonAtReview</p>
+						</div>
+					</div>
+				</div>
 
-			<button data-prevent-double-click="true" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-				Add to case
-			</button>
+			</div>
 		</div>
 	</div>
-	<script type="application/javascript" nonce="@nonce">
-		$(function () {
-			$("button[id^='accordion-default-heading']").attr("aria-expanded", "true");
-			$(".govuk-accordion__section").addClass("govuk-accordion__section--expanded");
-		});
-	</script>
-}
+</div>
+
+<script type="application/javascript" nonce="@nonce">
+	$(function () {
+		$("button[id^='accordion-default-heading']").attr("aria-expanded", "true");
+		$(".govuk-accordion__section").addClass("govuk-accordion__section--expanded");
+	});
+</script>

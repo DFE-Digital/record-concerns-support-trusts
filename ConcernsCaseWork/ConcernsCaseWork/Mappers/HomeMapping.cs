@@ -51,13 +51,9 @@ namespace ConcernsCaseWork.Mappers
 			// Find primary type
 			var primaryCaseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(primaryRecordModel.TypeUrn) == 0);
 			if (primaryCaseType is null) return null;
-				
-			// Find primary case type urn
-			var recordDto = recordsDto.FirstOrDefault(r => r.CaseUrn.CompareTo(caseDto.Urn) == 0);
-			if (recordDto is null) return null;
-				
+			
 			// Rag rating
-			var rating = ratingsDto.Where(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0)
+			var rating = ratingsDto.Where(r => r.Urn.CompareTo(primaryRecordModel.RatingUrn) == 0)
 				.Select(r => r.Name)
 				.First();
 

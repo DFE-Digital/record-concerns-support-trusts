@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Case;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Type;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -73,6 +74,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.CaseModel.ReviewAt, Is.EqualTo(caseModel.ReviewAt));
 			Assert.That(pageModel.CaseModel.StatusName, Is.EqualTo(caseModel.StatusName));
 			Assert.That(pageModel.CaseModel.TrustName, Is.EqualTo(caseModel.TrustName));
+			Assert.That(pageModel.CaseModel.TrustNameTitle, Is.EqualTo(caseModel.TrustName.ToTitle()));
 			Assert.That(pageModel.CaseModel.UpdatedAt, Is.EqualTo(caseModel.UpdatedAt));
 			Assert.That(pageModel.CaseModel.CaseSubType, Is.EqualTo(caseModel.CaseSubType));
 			Assert.That(pageModel.CaseModel.DirectionOfTravel, Is.EqualTo(caseModel.DirectionOfTravel));
