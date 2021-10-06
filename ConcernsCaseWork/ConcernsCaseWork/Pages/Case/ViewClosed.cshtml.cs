@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Pages.Case
 			_logger = logger;
 		}
 		
-		public async Task OnGet()
+		public async Task OnGetAsync()
 		{
 			try
 			{
