@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public async Task OnGetAsync()
 		{
-			_logger.LogInformation("HomePageModel::OnGetAsync executed");
+			_logger.LogInformation("ClosedPageModel::OnGetAsync executed");
 	        
 			CasesClosed = await _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Close);
 		}

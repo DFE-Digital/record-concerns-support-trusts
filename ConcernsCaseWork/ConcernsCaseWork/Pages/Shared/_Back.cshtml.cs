@@ -5,10 +5,7 @@ namespace ConcernsCaseWork.Pages.Shared
 {
 	public class BackPageModel : PageModel
 	{
-		/// <summary>
-		/// Store here all the go back options
-		/// </summary>
-		public const string BrowserBackPage = "javascript: history.back()";
+		public static bool IsExtraWidthContainer; 
 		
 		/// <summary>
 		/// Don't render component for this paths
@@ -17,6 +14,7 @@ namespace ConcernsCaseWork.Pages.Shared
 
 		public static bool CanRender(string requestPath)
 		{
+			IsExtraWidthContainer = !string.IsNullOrEmpty(requestPath) && requestPath.Contains("closed");
 			return !string.IsNullOrEmpty(requestPath) 
 			       && !requestPath.Equals("/") 
 			       && Regex.Matches(requestPath, Pattern, RegexOptions.IgnoreCase).Count == 0;
