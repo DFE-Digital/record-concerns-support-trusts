@@ -19,15 +19,15 @@ namespace Service.TRAMS.Cases
 			_logger = logger;
 		}
 		
-		public async Task<IList<CaseDto>> GetCasesByCaseworker(string caseworker, string statusName = "Live")
+		public async Task<IList<CaseDto>> GetCasesByCaseworkerAndStatus(string caseworker, long statusUrn)
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::GetCasesByCaseworker");
+				_logger.LogInformation("CaseService::GetCasesByCaseworkerAndStatus");
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"{EndpointsVersion}/cases/owner/{caseworker}?status={statusName}");
+					$"{EndpointsVersion}/cases/owner/{caseworker}?status={statusUrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -48,7 +48,7 @@ namespace Service.TRAMS.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseService::GetCasesByCaseworker::Exception message::{ex.Message}");
+				_logger.LogError($"CaseService::GetCasesByCaseworkerAndStatus::Exception message::{ex.Message}");
 			}
 			
 			return Array.Empty<CaseDto>();

@@ -44,7 +44,7 @@ namespace Service.TRAMS.Tests.Cases
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var cases = await caseService.GetCasesByCaseworker("caseworker");
+			var cases = await caseService.GetCasesByCaseworkerAndStatus("caseworker", 1);
 
 			// assert
 			Assert.That(cases, Is.Not.Null);
@@ -100,7 +100,7 @@ namespace Service.TRAMS.Tests.Cases
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var cases = await caseService.GetCasesByCaseworker("caseworker");
+			var cases = await caseService.GetCasesByCaseworkerAndStatus("caseworker", 1);
 
 			// assert
 			Assert.That(cases, Is.Not.Null);

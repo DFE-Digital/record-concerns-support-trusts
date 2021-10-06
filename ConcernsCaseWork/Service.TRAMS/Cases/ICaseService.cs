@@ -5,7 +5,7 @@ namespace Service.TRAMS.Cases
 {
 	public interface ICaseService
 	{
-		Task<IList<CaseDto>> GetCasesByCaseworker(string caseworker, string statusName = "Live");
+		Task<IList<CaseDto>> GetCasesByCaseworkerAndStatus(string caseworker, long statusUrn);
 		Task<CaseDto> GetCaseByUrn(long urn);
 		Task<IList<CaseDto>> GetCasesByTrustUkPrn(string trustUkprn);
 		Task<IList<CaseDto>> GetCasesByPagination(CaseSearch caseSearch);

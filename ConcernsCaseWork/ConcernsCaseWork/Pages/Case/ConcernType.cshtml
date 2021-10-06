@@ -8,7 +8,7 @@
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
-	<partial name="_Error" model="@Model.CaseModel"/>
+	<partial name="_Error"/>
 	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds">
 
@@ -42,7 +42,7 @@
 							</a> to assess the type of Concern
 						</div>
 						
-						<partial name="_ConcernType" model="@Model.CaseModel"></partial>
+						<partial name="_ConcernType" model="@Model.CaseModel"/>
 						
 					</fieldset>
 				</div>
@@ -55,7 +55,7 @@
 							What is the risk rating?
 						</legend>
 
-						<partial name="_RiskRating" model="@Model.CaseModel"></partial>
+						<partial name="_RiskRating" model="@Model.CaseModel"/>
 
 					</fieldset>
 				</div>

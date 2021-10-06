@@ -7,8 +7,7 @@ using Service.TRAMS.Trusts;
 using Service.TRAMS.Type;
 using System.Collections.Generic;
 using System.Linq;
-using ConcernsCaseWork.Extensions;
-using System.Threading.Tasks;
+using System;
 
 namespace ConcernsCaseWork.Mappers
 {
@@ -16,41 +15,29 @@ namespace ConcernsCaseWork.Mappers
 	{
 		private const string DateFormat = "dd-MM-yyyy";
 		
-		public static (IList<HomeModel>, IList<HomeModel>) Map(IEnumerable<CaseDto> casesDto,
+		public static IList<HomeModel> Map(IEnumerable<CaseDto> casesDto,
 			IList<TrustDetailsDto> trustsDetailsDto, IList<RecordDto> recordsDto,
-			IList<RatingDto> ratingsDto, IList<TypeDto> typesDto, StatusDto statusLiveDto,
-			StatusDto statusMonitoringDto)
+			IList<RatingDto> ratingsDto, IList<TypeDto> typesDto, StatusDto statusDto)
 		{
-			var activeCases = new List<HomeModel>();
-			var monitoringCases = new List<HomeModel>();
-
-			// Active and Monitoring cases split
-			(IList<CaseDto> activeCasesDto, IList<CaseDto> monitoringCasesDto) = casesDto.Split(
-				caseDto => caseDto.Status.CompareTo(statusLiveDto.Urn) == 0, 
-				caseDto => caseDto.Status.CompareTo(statusMonitoringDto.Urn) == 0);
-
-			var tasks = new List<Task>
-			{
-				Task.Run(() => {
-					foreach (var caseDto in activeCasesDto.OrderByDescending(c => c.UpdatedAt))
-					{
-						MapCases(activeCases, caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto);
-					}
-				}),
-				Task.Run(() => {
-					foreach (var caseDto in monitoringCasesDto.OrderBy(c => c.ReviewAt))
-					{
-						MapCases(monitoringCases, caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto);
-					}
-				})
-			};
-
-			Task.WaitAll(tasks.ToArray());
+			var cases = new List<HomeModel>();
 			
-			return (activeCases, monitoringCases);
+			if (statusDto.Name.Equals(StatusEnum.Live.ToString(), StringComparison.OrdinalIgnoreCase))
+			{
+				cases.AddRange(casesDto.OrderByDescending(c => c.UpdatedAt).Select(caseDto => MapCases(caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto)).Where(homeModel => homeModel != null));
+			} 
+			else if (statusDto.Name.Equals(StatusEnum.Monitoring.ToString(), StringComparison.OrdinalIgnoreCase))
+			{
+				cases.AddRange(casesDto.OrderBy(c => c.ReviewAt).Select(caseDto => MapCases(caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto)).Where(homeModel => homeModel != null));
+			}
+			else if (statusDto.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
+			{
+				cases.AddRange(casesDto.OrderBy(c => c.ClosedAt).Select(caseDto => MapCases(caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto)).Where(homeModel => homeModel != null));
+			}
+			
+			return cases;
 		}
 
-		private static void MapCases(ICollection<HomeModel> cases, CaseDto caseDto, IList<TrustDetailsDto> trustsDetailsDto, 
+		private static HomeModel MapCases(CaseDto caseDto, IList<TrustDetailsDto> trustsDetailsDto, 
 			IList<RecordDto> recordsDto, IEnumerable<RatingDto> ratingsDto, IEnumerable<TypeDto> typesDto)
 		{
 			// Find trust / academies
@@ -59,25 +46,21 @@ namespace ConcernsCaseWork.Mappers
 
 			// Find primary case record
 			var primaryRecordModel = recordsDto.FirstOrDefault(r => r.CaseUrn.CompareTo(caseDto.Urn) == 0 && r.Primary);
-			if (primaryRecordModel is null) return;
+			if (primaryRecordModel is null) return null;
 				
 			// Find primary type
 			var primaryCaseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(primaryRecordModel.TypeUrn) == 0);
-			if (primaryCaseType is null) return;
-				
-			// Find primary case type urn
-			var recordDto = recordsDto.FirstOrDefault(r => r.CaseUrn.CompareTo(caseDto.Urn) == 0);
-			if (recordDto is null) return;
-				
+			if (primaryCaseType is null) return null;
+			
 			// Rag rating
-			var rating = ratingsDto.Where(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0)
+			var rating = ratingsDto.Where(r => r.Urn.CompareTo(primaryRecordModel.RatingUrn) == 0)
 				.Select(r => r.Name)
 				.First();
 
 			var rag = RagMapping.FetchRag(rating);
 			var ragCss = RagMapping.FetchRagCss(rating);
 				
-			cases.Add(new HomeModel(
+			return new HomeModel(
 				caseDto.Urn.ToString(), 
 				caseDto.CreatedAt.ToString(DateFormat),
 				caseDto.UpdatedAt.ToString(DateFormat),
@@ -89,7 +72,7 @@ namespace ConcernsCaseWork.Mappers
 				primaryCaseType.Description,
 				rag,
 				ragCss
-			));
+			);
 		}
 		
 		public static string FetchTrustName(IEnumerable<TrustDetailsDto> trustsDetailsDto, CaseDto caseDto)

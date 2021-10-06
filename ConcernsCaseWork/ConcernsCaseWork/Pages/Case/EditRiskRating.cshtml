@@ -8,7 +8,7 @@
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
-	<partial name="_Error" model="@Model.CaseModel"></partial>
+	<partial name="_Error"/>
 	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds">
 
@@ -25,7 +25,7 @@
 				<div class="govuk-form-group">
 					<fieldset class="govuk-fieldset">
 						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
-						<partial name="_RiskRating" model="@Model.CaseModel"></partial>
+						<partial name="_RiskRating" model="@Model.CaseModel"/>
 					</fieldset>
 				</div>
 
@@ -34,7 +34,7 @@
 					<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
 						Apply
 					</button>
-					<partial name="_Cancel"></partial>
+					<partial name="_Cancel"/>
 				</div>
 			</form>
 		</div>

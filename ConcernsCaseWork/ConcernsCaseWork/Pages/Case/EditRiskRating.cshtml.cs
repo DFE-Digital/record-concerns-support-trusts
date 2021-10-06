@@ -40,7 +40,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::EditRiskRatingPageModel::OnGetAsync::Exception - { ex.Message }");
+				_logger.LogError("Case::EditRiskRatingPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 				
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
@@ -83,7 +83,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::EditRiskRatingPageModel::OnPostEditRiskRating::Exception - {ex.Message}");
+				_logger.LogError("Case::EditRiskRatingPageModel::OnPostEditRiskRating::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}

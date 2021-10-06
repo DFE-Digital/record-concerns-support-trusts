@@ -1,7 +1,6 @@
 ﻿using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Type;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,44 +9,43 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages
 {
 	[Parallelizable(ParallelScope.All)]
-	public class ManagementPageModelTests
+	public class ViewClosedPageModelTests
 	{
 		[Test]
 		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
-			var mockLogger = new Mock<ILogger<ManagementPageModel>>();
+			var mockLogger = new Mock<ILogger<ViewClosedPageModel>>();
 
-			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+			var pageModel = SetupViewClosedPageModel(mockCaseModelService.Object, mockLogger.Object);
 
 			// act
 			await pageModel.OnGetAsync();
 			
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 		
 		[Test]
-		public async Task WhenOnGetAsync_MissingCaseUrn_ReturnsPageModel()
+		public async Task WhenOnGetAsync_RouteCaseUrn_ThrowsException()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
-			var mockLogger = new Mock<ILogger<ManagementPageModel>>();
-
-			var caseModel = CaseFactory.BuildCaseModel();
-
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(caseModel);
+			var mockLogger = new Mock<ILogger<ViewClosedPageModel>>();
 			
-			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
-
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.Throws<Exception>();
+			
+			var pageModel = SetupViewClosedPageModel(mockCaseModelService.Object, mockLogger.Object);
+			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
 			
@@ -55,6 +53,32 @@ namespace ConcernsCaseWork.Tests.Pages
 			await pageModel.OnGetAsync();
 			
 			// assert
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
+		}
+		
+		[Test]
+		public async Task WhenOnGetAsync_RouteCaseUrn_Returns_CaseModel()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockLogger = new Mock<ILogger<ViewClosedPageModel>>();
+
+			var caseModel = CaseFactory.BuildCaseModel();
+			
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
+			
+			var pageModel = SetupViewClosedPageModel(mockCaseModelService.Object, mockLogger.Object);
+			
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("id", 1);
+			
+			// act
+			await pageModel.OnGetAsync();
+			
+			// assert
+			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			Assert.That(pageModel.CaseModel, Is.Not.Null);
 			Assert.That(pageModel.CaseModel.Description, Is.EqualTo(caseModel.Description));
 			Assert.That(pageModel.CaseModel.Issue, Is.EqualTo(caseModel.Issue));
@@ -81,14 +105,15 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.CaseModel.RagRatingCss, Is.EqualTo(caseModel.RagRatingCss));
 			Assert.That(pageModel.CaseModel.ReasonAtReview, Is.EqualTo(caseModel.ReasonAtReview));
 			Assert.That(pageModel.CaseModel.TrustUkPrn, Is.EqualTo(caseModel.TrustUkPrn));
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 		}
 		
-		private static ManagementPageModel SetupManagementPageModel(
-			ICaseModelService mockCaseModelService, ITypeModelService mockTypeModelService, ILogger<ManagementPageModel> mockLogger, bool isAuthenticated = false)
+		private static ViewClosedPageModel SetupViewClosedPageModel(
+			ICaseModelService mockCaseModelService, ILogger<ViewClosedPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new ManagementPageModel(mockCaseModelService, mockTypeModelService, mockLogger)
+			return new ViewClosedPageModel(mockCaseModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

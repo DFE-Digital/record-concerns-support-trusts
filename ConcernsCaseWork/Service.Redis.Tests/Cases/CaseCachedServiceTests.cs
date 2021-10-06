@@ -59,14 +59,14 @@ namespace Service.Redis.Tests.Cases
 			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
 			
 			// act
-			var casesDto = await caseCachedService.GetCasesByCaseworker("testing");
+			var casesDto = await caseCachedService.GetCasesByCaseworkerAndStatus("testing", 1);
 			
 			// assert
 			Assert.That(casesDto, Is.Not.Null);
 			Assert.That(casesDto.Count, Is.EqualTo(1));
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
-			mockCaseService.Verify(c => c.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+			mockCaseService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 		
 		[Test]
@@ -81,19 +81,19 @@ namespace Service.Redis.Tests.Cases
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
 				Returns(Task.FromResult<UserState>(null));
-			mockCaseService.Setup(c => c.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(expectedCasesDto);
+			mockCaseService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(expectedCasesDto);
 			
 			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
 			
 			// act
-			var casesDto = await caseCachedService.GetCasesByCaseworker("testing");
+			var casesDto = await caseCachedService.GetCasesByCaseworkerAndStatus("testing", 1);
 			
 			// assert
 			Assert.That(casesDto, Is.Not.Null);
 			Assert.That(casesDto.Count, Is.EqualTo(expectedCasesDto.Count));
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
-			mockCaseService.Verify(c => c.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+			mockCaseService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 		}
 		
 		[Test]
@@ -192,7 +192,7 @@ namespace Service.Redis.Tests.Cases
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
-			mockCaseService.Verify(c => c.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+			mockCaseService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 		
 		[Test]
@@ -236,7 +236,7 @@ namespace Service.Redis.Tests.Cases
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
-			mockCaseService.Verify(c => c.GetCasesByCaseworker(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+			mockCaseService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 
 		[Test]
