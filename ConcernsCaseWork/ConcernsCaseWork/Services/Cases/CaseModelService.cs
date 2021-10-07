@@ -295,7 +295,27 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseModelService::PatchCurrentStatus exception {ex.Message}");
+				_logger.LogError($"CaseModelService::PatchDeEscalationPoint exception {ex.Message}");
+
+				throw;
+			}
+		}
+
+
+		public async Task PatchNextSteps(PatchCaseModel patchCaseModel)
+		{
+			try
+			{
+				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+
+				// Patch source dtos
+				caseDto = CaseMapping.MapNextSteps(patchCaseModel, caseDto);
+
+				await _caseCachedService.PatchCaseByUrn(caseDto);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"CaseModelService::PatchNextSteps exception {ex.Message}");
 
 				throw;
 			}

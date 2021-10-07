@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork", "ConcernsCaseWork\ConcernsCaseWork.csproj", "{3A7D75FE-FB97-4CE8-A234-76A0BA618C20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork", "ConcernsCaseWork\ConcernsCaseWork.csproj", "{3A7D75FE-FB97-4CE8-A234-76A0BA618C20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.Tests", "ConcernsCaseWork.Tests\ConcernsCaseWork.Tests.csproj", "{1F53107D-4787-448F-806B-E5EA57D0BF90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Tests", "ConcernsCaseWork.Tests\ConcernsCaseWork.Tests.csproj", "{1F53107D-4787-448F-806B-E5EA57D0BF90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.TRAMS", "Service.TRAMS\Service.TRAMS.csproj", "{28DCC808-54DF-43F3-9F1B-4F126B679CFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.TRAMS", "Service.TRAMS\Service.TRAMS.csproj", "{28DCC808-54DF-43F3-9F1B-4F126B679CFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.TRAMS.Tests", "Service.TRAMS.Tests\Service.TRAMS.Tests.csproj", "{648B68C6-27EE-4211-BC27-49D8E146829C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.TRAMS.Tests", "Service.TRAMS.Tests\Service.TRAMS.Tests.csproj", "{648B68C6-27EE-4211-BC27-49D8E146829C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Redis", "Service.Redis\Service.Redis.csproj", "{E340BEC0-5744-459A-99B7-B0339D38F647}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Redis", "Service.Redis\Service.Redis.csproj", "{E340BEC0-5744-459A-99B7-B0339D38F647}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Redis.Tests", "Service.Redis.Tests\Service.Redis.Tests.csproj", "{C40689B1-9551-4364-91CB-FA8CD55F11BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Redis.Tests", "Service.Redis.Tests\Service.Redis.Tests.csproj", "{C40689B1-9551-4364-91CB-FA8CD55F11BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.Integration.Tests", "ConcernsCaseWork.Integration.Tests\ConcernsCaseWork.Integration.Tests.csproj", "{770CC7CC-FCA7-4A12-B677-35FE458B8B54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Integration.Tests", "ConcernsCaseWork.Integration.Tests\ConcernsCaseWork.Integration.Tests.csproj", "{770CC7CC-FCA7-4A12-B677-35FE458B8B54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.Shared.Tests", "ConcernsCaseWork.Shared.Tests\ConcernsCaseWork.Shared.Tests.csproj", "{E1460CF0-2592-4B5A-AC7A-D7B66FEDC3E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Shared.Tests", "ConcernsCaseWork.Shared.Tests\ConcernsCaseWork.Shared.Tests.csproj", "{E1460CF0-2592-4B5A-AC7A-D7B66FEDC3E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

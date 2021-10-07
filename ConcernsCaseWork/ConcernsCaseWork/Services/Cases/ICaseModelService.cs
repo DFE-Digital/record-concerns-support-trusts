@@ -17,6 +17,7 @@ namespace ConcernsCaseWork.Services.Cases
 		Task PatchCaseAim(PatchCaseModel patchCaseModel);
 		Task PatchCurrentStatus(PatchCaseModel patchCaseModel);
 		Task PatchDeEscalationPoint(PatchCaseModel patchCaseModel);
+		Task PatchNextSteps(PatchCaseModel patchCaseModel);
 		Task<CaseModel> PostCase(CreateCaseModel createCaseModel);
 	}
 }
