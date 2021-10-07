@@ -39,11 +39,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			var response = await pageModel.OnGetTrustsSearchResult(searchQuery);
 			
 			// assert
-			Assert.IsInstanceOf(typeof(PartialViewResult), response);
-			var partialPage = response as PartialViewResult;
+			Assert.IsInstanceOf(typeof(JsonResult), response);
+			var partialPage = response as JsonResult;
 			
 			Assert.That(partialPage, Is.Not.Null);
-			Assert.That(partialPage.Model, Is.InstanceOf<IList<TrustSummaryModel>>());
+			Assert.That(partialPage.Value, Is.InstanceOf<IList<TrustSummaryModel>>());
 			
 			// Verify ILogger
 			mockLogger.Verify(

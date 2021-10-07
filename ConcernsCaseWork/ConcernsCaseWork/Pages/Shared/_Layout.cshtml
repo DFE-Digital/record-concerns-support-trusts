@@ -52,7 +52,7 @@
 
 @await RenderSectionAsync("Scripts", required: false)
 @await RenderSectionAsync("BeforeMain", required: false)
-<partial name="_Back" model="BackPageModel.BrowserBackPage"/>
+<partial name="_Back"/>
 <main class="govuk-main-wrapper wrapper_padding-top-20 govuk-main-wrapper--auto-spacing" id="main-content" role="main">
 	@RenderBody()
 </main>

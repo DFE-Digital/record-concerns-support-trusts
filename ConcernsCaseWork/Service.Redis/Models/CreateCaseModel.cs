@@ -48,14 +48,14 @@ namespace Service.Redis.Models
 		{
 			get
 			{
-				var separator = string.IsNullOrEmpty(CaseSubType) ? string.Empty : ":";
-				return $"{CaseType}{separator} {CaseSubType ?? string.Empty}";
+				var separator = string.IsNullOrEmpty(SubType) ? string.Empty : ":";
+				return $"{Type}{separator} {SubType ?? string.Empty}";
 			}
 		}
 		
-		public string CaseType { get; set; }
+		public string Type { get; set; }
 		
-		public string CaseSubType { get; set; }
+		public string SubType { get; set; }
 		
 		public string RagRatingName { get; set; }
 		

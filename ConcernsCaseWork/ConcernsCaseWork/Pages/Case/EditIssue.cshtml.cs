@@ -40,7 +40,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::EditIssuePageModel::OnGetAsync::Exception - { ex.Message }");
+				_logger.LogError("Case::EditIssuePageModel::OnGetAsync::Exception - {Message}", ex.Message);
 				
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
@@ -82,7 +82,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::EditIssuePageModel::OnPostEditIssue::Exception - {ex.Message}");
+				_logger.LogError("Case::EditIssuePageModel::OnPostEditIssue::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}

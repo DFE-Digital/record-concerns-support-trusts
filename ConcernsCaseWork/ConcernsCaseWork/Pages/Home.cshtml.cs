@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Service.TRAMS.Status;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -29,7 +30,8 @@ namespace ConcernsCaseWork.Pages
         {
 	        _logger.LogInformation("HomePageModel::OnGetAsync executed");
 	        
-	        (CasesActive, CasesMonitoring) = await _caseModelService.GetCasesByCaseworker(User.Identity.Name);
+	        CasesActive = await _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Live);
+	        CasesMonitoring = await _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Monitoring);
         }
     }
 }

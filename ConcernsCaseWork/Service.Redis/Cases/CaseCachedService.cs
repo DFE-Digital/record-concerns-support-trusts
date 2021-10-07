@@ -22,14 +22,14 @@ namespace Service.Redis.Cases
 			_logger = logger;
 		}
 
-		public async Task<IList<CaseDto>> GetCasesByCaseworker(string caseworker, string statusUrn = "Live")
+		public async Task<IList<CaseDto>> GetCasesByCaseworkerAndStatus(string caseworker, long statusUrn)
 		{
-			_logger.LogInformation("CaseCachedService::GetCasesByCaseworker");
+			_logger.LogInformation("CaseCachedService::GetCasesByCaseworkerAndStatus");
 
 			var userState = await GetData<UserState>(caseworker);
 			if (userState != null) return userState.CasesDetails.Values.Select(c => c.CaseDto).ToList();
 			
-			var cases = await _caseService.GetCasesByCaseworker(caseworker, statusUrn);
+			var cases = await _caseService.GetCasesByCaseworkerAndStatus(caseworker, statusUrn);
 			if (!cases.Any()) return cases;
 			
 			userState = new UserState();

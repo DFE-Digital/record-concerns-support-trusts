@@ -35,11 +35,11 @@ namespace ConcernsCaseWork.Pages.Case
 			try
 			{
 				_logger.LogInformation("Case::IndexPageModel::OnGetTrustsPartial");
-			
+				
 				// Double check search query.
 				if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < SearchQueryMinLength)
 				{
-					return Partial("_TrustsSearchResult", Array.Empty<TrustSummaryModel>());
+					return new JsonResult(Array.Empty<TrustSummaryModel>());
 				}
 
 				var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);
@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::IndexPageModel::OnGetTrustsSearchResult::Exception - {ex.Message}");
+				_logger.LogError("Case::IndexPageModel::OnGetTrustsSearchResult::Exception - {Message}", ex.Message);
 				
 				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 			}
@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::IndexPageModel::OnGetSelectedTrust::Exception - {ex.Message}");
+				_logger.LogError("Case::IndexPageModel::OnGetSelectedTrust::Exception - {Message}", ex.Message);
 					
 				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 			}

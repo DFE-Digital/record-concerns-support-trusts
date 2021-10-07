@@ -5,12 +5,12 @@
 	ViewData["Title"] = "Home";
 }
 
-<div class="govuk-width-homepage-container">
+<div class="govuk-extra-width-container">
 	<div class="govuk-!-margin-top-0">
 
 		<div class="govuk-button-group flexalign__right">
-			<a class="govuk-link" href="#">
-				Closed cases (TRAMS)
+			<a class="govuk-link" asp-page="/case/closed">
+				Closed cases
 			</a>
 			<a class="govuk-button" asp-page="/case/index" role="button">
 				Create case
@@ -65,7 +65,7 @@
 							@caseModel.Updated
 						</td>
 						<td class="govuk-table__cell">
-							@caseModel.TrustName
+							@caseModel.TrustNameTitle
 						</td>
 						<td class="govuk-table__cell">
 							@caseModel.CaseTypeDescription
@@ -128,7 +128,7 @@
 							<a class="govuk-link" href="case/@caseModel.CaseUrn/management">@caseModel.CaseUrn</a>
 						</td>
 						<td class="govuk-table__cell">
-							@caseModel.TrustName
+							@caseModel.TrustNameTitle
 						</td>
 						<td class="govuk-table__cell">
 							@caseModel.CaseTypeDescription

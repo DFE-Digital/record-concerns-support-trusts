@@ -47,7 +47,7 @@
 	</div>
 	<form role="search" id="trust-form" novalidate>
 		<div class="govuk-form-group"></div>
-		<button class="govuk-button" data-module="govuk-button">
+		<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
 			Next step
 		</button>
 	</form>
@@ -92,17 +92,17 @@
 					// Ajax Get Trusts
 					let searchQuery = $("#search").val();
 					$.get("case/TrustsSearchResult", { searchQuery: searchQuery })
-					.done(function (trustsPartial) {							
+					.done(function (trusts) {							
 						hideGlobalError();
                         hideLoader();
 						
-						if (trustsPartial.length === 0)  {
+						if (trusts.length === 0) {
 							$(".autocomplete__menu").removeClass("autocomplete__menu--hidden");
 						}
 						else {
 							let autocompleteContainer = document.getElementById("autocomplete-container");
 							
-							const trustNames = trustsPartial.map(trust => trust.displayName);
+							const trustNames = trusts.map(trust => trust.displayName);
 							const input = $("#search");
 							
 							accessibleAutocomplete({
@@ -113,12 +113,12 @@
 							  confirmOnBlur: false,
 							  minLength: 3,
 							  onConfirm: (selected) => {
-								  input.attr("aria-valuetext", trustsPartial.find(item => item.displayName === selected).ukPrn);
+								  input.attr("aria-valuetext", trusts.find(item => item.displayName === selected).ukPrn);
 								  input.val(selected);
 							  }
 							});
 									
-							$(".autocomplete__wrapper #search").hide("slow");
+							$(".autocomplete__wrapper #search").hide("fast");
 							let autocompleteSearch = $("#autocomplete-container #search");
 							autocompleteSearch.val(searchQuery);
 						}

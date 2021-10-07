@@ -1,5 +1,5 @@
-using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages;
+﻿using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
@@ -18,27 +18,31 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Tests.Pages
 {
 	[Parallelizable(ParallelScope.All)]
-	public class HomePageModelTests
+	public class ClosedPageModelTests
 	{
 		[Test]
-		public async Task WhenInstanceOfIndexPageOnGetAsync_ReturnCases()
+		public async Task WhenOnGetAsync_Returns_ClosedCases()
 		{
 			// arrange
-			var homeModels = HomePageFactory.BuildHomeModels();
-
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<HomePageModel>>();
+			var mockLogger = new Mock<ILogger<ClosedPageModel>>();
+
+			var homeModels = HomePageFactory.BuildHomeModels();
+			
 			mockCaseModelService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
 				.ReturnsAsync(homeModels);
 			
+			var pageModel = SetupClosedPageModel(mockCaseModelService.Object, mockLogger.Object, true);
+			
 			// act
-			var homePageModel = SetupHomeModel(mockCaseModelService.Object, mockLogger.Object);
-			await homePageModel.OnGetAsync();
+			await pageModel.OnGetAsync();
+			var homeModel = pageModel.CasesClosed;
 			
 			// assert
-			Assert.IsAssignableFrom<List<HomeModel>>(homePageModel.CasesActive);
-			Assert.That(homePageModel.CasesActive.Count, Is.EqualTo(homeModels.Count));
-			foreach (var expected in homePageModel.CasesActive)
+			Assert.That(homeModel, Is.Not.Null);
+			Assert.IsAssignableFrom<List<HomeModel>>(homeModel);
+			Assert.That(homeModel.Count, Is.EqualTo(homeModels.Count));
+			foreach (var expected in homeModel)
 			{
 				foreach (var actual in homeModels.Where(actual => expected.CaseUrn.Equals(actual.CaseUrn)))
 				{
@@ -62,47 +66,40 @@ namespace ConcernsCaseWork.Tests.Pages
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("HomePageModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("ClosedPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 		}
 
 		[Test]
-		public async Task WhenInstanceOfIndexPageOnGetAsync_ReturnEmptyCases()
+		public async Task WhenOnGetAsync_ThrowsException()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<HomePageModel>>();
-			var emptyList = new List<HomeModel>();
+			var mockLogger = new Mock<ILogger<ClosedPageModel>>();
 			
-			mockCaseModelService.Setup(model => model.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
-				.ReturnsAsync(emptyList);
-			
+			mockCaseModelService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
+				.Throws<Exception>();
+
+			var pageModel = SetupClosedPageModel(mockCaseModelService.Object, mockLogger.Object, true);
+
 			// act
-			var indexModel = SetupHomeModel(mockCaseModelService.Object, mockLogger.Object);
-			await indexModel.OnGetAsync();
-			
+			await pageModel.OnGetAsync();
+			var homeModel = pageModel.CasesClosed;
+
 			// assert
-			Assert.IsAssignableFrom<List<HomeModel>>(indexModel.CasesActive);
-			Assert.That(indexModel.CasesActive.Count, Is.Zero);
-			
-			// Verify ILogger
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("HomePageModel")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
+			Assert.That(homeModel, Is.Not.Null);
+			Assert.IsAssignableFrom<HomeModel[]>(homeModel);
+			Assert.That(homeModel.Count, Is.EqualTo(0));
 		}
-		
-		private static HomePageModel SetupHomeModel(ICaseModelService mockCaseModelService, ILogger<HomePageModel> mockLogger, bool isAuthenticated = false)
+
+		private static ClosedPageModel SetupClosedPageModel(
+			ICaseModelService mockCaseModelService, ILogger<ClosedPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new HomePageModel(mockCaseModelService, mockLogger)
+			return new ClosedPageModel(mockCaseModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
