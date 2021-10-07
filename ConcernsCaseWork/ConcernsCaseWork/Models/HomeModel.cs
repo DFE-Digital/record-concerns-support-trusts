@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ConcernsCaseWork.Extensions;
+using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Models
 {
@@ -16,6 +17,8 @@ namespace ConcernsCaseWork.Models
 		public string Closed { get; }
 		
 		public string Review { get; }
+		
+		public string TrustNameTitle { get { return TrustName.ToTitle(); } }
 		
 		public string TrustName { get; }
 		
