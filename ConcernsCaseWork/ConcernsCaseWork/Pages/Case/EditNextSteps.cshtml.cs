@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.Pages.Case
 	public class EditNextStepsPageModel : AbstractPageModel
 	{
 		private readonly ICaseModelService _caseModelService;
-		private readonly ILogger<EditCaseAimPageModel> _logger;
+		private readonly ILogger<EditNextStepsPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
 
@@ -40,7 +40,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::EditNextStepsPageModel::OnGetAsync::Exception - { ex.Message }");
+				_logger.LogError("Case::EditNextStepsPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
@@ -80,7 +80,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"Case::EditNextStepsPageModel::OnPostEditNextSteps::Exception - {ex.Message}");
+				_logger.LogError("Case::EditNextStepsPageModel::OnPostEditNextSteps::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}

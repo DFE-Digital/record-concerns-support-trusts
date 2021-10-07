@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<EditNextStepsPageModelTests>>();
+			var mockLogger = new Mock<ILogger<EditNextStepsPageModel>>();
 
 			var pageModel = SetupEditNextStepsPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<EditNextStepsPageModelTests>>();
+			var mockLogger = new Mock<ILogger<EditNextStepsPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			
@@ -108,7 +108,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<EditNextStepsPageModelTests>>();
+			var mockLogger = new Mock<ILogger<EditNextStepsPageModel>>();
 			
 			var pageModel = SetupEditNextStepsPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
@@ -129,7 +129,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<EditNextStepsPageModelTests>>();
+			var mockLogger = new Mock<ILogger<EditNextStepsPageModel>>();
 
 			mockCaseModelService.Setup(c => c.PatchIssue(It.IsAny<PatchCaseModel>()));
 

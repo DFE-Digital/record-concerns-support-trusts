@@ -301,7 +301,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
 
 				// Patch source dtos
-				caseDto = CaseMapping.MapDeEscalationPoint(patchCaseModel, caseDto);
+				caseDto = CaseMapping.MapNextSteps(patchCaseModel, caseDto);
 
 				await _caseCachedService.PatchCaseByUrn(caseDto);
 			}
