@@ -29,7 +29,7 @@ namespace ConcernsCaseWork.Mappers
 			}
 			else if (statusDto.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
 			{
-				cases.AddRange(casesDto.OrderBy(c => c.ClosedAt).Select(caseDto => MapCases(caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto)).Where(homeModel => homeModel != null));
+				cases.AddRange(casesDto.OrderByDescending(c => c.ClosedAt).Select(caseDto => MapCases(caseDto, trustsDetailsDto, recordsDto, ratingsDto, typesDto)).Where(homeModel => homeModel != null));
 			}
 			
 			return cases;

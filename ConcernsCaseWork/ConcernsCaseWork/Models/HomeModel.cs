@@ -13,7 +13,7 @@ namespace ConcernsCaseWork.Models
 		
 		public string CaseUrn { get; }
 
-		public DateTimeOffset CreatedDateTimeOffset { get; }
+		private DateTimeOffset CreatedDateTimeOffset { get; }
 
 		public string Created
 		{
@@ -23,9 +23,15 @@ namespace ConcernsCaseWork.Models
 			}
 		}
 
-		public long CreatedUnixTime { get; }
+		public long CreatedUnixTime
+		{
+			get
+			{
+				return CreatedDateTimeOffset.ToUnixTimeMilliseconds();
+			}
+		}
 		
-		public DateTimeOffset UpdatedDateTimeOffset { get; }
+		private DateTimeOffset UpdatedDateTimeOffset { get; }
 		
 		public string Updated 
 		{ 
@@ -34,10 +40,16 @@ namespace ConcernsCaseWork.Models
 				return UpdatedDateTimeOffset.ToString(DateFormat);
 			} 
 		}
+
+		public long UpdatedUnixTime
+		{
+			get
+			{
+				return UpdatedDateTimeOffset.ToUnixTimeMilliseconds();
+			}
+		}
 		
-		public long UpdatedUnixTime { get; }
-		
-		public DateTimeOffset ClosedDateTimeOffset { get; }
+		private DateTimeOffset ClosedDateTimeOffset { get; }
 
 		public string Closed
 		{
@@ -47,7 +59,7 @@ namespace ConcernsCaseWork.Models
 			}
 		}
 		
-		public DateTimeOffset ReviewDateTimeOffset { get; }
+		private DateTimeOffset ReviewDateTimeOffset { get; }
 
 		public string Review
 		{
