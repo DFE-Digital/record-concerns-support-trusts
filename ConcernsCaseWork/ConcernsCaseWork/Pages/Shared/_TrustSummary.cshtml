@@ -14,10 +14,10 @@
 	<div class="govuk-summary-list__row">
 		<dt class="govuk-summary-list__key">Risk rating</dt>
 		<dd class="govuk-summary-list__value govuk-label-wrapper">
-			@for (var index = 0; index < Model.RagRating.Count; ++index)
+			@for (var index = 0; index < Model.RagRating.Item2.Count; ++index)
 			{
 				<span class="govuk-tag ragtag @Model.RagRatingCss.ElementAt(index)">
-					@Model.RagRating.ElementAt(index)
+					@Model.RagRating.Item2.ElementAt(index)
 				</span>
 			}
 		</dd>

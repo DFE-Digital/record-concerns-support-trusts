@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Extensions;
+using System;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Models
@@ -8,17 +9,73 @@ namespace ConcernsCaseWork.Models
 	/// </summary>
 	public sealed class HomeModel
 	{
+		private const string DateFormat = "dd-MM-yyyy";
+		
 		public string CaseUrn { get; }
+
+		private DateTimeOffset CreatedDateTimeOffset { get; }
+
+		public string Created
+		{
+			get
+			{
+				return CreatedDateTimeOffset.ToString(DateFormat);
+			}
+		}
+
+		public long CreatedUnixTime
+		{
+			get
+			{
+				return CreatedDateTimeOffset.ToUnixTimeMilliseconds();
+			}
+		}
 		
-		public string Created { get; }
+		private DateTimeOffset UpdatedDateTimeOffset { get; }
 		
-		public string Updated { get; }
+		public string Updated 
+		{ 
+			get
+			{
+				return UpdatedDateTimeOffset.ToString(DateFormat);
+			} 
+		}
+
+		public long UpdatedUnixTime
+		{
+			get
+			{
+				return UpdatedDateTimeOffset.ToUnixTimeMilliseconds();
+			}
+		}
 		
-		public string Closed { get; }
+		private DateTimeOffset ClosedDateTimeOffset { get; }
+
+		public string Closed
+		{
+			get
+			{
+				return ClosedDateTimeOffset.ToString(DateFormat);
+			}
+		}
 		
-		public string Review { get; }
-		
-		public string TrustNameTitle { get { return TrustName.ToTitle(); } }
+		private DateTimeOffset ReviewDateTimeOffset { get; }
+
+		public string Review
+		{
+			get
+			{
+				return ReviewDateTimeOffset.ToString(DateFormat);
+			}
+		}
+
+		public string TrustNameTitle
+		{
+			get
+			{
+				return TrustName.ToTitle();
+			}
+		}
 		
 		public string TrustName { get; }
 		
@@ -37,14 +94,14 @@ namespace ConcernsCaseWork.Models
 		
 		public string CaseSubType { get; }
 		
-		public IList<string> RagRating { get; }
+		public Tuple<int, IList<string>> RagRating { get; }
 		
 		public IList<string> RagRatingCss { get; }
 		
-		public HomeModel(string caseUrn, string created, string updated, string closed, string review,
+		public HomeModel(string caseUrn, DateTimeOffset created, DateTimeOffset updated, DateTimeOffset closed, DateTimeOffset review,
 			string trustName, string academyNames, string caseType, string caseSubType, 
-			IList<string> ragRating, IList<string> ragRatingCss) => 
-			(CaseUrn, Created, Updated, Closed, Review, TrustName, AcademyNames, CaseType, CaseSubType, RagRating, RagRatingCss) = 
+			Tuple<int, IList<string>> ragRating, IList<string> ragRatingCss) => 
+			(CaseUrn, CreatedDateTimeOffset, UpdatedDateTimeOffset, ClosedDateTimeOffset, ReviewDateTimeOffset, TrustName, AcademyNames, CaseType, CaseSubType, RagRating, RagRatingCss) = 
 			(caseUrn, created, updated, closed, review, trustName, academyNames, caseType, caseSubType, ragRating, ragRatingCss);
 	}
 }

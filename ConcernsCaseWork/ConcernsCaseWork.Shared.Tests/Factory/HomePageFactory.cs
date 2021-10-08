@@ -15,15 +15,15 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new List<HomeModel>
 			{
 				new HomeModel(Fixture.Create<string>(), 
-					dateTimeNow.ToString("dd-MM-yyyy"),
-					dateTimeNow.ToString("dd-MM-yyyy"),
-					dateTimeNow.ToString("dd-MM-yyyy"),
-					dateTimeNow.ToString("dd-MM-yyyy"),
+					dateTimeNow,
+					dateTimeNow,
+					dateTimeNow,
+					dateTimeNow,
 					Fixture.Create<string>(),
 					Fixture.Create<string>(),
 					Fixture.Create<string>(),
 					Fixture.Create<string>(),
-					new List<string> { Fixture.Create<string>() },
+					new Tuple<int, IList<string>>(1, new List<string> { Fixture.Create<string>() }),
 					new List<string> { Fixture.Create<string>() })
 			};
 		}

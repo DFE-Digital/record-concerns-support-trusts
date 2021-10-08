@@ -29,6 +29,12 @@ RDD - Regional Delivery Directorate
 
 ## Local Setup
 
+### Building the project Nuget proxy error
+***
+```
+The issue is a environment variable name HTTP_PROXY. Remove it from the system, restart IDE and re-try.
+```
+
 ### Docker Redis
 ***
 ```
@@ -46,6 +52,8 @@ into appsettings files.
 dotnet user-secrets init
 The preceding command adds a UserSecretsId element within a PropertyGroup of the project file. 
 By default, the inner text of UserSecretsId is a GUID. The inner text is arbitrary, but is unique to the project.
+
+NOTE:: Setup is done under the ConcernsCaseWork project root.
 
 List of secrets:
 dotnet user-secrets list
