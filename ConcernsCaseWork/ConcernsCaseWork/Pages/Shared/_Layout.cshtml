@@ -21,7 +21,6 @@
 <body class="govuk-template__body ">
 @{ var nonce = Context.GetNonce(); }
 <script src="~/dist/vendor/jquery.min.js" nonce="@nonce"></script>
-<script src="~/dist/moj/all.js" nonce="@nonce"></script>
 <script nonce="@nonce">
 	document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
 </script>

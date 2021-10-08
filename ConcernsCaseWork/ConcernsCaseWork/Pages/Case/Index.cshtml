@@ -55,6 +55,9 @@
 
 <script type="application/javascript" nonce="@nonce">
 	$(function () {
+		
+		console.log("Index");
+		
 		let clearResults = function () {
 			$("#trusts-partial-results").empty();
 			$("#autocomplete-container").empty();
@@ -68,7 +71,7 @@
 		
 		try {
 			let searchForm = $("#search-form");
-			const validator = new MOJFrontend.FormValidator(searchForm[0]);
+			const validator = formValidator(searchForm[0]);
 			validator.addValidator('search', [{
 		  		method: function(field) {
                 	return field.value.trim().length > 0;

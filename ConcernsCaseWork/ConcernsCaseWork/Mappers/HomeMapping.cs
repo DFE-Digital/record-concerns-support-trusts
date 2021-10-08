@@ -13,8 +13,6 @@ namespace ConcernsCaseWork.Mappers
 {
 	public static class HomeMapping
 	{
-		private const string DateFormat = "dd-MM-yyyy";
-		
 		public static IList<HomeModel> Map(IEnumerable<CaseDto> casesDto,
 			IList<TrustDetailsDto> trustsDetailsDto, IList<RecordDto> recordsDto,
 			IList<RatingDto> ratingsDto, IList<TypeDto> typesDto, StatusDto statusDto)
@@ -38,7 +36,7 @@ namespace ConcernsCaseWork.Mappers
 		}
 
 		private static HomeModel MapCases(CaseDto caseDto, IList<TrustDetailsDto> trustsDetailsDto, 
-			IList<RecordDto> recordsDto, IEnumerable<RatingDto> ratingsDto, IEnumerable<TypeDto> typesDto)
+			IEnumerable<RecordDto> recordsDto, IEnumerable<RatingDto> ratingsDto, IEnumerable<TypeDto> typesDto)
 		{
 			// Find trust / academies
 			var trustName = FetchTrustName(trustsDetailsDto, caseDto);
@@ -62,10 +60,10 @@ namespace ConcernsCaseWork.Mappers
 				
 			return new HomeModel(
 				caseDto.Urn.ToString(), 
-				caseDto.CreatedAt.ToString(DateFormat),
-				caseDto.UpdatedAt.ToString(DateFormat),
-				caseDto.ClosedAt.ToString(DateFormat),
-				caseDto.ReviewAt.ToString(DateFormat),
+				caseDto.CreatedAt,
+				caseDto.UpdatedAt,
+				caseDto.ClosedAt,
+				caseDto.ReviewAt,
 				trustName,
 				academies,
 				primaryCaseType.Name,

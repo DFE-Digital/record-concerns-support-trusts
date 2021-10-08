@@ -286,9 +286,9 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(expectedCaseDto.CrmEnquiry, Is.EqualTo(caseDto.CrmEnquiry));
 			Assert.That(expectedCaseDto.CurrentStatus, Is.EqualTo(caseDto.CurrentStatus));
 			Assert.That(expectedCaseDto.DeEscalation, Is.EqualTo(caseDto.DeEscalation));
-			Assert.That(expectedCaseDto.NextSteps, Is.EqualTo(caseDto.NextSteps));
+			Assert.That(expectedCaseDto.NextSteps, Is.EqualTo(patchCaseModel.NextSteps));
 			Assert.That(expectedCaseDto.CaseAim, Is.EqualTo(caseDto.CaseAim));
-			Assert.That(expectedCaseDto.DeEscalationPoint, Is.EqualTo(patchCaseModel.DeEscalationPoint));
+			Assert.That(expectedCaseDto.DeEscalationPoint, Is.EqualTo(caseDto.DeEscalationPoint));
 			Assert.That(expectedCaseDto.ReviewAt, Is.EqualTo(caseDto.ReviewAt));
 			Assert.That(expectedCaseDto.UpdatedAt, Is.EqualTo(patchCaseModel.UpdatedAt));
 			Assert.That(expectedCaseDto.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));

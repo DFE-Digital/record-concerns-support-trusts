@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Extensions;
+using System;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Models
@@ -8,17 +9,61 @@ namespace ConcernsCaseWork.Models
 	/// </summary>
 	public sealed class HomeModel
 	{
+		private const string DateFormat = "dd-MM-yyyy";
+		
 		public string CaseUrn { get; }
+
+		public DateTimeOffset CreatedDateTimeOffset { get; }
+
+		public string Created
+		{
+			get
+			{
+				return CreatedDateTimeOffset.ToString(DateFormat);
+			}
+		}
+
+		public long CreatedUnixTime { get; }
 		
-		public string Created { get; }
+		public DateTimeOffset UpdatedDateTimeOffset { get; }
 		
-		public string Updated { get; }
+		public string Updated 
+		{ 
+			get
+			{
+				return UpdatedDateTimeOffset.ToString(DateFormat);
+			} 
+		}
 		
-		public string Closed { get; }
+		public long UpdatedUnixTime { get; }
 		
-		public string Review { get; }
+		public DateTimeOffset ClosedDateTimeOffset { get; }
+
+		public string Closed
+		{
+			get
+			{
+				return ClosedDateTimeOffset.ToString(DateFormat);
+			}
+		}
 		
-		public string TrustNameTitle { get { return TrustName.ToTitle(); } }
+		public DateTimeOffset ReviewDateTimeOffset { get; }
+
+		public string Review
+		{
+			get
+			{
+				return ReviewDateTimeOffset.ToString(DateFormat);
+			}
+		}
+
+		public string TrustNameTitle
+		{
+			get
+			{
+				return TrustName.ToTitle();
+			}
+		}
 		
 		public string TrustName { get; }
 		
@@ -41,10 +86,10 @@ namespace ConcernsCaseWork.Models
 		
 		public IList<string> RagRatingCss { get; }
 		
-		public HomeModel(string caseUrn, string created, string updated, string closed, string review,
+		public HomeModel(string caseUrn, DateTimeOffset created, DateTimeOffset updated, DateTimeOffset closed, DateTimeOffset review,
 			string trustName, string academyNames, string caseType, string caseSubType, 
 			IList<string> ragRating, IList<string> ragRatingCss) => 
-			(CaseUrn, Created, Updated, Closed, Review, TrustName, AcademyNames, CaseType, CaseSubType, RagRating, RagRatingCss) = 
+			(CaseUrn, CreatedDateTimeOffset, UpdatedDateTimeOffset, ClosedDateTimeOffset, ReviewDateTimeOffset, TrustName, AcademyNames, CaseType, CaseSubType, RagRating, RagRatingCss) = 
 			(caseUrn, created, updated, closed, review, trustName, academyNames, caseType, caseSubType, ragRating, ragRatingCss);
 	}
 }
