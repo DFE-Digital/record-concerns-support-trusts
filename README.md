@@ -29,6 +29,12 @@ RDD - Regional Delivery Directorate
 
 ## Local Setup
 
+### Building the project Nuget proxy error
+***
+```
+The issue is a environment variable name HTTP_PROXY. Remove it from the system, restart IDE and re-try.
+```
+
 ### Docker Redis
 ***
 ```
