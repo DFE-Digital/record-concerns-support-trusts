@@ -94,13 +94,13 @@ namespace ConcernsCaseWork.Models
 		
 		public string CaseSubType { get; }
 		
-		public IList<string> RagRating { get; }
+		public Tuple<int, IList<string>> RagRating { get; }
 		
 		public IList<string> RagRatingCss { get; }
 		
 		public HomeModel(string caseUrn, DateTimeOffset created, DateTimeOffset updated, DateTimeOffset closed, DateTimeOffset review,
 			string trustName, string academyNames, string caseType, string caseSubType, 
-			IList<string> ragRating, IList<string> ragRatingCss) => 
+			Tuple<int, IList<string>> ragRating, IList<string> ragRatingCss) => 
 			(CaseUrn, CreatedDateTimeOffset, UpdatedDateTimeOffset, ClosedDateTimeOffset, ReviewDateTimeOffset, TrustName, AcademyNames, CaseType, CaseSubType, RagRating, RagRatingCss) = 
 			(caseUrn, created, updated, closed, review, trustName, academyNames, caseType, caseSubType, ragRating, ragRatingCss);
 	}

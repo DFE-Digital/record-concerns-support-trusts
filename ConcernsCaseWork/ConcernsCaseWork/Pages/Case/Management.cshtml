@@ -66,10 +66,10 @@ else
 						Risk rating
 					</dt>
 					<dd class="govuk-summary-list__value govuk-label-wrapper">
-						@for (var index = 0; index < Model.CaseModel.RagRating.Count; ++index)
+						@for (var index = 0; index < Model.CaseModel.RagRating.Item2.Count; ++index)
 						{
 							<span class="govuk-tag ragtag @Model.CaseModel.RagRatingCss.ElementAt(index)">
-								@Model.CaseModel.RagRating.ElementAt(index)
+								@Model.CaseModel.RagRating.Item2.ElementAt(index)
 							</span>
 						}
 					</dd>

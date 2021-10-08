@@ -79,7 +79,7 @@ namespace ConcernsCaseWork.Models
 
 		public string RagRatingName { get; set; } = string.Empty;
 		
-		public IList<string> RagRating { get; set; }
+		public Tuple<int, IList<string>> RagRating { get; set; }
 
 		public IList<string> RagRatingCss { get; set; }
 		

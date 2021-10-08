@@ -1,18 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Mappers
 {
 	public static class RagMapping
 	{
-		private static readonly Dictionary<string, IList<string>> Rags = new Dictionary<string, IList<string>>(7)
+		private static readonly Dictionary<string, Tuple<int, IList<string>>> Rags = new Dictionary<string, Tuple<int, IList<string>>>(7)
 		{
-			{"n/a", new List<string> { "-" }}, 
-			{"Red-Plus", new List<string> { "Red Plus" }}, 
-			{"Red", new List<string> { "Red" }}, 
-			{"Red-Amber", new List<string> { "Red", "Amber" }}, 
-			{"Amber-Green", new List<string> { "Amber", "Green" }},
-			{"Amber", new List<string> { "Amber" }},
-			{"Green", new List<string> { "Green" }}
+			{"n/a", new Tuple<int, IList<string>>(0, new List<string> { "-" })}, 
+			{"Red-Plus", new Tuple<int, IList<string>>(1, new List<string> { "Red Plus" })}, 
+			{"Red", new Tuple<int, IList<string>>(2, new List<string> { "Red" })}, 
+			{"Red-Amber", new Tuple<int, IList<string>>(3, new List<string> { "Red", "Amber" })},
+			{"Amber-Green", new Tuple<int, IList<string>>(4, new List<string> { "Amber", "Green" })},
+			{"Amber",  new Tuple<int, IList<string>>(5, new List<string> { "Amber" })},
+			{"Green",  new Tuple<int, IList<string>>(6, new List<string> { "Green" })}
 		};
 		private static readonly Dictionary<string, IList<string>> RagsCss = new Dictionary<string, IList<string>>(7)
 		{
@@ -25,9 +26,9 @@ namespace ConcernsCaseWork.Mappers
 			{"Green", new List<string> { "ragtag__green" }}
 		};
 		
-		public static IList<string> FetchRag(string rating)
+		public static Tuple<int, IList<string>> FetchRag(string rating)
 		{
-			var defaultRating = new List<string> { "n/a" };
+			var defaultRating = new Tuple<int, IList<string>>(0, new List<string> { "n/a" });
 			return Rags.TryGetValue(rating ?? "n/a", out var rag) ? rag : defaultRating;
 		}
 		

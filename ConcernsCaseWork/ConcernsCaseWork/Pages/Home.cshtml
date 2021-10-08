@@ -70,11 +70,11 @@
 						<td class="govuk-table__cell">
 							@caseModel.CaseTypeDescription
 						</td>
-						<td class="govuk-table__cell govuk-label-wrapper">
-							@for (var index = 0; index < caseModel.RagRating.Count; ++index)
+						<td class="govuk-table__cell govuk-label-wrapper" data-sort-value="@caseModel.RagRating.Item1">
+							@for (var index = 0; index < caseModel.RagRating.Item2.Count; ++index)
 							{
 								<span class="govuk-tag ragtag @caseModel.RagRatingCss.ElementAt(index)">
-									@caseModel.RagRating.ElementAt(index)
+									@caseModel.RagRating.Item2.ElementAt(index)
 								</span>
 							}
 						</td>
