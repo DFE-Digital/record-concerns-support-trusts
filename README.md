@@ -53,6 +53,8 @@ dotnet user-secrets init
 The preceding command adds a UserSecretsId element within a PropertyGroup of the project file. 
 By default, the inner text of UserSecretsId is a GUID. The inner text is arbitrary, but is unique to the project.
 
+NOTE:: Setup is done under the ConcernsCaseWork project root.
+
 List of secrets:
 dotnet user-secrets list
 
