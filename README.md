@@ -188,6 +188,7 @@ cf stop amsd-casework-dev
 cf delete -r amsd-casework-dev
 cf env amsd-casework-dev --> see environment variables of the target space
 cf set-space-role USERNAME ORGNAME SPACE ROLE --> Grant roles to user
+cf env <APP_NAME> --> See environment variables
 
 cf install-plugin conduit
 cf conduit amsd-casework-redis-dev --> Run Redis locally
