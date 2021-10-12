@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Integration.Tests.Pages
 {
 	[TestFixture]
-	public class LoginModelIntegrationTests
+	public class LoginPageModelIntegrationTests
 	{
 		/// Testing the class requires a running Redis,
 		/// startup is configured to use Redis with session storage.
