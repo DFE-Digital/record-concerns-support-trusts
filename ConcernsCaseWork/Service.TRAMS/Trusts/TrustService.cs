@@ -46,7 +46,7 @@ namespace Service.TRAMS.Trusts
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"TrustService::GetTrustsByPagination::Exception message::{ex.Message}");
+				_logger.LogError("TrustService::GetTrustsByPagination::Exception message::{Message}", ex.Message);
 			}
 
 			return Array.Empty<TrustSummaryDto>();
@@ -80,7 +80,7 @@ namespace Service.TRAMS.Trusts
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"TrustService::GetTrustByUkPrn::Exception message::{ex.Message}");
+				_logger.LogError("TrustService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
 				throw;
 			}
 		}

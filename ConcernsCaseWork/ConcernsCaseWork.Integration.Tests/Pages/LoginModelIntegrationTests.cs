@@ -36,6 +36,7 @@ namespace ConcernsCaseWork.Integration.Tests.Pages
 		}
 		
 		[Test]
+		[Category("Smoke")] 
 		public async Task WhenSignInIsWithCorrectCredentials_ReturnHomePage()
 		{
 			// arrange
@@ -76,6 +77,7 @@ namespace ConcernsCaseWork.Integration.Tests.Pages
 		}
 		
 		[Test]
+		[Category("Smoke")]
 		public async Task WhenSignInIsWithInCorrectCredentials_ReturnLoginPage()
 		{
 			// arrange

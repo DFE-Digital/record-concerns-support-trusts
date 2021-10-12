@@ -33,7 +33,7 @@ namespace ConcernsCaseWork.Security
 					builder.AddFontSrc().Self();
 					builder.AddStyleSrc().Self();
 					builder.AddBaseUri().Self();
-					builder.AddScriptSrc().UnsafeInline().WithNonce();
+					builder.AddScriptSrc().From("https://www.googletagmanager.com").UnsafeInline().WithNonce();
 					builder.AddFrameAncestors().None();
 				})
 				.RemoveServerHeader()
