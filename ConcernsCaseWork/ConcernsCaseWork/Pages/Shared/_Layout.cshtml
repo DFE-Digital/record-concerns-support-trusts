@@ -1,6 +1,24 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Hosting
+@using Microsoft.Extensions.Hosting
+
+@inject IWebHostEnvironment _env
+
+<!DOCTYPE html>
 <html class="govuk-template" lang="en">
+@{ var nonce = Context.GetNonce(); }
 <head>
+	@if (_env.IsProduction())
+    {
+	    <!-- Google Tag Manager -->
+	    <script nonce="@nonce">
+	    	(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});let f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!=='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+			})(window,document,'script','dataLayer','GTM-NGC8DRV');
+		</script>
+	    <!-- End Google Tag Manager -->
+    }
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="theme-color" content="#0b0c0c">
@@ -16,10 +34,14 @@
 	<link rel="stylesheet" href="~/dist/css/site.css"/>
 
 	<title>@ViewData["Title"] - Concerns casework - GOV.UK</title>
-	
+
 </head>
 <body class="govuk-template__body ">
-@{ var nonce = Context.GetNonce(); }
+<!-- Google Tag Manager (noscript) -->
+<noscript nonce="@nonce">
+	<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NGC8DRV" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
 <script src="~/dist/vendor/jquery.min.js" nonce="@nonce"></script>
 <script nonce="@nonce">
 	document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');

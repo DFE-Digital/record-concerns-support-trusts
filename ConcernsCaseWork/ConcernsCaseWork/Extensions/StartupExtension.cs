@@ -50,9 +50,9 @@ namespace ConcernsCaseWork.Extensions
 				var port = (string)redisCredentials["port"] ?? throw new Exception("AddRedis::Credentials::port missing");
 				var tls = (bool)redisCredentials["tls_enabled"];
 
-				Log.Information($"Starting Redis Server Host - {host}");
-				Log.Information($"Starting Redis Server Port - {port}");
-				Log.Information($"Starting Redis Server TLS - {tls}");
+				Log.Information("Starting Redis Server Host - {Host}", host);
+				Log.Information("Starting Redis Server Port - {Port}", port);
+				Log.Information("Starting Redis Server TLS - {Tls}", tls);
 
 				var redisConfigurationOptions = new ConfigurationOptions { Password = password, EndPoints = { $"{host}:{port}" }, Ssl = tls };
 				var redisConnection = Implementation.Connect(redisConfigurationOptions);
@@ -67,9 +67,8 @@ namespace ConcernsCaseWork.Extensions
 			}
 			catch (Exception ex)
 			{
-				var errorMessage = $"AddRedis::Exception::{ex.Message}";
-				Log.Error(errorMessage);
-				throw new Exception(errorMessage);
+				Log.Error("AddRedis::Exception::{Message}", ex.Message);
+				throw new Exception($"AddRedis::Exception::{ex.Message}");
 			}
 		}
 
@@ -86,7 +85,7 @@ namespace ConcernsCaseWork.Extensions
 			if (string.IsNullOrEmpty(tramsApiEndpoint) || string.IsNullOrEmpty(tramsApiKey)) 
 				throw new Exception("AddTramsApi::missing configuration");
 			
-			Log.Information($"Starting Trams API Endpoint - {tramsApiEndpoint}");
+			Log.Information("Starting Trams API Endpoint - {TramsApiEndpoint}", tramsApiEndpoint);
 			
 			services.AddHttpClient("TramsClient", client =>
 			{
