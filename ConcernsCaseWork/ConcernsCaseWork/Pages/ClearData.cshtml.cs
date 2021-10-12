@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Rating;
 using Service.Redis.Status;
+using Service.Redis.Trusts;
 using Service.Redis.Type;
 using System.Threading.Tasks;
 
@@ -16,16 +17,21 @@ namespace ConcernsCaseWork.Pages
 	{
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly IRatingCachedService _ratingCachedService;
+		private readonly ITrustCachedService _trustCachedService;
 		private readonly ITypeCachedService _typeCachedService;
 		private readonly ILogger<ClearDataPageModel> _logger;
 		private readonly ICachedService _cachedService;
 		
-		public ClearDataPageModel(ICachedService cachedService, ITypeCachedService typeCachedService, 
-			IStatusCachedService statusCachedService, IRatingCachedService ratingCachedService,
+		public ClearDataPageModel(ICachedService cachedService, 
+			ITypeCachedService typeCachedService, 
+			IStatusCachedService statusCachedService, 
+			IRatingCachedService ratingCachedService,
+			ITrustCachedService trustCachedService,
 			ILogger<ClearDataPageModel> logger)
 		{
 			_statusCachedService = statusCachedService;
 			_ratingCachedService = ratingCachedService;
+			_trustCachedService = trustCachedService;
 			_typeCachedService = typeCachedService;
 			_cachedService = cachedService;
 			_logger = logger;
@@ -41,6 +47,7 @@ namespace ConcernsCaseWork.Pages
 			await _typeCachedService.ClearData();
 			await _statusCachedService.ClearData();
 			await _ratingCachedService.ClearData();
+			await _trustCachedService.ClearData();
 
 			return RedirectToPage("home");
 		}

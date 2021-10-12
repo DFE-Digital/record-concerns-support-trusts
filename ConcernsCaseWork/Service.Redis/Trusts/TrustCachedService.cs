@@ -21,6 +21,11 @@ namespace Service.Redis.Trusts
 			_logger = logger;
 		}
 		
+		public async Task ClearData()
+		{
+			await ClearData(TrustsKey);
+		}
+		
 		public async Task<TrustDetailsDto> GetTrustByUkPrn(string ukPrn)
 		{
 			try
