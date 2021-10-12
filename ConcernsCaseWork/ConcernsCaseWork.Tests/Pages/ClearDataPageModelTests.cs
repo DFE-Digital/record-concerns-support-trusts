@@ -10,6 +10,7 @@ using NUnit.Framework;
 using Service.Redis.Base;
 using Service.Redis.Rating;
 using Service.Redis.Status;
+using Service.Redis.Trusts;
 using Service.Redis.Type;
 using System.Threading.Tasks;
 
@@ -26,10 +27,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockRatingCachedService = new Mock<IRatingCachedService>();
 			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockCachedService = new Mock<ICachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
 			var pageModel = SetupClearDataModel(mockStatusCachedService.Object, mockRatingCachedService.Object, 
-				mockTypeCachedService.Object, mockCachedService.Object,
+				mockTypeCachedService.Object, mockCachedService.Object, mockTrustCachedService.Object,
 				mockLogger.Object, true);
 
 			// act
@@ -56,10 +58,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockRatingCachedService = new Mock<IRatingCachedService>();
 			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockCachedService = new Mock<ICachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
 			var pageModel = SetupClearDataModel(mockStatusCachedService.Object, mockRatingCachedService.Object, 
-				mockTypeCachedService.Object, mockCachedService.Object,
+				mockTypeCachedService.Object, mockCachedService.Object, mockTrustCachedService.Object,
 				mockLogger.Object);
 
 			// act
@@ -78,14 +81,18 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Never);
 		}
 		
-		private static ClearDataPageModel SetupClearDataModel(IStatusCachedService mockStatusCachedService, IRatingCachedService mockRatingCachedService, 
-			ITypeCachedService mockTypeCachedService, ICachedService mockCachedService,
-			ILogger<ClearDataPageModel> mockLogger, bool isAuthenticated = false)
+		private static ClearDataPageModel SetupClearDataModel(IStatusCachedService mockStatusCachedService, 
+			IRatingCachedService mockRatingCachedService, 
+			ITypeCachedService mockTypeCachedService, 
+			ICachedService mockCachedService,
+			ITrustCachedService mockTrustCachedService,
+			ILogger<ClearDataPageModel> mockLogger, 
+			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
 			return new ClearDataPageModel(mockCachedService, mockTypeCachedService,
-				mockStatusCachedService, mockRatingCachedService, mockLogger)
+				mockStatusCachedService, mockRatingCachedService, mockTrustCachedService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
