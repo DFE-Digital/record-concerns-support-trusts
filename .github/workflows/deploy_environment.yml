@@ -55,12 +55,13 @@ jobs:
           dotnet user-secrets set "app:password" "${{ secrets.APP_PASSWORD }}"
       - name: Test staging
         if: github.event.inputs.environment == 'staging'
-        run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity diagnostic
+        run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln
       - name: Test production
         if: github.event.inputs.environment == 'production'
-        run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --filter TestCategory=Smoke --no-build --verbosity diagnostic
+        run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --filter TestCategory=Smoke
   
   terraform-run:
+    needs: build-test
     name: "Terraform Run"
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
