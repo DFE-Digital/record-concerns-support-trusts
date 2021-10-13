@@ -48,6 +48,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockRatingCachedService.Verify(c => c.ClearData(), Times.Once);
 			mockTypeCachedService.Verify(c => c.ClearData(), Times.Once);
 			mockCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Once);
+			mockTrustCachedService.Verify(c => c.ClearData(), Times.Once);
 		}
 		
 		[Test]
@@ -79,6 +80,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockRatingCachedService.Verify(c => c.ClearData(), Times.Never);
 			mockTypeCachedService.Verify(c => c.ClearData(), Times.Never);
 			mockCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Never);
+			mockTrustCachedService.Verify(c => c.ClearData(), Times.Never);
 		}
 		
 		private static ClearDataPageModel SetupClearDataModel(IStatusCachedService mockStatusCachedService, 
