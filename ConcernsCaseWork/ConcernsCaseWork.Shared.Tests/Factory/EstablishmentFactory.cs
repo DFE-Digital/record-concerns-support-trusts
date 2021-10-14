@@ -31,7 +31,12 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<string>(),
 				Fixture.Create<string>(),
 				Fixture.Create<string>(),
-				Fixture.Create<string>());
+				Fixture.Create<string>(),
+				Fixture.Create<string>(),
+				Fixture.Create<string>(),
+				Fixture.Create<string>(),
+				Fixture.Create<EstablishmentTypeDto>()
+				);
 		}
 
 		public static List<EstablishmentDto> BuildListEstablishmentDto()
@@ -43,7 +48,12 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<string>(),
 					Fixture.Create<string>(),
 					Fixture.Create<string>(),
-					Fixture.Create<string>())
+					Fixture.Create<string>(),
+					Fixture.Create<string>(),
+					Fixture.Create<string>(),
+					Fixture.Create<string>(),
+					Fixture.Create<EstablishmentTypeDto>()
+					)
 			};
 		}
 
@@ -56,7 +66,12 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<string>(),
 					Fixture.Create<string>(),
 					Fixture.Create<string>(),
-					Fixture.Create<string>())
+					Fixture.Create<string>(),
+					Fixture.Create<string>(),
+					Fixture.Create<string>(),
+					Fixture.Create<string>(),
+					Fixture.Create<EstablishmentTypeModel>()
+					)
 			};
 		}
 	}

@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using AutoMapper;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
@@ -14,6 +15,7 @@ using Service.Redis.Type;
 using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
+using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,13 +35,15 @@ namespace ConcernsCaseWork.Services.Cases
 		private readonly ITypeCachedService _typeCachedService;
 		private readonly ILogger<CaseModelService> _logger;
 		private readonly ICachedService _cachedService;
-		
+		private readonly IMapper _mapper;
+
 		public CaseModelService(ICaseCachedService caseCachedService, ITrustCachedService trustCachedService, 
 			IRecordCachedService recordCachedService, IRatingCachedService ratingCachedService,
 			ITypeCachedService typeCachedService, ICachedService cachedService, 
 			IRecordRatingHistoryCachedService recordRatingHistoryCachedService,
 			IStatusCachedService statusCachedService, 
 			ISequenceCachedService sequenceCachedService,
+			IMapper mapper,
 			ILogger<CaseModelService> logger)
 		{
 			_recordRatingHistoryCachedService = recordRatingHistoryCachedService;
@@ -51,6 +55,7 @@ namespace ConcernsCaseWork.Services.Cases
 			_caseCachedService = caseCachedService;
 			_typeCachedService = typeCachedService;
 			_cachedService = cachedService;
+			_mapper = mapper;
 			_logger = logger;
 		}
 		
@@ -84,9 +89,10 @@ namespace ConcernsCaseWork.Services.Cases
 				var caseModel = CaseMapping.Map(caseDto);
 
 				// Fetch Trust
-				var trustDto = await _trustCachedService.GetTrustByUkPrn(caseModel.TrustUkPrn);
-				caseModel.TrustName = trustDto?.GiasData?.GroupName;
-				
+				var trustDetailsDto = await _trustCachedService.GetTrustByUkPrn(caseModel.TrustUkPrn);
+				caseModel.TrustName = trustDetailsDto?.GiasData?.GroupName;
+				caseModel.TrustDetailsModel = _mapper.Map<TrustDetailsDto, TrustDetailsModel>(trustDetailsDto);
+
 				// Fetch records
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
 				var recordDto = recordsDto.First(r => r.Primary);
