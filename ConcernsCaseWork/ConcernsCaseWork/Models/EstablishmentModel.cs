@@ -23,11 +23,15 @@
 
 		public string HeadteacherFullName { get { return string.Format("{0} {1} {2}", this.HeadteacherTitle, this.HeadteacherFirstName, this.HeadteacherLastName); } }
 
-		public EstablishmentTypeModel EstablishmentType { get; set; }
+		public EstablishmentTypeModel EstablishmentType { get; }
+
+		private string SchoolWebsite { get; }
+
+		public string EstablishmentWebsite { get { return string.Format("http://{0}", this.SchoolWebsite); } }
 
 		public EstablishmentModel(string urn, string localAuthorityCode, string localAuthorityName,
-			string establishmentNumber, string establishmentName, string headteacherTitle, string headteacherFirstName,  string headteacherLastName, EstablishmentTypeModel establishmentType) => 
-			(Urn, LocalAuthorityCode, LocalAuthorityName, EstablishmentNumber, EstablishmentName, HeadteacherTitle, HeadteacherFirstName, HeadteacherLastName, EstablishmentType) = 
-			(urn, localAuthorityCode, localAuthorityName, establishmentNumber, establishmentName, headteacherTitle, headteacherFirstName, headteacherLastName, establishmentType);
+			string establishmentNumber, string establishmentName, string headteacherTitle, string headteacherFirstName,  string headteacherLastName, EstablishmentTypeModel establishmentType, string schoolWebsite) => 
+			(Urn, LocalAuthorityCode, LocalAuthorityName, EstablishmentNumber, EstablishmentName, HeadteacherTitle, HeadteacherFirstName, HeadteacherLastName, EstablishmentType, SchoolWebsite) = 
+			(urn, localAuthorityCode, localAuthorityName, establishmentNumber, establishmentName, headteacherTitle, headteacherFirstName, headteacherLastName, establishmentType, schoolWebsite);
 	}
 }

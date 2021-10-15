@@ -31,11 +31,13 @@ namespace Service.TRAMS.Trusts
 		[JsonProperty("establishmentType")]
 		public EstablishmentTypeDto EstablishmentType { get; }
 
+		[JsonProperty("schoolWebsite")]
+		public string SchoolWebsite { get; }
 
 		[JsonConstructor]
 		public EstablishmentDto(string urn, string localAuthorityCode, string localAuthorityName,
-			string establishmentNumber, string establishmentName, string headteacherTitle, string headteacherFirstName, string headteacherLastName, EstablishmentTypeDto establishmentType) => 
-			(Urn, LocalAuthorityCode, LocalAuthorityName, EstablishmentNumber, EstablishmentName, HeadteacherTitle, HeadteacherFirstName, HeadteacherLastName, EstablishmentType) = 
-			(urn, localAuthorityCode, localAuthorityName, establishmentNumber, establishmentName, headteacherTitle, headteacherFirstName, headteacherLastName, establishmentType);
+			string establishmentNumber, string establishmentName, string headteacherTitle, string headteacherFirstName, string headteacherLastName, EstablishmentTypeDto establishmentType, string schoolWebsite ) => 
+			(Urn, LocalAuthorityCode, LocalAuthorityName, EstablishmentNumber, EstablishmentName, HeadteacherTitle, HeadteacherFirstName, HeadteacherLastName, EstablishmentType, SchoolWebsite) = 
+			(urn, localAuthorityCode, localAuthorityName, establishmentNumber, establishmentName, headteacherTitle, headteacherFirstName, headteacherLastName, establishmentType, schoolWebsite);
 	}
 }
