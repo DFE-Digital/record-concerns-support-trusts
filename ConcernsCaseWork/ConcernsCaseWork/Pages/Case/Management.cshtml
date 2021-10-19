@@ -214,11 +214,13 @@ else
 			<div class="govuk-summary-list__row">
 				<dt class="govuk-summary-list__key">Total pupil capacity</dt>
 				<dd class="govuk-summary-list__value">
+					@Model.CaseModel.TrustDetailsModel.TotalPupilCapacity
 				</dd>
 			</div>
 			<div class="govuk-summary-list__row">
 				<dt class="govuk-summary-list__key">Number of pupils</dt>
 				<dd class="govuk-summary-list__value">
+					@Model.CaseModel.TrustDetailsModel.TotalPupils (@Model.CaseModel.TrustDetailsModel.PupilCapacityPercentage%)
 				</dd>
 			</div>
 			<div class="govuk-summary-list__row">
