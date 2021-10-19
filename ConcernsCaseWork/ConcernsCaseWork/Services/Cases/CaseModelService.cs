@@ -90,7 +90,6 @@ namespace ConcernsCaseWork.Services.Cases
 
 				// Fetch Trust
 				var trustDetailsDto = await _trustCachedService.GetTrustByUkPrn(caseModel.TrustUkPrn);
-				caseModel.TrustName = trustDetailsDto?.GiasData?.GroupName;
 				caseModel.TrustDetailsModel = _mapper.Map<TrustDetailsDto, TrustDetailsModel>(trustDetailsDto);
 
 				// Fetch records

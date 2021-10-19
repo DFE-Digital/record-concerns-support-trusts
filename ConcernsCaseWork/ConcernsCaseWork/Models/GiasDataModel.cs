@@ -13,6 +13,8 @@ namespace ConcernsCaseWork.Models
 
 		public string GroupName { get; }
 
+		public string GroupNameTitle { get { return this.GroupName.ToTitle(); } }
+
 		public string GroupTypeCode { get; }
 
 		public string CompaniesHouseNumber { get; }

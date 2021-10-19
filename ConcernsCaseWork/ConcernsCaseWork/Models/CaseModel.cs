@@ -27,15 +27,6 @@ namespace ConcernsCaseWork.Models
 
 		public string CrmEnquiry { get; set; }
 
-		public string TrustNameTitle
-		{
-			get
-			{
-				return TrustName.ToTitle();
-			}
-		}
-
-		public string TrustName { get; set; } = string.Empty;
 		
 		public string TrustUkPrn { get; set; }
 		
