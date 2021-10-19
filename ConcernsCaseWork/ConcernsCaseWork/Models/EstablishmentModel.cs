@@ -23,7 +23,9 @@
 
 		public string HeadteacherFullName { get { return string.Format("{0} {1} {2}", this.HeadteacherTitle, this.HeadteacherFirstName, this.HeadteacherLastName); } }
 
-		public EstablishmentTypeModel EstablishmentType { get; }
+		public EstablishmentTypeModel EstablishmentType { get; } 
+
+		public CensusModel Census { get; } 
 
 		private string SchoolWebsite { get; }
 
@@ -32,8 +34,8 @@
 		public string SchoolCapacity { get; }
 
 		public EstablishmentModel(string urn, string localAuthorityCode, string localAuthorityName,
-			string establishmentNumber, string establishmentName, string headteacherTitle, string headteacherFirstName,  string headteacherLastName, EstablishmentTypeModel establishmentType, string schoolWebsite, string schoolCapacity) => 
-			(Urn, LocalAuthorityCode, LocalAuthorityName, EstablishmentNumber, EstablishmentName, HeadteacherTitle, HeadteacherFirstName, HeadteacherLastName, EstablishmentType, SchoolWebsite, SchoolCapacity) = 
-			(urn, localAuthorityCode, localAuthorityName, establishmentNumber, establishmentName, headteacherTitle, headteacherFirstName, headteacherLastName, establishmentType, schoolWebsite, schoolCapacity);
+			string establishmentNumber, string establishmentName, string headteacherTitle, string headteacherFirstName,  string headteacherLastName, EstablishmentTypeModel establishmentType, CensusModel census, string schoolWebsite, string schoolCapacity) => 
+			(Urn, LocalAuthorityCode, LocalAuthorityName, EstablishmentNumber, EstablishmentName, HeadteacherTitle, HeadteacherFirstName, HeadteacherLastName, EstablishmentType, Census, SchoolWebsite, SchoolCapacity) = 
+			(urn, localAuthorityCode, localAuthorityName, establishmentNumber, establishmentName, headteacherTitle, headteacherFirstName, headteacherLastName, establishmentType, census, schoolWebsite, schoolCapacity);
 	}
 }

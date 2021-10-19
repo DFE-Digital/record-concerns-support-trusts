@@ -36,6 +36,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<string>(),
 				Fixture.Create<string>(),
 				Fixture.Create<EstablishmentTypeDto>(),
+				Fixture.Create<CensusDto>(),
 				Fixture.Create<string>(),
 				Fixture.Create<string>()
 				);
@@ -55,6 +56,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<string>(),
 					Fixture.Create<string>(),
 					Fixture.Create<EstablishmentTypeDto>(),
+					Fixture.Create<CensusDto>(),
 					Fixture.Create<string>(),
 					Fixture.Create<string>()
 					)
@@ -75,6 +77,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<string>(),
 					Fixture.Create<string>(),
 					Fixture.Create<EstablishmentTypeModel>(),
+					Fixture.Create<CensusModel>(),
 					Fixture.Create<string>(),
 					Fixture.Create<string>()
 					)

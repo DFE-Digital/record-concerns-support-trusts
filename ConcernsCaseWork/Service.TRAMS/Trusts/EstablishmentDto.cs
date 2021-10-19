@@ -31,6 +31,9 @@ namespace Service.TRAMS.Trusts
 		[JsonProperty("establishmentType")]
 		public EstablishmentTypeDto EstablishmentType { get; }
 
+		[JsonProperty("census")]
+		public CensusDto Census { get; }
+
 		[JsonProperty("schoolWebsite")]
 		public string SchoolWebsite { get; }
 
@@ -39,8 +42,8 @@ namespace Service.TRAMS.Trusts
 
 		[JsonConstructor]
 		public EstablishmentDto(string urn, string localAuthorityCode, string localAuthorityName,
-			string establishmentNumber, string establishmentName, string headteacherTitle, string headteacherFirstName, string headteacherLastName, EstablishmentTypeDto establishmentType, string schoolWebsite, string schoolCapacity) => 
-			(Urn, LocalAuthorityCode, LocalAuthorityName, EstablishmentNumber, EstablishmentName, HeadteacherTitle, HeadteacherFirstName, HeadteacherLastName, EstablishmentType, SchoolWebsite, SchoolCapacity) = 
-			(urn, localAuthorityCode, localAuthorityName, establishmentNumber, establishmentName, headteacherTitle, headteacherFirstName, headteacherLastName, establishmentType, schoolWebsite, schoolCapacity);
+			string establishmentNumber, string establishmentName, string headteacherTitle, string headteacherFirstName, string headteacherLastName, EstablishmentTypeDto establishmentType, CensusDto census, string schoolWebsite, string schoolCapacity) => 
+			(Urn, LocalAuthorityCode, LocalAuthorityName, EstablishmentNumber, EstablishmentName, HeadteacherTitle, HeadteacherFirstName, HeadteacherLastName, EstablishmentType, Census, SchoolWebsite, SchoolCapacity) = 
+			(urn, localAuthorityCode, localAuthorityName, establishmentNumber, establishmentName, headteacherTitle, headteacherFirstName, headteacherLastName, establishmentType, census, schoolWebsite, schoolCapacity);
 	}
 }
