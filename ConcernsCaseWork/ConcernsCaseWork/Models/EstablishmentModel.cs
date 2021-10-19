@@ -29,9 +29,11 @@
 
 		public string EstablishmentWebsite { get { return string.Format("http://{0}", this.SchoolWebsite); } }
 
+		public string SchoolCapacity { get; }
+
 		public EstablishmentModel(string urn, string localAuthorityCode, string localAuthorityName,
-			string establishmentNumber, string establishmentName, string headteacherTitle, string headteacherFirstName,  string headteacherLastName, EstablishmentTypeModel establishmentType, string schoolWebsite) => 
-			(Urn, LocalAuthorityCode, LocalAuthorityName, EstablishmentNumber, EstablishmentName, HeadteacherTitle, HeadteacherFirstName, HeadteacherLastName, EstablishmentType, SchoolWebsite) = 
-			(urn, localAuthorityCode, localAuthorityName, establishmentNumber, establishmentName, headteacherTitle, headteacherFirstName, headteacherLastName, establishmentType, schoolWebsite);
+			string establishmentNumber, string establishmentName, string headteacherTitle, string headteacherFirstName,  string headteacherLastName, EstablishmentTypeModel establishmentType, string schoolWebsite, string schoolCapacity) => 
+			(Urn, LocalAuthorityCode, LocalAuthorityName, EstablishmentNumber, EstablishmentName, HeadteacherTitle, HeadteacherFirstName, HeadteacherLastName, EstablishmentType, SchoolWebsite, SchoolCapacity) = 
+			(urn, localAuthorityCode, localAuthorityName, establishmentNumber, establishmentName, headteacherTitle, headteacherFirstName, headteacherLastName, establishmentType, schoolWebsite, schoolCapacity);
 	}
 }
