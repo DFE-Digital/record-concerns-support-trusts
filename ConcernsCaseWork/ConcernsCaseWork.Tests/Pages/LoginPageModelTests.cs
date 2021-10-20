@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.IsInstanceOf(typeof(PageResult), result);
 			Assert.That(pageModel.Credentials.ReturnUrl, Is.EqualTo(returnUrl));
 			Assert.That(pageModel.TempData.First().Key, Is.EqualTo("Error.Message"));
-			Assert.That(pageModel.TempData.First().Value, Is.EqualTo("Incorrect username and password"));
+			Assert.That(pageModel.TempData.First().Value, Is.EqualTo("Incorrect username or password"));
 		}
 		
 		[TestCase("", "/home")]

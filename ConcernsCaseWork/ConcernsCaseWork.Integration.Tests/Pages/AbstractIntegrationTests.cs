@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Integration.Tests.Pages
 			
 			var body = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
 			{
-				new KeyValuePair<string, string>("username", configuration["app:username"]),
+				new KeyValuePair<string, string>("username", configuration["app:username"].Split(',').FirstOrDefault()),
 				new KeyValuePair<string, string>("password", configuration["app:password"]),
 				new KeyValuePair<string, string>("__RequestVerificationToken", tokenValue)
 			});
@@ -40,6 +40,8 @@ namespace ConcernsCaseWork.Integration.Tests.Pages
 			
 			// Assert
 			Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+			Assert.That(response.RequestMessage.RequestUri.AbsolutePath, Contains.Substring("/home"));
+			Assert.That(await response.Content.ReadAsStringAsync(), Is.Not.Null);
 		}
 	}
 }
