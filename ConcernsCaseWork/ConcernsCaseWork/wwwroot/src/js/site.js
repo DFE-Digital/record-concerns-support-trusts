@@ -43,7 +43,7 @@ window.addIssueValidator = function(validator) {
 		method: function(field) {
 			return field.value.trim().length <= 2000;
 		},
-		message: 'You have exceeded one or more character limits'
+		message: 'Issue must be 2000 characters or less'
 	}]);
 }
 window.addRagRatingValidator = function(validator) {
@@ -87,7 +87,7 @@ window.addCurrentStatusValidator = function(validator) {
 		method: function(field) {
 			return field.value.trim().length <= 4000;
 		},
-		message: 'You have exceeded one or more character limits'
+		message: 'Current status must be 4000 characters or less'
 	}]);
 }
 window.addNextStepsValidator = function(validator) {
@@ -95,7 +95,7 @@ window.addNextStepsValidator = function(validator) {
 		method: function(field) {
 			return field.value.trim().length <= 4000;
 		},
-		message: 'You have exceeded one or more character limits'
+		message: 'Next steps must be 4000 characters or less'
 	}]);
 }
 window.addDeEscalationPointValidator = function(validator) {
@@ -103,7 +103,7 @@ window.addDeEscalationPointValidator = function(validator) {
 		method: function(field) {
 			return field.value.trim().length <= 1000;
 		},
-		message: 'You have exceeded one or more character limits'
+		message: 'DeEscalation point must be 1000 characters or less'
 	}]);
 }
 window.addCaseAimValidator = function(validator) {
@@ -111,7 +111,7 @@ window.addCaseAimValidator = function(validator) {
 		method: function(field) {
 			return field.value.trim().length <= 1000;
 		},
-		message: 'You have exceeded one or more character limits'
+		message: 'Case aim must be 1000 characters or less'
 	}]);
 }
 window.addDirectionOfTravelValidator = function(validator) {
