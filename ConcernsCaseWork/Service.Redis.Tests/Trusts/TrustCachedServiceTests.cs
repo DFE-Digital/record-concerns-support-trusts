@@ -16,6 +16,20 @@ namespace Service.Redis.Tests.Trusts
 	public class TrustCachedServiceTests
 	{
 		[Test]
+		public async Task WhenClearData_IsSuccessful()
+		{
+			// arrange
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockTrustService = new Mock<ITrustService>();
+			var mockLogger = new Mock<ILogger<TrustCachedService>>();
+
+			var trustCachedService = new TrustCachedService(mockCacheProvider.Object, mockTrustService.Object, mockLogger.Object);
+
+			// act
+			await trustCachedService.ClearData();
+		}
+		
+		[Test]
 		public async Task WhenGetTrustByUkPrn_ReturnsTrusts_CacheIsNull()
 		{
 			// arrange
