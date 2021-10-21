@@ -103,7 +103,7 @@ window.addDeEscalationPointValidator = function(validator) {
 		method: function(field) {
 			return field.value.trim().length <= 1000;
 		},
-		message: 'DeEscalation point must be 1000 characters or less'
+		message: 'De-escalation point must be 1000 characters or less'
 	}]);
 }
 window.addCaseAimValidator = function(validator) {
