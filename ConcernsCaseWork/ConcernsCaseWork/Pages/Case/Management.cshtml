@@ -22,268 +22,180 @@
 }
 else
 {
-	<div class="govuk-width-container">
-		<div class="govuk-grid-row">
-			<div class="buttons-topOfPage">
-				<a asp-page="../home" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-					Back to casework
-				</a>
-				<a href="@Request.Path/closure" role="button" class="govuk-button govuk-button--warning float__right" data-module="govuk-button">
-					Close case
-				</a>
-			</div>
+<div class="govuk-width-container">
+	<div class="govuk-grid-row">
+		<div class="buttons-topOfPage">
+			<a asp-page="../home" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+				Back to casework
+			</a>
+			<a href="@Request.Path/closure" role="button" class="govuk-button govuk-button--warning float__right" data-module="govuk-button">
+				Close case
+			</a>
+		</div>
 
-			<h1 class="govuk-heading-l" name="caseID">
-				<span class="govuk-caption-m">Case ID</span>
-				@Model.CaseModel.Urn
-			</h1>
+		<h1 class="govuk-heading-l" name="caseID">
+			<span class="govuk-caption-m">Case ID</span>
+			@Model.CaseModel.Urn
+		</h1>
 
-			<h2 class="govuk-heading-m">@Model.CaseModel.TrustDetailsModel.GiasData.GroupNameTitle</h2>
-			<a href="#" class="govuk-link">Trust overview (TRAMS)</a>
+		<h2 class="govuk-heading-m">@Model.CaseModel.TrustDetailsModel.GiasData.GroupNameTitle</h2>
+		<a href="#" class="govuk-link">Trust overview (TRAMS)</a>
 
-			<div class="govuk-tabs govuk-!-margin-top-6" data-module="govuk-tabs">
+		<div class="govuk-tabs govuk-!-margin-top-6" data-module="govuk-tabs">
 
-				<ul class="govuk-tabs__list">
-					<li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
-						<a class="govuk-tabs__tab" href="#case-details">
-							Case Details
-						</a>
-					</li>
-					<li class="govuk-tabs__list-item">
-						<a class="govuk-tabs__tab" href="#trust-overview">
-							Trust Overview
-						</a>
-					</li>
-				</ul>
-				<div class="govuk-tabs__panel" id="case-details">
-					<dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-6">
+			<ul class="govuk-tabs__list">
+				<li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+					<a class="govuk-tabs__tab" href="#case-details">
+						Case Details
+					</a>
+				</li>
+				<li class="govuk-tabs__list-item">
+					<a class="govuk-tabs__tab" href="#trust-overview">
+						Trust Overview
+					</a>
+				</li>
+			</ul>
+			<div class="govuk-tabs__panel" id="case-details">
+				<dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-6">
 
-						<!-- Concern -->
-						<div class="govuk-summary-list__row">
-						<dt class="dfe-width-30percent govuk-summary-list__key">
-							Primary Concern
-						</dt>
-						<dd class="govuk-summary-list__value">
-							<span class="caseDetail_type">
-								@Model.CaseModel.CaseTypeDescription
-							</span>
-						</dd>
-						<dd class="dfe-width-15percent govuk-summary-list__actions">
-							<a class="govuk-link" href="@Request.Path/edit_concerntype">
-								Change<span class="govuk-visually-hidden"> primary concern</span>
-							</a>
-						</dd>
-				</div>
-
-				<!-- Risk Rating -->
-				<div class="govuk-summary-list__row">
-					<dt class="dfe-width-30percent govuk-summary-list__key">
-						Risk rating
-					</dt>
-					<dd class="govuk-summary-list__value govuk-label-wrapper">
-						@for (var index = 0; index < Model.CaseModel.RagRating.Item2.Count; ++index)
-						{
-							<span class="govuk-tag ragtag @Model.CaseModel.RagRatingCss.ElementAt(index)">
-								@Model.CaseModel.RagRating.Item2.ElementAt(index)
-							</span>
-						}
-					</dd>
-					<dd class="dfe-width-15percent govuk-summary-list__actions">
-						<a class="govuk-link" href="@Request.Path/edit_riskrating">
-							Change<span class="govuk-visually-hidden"> risk rating</span>
-						</a>
-					</dd>
-				</div>
-
-				<!-- Direction of travel -->
-				<div class="govuk-summary-list__row">
-					<dt class="dfe-width-30percent govuk-summary-list__key">
-						Direction of travel
-					</dt>
-					<dd class="govuk-summary-list__value">
-						@Model.CaseModel.DirectionOfTravel
-					</dd>
-					<dd class="dfe-width-15percent govuk-summary-list__actions">
-						<a class="govuk-link" href="@Request.Path/edit_directionoftravel">
-							Change<span class="govuk-visually-hidden"> direction of travel</span>
-						</a>
-					</dd>
-				</div>
-
-				</dl>
-
-				<!--Accordions-->
-				<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
-
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-1">Issue</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1">
-							<a class="govuk-link float__right" href="@Request.Path/edit_issue">Edit</a>
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.Issue</p>
-							</div>
-						</div>
-					</div>
-
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-2">Current status</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-2" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-2">
-							<a class="govuk-link float__right" href="@Request.Path/edit_current_status">Edit</a>
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.CurrentStatus</p>
-							</div>
-						</div>
-					</div>
-
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-3">Case aim</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-3" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-3">
-							<a class="govuk-link float__right" href="@Request.Path/edit_case_aim">Edit</a>
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.CaseAim</p>
-							</div>
-						</div>
-					</div>
-
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-4">De-escalation point</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-4" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-4">
-							<a class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point">Edit</a>
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.DeEscalationPoint</p>
-							</div>
-						</div>
-					</div>
-
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-5">Next steps</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
-							<a class="govuk-link float__right" href="@Request.Path/edit_next_steps">Edit</a>
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.NextSteps</p>
-							</div>
-						</div>
-					</div>
-
-				</div>
-
-				<button data-prevent-double-click="true" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-					Add to case
-				</button>
-
-			</div>
-			<div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="trust-overview">
-				<dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-3">
+					<!-- Concern -->
 					<div class="govuk-summary-list__row">
-					<dt class="govuk-summary-list__key">Address</dt>
+					<dt class="dfe-width-30percent govuk-summary-list__key">
+						Primary Concern
+					</dt>
 					<dd class="govuk-summary-list__value">
-						@Model.CaseModel.TrustDetailsModel.GiasData.GroupContactAddress.DisplayAddress
+						<span class="caseDetail_type">
+							@Model.CaseModel.CaseTypeDescription
+						</span>
+					</dd>
+					<dd class="dfe-width-15percent govuk-summary-list__actions">
+						<a class="govuk-link" href="@Request.Path/edit_concerntype">
+							Change<span class="govuk-visually-hidden"> primary concern</span>
+						</a>
 					</dd>
 			</div>
+
+			<!-- Risk Rating -->
 			<div class="govuk-summary-list__row">
-				<dt class="govuk-summary-list__key">Local authority</dt>
-				<dd class="govuk-summary-list__value">
+				<dt class="dfe-width-30percent govuk-summary-list__key">
+					Risk rating
+				</dt>
+				<dd class="govuk-summary-list__value govuk-label-wrapper">
+					@for (var index = 0; index < Model.CaseModel.RagRating.Item2.Count; ++index)
+					{
+						<span class="govuk-tag ragtag @Model.CaseModel.RagRatingCss.ElementAt(index)">
+							@Model.CaseModel.RagRating.Item2.ElementAt(index)
+						</span>
+					}
+				</dd>
+				<dd class="dfe-width-15percent govuk-summary-list__actions">
+					<a class="govuk-link" href="@Request.Path/edit_riskrating">
+						Change<span class="govuk-visually-hidden"> risk rating</span>
+					</a>
 				</dd>
 			</div>
+
+			<!-- Direction of travel -->
 			<div class="govuk-summary-list__row">
-				<dt class="govuk-summary-list__key">Number of academies</dt>
+				<dt class="dfe-width-30percent govuk-summary-list__key">
+					Direction of travel
+				</dt>
 				<dd class="govuk-summary-list__value">
-					@Model.CaseModel.TrustDetailsModel.Establishments.Count
+					@Model.CaseModel.DirectionOfTravel
 				</dd>
-			</div>
-			<div class="govuk-summary-list__row">
-				<dt class="govuk-summary-list__key">Total pupil capacity</dt>
-				<dd class="govuk-summary-list__value">
-					@Model.CaseModel.TrustDetailsModel.TotalPupilCapacity
-				</dd>
-			</div>
-			<div class="govuk-summary-list__row">
-				<dt class="govuk-summary-list__key">Number of pupils</dt>
-				<dd class="govuk-summary-list__value">
-					@Model.CaseModel.TrustDetailsModel.TotalPupils (@Model.CaseModel.TrustDetailsModel.PupilCapacityPercentage%)
-				</dd>
-			</div>
-			<div class="govuk-summary-list__row">
-				<dt class="govuk-summary-list__key">Group Id</dt>
-				<dd class="govuk-summary-list__value">
-				</dd>
-			</div>
-			<div class="govuk-summary-list__row">
-				<dt class="govuk-summary-list__key">UID</dt>
-				<dd class="govuk-summary-list__value">
-				</dd>
-			</div>
-			<div class="govuk-summary-list__row">
-				<dt class="govuk-summary-list__key">UKPRN</dt>
-				<dd class="govuk-summary-list__value">
-					@Model.CaseModel.TrustDetailsModel.GiasData.UkPrn
-				</dd>
-			</div>
-			<div class="govuk-summary-list__row">
-				<dt class="govuk-summary-list__key">Main Contact</dt>
-				<dd class="govuk-summary-list__value">
-				</dd>
-			</div>
-			<div class="govuk-summary-list__row">
-				<dt class="govuk-summary-list__key">Phone number</dt>
-				<dd class="govuk-summary-list__value">
-				</dd>
-			</div>
-			<div class="govuk-summary-list__row">
-				<dt class="govuk-summary-list__key">Email</dt>
-				<dd class="govuk-summary-list__value">
-				</dd>
-			</div>
-			<div class="govuk-summary-list__row">
-				<dt class="govuk-summary-list__key">Companies House</dt>
-				<dd class="govuk-summary-list__value">
-					@Model.CaseModel.TrustDetailsModel.GiasData.CompaniesHouseNumber
-				</dd>
-			</div>
-			<div class="govuk-summary-list__row">
-				<dt class="govuk-summary-list__key">In-year balance 2019-2020</dt>
-				<dd class="govuk-summary-list__value">
-				</dd>
-			</div>
-			<div class="govuk-summary-list__row">
-				<dt class="govuk-summary-list__key">Revenue reserve</dt>
-				<dd class="govuk-summary-list__value">
-				</dd>
-			</div>
-			<div class="govuk-summary-list__row">
-				<dt class="govuk-summary-list__key">Last financial report</dt>
-				<dd class="govuk-summary-list__value">
+				<dd class="dfe-width-15percent govuk-summary-list__actions">
+					<a class="govuk-link" href="@Request.Path/edit_directionoftravel">
+						Change<span class="govuk-visually-hidden"> direction of travel</span>
+					</a>
 				</dd>
 			</div>
 
 			</dl>
 
-			<partial name="_Academies" model="@Model.CaseModel.TrustDetailsModel.Establishments" />
+			<!--Accordions-->
+			<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
 
-			<partial name="_TrustOverviewOtherCases" model="@Model.CaseModel.TrustDetailsModel.Establishments" />
-		</div>
-				
+				<div class="govuk-accordion__section">
+					<div class="govuk-accordion__section-header">
+						<h2 class="govuk-accordion__section-heading">
+							<span class="govuk-accordion__section-button" id="accordion-default-heading-1">Issue</span>
+						</h2>
+					</div>
+					<div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1">
+						<a class="govuk-link float__right" href="@Request.Path/edit_issue">Edit</a>
+						<div class="govuk-body details govuk-body-accordion-limit">
+							<p class="word-break">@Model.CaseModel.Issue</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="govuk-accordion__section">
+					<div class="govuk-accordion__section-header">
+						<h2 class="govuk-accordion__section-heading">
+							<span class="govuk-accordion__section-button" id="accordion-default-heading-2">Current status</span>
+						</h2>
+					</div>
+					<div aria-labelledby="accordion-default-heading-2" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-2">
+						<a class="govuk-link float__right" href="@Request.Path/edit_current_status">Edit</a>
+						<div class="govuk-body details govuk-body-accordion-limit">
+							<p class="word-break">@Model.CaseModel.CurrentStatus</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="govuk-accordion__section">
+					<div class="govuk-accordion__section-header">
+						<h2 class="govuk-accordion__section-heading">
+							<span class="govuk-accordion__section-button" id="accordion-default-heading-3">Case aim</span>
+						</h2>
+					</div>
+					<div aria-labelledby="accordion-default-heading-3" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-3">
+						<a class="govuk-link float__right" href="@Request.Path/edit_case_aim">Edit</a>
+						<div class="govuk-body details govuk-body-accordion-limit">
+							<p class="word-break">@Model.CaseModel.CaseAim</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="govuk-accordion__section">
+					<div class="govuk-accordion__section-header">
+						<h2 class="govuk-accordion__section-heading">
+							<span class="govuk-accordion__section-button" id="accordion-default-heading-4">De-escalation point</span>
+						</h2>
+					</div>
+					<div aria-labelledby="accordion-default-heading-4" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-4">
+						<a class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point">Edit</a>
+						<div class="govuk-body details govuk-body-accordion-limit">
+							<p class="word-break">@Model.CaseModel.DeEscalationPoint</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="govuk-accordion__section">
+					<div class="govuk-accordion__section-header">
+						<h2 class="govuk-accordion__section-heading">
+							<span class="govuk-accordion__section-button" id="accordion-default-heading-5">Next steps</span>
+						</h2>
+					</div>
+					<div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
+						<a class="govuk-link float__right" href="@Request.Path/edit_next_steps">Edit</a>
+						<div class="govuk-body details govuk-body-accordion-limit">
+							<p class="word-break">@Model.CaseModel.NextSteps</p>
+						</div>
+					</div>
+				</div>
+
 			</div>
+
+			<button data-prevent-double-click="true" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+				Add to case
+			</button>
+
+		</div>
+		<div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="trust-overview">
+			<partial name="_TrustOverview" model="@Model.CaseModel.TrustDetailsModel" />
+		</div>
+</div>
 
 		</div>
 	</div>

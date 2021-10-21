@@ -19,6 +19,8 @@ namespace ConcernsCaseWork.Models
 
 		public string CompaniesHouseNumber { get; }
 
+		public string CompaniesHouseWebsite { get { return $"https://find-and-update.company-information.service.gov.uk/company/{this.CompaniesHouseNumber}"; } }
+
 		public GroupContactAddressModel GroupContactAddress { get; }
 		
 		public GiasDataModel(string ukprn, string groupId, string groupName, string groupTypeCode, string companiesHouseNumber, GroupContactAddressModel groupContactAddress) =>
