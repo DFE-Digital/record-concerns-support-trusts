@@ -13,13 +13,13 @@ namespace ConcernsCaseWork.Models
 
 		public string GroupName { get; }
 
-		public string GroupNameTitle { get { return this.GroupName.ToTitle(); } }
+		public string GroupNameTitle { get { return GroupName.ToTitle(); } }
 
 		public string GroupTypeCode { get; }
 
 		public string CompaniesHouseNumber { get; }
 
-		public string CompaniesHouseWebsite { get { return $"https://find-and-update.company-information.service.gov.uk/company/{this.CompaniesHouseNumber}"; } }
+		public string CompaniesHouseWebsite { get { return $"https://find-and-update.company-information.service.gov.uk/company/{CompaniesHouseNumber}"; } }
 
 		public GroupContactAddressModel GroupContactAddress { get; }
 		
