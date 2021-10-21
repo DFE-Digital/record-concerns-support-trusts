@@ -21,7 +21,7 @@
 
 		public string HeadteacherLastName { get; }
 
-		public string HeadteacherFullName { get { return string.Format("{0} {1} {2}", HeadteacherTitle, HeadteacherFirstName, HeadteacherLastName); } }
+		public string HeadteacherFullName { get { return $"{HeadteacherTitle} {HeadteacherFirstName} {HeadteacherLastName}"; } }
 
 		public EstablishmentTypeModel EstablishmentType { get; } 
 
@@ -29,7 +29,7 @@
 
 		private string SchoolWebsite { get; }
 
-		public string EstablishmentWebsite { get { return string.Format("http://{0}", SchoolWebsite); } }
+		public string EstablishmentWebsite { get { return $"http://{SchoolWebsite}"; } }
 
 		public string SchoolCapacity { get; }
 
