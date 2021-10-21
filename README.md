@@ -61,7 +61,7 @@ dotnet user-secrets list
 Set a secret:
 dotnet user-secrets set "trams:api_endpoint" "secret_here"
 dotnet user-secrets set "trams:api_key" "secret_here"
-dotnet user-secrets set "app:username" "secret_here" --> By default will use your USERNAME environment variable (printenv USERNAME)
+dotnet user-secrets set "app:username" "secret_here" --> Store a list comma separated users e.g.  dotnet user-secrets set "app:username" "concerns.casework,ben.memmott,richard.machen,steve.oconnor,elijah.aremu,paulo.lancao"
 dotnet user-secrets set "app:password" "secret_here"
 dotnet user-secrets set "VCAP_SERVICES" "{'redis': [{'credentials': {'host': '127.0.0.1','password': 'password','port': '6379','tls_enabled': 'false'}}]}"
 
@@ -86,12 +86,20 @@ Based on the GitHub username configured to access TRAMS API repository, a few st
 download the docker image from Container registry.
 1. Docker installed on local machine
 2. Authentication with ghcr.io
-	1.1. Create a PAT (personal access token) https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token
-	1.2. Run command - $ echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
-		 > Login Succeeded
+	2.1. Create a PAT (personal access token) https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token
+	2.2. $ export CR_PAT=YOUR_TOKEN
+		 $ echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
+	2.3. After Login successfully with Docker account
+		 > Check TRAMM API https://github.com/DFE-Digital/trams-data-api -> or run the next command
+		 > docker run -d -p 1433:1433 ghcr.io/dfe-digital/trams-development-database:latest
 3. Open docker container, should see a image running on port 1443, click on it, will open a log window, on the middle right top there is a button "inspect"
 	click on it and will display the MSSQL_USER and MSSQL_SA_PASSWORD
 4. Install SSMS or Azure Data Studio and Login using the credentials from step 3
+5. e.g. SQLServer Management Studio
+	> Server name: localhost or 127.0.0.1
+	> Select SQLServer Authentication
+		> Login: Get from Docker inspect
+		> Password: Get from Docker inspect 
 ```
 
 ### Docker Application Image
