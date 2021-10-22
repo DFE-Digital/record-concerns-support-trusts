@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -31,6 +32,11 @@ namespace ConcernsCaseWork.Extensions
 		{
 			bool result = int.TryParse(input, out int value);
 			return result ? value : 0;
+		}
+
+		public static string ToUrl(this string value)
+		{
+			return Uri.TryCreate(value, UriKind.Absolute, out Uri _) ? value : $"https://{value}";
 		}
 	}
 }
