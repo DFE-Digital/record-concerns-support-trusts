@@ -24,26 +24,29 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new List<EstablishmentSummaryModel> { new EstablishmentSummaryModel(Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>()) };
 		}
 
-		public static EstablishmentDto BuildEstablishmentDto()
+		public static EstablishmentDto BuildEstablishmentDto(string schoolCapacity = "1000")
 		{
 			return new EstablishmentDto(
 				Fixture.Create<string>(),
 				Fixture.Create<string>(),
 				Fixture.Create<string>(),
 				Fixture.Create<string>(),
-				Fixture.Create<string>());
+				Fixture.Create<string>(),
+				Fixture.Create<string>(),
+				Fixture.Create<string>(),
+				Fixture.Create<string>(),
+				Fixture.Create<EstablishmentTypeDto>(),
+				BuildCensusDto(),
+				Fixture.Create<string>(),
+				schoolCapacity
+				);
 		}
 
 		public static List<EstablishmentDto> BuildListEstablishmentDto()
 		{
 			return new List<EstablishmentDto>
 			{
-				new EstablishmentDto(
-					Fixture.Create<string>(),
-					Fixture.Create<string>(),
-					Fixture.Create<string>(),
-					Fixture.Create<string>(),
-					Fixture.Create<string>())
+				BuildEstablishmentDto()
 			};
 		}
 
@@ -56,8 +59,22 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<string>(),
 					Fixture.Create<string>(),
 					Fixture.Create<string>(),
-					Fixture.Create<string>())
+					Fixture.Create<string>(),
+					Fixture.Create<string>(),
+					Fixture.Create<string>(),
+					Fixture.Create<string>(),
+					Fixture.Create<EstablishmentTypeModel>(),
+					Fixture.Create<CensusModel>(),
+					Fixture.Create<string>(),
+					Fixture.Create<string>()
+					)
 			};
 		}
+	
+		public static CensusDto BuildCensusDto(string numberOfPupils = "100")
+		{
+			return new CensusDto(numberOfPupils);
+		}
+	
 	}
 }

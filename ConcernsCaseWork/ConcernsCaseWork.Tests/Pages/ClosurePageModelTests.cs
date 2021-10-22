@@ -64,7 +64,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(caseModel.DeEscalationPoint, Is.EqualTo(expected.DeEscalationPoint));
 			Assert.That(caseModel.ReviewAt, Is.EqualTo(expected.ReviewAt));
 			Assert.That(caseModel.StatusName, Is.EqualTo(expected.StatusName));
-			Assert.That(caseModel.TrustName, Is.EqualTo(expected.TrustName));
+			Assert.That(caseModel.TrustDetailsModel.GiasData.GroupName, Is.EqualTo(expected.TrustDetailsModel.GiasData.GroupName));
 			Assert.That(caseModel.UpdatedAt, Is.EqualTo(expected.UpdatedAt));
 			Assert.That(caseModel.DirectionOfTravel, Is.EqualTo(expected.DirectionOfTravel));
 			Assert.That(caseModel.RagRatingCss, Is.EqualTo(expected.RagRatingCss));
