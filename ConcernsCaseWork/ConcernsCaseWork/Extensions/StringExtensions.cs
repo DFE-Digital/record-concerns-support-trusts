@@ -26,5 +26,11 @@ namespace ConcernsCaseWork.Extensions
 		{
 			return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.ToLower());
 		}
+
+		public static int ParseToInt(this string input)
+		{
+			bool result = int.TryParse(input, out int value);
+			return result ? value : 0;
+		}
 	}
 }

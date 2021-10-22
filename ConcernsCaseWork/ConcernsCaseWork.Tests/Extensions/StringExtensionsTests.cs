@@ -38,5 +38,15 @@ namespace ConcernsCaseWork.Tests.Extensions
 			// assert
 			Assert.That(actual.ToTitle(), Is.EqualTo(expected));
 		}
+
+		[TestCase("100", 100)]
+		[TestCase("invalid_string", 0)]
+		[TestCase("", 0)]
+		[TestCase(null, 0)]
+		public void WhenParseToInt_ReturnsExpected(string input, int expected)
+		{
+			// assert
+			Assert.That(input.ParseToInt(), Is.EqualTo(expected));
+		}
 	}
 }

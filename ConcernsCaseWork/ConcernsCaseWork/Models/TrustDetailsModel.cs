@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Helpers;
+﻿using ConcernsCaseWork.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +14,9 @@ namespace ConcernsCaseWork.Models
 		
 		public List<EstablishmentModel> Establishments { get; }
 
-		public double TotalPupilCapacity { get { return Establishments.Sum(establishment => Utilities.ParseInt(establishment.SchoolCapacity)); } }
+		public double TotalPupilCapacity { get { return Establishments.Sum(establishment => establishment.SchoolCapacity.ParseToInt()); } }
 
-		public double TotalPupils { get { return Establishments.Sum(establishment => Utilities.ParseInt(establishment.Census.NumberOfPupils)); } }
+		public double TotalPupils { get { return Establishments.Sum(establishment => establishment.Census.NumberOfPupils.ParseToInt()); } }
 
 		public double PupilCapacityPercentage { get { return Math.Round((TotalPupils / TotalPupilCapacity), 2) * 100; } }
 
