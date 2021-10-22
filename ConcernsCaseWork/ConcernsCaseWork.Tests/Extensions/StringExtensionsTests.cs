@@ -48,5 +48,15 @@ namespace ConcernsCaseWork.Tests.Extensions
 			// assert
 			Assert.That(input.ParseToInt(), Is.EqualTo(expected));
 		}
+
+		[TestCase("http://www.holleyparkacademy.co.uk", "http://www.holleyparkacademy.co.uk")]
+		[TestCase("www.holleyparkacademy.co.uk", "https://www.holleyparkacademy.co.uk")]
+		[TestCase("https://www.holleyparkacademy.co.uk", "https://www.holleyparkacademy.co.uk")]
+		[TestCase("www.holleyparkacademy.co.uk", "https://www.holleyparkacademy.co.uk")]
+		public void WhenToUri_Returns_Valid_Url(string input, string expected)
+		{
+			// assert
+			Assert.That(input.ToUrl(), Is.EqualTo(expected));
+		}
 	}
 }

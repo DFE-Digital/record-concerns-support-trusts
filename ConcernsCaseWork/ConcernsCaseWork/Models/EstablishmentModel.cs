@@ -1,4 +1,6 @@
-﻿namespace ConcernsCaseWork.Models
+﻿using ConcernsCaseWork.Extensions;
+
+namespace ConcernsCaseWork.Models
 {
 	/// <summary>
 	/// Frontend model classes used only for UI rendering
@@ -29,7 +31,7 @@
 
 		private string SchoolWebsite { get; }
 
-		public string EstablishmentWebsite { get { return $"http://{SchoolWebsite}"; } }
+		public string EstablishmentWebsite { get { return SchoolWebsite.ToUrl(); } }
 
 		public string SchoolCapacity { get; }
 
