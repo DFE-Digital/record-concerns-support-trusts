@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.Extensions
 
 		public static string ToUrl(this string value)
 		{
-			return Uri.TryCreate(value, UriKind.Absolute, out Uri _) ? value : $"https://{value}";
+			return Uri.TryCreate(value, UriKind.Absolute, out Uri _) ? value : $"http://{value}";
 		}
 	}
 }
