@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -47,12 +48,13 @@ namespace ConcernsCaseWork.Pages
 		public async Task<IActionResult> OnPostAsync(string returnUrl)
 		{
 			Credentials.ReturnUrl = returnUrl ?? HomePage;
+			var userFound = _configuration["app:username"].Split(',').FirstOrDefault(u => u.Equals(Credentials.UserName));
 			
-			if (Credentials.Validate() || Credentials.UserName != _configuration["app:username"] || Credentials.Password != _configuration["app:password"])
+			if (Credentials.Validate() || userFound is null || Credentials.Password != _configuration["app:password"])
 			{
-				_logger.LogInformation($"LoginPageModel::Invalid username or password - {Credentials.UserName}");
+				_logger.LogInformation("LoginPageModel::Invalid username or password - {UserName}", Credentials.UserName);
 				
-				TempData["Error.Message"] = "Incorrect username and password";
+				TempData["Error.Message"] = "Incorrect username or password";
 				return Page();
 			}
 

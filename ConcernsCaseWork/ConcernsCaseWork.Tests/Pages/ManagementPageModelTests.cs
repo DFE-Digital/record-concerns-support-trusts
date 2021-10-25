@@ -41,8 +41,9 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockLogger = new Mock<ILogger<ManagementPageModel>>();
+			string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
 
-			var caseModel = CaseFactory.BuildCaseModel();
+			var caseModel = CaseFactory.BuildCaseModel("case-type", "case-sub-type", userName);
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(caseModel);
 			
@@ -73,14 +74,17 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.CaseModel.DeEscalationPoint, Is.EqualTo(caseModel.DeEscalationPoint));
 			Assert.That(pageModel.CaseModel.ReviewAt, Is.EqualTo(caseModel.ReviewAt));
 			Assert.That(pageModel.CaseModel.StatusName, Is.EqualTo(caseModel.StatusName));
-			Assert.That(pageModel.CaseModel.TrustName, Is.EqualTo(caseModel.TrustName));
-			Assert.That(pageModel.CaseModel.TrustNameTitle, Is.EqualTo(caseModel.TrustName.ToTitle()));
+			Assert.That(pageModel.CaseModel.TrustDetailsModel.GiasData.GroupName, Is.EqualTo(caseModel.TrustDetailsModel.GiasData.GroupName));
+			Assert.That(pageModel.CaseModel.TrustDetailsModel.GiasData.GroupNameTitle, Is.EqualTo(caseModel.TrustDetailsModel.GiasData.GroupName.ToTitle()));
+			Assert.That(pageModel.CaseModel.TrustDetailsModel, Is.EqualTo(caseModel.TrustDetailsModel));
+			Assert.True(pageModel.CaseModel.TrustDetailsModel.Establishments[0].EstablishmentWebsite.Contains("http"));
 			Assert.That(pageModel.CaseModel.UpdatedAt, Is.EqualTo(caseModel.UpdatedAt));
 			Assert.That(pageModel.CaseModel.CaseSubType, Is.EqualTo(caseModel.CaseSubType));
 			Assert.That(pageModel.CaseModel.DirectionOfTravel, Is.EqualTo(caseModel.DirectionOfTravel));
 			Assert.That(pageModel.CaseModel.RagRatingCss, Is.EqualTo(caseModel.RagRatingCss));
 			Assert.That(pageModel.CaseModel.ReasonAtReview, Is.EqualTo(caseModel.ReasonAtReview));
 			Assert.That(pageModel.CaseModel.TrustUkPrn, Is.EqualTo(caseModel.TrustUkPrn));
+			Assert.True(pageModel.CurrentUserIsCaseOwner == true);
 		}
 		
 		private static ManagementPageModel SetupManagementPageModel(

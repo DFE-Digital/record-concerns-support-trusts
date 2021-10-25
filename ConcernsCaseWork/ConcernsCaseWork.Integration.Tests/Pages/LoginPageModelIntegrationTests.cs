@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Integration.Tests.Pages
 {
 	[TestFixture]
-	public class LoginModelIntegrationTests
+	public class LoginPageModelIntegrationTests : AbstractIntegrationTests
 	{
 		/// Testing the class requires a running Redis,
 		/// startup is configured to use Redis with session storage.
@@ -36,39 +36,11 @@ namespace ConcernsCaseWork.Integration.Tests.Pages
 		}
 		
 		[Test]
+		[Category("Smoke")] 
 		public async Task WhenSignInIsWithCorrectCredentials_ReturnHomePage()
 		{
 			// arrange
-			
-			// extract cookies for http client
-			var login = await _client.GetAsync("/login");
-			Assert.That(login.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-			var foundCookie = login.Headers.TryGetValues("Set-Cookie", out IEnumerable<string> setCookie);
-			
-			// extract request verification token
-			var htmlDoc = new HtmlDocument();
-			htmlDoc.LoadHtml(await login.Content.ReadAsStringAsync());
-			var tokenValue = htmlDoc.DocumentNode.SelectSingleNode("//input[@name='__RequestVerificationToken']")
-				.Attributes.Where(att => att.Name == "value").Select(att => att.Value).First();
-			
-			// http client headers
-			_client.DefaultRequestHeaders.Clear();
-			_client.DefaultRequestHeaders.Add("Cookie", foundCookie ? setCookie : Enumerable.Empty<string>());
-			
-			var body = new FormUrlEncodedContent(new List<KeyValuePair<string, string>>
-			{
-				new KeyValuePair<string, string>("username", _configuration["app:username"]),
-				new KeyValuePair<string, string>("password", _configuration["app:password"]),
-				new KeyValuePair<string, string>("__RequestVerificationToken", tokenValue)
-			});
-			
-			// Act
-			var response = await _client.PostAsync("/login", body);
-			
-			// Assert
-			Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-			Assert.That(response.RequestMessage.RequestUri.AbsolutePath, Contains.Substring("/home"));
-			Assert.That(await response.Content.ReadAsStringAsync(), Is.Not.Null);
+			await Login(_configuration, _client);
 			
 			// Logout
 			var logout = await _client.GetAsync("/logout");
@@ -76,6 +48,7 @@ namespace ConcernsCaseWork.Integration.Tests.Pages
 		}
 		
 		[Test]
+		[Category("Smoke")]
 		public async Task WhenSignInIsWithInCorrectCredentials_ReturnLoginPage()
 		{
 			// arrange

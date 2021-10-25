@@ -1,0 +1,63 @@
+﻿@model IList<ConcernsCaseWork.Models.EstablishmentModel>
+
+<table class="govuk-table  govuk-!-margin-top-9">
+	<caption class="govuk-table__caption govuk-table__caption--m">
+		Academies
+	</caption>
+
+	<thead class="govuk-table__head">
+		<tr class="govuk-table__row tr__large">
+			<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col">
+				Academy
+			</th>
+			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+				URN
+			</th>
+			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+				Type
+			</th>
+			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+				LA
+			</th>
+			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+				Head
+			</th>
+		</tr>
+	</thead>
+
+	<tbody class="govuk-table__body">
+		@if (Model.Count == 0)
+		{
+			<tr class="govuk-table__row tr__large">
+				<td class="govuk-table__cell__cases govuk-oneline-row">
+					<span>There are no academies available.</span>
+				</td>
+			</tr>
+		}
+		else
+		{
+			foreach (var establishment in Model)
+			{
+				<tr class="govuk-table__row tr__large">
+					<td class="govuk-table__cell">
+						<a href="@establishment.EstablishmentWebsite" target="_blank">
+							@establishment.EstablishmentName
+						</a>
+					</td>
+					<td class="govuk-table__cell">
+						@establishment.Urn
+					</td>
+					<td class="govuk-table__cell">
+						@establishment.EstablishmentType.Name
+					</td>
+					<td class="govuk-table__cell">
+						@establishment.LocalAuthorityName
+					</td>
+					<td class="govuk-table__cell">
+						@establishment.HeadteacherFullName
+					</td>
+				</tr>
+			}
+		}
+	</tbody>
+</table>

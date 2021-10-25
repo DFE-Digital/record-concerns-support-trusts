@@ -14,10 +14,57 @@ env:
   AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
 
 jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+
+    services:
+      # Label used to access the service container
+      redis:
+        # Docker Hub image
+        image: redis:alpine
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps port 6379 on service container to the host
+          - 6379:6379
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+      - name: Restore dependencies
+        run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
+      - name: Build
+        run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
+      - name: Set User secrets
+        run: |
+          cd ConcernsCaseWork/ConcernsCaseWork
+          dotnet user-secrets set "VCAP_SERVICES" "${{ secrets.VCAP_SERVICES }}"
+          dotnet user-secrets set "trams:api_endpoint" "${{ secrets.TRAMS_API_ENDPOINT }}"
+          dotnet user-secrets set "trams:api_key" "${{ secrets.TRAMS_API_KEY }}"
+          dotnet user-secrets set "app:username" "${{ secrets.APP_USERNAME }}"
+          dotnet user-secrets set "app:password" "${{ secrets.APP_PASSWORD }}"
+      - name: Test staging
+        if: github.event.inputs.environment == 'staging'
+        run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity diagnostic
+      - name: Test production
+        if: github.event.inputs.environment == 'production'
+        run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --filter TestCategory=Smoke --no-build --verbosity diagnostic
+  
   terraform-run:
+    needs: build-test
     name: "Terraform Run"
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment}}
+    environment: ${{ github.event.inputs.environment }}
     defaults:
       run:
         working-directory: terraform

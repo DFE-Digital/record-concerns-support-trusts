@@ -201,7 +201,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			};
 		}
 		
-		public static CaseModel BuildCaseModel(string caseType = "case-type", string caseSubType = "case-sub-type")
+		public static CaseModel BuildCaseModel(string caseType = "case-type", string caseSubType = "case-sub-type", string createdBy = "User 1")
 		{
 			var dateTimeNow = DateTimeOffset.Now;
 			return new CaseModel
@@ -210,7 +210,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				UpdatedAt = dateTimeNow,
 				ReviewAt = dateTimeNow,
 				ClosedAt = dateTimeNow,
-				CreatedBy = Fixture.Create<string>(),
+				CreatedBy = createdBy,
 				Description = Fixture.Create<string>(),
 				CrmEnquiry = Fixture.Create<string>(),
 				TrustUkPrn = Fixture.Create<string>(),
@@ -227,7 +227,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				StatusName = Fixture.Create<string>(),
 				CaseType = caseType,
 				CaseSubType = caseSubType,
-				TrustName = Fixture.Create<string>()
+				TrustDetailsModel = Fixture.Create<TrustDetailsModel>()
 			};
 		}
 

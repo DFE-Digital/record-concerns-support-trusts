@@ -21,6 +21,11 @@ namespace Service.Redis.Trusts
 			_logger = logger;
 		}
 		
+		public async Task ClearData()
+		{
+			await ClearData(TrustsKey);
+		}
+		
 		public async Task<TrustDetailsDto> GetTrustByUkPrn(string ukPrn)
 		{
 			try
@@ -52,7 +57,7 @@ namespace Service.Redis.Trusts
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"TrustCachedService::GetTrustByUkPrn::Exception message::{ex.Message}");
+				_logger.LogError("TrustCachedService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
 			}
 
 			return null;
