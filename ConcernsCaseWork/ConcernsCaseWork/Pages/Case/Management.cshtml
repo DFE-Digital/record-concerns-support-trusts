@@ -28,9 +28,12 @@ else
 				<a asp-page="../home" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
 					Back to casework
 				</a>
-				<a href="@Request.Path/closure" role="button" class="govuk-button govuk-button--warning float__right" data-module="govuk-button">
-					Close case
-				</a>
+				@if (Model.CurrentUserIsCaseOwner)
+				{
+					<a href="@Request.Path/closure" role="button" class="govuk-button govuk-button--warning float__right" data-module="govuk-button">
+						Close case
+					</a>
+				}
 			</div>
 
 			<h1 class="govuk-heading-l" name="caseID">
@@ -54,9 +57,12 @@ else
 						</span>
 					</dd>
 					<dd class="dfe-width-15percent govuk-summary-list__actions">
-						<a class="govuk-link" href="@Request.Path/edit_concerntype">
-							Change<span class="govuk-visually-hidden"> primary concern</span>
-						</a>
+						@if (!Model.CurrentUserIsCaseOwner)
+						{
+							<a class="govuk-link" href="@Request.Path/edit_concerntype">
+								Change<span class="govuk-visually-hidden"> primary concern</span>
+							</a>
+						}
 					</dd>
 				</div>
 
@@ -74,9 +80,12 @@ else
 						}
 					</dd>
 					<dd class="dfe-width-15percent govuk-summary-list__actions">
-						<a class="govuk-link" href="@Request.Path/edit_riskrating">
-							Change<span class="govuk-visually-hidden"> risk rating</span>
-						</a>
+						@if (!Model.CurrentUserIsCaseOwner)
+						{
+							<a class="govuk-link" href="@Request.Path/edit_riskrating">
+								Change<span class="govuk-visually-hidden"> risk rating</span>
+							</a>
+						}
 					</dd>
 				</div>
 
@@ -89,9 +98,12 @@ else
 						@Model.CaseModel.DirectionOfTravel
 					</dd>
 					<dd class="dfe-width-15percent govuk-summary-list__actions">
+						@if (!Model.CurrentUserIsCaseOwner)
+						{
 						<a class="govuk-link" href="@Request.Path/edit_directionoftravel">
 							Change<span class="govuk-visually-hidden"> direction of travel</span>
 						</a>
+						}
 					</dd>
 				</div>
 
@@ -107,7 +119,10 @@ else
 						</h2>
 					</div>
 					<div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1">
-						<a class="govuk-link float__right" href="@Request.Path/edit_issue">Edit</a>
+						@if (!Model.CurrentUserIsCaseOwner)
+						{
+							<a class="govuk-link float__right" href="@Request.Path/edit_issue">Edit</a>
+						}
 						<div class="govuk-body details govuk-body-accordion-limit">
 							<p class="word-break">@Model.CaseModel.Issue</p>
 						</div>
@@ -121,7 +136,10 @@ else
 						</h2>
 					</div>
 					<div aria-labelledby="accordion-default-heading-2" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-2">
-						<a class="govuk-link float__right" href="@Request.Path/edit_current_status">Edit</a>
+						@if (!Model.CurrentUserIsCaseOwner)
+						{
+							<a class="govuk-link float__right" href="@Request.Path/edit_current_status">Edit</a>
+						}
 						<div class="govuk-body details govuk-body-accordion-limit">
 							<p class="word-break">@Model.CaseModel.CurrentStatus</p>
 						</div>
@@ -135,7 +153,10 @@ else
 						</h2>
 					</div>
 					<div aria-labelledby="accordion-default-heading-3" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-3">
-						<a class="govuk-link float__right" href="@Request.Path/edit_case_aim">Edit</a>
+						@if (!Model.CurrentUserIsCaseOwner)
+						{
+							<a class="govuk-link float__right" href="@Request.Path/edit_case_aim">Edit</a>
+						}
 						<div class="govuk-body details govuk-body-accordion-limit">
 							<p class="word-break">@Model.CaseModel.CaseAim</p>
 						</div>
@@ -149,7 +170,10 @@ else
 						</h2>
 					</div>
 					<div aria-labelledby="accordion-default-heading-4" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-4">
-						<a class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point">Edit</a>
+						@if (!Model.CurrentUserIsCaseOwner)
+						{
+							<a class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point">Edit</a>
+						}
 						<div class="govuk-body details govuk-body-accordion-limit">
 							<p class="word-break">@Model.CaseModel.DeEscalationPoint</p>
 						</div>
@@ -163,7 +187,10 @@ else
 						</h2>
 					</div>
 					<div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
-						<a class="govuk-link float__right" href="@Request.Path/edit_next_steps">Edit</a>
+						@if (!Model.CurrentUserIsCaseOwner)
+						{
+							<a class="govuk-link float__right" href="@Request.Path/edit_next_steps">Edit</a>
+						}
 						<div class="govuk-body details govuk-body-accordion-limit">
 							<p class="word-break">@Model.CaseModel.NextSteps</p>
 						</div>
@@ -172,9 +199,13 @@ else
 
 			</div>
 
-			<button data-prevent-double-click="true" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-				Add to case
-			</button>
+			@if (!Model.CurrentUserIsCaseOwner)
+			{
+				<button data-prevent-double-click="true" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+					Add to case
+				</button>
+			}
+			
 		</div>
 	</div>
 	<script type="application/javascript" nonce="@nonce">

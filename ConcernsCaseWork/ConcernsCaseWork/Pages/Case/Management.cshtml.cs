@@ -18,6 +18,8 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ILogger<ManagementPageModel> _logger;
 		
 		public CaseModel CaseModel { get; private set; }
+		public bool CurrentUserIsCaseOwner { get; private set; }
+
 
 		public ManagementPageModel(ICaseModelService caseModelService, ITypeModelService typeModelService,
 			ILogger<ManagementPageModel> logger)
@@ -46,6 +48,8 @@ namespace ConcernsCaseWork.Pages.Case
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
+
+			CurrentUserIsCaseOwner = CaseModel.CreatedBy == User.Identity.Name;
 		}
 	}
 }
