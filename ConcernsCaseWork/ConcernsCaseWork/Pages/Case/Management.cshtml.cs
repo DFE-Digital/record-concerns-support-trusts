@@ -18,8 +18,6 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ILogger<ManagementPageModel> _logger;
 		
 		public CaseModel CaseModel { get; private set; }
-		public bool CurrentUserCanEditCase { get; private set; }
-
 
 		public ManagementPageModel(ICaseModelService caseModelService, ITypeModelService typeModelService,
 			ILogger<ManagementPageModel> logger)
@@ -41,7 +39,6 @@ namespace ConcernsCaseWork.Pages.Case
 				}
 
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
-				CurrentUserCanEditCase = CaseModel.CreatedBy == User.Identity.Name;
 			}
 			catch (Exception ex)
 			{

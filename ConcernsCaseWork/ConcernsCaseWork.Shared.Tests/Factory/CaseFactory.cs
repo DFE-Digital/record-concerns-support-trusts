@@ -201,7 +201,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			};
 		}
 		
-		public static CaseModel BuildCaseModel(string caseType = "case-type", string caseSubType = "case-sub-type", string createdBy = "User 1")
+		public static CaseModel BuildCaseModel(string caseType = "case-type", string caseSubType = "case-sub-type", string createdBy = "created-user")
 		{
 			var dateTimeNow = DateTimeOffset.Now;
 			return new CaseModel

@@ -41,9 +41,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockLogger = new Mock<ILogger<ManagementPageModel>>();
-			string userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-
-			var caseModel = CaseFactory.BuildCaseModel("case-type", "case-sub-type", userName);
+			
+			var caseModel = CaseFactory.BuildCaseModel();
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(caseModel);
 			
@@ -84,7 +83,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.CaseModel.RagRatingCss, Is.EqualTo(caseModel.RagRatingCss));
 			Assert.That(pageModel.CaseModel.ReasonAtReview, Is.EqualTo(caseModel.ReasonAtReview));
 			Assert.That(pageModel.CaseModel.TrustUkPrn, Is.EqualTo(caseModel.TrustUkPrn));
-			Assert.True(pageModel.CurrentUserIsCaseOwner == true);
 		}
 		
 		private static ManagementPageModel SetupManagementPageModel(
