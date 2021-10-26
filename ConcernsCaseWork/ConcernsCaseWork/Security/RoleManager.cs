@@ -4,7 +4,8 @@
 	{
 		public static bool UserHasEditCasePrivileges(string caseCreatedBy, string currentLoggedInUser)
 		{
-			return caseCreatedBy == currentLoggedInUser;
+			var result = currentLoggedInUser.CompareTo(caseCreatedBy);
+			return result == 0;
 		}
 	}
 }
