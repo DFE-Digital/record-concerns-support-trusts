@@ -50,9 +50,7 @@ namespace ConcernsCaseWork.Tests.Extensions
 		}
 
 		[TestCase("http://www.holleyparkacademy.co.uk", "http://www.holleyparkacademy.co.uk")]
-		[TestCase("www.holleyparkacademy.co.uk", "https://www.holleyparkacademy.co.uk")]
-		[TestCase("https://www.holleyparkacademy.co.uk", "https://www.holleyparkacademy.co.uk")]
-		[TestCase("www.holleyparkacademy.co.uk", "https://www.holleyparkacademy.co.uk")]
+		[TestCase("www.holleyparkacademy.co.uk", "http://www.holleyparkacademy.co.uk")]
 		public void WhenToUri_Returns_Valid_Url(string input, string expected)
 		{
 			// assert
