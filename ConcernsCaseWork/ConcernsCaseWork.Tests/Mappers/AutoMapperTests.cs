@@ -123,6 +123,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(giasDataModel.GroupContactAddress.Street, Is.EqualTo(giasDataDto.GroupContactAddress.Street));
 			Assert.That(giasDataModel.GroupContactAddress.Town, Is.EqualTo(giasDataDto.GroupContactAddress.Town));
 			Assert.That(giasDataModel.GroupContactAddress.AdditionalLine, Is.EqualTo(giasDataDto.GroupContactAddress.AdditionalLine));
+			Assert.That(giasDataModel.CompaniesHouseWebsite, Is.EqualTo($"https://find-and-update.company-information.service.gov.uk/company/{giasDataDto.CompaniesHouseNumber}"));
 		}
 		
 		[Test]
@@ -144,6 +145,12 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(establishmentModel.EstablishmentNumber, Is.EqualTo(establishmentDto.EstablishmentNumber));
 			Assert.That(establishmentModel.LocalAuthorityCode, Is.EqualTo(establishmentDto.LocalAuthorityCode));
 			Assert.That(establishmentModel.LocalAuthorityName, Is.EqualTo(establishmentDto.LocalAuthorityName));
+			Assert.That(establishmentModel.HeadteacherTitle, Is.EqualTo(establishmentDto.HeadteacherTitle));
+			Assert.That(establishmentModel.HeadteacherFirstName, Is.EqualTo(establishmentDto.HeadteacherFirstName));
+			Assert.That(establishmentModel.HeadteacherLastName, Is.EqualTo(establishmentDto.HeadteacherLastName));
+			Assert.That(establishmentModel.HeadteacherFullName, Is.EqualTo($"{establishmentDto.HeadteacherTitle} {establishmentDto.HeadteacherFirstName} {establishmentDto.HeadteacherLastName}"));
+			Assert.That(establishmentModel.EstablishmentType.Code, Is.EqualTo(establishmentDto.EstablishmentType.Code));
+			Assert.That(establishmentModel.EstablishmentType.Name, Is.EqualTo(establishmentDto.EstablishmentType.Name));
 		}
 	}
 }
