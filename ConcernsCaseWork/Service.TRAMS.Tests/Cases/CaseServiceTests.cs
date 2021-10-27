@@ -4,8 +4,10 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using Service.TRAMS.Base;
 using Service.TRAMS.Cases;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -112,9 +114,13 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var expectedCase = CaseFactory.BuildCaseDto();
+			var expectedCaseWrap = new ApiWrapper<CaseDto>(
+				new List<CaseDto> { expectedCase }, 
+				new ApiWrapper<CaseDto>.Pagination(1, 1, string.Empty));
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
+			var logger = new Mock<ILogger<CaseService>>();
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -122,14 +128,13 @@ namespace Service.TRAMS.Tests.Cases
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCase))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCaseWrap))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
-			var logger = new Mock<ILogger<CaseService>>();
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
 			// act
@@ -185,10 +190,42 @@ namespace Service.TRAMS.Tests.Cases
 		}
 		
 		[Test]
+		public void WhenGetCaseByUrn_UnwrapResponse_ReturnsException()
+		{
+			// arrange
+			var expectedCaseWrap = new ApiWrapper<CaseDto>(null, null);
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCaseWrap))
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act / assert
+			Assert.ThrowsAsync<Exception>(() => caseService.GetCaseByUrn(1));
+		}		
+		
+		[Test]
 		public async Task WhenGetCasesByTrustUkPrn_ReturnsCases()
 		{
 			// arrange
 			var expectedCases = CaseFactory.BuildListCaseDto();
+			var expectedCaseWrap = new ApiWrapper<CaseDto>(
+				expectedCases, 
+				new ApiWrapper<CaseDto>.Pagination(1, 1, string.Empty));
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -199,7 +236,7 @@ namespace Service.TRAMS.Tests.Cases
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCases))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCaseWrap))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
@@ -256,6 +293,39 @@ namespace Service.TRAMS.Tests.Cases
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.BadRequest
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act
+			var cases = await caseService.GetCasesByTrustUkPrn("trust-ukprn");
+
+			// assert
+			Assert.That(cases, Is.Not.Null);
+			Assert.That(cases.Count, Is.EqualTo(0));
+		}
+		
+		[Test]
+		public async Task WhenGetCasesByTrustUkPrn_ThrowsException_UnwrapResponse_ReturnsEmptyCases()
+		{
+			// arrange
+			var expectedCaseWrap = new ApiWrapper<CaseDto>(null, null);
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCaseWrap))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
@@ -367,9 +437,14 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var expectedCase = CaseFactory.BuildCaseDto();
+			var expectedCaseWrap = new ApiWrapper<CaseDto>(
+				new List<CaseDto> { expectedCase }, 
+				new ApiWrapper<CaseDto>.Pagination(1, 1, string.Empty));
+			
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
+			var logger = new Mock<ILogger<CaseService>>();
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -377,14 +452,13 @@ namespace Service.TRAMS.Tests.Cases
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCase))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCaseWrap))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
-			var logger = new Mock<ILogger<CaseService>>();
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
 			// act
@@ -439,7 +513,37 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.ThrowsAsync<HttpRequestException>(() => caseService.PostCase(CaseFactory.BuildCreateCaseDto()));
 		}
 		
-				[Test]
+		[Test]
+		public void WhenPostCase_UnwrapResponse_ReturnsException()
+		{
+			// arrange
+			var expectedCaseWrap = new ApiWrapper<CaseDto>(null, null);
+			
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCaseWrap))
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act
+			Assert.ThrowsAsync<Exception>(() => caseService.PostCase(CaseFactory.BuildCreateCaseDto()));
+		}		
+		
+		[Test]
 		public async Task WhenPatchCaseByUrn_ReturnsCase()
 		{
 			// arrange
