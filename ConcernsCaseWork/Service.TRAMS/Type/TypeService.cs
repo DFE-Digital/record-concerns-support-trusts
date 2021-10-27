@@ -24,7 +24,7 @@ namespace Service.TRAMS.Type
 				_logger.LogInformation("TypeService::GetTypes");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"{EndpointsVersion}/types");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/types");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -45,7 +45,7 @@ namespace Service.TRAMS.Type
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"TypeService::GetTypes::Exception message::{ex.Message}");
+				_logger.LogError("TypeService::GetTypes::Exception message::{Message}", ex.Message);
 			}
 			
 			// TODO replace return when TRAMS API endpoints are live

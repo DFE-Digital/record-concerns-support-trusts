@@ -27,7 +27,7 @@ namespace Service.TRAMS.RecordAcademy
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"{EndpointsVersion}/record-academy/record/urn/{recordUrn}");
+					$"/{EndpointsVersion}/record-academy/record/urn/{recordUrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -48,7 +48,7 @@ namespace Service.TRAMS.RecordAcademy
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RecordAcademyService::GetRecordsAcademyByRecordUrn::Exception message::{ex.Message}");
+				_logger.LogError("RecordAcademyService::GetRecordsAcademyByRecordUrn::Exception message::{Message}", ex.Message);
 			}
 			
 			return Array.Empty<RecordAcademyDto>();
@@ -71,7 +71,7 @@ namespace Service.TRAMS.RecordAcademy
 				
 				// Execute request
 				var response = await client.PostAsync(
-					$"{EndpointsVersion}/record-academy/record/urn/{createRecordAcademyDto.RecordUrn}", request);
+					$"/{EndpointsVersion}/record-academy/record/urn/{createRecordAcademyDto.RecordUrn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -86,7 +86,7 @@ namespace Service.TRAMS.RecordAcademy
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RecordAcademyService::PostRecordAcademyByRecordUrn::Exception message::{ex.Message}");
+				_logger.LogError("RecordAcademyService::PostRecordAcademyByRecordUrn::Exception message::{Message}", ex.Message);
 			}
 			
 			return null;
@@ -109,7 +109,7 @@ namespace Service.TRAMS.RecordAcademy
 				
 				// Execute request
 				var response = await client.PatchAsync(
-					$"{EndpointsVersion}/record-academy/urn/{recordAcademyDto.Urn}", request);
+					$"/{EndpointsVersion}/record-academy/urn/{recordAcademyDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -124,7 +124,7 @@ namespace Service.TRAMS.RecordAcademy
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RecordAcademyService::PatchRecordAcademyByUrn::Exception message::{ex.Message}");
+				_logger.LogError("RecordAcademyService::PatchRecordAcademyByUrn::Exception message::{Message}", ex.Message);
 			}
 			
 			return null;

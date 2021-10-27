@@ -40,8 +40,6 @@ namespace Service.Redis.Models
 		
 		public string DirectionOfTravel { get; set; }
 		
-		public long Urn { get; set; }
-		
 		public long Status { get; set; }
 
 		public string CaseTypeDescription

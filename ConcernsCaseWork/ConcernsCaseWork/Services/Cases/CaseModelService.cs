@@ -94,7 +94,7 @@ namespace ConcernsCaseWork.Services.Cases
 
 				// Fetch records
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
-				var recordDto = recordsDto.First(r => r.Primary);
+				var recordDto = recordsDto.FirstOrDefault(r => r.Primary) ?? recordsDto.First();
 				
 				// Fetch type
 				var typesDto = await _typeCachedService.GetTypes();
@@ -322,10 +322,6 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				// TODO Start Remove when Trams API is live
-				createCaseModel.Urn = await _sequenceCachedService.Generator();
-				// TODO End Remove when Trams API is live
-				
 				// Fetch Status
 				var statusDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
 
@@ -336,8 +332,9 @@ namespace ConcernsCaseWork.Services.Cases
 				// Fetch Rating
 				var ratingDto = await _ratingCachedService.GetRatingByName(createCaseModel.RagRatingName);
 
-				// Is first case
-				var isCasePrimary = await _caseCachedService.IsCasePrimary(createCaseModel.CreatedBy, createCaseModel.Urn);
+				// In a 1:1 case -> record (not multiple concerns) this flag is always true.
+				// When multiple concerns is develop take into consideration the number of records attached to the case.
+				const bool isCasePrimary = true;
 				
 				// Create a case
 				createCaseModel.Status = statusDto.Urn;

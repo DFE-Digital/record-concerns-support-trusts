@@ -167,8 +167,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<string>(),
 				Fixture.Create<string>(), 
 				Fixture.Create<string>(), 
-				Fixture.Create<string>(), 
-				1, 
+				Fixture.Create<string>(),
 				1
 			);
 		}
@@ -192,8 +191,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				NextSteps = Fixture.Create<string>(),
 				CaseAim = Fixture.Create<string>(),
 				DeEscalationPoint = Fixture.Create<string>(),
-				DirectionOfTravel = Fixture.Create<string>(), 
-				Urn = 1, 
+				DirectionOfTravel = Fixture.Create<string>(),
 				Status = 1, 
 				Type = caseType, 
 				SubType = caseSubType, 

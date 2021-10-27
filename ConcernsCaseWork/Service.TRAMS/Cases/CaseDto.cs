@@ -6,61 +6,64 @@ namespace Service.TRAMS.Cases
 	[Serializable]
 	public sealed class CaseDto
 	{
-		[JsonProperty("created_at")]
+		[JsonProperty("createdAt")]
 		public DateTimeOffset CreatedAt { get; }
 
-		[JsonProperty("updated_at")]
+		[JsonProperty("updatedAt")]
 		public DateTimeOffset UpdatedAt { get; }
 		
-		[JsonProperty("review_at")]
+		[JsonProperty("reviewedAt")]
+		//[JsonProperty("review_at")]
 		public DateTimeOffset ReviewAt { get; }
 		
-		[JsonProperty("closed_at")]
+		[JsonProperty("closedAt")]
 		public DateTimeOffset ClosedAt { get; }
 		
-		[JsonProperty("created_by")]
+		[JsonProperty("createdBy")]
 		public string CreatedBy { get; }
 		
 		[JsonProperty("description")]
 		public string Description { get; }
 		
-		[JsonProperty("crm_enquiry")]
+		[JsonProperty("crmEnquiry")]
 		public string CrmEnquiry { get; }
 		
-		[JsonProperty("trust_ukprn")]
+		[JsonProperty("trustUkprn")]
 		public string TrustUkPrn { get; }
 		
-		[JsonProperty("reason_at_review")]
+		[JsonProperty("reasonForReview")]
+		//[JsonProperty("reason_at_review")]
 		public string ReasonAtReview { get; }
 
-		[JsonProperty("de_escalation")]
+		[JsonProperty("deEscalation")]
 		public DateTimeOffset DeEscalation { get; }
 		
 		[JsonProperty("issue")]
 		public string Issue { get; }
 
-		[JsonProperty("current_status")]
+		[JsonProperty("currentStatus")]
 		public string CurrentStatus { get; }
 
-		[JsonProperty("case_aim")]
+		[JsonProperty("caseAim")]
 		public string CaseAim { get; }
 		
-		[JsonProperty("de_escalation_point")]
+		[JsonProperty("deEscalationPoint")]
 		public string DeEscalationPoint { get; }
 		
-		[JsonProperty("next_steps")]
+		[JsonProperty("nextSteps")]
 		public string NextSteps { get; }
 		
 		/// <summary>
 		/// Deteriorating, unchanged, improved
 		/// </summary>
-		[JsonProperty("direction_of_travel")]
+		[JsonProperty("directionOfTravel")]
 		public string DirectionOfTravel { get; }
 		
 		[JsonProperty("urn")]
 		public long Urn { get; }
 		
-		[JsonProperty("status")]
+		[JsonProperty("concernsStatusId")]
+		//[JsonProperty("status")]
 		public long Status { get; }
 
 		[JsonConstructor]

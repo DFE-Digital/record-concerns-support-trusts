@@ -24,7 +24,7 @@ namespace Service.TRAMS.Status
 				_logger.LogInformation("StatusService::GetStatuses");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"{EndpointsVersion}/statuses");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/statuses");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -45,7 +45,7 @@ namespace Service.TRAMS.Status
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"StatusService::GetStatuses::Exception message::{ex.Message}");
+				_logger.LogError("StatusService::GetStatuses::Exception message::{Message}", ex.Message);
 			}
 			
 			// TODO replace return when TRAMS API endpoints are live

@@ -22,7 +22,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(createCaseDto.Description, Is.EqualTo(createCaseModel.Description));
 			Assert.That(createCaseDto.Issue, Is.EqualTo(createCaseModel.Issue));
 			Assert.That(createCaseDto.Status, Is.EqualTo(createCaseModel.Status));
-			Assert.That(createCaseDto.Urn, Is.EqualTo(createCaseModel.Urn));
 			Assert.That(createCaseDto.ClosedAt, Is.EqualTo(createCaseModel.ClosedAt));
 			Assert.That(createCaseDto.CreatedAt, Is.EqualTo(createCaseModel.CreatedAt));
 			Assert.That(createCaseDto.CreatedBy, Is.EqualTo(createCaseModel.CreatedBy));
