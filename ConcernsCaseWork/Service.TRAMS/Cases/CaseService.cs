@@ -77,9 +77,15 @@ namespace Service.TRAMS.Cases
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POCO
-				var caseDto = JsonConvert.DeserializeObject<CaseDto>(content);
+				var caseDto = JsonConvert.DeserializeObject<ApiWrapper<CaseDto>>(content);
+				
+				// Unwrap response
+				if (caseDto is { Data: { } })
+				{
+					return caseDto.Data.FirstOrDefault();
+				}
 
-				return caseDto;
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{
@@ -111,9 +117,15 @@ namespace Service.TRAMS.Cases
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POCO
-				var casesDto = JsonConvert.DeserializeObject<IList<CaseDto>>(content);
+				var casesDto = JsonConvert.DeserializeObject<ApiWrapper<CaseDto>>(content);
 
-				return casesDto;
+				// Unwrap response
+				if (casesDto is { Data: { } })
+				{
+					return casesDto.Data;
+				}
+
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{
