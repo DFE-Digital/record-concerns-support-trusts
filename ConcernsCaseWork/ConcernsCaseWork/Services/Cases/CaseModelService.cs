@@ -12,6 +12,7 @@ using Service.Redis.Sequence;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
 using Service.Redis.Type;
+using Service.TRAMS.Cases;
 using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
@@ -35,6 +36,7 @@ namespace ConcernsCaseWork.Services.Cases
 		private readonly ITypeCachedService _typeCachedService;
 		private readonly ILogger<CaseModelService> _logger;
 		private readonly ICachedService _cachedService;
+		private readonly ICaseService _caseService;
 		private readonly IMapper _mapper;
 
 		public CaseModelService(ICaseCachedService caseCachedService, ITrustCachedService trustCachedService, 
@@ -43,6 +45,7 @@ namespace ConcernsCaseWork.Services.Cases
 			IRecordRatingHistoryCachedService recordRatingHistoryCachedService,
 			IStatusCachedService statusCachedService, 
 			ISequenceCachedService sequenceCachedService,
+			ICaseService caseService,
 			IMapper mapper,
 			ILogger<CaseModelService> logger)
 		{
@@ -55,6 +58,7 @@ namespace ConcernsCaseWork.Services.Cases
 			_caseCachedService = caseCachedService;
 			_typeCachedService = typeCachedService;
 			_cachedService = cachedService;
+			_caseService = caseService;
 			_mapper = mapper;
 			_logger = logger;
 		}
@@ -116,6 +120,22 @@ namespace ConcernsCaseWork.Services.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError("CaseModelService::GetCaseByUrn exception {Message}", ex.Message);
+				throw;
+			}
+		}
+
+		public async Task<IList<CaseModel>> GetCasesByTrustUkprn(string trustUkprn)
+		{
+			try
+			{
+				var casesDto = await _caseService.GetCasesByTrustUkPrn(trustUkprn);
+				var casesModel = casesDto.Select(caseDto => CaseMapping.Map(caseDto)).ToList();
+				
+				return casesModel;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("CaseModelService::GetCasesByTrustUkprn exception {Message}", ex.Message);
 				throw;
 			}
 		}

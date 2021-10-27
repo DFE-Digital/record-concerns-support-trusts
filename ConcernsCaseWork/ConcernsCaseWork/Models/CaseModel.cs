@@ -26,7 +26,6 @@ namespace ConcernsCaseWork.Models
 		public string Description { get; set; }
 
 		public string CrmEnquiry { get; set; }
-
 		
 		public string TrustUkPrn { get; set; }
 		
