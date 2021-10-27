@@ -7,6 +7,7 @@ using Service.Redis.Base;
 using Service.Redis.Cases;
 using Service.Redis.Models;
 using Service.TRAMS.Cases;
+using System;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Tests.Cases
@@ -243,6 +244,28 @@ namespace Service.Redis.Tests.Cases
 			mockCaseService.Verify(c => c.PostCase(It.IsAny<CreateCaseDto>()), Times.Once);
 		}
 
+		[Test]
+		public void WhenPostCase_ThrowsException_WhenApiCallReturnsNull()
+		{
+			// arrange
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockCaseService = new Mock<ICaseService>();
+			var mockLogger = new Mock<ILogger<CaseCachedService>>();
+
+			var expectedCreateCaseDto = CaseFactory.BuildCreateCaseDto();
+			
+			mockCaseService.Setup(c => c.PostCase(It.IsAny<CreateCaseDto>())).ReturnsAsync((CaseDto)null);
+			
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
+			
+			// act | assert
+			Assert.ThrowsAsync<ApplicationException>(() => caseCachedService.PostCase(expectedCreateCaseDto));
+			
+			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Never);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
+			mockCaseService.Verify(c => c.PostCase(It.IsAny<CreateCaseDto>()), Times.Once);
+		}		
+		
 		[Test]
 		public async Task WhenPatchCaseByUrn_ReturnsTask_StoresInCache()
 		{
