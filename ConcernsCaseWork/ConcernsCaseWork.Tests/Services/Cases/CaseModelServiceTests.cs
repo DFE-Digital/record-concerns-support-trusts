@@ -267,9 +267,90 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 				}
 			}
 		}
+
+		[Test]
+		public async Task WhenGetCasesByCaseworker_FetchFromCache_MissingCasesDto_ReturnsEmptyCases()
+		{
+			// arrange
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
+			var mockCachedService = new Mock<ICachedService>();
+			var mockRecordRatingHistoryCachedService = new Mock<IRecordRatingHistoryCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockAutoMapperService = new Mock<IMapper>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+			var mockCaseService = new Mock<ICaseService>();
+
+			var casesDto = CaseFactory.BuildListCaseDto();
+			var firstCaseDto = casesDto.First();
+			var recordsDto = RecordFactory.BuildListRecordDto();
+			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
+			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = TypeFactory.BuildListTypeDto();
+			var trustDto = TrustFactory.BuildTrustDetailsDto(firstCaseDto.TrustUkPrn);
+
+			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
+			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<CaseDto>())).ReturnsAsync(recordsDto);
+			mockRatingCachedService.Setup(r => r.GetRatings()).ReturnsAsync(ratingsDto);
+			mockTypeCachedService.Setup(t => t.GetTypes()).ReturnsAsync(typesDto);
+			mockTrustCachedService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDto);
+			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(casesDto);
+
+			var userState = new UserState
+			{
+				TrustUkPrn = firstCaseDto.TrustUkPrn
+			};
+			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
+
+			// act
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object, mockRecordRatingHistoryCachedService.Object,
+				mockStatusCachedService.Object, mockCaseService.Object, mockAutoMapperService.Object, mockLogger.Object);
+			var activeCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>());
+
+			// assert
+			Assert.IsAssignableFrom<HomeModel[]>(activeCasesModel);
+			Assert.That(activeCasesModel.Count, Is.EqualTo(0));
+		}
+
+		[Test]
+		public async Task When_GetCasesByTrustUkprn_ReturnsEmptyListTrustCasesModel()
+		{
+			// arrange
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
+			var mockCachedService = new Mock<ICachedService>();
+			var mockRecordRatingHistoryCachedService = new Mock<IRecordRatingHistoryCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockAutoMapperService = new Mock<IMapper>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+			var mockCaseService = new Mock<ICaseService>();
+			
+			mockCaseService.Setup(c => c.GetCasesByTrustUkPrn(It.IsAny<string>()))
+				.ReturnsAsync(new List<CaseDto>());
+			
+			// act
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object, mockRecordRatingHistoryCachedService.Object, 
+				mockStatusCachedService.Object, mockCaseService.Object, mockAutoMapperService.Object, mockLogger.Object);
+
+			var actualTrustCasesModel = await caseModelService.GetCasesByTrustUkprn("testing");
+
+			// assert
+			Assert.IsAssignableFrom<TrustCasesModel[]>(actualTrustCasesModel);
+			Assert.That(actualTrustCasesModel, Is.Not.Null);
+			Assert.That(actualTrustCasesModel.Count, Is.EqualTo(0));
+		}		
 		
 		[Test]
-		public async Task When_GetCasesByTrustUkprn_ReturnsListCaseModel()
+		public async Task When_GetCasesByTrustUkprn_ReturnsListTrustCasesModel()
 		{
 			// arrange
 			var mockCaseCachedService = new Mock<ICaseCachedService>();
@@ -312,6 +393,50 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			Assert.That(actualTrustCasesModel, Is.Not.Null);
 			Assert.That(actualTrustCasesModel.Count, Is.EqualTo(9));
 		}		
+		
+		[Test]
+		public async Task When_GetCasesByTrustUkprn_MissingRecords_ReturnsEmptyListTrustCasesModel()
+		{
+			// arrange
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
+			var mockCachedService = new Mock<ICachedService>();
+			var mockRecordRatingHistoryCachedService = new Mock<IRecordRatingHistoryCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockAutoMapperService = new Mock<IMapper>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+			var mockCaseService = new Mock<ICaseService>();
+			
+			var casesDto = CaseFactory.BuildListCaseDto();
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = TypeFactory.BuildListTypeDto();
+
+			mockCaseService.Setup(c => c.GetCasesByTrustUkPrn(It.IsAny<string>()))
+				.ReturnsAsync(casesDto);
+			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<CaseDto>()))
+				.ReturnsAsync(new List<RecordDto>());
+			mockRatingCachedService.Setup(r => r.GetRatings()).ReturnsAsync(ratingsDto);
+			mockTypeCachedService.Setup(t => t.GetTypes()).ReturnsAsync(typesDto);
+			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>()))
+				.ReturnsAsync(StatusFactory.BuildStatusDto("live", 1))
+				.ReturnsAsync(StatusFactory.BuildStatusDto("monitoring", 2))
+				.ReturnsAsync(StatusFactory.BuildStatusDto("close", 3));
+			
+			// act
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object, mockRecordRatingHistoryCachedService.Object, 
+				mockStatusCachedService.Object, mockCaseService.Object, mockAutoMapperService.Object, mockLogger.Object);
+
+			var actualTrustCasesModel = await caseModelService.GetCasesByTrustUkprn("testing");
+
+			// assert
+			Assert.IsAssignableFrom<TrustCasesModel[]>(actualTrustCasesModel);
+			Assert.That(actualTrustCasesModel, Is.Not.Null);
+			Assert.That(actualTrustCasesModel.Count, Is.EqualTo(0));
+		}
 		
 		[Test]
 		public void When_GetCasesByTrustUkprn_ThrowsException()

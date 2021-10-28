@@ -1,7 +1,9 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
+using Service.TRAMS.Records;
 using Service.TRAMS.Status;
+using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Tests.Mappers
 {
@@ -293,6 +295,63 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(expectedCaseDto.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
 			Assert.That(expectedCaseDto.ReasonAtReview, Is.EqualTo(caseDto.ReasonAtReview));
 			Assert.That(expectedCaseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
+		}
+
+		[Test]
+		public void WhenMapTrustCases_Returns_ListTrustCasesModel()
+		{
+			// arrange
+			var recordsDto = RecordFactory.BuildListRecordDto();
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = TypeFactory.BuildListTypeDto();
+			var casesDto = CaseFactory.BuildListCaseDto();
+			var liveStatus = StatusFactory.BuildStatusDto("live", 1);
+			var closeStatus = StatusFactory.BuildStatusDto("close", 3);
+
+			// act
+			var expectedTrustCasesModel = CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, liveStatus, closeStatus);
+
+			// assert
+			Assert.That(expectedTrustCasesModel, Is.Not.Null);
+			Assert.That(expectedTrustCasesModel.Count, Is.EqualTo(5));
+		}
+		
+		[Test]
+		public void WhenMapTrustCases_MissingType_Returns_ListTrustCasesModel()
+		{
+			// arrange
+			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto(1, 0) };
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = TypeFactory.BuildListTypeDto();
+			var casesDto = CaseFactory.BuildListCaseDto();
+			var liveStatus = StatusFactory.BuildStatusDto("live", 1);
+			var closeStatus = StatusFactory.BuildStatusDto("close", 3);
+
+			// act
+			var expectedTrustCasesModel = CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, liveStatus, closeStatus);
+
+			// assert
+			Assert.That(expectedTrustCasesModel, Is.Not.Null);
+			Assert.That(expectedTrustCasesModel.Count, Is.EqualTo(0));
+		}
+		
+		[Test]
+		public void WhenMapTrustCases_MissingCaseDto_Returns_ListTrustCasesModel()
+		{
+			// arrange
+			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto(0) };
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = TypeFactory.BuildListTypeDto();
+			var casesDto = CaseFactory.BuildListCaseDto();
+			var liveStatus = StatusFactory.BuildStatusDto("live", 1);
+			var closeStatus = StatusFactory.BuildStatusDto("close", 3);
+
+			// act
+			var expectedTrustCasesModel = CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, liveStatus, closeStatus);
+
+			// assert
+			Assert.That(expectedTrustCasesModel, Is.Not.Null);
+			Assert.That(expectedTrustCasesModel.Count, Is.EqualTo(0));
 		}
 	}
 }
