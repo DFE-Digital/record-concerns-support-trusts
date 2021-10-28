@@ -1,0 +1,26 @@
+﻿<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+<form role="form" id="search-form" novalidate>
+	<div class="govuk-form-group">
+		<fieldset class="govuk-fieldset" data-required data-error="Search cannot be blank" aria-required="true">
+
+			<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+				<h2 class="govuk-fieldset__heading govuk-heading-m">
+					Find Trust
+				</h2>
+			</legend>
+
+			<label class="govuk-hint" for="search" id="outgoing-trust-search-query-hint">
+				Search by name, trust reference number or companies house number
+			</label>
+
+			<input class="govuk-input form-control" id="search" name="search" type="text" aria-valuetext="" aria-describedby="search-hint search-error" placeholder="Search Trusts">
+		</fieldset>
+	</div>
+</form>
+
+<div class="ccms-loader govuk-!-display-none"></div>
+<div id="autocomplete-container"></div>
+<ul class="autocomplete__menu autocomplete__menu--inline autocomplete__menu--hidden" id="search__listbox" role="listbox">
+	<li class="autocomplete__option autocomplete__option--no-results">No results found.</li>
+</ul>
