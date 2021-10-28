@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages
@@ -88,6 +89,15 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			Assert.That(pageModel.TrustCasesModel, Is.Not.Null);
 			Assert.That(pageModel.TrustCasesModel.Count, Is.EqualTo(1));
+
+			var actualFirstTrustCaseModel = trustCasesModel.First();
+			var expectedFirstTrustCaseModel = pageModel.TrustCasesModel.First();
+			Assert.That(expectedFirstTrustCaseModel.CaseUrn, Is.EqualTo(actualFirstTrustCaseModel.CaseUrn));
+			Assert.That(expectedFirstTrustCaseModel.RagRating, Is.EqualTo(actualFirstTrustCaseModel.RagRating));
+			Assert.That(expectedFirstTrustCaseModel.RagRatingCss, Is.EqualTo(actualFirstTrustCaseModel.RagRatingCss));
+			Assert.That(expectedFirstTrustCaseModel.Closed, Is.EqualTo(actualFirstTrustCaseModel.Closed));
+			Assert.That(expectedFirstTrustCaseModel.CaseTypeDescription, Is.EqualTo(actualFirstTrustCaseModel.CaseTypeDescription));
+			Assert.That(expectedFirstTrustCaseModel.StatusDescription, Is.EqualTo(actualFirstTrustCaseModel.StatusDescription));
 		}
 		
 		private static ManagementPageModel SetupManagementPageModel(
