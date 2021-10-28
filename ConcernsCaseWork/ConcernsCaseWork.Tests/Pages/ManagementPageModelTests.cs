@@ -35,15 +35,18 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		[Test]
-		public async Task WhenOnGetAsync_MissingCaseUrn_ReturnsPageModel()
+		public async Task WhenOnGetAsync_ReturnsPageModel()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockLogger = new Mock<ILogger<ManagementPageModel>>();
 			var caseModel = CaseFactory.BuildCaseModel();
+			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(caseModel);
+			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
+				.ReturnsAsync(trustCasesModel);
 			
 			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
 
@@ -82,6 +85,9 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.CaseModel.RagRatingCss, Is.EqualTo(caseModel.RagRatingCss));
 			Assert.That(pageModel.CaseModel.ReasonAtReview, Is.EqualTo(caseModel.ReasonAtReview));
 			Assert.That(pageModel.CaseModel.TrustUkPrn, Is.EqualTo(caseModel.TrustUkPrn));
+			
+			Assert.That(pageModel.TrustCasesModel, Is.Not.Null);
+			Assert.That(pageModel.TrustCasesModel.Count, Is.EqualTo(1));
 		}
 		
 		private static ManagementPageModel SetupManagementPageModel(

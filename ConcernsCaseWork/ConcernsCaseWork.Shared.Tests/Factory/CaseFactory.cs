@@ -248,5 +248,21 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				DeEscalationPoint = Fixture.Create<string>()
 			};
 		}
+
+		public static IList<TrustCasesModel> BuildListTrustCasesModel()
+		{
+			return new List<TrustCasesModel>
+			{
+				new TrustCasesModel(
+					Fixture.Create<long>(), 
+					Fixture.Create<string>(),
+					Fixture.Create<string>(),
+					Fixture.Create<Tuple<int, IList<string>>>(),
+					Fixture.Create<IList<string>>(),
+					Fixture.Create<DateTimeOffset>(),
+					Fixture.Create<DateTimeOffset>(),
+					Fixture.Create<string>())
+			};
+		}
 	}
 }
