@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.Extensions;
-using Service.TRAMS.Cases;
+﻿using Service.TRAMS.Cases;
 using System;
 using System.Collections.Generic;
 

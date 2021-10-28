@@ -1,7 +1,12 @@
 ﻿using ConcernsCaseWork.Models;
 using Service.Redis.Models;
 using Service.TRAMS.Cases;
+using Service.TRAMS.Rating;
+using Service.TRAMS.Records;
 using Service.TRAMS.Status;
+using Service.TRAMS.Type;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ConcernsCaseWork.Mappers
 {
@@ -121,6 +126,41 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.DeEscalation, caseDto.Issue, caseDto.CurrentStatus,
 				patchCaseModel.NextSteps, caseDto.CaseAim, caseDto.DeEscalationPoint, caseDto.DirectionOfTravel,
 				caseDto.Urn, caseDto.Status);
+		}
+
+		public static List<TrustCasesModel> MapTrustCases(IEnumerable<RecordDto> recordsDto, IList<RatingDto> ragsRatingDto, IList<TypeDto> typesDto,
+			IList<CaseDto> casesDto, StatusDto liveStatus, StatusDto closeStatus)
+		{
+			var trustCases = new List<TrustCasesModel>();
+				
+			trustCases.AddRange(
+				recordsDto.Select(recordDto =>
+				{
+					var ragRatingDto = ragsRatingDto.First(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0);
+					var ragRating = RagMapping.FetchRag(ragRatingDto.Name);
+					var ragRatingCss = RagMapping.FetchRagCss(ragRatingDto.Name);
+						
+					var caseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(recordDto.TypeUrn) == 0);
+					if (caseType is null) return null;
+
+					var caseDto = casesDto.FirstOrDefault(c => c.Urn.CompareTo(recordDto.CaseUrn) == 0);
+					if (caseDto is null) return null;
+					
+					var trustCase = new TrustCasesModel(
+						recordDto.CaseUrn,
+						caseType.Name,
+						caseType.Description,
+						ragRating,
+						ragRatingCss,
+						caseDto.CreatedAt,
+						caseDto.ClosedAt,
+						caseDto.Status.CompareTo(liveStatus.Urn) == 0 ? liveStatus.Name : closeStatus.Name);
+
+					return trustCase;
+				}).Where(trustCasesModel => trustCasesModel != null)
+			);
+
+			return trustCases;
 		}
 	}
 }

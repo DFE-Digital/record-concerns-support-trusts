@@ -224,6 +224,8 @@ else
 		</div>
 		<div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="trust-overview">
 			<partial name="_TrustOverview" model="@Model.CaseModel.TrustDetailsModel" />
+			<partial name="_Academies" model="@Model.CaseModel.TrustDetailsModel.Establishments" />
+			<partial name="_TrustCases" model="@Model.TrustCasesModel" />
 		</div>
 </div>
 
