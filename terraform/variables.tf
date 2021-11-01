@@ -58,3 +58,12 @@ variable app_password {
   type = string
   description = "Application variable for the password for the service"
 }
+
+## ========================================================================== ##
+#  Logging				                                                   #
+## ========================================================================== ##
+
+variable logit_sink_url {
+  type        	= string
+  description 	= "Target URL (HTTPS) for logs to be streamed to"
+}
