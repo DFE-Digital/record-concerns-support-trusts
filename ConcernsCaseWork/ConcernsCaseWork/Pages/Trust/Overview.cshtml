@@ -1,0 +1,36 @@
+﻿@page "/trust/{id:long}/overview"
+@model ConcernsCaseWork.Pages.Trust.OverviewPageModel
+
+@{
+	ViewData["Title"] = "Trust Overview";
+	var nonce = HttpContext.GetNonce();
+}
+
+@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")) || Model.TrustDetailsModel is null)
+{
+	<div class="govuk-width-container">
+		<partial name="_BannerError"/>
+		<div class="moj-banner__message">
+			<p class="govuk-body">@TempData["Error.Message"]</p>
+		</div>
+	</div>
+    <script type="application/javascript" nonce="@nonce">
+        $(function () {
+            showGlobalError();
+		});
+    </script>
+}
+else
+{
+<div class="govuk-width-container">
+	<a href="/case/concerntype" role="button" class="govuk-button float__right" data-module="govuk-button">
+		Create case
+	</a>
+	<h1 class="govuk-heading-l">
+		<span class="govuk-caption-m">Trust Overview</span>
+		@Model.TrustDetailsModel.GiasData.GroupNameTitle
+	</h1>
+	<partial name="_TrustOverview" model="@Model.TrustDetailsModel" />
+</div>
+	
+}
