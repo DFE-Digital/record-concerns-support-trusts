@@ -59,7 +59,7 @@ namespace Service.TRAMS.Cases
 		public string DirectionOfTravel { get; }
 		
 		[JsonProperty("concernsStatusId")]
-		//[JsonProperty("status")]
+		//[JsonProperty("statusUrn")]
 		public long Status { get; }
 
 		[JsonConstructor]
