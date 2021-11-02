@@ -148,7 +148,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			);
 		}
 		
-		public static CreateCaseDto BuildCreateCaseDto()
+		public static CreateCaseDto BuildCreateCaseDto(string createdBy = null, string trustUkprn = null)
 		{
 			var dateTimeNow = DateTime.Now;
 			return new CreateCaseDto(
@@ -156,10 +156,10 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				dateTimeNow, 
 				dateTimeNow, 
 				dateTimeNow, 
-				Fixture.Create<string>(), 
+				createdBy ?? Fixture.Create<string>(), 
 				Fixture.Create<string>(), 
 				Fixture.Create<string>(),
-				Fixture.Create<string>(), 
+				trustUkprn ?? Fixture.Create<string>(), 
 				Fixture.Create<string>(), 
 				dateTimeNow, 
 				Fixture.Create<string>(), 
