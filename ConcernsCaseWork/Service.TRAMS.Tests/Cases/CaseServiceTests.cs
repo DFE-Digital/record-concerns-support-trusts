@@ -247,13 +247,18 @@ namespace Service.TRAMS.Tests.Cases
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var cases = await caseService.GetCasesByTrustUkPrn("trust-ukprn");
+			var apiWrapperCasesDto = await caseService.GetCasesByTrustUkPrn(new CaseTrustSearch("trust-ukprn"));
 
 			// assert
-			Assert.That(cases, Is.Not.Null);
-			Assert.That(cases.Count, Is.EqualTo(expectedCases.Count));
+			Assert.That(apiWrapperCasesDto, Is.Not.Null);
+			Assert.That(apiWrapperCasesDto.Data, Is.Not.Null);
+			Assert.That(apiWrapperCasesDto.Data.Count, Is.EqualTo(expectedCases.Count));
+			Assert.That(apiWrapperCasesDto.Paging, Is.Not.Null);
+			Assert.That(apiWrapperCasesDto.Paging.Page, Is.EqualTo(1));
+			Assert.That(apiWrapperCasesDto.Paging.RecordCount, Is.EqualTo(1));
+			Assert.That(apiWrapperCasesDto.Paging.NextPageUrl, Is.EqualTo(string.Empty));
 			
-			foreach (var caseDto in cases)
+			foreach (var caseDto in apiWrapperCasesDto.Data)
 			{
 				foreach (var expectedCase in expectedCases.Where(expectedCase => caseDto.Urn == expectedCase.Urn))
 				{
@@ -280,7 +285,7 @@ namespace Service.TRAMS.Tests.Cases
 		}
 		
 		[Test]
-		public async Task WhenGetCasesByTrustUkPrn_ThrowsException_ReturnsEmptyCases()
+		public void WhenGetCasesByTrustUkPrn_ThrowsException()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -303,44 +308,7 @@ namespace Service.TRAMS.Tests.Cases
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var cases = await caseService.GetCasesByTrustUkPrn("trust-ukprn");
-
-			// assert
-			Assert.That(cases, Is.Not.Null);
-			Assert.That(cases.Count, Is.EqualTo(0));
-		}
-		
-		[Test]
-		public async Task WhenGetCasesByTrustUkPrn_ThrowsException_UnwrapResponse_ReturnsEmptyCases()
-		{
-			// arrange
-			var expectedCaseWrap = new ApiWrapper<CaseDto>(null, null);
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var tramsApiEndpoint = configuration["trams:api_endpoint"];
-			
-			var httpClientFactory = new Mock<IHttpClientFactory>();
-			var mockMessageHandler = new Mock<HttpMessageHandler>();
-			mockMessageHandler.Protected()
-				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-				.ReturnsAsync(new HttpResponseMessage
-				{
-					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCaseWrap))
-				});
-
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
-			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
-			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
-			
-			// act
-			var cases = await caseService.GetCasesByTrustUkPrn("trust-ukprn");
-
-			// assert
-			Assert.That(cases, Is.Not.Null);
-			Assert.That(cases.Count, Is.EqualTo(0));
+			Assert.ThrowsAsync<HttpRequestException>(() => caseService.GetCasesByTrustUkPrn(new CaseTrustSearch("trust-ukprn")));
 		}
 		
 		[Test]

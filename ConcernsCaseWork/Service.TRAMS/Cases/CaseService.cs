@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Service.TRAMS.Cases
 {
@@ -95,14 +96,14 @@ namespace Service.TRAMS.Cases
 			}
 		}
 
-		public async Task<IList<CaseDto>> GetCasesByTrustUkPrn(string trustUkprn)
+		public async Task<ApiWrapper<CaseDto>> GetCasesByTrustUkPrn(CaseTrustSearch caseTrustSearch)
 		{
 			try
 			{
 				_logger.LogInformation("CaseService::GetCasesByTrustUkPrn");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/{EndpointPrefix}/ukprn/{trustUkprn}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/{EndpointPrefix}/ukprn/{caseTrustSearch.TrustUkPrn}?{BuildRequestUri(caseTrustSearch)}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -117,22 +118,16 @@ namespace Service.TRAMS.Cases
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POCO
-				var casesDto = JsonConvert.DeserializeObject<ApiWrapper<CaseDto>>(content);
+				var apiWrapperCasesDto = JsonConvert.DeserializeObject<ApiWrapper<CaseDto>>(content);
 
-				// Unwrap response
-				if (casesDto is { Data: { } })
-				{
-					return casesDto.Data;
-				}
-
-				throw new Exception("Academies API error unwrap response");
+				return apiWrapperCasesDto;
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("CaseService::GetCasesByTrustUkPrn::Exception message::{Message}", ex.Message);
+				
+				throw;
 			}
-			
-			return Array.Empty<CaseDto>();
 		}
 
 		public async Task<IList<CaseDto>> GetCasesByPagination(CaseSearch caseSearch)
@@ -247,6 +242,14 @@ namespace Service.TRAMS.Cases
 
 				throw;
 			}
+		}
+		
+		public string BuildRequestUri(CaseTrustSearch caseTrustSearch)
+		{
+			var queryParams = HttpUtility.ParseQueryString(string.Empty);
+			queryParams.Add("page", caseTrustSearch.Page.ToString());
+			
+			return HttpUtility.UrlEncode(queryParams.ToString());
 		}
 	}
 }

@@ -47,7 +47,7 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			Assert.That(caseModel.Description, Is.EqualTo(expected.Description));
 			Assert.That(caseModel.Issue, Is.EqualTo(expected.Issue));
-			Assert.That(caseModel.Status, Is.EqualTo(expected.Status));
+			Assert.That(caseModel.StatusUrn, Is.EqualTo(expected.StatusUrn));
 			Assert.That(caseModel.Urn, Is.EqualTo(expected.Urn));
 			Assert.That(caseModel.CaseType, Is.EqualTo(expected.CaseType));
 			Assert.That(caseModel.CaseSubType, Is.EqualTo(expected.CaseSubType));

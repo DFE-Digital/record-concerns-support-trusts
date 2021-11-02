@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Service.TRAMS.Base
 {
-	public class ApiWrapper<T>
+	public sealed class ApiWrapper<T>
 	{
 		[JsonProperty("data")] 
 		public IList<T> Data { get; }

@@ -25,7 +25,7 @@ namespace Service.TRAMS.Trusts
 				_logger.LogInformation("TrustService::GetTrustsByPagination");
 
 				// Create a request
-				using var request = new HttpRequestMessage(HttpMethod.Get, BuildRequestUri(trustSearch));
+				using var request = new HttpRequestMessage(HttpMethod.Get, $"/trusts?{BuildRequestUri(trustSearch)}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient(HttpClientName);
@@ -102,7 +102,7 @@ namespace Service.TRAMS.Trusts
 			}
 			queryParams.Add("page", trustSearch.Page.ToString());
 			
-			return $"/trusts?{HttpUtility.UrlEncode(queryParams.ToString())}";
+			return HttpUtility.UrlEncode(queryParams.ToString());
 		}
 	}
 }

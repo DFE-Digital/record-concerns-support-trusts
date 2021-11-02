@@ -221,7 +221,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				DeEscalationPoint = Fixture.Create<string>(),
 				DirectionOfTravel = Fixture.Create<string>(),
 				Urn = 1,
-				Status = 1,
+				StatusUrn = 1,
 				StatusName = Fixture.Create<string>(),
 				CaseType = caseType,
 				CaseSubType = caseSubType,

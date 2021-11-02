@@ -32,9 +32,9 @@ namespace ConcernsCaseWork.Services.Cases
 		private readonly ITrustCachedService _trustCachedService;
 		private readonly ICaseCachedService _caseCachedService;
 		private readonly ITypeCachedService _typeCachedService;
+		private readonly ICaseSearchService _caseSearchService;
 		private readonly ILogger<CaseModelService> _logger;
 		private readonly ICachedService _cachedService;
-		private readonly ICaseService _caseService;
 		private readonly IMapper _mapper;
 
 		public CaseModelService(ICaseCachedService caseCachedService, ITrustCachedService trustCachedService, 
@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Services.Cases
 			ITypeCachedService typeCachedService, ICachedService cachedService, 
 			IRecordRatingHistoryCachedService recordRatingHistoryCachedService,
 			IStatusCachedService statusCachedService,
-			ICaseService caseService,
+			ICaseSearchService caseSearchService,
 			IMapper mapper,
 			ILogger<CaseModelService> logger)
 		{
@@ -53,8 +53,8 @@ namespace ConcernsCaseWork.Services.Cases
 			_trustCachedService = trustCachedService;
 			_caseCachedService = caseCachedService;
 			_typeCachedService = typeCachedService;
+			_caseSearchService = caseSearchService;
 			_cachedService = cachedService;
-			_caseService = caseService;
 			_mapper = mapper;
 			_logger = logger;
 		}
@@ -130,7 +130,7 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var casesDto = await _caseService.GetCasesByTrustUkPrn(trustUkprn);
+				var casesDto = await _caseSearchService.GetCasesBySearchCriteria(new CaseTrustSearch(trustUkprn));
 				if (!casesDto.Any()) return Array.Empty<TrustCasesModel>();
 				
 				// Fetch live and close status

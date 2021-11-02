@@ -103,11 +103,11 @@ namespace Service.TRAMS.Tests.Trusts
 			Assert.That(trusts.Count, Is.EqualTo(0));
 		}
 
-		[TestCase("", "", "", "/trusts?page%3d1")]
-		[TestCase("group-name", "", "", "/trusts?groupName%3dgroup-name%26page%3d1")]
-		[TestCase("", "ukprn", "", "/trusts?ukprn%3dukprn%26page%3d1")]
-		[TestCase("", "", "companies-house-number", "/trusts?companiesHouseNumber%3dcompanies-house-number%26page%3d1")]
-		[TestCase("group-name", "ukprn", "", "/trusts?groupName%3dgroup-name%26ukprn%3dukprn%26page%3d1")]
+		[TestCase("", "", "", "page%3d1")]
+		[TestCase("group-name", "", "", "groupName%3dgroup-name%26page%3d1")]
+		[TestCase("", "ukprn", "", "ukprn%3dukprn%26page%3d1")]
+		[TestCase("", "", "companies-house-number", "companiesHouseNumber%3dcompanies-house-number%26page%3d1")]
+		[TestCase("group-name", "ukprn", "", "groupName%3dgroup-name%26ukprn%3dukprn%26page%3d1")]
 		public void WhenBuildRequestUri_ReturnsRequestUrl(string groupName, string ukprn, string companiesHouseNumber, string expectedRequestUri)
 		{
 			// arrange

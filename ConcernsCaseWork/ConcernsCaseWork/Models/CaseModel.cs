@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Models
 
 		public long Urn { get; set; }
 
-		public long Status { get; set; }
+		public long StatusUrn { get; set; }
 		
 		public string StatusName { get; set; } = string.Empty;
 

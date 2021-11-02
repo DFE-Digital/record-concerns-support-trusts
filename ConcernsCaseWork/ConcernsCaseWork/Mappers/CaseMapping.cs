@@ -41,7 +41,7 @@ namespace ConcernsCaseWork.Mappers
 				DeEscalationPoint = caseDto.DeEscalationPoint,
 				DirectionOfTravel = caseDto.DirectionOfTravel, 
 				Urn = caseDto.Urn,
-				Status = caseDto.Status,
+				StatusUrn = caseDto.Status,
 				StatusName = status
 			};
 		}
