@@ -244,7 +244,7 @@ namespace Service.TRAMS.Cases
 			}
 		}
 		
-		public string BuildRequestUri(CaseTrustSearch caseTrustSearch)
+		public static string BuildRequestUri(CaseTrustSearch caseTrustSearch)
 		{
 			var queryParams = HttpUtility.ParseQueryString(string.Empty);
 			queryParams.Add("page", caseTrustSearch.Page.ToString());

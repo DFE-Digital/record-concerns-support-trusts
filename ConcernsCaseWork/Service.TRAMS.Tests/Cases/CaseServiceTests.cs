@@ -602,5 +602,19 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(page, Is.EqualTo(1));
 			Assert.That(nextPage, Is.EqualTo(2));
 		}
+		
+		[Test]
+		public void WhenBuildRequestUri_ReturnsRequestUrl()
+		{
+			// arrange
+			var caseTrustSearch = CaseFactory.BuildCaseTrustSearch("trust-ukprn");
+
+			// act
+			var requestUri = CaseService.BuildRequestUri(caseTrustSearch);
+
+			// assert
+			Assert.That(requestUri, Is.Not.Null);
+			Assert.That(requestUri, Is.EqualTo("page%3d1"));
+		}
 	}
 }
