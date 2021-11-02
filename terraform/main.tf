@@ -4,14 +4,14 @@
   docker_image		 = local.docker_image
   strategy           = local.cloudfoundry_app_strategy
   
-  service_binding = [
-	{
+  service_binding {
 		service_instance = cloudfoundry_service_instance.redis.id
-	},
-	{
+	}
+
+  service_binding {
 		service_instance = cloudfoundry_user_provided_service.logit.id
 	}
-  ]
+  
 
   routes {
 	route = cloudfoundry_route.web_app_cloudapp_digital_route.id
