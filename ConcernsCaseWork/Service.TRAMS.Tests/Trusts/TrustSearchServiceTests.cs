@@ -5,7 +5,6 @@ using Moq;
 using NUnit.Framework;
 using Service.TRAMS.Configuration;
 using Service.TRAMS.Trusts;
-using Service.TRAMS.Type;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -28,8 +27,8 @@ namespace Service.TRAMS.Tests.Trusts
 
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>()))
-				.Returns(Task.FromResult(expectedTrusts))
-				.Returns(Task.FromResult(emptyList));
+				.ReturnsAsync(expectedTrusts)
+				.ReturnsAsync(emptyList);
 			
 			var trustSearchService = new TrustSearchService(mockTrustService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
@@ -75,17 +74,17 @@ namespace Service.TRAMS.Tests.Trusts
 
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>()))
-				.Returns(Task.FromResult(expectedTrusts))
-				.Returns(Task.FromResult(expectedTrusts))
-				.Returns(Task.FromResult(expectedTrusts))
-				.Returns(Task.FromResult(expectedTrusts))
-				.Returns(Task.FromResult(expectedTrusts))
-				.Returns(Task.FromResult(expectedTrusts))
-				.Returns(Task.FromResult(expectedTrusts))
-				.Returns(Task.FromResult(expectedTrusts))
-				.Returns(Task.FromResult(expectedTrusts))
-				.Returns(Task.FromResult(expectedTrusts))
-				.Returns(Task.FromResult(expectedTrusts));
+				.ReturnsAsync(expectedTrusts)
+				.ReturnsAsync(expectedTrusts)
+				.ReturnsAsync(expectedTrusts)
+				.ReturnsAsync(expectedTrusts)
+				.ReturnsAsync(expectedTrusts)
+				.ReturnsAsync(expectedTrusts)
+				.ReturnsAsync(expectedTrusts)
+				.ReturnsAsync(expectedTrusts)
+				.ReturnsAsync(expectedTrusts)
+				.ReturnsAsync(expectedTrusts)
+				.ReturnsAsync(expectedTrusts);
 			
 			var trustSearchService = new TrustSearchService(mockTrustService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 

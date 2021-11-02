@@ -264,5 +264,10 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<string>())
 			};
 		}
+		
+		public static CaseTrustSearch BuildCaseTrustSearch(string trustUkPrn = "")
+		{
+			return new CaseTrustSearch(trustUkPrn);
+		}
 	}
 }
