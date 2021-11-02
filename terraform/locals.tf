@@ -12,4 +12,7 @@ locals {
   
   ## Created manually see README.md
   aws_service_key			= "amsd-casework-tf-state"
+
+  ## Logit.io
+  logit_service_name		= "amsd-casework-logit-sink-${local.app_name_suffix}"
 }
