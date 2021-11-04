@@ -4,6 +4,7 @@ using Service.TRAMS.Base;
 using Service.TRAMS.Configuration;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,7 +47,7 @@ namespace Service.TRAMS.Cases
 					break;
 				}
 
-			} while (apiWrapperCaseDto?.Data != null && apiWrapperCaseDto.Data.Any() && apiWrapperCaseDto.Paging?.RecordCount >= caseTrustsList.Count);
+			} while (apiWrapperCaseDto?.Data != null && apiWrapperCaseDto.Data.Any() && apiWrapperCaseDto.Paging?.NextPageUrl != null);
 			
 			return caseTrustsList;
 		}
