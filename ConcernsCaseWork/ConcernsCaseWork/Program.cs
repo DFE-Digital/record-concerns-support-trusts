@@ -14,6 +14,7 @@ namespace ConcernsCaseWork
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
                 .WriteTo.Console(new RenderedCompactJsonFormatter())
+				.WriteTo.Sentry()
                 .CreateLogger();
 
             Log.Information("Starting web host");
@@ -25,7 +26,9 @@ namespace ConcernsCaseWork
                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureKestrel(options => options.AddServerHeader = false)
+                    webBuilder
+	                    .UseSentry()
+	                    .ConfigureKestrel(options => options.AddServerHeader = false)
 	                    .UseStartup<Startup>();
                 });
     }

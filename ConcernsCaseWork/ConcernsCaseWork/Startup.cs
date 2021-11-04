@@ -105,7 +105,10 @@ namespace ConcernsCaseWork
             
             app.UseRouting();
 
-            app.UseAuthentication();
+			// Enable Sentry middleware for performance monitoring
+			app.UseSentryTracing();
+
+			app.UseAuthentication();
             app.UseAuthorization();
             
             app.UseEndpoints(endpoints =>
