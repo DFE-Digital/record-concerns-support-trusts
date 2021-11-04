@@ -30,7 +30,7 @@ namespace Service.TRAMS.Cases
 		public string TrustUkPrn { get; }
 		
 		[JsonProperty("reasonForReview")]
-		//[JsonProperty("reason_at_review")]
+		//[JsonProperty("reasonAtReview")]
 		public string ReasonAtReview { get; }
 
 		[JsonProperty("deEscalation")]

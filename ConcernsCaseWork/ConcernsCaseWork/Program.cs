@@ -25,7 +25,8 @@ namespace ConcernsCaseWork
                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureKestrel(options => options.AddServerHeader = false)
+                    webBuilder
+	                    .ConfigureKestrel(options => options.AddServerHeader = false)
 	                    .UseStartup<Startup>();
                 });
     }
