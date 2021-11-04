@@ -19,6 +19,10 @@ namespace ConcernsCaseWork.Models
 		
 		public string CompaniesHouseNumber { get; }
 		
+		public string TrustType { get; }
+		
+		public GroupContactAddressModel GroupContactAddress { get; }
+		
 		public List<EstablishmentSummaryModel> Establishments { get; }
 
 		public string DisplayName
@@ -31,12 +35,17 @@ namespace ConcernsCaseWork.Models
 				sb.Append(string.IsNullOrEmpty(UkPrn) ? _isNullOrEmpty : UkPrn);
 				sb.Append(",").Append(" ");
 				sb.Append(string.IsNullOrEmpty(CompaniesHouseNumber) ? _isNullOrEmpty : CompaniesHouseNumber);
+				sb.Append(" ");
+				sb.Append(string.IsNullOrEmpty(GroupContactAddress?.Town) ? _isNullOrEmpty : $"({GroupContactAddress.Town})");
 				
 				return sb.ToString();
 			}
 		}
 
-		public TrustSummaryModel(string ukprn, string urn, string groupName, string companiesHouseNumber, List<EstablishmentSummaryModel> establishments) 
-			=> (UkPrn, Urn, GroupName, CompaniesHouseNumber, Establishments) = (ukprn, urn, groupName, companiesHouseNumber, establishments);
+		public TrustSummaryModel(string ukprn, string urn, string groupName, 
+			string companiesHouseNumber, string trustType, GroupContactAddressModel groupContactAddress, 
+			List<EstablishmentSummaryModel> establishments) 
+			=> (UkPrn, Urn, GroupName, CompaniesHouseNumber, TrustType, GroupContactAddress, Establishments) = 
+				(ukprn, urn, groupName, companiesHouseNumber, trustType, groupContactAddress, establishments);
 	}
 }

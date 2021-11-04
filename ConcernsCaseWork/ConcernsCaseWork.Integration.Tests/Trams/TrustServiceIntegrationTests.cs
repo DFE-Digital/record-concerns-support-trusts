@@ -39,12 +39,13 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			const string searchParameter = "Northwood";
 			
 			// act
-			var trustsSummaryDto = await trustService.GetTrustsByPagination(
+			var apiWrapperTrustsSummaryDto = await trustService.GetTrustsByPagination(
 				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
 
 			// assert
-			Assert.That(trustsSummaryDto, Is.Not.Null);
-			Assert.That(trustsSummaryDto.Count, Is.GreaterThanOrEqualTo(1));
+			Assert.That(apiWrapperTrustsSummaryDto, Is.Not.Null);
+			Assert.That(apiWrapperTrustsSummaryDto.Data, Is.Not.Null);
+			Assert.That(apiWrapperTrustsSummaryDto.Data.Count, Is.GreaterThanOrEqualTo(1));
 		}
 		
 		[Test]
@@ -71,14 +72,15 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			const string searchParameter = "Northwood";
 			
 			// act
-			var trustsSummaryDto = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
+			var apiWrapperTrustsSummaryDto = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
 
 			// assert
-			Assert.That(trustsSummaryDto, Is.Not.Null);
-			Assert.That(trustsSummaryDto.Count, Is.GreaterThanOrEqualTo(1));
+			Assert.That(apiWrapperTrustsSummaryDto, Is.Not.Null);
+			Assert.That(apiWrapperTrustsSummaryDto.Data, Is.Not.Null);
+			Assert.That(apiWrapperTrustsSummaryDto.Data.Count, Is.GreaterThanOrEqualTo(1));
 
 			// arrange
-			var ukPrn = trustsSummaryDto.Where(t => t.UkPrn != null).Select(t => t.UkPrn).FirstOrDefault();
+			var ukPrn = apiWrapperTrustsSummaryDto.Data.Where(t => t.UkPrn != null).Select(t => t.UkPrn).FirstOrDefault();
 			
 			// act
 			var trustDetailsDto = await trustService.GetTrustByUkPrn(ukPrn);

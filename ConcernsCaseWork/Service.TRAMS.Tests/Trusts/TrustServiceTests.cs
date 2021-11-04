@@ -43,13 +43,14 @@ namespace Service.TRAMS.Tests.Trusts
 			var trustService = new TrustService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var trusts = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch());
+			var apiWrapperTrusts = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch());
 
 			// assert
-			Assert.That(trusts, Is.Not.Null);
-			Assert.That(trusts.Count, Is.EqualTo(expectedTrusts.Count));
+			Assert.That(apiWrapperTrusts, Is.Not.Null);
+			Assert.That(apiWrapperTrusts.Data, Is.Not.Null);
+			Assert.That(apiWrapperTrusts.Data.Count, Is.EqualTo(expectedTrusts.Count));
 
-			foreach (var trust in trusts)
+			foreach (var trust in apiWrapperTrusts.Data)
 			{
 				foreach (var expectedTrust in expectedTrusts)
 				{
@@ -96,11 +97,12 @@ namespace Service.TRAMS.Tests.Trusts
 			var trustService = new TrustService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var trusts = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch());
+			var apiWrapperTrusts = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch());
 
 			// assert
-			Assert.That(trusts, Is.Not.Null);
-			Assert.That(trusts.Count, Is.EqualTo(0));
+			Assert.That(apiWrapperTrusts, Is.Not.Null);
+			Assert.That(apiWrapperTrusts.Data, Is.Not.Null);
+			Assert.That(apiWrapperTrusts.Data.Count, Is.EqualTo(0));
 		}
 
 		[TestCase("", "", "", "page%3d1")]

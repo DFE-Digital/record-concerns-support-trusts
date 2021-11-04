@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
+using Service.TRAMS.Base;
 using Service.TRAMS.Configuration;
 using Service.TRAMS.Trusts;
 using System;
@@ -27,8 +28,8 @@ namespace Service.TRAMS.Tests.Trusts
 
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>()))
-				.ReturnsAsync(expectedTrusts)
-				.ReturnsAsync(emptyList);
+				.ReturnsAsync(new ApiWrapper<TrustSummaryDto>(expectedTrusts, null))
+				.ReturnsAsync(new ApiWrapper<TrustSummaryDto>(emptyList, null));
 			
 			var trustSearchService = new TrustSearchService(mockTrustService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
@@ -71,20 +72,21 @@ namespace Service.TRAMS.Tests.Trusts
 			var mockLogger = new Mock<ILogger<TrustSearchService>>();
 
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
-
+			var expectedApiWrapper = new ApiWrapper<TrustSummaryDto>(expectedTrusts, null);
+			
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>()))
-				.ReturnsAsync(expectedTrusts)
-				.ReturnsAsync(expectedTrusts)
-				.ReturnsAsync(expectedTrusts)
-				.ReturnsAsync(expectedTrusts)
-				.ReturnsAsync(expectedTrusts)
-				.ReturnsAsync(expectedTrusts)
-				.ReturnsAsync(expectedTrusts)
-				.ReturnsAsync(expectedTrusts)
-				.ReturnsAsync(expectedTrusts)
-				.ReturnsAsync(expectedTrusts)
-				.ReturnsAsync(expectedTrusts);
+				.ReturnsAsync(expectedApiWrapper)
+				.ReturnsAsync(expectedApiWrapper)
+				.ReturnsAsync(expectedApiWrapper)
+				.ReturnsAsync(expectedApiWrapper)
+				.ReturnsAsync(expectedApiWrapper)
+				.ReturnsAsync(expectedApiWrapper)
+				.ReturnsAsync(expectedApiWrapper)
+				.ReturnsAsync(expectedApiWrapper)
+				.ReturnsAsync(expectedApiWrapper)
+				.ReturnsAsync(expectedApiWrapper)
+				.ReturnsAsync(expectedApiWrapper);
 			
 			var trustSearchService = new TrustSearchService(mockTrustService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 

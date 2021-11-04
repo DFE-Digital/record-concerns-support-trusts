@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Service.TRAMS.Base;
 using Service.TRAMS.Configuration;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,15 +27,16 @@ namespace Service.TRAMS.Trusts
 			_logger.LogInformation("TrustSearchService::GetTrustsBySearchCriteria execution");
 			
 			var trustList = new List<TrustSummaryDto>();
-			IList<TrustSummaryDto> trusts;
+			ApiWrapper<TrustSummaryDto> apiWrapperTrusts;
 			var nrRequests = 0;
 			
 			do
 			{
-				trusts = await _trustService.GetTrustsByPagination(trustSearch);
-				if (!trusts.Any()) continue;
+				apiWrapperTrusts = await _trustService.GetTrustsByPagination(trustSearch);
 				
-				trustList.AddRange(trusts);
+				if (apiWrapperTrusts?.Data is null || !apiWrapperTrusts.Data.Any()) continue;
+				
+				trustList.AddRange(apiWrapperTrusts.Data);
 				trustSearch.PageIncrement();
 				
 				// Safe guard in case we have more than 10 pages.
@@ -44,7 +46,7 @@ namespace Service.TRAMS.Trusts
 					break;
 				}
 
-			} while (trusts.Any());
+			} while (apiWrapperTrusts?.Data != null && apiWrapperTrusts.Data.Any() && apiWrapperTrusts.Paging?.NextPageUrl != null);
 			
 			return trustList;
 		}

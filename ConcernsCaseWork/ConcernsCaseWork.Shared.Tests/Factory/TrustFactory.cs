@@ -16,7 +16,9 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					fixture.Create<string>(), 
 					fixture.Create<string>(), 
 					fixture.Create<string>(), 
-					fixture.Create<string>(), 
+					fixture.Create<string>(),
+					fixture.Create<string>(),
+					GroupContactAddressFactory.BuildGroupContactAddressDto(),
 					EstablishmentFactory.BuildListEstablishmentSummaryDto())
 			};
 		}
@@ -35,22 +37,29 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					fixture.Create<string>(), 
 					fixture.Create<string>(), 
 					fixture.Create<string>(), 
-					fixture.Create<string>(), 
+					fixture.Create<string>(),
+					fixture.Create<string>(),
+					GroupContactAddressFactory.BuildGroupContactAddressModel(),
 					EstablishmentFactory.BuildListEstablishmentSummaryModel())
 			};
 		}
 
 		public static TrustDetailsDto BuildTrustDetailsDto(string ukPrn = "trust-ukprn")
 		{
-			return new TrustDetailsDto(GiasDataFactory.BuildGiasDataDto(ukPrn), EstablishmentFactory.BuildListEstablishmentDto());
+			return new TrustDetailsDto(
+				GiasDataFactory.BuildGiasDataDto(ukPrn),
+				IfdDataFactory.BuildIfdDataDto(),
+				EstablishmentFactory.BuildListEstablishmentDto());
 		}
 		
 		public static List<TrustDetailsDto> BuildListTrustDetailsDto()
 		{
 			return new List<TrustDetailsDto> {
 				new TrustDetailsDto(GiasDataFactory.BuildGiasDataDto(),
+					IfdDataFactory.BuildIfdDataDto(),
 				EstablishmentFactory.BuildListEstablishmentDto()),
 				new TrustDetailsDto(GiasDataFactory.BuildGiasDataDto(),
+					IfdDataFactory.BuildIfdDataDto(),
 					EstablishmentFactory.BuildListEstablishmentDto())
 			};
 		}
@@ -58,6 +67,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		public static TrustDetailsModel BuildTrustDetailsModel()
 		{
 			return new TrustDetailsModel(GiasDataFactory.BuildGiasDataModel(),
+				IfdDataFactory.BuildIfdDataModel(),
 				EstablishmentFactory.BuildListEstablishmentModel());
 		}
 	}
