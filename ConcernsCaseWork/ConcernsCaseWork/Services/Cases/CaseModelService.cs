@@ -384,7 +384,7 @@ namespace ConcernsCaseWork.Services.Cases
 				const bool isCasePrimary = true;
 				
 				// Create a case
-				createCaseModel.Status = statusDto.Urn;
+				createCaseModel.StatusUrn = statusDto.Urn;
 				var newCase = await _caseCachedService.PostCase(CaseMapping.Map(createCaseModel));
 
 				// Create a record
