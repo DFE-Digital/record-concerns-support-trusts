@@ -37,7 +37,6 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord, Is.Not.Null);
 			Assert.That(actualRecord, Is.Not.Null);
 			Assert.That(actualRecord.Name, Is.EqualTo(expectedRecord.Name));
-			Assert.That(actualRecord.Urn, Is.EqualTo(expectedRecord.Urn));
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(expectedRecord.Description));
 			Assert.That(actualRecord.Primary, Is.EqualTo(expectedRecord.Primary));
@@ -80,7 +79,6 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord, Is.Not.Null);
 			Assert.That(actualRecord, Is.Not.Null);
 			Assert.That(actualRecord.Name, Is.EqualTo(expectedRecord.Name));
-			Assert.That(actualRecord.Urn, Is.EqualTo(expectedRecord.Urn));
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(expectedRecord.Description));
 			Assert.That(actualRecord.Primary, Is.EqualTo(expectedRecord.Primary));
@@ -123,7 +121,6 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord, Is.Not.Null);
 			Assert.That(actualRecord, Is.Not.Null);
 			Assert.That(actualRecord.Name, Is.EqualTo(expectedRecord.Name));
-			Assert.That(actualRecord.Urn, Is.EqualTo(expectedRecord.Urn));
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(expectedRecord.Description));
 			Assert.That(actualRecord.Primary, Is.EqualTo(expectedRecord.Primary));

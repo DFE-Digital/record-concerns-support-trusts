@@ -27,7 +27,7 @@ namespace Service.TRAMS.Records
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"{EndpointsVersion}/records/case/urn/{caseUrn}");
+					$"/{EndpointsVersion}/records/case/urn/{caseUrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -48,7 +48,7 @@ namespace Service.TRAMS.Records
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RecordService::GetRecordsByCaseUrn::Exception message::{ex.Message}");
+				_logger.LogError("RecordService::GetRecordsByCaseUrn::Exception message::{Message}", ex.Message);
 			}
 			
 			return Array.Empty<RecordDto>();
@@ -71,7 +71,7 @@ namespace Service.TRAMS.Records
 				
 				// Execute request
 				var response = await client.PostAsync(
-					$"{EndpointsVersion}/record/case/urn/{createRecordDto.CaseUrn}", request);
+					$"/{EndpointsVersion}/record/case/urn/{createRecordDto.CaseUrn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -86,7 +86,7 @@ namespace Service.TRAMS.Records
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RecordService::PostRecordByCaseUrn::Exception message::{ex.Message}");
+				_logger.LogError("RecordService::PostRecordByCaseUrn::Exception message::{Message}", ex.Message);
 				
 				throw;
 			}
@@ -109,7 +109,7 @@ namespace Service.TRAMS.Records
 				
 				// Execute request
 				var response = await client.PatchAsync(
-					$"{EndpointsVersion}/record/urn/{recordDto.Urn}", request);
+					$"/{EndpointsVersion}/record/urn/{recordDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -124,7 +124,7 @@ namespace Service.TRAMS.Records
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RecordService::PatchRecordByUrn::Exception message::{ex.Message}");
+				_logger.LogError("RecordService::PatchRecordByUrn::Exception message::{Message}", ex.Message);
 
 				throw;
 			}

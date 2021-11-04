@@ -32,11 +32,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			};
 		}
 
-		public static RecordDto BuildRecordDto(long caseUrn = 1)
+		public static RecordDto BuildRecordDto(long caseUrn = 1, long typeUrn = 1)
 		{
 			var currentDate = DateTimeOffset.Now;
 			return new RecordDto(currentDate, currentDate, currentDate, currentDate,
-				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, 1, 1,
+				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, typeUrn, 1,
 				true, 1, 1);
 		}
 		
@@ -45,7 +45,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			var currentDate = DateTimeOffset.Now;
 			return new CreateRecordDto(currentDate, currentDate, currentDate, currentDate,
 				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), 1, 1, 1,
-				true, 1, 1);
+				true, 1);
 		}
 	}
 }

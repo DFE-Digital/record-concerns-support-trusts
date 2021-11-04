@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.TRAMS.Cases;
@@ -65,16 +64,10 @@ namespace Service.Redis.Cases
 		public async Task<CaseDto> PostCase(CreateCaseDto createCaseDto)
 		{
 			_logger.LogInformation("CaseCachedService::PostCase");
-
-			// TODO Enable only when TRAMS API is live
-			// Create case on TRAMS API
-			//var newCase = await _caseService.PostCase(createCaseDto);
-			//if (newCase is null) throw new ApplicationException("Error::CaseCachedService::PostCase");
 			
-			// TODO Start Remove when TRAMS API is live
-			var createCaseDtoStr = JsonConvert.SerializeObject(createCaseDto);
-			var newCase = JsonConvert.DeserializeObject<CaseDto>(createCaseDtoStr);
-			// TODO End Remove when TRAMS API is live
+			// Create case on Academy API
+			var newCase = await _caseService.PostCase(createCaseDto);
+			if (newCase is null) throw new ApplicationException("Error::CaseCachedService::PostCase");
 			
 			// Store in cache for 24 hours (default)
 			var userState = await GetData<UserState>(createCaseDto.CreatedBy);

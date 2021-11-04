@@ -8,10 +8,10 @@ using Service.Redis.Models;
 using Service.Redis.Rating;
 using Service.Redis.RecordRatingHistory;
 using Service.Redis.Records;
-using Service.Redis.Sequence;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
 using Service.Redis.Type;
+using Service.TRAMS.Cases;
 using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
@@ -26,13 +26,13 @@ namespace ConcernsCaseWork.Services.Cases
 	public sealed class CaseModelService : ICaseModelService
 	{
 		private readonly IRecordRatingHistoryCachedService _recordRatingHistoryCachedService;
-		private readonly ISequenceCachedService _sequenceCachedService;
 		private readonly IRatingCachedService _ratingCachedService;
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly IRecordCachedService _recordCachedService;
 		private readonly ITrustCachedService _trustCachedService;
 		private readonly ICaseCachedService _caseCachedService;
 		private readonly ITypeCachedService _typeCachedService;
+		private readonly ICaseSearchService _caseSearchService;
 		private readonly ILogger<CaseModelService> _logger;
 		private readonly ICachedService _cachedService;
 		private readonly IMapper _mapper;
@@ -41,19 +41,19 @@ namespace ConcernsCaseWork.Services.Cases
 			IRecordCachedService recordCachedService, IRatingCachedService ratingCachedService,
 			ITypeCachedService typeCachedService, ICachedService cachedService, 
 			IRecordRatingHistoryCachedService recordRatingHistoryCachedService,
-			IStatusCachedService statusCachedService, 
-			ISequenceCachedService sequenceCachedService,
+			IStatusCachedService statusCachedService,
+			ICaseSearchService caseSearchService,
 			IMapper mapper,
 			ILogger<CaseModelService> logger)
 		{
 			_recordRatingHistoryCachedService = recordRatingHistoryCachedService;
-			_sequenceCachedService = sequenceCachedService;
 			_statusCachedService = statusCachedService;
 			_ratingCachedService = ratingCachedService;
 			_recordCachedService = recordCachedService;
 			_trustCachedService = trustCachedService;
 			_caseCachedService = caseCachedService;
 			_typeCachedService = typeCachedService;
+			_caseSearchService = caseSearchService;
 			_cachedService = cachedService;
 			_mapper = mapper;
 			_logger = logger;
@@ -94,7 +94,7 @@ namespace ConcernsCaseWork.Services.Cases
 
 				// Fetch records
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
-				var recordDto = recordsDto.First(r => r.Primary);
+				var recordDto = recordsDto.FirstOrDefault(r => r.Primary) ?? recordsDto.First();
 				
 				// Fetch type
 				var typesDto = await _typeCachedService.GetTypes();
@@ -116,6 +116,53 @@ namespace ConcernsCaseWork.Services.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError("CaseModelService::GetCaseByUrn exception {Message}", ex.Message);
+				throw;
+			}
+		}
+
+		/// <summary>
+		/// Use case get all cases by trust ukprn
+		/// Trust overview scenario where service displays open and close cases by trust
+		/// </summary>
+		/// <param name="trustUkprn"></param>
+		/// <returns></returns>
+		public async Task<IList<TrustCasesModel>> GetCasesByTrustUkprn(string trustUkprn)
+		{
+			try
+			{
+				var casesDto = await _caseSearchService.GetCasesBySearchCriteria(new CaseTrustSearch(trustUkprn));
+				if (!casesDto.Any()) return Array.Empty<TrustCasesModel>();
+				
+				// Fetch live and close status
+				var liveStatus = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
+				var monitoringStatus = await _statusCachedService.GetStatusByName(StatusEnum.Monitoring.ToString());
+				var closeStatus = await _statusCachedService.GetStatusByName(StatusEnum.Close.ToString());
+				
+				// Filter cases that are for monitoring
+				casesDto = casesDto.Where(c => c.StatusUrn.CompareTo(monitoringStatus.Urn) != 0).ToList();
+				
+				// Fetch records by case urn
+				var recordsTasks = casesDto.Select(c => _recordCachedService.GetRecordsByCaseUrn(c)).ToList();
+				await Task.WhenAll(recordsTasks);
+			
+				// Get results from tasks and filter only primary records
+				var recordsDto = recordsTasks.SelectMany(recordTask => recordTask.Result).ToList();
+				
+				// Filter primary records
+				recordsDto = recordsDto.Where(r => r.Primary).ToList();
+				if (!recordsDto.Any()) return Array.Empty<TrustCasesModel>();
+				
+				// Fetch Ratings
+				var ragsRatingDto = await _ratingCachedService.GetRatings();
+
+				// Fetch Types
+				var typesDto = await _typeCachedService.GetTypes();
+
+				return CaseMapping.MapTrustCases(recordsDto, ragsRatingDto, typesDto, casesDto, liveStatus, closeStatus);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("CaseModelService::GetCasesByTrustUkprn exception {Message}", ex.Message);
 				throw;
 			}
 		}
@@ -322,10 +369,6 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				// TODO Start Remove when Trams API is live
-				createCaseModel.Urn = await _sequenceCachedService.Generator();
-				// TODO End Remove when Trams API is live
-				
 				// Fetch Status
 				var statusDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
 
@@ -336,8 +379,9 @@ namespace ConcernsCaseWork.Services.Cases
 				// Fetch Rating
 				var ratingDto = await _ratingCachedService.GetRatingByName(createCaseModel.RagRatingName);
 
-				// Is first case
-				var isCasePrimary = await _caseCachedService.IsCasePrimary(createCaseModel.CreatedBy, createCaseModel.Urn);
+				// In a 1:1 case -> record (not multiple concerns) this flag is always true.
+				// When multiple concerns is develop take into consideration the number of records attached to the case.
+				const bool isCasePrimary = true;
 				
 				// Create a case
 				createCaseModel.Status = statusDto.Urn;
@@ -347,7 +391,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var currentDate = DateTimeOffset.Now;
 				var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, 
 					currentDate, typeDto.Name, typeDto.Description, createCaseModel.Description, newCase.Urn, 
-					typeDto.Urn, ratingDto.Urn, isCasePrimary, await _sequenceCachedService.Generator(), statusDto.Urn);
+					typeDto.Urn, ratingDto.Urn, isCasePrimary, statusDto.Urn);
 				
 				var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 
@@ -410,7 +454,7 @@ namespace ConcernsCaseWork.Services.Cases
 					
 			// Fetch cases from cache
 			var casesDto = caseDetails.Select(c => c.Value.CaseDto)
-				.Where(c => c.Status.CompareTo(statusDto.Urn) == 0).ToList();
+				.Where(c => c.StatusUrn.CompareTo(statusDto.Urn) == 0).ToList();
 					
 			if (!casesDto.Any()) return Array.Empty<HomeModel>();
 			

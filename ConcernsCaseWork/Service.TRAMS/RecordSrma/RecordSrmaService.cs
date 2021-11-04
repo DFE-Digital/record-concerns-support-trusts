@@ -27,7 +27,7 @@ namespace Service.TRAMS.RecordSrma
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"{EndpointsVersion}/record-srma/record/urn/{recordUrn}");
+					$"/{EndpointsVersion}/record-srma/record/urn/{recordUrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -48,7 +48,7 @@ namespace Service.TRAMS.RecordSrma
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RecordSrmaService::GetRecordsSrmaByRecordUrn::Exception message::{ex.Message}");
+				_logger.LogError("RecordSrmaService::GetRecordsSrmaByRecordUrn::Exception message::{Message}", ex.Message);
 			}
 			
 			return Array.Empty<RecordSrmaDto>();
@@ -71,7 +71,7 @@ namespace Service.TRAMS.RecordSrma
 				
 				// Execute request
 				var response = await client.PostAsync(
-					$"{EndpointsVersion}/record-srma/record/urn/{createRecordSrmaDto.RecordUrn}", request);
+					$"/{EndpointsVersion}/record-srma/record/urn/{createRecordSrmaDto.RecordUrn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -86,7 +86,7 @@ namespace Service.TRAMS.RecordSrma
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RecordSrmaService::PostRecordSrmaByRecordUrn::Exception message::{ex.Message}");
+				_logger.LogError("RecordSrmaService::PostRecordSrmaByRecordUrn::Exception message::{Message}", ex.Message);
 			}
 			
 			return null;
@@ -109,7 +109,7 @@ namespace Service.TRAMS.RecordSrma
 				
 				// Execute request
 				var response = await client.PatchAsync(
-					$"{EndpointsVersion}/record-srma/urn/{recordSrmaDto.RecordUrn}", request);
+					$"/{EndpointsVersion}/record-srma/urn/{recordSrmaDto.RecordUrn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -124,7 +124,7 @@ namespace Service.TRAMS.RecordSrma
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RecordSrmaService::PatchRecordSrmaByUrn::Exception message::{ex.Message}");
+				_logger.LogError("RecordSrmaService::PatchRecordSrmaByUrn::Exception message::{Message}", ex.Message);
 			}
 			
 			return null;

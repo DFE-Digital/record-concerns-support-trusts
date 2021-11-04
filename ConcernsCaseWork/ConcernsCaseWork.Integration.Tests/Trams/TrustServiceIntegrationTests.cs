@@ -39,12 +39,12 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			const string searchParameter = "Northwood";
 			
 			// act
-			var trustsPage = await trustService.GetTrustsByPagination(
+			var trustsSummaryDto = await trustService.GetTrustsByPagination(
 				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
 
 			// assert
-			Assert.That(trustsPage, Is.Not.Null);
-			Assert.That(trustsPage.Count, Is.GreaterThanOrEqualTo(1));
+			Assert.That(trustsSummaryDto, Is.Not.Null);
+			Assert.That(trustsSummaryDto.Count, Is.GreaterThanOrEqualTo(1));
 		}
 		
 		[Test]

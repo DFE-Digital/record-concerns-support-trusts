@@ -148,7 +148,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			);
 		}
 		
-		public static CreateCaseDto BuildCreateCaseDto()
+		public static CreateCaseDto BuildCreateCaseDto(string createdBy = null, string trustUkprn = null)
 		{
 			var dateTimeNow = DateTime.Now;
 			return new CreateCaseDto(
@@ -156,10 +156,10 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				dateTimeNow, 
 				dateTimeNow, 
 				dateTimeNow, 
-				Fixture.Create<string>(), 
+				createdBy ?? Fixture.Create<string>(), 
 				Fixture.Create<string>(), 
 				Fixture.Create<string>(),
-				Fixture.Create<string>(), 
+				trustUkprn ?? Fixture.Create<string>(), 
 				Fixture.Create<string>(), 
 				dateTimeNow, 
 				Fixture.Create<string>(), 
@@ -167,8 +167,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<string>(),
 				Fixture.Create<string>(), 
 				Fixture.Create<string>(), 
-				Fixture.Create<string>(), 
-				1, 
+				Fixture.Create<string>(),
 				1
 			);
 		}
@@ -192,8 +191,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				NextSteps = Fixture.Create<string>(),
 				CaseAim = Fixture.Create<string>(),
 				DeEscalationPoint = Fixture.Create<string>(),
-				DirectionOfTravel = Fixture.Create<string>(), 
-				Urn = 1, 
+				DirectionOfTravel = Fixture.Create<string>(),
 				Status = 1, 
 				Type = caseType, 
 				SubType = caseSubType, 
@@ -223,7 +221,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				DeEscalationPoint = Fixture.Create<string>(),
 				DirectionOfTravel = Fixture.Create<string>(),
 				Urn = 1,
-				Status = 1,
+				StatusUrn = 1,
 				StatusName = Fixture.Create<string>(),
 				CaseType = caseType,
 				CaseSubType = caseSubType,
@@ -249,6 +247,27 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				CaseAim = Fixture.Create<string>(),
 				DeEscalationPoint = Fixture.Create<string>()
 			};
+		}
+
+		public static IList<TrustCasesModel> BuildListTrustCasesModel()
+		{
+			return new List<TrustCasesModel>
+			{
+				new TrustCasesModel(
+					Fixture.Create<long>(), 
+					Fixture.Create<string>(),
+					Fixture.Create<string>(),
+					Fixture.Create<Tuple<int, IList<string>>>(),
+					Fixture.Create<IList<string>>(),
+					Fixture.Create<DateTimeOffset>(),
+					Fixture.Create<DateTimeOffset>(),
+					Fixture.Create<string>())
+			};
+		}
+		
+		public static CaseTrustSearch BuildCaseTrustSearch(string trustUkPrn = "")
+		{
+			return new CaseTrustSearch(trustUkPrn);
 		}
 	}
 }

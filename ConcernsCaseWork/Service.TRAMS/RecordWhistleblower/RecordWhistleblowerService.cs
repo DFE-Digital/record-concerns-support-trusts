@@ -27,7 +27,7 @@ namespace Service.TRAMS.RecordWhistleblower
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"{EndpointsVersion}/record-whistleblower/record/urn/{recordUrn}");
+					$"/{EndpointsVersion}/record-whistleblower/record/urn/{recordUrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -48,7 +48,7 @@ namespace Service.TRAMS.RecordWhistleblower
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RecordWhistleblowerService::GetRecordsWhistleBlowingByRecordUrn::Exception message::{ex.Message}");
+				_logger.LogError("RecordWhistleblowerService::GetRecordsWhistleBlowingByRecordUrn::Exception message::{Message}", ex.Message);
 			}
 			
 			return Array.Empty<RecordWhistleblowerDto>();
@@ -71,7 +71,7 @@ namespace Service.TRAMS.RecordWhistleblower
 				
 				// Execute request
 				var response = await client.PostAsync(
-					$"{EndpointsVersion}/record-whistleblower/record/urn/{createRecordWhistleblowerDto.RecordUrn}", request);
+					$"/{EndpointsVersion}/record-whistleblower/record/urn/{createRecordWhistleblowerDto.RecordUrn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -86,7 +86,7 @@ namespace Service.TRAMS.RecordWhistleblower
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RecordWhistleblowerService::PostRecordWhistleblowerByRecordUrn::Exception message::{ex.Message}");
+				_logger.LogError("RecordWhistleblowerService::PostRecordWhistleblowerByRecordUrn::Exception message::{Message}", ex.Message);
 			}
 			
 			return null;
@@ -109,7 +109,7 @@ namespace Service.TRAMS.RecordWhistleblower
 				
 				// Execute request
 				var response = await client.PatchAsync(
-					$"{EndpointsVersion}/record-whistleblower/urn/{recordWhistleblowerDto.Urn}", request);
+					$"/{EndpointsVersion}/record-whistleblower/urn/{recordWhistleblowerDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -124,7 +124,7 @@ namespace Service.TRAMS.RecordWhistleblower
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RecordWhistleblowerService::PatchRecordWhistleblowerByUrn::Exception message::{ex.Message}");
+				_logger.LogError("RecordWhistleblowerService::PatchRecordWhistleblowerByUrn::Exception message::{Message}", ex.Message);
 			}
 			
 			return null;

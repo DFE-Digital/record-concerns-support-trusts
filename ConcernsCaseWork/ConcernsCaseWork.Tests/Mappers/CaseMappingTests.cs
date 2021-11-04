@@ -1,7 +1,9 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
+using Service.TRAMS.Records;
 using Service.TRAMS.Status;
+using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Tests.Mappers
 {
@@ -21,8 +23,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(createCaseDto, Is.Not.Null);
 			Assert.That(createCaseDto.Description, Is.EqualTo(createCaseModel.Description));
 			Assert.That(createCaseDto.Issue, Is.EqualTo(createCaseModel.Issue));
-			Assert.That(createCaseDto.Status, Is.EqualTo(createCaseModel.Status));
-			Assert.That(createCaseDto.Urn, Is.EqualTo(createCaseModel.Urn));
+			Assert.That(createCaseDto.StatusUrn, Is.EqualTo(createCaseModel.Status));
 			Assert.That(createCaseDto.ClosedAt, Is.EqualTo(createCaseModel.ClosedAt));
 			Assert.That(createCaseDto.CreatedAt, Is.EqualTo(createCaseModel.CreatedAt));
 			Assert.That(createCaseDto.CreatedBy, Is.EqualTo(createCaseModel.CreatedBy));
@@ -52,7 +53,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(caseModel, Is.Not.Null);
 			Assert.That(caseModel.Description, Is.EqualTo(caseDto.Description));
 			Assert.That(caseModel.Issue, Is.EqualTo(caseDto.Issue));
-			Assert.That(caseModel.Status, Is.EqualTo(caseDto.Status));
+			Assert.That(caseModel.StatusUrn, Is.EqualTo(caseDto.StatusUrn));
 			Assert.That(caseModel.StatusName, Is.EqualTo(StatusEnum.Close.ToString()));
 			Assert.That(caseModel.Urn, Is.EqualTo(caseDto.Urn));
 			Assert.That(caseModel.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
@@ -86,7 +87,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(expectedCaseDto, Is.Not.Null);
 			Assert.That(expectedCaseDto.Description, Is.EqualTo(caseDto.Description));
 			Assert.That(expectedCaseDto.Issue, Is.EqualTo(caseDto.Issue));
-			Assert.That(expectedCaseDto.Status, Is.EqualTo(caseDto.Status));
+			Assert.That(expectedCaseDto.StatusUrn, Is.EqualTo(caseDto.StatusUrn));
 			Assert.That(expectedCaseDto.Urn, Is.EqualTo(caseDto.Urn));
 			Assert.That(expectedCaseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
 			Assert.That(expectedCaseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
@@ -118,7 +119,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(expectedCaseDto, Is.Not.Null);
 			Assert.That(expectedCaseDto.Description, Is.EqualTo(caseDto.Description));
 			Assert.That(expectedCaseDto.Issue, Is.EqualTo(caseDto.Issue));
-			Assert.That(expectedCaseDto.Status, Is.EqualTo(caseDto.Status));
+			Assert.That(expectedCaseDto.StatusUrn, Is.EqualTo(caseDto.StatusUrn));
 			Assert.That(expectedCaseDto.Urn, Is.EqualTo(caseDto.Urn));
 			Assert.That(expectedCaseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
 			Assert.That(expectedCaseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
@@ -150,7 +151,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(expectedCaseDto, Is.Not.Null);
 			Assert.That(expectedCaseDto.Description, Is.EqualTo(caseDto.Description));
 			Assert.That(expectedCaseDto.Issue, Is.EqualTo(patchCaseModel.Issue));
-			Assert.That(expectedCaseDto.Status, Is.EqualTo(caseDto.Status));
+			Assert.That(expectedCaseDto.StatusUrn, Is.EqualTo(caseDto.StatusUrn));
 			Assert.That(expectedCaseDto.Urn, Is.EqualTo(caseDto.Urn));
 			Assert.That(expectedCaseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
 			Assert.That(expectedCaseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
@@ -182,7 +183,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(expectedCaseDto, Is.Not.Null);
 			Assert.That(expectedCaseDto.Description, Is.EqualTo(caseDto.Description));
 			Assert.That(expectedCaseDto.Issue, Is.EqualTo(caseDto.Issue));
-			Assert.That(expectedCaseDto.Status, Is.EqualTo(caseDto.Status));
+			Assert.That(expectedCaseDto.StatusUrn, Is.EqualTo(caseDto.StatusUrn));
 			Assert.That(expectedCaseDto.Urn, Is.EqualTo(caseDto.Urn));
 			Assert.That(expectedCaseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
 			Assert.That(expectedCaseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
@@ -214,7 +215,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(expectedCaseDto, Is.Not.Null);
 			Assert.That(expectedCaseDto.Description, Is.EqualTo(caseDto.Description));
 			Assert.That(expectedCaseDto.Issue, Is.EqualTo(caseDto.Issue));
-			Assert.That(expectedCaseDto.Status, Is.EqualTo(caseDto.Status));
+			Assert.That(expectedCaseDto.StatusUrn, Is.EqualTo(caseDto.StatusUrn));
 			Assert.That(expectedCaseDto.Urn, Is.EqualTo(caseDto.Urn));
 			Assert.That(expectedCaseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
 			Assert.That(expectedCaseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
@@ -246,7 +247,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(expectedCaseDto, Is.Not.Null);
 			Assert.That(expectedCaseDto.Description, Is.EqualTo(caseDto.Description));
 			Assert.That(expectedCaseDto.Issue, Is.EqualTo(caseDto.Issue));
-			Assert.That(expectedCaseDto.Status, Is.EqualTo(caseDto.Status));
+			Assert.That(expectedCaseDto.StatusUrn, Is.EqualTo(caseDto.StatusUrn));
 			Assert.That(expectedCaseDto.Urn, Is.EqualTo(caseDto.Urn));
 			Assert.That(expectedCaseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
 			Assert.That(expectedCaseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
@@ -278,7 +279,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(expectedCaseDto, Is.Not.Null);
 			Assert.That(expectedCaseDto.Description, Is.EqualTo(caseDto.Description));
 			Assert.That(expectedCaseDto.Issue, Is.EqualTo(caseDto.Issue));
-			Assert.That(expectedCaseDto.Status, Is.EqualTo(caseDto.Status));
+			Assert.That(expectedCaseDto.StatusUrn, Is.EqualTo(caseDto.StatusUrn));
 			Assert.That(expectedCaseDto.Urn, Is.EqualTo(caseDto.Urn));
 			Assert.That(expectedCaseDto.ClosedAt, Is.EqualTo(caseDto.ClosedAt));
 			Assert.That(expectedCaseDto.CreatedAt, Is.EqualTo(caseDto.CreatedAt));
@@ -294,6 +295,63 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(expectedCaseDto.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
 			Assert.That(expectedCaseDto.ReasonAtReview, Is.EqualTo(caseDto.ReasonAtReview));
 			Assert.That(expectedCaseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
+		}
+
+		[Test]
+		public void WhenMapTrustCases_Returns_ListTrustCasesModel()
+		{
+			// arrange
+			var recordsDto = RecordFactory.BuildListRecordDto();
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = TypeFactory.BuildListTypeDto();
+			var casesDto = CaseFactory.BuildListCaseDto();
+			var liveStatus = StatusFactory.BuildStatusDto("live", 1);
+			var closeStatus = StatusFactory.BuildStatusDto("close", 3);
+
+			// act
+			var expectedTrustCasesModel = CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, liveStatus, closeStatus);
+
+			// assert
+			Assert.That(expectedTrustCasesModel, Is.Not.Null);
+			Assert.That(expectedTrustCasesModel.Count, Is.EqualTo(5));
+		}
+		
+		[Test]
+		public void WhenMapTrustCases_MissingType_Returns_ListTrustCasesModel()
+		{
+			// arrange
+			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto(1, 0) };
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = TypeFactory.BuildListTypeDto();
+			var casesDto = CaseFactory.BuildListCaseDto();
+			var liveStatus = StatusFactory.BuildStatusDto("live", 1);
+			var closeStatus = StatusFactory.BuildStatusDto("close", 3);
+
+			// act
+			var expectedTrustCasesModel = CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, liveStatus, closeStatus);
+
+			// assert
+			Assert.That(expectedTrustCasesModel, Is.Not.Null);
+			Assert.That(expectedTrustCasesModel.Count, Is.EqualTo(0));
+		}
+		
+		[Test]
+		public void WhenMapTrustCases_MissingCaseDto_Returns_ListTrustCasesModel()
+		{
+			// arrange
+			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto(0) };
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = TypeFactory.BuildListTypeDto();
+			var casesDto = CaseFactory.BuildListCaseDto();
+			var liveStatus = StatusFactory.BuildStatusDto("live", 1);
+			var closeStatus = StatusFactory.BuildStatusDto("close", 3);
+
+			// act
+			var expectedTrustCasesModel = CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, liveStatus, closeStatus);
+
+			// assert
+			Assert.That(expectedTrustCasesModel, Is.Not.Null);
+			Assert.That(expectedTrustCasesModel.Count, Is.EqualTo(0));
 		}
 	}
 }

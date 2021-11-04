@@ -27,7 +27,7 @@ namespace Service.TRAMS.RecordRatingHistory
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"{EndpointsVersion}/record-rating-history/case/urn/{caseUrn}");
+					$"/{EndpointsVersion}/record-rating-history/case/urn/{caseUrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -48,7 +48,7 @@ namespace Service.TRAMS.RecordRatingHistory
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RecordRatingHistory::GetRecordsRatingHistoryByCaseUrn::Exception message::{ex.Message}");
+				_logger.LogError("RecordRatingHistory::GetRecordsRatingHistoryByCaseUrn::Exception message::{Message}", ex.Message);
 			}
 			
 			return Array.Empty<RecordRatingHistoryDto>();
@@ -62,7 +62,7 @@ namespace Service.TRAMS.RecordRatingHistory
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"{EndpointsVersion}/record-rating-history/record/urn/{recordUrn}");
+					$"/{EndpointsVersion}/record-rating-history/record/urn/{recordUrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -83,7 +83,7 @@ namespace Service.TRAMS.RecordRatingHistory
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RecordRatingHistory::GetRecordsRatingHistoryByRecordUrn::Exception message::{ex.Message}");
+				_logger.LogError("RecordRatingHistory::GetRecordsRatingHistoryByRecordUrn::Exception message::{Message}", ex.Message);
 			}
 			
 			return Array.Empty<RecordRatingHistoryDto>();
@@ -105,7 +105,7 @@ namespace Service.TRAMS.RecordRatingHistory
 				var client = ClientFactory.CreateClient("TramsClient");
 				
 				// Execute request
-				var response = await client.PostAsync($"{EndpointsVersion}/record-rating-history", request);
+				var response = await client.PostAsync($"/{EndpointsVersion}/record-rating-history", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -120,7 +120,7 @@ namespace Service.TRAMS.RecordRatingHistory
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RecordRatingHistory::PostRecordRatingHistoryByRecordUrn::Exception message::{ex.Message}");
+				_logger.LogError("RecordRatingHistory::PostRecordRatingHistoryByRecordUrn::Exception message::{Message}", ex.Message);
 			}
 
 			return null;

@@ -4,8 +4,10 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using Service.TRAMS.Base;
 using Service.TRAMS.Cases;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -56,7 +58,7 @@ namespace Service.TRAMS.Tests.Cases
 				{
 					Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
 					Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
-					Assert.That(caseDto.Status, Is.EqualTo(expectedCase.Status));
+					Assert.That(caseDto.StatusUrn, Is.EqualTo(expectedCase.StatusUrn));
 					Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
 					Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
 					Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
@@ -112,9 +114,13 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var expectedCase = CaseFactory.BuildCaseDto();
+			var expectedCaseWrap = new ApiWrapper<CaseDto>(
+				new List<CaseDto> { expectedCase }, 
+				new ApiWrapper<CaseDto>.Pagination(1, 1, string.Empty));
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
+			var logger = new Mock<ILogger<CaseService>>();
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -122,14 +128,13 @@ namespace Service.TRAMS.Tests.Cases
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCase))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCaseWrap))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
-			var logger = new Mock<ILogger<CaseService>>();
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
 			// act
@@ -139,7 +144,7 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(actualCase, Is.Not.Null);
 			Assert.That(actualCase.Description, Is.EqualTo(expectedCase.Description));
 			Assert.That(actualCase.Issue, Is.EqualTo(expectedCase.Issue));
-			Assert.That(actualCase.Status, Is.EqualTo(expectedCase.Status));
+			Assert.That(actualCase.StatusUrn, Is.EqualTo(expectedCase.StatusUrn));
 			Assert.That(actualCase.Urn, Is.EqualTo(expectedCase.Urn));
 			Assert.That(actualCase.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
 			Assert.That(actualCase.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
@@ -185,10 +190,42 @@ namespace Service.TRAMS.Tests.Cases
 		}
 		
 		[Test]
+		public void WhenGetCaseByUrn_UnwrapResponse_ReturnsException()
+		{
+			// arrange
+			var expectedCaseWrap = new ApiWrapper<CaseDto>(null, null);
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCaseWrap))
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act / assert
+			Assert.ThrowsAsync<Exception>(() => caseService.GetCaseByUrn(1));
+		}		
+		
+		[Test]
 		public async Task WhenGetCasesByTrustUkPrn_ReturnsCases()
 		{
 			// arrange
 			var expectedCases = CaseFactory.BuildListCaseDto();
+			var expectedCaseWrap = new ApiWrapper<CaseDto>(
+				expectedCases, 
+				new ApiWrapper<CaseDto>.Pagination(1, 1, string.Empty));
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -199,7 +236,7 @@ namespace Service.TRAMS.Tests.Cases
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCases))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCaseWrap))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
@@ -210,19 +247,24 @@ namespace Service.TRAMS.Tests.Cases
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var cases = await caseService.GetCasesByTrustUkPrn("trust-ukprn");
+			var apiWrapperCasesDto = await caseService.GetCasesByTrustUkPrn(new CaseTrustSearch("trust-ukprn"));
 
 			// assert
-			Assert.That(cases, Is.Not.Null);
-			Assert.That(cases.Count, Is.EqualTo(expectedCases.Count));
+			Assert.That(apiWrapperCasesDto, Is.Not.Null);
+			Assert.That(apiWrapperCasesDto.Data, Is.Not.Null);
+			Assert.That(apiWrapperCasesDto.Data.Count, Is.EqualTo(expectedCases.Count));
+			Assert.That(apiWrapperCasesDto.Paging, Is.Not.Null);
+			Assert.That(apiWrapperCasesDto.Paging.Page, Is.EqualTo(1));
+			Assert.That(apiWrapperCasesDto.Paging.RecordCount, Is.EqualTo(1));
+			Assert.That(apiWrapperCasesDto.Paging.NextPageUrl, Is.EqualTo(string.Empty));
 			
-			foreach (var caseDto in cases)
+			foreach (var caseDto in apiWrapperCasesDto.Data)
 			{
 				foreach (var expectedCase in expectedCases.Where(expectedCase => caseDto.Urn == expectedCase.Urn))
 				{
 					Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
 					Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
-					Assert.That(caseDto.Status, Is.EqualTo(expectedCase.Status));
+					Assert.That(caseDto.StatusUrn, Is.EqualTo(expectedCase.StatusUrn));
 					Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
 					Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
 					Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
@@ -243,7 +285,7 @@ namespace Service.TRAMS.Tests.Cases
 		}
 		
 		[Test]
-		public async Task WhenGetCasesByTrustUkPrn_ThrowsException_ReturnsEmptyCases()
+		public void WhenGetCasesByTrustUkPrn_ThrowsException()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -266,11 +308,7 @@ namespace Service.TRAMS.Tests.Cases
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var cases = await caseService.GetCasesByTrustUkPrn("trust-ukprn");
-
-			// assert
-			Assert.That(cases, Is.Not.Null);
-			Assert.That(cases.Count, Is.EqualTo(0));
+			Assert.ThrowsAsync<HttpRequestException>(() => caseService.GetCasesByTrustUkPrn(new CaseTrustSearch("trust-ukprn")));
 		}
 		
 		[Test]
@@ -311,7 +349,7 @@ namespace Service.TRAMS.Tests.Cases
 				{
 					Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
 					Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
-					Assert.That(caseDto.Status, Is.EqualTo(expectedCase.Status));
+					Assert.That(caseDto.StatusUrn, Is.EqualTo(expectedCase.StatusUrn));
 					Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
 					Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
 					Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
@@ -367,9 +405,14 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var expectedCase = CaseFactory.BuildCaseDto();
+			var expectedCaseWrap = new ApiWrapper<CaseDto>(
+				new List<CaseDto> { expectedCase }, 
+				new ApiWrapper<CaseDto>.Pagination(1, 1, string.Empty));
+			
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
+			var logger = new Mock<ILogger<CaseService>>();
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -377,14 +420,13 @@ namespace Service.TRAMS.Tests.Cases
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCase))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCaseWrap))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
-			var logger = new Mock<ILogger<CaseService>>();
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
 			// act
@@ -394,7 +436,7 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(actualCase, Is.Not.Null);
 			Assert.That(actualCase.Description, Is.EqualTo(expectedCase.Description));
 			Assert.That(actualCase.Issue, Is.EqualTo(expectedCase.Issue));
-			Assert.That(actualCase.Status, Is.EqualTo(expectedCase.Status));
+			Assert.That(actualCase.StatusUrn, Is.EqualTo(expectedCase.StatusUrn));
 			Assert.That(actualCase.Urn, Is.EqualTo(expectedCase.Urn));
 			Assert.That(actualCase.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
 			Assert.That(actualCase.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
@@ -439,7 +481,37 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.ThrowsAsync<HttpRequestException>(() => caseService.PostCase(CaseFactory.BuildCreateCaseDto()));
 		}
 		
-				[Test]
+		[Test]
+		public void WhenPostCase_UnwrapResponse_ReturnsException()
+		{
+			// arrange
+			var expectedCaseWrap = new ApiWrapper<CaseDto>(null, null);
+			
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCaseWrap))
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act
+			Assert.ThrowsAsync<Exception>(() => caseService.PostCase(CaseFactory.BuildCreateCaseDto()));
+		}		
+		
+		[Test]
 		public async Task WhenPatchCaseByUrn_ReturnsCase()
 		{
 			// arrange
@@ -471,7 +543,7 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(actualCase, Is.Not.Null);
 			Assert.That(actualCase.Description, Is.EqualTo(expectedCase.Description));
 			Assert.That(actualCase.Issue, Is.EqualTo(expectedCase.Issue));
-			Assert.That(actualCase.Status, Is.EqualTo(expectedCase.Status));
+			Assert.That(actualCase.StatusUrn, Is.EqualTo(expectedCase.StatusUrn));
 			Assert.That(actualCase.Urn, Is.EqualTo(expectedCase.Urn));
 			Assert.That(actualCase.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
 			Assert.That(actualCase.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
@@ -529,6 +601,20 @@ namespace Service.TRAMS.Tests.Cases
 			// assert
 			Assert.That(page, Is.EqualTo(1));
 			Assert.That(nextPage, Is.EqualTo(2));
+		}
+		
+		[Test]
+		public void WhenBuildRequestUri_ReturnsRequestUrl()
+		{
+			// arrange
+			var caseTrustSearch = CaseFactory.BuildCaseTrustSearch("trust-ukprn");
+
+			// act
+			var requestUri = CaseService.BuildRequestUri(caseTrustSearch);
+
+			// assert
+			Assert.That(requestUri, Is.Not.Null);
+			Assert.That(requestUri, Is.EqualTo("page%3d1"));
 		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Service.TRAMS.Base;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.Cases
@@ -7,7 +8,7 @@ namespace Service.TRAMS.Cases
 	{
 		Task<IList<CaseDto>> GetCasesByCaseworkerAndStatus(string caseworker, long statusUrn);
 		Task<CaseDto> GetCaseByUrn(long urn);
-		Task<IList<CaseDto>> GetCasesByTrustUkPrn(string trustUkprn);
+		Task<ApiWrapper<CaseDto>> GetCasesByTrustUkPrn(CaseTrustSearch caseTrustSearch);
 		Task<IList<CaseDto>> GetCasesByPagination(CaseSearch caseSearch);
 		Task<CaseDto> PostCase(CreateCaseDto createCaseDto);
 		Task<CaseDto> PatchCaseByUrn(CaseDto caseDto);

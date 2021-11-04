@@ -24,7 +24,7 @@ namespace Service.TRAMS.Rating
 				_logger.LogInformation("RatingService::GetRatings");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"{EndpointsVersion}/ratings");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/ratings");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -45,7 +45,7 @@ namespace Service.TRAMS.Rating
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"RatingService::GetRatings::Exception message::{ex.Message}");
+				_logger.LogError("RatingService::GetRatings::Exception message::{Message}", ex.Message);
 			}
 			
 			// TODO replace return when TRAMS API endpoints are live

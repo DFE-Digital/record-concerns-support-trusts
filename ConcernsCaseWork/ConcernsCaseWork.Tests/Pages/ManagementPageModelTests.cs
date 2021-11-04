@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages
@@ -35,15 +36,18 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		[Test]
-		public async Task WhenOnGetAsync_MissingCaseUrn_ReturnsPageModel()
+		public async Task WhenOnGetAsync_ReturnsPageModel()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockLogger = new Mock<ILogger<ManagementPageModel>>();
 			var caseModel = CaseFactory.BuildCaseModel();
+			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(caseModel);
+			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
+				.ReturnsAsync(trustCasesModel);
 			
 			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
 
@@ -57,7 +61,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.CaseModel, Is.Not.Null);
 			Assert.That(pageModel.CaseModel.Description, Is.EqualTo(caseModel.Description));
 			Assert.That(pageModel.CaseModel.Issue, Is.EqualTo(caseModel.Issue));
-			Assert.That(pageModel.CaseModel.Status, Is.EqualTo(caseModel.Status));
+			Assert.That(pageModel.CaseModel.StatusUrn, Is.EqualTo(caseModel.StatusUrn));
 			Assert.That(pageModel.CaseModel.Urn, Is.EqualTo(caseModel.Urn));
 			Assert.That(pageModel.CaseModel.CaseType, Is.EqualTo(caseModel.CaseType));
 			Assert.That(pageModel.CaseModel.ClosedAt, Is.EqualTo(caseModel.ClosedAt));
@@ -82,6 +86,18 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.CaseModel.RagRatingCss, Is.EqualTo(caseModel.RagRatingCss));
 			Assert.That(pageModel.CaseModel.ReasonAtReview, Is.EqualTo(caseModel.ReasonAtReview));
 			Assert.That(pageModel.CaseModel.TrustUkPrn, Is.EqualTo(caseModel.TrustUkPrn));
+			
+			Assert.That(pageModel.TrustCasesModel, Is.Not.Null);
+			Assert.That(pageModel.TrustCasesModel.Count, Is.EqualTo(1));
+
+			var actualFirstTrustCaseModel = trustCasesModel.First();
+			var expectedFirstTrustCaseModel = pageModel.TrustCasesModel.First();
+			Assert.That(expectedFirstTrustCaseModel.CaseUrn, Is.EqualTo(actualFirstTrustCaseModel.CaseUrn));
+			Assert.That(expectedFirstTrustCaseModel.RagRating, Is.EqualTo(actualFirstTrustCaseModel.RagRating));
+			Assert.That(expectedFirstTrustCaseModel.RagRatingCss, Is.EqualTo(actualFirstTrustCaseModel.RagRatingCss));
+			Assert.That(expectedFirstTrustCaseModel.Closed, Is.EqualTo(actualFirstTrustCaseModel.Closed));
+			Assert.That(expectedFirstTrustCaseModel.CaseTypeDescription, Is.EqualTo(actualFirstTrustCaseModel.CaseTypeDescription));
+			Assert.That(expectedFirstTrustCaseModel.StatusDescription, Is.EqualTo(actualFirstTrustCaseModel.StatusDescription));
 		}
 		
 		private static ManagementPageModel SetupManagementPageModel(

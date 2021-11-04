@@ -3,10 +3,12 @@ using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Service.TRAMS.Cases
 {
@@ -27,7 +29,7 @@ namespace Service.TRAMS.Cases
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"{EndpointsVersion}/cases/owner/{caseworker}?status={statusUrn}");
+					$"/{EndpointsVersion}/{EndpointPrefix}/owner/{caseworker}?status={statusUrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -41,14 +43,14 @@ namespace Service.TRAMS.Cases
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 				
-				// Deserialize content to POJO
+				// Deserialize content to POCO
 				var casesDto = JsonConvert.DeserializeObject<IList<CaseDto>>(content);
 
 				return casesDto;
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseService::GetCasesByCaseworkerAndStatus::Exception message::{ex.Message}");
+				_logger.LogError("CaseService::GetCasesByCaseworkerAndStatus::Exception message::{Message}", ex.Message);
 			}
 			
 			return Array.Empty<CaseDto>();
@@ -61,7 +63,7 @@ namespace Service.TRAMS.Cases
 				_logger.LogInformation("CaseService::GetCasesByUrn");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"{EndpointsVersion}/case/urn/{urn}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/{EndpointPrefix}/urn/{urn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -75,27 +77,33 @@ namespace Service.TRAMS.Cases
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 				
-				// Deserialize content to POJO
-				var caseDto = JsonConvert.DeserializeObject<CaseDto>(content);
+				// Deserialize content to POCO
+				var caseDto = JsonConvert.DeserializeObject<ApiWrapper<CaseDto>>(content);
+				
+				// Unwrap response
+				if (caseDto is { Data: { } })
+				{
+					return caseDto.Data.FirstOrDefault();
+				}
 
-				return caseDto;
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseService::GetCasesByUrn::Exception message::{ex.Message}");
+				_logger.LogError("CaseService::GetCasesByUrn::Exception message::{Message}", ex.Message);
 
 				throw;
 			}
 		}
 
-		public async Task<IList<CaseDto>> GetCasesByTrustUkPrn(string trustUkprn)
+		public async Task<ApiWrapper<CaseDto>> GetCasesByTrustUkPrn(CaseTrustSearch caseTrustSearch)
 		{
 			try
 			{
 				_logger.LogInformation("CaseService::GetCasesByTrustUkPrn");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"{EndpointsVersion}/cases/trust/{trustUkprn}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/{EndpointPrefix}/ukprn/{caseTrustSearch.TrustUkPrn}?{BuildRequestUri(caseTrustSearch)}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -109,17 +117,17 @@ namespace Service.TRAMS.Cases
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 				
-				// Deserialize content to POJO
-				var casesDto = JsonConvert.DeserializeObject<IList<CaseDto>>(content);
+				// Deserialize content to POCO
+				var apiWrapperCasesDto = JsonConvert.DeserializeObject<ApiWrapper<CaseDto>>(content);
 
-				return casesDto;
+				return apiWrapperCasesDto;
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseService::GetCasesByTrustUkPrn::Exception message::{ex.Message}");
+				_logger.LogError("CaseService::GetCasesByTrustUkPrn::Exception message::{Message}", ex.Message);
+				
+				throw;
 			}
-			
-			return Array.Empty<CaseDto>();
 		}
 
 		public async Task<IList<CaseDto>> GetCasesByPagination(CaseSearch caseSearch)
@@ -129,7 +137,7 @@ namespace Service.TRAMS.Cases
 				_logger.LogInformation("CaseService::GetCasesByPagination");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"{EndpointsVersion}/cases?page={caseSearch.Page}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/cases?page={caseSearch.Page}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -143,14 +151,14 @@ namespace Service.TRAMS.Cases
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 				
-				// Deserialize content to POJO
+				// Deserialize content to POCO
 				var casesDto = JsonConvert.DeserializeObject<IList<CaseDto>>(content);
 
 				return casesDto;
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseService::GetCasesByPagination::Exception message::{ex.Message}");
+				_logger.LogError("CaseService::GetCasesByPagination::Exception message::{Message}", ex.Message);
 			}
 			
 			return Array.Empty<CaseDto>();
@@ -172,7 +180,7 @@ namespace Service.TRAMS.Cases
 				var client = ClientFactory.CreateClient("TramsClient");
 				
 				// Execute request
-				var response = await client.PostAsync($"{EndpointsVersion}/case", request);
+				var response = await client.PostAsync($"/{EndpointsVersion}/{EndpointPrefix}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -180,14 +188,20 @@ namespace Service.TRAMS.Cases
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 				
-				// Deserialize content to POJO
-				var newCaseDto = JsonConvert.DeserializeObject<CaseDto>(content);
+				// Deserialize content to POCO
+				var newCaseDto = JsonConvert.DeserializeObject<ApiWrapper<CaseDto>>(content);
 
-				return newCaseDto;
+				// Unwrap response
+				if (newCaseDto is { Data: { } })
+				{
+					return newCaseDto.Data.FirstOrDefault();
+				}
+
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseService::PostCase::Exception message::{ex.Message}");
+				_logger.LogError("CaseService::PostCase::Exception message::{Message}", ex.Message);
 
 				throw;
 			}
@@ -209,7 +223,7 @@ namespace Service.TRAMS.Cases
 				var client = ClientFactory.CreateClient("TramsClient");
 				
 				// Execute request
-				var response = await client.PatchAsync($"{EndpointsVersion}/case/urn/{caseDto.Urn}", request);
+				var response = await client.PatchAsync($"/{EndpointsVersion}/case/urn/{caseDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -217,17 +231,25 @@ namespace Service.TRAMS.Cases
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 				
-				// Deserialize content to POJO
+				// Deserialize content to POCO
 				var updatedCaseDto = JsonConvert.DeserializeObject<CaseDto>(content);
 
 				return updatedCaseDto;
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError($"CaseService::PatchCaseByUrn::Exception message::{ex.Message}");
+				_logger.LogError("CaseService::PatchCaseByUrn::Exception message::{Message}", ex.Message);
 
 				throw;
 			}
+		}
+		
+		public static string BuildRequestUri(CaseTrustSearch caseTrustSearch)
+		{
+			var queryParams = HttpUtility.ParseQueryString(string.Empty);
+			queryParams.Add("page", caseTrustSearch.Page.ToString());
+			
+			return HttpUtility.UrlEncode(queryParams.ToString());
 		}
 	}
 }

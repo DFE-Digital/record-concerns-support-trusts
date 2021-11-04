@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.Extensions;
-using Service.TRAMS.Cases;
+﻿using Service.TRAMS.Cases;
 using System;
 using System.Collections.Generic;
 
@@ -26,7 +25,6 @@ namespace ConcernsCaseWork.Models
 		public string Description { get; set; }
 
 		public string CrmEnquiry { get; set; }
-
 		
 		public string TrustUkPrn { get; set; }
 		
@@ -51,7 +49,7 @@ namespace ConcernsCaseWork.Models
 
 		public long Urn { get; set; }
 
-		public long Status { get; set; }
+		public long StatusUrn { get; set; }
 		
 		public string StatusName { get; set; } = string.Empty;
 
