@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			mockTypeCachedService.Setup(t => t.GetTypes()).ReturnsAsync(typesDto);
 			mockTrustCachedService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDto);
 			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(casesDto.Where(c => c.Status == 2).ToList());
+				.ReturnsAsync(casesDto.Where(c => c.StatusUrn == 2).ToList());
 			
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,

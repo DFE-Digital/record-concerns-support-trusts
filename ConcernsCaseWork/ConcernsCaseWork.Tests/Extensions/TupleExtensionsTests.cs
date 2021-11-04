@@ -17,8 +17,8 @@ namespace ConcernsCaseWork.Tests.Extensions
 
 			// act
 			(IList<CaseDto> activeCasesDto, IList<CaseDto> monitoringCasesDto) = casesDto.Split(
-				caseDto => caseDto.Status.CompareTo(1) == 0, 
-				caseDto => caseDto.Status.CompareTo(2) == 0);
+				caseDto => caseDto.StatusUrn.CompareTo(1) == 0, 
+				caseDto => caseDto.StatusUrn.CompareTo(2) == 0);
 
 			// assert
 			Assert.That(activeCasesDto, Is.Not.Null);

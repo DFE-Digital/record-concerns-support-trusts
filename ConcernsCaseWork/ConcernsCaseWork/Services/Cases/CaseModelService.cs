@@ -139,7 +139,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var closeStatus = await _statusCachedService.GetStatusByName(StatusEnum.Close.ToString());
 				
 				// Filter cases that are for monitoring
-				casesDto = casesDto.Where(c => c.Status.CompareTo(monitoringStatus.Urn) != 0).ToList();
+				casesDto = casesDto.Where(c => c.StatusUrn.CompareTo(monitoringStatus.Urn) != 0).ToList();
 				
 				// Fetch records by case urn
 				var recordsTasks = casesDto.Select(c => _recordCachedService.GetRecordsByCaseUrn(c)).ToList();
@@ -454,7 +454,7 @@ namespace ConcernsCaseWork.Services.Cases
 					
 			// Fetch cases from cache
 			var casesDto = caseDetails.Select(c => c.Value.CaseDto)
-				.Where(c => c.Status.CompareTo(statusDto.Urn) == 0).ToList();
+				.Where(c => c.StatusUrn.CompareTo(statusDto.Urn) == 0).ToList();
 					
 			if (!casesDto.Any()) return Array.Empty<HomeModel>();
 			

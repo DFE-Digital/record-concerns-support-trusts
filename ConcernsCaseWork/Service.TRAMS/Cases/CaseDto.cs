@@ -12,8 +12,7 @@ namespace Service.TRAMS.Cases
 		[JsonProperty("updatedAt")]
 		public DateTimeOffset UpdatedAt { get; }
 		
-		[JsonProperty("reviewedAt")]
-		//[JsonProperty("review_at")]
+		[JsonProperty("reviewAt")]
 		public DateTimeOffset ReviewAt { get; }
 		
 		[JsonProperty("closedAt")]
@@ -62,20 +61,19 @@ namespace Service.TRAMS.Cases
 		[JsonProperty("urn")]
 		public long Urn { get; }
 		
-		[JsonProperty("concernsStatusId")]
-		//[JsonProperty("status")]
-		public long Status { get; }
+		[JsonProperty("statusUrn")]
+		public long StatusUrn { get; }
 
 		[JsonConstructor]
 		public CaseDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
 			DateTimeOffset closedAt, string createdBy, string description, string crmEnquiry, string trustUkPrn, 
 			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
-			string nextSteps, string caseAim, string deEscalationPoint, string directionOfTravel, long urn, long status) => 
+			string nextSteps, string caseAim, string deEscalationPoint, string directionOfTravel, long urn, long statusUrn) => 
 			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, CaseAim, DeEscalationPoint, 
-				DirectionOfTravel, Urn, Status) = 
+				DirectionOfTravel, Urn, StatusUrn) = 
 			(createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn,
 				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, caseAim, deEscalationPoint, 
-				directionOfTravel, urn, status);
+				directionOfTravel, urn, statusUrn);
 	}
 }

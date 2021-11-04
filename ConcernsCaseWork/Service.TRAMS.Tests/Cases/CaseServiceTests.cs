@@ -58,7 +58,7 @@ namespace Service.TRAMS.Tests.Cases
 				{
 					Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
 					Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
-					Assert.That(caseDto.Status, Is.EqualTo(expectedCase.Status));
+					Assert.That(caseDto.StatusUrn, Is.EqualTo(expectedCase.StatusUrn));
 					Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
 					Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
 					Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
@@ -144,7 +144,7 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(actualCase, Is.Not.Null);
 			Assert.That(actualCase.Description, Is.EqualTo(expectedCase.Description));
 			Assert.That(actualCase.Issue, Is.EqualTo(expectedCase.Issue));
-			Assert.That(actualCase.Status, Is.EqualTo(expectedCase.Status));
+			Assert.That(actualCase.StatusUrn, Is.EqualTo(expectedCase.StatusUrn));
 			Assert.That(actualCase.Urn, Is.EqualTo(expectedCase.Urn));
 			Assert.That(actualCase.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
 			Assert.That(actualCase.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
@@ -264,7 +264,7 @@ namespace Service.TRAMS.Tests.Cases
 				{
 					Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
 					Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
-					Assert.That(caseDto.Status, Is.EqualTo(expectedCase.Status));
+					Assert.That(caseDto.StatusUrn, Is.EqualTo(expectedCase.StatusUrn));
 					Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
 					Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
 					Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
@@ -349,7 +349,7 @@ namespace Service.TRAMS.Tests.Cases
 				{
 					Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
 					Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
-					Assert.That(caseDto.Status, Is.EqualTo(expectedCase.Status));
+					Assert.That(caseDto.StatusUrn, Is.EqualTo(expectedCase.StatusUrn));
 					Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
 					Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
 					Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
@@ -436,7 +436,7 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(actualCase, Is.Not.Null);
 			Assert.That(actualCase.Description, Is.EqualTo(expectedCase.Description));
 			Assert.That(actualCase.Issue, Is.EqualTo(expectedCase.Issue));
-			Assert.That(actualCase.Status, Is.EqualTo(expectedCase.Status));
+			Assert.That(actualCase.StatusUrn, Is.EqualTo(expectedCase.StatusUrn));
 			Assert.That(actualCase.Urn, Is.EqualTo(expectedCase.Urn));
 			Assert.That(actualCase.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
 			Assert.That(actualCase.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
@@ -543,7 +543,7 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(actualCase, Is.Not.Null);
 			Assert.That(actualCase.Description, Is.EqualTo(expectedCase.Description));
 			Assert.That(actualCase.Issue, Is.EqualTo(expectedCase.Issue));
-			Assert.That(actualCase.Status, Is.EqualTo(expectedCase.Status));
+			Assert.That(actualCase.StatusUrn, Is.EqualTo(expectedCase.StatusUrn));
 			Assert.That(actualCase.Urn, Is.EqualTo(expectedCase.Urn));
 			Assert.That(actualCase.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
 			Assert.That(actualCase.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));

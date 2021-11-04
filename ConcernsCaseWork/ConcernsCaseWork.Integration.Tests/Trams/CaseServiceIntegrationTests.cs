@@ -36,7 +36,6 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		}
 
 		[Test]
-		[Ignore("Enable when Academies API exposes the endpoint")]
 		public async Task WhenGetCasesByCaseworkerAndStatus_ReturnsListCaseDto()
 		{
 			// arrange
@@ -55,7 +54,6 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		}
 
 		[Test]
-		[Ignore("Enable when Academies API exposes the endpoint")]
 		public async Task WhenGetCaseByUrn_ReturnsCaseDto()
 		{
 			// arrange
@@ -74,7 +72,6 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		}
 		
 		[Test]
-		[Ignore("Enable when Academies API exposes the endpoint")]
 		public async Task WhenGetCasesByTrustUkPrn_ReturnsApiWrapperCaseDto()
 		{
 			// arrange

@@ -176,7 +176,7 @@ namespace Service.Redis.Tests.Cases
 			Assert.That(caseDto, Is.Not.Null);
 			Assert.That(caseDto.Description, Is.EqualTo(expectedCaseDto.Description));
 			Assert.That(caseDto.Issue, Is.EqualTo(expectedCaseDto.Issue));
-			Assert.That(caseDto.Status, Is.EqualTo(expectedCaseDto.Status));
+			Assert.That(caseDto.StatusUrn, Is.EqualTo(expectedCaseDto.StatusUrn));
 			Assert.That(caseDto.Urn, Is.EqualTo(expectedCaseDto.Urn));
 			Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCaseDto.ClosedAt));
 			Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCaseDto.CreatedAt));
@@ -222,7 +222,7 @@ namespace Service.Redis.Tests.Cases
 			Assert.That(caseDto, Is.Not.Null);
 			Assert.That(caseDto.Description, Is.EqualTo(expectedCaseDto.Description));
 			Assert.That(caseDto.Issue, Is.EqualTo(expectedCaseDto.Issue));
-			Assert.That(caseDto.Status, Is.EqualTo(expectedCaseDto.Status));
+			Assert.That(caseDto.StatusUrn, Is.EqualTo(expectedCaseDto.StatusUrn));
 			Assert.That(caseDto.Urn, Is.EqualTo(expectedCaseDto.Urn));
 			Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCaseDto.ClosedAt));
 			Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCaseDto.CreatedAt));

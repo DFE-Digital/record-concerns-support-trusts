@@ -21,7 +21,7 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(expectedCaseDto, Is.Not.Null);
 			Assert.That(caseDto.Description, Is.EqualTo(expectedCaseDto.Description));
 			Assert.That(caseDto.Issue, Is.EqualTo(expectedCaseDto.Issue));
-			Assert.That(caseDto.Status, Is.EqualTo(expectedCaseDto.Status));
+			Assert.That(caseDto.StatusUrn, Is.EqualTo(expectedCaseDto.StatusUrn));
 			Assert.That(caseDto.Urn, Is.EqualTo(expectedCaseDto.Urn));
 			Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCaseDto.ClosedAt));
 			Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCaseDto.CreatedAt));
@@ -37,6 +37,37 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCaseDto.DirectionOfTravel));
 			Assert.That(caseDto.ReasonAtReview, Is.EqualTo(expectedCaseDto.ReasonAtReview));
 			Assert.That(caseDto.TrustUkPrn, Is.EqualTo(expectedCaseDto.TrustUkPrn));
+		}
+		
+		[Test]
+		public void WhenCreateCaseDtoSerializeAndDeserialize_ToCaseDto_IsSuccessful()
+		{
+			// arrange
+			var createCaseDto = CaseFactory.BuildCreateCaseDto();
+			var createCaseStrDto = JsonConvert.SerializeObject(createCaseDto);
+			var expectedCaseDto = JsonConvert.DeserializeObject<CaseDto>(createCaseStrDto);
+			
+			// assert
+			Assert.That(createCaseDto, Is.Not.Null);
+			Assert.That(expectedCaseDto, Is.Not.Null);
+			Assert.That(expectedCaseDto.Urn, Is.EqualTo(0));
+			Assert.That(createCaseDto.Description, Is.EqualTo(expectedCaseDto.Description));
+			Assert.That(createCaseDto.Issue, Is.EqualTo(expectedCaseDto.Issue));
+			Assert.That(createCaseDto.StatusUrn, Is.EqualTo(expectedCaseDto.StatusUrn));
+			Assert.That(createCaseDto.ClosedAt, Is.EqualTo(expectedCaseDto.ClosedAt));
+			Assert.That(createCaseDto.CreatedAt, Is.EqualTo(expectedCaseDto.CreatedAt));
+			Assert.That(createCaseDto.CreatedBy, Is.EqualTo(expectedCaseDto.CreatedBy));
+			Assert.That(createCaseDto.CrmEnquiry, Is.EqualTo(expectedCaseDto.CrmEnquiry));
+			Assert.That(createCaseDto.CurrentStatus, Is.EqualTo(expectedCaseDto.CurrentStatus));
+			Assert.That(createCaseDto.DeEscalation, Is.EqualTo(expectedCaseDto.DeEscalation));
+			Assert.That(createCaseDto.NextSteps, Is.EqualTo(expectedCaseDto.NextSteps));
+			Assert.That(createCaseDto.CaseAim, Is.EqualTo(expectedCaseDto.CaseAim));
+			Assert.That(createCaseDto.DeEscalationPoint, Is.EqualTo(expectedCaseDto.DeEscalationPoint));
+			Assert.That(createCaseDto.ReviewAt, Is.EqualTo(expectedCaseDto.ReviewAt));
+			Assert.That(createCaseDto.UpdatedAt, Is.EqualTo(expectedCaseDto.UpdatedAt));
+			Assert.That(createCaseDto.DirectionOfTravel, Is.EqualTo(expectedCaseDto.DirectionOfTravel));
+			Assert.That(createCaseDto.ReasonAtReview, Is.EqualTo(expectedCaseDto.ReasonAtReview));
+			Assert.That(createCaseDto.TrustUkPrn, Is.EqualTo(expectedCaseDto.TrustUkPrn));
 		}
 	}
 }

@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
 
 			// act
-			var activeCases = HomeMapping.Map(casesDto.Where(c => c.Status == 1).ToList(), trustDetailsDto,
+			var activeCases = HomeMapping.Map(casesDto.Where(c => c.StatusUrn == 1).ToList(), trustDetailsDto,
 				recordsDto, ratingsDto, typesDto, statusLiveDto);
 
 			// assert
@@ -44,7 +44,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 
 			// act
-			var monitoringCases = HomeMapping.Map(casesDto.Where(c => c.Status == 2).ToList(), trustDetailsDto,
+			var monitoringCases = HomeMapping.Map(casesDto.Where(c => c.StatusUrn == 2).ToList(), trustDetailsDto,
 				recordsDto, ratingsDto, typesDto, statusMonitoringDto);
 
 			// assert
@@ -65,9 +65,9 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 			
 			// act
-			var activeCases = HomeMapping.Map(casesDto.Where(c => c.Status == 1).ToList(), trustDetailsDto,
+			var activeCases = HomeMapping.Map(casesDto.Where(c => c.StatusUrn == 1).ToList(), trustDetailsDto,
 				recordsDto, ratingsDto, typesDto, statusLiveDto);
-			var monitoringCases = HomeMapping.Map(casesDto.Where(c => c.Status == 2).ToList(), trustDetailsDto,
+			var monitoringCases = HomeMapping.Map(casesDto.Where(c => c.StatusUrn == 2).ToList(), trustDetailsDto,
 				recordsDto, ratingsDto, typesDto, statusMonitoringDto);
 			
 			// assert
@@ -90,7 +90,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var statusCloseDto = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
 
 			// act
-			var closeCases = HomeMapping.Map(casesDto.Where(c => c.Status == 3).ToList(), trustDetailsDto,
+			var closeCases = HomeMapping.Map(casesDto.Where(c => c.StatusUrn == 3).ToList(), trustDetailsDto,
 				recordsDto, ratingsDto, typesDto, statusCloseDto);
 
 			// assert
@@ -111,7 +111,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var statusCloseDto = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
 
 			// act
-			var closeCases = HomeMapping.Map(casesDto.Where(c => c.Status == 3).ToList(), trustDetailsDto,
+			var closeCases = HomeMapping.Map(casesDto.Where(c => c.StatusUrn == 3).ToList(), trustDetailsDto,
 				recordsDto, ratingsDto, typesDto, statusCloseDto);
 
 			// assert
@@ -132,7 +132,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var statusCloseDto = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
 
 			// act
-			var closeCases = HomeMapping.Map(casesDto.Where(c => c.Status == 3).ToList(), trustDetailsDto,
+			var closeCases = HomeMapping.Map(casesDto.Where(c => c.StatusUrn == 3).ToList(), trustDetailsDto,
 				recordsDto, ratingsDto, typesDto, statusCloseDto);
 
 			// assert

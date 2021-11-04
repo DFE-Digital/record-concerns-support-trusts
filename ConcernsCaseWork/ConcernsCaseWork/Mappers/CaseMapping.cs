@@ -41,7 +41,7 @@ namespace ConcernsCaseWork.Mappers
 				DeEscalationPoint = caseDto.DeEscalationPoint,
 				DirectionOfTravel = caseDto.DirectionOfTravel, 
 				Urn = caseDto.Urn,
-				StatusUrn = caseDto.Status,
+				StatusUrn = caseDto.StatusUrn,
 				StatusName = status
 			};
 		}
@@ -53,7 +53,7 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.CrmEnquiry, caseDto.TrustUkPrn, caseDto.ReasonAtReview,
 				caseDto.DeEscalation, caseDto.Issue, caseDto.CurrentStatus,
 				caseDto.NextSteps, caseDto.CaseAim, caseDto.DeEscalationPoint, caseDto.DirectionOfTravel,
-				caseDto.Urn, caseDto.Status);
+				caseDto.Urn, caseDto.StatusUrn);
 		}
 		
 		public static CaseDto MapClosure(PatchCaseModel patchCaseModel, CaseDto caseDto, StatusDto statusDto)
@@ -75,7 +75,7 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.CrmEnquiry, caseDto.TrustUkPrn, caseDto.ReasonAtReview,
 				caseDto.DeEscalation, caseDto.Issue, caseDto.CurrentStatus,
 				caseDto.NextSteps, caseDto.CaseAim, caseDto.DeEscalationPoint, patchCaseModel.DirectionOfTravel,
-				caseDto.Urn, caseDto.Status);
+				caseDto.Urn, caseDto.StatusUrn);
 		}
 		
 		public static CaseDto MapIssue(PatchCaseModel patchCaseModel, CaseDto caseDto)
@@ -85,7 +85,7 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.CrmEnquiry, caseDto.TrustUkPrn, caseDto.ReasonAtReview,
 				caseDto.DeEscalation, patchCaseModel.Issue, caseDto.CurrentStatus,
 				caseDto.NextSteps, caseDto.CaseAim, caseDto.DeEscalationPoint, caseDto.DirectionOfTravel,
-				caseDto.Urn, caseDto.Status);
+				caseDto.Urn, caseDto.StatusUrn);
 		}
 		
 		public static CaseDto MapCurrentStatus(PatchCaseModel patchCaseModel, CaseDto caseDto)
@@ -95,7 +95,7 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.CrmEnquiry, caseDto.TrustUkPrn, caseDto.ReasonAtReview,
 				caseDto.DeEscalation, caseDto.Issue, patchCaseModel.CurrentStatus,
 				caseDto.NextSteps, caseDto.CaseAim, caseDto.DeEscalationPoint, caseDto.DirectionOfTravel,
-				caseDto.Urn, caseDto.Status);
+				caseDto.Urn, caseDto.StatusUrn);
 		}
 		
 		public static CaseDto MapCaseAim(PatchCaseModel patchCaseModel, CaseDto caseDto)
@@ -105,7 +105,7 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.CrmEnquiry, caseDto.TrustUkPrn, caseDto.ReasonAtReview,
 				caseDto.DeEscalation, caseDto.Issue, caseDto.CurrentStatus,
 				caseDto.NextSteps, patchCaseModel.CaseAim, caseDto.DeEscalationPoint, caseDto.DirectionOfTravel,
-				caseDto.Urn, caseDto.Status);
+				caseDto.Urn, caseDto.StatusUrn);
 		}
 		
 		public static CaseDto MapDeEscalationPoint(PatchCaseModel patchCaseModel, CaseDto caseDto)
@@ -115,7 +115,7 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.CrmEnquiry, caseDto.TrustUkPrn, caseDto.ReasonAtReview,
 				caseDto.DeEscalation, caseDto.Issue, caseDto.CurrentStatus,
 				caseDto.NextSteps, caseDto.CaseAim, patchCaseModel.DeEscalationPoint, caseDto.DirectionOfTravel,
-				caseDto.Urn, caseDto.Status);
+				caseDto.Urn, caseDto.StatusUrn);
 		}
 
 		public static CaseDto MapNextSteps(PatchCaseModel patchCaseModel, CaseDto caseDto)
@@ -125,7 +125,7 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.CrmEnquiry, caseDto.TrustUkPrn, caseDto.ReasonAtReview,
 				caseDto.DeEscalation, caseDto.Issue, caseDto.CurrentStatus,
 				patchCaseModel.NextSteps, caseDto.CaseAim, caseDto.DeEscalationPoint, caseDto.DirectionOfTravel,
-				caseDto.Urn, caseDto.Status);
+				caseDto.Urn, caseDto.StatusUrn);
 		}
 
 		public static List<TrustCasesModel> MapTrustCases(IEnumerable<RecordDto> recordsDto, IList<RatingDto> ragsRatingDto, IList<TypeDto> typesDto,
@@ -154,7 +154,7 @@ namespace ConcernsCaseWork.Mappers
 						ragRatingCss,
 						caseDto.CreatedAt,
 						caseDto.ClosedAt,
-						caseDto.Status.CompareTo(liveStatus.Urn) == 0 ? liveStatus.Name : closeStatus.Name);
+						caseDto.StatusUrn.CompareTo(liveStatus.Urn) == 0 ? liveStatus.Name : closeStatus.Name);
 
 					return trustCase;
 				}).Where(trustCasesModel => trustCasesModel != null)
