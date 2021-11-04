@@ -192,7 +192,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				CaseAim = Fixture.Create<string>(),
 				DeEscalationPoint = Fixture.Create<string>(),
 				DirectionOfTravel = Fixture.Create<string>(),
-				Status = 1, 
+				StatusUrn = 1, 
 				Type = caseType, 
 				SubType = caseSubType, 
 				RagRatingName = Fixture.Create<string>()
