@@ -7,7 +7,7 @@
 	<div class="govuk-summary-list__row">
 		<dt class="govuk-summary-list__key">Name</dt>
 		<dd class="govuk-summary-list__value">
-			@Model?.GiasData.GroupName
+			@Model.GiasData.GroupName
 		</dd>
 	</div>
 
@@ -15,7 +15,7 @@
 		<dt class="govuk-summary-list__key">Type</dt>
 		<dd class="govuk-summary-list__value">
 			<p class="govuk-body">
-				@Model?.IfdData.TrustType
+				@Model.IfdData.TrustType
 			</p>
 		</dd>
 	</div>
@@ -24,7 +24,7 @@
 		<dt class="govuk-summary-list__key">Address</dt>
 		<dd class="govuk-summary-list__value">
 			<p class="govuk-body">
-				@Model?.GiasData.GroupContactAddress.DisplayAddress
+				@Model.GiasData.GroupContactAddress.DisplayAddress
 			</p>
 		</dd>
 	</div>
@@ -32,14 +32,14 @@
 	<div class="govuk-summary-list__row">
 		<dt class="govuk-summary-list__key">Region</dt>
 		<dd class="govuk-summary-list__value">
-			@Model?.IfdData.GroupContactAddress.County
+			@Model.IfdData.GroupContactAddress.County
 		</dd>
 	</div>
 
 	<div class="govuk-summary-list__row">
 		<dt class="govuk-summary-list__key">Companies House</dt>
 		<dd class="govuk-summary-list__value">
-			@Model?.GiasData.CompaniesHouseNumber
+			@Model.GiasData.CompaniesHouseNumber
 		</dd>
 	</div>
 
