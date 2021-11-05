@@ -31,6 +31,8 @@ else
 		@Model.TrustDetailsModel.GiasData.GroupNameTitle
 	</h1>
 	<partial name="_TrustOverview" model="@Model.TrustDetailsModel" />
+	<partial name="_Academies" model="@Model.TrustDetailsModel.Establishments" />
+	<partial name="_TrustCases" model="@Model.TrustCasesModel" />
 </div>
 	
 }
