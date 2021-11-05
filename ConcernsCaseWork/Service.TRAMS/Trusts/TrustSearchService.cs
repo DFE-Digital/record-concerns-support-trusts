@@ -57,7 +57,7 @@ namespace Service.TRAMS.Trusts
 			finally
 			{
 				stopwatch.Stop();
-				_logger.LogDebug("TrustSearchService::GetTrustsBySearchCriteria execution time {ElapsedMilliseconds} ms", stopwatch.ElapsedMilliseconds);
+				_logger.LogInformation("TrustSearchService::GetTrustsBySearchCriteria execution time {ElapsedMilliseconds} ms", stopwatch.ElapsedMilliseconds);
 			}
 			
 			return trustList;
