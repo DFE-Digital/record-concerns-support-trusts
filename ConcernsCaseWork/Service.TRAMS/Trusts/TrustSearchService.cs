@@ -39,6 +39,7 @@ namespace Service.TRAMS.Trusts
 				{
 					apiWrapperTrusts = await _trustService.GetTrustsByPagination(trustSearch);
 					
+					// The following condition will break the loop.
 					if (apiWrapperTrusts?.Data is null || !apiWrapperTrusts.Data.Any()) continue;
 					
 					trustList.AddRange(apiWrapperTrusts.Data);

@@ -39,6 +39,7 @@ namespace Service.TRAMS.Cases
 				{
 					apiWrapperCaseDto = await _caseService.GetCasesByTrustUkPrn(caseTrustSearch);
 					
+					// The following condition will break the loop.
 					if (apiWrapperCaseDto?.Data is null || !apiWrapperCaseDto.Data.Any()) continue;
 					
 					caseTrustsList.AddRange(apiWrapperCaseDto.Data);

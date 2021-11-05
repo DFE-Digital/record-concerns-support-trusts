@@ -77,7 +77,7 @@ namespace Service.TRAMS.Tests.Trusts
 		}
 		
 		[Test]
-		public void WhenGetTrustsByPagination_ThrowsException_ReturnsEmptyTrusts()
+		public void WhenGetTrustsByPagination_ThrowsException()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -102,7 +102,7 @@ namespace Service.TRAMS.Tests.Trusts
 			// act | assert
 			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch()));
 		}
-
+		
 		[TestCase("", "", "", "page%3d1")]
 		[TestCase("group-name", "", "", "groupName%3dgroup-name%26page%3d1")]
 		[TestCase("", "ukprn", "", "ukprn%3dukprn%26page%3d1")]
@@ -193,6 +193,35 @@ namespace Service.TRAMS.Tests.Trusts
 			
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustByUkPrn("9999999"));
+		}
+		
+		[Test]
+		public void WhenGetTrustByUkPrn_ApiWrapperResponseData_IsNull_ThrowsException()
+		{
+			// arrange
+			var expectedApiWrapperTrust = new ApiWrapper<TrustDetailsDto>(null, null);
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiWrapperTrust))
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<TrustService>>();
+			var trustService = new TrustService(httpClientFactory.Object, logger.Object);
+			
+			// act | assert
+			Assert.ThrowsAsync<Exception>(() => trustService.GetTrustByUkPrn("9999999"));
 		}
 	}
 }
