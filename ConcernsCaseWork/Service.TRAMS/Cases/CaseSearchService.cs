@@ -57,7 +57,7 @@ namespace Service.TRAMS.Cases
 			finally
 			{
 				stopwatch.Stop();
-				_logger.LogDebug("CaseSearchService::GetCasesBySearchCriteria execution time {ElapsedMilliseconds} ms", stopwatch.ElapsedMilliseconds);
+				_logger.LogInformation("CaseSearchService::GetCasesBySearchCriteria execution time {ElapsedMilliseconds} ms", stopwatch.ElapsedMilliseconds);
 			}
 			
 			return caseTrustsList;
