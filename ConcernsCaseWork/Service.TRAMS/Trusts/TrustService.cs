@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -18,14 +18,14 @@ namespace Service.TRAMS.Trusts
 			_logger = logger;
 		}
 		
-		public async Task<IList<TrustSummaryDto>> GetTrustsByPagination(TrustSearch trustSearch)
+		public async Task<ApiWrapper<TrustSummaryDto>> GetTrustsByPagination(TrustSearch trustSearch)
 		{
 			try
 			{
 				_logger.LogInformation("TrustService::GetTrustsByPagination");
 
 				// Create a request
-				using var request = new HttpRequestMessage(HttpMethod.Get, $"/trusts?{BuildRequestUri(trustSearch)}");
+				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/trusts?{BuildRequestUri(trustSearch)}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient(HttpClientName);
@@ -39,17 +39,17 @@ namespace Service.TRAMS.Trusts
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 
-				// Deserialize content to POJO
-				var trusts = JsonConvert.DeserializeObject<IList<TrustSummaryDto>>(content);
+				// Deserialize content to POCO
+				var apiWrapperTrusts = JsonConvert.DeserializeObject<ApiWrapper<TrustSummaryDto>>(content);
 				
-				return trusts;
+				return apiWrapperTrusts;
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("TrustService::GetTrustsByPagination::Exception message::{Message}", ex.Message);
+				
+				throw;
 			}
-
-			return Array.Empty<TrustSummaryDto>();
 		}
 
 		public async Task<TrustDetailsDto> GetTrustByUkPrn(string ukPrn)
@@ -59,7 +59,7 @@ namespace Service.TRAMS.Trusts
 				_logger.LogInformation("TrustService::GetTrustByUkPrn");
 
 				// Create a request
-				using var request = new HttpRequestMessage(HttpMethod.Get, $"/trust/{ukPrn}");
+				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/trusts/{ukPrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient(HttpClientName);
@@ -73,10 +73,16 @@ namespace Service.TRAMS.Trusts
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 
-				// Deserialize content to POJO
-				var trustDetails = JsonConvert.DeserializeObject<TrustDetailsDto>(content);
+				// Deserialize content to POCO
+				var apiWrapperTrustDetails = JsonConvert.DeserializeObject<ApiWrapper<TrustDetailsDto>>(content);
 				
-				return trustDetails;
+				// Unwrap response
+				if (apiWrapperTrustDetails is { Data: { } })
+				{
+					return apiWrapperTrustDetails.Data.FirstOrDefault();
+				}
+
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{

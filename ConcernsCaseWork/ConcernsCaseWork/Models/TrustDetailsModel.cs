@@ -12,6 +12,8 @@ namespace ConcernsCaseWork.Models
 	{
 		public GiasDataModel GiasData { get; }
 		
+		public IfdDataModel IfdData { get; }
+		
 		public List<EstablishmentModel> Establishments { get; }
 
 		public double TotalPupilCapacity { get { return Establishments.Sum(establishment => establishment.SchoolCapacity.ParseToInt()); } }
@@ -20,7 +22,7 @@ namespace ConcernsCaseWork.Models
 
 		public double PupilCapacityPercentage { get { return Math.Round((TotalPupils / TotalPupilCapacity), 2) * 100; } }
 
-		public TrustDetailsModel(GiasDataModel giasData, List<EstablishmentModel> establishments) => 
-			(GiasData, Establishments) = (giasData, establishments);
+		public TrustDetailsModel(GiasDataModel giasData, IfdDataModel ifdData, List<EstablishmentModel> establishments) => 
+			(GiasData, IfdData, Establishments) = (giasData, ifdData, establishments);
 	}
 }

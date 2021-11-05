@@ -17,11 +17,20 @@ namespace Service.TRAMS.Trusts
 		[JsonProperty("companiesHouseNumber")]
 		public string CompaniesHouseNumber { get; }
 		
+		[JsonProperty("trustType")]
+		public string TrustType { get; }
+		
+		[JsonProperty("trustAddress")]
+		public GroupContactAddressDto GroupContactAddress { get; }
+		
 		[JsonProperty("establishments")]
 		public List<EstablishmentSummaryDto> Establishments { get; }
 
 		[JsonConstructor]
-		public TrustSummaryDto(string ukprn, string urn, string groupName, string companiesHouseNumber, List<EstablishmentSummaryDto> establishments) => 
-			(UkPrn, Urn, GroupName, CompaniesHouseNumber, Establishments) = (ukprn, urn, groupName, companiesHouseNumber, establishments);
+		public TrustSummaryDto(string ukprn, string urn, string groupName, 
+			string companiesHouseNumber, string trustType, GroupContactAddressDto groupContactAddress,
+			List<EstablishmentSummaryDto> establishments) => 
+			(UkPrn, Urn, GroupName, CompaniesHouseNumber, TrustType, GroupContactAddress, Establishments) = 
+			(ukprn, urn, groupName, companiesHouseNumber, trustType, groupContactAddress, establishments);
 	}
 }

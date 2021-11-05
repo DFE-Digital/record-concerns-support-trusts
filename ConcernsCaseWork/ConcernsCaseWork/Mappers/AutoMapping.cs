@@ -19,6 +19,7 @@ namespace ConcernsCaseWork.Mappers
 			CreateMap<EstablishmentDto, EstablishmentModel>();
 			CreateMap<EstablishmentTypeDto, EstablishmentTypeModel>();
 			CreateMap<CensusDto, CensusModel>();
+			CreateMap<IfdDataDto, IfdDataModel>();
 		}
 	}
 }

@@ -15,6 +15,9 @@ namespace ConcernsCaseWork.Shared.Tests.Shared
 			sb.Append(string.IsNullOrEmpty(trustSummaryDto.UkPrn) ? "-".PadRight(2) : trustSummaryDto.UkPrn);
 			sb.Append(",").Append(" ");
 			sb.Append(string.IsNullOrEmpty(trustSummaryDto.CompaniesHouseNumber) ? "-".PadRight(2) : trustSummaryDto.CompaniesHouseNumber);
+			sb.Append(" ");
+			sb.Append(string.IsNullOrEmpty(trustSummaryDto.GroupContactAddress?.Town) ? "-".PadRight(2) : $"({trustSummaryDto.GroupContactAddress.Town})");	
+
 				
 			return sb.ToString();
 		}
@@ -27,7 +30,9 @@ namespace ConcernsCaseWork.Shared.Tests.Shared
 			sb.Append(string.IsNullOrEmpty(trustSummaryModel.UkPrn) ? "-".PadRight(2) : trustSummaryModel.UkPrn);
 			sb.Append(",").Append(" ");
 			sb.Append(string.IsNullOrEmpty(trustSummaryModel.CompaniesHouseNumber) ? "-".PadRight(2) : trustSummaryModel.CompaniesHouseNumber);
-				
+			sb.Append(" ");
+			sb.Append(string.IsNullOrEmpty(trustSummaryModel.GroupContactAddress?.Town) ? "-".PadRight(2) : $"({trustSummaryModel.GroupContactAddress.Town})");	
+			
 			return sb.ToString();
 		}
 		

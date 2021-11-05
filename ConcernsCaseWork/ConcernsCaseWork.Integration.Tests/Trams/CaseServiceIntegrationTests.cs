@@ -100,13 +100,16 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		private async Task<TrustSummaryDto> FetchRandomTrust(string searchParameter)
 		{
 			var trustService = _factory.Services.GetRequiredService<ITrustService>();
-			var trusts= await trustService.GetTrustsByPagination(
+			var apiWrapperTrusts= await trustService.GetTrustsByPagination(
 				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
 			
+			Assert.That(apiWrapperTrusts, Is.Not.Null);
+			Assert.That(apiWrapperTrusts.Data, Is.Not.Null);
+			
 			var random = new Random();
-			int index = random.Next(trusts.Count);
+			int index = random.Next(apiWrapperTrusts.Data.Count);
 
-			return trusts[index];
+			return apiWrapperTrusts.Data[index];
 		}
 	}
 }

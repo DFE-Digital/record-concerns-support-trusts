@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Service.TRAMS.Base;
 using Service.TRAMS.Configuration;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,26 +27,38 @@ namespace Service.TRAMS.Trusts
 		{
 			_logger.LogInformation("TrustSearchService::GetTrustsBySearchCriteria execution");
 			
+			var stopwatch = Stopwatch.StartNew();
 			var trustList = new List<TrustSummaryDto>();
-			IList<TrustSummaryDto> trusts;
-			var nrRequests = 0;
 			
-			do
+			try
 			{
-				trusts = await _trustService.GetTrustsByPagination(trustSearch);
-				if (!trusts.Any()) continue;
+				ApiWrapper<TrustSummaryDto> apiWrapperTrusts;
+				var nrRequests = 0;
 				
-				trustList.AddRange(trusts);
-				trustSearch.PageIncrement();
-				
-				// Safe guard in case we have more than 10 pages.
-				// We don't have a scenario at the moment, but feels like we need a limit.
-				if ((nrRequests = Interlocked.Increment(ref nrRequests)) > _hardLimitTrustsByPagination)
+				do
 				{
-					break;
-				}
+					apiWrapperTrusts = await _trustService.GetTrustsByPagination(trustSearch);
+					
+					// The following condition will break the loop.
+					if (apiWrapperTrusts?.Data is null || !apiWrapperTrusts.Data.Any()) continue;
+					
+					trustList.AddRange(apiWrapperTrusts.Data);
+					trustSearch.PageIncrement();
+					
+					// Safe guard in case we have more than 10 pages.
+					// We don't have a scenario at the moment, but feels like we need a limit.
+					if ((nrRequests = Interlocked.Increment(ref nrRequests)) > _hardLimitTrustsByPagination)
+					{
+						break;
+					}
 
-			} while (trusts.Any());
+				} while (apiWrapperTrusts?.Data != null && apiWrapperTrusts.Data.Any() && apiWrapperTrusts.Paging?.NextPageUrl != null);
+			}
+			finally
+			{
+				stopwatch.Stop();
+				_logger.LogDebug("TrustSearchService::GetTrustsBySearchCriteria execution time {ElapsedMilliseconds} ms", stopwatch.ElapsedMilliseconds);
+			}
 			
 			return trustList;
 		}

@@ -11,12 +11,11 @@
 		</dd>
 	</div>
 
-	<!-- Show when data is available ticket 75173 -->
-	<div class="govuk-summary-list__row govuk-!-display-none">
+	<div class="govuk-summary-list__row">
 		<dt class="govuk-summary-list__key">Type</dt>
 		<dd class="govuk-summary-list__value">
 			<p class="govuk-body">
-				@Model?.GiasData.GroupTypeCode
+				@Model?.IfdData.TrustType
 			</p>
 		</dd>
 	</div>
@@ -30,11 +29,10 @@
 		</dd>
 	</div>
 
-	<!-- Show when data is available ticket 75173 -->
-	<div class="govuk-summary-list__row govuk-!-display-none">
+	<div class="govuk-summary-list__row">
 		<dt class="govuk-summary-list__key">Region</dt>
 		<dd class="govuk-summary-list__value">
-			@Model?.GiasData.GroupContactAddress.County
+			@Model?.IfdData.GroupContactAddress.County
 		</dd>
 	</div>
 
