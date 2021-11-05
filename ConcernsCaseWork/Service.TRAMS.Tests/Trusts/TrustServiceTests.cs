@@ -4,8 +4,10 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using Service.TRAMS.Base;
 using Service.TRAMS.Trusts;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -22,6 +24,7 @@ namespace Service.TRAMS.Tests.Trusts
 		{
 			// arrange
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
+			var expectedApiWrapperTrust = new ApiWrapper<TrustSummaryDto>(expectedTrusts, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -32,7 +35,7 @@ namespace Service.TRAMS.Tests.Trusts
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedTrusts))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiWrapperTrust))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
@@ -74,7 +77,7 @@ namespace Service.TRAMS.Tests.Trusts
 		}
 		
 		[Test]
-		public async Task WhenGetTrustsByPagination_ThrowsException_ReturnsEmptyTrusts()
+		public void WhenGetTrustsByPagination_ThrowsException_ReturnsEmptyTrusts()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -96,13 +99,8 @@ namespace Service.TRAMS.Tests.Trusts
 			var logger = new Mock<ILogger<TrustService>>();
 			var trustService = new TrustService(httpClientFactory.Object, logger.Object);
 			
-			// act
-			var apiWrapperTrusts = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch());
-
-			// assert
-			Assert.That(apiWrapperTrusts, Is.Not.Null);
-			Assert.That(apiWrapperTrusts.Data, Is.Not.Null);
-			Assert.That(apiWrapperTrusts.Data.Count, Is.EqualTo(0));
+			// act | assert
+			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch()));
 		}
 
 		[TestCase("", "", "", "page%3d1")]
@@ -129,6 +127,7 @@ namespace Service.TRAMS.Tests.Trusts
 		{
 			// arrange
 			var expectedTrust = TrustFactory.BuildTrustDetailsDto();
+			var expectedApiWrapperTrust = new ApiWrapper<TrustDetailsDto>(new List<TrustDetailsDto> { expectedTrust }, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -139,7 +138,7 @@ namespace Service.TRAMS.Tests.Trusts
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedTrust))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiWrapperTrust))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);

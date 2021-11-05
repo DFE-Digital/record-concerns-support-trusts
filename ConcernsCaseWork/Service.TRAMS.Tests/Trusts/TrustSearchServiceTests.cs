@@ -72,7 +72,9 @@ namespace Service.TRAMS.Tests.Trusts
 			var mockLogger = new Mock<ILogger<TrustSearchService>>();
 
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
-			var expectedApiWrapper = new ApiWrapper<TrustSummaryDto>(expectedTrusts, null);
+			var expectedApiWrapper = new ApiWrapper<TrustSummaryDto>(
+				expectedTrusts, 
+				new ApiWrapper<TrustSummaryDto>.Pagination(1, 10, "next-page-url"));
 			
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>()))

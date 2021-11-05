@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Service.TRAMS.Base;
 using Service.TRAMS.Configuration;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,27 +27,37 @@ namespace Service.TRAMS.Cases
 		{
 			_logger.LogInformation("CaseSearchService::GetCasesBySearchCriteria execution");
 			
+			var stopwatch = Stopwatch.StartNew();
 			var caseTrustsList = new List<CaseDto>();
-			ApiWrapper<CaseDto> apiWrapperCaseDto;
-			var nrRequests = 0;
 			
-			do
+			try
 			{
-				apiWrapperCaseDto = await _caseService.GetCasesByTrustUkPrn(caseTrustSearch);
+				ApiWrapper<CaseDto> apiWrapperCaseDto;
+				var nrRequests = 0;
 				
-				if (apiWrapperCaseDto?.Data is null || !apiWrapperCaseDto.Data.Any()) continue;
-				
-				caseTrustsList.AddRange(apiWrapperCaseDto.Data);
-				caseTrustSearch.PageIncrement();
-				
-				// Safe guard in case we have more than 10 pages.
-				// We don't have a scenario at the moment, but feels like we need a limit.
-				if ((nrRequests = Interlocked.Increment(ref nrRequests)) > _hardLimitTrustsByPagination)
+				do
 				{
-					break;
-				}
+					apiWrapperCaseDto = await _caseService.GetCasesByTrustUkPrn(caseTrustSearch);
+					
+					if (apiWrapperCaseDto?.Data is null || !apiWrapperCaseDto.Data.Any()) continue;
+					
+					caseTrustsList.AddRange(apiWrapperCaseDto.Data);
+					caseTrustSearch.PageIncrement();
+					
+					// Safe guard in case we have more than 10 pages.
+					// We don't have a scenario at the moment, but feels like we need a limit.
+					if ((nrRequests = Interlocked.Increment(ref nrRequests)) > _hardLimitTrustsByPagination)
+					{
+						break;
+					}
 
-			} while (apiWrapperCaseDto?.Data != null && apiWrapperCaseDto.Data.Any() && apiWrapperCaseDto.Paging?.NextPageUrl != null);
+				} while (apiWrapperCaseDto?.Data != null && apiWrapperCaseDto.Data.Any() && apiWrapperCaseDto.Paging?.NextPageUrl != null);
+			}
+			finally
+			{
+				stopwatch.Stop();
+				_logger.LogDebug("CaseSearchService::GetCasesBySearchCriteria execution time {ElapsedMilliseconds} ms", stopwatch.ElapsedMilliseconds);
+			}
 			
 			return caseTrustsList;
 		}

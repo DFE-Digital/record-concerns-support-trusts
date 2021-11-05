@@ -50,6 +50,17 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 					Assert.That(expected.GroupName, Is.EqualTo(actual.GroupName));
 					Assert.That(expected.CompaniesHouseNumber, Is.EqualTo(actual.CompaniesHouseNumber));
 					Assert.That(expected.DisplayName, Is.EqualTo(SharedBuilder.BuildDisplayName(actual)));
+					Assert.That(expected.TrustType, Is.EqualTo(actual.TrustType));
+					
+					Assert.IsAssignableFrom<GroupContactAddressModel>(expected.GroupContactAddress);
+					Assert.That(expected.GroupContactAddress, Is.Not.Null);
+					Assert.That(expected.GroupContactAddress.County, Is.EqualTo(actual.GroupContactAddress.County));
+					Assert.That(expected.GroupContactAddress.Locality, Is.EqualTo(actual.GroupContactAddress.Locality));
+					Assert.That(expected.GroupContactAddress.Postcode, Is.EqualTo(actual.GroupContactAddress.Postcode));
+					Assert.That(expected.GroupContactAddress.Street, Is.EqualTo(actual.GroupContactAddress.Street));
+					Assert.That(expected.GroupContactAddress.Town, Is.EqualTo(actual.GroupContactAddress.Town));
+					Assert.That(expected.GroupContactAddress.AdditionalLine, Is.EqualTo(actual.GroupContactAddress.AdditionalLine));
+					Assert.That(expected.GroupContactAddress.DisplayAddress, Is.EqualTo(SharedBuilder.BuildDisplayAddress(actual.GroupContactAddress)));
 					
 					foreach (var establishment in actual.Establishments)
 					{
@@ -120,6 +131,21 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.AdditionalLine, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.AdditionalLine));
 			Assert.That(trustsDetailsModel.GiasData.GroupContactAddress.DisplayAddress, Is.EqualTo(SharedBuilder.BuildDisplayAddress(trustDetailsDto.GiasData.GroupContactAddress)));
 			
+			// Ifd Data
+			Assert.IsAssignableFrom<IfdDataModel>(trustsDetailsModel.IfdData);
+			Assert.That(trustsDetailsModel.IfdData, Is.Not.Null);
+			Assert.That(trustsDetailsModel.IfdData.TrustType, Is.EqualTo(trustDetailsDto.IfdData.TrustType));
+			Assert.IsAssignableFrom<GroupContactAddressModel>(trustsDetailsModel.IfdData.GroupContactAddress);
+			Assert.That(trustsDetailsModel.IfdData.GroupContactAddress, Is.Not.Null);
+			Assert.That(trustsDetailsModel.IfdData.GroupContactAddress.County, Is.EqualTo(trustDetailsDto.IfdData.GroupContactAddress.County));
+			Assert.That(trustsDetailsModel.IfdData.GroupContactAddress.Locality, Is.EqualTo(trustDetailsDto.IfdData.GroupContactAddress.Locality));
+			Assert.That(trustsDetailsModel.IfdData.GroupContactAddress.Postcode, Is.EqualTo(trustDetailsDto.IfdData.GroupContactAddress.Postcode));
+			Assert.That(trustsDetailsModel.IfdData.GroupContactAddress.Street, Is.EqualTo(trustDetailsDto.IfdData.GroupContactAddress.Street));
+			Assert.That(trustsDetailsModel.IfdData.GroupContactAddress.Town, Is.EqualTo(trustDetailsDto.IfdData.GroupContactAddress.Town));
+			Assert.That(trustsDetailsModel.IfdData.GroupContactAddress.AdditionalLine, Is.EqualTo(trustDetailsDto.IfdData.GroupContactAddress.AdditionalLine));
+			Assert.That(trustsDetailsModel.IfdData.GroupContactAddress.DisplayAddress, Is.EqualTo(SharedBuilder.BuildDisplayAddress(trustDetailsDto.IfdData.GroupContactAddress)));
+
+			// Establisment
 			Assert.IsAssignableFrom<List<EstablishmentModel>>(trustsDetailsModel.Establishments);
 			Assert.That(trustsDetailsModel.Establishments, Is.Not.Null);
 			Assert.That(trustsDetailsModel.Establishments.Count, Is.EqualTo(1));

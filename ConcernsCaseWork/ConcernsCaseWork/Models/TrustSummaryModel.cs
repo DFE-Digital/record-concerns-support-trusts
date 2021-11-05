@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Models
 		public GroupContactAddressModel GroupContactAddress { get; }
 		
 		public List<EstablishmentSummaryModel> Establishments { get; }
-
+		
 		public string DisplayName
 		{
 			get
