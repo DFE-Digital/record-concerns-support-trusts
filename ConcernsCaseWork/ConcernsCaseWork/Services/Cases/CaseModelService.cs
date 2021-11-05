@@ -94,6 +94,7 @@ namespace ConcernsCaseWork.Services.Cases
 
 				// Fetch records
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
+				if (!recordsDto.Any()) throw new Exception($"Case {urn} does not contain any records");
 				var recordDto = recordsDto.FirstOrDefault(r => r.Primary) ?? recordsDto.First();
 				
 				// Fetch type
