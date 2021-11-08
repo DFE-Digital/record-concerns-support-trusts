@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,13 +15,16 @@ namespace ConcernsCaseWork.Pages.Case
 	public class ViewClosedPageModel : AbstractPageModel
 	{
 		private readonly ICaseModelService _caseModelService;
+		private readonly ITrustModelService _trustModelService;
 		private readonly ILogger<ViewClosedPageModel> _logger;
 		
 		public CaseModel CaseModel { get; private set; }
+		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
-		public ViewClosedPageModel(ICaseModelService caseModelService, ILogger<ViewClosedPageModel> logger)
+		public ViewClosedPageModel(ICaseModelService caseModelService, ITrustModelService trustModelService, ILogger<ViewClosedPageModel> logger)
 		{
 			_caseModelService = caseModelService;
+			_trustModelService = trustModelService;
 			_logger = logger;
 		}
 		
@@ -37,6 +41,7 @@ namespace ConcernsCaseWork.Pages.Case
 				}
 
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 			}
 			catch (Exception ex)
 			{

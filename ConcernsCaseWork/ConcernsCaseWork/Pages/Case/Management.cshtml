@@ -42,7 +42,7 @@ else
 			@Model.CaseModel.Urn
 		</h1>
 
-		<h2 class="govuk-heading-m">@Model.CaseModel.TrustDetailsModel.GiasData.GroupNameTitle</h2>
+		<h2 class="govuk-heading-m">@Model.TrustDetailsModel.GiasData.GroupNameTitle</h2>
 
 		<div class="govuk-tabs govuk-!-margin-top-6" data-module="govuk-tabs">
 
@@ -222,8 +222,8 @@ else
 			}
 		</div>
 		<div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="trust-overview">
-			<partial name="_TrustOverview" model="@Model.CaseModel.TrustDetailsModel" />
-			<partial name="_Academies" model="@Model.CaseModel.TrustDetailsModel.Establishments" />
+			<partial name="_TrustOverview" model="@Model.TrustDetailsModel" />
+			<partial name="_Academies" model="@Model.TrustDetailsModel.Establishments" />
 			<partial name="_TrustCases" model="@Model.TrustCasesModel" />
 		</div>
 </div>

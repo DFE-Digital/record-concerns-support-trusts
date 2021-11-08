@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Type;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,15 +17,18 @@ namespace ConcernsCaseWork.Pages.Case
 	public class ManagementPageModel : AbstractPageModel
 	{
 		private readonly ICaseModelService _caseModelService;
+		private readonly ITrustModelService _trustModelService;
 		private readonly ILogger<ManagementPageModel> _logger;
 		
 		public CaseModel CaseModel { get; private set; }
+		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<TrustCasesModel> TrustCasesModel { get; private set; }
 
-		public ManagementPageModel(ICaseModelService caseModelService, ITypeModelService typeModelService,
+		public ManagementPageModel(ICaseModelService caseModelService, ITrustModelService trustModelService,
 			ILogger<ManagementPageModel> logger)
 		{
 			_caseModelService = caseModelService;
+			_trustModelService = trustModelService;
 			_logger = logger;
 		}
 
@@ -41,6 +45,7 @@ namespace ConcernsCaseWork.Pages.Case
 				}
 
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				TrustCasesModel = await _caseModelService.GetCasesByTrustUkprn(CaseModel.TrustUkPrn);
 			}
 			catch (Exception ex)

@@ -24,6 +24,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ICachedService _cachedService;
 		
 		public CaseModel CaseModel { get; private set; }
+		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
 		public ConcernTypePageModel(ITrustModelService trustModelService, ICachedService cachedService, 
 			ITypeModelService typeModelService, ILogger<ConcernTypePageModel> logger)
@@ -119,10 +120,8 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			else
 			{
-				CaseModel = new CaseModel {
-					TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn), 
-					TypesDictionary = await _typeModelService.GetTypes() 
-				};
+				CaseModel = new CaseModel { TypesDictionary = await _typeModelService.GetTypes() };
+				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
 			}
 			
 			return Page();

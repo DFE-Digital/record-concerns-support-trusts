@@ -1,7 +1,7 @@
 ﻿using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Type;
+using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -23,10 +23,10 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ManagementPageModel>>();
 
-			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -40,16 +40,18 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ManagementPageModel>>();
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
+			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(caseModel);
 			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
 				.ReturnsAsync(trustCasesModel);
+			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetailsModel);
 			
-			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
@@ -76,10 +78,10 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.CaseModel.DeEscalationPoint, Is.EqualTo(caseModel.DeEscalationPoint));
 			Assert.That(pageModel.CaseModel.ReviewAt, Is.EqualTo(caseModel.ReviewAt));
 			Assert.That(pageModel.CaseModel.StatusName, Is.EqualTo(caseModel.StatusName));
-			Assert.That(pageModel.CaseModel.TrustDetailsModel.GiasData.GroupName, Is.EqualTo(caseModel.TrustDetailsModel.GiasData.GroupName));
-			Assert.That(pageModel.CaseModel.TrustDetailsModel.GiasData.GroupNameTitle, Is.EqualTo(caseModel.TrustDetailsModel.GiasData.GroupName.ToTitle()));
-			Assert.That(pageModel.CaseModel.TrustDetailsModel, Is.EqualTo(caseModel.TrustDetailsModel));
-			Assert.True(pageModel.CaseModel.TrustDetailsModel.Establishments[0].EstablishmentWebsite.Contains("http"));
+			Assert.That(pageModel.TrustDetailsModel.GiasData.GroupName, Is.EqualTo(trustDetailsModel.GiasData.GroupName));
+			Assert.That(pageModel.TrustDetailsModel.GiasData.GroupNameTitle, Is.EqualTo(trustDetailsModel.GiasData.GroupName.ToTitle()));
+			Assert.That(pageModel.TrustDetailsModel, Is.EqualTo(trustDetailsModel));
+			Assert.True(pageModel.TrustDetailsModel.Establishments[0].EstablishmentWebsite.Contains("http"));
 			Assert.That(pageModel.CaseModel.UpdatedAt, Is.EqualTo(caseModel.UpdatedAt));
 			Assert.That(pageModel.CaseModel.CaseSubType, Is.EqualTo(caseModel.CaseSubType));
 			Assert.That(pageModel.CaseModel.DirectionOfTravel, Is.EqualTo(caseModel.DirectionOfTravel));
@@ -101,11 +103,11 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		private static ManagementPageModel SetupManagementPageModel(
-			ICaseModelService mockCaseModelService, ITypeModelService mockTypeModelService, ILogger<ManagementPageModel> mockLogger, bool isAuthenticated = false)
+			ICaseModelService mockCaseModelService, ITrustModelService mockTrustModelService, ILogger<ManagementPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new ManagementPageModel(mockCaseModelService, mockTypeModelService, mockLogger)
+			return new ManagementPageModel(mockCaseModelService, mockTrustModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

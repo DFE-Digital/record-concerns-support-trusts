@@ -86,7 +86,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.CaseModel.RagRating, Is.EqualTo(caseModel.RagRating));
 			Assert.That(pageModel.CaseModel.ReviewAt, Is.EqualTo(caseModel.ReviewAt));
 			Assert.That(pageModel.CaseModel.StatusName, Is.EqualTo(caseModel.StatusName));
-			Assert.That(pageModel.CaseModel.TrustDetailsModel.GiasData.GroupName, Is.EqualTo(caseModel.TrustDetailsModel.GiasData.GroupName));
 			Assert.That(pageModel.CaseModel.TypesDictionary, Is.EqualTo(caseModel.TypesDictionary));
 			Assert.That(pageModel.CaseModel.UpdatedAt, Is.EqualTo(caseModel.UpdatedAt));
 			Assert.That(pageModel.CaseModel.CaseSubType, Is.EqualTo(caseModel.CaseSubType));
@@ -96,7 +95,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.CaseModel.RagRatingCss, Is.EqualTo(caseModel.RagRatingCss));
 			Assert.That(pageModel.CaseModel.RagRatingName, Is.EqualTo(caseModel.RagRatingName));
 			Assert.That(pageModel.CaseModel.ReasonAtReview, Is.EqualTo(caseModel.ReasonAtReview));
-			Assert.That(pageModel.CaseModel.TrustDetailsModel, Is.EqualTo(caseModel.TrustDetailsModel));
 			Assert.That(pageModel.CaseModel.TrustUkPrn, Is.EqualTo(caseModel.TrustUkPrn));
 			
 			mockCaseModelService.Verify(c => 

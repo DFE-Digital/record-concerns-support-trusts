@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 			
 			var expected = CaseFactory.BuildCaseModel();
@@ -32,7 +34,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(expected);
 			
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
@@ -64,7 +66,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(caseModel.DeEscalationPoint, Is.EqualTo(expected.DeEscalationPoint));
 			Assert.That(caseModel.ReviewAt, Is.EqualTo(expected.ReviewAt));
 			Assert.That(caseModel.StatusName, Is.EqualTo(expected.StatusName));
-			Assert.That(caseModel.TrustDetailsModel.GiasData.GroupName, Is.EqualTo(expected.TrustDetailsModel.GiasData.GroupName));
 			Assert.That(caseModel.UpdatedAt, Is.EqualTo(expected.UpdatedAt));
 			Assert.That(caseModel.DirectionOfTravel, Is.EqualTo(expected.DirectionOfTravel));
 			Assert.That(caseModel.RagRatingCss, Is.EqualTo(expected.RagRatingCss));
@@ -87,9 +88,10 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 			
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
 			
 			// act
 			await pageModel.OnGetAsync();
@@ -114,9 +116,10 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 			
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
@@ -148,9 +151,10 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 			
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
 			
 			// act
 			var actionResult = await pageModel.OnPostCloseCase();
@@ -179,11 +183,12 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 			
 			mockCaseModelService.Setup(c => c.PatchClosure(It.IsAny<PatchCaseModel>()));
 			
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
@@ -226,11 +231,12 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 			
 			mockCaseModelService.Setup(c => c.PatchClosure(It.IsAny<PatchCaseModel>()));
 			
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
@@ -274,11 +280,12 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 			
 			mockCaseModelService.Setup(c => c.PatchClosure(It.IsAny<PatchCaseModel>()));
 			
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
@@ -316,11 +323,12 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 			
 			mockCaseModelService.Setup(c => c.PatchClosure(It.IsAny<PatchCaseModel>()));
 			
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
@@ -359,11 +367,12 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 			
 			mockCaseModelService.Setup(c => c.PatchClosure(It.IsAny<PatchCaseModel>()));
 			
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
@@ -400,11 +409,11 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		private static ClosurePageModel SetupClosurePageModel(
-			ICaseModelService mockCaseModelService, ILogger<ClosurePageModel> mockLogger, bool isAuthenticated = false)
+			ICaseModelService mockCaseModelService, ITrustModelService mockTrustModelService, ILogger<ClosurePageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new ClosurePageModel(mockCaseModelService, mockLogger)
+			return new ClosurePageModel(mockCaseModelService, mockTrustModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
