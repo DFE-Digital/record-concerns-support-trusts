@@ -15,7 +15,7 @@
 			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
 			<h1 class="govuk-heading-l"> Close case @Model.CaseModel.Urn </h1>
-			<h2 class="govuk-heading-s">@Model.CaseModel.TrustDetailsModel.GiasData.GroupNameTitle</h2>
+			<h2 class="govuk-heading-s">@Model.TrustDetailsModel.GiasData.GroupNameTitle</h2>
 
 			<form role="form" asp-page-handler="closeCase" method="post" id="close-case-form" novalidate>
 

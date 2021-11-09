@@ -74,8 +74,6 @@ namespace ConcernsCaseWork.Models
 		
 		public IDictionary<string, IList<string>> TypesDictionary { get; set; }
 		
-		public TrustDetailsModel TrustDetailsModel { get; set; }
-		
 		public string PreviousUrl { get; set; }
 	}
 }

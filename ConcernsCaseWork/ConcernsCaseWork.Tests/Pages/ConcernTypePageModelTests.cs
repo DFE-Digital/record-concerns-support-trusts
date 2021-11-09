@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			// act
 			await pageModel.OnGetAsync();
-			var trustDetailsModel = pageModel.CaseModel.TrustDetailsModel;
+			var trustDetailsModel = pageModel.TrustDetailsModel;
 			var typesDictionary = pageModel.CaseModel.TypesDictionary;
 
 			// assert

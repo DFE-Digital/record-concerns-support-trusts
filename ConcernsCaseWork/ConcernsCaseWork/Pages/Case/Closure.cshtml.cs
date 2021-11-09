@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Service.TRAMS.Status;
 using System;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Services.Trusts;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -16,13 +17,16 @@ namespace ConcernsCaseWork.Pages.Case
 	public class ClosurePageModel : AbstractPageModel
 	{
 		private readonly ICaseModelService _caseModelService;
+		private readonly ITrustModelService _trustModelService;
 		private readonly ILogger<ClosurePageModel> _logger;
 		
 		public CaseModel CaseModel { get; private set; }
+		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
-		public ClosurePageModel(ICaseModelService caseModelService, ILogger<ClosurePageModel> logger)
+		public ClosurePageModel(ICaseModelService caseModelService, ITrustModelService trustModelService, ILogger<ClosurePageModel> logger)
 		{
 			_caseModelService = caseModelService;
+			_trustModelService = trustModelService;
 			_logger = logger;
 		}
 		
@@ -41,6 +45,7 @@ namespace ConcernsCaseWork.Pages.Case
 
 				// Fetch UI data
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 			}
 			catch (Exception ex)
 			{

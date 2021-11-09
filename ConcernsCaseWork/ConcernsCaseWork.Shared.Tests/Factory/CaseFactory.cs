@@ -224,8 +224,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				StatusUrn = 1,
 				StatusName = Fixture.Create<string>(),
 				CaseType = caseType,
-				CaseSubType = caseSubType,
-				TrustDetailsModel = Fixture.Create<TrustDetailsModel>()
+				CaseSubType = caseSubType
 			};
 		}
 
