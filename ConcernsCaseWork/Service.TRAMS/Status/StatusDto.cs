@@ -11,10 +11,10 @@ namespace Service.TRAMS.Status
 		[JsonProperty("name")]
 		public string Name { get; }
 		
-		[JsonProperty("created_at")]
+		[JsonProperty("createdAt")]
 		public DateTimeOffset CreatedAt { get; }
 		
-		[JsonProperty("updated_at")]
+		[JsonProperty("updatedAt")]
 		public DateTimeOffset UpdatedAt { get; }
 		
 		[JsonProperty("urn")]

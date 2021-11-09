@@ -24,7 +24,7 @@ namespace Service.TRAMS.Status
 				_logger.LogInformation("StatusService::GetStatuses");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/statuses");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/concerns-statuses");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient("TramsClient");
@@ -38,25 +38,23 @@ namespace Service.TRAMS.Status
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 				
-				// Deserialize content to POJO
-				var statusDto = JsonConvert.DeserializeObject<IList<StatusDto>>(content);
+				// Deserialize content to POCO
+				var apiWrapperStatusesDto = JsonConvert.DeserializeObject<ApiWrapper<StatusDto>>(content);
 
-				return statusDto;
+				// Unwrap response
+				if (apiWrapperStatusesDto is { Data: { } })
+				{
+					return apiWrapperStatusesDto.Data;
+				}
+
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("StatusService::GetStatuses::Exception message::{Message}", ex.Message);
-			}
-			
-			// TODO replace return when TRAMS API endpoints are live
-			return new List<StatusDto>
-			{
-				new StatusDto("Live", DateTime.Now, DateTime.Now, 1),
-				new StatusDto("Monitoring", DateTime.Now, DateTime.Now, 2),
-				new StatusDto("Close", DateTime.Now, DateTime.Now, 3)
-			};
 
-			//return Array.Empty<StatusDto>();
+				throw;
+			}
 		}
 	}
 }

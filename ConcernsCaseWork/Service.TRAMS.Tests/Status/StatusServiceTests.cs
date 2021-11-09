@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using Service.TRAMS.Base;
 using Service.TRAMS.Status;
 using System;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace Service.TRAMS.Tests.Status
 		{
 			// arrange
 			var expectedStatuses = StatusFactory.BuildListStatusDto();
+			var expectedApiWrapperStatuses = new ApiWrapper<StatusDto>(expectedStatuses, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -33,7 +35,7 @@ namespace Service.TRAMS.Tests.Status
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedStatuses))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiWrapperStatuses))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
@@ -63,7 +65,7 @@ namespace Service.TRAMS.Tests.Status
 		}
 		
 		[Test]
-		public async Task WhenGetStatus_ThrowsException_ReturnsEmptyStatuses()
+		public void WhenGetStatus_ThrowsException()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -85,14 +87,8 @@ namespace Service.TRAMS.Tests.Status
 			var logger = new Mock<ILogger<StatusService>>();
 			var statusService = new StatusService(httpClientFactory.Object, logger.Object);
 			
-			// act
-			var statuses = await statusService.GetStatuses();
-
-			// assert
-			Assert.That(statuses, Is.Not.Null);
-			// TODO uncomment when trams api is live
-			//Assert.That(statuses.Count, Is.EqualTo(0));
-			Assert.That(statuses.Count, Is.EqualTo(3));
+			// act | assert
+			Assert.ThrowsAsync<HttpRequestException>(() => statusService.GetStatuses());
 		}
 	}
 }
