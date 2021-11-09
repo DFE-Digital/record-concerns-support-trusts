@@ -17,8 +17,7 @@ namespace ConcernsCaseWork.Shared.Tests.Shared
 			sb.Append(string.IsNullOrEmpty(trustSummaryDto.CompaniesHouseNumber) ? "-".PadRight(2) : trustSummaryDto.CompaniesHouseNumber);
 			sb.Append(" ");
 			sb.Append(string.IsNullOrEmpty(trustSummaryDto.GroupContactAddress?.Town) ? "-".PadRight(2) : $"({trustSummaryDto.GroupContactAddress.Town})");	
-
-				
+			
 			return sb.ToString();
 		}
 		
