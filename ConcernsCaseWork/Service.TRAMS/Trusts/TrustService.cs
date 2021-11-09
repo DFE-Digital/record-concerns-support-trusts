@@ -59,7 +59,7 @@ namespace Service.TRAMS.Trusts
 				_logger.LogInformation("TrustService::GetTrustByUkPrn");
 
 				// Create a request
-				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/trusts/{ukPrn}");
+				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/trust/{ukPrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient(HttpClientName);
