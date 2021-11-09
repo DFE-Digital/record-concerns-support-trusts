@@ -90,7 +90,7 @@ namespace Service.TRAMS.Tests.Status
 			var statusService = new StatusService(httpClientFactory.Object, logger.Object);
 			
 			// act | assert
-			Assert.ThrowsAsync<HttpRequestException>(() => statusService.GetStatuses());
+			Assert.ThrowsAsync<Exception>(() => statusService.GetStatuses());
 		}		
 		
 		[Test]
