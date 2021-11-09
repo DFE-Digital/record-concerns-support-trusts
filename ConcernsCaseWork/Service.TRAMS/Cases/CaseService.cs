@@ -189,12 +189,12 @@ namespace Service.TRAMS.Cases
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POCO
-				var newCaseDto = JsonConvert.DeserializeObject<ApiWrapper<CaseDto>>(content);
+				var apiWrapperNewCaseDto = JsonConvert.DeserializeObject<ApiWrapper<CaseDto>>(content);
 
 				// Unwrap response
-				if (newCaseDto is { Data: { } })
+				if (apiWrapperNewCaseDto is { Data: { } })
 				{
-					return newCaseDto.Data.FirstOrDefault();
+					return apiWrapperNewCaseDto.Data.FirstOrDefault();
 				}
 
 				throw new Exception("Academies API error unwrap response");
