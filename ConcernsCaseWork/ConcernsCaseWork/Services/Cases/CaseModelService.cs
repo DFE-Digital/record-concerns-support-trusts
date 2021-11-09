@@ -108,6 +108,7 @@ namespace ConcernsCaseWork.Services.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError("CaseModelService::GetCaseByUrn exception {Message}", ex.Message);
+				
 				throw;
 			}
 		}
@@ -155,6 +156,7 @@ namespace ConcernsCaseWork.Services.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError("CaseModelService::GetCasesByTrustUkprn exception {Message}", ex.Message);
+				
 				throw;
 			}
 		}
