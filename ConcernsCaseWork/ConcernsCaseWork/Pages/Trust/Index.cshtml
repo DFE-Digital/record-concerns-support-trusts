@@ -16,12 +16,7 @@
 		</div>
 
 	</div>
-	<form role="search" id="trust-form" novalidate>
-		<div class="govuk-form-group"></div>
-		<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
-			Next
-		</button>
-	</form>
+
 </div>
 
 <script type="application/javascript" nonce="@nonce">
@@ -77,16 +72,27 @@
 							const input = $("#search");
 
 							accessibleAutocomplete({
-							  element: autocompleteContainer,
-							  id: input.attr("id"),
-							  name: input.attr("name"),
-							  source: trustNames,
-							  confirmOnBlur: false,
-							  minLength: 3,
-							  onConfirm: (selected) => {
-								  input.attr("aria-valuetext", trusts.find(item => item.displayName === selected).ukPrn);
-								  input.val(selected);
-							  }
+							  	element: autocompleteContainer,
+							  	id: input.attr("id"),
+							  	name: input.attr("name"),
+							  	source: trustNames,
+							  	confirmOnBlur: false,
+							  	minLength: 3,
+							  	onConfirm: (selected) => {
+									const trustUkprn = trusts.find(item => item.displayName === selected).ukPrn;
+							  		input.attr("aria-valuetext", trustUkprn);
+									input.val(selected);
+								  
+								  	// Ajax Post Trust
+									$.get("trust?handler=SelectedTrust",
+										{ trustUkPrn: trustUkprn })
+									.done(function (result) {
+										window.location.replace(result.redirectUrl);
+									})
+									.fail(function() {
+										showGlobalError();
+									});
+							  	}
 							});
 
 							$(".autocomplete__wrapper #search").hide("fast");
@@ -103,26 +109,6 @@
 					clearResults();
 					hideGlobalError()
 					hideLoader();
-				}
-			});
-
-			// Trust form
-			$("#trust-form").submit(function (event) {
-				event.preventDefault();
-				validator.onSubmit(event);
-
-				let trustSelected = $("#search").attr("aria-valuetext");
-
-				if (validator.validate() && trustSelected !== "") {
-					// Ajax Post Trust
-					$.get("trust?handler=SelectedTrust",
-						{ trustUkPrn: trustSelected })
-					.done(function (result) {
-						window.location.replace(result.redirectUrl);
-					})
-					.fail(function() {
-						showGlobalError();
-					});
 				}
 			});
 

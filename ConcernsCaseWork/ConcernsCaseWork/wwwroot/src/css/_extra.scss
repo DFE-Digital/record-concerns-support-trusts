@@ -200,7 +200,6 @@ span.summary-validation-symbol {
 
 .govuk-accordion__section-heading, .govuk-accordion__section-button {
   font-size:19px;
-  //font-size: 1.1875rem;
 }
 
 .js-enabled .govuk-accordion__controls{
@@ -274,7 +273,6 @@ span.summary-validation-symbol {
   line-height: 1;
   text-align: left;
   font-size: 19px;
-  //font-size: 1.1875rem;
   text-decoration: none;
   padding: 8px 10px;
   background-color: transparent;
@@ -356,7 +354,6 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
   font-size: 16px;
-  //font-size: 1rem;
   line-height: 1.25;
   box-shadow: inset 0 -1px 0 #b1b4b6;
   display: block;
@@ -372,7 +369,6 @@ span.summary-validation-symbol {
 @media (min-width: 40.0625em) {
   .app-sub-navigation__item {
 	font-size: 19px;
-	//font-size: 1.1875rem;
 	line-height: 1.31579;
   }
 }
@@ -673,7 +669,6 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 700;
   font-size: 14px;
-  //font-size: 0.875rem;
   line-height: 1;
   padding: 3px 8px;
   margin-right: 8px;
@@ -693,7 +688,6 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 700;
   font-size: 14px;
-  //font-size: 0.875rem;
   line-height: 1;
   padding: 3px 8px;
   margin-right: 8px;
@@ -713,7 +707,6 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 700;
   font-size: 14px;
-  //font-size: 0.875rem;
   line-height: 1;
   padding: 3px 8px;
   margin-right: 8px;
@@ -760,7 +753,6 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
   font-size: 16px;
-  //font-size: 1rem;
   line-height: 1.25;
   margin: 0;
 
@@ -775,7 +767,6 @@ span.summary-validation-symbol {
 @media (min-width: 40.0625em) {
   .app-summary-card .app-summary-card__title {
 	font-size: 19px;
-	//font-size: 1.1875rem;
 	line-height: 1.31579;
   }
 }
@@ -793,7 +784,6 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
   font-size: 14px;
-  //font-size: 0.875rem;
   line-height: 1.14286;
   display: block;
   margin: 0;
@@ -809,7 +799,6 @@ span.summary-validation-symbol {
 @media (min-width: 40.0625em) {
   .app-summary-card .app-summary-card__meta {
 	font-size: 16px;
-	//font-size: 1rem;
 	line-height: 1.25;
   }
 }
@@ -827,7 +816,6 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
   font-size: 16px;
-  //font-size: 1rem;
   line-height: 1.25;
 
 }
@@ -841,7 +829,6 @@ span.summary-validation-symbol {
 @media (min-width: 40.0625em) {
   .app-summary-card .app-summary-card__actions {
 	font-size: 19px;
-	//font-size: 1.1875rem;
 	line-height: 1.31579;
   }
 }
@@ -883,7 +870,6 @@ span.summary-validation-symbol {
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
   font-size: 16px;
-  //font-size: 1rem;
   line-height: 1.25;
   padding: 15px;
 }
@@ -897,7 +883,6 @@ span.summary-validation-symbol {
 @media (min-width: 40.0625em) {
   .app-summary-card .app-summary-card__body {
 	font-size: 19px;
-	//font-size: 1.1875rem;
 	line-height: 1.31579;
   }
 }
@@ -1048,7 +1033,6 @@ span.summary-validation-symbol {
 @media (min-width: 40.0625em) {
   .app-banner__message {
 	font-size: 19px;
-	//font-size: 1.1875rem;
 	line-height: 1.31579;
   }
 }
@@ -1683,6 +1667,19 @@ label.govuk-label .govuk-tag {
   background-color: whitesmoke;
   padding: 5px;
   border: 1px solid black;
+}
+
+.search-form input[type="submit"] {
+  width: 40px;
+  height: 40px;
+  float: left;
+  padding: 6px;
+  background: green url("../../assets/images/icon-search-white.svg") no-repeat 7px 50%;
+  text-indent: -5000px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
 /* ==========================================================================
