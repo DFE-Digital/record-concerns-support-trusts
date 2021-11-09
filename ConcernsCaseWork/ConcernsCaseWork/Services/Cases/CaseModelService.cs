@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
@@ -15,7 +14,6 @@ using Service.TRAMS.Cases;
 using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
-using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +33,6 @@ namespace ConcernsCaseWork.Services.Cases
 		private readonly ICaseSearchService _caseSearchService;
 		private readonly ILogger<CaseModelService> _logger;
 		private readonly ICachedService _cachedService;
-		private readonly IMapper _mapper;
 
 		public CaseModelService(ICaseCachedService caseCachedService, ITrustCachedService trustCachedService, 
 			IRecordCachedService recordCachedService, IRatingCachedService ratingCachedService,
@@ -43,7 +40,6 @@ namespace ConcernsCaseWork.Services.Cases
 			IRecordRatingHistoryCachedService recordRatingHistoryCachedService,
 			IStatusCachedService statusCachedService,
 			ICaseSearchService caseSearchService,
-			IMapper mapper,
 			ILogger<CaseModelService> logger)
 		{
 			_recordRatingHistoryCachedService = recordRatingHistoryCachedService;
@@ -55,7 +51,6 @@ namespace ConcernsCaseWork.Services.Cases
 			_typeCachedService = typeCachedService;
 			_caseSearchService = caseSearchService;
 			_cachedService = cachedService;
-			_mapper = mapper;
 			_logger = logger;
 		}
 		
@@ -87,11 +82,7 @@ namespace ConcernsCaseWork.Services.Cases
 			{
 				var caseDto = await _caseCachedService.GetCaseByUrn(caseworker, urn);
 				var caseModel = CaseMapping.Map(caseDto);
-
-				// Fetch Trust
-				//var trustDetailsDto = await _trustCachedService.GetTrustByUkPrn(caseModel.TrustUkPrn);
-				//caseModel.TrustDetailsModel = _mapper.Map<TrustDetailsDto, TrustDetailsModel>(trustDetailsDto);
-
+				
 				// Fetch records
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
 				if (!recordsDto.Any()) throw new Exception($"Case {urn} does not contain any records");
