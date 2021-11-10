@@ -29,10 +29,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 			
-			var expected = CaseFactory.BuildCaseModel();
+			var expectedCaseModel = CaseFactory.BuildCaseModel();
+			var expectedTrustDetailsModel = TrustFactory.BuildTrustDetailsModel(); 
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(expected);
+				.ReturnsAsync(expectedCaseModel);
+			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+				.ReturnsAsync(expectedTrustDetailsModel);
 			
 			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
 			
@@ -42,36 +45,46 @@ namespace ConcernsCaseWork.Tests.Pages
 			// act
 			await pageModel.OnGetAsync();
 			var caseModel = pageModel.CaseModel;
+			var trustDetailsModel = pageModel.TrustDetailsModel;
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			Assert.IsAssignableFrom<CaseModel>(caseModel);
 
-			Assert.That(caseModel.Description, Is.EqualTo(expected.Description));
-			Assert.That(caseModel.Issue, Is.EqualTo(expected.Issue));
-			Assert.That(caseModel.StatusUrn, Is.EqualTo(expected.StatusUrn));
-			Assert.That(caseModel.Urn, Is.EqualTo(expected.Urn));
-			Assert.That(caseModel.CaseType, Is.EqualTo(expected.CaseType));
-			Assert.That(caseModel.CaseSubType, Is.EqualTo(expected.CaseSubType));
-			Assert.That(caseModel.CaseTypeDescription, Is.EqualTo($"{expected.CaseType}: {expected.CaseSubType}"));
-			Assert.That(caseModel.ClosedAt, Is.EqualTo(expected.ClosedAt));
-			Assert.That(caseModel.CreatedAt, Is.EqualTo(expected.CreatedAt));
-			Assert.That(caseModel.CreatedBy, Is.EqualTo(expected.CreatedBy));
-			Assert.That(caseModel.CrmEnquiry, Is.EqualTo(expected.CrmEnquiry));
-			Assert.That(caseModel.CurrentStatus, Is.EqualTo(expected.CurrentStatus));
-			Assert.That(caseModel.DeEscalation, Is.EqualTo(expected.DeEscalation));
-			Assert.That(caseModel.NextSteps, Is.EqualTo(expected.NextSteps));
-			Assert.That(caseModel.RagRating, Is.EqualTo(expected.RagRating));
-			Assert.That(caseModel.CaseAim, Is.EqualTo(expected.CaseAim));
-			Assert.That(caseModel.DeEscalationPoint, Is.EqualTo(expected.DeEscalationPoint));
-			Assert.That(caseModel.ReviewAt, Is.EqualTo(expected.ReviewAt));
-			Assert.That(caseModel.StatusName, Is.EqualTo(expected.StatusName));
-			Assert.That(caseModel.UpdatedAt, Is.EqualTo(expected.UpdatedAt));
-			Assert.That(caseModel.DirectionOfTravel, Is.EqualTo(expected.DirectionOfTravel));
-			Assert.That(caseModel.RagRatingCss, Is.EqualTo(expected.RagRatingCss));
-			Assert.That(caseModel.ReasonAtReview, Is.EqualTo(expected.ReasonAtReview));
-			Assert.That(caseModel.TrustUkPrn, Is.EqualTo(expected.TrustUkPrn));
+			Assert.That(caseModel.Description, Is.EqualTo(expectedCaseModel.Description));
+			Assert.That(caseModel.Issue, Is.EqualTo(expectedCaseModel.Issue));
+			Assert.That(caseModel.StatusUrn, Is.EqualTo(expectedCaseModel.StatusUrn));
+			Assert.That(caseModel.Urn, Is.EqualTo(expectedCaseModel.Urn));
+			Assert.That(caseModel.CaseType, Is.EqualTo(expectedCaseModel.CaseType));
+			Assert.That(caseModel.CaseSubType, Is.EqualTo(expectedCaseModel.CaseSubType));
+			Assert.That(caseModel.CaseTypeDescription, Is.EqualTo($"{expectedCaseModel.CaseType}: {expectedCaseModel.CaseSubType}"));
+			Assert.That(caseModel.ClosedAt, Is.EqualTo(expectedCaseModel.ClosedAt));
+			Assert.That(caseModel.CreatedAt, Is.EqualTo(expectedCaseModel.CreatedAt));
+			Assert.That(caseModel.CreatedBy, Is.EqualTo(expectedCaseModel.CreatedBy));
+			Assert.That(caseModel.CrmEnquiry, Is.EqualTo(expectedCaseModel.CrmEnquiry));
+			Assert.That(caseModel.CurrentStatus, Is.EqualTo(expectedCaseModel.CurrentStatus));
+			Assert.That(caseModel.DeEscalation, Is.EqualTo(expectedCaseModel.DeEscalation));
+			Assert.That(caseModel.NextSteps, Is.EqualTo(expectedCaseModel.NextSteps));
+			Assert.That(caseModel.RagRating, Is.EqualTo(expectedCaseModel.RagRating));
+			Assert.That(caseModel.CaseAim, Is.EqualTo(expectedCaseModel.CaseAim));
+			Assert.That(caseModel.DeEscalationPoint, Is.EqualTo(expectedCaseModel.DeEscalationPoint));
+			Assert.That(caseModel.ReviewAt, Is.EqualTo(expectedCaseModel.ReviewAt));
+			Assert.That(caseModel.StatusName, Is.EqualTo(expectedCaseModel.StatusName));
+			Assert.That(caseModel.UpdatedAt, Is.EqualTo(expectedCaseModel.UpdatedAt));
+			Assert.That(caseModel.DirectionOfTravel, Is.EqualTo(expectedCaseModel.DirectionOfTravel));
+			Assert.That(caseModel.RagRatingCss, Is.EqualTo(expectedCaseModel.RagRatingCss));
+			Assert.That(caseModel.ReasonAtReview, Is.EqualTo(expectedCaseModel.ReasonAtReview));
+			Assert.That(caseModel.TrustUkPrn, Is.EqualTo(expectedCaseModel.TrustUkPrn));
 
+			Assert.That(trustDetailsModel, Is.Not.Null);
+			Assert.That(trustDetailsModel.Establishments, Is.Not.Null);
+			Assert.That(trustDetailsModel.Establishments.Count, Is.EqualTo(1));
+			Assert.That(trustDetailsModel.GiasData, Is.Not.Null);
+			Assert.That(trustDetailsModel.IfdData, Is.Not.Null);
+			Assert.That(trustDetailsModel.TotalPupils, Is.Not.Null);
+			Assert.That(trustDetailsModel.PupilCapacityPercentage, Is.Not.Null);
+			Assert.That(trustDetailsModel.TotalPupilCapacity, Is.Not.Null);
+			
 			// Verify ILogger
 			mockLogger.Verify(
 				m => m.Log(

@@ -75,6 +75,5 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			return new CensusDto(numberOfPupils);
 		}
-	
 	}
 }
