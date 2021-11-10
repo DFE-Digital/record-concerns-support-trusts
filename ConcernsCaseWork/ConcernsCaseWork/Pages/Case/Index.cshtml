@@ -17,66 +17,61 @@
 		</div>
 
 	</div>
-	<form role="search" id="trust-form" novalidate>
-		<div class="govuk-form-group"></div>
-		<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
-			Next step
-		</button>
-	</form>
+
 </div>
 
 <script type="application/javascript" nonce="@nonce">
-	$(function () {		
+	$(function () {
 		let clearResults = function () {
 			$("#trusts-partial-results").empty();
 			$("#autocomplete-container").empty();
 			$(".autocomplete__menu").addClass("autocomplete__menu--hidden");
 		};
-		
+
 		$("#search").focusin(function() {
 			this.value = "";
-		  	clearResults();
+			clearResults();
 		});
-		
+
 		try {
 			let searchForm = $("#search-form");
 			const validator = formValidator(searchForm[0]);
 			validator.addValidator('search', [{
-		  		method: function(field) {
-                	return field.value.trim().length > 0;
-              	},
-              	message: 'Search cannot be blank'
-            }, {
-              	method: function(field) {
-                	return (field.value.length > 2);
-              	},
-              	message: 'Enter search criteria higher than three characters'
-            }]);
-			
+				method: function(field) {
+					return field.value.trim().length > 0;
+				},
+				message: 'Search cannot be blank'
+			}, {
+				method: function(field) {
+					return (field.value.length > 2);
+				},
+				message: 'Enter search criteria higher than three characters'
+			}]);
+
 			searchForm.submit(function (event) {
 				validator.onSubmit(event);
 				if (validator.validate()) {
 					event.preventDefault();
-					
+
 					clearResults();
 					showLoader();
-					
+
 					// Ajax Get Trusts
 					let searchQuery = $("#search").val();
 					$.get("case/TrustsSearchResult", { searchQuery: searchQuery })
-					.done(function (trusts) {							
+					.done(function (trusts) {
 						hideGlobalError();
-                        hideLoader();
-						
+						hideLoader();
+
 						if (trusts.length === 0) {
 							$(".autocomplete__menu").removeClass("autocomplete__menu--hidden");
 						}
 						else {
 							let autocompleteContainer = document.getElementById("autocomplete-container");
-							
+
 							const trustNames = trusts.map(trust => trust.displayName);
 							const input = $("#search");
-							
+
 							accessibleAutocomplete({
 							  element: autocompleteContainer,
 							  id: input.attr("id"),
@@ -85,16 +80,27 @@
 							  confirmOnBlur: false,
 							  minLength: 3,
 							  onConfirm: (selected) => {
-								  input.attr("aria-valuetext", trusts.find(item => item.displayName === selected).ukPrn);
-								  input.val(selected);
-							  }
+									const trustUkprn = trusts.find(item => item.displayName === selected).ukPrn;
+									input.attr("aria-valuetext", trustUkprn);
+									input.val(selected);
+
+									// Ajax Post Trust
+									$.get("case?handler=SelectedTrust",
+										{ trustUkPrn: trustUkprn })
+									.done(function (result) {
+										window.location.replace(result.redirectUrl);
+									})
+									.fail(function() {
+										showGlobalError();
+									});
+								}
 							});
-									
+
 							$(".autocomplete__wrapper #search").hide("fast");
 							let autocompleteSearch = $("#autocomplete-container #search");
 							autocompleteSearch.val(searchQuery);
 						}
-						
+
 					}).fail(function() {
 						clearResults();
 						showGlobalError();
@@ -106,32 +112,24 @@
 					hideLoader();
 				}
 			});
-			
+
 			// Trust form
 			$("#trust-form").submit(function (event) {
 				event.preventDefault();
 				validator.onSubmit(event);
-				
+
 				let trustSelected = $("#search").attr("aria-valuetext");
-				
+
 				if (validator.validate() && trustSelected !== "") {
-					// Ajax Post Trust
-					$.get("case?handler=SelectedTrust", 
-						{ trustUkPrn: trustSelected })
-					.done(function (result) {
-						window.location.replace(result.redirectUrl);
-					})
-					.fail(function() {
-						showGlobalError();
-					});
+
 				}
 			});
-			
-       	} catch(err) {
+
+		} catch(err) {
 			clearResults();
 			showGlobalError();
 			hideLoader();
-	  	}
-    });
+		}
+	});
 </script>
 
