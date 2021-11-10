@@ -15,7 +15,6 @@
 			<h1 class="govuk-heading-m">Create case</h1>
 			<partial name="../Shared/_FindTrust" />
 		</div>
-
 	</div>
 
 </div>
@@ -110,18 +109,6 @@
 					clearResults();
 					hideGlobalError()
 					hideLoader();
-				}
-			});
-
-			// Trust form
-			$("#trust-form").submit(function (event) {
-				event.preventDefault();
-				validator.onSubmit(event);
-
-				let trustSelected = $("#search").attr("aria-valuetext");
-
-				if (validator.validate() && trustSelected !== "") {
-
 				}
 			});
 
