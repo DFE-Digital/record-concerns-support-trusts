@@ -113,18 +113,6 @@
 				}
 			});
 
-			// Trust form
-			$("#trust-form").submit(function (event) {
-				event.preventDefault();
-				validator.onSubmit(event);
-
-				let trustSelected = $("#search").attr("aria-valuetext");
-
-				if (validator.validate() && trustSelected !== "") {
-
-				}
-			});
-
 		} catch(err) {
 			clearResults();
 			showGlobalError();
