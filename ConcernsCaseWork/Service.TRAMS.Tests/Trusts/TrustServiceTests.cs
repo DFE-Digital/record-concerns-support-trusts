@@ -24,7 +24,7 @@ namespace Service.TRAMS.Tests.Trusts
 		{
 			// arrange
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
-			var expectedApiWrapperTrust = new ApiWrapper<TrustSummaryDto>(expectedTrusts, null);
+			var expectedApiWrapperTrust = new ApiListWrapper<TrustSummaryDto>(expectedTrusts, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -127,7 +127,7 @@ namespace Service.TRAMS.Tests.Trusts
 		{
 			// arrange
 			var expectedTrust = TrustFactory.BuildTrustDetailsDto();
-			var expectedApiWrapperTrust = new ApiWrapper<TrustDetailsDto>(new List<TrustDetailsDto> { expectedTrust }, null);
+			var expectedApiWrapperTrust = new ApiListWrapper<TrustDetailsDto>(new List<TrustDetailsDto> { expectedTrust }, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -199,7 +199,7 @@ namespace Service.TRAMS.Tests.Trusts
 		public void WhenGetTrustByUkPrn_ApiWrapperResponseData_IsNull_ThrowsException()
 		{
 			// arrange
-			var expectedApiWrapperTrust = new ApiWrapper<TrustDetailsDto>(null, null);
+			var expectedApiWrapperTrust = new ApiListWrapper<TrustDetailsDto>(null, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			

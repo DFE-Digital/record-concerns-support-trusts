@@ -32,17 +32,17 @@ namespace Service.TRAMS.Trusts
 			
 			try
 			{
-				ApiWrapper<TrustSummaryDto> apiWrapperTrusts;
+				ApiListWrapper<TrustSummaryDto> apiListWrapperTrusts;
 				var nrRequests = 0;
 				
 				do
 				{
-					apiWrapperTrusts = await _trustService.GetTrustsByPagination(trustSearch);
+					apiListWrapperTrusts = await _trustService.GetTrustsByPagination(trustSearch);
 					
 					// The following condition will break the loop.
-					if (apiWrapperTrusts?.Data is null || !apiWrapperTrusts.Data.Any()) continue;
+					if (apiListWrapperTrusts?.Data is null || !apiListWrapperTrusts.Data.Any()) continue;
 					
-					trustList.AddRange(apiWrapperTrusts.Data);
+					trustList.AddRange(apiListWrapperTrusts.Data);
 					trustSearch.PageIncrement();
 					
 					// Safe guard in case we have more than 10 pages.
@@ -52,7 +52,7 @@ namespace Service.TRAMS.Trusts
 						break;
 					}
 
-				} while (apiWrapperTrusts?.Data != null && apiWrapperTrusts.Data.Any() && apiWrapperTrusts.Paging?.NextPageUrl != null);
+				} while (apiListWrapperTrusts?.Data != null && apiListWrapperTrusts.Data.Any() && apiListWrapperTrusts.Paging?.NextPageUrl != null);
 			}
 			finally
 			{

@@ -39,7 +39,7 @@ namespace Service.TRAMS.Status
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POCO
-				var apiWrapperStatusesDto = JsonConvert.DeserializeObject<ApiWrapper<StatusDto>>(content);
+				var apiWrapperStatusesDto = JsonConvert.DeserializeObject<ApiListWrapper<StatusDto>>(content);
 
 				// Unwrap response
 				if (apiWrapperStatusesDto is { Data: { } })

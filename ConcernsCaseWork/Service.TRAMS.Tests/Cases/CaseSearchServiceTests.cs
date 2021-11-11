@@ -29,8 +29,8 @@ namespace Service.TRAMS.Tests.Cases
 
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockCaseService.SetupSequence(t => t.GetCasesByTrustUkPrn(It.IsAny<CaseTrustSearch>()))
-				.ReturnsAsync(new ApiWrapper<CaseDto>(expectedCasesDto, null))
-				.ReturnsAsync(new ApiWrapper<CaseDto>(emptyList, null));
+				.ReturnsAsync(new ApiListWrapper<CaseDto>(expectedCasesDto, null))
+				.ReturnsAsync(new ApiListWrapper<CaseDto>(emptyList, null));
 			
 			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
@@ -76,7 +76,7 @@ namespace Service.TRAMS.Tests.Cases
 			var mockLogger = new Mock<ILogger<CaseSearchService>>();
 
 			var expectedCasesDto = CaseFactory.BuildListCaseDto();
-			var expectedApiWrapperCasesDto = new ApiWrapper<CaseDto>(expectedCasesDto, new ApiWrapper<CaseDto>.Pagination(1, 200, string.Empty));
+			var expectedApiWrapperCasesDto = new ApiListWrapper<CaseDto>(expectedCasesDto, new ApiListWrapper<CaseDto>.Pagination(1, 200, string.Empty));
 			
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockCaseService.SetupSequence(t => t.GetCasesByTrustUkPrn(It.IsAny<CaseTrustSearch>()))
@@ -111,7 +111,7 @@ namespace Service.TRAMS.Tests.Cases
 			var mockLogger = new Mock<ILogger<CaseSearchService>>();
 
 			var expectedCasesDto = CaseFactory.BuildListCaseDto();
-			var expectedApiWrapperCasesDto = new ApiWrapper<CaseDto>(expectedCasesDto, null);
+			var expectedApiWrapperCasesDto = new ApiListWrapper<CaseDto>(expectedCasesDto, null);
 			
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockCaseService.SetupSequence(t => t.GetCasesByTrustUkPrn(It.IsAny<CaseTrustSearch>()))
@@ -146,12 +146,12 @@ namespace Service.TRAMS.Tests.Cases
 			var mockLogger = new Mock<ILogger<CaseSearchService>>();
 
 			var expectedCasesDto = CaseFactory.BuildListCaseDto();
-			var expectedApiWrapperCasesDto = new ApiWrapper<CaseDto>(expectedCasesDto, null);
-			var nullApiWrapperCasesDto = new ApiWrapper<CaseDto>(null, null);
+			var expectedApiWrapperCasesDto = new ApiListWrapper<CaseDto>(expectedCasesDto, null);
+			var nullApiWrapperCasesDto = new ApiListWrapper<CaseDto>(null, null);
 			
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockCaseService.SetupSequence(t => t.GetCasesByTrustUkPrn(It.IsAny<CaseTrustSearch>()))
-				.ReturnsAsync((ApiWrapper<CaseDto>)null)
+				.ReturnsAsync((ApiListWrapper<CaseDto>)null)
 				.ReturnsAsync(expectedApiWrapperCasesDto)
 				.ReturnsAsync(nullApiWrapperCasesDto);
 			

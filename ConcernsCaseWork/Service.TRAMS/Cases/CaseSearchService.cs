@@ -32,17 +32,17 @@ namespace Service.TRAMS.Cases
 			
 			try
 			{
-				ApiWrapper<CaseDto> apiWrapperCaseDto;
+				ApiListWrapper<CaseDto> apiListWrapperCaseDto;
 				var nrRequests = 0;
 				
 				do
 				{
-					apiWrapperCaseDto = await _caseService.GetCasesByTrustUkPrn(caseTrustSearch);
+					apiListWrapperCaseDto = await _caseService.GetCasesByTrustUkPrn(caseTrustSearch);
 					
 					// The following condition will break the loop.
-					if (apiWrapperCaseDto?.Data is null || !apiWrapperCaseDto.Data.Any()) continue;
+					if (apiListWrapperCaseDto?.Data is null || !apiListWrapperCaseDto.Data.Any()) continue;
 					
-					caseTrustsList.AddRange(apiWrapperCaseDto.Data);
+					caseTrustsList.AddRange(apiListWrapperCaseDto.Data);
 					caseTrustSearch.PageIncrement();
 					
 					// Safe guard in case we have more than 10 pages.
@@ -52,7 +52,7 @@ namespace Service.TRAMS.Cases
 						break;
 					}
 
-				} while (apiWrapperCaseDto?.Data != null && apiWrapperCaseDto.Data.Any() && apiWrapperCaseDto.Paging?.NextPageUrl != null);
+				} while (apiListWrapperCaseDto?.Data != null && apiListWrapperCaseDto.Data.Any() && apiListWrapperCaseDto.Paging?.NextPageUrl != null);
 			}
 			finally
 			{
