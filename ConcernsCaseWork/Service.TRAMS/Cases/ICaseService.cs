@@ -8,7 +8,7 @@ namespace Service.TRAMS.Cases
 	{
 		Task<IList<CaseDto>> GetCasesByCaseworkerAndStatus(string caseworker, long statusUrn);
 		Task<CaseDto> GetCaseByUrn(long urn);
-		Task<ApiWrapper<CaseDto>> GetCasesByTrustUkPrn(CaseTrustSearch caseTrustSearch);
+		Task<ApiListWrapper<CaseDto>> GetCasesByTrustUkPrn(CaseTrustSearch caseTrustSearch);
 		Task<IList<CaseDto>> GetCasesByPagination(CaseSearch caseSearch);
 		Task<CaseDto> PostCase(CreateCaseDto createCaseDto);
 		Task<CaseDto> PatchCaseByUrn(CaseDto caseDto);

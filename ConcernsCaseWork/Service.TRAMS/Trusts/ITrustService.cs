@@ -6,7 +6,7 @@ namespace Service.TRAMS.Trusts
 	public interface ITrustService
 	{
 		string BuildRequestUri(TrustSearch trustSearch);
-		Task<ApiWrapper<TrustSummaryDto>> GetTrustsByPagination(TrustSearch trustSearch);
+		Task<ApiListWrapper<TrustSummaryDto>> GetTrustsByPagination(TrustSearch trustSearch);
 		Task<TrustDetailsDto> GetTrustByUkPrn(string ukPrn);
 	}
 }

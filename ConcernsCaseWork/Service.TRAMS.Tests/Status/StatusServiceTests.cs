@@ -24,7 +24,7 @@ namespace Service.TRAMS.Tests.Status
 		{
 			// arrange
 			var expectedStatuses = StatusFactory.BuildListStatusDto();
-			var expectedApiWrapperStatuses = new ApiWrapper<StatusDto>(expectedStatuses, null);
+			var expectedApiWrapperStatuses = new ApiListWrapper<StatusDto>(expectedStatuses, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -68,7 +68,7 @@ namespace Service.TRAMS.Tests.Status
 		public void WhenGetStatus_ApiWrapperResponseDataIsNull_ThrowsException()
 		{
 			// arrange
-			var expectedApiWrapperStatuses = new ApiWrapper<StatusDto>(null, null);
+			var expectedApiWrapperStatuses = new ApiListWrapper<StatusDto>(null, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			

@@ -28,8 +28,8 @@ namespace Service.TRAMS.Tests.Trusts
 
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>()))
-				.ReturnsAsync(new ApiWrapper<TrustSummaryDto>(expectedTrusts, null))
-				.ReturnsAsync(new ApiWrapper<TrustSummaryDto>(emptyList, null));
+				.ReturnsAsync(new ApiListWrapper<TrustSummaryDto>(expectedTrusts, null))
+				.ReturnsAsync(new ApiListWrapper<TrustSummaryDto>(emptyList, null));
 			
 			var trustSearchService = new TrustSearchService(mockTrustService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
@@ -72,9 +72,9 @@ namespace Service.TRAMS.Tests.Trusts
 			var mockLogger = new Mock<ILogger<TrustSearchService>>();
 
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
-			var expectedApiWrapper = new ApiWrapper<TrustSummaryDto>(
+			var expectedApiWrapper = new ApiListWrapper<TrustSummaryDto>(
 				expectedTrusts, 
-				new ApiWrapper<TrustSummaryDto>.Pagination(1, 10, "next-page-url"));
+				new ApiListWrapper<TrustSummaryDto>.Pagination(1, 10, "next-page-url"));
 			
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
 			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>()))
@@ -109,12 +109,12 @@ namespace Service.TRAMS.Tests.Trusts
 			var mockLogger = new Mock<ILogger<TrustSearchService>>();
 
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
-			var expectedApiWrapper = new ApiWrapper<TrustSummaryDto>(
+			var expectedApiWrapper = new ApiListWrapper<TrustSummaryDto>(
 				expectedTrusts, 
-				new ApiWrapper<TrustSummaryDto>.Pagination(1, 10, "next-page-url"));
-			var expectedEmptyApiWrapper = new ApiWrapper<TrustSummaryDto>(
+				new ApiListWrapper<TrustSummaryDto>.Pagination(1, 10, "next-page-url"));
+			var expectedEmptyApiWrapper = new ApiListWrapper<TrustSummaryDto>(
 				null, 
-				new ApiWrapper<TrustSummaryDto>.Pagination(1, 10, "next-page-url"));
+				new ApiListWrapper<TrustSummaryDto>.Pagination(1, 10, "next-page-url"));
 
 			
 			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});

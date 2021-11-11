@@ -114,9 +114,7 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var expectedCase = CaseFactory.BuildCaseDto();
-			var expectedCaseWrap = new ApiWrapper<CaseDto>(
-				new List<CaseDto> { expectedCase }, 
-				new ApiWrapper<CaseDto>.Pagination(1, 1, string.Empty));
+			var expectedCaseWrap = new ApiWrapper<CaseDto>(expectedCase);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -193,7 +191,7 @@ namespace Service.TRAMS.Tests.Cases
 		public void WhenGetCaseByUrn_UnwrapResponse_ReturnsException()
 		{
 			// arrange
-			var expectedCaseWrap = new ApiWrapper<CaseDto>(null, null);
+			var expectedCaseWrap = new ApiListWrapper<CaseDto>(null, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -223,9 +221,9 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var expectedCases = CaseFactory.BuildListCaseDto();
-			var expectedCaseWrap = new ApiWrapper<CaseDto>(
+			var expectedCaseWrap = new ApiListWrapper<CaseDto>(
 				expectedCases, 
-				new ApiWrapper<CaseDto>.Pagination(1, 1, string.Empty));
+				new ApiListWrapper<CaseDto>.Pagination(1, 1, string.Empty));
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -405,9 +403,7 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var expectedCase = CaseFactory.BuildCaseDto();
-			var expectedCaseWrap = new ApiWrapper<CaseDto>(
-				new List<CaseDto> { expectedCase }, 
-				new ApiWrapper<CaseDto>.Pagination(1, 1, string.Empty));
+			var expectedCaseWrap = new ApiWrapper<CaseDto>(expectedCase);
 			
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
@@ -485,7 +481,7 @@ namespace Service.TRAMS.Tests.Cases
 		public void WhenPostCase_UnwrapResponse_ReturnsException()
 		{
 			// arrange
-			var expectedCaseWrap = new ApiWrapper<CaseDto>(null, null);
+			var expectedCaseWrap = new ApiWrapper<CaseDto>(null);
 			
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];

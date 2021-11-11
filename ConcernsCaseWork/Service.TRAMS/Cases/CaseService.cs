@@ -83,7 +83,7 @@ namespace Service.TRAMS.Cases
 				// Unwrap response
 				if (caseDto is { Data: { } })
 				{
-					return caseDto.Data.FirstOrDefault();
+					return caseDto.Data;
 				}
 
 				throw new Exception("Academies API error unwrap response");
@@ -96,7 +96,7 @@ namespace Service.TRAMS.Cases
 			}
 		}
 
-		public async Task<ApiWrapper<CaseDto>> GetCasesByTrustUkPrn(CaseTrustSearch caseTrustSearch)
+		public async Task<ApiListWrapper<CaseDto>> GetCasesByTrustUkPrn(CaseTrustSearch caseTrustSearch)
 		{
 			try
 			{
@@ -118,7 +118,7 @@ namespace Service.TRAMS.Cases
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POCO
-				var apiWrapperCasesDto = JsonConvert.DeserializeObject<ApiWrapper<CaseDto>>(content);
+				var apiWrapperCasesDto = JsonConvert.DeserializeObject<ApiListWrapper<CaseDto>>(content);
 
 				return apiWrapperCasesDto;
 			}
@@ -194,7 +194,7 @@ namespace Service.TRAMS.Cases
 				// Unwrap response
 				if (apiWrapperNewCaseDto is { Data: { } })
 				{
-					return apiWrapperNewCaseDto.Data.FirstOrDefault();
+					return apiWrapperNewCaseDto.Data;
 				}
 
 				throw new Exception("Academies API error unwrap response");
