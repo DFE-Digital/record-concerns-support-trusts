@@ -1,15 +1,11 @@
-﻿using System.Threading;
+﻿using Service.TRAMS.Base;
 
 namespace Service.TRAMS.Cases
 {
-	public class CaseSearch
+	public sealed class CaseSearch : PageSearch
 	{
-		private int _page = 1;
-		public int Page { get { return _page; } }
+		public long CaseUrn { get; }
 		
-		public int PageIncrement()
-		{
-			return Interlocked.Increment(ref _page);
-		}
+		public CaseSearch(long caseUrn) => (CaseUrn) = (caseUrn);
 	}
 }

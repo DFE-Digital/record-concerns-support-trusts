@@ -326,7 +326,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
 			
-			mockCaseSearchService.Setup(c => c.GetCasesBySearchCriteria(It.IsAny<CaseTrustSearch>()))
+			mockCaseSearchService.Setup(c => c.GetCasesByCaseTrustSearch(It.IsAny<CaseTrustSearch>()))
 				.ReturnsAsync(new List<CaseDto>());
 			
 			// act
@@ -362,7 +362,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
 
-			mockCaseSearchService.Setup(c => c.GetCasesBySearchCriteria(It.IsAny<CaseTrustSearch>()))
+			mockCaseSearchService.Setup(c => c.GetCasesByCaseTrustSearch(It.IsAny<CaseTrustSearch>()))
 				.ReturnsAsync(casesDto);
 			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<CaseDto>()))
 				.ReturnsAsync(recordsDto);
@@ -405,7 +405,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
 
-			mockCaseSearchService.Setup(c => c.GetCasesBySearchCriteria(It.IsAny<CaseTrustSearch>()))
+			mockCaseSearchService.Setup(c => c.GetCasesByCaseTrustSearch(It.IsAny<CaseTrustSearch>()))
 				.ReturnsAsync(casesDto);
 			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<CaseDto>()))
 				.ReturnsAsync(new List<RecordDto>());
@@ -444,7 +444,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
 			
-			mockCaseSearchService.Setup(c => c.GetCasesBySearchCriteria(It.IsAny<CaseTrustSearch>()))
+			mockCaseSearchService.Setup(c => c.GetCasesByCaseTrustSearch(It.IsAny<CaseTrustSearch>()))
 				.Throws<Exception>();
 			
 			// act | assert

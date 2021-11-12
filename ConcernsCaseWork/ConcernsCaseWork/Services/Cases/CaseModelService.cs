@@ -123,7 +123,7 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var casesDto = await _caseSearchService.GetCasesBySearchCriteria(new CaseTrustSearch(trustUkprn));
+				var casesDto = await _caseSearchService.GetCasesByCaseTrustSearch(new CaseTrustSearch(trustUkprn));
 				if (!casesDto.Any()) return Array.Empty<TrustCasesModel>();
 				
 				// Fetch live and close status

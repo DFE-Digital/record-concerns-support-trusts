@@ -27,7 +27,7 @@ namespace Service.TRAMS.Rating
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/ratings");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient("TramsClient");
+				var client = ClientFactory.CreateClient(HttpClientName);
 				
 				// Execute request
 				var response = await client.SendAsync(request);

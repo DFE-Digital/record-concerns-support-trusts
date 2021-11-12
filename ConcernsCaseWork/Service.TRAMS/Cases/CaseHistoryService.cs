@@ -31,10 +31,10 @@ namespace Service.TRAMS.Cases
 					MediaTypeNames.Application.Json);
 
 				// Create http client
-				var client = ClientFactory.CreateClient("TramsClient");
+				var client = ClientFactory.CreateClient(HttpClientName);
 				
 				// Execute request
-				var response = await client.PostAsync($"/{EndpointsVersion}/{EndpointPrefix}", request);
+				var response = await client.PostAsync($"/{EndpointsVersion}/concerns-cases-history", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -59,6 +59,11 @@ namespace Service.TRAMS.Cases
 
 				throw;
 			}
+		}
+
+		public Task<ApiListWrapper<CaseHistoryDto>> GetCasesHistory(CaseSearch caseSearch)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

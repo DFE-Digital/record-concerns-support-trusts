@@ -30,7 +30,7 @@ namespace Service.TRAMS.RecordSrma
 					$"/{EndpointsVersion}/record-srma/record/urn/{recordUrn}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient("TramsClient");
+				var client = ClientFactory.CreateClient(HttpClientName);
 				
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -67,7 +67,7 @@ namespace Service.TRAMS.RecordSrma
 					MediaTypeNames.Application.Json);
 				
 				// Create http client
-				var client = ClientFactory.CreateClient("TramsClient");
+				var client = ClientFactory.CreateClient(HttpClientName);
 				
 				// Execute request
 				var response = await client.PostAsync(
@@ -105,7 +105,7 @@ namespace Service.TRAMS.RecordSrma
 					MediaTypeNames.Application.Json);
 				
 				// Create http client
-				var client = ClientFactory.CreateClient("TramsClient");
+				var client = ClientFactory.CreateClient(HttpClientName);
 				
 				// Execute request
 				var response = await client.PatchAsync(

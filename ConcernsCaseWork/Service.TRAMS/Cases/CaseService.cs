@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Service.TRAMS.Cases
 {
@@ -31,7 +30,7 @@ namespace Service.TRAMS.Cases
 					$"/{EndpointsVersion}/{EndpointPrefix}/owner/{caseworker}?status={statusUrn}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient("TramsClient");
+				var client = ClientFactory.CreateClient(HttpClientName);
 				
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -65,7 +64,7 @@ namespace Service.TRAMS.Cases
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/{EndpointPrefix}/urn/{urn}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient("TramsClient");
+				var client = ClientFactory.CreateClient(HttpClientName);
 				
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -102,10 +101,10 @@ namespace Service.TRAMS.Cases
 				_logger.LogInformation("CaseService::GetCasesByTrustUkPrn");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/{EndpointPrefix}/ukprn/{caseTrustSearch.TrustUkPrn}?{BuildRequestUri(caseTrustSearch)}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/{EndpointPrefix}/ukprn/{caseTrustSearch.TrustUkPrn}?page={caseTrustSearch.Page}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient("TramsClient");
+				var client = ClientFactory.CreateClient(HttpClientName);
 				
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -129,17 +128,17 @@ namespace Service.TRAMS.Cases
 			}
 		}
 
-		public async Task<IList<CaseDto>> GetCasesByPagination(CaseSearch caseSearch)
+		public async Task<ApiListWrapper<CaseDto>> GetCases(PageSearch pageSearch)
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::GetCasesByPagination");
+				_logger.LogInformation("CaseService::GetCases");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/cases?page={caseSearch.Page}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/cases?page={pageSearch.Page}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient("TramsClient");
+				var client = ClientFactory.CreateClient(HttpClientName);
 				
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -151,16 +150,16 @@ namespace Service.TRAMS.Cases
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POCO
-				var casesDto = JsonConvert.DeserializeObject<IList<CaseDto>>(content);
+				var apiWrapperCasesDto = JsonConvert.DeserializeObject<ApiListWrapper<CaseDto>>(content);
 
-				return casesDto;
+				return apiWrapperCasesDto;
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("CaseService::GetCasesByPagination::Exception message::{Message}", ex.Message);
+				_logger.LogError("CaseService::GetCases::Exception message::{Message}", ex.Message);
+				
+				throw;
 			}
-			
-			return Array.Empty<CaseDto>();
 		}
 
 		public async Task<CaseDto> PostCase(CreateCaseDto createCaseDto)
@@ -176,7 +175,7 @@ namespace Service.TRAMS.Cases
 					MediaTypeNames.Application.Json);
 
 				// Create http client
-				var client = ClientFactory.CreateClient("TramsClient");
+				var client = ClientFactory.CreateClient(HttpClientName);
 				
 				// Execute request
 				var response = await client.PostAsync($"/{EndpointsVersion}/{EndpointPrefix}", request);
@@ -219,7 +218,7 @@ namespace Service.TRAMS.Cases
 					MediaTypeNames.Application.Json);
 
 				// Create http client
-				var client = ClientFactory.CreateClient("TramsClient");
+				var client = ClientFactory.CreateClient(HttpClientName);
 				
 				// Execute request
 				var response = await client.PatchAsync($"/{EndpointsVersion}/case/urn/{caseDto.Urn}", request);
@@ -241,14 +240,6 @@ namespace Service.TRAMS.Cases
 
 				throw;
 			}
-		}
-		
-		public static string BuildRequestUri(CaseTrustSearch caseTrustSearch)
-		{
-			var queryParams = HttpUtility.ParseQueryString(string.Empty);
-			queryParams.Add("page", caseTrustSearch.Page.ToString());
-			
-			return HttpUtility.UrlEncode(queryParams.ToString());
 		}
 	}
 }

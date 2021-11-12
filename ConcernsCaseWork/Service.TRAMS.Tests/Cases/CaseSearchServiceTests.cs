@@ -35,7 +35,7 @@ namespace Service.TRAMS.Tests.Cases
 			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
 			// act
-			var actualCasesDto = await caseSearchService.GetCasesBySearchCriteria(CaseFactory.BuildCaseTrustSearch());
+			var actualCasesDto = await caseSearchService.GetCasesByCaseTrustSearch(CaseFactory.BuildCaseTrustSearch());
 
 			// assert
 			Assert.That(actualCasesDto, Is.Not.Null);
@@ -95,7 +95,7 @@ namespace Service.TRAMS.Tests.Cases
 			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
 			// act
-			var actualCaseTrusts = await caseSearchService.GetCasesBySearchCriteria(CaseFactory.BuildCaseTrustSearch());
+			var actualCaseTrusts = await caseSearchService.GetCasesByCaseTrustSearch(CaseFactory.BuildCaseTrustSearch());
 
 			// assert
 			Assert.That(actualCaseTrusts, Is.Not.Null);
@@ -130,7 +130,7 @@ namespace Service.TRAMS.Tests.Cases
 			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
 			// act
-			var actualCaseTrusts = await caseSearchService.GetCasesBySearchCriteria(CaseFactory.BuildCaseTrustSearch());
+			var actualCaseTrusts = await caseSearchService.GetCasesByCaseTrustSearch(CaseFactory.BuildCaseTrustSearch());
 
 			// assert
 			Assert.That(actualCaseTrusts, Is.Not.Null);
@@ -158,7 +158,7 @@ namespace Service.TRAMS.Tests.Cases
 			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
 			// act
-			var actualCaseTrusts = await caseSearchService.GetCasesBySearchCriteria(CaseFactory.BuildCaseTrustSearch());
+			var actualCaseTrusts = await caseSearchService.GetCasesByCaseTrustSearch(CaseFactory.BuildCaseTrustSearch());
 
 			// assert
 			Assert.That(actualCaseTrusts, Is.Not.Null);
