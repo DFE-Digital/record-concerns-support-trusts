@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ConcernsCaseWork.Extensions
 {
-	public static class TupleExtensions
+	public static class TupleExtension
 	{
 		public static (IList<T>, IList<T>) Split<T>(this IEnumerable<T> source, Func<T, bool> statusLive, Func<T, bool> statusMonitoring)
 		{

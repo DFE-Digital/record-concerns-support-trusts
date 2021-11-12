@@ -115,6 +115,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ITrustSearchService, TrustSearchService>();
 			services.AddSingleton<ITypeService, TypeService>();
 			services.AddSingleton<ICaseSearchService, CaseSearchService>();
+			services.AddSingleton<ICaseHistoryService, CaseHistoryService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();

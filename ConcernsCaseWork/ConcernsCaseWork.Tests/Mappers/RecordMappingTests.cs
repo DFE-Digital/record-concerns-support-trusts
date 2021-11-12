@@ -23,7 +23,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(recordDto.Name, Is.EqualTo(record.Name));
 			Assert.That(recordDto.Primary, Is.EqualTo(record.Primary));
 			Assert.That(recordDto.Reason, Is.EqualTo(record.Reason));
-			Assert.That(recordDto.Status, Is.EqualTo(record.Status));
+			Assert.That(recordDto.StatusUrn, Is.EqualTo(record.StatusUrn));
 			Assert.That(recordDto.Urn, Is.EqualTo(record.Urn));
 			Assert.That(recordDto.CaseUrn, Is.EqualTo(record.CaseUrn));
 			Assert.That(recordDto.ClosedAt, Is.EqualTo(record.ClosedAt));
@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(recordDto.Name, Is.EqualTo(record.Name));
 			Assert.That(recordDto.Primary, Is.EqualTo(record.Primary));
 			Assert.That(recordDto.Reason, Is.EqualTo(record.Reason));
-			Assert.That(recordDto.Status, Is.EqualTo(record.Status));
+			Assert.That(recordDto.StatusUrn, Is.EqualTo(record.StatusUrn));
 			Assert.That(recordDto.Urn, Is.EqualTo(record.Urn));
 			Assert.That(recordDto.CaseUrn, Is.EqualTo(record.CaseUrn));
 			Assert.That(recordDto.ClosedAt, Is.EqualTo(record.ClosedAt));
