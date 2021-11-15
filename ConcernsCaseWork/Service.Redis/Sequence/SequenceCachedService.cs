@@ -10,9 +10,7 @@ namespace Service.Redis.Sequence
 		private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 		private long _sequence;
 		
-		public SequenceCachedService(ICacheProvider cacheProvider) : base(cacheProvider)
-		{
-		}
+		public SequenceCachedService(ICacheProvider cacheProvider) : base(cacheProvider) { }
 
 		public async Task<long> Generator()
 		{

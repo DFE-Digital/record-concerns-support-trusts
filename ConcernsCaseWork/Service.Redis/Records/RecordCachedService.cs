@@ -53,12 +53,12 @@ namespace Service.Redis.Records
 		{
 			_logger.LogInformation("RecordCachedService::PostRecordByCaseUrn");
 
-			// TODO Enable only when TRAMS API is live
+			// TODO Enable only when Academies API is live
 			// Create record on TRAMS API
 			//var newRecord = await _recordService.PostRecordByCaseUrn(createRecordDto);
 			//if (newRecord is null) throw new ApplicationException("Error::RecordCachedService::PostRecordByCaseUrn");
 
-			// TODO Remove when TRAMS API is live
+			// TODO Remove when Academies API is live
 			var createRecordDtoStr = JsonConvert.SerializeObject(createRecordDto);
 			var newRecord = JsonConvert.DeserializeObject<RecordDto>(createRecordDtoStr);
 			

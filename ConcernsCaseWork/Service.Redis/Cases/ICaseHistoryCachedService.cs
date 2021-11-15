@@ -1,0 +1,12 @@
+﻿using Service.TRAMS.Cases;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Service.Redis.Cases
+{
+	public interface ICaseHistoryCachedService
+	{
+		Task<CaseHistoryDto> PostCaseHistory(CreateCaseHistoryDto createCaseHistoryDto, string caseworker);
+		Task<IList<CaseHistoryDto>> GetCasesHistory(CaseSearch caseSearch, string caseworker);
+	}
+}

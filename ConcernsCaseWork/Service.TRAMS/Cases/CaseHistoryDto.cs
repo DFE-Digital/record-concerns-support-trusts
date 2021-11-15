@@ -3,6 +3,7 @@ using System;
 
 namespace Service.TRAMS.Cases
 {
+	[Serializable]
 	public sealed class CaseHistoryDto
 	{
 		[JsonProperty("createdAt")]
