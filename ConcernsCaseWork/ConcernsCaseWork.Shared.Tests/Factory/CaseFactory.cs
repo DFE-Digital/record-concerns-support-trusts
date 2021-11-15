@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Models;
 using Service.Redis.Models;
+using Service.TRAMS.Base;
 using Service.TRAMS.Cases;
 using System;
 using System.Collections.Generic;
@@ -267,6 +268,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		public static CaseTrustSearch BuildCaseTrustSearch(string trustUkPrn = "")
 		{
 			return new CaseTrustSearch(trustUkPrn);
+		}
+		
+		public static PageSearch BuildPageSearch()
+		{
+			return new PageSearch();
 		}
 		
 		public static CaseSearch BuildCaseSearch(long caseUrn = 1)
