@@ -502,7 +502,7 @@ namespace Service.TRAMS.Tests.Cases
 			
 			// act
 			Assert.ThrowsAsync<Exception>(() => caseService.PostCase(CaseFactory.BuildCreateCaseDto()));
-		}		
+		}
 		
 		[Test]
 		public async Task WhenPatchCaseByUrn_ReturnsCase()

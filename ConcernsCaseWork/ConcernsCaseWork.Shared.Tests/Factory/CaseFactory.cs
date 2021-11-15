@@ -284,14 +284,29 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			return new List<CaseHistoryDto>
 			{
-				new CaseHistoryDto(
-					Fixture.Create<DateTimeOffset>(), 
-					Fixture.Create<long>(), 
-					Fixture.Create<string>(),
-					Fixture.Create<string>(),
-					Fixture.Create<string>(),
-					Fixture.Create<long>())
+				BuildCaseHistoryDto()
 			};
+		}
+
+		public static CaseHistoryDto BuildCaseHistoryDto()
+		{
+			return new CaseHistoryDto(
+				Fixture.Create<DateTimeOffset>(),
+				Fixture.Create<long>(),
+				Fixture.Create<string>(),
+				Fixture.Create<string>(),
+				Fixture.Create<string>(),
+				Fixture.Create<long>());
+		}
+
+		public static CreateCaseHistoryDto BuildCreateCaseHistoryDto()
+		{
+			return new CreateCaseHistoryDto(
+				Fixture.Create<DateTimeOffset>(),
+				Fixture.Create<long>(),
+				Fixture.Create<string>(),
+				Fixture.Create<string>(),
+				Fixture.Create<string>());
 		}
 	}
 }
