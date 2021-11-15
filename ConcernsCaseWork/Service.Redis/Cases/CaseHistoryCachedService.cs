@@ -16,9 +16,11 @@ namespace Service.Redis.Cases
 		private readonly ISequenceCachedService _sequenceCachedService;
 		private readonly ICaseHistoryService _caseHistoryService;
 		
-		public CaseHistoryCachedService(ICacheProvider cacheProvider, ICaseHistoryService caseHistoryService, ICaseSearchService caseSearchService,
-			ILogger<CaseHistoryCachedService> logger, ISequenceCachedService sequenceCachedService) 
-			: base(cacheProvider)
+		public CaseHistoryCachedService(ICacheProvider cacheProvider, 
+			ICaseHistoryService caseHistoryService, 
+			ICaseSearchService caseSearchService,
+			ILogger<CaseHistoryCachedService> logger, 
+			ISequenceCachedService sequenceCachedService) : base(cacheProvider)
 		{
 			_sequenceCachedService = sequenceCachedService;
 			_caseHistoryService = caseHistoryService;

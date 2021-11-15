@@ -314,11 +314,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<long>());
 		}
 
-		public static CreateCaseHistoryDto BuildCreateCaseHistoryDto()
+		public static CreateCaseHistoryDto BuildCreateCaseHistoryDto(long caseUrn = 1)
 		{
 			return new CreateCaseHistoryDto(
 				Fixture.Create<DateTimeOffset>(),
-				Fixture.Create<long>(),
+				caseUrn,
 				Fixture.Create<string>(),
 				Fixture.Create<string>(),
 				Fixture.Create<string>());
