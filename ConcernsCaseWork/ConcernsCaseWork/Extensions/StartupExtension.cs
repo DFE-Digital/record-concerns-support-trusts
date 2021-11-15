@@ -101,6 +101,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ICaseModelService, CaseModelService>();
 			services.AddSingleton<ITrustModelService, TrustModelService>();
 			services.AddSingleton<ITypeModelService, TypeModelService>();
+			services.AddSingleton<ICaseHistoryModelService, CaseHistoryModelService>();
 			
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();

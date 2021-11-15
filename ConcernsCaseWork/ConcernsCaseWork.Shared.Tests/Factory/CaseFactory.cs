@@ -288,6 +288,21 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			};
 		}
 
+		public static IList<CaseHistoryModel> BuildListCasesHistoryModel()
+		{
+			return new List<CaseHistoryModel>
+			{
+				new CaseHistoryModel {
+					CreatedAt = Fixture.Create<DateTimeOffset>(),
+					Urn = Fixture.Create<long>(),
+					CaseUrn = Fixture.Create<long>(),
+					Action = Fixture.Create<string>(),
+					Description = Fixture.Create<string>(),
+					Title = Fixture.Create<string>()
+				}
+			};
+		}
+		
 		public static CaseHistoryDto BuildCaseHistoryDto()
 		{
 			return new CaseHistoryDto(

@@ -25,8 +25,10 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ManagementPageModel>>();
+			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
 
-			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object);
+			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object, 
+				mockCaseHistoryModelService.Object, mockLogger.Object);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -42,16 +44,24 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ManagementPageModel>>();
+			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
+			
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
+			var casesHistoryModel = CaseFactory.BuildListCasesHistoryModel();
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(caseModel);
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
 			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
 				.ReturnsAsync(trustCasesModel);
-			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetailsModel);
+			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+				.ReturnsAsync(trustDetailsModel);
+			mockCaseHistoryModelService.Setup(c => c.GetCasesHistory(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(casesHistoryModel);
 			
-			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object);
+			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object, 
+				mockCaseHistoryModelService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
@@ -100,14 +110,30 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(expectedFirstTrustCaseModel.Closed, Is.EqualTo(actualFirstTrustCaseModel.Closed));
 			Assert.That(expectedFirstTrustCaseModel.CaseTypeDescription, Is.EqualTo(actualFirstTrustCaseModel.CaseTypeDescription));
 			Assert.That(expectedFirstTrustCaseModel.StatusDescription, Is.EqualTo(actualFirstTrustCaseModel.StatusDescription));
+			
+			Assert.That(pageModel.CasesHistoryModel, Is.Not.Null);
+			Assert.That(pageModel.CasesHistoryModel.Count, Is.EqualTo(1));
+
+			var actualFirstCaseHistoryModel = casesHistoryModel.First();
+			var expectedFirstCaseHistoryModel = pageModel.CasesHistoryModel.First();
+			Assert.That(expectedFirstCaseHistoryModel.CaseUrn, Is.EqualTo(actualFirstCaseHistoryModel.CaseUrn));
+			Assert.That(expectedFirstCaseHistoryModel.Action, Is.EqualTo(actualFirstCaseHistoryModel.Action));
+			Assert.That(expectedFirstCaseHistoryModel.Description, Is.EqualTo(actualFirstCaseHistoryModel.Description));
+			Assert.That(expectedFirstCaseHistoryModel.Title, Is.EqualTo(actualFirstCaseHistoryModel.Title));
+			Assert.That(expectedFirstCaseHistoryModel.Urn, Is.EqualTo(actualFirstCaseHistoryModel.Urn));
+			Assert.That(expectedFirstCaseHistoryModel.CreatedAt, Is.EqualTo(actualFirstCaseHistoryModel.CreatedAt));
 		}
 		
 		private static ManagementPageModel SetupManagementPageModel(
-			ICaseModelService mockCaseModelService, ITrustModelService mockTrustModelService, ILogger<ManagementPageModel> mockLogger, bool isAuthenticated = false)
+			ICaseModelService mockCaseModelService, 
+			ITrustModelService mockTrustModelService,
+			ICaseHistoryModelService mockCaseHistoryModelService,
+			ILogger<ManagementPageModel> mockLogger, 
+			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new ManagementPageModel(mockCaseModelService, mockTrustModelService, mockLogger)
+			return new ManagementPageModel(mockCaseModelService, mockTrustModelService, mockCaseHistoryModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

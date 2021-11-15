@@ -405,6 +405,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var createCaseHistoryDto = new CreateCaseHistoryDto(DateTimeOffset.Now, newCase.Urn, CaseHistoryEnum.Case.ToString(), caseHistoryDisplay, caseHistoryDisplay);
 				await _caseHistoryCachedService.PostCaseHistory(createCaseHistoryDto, createCaseModel.CreatedBy);
 				
+				// Return case urn, if required return type can be changed to CaseModel.
 				return newCase.Urn;
 			}
 			catch (Exception ex)
