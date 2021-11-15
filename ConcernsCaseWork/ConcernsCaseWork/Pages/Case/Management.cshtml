@@ -217,7 +217,13 @@ else
 				<div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="trust-overview">
 					<partial name="_TrustOverview" model="@Model.TrustDetailsModel"/>
 					<partial name="_Academies" model="@Model.TrustDetailsModel.Establishments"/>
-					<partial name="_TrustCases" model="@Model.TrustCasesModel"/>
+					
+					<table class="govuk-table  govuk-!-margin-top-9">
+                    	<caption class="govuk-table__caption govuk-table__caption--m">
+	                        Other cases
+                    	</caption>
+						<partial name="_TrustCases" model="@Model.TrustCasesModel"/>
+					</table>
 				</div>
 			</div>
 		</div>

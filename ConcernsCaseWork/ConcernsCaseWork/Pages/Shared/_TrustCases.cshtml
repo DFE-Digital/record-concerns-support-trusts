@@ -1,71 +1,60 @@
 ﻿@model IList<ConcernsCaseWork.Models.TrustCasesModel>
 
-<table class="govuk-table  govuk-!-margin-top-9">
-	<caption class="govuk-table__caption govuk-table__caption--m">
-		<div class="govuk-button-group flexalign__right">
-			<a href="/case/concerntype" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-				Create case
-			</a>
-		</div>
-		Other cases
-	</caption>
+<thead class="govuk-table__head">
+<tr class="govuk-table__row tr__large">
+	<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+		Case ID
+	</th>
+	<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+		Primary concern
+	</th>
+	<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+		Risk rating
+	</th>
+	<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+		Date closed
+	</th>
+	<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+		Status
+	</th>
+</tr>
+</thead>
 
-	<thead class="govuk-table__head">
+<tbody class="govuk-table__body">
+@if (Model.Count == 0)
+{
+	<tr class="govuk-table__row tr__large">
+		<td class="govuk-table__cell__cases govuk-oneline-row">
+			<span>There are no cases available.</span>
+		</td>
+	</tr>
+}
+else
+{
+	foreach (var trustCase in Model)
+	{
 		<tr class="govuk-table__row tr__large">
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				Case ID
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				Primary concern
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				Risk rating
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				Date closed
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				Status
-			</th>
+			<td class="govuk-table__cell">
+				<a class="govuk-link" href="/case/@trustCase.CaseUrn/management">@trustCase.CaseUrn</a>
+			</td>
+			<td class="govuk-table__cell">
+				@trustCase.CaseTypeDescription
+			</td>
+			<td class="govuk-table__cell govuk-label-wrapper">
+				@for (var index = 0; index < trustCase.RagRating.Item2.Count; ++index)
+				{
+					<span class="govuk-tag ragtag @trustCase.RagRatingCss.ElementAt(index)">
+						@trustCase.RagRating.Item2.ElementAt(index)
+					</span>
+				}
+			</td>
+			<td class="govuk-table__cell">
+				@trustCase.Closed
+			</td>
+			<td class="govuk-table__cell">
+				@trustCase.StatusDescription
+			</td>
 		</tr>
-	</thead>
-
-	<tbody class="govuk-table__body">
-		@if (Model.Count == 0)
-		{
-			<tr class="govuk-table__row tr__large">
-				<td class="govuk-table__cell__cases govuk-oneline-row">
-					<span>There are no cases available.</span>
-				</td>
-			</tr>
-		}
-		else
-		{
-			foreach (var trustCase in Model)
-			{
-				<tr class="govuk-table__row tr__large">
-					<td class="govuk-table__cell">
-						<a class="govuk-link" href="/case/@trustCase.CaseUrn/management">@trustCase.CaseUrn</a>
-					</td>
-					<td class="govuk-table__cell">
-						@trustCase.CaseTypeDescription
-					</td>
-					<td class="govuk-table__cell govuk-label-wrapper">
-						@for (var index = 0; index < trustCase.RagRating.Item2.Count; ++index)
-						{
-							<span class="govuk-tag ragtag @trustCase.RagRatingCss.ElementAt(index)">
-								@trustCase.RagRating.Item2.ElementAt(index)
-							</span>
-						}
-					</td>
-					<td class="govuk-table__cell">
-						@trustCase.Closed
-					</td>
-					<td class="govuk-table__cell">
-						@trustCase.StatusDescription
-					</td>
-				</tr>
-			}
-		}
-	</tbody>
-</table>
+	}
+}
+</tbody>

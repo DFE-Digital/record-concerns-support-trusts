@@ -22,8 +22,8 @@
 }
 else
 {
-<div class="govuk-width-container">
-	<div class="govuk-button-group">
+	<div class="govuk-width-container">
+		<div class="govuk-button-group">
 			<a class="govuk-button govuk-button--secondary" asp-page="/home" role="button">
 				Your Casework
 			</a>
@@ -31,15 +31,25 @@ else
 				Find trust
 			</a>
 		</div>
-	<h1 class="govuk-heading-l">
-		<span class="govuk-caption-m">Trust Overview</span>
-		@Model.TrustDetailsModel.GiasData.GroupNameTitle
-	</h1>
-	<partial name="_TrustOverview" model="@Model.TrustDetailsModel" />
-	<partial name="_Academies" model="@Model.TrustDetailsModel.Establishments" />
-	<partial name="_TrustCases" model="@Model.TrustCasesModel" />
-</div>
-	
+		<h1 class="govuk-heading-l">
+			<span class="govuk-caption-m">Trust Overview</span>
+			@Model.TrustDetailsModel.GiasData.GroupNameTitle
+		</h1>
+		<partial name="_TrustOverview" model="@Model.TrustDetailsModel"/>
+		<partial name="_Academies" model="@Model.TrustDetailsModel.Establishments"/>
+
+		<table class="govuk-table  govuk-!-margin-top-9">
+			<caption class="govuk-table__caption govuk-table__caption--m">
+				<div class="govuk-button-group flexalign__right">
+					<a href="/case/concerntype" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+						Create case
+					</a>
+				</div>
+				Other cases
+			</caption>
+			<partial name="_TrustCases" model="@Model.TrustCasesModel"/>
+		</table>
+	</div>
 }
 
 
