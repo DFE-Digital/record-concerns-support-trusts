@@ -396,13 +396,18 @@ namespace ConcernsCaseWork.Services.Cases
 				
 				var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 
+				// Create case history event
+				var caseHistoryConcernDisplay = CaseHistoryEnum.Concern.ToDisplay();
+				var createCaseHistoryDto = new CreateCaseHistoryDto(DateTimeOffset.Now, newCase.Urn, CaseHistoryEnum.Concern.ToString(), caseHistoryConcernDisplay, caseHistoryConcernDisplay);
+				await _caseHistoryCachedService.PostCaseHistory(createCaseHistoryDto, createCaseModel.CreatedBy);
+				
 				// Create a rating history
 				var createRecordRatingHistoryDto = new RecordRatingHistoryDto(DateTimeOffset.Now, newRecord.Urn, ratingDto.Urn);
 				await _recordRatingHistoryCachedService.PostRecordRatingHistory(createRecordRatingHistoryDto, createCaseModel.CreatedBy, newCase.Urn);
 
 				// Create case history event
 				var caseHistoryDisplay = CaseHistoryEnum.Case.ToDisplay();
-				var createCaseHistoryDto = new CreateCaseHistoryDto(DateTimeOffset.Now, newCase.Urn, CaseHistoryEnum.Case.ToString(), caseHistoryDisplay, caseHistoryDisplay);
+				createCaseHistoryDto = new CreateCaseHistoryDto(DateTimeOffset.Now, newCase.Urn, CaseHistoryEnum.Case.ToString(), caseHistoryDisplay, caseHistoryDisplay);
 				await _caseHistoryCachedService.PostCaseHistory(createCaseHistoryDto, createCaseModel.CreatedBy);
 				
 				// Return case urn, if required return type can be changed to CaseModel.
