@@ -62,6 +62,7 @@ namespace Service.Redis.Cases
 					userState.CasesDetails.Add(createCaseHistoryDto.CaseUrn, caseWrapper);
 				}
 			}
+			
 			await StoreData(caseworker, userState);
 
 			return newCaseHistoryDto;
