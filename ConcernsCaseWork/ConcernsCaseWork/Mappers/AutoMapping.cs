@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
+using Service.TRAMS.Cases;
 using Service.TRAMS.Trusts;
 
 namespace ConcernsCaseWork.Mappers
@@ -20,6 +21,9 @@ namespace ConcernsCaseWork.Mappers
 			CreateMap<EstablishmentTypeDto, EstablishmentTypeModel>();
 			CreateMap<CensusDto, CensusModel>();
 			CreateMap<IfdDataDto, IfdDataModel>();
+			
+			// Case
+			CreateMap<CaseHistoryDto, CaseHistoryModel>();
 		}
 	}
 }

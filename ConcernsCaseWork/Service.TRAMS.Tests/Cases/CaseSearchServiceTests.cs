@@ -21,6 +21,7 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseHistoryService = new Mock<ICaseHistoryService>();
 			var mockIOptionsTrustSearch = new Mock<IOptions<TrustSearchOptions>>();
 			var mockLogger = new Mock<ILogger<CaseSearchService>>();
 
@@ -32,7 +33,7 @@ namespace Service.TRAMS.Tests.Cases
 				.ReturnsAsync(new ApiListWrapper<CaseDto>(expectedCasesDto, null))
 				.ReturnsAsync(new ApiListWrapper<CaseDto>(emptyList, null));
 			
-			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
+			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockCaseHistoryService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
 			// act
 			var actualCasesDto = await caseSearchService.GetCasesByCaseTrustSearch(CaseFactory.BuildCaseTrustSearch());
@@ -72,6 +73,7 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseHistoryService = new Mock<ICaseHistoryService>();
 			var mockIOptionsTrustSearch = new Mock<IOptions<TrustSearchOptions>>();
 			var mockLogger = new Mock<ILogger<CaseSearchService>>();
 
@@ -92,7 +94,7 @@ namespace Service.TRAMS.Tests.Cases
 				.ReturnsAsync(expectedApiWrapperCasesDto)
 				.ReturnsAsync(expectedApiWrapperCasesDto);
 			
-			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
+			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockCaseHistoryService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
 			// act
 			var actualCaseTrusts = await caseSearchService.GetCasesByCaseTrustSearch(CaseFactory.BuildCaseTrustSearch());
@@ -107,6 +109,7 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseHistoryService = new Mock<ICaseHistoryService>();
 			var mockIOptionsTrustSearch = new Mock<IOptions<TrustSearchOptions>>();
 			var mockLogger = new Mock<ILogger<CaseSearchService>>();
 
@@ -127,7 +130,7 @@ namespace Service.TRAMS.Tests.Cases
 				.ReturnsAsync(expectedApiWrapperCasesDto)
 				.ReturnsAsync(expectedApiWrapperCasesDto);
 			
-			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
+			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockCaseHistoryService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
 			// act
 			var actualCaseTrusts = await caseSearchService.GetCasesByCaseTrustSearch(CaseFactory.BuildCaseTrustSearch());
@@ -142,6 +145,7 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseHistoryService = new Mock<ICaseHistoryService>();
 			var mockIOptionsTrustSearch = new Mock<IOptions<TrustSearchOptions>>();
 			var mockLogger = new Mock<ILogger<CaseSearchService>>();
 
@@ -155,7 +159,7 @@ namespace Service.TRAMS.Tests.Cases
 				.ReturnsAsync(expectedApiWrapperCasesDto)
 				.ReturnsAsync(nullApiWrapperCasesDto);
 			
-			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
+			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockCaseHistoryService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
 			// act
 			var actualCaseTrusts = await caseSearchService.GetCasesByCaseTrustSearch(CaseFactory.BuildCaseTrustSearch());

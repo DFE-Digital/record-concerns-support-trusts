@@ -61,9 +61,38 @@ namespace Service.TRAMS.Cases
 			}
 		}
 
-		public Task<ApiListWrapper<CaseHistoryDto>> GetCasesHistory(CaseSearch caseSearch)
+		public async Task<ApiListWrapper<CaseHistoryDto>> GetCasesHistory(CaseSearch caseSearch)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				_logger.LogInformation("CaseHistoryService::GetCasesHistory");
+				
+				// Create a request
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/concerns-cases-history/case/urn/{caseSearch.CaseUrn}?page={caseSearch.Page}");
+				
+				// Create http client
+				var client = ClientFactory.CreateClient(HttpClientName);
+				
+				// Execute request
+				var response = await client.SendAsync(request);
+
+				// Check status code
+				response.EnsureSuccessStatusCode();
+				
+				// Read response content
+				var content = await response.Content.ReadAsStringAsync();
+				
+				// Deserialize content to POCO
+				var apiWrapperCasesHistoryDto = JsonConvert.DeserializeObject<ApiListWrapper<CaseHistoryDto>>(content);
+
+				return apiWrapperCasesHistoryDto;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("CaseHistoryService::GetCasesHistory::Exception message::{Message}", ex.Message);
+				
+				throw;
+			}
 		}
 	}
 }

@@ -12,13 +12,15 @@ namespace Service.TRAMS.Cases
 {
 	public sealed class CaseSearchService : ICaseSearchService
 	{
+		private readonly ICaseHistoryService _caseHistoryService;
 		private readonly ICaseService _caseService;
 		private readonly ILogger<CaseSearchService> _logger;
 		private readonly int _hardLimitByPagination;
 
-		public CaseSearchService(ICaseService caseService, IOptions<TrustSearchOptions> options, ILogger<CaseSearchService> logger)
+		public CaseSearchService(ICaseService caseService, ICaseHistoryService caseHistoryService, IOptions<TrustSearchOptions> options, ILogger<CaseSearchService> logger)
 		{
 			_caseService = caseService;
+			_caseHistoryService = caseHistoryService;
 			_logger = logger;
 			_hardLimitByPagination = options.Value.TrustsLimitByPage;
 		}
@@ -63,9 +65,9 @@ namespace Service.TRAMS.Cases
 			return caseTrustsList;
 		}
 
-		public async Task<IList<CaseDto>> GetCasesByCaseSearch(PageSearch pageSearch)
+		public async Task<IList<CaseDto>> GetCasesByPageSearch(PageSearch pageSearch)
 		{
-			_logger.LogInformation("CaseSearchService::GetCasesByCaseSearch execution");
+			_logger.LogInformation("CaseSearchService::GetCasesByPageSearch execution");
 			
 			var stopwatch = Stopwatch.StartNew();
 			var casesList = new List<CaseDto>();
@@ -97,10 +99,50 @@ namespace Service.TRAMS.Cases
 			finally
 			{
 				stopwatch.Stop();
-				_logger.LogInformation("CaseSearchService::GetCasesByCaseSearch execution time {ElapsedMilliseconds} ms", stopwatch.ElapsedMilliseconds);
+				_logger.LogInformation("CaseSearchService::GetCasesByPageSearch execution time {ElapsedMilliseconds} ms", stopwatch.ElapsedMilliseconds);
 			}
 			
 			return casesList;
+		}
+
+		public async Task<IList<CaseHistoryDto>> GetCasesHistoryByCaseSearch(CaseSearch caseSearch)
+		{
+			_logger.LogInformation("CaseSearchService::GetCasesHistoryByCaseSearch execution");
+			
+			var stopwatch = Stopwatch.StartNew();
+			var casesHistoryList = new List<CaseHistoryDto>();
+			
+			try
+			{
+				ApiListWrapper<CaseHistoryDto> apiListWrapperCaseHistoryDto;
+				var nrRequests = 0;
+				
+				do
+				{
+					apiListWrapperCaseHistoryDto = await _caseHistoryService.GetCasesHistory(caseSearch);
+					
+					// The following condition will break the loop.
+					if (apiListWrapperCaseHistoryDto?.Data is null || !apiListWrapperCaseHistoryDto.Data.Any()) continue;
+					
+					casesHistoryList.AddRange(apiListWrapperCaseHistoryDto.Data);
+					caseSearch.PageIncrement();
+					
+					// Safe guard in case we have more than 10 pages.
+					// We don't have a scenario at the moment, but feels like we need a limit.
+					if ((nrRequests = Interlocked.Increment(ref nrRequests)) > _hardLimitByPagination)
+					{
+						break;
+					}
+
+				} while (apiListWrapperCaseHistoryDto?.Data != null && apiListWrapperCaseHistoryDto.Data.Any() && apiListWrapperCaseHistoryDto.Paging?.NextPageUrl != null);
+			}
+			finally
+			{
+				stopwatch.Stop();
+				_logger.LogInformation("CaseSearchService::GetCasesHistoryByCaseSearch execution time {ElapsedMilliseconds} ms", stopwatch.ElapsedMilliseconds);
+			}
+			
+			return casesHistoryList;
 		}
 	}
 }

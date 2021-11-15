@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace ConcernsCaseWork.Tests.Extensions
 {
 	[Parallelizable(ParallelScope.All)]
-	public class StringExtensionsTests
+	public class StringExtensionTests
 	{
 		[TestCase("", false)]
 		[TestCase("xpto", false)]
