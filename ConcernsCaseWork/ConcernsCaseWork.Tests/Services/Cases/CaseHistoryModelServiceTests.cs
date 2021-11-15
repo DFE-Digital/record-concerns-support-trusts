@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			foreach (var expected in casesHistoryModel)
 			{
-				foreach (var actual in casesHistoryDto.Where(actual => expected.CaseUrn.CompareTo(actual.Urn) == 0))
+				foreach (var actual in casesHistoryDto.Where(actual => expected.CaseUrn.CompareTo(actual.CaseUrn) == 0))
 				{
 					Assert.That(expected.Action, Is.EqualTo(actual.Action));
 					Assert.That(expected.Description, Is.EqualTo(actual.Description));
