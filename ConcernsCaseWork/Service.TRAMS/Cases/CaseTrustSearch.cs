@@ -2,7 +2,7 @@
 
 namespace Service.TRAMS.Cases
 {
-	public sealed class CaseTrustSearch : Base.PageSearch
+	public sealed class CaseTrustSearch : PageSearch
 	{
 		public string TrustUkPrn { get; }
 		
