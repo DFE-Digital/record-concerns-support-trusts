@@ -123,14 +123,12 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
 			var mockCachedService = new Mock<ICachedService>();
-
-			var caseModel = CaseFactory.BuildCaseModel();
 			
 			var expected = CaseFactory.BuildCreateCaseModel();
 			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
-			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(caseModel);
+			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(1);
 			
 			var pageModel = SetupDetailsModel(mockCaseModelService.Object, 
 				mockCachedService.Object, mockLogger.Object, true);
@@ -163,10 +161,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
 			var mockCasesCachedService = new Mock<ICachedService>();
-
-			var caseModel = CaseFactory.BuildCaseModel();
 			
-			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(caseModel);
+			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(1);
 			
 			var pageModel = SetupDetailsModel(mockCaseModelService.Object, 
 				mockCasesCachedService.Object, mockLogger.Object, true);

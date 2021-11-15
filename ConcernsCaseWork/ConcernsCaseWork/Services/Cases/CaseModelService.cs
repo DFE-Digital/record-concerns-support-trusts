@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
@@ -24,6 +25,7 @@ namespace ConcernsCaseWork.Services.Cases
 	public sealed class CaseModelService : ICaseModelService
 	{
 		private readonly IRecordRatingHistoryCachedService _recordRatingHistoryCachedService;
+		private readonly ICaseHistoryCachedService _caseHistoryCachedService;
 		private readonly IRatingCachedService _ratingCachedService;
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly IRecordCachedService _recordCachedService;
@@ -34,15 +36,20 @@ namespace ConcernsCaseWork.Services.Cases
 		private readonly ILogger<CaseModelService> _logger;
 		private readonly ICachedService _cachedService;
 
-		public CaseModelService(ICaseCachedService caseCachedService, ITrustCachedService trustCachedService, 
-			IRecordCachedService recordCachedService, IRatingCachedService ratingCachedService,
-			ITypeCachedService typeCachedService, ICachedService cachedService, 
+		public CaseModelService(ICaseCachedService caseCachedService, 
+			ITrustCachedService trustCachedService, 
+			IRecordCachedService recordCachedService, 
+			IRatingCachedService ratingCachedService,
+			ITypeCachedService typeCachedService, 
+			ICachedService cachedService, 
 			IRecordRatingHistoryCachedService recordRatingHistoryCachedService,
 			IStatusCachedService statusCachedService,
 			ICaseSearchService caseSearchService,
+			ICaseHistoryCachedService caseHistoryCachedService,
 			ILogger<CaseModelService> logger)
 		{
 			_recordRatingHistoryCachedService = recordRatingHistoryCachedService;
+			_caseHistoryCachedService = caseHistoryCachedService;
 			_statusCachedService = statusCachedService;
 			_ratingCachedService = ratingCachedService;
 			_recordCachedService = recordCachedService;
@@ -359,7 +366,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 		}
 
-		public async Task<CaseModel> PostCase(CreateCaseModel createCaseModel)
+		public async Task<long> PostCase(CreateCaseModel createCaseModel)
 		{
 			try
 			{
@@ -393,8 +400,12 @@ namespace ConcernsCaseWork.Services.Cases
 				var createRecordRatingHistoryDto = new RecordRatingHistoryDto(DateTimeOffset.Now, newRecord.Urn, ratingDto.Urn);
 				await _recordRatingHistoryCachedService.PostRecordRatingHistory(createRecordRatingHistoryDto, createCaseModel.CreatedBy, newCase.Urn);
 
-				// Return case model
-				return CaseMapping.Map(newCase, statusDto.Name);
+				// Create case history event
+				var caseHistoryDisplay = CaseHistoryEnum.Case.ToDisplay();
+				var createCaseHistoryDto = new CreateCaseHistoryDto(DateTimeOffset.Now, newCase.Urn, CaseHistoryEnum.Case.ToString(), caseHistoryDisplay, caseHistoryDisplay);
+				await _caseHistoryCachedService.PostCaseHistory(createCaseHistoryDto, createCaseModel.CreatedBy);
+				
+				return newCase.Urn;
 			}
 			catch (Exception ex)
 			{

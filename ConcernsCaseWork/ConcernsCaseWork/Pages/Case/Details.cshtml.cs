@@ -72,9 +72,9 @@ namespace ConcernsCaseWork.Pages.Case
 				createCaseModel.CaseAim = caseAim;
 				createCaseModel.DeEscalationPoint = deEscalationPoint;
 					
-				var newCase = await _caseModelService.PostCase(createCaseModel);
+				var caseUrn = await _caseModelService.PostCase(createCaseModel);
 				
-				return RedirectToPage("Management", new { id = newCase.Urn });
+				return RedirectToPage("Management", new { id = caseUrn });
 			}
 			catch (Exception ex)
 			{

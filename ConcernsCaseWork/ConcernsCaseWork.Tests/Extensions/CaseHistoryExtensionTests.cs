@@ -7,7 +7,7 @@ namespace ConcernsCaseWork.Tests.Extensions
 	[Parallelizable(ParallelScope.All)]
 	public class CaseHistoryExtensionTests
 	{
-
+		[TestCase(CaseHistoryEnum.Case, "Case")]
 		[TestCase(CaseHistoryEnum.Comment, "Comment")]
 		[TestCase(CaseHistoryEnum.Concern, "Concern")]
 		[TestCase(CaseHistoryEnum.Financial, "Financial")]

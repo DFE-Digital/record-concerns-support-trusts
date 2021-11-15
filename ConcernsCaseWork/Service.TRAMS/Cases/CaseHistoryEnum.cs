@@ -2,6 +2,7 @@
 {
 	public enum CaseHistoryEnum
 	{
+		Case,
 		Comment,
 		Concern,
 		Financial,

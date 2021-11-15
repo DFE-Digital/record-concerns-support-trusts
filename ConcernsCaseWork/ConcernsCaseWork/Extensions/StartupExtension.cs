@@ -129,6 +129,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ICaseCachedService, CaseCachedService>();
 			services.AddSingleton<IRecordCachedService, RecordCachedService>();
 			services.AddSingleton<IRecordRatingHistoryCachedService, RecordRatingHistoryCachedService>();
+			services.AddSingleton<ICaseHistoryCachedService, CaseHistoryCachedService>();
 			
 			// Redis Sequence
 			services.AddSingleton<ISequenceCachedService, SequenceCachedService>();

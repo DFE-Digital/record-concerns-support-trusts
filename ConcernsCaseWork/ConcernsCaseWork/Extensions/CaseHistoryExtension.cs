@@ -8,6 +8,7 @@ namespace ConcernsCaseWork.Extensions
 		{
 			return me switch
 			{
+				CaseHistoryEnum.Case => "Case",
 				CaseHistoryEnum.Comment => "Comment",
 				CaseHistoryEnum.Concern => "Concern",
 				CaseHistoryEnum.Financial => "Financial",

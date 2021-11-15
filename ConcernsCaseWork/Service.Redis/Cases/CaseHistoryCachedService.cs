@@ -26,7 +26,7 @@ namespace Service.Redis.Cases
 			_logger = logger;
 		}
 		
-		public async Task<CaseHistoryDto> PostCaseHistory(CreateCaseHistoryDto createCaseHistoryDto, string caseworker)
+		public async Task PostCaseHistory(CreateCaseHistoryDto createCaseHistoryDto, string caseworker)
 		{
 			_logger.LogInformation("CaseHistoryCachedService::PostCaseHistory");
 			
@@ -64,8 +64,6 @@ namespace Service.Redis.Cases
 			}
 			
 			await StoreData(caseworker, userState);
-
-			return newCaseHistoryDto;
 		}
 
 		public async Task<IList<CaseHistoryDto>> GetCasesHistory(CaseSearch caseSearch, string caseworker)
