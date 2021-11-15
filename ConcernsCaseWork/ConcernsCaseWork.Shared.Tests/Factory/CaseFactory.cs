@@ -268,5 +268,24 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			return new CaseTrustSearch(trustUkPrn);
 		}
+		
+		public static CaseSearch BuildCaseSearch(long caseUrn = 1)
+		{
+			return new CaseSearch(caseUrn);
+		}
+
+		public static IList<CaseHistoryDto> BuildListCasesHistoryDto()
+		{
+			return new List<CaseHistoryDto>
+			{
+				new CaseHistoryDto(
+					Fixture.Create<DateTimeOffset>(), 
+					Fixture.Create<long>(), 
+					Fixture.Create<string>(),
+					Fixture.Create<string>(),
+					Fixture.Create<string>(),
+					Fixture.Create<long>())
+			};
+		}
 	}
 }

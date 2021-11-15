@@ -41,7 +41,7 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord.Description, Is.EqualTo(expectedRecord.Description));
 			Assert.That(actualRecord.Primary, Is.EqualTo(expectedRecord.Primary));
 			Assert.That(actualRecord.Reason, Is.EqualTo(expectedRecord.Reason));
-			Assert.That(actualRecord.StatusUrn, Is.EqualTo(expectedRecord.Status));
+			Assert.That(actualRecord.StatusUrn, Is.EqualTo(expectedRecord.StatusUrn));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(expectedRecord.CaseUrn));
 			Assert.That(actualRecord.ClosedAt, Is.EqualTo(expectedRecord.ClosedAt));
 			Assert.That(actualRecord.RatingUrn, Is.EqualTo(expectedRecord.RatingUrn));
@@ -83,7 +83,7 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord.Description, Is.EqualTo(expectedRecord.Description));
 			Assert.That(actualRecord.Primary, Is.EqualTo(expectedRecord.Primary));
 			Assert.That(actualRecord.Reason, Is.EqualTo(expectedRecord.Reason));
-			Assert.That(actualRecord.StatusUrn, Is.EqualTo(expectedRecord.Status));
+			Assert.That(actualRecord.StatusUrn, Is.EqualTo(expectedRecord.StatusUrn));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(expectedRecord.CaseUrn));
 			Assert.That(actualRecord.ClosedAt, Is.EqualTo(expectedRecord.ClosedAt));
 			Assert.That(actualRecord.RatingUrn, Is.EqualTo(expectedRecord.RatingUrn));
@@ -125,7 +125,7 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord.Description, Is.EqualTo(expectedRecord.Description));
 			Assert.That(actualRecord.Primary, Is.EqualTo(expectedRecord.Primary));
 			Assert.That(actualRecord.Reason, Is.EqualTo(expectedRecord.Reason));
-			Assert.That(actualRecord.StatusUrn, Is.EqualTo(expectedRecord.Status));
+			Assert.That(actualRecord.StatusUrn, Is.EqualTo(expectedRecord.StatusUrn));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(expectedRecord.CaseUrn));
 			Assert.That(actualRecord.ClosedAt, Is.EqualTo(expectedRecord.ClosedAt));
 			Assert.That(actualRecord.RatingUrn, Is.EqualTo(expectedRecord.RatingUrn));

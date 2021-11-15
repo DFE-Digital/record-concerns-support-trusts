@@ -168,5 +168,110 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(actualCaseTrusts, Is.Not.Null);
 			Assert.That(actualCaseTrusts.Count, Is.EqualTo(0));
 		}
+
+		[Test]
+		public async Task WhenGetCasesHistoryByCaseSearch_ReturnsCasesHistoryFromTrams()
+		{
+			// arrange
+			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseHistoryService = new Mock<ICaseHistoryService>();
+			var mockIOptionsTrustSearch = new Mock<IOptions<TrustSearchOptions>>();
+			var mockLogger = new Mock<ILogger<CaseSearchService>>();
+
+			var expectedCasesHistoryDto = CaseFactory.BuildListCasesHistoryDto();
+			IList<CaseHistoryDto> emptyList = Array.Empty<CaseHistoryDto>();
+
+			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
+			mockCaseHistoryService.SetupSequence(c => c.GetCasesHistory(It.IsAny<CaseSearch>()))
+				.ReturnsAsync(new ApiListWrapper<CaseHistoryDto>(expectedCasesHistoryDto, null))
+				.ReturnsAsync(new ApiListWrapper<CaseHistoryDto>(emptyList, null));
+			
+			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockCaseHistoryService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
+
+			// act
+			var actualCasesHistoryDto = await caseSearchService.GetCasesHistoryByCaseSearch(CaseFactory.BuildCaseSearch());
+
+			// assert
+			Assert.That(actualCasesHistoryDto, Is.Not.Null);
+			Assert.That(actualCasesHistoryDto.Count, Is.EqualTo(expectedCasesHistoryDto.Count));
+			
+			foreach (var caseDto in actualCasesHistoryDto)
+			{
+				foreach (var expectedCase in expectedCasesHistoryDto.Where(expectedCase => caseDto.Urn == expectedCase.Urn))
+				{
+					Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
+					Assert.That(caseDto.Action, Is.EqualTo(expectedCase.Action));
+					Assert.That(caseDto.Title, Is.EqualTo(expectedCase.Title));
+					Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
+					Assert.That(caseDto.CaseUrn, Is.EqualTo(expectedCase.CaseUrn));
+					Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
+				}
+			}
+		}
+		
+		[Test]
+		public async Task WhenGetCasesHistoryByCaseSearch_AndLimitedByMaxPages_ReturnsCasesHistoryFromTrams()
+		{
+			// arrange
+			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseHistoryService = new Mock<ICaseHistoryService>();
+			var mockIOptionsTrustSearch = new Mock<IOptions<TrustSearchOptions>>();
+			var mockLogger = new Mock<ILogger<CaseSearchService>>();
+
+			var expectedCasesHistoryDto = CaseFactory.BuildListCasesHistoryDto();
+			var expectedApiWrapperCasesHistoryDto = new ApiListWrapper<CaseHistoryDto>(expectedCasesHistoryDto, new ApiListWrapper<CaseHistoryDto>.Pagination(1, 200, string.Empty));
+			
+			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
+			mockCaseHistoryService.SetupSequence(c => c.GetCasesHistory(It.IsAny<CaseSearch>()))
+				.ReturnsAsync(expectedApiWrapperCasesHistoryDto)
+				.ReturnsAsync(expectedApiWrapperCasesHistoryDto)
+				.ReturnsAsync(expectedApiWrapperCasesHistoryDto)
+				.ReturnsAsync(expectedApiWrapperCasesHistoryDto)
+				.ReturnsAsync(expectedApiWrapperCasesHistoryDto)
+				.ReturnsAsync(expectedApiWrapperCasesHistoryDto)
+				.ReturnsAsync(expectedApiWrapperCasesHistoryDto)
+				.ReturnsAsync(expectedApiWrapperCasesHistoryDto)
+				.ReturnsAsync(expectedApiWrapperCasesHistoryDto)
+				.ReturnsAsync(expectedApiWrapperCasesHistoryDto)
+				.ReturnsAsync(expectedApiWrapperCasesHistoryDto);
+			
+			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockCaseHistoryService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
+
+			// act
+			var actualCasesHistory = await caseSearchService.GetCasesHistoryByCaseSearch(CaseFactory.BuildCaseSearch());
+
+			// assert
+			Assert.That(actualCasesHistory, Is.Not.Null);
+			Assert.That(actualCasesHistory.Count, Is.EqualTo(expectedCasesHistoryDto.Count * 11));
+		}
+		
+		[Test]
+		public async Task WhenGetCasesHistoryByCaseSearch_AndResponseIsNullOrDataIsNull_ReturnsEmptyCasesHistoryFromTrams()
+		{
+			// arrange
+			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseHistoryService = new Mock<ICaseHistoryService>();
+			var mockIOptionsTrustSearch = new Mock<IOptions<TrustSearchOptions>>();
+			var mockLogger = new Mock<ILogger<CaseSearchService>>();
+
+			var expectedCasesHistoryDto = CaseFactory.BuildListCasesHistoryDto();
+			var expectedApiWrapperCasesHistoryDto = new ApiListWrapper<CaseHistoryDto>(expectedCasesHistoryDto, null);
+			var nullApiWrapperCasesHistoryDto = new ApiListWrapper<CaseHistoryDto>(null, null);
+			
+			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
+			mockCaseHistoryService.SetupSequence(c => c.GetCasesHistory(It.IsAny<CaseSearch>()))
+				.ReturnsAsync((ApiListWrapper<CaseHistoryDto>)null)
+				.ReturnsAsync(expectedApiWrapperCasesHistoryDto)
+				.ReturnsAsync(nullApiWrapperCasesHistoryDto);
+			
+			var caseSearchService = new CaseSearchService(mockCaseService.Object, mockCaseHistoryService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
+
+			// act
+			var actualCasesHistory = await caseSearchService.GetCasesHistoryByCaseSearch(CaseFactory.BuildCaseSearch());
+
+			// assert
+			Assert.That(actualCasesHistory, Is.Not.Null);
+			Assert.That(actualCasesHistory.Count, Is.EqualTo(0));
+		}
 	}
 }
