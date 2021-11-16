@@ -12,12 +12,14 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			return new IfdDataDto(
 				Fixture.Create<string>(),
+				Fixture.Create<string>(),
 				GroupContactAddressFactory.BuildGroupContactAddressDto());
 		}
 		
 		public static IfdDataModel BuildIfdDataModel()
 		{
 			return new IfdDataModel(
+				Fixture.Create<string>(),
 				Fixture.Create<string>(),
 				GroupContactAddressFactory.BuildGroupContactAddressModel());
 		}
