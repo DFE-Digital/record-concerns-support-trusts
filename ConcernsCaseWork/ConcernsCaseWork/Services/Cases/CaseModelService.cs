@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
@@ -185,6 +184,12 @@ namespace ConcernsCaseWork.Services.Cases
 				
 				await _recordCachedService.PatchRecordByUrn(recordDto, patchCaseModel.CreatedBy);
 				await _caseCachedService.PatchCaseByUrn(caseDto);
+				
+				// Create case history event
+				var caseHistoryEnum = patchCaseModel.StatusName.Equals(StatusEnum.Monitoring.ToString(), StringComparison.OrdinalIgnoreCase)
+					? CaseHistoryEnum.ClosedForMonitoring
+					: CaseHistoryEnum.Closed;
+				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(caseHistoryEnum, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -238,11 +243,15 @@ namespace ConcernsCaseWork.Services.Cases
 				recordDto = RecordMapping.MapRiskRating(patchCaseModel, recordDto);
 				caseDto = CaseMapping.Map(patchCaseModel, caseDto);
 
-				var recordRatingHistory = new RecordRatingHistoryDto(DateTimeOffset.Now, recordDto.Urn, ratingDto.Urn);
+				var timeNow = DateTimeOffset.Now;
+				var recordRatingHistory = new RecordRatingHistoryDto(timeNow, recordDto.Urn, ratingDto.Urn);
 				
 				await _recordCachedService.PatchRecordByUrn(recordDto, patchCaseModel.CreatedBy);
 				await _caseCachedService.PatchCaseByUrn(caseDto);
 				await _recordRatingHistoryCachedService.PostRecordRatingHistory(recordRatingHistory, patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				
+				// Create case history event
+				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.RiskRating, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -262,6 +271,9 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.MapDirectionOfTravel(patchCaseModel, caseDto);
 
 				await _caseCachedService.PatchCaseByUrn(caseDto);
+				
+				// Create case history event
+				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.DirectionOfTravel, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -281,6 +293,9 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.MapIssue(patchCaseModel, caseDto);
 
 				await _caseCachedService.PatchCaseByUrn(caseDto);
+				
+				// Create case history event
+				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Issue, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -300,6 +315,9 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.MapCaseAim(patchCaseModel, caseDto);
 
 				await _caseCachedService.PatchCaseByUrn(caseDto);
+				
+				// Create case history event
+				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.CaseAim, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -319,6 +337,9 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.MapCurrentStatus(patchCaseModel, caseDto);
 
 				await _caseCachedService.PatchCaseByUrn(caseDto);
+				
+				// Create case history event
+				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.CurrentStatus, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -338,6 +359,9 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.MapDeEscalationPoint(patchCaseModel, caseDto);
 
 				await _caseCachedService.PatchCaseByUrn(caseDto);
+				
+				// Create case history event
+				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.DeEscalationPoint, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -357,6 +381,9 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.MapNextSteps(patchCaseModel, caseDto);
 
 				await _caseCachedService.PatchCaseByUrn(caseDto);
+				
+				// Create case history event
+				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.NextSteps, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -394,20 +421,16 @@ namespace ConcernsCaseWork.Services.Cases
 					currentDate, typeDto.Name, typeDto.Description, createCaseModel.Description, newCase.Urn, 
 					typeDto.Urn, ratingDto.Urn, isCasePrimary, statusDto.Urn);
 				var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
-
+				
 				// Create case history event
-				var caseHistoryConcernDisplay = CaseHistoryEnum.Concern.ToDisplay();
-				var createCaseHistoryDto = new CreateCaseHistoryDto(DateTimeOffset.Now, newCase.Urn, CaseHistoryEnum.Concern.ToString(), caseHistoryConcernDisplay, caseHistoryConcernDisplay);
-				await _caseHistoryCachedService.PostCaseHistory(createCaseHistoryDto, createCaseModel.CreatedBy);
+				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Concern, newCase.Urn), newCase.CreatedBy);
 				
 				// Create a rating history
 				var createRecordRatingHistoryDto = new RecordRatingHistoryDto(DateTimeOffset.Now, newRecord.Urn, ratingDto.Urn);
 				await _recordRatingHistoryCachedService.PostRecordRatingHistory(createRecordRatingHistoryDto, createCaseModel.CreatedBy, newCase.Urn);
 
 				// Create case history event
-				var caseHistoryDisplay = CaseHistoryEnum.Case.ToDisplay();
-				createCaseHistoryDto = new CreateCaseHistoryDto(DateTimeOffset.Now, newCase.Urn, CaseHistoryEnum.Case.ToString(), caseHistoryDisplay, caseHistoryDisplay);
-				await _caseHistoryCachedService.PostCaseHistory(createCaseHistoryDto, createCaseModel.CreatedBy);
+				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Case, newCase.Urn), newCase.CreatedBy);
 				
 				// Return case urn, if required return type can be changed to CaseModel.
 				return newCase.Urn;

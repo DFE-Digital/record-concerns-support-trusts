@@ -7,7 +7,6 @@ using NUnit.Framework;
 using Service.TRAMS.Base;
 using Service.TRAMS.Trusts;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -127,7 +126,7 @@ namespace Service.TRAMS.Tests.Trusts
 		{
 			// arrange
 			var expectedTrust = TrustFactory.BuildTrustDetailsDto();
-			var expectedApiWrapperTrust = new ApiListWrapper<TrustDetailsDto>(new List<TrustDetailsDto> { expectedTrust }, null);
+			var expectedApiWrapperTrust = new ApiWrapper<TrustDetailsDto>(expectedTrust);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
