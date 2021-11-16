@@ -74,12 +74,12 @@ namespace Service.TRAMS.Trusts
 				var content = await response.Content.ReadAsStringAsync();
 
 				// Deserialize content to POCO
-				var apiWrapperTrustDetails = JsonConvert.DeserializeObject<ApiListWrapper<TrustDetailsDto>>(content);
+				var apiWrapperTrustDetails = JsonConvert.DeserializeObject<ApiWrapper<TrustDetailsDto>>(content);
 				
 				// Unwrap response
 				if (apiWrapperTrustDetails is { Data: { } })
 				{
-					return apiWrapperTrustDetails.Data.FirstOrDefault();
+					return apiWrapperTrustDetails.Data;
 				}
 
 				throw new Exception("Academies API error unwrap response");
