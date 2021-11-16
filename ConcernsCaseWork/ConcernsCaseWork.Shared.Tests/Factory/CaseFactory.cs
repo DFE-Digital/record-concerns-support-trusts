@@ -126,18 +126,17 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 
 		public static CaseDto BuildCaseDto()
 		{
-			var dateTimeNow = DateTime.Now;
 			return new CaseDto(
-				dateTimeNow, 
-				dateTimeNow, 
-				dateTimeNow, 
-				dateTimeNow, 
+				Fixture.Create<DateTimeOffset>(), 
+				Fixture.Create<DateTimeOffset>(), 
+				Fixture.Create<DateTimeOffset>(), 
+				Fixture.Create<DateTimeOffset>(), 
 				Fixture.Create<string>(), 
 				Fixture.Create<string>(), 
 				Fixture.Create<string>(),
 				Fixture.Create<string>(), 
 				Fixture.Create<string>(), 
-				dateTimeNow, 
+				Fixture.Create<DateTimeOffset>(), 
 				Fixture.Create<string>(), 
 				Fixture.Create<string>(), 
 				Fixture.Create<string>(),
@@ -237,7 +236,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				CreatedBy = Fixture.Create<string>(),
 				CaseType = Fixture.Create<string>(),
 				TypeUrn = 1,
-				UpdatedAt = DateTimeOffset.Now,
+				UpdatedAt = Fixture.Create<DateTimeOffset>(),
 				CaseSubType = Fixture.Create<string>(),
 				RatingUrn = 1,
 				RiskRating = Fixture.Create<string>(),
@@ -245,7 +244,12 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Issue = Fixture.Create<string>(),
 				CurrentStatus = Fixture.Create<string>(),
 				CaseAim = Fixture.Create<string>(),
-				DeEscalationPoint = Fixture.Create<string>()
+				DeEscalationPoint = Fixture.Create<string>(),
+				ClosedAt = Fixture.Create<DateTimeOffset>(),
+				NextSteps = Fixture.Create<string>(),
+				StatusName = Fixture.Create<string>(),
+				ReasonAtReview = Fixture.Create<string>(),
+				ReviewAt = Fixture.Create<DateTimeOffset>()
 			};
 		}
 
