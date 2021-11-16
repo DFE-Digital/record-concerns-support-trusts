@@ -6,10 +6,12 @@
 	public sealed class IfdDataModel
 	{
 		public string TrustType { get; }
-		
+
+		public string TrustContactPhoneNumber { get; }
+
 		public GroupContactAddressModel GroupContactAddress { get; }
 		
-		public IfdDataModel(string trustType, GroupContactAddressModel groupContactAddress) => 
-			(TrustType, GroupContactAddress) = (trustType, groupContactAddress);
+		public IfdDataModel(string trustType, string trustContactPhoneNumber, GroupContactAddressModel groupContactAddress) => 
+			(TrustType, TrustContactPhoneNumber, GroupContactAddress) = (trustType, trustContactPhoneNumber, groupContactAddress);
 	}
 }

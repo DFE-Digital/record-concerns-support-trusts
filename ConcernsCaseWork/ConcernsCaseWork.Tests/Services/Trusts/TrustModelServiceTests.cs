@@ -144,6 +144,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			Assert.That(trustsDetailsModel.IfdData.GroupContactAddress.Town, Is.EqualTo(trustDetailsDto.IfdData.GroupContactAddress.Town));
 			Assert.That(trustsDetailsModel.IfdData.GroupContactAddress.AdditionalLine, Is.EqualTo(trustDetailsDto.IfdData.GroupContactAddress.AdditionalLine));
 			Assert.That(trustsDetailsModel.IfdData.GroupContactAddress.DisplayAddress, Is.EqualTo(SharedBuilder.BuildDisplayAddress(trustDetailsDto.IfdData.GroupContactAddress)));
+			Assert.That(trustsDetailsModel.IfdData.TrustContactPhoneNumber, Is.EqualTo(trustDetailsDto.IfdData.TrustContactPhoneNumber));
 
 			// Establisment
 			Assert.IsAssignableFrom<List<EstablishmentModel>>(trustsDetailsModel.Establishments);
