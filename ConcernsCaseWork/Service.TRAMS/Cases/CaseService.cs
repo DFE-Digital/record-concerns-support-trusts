@@ -221,7 +221,7 @@ namespace Service.TRAMS.Cases
 				var client = ClientFactory.CreateClient(HttpClientName);
 				
 				// Execute request
-				var response = await client.PatchAsync($"/{EndpointsVersion}/{EndpointPrefix}/urn/{caseDto.Urn}", request);
+				var response = await client.PatchAsync($"/{EndpointsVersion}/{EndpointPrefix}/{caseDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
