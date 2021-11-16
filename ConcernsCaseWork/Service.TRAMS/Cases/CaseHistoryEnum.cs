@@ -16,6 +16,15 @@
 		RecoveryPlan,
 		Srma,
 		Tff,
-		Whistleblower
+		Whistleblower,
+		RiskRating,
+		DirectionOfTravel,
+		Issue,
+		CurrentStatus,
+		CaseAim,
+		DeEscalationPoint,
+		NextSteps,
+		Closed,
+		ClosedForMonitoring
 	}
 }
