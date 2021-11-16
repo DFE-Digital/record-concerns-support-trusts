@@ -509,6 +509,7 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var expectedCase = CaseFactory.BuildCaseDto();
+			var expectedApiWrapperCase = new ApiWrapper<CaseDto>(expectedCase);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -519,7 +520,7 @@ namespace Service.TRAMS.Tests.Cases
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCase))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiWrapperCase))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);

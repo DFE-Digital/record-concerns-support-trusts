@@ -221,7 +221,7 @@ namespace Service.TRAMS.Cases
 				var client = ClientFactory.CreateClient(HttpClientName);
 				
 				// Execute request
-				var response = await client.PatchAsync($"/{EndpointsVersion}/case/urn/{caseDto.Urn}", request);
+				var response = await client.PatchAsync($"/{EndpointsVersion}/{EndpointPrefix}/urn/{caseDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -230,9 +230,15 @@ namespace Service.TRAMS.Cases
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POCO
-				var updatedCaseDto = JsonConvert.DeserializeObject<CaseDto>(content);
+				var apiWrapperUpdatedCaseDto = JsonConvert.DeserializeObject<ApiWrapper<CaseDto>>(content);
 
-				return updatedCaseDto;
+				// Unwrap response
+				if (apiWrapperUpdatedCaseDto is { Data: { } })
+				{
+					return apiWrapperUpdatedCaseDto.Data;
+				}
+
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{
