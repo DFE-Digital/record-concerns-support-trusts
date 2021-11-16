@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Models
 		{ 
 			get 
 				{ 
-					return  TotalPupils != 0 && TotalPupilCapacity != 0 ? Math.Round((TotalPupils / TotalPupilCapacity), 2) * 100 : 0; 
+					return  TotalPupils != 0 && TotalPupilCapacity != 0 ? Math.Round((Math.Round((TotalPupils / TotalPupilCapacity), 2) * 100), 3) : 0; 
 				} 
 		}
 
