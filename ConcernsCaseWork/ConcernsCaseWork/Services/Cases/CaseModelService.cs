@@ -393,7 +393,6 @@ namespace ConcernsCaseWork.Services.Cases
 				var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, 
 					currentDate, typeDto.Name, typeDto.Description, createCaseModel.Description, newCase.Urn, 
 					typeDto.Urn, ratingDto.Urn, isCasePrimary, statusDto.Urn);
-				
 				var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 
 				// Create case history event
