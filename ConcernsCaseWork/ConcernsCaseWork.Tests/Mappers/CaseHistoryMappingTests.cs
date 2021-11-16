@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Mappers;
 using NUnit.Framework;
 using Service.TRAMS.Cases;
+using System;
 
 namespace ConcernsCaseWork.Tests.Mappers
 {
@@ -30,6 +31,13 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(createCaseHistoryDto.Title, Is.Not.Null);
 			Assert.That(createCaseHistoryDto.CaseUrn, Is.Not.Null);
 			Assert.That(createCaseHistoryDto.CreatedAt, Is.Not.Null);
+		}
+
+		[Test]
+		public void WhenBuildCaseHistoryDto_Throws_Exception()
+		{
+			// act | assert
+			Assert.Throws<Exception>(() => CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Fnti, 1));
 		}
 	}
 }
