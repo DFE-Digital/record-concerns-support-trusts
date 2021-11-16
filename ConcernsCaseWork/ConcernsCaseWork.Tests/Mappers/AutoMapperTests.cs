@@ -152,5 +152,27 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(establishmentModel.EstablishmentType.Code, Is.EqualTo(establishmentDto.EstablishmentType.Code));
 			Assert.That(establishmentModel.EstablishmentType.Name, Is.EqualTo(establishmentDto.EstablishmentType.Name));
 		}
+
+		[Test]
+		public void ConvertFrom_CaseHistoryDto_To_CaseHistoryModel_IsValid()
+		{
+			// arrange
+			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
+			var mapper = config.CreateMapper();
+
+			var caseHistoryDto = CaseFactory.BuildCaseHistoryDto();
+			
+			// act
+			var caseHistoryModel = mapper.Map<CaseHistoryModel>(caseHistoryDto);
+			
+			// assert
+			Assert.IsAssignableFrom<CaseHistoryModel>(caseHistoryModel);
+			Assert.That(caseHistoryModel.Action, Is.EqualTo(caseHistoryDto.Action));
+			Assert.That(caseHistoryModel.Description, Is.EqualTo(caseHistoryDto.Description));
+			Assert.That(caseHistoryModel.Title, Is.EqualTo(caseHistoryDto.Title));
+			Assert.That(caseHistoryModel.Urn, Is.EqualTo(caseHistoryDto.Urn));
+			Assert.That(caseHistoryModel.CaseUrn, Is.EqualTo(caseHistoryDto.CaseUrn));
+			Assert.That(caseHistoryModel.CreatedAt, Is.EqualTo(caseHistoryDto.CreatedAt));
+		}
 	}
 }

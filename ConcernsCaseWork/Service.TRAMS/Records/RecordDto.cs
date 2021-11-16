@@ -6,16 +6,16 @@ namespace Service.TRAMS.Records
 	[Serializable]
 	public sealed class RecordDto
 	{
-		[JsonProperty("created_at")]
+		[JsonProperty("createdAt")]
 		public DateTimeOffset CreatedAt { get; }
 
-		[JsonProperty("updated_at")]
+		[JsonProperty("updatedAt")]
 		public DateTimeOffset UpdatedAt { get; }
 		
-		[JsonProperty("review_at")]
+		[JsonProperty("reviewAt")]
 		public DateTimeOffset ReviewAt { get; }
 		
-		[JsonProperty("closed_at")]
+		[JsonProperty("closedAt")]
 		public DateTimeOffset ClosedAt { get; }
 		
 		[JsonProperty("name")]
@@ -27,29 +27,29 @@ namespace Service.TRAMS.Records
 		[JsonProperty("reason")]
 		public string Reason { get; }
 		
-		[JsonProperty("case_urn")]
+		[JsonProperty("caseUrn")]
 		public long CaseUrn { get; }
 		
-		[JsonProperty("type_urn")]
+		[JsonProperty("typeUrn")]
 		public long TypeUrn { get; }
 
-		[JsonProperty("rating_urn")]
+		[JsonProperty("ratingUrn")]
 		public long RatingUrn { get; }
 		
 		[JsonProperty("primary")]
 		public bool Primary { get; }
 		
 		[JsonProperty("urn")]
-		public long Urn { get; set; } // TODO Remove setter when TRAMS API is live
+		public long Urn { get; set; } // TODO Remove setter when Academy API is live
 		
-		[JsonProperty("status")]
-		public long Status { get; }
+		[JsonProperty("statusUrn")]
+		public long StatusUrn { get; }
 		
 		[JsonConstructor]
 		public RecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
 			string name, string description, string reason, long caseUrn, long typeUrn, 
-			long ratingUrn, bool primary, long urn, long status) => 
-			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Urn, Status) = 
-			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, primary, urn, status);
+			long ratingUrn, bool primary, long urn, long statusUrn) => 
+			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Urn, StatusUrn) = 
+			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, primary, urn, statusUrn);
 	}
 }

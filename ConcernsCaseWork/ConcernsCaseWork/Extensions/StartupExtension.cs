@@ -101,6 +101,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ICaseModelService, CaseModelService>();
 			services.AddSingleton<ITrustModelService, TrustModelService>();
 			services.AddSingleton<ITypeModelService, TypeModelService>();
+			services.AddSingleton<ICaseHistoryModelService, CaseHistoryModelService>();
 			
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
@@ -115,6 +116,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ITrustSearchService, TrustSearchService>();
 			services.AddSingleton<ITypeService, TypeService>();
 			services.AddSingleton<ICaseSearchService, CaseSearchService>();
+			services.AddSingleton<ICaseHistoryService, CaseHistoryService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
@@ -128,6 +130,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ICaseCachedService, CaseCachedService>();
 			services.AddSingleton<IRecordCachedService, RecordCachedService>();
 			services.AddSingleton<IRecordRatingHistoryCachedService, RecordRatingHistoryCachedService>();
+			services.AddSingleton<ICaseHistoryCachedService, CaseHistoryCachedService>();
 			
 			// Redis Sequence
 			services.AddSingleton<ISequenceCachedService, SequenceCachedService>();

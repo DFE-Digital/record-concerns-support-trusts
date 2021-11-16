@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace ConcernsCaseWork.Tests.Extensions
 {
 	[Parallelizable(ParallelScope.All)]
-	public class TupleExtensionsTests
+	public class TupleExtensionTests
 	{
 		[Test]
 		public void WhenSplit_ReturnCases()

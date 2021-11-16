@@ -47,10 +47,10 @@ namespace ConcernsCaseWork.Services.Trusts
 			_logger.LogInformation("TrustModelService::GetTrustByUkPrn");
 			
 			// Fetch trust by ukprn
-			var trustsDetailsDto = await _trustCachedService.GetTrustByUkPrn(ukPrn);
+			var trustDetailsDto = await _trustCachedService.GetTrustByUkPrn(ukPrn);
 			
-			// Map trust to model
-			var trustDetailsModel = _mapper.Map<TrustDetailsModel>(trustsDetailsDto);
+			// Map trust dto to model
+			var trustDetailsModel = _mapper.Map<TrustDetailsModel>(trustDetailsDto);
 
 			return trustDetailsModel;
 		}

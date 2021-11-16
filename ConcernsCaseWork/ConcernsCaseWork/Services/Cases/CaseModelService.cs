@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
@@ -24,6 +25,7 @@ namespace ConcernsCaseWork.Services.Cases
 	public sealed class CaseModelService : ICaseModelService
 	{
 		private readonly IRecordRatingHistoryCachedService _recordRatingHistoryCachedService;
+		private readonly ICaseHistoryCachedService _caseHistoryCachedService;
 		private readonly IRatingCachedService _ratingCachedService;
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly IRecordCachedService _recordCachedService;
@@ -34,15 +36,20 @@ namespace ConcernsCaseWork.Services.Cases
 		private readonly ILogger<CaseModelService> _logger;
 		private readonly ICachedService _cachedService;
 
-		public CaseModelService(ICaseCachedService caseCachedService, ITrustCachedService trustCachedService, 
-			IRecordCachedService recordCachedService, IRatingCachedService ratingCachedService,
-			ITypeCachedService typeCachedService, ICachedService cachedService, 
+		public CaseModelService(ICaseCachedService caseCachedService, 
+			ITrustCachedService trustCachedService, 
+			IRecordCachedService recordCachedService, 
+			IRatingCachedService ratingCachedService,
+			ITypeCachedService typeCachedService, 
+			ICachedService cachedService, 
 			IRecordRatingHistoryCachedService recordRatingHistoryCachedService,
 			IStatusCachedService statusCachedService,
 			ICaseSearchService caseSearchService,
+			ICaseHistoryCachedService caseHistoryCachedService,
 			ILogger<CaseModelService> logger)
 		{
 			_recordRatingHistoryCachedService = recordRatingHistoryCachedService;
+			_caseHistoryCachedService = caseHistoryCachedService;
 			_statusCachedService = statusCachedService;
 			_ratingCachedService = ratingCachedService;
 			_recordCachedService = recordCachedService;
@@ -123,7 +130,7 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var casesDto = await _caseSearchService.GetCasesBySearchCriteria(new CaseTrustSearch(trustUkprn));
+				var casesDto = await _caseSearchService.GetCasesByCaseTrustSearch(new CaseTrustSearch(trustUkprn));
 				if (!casesDto.Any()) return Array.Empty<TrustCasesModel>();
 				
 				// Fetch live and close status
@@ -359,7 +366,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 		}
 
-		public async Task<CaseModel> PostCase(CreateCaseModel createCaseModel)
+		public async Task<long> PostCase(CreateCaseModel createCaseModel)
 		{
 			try
 			{
@@ -386,15 +393,24 @@ namespace ConcernsCaseWork.Services.Cases
 				var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, 
 					currentDate, typeDto.Name, typeDto.Description, createCaseModel.Description, newCase.Urn, 
 					typeDto.Urn, ratingDto.Urn, isCasePrimary, statusDto.Urn);
-				
 				var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 
+				// Create case history event
+				var caseHistoryConcernDisplay = CaseHistoryEnum.Concern.ToDisplay();
+				var createCaseHistoryDto = new CreateCaseHistoryDto(DateTimeOffset.Now, newCase.Urn, CaseHistoryEnum.Concern.ToString(), caseHistoryConcernDisplay, caseHistoryConcernDisplay);
+				await _caseHistoryCachedService.PostCaseHistory(createCaseHistoryDto, createCaseModel.CreatedBy);
+				
 				// Create a rating history
 				var createRecordRatingHistoryDto = new RecordRatingHistoryDto(DateTimeOffset.Now, newRecord.Urn, ratingDto.Urn);
 				await _recordRatingHistoryCachedService.PostRecordRatingHistory(createRecordRatingHistoryDto, createCaseModel.CreatedBy, newCase.Urn);
 
-				// Return case model
-				return CaseMapping.Map(newCase, statusDto.Name);
+				// Create case history event
+				var caseHistoryDisplay = CaseHistoryEnum.Case.ToDisplay();
+				createCaseHistoryDto = new CreateCaseHistoryDto(DateTimeOffset.Now, newCase.Urn, CaseHistoryEnum.Case.ToString(), caseHistoryDisplay, caseHistoryDisplay);
+				await _caseHistoryCachedService.PostCaseHistory(createCaseHistoryDto, createCaseModel.CreatedBy);
+				
+				// Return case urn, if required return type can be changed to CaseModel.
+				return newCase.Urn;
 			}
 			catch (Exception ex)
 			{

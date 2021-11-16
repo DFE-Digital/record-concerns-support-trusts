@@ -3,15 +3,16 @@ using System;
 
 namespace Service.TRAMS.RecordRatingHistory
 {
+	[Serializable]
 	public sealed class RecordRatingHistoryDto
 	{
-		[JsonProperty("created_at")]
+		[JsonProperty("createdAt")]
 		public DateTimeOffset CreatedAt { get; }
 
-		[JsonProperty("record_urn")]
+		[JsonProperty("recordUrn")]
 		public long RecordUrn { get; }
 		
-		[JsonProperty("rating_urn")]
+		[JsonProperty("ratingUrn")]
 		public long RatingUrn { get; }
 		
 		[JsonConstructor]

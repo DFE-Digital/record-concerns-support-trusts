@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace ConcernsCaseWork.Extensions
 {
-	public static class StringExtensions
+	public static class StringExtension
 	{
 		public static bool ToBoolean(this string value)
 		{

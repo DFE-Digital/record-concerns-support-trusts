@@ -77,6 +77,7 @@ namespace Service.Redis.Cases
 			}
 			else
 			{
+				// Maybe we need to check if a case urn already exists on CaseDetails, extract CaseWrapper and update.
 				userState.CasesDetails.Add(newCase.Urn, new CaseWrapper { CaseDto = newCase });
 			}
 			await StoreData(createCaseDto.CreatedBy, userState);
@@ -88,7 +89,7 @@ namespace Service.Redis.Cases
 		{
 			_logger.LogInformation("CaseCachedService::PatchCaseByUrn");
 			
-			// TODO Enable only when TRAMS API is live
+			// TODO Enable only when Academies API is live
 			// Patch case on TRAMS API
 			//var patchCase = await _caseService.PatchCaseByUrn(caseDto);
 			//if (patchCase is null) throw new ApplicationException("Error::CaseCachedService::PatchCaseByUrn");

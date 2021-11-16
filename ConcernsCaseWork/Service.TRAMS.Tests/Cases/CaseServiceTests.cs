@@ -313,6 +313,7 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var expectedCases = CaseFactory.BuildListCaseDto();
+			var expectedApiListWrapperCases = new ApiListWrapper<CaseDto>(expectedCases, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -323,7 +324,7 @@ namespace Service.TRAMS.Tests.Cases
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCases))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiListWrapperCases))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
@@ -334,13 +335,14 @@ namespace Service.TRAMS.Tests.Cases
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var cases = await caseService.GetCasesByPagination(new CaseSearch());
+			var cases = await caseService.GetCases(new PageSearch());
 
 			// assert
 			Assert.That(cases, Is.Not.Null);
-			Assert.That(cases.Count, Is.EqualTo(expectedCases.Count));
+			Assert.That(cases.Data, Is.Not.Null);
+			Assert.That(cases.Data.Count, Is.EqualTo(expectedCases.Count));
 			
-			foreach (var caseDto in cases)
+			foreach (var caseDto in cases.Data)
 			{
 				foreach (var expectedCase in expectedCases.Where(expectedCase => caseDto.Urn == expectedCase.Urn))
 				{
@@ -367,7 +369,7 @@ namespace Service.TRAMS.Tests.Cases
 		}
 		
 		[Test]
-		public async Task WhenGetCasesByPagination_ThrowsException_ReturnsEmptyCases()
+		public void WhenGetCasesByPagination_ThrowsException()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -389,12 +391,8 @@ namespace Service.TRAMS.Tests.Cases
 			var logger = new Mock<ILogger<CaseService>>();
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
-			// act
-			var cases = await caseService.GetCasesByPagination(new CaseSearch());
-
-			// assert
-			Assert.That(cases, Is.Not.Null);
-			Assert.That(cases.Count, Is.EqualTo(0));
+			// act | assert
+			Assert.ThrowsAsync<HttpRequestException>(() => caseService.GetCases(new PageSearch()));
 		}
 		
 		[Test]
@@ -504,7 +502,7 @@ namespace Service.TRAMS.Tests.Cases
 			
 			// act
 			Assert.ThrowsAsync<Exception>(() => caseService.PostCase(CaseFactory.BuildCreateCaseDto()));
-		}		
+		}
 		
 		[Test]
 		public async Task WhenPatchCaseByUrn_ReturnsCase()
@@ -587,7 +585,7 @@ namespace Service.TRAMS.Tests.Cases
 		public void WhenCaseSearchIncrements_ReturnsNextPage()
 		{
 			// arrange
-			var caseSearch = new CaseSearch();
+			var caseSearch = new PageSearch();
 
 			// act
 			var page = caseSearch.Page;
@@ -596,20 +594,6 @@ namespace Service.TRAMS.Tests.Cases
 			// assert
 			Assert.That(page, Is.EqualTo(1));
 			Assert.That(nextPage, Is.EqualTo(2));
-		}
-		
-		[Test]
-		public void WhenBuildRequestUri_ReturnsRequestUrl()
-		{
-			// arrange
-			var caseTrustSearch = CaseFactory.BuildCaseTrustSearch("trust-ukprn");
-
-			// act
-			var requestUri = CaseService.BuildRequestUri(caseTrustSearch);
-
-			// assert
-			Assert.That(requestUri, Is.Not.Null);
-			Assert.That(requestUri, Is.EqualTo("page%3d1"));
 		}
 	}
 }
