@@ -509,6 +509,7 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var expectedCase = CaseFactory.BuildCaseDto();
+			var expectedApiWrapperCase = new ApiWrapper<CaseDto>(expectedCase);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -519,7 +520,7 @@ namespace Service.TRAMS.Tests.Cases
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCase))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiWrapperCase))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
@@ -581,6 +582,36 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.ThrowsAsync<HttpRequestException>(() => caseService.PatchCaseByUrn(CaseFactory.BuildCaseDto()));
 		}
 
+		[Test]
+		public void WhenPatchCaseByUrn_UnwrapResponse_ReturnsException()
+		{
+			// arrange
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var expectedApiWrapperCase = new ApiWrapper<CaseDto>(null);
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiWrapperCase))
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<CaseService>>();
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
+			
+			// act / assert
+			Assert.ThrowsAsync<Exception>(() => caseService.PatchCaseByUrn(CaseFactory.BuildCaseDto()));
+		}
+		
 		[Test]
 		public void WhenCaseSearchIncrements_ReturnsNextPage()
 		{

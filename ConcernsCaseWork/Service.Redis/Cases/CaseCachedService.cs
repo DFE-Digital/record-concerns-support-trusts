@@ -70,7 +70,7 @@ namespace Service.Redis.Cases
 			if (newCase is null) throw new ApplicationException("Error::CaseCachedService::PostCase");
 			
 			// Store in cache for 24 hours (default)
-			var userState = await GetData<UserState>(createCaseDto.CreatedBy);
+			var userState = await GetData<UserState>(newCase.CreatedBy);
 			if (userState is null)
 			{
 				userState = new UserState { CasesDetails = { { newCase.Urn, new CaseWrapper { CaseDto = newCase } } } };
@@ -80,7 +80,7 @@ namespace Service.Redis.Cases
 				// Maybe we need to check if a case urn already exists on CaseDetails, extract CaseWrapper and update.
 				userState.CasesDetails.Add(newCase.Urn, new CaseWrapper { CaseDto = newCase });
 			}
-			await StoreData(createCaseDto.CreatedBy, userState);
+			await StoreData(newCase.CreatedBy, userState);
 
 			return newCase;
 		}
@@ -89,29 +89,28 @@ namespace Service.Redis.Cases
 		{
 			_logger.LogInformation("CaseCachedService::PatchCaseByUrn");
 			
-			// TODO Enable only when Academies API is live
 			// Patch case on TRAMS API
-			//var patchCase = await _caseService.PatchCaseByUrn(caseDto);
-			//if (patchCase is null) throw new ApplicationException("Error::CaseCachedService::PatchCaseByUrn");
+			var patchCaseDto = await _caseService.PatchCaseByUrn(caseDto);
+			if (patchCaseDto is null) throw new ApplicationException("Error::CaseCachedService::PatchCaseByUrn");
 			
 			// Store in cache for 24 hours (default)
-			var userState = await GetData<UserState>(caseDto.CreatedBy);
+			var userState = await GetData<UserState>(patchCaseDto.CreatedBy);
 			if (userState is null)
 			{
-				userState = new UserState { CasesDetails = { { caseDto.Urn, new CaseWrapper { CaseDto = caseDto } } } };
+				userState = new UserState { CasesDetails = { { patchCaseDto.Urn, new CaseWrapper { CaseDto = patchCaseDto } } } };
 			}
 			else
 			{
-				if (userState.CasesDetails.TryGetValue(caseDto.Urn, out var caseWrapper))
+				if (userState.CasesDetails.TryGetValue(patchCaseDto.Urn, out var caseWrapper))
 				{
-					caseWrapper.CaseDto = caseDto;
+					caseWrapper.CaseDto = patchCaseDto;
 				}
 				else
 				{
-					userState.CasesDetails.Add(caseDto.Urn, new CaseWrapper { CaseDto = caseDto });
+					userState.CasesDetails.Add(patchCaseDto.Urn, new CaseWrapper { CaseDto = patchCaseDto });
 				}
 			}
-			await StoreData(caseDto.CreatedBy, userState);
+			await StoreData(patchCaseDto.CreatedBy, userState);
 		}
 
 		public async Task<Boolean> IsCasePrimary(string caseworker, long caseUrn)
