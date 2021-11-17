@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Extensions;
 using System;
 using System.Collections.Generic;
+using static ConcernsCaseWork.Extensions.DateExtension;
 
 namespace ConcernsCaseWork.Models
 {
@@ -9,8 +10,6 @@ namespace ConcernsCaseWork.Models
 	/// </summary>
 	public sealed class HomeModel
 	{
-		private const string DateFormat = "dd-MM-yyyy";
-		
 		public string CaseUrn { get; }
 
 		private DateTimeOffset CreatedDateTimeOffset { get; }
@@ -19,7 +18,7 @@ namespace ConcernsCaseWork.Models
 		{
 			get
 			{
-				return CreatedDateTimeOffset.ToString(DateFormat);
+				return CreatedDateTimeOffset.ToDayMonthYear();
 			}
 		}
 
@@ -37,7 +36,7 @@ namespace ConcernsCaseWork.Models
 		{ 
 			get
 			{
-				return UpdatedDateTimeOffset.ToString(DateFormat);
+				return UpdatedDateTimeOffset.ToDayMonthYear();
 			} 
 		}
 
@@ -55,7 +54,7 @@ namespace ConcernsCaseWork.Models
 		{
 			get
 			{
-				return ClosedDateTimeOffset.ToString(DateFormat);
+				return ClosedDateTimeOffset.ToDayMonthYear();
 			}
 		}
 		
@@ -65,7 +64,7 @@ namespace ConcernsCaseWork.Models
 		{
 			get
 			{
-				return ReviewDateTimeOffset.ToString(DateFormat);
+				return ReviewDateTimeOffset.ToDayMonthYear();
 			}
 		}
 

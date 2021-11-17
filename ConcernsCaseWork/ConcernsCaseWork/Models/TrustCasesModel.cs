@@ -1,6 +1,7 @@
 ﻿using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
+using static ConcernsCaseWork.Extensions.DateExtension;
 
 namespace ConcernsCaseWork.Models
 {
@@ -9,8 +10,6 @@ namespace ConcernsCaseWork.Models
 	/// </summary>
 	public sealed class TrustCasesModel
 	{
-		private const string DateFormat = "dd-MM-yyyy";
-		
 		public long CaseUrn { get; }
 		
 		public Tuple<int, IList<string>> RagRating { get; }
@@ -28,7 +27,7 @@ namespace ConcernsCaseWork.Models
 			get
 			{
 				var sameDate = CreatedAtDateTimeOffset.CompareTo(ClosedDateTimeOffset) == 0;
-				return sameDate ? "-" : ClosedDateTimeOffset.ToString(DateFormat);
+				return sameDate ? "-" : ClosedDateTimeOffset.ToDayMonthYear();
 			} 
 		}
 		
