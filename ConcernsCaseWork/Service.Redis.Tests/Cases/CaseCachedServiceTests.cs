@@ -267,6 +267,30 @@ namespace Service.Redis.Tests.Cases
 		}		
 		
 		[Test]
+		public void WhenPatchCaseByUrn_ThrowsException_WhenApiCallReturnsNull()
+		{
+			// arrange
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockCaseService = new Mock<ICaseService>();
+			var mockLogger = new Mock<ILogger<CaseCachedService>>();
+
+			var caseDto = CaseFactory.BuildCaseDto();
+			
+			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
+				ReturnsAsync((UserState)null);
+			mockCaseService.Setup(c => c.PatchCaseByUrn(It.IsAny<CaseDto>())).ReturnsAsync((CaseDto)null);
+			
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
+			
+			// act | assert
+			Assert.ThrowsAsync<ApplicationException>(() => caseCachedService.PatchCaseByUrn(caseDto));
+			
+			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Never);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
+			mockCaseService.Verify(c => c.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Once);
+		}
+		
+		[Test]
 		public async Task WhenPatchCaseByUrn_ReturnsTask_StoresInCache()
 		{
 			// arrange
