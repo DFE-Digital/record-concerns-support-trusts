@@ -1,4 +1,5 @@
 ﻿using System;
+using static ConcernsCaseWork.Extensions.DateExtension;
 
 namespace ConcernsCaseWork.Models
 {
@@ -8,7 +9,8 @@ namespace ConcernsCaseWork.Models
 	public sealed class CaseHistoryModel
 	{
 		public DateTimeOffset CreatedAt { get; set; }
-	
+		public string Created { get { return CreatedAt.DateTime.ToUserFriendlyDate(); } }
+
 		public long CaseUrn { get; set; }
 		
 		public string Action { get; set; }
