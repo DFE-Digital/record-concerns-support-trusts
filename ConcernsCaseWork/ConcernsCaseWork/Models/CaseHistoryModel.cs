@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.Models
 	public sealed class CaseHistoryModel
 	{
 		public DateTimeOffset CreatedAt { get; set; }
-		public string Created { get { return CreatedAt.DateTime.ToUserFriendlyDate(); } }
+		public string Created { get { return CreatedAt.ToUserFriendlyDate(); } }
 
 		public long CaseUrn { get; set; }
 		
