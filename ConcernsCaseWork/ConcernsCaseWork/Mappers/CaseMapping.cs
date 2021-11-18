@@ -137,8 +137,8 @@ namespace ConcernsCaseWork.Mappers
 				recordsDto.Select(recordDto =>
 				{
 					var ragRatingDto = ragsRatingDto.First(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0);
-					var ragRating = RagMapping.FetchRag(ragRatingDto.Name);
-					var ragRatingCss = RagMapping.FetchRagCss(ragRatingDto.Name);
+					var ragRating = RatingMapping.FetchRag(ragRatingDto.Name);
+					var ragRatingCss = RatingMapping.FetchRagCss(ragRatingDto.Name);
 						
 					var caseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(recordDto.TypeUrn) == 0);
 					if (caseType is null) return null;

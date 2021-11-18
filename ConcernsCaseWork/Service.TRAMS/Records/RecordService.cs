@@ -71,7 +71,7 @@ namespace Service.TRAMS.Records
 				
 				// Execute request
 				var response = await client.PostAsync(
-					$"/{EndpointsVersion}/concerns-record", request);
+					$"/{EndpointsVersion}/concerns-records", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -109,7 +109,7 @@ namespace Service.TRAMS.Records
 				
 				// Execute request
 				var response = await client.PatchAsync(
-					$"/{EndpointsVersion}/record/urn/{recordDto.Urn}", request);
+					$"/{EndpointsVersion}/concerns-records/{recordDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();

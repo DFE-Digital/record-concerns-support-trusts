@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Services.Rating;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Type;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +11,7 @@ using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.TRAMS.Cases;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -20,15 +22,19 @@ namespace ConcernsCaseWork.Pages.Case
 	{
 		private readonly ITrustModelService _trustModelService;
 		private readonly ITypeModelService _typeModelService;
-		private readonly ILogger<ConcernTypePageModel> _logger;
 		private readonly ICachedService _cachedService;
+		private readonly IRatingModelService _ratingModelService;
+		private readonly ILogger<ConcernTypePageModel> _logger;
 		
 		public CaseModel CaseModel { get; private set; }
+		public IList<RatingModel> RatingsModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
 		public ConcernTypePageModel(ITrustModelService trustModelService, ICachedService cachedService, 
-			ITypeModelService typeModelService, ILogger<ConcernTypePageModel> logger)
+			ITypeModelService typeModelService, IRatingModelService ratingModelService,
+			ILogger<ConcernTypePageModel> logger)
 		{
+			_ratingModelService = ratingModelService;
 			_trustModelService = trustModelService;
 			_typeModelService = typeModelService;
 			_cachedService = cachedService;
@@ -84,8 +90,8 @@ namespace ConcernsCaseWork.Pages.Case
 					CreatedBy = User.Identity.Name,
 					DeEscalation = currentDate,
 					RagRatingName = ragRating,
-					RagRating = RagMapping.FetchRag(ragRating),
-					RagRatingCss = RagMapping.FetchRagCss(ragRating),
+					RagRating = RatingMapping.FetchRag(ragRating),
+					RagRatingCss = RatingMapping.FetchRagCss(ragRating),
 					Type = type,
 					ReviewAt = currentDate,
 					UpdatedAt = currentDate,
@@ -115,13 +121,15 @@ namespace ConcernsCaseWork.Pages.Case
 			if (string.IsNullOrEmpty(trustUkPrn))
 			{
 				CaseModel = new CaseModel { 
-					TypesDictionary = await _typeModelService.GetTypes() 
+					TypesDictionary = await _typeModelService.GetTypes()
 				};
+				RatingsModel = await _ratingModelService.GetRatings();
 			}
 			else
 			{
 				CaseModel = new CaseModel { TypesDictionary = await _typeModelService.GetTypes() };
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
+				RatingsModel = await _ratingModelService.GetRatings();
 			}
 			
 			return Page();

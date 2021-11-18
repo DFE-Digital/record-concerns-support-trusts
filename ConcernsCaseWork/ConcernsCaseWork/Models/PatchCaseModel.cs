@@ -2,6 +2,9 @@
 
 namespace ConcernsCaseWork.Models
 {
+	/// <summary>
+	/// Frontend model classes used only for UI rendering
+	/// </summary>
 	public sealed class PatchCaseModel
 	{
 		public DateTimeOffset UpdatedAt { get; set; }
@@ -37,6 +40,7 @@ namespace ConcernsCaseWork.Models
 		public string CaseAim { get; set; }
 		
 		public string DeEscalationPoint { get; set; }
+		
 		public string NextSteps { get; set; }
 	}
 }

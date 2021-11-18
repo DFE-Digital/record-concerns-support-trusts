@@ -105,8 +105,8 @@ namespace ConcernsCaseWork.Services.Cases
 				// Fetch Ratings
 				var ragsRatingDto = await _ratingCachedService.GetRatings();
 				var ragRating = ragsRatingDto.First(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0);
-				caseModel.RagRating = RagMapping.FetchRag(ragRating.Name);
-				caseModel.RagRatingCss = RagMapping.FetchRagCss(ragRating.Name);
+				caseModel.RagRating = RatingMapping.FetchRag(ragRating.Name);
+				caseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRating.Name);
 				caseModel.RagRatingName = ragRating.Name;
 				
 				return caseModel;

@@ -24,7 +24,7 @@ namespace Service.TRAMS.Rating
 				_logger.LogInformation("RatingService::GetRatings");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/ratings");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/concerns-ratings");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient(HttpClientName);
@@ -38,28 +38,23 @@ namespace Service.TRAMS.Rating
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 				
-				// Deserialize content to POJO
-				var ratingsDto = JsonConvert.DeserializeObject<IList<RatingDto>>(content);
+				// Deserialize content to POCO
+				var apiWrapperRatingsDto = JsonConvert.DeserializeObject<ApiListWrapper<RatingDto>>(content);
 
-				return ratingsDto;
+				// Unwrap response
+				if (apiWrapperRatingsDto is { Data: { } })
+				{
+					return apiWrapperRatingsDto.Data;
+				}
+
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("RatingService::GetRatings::Exception message::{Message}", ex.Message);
-			}
-			
-			// TODO replace return when TRAMS API endpoints are live
-			var currentDate = DateTimeOffset.Now;
-			return new List<RatingDto>
-			{
-				new RatingDto("n/a", currentDate, currentDate, 1),
-				new RatingDto("Red-Plus", currentDate, currentDate, 2),
-				new RatingDto("Red", currentDate, currentDate, 3),
-				new RatingDto("Red-Amber", currentDate, currentDate, 4),
-				new RatingDto("Amber-Green", currentDate, currentDate, 5)
-			};
 
-			//return Array.Empty<RatingDto>();
+				throw;
+			}
 		}
 	}
 }
