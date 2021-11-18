@@ -7,8 +7,10 @@
 	@foreach (var rating in Model)
 	{
 		<div class="govuk-radios__item">
-			@{ var idStr = id == 0 ? "ragRating" : "ragRating-" + id; }
-			<input class="govuk-radios__input" id="@idStr" name="ragRating" type="radio" value="@rating.Urn" checked="@rating.Checked">
+			@{
+				var idStr = id == 0 ? "ragRating" : "ragRating-" + id;
+			}
+			<input class="govuk-radios__input" id="@idStr" name="ragRating" type="radio" value="@rating.Urn:@rating.Name" checked="@rating.Checked">
 			<label class="govuk-label govuk-radios__label" for="@idStr">
 				<div class="govuk-label-wrapper">
 					@for (var index = 0; index < rating.RagRating.Item2.Count; ++index)

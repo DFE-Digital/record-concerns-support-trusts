@@ -77,6 +77,10 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				if (!IsValidConcernType(type, ref subType, ragRating, trustUkPrn))
 					throw new Exception("Case::ConcernTypePageModel::Missing form values");
+
+				var splitRagRating = ragRating.ToString().Split(":");
+				var ragRatingUrn = splitRagRating[0];
+				var ragRatingName = splitRagRating[1];
 				
 				var userState = await GetUserState();
 				
@@ -89,9 +93,10 @@ namespace ConcernsCaseWork.Pages.Case
 					CreatedAt = currentDate,
 					CreatedBy = User.Identity.Name,
 					DeEscalation = currentDate,
-					RagRatingName = ragRating,
-					RagRating = RatingMapping.FetchRag(ragRating),
-					RagRatingCss = RatingMapping.FetchRagCss(ragRating),
+					RagRatingName = ragRatingName,
+					RagRatingUrn = long.Parse(ragRatingUrn),
+					RagRating = RatingMapping.FetchRag(ragRatingName),
+					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
 					Type = type,
 					ReviewAt = currentDate,
 					UpdatedAt = currentDate,

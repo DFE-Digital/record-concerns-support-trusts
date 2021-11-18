@@ -46,6 +46,7 @@ namespace ConcernsCaseWork.Mappers
 		{
 			return new RatingModel
 			{
+				Name = ratingDto.Name,
 				Urn = ratingDto.Urn,
 				RagRating = FetchRag(ratingDto.Name),
 				RagRatingCss = FetchRagCss(ratingDto.Name)

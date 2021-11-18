@@ -8,6 +8,8 @@ namespace ConcernsCaseWork.Models
 	/// </summary>
 	public sealed class RatingModel
 	{
+		public string Name { get; set; }
+		
 		public long Urn { get; set; }
 
 		public bool Checked { get; set; }
