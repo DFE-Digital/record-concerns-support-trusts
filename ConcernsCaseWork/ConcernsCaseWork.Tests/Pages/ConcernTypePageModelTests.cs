@@ -44,7 +44,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			// act
 			await pageModel.OnGetAsync();
 			var trustDetailsModel = pageModel.TrustDetailsModel;
-			var typesDictionary = pageModel.CaseModel.TypesDictionary;
+			var typesDictionary = pageModel.TypeModel.TypesDictionary;
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
@@ -101,7 +101,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
-			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.That(pageModel.TypeModel, Is.Null);
 
 			// Verify ILogger
 			mockLogger.Verify(

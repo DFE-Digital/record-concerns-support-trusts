@@ -1,4 +1,6 @@
-﻿using Service.Redis.Type;
+﻿using ConcernsCaseWork.Models;
+using Microsoft.Extensions.Logging;
+using Service.Redis.Type;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,30 +9,40 @@ namespace ConcernsCaseWork.Services.Type
 	public sealed class TypeModelService : ITypeModelService
 	{
 		private readonly ITypeCachedService _typeCachedService;
+		private readonly ILogger<TypeModelService> _logger;
 
-		public TypeModelService(ITypeCachedService typeCachedService)
+		public TypeModelService(ITypeCachedService typeCachedService, ILogger<TypeModelService> logger)
 		{
 			_typeCachedService = typeCachedService;
+			_logger = logger;
 		}
 		
-		public async Task<IDictionary<string, IList<string>>> GetTypes()
+		/// <summary>
+		/// Key -> type name
+		/// Value -> class encapsulates urn and subtype
+		/// </summary>
+		/// <returns></returns>
+		public async Task<TypeModel> GetTypes()
 		{
+			_logger.LogInformation("TypeModelService::GetTypes");
+			
 			var typesDto = await _typeCachedService.GetTypes();
-			var typesDic = new Dictionary<string, IList<string>>();
+
+			var typesDictionary = new Dictionary<string, IList<TypeModel.TypeValueModel>>();
 			
 			foreach (var typeDto in typesDto)
 			{
-				if (typesDic.ContainsKey(typeDto.Name) && typesDic.TryGetValue(typeDto.Name, out var subTypes))
+				if (typesDictionary.ContainsKey(typeDto.Name) && typesDictionary.TryGetValue(typeDto.Name, out var subTypes))
 				{
-					subTypes.Add(typeDto.Description);
+					subTypes.Add(new TypeModel.TypeValueModel{ Urn = typeDto.Urn, SubType = typeDto.Description });
 				}
 				else
 				{
-					typesDic.Add(typeDto.Name, string.IsNullOrEmpty(typeDto.Description) ? new List<string>() : new List<string> { typeDto.Description });
+					typesDictionary.Add(typeDto.Name, new List<TypeModel.TypeValueModel> { new TypeModel.TypeValueModel{ Urn = typeDto.Urn, SubType = typeDto.Description } });
 				}
 			}
 
-			return typesDic;
+			return new TypeModel { TypesDictionary = typesDictionary };
 		}
 	}
 }

@@ -23,7 +23,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ILogger<ConcernTypePageModel> _logger;
 		private readonly ICachedService _cachedService;
 		
-		public CaseModel CaseModel { get; private set; }
+		public TypeModel TypeModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
 		public ConcernTypePageModel(ITrustModelService trustModelService, ICachedService cachedService, 
@@ -114,16 +114,12 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			if (string.IsNullOrEmpty(trustUkPrn))
 			{
-				CaseModel = new CaseModel { 
-					TypesDictionary = await _typeModelService.GetTypes() 
-				};
-			}
-			else
-			{
-				CaseModel = new CaseModel { TypesDictionary = await _typeModelService.GetTypes() };
-				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
+				throw new Exception("Case::ConcernTypePageModel::LoadPage trustukprn is null or empty");
 			}
 			
+			TypesDictionary = await _typeModelService.GetTypes();
+			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
+
 			return Page();
 		}
 		

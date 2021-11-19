@@ -24,7 +24,7 @@ namespace Service.TRAMS.Type
 				_logger.LogInformation("TypeService::GetTypes");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/types");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/concerns-types");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient(HttpClientName);
@@ -38,49 +38,23 @@ namespace Service.TRAMS.Type
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 				
-				// Deserialize content to POJO
-				var typesDto = JsonConvert.DeserializeObject<IList<TypeDto>>(content);
+				// Deserialize content to POCO
+				var apiListWrapperTypesDto = JsonConvert.DeserializeObject<ApiListWrapper<TypeDto>>(content);
 
-				return typesDto;
+				// Unwrap response
+				if (apiListWrapperTypesDto is { Data: { } })
+				{
+					return apiListWrapperTypesDto.Data;
+				}
+
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("TypeService::GetTypes::Exception message::{Message}", ex.Message);
+
+				throw;
 			}
-			
-			// TODO replace return when TRAMS API endpoints are live
-			var currentDate = DateTimeOffset.Now;
-			return new List<TypeDto>
-			{
-				new TypeDto("Compliance", "Financial reporting", currentDate, 
-					currentDate, 1),
-				new TypeDto("Compliance", "Financial returns", currentDate, 
-					currentDate, 2),
-				new TypeDto("Financial", "Deficit", currentDate, 
-					currentDate, 3),
-				new TypeDto("Financial", "Projected deficit / Low future surplus", currentDate, 
-					currentDate, 4),
-				new TypeDto("Financial", "Cash flow shortfall", currentDate, 
-					currentDate, 5),
-				new TypeDto("Financial", "Clawback", currentDate, 
-					currentDate, 6),
-				new TypeDto("Force Majeure", "", currentDate, 
-					currentDate, 7),
-				new TypeDto("Governance", "Governance", currentDate, 
-					currentDate, 8),
-				new TypeDto("Governance", "Closure", currentDate, 
-					currentDate, 9),
-				new TypeDto("Governance", "Executive Pay", currentDate, 
-					currentDate, 10),
-				new TypeDto("Governance", "Safeguarding", currentDate, 
-					currentDate, 11),
-				new TypeDto("Irregularity", "Allegations and self reported concerns", currentDate, 
-					currentDate, 12),
-				new TypeDto("Irregularity", "Related party transactions - in year", currentDate, 
-					currentDate, 13)
-			};
-			
-			//return Array.Empty<TypeDto>();
 		}
 	}
 }

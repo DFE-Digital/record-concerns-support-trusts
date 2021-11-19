@@ -53,18 +53,18 @@ namespace ConcernsCaseWork.Models
 		
 		public string StatusName { get; set; } = string.Empty;
 
-		public string CaseTypeDescription
-		{
-			get
-			{
-				var separator = string.IsNullOrEmpty(CaseSubType) ? string.Empty : ":";
-				return $"{CaseType}{separator} {CaseSubType ?? string.Empty}";
-			}
-		}
+		// public string CaseTypeDescription
+		// {
+		// 	get
+		// 	{
+		// 		var separator = string.IsNullOrEmpty(CaseSubType) ? string.Empty : ":";
+		// 		return $"{CaseType}{separator} {CaseSubType ?? string.Empty}";
+		// 	}
+		// }
 		
-		public string CaseType { get; set; } = string.Empty;
-
-		public string CaseSubType { get; set; } = string.Empty;
+		// public string CaseType { get; set; } = string.Empty;
+		//
+		// public string CaseSubType { get; set; } = string.Empty;
 
 		public string RagRatingName { get; set; } = string.Empty;
 		
@@ -72,7 +72,7 @@ namespace ConcernsCaseWork.Models
 
 		public IList<string> RagRatingCss { get; set; }
 		
-		public IDictionary<string, IList<string>> TypesDictionary { get; set; }
+		// public IDictionary<string, IList<string>> TypesDictionary { get; set; }
 		
 		public string PreviousUrl { get; set; }
 	}
