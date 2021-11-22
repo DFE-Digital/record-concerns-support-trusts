@@ -40,15 +40,15 @@
 						<partial name="_Cancel"/>
 					</div>
 				</form>
+				
+				<script type="application/javascript" nonce="@nonce">
+					$(function () {
+						let validator = formValidator($("#concern-type-form")[0]);
+						addConcernTypeValidator(validator);
+					});
+				</script>
 			}
 		</div>
 	</div>
 </div>
-		
-<script type="application/javascript" nonce="@nonce">
-	$(function () {
-		let validator = formValidator($("#concern-type-form")[0]);
-		addConcernTypeValidator(validator);
-	});
-</script>
 
