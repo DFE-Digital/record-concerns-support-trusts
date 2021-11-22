@@ -1,4 +1,6 @@
 ﻿using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Rating;
+using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Type;
 using Microsoft.AspNetCore.DataProtection;
@@ -102,7 +104,9 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ITrustModelService, TrustModelService>();
 			services.AddSingleton<ITypeModelService, TypeModelService>();
 			services.AddSingleton<ICaseHistoryModelService, CaseHistoryModelService>();
-			
+			services.AddSingleton<IRatingModelService, RatingModelService>();
+			services.AddSingleton<IRecordModelService, RecordModelService>();
+
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
 			services.AddSingleton<IRatingService, RatingService>();

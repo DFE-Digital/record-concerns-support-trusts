@@ -59,6 +59,8 @@ namespace Service.Redis.Models
 		
 		public string RagRatingName { get; set; }
 		
+		public long RagRatingUrn { get; set; }
+		
 		public Tuple<int, IList<string>> RagRating { get; set; }
 
 		public IList<string> RagRatingCss { get; set; }

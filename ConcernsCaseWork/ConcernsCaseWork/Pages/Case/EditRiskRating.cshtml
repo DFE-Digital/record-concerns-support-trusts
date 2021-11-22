@@ -1,4 +1,4 @@
-﻿@page "/case/{id:long}/management/edit_riskrating"
+﻿@page "/case/{urn:long}/management/record/{recordUrn:long}/edit_riskrating"
 @model ConcernsCaseWork.Pages.Case.EditRiskRatingPageModel
 
 @{
@@ -25,7 +25,7 @@
 				<div class="govuk-form-group">
 					<fieldset class="govuk-fieldset">
 						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
-						<partial name="_RiskRating" model="@Model.CaseModel"/>
+						<partial name="_RiskRating" model="@Model.RatingsModel"/>
 					</fieldset>
 				</div>
 

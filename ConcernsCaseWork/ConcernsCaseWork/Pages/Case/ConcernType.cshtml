@@ -14,7 +14,7 @@
 
 			<span class="govuk-caption-l">Create case</span>
 			<h1 class="govuk-heading-l">Concern </h1>
-
+			
 			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
 			{
 				<partial name="_Error"/>
@@ -77,13 +77,13 @@
 				</form>
 
 				<script type="application/javascript" nonce="@nonce">
-				$(function () {
-					let validator = formValidator($("#case-concern-type-form")[0]);
-					addConcernTypeValidator(validator);
-					addRagRatingValidator(validator);
-				});
-			</script>
-			}
+					$(function () {
+						let validator = formValidator($("#case-concern-type-form")[0]);
+						addConcernTypeValidator(validator);
+						addRagRatingValidator(validator);
+					});
+				</script>
+				}
 		</div>
 	</div>
 </div>

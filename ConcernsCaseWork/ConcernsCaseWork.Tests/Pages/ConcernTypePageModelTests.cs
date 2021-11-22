@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
+using ConcernsCaseWork.Services.Rating;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Type;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -32,6 +33,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			
 			var expected = TrustFactory.BuildTrustDetailsModel();
 
 			mockTypeModelService.Setup(t => t.GetTypeModel()).ReturnsAsync(new TypeModel());
@@ -39,7 +42,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
 			
 			var pageModel = SetupConcernTypePageModel(mockTrustModelService.Object, mockCachedService.Object, 
-				mockTypeModelService.Object, mockLogger.Object, true);
+				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
 			
 			// act
 			await pageModel.OnGetAsync();
@@ -86,6 +89,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			
 			var expected = TrustFactory.BuildTrustDetailsModel();
 
 			mockTypeModelService.Setup(t => t.GetTypeModel()).ReturnsAsync(new TypeModel());
@@ -93,7 +98,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
 			
 			var pageModel = SetupConcernTypePageModel(mockTrustModelService.Object, mockCachedService.Object, 
-				mockTypeModelService.Object, mockLogger.Object, true);
+				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
 			
 			// act
 			await pageModel.OnGetAsync();
@@ -122,19 +127,20 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
 			
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>()))
 				.ReturnsAsync((UserState)null);
 
 			var pageModel = SetupConcernTypePageModel(mockTrustModelService.Object, mockCachedService.Object, 
-				mockTypeModelService.Object, mockLogger.Object, true);
+				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
 			
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
 					{ "type", new StringValues("type") },
 					{ "subType", new StringValues("subType") },
-					{ "ragRating", new StringValues("ragRating") },
+					{ "ragRating", new StringValues("ragRating:123") },
 					{ "trustUkprn", new StringValues("trustUkprn") },
 					{ "trustName", new StringValues("trustName") }
 				});
@@ -160,6 +166,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
 			
 			var expected = CaseFactory.BuildCreateCaseModel();
 			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
@@ -167,14 +174,14 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
 
 			var pageModel = SetupConcernTypePageModel(mockTrustModelService.Object, mockCachedService.Object, 
-				mockTypeModelService.Object, mockLogger.Object, true);
+				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
 			
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
 					{ "type", new StringValues("Force Majeure") },
 					{ "subType", new StringValues("subType") },
-					{ "ragRating", new StringValues("ragRating") },
+					{ "ragRating", new StringValues("123:ragRating") },
 					{ "trustUkprn", new StringValues("trustUkprn") },
 					{ "trustName", new StringValues("trustName") }
 				});
@@ -201,6 +208,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
 			
 			var expected = CaseFactory.BuildCreateCaseModel();
 			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
@@ -208,7 +216,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
 
 			var pageModel = SetupConcernTypePageModel(mockTrustModelService.Object, mockCachedService.Object, 
-				mockTypeModelService.Object, mockLogger.Object, true);
+				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
 			
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -235,6 +243,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
 			
 			var expected = CaseFactory.BuildCreateCaseModel(type, subType);
 			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
@@ -242,7 +251,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
 
 			var pageModel = SetupConcernTypePageModel(mockTrustModelService.Object, mockCachedService.Object, 
-				mockTypeModelService.Object, mockLogger.Object, true);
+				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
 			
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
@@ -271,11 +280,11 @@ namespace ConcernsCaseWork.Tests.Pages
 		
 		private static ConcernTypePageModel SetupConcernTypePageModel(
 			ITrustModelService mockTrustModelService, ICachedService mockCachedService, ITypeModelService mockTypeModelService, 
-			ILogger<ConcernTypePageModel> mockLogger, bool isAuthenticated = false)
+			IRatingModelService mockRatingModelService, ILogger<ConcernTypePageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new ConcernTypePageModel(mockTrustModelService, mockCachedService, mockTypeModelService, mockLogger)
+			return new ConcernTypePageModel(mockTrustModelService, mockCachedService, mockTypeModelService, mockRatingModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

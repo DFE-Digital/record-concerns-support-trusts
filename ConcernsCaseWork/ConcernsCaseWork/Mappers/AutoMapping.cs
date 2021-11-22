@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
 using Service.TRAMS.Cases;
+using Service.TRAMS.Records;
 using Service.TRAMS.Trusts;
 
 namespace ConcernsCaseWork.Mappers
@@ -24,6 +25,9 @@ namespace ConcernsCaseWork.Mappers
 			
 			// Case
 			CreateMap<CaseHistoryDto, CaseHistoryModel>();
+
+			// Record 
+			CreateMap<RecordDto, RecordModel>();
 		}
 	}
 }

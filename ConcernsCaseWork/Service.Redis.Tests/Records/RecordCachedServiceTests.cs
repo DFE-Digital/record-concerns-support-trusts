@@ -149,14 +149,16 @@ namespace Service.Redis.Tests.Records
 			
 			var recordRecordCachedService = new RecordCachedService(
 				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
-			
-			// act
-			var actualRecords = await recordRecordCachedService.GetRecordsByCaseUrn(CaseFactory.BuildCaseDto());
 
-			// assert
+			var caseDto = CaseFactory.BuildCaseDto();
+
+			// act
+			var actualRecords = await recordRecordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
+
+			//// assert
 			Assert.That(actualRecords, Is.Not.Null);
 			Assert.That(actualRecords.Count, Is.EqualTo(0));
-			
+
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
 			mockRecordService.Verify(c => 
@@ -198,9 +200,11 @@ namespace Service.Redis.Tests.Records
 			
 			var recordRecordCachedService = new RecordCachedService(
 				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
-			
+
+			var caseDto = CaseFactory.BuildCaseDto();
+
 			// act
-			var actualRecords = await recordRecordCachedService.GetRecordsByCaseUrn(CaseFactory.BuildCaseDto());
+			var actualRecords = await recordRecordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
 
 			// assert
 			Assert.That(actualRecords, Is.Not.Null);
@@ -247,9 +251,11 @@ namespace Service.Redis.Tests.Records
 			
 			var recordRecordCachedService = new RecordCachedService(
 				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
-			
+
+			var caseDto = CaseFactory.BuildCaseDto();
+
 			// act
-			var actualRecords = await recordRecordCachedService.GetRecordsByCaseUrn(CaseFactory.BuildCaseDto());
+			var actualRecords = await recordRecordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
 
 			// assert
 			Assert.That(actualRecords, Is.Not.Null);

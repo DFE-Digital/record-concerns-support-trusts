@@ -53,6 +53,11 @@ namespace ConcernsCaseWork.Models
 		
 		public string StatusName { get; set; } = string.Empty;
 		
+		public long RecordUrn { get; set; }
+		
+		public long TypeUrn { get; set; }
+		
+/*<<<<<<< HEAD
 		// TODO Remove when we have records integrated
 		public long RecordUrn { get; set; }
 		public long TypeUrn { get; set; }
@@ -75,6 +80,11 @@ namespace ConcernsCaseWork.Models
 		public Tuple<int, IList<string>> RagRating { get; set; }
 
 		public IList<string> RagRatingCss { get; set; }
+=======
+		public string CaseType { get; set; } = string.Empty;
+
+		public string CaseSubType { get; set; } = string.Empty;
+>>>>>>> b49ba3f33ce137d02ef5216e3022a0c587f67e48*/
 		
 		// public IDictionary<string, IList<string>> TypesDictionary { get; set; }
 		
