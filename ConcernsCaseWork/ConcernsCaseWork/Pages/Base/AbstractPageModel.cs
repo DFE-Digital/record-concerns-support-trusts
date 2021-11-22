@@ -34,7 +34,7 @@ namespace ConcernsCaseWork.Pages.Base
 			return true;
 		}*/
 
-		protected static bool IsValidEditConcernType(StringValues type, ref StringValues subType)
+		/*protected static bool IsValidEditConcernType(StringValues type, ref StringValues subType)
 		{
 			const string forceMajeure = "Force Majeure";
 			
@@ -53,7 +53,7 @@ namespace ConcernsCaseWork.Pages.Base
 			}
 
 			return true;
-		}
+		}*/
 		
 		protected static bool IsValidClosure(StringValues caseOutcomes, StringValues monitoring, 
 			StringValues dayToReview, StringValues monthToReview, StringValues yearToReview)

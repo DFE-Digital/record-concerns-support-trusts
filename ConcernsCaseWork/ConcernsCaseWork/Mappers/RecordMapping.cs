@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.Mappers
 		public static RecordDto MapConcernType(PatchCaseModel patchCaseModel, RecordDto recordDto)
 		{
 			return new RecordDto(recordDto.CreatedAt, patchCaseModel.UpdatedAt, recordDto.ReviewAt,
-				recordDto.ClosedAt, recordDto.Name, $"{patchCaseModel.CaseType} {patchCaseModel.CaseSubType}", 
+				recordDto.ClosedAt, recordDto.Name, $"{patchCaseModel.Type} {patchCaseModel.SubType}", 
 				recordDto.Reason, recordDto.CaseUrn, patchCaseModel.TypeUrn, recordDto.RatingUrn,
 				recordDto.Primary, recordDto.Urn, recordDto.StatusUrn);
 		}

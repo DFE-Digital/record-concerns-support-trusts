@@ -17,13 +17,13 @@ namespace ConcernsCaseWork.Models
 		
 		public long Urn { get; set; }
 		
-		public string CaseType { get; set; }
+		public string Type { get; set; }
 		
-		public string CaseSubType { get; set; }
+		public string SubType { get; set; }
 		
 		public long TypeUrn { get; set; }
 		
-		public string RiskRating { get; set; }
+		public string RatingName { get; set; }
 		
 		public long RatingUrn { get; set; }
 		

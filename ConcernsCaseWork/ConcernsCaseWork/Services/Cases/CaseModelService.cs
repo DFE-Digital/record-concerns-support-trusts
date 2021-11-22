@@ -200,11 +200,6 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				// Fetch Type
-				var typeDto = await _typeCachedService.GetTypeByNameAndDescription(
-					patchCaseModel.CaseType, patchCaseModel.CaseSubType);
-				patchCaseModel.TypeUrn = typeDto.Urn;
-				
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
 				var recordDto = recordsDto.First(r => r.Primary);
@@ -229,7 +224,7 @@ namespace ConcernsCaseWork.Services.Cases
 			try
 			{
 				// Fetch Rating
-				var ratingDto = await _ratingCachedService.GetRatingByName(patchCaseModel.RiskRating);
+				var ratingDto = await _ratingCachedService.GetRatingByName(patchCaseModel.RatingName);
 				patchCaseModel.RatingUrn = ratingDto.Urn;
 				
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);

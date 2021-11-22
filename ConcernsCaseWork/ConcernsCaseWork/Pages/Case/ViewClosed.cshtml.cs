@@ -44,7 +44,7 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				_logger.LogInformation("Case::ViewClosedPageModel::OnGetAsync");
 
-				var caseUrnValue = RouteData.Values["id"];
+				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn))
 				{
 					throw new Exception("ViewClosedPageModel::CaseUrn is null or invalid to parse");

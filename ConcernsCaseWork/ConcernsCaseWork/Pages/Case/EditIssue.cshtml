@@ -1,4 +1,4 @@
-﻿@page "/case/{id:long}/management/edit_issue"
+﻿@page "/case/{urn:long}/management/edit_issue"
 @model ConcernsCaseWork.Pages.Case.EditIssuePageModel
 
 @{
@@ -16,33 +16,40 @@
 				Edit case issue
 			</h1>
 
-			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+			{
+				<partial name="_Error"/>
+			}
+			else
+			{
 
-			<form role="form" asp-page-handler="editIssue" method="post" id="issue-form" novalidate>
+				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-				<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
-				
-				<partial name="_EditIssue" model="@Model.CaseModel"/>
-				
-				<!--Button group-->
-                <div class="govuk-button-group">
-                	<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
-                		Apply
-                	</button>
-	                <partial name="_Cancel"/>
-                </div>
-				
-			</form>
+				<form role="form" asp-page-handler="editIssue" method="post" id="issue-form" novalidate>
 
+					<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
+
+					<partial name="_EditIssue" model="@Model.CaseModel"/>
+
+					<!--Button group-->
+					<div class="govuk-button-group">
+						<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
+							Apply
+						</button>
+						<partial name="_Cancel"/>
+					</div>
+
+				</form>
+
+				<script type="application/javascript" nonce="@nonce">
+					$(function () {	
+						let validator = formValidator($("#issue-form")[0]);
+						addIssueValidator(validator);
+						
+						autoResizer();
+					});
+				</script>
+			}
 		</div>
 	</div>
 </div>
-
-<script type="application/javascript" nonce="@nonce">
-	$(function () {	
-		let validator = formValidator($("#issue-form")[0]);
-		addIssueValidator(validator);
-		
-		autoResizer();
-	});
-</script>

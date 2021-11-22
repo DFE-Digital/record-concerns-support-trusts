@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.Pages.Case
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<TrustCasesModel> TrustCasesModel { get; private set; }
 		public IList<CaseHistoryModel> CasesHistoryModel { get; private set; }
-		public IDictionary<long, RatingModel> RatingModelMap { get; set; }
+		public IDictionary<long, RatingModel> RatingModelMap { get; private set; }
 
 		public ManagementPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,

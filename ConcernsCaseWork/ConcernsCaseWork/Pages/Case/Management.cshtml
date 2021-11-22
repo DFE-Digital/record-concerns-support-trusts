@@ -84,20 +84,20 @@
 								Risk rating
 							</dt>
 
-							@foreach(var ratingModel in Model.RatingModelMap)
+							@foreach(var (key, value) in Model.RatingModelMap)
 							{
 								<dd class="govuk-summary-list__value govuk-label-wrapper">
-									@for (var index = 0; index < ratingModel.Value.RagRating.Item2.Count; ++index)
+									@for (var index = 0; index < value.RagRating.Item2.Count; ++index)
 									{
-										<span class="govuk-tag ragtag @ratingModel.Value.RagRatingCss.ElementAt(index)">
-											@ratingModel.Value.RagRating.Item2.ElementAt(index)
+										<span class="govuk-tag ragtag @value.RagRatingCss.ElementAt(index)">
+											@value.RagRating.Item2.ElementAt(index)
 										</span>
 									}
 								</dd>
 								<dd class="dfe-width-15percent govuk-summary-list__actions">
 									@if (UserHasEditCasePrivileges(Model.CaseModel.CreatedBy, User.Identity.Name))
 									{
-										<a class="govuk-link" href="@Request.Path/record/@ratingModel.Key/edit_riskrating">
+										<a class="govuk-link" href="@Request.Path/record/@key/edit_riskrating">
 											Change<span class="govuk-visually-hidden"> risk rating</span>
 										</a>
 									}

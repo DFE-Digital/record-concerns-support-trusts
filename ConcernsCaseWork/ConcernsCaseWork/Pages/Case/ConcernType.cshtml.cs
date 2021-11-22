@@ -22,19 +22,20 @@ namespace ConcernsCaseWork.Pages.Case
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class ConcernTypePageModel : AbstractPageModel
 	{
+		private readonly IRatingModelService _ratingModelService;
 		private readonly ILogger<ConcernTypePageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly ITypeModelService _typeModelService;
 		private readonly ICachedService _cachedService;
-		private readonly IRatingModelService _ratingModelService;
-
-		public CaseModel CaseModel { get; private set; }
+		
 		public TypeModel TypeModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
-		public ConcernTypePageModel(ITrustModelService trustModelService, ICachedService cachedService, 
-			ITypeModelService typeModelService, IRatingModelService ratingModelService,
+		public ConcernTypePageModel(ITrustModelService trustModelService, 
+			ICachedService cachedService, 
+			ITypeModelService typeModelService, 
+			IRatingModelService ratingModelService,
 			ILogger<ConcernTypePageModel> logger)
 		{
 			_ratingModelService = ratingModelService;
@@ -76,9 +77,11 @@ namespace ConcernsCaseWork.Pages.Case
 					throw new Exception("Case::ConcernTypePageModel::Missing form values");
 				
 				string typeUrn;
+				
+				// Form
 				var type = Request.Form["type"].ToString();
 				var subType = Request.Form["sub-type"].ToString();
-				var ragRating = Request.Form["ragRating"].ToString();
+				var ragRating = Request.Form["rating"].ToString();
 				var trustName = Request.Form["trust-name"].ToString();
 				trustUkPrn = Request.Form["trust-ukprn"].ToString();
 				
@@ -90,15 +93,18 @@ namespace ConcernsCaseWork.Pages.Case
 				var ragRatingUrn = splitRagRating[0];
 				var ragRatingName = splitRagRating[1];
 				
+				// Redis state
 				var userState = await GetUserState();
 				
-				// Create a case post model
+				// Create a case model
 				var currentDate = DateTimeOffset.Now;
 				userState.CreateCaseModel = new CreateCaseModel
 				{
 					Description = $"{type} {subType}",
-					ClosedAt = currentDate,
 					CreatedAt = currentDate,
+					ReviewAt = currentDate,
+					UpdatedAt = currentDate,
+					ClosedAt = currentDate,
 					CreatedBy = User.Identity.Name,
 					DeEscalation = currentDate,
 					RagRatingName = ragRatingName,
@@ -106,10 +112,8 @@ namespace ConcernsCaseWork.Pages.Case
 					RagRating = RatingMapping.FetchRag(ragRatingName),
 					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
 					Type = type,
-					TypeUrn = long.Parse(typeUrn),
-					ReviewAt = currentDate,
-					UpdatedAt = currentDate,
 					SubType = subType,
+					TypeUrn = long.Parse(typeUrn),
 					TrustUkPrn = trustUkPrn,
 					TrustName = trustName,
 					DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString()
@@ -133,28 +137,11 @@ namespace ConcernsCaseWork.Pages.Case
 		private async Task<ActionResult> LoadPage(string trustUkPrn)
 		{
 			if (string.IsNullOrEmpty(trustUkPrn)) return Page();
-/*=======
-			if (string.IsNullOrEmpty(trustUkPrn))
-			{
-				CaseModel = new CaseModel { 
-					TypesDictionary = await _typeModelService.GetTypes()
-				};
-				RatingsModel = await _ratingModelService.GetRatings();
-			}
-			else
-			{
-				CaseModel = new CaseModel { TypesDictionary = await _typeModelService.GetTypes() };
-				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-				RatingsModel = await _ratingModelService.GetRatings();
-			}
->>>>>>> b49ba3f33ce137d02ef5216e3022a0c587f67e48*/
 			
-			// TODO remove when rating code is merged in
-			CaseModel = new CaseModel();
-			TypeModel = await _typeModelService.GetTypeModel();
 			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
 			RatingsModel = await _ratingModelService.GetRatings();
-
+			TypeModel = await _typeModelService.GetTypeModel();
+			
 			return Page();
 		}
 		
