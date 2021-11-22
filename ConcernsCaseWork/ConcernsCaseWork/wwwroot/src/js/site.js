@@ -65,11 +65,12 @@ window.addConcernTypeValidator = function(validator) {
 			let typeChecked = $('input[name="type"]:checked');
 			if (typeChecked !== undefined) {
 				let typeAriaControl = typeChecked.attr('aria-controls');
-				if (typeAriaControl !== undefined) {
+				// Isn't ideal to check sub-type with type string 
+				if (typeAriaControl !== undefined && typeChecked.val() !== "Force majeure") {
 					let concernAriaControlElem = $("#" + typeAriaControl + "");
-					let subTypeChildren = concernAriaControlElem.find("input[name='subType']");
+					let subTypeChildren = concernAriaControlElem.find("input[name='sub-type']");
 					if (subTypeChildren.length > 0) {
-						let subTypeChecked = concernAriaControlElem.find("input[name='subType']:checked");
+						let subTypeChecked = concernAriaControlElem.find("input[name='sub-type']:checked");
 						if (subTypeChecked.length === 0) {
 							return false;
 						}

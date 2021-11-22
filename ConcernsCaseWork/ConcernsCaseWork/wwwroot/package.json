@@ -1,4 +1,7 @@
 {
+  "engines": {
+	"node": ">=14.0.0 <17.0.0"
+  },
   "scripts": {
     "build": "npm run build:assets && npm run build:frontend --env.NODE_ENV=production && npm run build:sass-migrator",
     "build:frontend": "webpack",

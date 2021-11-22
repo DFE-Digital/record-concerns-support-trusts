@@ -19,6 +19,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ILogger<EditConcernTypePageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
+		public TypeModel TypeModel { get; private set; }
 		
 		public EditConcernTypePageModel(ITypeModelService typeModelService, ICaseModelService caseModelService, 
 			ILogger<EditConcernTypePageModel> logger)
@@ -36,11 +37,15 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				_logger.LogInformation("Case::EditConcernTypePageModel::OnGetAsync");
 
-				var caseUrnValue = RouteData.Values["id"];
+				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn))
 				{
 					throw new Exception("Case::EditConcernTypePageModel::CaseUrn is null or invalid to parse");
 				}
+
+				var recordUrnValue = RouteData.Values["recordUrn"];
+				
+
 			}
 			catch (Exception ex)
 			{
@@ -55,19 +60,27 @@ namespace ConcernsCaseWork.Pages.Case
 		public async Task<ActionResult> OnPostEditConcernType(string url)
 		{
 			long caseUrn = 0;
+			long recordUrn = 0;
 			
 			try
 			{
 				_logger.LogInformation("Case::EditConcernTypePageModel::OnPostEditConcernType");
 				
-				var caseUrnValue = RouteData.Values["id"];
+				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn))
 				{
 					throw new Exception("Case::EditConcernTypePageModel::CaseUrn is null or invalid to parse");
 				}
 				
+				var recordUrnValue = RouteData.Values["recordUrn"];
+				if (recordUrnValue == null || !long.TryParse(recordUrnValue.ToString(), out recordUrn))
+				{
+					throw new Exception("Case::EditConcernTypePageModel::RecordUrn is null or invalid to parse");
+				}
+				
 				var type = Request.Form["type"];
 				var subType = Request.Form["subType"];
+				var typeUrn = Request.Form["typeUrn"];
 
 				if (!IsValidEditConcernType(type, ref subType)) 
 					throw new Exception("Case::EditConcernTypePageModel::Missing form values");
@@ -106,7 +119,7 @@ namespace ConcernsCaseWork.Pages.Case
 				CaseModel = new CaseModel();
 			}
 
-			CaseModel.TypesDictionary = await _typeModelService.GetTypes();
+			TypeModel = await _typeModelService.GetTypeModel();
 			CaseModel.PreviousUrl = url;
 			
 			return Page();

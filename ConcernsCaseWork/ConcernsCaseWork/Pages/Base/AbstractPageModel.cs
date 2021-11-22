@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Pages.Base
 		internal const string ErrorOnGetPage = "An error occurred loading the page, please try again. If the error persists contact the service administrator.";
 		internal const string ErrorOnPostPage = "An error occurred posting the form, please try again. If the error persists contact the service administrator.";
 
-		protected static bool IsValidConcernType(StringValues type, ref StringValues subType, StringValues ragRating, StringValues trustUkPrn)
+		/*protected static bool IsValidConcernType(StringValues type, ref StringValues subType, StringValues ragRating, StringValues trustUkPrn)
 		{
 			const string forceMajeure = "Force Majeure";
 			
@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.Pages.Base
 			}
 
 			return true;
-		}
+		}*/
 
 		protected static bool IsValidEditConcernType(StringValues type, ref StringValues subType)
 		{

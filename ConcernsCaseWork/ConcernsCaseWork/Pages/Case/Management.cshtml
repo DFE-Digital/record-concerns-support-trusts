@@ -1,4 +1,4 @@
-﻿@page "/case/{id:long}/management"
+﻿@page "/case/{urn:long}/management"
 @model ConcernsCaseWork.Pages.Case.ManagementPageModel
 @using static ConcernsCaseWork.Security.RoleManager
 
@@ -7,24 +7,17 @@
 	var nonce = HttpContext.GetNonce();
 }
 
-@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")) || Model.CaseModel is null)
-{
-	<div class="govuk-width-container">
-		<partial name="_BannerError"/>
-		<div class="moj-banner__message">
-			<p class="govuk-body">@TempData["Error.Message"]</p>
-		</div>
-	</div>
-    <script type="application/javascript" nonce="@nonce">
-        $(function () {
-            showGlobalError();
-		});
-    </script>
-}
-else
-{
-	<div class="govuk-width-container">
-		<div class="govuk-grid-row">
+<div class="govuk-width-container">
+	<partial name="_BannerError"/>
+
+	<div class="govuk-grid-row">
+
+		@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")) || Model.CaseModel is null)
+		{
+			<partial name="_Error"/>
+		}
+		else
+		{
 			<div class="buttons-topOfPage">
 				<a asp-page="../home" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
 					Back to casework
@@ -66,19 +59,23 @@ else
 							<dt class="dfe-width-30percent govuk-summary-list__key">
 								Primary Concern
 							</dt>
-							<dd class="govuk-summary-list__value">
-								<span class="caseDetail_type">
-									@Model.CaseModel.CaseTypeDescription
-								</span>
-							</dd>
-							<dd class="dfe-width-15percent govuk-summary-list__actions">
-								@if (UserHasEditCasePrivileges(Model.CaseModel.CreatedBy, User.Identity.Name))
-								{
-									<a class="govuk-link" href="@Request.Path/edit_concerntype">
-										Change<span class="govuk-visually-hidden"> primary concern</span>
-									</a>
-								}
-							</dd>
+							@foreach (var (key, value) in Model.TypeModelMap)
+							{
+								<dd class="govuk-summary-list__value">
+									<span class="caseDetail_type">
+										@value.TypeDisplay
+									</span>
+								</dd>
+								<dd class="dfe-width-15percent govuk-summary-list__actions">
+									@if (UserHasEditCasePrivileges(Model.CaseModel.CreatedBy, User.Identity.Name))
+									{
+										<a class="govuk-link" href="@Request.Path/record/@key/edit_concerntype">
+											Change<span class="govuk-visually-hidden"> primary concern</span>
+										</a>
+									}
+								</dd>
+							}
+
 						</div>
 
 						<!-- Risk Rating -->
@@ -213,27 +210,27 @@ else
 						</div>
 					</div>
 
-					<partial name="_CaseHistory" model="@Model.CasesHistoryModel" />
+					<partial name="_CaseHistory" model="@Model.CasesHistoryModel"/>
 
 				</div>
 				<div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="trust-overview">
 					<partial name="_TrustOverview" model="@Model.TrustDetailsModel"/>
 					<partial name="_Academies" model="@Model.TrustDetailsModel.Establishments"/>
-					
+
 					<table class="govuk-table  govuk-!-margin-top-9">
-                    	<caption class="govuk-table__caption govuk-table__caption--m">
-	                        Other cases
-                    	</caption>
+						<caption class="govuk-table__caption govuk-table__caption--m">
+							Other cases
+						</caption>
 						<partial name="_TrustCases" model="@Model.TrustCasesModel"/>
 					</table>
 				</div>
 			</div>
-		</div>
+			<script type="application/javascript" nonce="@nonce">
+				$(function () {
+					$("button[id^='accordion-default-heading']").attr("aria-expanded", "true");
+					$(".govuk-accordion__section").addClass("govuk-accordion__section--expanded");
+				});
+			</script>
+		}
 	</div>
-	<script type="application/javascript" nonce="@nonce">
-		$(function () {
-			$("button[id^='accordion-default-heading']").attr("aria-expanded", "true");
-			$(".govuk-accordion__section").addClass("govuk-accordion__section--expanded");
-		});
-	</script>
-}
+</div>

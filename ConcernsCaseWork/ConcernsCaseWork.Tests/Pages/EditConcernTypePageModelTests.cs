@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
 			
-			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
+			// mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
 			
 			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
 			
@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
-			Assert.That(pageModel.CaseModel.TypesDictionary, Is.Empty);
+			// Assert.That(pageModel.CaseModel.TypesDictionary, Is.Empty);
 		}
 		
 		[Test]
@@ -58,7 +58,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
+			// mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
 			
 			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
 			
@@ -75,7 +75,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
-			Assert.That(pageModel.CaseModel.TypesDictionary, Is.Empty);
+			// Assert.That(pageModel.CaseModel.TypesDictionary, Is.Empty);
 		}		
 		
 		[Test]
@@ -86,7 +86,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
 			
-			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
+			// mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
 			
 			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
 			
@@ -99,7 +99,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
-			Assert.That(pageModel.CaseModel.TypesDictionary, Is.Empty);
+			// Assert.That(pageModel.CaseModel.TypesDictionary, Is.Empty);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 		}
 
@@ -113,11 +113,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
 
-			var caseModel = CaseFactory.BuildCaseModel(type, subType);
+			var caseModel = CaseFactory.BuildCaseModel(/*type, subType*/);
 			
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
+			// mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
 			
 			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
 			
@@ -139,7 +139,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
-			Assert.That(pageModel.CaseModel.TypesDictionary, Is.Empty);
+			// Assert.That(pageModel.CaseModel.TypesDictionary, Is.Empty);
 		}
 		
 		[TestCase("Force Majeure", "test")]
@@ -161,7 +161,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
 
 			mockCaseModelService.Setup(c => c.PatchConcernType(It.IsAny<PatchCaseModel>()));
-			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
+			// mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
 			
 			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
 			

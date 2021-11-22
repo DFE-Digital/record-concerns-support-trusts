@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.Pages.Case
 					
 				var caseUrn = await _caseModelService.PostCase(createCaseModel);
 				
-				return RedirectToPage("Management", new { id = caseUrn });
+				return RedirectToPage("Management", new { urn = caseUrn });
 			}
 			catch (Exception ex)
 			{
@@ -90,10 +90,8 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			var userState = await _cachedService.GetData<UserState>(User.Identity.Name);
 			if (userState is null)
-			{
 				throw new Exception("Case::DetailsPageModel::Cache CaseStateData is null");
-			}
-
+			
 			return userState;
 		}
 	}

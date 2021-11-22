@@ -34,7 +34,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var expected = TrustFactory.BuildTrustDetailsModel();
 
-			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
+			mockTypeModelService.Setup(t => t.GetTypeModel()).ReturnsAsync(new TypeModel());
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(new UserState { TrustUkPrn = "trust-ukprn" });
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
 			
@@ -88,7 +88,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var expected = TrustFactory.BuildTrustDetailsModel();
 
-			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
+			mockTypeModelService.Setup(t => t.GetTypeModel()).ReturnsAsync(new TypeModel());
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync((UserState)null);
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
 			

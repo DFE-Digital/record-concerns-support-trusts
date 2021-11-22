@@ -199,7 +199,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			};
 		}
 		
-		public static CaseModel BuildCaseModel(string caseType = "case-type", string caseSubType = "case-sub-type", string createdBy = "created-user")
+		public static CaseModel BuildCaseModel(string createdBy = "created-user")
 		{
 			var dateTimeNow = DateTimeOffset.Now;
 			return new CaseModel
@@ -222,9 +222,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				DirectionOfTravel = Fixture.Create<string>(),
 				Urn = 1,
 				StatusUrn = 1,
-				StatusName = Fixture.Create<string>(),
-				CaseType = caseType,
-				CaseSubType = caseSubType
+				StatusName = Fixture.Create<string>()
 			};
 		}
 

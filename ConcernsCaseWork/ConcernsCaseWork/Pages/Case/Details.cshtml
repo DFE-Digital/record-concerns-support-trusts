@@ -8,23 +8,16 @@
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
+	
 	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds">
 
 			<span class="govuk-caption-l">Create case</span>
 			<h1 class="govuk-heading-l">Concern </h1>
 
-			@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")) ||
-			     Model.CreateCaseModel is null)
+			@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")))
             {
-	            <div class="moj-banner__message">
-		            <p class="govuk-body">@TempData["Error.Message"]</p>
-		        </div>
-	            <script type="application/javascript" nonce="@nonce">
-	            	$(function () {
-	            		showGlobalError();
-					});
-	            </script>
+	            <partial name="_Error"/>
             }
 			else
 			{

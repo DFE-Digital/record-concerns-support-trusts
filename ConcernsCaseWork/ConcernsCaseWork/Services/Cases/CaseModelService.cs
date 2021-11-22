@@ -93,14 +93,18 @@ namespace ConcernsCaseWork.Services.Cases
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
 				if (!recordsDto.Any()) throw new Exception($"Case {urn} does not contain any records");
 				var recordDto = recordsDto.FirstOrDefault(r => r.Primary) ?? recordsDto.First();
+
+				// TODO remove Map type to case model
+				caseModel.RecordUrn = recordDto.Urn;
+				caseModel.TypeUrn = recordDto.TypeUrn;
 				
-				// Fetch type
-				var typesDto = await _typeCachedService.GetTypes();
-				var typeDto = typesDto.First(t => t.Urn.CompareTo(recordDto.TypeUrn) == 0);
-				
-				// Map case model
-				caseModel.CaseType = typeDto.Name;
-				caseModel.CaseSubType = typeDto.Description;
+				// // Fetch type
+				// var typesDto = await _typeCachedService.GetTypes();
+				// var typeDto = typesDto.First(t => t.Urn.CompareTo(recordDto.TypeUrn) == 0);
+				//
+				// // Map case model
+				// caseModel.CaseType = typeDto.Name;
+				// caseModel.CaseSubType = typeDto.Description;
 				
 				// Fetch Ratings
 				var ragsRatingDto = await _ratingCachedService.GetRatings();
@@ -399,11 +403,7 @@ namespace ConcernsCaseWork.Services.Cases
 			{
 				// Fetch Status
 				var statusDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
-
-				// Fetch Type
-				var typeDto = await _typeCachedService.GetTypeByNameAndDescription(
-					createCaseModel.Type, createCaseModel.SubType);
-
+				
 				// Fetch Rating
 				var ratingDto = await _ratingCachedService.GetRatingByName(createCaseModel.RagRatingName);
 
@@ -418,8 +418,8 @@ namespace ConcernsCaseWork.Services.Cases
 				// Create a record
 				var currentDate = DateTimeOffset.Now;
 				var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, 
-					currentDate, typeDto.Name, typeDto.Description, createCaseModel.Description, newCase.Urn, 
-					typeDto.Urn, ratingDto.Urn, isCasePrimary, statusDto.Urn);
+					currentDate, createCaseModel.Type, createCaseModel.SubType, createCaseModel.Description, newCase.Urn, 
+					createCaseModel.TypeUrn, ratingDto.Urn, isCasePrimary, statusDto.Urn);
 				var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 				
 				// Create case history event

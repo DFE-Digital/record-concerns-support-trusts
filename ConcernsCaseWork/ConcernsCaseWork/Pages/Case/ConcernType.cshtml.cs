@@ -1,6 +1,8 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Type;
 using Microsoft.AspNetCore.Authorization;
@@ -18,11 +20,12 @@ namespace ConcernsCaseWork.Pages.Case
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class ConcernTypePageModel : AbstractPageModel
 	{
+		private readonly ILogger<ConcernTypePageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly ITypeModelService _typeModelService;
-		private readonly ILogger<ConcernTypePageModel> _logger;
 		private readonly ICachedService _cachedService;
 		
+		public CaseModel CaseModel { get; private set; }
 		public TypeModel TypeModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
@@ -63,14 +66,16 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				_logger.LogInformation("Case::ConcernTypePageModel::OnPostAsync");
 
-				var type = Request.Form["type"];
-				var subType = Request.Form["subType"];
-				var ragRating = Request.Form["ragRating"];
-				var trustName = Request.Form["trustName"];
-				trustUkPrn = Request.Form["trustUkprn"];
-				
-				if (!IsValidConcernType(type, ref subType, ragRating, trustUkPrn))
+				if (!ConcernTypeValidator.IsValid(Request.Form))
 					throw new Exception("Case::ConcernTypePageModel::Missing form values");
+
+				string typeUrn;
+				var type = Request.Form["type"].ToString();
+				var subType = Request.Form["sub-type"].ToString();
+				var ragRating = Request.Form["ragRating"].ToString();
+				var trustName = Request.Form["trust-name"].ToString();
+				trustUkPrn = Request.Form["trust-ukprn"].ToString();
+				(typeUrn, type, subType) = type.SplitType(subType);
 				
 				var userState = await GetUserState();
 				
@@ -87,6 +92,7 @@ namespace ConcernsCaseWork.Pages.Case
 					RagRating = RagMapping.FetchRag(ragRating),
 					RagRatingCss = RagMapping.FetchRagCss(ragRating),
 					Type = type,
+					TypeUrn = long.Parse(typeUrn),
 					ReviewAt = currentDate,
 					UpdatedAt = currentDate,
 					SubType = subType,
@@ -112,12 +118,11 @@ namespace ConcernsCaseWork.Pages.Case
 
 		private async Task<ActionResult> LoadPage(string trustUkPrn)
 		{
-			if (string.IsNullOrEmpty(trustUkPrn))
-			{
-				throw new Exception("Case::ConcernTypePageModel::LoadPage trustukprn is null or empty");
-			}
+			if (string.IsNullOrEmpty(trustUkPrn)) return Page();
 			
-			TypesDictionary = await _typeModelService.GetTypes();
+			// TODO remove when rating code is merged in
+			CaseModel = new CaseModel();
+			TypeModel = await _typeModelService.GetTypeModel();
 			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
 
 			return Page();
@@ -127,10 +132,8 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			var userState = await _cachedService.GetData<UserState>(User.Identity.Name);
 			if (userState is null)
-			{
 				throw new Exception("Case::ConcernTypePageModel::Cache CaseStateData is null");
-			}
-
+			
 			return userState;
 		}
 	}

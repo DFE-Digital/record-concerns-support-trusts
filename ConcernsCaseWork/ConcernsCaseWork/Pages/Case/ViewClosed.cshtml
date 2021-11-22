@@ -23,11 +23,14 @@
 					<dt class="dfe-width-30percent govuk-summary-list__key">
 						Primary Concern
 					</dt>
-					<dd class="govuk-summary-list__value">
-						<span class="caseDetail_type">
-							@Model.CaseModel.CaseTypeDescription
-						</span>
-					</dd>
+					@foreach (var (key, value) in Model.TypeModelMap)
+					{
+						<dd class="govuk-summary-list__value">
+							<span class="caseDetail_type">
+								@value.TypeDisplay
+							</span>
+						</dd>
+					}
 				</div>
 			</dl>
 

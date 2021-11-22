@@ -41,8 +41,8 @@ namespace Service.Redis.Models
 		public string DirectionOfTravel { get; set; }
 		
 		public long StatusUrn { get; set; }
-
-		public string CaseTypeDescription
+		
+		public string TypeDisplay
 		{
 			get
 			{
@@ -50,6 +50,8 @@ namespace Service.Redis.Models
 				return $"{Type}{separator} {SubType ?? string.Empty}";
 			}
 		}
+		
+		public long TypeUrn { get; set; }
 		
 		public string Type { get; set; }
 		

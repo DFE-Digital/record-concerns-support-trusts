@@ -52,7 +52,11 @@ namespace ConcernsCaseWork.Models
 		public long StatusUrn { get; set; }
 		
 		public string StatusName { get; set; } = string.Empty;
-
+		
+		// TODO Remove when we have records integrated
+		public long RecordUrn { get; set; }
+		public long TypeUrn { get; set; }
+		
 		// public string CaseTypeDescription
 		// {
 		// 	get
