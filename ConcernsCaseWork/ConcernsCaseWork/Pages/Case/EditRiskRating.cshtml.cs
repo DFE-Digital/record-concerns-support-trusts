@@ -109,7 +109,7 @@ namespace ConcernsCaseWork.Pages.Case
 			
 			CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
 			var recordModel = await _recordModelService.GetRecordModelByUrn(User.Identity.Name, caseUrn, recordUrn);
-			RatingsModel = await _ratingModelService.GetSelectedRatingsByUrn(recordModel.RatingUrn);
+			RatingsModel = await _ratingModelService.GetSelectedRatingsModelByUrn(recordModel.RatingUrn);
 			CaseModel.PreviousUrl = url;
 
 			return Page();

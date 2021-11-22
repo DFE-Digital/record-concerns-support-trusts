@@ -139,7 +139,7 @@ namespace ConcernsCaseWork.Pages.Case
 			if (string.IsNullOrEmpty(trustUkPrn)) return Page();
 			
 			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-			RatingsModel = await _ratingModelService.GetRatings();
+			RatingsModel = await _ratingModelService.GetRatingsModel();
 			TypeModel = await _typeModelService.GetTypeModel();
 			
 			return Page();

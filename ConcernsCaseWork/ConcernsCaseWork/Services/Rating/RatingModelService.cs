@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.Services.Rating
 			_logger = logger;
 		}
 
-		public async Task<IList<RatingModel>> GetRatings()
+		public async Task<IList<RatingModel>> GetRatingsModel()
 		{
 			_logger.LogInformation("RatingModelService::GetRatings");
 
@@ -35,23 +35,26 @@ namespace ConcernsCaseWork.Services.Rating
 			return ratingsModel;
 		}
 
-		public async Task<IList<RatingModel>> GetSelectedRatingsByUrn(long urn)
+		public async Task<IList<RatingModel>> GetSelectedRatingsModelByUrn(long urn)
 		{
 			_logger.LogInformation("RatingModelService::GetSelectedRatingsByUrn");
 
-			var ratings = await GetRatings();
-			ratings.FirstOrDefault(r => r.Urn == urn).Checked = true;
+			var ratings = await GetRatingsModel();
+			ratings = ratings.Where(r => r.Urn.CompareTo(urn) == 0).Select(r =>
+			{
+				r.Checked = true;
+				return r;
+			}).ToList();
 
 			return ratings;
 		}
 
-		public async Task<RatingModel> GetRatingByUrn(long urn)
+		public async Task<RatingModel> GetRatingModelByUrn(long urn)
 		{
 			_logger.LogInformation("RatingModelService::GetRatingByUrn");
-			var ratings = await GetRatings();
+			var ratings = await GetRatingsModel();
 
 			return ratings.FirstOrDefault(r => r.Urn == urn);
 		}
-
 	}
 }

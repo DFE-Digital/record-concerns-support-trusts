@@ -6,8 +6,8 @@ namespace ConcernsCaseWork.Services.Rating
 {
 	public interface IRatingModelService
 	{
-		Task<IList<RatingModel>> GetRatings();
-		Task<RatingModel> GetRatingByUrn(long urn);
-		Task<IList<RatingModel>> GetSelectedRatingsByUrn(long urn);
+		Task<IList<RatingModel>> GetRatingsModel();
+		Task<RatingModel> GetRatingModelByUrn(long urn);
+		Task<IList<RatingModel>> GetSelectedRatingsModelByUrn(long urn);
 	}
 }

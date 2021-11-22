@@ -47,7 +47,7 @@ window.addIssueValidator = function(validator) {
 	}]);
 }
 window.addRagRatingValidator = function(validator) {
-	validator.addValidator('ragRating', [{
+	validator.addValidator('rating', [{
 		method: function(field) {
 			return field.value.trim().length > 0;
 		},

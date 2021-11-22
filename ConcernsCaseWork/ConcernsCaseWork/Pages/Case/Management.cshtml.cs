@@ -67,19 +67,16 @@ namespace ConcernsCaseWork.Pages.Case
 				CasesHistoryModel = await _caseHistoryModelService.GetCasesHistory(User.Identity.Name, caseUrn);
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				TrustCasesModel = await _caseModelService.GetCasesByTrustUkprn(CaseModel.TrustUkPrn);
-
 				
 				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
-				RatingModelMap = recordsModel.ToDictionary(r => r.Urn, r => _ratingModelService.GetRatingByUrn(r.RatingUrn).Result);
+
+				var ratingTasks = recordsModel.Select(async r => new { r.Urn, RatingModel = await _ratingModelService.GetRatingModelByUrn(r.RatingUrn) });
+				var ratingsResult = await Task.WhenAll(ratingTasks);
+				RatingModelMap = ratingsResult.ToDictionary(pair => pair.Urn, pair => pair.RatingModel);
 				
-				
-				// TODO Integrate records model service and build a IDic<long, TypeModel>
-				var typeModel = await _typeModelService.GetTypeModelByUrn(CaseModel.TypeUrn);
-				TypeModelMap = new Dictionary<long, TypeModel>{ { CaseModel.RecordUrn, typeModel } };
-
-
-
-
+				var typeTasks = recordsModel.Select(async r => new { r.Urn, TypeModel = await _typeModelService.GetTypeModelByUrn(r.TypeUrn) });
+				var typesResult = await Task.WhenAll(typeTasks);
+				TypeModelMap = typesResult.ToDictionary(pair => pair.Urn, pair => pair.TypeModel);
 			}
 			catch (Exception ex)
 			{

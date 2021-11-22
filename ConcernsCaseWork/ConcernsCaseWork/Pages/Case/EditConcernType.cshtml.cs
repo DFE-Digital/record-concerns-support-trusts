@@ -41,6 +41,8 @@ namespace ConcernsCaseWork.Pages.Case
 				_logger.LogInformation("Case::EditConcernTypePageModel::OnGetAsync");
 
 				(caseUrn, recordUrn) = GetRouteData();
+
+				if (caseUrn == 0 || recordUrn == 0) throw new Exception("Case::EditConcernTypePageModel missing route data");
 			}
 			catch (Exception ex)
 			{
@@ -102,8 +104,6 @@ namespace ConcernsCaseWork.Pages.Case
 
 		private async Task<ActionResult> LoadPage(string url, long caseUrn, long recordUrn)
 		{
-			if (caseUrn == 0 || recordUrn == 0) return Page();
-
 			TypeModel = await _typeModelService.GetTypeModel();
 			CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
 			CaseModel.PreviousUrl = url;
