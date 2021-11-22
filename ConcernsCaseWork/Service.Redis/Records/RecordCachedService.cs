@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.TRAMS.Cases;
 using Service.TRAMS.Records;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,15 +51,10 @@ namespace Service.Redis.Records
 		public async Task<RecordDto> PostRecordByCaseUrn(CreateRecordDto createRecordDto, string caseworker)
 		{
 			_logger.LogInformation("RecordCachedService::PostRecordByCaseUrn");
-
-			// TODO Enable only when Academies API is live
+			
 			// Create record on TRAMS API
-			//var newRecord = await _recordService.PostRecordByCaseUrn(createRecordDto);
-			//if (newRecord is null) throw new ApplicationException("Error::RecordCachedService::PostRecordByCaseUrn");
-
-			// TODO Remove when Academies API is live
-			var createRecordDtoStr = JsonConvert.SerializeObject(createRecordDto);
-			var newRecord = JsonConvert.DeserializeObject<RecordDto>(createRecordDtoStr);
+			var newRecord = await _recordService.PostRecordByCaseUrn(createRecordDto);
+			if (newRecord is null) throw new ApplicationException("Error::RecordCachedService::PostRecordByCaseUrn");
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);
