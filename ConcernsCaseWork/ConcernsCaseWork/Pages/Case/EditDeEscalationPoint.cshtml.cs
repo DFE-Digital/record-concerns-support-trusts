@@ -89,15 +89,12 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		private async Task<ActionResult> LoadPage(string url, long caseUrn)
 		{
-			if (caseUrn != 0)
+			if (caseUrn == 0)
 			{
-				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+				throw new Exception("Case::EditCurrentStatusPageModel::LoadPage caseUrn cannot be 0");
 			}
-			else
-			{
-				CaseModel = new CaseModel();
-			}
-			
+
+			CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
 			CaseModel.PreviousUrl = url;
 			
 			return Page();

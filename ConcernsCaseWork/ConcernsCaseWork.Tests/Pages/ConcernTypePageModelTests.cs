@@ -140,7 +140,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				{
 					{ "type", new StringValues("type") },
 					{ "subType", new StringValues("subType") },
-					{ "ragRating", new StringValues("ragRating") },
+					{ "ragRating", new StringValues("ragRating:123") },
 					{ "trustUkprn", new StringValues("trustUkprn") },
 					{ "trustName", new StringValues("trustName") }
 				});
@@ -181,7 +181,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				{
 					{ "type", new StringValues("Force Majeure") },
 					{ "subType", new StringValues("subType") },
-					{ "ragRating", new StringValues("ragRating") },
+					{ "ragRating", new StringValues("123:ragRating") },
 					{ "trustUkprn", new StringValues("trustUkprn") },
 					{ "trustName", new StringValues("trustName") }
 				});

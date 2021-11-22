@@ -1,12 +1,15 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Rating;
+using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -18,21 +21,28 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ICaseHistoryModelService _caseHistoryModelService;
 		private readonly ITrustModelService _trustModelService;
 		private readonly ICaseModelService _caseModelService;
+		private readonly IRecordModelService _recordModelService;
+		private readonly IRatingModelService _ratingModelService;
 		private readonly ILogger<ManagementPageModel> _logger;
 		
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<TrustCasesModel> TrustCasesModel { get; private set; }
 		public IList<CaseHistoryModel> CasesHistoryModel { get; private set; }
+		public IDictionary<long, RatingModel> RatingModelMap { get; set; }
 
 		public ManagementPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
 			ICaseHistoryModelService caseHistoryModelService,
+			IRecordModelService recordModelService,
+			IRatingModelService ratingModelService,
 			ILogger<ManagementPageModel> logger)
 		{
 			_caseHistoryModelService = caseHistoryModelService;
 			_trustModelService = trustModelService;
 			_caseModelService = caseModelService;
+			_recordModelService = recordModelService;
+			_ratingModelService = ratingModelService;
 			_logger = logger;
 		}
 
@@ -52,6 +62,8 @@ namespace ConcernsCaseWork.Pages.Case
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				TrustCasesModel = await _caseModelService.GetCasesByTrustUkprn(CaseModel.TrustUkPrn);
 				CasesHistoryModel = await _caseHistoryModelService.GetCasesHistory(User.Identity.Name, caseUrn);
+				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
+				RatingModelMap = recordsModel.ToDictionary(r => r.Urn, r => _ratingModelService.GetRatingByUrn(r.RatingUrn).Result);
 			}
 			catch (Exception ex)
 			{

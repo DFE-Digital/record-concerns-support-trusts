@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.Models
 	{
 		public DateTimeOffset CreatedAt { get; }
 
-		public DateTimeOffset UpdateAt { get; }
+		public DateTimeOffset UpdatedAt { get; }
 
 		public DateTimeOffset ReviewAt { get; }
 
@@ -31,12 +31,12 @@ namespace ConcernsCaseWork.Models
 		
 		public long Urn { get; }
 		
-		public long Status { get; }
+		public long StatusUrn { get; }
 		
 		public RecordModel(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
 			DateTimeOffset closedAt, string name, string description, string reason, long caseUrn, long typeUrn, 
-			long ratingUrn, bool primary, long urn, long status) => 
-			(CreatedAt, UpdateAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Urn, Status) = 
-			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, primary, urn, status);
+			long ratingUrn, bool primary, long urn, long statusUrn) => 
+			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Urn, StatusUrn) = 
+			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, primary, urn, statusUrn);
 	}
 }

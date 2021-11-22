@@ -22,14 +22,14 @@ namespace Service.Redis.Records
 			_logger = logger;
 		}
 		
-		public async Task<IList<RecordDto>> GetRecordsByCaseUrn(CaseDto caseDto)
+		public async Task<IList<RecordDto>> GetRecordsByCaseUrn(string caseworker, long caseUrn)
 		{
 			_logger.LogInformation("RecordCachedService::GetRecordsByCaseUrn");
 
 			var records = new List<RecordDto>();
 			
 			// Store in cache for 24 hours (default)
-			var caseState = await GetData<UserState>(caseDto.CreatedBy);
+			var caseState = await GetData<UserState>(caseworker);
 			if (caseState is null)
 			{
 				// TODO Enable only when TRAMS API is live
@@ -39,9 +39,9 @@ namespace Service.Redis.Records
 				
 				// TODO Finish cache logic
 				caseState = new UserState();
-				await StoreData(caseDto.CreatedBy, caseState);
+				await StoreData(caseworker, caseState);
 			}
-			else if (caseState.CasesDetails.ContainsKey(caseDto.Urn) && caseState.CasesDetails.TryGetValue(caseDto.Urn, out var caseWrapper))
+			else if (caseState.CasesDetails.ContainsKey(caseUrn) && caseState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper))
 			{
 				return caseWrapper.Records.Values.Select(r => r.RecordDto).ToList();
 			}

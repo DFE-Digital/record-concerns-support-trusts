@@ -65,12 +65,6 @@ namespace ConcernsCaseWork.Models
 		public string CaseType { get; set; } = string.Empty;
 
 		public string CaseSubType { get; set; } = string.Empty;
-
-		public string RagRatingName { get; set; } = string.Empty;
-		
-		public Tuple<int, IList<string>> RagRating { get; set; }
-
-		public IList<string> RagRatingCss { get; set; }
 		
 		public IDictionary<string, IList<string>> TypesDictionary { get; set; }
 		

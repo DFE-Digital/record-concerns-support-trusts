@@ -90,7 +90,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var caseModel = CaseMapping.Map(caseDto);
 				
 				// Fetch records
-				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
+				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
 				if (!recordsDto.Any()) throw new Exception($"Case {urn} does not contain any records");
 				var recordDto = recordsDto.FirstOrDefault(r => r.Primary) ?? recordsDto.First();
 				
@@ -101,13 +101,6 @@ namespace ConcernsCaseWork.Services.Cases
 				// Map case model
 				caseModel.CaseType = typeDto.Name;
 				caseModel.CaseSubType = typeDto.Description;
-				
-				// Fetch Ratings
-				var ragsRatingDto = await _ratingCachedService.GetRatings();
-				var ragRating = ragsRatingDto.First(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0);
-				caseModel.RagRating = RatingMapping.FetchRag(ragRating.Name);
-				caseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRating.Name);
-				caseModel.RagRatingName = ragRating.Name;
 				
 				return caseModel;
 			}
@@ -141,7 +134,7 @@ namespace ConcernsCaseWork.Services.Cases
 				casesDto = casesDto.Where(c => c.StatusUrn.CompareTo(monitoringStatus.Urn) != 0).ToList();
 				
 				// Fetch records by case urn
-				var recordsTasks = casesDto.Select(c => _recordCachedService.GetRecordsByCaseUrn(c)).ToList();
+				var recordsTasks = casesDto.Select(c => _recordCachedService.GetRecordsByCaseUrn(c.CreatedBy, c.Urn)).ToList();
 				await Task.WhenAll(recordsTasks);
 			
 				// Get results from tasks and filter only primary records
@@ -175,7 +168,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var statusDto = await _statusCachedService.GetStatusByName(patchCaseModel.StatusName);
 				
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
-				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
+				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
 				var recordDto = recordsDto.First(r => r.Primary);
 				
 				// Patch source dtos
@@ -209,7 +202,7 @@ namespace ConcernsCaseWork.Services.Cases
 				patchCaseModel.TypeUrn = typeDto.Urn;
 				
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
-				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
+				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
 				var recordDto = recordsDto.First(r => r.Primary);
 				
 				// Patch source dtos
@@ -236,7 +229,7 @@ namespace ConcernsCaseWork.Services.Cases
 				patchCaseModel.RatingUrn = ratingDto.Urn;
 				
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
-				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto);
+				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
 				var recordDto = recordsDto.First(r => r.Primary);
 				
 				// Patch source dtos
@@ -462,7 +455,7 @@ namespace ConcernsCaseWork.Services.Cases
 				.ToList();
 
 			// Fetch records by case urn
-			var recordsTasks = casesDto.Select(c => _recordCachedService.GetRecordsByCaseUrn(c)).ToList();
+			var recordsTasks = casesDto.Select(c => _recordCachedService.GetRecordsByCaseUrn(c.CreatedBy, c.Urn)).ToList();
 			await Task.WhenAll(recordsTasks);
 			
 			// Get results from tasks
