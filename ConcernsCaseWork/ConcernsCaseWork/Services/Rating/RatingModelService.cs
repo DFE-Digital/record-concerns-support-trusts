@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.Services.Rating
 
 		public async Task<IList<RatingModel>> GetRatingsModel()
 		{
-			_logger.LogInformation("RatingModelService::GetRatings");
+			_logger.LogInformation("RatingModelService::GetRatingsModel");
 
 			var ratingsDto = await _ratingCachedService.GetRatings();
 			
@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Services.Rating
 
 		public async Task<IList<RatingModel>> GetSelectedRatingsModelByUrn(long urn)
 		{
-			_logger.LogInformation("RatingModelService::GetSelectedRatingsByUrn");
+			_logger.LogInformation("RatingModelService::GetSelectedRatingsModelByUrn");
 
 			var ratings = await GetRatingsModel();
 			
@@ -55,7 +55,8 @@ namespace ConcernsCaseWork.Services.Rating
 
 		public async Task<RatingModel> GetRatingModelByUrn(long urn)
 		{
-			_logger.LogInformation("RatingModelService::GetRatingByUrn");
+			_logger.LogInformation("RatingModelService::GetRatingModelByUrn");
+			
 			var ratings = await GetRatingsModel();
 
 			return ratings.FirstOrDefault(r => r.Urn == urn);
