@@ -18,83 +18,85 @@ namespace Service.TRAMS.Tests.Rating
 	[Parallelizable(ParallelScope.All)]
 	public class RatingServiceTests
 	{
-		//TODO EA
-		//[Test]
-		//public async Task WhenGetTypes_ReturnsTypes()
-		//{
-		//	// arrange
-		//	var expectedRatings = RatingFactory.BuildListRatingDto();
-		//	var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-		//	var tramsApiEndpoint = configuration["trams:api_endpoint"];
+		[Test]
+		public async Task WhenGetTypes_ReturnsTypes()
+		{
+			//TODOEA wrape with APIWrapper
 
-		//	var httpClientFactory = new Mock<IHttpClientFactory>();
-		//	var mockMessageHandler = new Mock<HttpMessageHandler>();
-		//	mockMessageHandler.Protected()
-		//		.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-		//		.ReturnsAsync(new HttpResponseMessage
-		//		{
-		//			StatusCode = HttpStatusCode.OK,
-		//			Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedRatings))
-		//		});
 
-		//	var httpClient = new HttpClient(mockMessageHandler.Object);
-		//	httpClient.BaseAddress = new Uri(tramsApiEndpoint);
-		//	httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			// arrange
+			var expectedRatings = RatingFactory.BuildListRatingDto();
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 
-		//	var logger = new Mock<ILogger<RatingService>>();
-		//	var ratingService = new RatingService(httpClientFactory.Object, logger.Object);
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedRatings))
+				});
 
-		//	// act
-		//	var ratings = await ratingService.GetRatings();
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-		//	// assert
-		//	Assert.That(ratings, Is.Not.Null);
-		//	Assert.That(ratings.Count, Is.EqualTo(expectedRatings.Count));
+			var logger = new Mock<ILogger<RatingService>>();
+			var ratingService = new RatingService(httpClientFactory.Object, logger.Object);
 
-		//	foreach (var actualRating in ratings)
-		//	{
-		//		foreach (var expectedRating in expectedRatings.Where(expectedType => actualRating.Urn.CompareTo(expectedType.Urn) == 0))
-		//		{
-		//			Assert.That(actualRating.Name, Is.EqualTo(expectedRating.Name));
-		//			Assert.That(actualRating.Urn, Is.EqualTo(expectedRating.Urn));
-		//			Assert.That(actualRating.CreatedAt, Is.EqualTo(expectedRating.CreatedAt));
-		//			Assert.That(actualRating.UpdatedAt, Is.EqualTo(expectedRating.UpdatedAt));
-		//		}
-		//	}
-		//}
+			// act
+			var ratings = await ratingService.GetRatings();
 
-		//[Test]
-		//public async Task WhenGetTypes_ThrowsException_ReturnsEmptyTypes()
-		//{
-		//	// arrange
-		//	var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-		//	var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			// assert
+			Assert.That(ratings, Is.Not.Null);
+			Assert.That(ratings.Count, Is.EqualTo(expectedRatings.Count));
 
-		//	var httpClientFactory = new Mock<IHttpClientFactory>();
-		//	var mockMessageHandler = new Mock<HttpMessageHandler>();
-		//	mockMessageHandler.Protected()
-		//		.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-		//		.ReturnsAsync(new HttpResponseMessage
-		//		{
-		//			StatusCode = HttpStatusCode.BadRequest
-		//		});
+			foreach (var actualRating in ratings)
+			{
+				foreach (var expectedRating in expectedRatings.Where(expectedType => actualRating.Urn.CompareTo(expectedType.Urn) == 0))
+				{
+					Assert.That(actualRating.Name, Is.EqualTo(expectedRating.Name));
+					Assert.That(actualRating.Urn, Is.EqualTo(expectedRating.Urn));
+					Assert.That(actualRating.CreatedAt, Is.EqualTo(expectedRating.CreatedAt));
+					Assert.That(actualRating.UpdatedAt, Is.EqualTo(expectedRating.UpdatedAt));
+				}
+			}
+		}
 
-		//	var httpClient = new HttpClient(mockMessageHandler.Object);
-		//	httpClient.BaseAddress = new Uri(tramsApiEndpoint);
-		//	httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+		[Test]
+		public async Task WhenGetTypes_ThrowsException_ReturnsEmptyTypes()
+		{
+			// arrange
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 
-		//	var logger = new Mock<ILogger<RatingService>>();
-		//	var ratingService = new RatingService(httpClientFactory.Object, logger.Object);
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.BadRequest
+				});
 
-		//	// act
-		//	var ratings = await ratingService.GetRatings();
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-		//	// assert
-		//	Assert.That(ratings, Is.Not.Null);
-		//	// TODO uncomment when trams api is live
-		//	//Assert.That(types.Count, Is.EqualTo(0));
-		//	Assert.That(ratings.Count, Is.EqualTo(0));
-		//}
+			var logger = new Mock<ILogger<RatingService>>();
+			var ratingService = new RatingService(httpClientFactory.Object, logger.Object);
+
+			// act
+			var ratings = await ratingService.GetRatings();
+
+			// assert
+			Assert.That(ratings, Is.Not.Null);
+			// TODO uncomment when trams api is live
+			//Assert.That(types.Count, Is.EqualTo(0));
+			Assert.That(ratings.Count, Is.EqualTo(0));
+		}
 
 	}
 }

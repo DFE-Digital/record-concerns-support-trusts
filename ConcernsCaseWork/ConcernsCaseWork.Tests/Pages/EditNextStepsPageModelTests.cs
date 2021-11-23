@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,31 +20,33 @@ namespace ConcernsCaseWork.Tests.Pages
 	[Parallelizable(ParallelScope.All)]
 	public class EditNextStepsPageModelTests
 	{
-		//TODO EA
-		//[Test]
-		//public async Task WhenOnGetAsync_ReturnsPage()
-		//{
-		//	// arrange
-		//	var mockCaseModelService = new Mock<ICaseModelService>();
-		//	var mockLogger = new Mock<ILogger<EditNextStepsPageModel>>();
+		[Test]
+		public async Task WhenOnGetAsync_ReturnsPage()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockLogger = new Mock<ILogger<EditNextStepsPageModel>>();
 
-		//	var pageModel = SetupEditNextStepsPageModel(mockCaseModelService.Object, mockLogger.Object);
+			var caseModel = CaseFactory.BuildCaseModel();
 
-		//	pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
 
-		//	// act
-		//	var pageResponse = await pageModel.OnGetAsync();
+			var pageModel = SetupEditNextStepsPageModel(mockCaseModelService.Object, mockLogger.Object);
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("id", 1);
+			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 
-		//	// assert
-		//	Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-		//	var page = pageResponse as PageResult;
+			// act
+			var pageResponse = await pageModel.OnGetAsync();
 
-		//	Assert.That(page, Is.Not.Null);
-		//	Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			var page = pageResponse as PageResult;
 
-		//	mockCaseModelService.Verify(c => 
-		//			c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-		//}
+			Assert.That(page, Is.Not.Null);
+			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
+		}
 
 		[Test]
 		public async Task WhenOnGetAsync_RouteData_ReturnsPage()
@@ -102,27 +105,18 @@ namespace ConcernsCaseWork.Tests.Pages
 				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 		}
 
-		//TODO EA
-		//[Test]
-		//public async Task WhenOnPostEditNextSteps_MissingRouteData_ThrowsException_ReloadPage()
-		//{
-		//	// arrange
-		//	var mockCaseModelService = new Mock<ICaseModelService>();
-		//	var mockLogger = new Mock<ILogger<EditNextStepsPageModel>>();
+		[Test]
+		public void WhenOnPostEditNextSteps_MissingRouteData_ThrowsException()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockLogger = new Mock<ILogger<EditNextStepsPageModel>>();
 
-		//	var pageModel = SetupEditNextStepsPageModel(mockCaseModelService.Object, mockLogger.Object);
+			var pageModel = SetupEditNextStepsPageModel(mockCaseModelService.Object, mockLogger.Object);
 
-		//	// act
-		//	var pageResponse = await pageModel.OnPostEditNextSteps("https://returnto/thispage");
-
-		//	// assert
-		//	Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-		//	var page = pageResponse as PageResult;
-
-		//	Assert.That(page, Is.Not.Null);
-		//	Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
-		//	Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
-		//}
+			// assert/act
+			Assert.ThrowsAsync<Exception>(() => pageModel.OnPostEditNextSteps("https://returnto/thispage"));
+		}
 
 		[Test]
 		public async Task WhenOnPostEditNextSteps_RouteData_RequestForm_ReturnsToPreviousUrl()
