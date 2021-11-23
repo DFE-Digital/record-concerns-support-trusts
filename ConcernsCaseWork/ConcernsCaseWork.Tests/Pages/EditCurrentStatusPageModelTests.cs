@@ -72,7 +72,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 
 		[Test]
-		public async Task WhenOnGetAsync_Missing_RouteData_ReturnsPage()
+		public async Task WhenOnGetAsync_MissingRouteData_ThrowsException_ReturnsPage()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
