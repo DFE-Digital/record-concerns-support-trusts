@@ -40,9 +40,13 @@ namespace ConcernsCaseWork.Services.Rating
 			_logger.LogInformation("RatingModelService::GetSelectedRatingsByUrn");
 
 			var ratings = await GetRatingsModel();
-			ratings = ratings.Where(r => r.Urn.CompareTo(urn) == 0).Select(r =>
+			
+			ratings = ratings.Select(r =>
 			{
-				r.Checked = true;
+				if (r.Urn.CompareTo(urn) == 0)
+				{
+					r.Checked = true;
+				}
 				return r;
 			}).ToList();
 
