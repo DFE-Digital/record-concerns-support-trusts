@@ -30,21 +30,21 @@ namespace Service.Redis.Records
 			if (caseState is null)
 			{
 				// Fetch records from Academies API
-				var records = await _recordService.GetRecordsByCaseUrn(caseUrn);
-				if (records is null) throw new ApplicationException("Error::RecordCachedService::GetRecordsByCaseUrn");
+				var recordsDto = await _recordService.GetRecordsByCaseUrn(caseUrn);
+				if (recordsDto is null) throw new ApplicationException("Error::RecordCachedService::GetRecordsByCaseUrn");
 				
 				caseState = new UserState
 				{
 					CasesDetails = { { caseUrn, 
 						new CaseWrapper { 
-							Records = records.ToDictionary(r => r.Urn, r => new RecordWrapper { RecordDto = r } )
+							Records = recordsDto.ToDictionary(r => r.Urn, r => new RecordWrapper { RecordDto = r } )
 						} 
 					} }
 				};
 				
 				await StoreData(caseworker, caseState);
 				
-				return records;
+				return recordsDto;
 			}
 
 			if (caseState.CasesDetails.ContainsKey(caseUrn) && caseState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper))
@@ -60,8 +60,8 @@ namespace Service.Redis.Records
 			_logger.LogInformation("RecordCachedService::PostRecordByCaseUrn");
 			
 			// Create record on Academies API
-			var newRecord = await _recordService.PostRecordByCaseUrn(createRecordDto);
-			if (newRecord is null) throw new ApplicationException("Error::RecordCachedService::PostRecordByCaseUrn");
+			var newRecordDto = await _recordService.PostRecordByCaseUrn(createRecordDto);
+			if (newRecordDto is null) throw new ApplicationException("Error::RecordCachedService::PostRecordByCaseUrn");
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);
@@ -69,32 +69,32 @@ namespace Service.Redis.Records
 			{
 				caseState = new UserState
 				{
-					CasesDetails = { { newRecord.CaseUrn, 
+					CasesDetails = { { newRecordDto.CaseUrn, 
 						new CaseWrapper { 
-							Records = { { newRecord.Urn, 
-								new RecordWrapper { RecordDto = newRecord } }} 
+							Records = { { newRecordDto.Urn, 
+								new RecordWrapper { RecordDto = newRecordDto } }} 
 						} 
 					} }
 				};
 			}
 			else
 			{
-				if (caseState.CasesDetails.ContainsKey(newRecord.CaseUrn) 
-				    && caseState.CasesDetails.TryGetValue(newRecord.CaseUrn, out var caseWrapper))
+				if (caseState.CasesDetails.ContainsKey(newRecordDto.CaseUrn) 
+				    && caseState.CasesDetails.TryGetValue(newRecordDto.CaseUrn, out var caseWrapper))
 				{
-					caseWrapper.Records.Add(newRecord.Urn, new RecordWrapper {  RecordDto = newRecord });
+					caseWrapper.Records.Add(newRecordDto.Urn, new RecordWrapper {  RecordDto = newRecordDto });
 				}
 				else
 				{
 					caseWrapper = new CaseWrapper();
-					caseWrapper.Records.Add(newRecord.Urn, new RecordWrapper {  RecordDto = newRecord });
+					caseWrapper.Records.Add(newRecordDto.Urn, new RecordWrapper {  RecordDto = newRecordDto });
 					
-					caseState.CasesDetails.Add(newRecord.CaseUrn, caseWrapper);
+					caseState.CasesDetails.Add(newRecordDto.CaseUrn, caseWrapper);
 				}
 			}
 			await StoreData(caseworker, caseState);
 
-			return newRecord;
+			return newRecordDto;
 		}
 
 		public async Task PatchRecordByUrn(RecordDto recordDto, string caseworker)
@@ -102,8 +102,8 @@ namespace Service.Redis.Records
 			_logger.LogInformation("RecordCachedService::PatchRecordByUrn");
 			
 			// Patch record on Academies API
-			var patchRecord = await _recordService.PatchRecordByUrn(recordDto);
-			if (patchRecord is null) throw new ApplicationException("Error::RecordCachedService::PatchRecordByUrn");
+			var patchRecordDto = await _recordService.PatchRecordByUrn(recordDto);
+			if (patchRecordDto is null) throw new ApplicationException("Error::RecordCachedService::PatchRecordByUrn");
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);
@@ -111,28 +111,28 @@ namespace Service.Redis.Records
 			{
 				caseState = new UserState
 				{
-					CasesDetails = { { patchRecord.CaseUrn, 
+					CasesDetails = { { patchRecordDto.CaseUrn, 
 						new CaseWrapper { 
-							Records = { { patchRecord.Urn, 
-								new RecordWrapper { RecordDto = patchRecord } }} 
+							Records = { { patchRecordDto.Urn, 
+								new RecordWrapper { RecordDto = patchRecordDto } }} 
 						} 
 					} }
 				};
 			}
 			else
 			{
-				if (caseState.CasesDetails.ContainsKey(patchRecord.CaseUrn) 
-				    && caseState.CasesDetails.TryGetValue(patchRecord.CaseUrn, out var caseWrapper)
-				    && caseWrapper.Records.TryGetValue(patchRecord.Urn, out var recordWrapper))
+				if (caseState.CasesDetails.ContainsKey(patchRecordDto.CaseUrn) 
+				    && caseState.CasesDetails.TryGetValue(patchRecordDto.CaseUrn, out var caseWrapper)
+				    && caseWrapper.Records.TryGetValue(patchRecordDto.Urn, out var recordWrapper))
 				{
-					recordWrapper.RecordDto = patchRecord;
+					recordWrapper.RecordDto = patchRecordDto;
 				}
 				else
 				{
 					caseWrapper = new CaseWrapper();
-					caseWrapper.Records.Add(patchRecord.Urn, new RecordWrapper {  RecordDto = patchRecord });
+					caseWrapper.Records.Add(patchRecordDto.Urn, new RecordWrapper {  RecordDto = patchRecordDto });
 					
-					caseState.CasesDetails.Add(patchRecord.CaseUrn, caseWrapper);
+					caseState.CasesDetails.Add(patchRecordDto.CaseUrn, caseWrapper);
 				}
 			}
 			await StoreData(caseworker, caseState);
