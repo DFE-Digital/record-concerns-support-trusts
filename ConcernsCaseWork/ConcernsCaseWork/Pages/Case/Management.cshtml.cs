@@ -4,7 +4,7 @@ using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Type;
+using ConcernsCaseWork.Services.Types;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

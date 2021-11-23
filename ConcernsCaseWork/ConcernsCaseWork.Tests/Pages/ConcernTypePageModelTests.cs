@@ -2,7 +2,7 @@
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Type;
+using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.Shared;
 using Microsoft.AspNetCore.Http;

@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Services.Type;
+using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Services.Type
+namespace ConcernsCaseWork.Tests.Services.Types
 {
 	[Parallelizable(ParallelScope.All)]
 	public class TypeModelServiceTests

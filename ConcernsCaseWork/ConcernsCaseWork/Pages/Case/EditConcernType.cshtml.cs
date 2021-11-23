@@ -4,7 +4,7 @@ using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Records;
-using ConcernsCaseWork.Services.Type;
+using ConcernsCaseWork.Services.Types;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

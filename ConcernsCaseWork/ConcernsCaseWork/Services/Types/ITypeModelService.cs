@@ -1,7 +1,7 @@
 ﻿using ConcernsCaseWork.Models;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Services.Type
+namespace ConcernsCaseWork.Services.Types
 {
 	public interface ITypeModelService
 	{

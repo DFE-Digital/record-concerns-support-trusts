@@ -2,7 +2,7 @@
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Records;
-using ConcernsCaseWork.Services.Type;
+using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

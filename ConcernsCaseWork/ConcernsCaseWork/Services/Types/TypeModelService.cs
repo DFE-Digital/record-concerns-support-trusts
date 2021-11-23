@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Services.Type
+namespace ConcernsCaseWork.Services.Types
 {
 	public sealed class TypeModelService : ITypeModelService
 	{
