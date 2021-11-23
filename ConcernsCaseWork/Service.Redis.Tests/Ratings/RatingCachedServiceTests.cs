@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
-using Service.Redis.Rating;
+using Service.Redis.Ratings;
 using Service.TRAMS.Ratings;
 using System.Collections.Generic;
 using System.Threading.Tasks;

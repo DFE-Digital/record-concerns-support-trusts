@@ -4,7 +4,7 @@ using Service.TRAMS.Ratings;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
 using Service.TRAMS.Trusts;
-using Service.TRAMS.Type;
+using Service.TRAMS.Types;
 using System.Collections.Generic;
 using System.Linq;
 using System;

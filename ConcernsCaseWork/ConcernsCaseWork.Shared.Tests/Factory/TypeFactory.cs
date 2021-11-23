@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.Type;
+﻿using Service.TRAMS.Types;
 using System;
 using System.Collections.Generic;
 

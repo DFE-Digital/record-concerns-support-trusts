@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Type
+namespace Service.TRAMS.Types
 {
 	public sealed class TypeService : AbstractService, ITypeService
 	{

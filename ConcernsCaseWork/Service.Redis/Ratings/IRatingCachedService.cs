@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Rating
+namespace Service.Redis.Ratings
 {
 	public interface IRatingCachedService
 	{

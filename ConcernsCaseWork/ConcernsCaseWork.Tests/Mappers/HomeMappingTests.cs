@@ -3,7 +3,7 @@ using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
-using Service.TRAMS.Type;
+using Service.TRAMS.Types;
 using System.Collections.Generic;
 using System.Linq;
 

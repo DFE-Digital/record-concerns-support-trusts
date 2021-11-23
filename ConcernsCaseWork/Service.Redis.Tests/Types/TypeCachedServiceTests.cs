@@ -4,12 +4,12 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
-using Service.Redis.Type;
-using Service.TRAMS.Type;
+using Service.Redis.Types;
+using Service.TRAMS.Types;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Tests.Type
+namespace Service.Redis.Tests.Types
 {
 	[Parallelizable(ParallelScope.All)]
 	public class TypeCachedServiceTests

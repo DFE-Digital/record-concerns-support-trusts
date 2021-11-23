@@ -1,7 +1,7 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Rating;
+using Service.Redis.Ratings;
 using System;
 using System.Collections.Generic;
 using System.Linq;

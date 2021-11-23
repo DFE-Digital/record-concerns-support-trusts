@@ -1,8 +1,8 @@
-﻿using Service.TRAMS.Type;
+﻿using Service.TRAMS.Types;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Type
+namespace Service.Redis.Types
 {
 	public interface ITypeCachedService
 	{

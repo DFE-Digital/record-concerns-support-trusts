@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Rating
+namespace Service.Redis.Ratings
 {
 	public sealed class RatingCachedService : CachedService, IRatingCachedService
 	{

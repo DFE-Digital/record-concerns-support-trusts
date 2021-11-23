@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace Service.TRAMS.Type
+namespace Service.TRAMS.Types
 {
 	public sealed class TypeDto
 	{

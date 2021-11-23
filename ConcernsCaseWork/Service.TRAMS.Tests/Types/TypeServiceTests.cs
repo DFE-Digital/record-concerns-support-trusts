@@ -5,7 +5,7 @@ using Moq;
 using Moq.Protected;
 using NUnit.Framework;
 using Service.TRAMS.Base;
-using Service.TRAMS.Type;
+using Service.TRAMS.Types;
 using System;
 using System.Linq;
 using System.Net;
@@ -14,7 +14,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Tests.Type
+namespace Service.TRAMS.Tests.Types
 {
 	[Parallelizable(ParallelScope.All)]
 	public class TypeServiceTests
