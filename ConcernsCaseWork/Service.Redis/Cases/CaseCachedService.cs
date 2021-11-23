@@ -65,7 +65,7 @@ namespace Service.Redis.Cases
 		{
 			_logger.LogInformation("CaseCachedService::PostCase");
 			
-			// Create case on Academy API
+			// Create case on Academies API
 			var newCase = await _caseService.PostCase(createCaseDto);
 			if (newCase is null) throw new ApplicationException("Error::CaseCachedService::PostCase");
 			
@@ -89,7 +89,7 @@ namespace Service.Redis.Cases
 		{
 			_logger.LogInformation("CaseCachedService::PatchCaseByUrn");
 			
-			// Patch case on TRAMS API
+			// Patch case on Academies API
 			var patchCaseDto = await _caseService.PatchCaseByUrn(caseDto);
 			if (patchCaseDto is null) throw new ApplicationException("Error::CaseCachedService::PatchCaseByUrn");
 			
@@ -113,6 +113,12 @@ namespace Service.Redis.Cases
 			await StoreData(patchCaseDto.CreatedBy, userState);
 		}
 
+		/// <summary>
+		/// TODO Primary is under review to maybe be removed in terms of business logic.
+		/// </summary>
+		/// <param name="caseworker"></param>
+		/// <param name="caseUrn"></param>
+		/// <returns></returns>
 		public async Task<Boolean> IsCasePrimary(string caseworker, long caseUrn)
 		{
 			_logger.LogInformation("CaseCachedService::IsCasePrimary");

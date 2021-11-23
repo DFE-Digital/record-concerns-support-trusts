@@ -58,7 +58,7 @@ namespace ConcernsCaseWork.Pages.Case
 				_logger.LogInformation("Case::ManagementPageModel::OnGetAsync");
 
 				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn))
+				if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
 				{
 					throw new Exception("ManagementPageModel::CaseUrn is null or invalid to parse");
 				}

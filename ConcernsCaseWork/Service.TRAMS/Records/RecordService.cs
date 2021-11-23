@@ -41,7 +41,7 @@ namespace Service.TRAMS.Records
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 				
-				// Deserialize content to POJO
+				// Deserialize content to POCO
 				var apiWrapperRecordsDto = JsonConvert.DeserializeObject<ApiListWrapper<RecordDto>>(content);
 
 				// Unwrap response

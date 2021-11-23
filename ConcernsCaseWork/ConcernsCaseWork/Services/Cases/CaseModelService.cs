@@ -71,7 +71,7 @@ namespace ConcernsCaseWork.Services.Cases
 					return await FetchFromCache(caseState, status);
 				}
 				
-				// Find cases TramsApi
+				// Find cases Academies Api
 				return await FetchFromTramsApi(caseworker, status);
 			}
 			catch (Exception ex)
@@ -88,23 +88,6 @@ namespace ConcernsCaseWork.Services.Cases
 			{
 				var caseDto = await _caseCachedService.GetCaseByUrn(caseworker, urn);
 				var caseModel = CaseMapping.Map(caseDto);
-				
-				// Fetch records
-				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
-				if (!recordsDto.Any()) throw new Exception($"Case {urn} does not contain any records");
-				var recordDto = recordsDto.FirstOrDefault(r => r.Primary) ?? recordsDto.First();
-
-				// TODO remove Map type to case model
-				caseModel.RecordUrn = recordDto.Urn;
-				caseModel.TypeUrn = recordDto.TypeUrn;
-				
-				// // Fetch type
-				// var typesDto = await _typeCachedService.GetTypes();
-				// var typeDto = typesDto.First(t => t.Urn.CompareTo(recordDto.TypeUrn) == 0);
-				//
-				// // Map case model
-				// caseModel.CaseType = typeDto.Name;
-				// caseModel.CaseSubType = typeDto.Description;
 				
 				return caseModel;
 			}
