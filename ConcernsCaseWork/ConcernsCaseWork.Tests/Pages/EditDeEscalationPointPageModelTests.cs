@@ -114,7 +114,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageModel = SetupEditDeEscalationPointPageModel(mockCaseModelService.Object, mockLogger.Object);
 
 			// act/assert
-			Assert.ThrowsAsync<Exception>(() => pageModel.OnPostEditDeEscalationPoint("https://returnto/thispage"));		
+			Assert.ThrowsAsync<Exception>(() => pageModel.OnPostEditDeEscalationPoint("https://returnto/thispage"));
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 
 		[Test]

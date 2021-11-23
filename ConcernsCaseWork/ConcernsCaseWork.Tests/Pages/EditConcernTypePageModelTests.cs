@@ -93,16 +93,12 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
 			var casesDto = CaseFactory.BuildCaseModel();
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(casesDto);
-			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
-
 			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
 
 			// act/assert
 			Assert.ThrowsAsync<Exception>(() => pageModel.OnPostEditConcernType("https://returnto/thispage"));
-			//TODOEA 
-			//Verify that the mock functions are not called 
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			mockTypeModelService.Verify(c => c.GetTypes(), Times.Never);
 		}
 
 		[TestCase("", "")]

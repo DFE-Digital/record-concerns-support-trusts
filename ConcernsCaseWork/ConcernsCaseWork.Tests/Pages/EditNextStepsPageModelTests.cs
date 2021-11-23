@@ -116,6 +116,7 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			// assert/act
 			Assert.ThrowsAsync<Exception>(() => pageModel.OnPostEditNextSteps("https://returnto/thispage"));
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 
 		[Test]

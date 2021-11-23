@@ -88,6 +88,7 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			// act/assert
 			Assert.ThrowsAsync<Exception>(() => pageModel.OnPostEditDirectionOfTravel("https://returnto/thispage"));
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 
 		[Test]

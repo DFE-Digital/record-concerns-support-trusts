@@ -34,12 +34,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
-			var recordDto = RecordFactory.BuildRecordDto();
-
-			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
-			var mapper = config.CreateMapper();
-
-			var recordModel = mapper.Map<RecordModel>(recordDto);
+			var recordModel = RecordFactory.BuildRecordModel();
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
@@ -74,12 +69,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
-			var recordDto = RecordFactory.BuildRecordDto();
-
-			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
-			var mapper = config.CreateMapper();
-
-			var recordModel = mapper.Map<RecordModel>(recordDto);
+			var recordModel = RecordFactory.BuildRecordModel();
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
@@ -118,6 +108,9 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			// act/assert
 			Assert.ThrowsAsync<Exception>(() => pageModel.OnPostEditRiskRating("https://returnto/thispage"));
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			mockRecordModelService.Verify(c => c.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
+			mockRatingModelService.Verify(c => c.GetSelectedRatingsByUrn(It.IsAny<long>()), Times.Never);
 		}
 
 		[Test]
@@ -130,12 +123,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
-			var recordDto = RecordFactory.BuildRecordDto();
-
-			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
-			var mapper = config.CreateMapper();
-
-			var recordModel = mapper.Map<RecordModel>(recordDto);
+			var recordModel = RecordFactory.BuildRecordModel();
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
