@@ -5,11 +5,11 @@ using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
 using Service.Redis.Rating;
-using Service.TRAMS.Rating;
+using Service.TRAMS.Ratings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Tests.Rating
+namespace Service.Redis.Tests.Ratings
 {
 	[Parallelizable(ParallelScope.All)]
 	public class RatingCachedServiceTests

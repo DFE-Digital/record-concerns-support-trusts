@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Rating
+namespace Service.TRAMS.Ratings
 {
 	public sealed class RatingService : AbstractService, IRatingService
 	{

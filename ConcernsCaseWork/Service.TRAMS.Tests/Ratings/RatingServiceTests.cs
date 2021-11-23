@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
-using Service.TRAMS.Rating;
+using Service.TRAMS.Ratings;
 using System;
 using System.Linq;
 using System.Net;
@@ -13,7 +13,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Tests.Rating
+namespace Service.TRAMS.Tests.Ratings
 {
 	[Parallelizable(ParallelScope.All)]
 	public class RatingServiceTests

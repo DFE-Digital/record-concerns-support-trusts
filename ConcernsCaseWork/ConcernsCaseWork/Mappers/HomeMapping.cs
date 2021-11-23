@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Models;
 using Service.TRAMS.Cases;
-using Service.TRAMS.Rating;
+using Service.TRAMS.Ratings;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
 using Service.TRAMS.Trusts;

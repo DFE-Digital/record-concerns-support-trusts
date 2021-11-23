@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace Service.TRAMS.Rating
+namespace Service.TRAMS.Ratings
 {
 	public sealed class RatingDto
 	{

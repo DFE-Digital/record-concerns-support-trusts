@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
-using Service.TRAMS.Rating;
+using Service.TRAMS.Ratings;
 using System;
 using System.Collections.Generic;
 using System.Linq;

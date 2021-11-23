@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.Rating;
+﻿using Service.TRAMS.Ratings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
