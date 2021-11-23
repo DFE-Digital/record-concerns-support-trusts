@@ -375,9 +375,6 @@ namespace ConcernsCaseWork.Services.Cases
 				// Fetch Status
 				var statusDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
 				
-				// Fetch Rating
-				var ratingDto = await _ratingCachedService.GetRatingByName(createCaseModel.RagRatingName);
-
 				// In a 1:1 case -> record (not multiple concerns) this flag is always true.
 				// When multiple concerns is develop take into consideration the number of records attached to the case.
 				const bool isCasePrimary = true;
@@ -390,14 +387,14 @@ namespace ConcernsCaseWork.Services.Cases
 				var currentDate = DateTimeOffset.Now;
 				var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, 
 					currentDate, createCaseModel.Type, createCaseModel.SubType, createCaseModel.TypeDisplay, newCase.Urn, 
-					createCaseModel.TypeUrn, ratingDto.Urn, isCasePrimary, statusDto.Urn);
+					createCaseModel.TypeUrn, createCaseModel.RagRatingUrn, isCasePrimary, statusDto.Urn);
 				var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 				
 				// Create case history event
 				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Concern, newCase.Urn), newCase.CreatedBy);
 				
 				// Create a rating history
-				var createRecordRatingHistoryDto = new RecordRatingHistoryDto(DateTimeOffset.Now, newRecord.Urn, ratingDto.Urn);
+				var createRecordRatingHistoryDto = new RecordRatingHistoryDto(DateTimeOffset.Now, newRecord.Urn, createCaseModel.RagRatingUrn);
 				await _recordRatingHistoryCachedService.PostRecordRatingHistory(createRecordRatingHistoryDto, createCaseModel.CreatedBy, newCase.Urn);
 
 				// Create case history event
