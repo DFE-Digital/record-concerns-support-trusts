@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -34,7 +33,8 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			var pageModel = SetupEditCurrentStatusPageModel(mockCaseModelService.Object, mockLogger.Object);
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("id", 1);
+			routeData.Add("urn", 1);
+			
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 
 			// act
@@ -45,11 +45,34 @@ namespace ConcernsCaseWork.Tests.Pages
 			var page = pageResponse as PageResult;
 
 			Assert.That(page, Is.Not.Null);
+			Assert.That(pageModel.CaseModel, Is.Not.Null);
 			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
+			Assert.That(pageModel.CaseModel.Description, Is.EqualTo(caseModel.Description));
+			Assert.That(pageModel.CaseModel.Issue, Is.EqualTo(caseModel.Issue));
+			Assert.That(pageModel.CaseModel.StatusUrn, Is.EqualTo(caseModel.StatusUrn));
+			Assert.That(pageModel.CaseModel.Urn, Is.EqualTo(caseModel.Urn));
+			Assert.That(pageModel.CaseModel.CaseAim, Is.EqualTo(caseModel.CaseAim));
+			Assert.That(pageModel.CaseModel.ClosedAt, Is.EqualTo(caseModel.ClosedAt));
+			Assert.That(pageModel.CaseModel.CreatedAt, Is.EqualTo(caseModel.CreatedAt));
+			Assert.That(pageModel.CaseModel.CreatedBy, Is.EqualTo(caseModel.CreatedBy));
+			Assert.That(pageModel.CaseModel.CrmEnquiry, Is.EqualTo(caseModel.CrmEnquiry));
+			Assert.That(pageModel.CaseModel.CurrentStatus, Is.EqualTo(caseModel.CurrentStatus));
+			Assert.That(pageModel.CaseModel.DeEscalation, Is.EqualTo(caseModel.DeEscalation));
+			Assert.That(pageModel.CaseModel.NextSteps, Is.EqualTo(caseModel.NextSteps));
+			Assert.That(pageModel.CaseModel.ReviewAt, Is.EqualTo(caseModel.ReviewAt));
+			Assert.That(pageModel.CaseModel.StatusName, Is.EqualTo(caseModel.StatusName));
+			Assert.That(pageModel.CaseModel.UpdatedAt, Is.EqualTo(caseModel.UpdatedAt));
+			Assert.That(pageModel.CaseModel.DeEscalationPoint, Is.EqualTo(caseModel.DeEscalationPoint));
+			Assert.That(pageModel.CaseModel.DirectionOfTravel, Is.EqualTo(caseModel.DirectionOfTravel));
+			Assert.That(pageModel.CaseModel.ReasonAtReview, Is.EqualTo(caseModel.ReasonAtReview));
+			Assert.That(pageModel.CaseModel.TrustUkPrn, Is.EqualTo(caseModel.TrustUkPrn));
+			
+			mockCaseModelService.Verify(c => 
+				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 		}
 
 		[Test]
-		public async Task WhenOnGetAsync_RouteData_ReturnsPage()
+		public async Task WhenOnGetAsync_Missing_RouteData_ReturnsPage()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -59,10 +82,9 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
+			
 			var pageModel = SetupEditCurrentStatusPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("id", 1);
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
 			// act
@@ -73,40 +95,16 @@ namespace ConcernsCaseWork.Tests.Pages
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
-			Assert.That(pageModel.CaseModel.Description, Is.EqualTo(caseModel.Description));
-			Assert.That(pageModel.CaseModel.Issue, Is.EqualTo(caseModel.Issue));
-			Assert.That(pageModel.CaseModel.StatusUrn, Is.EqualTo(caseModel.StatusUrn));
-			Assert.That(pageModel.CaseModel.Urn, Is.EqualTo(caseModel.Urn));
-			Assert.That(pageModel.CaseModel.CaseAim, Is.EqualTo(caseModel.CaseAim));
-			// Assert.That(pageModel.CaseModel.CaseType, Is.EqualTo(caseModel.CaseType));
-			Assert.That(pageModel.CaseModel.ClosedAt, Is.EqualTo(caseModel.ClosedAt));
-			Assert.That(pageModel.CaseModel.CreatedAt, Is.EqualTo(caseModel.CreatedAt));
-			Assert.That(pageModel.CaseModel.CreatedBy, Is.EqualTo(caseModel.CreatedBy));
-			Assert.That(pageModel.CaseModel.CrmEnquiry, Is.EqualTo(caseModel.CrmEnquiry));
-			Assert.That(pageModel.CaseModel.CurrentStatus, Is.EqualTo(caseModel.CurrentStatus));
-			Assert.That(pageModel.CaseModel.DeEscalation, Is.EqualTo(caseModel.DeEscalation));
-			Assert.That(pageModel.CaseModel.NextSteps, Is.EqualTo(caseModel.NextSteps));
-			//Assert.That(pageModel.CaseModel.RagRating, Is.EqualTo(caseModel.RagRating)); //TODOEA
-			Assert.That(pageModel.CaseModel.ReviewAt, Is.EqualTo(caseModel.ReviewAt));
-			Assert.That(pageModel.CaseModel.StatusName, Is.EqualTo(caseModel.StatusName));
-			// Assert.That(pageModel.CaseModel.TypesDictionary, Is.EqualTo(caseModel.TypesDictionary));
-			Assert.That(pageModel.CaseModel.UpdatedAt, Is.EqualTo(caseModel.UpdatedAt));
-			// Assert.That(pageModel.CaseModel.CaseSubType, Is.EqualTo(caseModel.CaseSubType));
-			// Assert.That(pageModel.CaseModel.CaseTypeDescription, Is.EqualTo(caseModel.CaseTypeDescription));
-			Assert.That(pageModel.CaseModel.DeEscalationPoint, Is.EqualTo(caseModel.DeEscalationPoint));
-			Assert.That(pageModel.CaseModel.DirectionOfTravel, Is.EqualTo(caseModel.DirectionOfTravel));
-			//Assert.That(pageModel.CaseModel.RagRatingCss, Is.EqualTo(caseModel.RagRatingCss)); //TODOEA
-			//Assert.That(pageModel.CaseModel.RagRatingName, Is.EqualTo(caseModel.RagRatingName)); //TODOEA
-			Assert.That(pageModel.CaseModel.ReasonAtReview, Is.EqualTo(caseModel.ReasonAtReview));
-			Assert.That(pageModel.CaseModel.TrustUkPrn, Is.EqualTo(caseModel.TrustUkPrn));
+			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.That(pageModel.TempData, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 			
 			mockCaseModelService.Verify(c => 
-				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
+				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
-
+		
 		[Test]
-		public void WhenOnPostEditIssue_MissingRouteData_ThrowsException()
+		public async Task WhenOnPostEditIssue_MissingRouteData_ThrowsException_ReturnPage()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -114,8 +112,20 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			var pageModel = SetupEditCurrentStatusPageModel(mockCaseModelService.Object, mockLogger.Object);
 
-			// act/assert
-			Assert.ThrowsAsync<Exception>(() => pageModel.OnPostEditCurrentStatus("https://returnto/thispage"));
+			// act
+			var pageResponse = await pageModel.OnPostEditCurrentStatus("https://returnto/thispage");
+			
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			var page = pageResponse as PageResult;
+			
+			Assert.That(page, Is.Not.Null);
+			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.That(pageModel.TempData, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			
+			mockCaseModelService.Verify(c => 
+				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 
 		[Test]
@@ -130,7 +140,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageModel = SetupEditCurrentStatusPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("id", 1);
+			routeData.Add("urn", 1);
+			
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
@@ -147,6 +158,9 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.CaseModel, Is.Null);
 			Assert.That(page.Url, Is.EqualTo("https://returnto/thispage"));
+			
+			mockCaseModelService.Verify(c => 
+				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 		
 		private static EditCurrentStatusPageModel SetupEditCurrentStatusPageModel(

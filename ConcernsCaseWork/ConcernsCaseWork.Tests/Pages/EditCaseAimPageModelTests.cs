@@ -76,6 +76,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
+			Assert.That(pageModel.CaseModel, Is.Not.Null);
 			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
 			Assert.That(pageModel.CaseModel.Description, Is.EqualTo(caseModel.Description));
 			Assert.That(pageModel.CaseModel.Issue, Is.EqualTo(caseModel.Issue));
