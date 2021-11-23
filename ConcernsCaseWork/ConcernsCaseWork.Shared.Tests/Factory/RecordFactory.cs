@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.Models;
 using Service.TRAMS.Records;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,14 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new CreateRecordDto(currentDate, currentDate, currentDate, currentDate,
 				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), 1, 1, 1,
 				true, 1);
+		}
+		
+		public static RecordModel BuildRecordModel(long caseUrn = 1, long typeUrn = 1)
+		{
+			var currentDate = DateTimeOffset.Now;
+			return new RecordModel(currentDate, currentDate, currentDate, currentDate,
+				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, typeUrn, 1,
+				true, 1, 1);
 		}
 	}
 }
