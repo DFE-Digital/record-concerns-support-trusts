@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Service.TRAMS.Status;
 using System;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Services.Trusts;
 using System.Threading.Tasks;
 
@@ -38,7 +39,7 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				// Fetch case urn
 				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn))
+				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
 				{
 					throw new Exception("Case::ClosurePageModel::CaseUrn is null or invalid to parse");
 				}
@@ -62,19 +63,19 @@ namespace ConcernsCaseWork.Pages.Case
 				_logger.LogInformation("Case::ClosurePageModel::OnPostCloseCase");
 				
 				var caseUrnValue = RouteData.Values["urn"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn))
+				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
 				{
 					throw new Exception("ClosurePageModel::CaseUrn is null or invalid to parse");
 				}
+				
+				if(!ClosureValidator.IsValid(Request.Form))
+					throw new Exception("Case::ClosurePageModel::Missing form values");
 				
 				var caseOutcomes = Request.Form["case-outcomes"];
 				var monitoring = Request.Form["monitoring"];
 				var dayToReview = Request.Form["dtr-day"];
 				var monthToReview = Request.Form["dtr-month"];
 				var yearToReview = Request.Form["dtr-year"];
-
-				if (!IsValidClosure(caseOutcomes, monitoring, dayToReview, monthToReview, yearToReview)) 
-					throw new Exception("Case::ClosurePageModel::Missing form values");
 				
 				var isMonitoring = monitoring.ToString().ToBoolean();
 				var patchCaseModel = new PatchCaseModel();

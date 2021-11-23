@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Type;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
@@ -27,13 +28,14 @@ namespace ConcernsCaseWork.Tests.Pages
 		//	// arrange
 		//	var mockCaseModelService = new Mock<ICaseModelService>();
 		//	var mockTypeModelService = new Mock<ITypeModelService>();
+		//  var mockRecordModelService = new Mock<IRecordModelService>();
 		//	var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
 			
 
 			// mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
 
 			
-		//	var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+		//	var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockLogger.Object);
 			
 		//	pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
@@ -56,6 +58,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
 			
 			var caseModel = CaseFactory.BuildCaseModel();
@@ -64,7 +67,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				.ReturnsAsync(caseModel);
 			// mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
 			
-			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
@@ -89,11 +92,12 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
 			
 			// mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
 			
-			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockLogger.Object);
 			
 			// act
 			var pageResponse = await pageModel.OnPostEditConcernType("https://returnto/thispage");
@@ -115,11 +119,12 @@ namespace ConcernsCaseWork.Tests.Pages
 		//	// arrange
 		//	var mockCaseModelService = new Mock<ICaseModelService>();
 		//	var mockTypeModelService = new Mock<ITypeModelService>();
+		//  var mockRecordModelService = new Mock<IRecordModelService>();
 		//	var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
 
 		//	mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
 
-		//	var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+		//	var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockLogger.Object);
 
 		//	// act
 		//	var pageResponse = await pageModel.OnPostEditConcernType("https://returnto/thispage");
@@ -142,6 +147,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel(/*type, subType*/);
@@ -150,7 +156,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				.ReturnsAsync(caseModel);
 			// mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
 			
-			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
@@ -189,12 +195,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
 
 			mockCaseModelService.Setup(c => c.PatchConcernType(It.IsAny<PatchCaseModel>()));
 			// mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
 			
-			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("id", 1);
@@ -217,12 +224,15 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(page.Url, Is.EqualTo("https://returnto/thispage"));
 		}
 		
-		private static EditConcernTypePageModel SetupEditConcernTypePageModel(
-			ICaseModelService mockCaseModelService, ITypeModelService mockTypeModelService, ILogger<EditConcernTypePageModel> mockLogger, bool isAuthenticated = false)
+		private static EditConcernTypePageModel SetupEditConcernTypePageModel(ICaseModelService mockCaseModelService, 
+			ITypeModelService mockTypeModelService, 
+			IRecordModelService mockRecordModelService,
+			ILogger<EditConcernTypePageModel> mockLogger, 
+			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new EditConcernTypePageModel(mockTypeModelService, mockCaseModelService, mockLogger)
+			return new EditConcernTypePageModel(mockTypeModelService, mockCaseModelService, mockRecordModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

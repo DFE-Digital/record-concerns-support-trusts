@@ -102,11 +102,6 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		private async Task<ActionResult> LoadPage(string url, long caseUrn, long recordUrn)
 		{
-			if (caseUrn == 0)
-			{
-				throw new Exception("Case::EditRiskRatingPageModel::LoadPage caseUrn cannot be 0");
-			}
-			
 			CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
 			var recordModel = await _recordModelService.GetRecordModelByUrn(User.Identity.Name, caseUrn, recordUrn);
 			RatingsModel = await _ratingModelService.GetSelectedRatingsModelByUrn(recordModel.RatingUrn);
@@ -118,13 +113,13 @@ namespace ConcernsCaseWork.Pages.Case
 		private (long caseUrn, long recordUrn) GetRouteData()
 		{
 			var caseUrnValue = RouteData.Values["urn"];
-			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn))
+			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
 			{
 				throw new Exception("Case::EditRiskRatingPageModel::CaseUrn is null or invalid to parse");
 			}
 
 			var recordUrnValue = RouteData.Values["recordUrn"];
-			if (recordUrnValue == null || !long.TryParse(recordUrnValue.ToString(), out long recordUrn))
+			if (recordUrnValue == null || !long.TryParse(recordUrnValue.ToString(), out long recordUrn) || recordUrn == 0)
 			{
 				throw new Exception("Case::EditRiskRatingPageModel::RecordUrn is null or invalid to parse");
 			}

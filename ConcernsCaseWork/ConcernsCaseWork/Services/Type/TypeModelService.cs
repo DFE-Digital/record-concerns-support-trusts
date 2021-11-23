@@ -55,8 +55,8 @@ namespace ConcernsCaseWork.Services.Type
 			var typeModel = await GetTypeModel();
 
 			var selectedTypeDto = typesDto.FirstOrDefault(t => t.Urn.CompareTo(urn) == 0) ?? typesDto.First();
-			typeModel.CheckedType = selectedTypeDto.Name;
-			typeModel.CheckedSubType = selectedTypeDto.Description;
+			typeModel.CheckedType = selectedTypeDto.Name ?? string.Empty;
+			typeModel.CheckedSubType = selectedTypeDto.Description ?? string.Empty;
 
 			return typeModel;
 		}
@@ -69,9 +69,9 @@ namespace ConcernsCaseWork.Services.Type
 			var selectedTypeDto = typesDto.FirstOrDefault(t => t.Urn.CompareTo(urn) == 0) ?? typesDto.First();
 			
 			return new TypeModel{ 
-				CheckedType = selectedTypeDto.Name,
-				CheckedSubType = selectedTypeDto.Description 
-			};;
+				CheckedType = selectedTypeDto.Name ?? string.Empty,
+				CheckedSubType = selectedTypeDto.Description ?? string.Empty
+			};
 		}
 
 		private async Task<IList<TypeDto>> GetTypes()

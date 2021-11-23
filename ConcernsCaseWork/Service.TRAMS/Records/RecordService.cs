@@ -27,7 +27,7 @@ namespace Service.TRAMS.Records
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"/{EndpointsVersion}/records/case/urn/{caseUrn}");
+					$"/{EndpointsVersion}/concerns-records/case/urn/{caseUrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient(HttpClientName);
@@ -42,16 +42,22 @@ namespace Service.TRAMS.Records
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POJO
-				var recordsDto = JsonConvert.DeserializeObject<IList<RecordDto>>(content);
+				var apiWrapperRecordsDto = JsonConvert.DeserializeObject<ApiListWrapper<RecordDto>>(content);
 
-				return recordsDto;
+				// Unwrap response
+				if (apiWrapperRecordsDto is { Data: { } })
+				{
+					return apiWrapperRecordsDto.Data;
+				}
+
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("RecordService::GetRecordsByCaseUrn::Exception message::{Message}", ex.Message);
+				
+				throw;
 			}
-			
-			return Array.Empty<RecordDto>();
 		}
 
 		public async Task<RecordDto> PostRecordByCaseUrn(CreateRecordDto createRecordDto)

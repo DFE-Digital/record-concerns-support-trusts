@@ -3,6 +3,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Type;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,16 +17,20 @@ namespace ConcernsCaseWork.Pages.Case
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class EditConcernTypePageModel : AbstractPageModel
 	{
+		private readonly ILogger<EditConcernTypePageModel> _logger;
+		private readonly IRecordModelService _recordModelService;
 		private readonly ICaseModelService _caseModelService;
 		private readonly ITypeModelService _typeModelService;
-		private readonly ILogger<EditConcernTypePageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
 		public TypeModel TypeModel { get; private set; }
 		
-		public EditConcernTypePageModel(ITypeModelService typeModelService, ICaseModelService caseModelService, 
+		public EditConcernTypePageModel(ITypeModelService typeModelService, 
+			ICaseModelService caseModelService, 
+			IRecordModelService recordModelService,
 			ILogger<EditConcernTypePageModel> logger)
 		{
+			_recordModelService = recordModelService;
 			_typeModelService = typeModelService;
 			_caseModelService = caseModelService;
 			_logger = logger;
@@ -41,8 +46,6 @@ namespace ConcernsCaseWork.Pages.Case
 				_logger.LogInformation("Case::EditConcernTypePageModel::OnGetAsync");
 
 				(caseUrn, recordUrn) = GetRouteData();
-
-				if (caseUrn == 0 || recordUrn == 0) throw new Exception("Case::EditConcernTypePageModel missing route data");
 			}
 			catch (Exception ex)
 			{
@@ -104,7 +107,8 @@ namespace ConcernsCaseWork.Pages.Case
 
 		private async Task<ActionResult> LoadPage(string url, long caseUrn, long recordUrn)
 		{
-			TypeModel = await _typeModelService.GetTypeModel();
+			var recordModel = await _recordModelService.GetRecordModelByUrn(User.Identity.Name, caseUrn, recordUrn);
+			TypeModel = await _typeModelService.GetSelectedTypeModelByUrn(recordModel.TypeUrn);
 			CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
 			CaseModel.PreviousUrl = url;
 			
@@ -114,13 +118,13 @@ namespace ConcernsCaseWork.Pages.Case
 		private (long caseUrn, long recordUrn) GetRouteData()
 		{
 			var caseUrnValue = RouteData.Values["urn"];
-			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn))
+			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
 			{
 				throw new Exception("Case::EditConcernTypePageModel::CaseUrn is null or invalid to parse");
 			}
 
 			var recordUrnValue = RouteData.Values["recordUrn"];
-			if (recordUrnValue == null || !long.TryParse(recordUrnValue.ToString(), out long recordUrn))
+			if (recordUrnValue == null || !long.TryParse(recordUrnValue.ToString(), out long recordUrn) || recordUrn == 0)
 			{
 				throw new Exception("Case::EditConcernTypePageModel::RecordUrn is null or invalid to parse");
 			}

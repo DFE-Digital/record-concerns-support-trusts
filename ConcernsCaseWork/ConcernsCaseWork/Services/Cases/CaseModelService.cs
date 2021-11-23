@@ -406,7 +406,7 @@ namespace ConcernsCaseWork.Services.Cases
 				// Create a record
 				var currentDate = DateTimeOffset.Now;
 				var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, 
-					currentDate, createCaseModel.Type, createCaseModel.SubType, createCaseModel.Description, newCase.Urn, 
+					currentDate, createCaseModel.Type, createCaseModel.SubType, createCaseModel.TypeDisplay, newCase.Urn, 
 					createCaseModel.TypeUrn, ratingDto.Urn, isCasePrimary, statusDto.Urn);
 				var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 				

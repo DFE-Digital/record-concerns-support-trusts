@@ -24,35 +24,42 @@ namespace Service.Redis.Records
 		public async Task<IList<RecordDto>> GetRecordsByCaseUrn(string caseworker, long caseUrn)
 		{
 			_logger.LogInformation("RecordCachedService::GetRecordsByCaseUrn");
-
-			var records = new List<RecordDto>();
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);
 			if (caseState is null)
 			{
-				// TODO Enable only when TRAMS API is live
-				// Fetch records from TRAMS API
-				// var records = await _recordService.GetRecordsByCaseUrn(caseDto.Urn);
-				// if (records is null) throw new ApplicationException("Error::RecordCachedService::GetRecordsByCaseUrn");
+				// Fetch records from Academies API
+				var records = await _recordService.GetRecordsByCaseUrn(caseUrn);
+				if (records is null) throw new ApplicationException("Error::RecordCachedService::GetRecordsByCaseUrn");
 				
-				// TODO Finish cache logic
-				caseState = new UserState();
+				caseState = new UserState
+				{
+					CasesDetails = { { caseUrn, 
+						new CaseWrapper { 
+							Records = records.ToDictionary(r => r.Urn, r => new RecordWrapper { RecordDto = r } )
+						} 
+					} }
+				};
+				
 				await StoreData(caseworker, caseState);
+				
+				return records;
 			}
-			else if (caseState.CasesDetails.ContainsKey(caseUrn) && caseState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper))
+
+			if (caseState.CasesDetails.ContainsKey(caseUrn) && caseState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper))
 			{
 				return caseWrapper.Records.Values.Select(r => r.RecordDto).ToList();
 			}
-			
-			return records;
+
+			return Array.Empty<RecordDto>();
 		}
 		
 		public async Task<RecordDto> PostRecordByCaseUrn(CreateRecordDto createRecordDto, string caseworker)
 		{
 			_logger.LogInformation("RecordCachedService::PostRecordByCaseUrn");
 			
-			// Create record on TRAMS API
+			// Create record on Academies API
 			var newRecord = await _recordService.PostRecordByCaseUrn(createRecordDto);
 			if (newRecord is null) throw new ApplicationException("Error::RecordCachedService::PostRecordByCaseUrn");
 			
@@ -94,10 +101,9 @@ namespace Service.Redis.Records
 		{
 			_logger.LogInformation("RecordCachedService::PatchRecordByUrn");
 			
-			// TODO Enable only when TRAMS API is live
-			// Patch record on TRAMS API
-			//var patchRecord = await _recordService.PatchRecordByUrn(recordDto);
-			//if (patchRecord is null) throw new ApplicationException("Error::RecordCachedService::PatchRecordByUrn");
+			// Patch record on Academies API
+			var patchRecord = await _recordService.PatchRecordByUrn(recordDto);
+			if (patchRecord is null) throw new ApplicationException("Error::RecordCachedService::PatchRecordByUrn");
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);
@@ -105,28 +111,28 @@ namespace Service.Redis.Records
 			{
 				caseState = new UserState
 				{
-					CasesDetails = { { recordDto.CaseUrn, 
+					CasesDetails = { { patchRecord.CaseUrn, 
 						new CaseWrapper { 
-							Records = { { recordDto.Urn, 
-								new RecordWrapper { RecordDto = recordDto } }} 
+							Records = { { patchRecord.Urn, 
+								new RecordWrapper { RecordDto = patchRecord } }} 
 						} 
 					} }
 				};
 			}
 			else
 			{
-				if (caseState.CasesDetails.ContainsKey(recordDto.CaseUrn) 
-				    && caseState.CasesDetails.TryGetValue(recordDto.CaseUrn, out var caseWrapper)
-				    && caseWrapper.Records.TryGetValue(recordDto.Urn, out var recordWrapper))
+				if (caseState.CasesDetails.ContainsKey(patchRecord.CaseUrn) 
+				    && caseState.CasesDetails.TryGetValue(patchRecord.CaseUrn, out var caseWrapper)
+				    && caseWrapper.Records.TryGetValue(patchRecord.Urn, out var recordWrapper))
 				{
-					recordWrapper.RecordDto = recordDto;
+					recordWrapper.RecordDto = patchRecord;
 				}
 				else
 				{
 					caseWrapper = new CaseWrapper();
-					caseWrapper.Records.Add(recordDto.Urn, new RecordWrapper {  RecordDto = recordDto });
+					caseWrapper.Records.Add(patchRecord.Urn, new RecordWrapper {  RecordDto = patchRecord });
 					
-					caseState.CasesDetails.Add(recordDto.CaseUrn, caseWrapper);
+					caseState.CasesDetails.Add(patchRecord.CaseUrn, caseWrapper);
 				}
 			}
 			await StoreData(caseworker, caseState);
