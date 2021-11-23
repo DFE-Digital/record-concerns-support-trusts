@@ -130,9 +130,19 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
+			var recordDto = RecordFactory.BuildRecordDto();
+
+			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
+			var mapper = config.CreateMapper();
+
+			var recordModel = mapper.Map<RecordModel>(recordDto);
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
+
+			mockRecordModelService.Setup(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
+				.ReturnsAsync(recordModel);
+
 			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockRatingModelService.Object, mockRecordModelService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
