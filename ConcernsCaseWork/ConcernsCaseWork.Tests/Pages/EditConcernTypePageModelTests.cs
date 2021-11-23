@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,33 +21,37 @@ namespace ConcernsCaseWork.Tests.Pages
 	[Parallelizable(ParallelScope.All)]
 	public class EditConcernTypePageModelTests
 	{
-		//TODO EA
-		//[Test]
-		//public async Task WhenOnGetAsync_ReturnsPage()
-		//{
-		//	// arrange
-		//	var mockCaseModelService = new Mock<ICaseModelService>();
-		//	var mockTypeModelService = new Mock<ITypeModelService>();
-		//	var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
-			
-		//	mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
-			
-		//	var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
-			
-		//	pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
-			
-		//	// act
-		//	var pageResponse = await pageModel.OnGetAsync();
+		[Test]
+		public async Task WhenOnGetAsync_ReturnsPage()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
+			var casesDto = CaseFactory.BuildCaseModel();
 
-		//	// assert
-		//	Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-		//	var page = pageResponse as PageResult;
-			
-		//	Assert.That(page, Is.Not.Null);
-		//	Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
-		//	Assert.That(pageModel.CaseModel.TypesDictionary, Is.Empty);
-		//}
-		
+			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(casesDto);
+
+			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("id", 1);
+			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
+
+			// act
+			var pageResponse = await pageModel.OnGetAsync();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			var page = pageResponse as PageResult;
+
+			Assert.That(page, Is.Not.Null);
+			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
+			Assert.That(pageModel.CaseModel.TypesDictionary, Is.Empty);
+		}
+
 		[Test]
 		public async Task WhenOnGetAsync_RouteData_ReturnsPage()
 		{
@@ -79,31 +84,26 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.CaseModel.TypesDictionary, Is.Empty);
 		}
 
-		//TODO EA
-		//[Test]
-		//public async Task WhenOnPostEditConcernType_MissingRouteData_ThrowsException_ReloadPage()
-		//{
-		//	// arrange
-		//	var mockCaseModelService = new Mock<ICaseModelService>();
-		//	var mockTypeModelService = new Mock<ITypeModelService>();
-		//	var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
+		[Test]
+		public void WhenOnPostEditConcernType_MissingRouteData_ThrowsException()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
+			var casesDto = CaseFactory.BuildCaseModel();
 
-		//	mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(casesDto);
+			mockTypeModelService.Setup(t => t.GetTypes()).ReturnsAsync(new Dictionary<string, IList<string>>());
 
-		//	var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
+			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockLogger.Object);
 
-		//	// act
-		//	var pageResponse = await pageModel.OnPostEditConcernType("https://returnto/thispage");
-
-		//	// assert
-		//	Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-		//	var page = pageResponse as PageResult;
-
-		//	Assert.That(page, Is.Not.Null);
-		//	Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
-		//	Assert.That(pageModel.CaseModel.TypesDictionary, Is.Empty);
-		//	Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
-		//}
+			// act/assert
+			Assert.ThrowsAsync<Exception>(() => pageModel.OnPostEditConcernType("https://returnto/thispage"));
+			//TODOEA 
+			//Verify that the mock functions are not called 
+		}
 
 		[TestCase("", "")]
 		[TestCase(null, null)]
