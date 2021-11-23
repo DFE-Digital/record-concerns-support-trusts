@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using AutoMapper;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -364,6 +365,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
 			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
+			var mockRecordService = new Mock<IRecordService>();
 
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var caseDto = casesDto.First();

@@ -4,8 +4,10 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using Service.TRAMS.Base;
 using Service.TRAMS.Rating;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -19,13 +21,11 @@ namespace Service.TRAMS.Tests.Rating
 	public class RatingServiceTests
 	{
 		[Test]
-		public async Task WhenGetTypes_ReturnsTypes()
+		public async Task WhenGetRatings_ReturnsTypes()
 		{
-			//TODOEA wrape with APIWrapper
-
-
 			// arrange
-			var expectedRatings = RatingFactory.BuildListRatingDto();
+			var expectedRatings = new ApiListWrapper<RatingDto>(RatingFactory.BuildListRatingDto(), null);
+
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 
@@ -51,11 +51,11 @@ namespace Service.TRAMS.Tests.Rating
 
 			// assert
 			Assert.That(ratings, Is.Not.Null);
-			Assert.That(ratings.Count, Is.EqualTo(expectedRatings.Count));
+			Assert.That(ratings.Count, Is.EqualTo(expectedRatings.Data.Count));
 
 			foreach (var actualRating in ratings)
 			{
-				foreach (var expectedRating in expectedRatings.Where(expectedType => actualRating.Urn.CompareTo(expectedType.Urn) == 0))
+				foreach (var expectedRating in expectedRatings.Data.Where(expectedType => actualRating.Urn.CompareTo(expectedType.Urn) == 0))
 				{
 					Assert.That(actualRating.Name, Is.EqualTo(expectedRating.Name));
 					Assert.That(actualRating.Urn, Is.EqualTo(expectedRating.Urn));
@@ -66,7 +66,7 @@ namespace Service.TRAMS.Tests.Rating
 		}
 
 		[Test]
-		public async Task WhenGetTypes_ThrowsException_ReturnsEmptyTypes()
+		public void WhenGetRatings_BadRequest_ThrowsException()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -88,14 +88,7 @@ namespace Service.TRAMS.Tests.Rating
 			var logger = new Mock<ILogger<RatingService>>();
 			var ratingService = new RatingService(httpClientFactory.Object, logger.Object);
 
-			// act
-			var ratings = await ratingService.GetRatings();
-
-			// assert
-			Assert.That(ratings, Is.Not.Null);
-			// TODO uncomment when trams api is live
-			//Assert.That(types.Count, Is.EqualTo(0));
-			Assert.That(ratings.Count, Is.EqualTo(0));
+			Assert.ThrowsAsync<HttpRequestException>(() => ratingService.GetRatings());
 		}
 
 	}
