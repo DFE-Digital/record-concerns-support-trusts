@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -48,7 +47,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 
 			const string trustUkPrn = "trust-ukprn";
 			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
-			var firstCaseDto = casesDto.First();
 			var recordsDto = RecordFactory.BuildListRecordDto();
 			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 			var ratingsDto = RatingFactory.BuildListRatingDto();
@@ -56,7 +54,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var trustDto = TrustFactory.BuildTrustDetailsDto();
 
 			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusMonitoringDto);
-			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(firstCaseDto.CreatedBy, firstCaseDto.Urn)).ReturnsAsync(recordsDto);
+			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(recordsDto);
 			mockRatingCachedService.Setup(r => r.GetRatings()).ReturnsAsync(ratingsDto);
 			mockTypeCachedService.Setup(t => t.GetTypes()).ReturnsAsync(typesDto);
 			mockTrustCachedService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDto);
@@ -365,17 +363,15 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
 			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
-			var mockRecordService = new Mock<IRecordService>();
 
 			var casesDto = CaseFactory.BuildListCaseDto();
-			var caseDto = casesDto.First();
 			var recordsDto = RecordFactory.BuildListRecordDto();
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
 
 			mockCaseSearchService.Setup(c => c.GetCasesByCaseTrustSearch(It.IsAny<CaseTrustSearch>()))
 				.ReturnsAsync(casesDto);
-			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn))
+			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsDto);
 			mockRatingCachedService.Setup(r => r.GetRatings()).ReturnsAsync(ratingsDto);
 			mockTypeCachedService.Setup(t => t.GetTypes()).ReturnsAsync(typesDto);
@@ -414,13 +410,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var casesDto = CaseFactory.BuildListCaseDto();
-			var caseDto = casesDto.First();
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
 
 			mockCaseSearchService.Setup(c => c.GetCasesByCaseTrustSearch(It.IsAny<CaseTrustSearch>()))
 				.ReturnsAsync(casesDto);
-			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn))
+			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(new List<RecordDto>());
 			mockRatingCachedService.Setup(r => r.GetRatings()).ReturnsAsync(ratingsDto);
 			mockTypeCachedService.Setup(t => t.GetTypes()).ReturnsAsync(typesDto);
@@ -636,38 +631,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.GetCaseByUrn("testing", 1));
 		}
 		
-		[Test]
-		public void When_GetCaseByUrn_Missing_Records_ThrowsException()
-		{
-			// arrange
-			var mockCaseCachedService = new Mock<ICaseCachedService>();
-			var mockTrustCachedService = new Mock<ITrustCachedService>();
-			var mockRecordCachedService = new Mock<IRecordCachedService>();
-			var mockRatingCachedService = new Mock<IRatingCachedService>();
-			var mockTypeCachedService = new Mock<ITypeCachedService>();
-			var mockCachedService = new Mock<ICachedService>();
-			var mockRecordRatingHistoryCachedService = new Mock<IRecordRatingHistoryCachedService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockLogger = new Mock<ILogger<CaseModelService>>();
-			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
-
-			var caseDto = CaseFactory.BuildCaseDto();
-
-			mockCaseCachedService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(CaseFactory.BuildCaseDto());
-			
-			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn))
-				.ReturnsAsync(Array.Empty<RecordDto>());
-
-			// act
-			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
-				mockRatingCachedService.Object, mockTypeCachedService.Object, mockCachedService.Object, mockRecordRatingHistoryCachedService.Object,
-				mockStatusCachedService.Object, mockCaseSearchService.Object, mockCaseHistoryCachedService.Object, mockLogger.Object);
-
-			Assert.ThrowsAsync<ArgumentNullException>(() => caseModelService.GetCaseByUrn("testing", 1));
-		}
-
 		[Test]
 		public async Task WhenPatchConcernType_ReturnsTask()
 		{
