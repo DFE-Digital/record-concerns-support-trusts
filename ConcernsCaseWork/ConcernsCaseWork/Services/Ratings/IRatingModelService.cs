@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Services.Rating
+namespace ConcernsCaseWork.Services.Ratings
 {
 	public interface IRatingModelService
 	{

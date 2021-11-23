@@ -1,7 +1,7 @@
 ﻿using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Rating;
+using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Type;
