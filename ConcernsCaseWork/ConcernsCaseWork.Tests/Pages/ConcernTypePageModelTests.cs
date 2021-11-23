@@ -36,8 +36,9 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			
 			var expected = TrustFactory.BuildTrustDetailsModel();
+			var expectedTypeModel = TypeFactory.BuildTypeModel();
 
-			mockTypeModelService.Setup(t => t.GetTypeModel()).ReturnsAsync(new TypeModel());
+			mockTypeModelService.Setup(t => t.GetTypeModel()).ReturnsAsync(expectedTypeModel);
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(new UserState { TrustUkPrn = "trust-ukprn" });
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
 			
@@ -52,7 +53,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsModel);
-			Assert.IsAssignableFrom<Dictionary<string, IList<string>>>(typesDictionary);
+			Assert.IsAssignableFrom<Dictionary<string, IList<TypeModel.TypeValueModel>>>(typesDictionary);
 
 			Assert.That(typesDictionary, Is.Not.Null);
 			Assert.That(trustDetailsModel, Is.Not.Null);
@@ -139,10 +140,10 @@ namespace ConcernsCaseWork.Tests.Pages
 				new Dictionary<string, StringValues>
 				{
 					{ "type", new StringValues("type") },
-					{ "subType", new StringValues("subType") },
-					{ "ragRating", new StringValues("ragRating:123") },
-					{ "trustUkprn", new StringValues("trustUkprn") },
-					{ "trustName", new StringValues("trustName") }
+					{ "sub-type", new StringValues("999:subType") },
+					{ "rating", new StringValues("ragRating:123") },
+					{ "trust-ukprn", new StringValues("trustUkprn") },
+					{ "trust-name", new StringValues("trustName") }
 				});
 			
 			// act
@@ -180,10 +181,10 @@ namespace ConcernsCaseWork.Tests.Pages
 				new Dictionary<string, StringValues>
 				{
 					{ "type", new StringValues("Force Majeure") },
-					{ "subType", new StringValues("subType") },
-					{ "ragRating", new StringValues("123:ragRating") },
-					{ "trustUkprn", new StringValues("trustUkprn") },
-					{ "trustName", new StringValues("trustName") }
+					{ "sub-type", new StringValues("123:subType") },
+					{ "rating", new StringValues("123:ragRating") },
+					{ "trust-ukprn", new StringValues("trustUkprn") },
+					{ "trust-name", new StringValues("trustName") }
 				});
 			
 			// act
@@ -257,10 +258,10 @@ namespace ConcernsCaseWork.Tests.Pages
 				new Dictionary<string, StringValues>
 				{
 					{ "type", new StringValues(type) },
-					{ "subType", new StringValues(subType) },
-					{ "ragRating", new StringValues(ragRating) },
-					{ "trustUkprn", new StringValues(trustUkprn) },
-					{ "trustName", new StringValues() }
+					{ "sub-type", new StringValues(subType) },
+					{ "rating", new StringValues(ragRating) },
+					{ "trust-ukprn", new StringValues(trustUkprn) },
+					{ "trust-name", new StringValues() }
 				});
 			
 			// act

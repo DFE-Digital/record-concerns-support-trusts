@@ -40,7 +40,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("id", 1);
+			routeData.Add("urn", 1);
 			
 			// act
 			await pageModel.OnGetAsync();
@@ -55,9 +55,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(caseModel.Issue, Is.EqualTo(expectedCaseModel.Issue));
 			Assert.That(caseModel.StatusUrn, Is.EqualTo(expectedCaseModel.StatusUrn));
 			Assert.That(caseModel.Urn, Is.EqualTo(expectedCaseModel.Urn));
-			// Assert.That(caseModel.CaseType, Is.EqualTo(expectedCaseModel.CaseType));
-			// Assert.That(caseModel.CaseSubType, Is.EqualTo(expectedCaseModel.CaseSubType));
-			// Assert.That(caseModel.CaseTypeDescription, Is.EqualTo($"{expectedCaseModel.CaseType}: {expectedCaseModel.CaseSubType}"));
 			Assert.That(caseModel.ClosedAt, Is.EqualTo(expectedCaseModel.ClosedAt));
 			Assert.That(caseModel.CreatedAt, Is.EqualTo(expectedCaseModel.CreatedAt));
 			Assert.That(caseModel.CreatedBy, Is.EqualTo(expectedCaseModel.CreatedBy));
@@ -65,16 +62,15 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(caseModel.CurrentStatus, Is.EqualTo(expectedCaseModel.CurrentStatus));
 			Assert.That(caseModel.DeEscalation, Is.EqualTo(expectedCaseModel.DeEscalation));
 			Assert.That(caseModel.NextSteps, Is.EqualTo(expectedCaseModel.NextSteps));
-			//Assert.That(caseModel.RagRating, Is.EqualTo(expectedCaseModel.RagRating)); //TODOEA
 			Assert.That(caseModel.CaseAim, Is.EqualTo(expectedCaseModel.CaseAim));
 			Assert.That(caseModel.DeEscalationPoint, Is.EqualTo(expectedCaseModel.DeEscalationPoint));
 			Assert.That(caseModel.ReviewAt, Is.EqualTo(expectedCaseModel.ReviewAt));
 			Assert.That(caseModel.StatusName, Is.EqualTo(expectedCaseModel.StatusName));
 			Assert.That(caseModel.UpdatedAt, Is.EqualTo(expectedCaseModel.UpdatedAt));
 			Assert.That(caseModel.DirectionOfTravel, Is.EqualTo(expectedCaseModel.DirectionOfTravel));
-			//Assert.That(caseModel.RagRatingCss, Is.EqualTo(expectedCaseModel.RagRatingCss)); //TODOEA
 			Assert.That(caseModel.ReasonAtReview, Is.EqualTo(expectedCaseModel.ReasonAtReview));
 			Assert.That(caseModel.TrustUkPrn, Is.EqualTo(expectedCaseModel.TrustUkPrn));
+			Assert.That(caseModel.PreviousUrl, Is.EqualTo(expectedCaseModel.PreviousUrl));
 
 			Assert.That(trustDetailsModel, Is.Not.Null);
 			Assert.That(trustDetailsModel.Establishments, Is.Not.Null);
@@ -204,7 +200,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("id", 1);
+			routeData.Add("urn", 1);
 			
 			var currentDate = DateTimeOffset.Now.AddDays(1);
 			
@@ -388,7 +384,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("id", 1);
+			routeData.Add("urn", 1);
 			
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
