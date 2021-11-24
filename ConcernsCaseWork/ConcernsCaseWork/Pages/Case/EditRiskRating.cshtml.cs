@@ -102,6 +102,8 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		private async Task<ActionResult> LoadPage(string url, long caseUrn, long recordUrn)
 		{
+			if (caseUrn == 0 || recordUrn == 0) return Page();
+			
 			CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
 			var recordModel = await _recordModelService.GetRecordModelByUrn(User.Identity.Name, caseUrn, recordUrn);
 			RatingsModel = await _ratingModelService.GetSelectedRatingsModelByUrn(recordModel.RatingUrn);

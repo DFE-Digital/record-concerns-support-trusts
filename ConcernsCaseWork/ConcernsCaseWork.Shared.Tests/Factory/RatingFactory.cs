@@ -1,4 +1,5 @@
-﻿using Service.TRAMS.Ratings;
+﻿using ConcernsCaseWork.Models;
+using Service.TRAMS.Ratings;
 using System;
 using System.Collections.Generic;
 
@@ -23,6 +24,19 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			var currentDate = DateTimeOffset.Now;
 			return new RatingDto("Red-Plus", currentDate, currentDate, 2);
+		}
+
+		public static List<RatingModel> BuildListRatingModel()
+		{
+			return new List<RatingModel>
+			{
+				new RatingModel
+				{
+					Name = "Red-Plus",
+					Checked = true,
+					Urn = 1
+				}
+			};
 		}
 	}
 }
