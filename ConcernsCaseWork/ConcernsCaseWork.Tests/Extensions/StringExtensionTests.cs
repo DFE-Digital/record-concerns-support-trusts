@@ -56,5 +56,19 @@ namespace ConcernsCaseWork.Tests.Extensions
 			// assert
 			Assert.That(input.ToUrl(), Is.EqualTo(expected));
 		}
+
+		[TestCase("123:type", "subtype", "123", "type", "")]
+		[TestCase("type", "123:subtype", "123", "type", "subtype")]
+		[TestCase("type", "subtype", "", "type", "subtype")]
+		public void WhenSplitType_Returns_IsValid(string type, string subType, string expectedTypeUrn, string expectedType, string expectedSubType)
+		{
+			// act
+			(string actualTypeUrn, string actualType, string actualSubType) = type.SplitType(subType);
+			
+			// assert
+			Assert.That(actualTypeUrn, Is.EqualTo(expectedTypeUrn));
+			Assert.That(actualType, Is.EqualTo(expectedType));
+			Assert.That(actualSubType, Is.EqualTo(expectedSubType));
+		}
 	}
 }
