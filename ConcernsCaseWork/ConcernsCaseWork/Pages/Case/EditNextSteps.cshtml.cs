@@ -91,6 +91,8 @@ namespace ConcernsCaseWork.Pages.Case
 
 		private async Task<ActionResult> LoadPage(string url, long caseUrn)
 		{
+			if (caseUrn == 0) return Page();
+			
 			CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
 			CaseModel.PreviousUrl = url;
 
