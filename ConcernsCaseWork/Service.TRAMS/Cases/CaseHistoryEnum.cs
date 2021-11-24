@@ -2,6 +2,7 @@
 {
 	public enum CaseHistoryEnum
 	{
+		NotFound,
 		Case,
 		Comment,
 		Concern,
