@@ -68,5 +68,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<long>()
 				);
 		}
+		
+		public static List<RecordModel> BuildListRecordModel()
+		{
+			var currentDate = DateTimeOffset.Now;
+			return new List<RecordModel> { BuildRecordModel() };
+		}
 	}
 }
