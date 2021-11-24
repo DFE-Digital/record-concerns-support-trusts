@@ -131,7 +131,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("id", 1);
+			routeData.Add("urn", 1);
 			
 			// act
 			var actionResult = await pageModel.OnPostCloseCase();
@@ -164,6 +164,18 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 			
 			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+			
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "case-outcomes", new StringValues("case-outcomes") },
+					{ "monitoring", new StringValues("") },
+					{ "dtr-day", new StringValues("") },
+					{ "dtr-month", new StringValues("") },
+					{ "dtr-year", new StringValues("") }
+				});
 			
 			// act
 			var actionResult = await pageModel.OnPostCloseCase();
