@@ -22,6 +22,7 @@ namespace ConcernsCaseWork.Tests.Extensions
 		[TestCase(CaseHistoryEnum.Srma, "SRMA")]
 		[TestCase(CaseHistoryEnum.Tff, "TFF")]
 		[TestCase(CaseHistoryEnum.Whistleblower, "Whistleblower")]
+		[TestCase(CaseHistoryEnum.NotFound, "n/f")]
 		public void WhenToDisplay_ReturnsDisplayString(CaseHistoryEnum caseHistoryEnum, string expected)
 		{
 			Assert.That(caseHistoryEnum.ToDisplay(), Is.EqualTo(expected));

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.Cases;
@@ -50,6 +51,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.Urn, Is.EqualTo(actual.Urn));
 					Assert.That(expected.CreatedAt, Is.EqualTo(actual.CreatedAt));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.CaseUrn));
+					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToUserFriendlyDate()));
 				}
 			}
 		}
