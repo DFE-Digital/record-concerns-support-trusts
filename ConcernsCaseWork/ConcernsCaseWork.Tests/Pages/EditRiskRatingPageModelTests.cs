@@ -99,6 +99,46 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 
 		[Test]
+		public async Task WhenOnGet_Missing_RecordUrn_RouteData_ThrowsException_ReturnsPage()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
+			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
+
+			var caseModel = CaseFactory.BuildCaseModel();
+			var recordModel = RecordFactory.BuildRecordModel();
+
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
+
+			mockRecordModelService.Setup(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
+				.ReturnsAsync(recordModel);
+
+			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockRatingModelService.Object, mockRecordModelService.Object, mockLogger.Object);
+			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+
+			// act
+			var pageResponse = await pageModel.OnGet();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			var page = pageResponse as PageResult;
+
+			Assert.That(page, Is.Not.Null);
+			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.That(pageModel.TempData, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			
+			mockCaseModelService.Verify(c => 
+				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+		}
+		
+		[Test]
 		public async Task WhenOnPostEditRiskRating_MissingRouteData_ThrowsException_ReturnsPage()
 		{
 			// arrange
