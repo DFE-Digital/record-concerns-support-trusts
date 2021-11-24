@@ -68,6 +68,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var casesHistoryModel = CaseFactory.BuildListCasesHistoryModel();
+			var recordsModel = RecordFactory.BuildListRecordModel();
+			var typeModel = TypeFactory.BuildTypeModel();
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
@@ -77,6 +79,10 @@ namespace ConcernsCaseWork.Tests.Pages
 				.ReturnsAsync(trustDetailsModel);
 			mockCaseHistoryModelService.Setup(c => c.GetCasesHistory(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(casesHistoryModel);
+			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(recordsModel);
+			mockTypeModelService.Setup(t => t.GetTypeModelByUrn(It.IsAny<long>()))
+				.ReturnsAsync(typeModel);
 			
 			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
 					mockCaseHistoryModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object);
@@ -136,6 +142,9 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(expectedFirstCaseHistoryModel.Title, Is.EqualTo(actualFirstCaseHistoryModel.Title));
 			Assert.That(expectedFirstCaseHistoryModel.Urn, Is.EqualTo(actualFirstCaseHistoryModel.Urn));
 			Assert.That(expectedFirstCaseHistoryModel.CreatedAt, Is.EqualTo(actualFirstCaseHistoryModel.CreatedAt));
+			
+			Assert.That(pageModel.RatingModelMap, Is.Not.Null);
+			Assert.That(pageModel.TypeModelMap, Is.Not.Null);
 		}
 		
 		private static ManagementPageModel SetupManagementPageModel(
