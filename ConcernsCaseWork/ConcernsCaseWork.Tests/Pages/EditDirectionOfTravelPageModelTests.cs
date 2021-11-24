@@ -91,7 +91,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<EditDirectionOfTravelPageModel>>();
 
 			var pageModel = SetupEditDirectionOfTravelPageModel(mockCaseModelService.Object, mockLogger.Object);
-
+			
 			// act
 			var pageResponse = await pageModel.OnPostEditDirectionOfTravel("https://returnto/thispage");
 			

@@ -184,7 +184,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
 			var casesDto = CaseFactory.BuildCaseModel();
-
+			
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(casesDto);
 			mockTypeModelService.Setup(t => t.GetTypeModel()).ReturnsAsync((TypeModel)null);

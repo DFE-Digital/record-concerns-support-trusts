@@ -49,12 +49,24 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				true, 1);
 		}
 		
-		public static RecordModel BuildRecordModel(long caseUrn = 1, long typeUrn = 1)
+		public static RecordModel BuildRecordModel()
 		{
 			var currentDate = DateTimeOffset.Now;
-			return new RecordModel(currentDate, currentDate, currentDate, currentDate,
-				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, typeUrn, 1,
-				true, 1, 1);
+			return new RecordModel(
+				currentDate, 
+				currentDate, 
+				currentDate, 
+				currentDate, 
+				Fixture.Create<string>(), 
+				Fixture.Create<string>(), 
+				Fixture.Create<string>(), 
+				Fixture.Create<long>(), 
+				Fixture.Create<long>(),
+				Fixture.Create<long>(),
+				Fixture.Create<bool>(),
+				Fixture.Create<long>(),
+				Fixture.Create<long>()
+				);
 		}
 	}
 }
