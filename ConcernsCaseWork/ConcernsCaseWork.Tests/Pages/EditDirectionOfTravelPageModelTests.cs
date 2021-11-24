@@ -58,11 +58,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<EditDirectionOfTravelPageModel>>();
-
-			var caseModel = CaseFactory.BuildCaseModel();
 			
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(caseModel);
 			var pageModel = SetupEditDirectionOfTravelPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
