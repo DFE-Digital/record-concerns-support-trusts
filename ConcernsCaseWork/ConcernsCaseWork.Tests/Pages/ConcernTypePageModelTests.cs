@@ -37,21 +37,31 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			var expected = TrustFactory.BuildTrustDetailsModel();
 			var expectedTypeModel = TypeFactory.BuildTypeModel();
+			var expectedRatingsModel = RatingFactory.BuildListRatingModel();
 
 			mockTypeModelService.Setup(t => t.GetTypeModel()).ReturnsAsync(expectedTypeModel);
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(new UserState { TrustUkPrn = "trust-ukprn" });
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
+			mockRatingModelService.Setup(r => r.GetRatingsModel()).ReturnsAsync(expectedRatingsModel);
 			
 			var pageModel = SetupConcernTypePageModel(mockTrustModelService.Object, mockCachedService.Object, 
 				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
 			
 			// act
 			await pageModel.OnGetAsync();
+			
+			// assert
+			Assert.That(pageModel, Is.Not.Null);
+			Assert.That(pageModel.RatingsModel, Is.Not.Null);
+			Assert.That(pageModel.TypeModel, Is.Not.Null);
+			Assert.That(pageModel.TrustDetailsModel, Is.Not.Null);
+			
 			var trustDetailsModel = pageModel.TrustDetailsModel;
 			var typesDictionary = pageModel.TypeModel.TypesDictionary;
-
-			// assert
+			var ratingsModel = pageModel.RatingsModel;
+			
 			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
+			Assert.IsAssignableFrom<List<RatingModel>>(ratingsModel);
 			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsModel);
 			Assert.IsAssignableFrom<Dictionary<string, IList<TypeModel.TypeValueModel>>>(typesDictionary);
 
