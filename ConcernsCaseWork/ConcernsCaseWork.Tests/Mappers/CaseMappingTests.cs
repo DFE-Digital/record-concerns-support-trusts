@@ -1,8 +1,10 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
+using Service.TRAMS.Ratings;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
+using System;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Tests.Mappers
@@ -322,6 +324,25 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// arrange
 			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto(1, 0) };
 			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = TypeFactory.BuildListTypeDto();
+			var casesDto = CaseFactory.BuildListCaseDto();
+			var liveStatus = StatusFactory.BuildStatusDto("live", 1);
+			var closeStatus = StatusFactory.BuildStatusDto("close", 3);
+
+			// act
+			var expectedTrustCasesModel = CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, liveStatus, closeStatus);
+
+			// assert
+			Assert.That(expectedTrustCasesModel, Is.Not.Null);
+			Assert.That(expectedTrustCasesModel.Count, Is.EqualTo(0));
+		}
+		
+		[Test]
+		public void WhenMapTrustCases_MissingRating_Returns_ListTrustCasesModel()
+		{
+			// arrange
+			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto(), RecordFactory.BuildRecordDto(2, 2) };
+			var ratingsDto = Array.Empty<RatingDto>();
 			var typesDto = TypeFactory.BuildListTypeDto();
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var liveStatus = StatusFactory.BuildStatusDto("live", 1);

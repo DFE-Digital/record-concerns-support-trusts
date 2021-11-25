@@ -71,7 +71,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		
 		public static List<RecordModel> BuildListRecordModel()
 		{
-			var currentDate = DateTimeOffset.Now;
 			return new List<RecordModel> { BuildRecordModel() };
 		}
 	}
