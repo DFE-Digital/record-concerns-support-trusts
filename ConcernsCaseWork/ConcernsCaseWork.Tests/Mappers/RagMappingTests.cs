@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
 using System.Linq;
 
@@ -22,7 +23,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var splitExpected = expected.Split(",").ToList();
 			
 			// act
-			var rags = RagMapping.FetchRag(rating);
+			var rags = RatingMapping.FetchRag(rating);
 
 			// assert
 			CollectionAssert.AreEqual(rags.Item2, splitExpected);
@@ -44,10 +45,28 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var splitExpected = expected.Split(",").ToList();
 			
 			// act
-			var rags = RagMapping.FetchRagCss(rating);
+			var rags = RatingMapping.FetchRagCss(rating);
 
 			// assert
 			CollectionAssert.AreEqual(rags, splitExpected);
+		}
+
+		[Test]
+		public void WhenMapDtoToModel_ReturnsRatingModel()
+		{
+			// arrange
+			var ratingDto = RatingFactory.BuildRatingDto();
+			
+			// act
+			var ratingModel = RatingMapping.MapDtoToModel(ratingDto);
+			
+			// assert
+			Assert.That(ratingModel, Is.Not.Null);
+			Assert.That(ratingModel.Checked, Is.Not.Null);
+			Assert.That(ratingModel.Name, Is.Not.Null);
+			Assert.That(ratingModel.Urn, Is.Not.Null);
+			Assert.That(ratingModel.RagRating, Is.Not.Null);
+			Assert.That(ratingModel.RagRatingCss, Is.Not.Null);
 		}
 	}
 }

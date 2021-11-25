@@ -26,10 +26,17 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<EditCaseAimPageModel>>();
 
+			var caseModel = CaseFactory.BuildCaseModel();
+
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
+
 			var pageModel = SetupEditCaseAimPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
-			
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+
 			// act
 			var pageResponse = await pageModel.OnGetAsync();
 
@@ -41,7 +48,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
 			
 			mockCaseModelService.Verify(c => 
-					c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 		}
 		
 		[Test]
@@ -58,7 +65,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageModel = SetupEditCaseAimPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("id", 1);
+			routeData.Add("urn", 1);
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
 			// act
@@ -69,13 +76,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
+			Assert.That(pageModel.CaseModel, Is.Not.Null);
 			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
 			Assert.That(pageModel.CaseModel.Description, Is.EqualTo(caseModel.Description));
 			Assert.That(pageModel.CaseModel.Issue, Is.EqualTo(caseModel.Issue));
 			Assert.That(pageModel.CaseModel.StatusUrn, Is.EqualTo(caseModel.StatusUrn));
 			Assert.That(pageModel.CaseModel.Urn, Is.EqualTo(caseModel.Urn));
 			Assert.That(pageModel.CaseModel.CaseAim, Is.EqualTo(caseModel.CaseAim));
-			Assert.That(pageModel.CaseModel.CaseType, Is.EqualTo(caseModel.CaseType));
 			Assert.That(pageModel.CaseModel.ClosedAt, Is.EqualTo(caseModel.ClosedAt));
 			Assert.That(pageModel.CaseModel.CreatedAt, Is.EqualTo(caseModel.CreatedAt));
 			Assert.That(pageModel.CaseModel.CreatedBy, Is.EqualTo(caseModel.CreatedBy));
@@ -83,22 +90,48 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.CaseModel.CurrentStatus, Is.EqualTo(caseModel.CurrentStatus));
 			Assert.That(pageModel.CaseModel.DeEscalation, Is.EqualTo(caseModel.DeEscalation));
 			Assert.That(pageModel.CaseModel.NextSteps, Is.EqualTo(caseModel.NextSteps));
-			Assert.That(pageModel.CaseModel.RagRating, Is.EqualTo(caseModel.RagRating));
 			Assert.That(pageModel.CaseModel.ReviewAt, Is.EqualTo(caseModel.ReviewAt));
 			Assert.That(pageModel.CaseModel.StatusName, Is.EqualTo(caseModel.StatusName));
-			Assert.That(pageModel.CaseModel.TypesDictionary, Is.EqualTo(caseModel.TypesDictionary));
 			Assert.That(pageModel.CaseModel.UpdatedAt, Is.EqualTo(caseModel.UpdatedAt));
-			Assert.That(pageModel.CaseModel.CaseSubType, Is.EqualTo(caseModel.CaseSubType));
-			Assert.That(pageModel.CaseModel.CaseTypeDescription, Is.EqualTo(caseModel.CaseTypeDescription));
 			Assert.That(pageModel.CaseModel.DeEscalationPoint, Is.EqualTo(caseModel.DeEscalationPoint));
 			Assert.That(pageModel.CaseModel.DirectionOfTravel, Is.EqualTo(caseModel.DirectionOfTravel));
-			Assert.That(pageModel.CaseModel.RagRatingCss, Is.EqualTo(caseModel.RagRatingCss));
-			Assert.That(pageModel.CaseModel.RagRatingName, Is.EqualTo(caseModel.RagRatingName));
 			Assert.That(pageModel.CaseModel.ReasonAtReview, Is.EqualTo(caseModel.ReasonAtReview));
 			Assert.That(pageModel.CaseModel.TrustUkPrn, Is.EqualTo(caseModel.TrustUkPrn));
 			
 			mockCaseModelService.Verify(c => 
 				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
+		}
+		
+		[Test]
+		public async Task WhenOnGetAsync_MissingRouteData_ThrowsException_ReloadPage()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockLogger = new Mock<ILogger<EditCaseAimPageModel>>();
+
+			var caseModel = CaseFactory.BuildCaseModel();
+
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
+
+			var pageModel = SetupEditCaseAimPageModel(mockCaseModelService.Object, mockLogger.Object);
+			
+			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
+
+			// act
+			var pageResponse = await pageModel.OnGetAsync();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			var page = pageResponse as PageResult;
+			
+			Assert.That(page, Is.Not.Null);
+			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.That(pageModel.TempData, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+
+			mockCaseModelService.Verify(c => 
+				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 		
 		[Test]
@@ -114,12 +147,12 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageResponse = await pageModel.OnPostEditCaseAim("https://returnto/thispage");
 
 			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-			
-			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
+			Assert.That(pageResponse, Is.Not.Null);
+			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			
+			mockCaseModelService.Verify(c => c.PatchCaseAim(It.IsAny<PatchCaseModel>()), Times.Never);
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 		
 		[Test]
@@ -134,7 +167,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageModel = SetupEditCaseAimPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("id", 1);
+			routeData.Add("urn", 1);
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{

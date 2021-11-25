@@ -32,8 +32,8 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				_logger.LogInformation("Case::EditCaseAimPageModel::OnGetAsync");
 
-				var caseUrnValue = RouteData.Values["id"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn))
+				var caseUrnValue = RouteData.Values["urn"];
+				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
 				{
 					throw new Exception("Case::EditCaseAimPageModel::CaseUrn is null or invalid to parse");
 				}
@@ -56,8 +56,8 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				_logger.LogInformation("Case::EditCaseAimPageModel::OnPostEditCaseAim");
 				
-				var caseUrnValue = RouteData.Values["id"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn))
+				var caseUrnValue = RouteData.Values["urn"];
+				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
 				{
 					throw new Exception("Case::EditCaseAimPageModel::CaseUrn is null or invalid to parse");
 				}
@@ -89,15 +89,9 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		private async Task<ActionResult> LoadPage(string url, long caseUrn)
 		{
-			if (caseUrn != 0)
-			{
-				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
-			}
-			else
-			{
-				CaseModel = new CaseModel();
-			}
+			if (caseUrn == 0) return Page();
 			
+			CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
 			CaseModel.PreviousUrl = url;
 			
 			return Page();

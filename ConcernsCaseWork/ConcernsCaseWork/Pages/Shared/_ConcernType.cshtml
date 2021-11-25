@@ -1,8 +1,8 @@
-﻿@model ConcernsCaseWork.Models.CaseModel
+﻿@model ConcernsCaseWork.Models.TypeModel
 @{
 	var types = Model.TypesDictionary;
-	var type = Model.CaseType;
-	var subType = Model.CaseSubType;
+	var type = Model.CheckedType;
+	var subType = Model.CheckedSubType;
 	var typeIndex = 1;
 	var subTypeIndex = 1;
 }
@@ -13,14 +13,21 @@
 	@{
 		foreach (var (key, value) in types)
 		{
+			// Include type urn at type level
+			var hasSingleSubType = value.Any() && value.Count == 1;
+			var firstSubType = value.First();
+			var typeValue = hasSingleSubType ? firstSubType.Urn + ":" + key : key;
+			
 			<div class="govuk-radios__item">
-				<input class="govuk-radios__input" data-aria-controls="conditional-type-@typeIndex" id="type" name="type" type="radio" value="@key" checked="@type.Equals(key)">
+					
+				<input class="govuk-radios__input" data-aria-controls="conditional-type-@typeIndex" id="type" name="type"
+				       type="radio" value="@typeValue" checked="@type.Equals(key)">
 				<label class="govuk-label govuk-radios__label" for="type">
 					@key
 				</label>
 			</div>
 			
-			@if (value.Any())
+			@if (!hasSingleSubType)
 			{
 				<div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-type-@typeIndex">
 					<div class="govuk-form-group">
@@ -28,9 +35,10 @@
 						@foreach (var subtype in value)
 						{
 							<div class="govuk-radios__item">
-								<input class="govuk-radios__input" id="subType-@subTypeIndex" name="subType" type="radio" value="@subtype" checked="@subType.Equals(subtype)">
-								<label class="govuk-label govuk-radios__label" for="subType-@subTypeIndex">
-									@key: @subtype
+								<input class="govuk-radios__input" id="sub-type-@subTypeIndex" name="sub-type" type="radio" 
+								       value="@subtype.Urn:@subtype.SubType" checked="@subType.Equals(subtype.SubType)">
+								<label class="govuk-label govuk-radios__label" for="sub-type-@subTypeIndex">
+									@key: @subtype.SubType
 								</label>
 							</div>
 

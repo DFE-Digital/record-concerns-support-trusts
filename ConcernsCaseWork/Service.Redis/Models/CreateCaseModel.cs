@@ -41,8 +41,8 @@ namespace Service.Redis.Models
 		public string DirectionOfTravel { get; set; }
 		
 		public long StatusUrn { get; set; }
-
-		public string CaseTypeDescription
+		
+		public string TypeDisplay
 		{
 			get
 			{
@@ -51,11 +51,15 @@ namespace Service.Redis.Models
 			}
 		}
 		
+		public long TypeUrn { get; set; }
+		
 		public string Type { get; set; }
 		
 		public string SubType { get; set; }
 		
 		public string RagRatingName { get; set; }
+		
+		public long RagRatingUrn { get; set; }
 		
 		public Tuple<int, IList<string>> RagRating { get; set; }
 

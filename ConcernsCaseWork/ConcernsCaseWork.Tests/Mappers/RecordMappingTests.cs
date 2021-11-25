@@ -19,8 +19,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 
 			// assert
 			Assert.That(recordDto, Is.Not.Null);
-			Assert.That(recordDto.Description, Is.EqualTo($"{patchCaseModel.CaseType} {patchCaseModel.CaseSubType}"));
-			Assert.That(recordDto.Name, Is.EqualTo(record.Name));
+			Assert.That(recordDto.Description, Is.EqualTo(patchCaseModel.SubType));
+			Assert.That(recordDto.Name, Is.EqualTo(patchCaseModel.Type));
 			Assert.That(recordDto.Primary, Is.EqualTo(record.Primary));
 			Assert.That(recordDto.Reason, Is.EqualTo(record.Reason));
 			Assert.That(recordDto.StatusUrn, Is.EqualTo(record.StatusUrn));

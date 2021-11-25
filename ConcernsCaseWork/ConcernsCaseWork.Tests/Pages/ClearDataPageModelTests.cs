@@ -8,10 +8,10 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
-using Service.Redis.Rating;
+using Service.Redis.Ratings;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
-using Service.Redis.Type;
+using Service.Redis.Types;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages

@@ -27,7 +27,7 @@ namespace Service.TRAMS.Records
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"/{EndpointsVersion}/records/case/urn/{caseUrn}");
+					$"/{EndpointsVersion}/concerns-records/case/urn/{caseUrn}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient(HttpClientName);
@@ -41,17 +41,23 @@ namespace Service.TRAMS.Records
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 				
-				// Deserialize content to POJO
-				var recordsDto = JsonConvert.DeserializeObject<IList<RecordDto>>(content);
+				// Deserialize content to POCO
+				var apiWrapperRecordsDto = JsonConvert.DeserializeObject<ApiListWrapper<RecordDto>>(content);
 
-				return recordsDto;
+				// Unwrap response
+				if (apiWrapperRecordsDto is { Data: { } })
+				{
+					return apiWrapperRecordsDto.Data;
+				}
+
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("RecordService::GetRecordsByCaseUrn::Exception message::{Message}", ex.Message);
+				
+				throw;
 			}
-			
-			return Array.Empty<RecordDto>();
 		}
 
 		public async Task<RecordDto> PostRecordByCaseUrn(CreateRecordDto createRecordDto)
@@ -71,7 +77,7 @@ namespace Service.TRAMS.Records
 				
 				// Execute request
 				var response = await client.PostAsync(
-					$"/{EndpointsVersion}/concerns-record", request);
+					$"/{EndpointsVersion}/concerns-records", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -79,10 +85,16 @@ namespace Service.TRAMS.Records
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 				
-				// Deserialize content to POJO
-				var newRecordDto = JsonConvert.DeserializeObject<RecordDto>(content);
+				// Deserialize content to POCO
+				var apiWrapperRecordDto = JsonConvert.DeserializeObject<ApiWrapper<RecordDto>>(content);
 
-				return newRecordDto;
+				// Unwrap response
+				if (apiWrapperRecordDto is { Data: { } })
+				{
+					return apiWrapperRecordDto.Data;
+				}
+
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{
@@ -109,7 +121,7 @@ namespace Service.TRAMS.Records
 				
 				// Execute request
 				var response = await client.PatchAsync(
-					$"/{EndpointsVersion}/record/urn/{recordDto.Urn}", request);
+					$"/{EndpointsVersion}/concerns-records/{recordDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -117,10 +129,16 @@ namespace Service.TRAMS.Records
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 				
-				// Deserialize content to POJO
-				var updatedRecordDto = JsonConvert.DeserializeObject<RecordDto>(content);
+				// Deserialize content to POCO
+				var apiWrapperRecordDto = JsonConvert.DeserializeObject<ApiWrapper<RecordDto>>(content);
 
-				return updatedRecordDto;
+				// Unwrap response
+				if (apiWrapperRecordDto is { Data: { } })
+				{
+					return apiWrapperRecordDto.Data;
+				}
+
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{

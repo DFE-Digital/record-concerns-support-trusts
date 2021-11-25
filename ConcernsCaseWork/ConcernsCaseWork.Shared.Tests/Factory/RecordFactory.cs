@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.Models;
 using Service.TRAMS.Records;
 using System;
 using System.Collections.Generic;
@@ -40,12 +41,38 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				true, 1, 1);
 		}
 		
-		public static CreateRecordDto BuildCreateRecordDto()
+		public static CreateRecordDto BuildCreateRecordDto(long caseUrn = 1, long typeUrn = 1, long ratingUrn = 1)
 		{
 			var currentDate = DateTimeOffset.Now;
 			return new CreateRecordDto(currentDate, currentDate, currentDate, currentDate,
-				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), 1, 1, 1,
+				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, typeUrn, ratingUrn,
 				true, 1);
+		}
+		
+		public static RecordModel BuildRecordModel()
+		{
+			var currentDate = DateTimeOffset.Now;
+			return new RecordModel(
+				currentDate, 
+				currentDate, 
+				currentDate, 
+				currentDate, 
+				Fixture.Create<string>(), 
+				Fixture.Create<string>(), 
+				Fixture.Create<string>(), 
+				Fixture.Create<long>(), 
+				Fixture.Create<long>(),
+				Fixture.Create<long>(),
+				Fixture.Create<bool>(),
+				Fixture.Create<long>(),
+				Fixture.Create<long>()
+				);
+		}
+		
+		public static List<RecordModel> BuildListRecordModel()
+		{
+			var currentDate = DateTimeOffset.Now;
+			return new List<RecordModel> { BuildRecordModel() };
 		}
 	}
 }

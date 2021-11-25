@@ -26,36 +26,41 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<EditDirectionOfTravelPageModel>>();
 
-			var pageModel = SetupEditDirectionOfTravelPageModel(mockCaseModelService.Object, mockLogger.Object);
-			
-			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
-			
-			// act
-			var pageResponse = await pageModel.OnGetAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-			var page = pageResponse as PageResult;
-			
-			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
-		}
-		
-		[Test]
-		public async Task WhenOnGetAsync_RouteData_ReturnsPage()
-		{
-			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockLogger = new Mock<ILogger<EditDirectionOfTravelPageModel>>();
-
 			var caseModel = CaseFactory.BuildCaseModel();
-			
+
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
+			
+			var pageModel = SetupEditDirectionOfTravelPageModel(mockCaseModelService.Object, mockLogger.Object);
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+			
+			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
+
+			// act
+			var pageResponse = await pageModel.OnGetAsync();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			var page = pageResponse as PageResult;
+
+			Assert.That(page, Is.Not.Null);
+			Assert.That(pageModel.CaseModel, Is.Not.Null);
+			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
+			
+			mockCaseModelService.Verify(c => 
+				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
+		}
+
+		[Test]
+		public async Task WhenOnGetAsync_MissingRouteData_ThrowsException_ReturnsPage()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockLogger = new Mock<ILogger<EditDirectionOfTravelPageModel>>();
+			
 			var pageModel = SetupEditDirectionOfTravelPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("id", 1);
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
 			// act
@@ -66,28 +71,37 @@ namespace ConcernsCaseWork.Tests.Pages
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
-		}		
-		
+			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.That(pageModel.TempData, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			
+			mockCaseModelService.Verify(c => 
+				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+		}
+
 		[Test]
-		public async Task WhenOnPostEditDirectionOfTravel_MissingRouteData_ThrowsException_ReloadPage()
+		public async Task WhenOnPostEditDirectionOfTravel_MissingRouteData_ThrowsException_ReturnsPage()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<EditDirectionOfTravelPageModel>>();
-			
+
 			var pageModel = SetupEditDirectionOfTravelPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			// act
 			var pageResponse = await pageModel.OnPostEditDirectionOfTravel("https://returnto/thispage");
-
+			
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
+			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+
+			mockCaseModelService.Verify(c => 
+				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 
 		[Test]
@@ -101,10 +115,12 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
+			
 			var pageModel = SetupEditDirectionOfTravelPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("id", 1);
+			routeData.Add("urn", 1);
+			
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
@@ -120,7 +136,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.CaseModel, Is.Not.Null);
-			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
+			Assert.That(pageModel.TempData, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+
+			mockCaseModelService.Verify(c => 
+				c.PatchDirectionOfTravel(It.IsAny<PatchCaseModel>()), Times.Never);
+			mockCaseModelService.Verify(c => 
+				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 		}
 		
 		[Test]
@@ -135,7 +157,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageModel = SetupEditDirectionOfTravelPageModel(mockCaseModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("id", 1);
+			routeData.Add("urn", 1);
+			
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
@@ -152,6 +175,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.CaseModel, Is.Null);
 			Assert.That(page.Url, Is.EqualTo("https://returnto/thispage"));
+			
+			mockCaseModelService.Verify(c => 
+				c.PatchDirectionOfTravel(It.IsAny<PatchCaseModel>()), Times.Once);
+			mockCaseModelService.Verify(c => 
+				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 		
 		private static EditDirectionOfTravelPageModel SetupEditDirectionOfTravelPageModel(

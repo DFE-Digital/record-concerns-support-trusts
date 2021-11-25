@@ -1,4 +1,4 @@
-﻿@page "/case/{id:long}/management/edit_riskrating"
+﻿@page "/case/{urn:long}/management/record/{recordUrn:long}/edit_riskrating"
 @model ConcernsCaseWork.Pages.Case.EditRiskRatingPageModel
 
 @{
@@ -8,7 +8,7 @@
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
-	<partial name="_Error"/>
+
 	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds">
 
@@ -16,34 +16,41 @@
 				Change risk rating
 			</h1>
 
-			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+            	<partial name="_Error"/>
+            }
+			else
+			{
+				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-			<form role="form" asp-page-handler="editRiskRating" method="post" id="risk-rating-form" novalidate>
+				<form role="form" asp-page-handler="editRiskRating" method="post" id="risk-rating-form" novalidate>
 
-				<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
+					<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
 
-				<div class="govuk-form-group">
-					<fieldset class="govuk-fieldset">
-						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
-						<partial name="_RiskRating" model="@Model.CaseModel"/>
-					</fieldset>
-				</div>
+					<div class="govuk-form-group">
+						<fieldset class="govuk-fieldset">
+							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
+							<partial name="_RiskRating" model="@Model.RatingsModel"/>
+						</fieldset>
+					</div>
 
-				<!--Button group-->
-				<div class="govuk-button-group">
-					<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
-						Apply
-					</button>
-					<partial name="_Cancel"/>
-				</div>
-			</form>
+					<!--Button group-->
+					<div class="govuk-button-group">
+						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+							Apply
+						</button>
+						<partial name="_Cancel"/>
+					</div>
+				</form>
+
+				<script type="application/javascript" nonce="@nonce">
+					$(function () {	
+						let validator = formValidator($("#risk-rating-form")[0]);
+						addRagRatingValidator(validator);
+					});
+				</script>
+			}
 		</div>
 	</div>
 </div>
-		
-<script type="application/javascript" nonce="@nonce">
-	$(function () {	
-		let validator = formValidator($("#risk-rating-form")[0]);
-		addRagRatingValidator(validator);
-	});
-</script>

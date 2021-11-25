@@ -1,10 +1,10 @@
 ﻿using ConcernsCaseWork.Models;
 using Service.TRAMS.Cases;
-using Service.TRAMS.Rating;
+using Service.TRAMS.Ratings;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
 using Service.TRAMS.Trusts;
-using Service.TRAMS.Type;
+using Service.TRAMS.Types;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -51,12 +51,12 @@ namespace ConcernsCaseWork.Mappers
 			if (primaryCaseType is null) return null;
 			
 			// Rag rating
-			var rating = ratingsDto.Where(r => r.Urn.CompareTo(primaryRecordModel.RatingUrn) == 0)
+			var ratingName = ratingsDto.Where(r => r.Urn.CompareTo(primaryRecordModel.RatingUrn) == 0)
 				.Select(r => r.Name)
 				.First();
 
-			var rag = RagMapping.FetchRag(rating);
-			var ragCss = RagMapping.FetchRagCss(rating);
+			var rag = RatingMapping.FetchRag(ratingName);
+			var ragCss = RatingMapping.FetchRagCss(ratingName);
 				
 			return new HomeModel(
 				caseDto.Urn.ToString(), 

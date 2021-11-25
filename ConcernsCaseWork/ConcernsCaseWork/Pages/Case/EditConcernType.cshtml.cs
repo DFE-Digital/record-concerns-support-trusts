@@ -1,7 +1,10 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Type;
+using ConcernsCaseWork.Services.Records;
+using ConcernsCaseWork.Services.Types;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,15 +17,20 @@ namespace ConcernsCaseWork.Pages.Case
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class EditConcernTypePageModel : AbstractPageModel
 	{
+		private readonly ILogger<EditConcernTypePageModel> _logger;
+		private readonly IRecordModelService _recordModelService;
 		private readonly ICaseModelService _caseModelService;
 		private readonly ITypeModelService _typeModelService;
-		private readonly ILogger<EditConcernTypePageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
+		public TypeModel TypeModel { get; private set; }
 		
-		public EditConcernTypePageModel(ITypeModelService typeModelService, ICaseModelService caseModelService, 
+		public EditConcernTypePageModel(ITypeModelService typeModelService, 
+			ICaseModelService caseModelService, 
+			IRecordModelService recordModelService,
 			ILogger<EditConcernTypePageModel> logger)
 		{
+			_recordModelService = recordModelService;
 			_typeModelService = typeModelService;
 			_caseModelService = caseModelService;
 			_logger = logger;
@@ -31,16 +39,13 @@ namespace ConcernsCaseWork.Pages.Case
 		public async Task<ActionResult> OnGetAsync()
 		{
 			long caseUrn = 0;
+			long recordUrn = 0;
 			
 			try
 			{
 				_logger.LogInformation("Case::EditConcernTypePageModel::OnGetAsync");
 
-				var caseUrnValue = RouteData.Values["id"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn))
-				{
-					throw new Exception("Case::EditConcernTypePageModel::CaseUrn is null or invalid to parse");
-				}
+				(caseUrn, recordUrn) = GetRouteData();
 			}
 			catch (Exception ex)
 			{
@@ -49,28 +54,31 @@ namespace ConcernsCaseWork.Pages.Case
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 			
-			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn);
+			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn, recordUrn);
 		}
 		
 		public async Task<ActionResult> OnPostEditConcernType(string url)
 		{
 			long caseUrn = 0;
+			long recordUrn = 0;
 			
 			try
 			{
 				_logger.LogInformation("Case::EditConcernTypePageModel::OnPostEditConcernType");
 				
-				var caseUrnValue = RouteData.Values["id"];
-				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn))
-				{
-					throw new Exception("Case::EditConcernTypePageModel::CaseUrn is null or invalid to parse");
-				}
-				
-				var type = Request.Form["type"];
-				var subType = Request.Form["subType"];
-
-				if (!IsValidEditConcernType(type, ref subType)) 
+				if (!ConcernTypeValidator.IsEditValid(Request.Form))
 					throw new Exception("Case::EditConcernTypePageModel::Missing form values");
+				
+				(caseUrn, recordUrn) = GetRouteData();
+				
+				string typeUrn;
+				
+				// Form
+				var type = Request.Form["type"].ToString();
+				var subType = Request.Form["sub-type"].ToString();
+				
+				// Type
+				(typeUrn, type, subType) = type.SplitType(subType);
 				
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel
@@ -78,8 +86,9 @@ namespace ConcernsCaseWork.Pages.Case
 					Urn = caseUrn,
 					CreatedBy = User.Identity.Name,
 					UpdatedAt = DateTimeOffset.Now,
-					CaseType = type,
-					CaseSubType = subType
+					Type = type,
+					SubType = subType,
+					TypeUrn = long.Parse(typeUrn)
 				};
 					
 				await _caseModelService.PatchConcernType(patchCaseModel);
@@ -93,23 +102,36 @@ namespace ConcernsCaseWork.Pages.Case
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
-			return await LoadPage(url, caseUrn);
+			return await LoadPage(url, caseUrn, recordUrn);
 		}
 
-		private async Task<ActionResult> LoadPage(string url, long caseUrn)
+		private async Task<ActionResult> LoadPage(string url, long caseUrn, long recordUrn)
 		{
-			if (caseUrn != 0) {
-				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
-			}
-			else
-			{
-				CaseModel = new CaseModel();
-			}
-
-			CaseModel.TypesDictionary = await _typeModelService.GetTypes();
+			if (caseUrn == 0 || recordUrn == 0) return Page();
+			
+			var recordModel = await _recordModelService.GetRecordModelByUrn(User.Identity.Name, caseUrn, recordUrn);
+			TypeModel = await _typeModelService.GetSelectedTypeModelByUrn(recordModel.TypeUrn);
+			CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
 			CaseModel.PreviousUrl = url;
 			
 			return Page();
+		}
+		
+		private (long caseUrn, long recordUrn) GetRouteData()
+		{
+			var caseUrnValue = RouteData.Values["urn"];
+			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
+			{
+				throw new Exception("Case::EditConcernTypePageModel::CaseUrn is null or invalid to parse");
+			}
+
+			var recordUrnValue = RouteData.Values["recordUrn"];
+			if (recordUrnValue == null || !long.TryParse(recordUrnValue.ToString(), out long recordUrn) || recordUrn == 0)
+			{
+				throw new Exception("Case::EditConcernTypePageModel::RecordUrn is null or invalid to parse");
+			}
+
+			return (caseUrn, recordUrn);
 		}
 	}
 }

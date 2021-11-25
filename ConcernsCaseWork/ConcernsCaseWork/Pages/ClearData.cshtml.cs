@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
-using Service.Redis.Rating;
+using Service.Redis.Ratings;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
-using Service.Redis.Type;
+using Service.Redis.Types;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages

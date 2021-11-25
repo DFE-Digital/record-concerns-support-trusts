@@ -1,6 +1,8 @@
 ﻿using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Ratings;
+using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Type;
+using ConcernsCaseWork.Services.Types;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,17 +11,17 @@ using Serilog;
 using Service.Redis.Base;
 using Service.Redis.Cases;
 using Service.Redis.Configuration;
-using Service.Redis.Rating;
+using Service.Redis.Ratings;
 using Service.Redis.RecordRatingHistory;
 using Service.Redis.Records;
 using Service.Redis.Sequence;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
-using Service.Redis.Type;
+using Service.Redis.Types;
 using Service.Redis.Users;
 using Service.TRAMS.Cases;
 using Service.TRAMS.Configuration;
-using Service.TRAMS.Rating;
+using Service.TRAMS.Ratings;
 using Service.TRAMS.RecordAcademy;
 using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
@@ -27,7 +29,7 @@ using Service.TRAMS.RecordSrma;
 using Service.TRAMS.RecordWhistleblower;
 using Service.TRAMS.Status;
 using Service.TRAMS.Trusts;
-using Service.TRAMS.Type;
+using Service.TRAMS.Types;
 using StackExchange.Redis;
 using System;
 using System.Net.Mime;
@@ -102,7 +104,9 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ITrustModelService, TrustModelService>();
 			services.AddSingleton<ITypeModelService, TypeModelService>();
 			services.AddSingleton<ICaseHistoryModelService, CaseHistoryModelService>();
-			
+			services.AddSingleton<IRatingModelService, RatingModelService>();
+			services.AddSingleton<IRecordModelService, RecordModelService>();
+
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
 			services.AddSingleton<IRatingService, RatingService>();

@@ -1,4 +1,5 @@
-﻿using Service.TRAMS.Type;
+﻿using ConcernsCaseWork.Models;
+using Service.TRAMS.Types;
 using System;
 using System.Collections.Generic;
 
@@ -45,6 +46,16 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			var currentDate = DateTimeOffset.Now;
 			return new TypeDto("Compliance", "Compliance: Financial reporting", currentDate,
 				currentDate, urn);
+		}
+		
+		public static TypeModel BuildTypeModel()
+		{
+			return new TypeModel
+			{
+				CheckedType = "Compliance",
+				CheckedSubType = "Compliance: Financial reporting",
+				TypesDictionary = new Dictionary<string, IList<TypeModel.TypeValueModel>>()
+			};
 		}
 	}
 }

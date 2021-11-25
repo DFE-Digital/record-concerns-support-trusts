@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
+using Service.TRAMS.Base;
 using Service.TRAMS.Records;
 using System;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace Service.TRAMS.Tests.Records
 		{
 			// arrange
 			var expectedRecords = RecordFactory.BuildListRecordDto();
+			var apiListWrapperRecords = new ApiListWrapper<RecordDto>(expectedRecords, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -33,7 +35,7 @@ namespace Service.TRAMS.Tests.Records
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedRecords))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(apiListWrapperRecords))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
@@ -72,7 +74,7 @@ namespace Service.TRAMS.Tests.Records
 		}
 
 		[Test]
-		public async Task WhenGetRecordsByCaseUrn_ThrowsException_ReturnsEmptyRecords()
+		public void WhenGetRecordsByCaseUrn_ThrowsException()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -94,19 +96,15 @@ namespace Service.TRAMS.Tests.Records
 			var logger = new Mock<ILogger<RecordService>>();
 			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
 			
-			// act
-			var actualRecords = await recordService.GetRecordsByCaseUrn(1);
-
-			// assert
-			Assert.That(actualRecords, Is.Not.Null);
-			Assert.That(actualRecords.Count, Is.EqualTo(0));
+			// act / assert
+			Assert.ThrowsAsync<HttpRequestException>(() => recordService.GetRecordsByCaseUrn(1));
 		}
 		
 		[Test]
-		public async Task WhenPostRecordByCaseUrn_ReturnsRecord()
+		public void WhenGetRecordsByCaseUrn_And_ResponseData_IsNull_ThrowsException()
 		{
 			// arrange
-			var expectedRecord = RecordFactory.BuildCreateRecordDto();
+			var apiListWrapperRecords = new ApiListWrapper<RecordDto>(null, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -117,7 +115,37 @@ namespace Service.TRAMS.Tests.Records
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedRecord))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(apiListWrapperRecords))
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<RecordService>>();
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
+			
+			// act / assert
+			Assert.ThrowsAsync<Exception>(() => recordService.GetRecordsByCaseUrn(1));
+		}
+		
+		[Test]
+		public async Task WhenPostRecordByCaseUrn_ReturnsRecord()
+		{
+			// arrange
+			var expectedRecord = RecordFactory.BuildCreateRecordDto();
+			var apiWrapperRecord = new ApiWrapper<CreateRecordDto>(expectedRecord);
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(apiWrapperRecord))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
@@ -147,7 +175,7 @@ namespace Service.TRAMS.Tests.Records
 		}
 
 		[Test]
-		public void WhenPostRecordByCaseUrn_ThrowsException_ThrowsException()
+		public void WhenPostRecordByCaseUrn_ThrowsException()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -174,10 +202,10 @@ namespace Service.TRAMS.Tests.Records
 		}
 		
 		[Test]
-		public async Task WhenPatchRecordByUrn_ReturnsRecord()
+		public void WhenPostRecordByCaseUrn_And_ResponseData_IsNull_ThrowsException()
 		{
 			// arrange
-			var expectedRecord = RecordFactory.BuildRecordDto();
+			var apiWrapperRecord = new ApiWrapper<RecordDto>(null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -188,7 +216,37 @@ namespace Service.TRAMS.Tests.Records
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedRecord))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(apiWrapperRecord))
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<RecordService>>();
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
+			
+			// act / assert
+			Assert.ThrowsAsync<Exception>(() => recordService.PostRecordByCaseUrn(RecordFactory.BuildCreateRecordDto()));
+		}
+		
+		[Test]
+		public async Task WhenPatchRecordByUrn_ReturnsRecord()
+		{
+			// arrange
+			var expectedRecord = RecordFactory.BuildRecordDto();
+			var apiWrapperRecord = new ApiWrapper<RecordDto>(expectedRecord);
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(apiWrapperRecord))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
@@ -219,7 +277,7 @@ namespace Service.TRAMS.Tests.Records
 		}
 
 		[Test]
-		public void WhenPatchRecordByUrn_ThrowsException_ThrowsException()
+		public void WhenPatchRecordByUrn_ThrowsException()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -243,6 +301,35 @@ namespace Service.TRAMS.Tests.Records
 			
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => recordService.PatchRecordByUrn(RecordFactory.BuildRecordDto()));
+		}
+		
+		[Test]
+		public void WhenPatchRecordByUrn_And_ResponseData_IsNull_ThrowsException()
+		{
+			// arrange
+			var apiWrapperRecord = new ApiWrapper<RecordDto>(null);
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			
+			var httpClientFactory = new Mock<IHttpClientFactory>();
+			var mockMessageHandler = new Mock<HttpMessageHandler>();
+			mockMessageHandler.Protected()
+				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(apiWrapperRecord))
+				});
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			
+			var logger = new Mock<ILogger<RecordService>>();
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
+			
+			// act / assert
+			Assert.ThrowsAsync<Exception>(() => recordService.PatchRecordByUrn(RecordFactory.BuildRecordDto()));
 		}
 	}
 }

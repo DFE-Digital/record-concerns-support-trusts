@@ -1,10 +1,10 @@
 ﻿using ConcernsCaseWork.Models;
 using Service.Redis.Models;
 using Service.TRAMS.Cases;
-using Service.TRAMS.Rating;
+using Service.TRAMS.Ratings;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
-using Service.TRAMS.Type;
+using Service.TRAMS.Types;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -137,8 +137,8 @@ namespace ConcernsCaseWork.Mappers
 				recordsDto.Select(recordDto =>
 				{
 					var ragRatingDto = ragsRatingDto.First(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0);
-					var ragRating = RagMapping.FetchRag(ragRatingDto.Name);
-					var ragRatingCss = RagMapping.FetchRagCss(ragRatingDto.Name);
+					var ragRating = RatingMapping.FetchRag(ragRatingDto.Name);
+					var ragRatingCss = RatingMapping.FetchRagCss(ragRatingDto.Name);
 						
 					var caseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(recordDto.TypeUrn) == 0);
 					if (caseType is null) return null;

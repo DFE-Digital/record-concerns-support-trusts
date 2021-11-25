@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.TRAMS.Cases;
 using Service.TRAMS.Records;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,45 +21,47 @@ namespace Service.Redis.Records
 			_logger = logger;
 		}
 		
-		public async Task<IList<RecordDto>> GetRecordsByCaseUrn(CaseDto caseDto)
+		public async Task<IList<RecordDto>> GetRecordsByCaseUrn(string caseworker, long caseUrn)
 		{
 			_logger.LogInformation("RecordCachedService::GetRecordsByCaseUrn");
-
-			var records = new List<RecordDto>();
 			
 			// Store in cache for 24 hours (default)
-			var caseState = await GetData<UserState>(caseDto.CreatedBy);
+			var caseState = await GetData<UserState>(caseworker);
 			if (caseState is null)
 			{
-				// TODO Enable only when TRAMS API is live
-				// Fetch records from TRAMS API
-				// var records = await _recordService.GetRecordsByCaseUrn(caseDto.Urn);
-				// if (records is null) throw new ApplicationException("Error::RecordCachedService::GetRecordsByCaseUrn");
+				// Fetch records from Academies API
+				var recordsDto = await _recordService.GetRecordsByCaseUrn(caseUrn);
+				if (recordsDto is null) throw new ApplicationException("Error::RecordCachedService::GetRecordsByCaseUrn");
 				
-				// TODO Finish cache logic
-				caseState = new UserState();
-				await StoreData(caseDto.CreatedBy, caseState);
+				caseState = new UserState
+				{
+					CasesDetails = { { caseUrn, 
+						new CaseWrapper { 
+							Records = recordsDto.ToDictionary(r => r.Urn, r => new RecordWrapper { RecordDto = r } )
+						} 
+					} }
+				};
+				
+				await StoreData(caseworker, caseState);
+				
+				return recordsDto;
 			}
-			else if (caseState.CasesDetails.ContainsKey(caseDto.Urn) && caseState.CasesDetails.TryGetValue(caseDto.Urn, out var caseWrapper))
+
+			if (caseState.CasesDetails.ContainsKey(caseUrn) && caseState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper))
 			{
 				return caseWrapper.Records.Values.Select(r => r.RecordDto).ToList();
 			}
-			
-			return records;
+
+			return Array.Empty<RecordDto>();
 		}
 		
 		public async Task<RecordDto> PostRecordByCaseUrn(CreateRecordDto createRecordDto, string caseworker)
 		{
 			_logger.LogInformation("RecordCachedService::PostRecordByCaseUrn");
-
-			// TODO Enable only when Academies API is live
-			// Create record on TRAMS API
-			//var newRecord = await _recordService.PostRecordByCaseUrn(createRecordDto);
-			//if (newRecord is null) throw new ApplicationException("Error::RecordCachedService::PostRecordByCaseUrn");
-
-			// TODO Remove when Academies API is live
-			var createRecordDtoStr = JsonConvert.SerializeObject(createRecordDto);
-			var newRecord = JsonConvert.DeserializeObject<RecordDto>(createRecordDtoStr);
+			
+			// Create record on Academies API
+			var newRecordDto = await _recordService.PostRecordByCaseUrn(createRecordDto);
+			if (newRecordDto is null) throw new ApplicationException("Error::RecordCachedService::PostRecordByCaseUrn");
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);
@@ -68,42 +69,41 @@ namespace Service.Redis.Records
 			{
 				caseState = new UserState
 				{
-					CasesDetails = { { newRecord.CaseUrn, 
+					CasesDetails = { { newRecordDto.CaseUrn, 
 						new CaseWrapper { 
-							Records = { { newRecord.Urn, 
-								new RecordWrapper { RecordDto = newRecord } }} 
+							Records = { { newRecordDto.Urn, 
+								new RecordWrapper { RecordDto = newRecordDto } }} 
 						} 
 					} }
 				};
 			}
 			else
 			{
-				if (caseState.CasesDetails.ContainsKey(newRecord.CaseUrn) 
-				    && caseState.CasesDetails.TryGetValue(newRecord.CaseUrn, out var caseWrapper))
+				if (caseState.CasesDetails.ContainsKey(newRecordDto.CaseUrn) 
+				    && caseState.CasesDetails.TryGetValue(newRecordDto.CaseUrn, out var caseWrapper))
 				{
-					caseWrapper.Records.Add(newRecord.Urn, new RecordWrapper {  RecordDto = newRecord });
+					caseWrapper.Records.Add(newRecordDto.Urn, new RecordWrapper {  RecordDto = newRecordDto });
 				}
 				else
 				{
 					caseWrapper = new CaseWrapper();
-					caseWrapper.Records.Add(newRecord.Urn, new RecordWrapper {  RecordDto = newRecord });
+					caseWrapper.Records.Add(newRecordDto.Urn, new RecordWrapper {  RecordDto = newRecordDto });
 					
-					caseState.CasesDetails.Add(newRecord.CaseUrn, caseWrapper);
+					caseState.CasesDetails.Add(newRecordDto.CaseUrn, caseWrapper);
 				}
 			}
 			await StoreData(caseworker, caseState);
 
-			return newRecord;
+			return newRecordDto;
 		}
 
 		public async Task PatchRecordByUrn(RecordDto recordDto, string caseworker)
 		{
 			_logger.LogInformation("RecordCachedService::PatchRecordByUrn");
 			
-			// TODO Enable only when TRAMS API is live
-			// Patch record on TRAMS API
-			//var patchRecord = await _recordService.PatchRecordByUrn(recordDto);
-			//if (patchRecord is null) throw new ApplicationException("Error::RecordCachedService::PatchRecordByUrn");
+			// Patch record on Academies API
+			var patchRecordDto = await _recordService.PatchRecordByUrn(recordDto);
+			if (patchRecordDto is null) throw new ApplicationException("Error::RecordCachedService::PatchRecordByUrn");
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);
@@ -111,28 +111,28 @@ namespace Service.Redis.Records
 			{
 				caseState = new UserState
 				{
-					CasesDetails = { { recordDto.CaseUrn, 
+					CasesDetails = { { patchRecordDto.CaseUrn, 
 						new CaseWrapper { 
-							Records = { { recordDto.Urn, 
-								new RecordWrapper { RecordDto = recordDto } }} 
+							Records = { { patchRecordDto.Urn, 
+								new RecordWrapper { RecordDto = patchRecordDto } }} 
 						} 
 					} }
 				};
 			}
 			else
 			{
-				if (caseState.CasesDetails.ContainsKey(recordDto.CaseUrn) 
-				    && caseState.CasesDetails.TryGetValue(recordDto.CaseUrn, out var caseWrapper)
-				    && caseWrapper.Records.TryGetValue(recordDto.Urn, out var recordWrapper))
+				if (caseState.CasesDetails.ContainsKey(patchRecordDto.CaseUrn) 
+				    && caseState.CasesDetails.TryGetValue(patchRecordDto.CaseUrn, out var caseWrapper)
+				    && caseWrapper.Records.TryGetValue(patchRecordDto.Urn, out var recordWrapper))
 				{
-					recordWrapper.RecordDto = recordDto;
+					recordWrapper.RecordDto = patchRecordDto;
 				}
 				else
 				{
 					caseWrapper = new CaseWrapper();
-					caseWrapper.Records.Add(recordDto.Urn, new RecordWrapper {  RecordDto = recordDto });
+					caseWrapper.Records.Add(patchRecordDto.Urn, new RecordWrapper {  RecordDto = patchRecordDto });
 					
-					caseState.CasesDetails.Add(recordDto.CaseUrn, caseWrapper);
+					caseState.CasesDetails.Add(patchRecordDto.CaseUrn, caseWrapper);
 				}
 			}
 			await StoreData(caseworker, caseState);

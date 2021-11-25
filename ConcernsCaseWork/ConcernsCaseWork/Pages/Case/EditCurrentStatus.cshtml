@@ -1,4 +1,4 @@
-﻿@page "/case/{id:long}/management/edit_current_status"
+﻿@page "/case/{urn:long}/management/edit_current_status"
 @model ConcernsCaseWork.Pages.Case.EditCurrentStatusPageModel
 
 @{
@@ -8,7 +8,7 @@
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
-	<partial name="_Error"/>
+
 	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds">
 
@@ -16,33 +16,40 @@
 				Edit current status
 			</h1>
 
-			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+            	<partial name="_Error"/>
+            }
+			else
+			{
 
-			<form role="form" asp-page-handler="editCurrentStatus" method="post" id="current-status-form" novalidate>
+				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-				<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
+				<form role="form" asp-page-handler="editCurrentStatus" method="post" id="current-status-form" novalidate>
 
-				<partial name="_EditCurrentStatus" model="@Model.CaseModel"/>
-				
-				<!--Button group-->
-                <div class="govuk-button-group">
-                	<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
-                		Apply
-                	</button>
-	                <partial name="_Cancel"/>
-                </div>
-				
-			</form>
+					<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
 
+					<partial name="_EditCurrentStatus" model="@Model.CaseModel"/>
+
+					<!--Button group-->
+					<div class="govuk-button-group">
+						<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
+							Apply
+						</button>
+						<partial name="_Cancel"/>
+					</div>
+
+				</form>
+
+				<script type="application/javascript" nonce="@nonce">
+					$(function () {	
+						let validator = formValidator($("#current-status-form")[0]);
+						addCurrentStatusValidator(validator);
+						
+						autoResizer();
+					});
+				</script>
+			}
 		</div>
 	</div>
 </div>
-
-<script type="application/javascript" nonce="@nonce">
-	$(function () {	
-		let validator = formValidator($("#current-status-form")[0]);
-		addCurrentStatusValidator(validator);
-		
-		autoResizer();
-	});
-</script>
