@@ -124,7 +124,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var recordsTasks = casesDto.Select(c => _recordCachedService.GetRecordsByCaseUrn(c.CreatedBy, c.Urn)).ToList();
 				await Task.WhenAll(recordsTasks);
 			
-				// Get results from tasks and filter only primary records
+				// Get results from tasks
 				var recordsDto = recordsTasks.SelectMany(recordTask => recordTask.Result).ToList();
 				
 				// Filter primary records

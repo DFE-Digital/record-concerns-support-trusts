@@ -136,10 +136,9 @@ namespace ConcernsCaseWork.Mappers
 			trustCases.AddRange(
 				recordsDto.Select(recordDto =>
 				{
-					var ragRatingDto = ragsRatingDto.First(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0);
-					var ragRating = RatingMapping.FetchRag(ragRatingDto.Name);
-					var ragRatingCss = RatingMapping.FetchRagCss(ragRatingDto.Name);
-						
+					var ragRatingDto = ragsRatingDto.FirstOrDefault(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0);
+					if (ragRatingDto is null) return null;
+
 					var caseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(recordDto.TypeUrn) == 0);
 					if (caseType is null) return null;
 
@@ -150,8 +149,8 @@ namespace ConcernsCaseWork.Mappers
 						recordDto.CaseUrn,
 						caseType.Name,
 						caseType.Description,
-						ragRating,
-						ragRatingCss,
+						RatingMapping.FetchRag(ragRatingDto.Name),
+						RatingMapping.FetchRagCss(ragRatingDto.Name),
 						caseDto.CreatedAt,
 						caseDto.ClosedAt,
 						caseDto.StatusUrn.CompareTo(liveStatus.Urn) == 0 ? liveStatus.Name : closeStatus.Name);

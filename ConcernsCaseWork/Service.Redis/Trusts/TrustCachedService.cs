@@ -58,9 +58,9 @@ namespace Service.Redis.Trusts
 			catch (Exception ex)
 			{
 				_logger.LogError("TrustCachedService::GetTrustByUkPrn::Exception message::{Message}", ex.Message);
+				
+				throw;
 			}
-
-			return null;
 		}
 	}
 }
