@@ -23,7 +23,7 @@ namespace Service.TRAMS.Cases
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::GetCasesByCaseworkerAndStatus");
+				_logger.LogInformation("CaseService::GetCasesByCaseworkerAndStatus {Caseworker} {StatusUrn}", caseworker, statusUrn);
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
@@ -58,7 +58,7 @@ namespace Service.TRAMS.Cases
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::GetCasesByUrn");
+				_logger.LogInformation("CaseService::GetCasesByUrn {Urn}", urn);
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/{EndpointPrefix}/urn/{urn}");
@@ -98,7 +98,7 @@ namespace Service.TRAMS.Cases
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::GetCasesByTrustUkPrn");
+				_logger.LogInformation("CaseService::GetCasesByTrustUkPrn {TrustUkPrn} - {Page}", caseTrustSearch.TrustUkPrn, caseTrustSearch.Page);
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/{EndpointPrefix}/ukprn/{caseTrustSearch.TrustUkPrn}?page={caseTrustSearch.Page}");
@@ -132,7 +132,7 @@ namespace Service.TRAMS.Cases
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::GetCases");
+				_logger.LogInformation("CaseService::GetCases {Page}", pageSearch.Page);
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/cases?page={pageSearch.Page}");
@@ -209,7 +209,7 @@ namespace Service.TRAMS.Cases
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::PatchCaseByUrn");
+				_logger.LogInformation("CaseService::PatchCaseByUrn {Urn}", caseDto.Urn);
 				
 				// Create a request
 				var request = new StringContent(
