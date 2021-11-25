@@ -131,7 +131,7 @@ namespace Service.Redis.Tests.Trusts
 		}
 		
 		[Test]
-		public async Task WhenGetTrustByUkPrn_ThrowsException_ReturnsNull()
+		public void WhenGetTrustByUkPrn_ThrowsException()
 		{
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
@@ -148,11 +148,9 @@ namespace Service.Redis.Tests.Trusts
 			var trustCachedService = new TrustCachedService(mockCacheProvider.Object, mockTrustService.Object, mockLogger.Object);
 			
 			// act
-			var actualTrust = await trustCachedService.GetTrustByUkPrn("trust-ukprn");
+			Assert.ThrowsAsync<Exception>(() => trustCachedService.GetTrustByUkPrn("trust-ukprn"));
 
 			// assert
-			Assert.That(actualTrust, Is.Null);
-			
 			mockCacheProvider.Verify(c => c.GetFromCache<IDictionary<string, TrustDetailsDto>>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<IDictionary<string, TrustDetailsDto>>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
 			mockTrustService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
