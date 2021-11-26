@@ -19,7 +19,7 @@ namespace Service.TRAMS.Cases
 			_logger = logger;
 		}
 		
-		public async Task<IList<CaseDto>> GetCasesByCaseworkerAndStatus(string caseworker, long statusUrn)
+		public async Task<ApiListWrapper<CaseDto>> GetCasesByCaseworkerAndStatus(string caseworker, long statusUrn)
 		{
 			try
 			{
@@ -42,16 +42,15 @@ namespace Service.TRAMS.Cases
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POCO
-				var casesDto = JsonConvert.DeserializeObject<IList<CaseDto>>(content);
+				var apiWrapperCasesDto = JsonConvert.DeserializeObject<ApiListWrapper<CaseDto>>(content);
 
-				return casesDto;
+				return apiWrapperCasesDto;
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("CaseService::GetCasesByCaseworkerAndStatus::Exception message::{Message}", ex.Message);
+				throw;
 			}
-			
-			return Array.Empty<CaseDto>();
 		}
 
 		public async Task<CaseDto> GetCaseByUrn(long urn)

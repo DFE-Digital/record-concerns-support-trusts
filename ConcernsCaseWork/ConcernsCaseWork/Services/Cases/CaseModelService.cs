@@ -430,11 +430,21 @@ namespace ConcernsCaseWork.Services.Cases
 				.ToList();
 
 			// Fetch records by case urn
-			var recordsTasks = casesDto.Select(c => _recordCachedService.GetRecordsByCaseUrn(c.CreatedBy, c.Urn)).ToList();
-			await Task.WhenAll(recordsTasks);
-			
+			// Multi threading was causing data overding issues so used for each instead
+
+			var recordsDto = new List<RecordDto>();
+			foreach (var caseDto in casesDto)
+			{
+				var records = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
+				recordsDto.AddRange(records);
+			}
+
+
+			//var recordsTasks = casesDto.Select(async c => await _recordCachedService.GetRecordsByCaseUrn(c.CreatedBy, c.Urn)).ToList();
+			//await Task.WhenAll(recordsTasks);
+
 			// Get results from tasks
-			var recordsDto = recordsTasks.SelectMany(recordTask => recordTask.Result).ToList();
+			//var recordsDto = recordsTasks.SelectMany(recordTask => recordTask.Result).ToList();
 								
 			// Fetch rag rating
 			var ragsRatingDto = await _ratingCachedService.GetRatings();
@@ -455,7 +465,7 @@ namespace ConcernsCaseWork.Services.Cases
 					
 			// Fetch cases from cache
 			var casesDto = caseDetails.Select(c => c.Value.CaseDto)
-				.Where(c => c.StatusUrn.CompareTo(statusDto.Urn) == 0).ToList();
+				.Where(c => c != null && c.StatusUrn.CompareTo(statusDto.Urn) == 0).ToList();
 					
 			if (!casesDto.Any()) return Array.Empty<HomeModel>();
 			

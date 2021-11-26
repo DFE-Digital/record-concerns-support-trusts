@@ -13,11 +13,13 @@ namespace Service.Redis.Cases
 	{
 		private readonly ILogger<CaseCachedService> _logger;
 		private readonly ICaseService _caseService;
+		private readonly ICaseSearchService _caseSearchService;
 		
-		public CaseCachedService(ICacheProvider cacheProvider, ICaseService caseService, ILogger<CaseCachedService> logger) 
+		public CaseCachedService(ICacheProvider cacheProvider, ICaseService caseService, ICaseSearchService caseSearchService, ILogger<CaseCachedService> logger) 
 			: base(cacheProvider)
 		{
 			_caseService = caseService;
+			_caseSearchService = caseSearchService;
 			_logger = logger;
 		}
 
@@ -27,8 +29,11 @@ namespace Service.Redis.Cases
 
 			var userState = await GetData<UserState>(caseworker);
 			if (userState != null) return userState.CasesDetails.Values.Select(c => c.CaseDto).ToList();
-			
-			var cases = await _caseService.GetCasesByCaseworkerAndStatus(caseworker, statusUrn);
+
+			var caseCaseWorkerSearch = new CaseCaseWorkerSearch(caseworker, statusUrn);
+
+			var cases = await _caseSearchService.GetCasesByCaseworkerAndStatus(caseCaseWorkerSearch);
+
 			if (!cases.Any()) return cases;
 			
 			userState = new UserState();

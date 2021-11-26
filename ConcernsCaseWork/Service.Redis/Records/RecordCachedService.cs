@@ -27,11 +27,11 @@ namespace Service.Redis.Records
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);
-			if (caseState is null)
+			if (caseState is null || (caseState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper) && !caseWrapper.Records.Any()))
 			{
 				// Fetch records from Academies API
 				var recordsDto = await _recordService.GetRecordsByCaseUrn(caseUrn);
-				if (recordsDto is null) throw new ApplicationException("Error::RecordCachedService::GetRecordsByCaseUrn");
+				if (!recordsDto.Any()) return recordsDto;
 				
 				caseState = new UserState
 				{
@@ -47,7 +47,7 @@ namespace Service.Redis.Records
 				return recordsDto;
 			}
 
-			if (caseState.CasesDetails.ContainsKey(caseUrn) && caseState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper))
+			if (caseState.CasesDetails.ContainsKey(caseUrn) && caseState.CasesDetails.TryGetValue(caseUrn, out caseWrapper))
 			{
 				return caseWrapper.Records.Values.Select(r => r.RecordDto).ToList();
 			}

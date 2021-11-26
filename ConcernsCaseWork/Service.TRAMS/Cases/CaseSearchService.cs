@@ -65,6 +65,46 @@ namespace Service.TRAMS.Cases
 			return caseTrustsList;
 		}
 
+		public async Task<IList<CaseDto>> GetCasesByCaseworkerAndStatus(CaseCaseWorkerSearch caseCaseWorkerSearch)
+		{
+			_logger.LogInformation("CaseSearchService::GetCasesByCaseworkerAndStatus execution");
+
+			var stopwatch = Stopwatch.StartNew();
+			var casesList = new List<CaseDto>();
+
+			try
+			{
+				ApiListWrapper<CaseDto> apiListWrapperCaseDto;
+				var nrRequests = 0;
+
+				do
+				{
+					apiListWrapperCaseDto = await _caseService.GetCasesByCaseworkerAndStatus(caseCaseWorkerSearch.CaseWorkerName, caseCaseWorkerSearch.StatusUrn);
+
+					// The following condition will break the loop.
+					if (apiListWrapperCaseDto?.Data is null || !apiListWrapperCaseDto.Data.Any()) continue;
+
+					casesList.AddRange(apiListWrapperCaseDto.Data);
+					caseCaseWorkerSearch.PageIncrement();
+
+					// Safe guard in case we have more than 10 pages.
+					// We don't have a scenario at the moment, but feels like we need a limit.
+					if ((nrRequests = Interlocked.Increment(ref nrRequests)) > _hardLimitByPagination)
+					{
+						break;
+					}
+
+				} while (apiListWrapperCaseDto?.Data != null && apiListWrapperCaseDto.Data.Any() && apiListWrapperCaseDto.Paging?.NextPageUrl != null);
+			}
+			finally
+			{
+				stopwatch.Stop();
+				_logger.LogInformation("CaseSearchService::GetCasesByCaseworkerAndStatus execution time {ElapsedMilliseconds} ms", stopwatch.ElapsedMilliseconds);
+			}
+
+			return casesList;
+		}
+
 		public async Task<IList<CaseDto>> GetCasesByPageSearch(PageSearch pageSearch)
 		{
 			_logger.LogInformation("CaseSearchService::GetCasesByPageSearch execution");

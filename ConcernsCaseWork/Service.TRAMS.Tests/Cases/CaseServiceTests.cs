@@ -49,9 +49,9 @@ namespace Service.TRAMS.Tests.Cases
 
 			// assert
 			Assert.That(cases, Is.Not.Null);
-			Assert.That(cases.Count, Is.EqualTo(expectedCases.Count));
+			Assert.That(cases.Data.Count, Is.EqualTo(expectedCases.Count));
 			
-			foreach (var caseDto in cases)
+			foreach (var caseDto in cases.Data)
 			{
 				foreach (var expectedCase in expectedCases.Where(expectedCase => caseDto.Urn == expectedCase.Urn))
 				{
@@ -105,7 +105,7 @@ namespace Service.TRAMS.Tests.Cases
 
 			// assert
 			Assert.That(cases, Is.Not.Null);
-			Assert.That(cases.Count, Is.EqualTo(0));
+			Assert.That(cases.Data.Count, Is.EqualTo(0));
 		}
 		
 		[Test]
