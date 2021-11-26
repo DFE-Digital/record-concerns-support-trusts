@@ -30,20 +30,19 @@ namespace Service.Redis.Cases
 			var userState = await GetData<UserState>(caseworker);
 			if (userState != null) return userState.CasesDetails.Values.Select(c => c.CaseDto).ToList();
 
-			var caseCaseWorkerSearch = new CaseCaseWorkerSearch(caseworker, statusUrn);
-
-			var cases = await _caseSearchService.GetCasesByCaseworkerAndStatus(caseCaseWorkerSearch);
+			var cases = await _caseSearchService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch(caseworker, statusUrn));
 
 			if (!cases.Any()) return cases;
 			
 			userState = new UserState();
+			
 			foreach (var caseDto in cases)
 			{
 				userState.CasesDetails.Add(caseDto.Urn, new CaseWrapper { CaseDto = caseDto });
 			}
 				
 			await StoreData(caseworker, userState);
-
+			
 			return cases;
 		}
 

@@ -27,34 +27,28 @@ namespace Service.Redis.Records
 			
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);
-			if (caseState is null || (caseState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper) && !caseWrapper.Records.Any()))
+			
+			IList<RecordDto> recordsDto = new List<RecordDto>();
+			if (!caseState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper)) return recordsDto;
+			
+			if (caseWrapper.Records.Any())
 			{
-				// Fetch records from Academies API
-				var recordsDto = await _recordService.GetRecordsByCaseUrn(caseUrn);
+				recordsDto = caseWrapper.Records.Values.Select(r => r.RecordDto).ToList();
+			}
+			else 
+			{
+				recordsDto = await _recordService.GetRecordsByCaseUrn(caseUrn);
 				if (!recordsDto.Any()) return recordsDto;
-				
-				caseState = new UserState
-				{
-					CasesDetails = { { caseUrn, 
-						new CaseWrapper { 
-							Records = recordsDto.ToDictionary(r => r.Urn, r => new RecordWrapper { RecordDto = r } )
-						} 
-					} }
-				};
-				
+
+				caseWrapper.Records = recordsDto.ToDictionary(r => r.Urn, r => new RecordWrapper { RecordDto = r } );
+					
 				await StoreData(caseworker, caseState);
-				
-				return recordsDto;
 			}
 
-			if (caseState.CasesDetails.ContainsKey(caseUrn) && caseState.CasesDetails.TryGetValue(caseUrn, out caseWrapper))
-			{
-				return caseWrapper.Records.Values.Select(r => r.RecordDto).ToList();
-			}
-
-			return Array.Empty<RecordDto>();
+			return recordsDto;
 		}
 		
+		// TODO Wrong revisit logic
 		public async Task<RecordDto> PostRecordByCaseUrn(CreateRecordDto createRecordDto, string caseworker)
 		{
 			_logger.LogInformation("RecordCachedService::PostRecordByCaseUrn");
@@ -97,6 +91,7 @@ namespace Service.Redis.Records
 			return newRecordDto;
 		}
 
+		// TODO Wrong revisit logic
 		public async Task PatchRecordByUrn(RecordDto recordDto, string caseworker)
 		{
 			_logger.LogInformation("RecordCachedService::PatchRecordByUrn");

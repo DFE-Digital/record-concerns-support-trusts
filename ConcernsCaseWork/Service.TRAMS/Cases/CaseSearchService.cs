@@ -79,7 +79,7 @@ namespace Service.TRAMS.Cases
 
 				do
 				{
-					apiListWrapperCaseDto = await _caseService.GetCasesByCaseworkerAndStatus(caseCaseWorkerSearch.CaseWorkerName, caseCaseWorkerSearch.StatusUrn);
+					apiListWrapperCaseDto = await _caseService.GetCasesByCaseworkerAndStatus(caseCaseWorkerSearch);
 
 					// The following condition will break the loop.
 					if (apiListWrapperCaseDto?.Data is null || !apiListWrapperCaseDto.Data.Any()) continue;

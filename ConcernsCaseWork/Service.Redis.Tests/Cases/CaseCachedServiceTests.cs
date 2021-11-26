@@ -69,7 +69,7 @@ namespace Service.Redis.Tests.Cases
 			Assert.That(casesDto.Count, Is.EqualTo(1));
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
-			mockCaseService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			mockCaseService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<CaseCaseWorkerSearch>()), Times.Never);
 		}
 		
 		[Test]
@@ -88,7 +88,7 @@ namespace Service.Redis.Tests.Cases
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
 				Returns(Task.FromResult<UserState>(null));
-			mockCaseService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(expectedCasesDto);
+			mockCaseService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<CaseCaseWorkerSearch>())).ReturnsAsync(expectedCasesDto);
 			
 			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
@@ -100,7 +100,7 @@ namespace Service.Redis.Tests.Cases
 			Assert.That(casesDto.Count, Is.EqualTo(expectedCasesDto.Data.Count));
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
-			mockCaseService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
+			mockCaseService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<CaseCaseWorkerSearch>()), Times.Once);
 		}
 		
 		[Test]

@@ -76,7 +76,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("CaseModelService::GetCasesByCaseworker exception {Message}", ex.Message);
+				_logger.LogError("CaseModelService::GetCasesByCaseworkerAndStatus exception {Message}", ex.Message);
 			}
 
 			return Array.Empty<HomeModel>();
@@ -421,17 +421,14 @@ namespace ConcernsCaseWork.Services.Cases
 
 			if (!casesDto.Any()) return Array.Empty<HomeModel>();
 			
-			var trustsDetailsTasks = casesDto.Where(c => c.TrustUkPrn != null)
-				.Select(c => _trustCachedService.GetTrustByUkPrn(c.TrustUkPrn)).ToList();
+			var trustsDetailsTasks = casesDto.Select(c => _trustCachedService.GetTrustByUkPrn(c.TrustUkPrn)).ToList();
 			await Task.WhenAll(trustsDetailsTasks);
 			
 			// Get results from tasks
-			var trustsDetailsDto = trustsDetailsTasks.Select(trustDetailsTask => trustDetailsTask.Result)
-				.ToList();
+			var trustsDetailsDto = trustsDetailsTasks.Select(trustDetailsTask => trustDetailsTask.Result).ToList();
 
 			// Fetch records by case urn
-			// Multi threading was causing data overding issues so used for each instead
-
+			// Multi threading was causing data overriding issues so used for each instead
 			var recordsDto = new List<RecordDto>();
 			foreach (var caseDto in casesDto)
 			{
@@ -439,13 +436,6 @@ namespace ConcernsCaseWork.Services.Cases
 				recordsDto.AddRange(records);
 			}
 
-
-			//var recordsTasks = casesDto.Select(async c => await _recordCachedService.GetRecordsByCaseUrn(c.CreatedBy, c.Urn)).ToList();
-			//await Task.WhenAll(recordsTasks);
-
-			// Get results from tasks
-			//var recordsDto = recordsTasks.SelectMany(recordTask => recordTask.Result).ToList();
-								
 			// Fetch rag rating
 			var ragsRatingDto = await _ratingCachedService.GetRatings();
 								
@@ -465,13 +455,12 @@ namespace ConcernsCaseWork.Services.Cases
 					
 			// Fetch cases from cache
 			var casesDto = caseDetails.Select(c => c.Value.CaseDto)
-				.Where(c => c != null && c.StatusUrn.CompareTo(statusDto.Urn) == 0).ToList();
+				.Where(c => c.StatusUrn.CompareTo(statusDto.Urn) == 0).ToList();
 					
 			if (!casesDto.Any()) return Array.Empty<HomeModel>();
 			
 			// Fetch trusts by ukprn
-			var trustsDetailsTasks = casesDto.Where(c => c.TrustUkPrn != null)
-				.Select(c => _trustCachedService.GetTrustByUkPrn(c.TrustUkPrn)).ToList();
+			var trustsDetailsTasks = casesDto.Select(c => _trustCachedService.GetTrustByUkPrn(c.TrustUkPrn)).ToList();
 			var trustsDetailsTasksResults = await Task.WhenAll(trustsDetailsTasks);
 			
 			// Fetch results from tasks
