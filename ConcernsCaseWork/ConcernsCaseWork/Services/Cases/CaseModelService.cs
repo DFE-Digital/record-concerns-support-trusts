@@ -59,20 +59,34 @@ namespace ConcernsCaseWork.Services.Cases
 			_cachedService = cachedService;
 			_logger = logger;
 		}
+
+		public async Task<(IList<HomeModel>, IList<HomeModel>)> GetCasesByCaseworkerAndStatusLiveAndMonitoring(string caseworker)
+		{
+			var defaultHomeModel = Array.Empty<HomeModel>();
+			
+			try
+			{
+				Task<IList<HomeModel>> liveCases = GetCasesByCaseworkerAndStatus(caseworker, StatusEnum.Live);
+				Task<IList<HomeModel>> monitoringCases = GetCasesByCaseworkerAndStatus(caseworker, StatusEnum.Monitoring);
+				
+				await Task.WhenAll(liveCases, monitoringCases);
+				
+				return (liveCases.Result, monitoringCases.Result);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("CaseModelService::GetCasesByCaseworkerAndStatuses exception {Message}", ex.Message);
+			}
+			
+			return (defaultHomeModel, defaultHomeModel);
+		}
 		
 		public async Task<IList<HomeModel>> GetCasesByCaseworkerAndStatus(string caseworker, StatusEnum status)
 		{
 			try
 			{
-				// Find cases redis cache
-				var caseState = await _cachedService.GetData<UserState>(caseworker);
-				if (caseState != null)
-				{
-					return await FetchFromCache(caseState, status);
-				}
-				
 				// Find cases Academies Api
-				return await FetchFromTramsApi(caseworker, status);
+				return await FetchFromAcademiesApi(caseworker, status);
 			}
 			catch (Exception ex)
 			{
@@ -207,9 +221,6 @@ namespace ConcernsCaseWork.Services.Cases
 			try
 			{
 				// Fetch Rating
-				var ratingDto = await _ratingCachedService.GetRatingByName(patchCaseModel.RatingName);
-				patchCaseModel.RatingUrn = ratingDto.Urn;
-				
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
 				var recordDto = recordsDto.First(r => r.Primary);
@@ -219,7 +230,7 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.Map(patchCaseModel, caseDto);
 
 				var timeNow = DateTimeOffset.Now;
-				var recordRatingHistory = new RecordRatingHistoryDto(timeNow, recordDto.Urn, ratingDto.Urn);
+				var recordRatingHistory = new RecordRatingHistoryDto(timeNow, recordDto.Urn, patchCaseModel.RatingUrn);
 				
 				await _recordCachedService.PatchRecordByUrn(recordDto, patchCaseModel.CreatedBy);
 				await _caseCachedService.PatchCaseByUrn(caseDto);
@@ -411,17 +422,74 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 		}
 		
-		private async Task<IList<HomeModel>> FetchFromTramsApi(string caseworker, StatusEnum status)
+		private async Task<IList<HomeModel>> FetchFromAcademiesApi(string caseworker, StatusEnum statusEnum)
 		{
 			// Fetch Status
-			var statusDto = await _statusCachedService.GetStatusByName(status.ToString());
+			var statusDto = await _statusCachedService.GetStatusByName(statusEnum.ToString());
 
-			// Get from TRAMS API all trusts for the caseworker
+			// Get from Academies API all cases by caseworker and status
 			var casesDto = await _caseCachedService.GetCasesByCaseworkerAndStatus(caseworker, statusDto.Urn);
 
+			// Return if cases are empty
 			if (!casesDto.Any()) return Array.Empty<HomeModel>();
 			
-			var trustsDetailsTasks = casesDto.Select(c => _trustCachedService.GetTrustByUkPrn(c.TrustUkPrn)).ToList();
+			// Fetch rag rating
+			var ratingsDto = await _ratingCachedService.GetRatings();
+								
+			// Fetch types
+			var typesDto = await _typeCachedService.GetTypes();
+			
+			// Execute in parallel each case contained logic
+			var listHomeModelTasks = casesDto.Select(async caseDto =>
+			{
+				var trustDetailsDto = await _trustCachedService.GetTrustByUkPrn(caseDto.TrustUkPrn);
+				var records = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
+				
+				// Get primary record
+				var primaryRecordDto = records.FirstOrDefault(recordDto => recordDto.Primary);
+				if (primaryRecordDto is null) return null;
+
+				// Find primary type
+				var primaryCaseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(primaryRecordDto.TypeUrn) == 0);
+				if (primaryCaseType is null) return null;
+			
+				// Rag rating
+				var ratingName = ratingsDto.Where(r => r.Urn.CompareTo(primaryRecordDto.RatingUrn) == 0)
+					.Select(r => r.Name)
+					.First();
+
+				var rag = RatingMapping.FetchRag(ratingName);
+				var ragCss = RatingMapping.FetchRagCss(ratingName);
+
+				var trustName = TrustMapping.FetchTrustName(trustDetailsDto);
+				var academies = TrustMapping.FetchAcademies(trustDetailsDto);
+				
+				return new HomeModel(
+					caseDto.Urn.ToString(), 
+					caseDto.CreatedAt,
+					caseDto.UpdatedAt,
+					caseDto.ClosedAt,
+					caseDto.ReviewAt,
+					trustName,
+					academies,
+					primaryCaseType.Name,
+					primaryCaseType.Description,
+					rag,
+					ragCss);
+			}).ToList();
+			
+			await Task.WhenAll(listHomeModelTasks);
+			var listHomeModel = listHomeModelTasks.Select(homeModelTask => homeModelTask.Result).Where(homeModel => homeModel != null).ToList();
+
+			return statusEnum switch
+			{
+				StatusEnum.Live => listHomeModel.OrderByDescending(homeModel => homeModel.Updated).ToList(),
+				StatusEnum.Monitoring => listHomeModel.OrderBy(homeModel => homeModel.Review).ToList(),
+				StatusEnum.Close => listHomeModel.OrderByDescending(homeModel => homeModel.Closed).ToList(),
+				_ => throw new ArgumentOutOfRangeException(nameof(statusEnum), statusEnum, $"Invalid status enum {statusEnum}")
+			};
+
+			/*var trustsDetailsTasks = casesDto.Select(c => _trustCachedService.GetTrustByUkPrn(c.TrustUkPrn)).ToList();
 			await Task.WhenAll(trustsDetailsTasks);
 			
 			// Get results from tasks
@@ -442,7 +510,7 @@ namespace ConcernsCaseWork.Services.Cases
 			// Fetch types
 			var typesDto = await _typeCachedService.GetTypes();
 				
-			return HomeMapping.Map(casesDto, trustsDetailsDto, recordsDto, ragsRatingDto, typesDto, statusDto);
+			return HomeMapping.Map(casesDto, trustsDetailsDto, recordsDto, ragsRatingDto, typesDto, statusDto);*/
 		}
 
 		private async Task<IList<HomeModel>> FetchFromCache(UserState userState, StatusEnum status)

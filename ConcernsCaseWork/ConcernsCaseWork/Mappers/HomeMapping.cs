@@ -43,15 +43,15 @@ namespace ConcernsCaseWork.Mappers
 			var academies = FetchAcademies(trustsDetailsDto, caseDto);
 
 			// Find primary case record
-			var primaryRecordModel = recordsDto.FirstOrDefault(r => r.CaseUrn.CompareTo(caseDto.Urn) == 0 && r.Primary);
-			if (primaryRecordModel is null) return null;
+			var primaryRecordDto = recordsDto.FirstOrDefault(r => r.CaseUrn.CompareTo(caseDto.Urn) == 0 && r.Primary);
+			if (primaryRecordDto is null) return null;
 				
 			// Find primary type
-			var primaryCaseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(primaryRecordModel.TypeUrn) == 0);
+			var primaryCaseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(primaryRecordDto.TypeUrn) == 0);
 			if (primaryCaseType is null) return null;
 			
 			// Rag rating
-			var ratingName = ratingsDto.Where(r => r.Urn.CompareTo(primaryRecordModel.RatingUrn) == 0)
+			var ratingName = ratingsDto.Where(r => r.Urn.CompareTo(primaryRecordDto.RatingUrn) == 0)
 				.Select(r => r.Name)
 				.First();
 

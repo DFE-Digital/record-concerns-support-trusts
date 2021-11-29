@@ -8,6 +8,7 @@ namespace ConcernsCaseWork.Services.Cases
 {
 	public interface ICaseModelService
 	{
+		Task<(IList<HomeModel>, IList<HomeModel>)> GetCasesByCaseworkerAndStatusLiveAndMonitoring(string caseworker);
 		Task<IList<HomeModel>> GetCasesByCaseworkerAndStatus(string caseworker, StatusEnum status);
 		Task<CaseModel> GetCaseByUrn(string caseworker, long urn);
 		Task<IList<TrustCasesModel>> GetCasesByTrustUkprn(string trustUkprn);

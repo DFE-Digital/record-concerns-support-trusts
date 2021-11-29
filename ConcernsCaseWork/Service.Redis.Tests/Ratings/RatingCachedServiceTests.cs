@@ -76,52 +76,5 @@ namespace Service.Redis.Tests.Ratings
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<IList<RatingDto>>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
 			mockRatingService.Verify(c => c.GetRatings(), Times.Once);
 		}
-		
-		[Test]
-		public async Task WhenGetRatingByName_ReturnsRatings_FromCache()
-		{
-			// arrange
-			var mockCacheProvider = new Mock<ICacheProvider>();
-			var mockRatingService = new Mock<IRatingService>();
-			var mockLogger = new Mock<ILogger<RatingCachedService>>();
-
-			mockCacheProvider.Setup(c => c.GetFromCache<IList<RatingDto>>(It.IsAny<string>())).
-				ReturnsAsync(RatingFactory.BuildListRatingDto());
-			
-			var ratingCachedService = new RatingCachedService(mockCacheProvider.Object, mockRatingService.Object, mockLogger.Object);
-
-			// act
-			var ratingDto = await ratingCachedService.GetRatingByName("Red-Plus");
-			
-			// assert
-			Assert.That(ratingDto, Is.Not.Null);
-			mockCacheProvider.Verify(c => c.GetFromCache<IList<RatingDto>>(It.IsAny<string>()), Times.Once);
-			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<IList<RatingDto>>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
-			mockRatingService.Verify(c => c.GetRatings(), Times.Never);
-		}
-		
-		[Test]
-		public async Task WhenGetRatingByName_ReturnsRatings_FromTramsApi()
-		{
-			// arrange
-			var mockCacheProvider = new Mock<ICacheProvider>();
-			var mockRatingService = new Mock<IRatingService>();
-			var mockLogger = new Mock<ILogger<RatingCachedService>>();
-
-			mockCacheProvider.Setup(c => c.GetFromCache<IList<RatingDto>>(It.IsAny<string>())).
-				Returns(Task.FromResult<IList<RatingDto>>(null));
-			mockRatingService.Setup(r => r.GetRatings()).ReturnsAsync(RatingFactory.BuildListRatingDto());
-			
-			var ratingCachedService = new RatingCachedService(mockCacheProvider.Object, mockRatingService.Object, mockLogger.Object);
-
-			// act
-			var ratingDto = await ratingCachedService.GetRatingByName("Red-Plus");
-			
-			// assert
-			Assert.That(ratingDto, Is.Not.Null);
-			mockCacheProvider.Verify(c => c.GetFromCache<IList<RatingDto>>(It.IsAny<string>()), Times.Once);
-			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<IList<RatingDto>>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
-			mockRatingService.Verify(c => c.GetRatings(), Times.Once);
-		}
 	}
 }

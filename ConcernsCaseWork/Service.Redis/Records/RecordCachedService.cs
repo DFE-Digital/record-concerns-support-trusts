@@ -25,10 +25,12 @@ namespace Service.Redis.Records
 		{
 			_logger.LogInformation("RecordCachedService::GetRecordsByCaseUrn");
 			
+			IList<RecordDto> recordsDto = new List<RecordDto>();
+
 			// Store in cache for 24 hours (default)
 			var caseState = await GetData<UserState>(caseworker);
+			if (caseState is null) return recordsDto;
 			
-			IList<RecordDto> recordsDto = new List<RecordDto>();
 			if (!caseState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper)) return recordsDto;
 			
 			if (caseWrapper.Records.Any())

@@ -39,7 +39,7 @@ namespace Service.Redis.Trusts
 					return trustDetailsDto;
 				}
 				
-				// Fetch from TRAMS API
+				// Fetch from Academies API
 				trustDetailsDto = await _trustService.GetTrustByUkPrn(ukPrn);
 
 				// Store in cache for 24 hours (default)
