@@ -479,12 +479,10 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var recordDto = RecordFactory.BuildRecordDto();
 			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
 			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
-			var typeDto = TypeFactory.BuildTypeDto();
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			var recordRatingHistoryDto = RecordRatingHistoryFactory.BuildRecordRatingHistoryDto();
 			
 			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
-			mockTypeCachedService.Setup(t => t.GetTypeByNameAndDescription(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(typeDto);
 			mockCaseCachedService.Setup(cs => cs.PostCase(It.IsAny<CreateCaseDto>())).ReturnsAsync(caseDto);
 			mockRecordCachedService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordDto>(), It.IsAny<string>())).ReturnsAsync(recordDto);
 			mockRecordRatingHistoryCachedService.Setup(r => r.PostRecordRatingHistory(It.IsAny<RecordRatingHistoryDto>(), It.IsAny<string>(), It.IsAny<long>()))
@@ -519,11 +517,9 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
 			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
-			var typeDto = TypeFactory.BuildTypeDto();
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			
 			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
-			mockTypeCachedService.Setup(t => t.GetTypeByNameAndDescription(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(typeDto);
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
@@ -635,9 +631,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 
 			var caseDto = CaseFactory.BuildCaseDto();
 			var recordsDto = RecordFactory.BuildListRecordDto();
-			var typeDto = TypeFactory.BuildTypeDto();
 
-			mockTypeCachedService.Setup(t => t.GetTypeByNameAndDescription(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(typeDto);
 			mockCaseCachedService.Setup(cs => cs.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(caseDto);
 			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn)).ReturnsAsync(recordsDto);
 			

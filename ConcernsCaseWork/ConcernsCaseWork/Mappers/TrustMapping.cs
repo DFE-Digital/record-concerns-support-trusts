@@ -8,7 +8,7 @@ namespace ConcernsCaseWork.Mappers
 	{
 		public static string FetchTrustName(TrustDetailsDto trustDetailsDto)
 		{
-			return trustDetailsDto?.GiasData?.GroupName ?? "-";;
+			return trustDetailsDto?.GiasData?.GroupName ?? "-";
 		}
 
 		public static string FetchAcademies(TrustDetailsDto trustDetailsDto)
