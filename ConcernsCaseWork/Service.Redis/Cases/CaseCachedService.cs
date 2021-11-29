@@ -27,7 +27,8 @@ namespace Service.Redis.Cases
 			_logger.LogInformation("CaseCachedService::GetCasesByCaseworkerAndStatus {Caseworker} - {StatusUrn}", caseworker, statusUrn);
 
 			var userState = await GetData<UserState>(caseworker);
-			if (userState != null) return userState.CasesDetails.Values.Select(caseWrapper => caseWrapper.CaseDto).ToList();
+			if (userState != null) return userState.CasesDetails.Values.Where(caseWrapper => caseWrapper.CaseDto.StatusUrn.CompareTo(statusUrn) == 0)
+				.Select(caseWrapper => caseWrapper.CaseDto).ToList();
 
 			var casesDto = await _caseSearchService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch(caseworker, statusUrn));
 			if (!casesDto.Any()) return casesDto;
