@@ -35,7 +35,7 @@ namespace Service.Redis.Status
 			var statuses = await GetData<IList<StatusDto>>(StatusesKey);
 			if (statuses != null) return statuses;
 
-			// Fetch from TRAMS API
+			// Fetch from Academies API
 			statuses = await _statusService.GetStatuses();
 
 			// Store in cache for 24 hours (default)
@@ -46,7 +46,7 @@ namespace Service.Redis.Status
 
 		public async Task<StatusDto> GetStatusByName(string name)
 		{
-			_logger.LogInformation("StatusCachedService::GetStatusByName");
+			_logger.LogInformation("StatusCachedService::GetStatusByName {Name}", name);
 
 			var statuses = await GetStatuses();
 

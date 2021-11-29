@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace Service.Redis.Models
@@ -8,6 +9,6 @@ namespace Service.Redis.Models
 	{
 		public string TrustUkPrn { get; set; }
 		public CreateCaseModel CreateCaseModel { get; set; } = new CreateCaseModel();
-		public IDictionary<long, CaseWrapper> CasesDetails { get; } = new Dictionary<long, CaseWrapper>();
+		public IDictionary<long, CaseWrapper> CasesDetails { get; } = new ConcurrentDictionary<long, CaseWrapper>();
 	}
 }

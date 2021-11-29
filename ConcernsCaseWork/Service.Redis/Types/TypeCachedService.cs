@@ -43,16 +43,5 @@ namespace Service.Redis.Types
 			
 			return types;
 		}
-
-		public async Task<TypeDto> GetTypeByNameAndDescription(string name, string description)
-		{
-			_logger.LogInformation("TypeCachedService::GetTypeByNameAndDescription");
-			
-			var types = await GetTypes();
-			
-			return types.FirstOrDefault(t => 
-				t.Name.Equals(name, StringComparison.OrdinalIgnoreCase) && 
-				(string.IsNullOrEmpty(t.Description) || t.Description.Equals(description, StringComparison.OrdinalIgnoreCase)));
-		}
 	}
 }

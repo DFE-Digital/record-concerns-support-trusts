@@ -30,7 +30,13 @@ namespace ConcernsCaseWork.Pages
         {
 	        _logger.LogInformation("HomePageModel::OnGetAsync executed");
 
-	        (CasesActive, CasesMonitoring) = await _caseModelService.GetCasesByCaseworkerAndStatusLiveAndMonitoring(User.Identity.Name);
+	        Task<IList<HomeModel>> liveCases = _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Live);
+	        Task<IList<HomeModel>> monitoringCases = _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Monitoring);
+				
+	        await Task.WhenAll(liveCases, monitoringCases);
+
+	        CasesActive = liveCases.Result;
+	        CasesMonitoring = monitoringCases.Result;
         }
     }
 }

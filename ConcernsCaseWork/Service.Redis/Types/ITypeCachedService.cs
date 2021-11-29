@@ -8,6 +8,5 @@ namespace Service.Redis.Types
 	{
 		Task ClearData();
 		Task<IList<TypeDto>> GetTypes();
-		Task<TypeDto> GetTypeByNameAndDescription(string name, string description);
 	}
 }

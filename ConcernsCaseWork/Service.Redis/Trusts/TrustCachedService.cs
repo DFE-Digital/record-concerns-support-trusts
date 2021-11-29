@@ -30,7 +30,7 @@ namespace Service.Redis.Trusts
 		{
 			try
 			{
-				_logger.LogInformation("TrustCachedService::GetTrustByUkPrn");
+				_logger.LogInformation("TrustCachedService::GetTrustByUkPrn {UkPrn}", ukPrn);
 				
 				// Check cache
 				var trustsCached = await GetData<IDictionary<string, TrustDetailsDto>>(TrustsKey);
