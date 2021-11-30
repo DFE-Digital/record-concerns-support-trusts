@@ -4,6 +4,7 @@ using Service.Redis.Models;
 using Service.TRAMS.Records;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Records
@@ -12,6 +13,8 @@ namespace Service.Redis.Records
 	{
 		private readonly ILogger<RecordCachedService> _logger;
 		private readonly IRecordService _recordService;
+		
+		private readonly SemaphoreSlim _semaphoreRecordsCase = new SemaphoreSlim(1, 1);
 		
 		public RecordCachedService(ICacheProvider cacheProvider, IRecordService recordService, ILogger<RecordCachedService> logger) 
 			: base(cacheProvider)
@@ -41,10 +44,20 @@ namespace Service.Redis.Records
 			{
 				recordsDto = await _recordService.GetRecordsByCaseUrn(caseUrn);
 				if (!recordsDto.Any()) return recordsDto;
-
-				caseWrapper.Records = recordsDto.ToDictionary(recordDto => recordDto.Urn, recordDto => new RecordWrapper { RecordDto = recordDto } );
-					
-				await StoreData(caseworker, userState);
+				
+				await _semaphoreRecordsCase.WaitAsync();
+				
+				userState = await GetData<UserState>(caseworker);
+				userState ??= new UserState();
+				
+				if(userState.CasesDetails.TryGetValue(caseUrn, out caseWrapper)) 
+				{
+					caseWrapper.Records = recordsDto.ToDictionary(recordDto => recordDto.Urn, recordDto => new RecordWrapper { RecordDto = recordDto } );
+						
+					await StoreData(caseworker, userState);
+				}
+				
+				_semaphoreRecordsCase.Release();
 			}
 
 			return recordsDto;

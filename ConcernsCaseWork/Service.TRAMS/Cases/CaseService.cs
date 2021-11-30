@@ -48,6 +48,7 @@ namespace Service.TRAMS.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError("CaseService::GetCasesByCaseworkerAndStatus::Exception message::{Message}", ex.Message);
+				
 				throw;
 			}
 		}

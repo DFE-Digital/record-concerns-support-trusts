@@ -4,6 +4,7 @@ using Service.Redis.Models;
 using Service.TRAMS.Cases;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Cases
@@ -13,6 +14,8 @@ namespace Service.Redis.Cases
 		private readonly ILogger<CaseCachedService> _logger;
 		private readonly ICaseService _caseService;
 		private readonly ICaseSearchService _caseSearchService;
+		
+		private readonly SemaphoreSlim _semaphoreCasesCaseworkStatus = new SemaphoreSlim(1, 1);
 		
 		public CaseCachedService(ICacheProvider cacheProvider, ICaseService caseService, ICaseSearchService caseSearchService, ILogger<CaseCachedService> logger) 
 			: base(cacheProvider)
@@ -27,21 +30,31 @@ namespace Service.Redis.Cases
 			_logger.LogInformation("CaseCachedService::GetCasesByCaseworkerAndStatus {Caseworker} - {StatusUrn}", caseworker, statusUrn);
 
 			var userState = await GetData<UserState>(caseworker);
-			if (userState != null) return userState.CasesDetails.Values.Where(caseWrapper => caseWrapper.CaseDto.StatusUrn.CompareTo(statusUrn) == 0)
-				.Select(caseWrapper => caseWrapper.CaseDto).ToList();
+			if (userState != null)
+			{
+				var cachedCases = userState.CasesDetails.Values.Where(caseWrapper => caseWrapper.CaseDto.StatusUrn.CompareTo(statusUrn) == 0)
+					.Select(caseWrapper => caseWrapper.CaseDto).ToList();
 
-			var casesDto = await _caseSearchService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch(caseworker, statusUrn));
+				if (cachedCases.Any()) return cachedCases;
+			}
+			
+			IList<CaseDto> casesDto = await _caseSearchService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch(caseworker, statusUrn));
 			if (!casesDto.Any()) return casesDto;
 			
-			userState = new UserState();
+			await _semaphoreCasesCaseworkStatus.WaitAsync();
 
-			Parallel.ForEach(casesDto, caseDto => userState.CasesDetails.Add(caseDto.Urn, new CaseWrapper { CaseDto = caseDto }));
+			userState = await GetData<UserState>(caseworker);
+			userState ??= new UserState();
+
+			Parallel.ForEach(casesDto, caseDto => userState.CasesDetails.TryAdd(caseDto.Urn, new CaseWrapper { CaseDto = caseDto }));
 			
 			await StoreData(caseworker, userState);
 			
+			_semaphoreCasesCaseworkStatus.Release();
+				
 			return casesDto;
 		}
-
+		
 		public async Task<CaseDto> GetCaseByUrn(string caseworker, long urn)
 		{
 			_logger.LogInformation("CaseCachedService::GetCaseByUrn {Caseworker} - {CaseUrn}", caseworker, urn);
