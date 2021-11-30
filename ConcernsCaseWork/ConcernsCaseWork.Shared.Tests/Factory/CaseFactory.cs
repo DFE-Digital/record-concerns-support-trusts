@@ -271,6 +271,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			return new CaseTrustSearch(trustUkPrn);
 		}
+
+		public static CaseCaseWorkerSearch BuildCaseCaseWorkerSearch()
+		{
+			return new CaseCaseWorkerSearch(Fixture.Create<string>(), Fixture.Create<long>());
+		}
 		
 		public static PageSearch BuildPageSearch()
 		{
