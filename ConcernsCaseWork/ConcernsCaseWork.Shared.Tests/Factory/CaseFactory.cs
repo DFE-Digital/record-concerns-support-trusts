@@ -124,6 +124,54 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			};
 		}
 
+		public static List<CaseDto> BuildListCaseDtoStatusMonitoring(string trustUkPrn = null)
+		{
+			var dateTimeNow = DateTimeOffset.Now;
+			return new List<CaseDto>
+			{
+				new CaseDto(
+					dateTimeNow, 
+					dateTimeNow, 
+					dateTimeNow, 
+					dateTimeNow, 
+					Fixture.Create<string>(),
+					Fixture.Create<string>(), 
+					Fixture.Create<string>(),
+					trustUkPrn ?? Fixture.Create<string>(), 
+					Fixture.Create<string>(), 
+					dateTimeNow, 
+					Fixture.Create<string>(), 
+					Fixture.Create<string>(), 
+					Fixture.Create<string>(), 
+					Fixture.Create<string>(), 
+					Fixture.Create<string>(), 
+					Fixture.Create<string>(), 
+					3, 
+					2
+				),
+				new CaseDto(
+					dateTimeNow, 
+					dateTimeNow, 
+					dateTimeNow, 
+					dateTimeNow, 
+					Fixture.Create<string>(),
+					Fixture.Create<string>(), 
+					Fixture.Create<string>(),
+					trustUkPrn ?? Fixture.Create<string>(), 
+					Fixture.Create<string>(), 
+					dateTimeNow, 
+					Fixture.Create<string>(), 
+					Fixture.Create<string>(), 
+					Fixture.Create<string>(), 
+					Fixture.Create<string>(), 
+					Fixture.Create<string>(), 
+					Fixture.Create<string>(), 
+					5, 
+					2
+				)
+			};
+		}
+		
 		public static CaseDto BuildCaseDto()
 		{
 			return new CaseDto(

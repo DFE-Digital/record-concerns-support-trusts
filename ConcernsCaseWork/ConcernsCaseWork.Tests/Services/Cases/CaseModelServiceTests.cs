@@ -29,7 +29,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 	public class CaseModelServiceTests
 	{
 		[Test]
-		public async Task WhenGetCasesByCaseworker_FetchFromTramsApi_ReturnsCases()
+		public async Task WhenGetCasesByCaseworker_FetchFromAcademiesApi_ReturnsCases()
 		{
 			// arrange
 			var mockCaseCachedService = new Mock<ICaseCachedService>();
@@ -44,20 +44,31 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			const string trustUkPrn = "trust-ukprn";
-			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
-			var recordsDto = RecordFactory.BuildListRecordDto();
+			var casesDto = CaseFactory.BuildListCaseDtoStatusMonitoring(trustUkPrn);
+			
+			var recordsDtoCaseUrnAtIndex1 = RecordFactory.BuildListRecordDtoByCaseUrn(casesDto.ElementAt(0).Urn);
+			var recordsDtoCaseUrnAtIndex2 = RecordFactory.BuildListRecordDtoByCaseUrn(casesDto.ElementAt(1).Urn);
+			var recordsDto = new List<RecordDto>(recordsDtoCaseUrnAtIndex1);
+			recordsDto.AddRange(recordsDtoCaseUrnAtIndex2);
+			
 			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
 			var trustDto = TrustFactory.BuildTrustDetailsDto();
 
-			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusMonitoringDto);
-			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(recordsDto);
-			mockRatingCachedService.Setup(r => r.GetRatings()).ReturnsAsync(ratingsDto);
-			mockTypeCachedService.Setup(t => t.GetTypes()).ReturnsAsync(typesDto);
-			mockTrustCachedService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDto);
+			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+				.ReturnsAsync(statusMonitoringDto);
 			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(casesDto.Where(c => c.StatusUrn == 2).ToList());
+				.ReturnsAsync(casesDto);
+			mockRatingCachedService.Setup(r => r.GetRatings())
+				.ReturnsAsync(ratingsDto);
+			mockTypeCachedService.Setup(t => t.GetTypes())
+				.ReturnsAsync(typesDto);
+			mockTrustCachedService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+				.ReturnsAsync(trustDto);
+			mockRecordCachedService.SetupSequence(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(recordsDtoCaseUrnAtIndex1)
+				.ReturnsAsync(recordsDtoCaseUrnAtIndex2);
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, mockTrustCachedService.Object, mockRecordCachedService.Object,
@@ -100,7 +111,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		}
 
 		[Test]
-		public async Task WhenGetCasesByCaseworker_FetchFromTramsApi_ReturnEmptyCases()
+		public async Task WhenGetCasesByCaseworker_FetchFromAcademiesApi_ReturnEmptyCases()
 		{
 			// arrange
 			var mockCaseCachedService = new Mock<ICaseCachedService>();
@@ -136,7 +147,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		}
 		
 		[Test]
-		public async Task WhenGetCasesByCaseworker_FetchFromTramsApi_ThrowsException_ReturnEmptyCases()
+		public async Task WhenGetCasesByCaseworker_FetchFromAcademiesApi_ThrowsException_ReturnEmptyCases()
 		{
 			// arrange
 			var mockCaseCachedService = new Mock<ICaseCachedService>();

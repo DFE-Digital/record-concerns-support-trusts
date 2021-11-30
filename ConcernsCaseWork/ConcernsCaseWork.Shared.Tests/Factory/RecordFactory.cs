@@ -33,6 +33,29 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			};
 		}
 
+		public static List<RecordDto> BuildListRecordDtoByCaseUrn(long caseUrn = 1)
+		{
+			var currentDate = DateTimeOffset.Now;
+			return new List<RecordDto>
+			{
+				new RecordDto(currentDate, currentDate, currentDate, currentDate,
+					Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, 1, 1,
+					true, 1, 1),
+				new RecordDto(currentDate, currentDate, currentDate, currentDate,
+					Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, 2, 2,
+					true, 2, 1),
+				new RecordDto(currentDate, currentDate, currentDate, currentDate,
+					Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, 3, 3,
+					true, 3, 1),
+				new RecordDto(currentDate, currentDate, currentDate, currentDate,
+					Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, 4, 2,
+					true, 4, 1),
+				new RecordDto(currentDate, currentDate, currentDate, currentDate,
+					Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, 5, 1,
+					true, 5, 1)
+			};
+		}
+		
 		public static RecordDto BuildRecordDto(long caseUrn = 1, long typeUrn = 1)
 		{
 			var currentDate = DateTimeOffset.Now;
