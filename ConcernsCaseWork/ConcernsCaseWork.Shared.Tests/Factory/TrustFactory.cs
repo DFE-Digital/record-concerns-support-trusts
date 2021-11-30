@@ -52,18 +52,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				EstablishmentFactory.BuildListEstablishmentDto());
 		}
 		
-		public static List<TrustDetailsDto> BuildListTrustDetailsDto()
-		{
-			return new List<TrustDetailsDto> {
-				new TrustDetailsDto(GiasDataFactory.BuildGiasDataDto(),
-					IfdDataFactory.BuildIfdDataDto(),
-				EstablishmentFactory.BuildListEstablishmentDto()),
-				new TrustDetailsDto(GiasDataFactory.BuildGiasDataDto(),
-					IfdDataFactory.BuildIfdDataDto(),
-					EstablishmentFactory.BuildListEstablishmentDto())
-			};
-		}
-		
 		public static TrustDetailsModel BuildTrustDetailsModel()
 		{
 			return new TrustDetailsModel(GiasDataFactory.BuildGiasDataModel(),
