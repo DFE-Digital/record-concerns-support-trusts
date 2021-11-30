@@ -192,7 +192,7 @@ namespace Service.Redis.Tests.Cases
 		}
 		
 		[Test]
-		public async Task WhenGetCaseByUrn_ReturnsCasesDto_FromTramsApi()
+		public async Task WhenGetCaseByUrn_ReturnsCasesDto_FromAcademiesApi()
 		{
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
