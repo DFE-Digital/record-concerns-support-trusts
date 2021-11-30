@@ -323,6 +323,89 @@ namespace Service.Redis.Tests.Records
 		}
 		
 		[Test]
+		public async Task WhenGetRecordsByCaseUrn_CacheNotNull_CaseUrnExists_RecordsIsEmpty_CallApi_Return_RecordsDto()
+		{
+			// arrange
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockRecordService = new Mock<IRecordService>();
+			var mockLogger = new Mock<ILogger<RecordCachedService>>();
+
+			var recordsDto = RecordFactory.BuildListRecordDto();
+			var userState = new UserState
+			{
+				TrustUkPrn = "trust-ukprn",
+				CasesDetails =
+				{
+					{ 1, new CaseWrapper { 
+						CaseDto = CaseFactory.BuildCaseDto()
+					} }
+				}
+			}; 
+			
+			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
+				ReturnsAsync(userState);
+			mockRecordService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<long>()))
+				.ReturnsAsync(recordsDto);
+			
+			var recordRecordCachedService = new RecordCachedService(
+				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
+
+			var caseDto = CaseFactory.BuildCaseDto();
+
+			// act
+			var actualRecords = await recordRecordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
+
+			// assert
+			Assert.That(actualRecords, Is.Not.Null);
+			Assert.That(actualRecords.Count, Is.EqualTo(5));
+			
+			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Exactly(2));
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
+			mockRecordService.Verify(c => c.GetRecordsByCaseUrn(It.IsAny<long>()), Times.Once);
+		}		
+		
+		[Test]
+		public async Task WhenGetRecordsByCaseUrn_CacheNotNull_CaseUrnExists_RecordsIsEmpty_CallApi_Return_EmptyRecordsDto()
+		{
+			// arrange
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockRecordService = new Mock<IRecordService>();
+			var mockLogger = new Mock<ILogger<RecordCachedService>>();
+			
+			var userState = new UserState
+			{
+				TrustUkPrn = "trust-ukprn",
+				CasesDetails =
+				{
+					{ 1, new CaseWrapper { 
+						CaseDto = CaseFactory.BuildCaseDto()
+					} }
+				}
+			}; 
+			
+			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
+				ReturnsAsync(userState);
+			mockRecordService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<long>()))
+				.ReturnsAsync(Array.Empty<RecordDto>());
+			
+			var recordRecordCachedService = new RecordCachedService(
+				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
+
+			var caseDto = CaseFactory.BuildCaseDto();
+
+			// act
+			var actualRecords = await recordRecordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
+
+			// assert
+			Assert.That(actualRecords, Is.Not.Null);
+			Assert.That(actualRecords.Count, Is.EqualTo(0));
+			
+			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
+			mockRecordService.Verify(c => c.GetRecordsByCaseUrn(It.IsAny<long>()), Times.Once);
+		}		
+		
+		[Test]
 		public async Task WhenGetRecordsByCaseUrn_CacheNotNull_KeyMissing_Return_RecordsDto()
 		{
 			// arrange
