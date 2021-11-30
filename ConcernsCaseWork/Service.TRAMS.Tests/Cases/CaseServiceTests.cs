@@ -24,6 +24,7 @@ namespace Service.TRAMS.Tests.Cases
 		{
 			// arrange
 			var expectedCases = CaseFactory.BuildListCaseDto();
+			var expectedApiListWrapper = new ApiListWrapper<CaseDto>(expectedCases, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -34,7 +35,7 @@ namespace Service.TRAMS.Tests.Cases
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedCases))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(expectedApiListWrapper))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
@@ -78,7 +79,7 @@ namespace Service.TRAMS.Tests.Cases
 		}
 		
 		[Test]
-		public async Task WhenGetCasesByCaseworker_ThrowsException_ReturnsEmptyCases()
+		public void WhenGetCasesByCaseworker_ThrowsException_ReturnsEmptyCases()
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
@@ -100,12 +101,8 @@ namespace Service.TRAMS.Tests.Cases
 			var logger = new Mock<ILogger<CaseService>>();
 			var caseService = new CaseService(httpClientFactory.Object, logger.Object);
 			
-			// act
-			var cases = await caseService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch("caseworker", 1));
-
-			// assert
-			Assert.That(cases, Is.Not.Null);
-			Assert.That(cases.Data.Count, Is.EqualTo(0));
+			// act | assert
+			Assert.ThrowsAsync<HttpRequestException>(() => caseService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch("caseworker", 1)));
 		}
 		
 		[Test]
