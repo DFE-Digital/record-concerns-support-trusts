@@ -44,14 +44,14 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			const string trustUkPrn = "trust-ukprn";
-			var casesDto = CaseFactory.BuildListCaseDtoStatusMonitoring(trustUkPrn);
+			var casesDto = CaseFactory.BuildListCaseDtoStatus(trustUkPrn);
 			
 			var recordsDtoCaseUrnAtIndex1 = RecordFactory.BuildListRecordDtoByCaseUrn(casesDto.ElementAt(0).Urn);
 			var recordsDtoCaseUrnAtIndex2 = RecordFactory.BuildListRecordDtoByCaseUrn(casesDto.ElementAt(1).Urn);
 			var recordsDto = new List<RecordDto>(recordsDtoCaseUrnAtIndex1);
 			recordsDto.AddRange(recordsDtoCaseUrnAtIndex2);
 			
-			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
+			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), casesDto.First().Urn);
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
 			var trustDto = TrustFactory.BuildTrustDetailsDto();
@@ -198,10 +198,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var casesDto = CaseFactory.BuildListCaseDto();
-			var casesDtoLive = casesDto.Where(c => c.StatusUrn.CompareTo(1) == 0).ToList();
-			var casesDtoMonitoring = casesDto.Where(c => c.StatusUrn.CompareTo(2) == 0).ToList();
-			
-			var firstCaseDto = casesDto.First();
+			var casesDtoLive = CaseFactory.BuildListCaseDtoStatus();
+			var casesDtoMonitoring = CaseFactory.BuildListCaseDtoStatus();
 			
 			// All the records from cases
 			var recordsDto = new List<RecordDto>();
@@ -214,11 +212,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var recordsDtoLiveCases = RecordFactory.BuildListRecordDtoByCaseUrn(casesDtoLive.ElementAt(0).Urn);
 			var recordsDtoMonitoringCases = RecordFactory.BuildListRecordDtoByCaseUrn(casesDtoMonitoring.ElementAt(0).Urn);
 
-			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
-			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
+			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), casesDtoLive.First().Urn);
+			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), casesDtoMonitoring.First().Urn);
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
-			var trustDto = TrustFactory.BuildTrustDetailsDto(firstCaseDto.TrustUkPrn);
+			var trustDto = TrustFactory.BuildTrustDetailsDto(casesDto.First().TrustUkPrn);
 			
 			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(statusLiveDto)

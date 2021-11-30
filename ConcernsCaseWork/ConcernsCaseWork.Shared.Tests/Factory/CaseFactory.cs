@@ -124,7 +124,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			};
 		}
 
-		public static List<CaseDto> BuildListCaseDtoStatusMonitoring(string trustUkPrn = null)
+		public static List<CaseDto> BuildListCaseDtoStatus(string trustUkPrn = null)
 		{
 			var dateTimeNow = DateTimeOffset.Now;
 			return new List<CaseDto>
@@ -146,8 +146,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<string>(), 
 					Fixture.Create<string>(), 
 					Fixture.Create<string>(), 
-					3, 
-					2
+					Fixture.Create<long>(), 
+					Fixture.Create<long>()
 				),
 				new CaseDto(
 					dateTimeNow, 
@@ -166,8 +166,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<string>(), 
 					Fixture.Create<string>(), 
 					Fixture.Create<string>(), 
-					5, 
-					2
+					Fixture.Create<long>(), 
+					Fixture.Create<long>()
 				)
 			};
 		}
