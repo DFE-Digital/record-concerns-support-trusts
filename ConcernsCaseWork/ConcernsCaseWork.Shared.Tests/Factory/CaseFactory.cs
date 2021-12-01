@@ -285,7 +285,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				UpdatedAt = Fixture.Create<DateTimeOffset>(),
 				SubType = Fixture.Create<string>(),
 				RatingUrn = 1,
-				RatingName = Fixture.Create<string>(),
 				DirectionOfTravel = Fixture.Create<string>(),
 				Issue = Fixture.Create<string>(),
 				CurrentStatus = Fixture.Create<string>(),

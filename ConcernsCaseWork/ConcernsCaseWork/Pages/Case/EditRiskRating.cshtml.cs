@@ -73,7 +73,6 @@ namespace ConcernsCaseWork.Pages.Case
 
 				var splitRagRating = riskRating.Split(":");
 				var ratingUrn = splitRagRating[0];
-				var ratingName = splitRagRating[1];
 
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel
@@ -81,7 +80,6 @@ namespace ConcernsCaseWork.Pages.Case
 					Urn = caseUrn,
 					CreatedBy = User.Identity.Name,
 					UpdatedAt = DateTimeOffset.Now,
-					RatingName = ratingName,
 					RatingUrn = long.Parse(ratingUrn)
 				};
 					
