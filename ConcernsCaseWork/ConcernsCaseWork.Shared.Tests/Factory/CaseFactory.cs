@@ -123,54 +123,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				)
 			};
 		}
-
-		public static List<CaseDto> BuildListCaseDtoStatus(string trustUkPrn = null)
-		{
-			var dateTimeNow = DateTimeOffset.Now;
-			return new List<CaseDto>
-			{
-				new CaseDto(
-					dateTimeNow, 
-					dateTimeNow, 
-					dateTimeNow, 
-					dateTimeNow, 
-					Fixture.Create<string>(),
-					Fixture.Create<string>(), 
-					Fixture.Create<string>(),
-					trustUkPrn ?? Fixture.Create<string>(), 
-					Fixture.Create<string>(), 
-					dateTimeNow, 
-					Fixture.Create<string>(), 
-					Fixture.Create<string>(), 
-					Fixture.Create<string>(), 
-					Fixture.Create<string>(), 
-					Fixture.Create<string>(), 
-					Fixture.Create<string>(), 
-					Fixture.Create<long>(), 
-					Fixture.Create<long>()
-				),
-				new CaseDto(
-					dateTimeNow, 
-					dateTimeNow, 
-					dateTimeNow, 
-					dateTimeNow, 
-					Fixture.Create<string>(),
-					Fixture.Create<string>(), 
-					Fixture.Create<string>(),
-					trustUkPrn ?? Fixture.Create<string>(), 
-					Fixture.Create<string>(), 
-					dateTimeNow, 
-					Fixture.Create<string>(), 
-					Fixture.Create<string>(), 
-					Fixture.Create<string>(), 
-					Fixture.Create<string>(), 
-					Fixture.Create<string>(), 
-					Fixture.Create<string>(), 
-					Fixture.Create<long>(), 
-					Fixture.Create<long>()
-				)
-			};
-		}
 		
 		public static CaseDto BuildCaseDto()
 		{
