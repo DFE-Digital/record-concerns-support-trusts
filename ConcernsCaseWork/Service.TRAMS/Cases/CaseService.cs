@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
@@ -19,15 +18,15 @@ namespace Service.TRAMS.Cases
 			_logger = logger;
 		}
 		
-		public async Task<IList<CaseDto>> GetCasesByCaseworkerAndStatus(string caseworker, long statusUrn)
+		public async Task<ApiListWrapper<CaseDto>> GetCasesByCaseworkerAndStatus(CaseCaseWorkerSearch caseCaseWorkerSearch)
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::GetCasesByCaseworkerAndStatus {Caseworker} {StatusUrn}", caseworker, statusUrn);
+				_logger.LogInformation("CaseService::GetCasesByCaseworkerAndStatus {Caseworker} {StatusUrn}", caseCaseWorkerSearch.CaseWorkerName, caseCaseWorkerSearch.StatusUrn);
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"/{EndpointsVersion}/{EndpointPrefix}/owner/{caseworker}?status={statusUrn}");
+					$"/{EndpointsVersion}/{EndpointPrefix}/owner/{caseCaseWorkerSearch.CaseWorkerName}?status={caseCaseWorkerSearch.StatusUrn}&page={caseCaseWorkerSearch.Page}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient(HttpClientName);
@@ -42,16 +41,16 @@ namespace Service.TRAMS.Cases
 				var content = await response.Content.ReadAsStringAsync();
 				
 				// Deserialize content to POCO
-				var casesDto = JsonConvert.DeserializeObject<IList<CaseDto>>(content);
+				var apiWrapperCasesDto = JsonConvert.DeserializeObject<ApiListWrapper<CaseDto>>(content);
 
-				return casesDto;
+				return apiWrapperCasesDto;
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("CaseService::GetCasesByCaseworkerAndStatus::Exception message::{Message}", ex.Message);
+				
+				throw;
 			}
-			
-			return Array.Empty<CaseDto>();
 		}
 
 		public async Task<CaseDto> GetCaseByUrn(long urn)

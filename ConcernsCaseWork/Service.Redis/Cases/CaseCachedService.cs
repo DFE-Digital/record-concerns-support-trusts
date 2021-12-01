@@ -2,9 +2,9 @@
 using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.TRAMS.Cases;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Cases
@@ -13,38 +13,51 @@ namespace Service.Redis.Cases
 	{
 		private readonly ILogger<CaseCachedService> _logger;
 		private readonly ICaseService _caseService;
+		private readonly ICaseSearchService _caseSearchService;
 		
-		public CaseCachedService(ICacheProvider cacheProvider, ICaseService caseService, ILogger<CaseCachedService> logger) 
+		private readonly SemaphoreSlim _semaphoreCasesCaseworkStatus = new SemaphoreSlim(1, 1);
+		
+		public CaseCachedService(ICacheProvider cacheProvider, ICaseService caseService, ICaseSearchService caseSearchService, ILogger<CaseCachedService> logger) 
 			: base(cacheProvider)
 		{
 			_caseService = caseService;
+			_caseSearchService = caseSearchService;
 			_logger = logger;
 		}
 
 		public async Task<IList<CaseDto>> GetCasesByCaseworkerAndStatus(string caseworker, long statusUrn)
 		{
-			_logger.LogInformation("CaseCachedService::GetCasesByCaseworkerAndStatus");
+			_logger.LogInformation("CaseCachedService::GetCasesByCaseworkerAndStatus {Caseworker} - {StatusUrn}", caseworker, statusUrn);
 
 			var userState = await GetData<UserState>(caseworker);
-			if (userState != null) return userState.CasesDetails.Values.Select(c => c.CaseDto).ToList();
-			
-			var cases = await _caseService.GetCasesByCaseworkerAndStatus(caseworker, statusUrn);
-			if (!cases.Any()) return cases;
-			
-			userState = new UserState();
-			foreach (var caseDto in cases)
+			if (userState != null)
 			{
-				userState.CasesDetails.Add(caseDto.Urn, new CaseWrapper { CaseDto = caseDto });
+				var cachedCases = userState.CasesDetails.Values.Where(caseWrapper => caseWrapper.CaseDto.StatusUrn.CompareTo(statusUrn) == 0)
+					.Select(caseWrapper => caseWrapper.CaseDto).ToList();
+
+				if (cachedCases.Any()) return cachedCases;
 			}
-				
+			
+			IList<CaseDto> casesDto = await _caseSearchService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch(caseworker, statusUrn));
+			if (!casesDto.Any()) return casesDto;
+			
+			await _semaphoreCasesCaseworkStatus.WaitAsync();
+
+			userState = await GetData<UserState>(caseworker);
+			userState ??= new UserState();
+
+			Parallel.ForEach(casesDto, caseDto => userState.CasesDetails.TryAdd(caseDto.Urn, new CaseWrapper { CaseDto = caseDto }));
+			
 			await StoreData(caseworker, userState);
-
-			return cases;
+			
+			_semaphoreCasesCaseworkStatus.Release();
+				
+			return casesDto;
 		}
-
+		
 		public async Task<CaseDto> GetCaseByUrn(string caseworker, long urn)
 		{
-			_logger.LogInformation("CaseCachedService::GetCaseByUrn");
+			_logger.LogInformation("CaseCachedService::GetCaseByUrn {Caseworker} - {CaseUrn}", caseworker, urn);
 			
 			var userState = await GetData<UserState>(caseworker);
 			if (userState != null && userState.CasesDetails.TryGetValue(urn, out var caseWrapper))
@@ -63,11 +76,10 @@ namespace Service.Redis.Cases
 
 		public async Task<CaseDto> PostCase(CreateCaseDto createCaseDto)
 		{
-			_logger.LogInformation("CaseCachedService::PostCase");
+			_logger.LogInformation("CaseCachedService::PostCase {Caseworker}", createCaseDto.CreatedBy);
 			
 			// Create case on Academies API
 			var newCase = await _caseService.PostCase(createCaseDto);
-			if (newCase is null) throw new ApplicationException("Error::CaseCachedService::PostCase");
 			
 			// Store in cache for 24 hours (default)
 			var userState = await GetData<UserState>(newCase.CreatedBy);
@@ -77,9 +89,9 @@ namespace Service.Redis.Cases
 			}
 			else
 			{
-				// Maybe we need to check if a case urn already exists on CaseDetails, extract CaseWrapper and update.
 				userState.CasesDetails.Add(newCase.Urn, new CaseWrapper { CaseDto = newCase });
 			}
+			
 			await StoreData(newCase.CreatedBy, userState);
 
 			return newCase;
@@ -87,11 +99,10 @@ namespace Service.Redis.Cases
 
 		public async Task PatchCaseByUrn(CaseDto caseDto)
 		{
-			_logger.LogInformation("CaseCachedService::PatchCaseByUrn");
+			_logger.LogInformation("CaseCachedService::PatchCaseByUrn {Caseworker} - {CaseUrn}", caseDto.CreatedBy, caseDto.Urn);
 			
 			// Patch case on Academies API
 			var patchCaseDto = await _caseService.PatchCaseByUrn(caseDto);
-			if (patchCaseDto is null) throw new ApplicationException("Error::CaseCachedService::PatchCaseByUrn");
 			
 			// Store in cache for 24 hours (default)
 			var userState = await GetData<UserState>(patchCaseDto.CreatedBy);
@@ -110,37 +121,8 @@ namespace Service.Redis.Cases
 					userState.CasesDetails.Add(patchCaseDto.Urn, new CaseWrapper { CaseDto = patchCaseDto });
 				}
 			}
+			
 			await StoreData(patchCaseDto.CreatedBy, userState);
-		}
-
-		/// <summary>
-		/// TODO Primary is under review to maybe be removed in terms of business logic.
-		/// </summary>
-		/// <param name="caseworker"></param>
-		/// <param name="caseUrn"></param>
-		/// <returns></returns>
-		public async Task<Boolean> IsCasePrimary(string caseworker, long caseUrn)
-		{
-			_logger.LogInformation("CaseCachedService::IsCasePrimary");
-			
-			// Fetch from cache expiration 24 hours (default)
-			var userState = await GetData<UserState>(caseworker);
-			if (userState is null) {
-			
-				// TODO Enable only when TRAMS API is live
-				// Fetch cases by user
-				//var cases = await _caseService.GetCasesByCaseworker(caseworker);
-				//return !cases.Any();
-
-				return true;
-			}
-
-			if (userState.CasesDetails.ContainsKey(caseUrn) && userState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper))
-			{
-				return !caseWrapper.Records.Any();
-			}
-
-			return true;
 		}
 	}
 }

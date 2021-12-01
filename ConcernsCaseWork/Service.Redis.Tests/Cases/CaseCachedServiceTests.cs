@@ -46,6 +46,7 @@ namespace Service.Redis.Tests.Cases
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
 			var mockLogger = new Mock<ILogger<CaseCachedService>>();
 
 			var caseStateModel = new UserState
@@ -57,7 +58,7 @@ namespace Service.Redis.Tests.Cases
 			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
 				ReturnsAsync(caseStateModel);
 
-			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			// act
 			var casesDto = await caseCachedService.GetCasesByCaseworkerAndStatus("testing", 1);
@@ -67,24 +68,58 @@ namespace Service.Redis.Tests.Cases
 			Assert.That(casesDto.Count, Is.EqualTo(1));
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
-			mockCaseService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			mockCaseService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<CaseCaseWorkerSearch>()), Times.Never);
 		}
 		
 		[Test]
-		public async Task WhenGetCasesByCaseworker_ReturnsCasesDto_FromTramsApi()
+		public async Task WhenGetCasesByCaseworker_ReturnsCasesDto_LookupCache_FetchFromAcademiesApi()
 		{
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
 			var mockLogger = new Mock<ILogger<CaseCachedService>>();
 
 			var expectedCasesDto = CaseFactory.BuildListCaseDto();
+			var caseStateModel = new UserState
+			{
+				TrustUkPrn = "999999",
+				CasesDetails = { { 1, new CaseWrapper{ CaseDto = CaseFactory.BuildCaseDto() } } }
+			};
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
-				Returns(Task.FromResult<UserState>(null));
-			mockCaseService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(expectedCasesDto);
+				ReturnsAsync(caseStateModel);
+			mockCaseSearchService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<CaseCaseWorkerSearch>())).ReturnsAsync(expectedCasesDto);
+
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
-			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
+			// act
+			var casesDto = await caseCachedService.GetCasesByCaseworkerAndStatus("testing", 3);
+			
+			// assert
+			Assert.That(casesDto, Is.Not.Null);
+			Assert.That(casesDto.Count, Is.EqualTo(expectedCasesDto.Count));
+			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Exactly(2));
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
+			mockCaseSearchService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<CaseCaseWorkerSearch>()), Times.Once);
+		}		
+		
+		[Test]
+		public async Task WhenGetCasesByCaseworker_ReturnsCasesDto_FromAcademiesApi()
+		{
+			// arrange
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
+			var mockLogger = new Mock<ILogger<CaseCachedService>>();
+			
+			var expectedCasesDto = CaseFactory.BuildListCaseDto();
+			
+			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
+				ReturnsAsync((UserState)null);
+			mockCaseSearchService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<CaseCaseWorkerSearch>())).ReturnsAsync(expectedCasesDto);
+			
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			// act
 			var casesDto = await caseCachedService.GetCasesByCaseworkerAndStatus("testing", 1);
@@ -92,9 +127,37 @@ namespace Service.Redis.Tests.Cases
 			// assert
 			Assert.That(casesDto, Is.Not.Null);
 			Assert.That(casesDto.Count, Is.EqualTo(expectedCasesDto.Count));
-			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Exactly(2));
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
-			mockCaseService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
+			mockCaseSearchService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<CaseCaseWorkerSearch>()), Times.Once);
+		}
+
+		[Test]
+		public async Task WhenGetCasesByCaseworker_ReturnsEmptyCasesDto_FromAcademiesApi()
+		{
+			// arrange
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
+			var mockLogger = new Mock<ILogger<CaseCachedService>>();
+			
+			var expectedCasesDto = Array.Empty<CaseDto>();
+			
+			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
+				ReturnsAsync((UserState)null);
+			mockCaseSearchService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<CaseCaseWorkerSearch>())).ReturnsAsync(expectedCasesDto);
+			
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
+			
+			// act
+			var casesDto = await caseCachedService.GetCasesByCaseworkerAndStatus("testing", 1);
+			
+			// assert
+			Assert.That(casesDto, Is.Not.Null);
+			Assert.That(casesDto.Count, Is.EqualTo(expectedCasesDto.Length));
+			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
+			mockCaseSearchService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<CaseCaseWorkerSearch>()), Times.Once);
 		}
 		
 		[Test]
@@ -103,6 +166,8 @@ namespace Service.Redis.Tests.Cases
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
+
 			var mockLogger = new Mock<ILogger<CaseCachedService>>();
 
 			var caseStateModel = new UserState
@@ -114,7 +179,7 @@ namespace Service.Redis.Tests.Cases
 			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
 				ReturnsAsync(caseStateModel);
 
-			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			// act
 			var casesDto = await caseCachedService.GetCaseByUrn("testing", 1);
@@ -127,11 +192,12 @@ namespace Service.Redis.Tests.Cases
 		}
 		
 		[Test]
-		public async Task WhenGetCaseByUrn_ReturnsCasesDto_FromTramsApi()
+		public async Task WhenGetCaseByUrn_ReturnsCasesDto_FromAcademiesApi()
 		{
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
 			var mockLogger = new Mock<ILogger<CaseCachedService>>();
 
 			var expectedCaseDto = CaseFactory.BuildCaseDto();
@@ -140,7 +206,7 @@ namespace Service.Redis.Tests.Cases
 				ReturnsAsync((UserState)null);
 			mockCaseService.Setup(c => c.GetCaseByUrn(It.IsAny<long>())).ReturnsAsync(expectedCaseDto);
 			
-			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			// act
 			var casesDto = await caseCachedService.GetCaseByUrn("testing", 1);
@@ -158,6 +224,7 @@ namespace Service.Redis.Tests.Cases
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
 			var mockLogger = new Mock<ILogger<CaseCachedService>>();
 
 			var expectedCreateCaseDto = CaseFactory.BuildCreateCaseDto();
@@ -167,7 +234,7 @@ namespace Service.Redis.Tests.Cases
 				ReturnsAsync((UserState)null);
 			mockCaseService.Setup(c => c.PostCase(It.IsAny<CreateCaseDto>())).ReturnsAsync(expectedCaseDto);
 			
-			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			// act
 			var caseDto = await caseCachedService.PostCase(expectedCreateCaseDto);
@@ -204,6 +271,7 @@ namespace Service.Redis.Tests.Cases
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
 			var mockLogger = new Mock<ILogger<CaseCachedService>>();
 
 			var expectedCreateCaseDto = CaseFactory.BuildCreateCaseDto();
@@ -213,7 +281,7 @@ namespace Service.Redis.Tests.Cases
 				ReturnsAsync(new UserState());
 			mockCaseService.Setup(c => c.PostCase(It.IsAny<CreateCaseDto>())).ReturnsAsync(expectedCaseDto);
 			
-			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			// act
 			var caseDto = await caseCachedService.PostCase(expectedCreateCaseDto);
@@ -245,18 +313,19 @@ namespace Service.Redis.Tests.Cases
 		}
 
 		[Test]
-		public void WhenPostCase_ThrowsException_WhenApiCallReturnsNull()
+		public void WhenPostCase_ThrowsException_WhenApiCall_ThrowsException()
 		{
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
 			var mockLogger = new Mock<ILogger<CaseCachedService>>();
 
 			var expectedCreateCaseDto = CaseFactory.BuildCreateCaseDto();
 			
-			mockCaseService.Setup(c => c.PostCase(It.IsAny<CreateCaseDto>())).ReturnsAsync((CaseDto)null);
+			mockCaseService.Setup(c => c.PostCase(It.IsAny<CreateCaseDto>())).Throws<ApplicationException>();
 			
-			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			// act | assert
 			Assert.ThrowsAsync<ApplicationException>(() => caseCachedService.PostCase(expectedCreateCaseDto));
@@ -267,20 +336,21 @@ namespace Service.Redis.Tests.Cases
 		}		
 		
 		[Test]
-		public void WhenPatchCaseByUrn_ThrowsException_WhenApiCallReturnsNull()
+		public void WhenPatchCaseByUrn_ThrowsException_WhenApiCall_ThrowsException()
 		{
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
 			var mockLogger = new Mock<ILogger<CaseCachedService>>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
 				ReturnsAsync((UserState)null);
-			mockCaseService.Setup(c => c.PatchCaseByUrn(It.IsAny<CaseDto>())).ReturnsAsync((CaseDto)null);
+			mockCaseService.Setup(c => c.PatchCaseByUrn(It.IsAny<CaseDto>())).Throws<ApplicationException>();
 			
-			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			// act | assert
 			Assert.ThrowsAsync<ApplicationException>(() => caseCachedService.PatchCaseByUrn(caseDto));
@@ -296,6 +366,7 @@ namespace Service.Redis.Tests.Cases
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
 			var mockLogger = new Mock<ILogger<CaseCachedService>>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
@@ -304,7 +375,7 @@ namespace Service.Redis.Tests.Cases
 				ReturnsAsync((UserState)null);
 			mockCaseService.Setup(c => c.PatchCaseByUrn(It.IsAny<CaseDto>())).ReturnsAsync(caseDto);
 			
-			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			// act
 			await caseCachedService.PatchCaseByUrn(caseDto);
@@ -321,6 +392,7 @@ namespace Service.Redis.Tests.Cases
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
 			var mockLogger = new Mock<ILogger<CaseCachedService>>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
@@ -329,7 +401,7 @@ namespace Service.Redis.Tests.Cases
 				ReturnsAsync(new UserState());
 			mockCaseService.Setup(c => c.PatchCaseByUrn(It.IsAny<CaseDto>())).ReturnsAsync(caseDto);
 			
-			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			// act
 			await caseCachedService.PatchCaseByUrn(caseDto);
@@ -346,6 +418,7 @@ namespace Service.Redis.Tests.Cases
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
 			var mockLogger = new Mock<ILogger<CaseCachedService>>();
 
 			var userState = new UserState { CasesDetails = { { 1, new CaseWrapper { CaseDto = CaseFactory.BuildCaseDto() } } } };
@@ -355,7 +428,7 @@ namespace Service.Redis.Tests.Cases
 				ReturnsAsync(userState);
 			mockCaseService.Setup(c => c.PatchCaseByUrn(It.IsAny<CaseDto>())).ReturnsAsync(caseDto);
 			
-			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			// act
 			await caseCachedService.PatchCaseByUrn(caseDto);
@@ -364,92 +437,6 @@ namespace Service.Redis.Tests.Cases
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
 			mockCaseService.Verify(c => c.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Once);
-		}
-		
-		[Test]
-		public async Task WhenIsCasePrimary_ReturnsTrue()
-		{
-			// arrange
-			var mockCacheProvider = new Mock<ICacheProvider>();
-			var mockCaseService = new Mock<ICaseService>();
-			var mockLogger = new Mock<ILogger<CaseCachedService>>();
-
-			var userState = new UserState { CasesDetails = { { 1, new CaseWrapper() } } };
-			
-			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
-				ReturnsAsync(userState);
-			
-			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
-			
-			// act
-			var isPrimary = await caseCachedService.IsCasePrimary("testing", 1);
-			
-			// assert
-			Assert.That(isPrimary, Is.True);
-		}
-		
-		[Test]
-		public async Task WhenIsCasePrimary_ReturnsTrue_DefaultReturn()
-		{
-			// arrange
-			var mockCacheProvider = new Mock<ICacheProvider>();
-			var mockCaseService = new Mock<ICaseService>();
-			var mockLogger = new Mock<ILogger<CaseCachedService>>();
-
-			var userState = new UserState { CasesDetails = { { 1, new CaseWrapper() } } };
-			
-			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
-				ReturnsAsync(userState);
-			
-			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
-			
-			// act
-			var isPrimary = await caseCachedService.IsCasePrimary("testing", 2);
-			
-			// assert
-			Assert.That(isPrimary, Is.True);
-		}
-		
-		[Test]
-		public async Task WhenIsCasePrimary_ReturnsFalse()
-		{
-			// arrange
-			var mockCacheProvider = new Mock<ICacheProvider>();
-			var mockCaseService = new Mock<ICaseService>();
-			var mockLogger = new Mock<ILogger<CaseCachedService>>();
-
-			var userState = new UserState { CasesDetails = { { 1, new CaseWrapper{ Records = { { 1, new RecordWrapper() } } } } } };
-			
-			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
-				ReturnsAsync(userState);
-			
-			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
-			
-			// act
-			var isPrimary = await caseCachedService.IsCasePrimary("testing", 1);
-			
-			// assert
-			Assert.That(isPrimary, Is.False);
-		}
-		
-		[Test]
-		public async Task WhenIsCasePrimary_ReturnsFalse_UserState_IsNull()
-		{
-			// arrange
-			var mockCacheProvider = new Mock<ICacheProvider>();
-			var mockCaseService = new Mock<ICaseService>();
-			var mockLogger = new Mock<ILogger<CaseCachedService>>();
-			
-			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
-				ReturnsAsync((UserState)null);
-			
-			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockLogger.Object);
-			
-			// act
-			var isPrimary = await caseCachedService.IsCasePrimary("testing", 1);
-			
-			// assert
-			Assert.That(isPrimary, Is.True);
 		}
 	}
 }

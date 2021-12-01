@@ -123,7 +123,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				)
 			};
 		}
-
+		
 		public static CaseDto BuildCaseDto()
 		{
 			return new CaseDto(
@@ -237,7 +237,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				UpdatedAt = Fixture.Create<DateTimeOffset>(),
 				SubType = Fixture.Create<string>(),
 				RatingUrn = 1,
-				RatingName = Fixture.Create<string>(),
 				DirectionOfTravel = Fixture.Create<string>(),
 				Issue = Fixture.Create<string>(),
 				CurrentStatus = Fixture.Create<string>(),
@@ -270,6 +269,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		public static CaseTrustSearch BuildCaseTrustSearch(string trustUkPrn = "")
 		{
 			return new CaseTrustSearch(trustUkPrn);
+		}
+
+		public static CaseCaseWorkerSearch BuildCaseCaseWorkerSearch()
+		{
+			return new CaseCaseWorkerSearch(Fixture.Create<string>(), Fixture.Create<long>());
 		}
 		
 		public static PageSearch BuildPageSearch()

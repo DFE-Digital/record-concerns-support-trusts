@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.TRAMS.Ratings;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Ratings
@@ -35,22 +33,13 @@ namespace Service.Redis.Ratings
 			var ratings = await GetData<IList<RatingDto>>(RatingsKey);
 			if (ratings != null) return ratings;
 
-			// Fetch from TRAMS API
+			// Fetch from Academies API
 			ratings = await _ratingService.GetRatings();
 
 			// Store in cache for 24 hours (default)
 			await StoreData(RatingsKey, ratings);
 			
 			return ratings;
-		}
-
-		public async Task<RatingDto> GetRatingByName(string name)
-		{
-			_logger.LogInformation("RatingCachedService::GetRatingByName");
-			
-			var ratings = await GetRatings();
-			
-			return ratings.FirstOrDefault(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 		}
 	}
 }

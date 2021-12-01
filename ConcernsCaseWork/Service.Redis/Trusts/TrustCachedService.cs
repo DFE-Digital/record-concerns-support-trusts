@@ -30,7 +30,7 @@ namespace Service.Redis.Trusts
 		{
 			try
 			{
-				_logger.LogInformation("TrustCachedService::GetTrustByUkPrn");
+				_logger.LogInformation("TrustCachedService::GetTrustByUkPrn {UkPrn}", ukPrn);
 				
 				// Check cache
 				var trustsCached = await GetData<IDictionary<string, TrustDetailsDto>>(TrustsKey);
@@ -39,7 +39,7 @@ namespace Service.Redis.Trusts
 					return trustDetailsDto;
 				}
 				
-				// Fetch from TRAMS API
+				// Fetch from Academies API
 				trustDetailsDto = await _trustService.GetTrustByUkPrn(ukPrn);
 
 				// Store in cache for 24 hours (default)

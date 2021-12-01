@@ -29,9 +29,14 @@ namespace ConcernsCaseWork.Pages
         public async Task OnGetAsync()
         {
 	        _logger.LogInformation("HomePageModel::OnGetAsync executed");
-	        
-	        CasesActive = await _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Live);
-	        CasesMonitoring = await _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Monitoring);
+
+	        Task<IList<HomeModel>> liveCases = _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Live);
+	        Task<IList<HomeModel>> monitoringCases = _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Monitoring);
+				
+	        await Task.WhenAll(liveCases, monitoringCases);
+
+	        CasesActive = liveCases.Result;
+	        CasesMonitoring = monitoringCases.Result;
         }
     }
 }
