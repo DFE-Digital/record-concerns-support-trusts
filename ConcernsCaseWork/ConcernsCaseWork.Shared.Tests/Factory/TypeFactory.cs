@@ -40,7 +40,17 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					currentDate, 13)
 			};
 		}
-		
+
+		public static List<TypeDto> BuildListOrphanTypeDto()
+		{
+			var currentDate = DateTimeOffset.Now;
+			return new List<TypeDto>
+			{
+				new TypeDto("Compliance", "Compliance: Financial reporting", currentDate,
+					currentDate, 0)
+			};
+		}
+
 		public static TypeModel BuildTypeModel()
 		{
 			return new TypeModel
