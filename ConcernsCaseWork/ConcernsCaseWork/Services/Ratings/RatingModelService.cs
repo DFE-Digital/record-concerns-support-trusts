@@ -29,8 +29,8 @@ namespace ConcernsCaseWork.Services.Ratings
 			// Filter n/a rating
 			ratingsDto = ratingsDto.Where(r => !r.Name.Equals(RatingMapping.NotApplicable, StringComparison.OrdinalIgnoreCase)).ToList();
 
-			// Map dto to model
-			var ratingsModel= ratingsDto.OrderBy(r => r.Name).Select(RatingMapping.MapDtoToModel).ToList();
+			// Map dto to model, Order by Rating Mapping Order
+			var ratingsModel= ratingsDto.Select(RatingMapping.MapDtoToModel).OrderBy(r => r.RagRating.Item1).ToList();
 
 			return ratingsModel;
 		}
