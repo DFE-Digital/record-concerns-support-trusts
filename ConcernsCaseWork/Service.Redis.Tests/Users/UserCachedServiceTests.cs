@@ -1,7 +1,7 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging;
+using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
-using Service.Redis.Models;
 using Service.Redis.Security;
 using Service.Redis.Users;
 using System.Threading.Tasks;
@@ -17,7 +17,9 @@ namespace Service.Redis.Tests.Users
 			// arrange
 			var mockActiveDirectoryService = new Mock<IActiveDirectoryService>();
 			var mockCacheProvider = new Mock<ICacheProvider>();
-			var cachedUserService = new UserRoleCachedService(mockActiveDirectoryService.Object, mockCacheProvider.Object);
+			var mockLogger = new Mock<ILogger<UserRoleCachedService>>();
+			
+			var cachedUserService = new UserRoleCachedService(mockCacheProvider.Object, mockActiveDirectoryService.Object, mockLogger.Object);
 			var userClaims = new Claims
 			{
 				Email = "test@email.com", 
@@ -29,7 +31,7 @@ namespace Service.Redis.Tests.Users
 				Returns(Task.FromResult(userClaims));
 
 			// act
-			var cachedUser = await cachedUserService.GetUserClaimsAsync(userCredentials);
+			var cachedUser = await cachedUserService.GetUserClaims(userCredentials);
 
 			// assert
 			Assert.That(cachedUser, Is.Not.Null);
@@ -44,7 +46,9 @@ namespace Service.Redis.Tests.Users
 			// arrange
 			var mockActiveDirectoryService = new Mock<IActiveDirectoryService>();
 			var mockCacheProvider = new Mock<ICacheProvider>();
-			var cachedUserService = new UserRoleCachedService(mockActiveDirectoryService.Object, mockCacheProvider.Object);
+			var mockLogger = new Mock<ILogger<UserRoleCachedService>>();
+			
+			var cachedUserService = new UserRoleCachedService(mockCacheProvider.Object, mockActiveDirectoryService.Object, mockLogger.Object);
 			var userClaims = new Claims
 			{
 				Email = "test@email.com", 
@@ -60,7 +64,7 @@ namespace Service.Redis.Tests.Users
 				Returns(Task.FromResult(userClaims));
 			
 			// act
-			var cachedUser = await cachedUserService.GetUserClaimsAsync(userCredentials);
+			var cachedUser = await cachedUserService.GetUserClaims(userCredentials);
 
 			// assert
 			Assert.That(cachedUser, Is.Not.Null);
@@ -75,14 +79,16 @@ namespace Service.Redis.Tests.Users
 			// arrange
 			var mockActiveDirectoryService = new Mock<IActiveDirectoryService>();
 			var mockCacheProvider = new Mock<ICacheProvider>();
-			var cachedUserService = new UserRoleCachedService(mockActiveDirectoryService.Object, mockCacheProvider.Object);
+			var mockLogger = new Mock<ILogger<UserRoleCachedService>>();
+			
+			var cachedUserService = new UserRoleCachedService(mockCacheProvider.Object, mockActiveDirectoryService.Object, mockLogger.Object);
 			var userCredentials = new UserCredentials("test.test", "test@email.com", "password");
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<Claims>(It.IsAny<string>())).
 				Returns(Task.FromResult<Claims>(null));
 
 			// act
-			var cachedUser = await cachedUserService.GetUserClaimsAsync(userCredentials);
+			var cachedUser = await cachedUserService.GetUserClaims(userCredentials);
 
 			// assert
 			Assert.That(cachedUser, Is.Null);

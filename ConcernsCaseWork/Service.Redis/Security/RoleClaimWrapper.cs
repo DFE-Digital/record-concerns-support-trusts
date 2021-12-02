@@ -7,6 +7,6 @@ namespace Service.Redis.Security
 	public sealed class RoleClaimWrapper
 	{
 		public Claims Claims { get; set; }
-		public List<RoleEnum> Roles { get; set; } = new List<RoleEnum>();
+		public IList<RoleEnum> Roles { get; set; } = new List<RoleEnum>();
 	}
 }
