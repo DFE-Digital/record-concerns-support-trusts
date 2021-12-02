@@ -10,26 +10,25 @@ namespace ConcernsCaseWork.Security
 	public sealed class RbacManager : IRbacManager
 	{
 		private readonly IUserRoleCachedService _userRoleCachedService;
-		private readonly IConfiguration _configuration;
 		private readonly ILogger<RbacManager> _logger;
+
+		private readonly string[] _defaultUsers;
 
 		public RbacManager(IConfiguration configuration, IUserRoleCachedService userRoleCachedService, ILogger<RbacManager> logger)
 		{
 			_userRoleCachedService = userRoleCachedService;
-			_configuration = configuration;
 			_logger = logger;
+			
+			// set hardcoded users from configuration
+			// update / remove when AD integration
+			_defaultUsers = configuration["app:username"].Split(',');
 		}
 
 		public async Task<IDictionary<string, RoleClaimWrapper>> GetUsersRoles()
 		{
 			_logger.LogInformation("RbacManager::GetUsersRoles");
 			
-			var defaultUsers = _configuration["app:username"].Split(',');
-			var defaultUserRoleClaim = new Dictionary<string, RoleClaimWrapper>();
-			
-			if (defaultUsers.Length == 0) return defaultUserRoleClaim;
-			
-			var usersRoleClaim = await _userRoleCachedService.GetUsersRoleClaim(defaultUsers);
+			var usersRoleClaim = await _userRoleCachedService.GetUsersRoleClaim(_defaultUsers);
 			
 			return usersRoleClaim;
 		}
@@ -38,7 +37,7 @@ namespace ConcernsCaseWork.Security
 		{
 			_logger.LogInformation("RbacManager::GetUserRoles {User}", user);
 
-			var userRoles = await _userRoleCachedService.GetUserRoleClaim(user);
+			var userRoles = await _userRoleCachedService.GetRoleClaimWrapper(_defaultUsers, user);
 			
 			return userRoles.Roles;
 		}

@@ -7,6 +7,6 @@ namespace Service.Redis.Security
 	[Serializable]
 	public sealed class UserRoleClaimState
 	{
-		public IDictionary<string, RoleClaimWrapper> UserRoleClaim { get; } = new ConcurrentDictionary<string, RoleClaimWrapper>();
+		public IDictionary<string, RoleClaimWrapper> UserRoleClaim { get; set; } = new ConcurrentDictionary<string, RoleClaimWrapper>();
 	}
 }

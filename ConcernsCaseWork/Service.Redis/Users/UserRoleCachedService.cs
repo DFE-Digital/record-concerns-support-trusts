@@ -84,12 +84,12 @@ namespace Service.Redis.Users
 			return userRoleClaimState.UserRoleClaim;
 		}
 
-		public async Task<RoleClaimWrapper> GetUserRoleClaim(string user)
+		public async Task<RoleClaimWrapper> GetRoleClaimWrapper(string[] users, string user)
 		{
 			_logger.LogInformation("UserRoleCachedService::GetUserRoleClaim {UserName}", user);
 			
-			var userRoleClaimState = await GetData<UserRoleClaimState>(UserRoleClaimKey);
-			if (userRoleClaimState != null && userRoleClaimState.UserRoleClaim.TryGetValue(user, out var roleClaimWrapper)) 
+			var userRoleClaimState = await GetData<UserRoleClaimState>(UserRoleClaimKey) ?? new UserRoleClaimState { UserRoleClaim = await GetUsersRoleClaim(users) };
+			if (userRoleClaimState.UserRoleClaim.TryGetValue(user, out var roleClaimWrapper)) 
 			{
 				if (roleClaimWrapper.Roles.Any())
 					return roleClaimWrapper;
@@ -98,7 +98,6 @@ namespace Service.Redis.Users
 			}
 			else 
 			{
-				userRoleClaimState ??= new UserRoleClaimState();
 				roleClaimWrapper = new RoleClaimWrapper { Roles = UserRoleMap.DefaultUserRole() };
 				
 				userRoleClaimState.UserRoleClaim.Add(user, roleClaimWrapper);

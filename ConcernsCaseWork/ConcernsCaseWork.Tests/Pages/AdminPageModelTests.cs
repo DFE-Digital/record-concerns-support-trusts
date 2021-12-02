@@ -1,10 +1,14 @@
-﻿using ConcernsCaseWork.Pages;
+﻿using ConcernsCaseWork.Pages.Admin;
+using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Logging;
+using Moq;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages
 {
@@ -12,23 +16,26 @@ namespace ConcernsCaseWork.Tests.Pages
 	public class AdminPageModelTests
 	{
 		[Test]
-		public void WhenOnGet_ReturnsPage()
+		public async Task WhenOnGet_ReturnsPage()
 		{
 			// arrange
-			var pageModel = SetupAdminPageModel();
+			var mockRbacManager = new Mock<IRbacManager>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
+			
+			var pageModel = SetupAdminPageModel(mockRbacManager.Object, mockLogger.Object);
 			
 			// act
-			pageModel.OnGet();
+			await pageModel.OnGetAsync();
 
 			// assert
 			
 		}
 
-		private static AdminPageModel SetupAdminPageModel(bool isAuthenticated = false)
+		private static IndexPageModel SetupAdminPageModel(IRbacManager rbacManager, ILogger<IndexPageModel> logger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new AdminPageModel()
+			return new IndexPageModel(rbacManager, logger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
