@@ -20,6 +20,11 @@ namespace Service.Redis.Users
 			_logger = logger;
 		}
 		
+		public async Task ClearData()
+		{
+			await ClearData(UserRoleClaimKey);
+		}
+		
 		/// <summary>
 		/// TODO: Logic to be review when AD integration is done
 		/// </summary>
@@ -81,7 +86,7 @@ namespace Service.Redis.Users
 
 		public async Task<RoleClaimWrapper> GetUserRoleClaim(string user)
 		{
-			_logger.LogInformation("UserRoleCachedService::GetUserRoleClaim");
+			_logger.LogInformation("UserRoleCachedService::GetUserRoleClaim {UserName}", user);
 			
 			var userRoleClaimState = await GetData<UserRoleClaimState>(UserRoleClaimKey);
 			if (userRoleClaimState != null && userRoleClaimState.UserRoleClaim.TryGetValue(user, out var roleClaimWrapper)) 
@@ -102,6 +107,19 @@ namespace Service.Redis.Users
 			await StoreData(user, userRoleClaimState);
 			
 			return roleClaimWrapper;
+		}
+
+		public async Task UpdateUserRoles(string user, IList<RoleEnum> roles)
+		{
+			_logger.LogInformation("UserRoleCachedService::UpdateUserRoles {UserName}", user);
+			
+			var userRoleClaimState = await GetData<UserRoleClaimState>(UserRoleClaimKey);
+			if (userRoleClaimState != null && userRoleClaimState.UserRoleClaim.TryGetValue(user, out var roleClaimWrapper))
+			{
+				roleClaimWrapper.Roles = roles;
+				
+				await StoreData(user, userRoleClaimState);
+			}
 		}
 	}
 }

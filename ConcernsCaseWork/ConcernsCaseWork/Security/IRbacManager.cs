@@ -7,6 +7,7 @@ namespace ConcernsCaseWork.Security
 	public interface IRbacManager
 	{
 		Task<IDictionary<string, RoleClaimWrapper>> GetUsersRoles();
-		Task GetUserRoles(string user);
+		Task<IList<RoleEnum>> GetUserRoles(string user);
+		Task UpdateUserRoles(string user, IList<RoleEnum> roles);
 	}
 }

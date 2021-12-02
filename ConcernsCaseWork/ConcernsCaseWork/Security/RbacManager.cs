@@ -34,11 +34,20 @@ namespace ConcernsCaseWork.Security
 			return usersRoleClaim;
 		}
 
-		public Task GetUserRoles(string user)
+		public async Task<IList<RoleEnum>> GetUserRoles(string user)
 		{
 			_logger.LogInformation("RbacManager::GetUserRoles {User}", user);
+
+			var userRoles = await _userRoleCachedService.GetUserRoleClaim(user);
 			
-			throw new System.NotImplementedException();
+			return userRoles.Roles;
+		}
+
+		public async Task UpdateUserRoles(string user, IList<RoleEnum> roles)
+		{
+			_logger.LogInformation("RbacManager::UpdateUserRoles {User}", user);
+			
+			await _userRoleCachedService.UpdateUserRoles(user, roles);
 		}
 	}
 }
