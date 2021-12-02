@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.Tests.Services.Ratings
 			
 			// Filter n/a rating
 			ratingsDto = ratingsDto.Where(r => !r.Name.Equals(RatingMapping.NotApplicable, StringComparison.OrdinalIgnoreCase)).ToList();
-			var ratingsModelSorted= ratingsDto.OrderBy(r => r.Name).Select(RatingMapping.MapDtoToModel).ToList();
+			var ratingsModelSorted= ratingsDto.Select(RatingMapping.MapDtoToModel).OrderBy(r => r.RagRating.Item1).ToList();
 			
 			for (var index = 0; index < ratingsModel.Count; index++)
 			{
@@ -77,7 +77,7 @@ namespace ConcernsCaseWork.Tests.Services.Ratings
 			
 			// Filter n/a rating
 			ratingsDto = ratingsDto.Where(r => !r.Name.Equals(RatingMapping.NotApplicable, StringComparison.OrdinalIgnoreCase)).ToList();
-			var ratingsModelSorted= ratingsDto.OrderBy(r => r.Name).Select(RatingMapping.MapDtoToModel).ToList();
+			var ratingsModelSorted = ratingsDto.Select(RatingMapping.MapDtoToModel).OrderBy(r => r.RagRating.Item1);
 			
 			for (var index = 0; index < ratingsModel.Count; index++)
 			{
