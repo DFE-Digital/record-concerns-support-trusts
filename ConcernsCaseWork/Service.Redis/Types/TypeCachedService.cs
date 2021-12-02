@@ -35,7 +35,7 @@ namespace Service.Redis.Types
 			var types = await GetData<IList<TypeDto>>(TypesKey);
 			if (types != null) return types;
 
-			// Fetch from TRAMS API
+			// Fetch from Academies API
 			types = await _typeService.GetTypes();
 
 			// Store in cache for 24 hours (default)
