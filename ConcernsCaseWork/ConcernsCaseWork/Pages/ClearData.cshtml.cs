@@ -7,6 +7,7 @@ using Service.Redis.Ratings;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
 using Service.Redis.Types;
+using Service.Redis.Users;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages
@@ -15,6 +16,7 @@ namespace ConcernsCaseWork.Pages
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class ClearDataPageModel : PageModel
 	{
+		private readonly IUserRoleCachedService _userRoleCachedService;
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly IRatingCachedService _ratingCachedService;
 		private readonly ITrustCachedService _trustCachedService;
@@ -27,8 +29,10 @@ namespace ConcernsCaseWork.Pages
 			IStatusCachedService statusCachedService, 
 			IRatingCachedService ratingCachedService,
 			ITrustCachedService trustCachedService,
+			IUserRoleCachedService userRoleCachedService,
 			ILogger<ClearDataPageModel> logger)
 		{
+			_userRoleCachedService = userRoleCachedService;
 			_statusCachedService = statusCachedService;
 			_ratingCachedService = ratingCachedService;
 			_trustCachedService = trustCachedService;
@@ -48,6 +52,7 @@ namespace ConcernsCaseWork.Pages
 			await _statusCachedService.ClearData();
 			await _ratingCachedService.ClearData();
 			await _trustCachedService.ClearData();
+			await _userRoleCachedService.ClearData();
 
 			return RedirectToPage("home");
 		}
