@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Security
 {
+	/// <summary>
+	/// NOTE: Waiting for AD integration to adjust service accordingly
+	/// </summary>
 	public sealed class RbacManager : IRbacManager
 	{
 		private readonly IUserRoleCachedService _userRoleCachedService;

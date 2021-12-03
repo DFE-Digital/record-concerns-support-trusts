@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.Pages.Admin
 	    
 	    public IDictionary<string, RoleClaimWrapper> UsersRole { get; private set; }
 	    // Disable editing on the page when it's admin username, re-think further inline when AD integration.
-	    public const string AdminUserName = "concerns.casework";
+	    public const string AdminUserName = UserRoleMap.AdminUserName;
 	    
 	    public IndexPageModel(IRbacManager rbacManager, IUserRoleCachedService userRoleCachedService, ILogger<IndexPageModel> logger)
 	    {
@@ -36,16 +36,16 @@ namespace ConcernsCaseWork.Pages.Admin
 	        await LoadPage();
         }
 
-        public async Task<IActionResult> OnGetClearCache()
+        public async Task OnGetClearCache()
         {
 	        _logger.LogInformation("Admin::IndexPageModel::OnGetClearCache");
 	        
 	        await _userRoleCachedService.ClearData();
-	        
-	        return await LoadPage();
+
+	        await LoadPage();
         }
         
-        private async Task<ActionResult> LoadPage()
+        private async Task LoadPage()
         {
 			// Check if logged user has admin role
 	        var userRoles = await _rbacManager.GetUserRoles(User.Identity.Name);
@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.Pages.Admin
 		        TempData["Error.Message"] = $"The logged user {User.Identity.Name} doesn't have the necessary Roles to view the page.";
 	        }
 
-	        return Page();
+	        Page();
         }
     }
 }

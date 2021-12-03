@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Service.Redis.Security
 {
 	/// <summary>
-	/// TODO: Replace / review this class when AD is integrated.
+	/// NOTE: Replace / review this class when AD is integrated.
 	/// </summary>
 	public static class UserRoleMap
 	{
@@ -21,6 +21,8 @@ namespace Service.Redis.Security
 			{ "stephanie.maskery", new List<RoleEnum> { RoleEnum.User } }
 		};
 
+		public const string AdminUserName = "concerns.casework";
+		
 		public static List<RoleEnum> DefaultUserRole()
 		{
 			return new List<RoleEnum> { RoleEnum.User };
@@ -33,7 +35,7 @@ namespace Service.Redis.Security
 			var usersRoles = new Dictionary<string, List<RoleEnum>>();
 			foreach (var user in users)
 			{
-				if (user.Equals("concerns.casework", StringComparison.OrdinalIgnoreCase))
+				if (user.Equals(AdminUserName, StringComparison.OrdinalIgnoreCase))
 				{
 					usersRoles.Add(user, new List<RoleEnum> { RoleEnum.User, RoleEnum.Admin, RoleEnum.Leader });
 					continue;

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Service.Redis.Users
 {
+	/// <summary>
+	/// NOTE: Waiting for AD integration to adjust service accordingly
+	/// </summary>
 	public sealed class UserRoleCachedService : CachedService, IUserRoleCachedService
 	{
 		private readonly IActiveDirectoryService _activeDirectoryService;
@@ -25,9 +28,6 @@ namespace Service.Redis.Users
 			await ClearData(UserRoleClaimKey);
 		}
 		
-		/// <summary>
-		/// TODO: Logic to be review when AD integration is done
-		/// </summary>
 		public async Task<Claims> GetUserClaims(UserCredentials userCredentials)
 		{
 			_logger.LogInformation("UserRoleCachedService::GetUserClaims {UserName} {Email}", userCredentials.UserName, userCredentials.Email);
