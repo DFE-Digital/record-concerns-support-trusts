@@ -102,7 +102,7 @@ namespace Service.Redis.Users
 				userRoleClaimState.UserRoleClaim.Add(user, roleClaimWrapper);
 			}
 			
-			await StoreData(user, userRoleClaimState);
+			await StoreData(UserRoleClaimKey, userRoleClaimState);
 			
 			return roleClaimWrapper;
 		}
@@ -116,7 +116,7 @@ namespace Service.Redis.Users
 			{
 				roleClaimWrapper.Roles = roles;
 				
-				await StoreData(user, userRoleClaimState);
+				await StoreData(UserRoleClaimKey, userRoleClaimState);
 			}
 		}
 	}

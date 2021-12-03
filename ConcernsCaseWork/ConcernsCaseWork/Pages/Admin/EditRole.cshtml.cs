@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Service.Redis.Security;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Admin
@@ -19,6 +21,8 @@ namespace ConcernsCaseWork.Pages.Admin
 
 		public IList<RoleEnum> Roles { get; private set; }
 		public IList<RoleEnum> UserRoles { get; private set; }
+		public string UserName { get; private set; }
+		public string PreviousUrl { get; private set; }
 		
 		public EditRolePageModel(IRbacManager rbacManager, ILogger<EditRolePageModel> logger)
 		{
@@ -26,20 +30,17 @@ namespace ConcernsCaseWork.Pages.Admin
 			_logger = logger;
 		}
 		
-		public async Task OnGetAsync()
+		public async Task<ActionResult> OnGetAsync()
 		{
+			var userName = string.Empty;
+			
 			try
 			{
 				_logger.LogInformation("EditRolePageModel::OnGetAsync");
 				
-				var userName = RouteData.Values["username"].ToString();
+				userName = RouteData.Values["username"].ToString();
 				if (string.IsNullOrEmpty(userName)) 
 					throw new Exception("EditRolePageModel::OnGetAsync::Missing route data");
-				
-				TempData["Data.UserName"] = userName;
-
-				Roles = new List<RoleEnum> { RoleEnum.Admin, RoleEnum.Leader, RoleEnum.User };
-				UserRoles = await _rbacManager.GetUserRoles(User.Identity.Name);
 			}
 			catch (Exception ex)
 			{
@@ -47,19 +48,27 @@ namespace ConcernsCaseWork.Pages.Admin
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
+			
+			return await LoadPage(Request.Headers["Referer"].ToString(), userName);
 		}
 
-		public async Task<ActionResult> OnPostEditRole()
+		public async Task<ActionResult> OnPostEditRole(string url)
 		{
+			var userName = string.Empty;
+			
 			try
 			{
 				var rolesSelected = Request.Form["role"].ToString();
-				if (string.IsNullOrEmpty(rolesSelected)) 
+				userName = Request.Form["username"].ToString();
+				if (string.IsNullOrEmpty(rolesSelected) || string.IsNullOrEmpty(userName)) 
 					throw new Exception("EditRolePageModel::OnPostEditRole::Missing request form data");
-				
-				
-				
 
+				var rolesSplit = rolesSelected.Split(",");
+				var rolesEnum = rolesSplit.Select(role => role.ToEnum<RoleEnum>()).ToList();
+				
+				await _rbacManager.UpdateUserRoles(userName, rolesEnum);
+
+				return Redirect("/admin");
 			}
 			catch (Exception ex)
 			{
@@ -68,7 +77,19 @@ namespace ConcernsCaseWork.Pages.Admin
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 			
-			return Redirect("/admin");
+			return await LoadPage(url, userName);
+		}
+		
+		private async Task<ActionResult> LoadPage(string url, string userName)
+		{
+			if (string.IsNullOrEmpty(userName)) return Page();
+			
+			UserName = userName;
+			Roles = new List<RoleEnum> { RoleEnum.Admin, RoleEnum.Leader, RoleEnum.User };
+			UserRoles = await _rbacManager.GetUserRoles(UserName);
+			PreviousUrl = url;
+
+			return Page();
 		}
 	}
 }

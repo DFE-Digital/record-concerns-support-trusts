@@ -25,7 +25,7 @@
 					<fieldset class="govuk-fieldset" aria-describedby="role-hint">
 						<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
 							<h1 class="govuk-fieldset__heading">
-								Edit "@TempData["Data.UserName"]" roles
+								"@Model.UserName" roles
 							</h1>
 						</legend>
 						<div id="waste-hint" class="govuk-hint">
@@ -34,6 +34,9 @@
 
 						<form role="form" asp-page-handler="editRole" method="post" id="edit-role-form" novalidate>
 
+							<input type="hidden" name="username" value="@Model.UserName"/>
+							<input type="hidden" name="url" value="@Model.PreviousUrl"/>
+							
 							<div class="govuk-checkboxes" data-module="govuk-checkboxes">
 								@{ var id = 0; }
 								@foreach (var roleEnum in Model.Roles)
@@ -64,8 +67,8 @@
 						<!-- TODO ADD JS FORM VALIDATOR -->
 						<script type="application/javascript" nonce="@nonce">
                         	$(function () {	
-                        		let validator = formValidator($("#risk-rating-form")[0]);
-                        		addRagRatingValidator(validator);
+                        		let validator = formValidator($("#edit-role-form")[0]);
+                        		
                         	});
                         </script>
 						
