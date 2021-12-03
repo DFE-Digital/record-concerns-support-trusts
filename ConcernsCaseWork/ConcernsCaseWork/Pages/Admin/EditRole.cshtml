@@ -3,6 +3,7 @@
 
 @{
 	ViewData["Title"] = "Edit Role";
+	var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
@@ -11,8 +12,66 @@
 	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds">
 			
-			Edit user role
+			<span class="govuk-caption-l">Administrator</span>
+            <h1 class="govuk-heading-l">Edit Roles</h1>
 			
+			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+            	<partial name="_Error"/>
+            }
+			else
+			{
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset" aria-describedby="role-hint">
+						<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+							<h1 class="govuk-fieldset__heading">
+								Edit "@TempData["Data.UserName"]" roles
+							</h1>
+						</legend>
+						<div id="waste-hint" class="govuk-hint">
+							Select all that apply.
+						</div>
+
+						<form role="form" asp-page-handler="editRole" method="post" id="edit-role-form" novalidate>
+
+							<div class="govuk-checkboxes" data-module="govuk-checkboxes">
+								@{ var id = 0; }
+								@foreach (var roleEnum in Model.Roles)
+								{
+									<div class="govuk-checkboxes__item">
+										@{
+											var idStr = id == 0 ? "role" : "role-" + id; 
+											var checkedRole = Model.UserRoles.Contains(roleEnum);
+										}
+										<input class="govuk-checkboxes__input" id="@idStr" name="role" type="checkbox" value="@roleEnum" checked="@checkedRole">
+										<label class="govuk-label govuk-checkboxes__label" for="@idStr">
+											@roleEnum
+										</label>
+									</div>
+									id++;
+								}
+							</div>
+
+							<!--Button group-->
+							<div class="govuk-button-group">
+								<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+									Apply
+								</button>
+								<partial name="_Cancel"/>
+							</div>
+						</form>
+
+						<!-- TODO ADD JS FORM VALIDATOR -->
+						<script type="application/javascript" nonce="@nonce">
+                        	$(function () {	
+                        		let validator = formValidator($("#risk-rating-form")[0]);
+                        		addRagRatingValidator(validator);
+                        	});
+                        </script>
+						
+					</fieldset>
+				</div>
+			}
 			
 		</div>
 	</div>

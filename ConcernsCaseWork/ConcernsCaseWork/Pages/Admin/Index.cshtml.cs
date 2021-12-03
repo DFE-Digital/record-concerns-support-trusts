@@ -26,7 +26,7 @@ namespace ConcernsCaseWork.Pages.Admin
 	    
         public async Task OnGetAsync()
         {
-	        _logger.LogInformation("AdminPageModel::OnGetAsync");
+	        _logger.LogInformation("IndexPageModel::OnGetAsync");
 
 	        // Check if logged user has admin role
 	        var userRoles = await _rbacManager.GetUserRoles(User.Identity.Name);

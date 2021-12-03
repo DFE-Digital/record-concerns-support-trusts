@@ -99,7 +99,6 @@ namespace Service.Redis.Users
 			else 
 			{
 				roleClaimWrapper = new RoleClaimWrapper { Roles = UserRoleMap.DefaultUserRole() };
-				
 				userRoleClaimState.UserRoleClaim.Add(user, roleClaimWrapper);
 			}
 			
