@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Service.Redis.Base;
 using Service.Redis.Security;
 using Service.Redis.Users;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -203,5 +204,89 @@ namespace Service.Redis.Tests.Users
 			// assert
 			Assert.That(userRoleClaimDic, Is.Not.Null);
 		}
+		
+		[Test]
+		public async Task WhenGetRoleClaimWrapper_FromCache_Return_RoleClaimWrapper()
+		{
+			// arrange
+			var mockActiveDirectoryService = new Mock<IActiveDirectoryService>();
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockLogger = new Mock<ILogger<UserRoleCachedService>>();
+			
+			var userRoleClaimState = new UserRoleClaimState { UserRoleClaim = RoleFactory.BuildDicUsersRoles() };
+			(string userName, RoleClaimWrapper roleClaim) = userRoleClaimState.UserRoleClaim.First();
+			
+			mockCacheProvider.Setup(c => c.GetFromCache<UserRoleClaimState>(It.IsAny<string>())).
+				ReturnsAsync(userRoleClaimState);
+
+			var cachedUserService = new UserRoleCachedService(mockCacheProvider.Object, mockActiveDirectoryService.Object, mockLogger.Object);
+
+			// act
+			var roleClaimWrapper = await cachedUserService.GetRoleClaimWrapper(new[] { "user1" }, userName);
+
+			// assert
+			Assert.That(roleClaimWrapper, Is.Not.Null);
+			Assert.That(roleClaimWrapper.Claims, Is.Not.Null);
+			Assert.That(roleClaimWrapper.Roles, Is.Not.Null);
+			Assert.That(roleClaimWrapper.Claims.Email, Is.EqualTo(roleClaim.Claims.Email));
+			Assert.That(roleClaimWrapper.Claims.Id, Is.EqualTo(roleClaim.Claims.Id));
+			Assert.That(roleClaimWrapper.Roles.Count, Is.EqualTo(roleClaim.Roles.Count));
+		}
+		
+		[Test]
+		public async Task WhenGetRoleClaimWrapper_FromCache_RolesInNull_Return_RoleClaimWrapper()
+		{
+			// arrange
+			var mockActiveDirectoryService = new Mock<IActiveDirectoryService>();
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockLogger = new Mock<ILogger<UserRoleCachedService>>();
+			
+			var userRoleClaimState = new UserRoleClaimState { UserRoleClaim = RoleFactory.BuildDicUsersRoles() };
+			(string userName, RoleClaimWrapper roleClaim) = userRoleClaimState.UserRoleClaim.First();
+			roleClaim.Roles = Array.Empty<RoleEnum>();
+			
+			mockCacheProvider.Setup(c => c.GetFromCache<UserRoleClaimState>(It.IsAny<string>())).
+				ReturnsAsync(userRoleClaimState);
+
+			var cachedUserService = new UserRoleCachedService(mockCacheProvider.Object, mockActiveDirectoryService.Object, mockLogger.Object);
+
+			// act
+			var roleClaimWrapper = await cachedUserService.GetRoleClaimWrapper(new[] { "user1" }, userName);
+
+			// assert
+			Assert.That(roleClaimWrapper, Is.Not.Null);
+			Assert.That(roleClaimWrapper.Claims, Is.Not.Null);
+			Assert.That(roleClaimWrapper.Roles, Is.Not.Null);
+			Assert.That(roleClaimWrapper.Claims.Email, Is.EqualTo(roleClaim.Claims.Email));
+			Assert.That(roleClaimWrapper.Claims.Id, Is.EqualTo(roleClaim.Claims.Id));
+			Assert.That(roleClaimWrapper.Roles.Count, Is.EqualTo(UserRoleMap.DefaultUserRole().Count));
+		}
+		
+		[Test]
+		public async Task WhenGetRoleClaimWrapper_FromCache_UserNotFound_Return_RoleClaimWrapper()
+		{
+			// arrange
+			var mockActiveDirectoryService = new Mock<IActiveDirectoryService>();
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockLogger = new Mock<ILogger<UserRoleCachedService>>();
+			
+			var userRoleClaimState = new UserRoleClaimState { UserRoleClaim = RoleFactory.BuildDicUsersRoles() };
+			
+			mockCacheProvider.Setup(c => c.GetFromCache<UserRoleClaimState>(It.IsAny<string>())).
+				ReturnsAsync(userRoleClaimState);
+
+			var cachedUserService = new UserRoleCachedService(mockCacheProvider.Object, mockActiveDirectoryService.Object, mockLogger.Object);
+
+			// act
+			var roleClaimWrapper = await cachedUserService.GetRoleClaimWrapper(new[] { "user1" }, "testing-wrong-user");
+
+			// assert
+			Assert.That(roleClaimWrapper, Is.Not.Null);
+			Assert.That(roleClaimWrapper.Claims, Is.Null);
+			Assert.That(roleClaimWrapper.Roles, Is.Not.Null);
+			Assert.That(roleClaimWrapper.Roles.Count, Is.EqualTo(UserRoleMap.DefaultUserRole().Count));
+		}
+		
+		
 	}
 }
