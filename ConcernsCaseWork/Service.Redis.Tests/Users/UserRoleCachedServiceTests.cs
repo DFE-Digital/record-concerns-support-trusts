@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Shared.Tests.Factory;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -6,6 +7,7 @@ using Service.Redis.Base;
 using Service.Redis.Security;
 using Service.Redis.Users;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -287,6 +289,51 @@ namespace Service.Redis.Tests.Users
 			Assert.That(roleClaimWrapper.Roles.Count, Is.EqualTo(UserRoleMap.DefaultUserRole().Count));
 		}
 		
+		[Test]
+		public async Task WhenUpdateUserRoles_UserFoundCache_Return_Task()
+		{
+			// arrange
+			var mockActiveDirectoryService = new Mock<IActiveDirectoryService>();
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockLogger = new Mock<ILogger<UserRoleCachedService>>();
+			
+			var userRoleClaimState = new UserRoleClaimState { UserRoleClaim = RoleFactory.BuildDicUsersRoles() };
+			(string userName, RoleClaimWrapper _) = userRoleClaimState.UserRoleClaim.First();
+			
+			mockCacheProvider.Setup(c => c.GetFromCache<UserRoleClaimState>(It.IsAny<string>())).
+				ReturnsAsync(userRoleClaimState);
+
+			var cachedUserService = new UserRoleCachedService(mockCacheProvider.Object, mockActiveDirectoryService.Object, mockLogger.Object);
+
+			// act
+			await cachedUserService.UpdateUserRoles(userName, new List<RoleEnum> { RoleEnum.Admin });
+
+			// assert
+			mockCacheProvider.Verify(c => c.GetFromCache<UserRoleClaimState>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserRoleClaimState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
+		}
 		
+		[Test]
+		public async Task WhenUpdateUserRoles_UserNotFoundCache_Return_Task()
+		{
+			// arrange
+			var mockActiveDirectoryService = new Mock<IActiveDirectoryService>();
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockLogger = new Mock<ILogger<UserRoleCachedService>>();
+			
+			var userRoleClaimState = new UserRoleClaimState { UserRoleClaim = RoleFactory.BuildDicUsersRoles() };
+
+			mockCacheProvider.Setup(c => c.GetFromCache<UserRoleClaimState>(It.IsAny<string>())).
+				ReturnsAsync(userRoleClaimState);
+
+			var cachedUserService = new UserRoleCachedService(mockCacheProvider.Object, mockActiveDirectoryService.Object, mockLogger.Object);
+
+			// act
+			await cachedUserService.UpdateUserRoles("wrong-user", new List<RoleEnum> { RoleEnum.Admin });
+
+			// assert
+			mockCacheProvider.Verify(c => c.GetFromCache<UserRoleClaimState>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserRoleClaimState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
+		}
 	}
 }
