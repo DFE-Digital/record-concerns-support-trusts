@@ -32,21 +32,22 @@ namespace Service.Redis.Users
 		{
 			_logger.LogInformation("UserRoleCachedService::GetUserClaims {UserName} {Email}", userCredentials.UserName, userCredentials.Email);
 			
-			var userRoleClaimState = await GetData<UserRoleClaimState>(UserRoleClaimKey);
-			if (userRoleClaimState != null 
-			    && userRoleClaimState.UserRoleClaim.TryGetValue(userCredentials.UserName, out var roleClaimWrapper)
-			    && roleClaimWrapper.Claims != null) return roleClaimWrapper.Claims;
-
 			var userClaims = await _activeDirectoryService.GetUserAsync(userCredentials);
 			
-			userRoleClaimState ??= new UserRoleClaimState();
-
-			if (userRoleClaimState.UserRoleClaim.TryGetValue(userCredentials.UserName, out roleClaimWrapper))
+			var userRoleClaimState = await GetData<UserRoleClaimState>(UserRoleClaimKey);
+			if (userRoleClaimState != null && userRoleClaimState.UserRoleClaim.TryGetValue(userCredentials.UserName, out var roleClaimWrapper))
 			{
+				if (roleClaimWrapper.Claims != null)
+				{
+					return roleClaimWrapper.Claims;
+				}
+				
 				roleClaimWrapper.Claims = userClaims;
 			}
 			else
 			{
+				userRoleClaimState ??= new UserRoleClaimState();
+				
 				var defaultUserRoles = UserRoleMap.InitUserRoles();
 				defaultUserRoles.TryGetValue(userCredentials.UserName, out var roles);
 				roleClaimWrapper = new RoleClaimWrapper { Claims = userClaims, Roles = roles ?? UserRoleMap.DefaultUserRole() };

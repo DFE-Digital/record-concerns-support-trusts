@@ -14,7 +14,7 @@ namespace Service.Redis.Tests.Users
 	public class UserRoleCachedServiceTests
 	{
 		[Test]
-		public async Task WhenGetUserAsyncFromCache_IsSuccessful()
+		public async Task WhenGetUserClaims_FromCache_Return_Claims()
 		{
 			// arrange
 			var mockActiveDirectoryService = new Mock<IActiveDirectoryService>();
@@ -31,17 +31,17 @@ namespace Service.Redis.Tests.Users
 			var cachedUserService = new UserRoleCachedService(mockCacheProvider.Object, mockActiveDirectoryService.Object, mockLogger.Object);
 
 			// act
-			var claims = await cachedUserService.GetUserClaims(userCredentials);
+			var userClaimsResponse = await cachedUserService.GetUserClaims(userCredentials);
 
 			// assert
-			Assert.That(claims, Is.Not.Null);
-			Assert.That(claims, Is.InstanceOf<Claims>());
-			Assert.That(claims.Email, Is.EqualTo(claims.Email));
-			Assert.That(claims.Id, Is.EqualTo(claims.Id));
+			Assert.That(userClaimsResponse, Is.Not.Null);
+			Assert.That(userClaimsResponse, Is.InstanceOf<Claims>());
+			Assert.That(userClaimsResponse.Email, Is.EqualTo(userClaimsResponse.Email));
+			Assert.That(userClaimsResponse.Id, Is.EqualTo(userClaimsResponse.Id));
 		}
 		
 		[Test]
-		public async Task WhenGetUserAsyncFromActiveDirectory_IsSuccessful()
+		public async Task WhenGetUserClaims_CacheIsNull_Return_Claims()
 		{
 			// arrange
 			var mockActiveDirectoryService = new Mock<IActiveDirectoryService>();
@@ -55,45 +55,92 @@ namespace Service.Redis.Tests.Users
 			};
 			var userCredentials = new UserCredentials("test.test", "test@email.com", "password");
 			
-			mockCacheProvider.Setup(c => c.GetFromCache<Claims>(It.IsAny<string>())).
-				Returns(Task.FromResult<Claims>(null));
-			mockCacheProvider.Setup(c => c.CacheTimeToLive()).Returns(24);
-
+			mockCacheProvider.Setup(c => c.GetFromCache<UserRoleClaimState>(It.IsAny<string>())).
+				ReturnsAsync((UserRoleClaimState)null);
+			
 			mockActiveDirectoryService.Setup(ad => ad.GetUserAsync(It.IsAny<UserCredentials>())).
-				Returns(Task.FromResult(userClaims));
+				ReturnsAsync(userClaims);
 			
 			var cachedUserService = new UserRoleCachedService(mockCacheProvider.Object, mockActiveDirectoryService.Object, mockLogger.Object);
 			
 			// act
-			var cachedUser = await cachedUserService.GetUserClaims(userCredentials);
+			var userClaimsResponse = await cachedUserService.GetUserClaims(userCredentials);
 
 			// assert
-			Assert.That(cachedUser, Is.Not.Null);
-			Assert.That(cachedUser, Is.InstanceOf<Claims>());
-			Assert.That(cachedUser.Email, Is.EqualTo(userClaims.Email));
-			Assert.That(cachedUser.Id, Is.EqualTo(userClaims.Id));
+			Assert.That(userClaimsResponse, Is.Not.Null);
+			Assert.That(userClaimsResponse, Is.InstanceOf<Claims>());
+			Assert.That(userClaimsResponse.Email, Is.EqualTo(userClaims.Email));
+			Assert.That(userClaimsResponse.Id, Is.EqualTo(userClaims.Id));
 		}
 		
 		[Test]
-		public async Task WhenGetUserAsyncFromActiveDirectory_IsFailure()
+		public async Task WhenGetUserClaims_CacheContainsUser_Return_Claims()
 		{
 			// arrange
 			var mockActiveDirectoryService = new Mock<IActiveDirectoryService>();
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			var mockLogger = new Mock<ILogger<UserRoleCachedService>>();
 			
-			var userCredentials = new UserCredentials("test.test", "test@email.com", "password");
+			var userRoleClaimState = new UserRoleClaimState { UserRoleClaim = RoleFactory.BuildDicUsersRoles() };
+			var userName = userRoleClaimState.UserRoleClaim.First().Key;
+			var userCredentials = new UserCredentials(userName, userName, userName);
+			var userClaims = new Claims
+			{
+				Email = userName, 
+				Id = "test"
+			};
 			
-			mockCacheProvider.Setup(c => c.GetFromCache<Claims>(It.IsAny<string>())).
-				Returns(Task.FromResult<Claims>(null));
-
+			mockCacheProvider.Setup(c => c.GetFromCache<UserRoleClaimState>(It.IsAny<string>())).
+				ReturnsAsync(userRoleClaimState);
+			mockActiveDirectoryService.Setup(ad => ad.GetUserAsync(It.IsAny<UserCredentials>())).
+				ReturnsAsync(userClaims);
+			
 			var cachedUserService = new UserRoleCachedService(mockCacheProvider.Object, mockActiveDirectoryService.Object, mockLogger.Object);
 			
 			// act
-			var cachedUser = await cachedUserService.GetUserClaims(userCredentials);
+			var userClaimsResponse = await cachedUserService.GetUserClaims(userCredentials);
 
 			// assert
-			Assert.That(cachedUser, Is.Null);
+			Assert.That(userClaimsResponse, Is.Not.Null);
+			Assert.That(userClaimsResponse, Is.InstanceOf<Claims>());
+			Assert.That(userClaimsResponse.Email, Is.EqualTo(userClaimsResponse.Email));
+			Assert.That(userClaimsResponse.Id, Is.EqualTo(userClaimsResponse.Id));
+		}
+		
+		[Test]
+		public async Task WhenGetUserClaims_CacheContainsUser_ClaimsAreNull_Return_Claims()
+		{
+			// arrange
+			var mockActiveDirectoryService = new Mock<IActiveDirectoryService>();
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockLogger = new Mock<ILogger<UserRoleCachedService>>();
+			
+			var userRoleClaimState = new UserRoleClaimState { UserRoleClaim = RoleFactory.BuildDicUsersRoles() };
+			(string userName, RoleClaimWrapper value) = userRoleClaimState.UserRoleClaim.First();
+			value.Claims = null;
+
+			var userCredentials = new UserCredentials(userName, userName, userName);
+			var userClaims = new Claims
+			{
+				Email = userName, 
+				Id = "test"
+			};
+			
+			mockCacheProvider.Setup(c => c.GetFromCache<UserRoleClaimState>(It.IsAny<string>())).
+				ReturnsAsync(userRoleClaimState);
+			mockActiveDirectoryService.Setup(ad => ad.GetUserAsync(It.IsAny<UserCredentials>())).
+				ReturnsAsync(userClaims);
+			
+			var cachedUserService = new UserRoleCachedService(mockCacheProvider.Object, mockActiveDirectoryService.Object, mockLogger.Object);
+			
+			// act
+			var userClaimsResponse = await cachedUserService.GetUserClaims(userCredentials);
+
+			// assert
+			Assert.That(userClaimsResponse, Is.Not.Null);
+			Assert.That(userClaimsResponse, Is.InstanceOf<Claims>());
+			Assert.That(userClaimsResponse.Email, Is.EqualTo(userClaimsResponse.Email));
+			Assert.That(userClaimsResponse.Id, Is.EqualTo(userClaimsResponse.Id));
 		}
 	}
 }
