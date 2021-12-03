@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "/admin/{handler?}"
 @model ConcernsCaseWork.Pages.Admin.IndexPageModel
 
 @{
@@ -8,50 +8,54 @@
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
 
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
+	<div class="govuk-!-margin-top-0">
 
-			<span class="govuk-caption-l">Administrator</span>
-			<h1 class="govuk-heading-l">Users Roles and Configurations</h1>
-				
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-			{
-				<partial name="_Error"/>
-			}
-			else
-			{
-				<dl class="govuk-summary-list">
-					<div class="govuk-summary-list__row">
-						<dt class="govuk-summary-list__key">
-                    		Username
-                    	</dt>
-						<dd class="govuk-summary-list__value">
-							Roles
-						</dd>
-						<dd class="govuk-summary-list__actions"/>
-					</div>
-					@foreach (var (username, roleClaimWrapper) in Model.UsersRole)
-					{
-						<div class="govuk-summary-list__row">
-
-							<dt class="govuk-summary-list__key">
-								@username
-							</dt>
-							<dd class="govuk-summary-list__value">
-								@(string.Join(",", roleClaimWrapper.Roles))
-							</dd>
-							<dd class="govuk-summary-list__actions">
-								@if(!username.Equals(IndexPageModel.AdminUserName)) {
-									<a class="govuk-link" href="@Request.Path/user/@username/edit_role">
-										Change<span class="govuk-visually-hidden"> name</span>
-									</a>
-								}
-							</dd>
-
-						</div>
-					}
-				</dl>
-			}
+		<div class="govuk-button-group flexalign__right">
+            <a class="govuk-button govuk-button--warning" data-module="govuk-button" href="/admin?handler=ClearCache" role="button">
+            	Clear cache
+            </a>
 		</div>
+			
+		<span class="govuk-caption-l">Administrator</span>
+		<h1 class="govuk-heading-l">Users Roles and Configurations</h1>
+			
+		@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+		{
+			<partial name="_Error"/>
+		}
+		else
+		{
+			<dl class="govuk-summary-list">
+				<div class="govuk-summary-list__row">
+					<dt class="govuk-summary-list__key">
+                    	Username
+                    </dt>
+					<dd class="govuk-summary-list__value">
+						Roles
+					</dd>
+					<dd class="govuk-summary-list__actions"/>
+				</div>
+				@foreach (var (username, roleClaimWrapper) in Model.UsersRole)
+				{
+					<div class="govuk-summary-list__row">
+
+						<dt class="govuk-summary-list__key">
+							@username
+						</dt>
+						<dd class="govuk-summary-list__value">
+							@(string.Join(",", roleClaimWrapper.Roles))
+						</dd>
+						<dd class="govuk-summary-list__actions">
+							@if(!username.Equals(IndexPageModel.AdminUserName)) {
+								<a class="govuk-link" href="@Request.Path/user/@username/edit_role">
+									Change<span class="govuk-visually-hidden"> name</span>
+								</a>
+							}
+						</dd>
+
+					</div>
+				}
+			</dl>
+		}
 	</div>
 </div>
