@@ -12,7 +12,6 @@ using Service.Redis.Ratings;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
 using Service.Redis.Types;
-using Service.Redis.Users;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages
@@ -29,12 +28,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
-			var mockUserRoleCachedService = new Mock<IUserRoleCachedService>();
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
 			var pageModel = SetupClearDataModel(mockStatusCachedService.Object, mockRatingCachedService.Object, 
 				mockTypeCachedService.Object, mockCachedService.Object, mockTrustCachedService.Object,
-				mockUserRoleCachedService.Object, mockLogger.Object, true);
+				mockLogger.Object, true);
 
 			// act
 			var response = await pageModel.OnGetAsync();
@@ -62,12 +60,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
-			var mockUserRoleCachedService = new Mock<IUserRoleCachedService>();
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
 			var pageModel = SetupClearDataModel(mockStatusCachedService.Object, mockRatingCachedService.Object, 
 				mockTypeCachedService.Object, mockCachedService.Object, mockTrustCachedService.Object,
-				mockUserRoleCachedService.Object, mockLogger.Object);
+				mockLogger.Object);
 
 			// act
 			var response = await pageModel.OnGetAsync();
@@ -91,14 +88,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			ITypeCachedService mockTypeCachedService, 
 			ICachedService mockCachedService,
 			ITrustCachedService mockTrustCachedService,
-			IUserRoleCachedService mockUserRoleCachedService,
 			ILogger<ClearDataPageModel> mockLogger, 
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
 			return new ClearDataPageModel(mockCachedService, mockTypeCachedService,
-				mockStatusCachedService, mockRatingCachedService, mockTrustCachedService, mockUserRoleCachedService, mockLogger)
+				mockStatusCachedService, mockRatingCachedService, mockTrustCachedService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

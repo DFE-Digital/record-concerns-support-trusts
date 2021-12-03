@@ -15,8 +15,10 @@ namespace ConcernsCaseWork.Pages.Admin
     {
 	    private readonly IRbacManager _rbacManager;
 	    private readonly ILogger<IndexPageModel> _logger;
-
+	    
 	    public IDictionary<string, RoleClaimWrapper> UsersRole { get; private set; }
+	    // Disable editing on the page when it's admin username, re-think further inline when AD integration.
+	    public const string AdminUserName = "concerns.casework";
 	    
 	    public IndexPageModel(IRbacManager rbacManager, ILogger<IndexPageModel> logger)
 	    {

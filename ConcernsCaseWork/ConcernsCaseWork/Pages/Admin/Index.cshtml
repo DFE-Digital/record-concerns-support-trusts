@@ -41,9 +41,11 @@
 								@(string.Join(",", roleClaimWrapper.Roles))
 							</dd>
 							<dd class="govuk-summary-list__actions">
-								<a class="govuk-link" href="@Request.Path/user/@username/edit_role">
-									Change<span class="govuk-visually-hidden"> name</span>
-								</a>
+								@if(!username.Equals(IndexPageModel.AdminUserName)) {
+									<a class="govuk-link" href="@Request.Path/user/@username/edit_role">
+										Change<span class="govuk-visually-hidden"> name</span>
+									</a>
+								}
 							</dd>
 
 						</div>
