@@ -29,15 +29,17 @@ namespace ConcernsCaseWork.Pages.Admin
 		    _logger = logger;
 	    }
 	    
-        public async Task<ActionResult> OnGetAsync()
+        public async Task OnGetAsync()
         {
-	        _logger.LogInformation("IndexPageModel::OnGetAsync");
+	        _logger.LogInformation("Admin::IndexPageModel::OnGetAsync");
 
-	        return await LoadPage();
+	        await LoadPage();
         }
 
         public async Task<IActionResult> OnGetClearCache()
         {
+	        _logger.LogInformation("Admin::IndexPageModel::OnGetClearCache");
+	        
 	        await _userRoleCachedService.ClearData();
 	        
 	        return await LoadPage();
