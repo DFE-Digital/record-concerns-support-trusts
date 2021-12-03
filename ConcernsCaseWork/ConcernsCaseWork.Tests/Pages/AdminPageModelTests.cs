@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Service.Redis.Users;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages
@@ -20,9 +21,10 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockRbacManager = new Mock<IRbacManager>();
+			var mockUserRoleCachedService = new Mock<IUserRoleCachedService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			
-			var pageModel = SetupAdminPageModel(mockRbacManager.Object, mockLogger.Object);
+			var pageModel = SetupAdminPageModel(mockRbacManager.Object, mockUserRoleCachedService.Object, mockLogger.Object);
 			
 			// act
 			await pageModel.OnGetAsync();
@@ -31,11 +33,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 		}
 
-		private static IndexPageModel SetupAdminPageModel(IRbacManager rbacManager, ILogger<IndexPageModel> logger, bool isAuthenticated = false)
+		private static IndexPageModel SetupAdminPageModel(IRbacManager rbacManager, IUserRoleCachedService userRoleCachedService, ILogger<IndexPageModel> logger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new IndexPageModel(rbacManager, logger)
+			return new IndexPageModel(rbacManager, userRoleCachedService, logger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

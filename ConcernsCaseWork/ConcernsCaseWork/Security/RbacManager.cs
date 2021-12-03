@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Security
 			
 			var usersRoleClaim = await _userRoleCachedService.GetUsersRoleClaim(_defaultUsers);
 			
-			return usersRoleClaim;
+			return new SortedDictionary<string, RoleClaimWrapper>(usersRoleClaim);
 		}
 
 		public async Task<IList<RoleEnum>> GetUserRoles(string user)

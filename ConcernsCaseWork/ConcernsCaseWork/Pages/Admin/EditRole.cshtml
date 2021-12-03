@@ -63,12 +63,11 @@
 								<partial name="_Cancel"/>
 							</div>
 						</form>
-
-						<!-- TODO ADD JS FORM VALIDATOR -->
+						
 						<script type="application/javascript" nonce="@nonce">
                         	$(function () {	
                         		let validator = formValidator($("#edit-role-form")[0]);
-                        		
+                        		addRolesValidator(validator);
                         	});
                         </script>
 						
