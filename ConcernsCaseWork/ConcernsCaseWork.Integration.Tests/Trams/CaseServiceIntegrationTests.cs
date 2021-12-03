@@ -35,7 +35,8 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			_factory.Dispose();
 		}
 
-		//[Test] TODO Enable when staging endpoint is deployed 
+		[Test]
+		[Ignore("Academies not release to staging")]
 		public async Task WhenGetCasesByCaseworkerAndStatus_ReturnsListCaseDto()
 		{
 			// arrange
