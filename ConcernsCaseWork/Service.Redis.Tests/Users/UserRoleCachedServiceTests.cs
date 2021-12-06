@@ -306,7 +306,7 @@ namespace Service.Redis.Tests.Users
 			var cachedUserService = new UserRoleCachedService(mockCacheProvider.Object, mockActiveDirectoryService.Object, mockLogger.Object);
 
 			// act
-			await cachedUserService.UpdateUserRoles(userName, new List<RoleEnum> { RoleEnum.Admin });
+			await cachedUserService.UpdateUserRoles(userName, new List<RoleEnum> { RoleEnum.Admin }, new List<string> { "user1", "user2"});
 
 			// assert
 			mockCacheProvider.Verify(c => c.GetFromCache<UserRoleClaimState>(It.IsAny<string>()), Times.Once);
@@ -329,7 +329,7 @@ namespace Service.Redis.Tests.Users
 			var cachedUserService = new UserRoleCachedService(mockCacheProvider.Object, mockActiveDirectoryService.Object, mockLogger.Object);
 
 			// act
-			await cachedUserService.UpdateUserRoles("wrong-user", new List<RoleEnum> { RoleEnum.Admin });
+			await cachedUserService.UpdateUserRoles("wrong-user", new List<RoleEnum> { RoleEnum.Admin }, new List<string> { "user1", "user2"});
 
 			// assert
 			mockCacheProvider.Verify(c => c.GetFromCache<UserRoleClaimState>(It.IsAny<string>()), Times.Once);

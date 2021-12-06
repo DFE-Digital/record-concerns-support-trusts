@@ -53,11 +53,12 @@ namespace ConcernsCaseWork.Tests.Security
 			var rbacManager = new RbacManager(BuildConfiguration(), mockUserRoleCachedService.Object, mockLogger.Object);
 
 			// act
-			var rolesEnum = await rbacManager.GetUserRoles(It.IsAny<string>());
+			var userRoleClaimWrapper = await rbacManager.GetUserRoleClaimWrapper(It.IsAny<string>());
 
 			// assert
-			Assert.That(rolesEnum, Is.Not.Null);
-			CollectionAssert.AreEqual(roleClaimWrapper.Roles, rolesEnum);
+			Assert.That(userRoleClaimWrapper, Is.Not.Null);
+			Assert.That(userRoleClaimWrapper.Roles, Is.Not.Null);
+			CollectionAssert.AreEqual(roleClaimWrapper.Roles, userRoleClaimWrapper.Roles);
 		}
 
 		[Test]
@@ -67,15 +68,15 @@ namespace ConcernsCaseWork.Tests.Security
 			var mockUserRoleCachedService = new Mock<IUserRoleCachedService>();
 			var mockLogger = new Mock<ILogger<RbacManager>>();
 			
-			mockUserRoleCachedService.Setup(urc => urc.UpdateUserRoles(It.IsAny<string>(), It.IsAny<IList<RoleEnum>>()));
+			mockUserRoleCachedService.Setup(urc => urc.UpdateUserRoles(It.IsAny<string>(), It.IsAny<IList<RoleEnum>>(), It.IsAny<IList<string>>()));
 			
 			var rbacManager = new RbacManager(BuildConfiguration(), mockUserRoleCachedService.Object, mockLogger.Object);
 
 			// act
-			await rbacManager.UpdateUserRoles(It.IsAny<string>(), It.IsAny<IList<RoleEnum>>());
+			await rbacManager.UpdateUserRoles(It.IsAny<string>(), It.IsAny<IList<RoleEnum>>(), It.IsAny<IList<string>>());
 
 			// assert
-			mockUserRoleCachedService.Verify(urc => urc.UpdateUserRoles(It.IsAny<string>(), It.IsAny<IList<RoleEnum>>()), Times.Once);
+			mockUserRoleCachedService.Verify(urc => urc.UpdateUserRoles(It.IsAny<string>(), It.IsAny<IList<RoleEnum>>(), It.IsAny<IList<string>>()), Times.Once);
 		}
 
 		private static IConfiguration BuildConfiguration()

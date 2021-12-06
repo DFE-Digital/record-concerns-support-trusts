@@ -112,7 +112,7 @@ namespace Service.Redis.Users
 			return roleClaimWrapper;
 		}
 
-		public async Task UpdateUserRoles(string user, IList<RoleEnum> roles)
+		public async Task UpdateUserRoles(string user, IList<RoleEnum> roles, IList<string> users)
 		{
 			_logger.LogInformation("UserRoleCachedService::UpdateUserRoles {UserName}", user);
 			
@@ -120,6 +120,7 @@ namespace Service.Redis.Users
 			if (userRoleClaimState != null && userRoleClaimState.UserRoleClaim.TryGetValue(user, out var roleClaimWrapper))
 			{
 				roleClaimWrapper.Roles = roles;
+				roleClaimWrapper.Users = users;
 				
 				await StoreData(UserRoleClaimKey, userRoleClaimState);
 			}

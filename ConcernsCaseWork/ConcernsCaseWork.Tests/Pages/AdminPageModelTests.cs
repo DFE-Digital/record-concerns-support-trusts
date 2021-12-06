@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Service.Redis.Security;
 using Service.Redis.Users;
 using System;
 using System.Threading.Tasks;
@@ -27,9 +28,10 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			var rolesEnum = RoleFactory.BuildListRoleEnum();
 			var usersRoles = RoleFactory.BuildDicUsersRoles();
-
-			mockRbacManager.Setup(r => r.GetUserRoles(It.IsAny<string>()))
-				.ReturnsAsync(rolesEnum);
+			var roleClaimWrapper = new RoleClaimWrapper { Roles = rolesEnum };
+			
+			mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
+				.ReturnsAsync(roleClaimWrapper);
 			mockRbacManager.Setup(r => r.GetUsersRoles())
 				.ReturnsAsync(usersRoles);
 			
@@ -51,7 +53,7 @@ namespace ConcernsCaseWork.Tests.Pages
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 			
-			mockRbacManager.Verify(r => r.GetUserRoles(It.IsAny<string>()), Times.Once);
+			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Once);
 			mockRbacManager.Verify(r => r.GetUsersRoles(), Times.Once);
 		}
 
@@ -65,9 +67,10 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			var rolesEnum = RoleFactory.BuildPartialListRoleEnum();
 			var usersRoles = RoleFactory.BuildDicUsersRoles();
-
-			mockRbacManager.Setup(r => r.GetUserRoles(It.IsAny<string>()))
-				.ReturnsAsync(rolesEnum);
+			var roleClaimWrapper = new RoleClaimWrapper { Roles = rolesEnum };
+			
+			mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
+				.ReturnsAsync(roleClaimWrapper);
 			mockRbacManager.Setup(r => r.GetUsersRoles())
 				.ReturnsAsync(usersRoles);
 			
@@ -89,7 +92,7 @@ namespace ConcernsCaseWork.Tests.Pages
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 			
-			mockRbacManager.Verify(r => r.GetUserRoles(It.IsAny<string>()), Times.Once);
+			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Once);
 			mockRbacManager.Verify(r => r.GetUsersRoles(), Times.Never);
 		}		
 		
@@ -103,10 +106,10 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			var rolesEnum = RoleFactory.BuildListRoleEnum();
 			var usersRoles = RoleFactory.BuildDicUsersRoles();
-
-			mockUserRoleCachedService.Setup(urc => urc.ClearData());
-			mockRbacManager.Setup(r => r.GetUserRoles(It.IsAny<string>()))
-				.ReturnsAsync(rolesEnum);
+			var roleClaimWrapper = new RoleClaimWrapper { Roles = rolesEnum };
+			
+			mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
+				.ReturnsAsync(roleClaimWrapper);
 			mockRbacManager.Setup(r => r.GetUsersRoles())
 				.ReturnsAsync(usersRoles);
 			
@@ -128,7 +131,7 @@ namespace ConcernsCaseWork.Tests.Pages
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 			
-			mockRbacManager.Verify(r => r.GetUserRoles(It.IsAny<string>()), Times.Once);
+			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Once);
 			mockRbacManager.Verify(r => r.GetUsersRoles(), Times.Once);
 			mockUserRoleCachedService.Verify(urc => urc.ClearData(), Times.Once);
 		}		

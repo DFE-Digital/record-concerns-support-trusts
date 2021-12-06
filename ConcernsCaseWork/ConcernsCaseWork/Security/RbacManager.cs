@@ -41,20 +41,20 @@ namespace ConcernsCaseWork.Security
 			return new SortedDictionary<string, RoleClaimWrapper>(usersRoleClaim);
 		}
 
-		public async Task<IList<RoleEnum>> GetUserRoles(string user)
+		public async Task<RoleClaimWrapper> GetUserRoleClaimWrapper(string user)
 		{
 			_logger.LogInformation("RbacManager::GetUserRoles {User}", user);
 
-			var userRoles = await _userRoleCachedService.GetRoleClaimWrapper(_defaultUsers, user);
+			var roleClaimWrapper = await _userRoleCachedService.GetRoleClaimWrapper(_defaultUsers, user);
 			
-			return userRoles.Roles;
+			return roleClaimWrapper;
 		}
 
-		public async Task UpdateUserRoles(string user, IList<RoleEnum> roles)
+		public async Task UpdateUserRoles(string user, IList<RoleEnum> roles, IList<string> users)
 		{
 			_logger.LogInformation("RbacManager::UpdateUserRoles {User}", user);
 			
-			await _userRoleCachedService.UpdateUserRoles(user, roles);
+			await _userRoleCachedService.UpdateUserRoles(user, roles, users);
 		}
 	}
 }

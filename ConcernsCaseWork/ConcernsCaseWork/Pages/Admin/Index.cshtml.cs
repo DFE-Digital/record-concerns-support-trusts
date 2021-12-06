@@ -48,9 +48,9 @@ namespace ConcernsCaseWork.Pages.Admin
         private async Task LoadPage()
         {
 			// Check if logged user has admin role
-	        var userRoles = await _rbacManager.GetUserRoles(User.Identity.Name);
+	        var userRoleClaimWrapper = await _rbacManager.GetUserRoleClaimWrapper(User.Identity.Name);
 
-	        if (userRoles.Contains(RoleEnum.Admin))
+	        if (userRoleClaimWrapper.Roles.Contains(RoleEnum.Admin))
 	        {
 		        // Get all users, roles and claims
 		        UsersRole = await _rbacManager.GetUsersRoles();

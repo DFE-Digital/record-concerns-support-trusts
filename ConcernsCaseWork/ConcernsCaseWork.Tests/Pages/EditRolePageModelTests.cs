@@ -28,9 +28,10 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<EditRolePageModel>>();
 
 			var roles = RoleFactory.BuildListRoleEnum();
+			var roleClaimWrapper = new RoleClaimWrapper { Roles = roles };
 			
-			mockRbacManager.Setup(r => r.GetUserRoles(It.IsAny<string>()))
-				.ReturnsAsync(roles);
+			mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
+				.ReturnsAsync(roleClaimWrapper);
 			
 			var pageModel = SetupEditRolePageModel(mockRbacManager.Object, mockLogger.Object);
 			var routeData = pageModel.RouteData.Values;
@@ -45,7 +46,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.UserName, Is.Not.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Not.Null);
 			Assert.That(pageModel.Roles, Is.Not.Null);
-			Assert.That(pageModel.UserRoles, Is.Not.Null);
+			Assert.That(pageModel.UserRoleClaimWrapper, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Empty);
 
 			mockLogger.Verify(
@@ -57,7 +58,7 @@ namespace ConcernsCaseWork.Tests.Pages
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 			
-			mockRbacManager.Verify(r => r.GetUserRoles(It.IsAny<string>()), Times.Once);
+			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Once);
 		}
 		
 		[Test]
@@ -68,9 +69,10 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<EditRolePageModel>>();
 
 			var roles = RoleFactory.BuildListRoleEnum();
+			var roleClaimWrapper = new RoleClaimWrapper { Roles = roles };
 			
-			mockRbacManager.Setup(r => r.GetUserRoles(It.IsAny<string>()))
-				.ReturnsAsync(roles);
+			mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
+				.ReturnsAsync(roleClaimWrapper);
 			
 			var pageModel = SetupEditRolePageModel(mockRbacManager.Object, mockLogger.Object);
 			var routeData = pageModel.RouteData.Values;
@@ -85,7 +87,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.UserName, Is.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Null);
 			Assert.That(pageModel.Roles, Is.Null);
-			Assert.That(pageModel.UserRoles, Is.Null);
+			Assert.That(pageModel.UserRoleClaimWrapper, Is.Null);
 			Assert.That(pageModel.TempData, Is.Not.Empty);
 
 			mockLogger.Verify(
@@ -97,7 +99,7 @@ namespace ConcernsCaseWork.Tests.Pages
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 			
-			mockRbacManager.Verify(r => r.GetUserRoles(It.IsAny<string>()), Times.Never);
+			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Never);
 		}		
 		
 		[Test]
@@ -107,7 +109,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockRbacManager = new Mock<IRbacManager>();
 			var mockLogger = new Mock<ILogger<EditRolePageModel>>();
 			
-			mockRbacManager.Setup(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>()));
+			mockRbacManager.Setup(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>(), It.IsAny<IList<string>>()));
 			
 			var pageModel = SetupEditRolePageModel(mockRbacManager.Object, mockLogger.Object);
 			
@@ -130,7 +132,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.UserName, Is.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Null);
 			Assert.That(pageModel.Roles, Is.Null);
-			Assert.That(pageModel.UserRoles, Is.Null);
+			Assert.That(pageModel.UserRoleClaimWrapper, Is.Null);
 			Assert.That(pageModel.TempData, Is.Empty);
 
 			mockLogger.Verify(
@@ -142,7 +144,7 @@ namespace ConcernsCaseWork.Tests.Pages
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 			
-			mockRbacManager.Verify(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>()), Times.Once);
+			mockRbacManager.Verify(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>(), It.IsAny<IList<string>>()), Times.Once);
 		}		
 		
 		[Test]
@@ -152,7 +154,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockRbacManager = new Mock<IRbacManager>();
 			var mockLogger = new Mock<ILogger<EditRolePageModel>>();
 			
-			mockRbacManager.Setup(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>()));
+			mockRbacManager.Setup(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>(), It.IsAny<IList<string>>()));
 			
 			var pageModel = SetupEditRolePageModel(mockRbacManager.Object, mockLogger.Object);
 			
@@ -168,7 +170,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.UserName, Is.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Null);
 			Assert.That(pageModel.Roles, Is.Null);
-			Assert.That(pageModel.UserRoles, Is.Null);
+			Assert.That(pageModel.UserRoleClaimWrapper, Is.Null);
 			Assert.That(pageModel.TempData, Is.Not.Empty);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 
@@ -181,7 +183,7 @@ namespace ConcernsCaseWork.Tests.Pages
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 			
-			mockRbacManager.Verify(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>()), Times.Never);
+			mockRbacManager.Verify(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>(), It.IsAny<IList<string>>()), Times.Never);
 		}		
 		
 		[Test]
@@ -192,10 +194,11 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<EditRolePageModel>>();
 			
 			var roles = RoleFactory.BuildListRoleEnum();
+			var roleClaimWrapper = new RoleClaimWrapper { Roles = roles };
 			
-			mockRbacManager.Setup(r => r.GetUserRoles(It.IsAny<string>()))
-				.ReturnsAsync(roles);
-			mockRbacManager.Setup(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>()));
+			mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
+				.ReturnsAsync(roleClaimWrapper);
+			mockRbacManager.Setup(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>(), It.IsAny<IList<string>>()));
 			
 			var pageModel = SetupEditRolePageModel(mockRbacManager.Object, mockLogger.Object);
 			pageModel.HttpContext.Request.Form = new FormCollection(
@@ -215,7 +218,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.UserName, Is.Not.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Not.Null);
 			Assert.That(pageModel.Roles, Is.Not.Null);
-			Assert.That(pageModel.UserRoles, Is.Not.Null);
+			Assert.That(pageModel.UserRoleClaimWrapper, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Empty);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 
@@ -228,8 +231,8 @@ namespace ConcernsCaseWork.Tests.Pages
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 			
-			mockRbacManager.Verify(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>()), Times.Never);
-			mockRbacManager.Verify(r => r.GetUserRoles(It.IsAny<string>()), Times.Once);
+			mockRbacManager.Verify(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>(), It.IsAny<IList<string>>()), Times.Never);
+			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Once);
 		}
 		
 		private static EditRolePageModel SetupEditRolePageModel(IRbacManager rbacManager, ILogger<EditRolePageModel> logger, bool isAuthenticated = false)

@@ -129,7 +129,16 @@ window.addRolesValidator = function(validator) {
 			let checkboxRoles = $('input[name="role"]:checked');
 			return checkboxRoles.length > 0;
 		},
-		message: 'Select role'
+		message: 'Select role(s)'
+	}]);
+}
+window.addUsersValidator = function(validator) {
+	validator.addValidator('user', [{
+		method: function() {
+			let checkboxRoles = $('input[name="user"]:checked');
+			return checkboxRoles.length > 0;
+		},
+		message: 'Select user(s)'
 	}]);
 }
 

@@ -8,7 +8,7 @@ namespace ConcernsCaseWork.Security
 	{
 		IList<string> GetDefaultUsers();
 		Task<IDictionary<string, RoleClaimWrapper>> GetUsersRoles();
-		Task<IList<RoleEnum>> GetUserRoles(string user);
-		Task UpdateUserRoles(string user, IList<RoleEnum> roles);
+		Task<RoleClaimWrapper> GetUserRoleClaimWrapper(string user);
+		Task UpdateUserRoles(string user, IList<RoleEnum> roles, IList<string> users);
 	}
 }

@@ -20,7 +20,8 @@ namespace ConcernsCaseWork.Pages.Admin
 		private readonly ILogger<EditRolePageModel> _logger;
 
 		public IList<RoleEnum> Roles { get; private set; }
-		public IList<RoleEnum> UserRoles { get; private set; }
+		public IList<string> Users { get; private set; }
+		public RoleClaimWrapper UserRoleClaimWrapper { get; private set; }
 		public string UserName { get; private set; }
 		public string PreviousUrl { get; private set; }
 		
@@ -61,14 +62,16 @@ namespace ConcernsCaseWork.Pages.Admin
 				_logger.LogInformation("Admin::EditRolePageModel::OnPostEditRole");
 				
 				var rolesSelected = Request.Form["role"].ToString();
+				var usersSelected = Request.Form["user"].ToString();
 				userName = Request.Form["username"].ToString();
-				if (string.IsNullOrEmpty(rolesSelected) || string.IsNullOrEmpty(userName)) 
+				if (string.IsNullOrEmpty(rolesSelected) || string.IsNullOrEmpty(usersSelected) || string.IsNullOrEmpty(userName)) 
 					throw new Exception("Missing request form data");
 
 				var rolesSplit = rolesSelected.Split(",");
 				var rolesEnum = rolesSplit.Select(role => role.ToEnum<RoleEnum>()).ToList();
+				var users = usersSelected.Split(",");
 				
-				await _rbacManager.UpdateUserRoles(userName, rolesEnum);
+				await _rbacManager.UpdateUserRoles(userName, rolesEnum, users);
 
 				return Redirect("/admin");
 			}
@@ -88,7 +91,8 @@ namespace ConcernsCaseWork.Pages.Admin
 			
 			UserName = userName;
 			Roles = new List<RoleEnum> { RoleEnum.Admin, RoleEnum.Leader, RoleEnum.User };
-			UserRoles = await _rbacManager.GetUserRoles(UserName);
+			Users = _rbacManager.GetDefaultUsers();
+			UserRoleClaimWrapper = await _rbacManager.GetUserRoleClaimWrapper(UserName);
 			PreviousUrl = url;
 
 			return Page();
