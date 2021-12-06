@@ -1,6 +1,7 @@
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages;
+using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
@@ -28,12 +29,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			var homeModels = HomePageFactory.BuildHomeModels();
 
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockRbacManager = new Mock<IRbacManager>();
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
 			mockCaseModelService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
 				.ReturnsAsync(homeModels);
 			
 			// act
-			var homePageModel = SetupHomeModel(mockCaseModelService.Object, mockLogger.Object);
+			var homePageModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object);
 			await homePageModel.OnGetAsync();
 			
 			// assert
@@ -77,6 +79,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockRbacManager = new Mock<IRbacManager>();
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
 			var emptyList = new List<HomeModel>();
 			
@@ -84,7 +87,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				.ReturnsAsync(emptyList);
 			
 			// act
-			var indexModel = SetupHomeModel(mockCaseModelService.Object, mockLogger.Object);
+			var indexModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object);
 			await indexModel.OnGetAsync();
 			
 			// assert
@@ -102,11 +105,11 @@ namespace ConcernsCaseWork.Tests.Pages
 				Times.Once);
 		}
 		
-		private static HomePageModel SetupHomeModel(ICaseModelService mockCaseModelService, ILogger<HomePageModel> mockLogger, bool isAuthenticated = false)
+		private static HomePageModel SetupHomeModel(ICaseModelService mockCaseModelService, IRbacManager mockRbacManager, ILogger<HomePageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new HomePageModel(mockCaseModelService, mockLogger)
+			return new HomePageModel(mockCaseModelService,mockRbacManager, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

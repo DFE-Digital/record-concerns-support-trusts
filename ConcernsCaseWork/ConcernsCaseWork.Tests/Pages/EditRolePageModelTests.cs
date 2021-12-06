@@ -46,8 +46,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageResponse, Is.Not.Null);
 			Assert.That(pageModel.UserName, Is.Not.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Not.Null);
-			Assert.That(pageModel.Roles, Is.Not.Null);
-			Assert.That(pageModel.Users, Is.Null);
+			Assert.That(pageModel.DefaultRoles, Is.Not.Null);
+			Assert.That(pageModel.DefaultUsers, Is.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper, Is.Not.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper.Roles, Is.Not.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper.Users, Is.Not.Null);
@@ -91,8 +91,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageResponse, Is.Not.Null);
 			Assert.That(pageModel.UserName, Is.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Null);
-			Assert.That(pageModel.Roles, Is.Null);
-			Assert.That(pageModel.Users, Is.Null);
+			Assert.That(pageModel.DefaultRoles, Is.Null);
+			Assert.That(pageModel.DefaultUsers, Is.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper, Is.Null);
 			Assert.That(pageModel.TempData, Is.Not.Empty);
 
@@ -138,8 +138,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			Assert.That(pageModel.UserName, Is.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Null);
-			Assert.That(pageModel.Roles, Is.Null);
-			Assert.That(pageModel.Users, Is.Null);
+			Assert.That(pageModel.DefaultRoles, Is.Null);
+			Assert.That(pageModel.DefaultUsers, Is.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper, Is.Null);
 			Assert.That(pageModel.TempData, Is.Empty);
 
@@ -177,8 +177,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			Assert.That(pageModel.UserName, Is.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Null);
-			Assert.That(pageModel.Roles, Is.Null);
-			Assert.That(pageModel.Users, Is.Null);
+			Assert.That(pageModel.DefaultRoles, Is.Null);
+			Assert.That(pageModel.DefaultUsers, Is.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper, Is.Null);
 			Assert.That(pageModel.TempData, Is.Not.Empty);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
@@ -226,8 +226,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.UserName, Is.Not.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Not.Null);
-			Assert.That(pageModel.Roles, Is.Not.Null);
-			Assert.That(pageModel.Users, Is.Null);
+			Assert.That(pageModel.DefaultRoles, Is.Not.Null);
+			Assert.That(pageModel.DefaultUsers, Is.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper, Is.Not.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper.Roles, Is.Not.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper.Users, Is.Not.Null);

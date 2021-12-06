@@ -8,20 +8,33 @@
 <div class="govuk-extra-width-container">
 	<div class="govuk-!-margin-top-0">
 
-		<div class="govuk-button-group flexalign__right">
-			<a class="govuk-button" asp-page="/case/index" role="button">
-				Create case
-			</a>
-			<a class="govuk-button govuk-button--secondary" asp-page="/trust/index" role="button">
-				Find trust
-			</a>
-		</div>
-
-		<!-- Active casework -->
-		<partial name="_CasesActive" model="Model.CasesActive"/>
-
-		<!-- Closed for monitoring -->
-		<partial name="_CasesMonitoring" model="Model.CasesMonitoring"/>
+		@if (Model.UserAsRoleLeader)
+		{
+			<div class="govuk-tabs govuk-!-margin-top-6" data-module="govuk-tabs">
+				<ul class="govuk-tabs__list">
+					<li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+						<a class="govuk-tabs__tab" href="#your-casework">
+							Your Casework
+						</a>
+					</li>
+					<li class="govuk-tabs__list-item">
+						<a class="govuk-tabs__tab" href="#team-casework">
+							Team Casework
+						</a>
+					</li>
+				</ul>
+				<div class="govuk-tabs__panel" id="your-casework">
+					<partial name="_Home" model="Model"/>
+				</div>
+				<div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="team-casework">
+					<partial name="_CasesActive" model="Model.CasesAllCaseworkerActive"/>
+				</div>
+			</div>
+		}
+		else
+		{
+			<partial name="_Home" model="Model"/>
+		}
 		
 	</div>
 </div>

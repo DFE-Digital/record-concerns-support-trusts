@@ -55,7 +55,25 @@ namespace ConcernsCaseWork.Services.Cases
 			_caseSearchService = caseSearchService;
 			_logger = logger;
 		}
-		
+
+		public async Task<IList<HomeModel>> GetCasesByCaseworkerAndStatus(IList<string> caseworkers, StatusEnum statusEnum)
+		{
+			try
+			{
+				var allCaseworkerCasesTasks = caseworkers.Select(caseworker => GetCasesByCaseworkerAndStatus(caseworker, statusEnum)).ToList();
+				await Task.WhenAll(allCaseworkerCasesTasks);
+				
+				return allCaseworkerCasesTasks.SelectMany(homeModelTask => homeModelTask.Result).ToList();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("CaseModelService::GetCasesByCaseworkerAndStatus exception {Message}", ex.Message);
+			}
+
+			return Array.Empty<HomeModel>();
+		}
+
+
 		public async Task<IList<HomeModel>> GetCasesByCaseworkerAndStatus(string caseworker, StatusEnum statusEnum)
 		{
 			try
