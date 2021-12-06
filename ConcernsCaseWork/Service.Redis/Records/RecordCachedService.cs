@@ -33,7 +33,7 @@ namespace Service.Redis.Records
 			var userState = await GetData<UserState>(caseworker);
 			if (userState is null) return recordsDto;
 			
-			// If case urn doesn't exist on the cache return new created record
+			// If case urn doesn't exist on the cache return empty records
 			if (!userState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper)) return recordsDto;
 			
 			if (caseWrapper.Records.Any())

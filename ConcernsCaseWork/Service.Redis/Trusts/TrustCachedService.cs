@@ -51,6 +51,7 @@ namespace Service.Redis.Trusts
 				{
 					trustsCached.Add(ukPrn, trustDetailsDto);
 				}
+				
 				await StoreData(TrustsKey, trustsCached);
 				
 				return trustDetailsDto;
