@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Pages.Admin
 			_logger = logger;
 		}
 		
-		public async Task OnGetAsync()
+		public async Task<ActionResult> OnGetAsync()
 		{
 			var userName = string.Empty;
 			
@@ -49,10 +49,10 @@ namespace ConcernsCaseWork.Pages.Admin
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 
-			await LoadPage(Request.Headers["Referer"].ToString(), userName);
+			return await LoadPage(Request.Headers["Referer"].ToString(), userName);
 		}
 
-		public async Task OnPostEditRole(string url)
+		public async Task<ActionResult> OnPostEditRole(string url)
 		{
 			var userName = string.Empty;
 			
@@ -70,8 +70,7 @@ namespace ConcernsCaseWork.Pages.Admin
 				
 				await _rbacManager.UpdateUserRoles(userName, rolesEnum);
 
-				Redirect("/admin");
-				return;
+				return Redirect("/admin");
 			}
 			catch (Exception ex)
 			{
@@ -80,23 +79,19 @@ namespace ConcernsCaseWork.Pages.Admin
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
-			await LoadPage(url, userName);
+			return await LoadPage(url, userName);
 		}
 		
-		private async Task LoadPage(string url, string userName)
+		private async Task<ActionResult> LoadPage(string url, string userName)
 		{
-			if (string.IsNullOrEmpty(userName))
-			{
-				Page();
-				return;
-			}
-
+			if (string.IsNullOrEmpty(userName)) return Page();
+			
 			UserName = userName;
 			Roles = new List<RoleEnum> { RoleEnum.Admin, RoleEnum.Leader, RoleEnum.User };
 			UserRoles = await _rbacManager.GetUserRoles(UserName);
 			PreviousUrl = url;
 
-			Page();
+			return Page();
 		}
 	}
 }

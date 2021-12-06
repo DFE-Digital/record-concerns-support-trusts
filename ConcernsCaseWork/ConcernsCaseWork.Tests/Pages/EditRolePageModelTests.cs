@@ -119,9 +119,14 @@ namespace ConcernsCaseWork.Tests.Pages
 				});
 			
 			// act
-			await pageModel.OnPostEditRole("https://returnto/thispage");
+			var pageResponse = await pageModel.OnPostEditRole("https://returnto/thispage");
 			
 			// assert
+			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
+			var page = pageResponse as RedirectResult;
+
+			Assert.That(page, Is.Not.Null);
+			
 			Assert.That(pageModel.UserName, Is.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Null);
 			Assert.That(pageModel.Roles, Is.Null);
@@ -152,9 +157,14 @@ namespace ConcernsCaseWork.Tests.Pages
 			var pageModel = SetupEditRolePageModel(mockRbacManager.Object, mockLogger.Object);
 			
 			// act
-			await pageModel.OnPostEditRole("https://returnto/thispage");
+			var pageResponse = await pageModel.OnPostEditRole("https://returnto/thispage");
 			
 			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			var page = pageResponse as PageResult;
+			
+			Assert.That(page, Is.Not.Null);
+			
 			Assert.That(pageModel.UserName, Is.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Null);
 			Assert.That(pageModel.Roles, Is.Null);
@@ -195,9 +205,13 @@ namespace ConcernsCaseWork.Tests.Pages
 				});
 			
 			// act
-			await pageModel.OnPostEditRole("https://returnto/thispage");
+			var pageResponse = await pageModel.OnPostEditRole("https://returnto/thispage");
 			
 			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			var page = pageResponse as PageResult;
+			
+			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.UserName, Is.Not.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Not.Null);
 			Assert.That(pageModel.Roles, Is.Not.Null);
