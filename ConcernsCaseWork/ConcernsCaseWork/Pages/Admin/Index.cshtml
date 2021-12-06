@@ -17,7 +17,7 @@
 		</div>
 			
 		<span class="govuk-caption-l">Administrator</span>
-		<h1 class="govuk-heading-l">Users Roles and Configurations</h1>
+		<h1 class="govuk-heading-l">Users Roles and Groups</h1>
 			
 		@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
 		{
@@ -33,6 +33,9 @@
 					<dd class="govuk-summary-list__value">
 						Roles
 					</dd>
+					<dd class="govuk-summary-list__value">
+                    	Users
+                    </dd>
 					<dd class="govuk-summary-list__actions"/>
 				</div>
 				@foreach (var (username, roleClaimWrapper) in Model.UsersRole)
@@ -44,6 +47,16 @@
 						</dt>
 						<dd class="govuk-summary-list__value">
 							@(string.Join(",", roleClaimWrapper.Roles))
+						</dd>
+						<dd class="govuk-summary-list__value">
+							@if (roleClaimWrapper.Users.Any())
+							{
+								@(string.Join(", ", roleClaimWrapper.Users))
+							}
+							else
+							{
+								@("-")	
+							}
 						</dd>
 						<dd class="govuk-summary-list__actions">
 							@if(!username.Equals(IndexPageModel.AdminUserName)) {

@@ -27,6 +27,11 @@ namespace ConcernsCaseWork.Security
 			_defaultUsers = configuration["app:username"].Split(',');
 		}
 
+		public IList<string> GetDefaultUsers()
+		{
+			return _defaultUsers;
+		}
+		
 		public async Task<IDictionary<string, RoleClaimWrapper>> GetUsersRoles()
 		{
 			_logger.LogInformation("RbacManager::GetUsersRoles");

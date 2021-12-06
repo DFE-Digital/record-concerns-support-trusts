@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Security;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -77,7 +78,10 @@ namespace Service.Redis.Users
 			Parallel.ForEach(userRoles, userRole =>
 			{
 				(string key, List<RoleEnum> value) = userRole;
-				userRoleClaimState.UserRoleClaim.Add(key, new RoleClaimWrapper { Roles = value });
+				userRoleClaimState.UserRoleClaim.Add(key,
+					key.Equals(UserRoleMap.AdminUserName, StringComparison.OrdinalIgnoreCase)
+						? new RoleClaimWrapper { Users = users, Roles = value }
+						: new RoleClaimWrapper { Roles = value });
 			});
 			
 			await StoreData(UserRoleClaimKey, userRoleClaimState);
