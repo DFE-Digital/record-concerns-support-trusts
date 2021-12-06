@@ -12,7 +12,7 @@ namespace Service.Redis.Trusts
 		private readonly ILogger<TrustCachedService> _logger;
 		private readonly ITrustService _trustService;
 
-		private const string TrustsKey = "Trusts";
+		private const string TrustsKey = "Concerns.Trusts";
 		
 		public TrustCachedService(ICacheProvider cacheProvider, ITrustService trustService, ILogger<TrustCachedService> logger) 
 			: base(cacheProvider)

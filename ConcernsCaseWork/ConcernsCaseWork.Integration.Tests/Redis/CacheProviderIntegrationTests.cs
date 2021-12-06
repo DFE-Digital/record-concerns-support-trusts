@@ -9,6 +9,7 @@ using NUnit.Framework;
 using Service.Redis.Base;
 using Service.Redis.Configuration;
 using Service.Redis.Models;
+using Service.Redis.Security;
 using StackExchange.Redis;
 using System;
 using System.Threading.Tasks;
@@ -67,7 +68,7 @@ namespace ConcernsCaseWork.Integration.Tests.Redis
 			var cacheEntryOptions = new DistributedCacheEntryOptions()
 				.SetSlidingExpiration(TimeSpan.FromSeconds(cacheTimeToLive));
 			
-			var userClaims = new UserClaims
+			var userClaims = new Claims
 			{
 				Email = "test@email.com", 
 				Id = "test"
@@ -75,17 +76,17 @@ namespace ConcernsCaseWork.Integration.Tests.Redis
 			
 			// act
 			await cacheProvider.SetCache(userClaims.Email, userClaims, cacheEntryOptions);
-			var cachedUserClaim = await cacheProvider.GetFromCache<UserClaims>(userClaims.Email);
+			var cachedUserClaim = await cacheProvider.GetFromCache<Claims>(userClaims.Email);
 
 			// assert
 			Assert.That(cachedUserClaim, Is.Not.Null);
-			Assert.That(cachedUserClaim, Is.InstanceOf<UserClaims>());
+			Assert.That(cachedUserClaim, Is.InstanceOf<Claims>());
 			Assert.That(cachedUserClaim.Email, Is.EqualTo(userClaims.Email));
 			Assert.That(cachedUserClaim.Id, Is.EqualTo(userClaims.Id));
 			
 			// clean up
 			await cacheProvider.ClearCache(cachedUserClaim.Email);
-			cachedUserClaim = await cacheProvider.GetFromCache<UserClaims>(userClaims.Email);
+			cachedUserClaim = await cacheProvider.GetFromCache<Claims>(userClaims.Email);
 			
 			Assert.That(cachedUserClaim, Is.Null);
 		}

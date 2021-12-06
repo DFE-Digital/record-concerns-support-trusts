@@ -214,4 +214,10 @@
     <_ContentIncludedByDefault Remove="wwwroot\dist\moj\vendor\jquery.js.LICENSE.txt" />
   </ItemGroup>
 	
+  <ItemGroup>
+    <Compile Update="Pages\Admin\Index.cshtml.cs">
+      <DependentUpon>Index.cshtml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+	
 </Project>

@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.TRAMS.Types;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Types
@@ -35,7 +33,7 @@ namespace Service.Redis.Types
 			var types = await GetData<IList<TypeDto>>(TypesKey);
 			if (types != null) return types;
 
-			// Fetch from TRAMS API
+			// Fetch from Academies API
 			types = await _typeService.GetTypes();
 
 			// Store in cache for 24 hours (default)
