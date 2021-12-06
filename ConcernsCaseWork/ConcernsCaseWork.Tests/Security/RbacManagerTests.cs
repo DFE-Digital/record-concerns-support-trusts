@@ -16,6 +16,22 @@ namespace ConcernsCaseWork.Tests.Security
 	public class RbacManagerTests
 	{
 		[Test]
+		public void WhenGetDefaultUsers_Return_Users()
+		{
+			// arrange
+			var mockUserRoleCachedService = new Mock<IUserRoleCachedService>();
+			var mockLogger = new Mock<ILogger<RbacManager>>();
+			
+			var rbacManager = new RbacManager(BuildConfiguration(), mockUserRoleCachedService.Object, mockLogger.Object);
+			
+			// act
+			var defaultUsers = rbacManager.GetDefaultUsers();
+
+			// assert
+			Assert.That(defaultUsers, Is.Not.Null);
+		}
+		
+		[Test]
 		public async Task WhenGetUsersRoles_Return_SortedDicUserRoleClaim()
 		{
 			// arrange
