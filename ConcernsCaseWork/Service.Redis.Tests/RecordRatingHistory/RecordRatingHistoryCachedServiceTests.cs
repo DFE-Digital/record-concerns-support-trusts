@@ -95,16 +95,17 @@ namespace Service.Redis.Tests.RecordRatingHistory
 				{
 					{ 1, new CaseWrapper { 
 						CaseDto = CaseFactory.BuildCaseDto(), 
-						Records =
+						Records = new Dictionary<long, RecordWrapper>
 						{
 							{ 1, new RecordWrapper
-							{
-								RecordDto = RecordFactory.BuildRecordDto(), 
-								RecordsRatingHistory = new List<RecordRatingHistoryDto>
 								{
-									new RecordRatingHistoryDto(DateTimeOffset.Now, 1, 1)
-								}
-							} }
+									RecordDto = RecordFactory.BuildRecordDto(), 
+									RecordsRatingHistory = new List<RecordRatingHistoryDto>
+									{
+										new RecordRatingHistoryDto(DateTimeOffset.Now, 1, 1)
+									}
+								} 
+							}
 						}
 					} }
 				}

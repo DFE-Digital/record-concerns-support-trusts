@@ -37,6 +37,7 @@ namespace Service.Redis.Records
 			// If case urn doesn't exist on the cache return empty records
 			if (!userState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper)) return recordsDto;
 			
+			// Checking records was cached before
 			if (caseWrapper.Records != null)
 			{
 				if (!caseWrapper.Records.Any()) return recordsDto;
@@ -92,6 +93,7 @@ namespace Service.Redis.Records
 			if (!userState.CasesDetails.TryGetValue(newRecordDto.CaseUrn, out var caseWrapper)) return newRecordDto;
 			
 			// Add new record to the records cache
+			caseWrapper.Records ??= new ConcurrentDictionary<long, RecordWrapper>();
 			caseWrapper.Records.Add(newRecordDto.Urn, new RecordWrapper {  RecordDto = newRecordDto });
 			
 			await StoreData(caseworker, userState);
