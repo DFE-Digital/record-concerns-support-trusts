@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.Pages
 	    
         public IList<HomeModel> CasesActive { get; private set; }
         public IList<HomeModel> CasesMonitoring { get; private set; }
-        public IList<HomeModel> CasesAllCaseworkerActive { get; private set; }
+        public IList<HomeModel> CasesTeamActive { get; private set; }
         public bool UserAsRoleLeader { get; private set; }
         
         public HomePageModel(ICaseModelService caseModelService, IRbacManager rbacManager, ILogger<HomePageModel> logger)
@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.Pages
 		        // Assign responses to UI public properties
 		        CasesActive = liveCases.Result;
 		        CasesMonitoring = monitoringCases.Result;
-		        CasesAllCaseworkerActive = liveCasesTeamLead.Result;
+		        CasesTeamActive = liveCasesTeamLead.Result;
 	        }
 	        else
 	        {

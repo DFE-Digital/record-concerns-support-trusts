@@ -126,6 +126,7 @@ namespace ConcernsCaseWork.Services.Cases
 						caseDto.UpdatedAt,
 						caseDto.ClosedAt,
 						caseDto.ReviewAt,
+						caseDto.CreatedBy,
 						trustName,
 						academies,
 						primaryCaseType.Name,

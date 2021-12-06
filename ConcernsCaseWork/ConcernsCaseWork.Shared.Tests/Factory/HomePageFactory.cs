@@ -23,6 +23,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<string>(),
 					Fixture.Create<string>(),
 					Fixture.Create<string>(),
+					Fixture.Create<string>(),
 					new Tuple<int, IList<string>>(1, new List<string> { Fixture.Create<string>() }),
 					new List<string> { Fixture.Create<string>() })
 			};

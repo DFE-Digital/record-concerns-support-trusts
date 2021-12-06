@@ -11,6 +11,8 @@ namespace ConcernsCaseWork.Models
 	{
 		public string CaseUrn { get; }
 
+		public string CreatedBy { get; }
+		
 		private DateTimeOffset CreatedDateTimeOffset { get; }
 
 		public string Created
@@ -97,9 +99,9 @@ namespace ConcernsCaseWork.Models
 		public IList<string> RagRatingCss { get; }
 		
 		public HomeModel(string caseUrn, DateTimeOffset created, DateTimeOffset updated, DateTimeOffset closed, DateTimeOffset review,
-			string trustName, string academyNames, string caseType, string caseSubType, 
+			string createdBy, string trustName, string academyNames, string caseType, string caseSubType, 
 			Tuple<int, IList<string>> ragRating, IList<string> ragRatingCss) => 
-			(CaseUrn, CreatedDateTimeOffset, UpdatedDateTimeOffset, ClosedDateTimeOffset, ReviewDateTimeOffset, TrustName, AcademyNames, CaseType, CaseSubType, RagRating, RagRatingCss) = 
-			(caseUrn, created, updated, closed, review, trustName, academyNames, caseType, caseSubType, ragRating, ragRatingCss);
+			(CaseUrn, CreatedDateTimeOffset, UpdatedDateTimeOffset, ClosedDateTimeOffset, ReviewDateTimeOffset, CreatedBy, TrustName, AcademyNames, CaseType, CaseSubType, RagRating, RagRatingCss) = 
+			(caseUrn, created, updated, closed, review, createdBy, trustName, academyNames, caseType, caseSubType, ragRating, ragRatingCss);
 	}
 }
