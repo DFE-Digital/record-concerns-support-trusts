@@ -40,13 +40,17 @@ namespace ConcernsCaseWork.Tests.Pages
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
 			// act
-			await pageModel.OnGetAsync();
+			var pageResponse = await pageModel.OnGetAsync();
 			
 			// assert
+			Assert.That(pageResponse, Is.Not.Null);
 			Assert.That(pageModel.UserName, Is.Not.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Not.Null);
 			Assert.That(pageModel.Roles, Is.Not.Null);
+			Assert.That(pageModel.Users, Is.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper, Is.Not.Null);
+			Assert.That(pageModel.UserRoleClaimWrapper.Roles, Is.Not.Null);
+			Assert.That(pageModel.UserRoleClaimWrapper.Users, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Empty);
 
 			mockLogger.Verify(
@@ -81,12 +85,14 @@ namespace ConcernsCaseWork.Tests.Pages
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
 			// act
-			await pageModel.OnGetAsync();
+			var pageResponse = await pageModel.OnGetAsync();
 			
 			// assert
+			Assert.That(pageResponse, Is.Not.Null);
 			Assert.That(pageModel.UserName, Is.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Null);
 			Assert.That(pageModel.Roles, Is.Null);
+			Assert.That(pageModel.Users, Is.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper, Is.Null);
 			Assert.That(pageModel.TempData, Is.Not.Empty);
 
@@ -117,6 +123,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				new Dictionary<string, StringValues>
 				{
 					{ "role", new StringValues("Admin,Leader") },
+					{ "user", new StringValues("user1,user2") },
 					{ "username", new StringValues("test.test") }
 				});
 			
@@ -132,6 +139,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.UserName, Is.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Null);
 			Assert.That(pageModel.Roles, Is.Null);
+			Assert.That(pageModel.Users, Is.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper, Is.Null);
 			Assert.That(pageModel.TempData, Is.Empty);
 
@@ -170,6 +178,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.UserName, Is.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Null);
 			Assert.That(pageModel.Roles, Is.Null);
+			Assert.That(pageModel.Users, Is.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper, Is.Null);
 			Assert.That(pageModel.TempData, Is.Not.Empty);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
@@ -218,7 +227,10 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.UserName, Is.Not.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Not.Null);
 			Assert.That(pageModel.Roles, Is.Not.Null);
+			Assert.That(pageModel.Users, Is.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper, Is.Not.Null);
+			Assert.That(pageModel.UserRoleClaimWrapper.Roles, Is.Not.Null);
+			Assert.That(pageModel.UserRoleClaimWrapper.Users, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Empty);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 
