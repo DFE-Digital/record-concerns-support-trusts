@@ -30,66 +30,73 @@ namespace ConcernsCaseWork.Pages.Admin
 			_logger = logger;
 		}
 		
-		public async Task<ActionResult> OnGetAsync()
+		public async Task OnGetAsync()
 		{
 			var userName = string.Empty;
 			
 			try
 			{
-				_logger.LogInformation("EditRolePageModel::OnGetAsync");
+				_logger.LogInformation("Admin::EditRolePageModel::OnGetAsync");
 				
 				userName = RouteData.Values["username"].ToString();
 				if (string.IsNullOrEmpty(userName)) 
-					throw new Exception("EditRolePageModel::OnGetAsync::Missing route data");
+					throw new Exception("Missing route data");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("EditRolePageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Admin::EditRolePageModel::OnGetAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
-			
-			return await LoadPage(Request.Headers["Referer"].ToString(), userName);
+
+			await LoadPage(Request.Headers["Referer"].ToString(), userName);
 		}
 
-		public async Task<ActionResult> OnPostEditRole(string url)
+		public async Task OnPostEditRole(string url)
 		{
 			var userName = string.Empty;
 			
 			try
 			{
+				_logger.LogInformation("Admin::EditRolePageModel::OnPostEditRole");
+				
 				var rolesSelected = Request.Form["role"].ToString();
 				userName = Request.Form["username"].ToString();
 				if (string.IsNullOrEmpty(rolesSelected) || string.IsNullOrEmpty(userName)) 
-					throw new Exception("EditRolePageModel::OnPostEditRole::Missing request form data");
+					throw new Exception("Missing request form data");
 
 				var rolesSplit = rolesSelected.Split(",");
 				var rolesEnum = rolesSplit.Select(role => role.ToEnum<RoleEnum>()).ToList();
 				
 				await _rbacManager.UpdateUserRoles(userName, rolesEnum);
 
-				return Redirect("/admin");
+				Redirect("/admin");
+				return;
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("EditRolePageModel::OnPostEditRole::Exception - {Message}", ex.Message);
+				_logger.LogError("Admin::EditRolePageModel::OnPostEditRole::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
-			
-			return await LoadPage(url, userName);
+
+			await LoadPage(url, userName);
 		}
 		
-		private async Task<ActionResult> LoadPage(string url, string userName)
+		private async Task LoadPage(string url, string userName)
 		{
-			if (string.IsNullOrEmpty(userName)) return Page();
-			
+			if (string.IsNullOrEmpty(userName))
+			{
+				Page();
+				return;
+			}
+
 			UserName = userName;
 			Roles = new List<RoleEnum> { RoleEnum.Admin, RoleEnum.Leader, RoleEnum.User };
 			UserRoles = await _rbacManager.GetUserRoles(UserName);
 			PreviousUrl = url;
 
-			return Page();
+			Page();
 		}
 	}
 }
