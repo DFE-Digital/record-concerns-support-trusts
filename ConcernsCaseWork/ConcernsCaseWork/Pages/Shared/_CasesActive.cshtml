@@ -1,0 +1,70 @@
+﻿@model IList<ConcernsCaseWork.Models.HomeModel>
+
+<table class="govuk-table" data-module="moj-sortable-table">
+	<caption class="govuk-table__caption govuk-table__caption--m">
+		Your active casework
+	</caption>
+	<thead class="govuk-table__head">
+	<tr class="govuk-table__row tr__large">
+		<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+			Case ID
+		</th>
+		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
+			Last update
+		</th>
+		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col" aria-sort="ascending">
+			Trust/Academy
+		</th>
+		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col" aria-sort="ascending">
+			Primary case type
+		</th>
+		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
+			RAG rating
+		</th>
+		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
+			Created
+		</th>
+	</tr>
+	</thead>
+	<tbody class="govuk-table__body">
+	@if (Model.Count == 0)
+	{
+		<tr class="govuk-table__row tr__large">
+			<td class="govuk-table__cell__cases govuk-oneline-row">
+				<span>There are no cases available.</span>
+			</td>
+		</tr>
+	}
+	else
+	{
+		foreach (var homeModel in Model)
+		{
+			<tr class="govuk-table__row tr__large">
+				<td class="govuk-table__cell">
+					<a class="govuk-link" href="case/@homeModel.CaseUrn/management">@homeModel.CaseUrn</a>
+				</td>
+				<td class="govuk-table__cell" data-sort-value="@homeModel.UpdatedUnixTime">
+					@homeModel.Updated
+				</td>
+				<td class="govuk-table__cell">
+					@homeModel.TrustNameTitle
+				</td>
+				<td class="govuk-table__cell">
+					@homeModel.CaseTypeDescription
+				</td>
+				<td class="govuk-table__cell govuk-label-wrapper" data-sort-value="@homeModel.RagRating.Item1">
+					@for (var index = 0; index < homeModel.RagRating.Item2.Count; ++index)
+					{
+						<span class="govuk-tag ragtag @homeModel.RagRatingCss.ElementAt(index)">
+							@homeModel.RagRating.Item2.ElementAt(index)
+						</span>
+					}
+				</td>
+				<td class="govuk-table__cell" data-sort-value="@homeModel.CreatedUnixTime">
+					@homeModel.Created
+				</td>
+			</tr>
+		}
+	}
+	</tbody>
+</table>
