@@ -85,5 +85,11 @@ namespace ConcernsCaseWork.Pages.Case
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 		}
+		
+		public bool UserHasEditCasePrivileges()
+		{
+			bool result = CaseModel.CreatedBy.Equals(User.Identity.Name, StringComparison.OrdinalIgnoreCase);
+			return result;
+		}
 	}
 }

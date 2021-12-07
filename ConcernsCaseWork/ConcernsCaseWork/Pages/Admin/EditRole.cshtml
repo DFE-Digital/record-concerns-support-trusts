@@ -43,7 +43,7 @@
 
 							<div class="govuk-checkboxes" data-module="govuk-checkboxes">
 								@{ var idRole = 0; }
-								@foreach (var roleEnum in Model.Roles)
+								@foreach (var roleEnum in Model.DefaultRoles)
 								{
 									<div class="govuk-checkboxes__item">
 										@{
@@ -75,7 +75,7 @@
 
 							<div class="govuk-checkboxes" data-module="govuk-checkboxes">
 								@{ var idUser = 0; }
-								@foreach (var user in Model.Users)
+								@foreach (var user in Model.DefaultUsers)
 								{
 									<div class="govuk-checkboxes__item">
 										@{

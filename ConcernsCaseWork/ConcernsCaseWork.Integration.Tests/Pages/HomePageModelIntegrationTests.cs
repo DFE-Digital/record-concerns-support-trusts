@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Integration.Tests.Pages
 			
 			// assert
 			Assert.That(logoutMessage, Is.Not.Null);
-			Assert.That(logoutMessage.Count, Is.EqualTo(2));
+			Assert.That(logoutMessage.Count, Is.EqualTo(3));
 		}
 	}
 }

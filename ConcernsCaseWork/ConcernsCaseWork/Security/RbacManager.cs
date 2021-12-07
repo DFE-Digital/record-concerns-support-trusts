@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Security
 
 		public async Task<RoleClaimWrapper> GetUserRoleClaimWrapper(string user)
 		{
-			_logger.LogInformation("RbacManager::GetUserRoles {User}", user);
+			_logger.LogInformation("RbacManager::GetUserRoleClaimWrapper {User}", user);
 
 			var roleClaimWrapper = await _userRoleCachedService.GetRoleClaimWrapper(_defaultUsers, user);
 			

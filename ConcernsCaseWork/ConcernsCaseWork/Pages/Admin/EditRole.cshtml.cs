@@ -19,8 +19,8 @@ namespace ConcernsCaseWork.Pages.Admin
 		private readonly IRbacManager _rbacManager;
 		private readonly ILogger<EditRolePageModel> _logger;
 
-		public IList<RoleEnum> Roles { get; private set; }
-		public IList<string> Users { get; private set; }
+		public IList<RoleEnum> DefaultRoles { get; private set; }
+		public IList<string> DefaultUsers { get; private set; }
 		public RoleClaimWrapper UserRoleClaimWrapper { get; private set; }
 		public string UserName { get; private set; }
 		public string PreviousUrl { get; private set; }
@@ -64,6 +64,7 @@ namespace ConcernsCaseWork.Pages.Admin
 				var rolesSelected = Request.Form["role"].ToString();
 				var usersSelected = Request.Form["user"].ToString();
 				userName = Request.Form["username"].ToString();
+				
 				if (string.IsNullOrEmpty(rolesSelected) || string.IsNullOrEmpty(usersSelected) || string.IsNullOrEmpty(userName)) 
 					throw new Exception("Missing request form data");
 
@@ -90,8 +91,8 @@ namespace ConcernsCaseWork.Pages.Admin
 			if (string.IsNullOrEmpty(userName)) return Page();
 			
 			UserName = userName;
-			Roles = new List<RoleEnum> { RoleEnum.Admin, RoleEnum.Leader, RoleEnum.User };
-			Users = _rbacManager.GetDefaultUsers();
+			DefaultRoles = new List<RoleEnum> { RoleEnum.Admin, RoleEnum.Leader, RoleEnum.User };
+			DefaultUsers = _rbacManager.GetDefaultUsers().Where(u => !u.Equals(UserName, StringComparison.OrdinalIgnoreCase)).ToList();
 			UserRoleClaimWrapper = await _rbacManager.GetUserRoleClaimWrapper(UserName);
 			PreviousUrl = url;
 

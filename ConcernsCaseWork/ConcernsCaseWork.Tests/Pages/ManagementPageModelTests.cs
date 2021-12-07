@@ -146,6 +146,98 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.RatingModelMap, Is.Not.Null);
 			Assert.That(pageModel.TypeModelMap, Is.Not.Null);
 		}
+
+		[Test]
+		public async Task WhenUserHasEditCasePrivileges_ShowEditActions_Return_False()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			var mockLogger = new Mock<ILogger<ManagementPageModel>>();
+			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
+			
+			var caseModel = CaseFactory.BuildCaseModel();
+			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
+			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
+			var casesHistoryModel = CaseFactory.BuildListCasesHistoryModel();
+			var recordsModel = RecordFactory.BuildListRecordModel();
+			var typeModel = TypeFactory.BuildTypeModel();
+
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
+			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
+				.ReturnsAsync(trustCasesModel);
+			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+				.ReturnsAsync(trustDetailsModel);
+			mockCaseHistoryModelService.Setup(c => c.GetCasesHistory(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(casesHistoryModel);
+			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(recordsModel);
+			mockTypeModelService.Setup(t => t.GetTypeModelByUrn(It.IsAny<long>()))
+				.ReturnsAsync(typeModel);
+			
+			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
+				mockCaseHistoryModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+			
+			// act
+			await pageModel.OnGetAsync();
+			var showEditActions = pageModel.UserHasEditCasePrivileges();
+			
+			// assert
+			Assert.False(showEditActions);
+		}
+		
+		[Test]
+		public async Task WhenUserHasEditCasePrivileges_ShowEditActions_Return_True()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			var mockLogger = new Mock<ILogger<ManagementPageModel>>();
+			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
+			
+			var caseModel = CaseFactory.BuildCaseModel("Tester");
+			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
+			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
+			var casesHistoryModel = CaseFactory.BuildListCasesHistoryModel();
+			var recordsModel = RecordFactory.BuildListRecordModel();
+			var typeModel = TypeFactory.BuildTypeModel();
+
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
+			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
+				.ReturnsAsync(trustCasesModel);
+			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+				.ReturnsAsync(trustDetailsModel);
+			mockCaseHistoryModelService.Setup(c => c.GetCasesHistory(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(casesHistoryModel);
+			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(recordsModel);
+			mockTypeModelService.Setup(t => t.GetTypeModelByUrn(It.IsAny<long>()))
+				.ReturnsAsync(typeModel);
+			
+			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
+				mockCaseHistoryModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object, true);
+			
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+			
+			// act
+			await pageModel.OnGetAsync();
+			var showEditActions = pageModel.UserHasEditCasePrivileges();
+			
+			// assert
+			Assert.True(showEditActions);
+		}
 		
 		private static ManagementPageModel SetupManagementPageModel(
 			ICaseModelService mockCaseModelService, 
