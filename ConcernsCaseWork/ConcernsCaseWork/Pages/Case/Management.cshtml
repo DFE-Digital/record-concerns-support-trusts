@@ -1,6 +1,6 @@
 ﻿@page "/case/{urn:long}/management"
 @model ConcernsCaseWork.Pages.Case.ManagementPageModel
-@using static ConcernsCaseWork.Security.RoleManager
+@*@using static ConcernsCaseWork.Security.RoleManager*@
 
 @{
 	ViewData["Title"] = "Case management";
@@ -22,7 +22,7 @@
 				<a asp-page="../home" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
 					Back to casework
 				</a>
-				@if (UserHasEditCasePrivileges(Model.CaseModel.CreatedBy, User.Identity.Name))
+				@if (Model.UserHasEditCasePrivileges())
 				{
 					<a href="@Request.Path/closure" role="button" class="govuk-button govuk-button--warning float__right" data-module="govuk-button">
 						Close case
@@ -67,7 +67,7 @@
 									</span>
 								</dd>
 								<dd class="dfe-width-15percent govuk-summary-list__actions">
-									@if (UserHasEditCasePrivileges(Model.CaseModel.CreatedBy, User.Identity.Name))
+									@if (Model.UserHasEditCasePrivileges())
 									{
 										<a class="govuk-link" href="@Request.Path/record/@key/edit_concerntype">
 											Change<span class="govuk-visually-hidden"> primary concern</span>
@@ -95,7 +95,7 @@
 									}
 								</dd>
 								<dd class="dfe-width-15percent govuk-summary-list__actions">
-									@if (UserHasEditCasePrivileges(Model.CaseModel.CreatedBy, User.Identity.Name))
+									@if (Model.UserHasEditCasePrivileges())
 									{
 										<a class="govuk-link" href="@Request.Path/record/@key/edit_riskrating">
 											Change<span class="govuk-visually-hidden"> risk rating</span>
@@ -114,7 +114,7 @@
 								@Model.CaseModel.DirectionOfTravel
 							</dd>
 							<dd class="dfe-width-15percent govuk-summary-list__actions">
-								@if (UserHasEditCasePrivileges(Model.CaseModel.CreatedBy, User.Identity.Name))
+								@if (Model.UserHasEditCasePrivileges())
 								{
 									<a class="govuk-link" href="@Request.Path/edit_directionoftravel">
 										Change<span class="govuk-visually-hidden"> direction of travel</span>
@@ -135,7 +135,7 @@
 								</h2>
 							</div>
 							<div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1">
-								@if (UserHasEditCasePrivileges(Model.CaseModel.CreatedBy, User.Identity.Name))
+								@if (Model.UserHasEditCasePrivileges())
 								{
 									<a class="govuk-link float__right" href="@Request.Path/edit_issue">Edit</a>
 								}
@@ -152,7 +152,7 @@
 								</h2>
 							</div>
 							<div aria-labelledby="accordion-default-heading-2" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-2">
-								@if (UserHasEditCasePrivileges(Model.CaseModel.CreatedBy, User.Identity.Name))
+								@if (Model.UserHasEditCasePrivileges())
 								{
 									<a class="govuk-link float__right" href="@Request.Path/edit_current_status">Edit</a>
 								}
@@ -169,7 +169,7 @@
 								</h2>
 							</div>
 							<div aria-labelledby="accordion-default-heading-3" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-3">
-								@if (UserHasEditCasePrivileges(Model.CaseModel.CreatedBy, User.Identity.Name))
+								@if (Model.UserHasEditCasePrivileges())
 								{
 									<a class="govuk-link float__right" href="@Request.Path/edit_case_aim">Edit</a>
 								}
@@ -186,7 +186,7 @@
 								</h2>
 							</div>
 							<div aria-labelledby="accordion-default-heading-4" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-4">
-								@if (UserHasEditCasePrivileges(Model.CaseModel.CreatedBy, User.Identity.Name))
+								@if (Model.UserHasEditCasePrivileges())
 								{
 									<a class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point">Edit</a>
 								}
@@ -203,7 +203,7 @@
 								</h2>
 							</div>
 							<div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
-								@if (UserHasEditCasePrivileges(Model.CaseModel.CreatedBy, User.Identity.Name))
+								@if (Model.UserHasEditCasePrivileges())
 								{
 									<a class="govuk-link float__right" href="@Request.Path/edit_next_steps">Edit</a>
 								}
