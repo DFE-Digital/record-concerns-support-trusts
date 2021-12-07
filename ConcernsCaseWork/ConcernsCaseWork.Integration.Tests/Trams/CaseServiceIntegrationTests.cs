@@ -145,6 +145,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			Assert.That(updatedCaseDto.NextSteps, Is.EqualTo(postCaseDto.NextSteps));
 			Assert.That(updatedCaseDto.ReviewAt, Is.EqualTo(timeNow));
 			Assert.That(updatedCaseDto.StatusUrn, Is.EqualTo(postCaseDto.StatusUrn));
+			Assert.That(updatedCaseDto.RatingUrn, Is.EqualTo(postCaseDto.RatingUrn));
 			Assert.That(updatedCaseDto.UpdatedAt, Is.EqualTo(timeNow));
 			Assert.That(updatedCaseDto.DeEscalationPoint, Is.EqualTo(postCaseDto.DeEscalationPoint));
 			Assert.That(updatedCaseDto.DirectionOfTravel, Is.EqualTo(DirectionOfTravelEnum.Improving.ToString()));
