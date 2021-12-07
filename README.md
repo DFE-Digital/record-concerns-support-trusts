@@ -153,10 +153,10 @@ Project configuration based on other internal streams for consistency.
 ```
 [GitHub Repository](https://github.com/DFE-Digital/sdd-technical-documentation/blob/main/development_guidance/logging.md)
 
-## TRAMS API
+## Academies API
 ***
 ```
-TRAMS API is designed to replace dynamics365 were most of the legacy systems are feeding data from.
+Academies API is designed to replace dynamics365 were most of the legacy systems are feeding data from.
 
 For integration with TRAMS API a member of the team will make available an API key (per environment).
 Include header 'ApiKey' with the service key provided by TRAMS team.
