@@ -73,7 +73,6 @@ namespace ConcernsCaseWork.Services.Cases
 			return Array.Empty<HomeModel>();
 		}
 
-
 		public async Task<IList<HomeModel>> GetCasesByCaseworkerAndStatus(string caseworker, StatusEnum statusEnum)
 		{
 			try

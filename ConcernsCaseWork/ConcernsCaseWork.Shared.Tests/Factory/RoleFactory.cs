@@ -18,6 +18,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new List<RoleEnum> { RoleEnum.Leader, RoleEnum.User };
 		}
 		
+		public static List<RoleEnum> BuildListUserRoleEnum()
+		{
+			return new List<RoleEnum> { RoleEnum.User };
+		}
+		
 		public static IDictionary<string, RoleClaimWrapper> BuildDicUsersRoles()
 		{
 			return new Dictionary<string, RoleClaimWrapper>

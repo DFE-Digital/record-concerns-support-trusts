@@ -29,9 +29,12 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			var roles = RoleFactory.BuildListRoleEnum();
 			var roleClaimWrapper = new RoleClaimWrapper { Roles = roles };
+			var defaultUsers = new[]{ "user1", "user2" };
 			
 			mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
 				.ReturnsAsync(roleClaimWrapper);
+			mockRbacManager.Setup(r => r.GetDefaultUsers())
+				.Returns(defaultUsers);
 			
 			var pageModel = SetupEditRolePageModel(mockRbacManager.Object, mockLogger.Object);
 			var routeData = pageModel.RouteData.Values;
@@ -47,7 +50,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.UserName, Is.Not.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Not.Null);
 			Assert.That(pageModel.DefaultRoles, Is.Not.Null);
-			Assert.That(pageModel.DefaultUsers, Is.Null);
+			Assert.That(pageModel.DefaultUsers, Is.Not.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper, Is.Not.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper.Roles, Is.Not.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper.Users, Is.Not.Null);
@@ -63,6 +66,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				Times.Once);
 			
 			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Once);
+			mockRbacManager.Verify(r => r.GetDefaultUsers(), Times.Once);
 		}
 		
 		[Test]
@@ -106,6 +110,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				Times.Once);
 			
 			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Never);
+			mockRbacManager.Verify(r => r.GetDefaultUsers(), Times.Never);
 		}		
 		
 		[Test]
@@ -153,6 +158,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				Times.Once);
 			
 			mockRbacManager.Verify(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>(), It.IsAny<IList<string>>()), Times.Once);
+			mockRbacManager.Verify(r => r.GetDefaultUsers(), Times.Never);
 		}		
 		
 		[Test]
@@ -193,6 +199,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				Times.Once);
 			
 			mockRbacManager.Verify(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>(), It.IsAny<IList<string>>()), Times.Never);
+			mockRbacManager.Verify(r => r.GetDefaultUsers(), Times.Never);
 		}		
 		
 		[Test]
@@ -204,9 +211,12 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			var roles = RoleFactory.BuildListRoleEnum();
 			var roleClaimWrapper = new RoleClaimWrapper { Roles = roles };
+			var defaultUsers = new[]{ "user1", "user2" };
 			
 			mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
 				.ReturnsAsync(roleClaimWrapper);
+			mockRbacManager.Setup(r => r.GetDefaultUsers())
+				.Returns(defaultUsers);
 			mockRbacManager.Setup(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>(), It.IsAny<IList<string>>()));
 			
 			var pageModel = SetupEditRolePageModel(mockRbacManager.Object, mockLogger.Object);
@@ -227,7 +237,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.UserName, Is.Not.Null);
 			Assert.That(pageModel.PreviousUrl, Is.Not.Null);
 			Assert.That(pageModel.DefaultRoles, Is.Not.Null);
-			Assert.That(pageModel.DefaultUsers, Is.Null);
+			Assert.That(pageModel.DefaultUsers, Is.Not.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper, Is.Not.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper.Roles, Is.Not.Null);
 			Assert.That(pageModel.UserRoleClaimWrapper.Users, Is.Not.Null);
@@ -245,6 +255,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			mockRbacManager.Verify(r => r.UpdateUserRoles(It.IsAny<string>(), It.IsAny<List<RoleEnum>>(), It.IsAny<IList<string>>()), Times.Never);
 			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Once);
+			mockRbacManager.Verify(r => r.GetDefaultUsers(), Times.Once);
 		}
 		
 		private static EditRolePageModel SetupEditRolePageModel(IRbacManager rbacManager, ILogger<EditRolePageModel> logger, bool isAuthenticated = false)
