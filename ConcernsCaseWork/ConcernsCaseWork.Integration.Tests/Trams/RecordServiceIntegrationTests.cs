@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
-using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +9,6 @@ using Service.TRAMS.Records;
 using Service.TRAMS.Trusts;
 using Service.TRAMS.Types;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Integration.Tests.Trams
@@ -41,7 +39,8 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			_factory.Dispose();
 		}
 
-		//[Test] TODO Enable when staging endpoint is deployed 
+		[Test]
+		[Ignore("Academies not release to staging")]
 		public async Task WhenGetRecordsByCaseUrn_ReturnsListRecordDto()
 		{
 			// arrange

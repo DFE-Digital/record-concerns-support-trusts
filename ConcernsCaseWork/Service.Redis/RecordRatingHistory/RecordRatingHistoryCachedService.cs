@@ -2,6 +2,7 @@
 using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.TRAMS.RecordRatingHistory;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
 namespace Service.Redis.RecordRatingHistory
@@ -32,7 +33,9 @@ namespace Service.Redis.RecordRatingHistory
 			{
 				var recordWrapper = new RecordWrapper();
 				recordWrapper.RecordsRatingHistory.Add(recordRatingHistoryDto);
-				var caseWrapper = new CaseWrapper { Records = { { recordRatingHistoryDto.RecordUrn, recordWrapper } } };
+				var records = new ConcurrentDictionary<long, RecordWrapper>();
+				records.TryAdd(recordRatingHistoryDto.RecordUrn, recordWrapper);
+				var caseWrapper = new CaseWrapper { Records = records };
 				
 				caseState = new UserState
 				{
@@ -52,7 +55,7 @@ namespace Service.Redis.RecordRatingHistory
 					recordWrapper = new RecordWrapper();
 					recordWrapper.RecordsRatingHistory.Add(recordRatingHistoryDto);
 					
-					caseWrapper = new CaseWrapper();
+					caseWrapper = new CaseWrapper { Records = new ConcurrentDictionary<long, RecordWrapper>() };
 					caseWrapper.Records.Add(recordRatingHistoryDto.RecordUrn, recordWrapper);
 					
 					caseState.CasesDetails.Add(caseUrn, caseWrapper);

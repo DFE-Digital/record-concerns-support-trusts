@@ -1,8 +1,10 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
-namespace Service.Redis.Models
+namespace Service.Redis.Security
 {
-	public sealed class UserClaims
+	[Serializable]
+	public sealed class Claims
 	{
 		[JsonPropertyName("id")]
 		public string Id { get; set; }

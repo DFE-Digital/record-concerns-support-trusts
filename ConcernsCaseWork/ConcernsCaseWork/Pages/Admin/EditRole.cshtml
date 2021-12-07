@@ -1,0 +1,116 @@
+﻿@page "/admin/user/{username}/edit_role"
+@model ConcernsCaseWork.Pages.Admin.EditRolePageModel
+
+@{
+	ViewData["Title"] = "Edit Role";
+	var nonce = HttpContext.GetNonce();
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError"/>
+
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+			
+			<span class="govuk-caption-l">Administrator</span>
+            <h1 class="govuk-heading-l">Edit Roles and Groups</h1>
+			
+			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+            	<partial name="_Error"/>
+            }
+			else
+			{
+				<h1 class="govuk-table__header">
+					"@Model.UserName"
+				</h1>
+
+				<form role="form" asp-page-handler="editRole" method="post" id="edit-role-users-form" novalidate>
+
+					<input type="hidden" name="username" value="@Model.UserName"/>
+					<input type="hidden" name="url" value="@Model.PreviousUrl"/>
+
+					<div class="govuk-form-group">
+						<fieldset class="govuk-fieldset" aria-describedby="role-hint">
+							<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+								<h1 class="govuk-fieldset__heading">
+									Roles
+								</h1>
+							</legend>
+							<div id="role-hint" class="govuk-hint">
+								Select all that apply.
+							</div>
+
+							<div class="govuk-checkboxes" data-module="govuk-checkboxes">
+								@{ var idRole = 0; }
+								@foreach (var roleEnum in Model.DefaultRoles)
+								{
+									<div class="govuk-checkboxes__item">
+										@{
+											var idStr = idRole == 0 ? "role" : "role-" + idRole;
+											var checkedRole = Model.UserRoleClaimWrapper.Roles.Contains(roleEnum);
+										}
+										<input class="govuk-checkboxes__input" id="@idStr" name="role" type="checkbox" value="@roleEnum" checked="@checkedRole">
+										<label class="govuk-label govuk-checkboxes__label" for="@idStr">
+											@roleEnum
+										</label>
+									</div>
+									idRole++;
+								}
+							</div>
+
+						</fieldset>
+					</div>
+					
+					<div class="govuk-form-group">
+						<fieldset class="govuk-fieldset" aria-describedby="user-hint">
+							<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+								<h1 class="govuk-fieldset__heading">
+									Groups
+								</h1>
+							</legend>
+							<div id="user-hint" class="govuk-hint">
+								Select all that apply.
+							</div>
+
+							<div class="govuk-checkboxes" data-module="govuk-checkboxes">
+								@{ var idUser = 0; }
+								@foreach (var user in Model.DefaultUsers)
+								{
+									<div class="govuk-checkboxes__item">
+										@{
+											var idStr = idUser == 0 ? "user" : "user-" + idUser;
+											var checkedUser = Model.UserRoleClaimWrapper.Users.Contains(user);
+										}
+										<input class="govuk-checkboxes__input" id="@idStr" name="user" type="checkbox" value="@user" checked="@checkedUser">
+										<label class="govuk-label govuk-checkboxes__label" for="@idStr">
+											@user
+										</label>
+									</div>
+									idUser++;
+								}
+							</div>
+						</fieldset>
+					</div>
+
+					<!--Button group-->
+					<div class="govuk-button-group">
+						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+							Apply
+						</button>
+						<partial name="_Cancel"/>
+					</div>
+				</form>
+						
+				<script type="application/javascript" nonce="@nonce">
+                    $(function () {	
+                        let validator = formValidator($("#edit-role-users-form")[0]);
+                        addRolesValidator(validator);
+						addUsersValidator(validator);
+                    });
+                </script>
+			}
+			
+		</div>
+	</div>
+</div>

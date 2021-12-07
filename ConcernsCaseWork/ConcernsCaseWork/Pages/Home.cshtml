@@ -8,143 +8,33 @@
 <div class="govuk-extra-width-container">
 	<div class="govuk-!-margin-top-0">
 
-		<div class="govuk-button-group flexalign__right">
-			<a class="govuk-button" asp-page="/case/index" role="button">
-				Create case
-			</a>
-			<a class="govuk-button govuk-button--secondary" asp-page="/trust/index" role="button">
-				Find trust
-			</a>
-		</div>
-
-		<!-- Active casework -->
-		<table class="govuk-table" data-module="moj-sortable-table">
-			<caption class="govuk-table__caption govuk-table__caption--m">
-				Your active casework
-			</caption>
-			<thead class="govuk-table__head">
-			<tr class="govuk-table__row tr__large">
-				<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-					Case ID
-				</th>
-				<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
-					Last update
-				</th>
-				<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col" aria-sort="ascending">
-					Trust/Academy
-				</th>
-				<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col" aria-sort="ascending">
-					Primary case type
-				</th>
-				<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
-					RAG rating
-				</th>
-				<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
-					Created
-				</th>
-			</tr>
-			</thead>
-			<tbody class="govuk-table__body">
-			@if (Model.CasesActive.Count == 0)
-			{
-				<tr class="govuk-table__row tr__large">
-					<td class="govuk-table__cell__cases govuk-oneline-row">
-						<span>There are no cases available.</span>
-					</td>
-				</tr>
-			}
-			else
-			{
-				foreach (var caseModel in Model.CasesActive)
-				{
-					<tr class="govuk-table__row tr__large">
-						<td class="govuk-table__cell">
-							<a class="govuk-link" href="case/@caseModel.CaseUrn/management">@caseModel.CaseUrn</a>
-						</td>
-						<td class="govuk-table__cell" data-sort-value="@caseModel.UpdatedUnixTime">
-							@caseModel.Updated
-						</td>
-						<td class="govuk-table__cell">
-							@caseModel.TrustNameTitle
-						</td>
-						<td class="govuk-table__cell">
-							@caseModel.CaseTypeDescription
-						</td>
-						<td class="govuk-table__cell govuk-label-wrapper" data-sort-value="@caseModel.RagRating.Item1">
-							@for (var index = 0; index < caseModel.RagRating.Item2.Count; ++index)
-							{
-								<span class="govuk-tag ragtag @caseModel.RagRatingCss.ElementAt(index)">
-									@caseModel.RagRating.Item2.ElementAt(index)
-								</span>
-							}
-						</td>
-						<td class="govuk-table__cell" data-sort-value="@caseModel.CreatedUnixTime">
-							@caseModel.Created
-						</td>
-					</tr>
-				}
-			}
-			</tbody>
-		</table>
-
-		<!-- Closed for monitoring -->
-		<table class="govuk-table  govuk-!-margin-top-9" data-module="moj-sortable-table">
-			<caption class="govuk-table__caption govuk-table__caption--m">
-				<div class="govuk-button-group flexalign__right">
-					<a class="govuk-button govuk-button--secondary" asp-page="/case/closed">
-						All Closed cases
-					</a>
+		@if (Model.UserAsRoleLeader)
+		{
+			<div class="govuk-tabs govuk-!-margin-top-6" data-module="govuk-tabs">
+				<ul class="govuk-tabs__list">
+					<li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+						<a class="govuk-tabs__tab" href="#your-casework">
+							Your Casework
+						</a>
+					</li>
+					<li class="govuk-tabs__list-item">
+						<a class="govuk-tabs__tab" href="#team-casework">
+							Team Casework
+						</a>
+					</li>
+				</ul>
+				<div class="govuk-tabs__panel" id="your-casework">
+					<partial name="_Home" model="Model"/>
 				</div>
-				Closed for monitoring
-			</caption>
-
-			<thead class="govuk-table__head">
-				<tr class="govuk-table__row tr__large">
-					<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-						Case ID
-					</th>
-					<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col" aria-sort="ascending">
-						Trust/Academy
-					</th>
-					<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-						Primary case type
-					</th>
-					<th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="none">
-						Review date
-					</th>
-				</tr>
-			</thead>
-
-			<tbody class="govuk-table__body">
-				@if (Model.CasesMonitoring.Count == 0)
-				{
-					<tr class="govuk-table__row tr__large">
-						<td class="govuk-table__cell__cases govuk-oneline-row">
-							<span>There are no cases available.</span>
-						</td>
-					</tr>
-				}
-				else
-				{
-					foreach (var caseModel in Model.CasesMonitoring)
-					{
-						<tr class="govuk-table__row tr__large">
-							<td class="govuk-table__cell">
-								<a class="govuk-link" href="case/@caseModel.CaseUrn/management">@caseModel.CaseUrn</a>
-							</td>
-							<td class="govuk-table__cell">
-								@caseModel.TrustNameTitle
-							</td>
-							<td class="govuk-table__cell">
-								@caseModel.CaseTypeDescription
-							</td>
-							<td class="govuk-table__cell">
-								@caseModel.Review
-							</td>
-						</tr>
-					}
-				}
-			</tbody>
-		</table>
+				<div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="team-casework">
+					<partial name="_CasesTeamActive" model="Model.CasesTeamActive"/>
+				</div>
+			</div>
+		}
+		else
+		{
+			<partial name="_Home" model="Model"/>
+		}
+		
 	</div>
 </div>

@@ -4,7 +4,7 @@ using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
 using Service.Redis.Configuration;
-using Service.Redis.Models;
+using Service.Redis.Security;
 using System;
 using System.Text;
 using System.Text.Json;
@@ -22,7 +22,7 @@ namespace Service.Redis.Tests.Base
 			// arrange
 			var mockCache = new Mock<IDistributedCache>();
 			var mockIOptionsCache = new Mock<IOptions<CacheOptions>>();
-			var userClaims = new UserClaims
+			var userClaims = new Claims
 			{
 				Email = "test@email.com", 
 				Id = "test"
@@ -36,11 +36,11 @@ namespace Service.Redis.Tests.Base
 			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
 			
 			// act
-			var cachedUser = await cacheProvider.GetFromCache<UserClaims>(userClaims.Email);
+			var cachedUser = await cacheProvider.GetFromCache<Claims>(userClaims.Email);
 
 			// assert
 			Assert.That(cachedUser, Is.Not.Null);
-			Assert.That(cachedUser, Is.InstanceOf<UserClaims>());
+			Assert.That(cachedUser, Is.InstanceOf<Claims>());
 			Assert.That(cachedUser.Email, Is.EqualTo(userClaims.Email));
 			Assert.That(cachedUser.Id, Is.EqualTo(userClaims.Id));
 		}
@@ -59,7 +59,7 @@ namespace Service.Redis.Tests.Base
 			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
 			
 			// act
-			var cachedUser = await cacheProvider.GetFromCache<UserClaims>("test@email.com");
+			var cachedUser = await cacheProvider.GetFromCache<Claims>("test@email.com");
 
 			// assert
 			Assert.That(cachedUser, Is.Null);
@@ -72,7 +72,7 @@ namespace Service.Redis.Tests.Base
 			const int cacheTimeToLive = 120;
 			var mockCache = new Mock<IDistributedCache>();
 			var mockIOptionsCache = new Mock<IOptions<CacheOptions>>();
-			var userClaims = new UserClaims
+			var userClaims = new Claims
 			{
 				Email = "test@email.com", 
 				Id = "test"

@@ -1,6 +1,5 @@
 ﻿using Service.TRAMS.Cases;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace Service.Redis.Models
@@ -10,6 +9,6 @@ namespace Service.Redis.Models
 	{
 		public CaseDto CaseDto { get; set; }
 		public IList<CaseHistoryDto> CasesHistoryDto { get; set; } = new List<CaseHistoryDto>();
-		public IDictionary<long, RecordWrapper> Records { get; set; } = new ConcurrentDictionary<long, RecordWrapper>();
+		public IDictionary<long, RecordWrapper> Records { get; set; }
 	}
 }

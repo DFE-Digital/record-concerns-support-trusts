@@ -123,6 +123,24 @@ window.addDirectionOfTravelValidator = function(validator) {
 		message: 'Select direction of travel'
 	}]);
 }
+window.addRolesValidator = function(validator) {
+	validator.addValidator('role', [{
+		method: function() {
+			let checkboxRoles = $('input[name="role"]:checked');
+			return checkboxRoles.length > 0;
+		},
+		message: 'Select role(s)'
+	}]);
+}
+window.addUsersValidator = function(validator) {
+	validator.addValidator('user', [{
+		method: function() {
+			let checkboxRoles = $('input[name="user"]:checked');
+			return checkboxRoles.length > 0;
+		},
+		message: 'Select user(s)'
+	}]);
+}
 
 // Auto resizer textBox
 window.autoResizer = function() {

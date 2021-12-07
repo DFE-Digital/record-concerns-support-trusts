@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Services.Cases;
+﻿using ConcernsCaseWork.Security;
+using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
@@ -14,6 +15,7 @@ using Service.Redis.Configuration;
 using Service.Redis.Ratings;
 using Service.Redis.RecordRatingHistory;
 using Service.Redis.Records;
+using Service.Redis.Security;
 using Service.Redis.Sequence;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
@@ -124,8 +126,6 @@ namespace ConcernsCaseWork.Extensions
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
-			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
-			services.AddSingleton<IUserCachedService, UserCachedService>();
 			services.AddSingleton<ICachedService, CachedService>();
 			services.AddSingleton<ITypeCachedService, TypeCachedService>();
 			services.AddSingleton<IStatusCachedService, StatusCachedService>();
@@ -135,6 +135,11 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IRecordCachedService, RecordCachedService>();
 			services.AddSingleton<IRecordRatingHistoryCachedService, RecordRatingHistoryCachedService>();
 			services.AddSingleton<ICaseHistoryCachedService, CaseHistoryCachedService>();
+			
+			// AD Integration
+			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
+			services.AddSingleton<IUserRoleCachedService, UserRoleCachedService>();
+			services.AddSingleton<IRbacManager, RbacManager>();
 			
 			// Redis Sequence
 			services.AddSingleton<ISequenceCachedService, SequenceCachedService>();

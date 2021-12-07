@@ -2,6 +2,7 @@
 using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.TRAMS.Records;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -33,25 +34,39 @@ namespace Service.Redis.Records
 			var userState = await GetData<UserState>(caseworker);
 			if (userState is null) return recordsDto;
 			
-			// If case urn doesn't exist on the cache return new created record
+			// If case urn doesn't exist on the cache return empty records
 			if (!userState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper)) return recordsDto;
 			
-			if (caseWrapper.Records.Any())
+			// Checking records was cached before
+			if (caseWrapper.Records != null)
 			{
+				if (!caseWrapper.Records.Any()) return recordsDto;
 				recordsDto = caseWrapper.Records.Values.Select(r => r.RecordDto).ToList();
 			}
 			else 
 			{
 				recordsDto = await _recordService.GetRecordsByCaseUrn(caseUrn);
-				if (!recordsDto.Any()) return recordsDto;
+				if (!recordsDto.Any())
+				{
+					await _semaphoreRecordsCase.WaitAsync();
+					
+					caseWrapper.Records ??= new ConcurrentDictionary<long, RecordWrapper>();
+					
+					await StoreData(caseworker, userState);
+					
+					_semaphoreRecordsCase.Release();
+					
+					return recordsDto;
+				}
 				
 				await _semaphoreRecordsCase.WaitAsync();
 				
 				userState = await GetData<UserState>(caseworker);
 				userState ??= new UserState();
 				
-				if(userState.CasesDetails.TryGetValue(caseUrn, out caseWrapper)) 
+				if(userState.CasesDetails.TryGetValue(caseUrn, out caseWrapper))
 				{
+					caseWrapper.Records ??= new ConcurrentDictionary<long, RecordWrapper>();
 					caseWrapper.Records = recordsDto.ToDictionary(recordDto => recordDto.Urn, recordDto => new RecordWrapper { RecordDto = recordDto } );
 						
 					await StoreData(caseworker, userState);
@@ -78,6 +93,7 @@ namespace Service.Redis.Records
 			if (!userState.CasesDetails.TryGetValue(newRecordDto.CaseUrn, out var caseWrapper)) return newRecordDto;
 			
 			// Add new record to the records cache
+			caseWrapper.Records ??= new ConcurrentDictionary<long, RecordWrapper>();
 			caseWrapper.Records.Add(newRecordDto.Urn, new RecordWrapper {  RecordDto = newRecordDto });
 			
 			await StoreData(caseworker, userState);

@@ -287,7 +287,7 @@ namespace Service.Redis.Tests.Records
 				{
 					{ 1, new CaseWrapper { 
 						CaseDto = CaseFactory.BuildCaseDto(), 
-						Records =
+						Records = new Dictionary<long, RecordWrapper>
 						{
 							{ 1, new RecordWrapper
 							{
@@ -365,7 +365,7 @@ namespace Service.Redis.Tests.Records
 		}		
 		
 		[Test]
-		public async Task WhenGetRecordsByCaseUrn_CacheNotNull_CaseUrnExists_RecordsIsEmpty_CallApi_Return_EmptyRecordsDto()
+		public async Task WhenGetRecordsByCaseUrn_CacheNotNull_CaseUrnExists_RecordsIsNull_CallApi_Return_EmptyRecordsDto()
 		{
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
@@ -377,9 +377,7 @@ namespace Service.Redis.Tests.Records
 				TrustUkPrn = "trust-ukprn",
 				CasesDetails =
 				{
-					{ 1, new CaseWrapper { 
-						CaseDto = CaseFactory.BuildCaseDto()
-					} }
+					{ 1, new CaseWrapper { CaseDto = CaseFactory.BuildCaseDto() } }
 				}
 			}; 
 			
@@ -401,7 +399,7 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecords.Count, Is.EqualTo(0));
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
-			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
 			mockRecordService.Verify(c => c.GetRecordsByCaseUrn(It.IsAny<long>()), Times.Once);
 		}		
 		
@@ -420,7 +418,7 @@ namespace Service.Redis.Tests.Records
 				{
 					{ 99, new CaseWrapper { 
 						CaseDto = CaseFactory.BuildCaseDto(), 
-						Records =
+						Records = new Dictionary<long, RecordWrapper>
 						{
 							{ 99, new RecordWrapper
 							{
@@ -472,7 +470,7 @@ namespace Service.Redis.Tests.Records
 				{
 					{ 1, new CaseWrapper { 
 						CaseDto = CaseFactory.BuildCaseDto(), 
-						Records =
+						Records = new Dictionary<long, RecordWrapper>
 						{
 							{ 1, new RecordWrapper
 							{
@@ -520,7 +518,7 @@ namespace Service.Redis.Tests.Records
 				{
 					{ 99, new CaseWrapper { 
 						CaseDto = CaseFactory.BuildCaseDto(), 
-						Records =
+						Records = new Dictionary<long, RecordWrapper>
 						{
 							{ 99, new RecordWrapper
 							{
@@ -586,7 +584,7 @@ namespace Service.Redis.Tests.Records
 				{
 					{ 1, new CaseWrapper { 
 						CaseDto = CaseFactory.BuildCaseDto(), 
-						Records =
+						Records = new Dictionary<long, RecordWrapper>
 						{
 							{ 99, new RecordWrapper
 							{
