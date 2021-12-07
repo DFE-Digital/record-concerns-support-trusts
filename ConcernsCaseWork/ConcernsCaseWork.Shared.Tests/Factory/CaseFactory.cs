@@ -39,6 +39,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<string>(), 
 					Fixture.Create<string>(), 
 					1, 
+					1,
 					1
 				),
 				new CaseDto(
@@ -59,7 +60,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<string>(), 
 					Fixture.Create<string>(), 
 					2, 
-					3
+					3,
+					2
 				),
 				new CaseDto(
 					dateTimeNow, 
@@ -79,7 +81,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<string>(), 
 					Fixture.Create<string>(), 
 					3, 
-					2
+					2,
+					3
 				),
 				new CaseDto(
 					dateTimeNow, 
@@ -99,7 +102,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<string>(), 
 					Fixture.Create<string>(), 
 					4, 
-					1
+					1,
+					4
 				),
 				new CaseDto(
 					dateTimeNow, 
@@ -119,7 +123,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<string>(), 
 					Fixture.Create<string>(), 
 					5, 
-					2
+					2,
+					5
 				)
 			};
 		}
@@ -144,6 +149,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<string>(), 
 				Fixture.Create<string>(), 
 				1, 
+				1,
 				1
 			);
 		}
@@ -168,7 +174,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<string>(), 
 				Fixture.Create<string>(), 
 				Fixture.Create<string>(),
-				1
+				1,
+				2
 			);
 		}
 		

@@ -97,6 +97,8 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		{
 			// arrange
 			var caseService = _factory.Services.GetRequiredService<ICaseService>();
+			
+			
 			var trustSummaryDto = await FetchRandomTrust("Senior");
 
 			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustSummaryDto.UkPrn);
@@ -122,7 +124,8 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 				postCaseDto.DeEscalationPoint,
 				DirectionOfTravelEnum.Improving.ToString(),
 				postCaseDto.Urn,
-				postCaseDto.StatusUrn);
+				postCaseDto.StatusUrn,
+				postCaseDto.RatingUrn);
 			
 			// act
 			var updatedCaseDto = await caseService.PatchCaseByUrn(toUpdateCaseDto);
