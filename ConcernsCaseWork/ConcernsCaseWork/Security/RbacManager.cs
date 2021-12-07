@@ -29,7 +29,7 @@ namespace ConcernsCaseWork.Security
 
 		public IList<string> GetDefaultUsers()
 		{
-			return _defaultUsers;
+			return UserRoleMap.GetDefaultUsersExcludeE2E(_defaultUsers);
 		}
 		
 		public async Task<IDictionary<string, RoleClaimWrapper>> GetUsersRoles()
