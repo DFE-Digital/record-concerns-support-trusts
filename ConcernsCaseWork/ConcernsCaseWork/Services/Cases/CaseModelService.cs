@@ -425,31 +425,43 @@ namespace ConcernsCaseWork.Services.Cases
 				// Fetch Status
 				var statusDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
 				
-				// In a 1:1 case -> record (not multiple concerns) this flag is always true.
-				// When multiple concerns is develop take into consideration the number of records attached to the case.
-				const bool isCasePrimary = true;
-				
 				// Create a case
 				createCaseModel.StatusUrn = statusDto.Urn;
 				var newCase = await _caseCachedService.PostCase(CaseMapping.Map(createCaseModel));
 
-				// Create a record
+
 				var currentDate = DateTimeOffset.Now;
-				var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, 
-					currentDate, createCaseModel.Type, createCaseModel.SubType, createCaseModel.TypeDisplay, newCase.Urn, 
-					createCaseModel.TypeUrn, createCaseModel.RagRatingUrn, isCasePrimary, statusDto.Urn);
-				var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
-				
+				//TODOEA resolve type urn
+				// create records
+				createCaseModel.CreateRecordsModel.Select(async r =>
+				{
+					//var createRecordDto = new CreateRecordDto(
+					//	currentDate, 
+					//	currentDate, 
+					//	currentDate,
+					//	currentDate, 
+					//	r.TypeModel.CheckedType, 
+					//	r.TypeModel.CheckedSubType, 
+					//	r.TypeModel.TypeDisplay, 
+					//	newCase.Urn,
+					//	100, 
+					//	r.RatingModel.Urn, 
+					//	statusDto.Urn);
+
+					//var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
+
+					//// Create a rating history
+					//var createRecordRatingHistoryDto = new RecordRatingHistoryDto(currentDate, newRecord.Urn, r.RatingModel.Urn);
+					//await _recordRatingHistoryCachedService.PostRecordRatingHistory(createRecordRatingHistoryDto, createCaseModel.CreatedBy, newCase.Urn);
+				}
+				);
+
 				// Create case history event
 				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Concern, newCase.Urn), newCase.CreatedBy);
-				
-				// Create a rating history
-				var createRecordRatingHistoryDto = new RecordRatingHistoryDto(DateTimeOffset.Now, newRecord.Urn, createCaseModel.RagRatingUrn);
-				await _recordRatingHistoryCachedService.PostRecordRatingHistory(createRecordRatingHistoryDto, createCaseModel.CreatedBy, newCase.Urn);
 
 				// Create case history event
 				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Case, newCase.Urn), newCase.CreatedBy);
-				
+
 				// Return case urn, if required return type can be changed to CaseModel.
 				return newCase.Urn;
 			}

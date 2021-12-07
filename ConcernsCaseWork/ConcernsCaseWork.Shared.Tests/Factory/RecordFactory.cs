@@ -79,8 +79,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			var currentDate = DateTimeOffset.Now;
 			return new CreateRecordDto(currentDate, currentDate, currentDate, currentDate,
-				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, typeUrn, ratingUrn,
-				true, 1);
+				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, typeUrn, ratingUrn, 1);
 		}
 		
 		public static RecordModel BuildRecordModel()

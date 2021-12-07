@@ -10,14 +10,14 @@
 	<partial name="_BannerError"/>
 
 	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
+		<div class="govuk-grid-column">
 
 			<span class="govuk-caption-l">Create case</span>
-			<h1 class="govuk-heading-l">Concern </h1>
-			
+			<h1 class="govuk-heading-l">Concerns </h1>
+
 			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
 			{
-				<partial name="_Error"/>
+				<partial name="_Error" />
 			}
 			else
 			{
@@ -26,64 +26,136 @@
 					Change trust
 				</a>
 
-				<partial name="_TrustDetails" model="@Model.TrustDetailsModel"/>
+				<dl class="govuk-summary-list">
+					<div class="govuk-summary-list__row">
+					<dt class="govuk-summary-list__key">Trust</dt>
+					<dd class="govuk-summary-list__value">
+						@Model.TrustDetailsModel.GiasData.GroupName (@Model.TrustDetailsModel.IfdData.GroupContactAddress.County)
+						@* TODOEA if county is empty remove () *@
+						<br />
+						@Model.TrustDetailsModel.GiasData.GroupContactAddress.DisplayAddress
+					</dd>
+			</div>
+			@{
+				<div id="concerns-summary-list" class="govuk-summary-list__row">
+					<dt class="govuk-summary-list__key">Concerns</dt>
+					<dd class="govuk-summary-list__value">
+						@foreach (var concern in Model.CreateRecordsModel)
+						{
+							<a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 govuk-!-margin-top-6 float__right" href="#">
+								Edit
+							</a>
 
-				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+							@*<partial name="_RiskRating" model="@concern.RagRating" />*@
+							//TODOEA 
+							@*@concern.TypeModel.TypeDisplay
 
-				<h2 class="govuk-heading-m govuk-!-margin-top-9">Primary concern type</h2>
+							<div class="govuk-label-wrapper">
 
-				<!-- FORM -->
-				<form role="form" method="post" id="case-concern-type-form" novalidate>
-					<!--Trust UkPrn-->
-					<input type="hidden" name="trust-ukprn" value="@Model.TrustDetailsModel?.GiasData.UkPrn">
-					<input type="hidden" name="trust-name" value="@Model.TrustDetailsModel?.GiasData.GroupName">
+								@for (var index = 0; index < concern.RatingModel.RagRating.Item2.Count; ++index)
+								{
+									<span class="govuk-tag ragtag @concern.RatingModel.RagRatingCss.ElementAt(index)">
+										@concern.RatingModel.RagRating.Item2.ElementAt(index)
+									</span>
+								}
+							</div>*@
 
-					<!--Q Concern type-->
-					<div class="govuk-form-group">
-						<fieldset class="govuk-fieldset">
+							<br />
+						}
+					</dd>
+				</div>
+			}
+			</dl>
 
-							<div class="govuk-hint" id="case-issue-hint">
-								Use the
-								<a target="_blank" href="@Url.Page("../FileResource", "DownloadRiskManagementPdf")" class="govuk-link" rel="noreferrer noopener">
-									Risk Management Framework (opens in new tab)
-								</a> to assess the type of Concern
-							</div>
 
-							<partial name="_ConcernType" model="@Model.TypeModel"/>
+			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-						</fieldset>
-					</div>
+			<input type="hidden" id="numOfRecords" value="@Model.CreateRecordsModel.Count">
 
-					<!-- Q Risk rating -->
-					<div class="govuk-form-group govuk-!-margin-top-6">
-						<fieldset class="govuk-fieldset">
+			<!-- FORM -->
+			<form role="form" method="post" id="case-concern-type-form" novalidate>
+				<h2 class="govuk-heading-m govuk-!-margin-top-9">Select a concern</h2>
 
-							<legend class="govuk-fieldset__legend govuk-!-font-weight-bold">
-								What is the risk rating?
-							</legend>
+				<!--Trust UkPrn-->
+				<input type="hidden" name="trust-ukprn" value="@Model.TrustDetailsModel?.GiasData.UkPrn">
+				<input type="hidden" name="trust-name" value="@Model.TrustDetailsModel?.GiasData.GroupName">
 
-							<partial name="_RiskRating" model="@Model.RatingsModel"/>
+				<!--Q Concern type-->
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset">
 
-						</fieldset>
-					</div>
+						<div class="govuk-hint" id="case-issue-hint">
+							Use the
+							<a target="_blank" href="@Url.Page("../FileResource", "DownloadRiskManagementPdf")" class="govuk-link" rel="noreferrer noopener">
+								Risk Management Framework (opens in new tab)
+							</a> to assess the type of Concern
+						</div>
 
-					<div class="govuk-button-group">
-						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
-							Next step
-						</button>
-						<a class="govuk-link" asp-page="../home">Cancel</a>
-					</div>
+						<partial name="_ConcernType" model="@Model.TypeModel" />
 
-				</form>
+					</fieldset>
+				</div>
+
+				<!-- Q Risk rating -->
+				<div class="govuk-form-group govuk-!-margin-top-6">
+					<fieldset class="govuk-fieldset">
+
+						<legend class="govuk-fieldset__legend govuk-!-font-weight-bold">
+							What is the risk rating?
+						</legend>
+
+						<partial name="_RiskRating" model="@Model.RatingsModel" />
+
+					</fieldset>
+				</div>
+
+				<div class="govuk-button-group">
+
+					<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+						Add to case
+					</button>
+					<a class="govuk-link" asp-page="../home">Cancel</a>
+				</div>
+
+			</form>
+
+			<div id="add-another-concern-button-group" class="govuk-button-group">
+
+				<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+					Next step
+				</button>
+				<a id="addAConcernButton" class="govuk-button govuk-button--secondary" role="button">
+					Add another concern
+				</a>
+
+				<a class="govuk-link" asp-page="../home">Cancel</a>
+			</div>
 
 				<script type="application/javascript" nonce="@nonce">
 					$(function () {
 						let validator = formValidator($("#case-concern-type-form")[0]);
 						addConcernTypeValidator(validator);
 						addRagRatingValidator(validator);
+
+						let numOfRecords = $('#numOfRecords').val();
+
+						if(numOfRecords == 0)
+						{
+							$('#concerns-summary-list').hide();
+							$('#add-another-concern-button-group').hide();
+						}else
+						{
+							$('#case-concern-type-form').hide();
+							$('#add-another-concern-button-group').show();
+						}
+
+						$('#addAConcernButton').on("click", function(){
+							$('#case-concern-type-form').show();
+							$('#add-another-concern-button-group').hide();
+						})
 					});
 				</script>
 				}
+			</div>
 		</div>
-	</div>
 </div>

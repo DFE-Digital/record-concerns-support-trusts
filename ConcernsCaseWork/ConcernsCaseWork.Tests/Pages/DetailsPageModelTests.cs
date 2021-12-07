@@ -46,7 +46,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.IsAssignableFrom<CreateCaseModel>(createCaseModel);
 			
 			Assert.That(createCaseModel, Is.Not.Null);
-			Assert.That(createCaseModel.Description, Is.EqualTo(expected.Description));
 			Assert.That(createCaseModel.Issue, Is.EqualTo(expected.Issue));
 			Assert.That(createCaseModel.StatusUrn, Is.EqualTo(expected.StatusUrn));
 			Assert.That(createCaseModel.CaseAim, Is.EqualTo(expected.CaseAim));
@@ -58,14 +57,12 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(createCaseModel.DeEscalation, Is.EqualTo(expected.DeEscalation));
 			Assert.That(createCaseModel.NextSteps, Is.EqualTo(expected.NextSteps));
 			Assert.That(createCaseModel.RagRating, Is.EqualTo(expected.RagRating));
-			Assert.That(createCaseModel.Type, Is.EqualTo(expected.Type));
 			Assert.That(createCaseModel.ReviewAt, Is.EqualTo(expected.ReviewAt));
 			Assert.That(createCaseModel.TrustName, Is.EqualTo(expected.TrustName));
 			Assert.That(createCaseModel.UpdatedAt, Is.EqualTo(expected.UpdatedAt));
 			Assert.That(createCaseModel.DeEscalationPoint, Is.EqualTo(expected.DeEscalationPoint));
 			Assert.That(createCaseModel.DirectionOfTravel, Is.EqualTo(expected.DirectionOfTravel));
 			Assert.That(createCaseModel.ReasonAtReview, Is.EqualTo(expected.ReasonAtReview));
-			Assert.That(createCaseModel.SubType, Is.EqualTo(expected.SubType));
 			Assert.That(createCaseModel.TrustUkPrn, Is.EqualTo(expected.TrustUkPrn));
 
 			// Verify ILogger
