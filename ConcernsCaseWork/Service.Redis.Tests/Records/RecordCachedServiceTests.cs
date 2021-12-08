@@ -398,7 +398,7 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecords, Is.Not.Null);
 			Assert.That(actualRecords.Count, Is.EqualTo(0));
 			
-			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Exactly(2));
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
 			mockRecordService.Verify(c => c.GetRecordsByCaseUrn(It.IsAny<long>()), Times.Once);
 		}		

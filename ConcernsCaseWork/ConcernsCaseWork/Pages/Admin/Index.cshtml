@@ -11,12 +11,15 @@
 	<div class="govuk-!-margin-top-0">
 
 		<div class="buttons-topOfPage">
-        	<a asp-page="../home" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-        		Back to casework
-        	</a>
-        	<a class="govuk-button govuk-button--warning float__right" data-module="govuk-button" href="/admin?handler=ClearCache" role="button">
-                Clear cache
-            </a>
+			<a asp-page="../home" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+				Back to casework
+			</a>
+			@if (string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+			{
+				<a class="govuk-button govuk-button--warning float__right" data-module="govuk-button" href="/admin?handler=ClearCache" role="button">
+					Clear cache
+				</a>
+			}
         </div>
 		
 		<span class="govuk-caption-l">Administrator</span>

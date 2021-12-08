@@ -46,29 +46,20 @@ namespace Service.Redis.Records
 			else 
 			{
 				recordsDto = await _recordService.GetRecordsByCaseUrn(caseUrn);
-				if (!recordsDto.Any())
-				{
-					await _semaphoreRecordsCase.WaitAsync();
-					
-					caseWrapper.Records ??= new ConcurrentDictionary<long, RecordWrapper>();
-					
-					await StoreData(caseworker, userState);
-					
-					_semaphoreRecordsCase.Release();
-					
-					return recordsDto;
-				}
 				
 				await _semaphoreRecordsCase.WaitAsync();
 				
 				userState = await GetData<UserState>(caseworker);
-				userState ??= new UserState();
 				
 				if(userState.CasesDetails.TryGetValue(caseUrn, out caseWrapper))
 				{
 					caseWrapper.Records ??= new ConcurrentDictionary<long, RecordWrapper>();
-					caseWrapper.Records = recordsDto.ToDictionary(recordDto => recordDto.Urn, recordDto => new RecordWrapper { RecordDto = recordDto } );
-						
+					
+					if (recordsDto.Any())
+					{
+						caseWrapper.Records = recordsDto.ToDictionary(recordDto => recordDto.Urn, recordDto => new RecordWrapper { RecordDto = recordDto } );
+					}
+					
 					await StoreData(caseworker, userState);
 				}
 				
