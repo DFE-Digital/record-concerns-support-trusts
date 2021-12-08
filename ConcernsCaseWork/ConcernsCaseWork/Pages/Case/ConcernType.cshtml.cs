@@ -152,12 +152,12 @@ namespace ConcernsCaseWork.Pages.Case
 
 		public async Task<ActionResult> OnGetCancelCreateCase()
 		{
+			//TODO try catch
 			var userState = await GetUserState();
 			userState.CreateCaseModel.CreateRecordsModel.Clear();
 			await _cachedService.StoreData(User.Identity.Name, userState);
 
-			//return new JsonResult(new { redirectUrl = Url.Page("../home") });
-			return new JsonResult(new { redirectUrl = Url.Page("../index") });
+			return new JsonResult(new { redirectUrl = Url.Page("../home") });
 		}
 
 		private async Task<ActionResult> LoadPage(string trustUkPrn)
