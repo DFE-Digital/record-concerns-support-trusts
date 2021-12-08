@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
+			var mockLogger = new Mock<ILogger<EditConcernPageModel>>();
 			
 			var caseModel = CaseFactory.BuildCaseModel();
 			var recordModel = RecordFactory.BuildRecordModel();
@@ -95,7 +95,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
+			var mockLogger = new Mock<ILogger<EditConcernPageModel>>();
 			
 			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockLogger.Object);
 			
@@ -125,7 +125,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
+			var mockLogger = new Mock<ILogger<EditConcernPageModel>>();
 			
 			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockLogger.Object);
 			
@@ -155,7 +155,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
+			var mockLogger = new Mock<ILogger<EditConcernPageModel>>();
 			
 			var pageModel = SetupEditConcernTypePageModel(mockCaseModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockLogger.Object);
 			
@@ -182,7 +182,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
+			var mockLogger = new Mock<ILogger<EditConcernPageModel>>();
 			var casesDto = CaseFactory.BuildCaseModel();
 			
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
@@ -216,7 +216,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
+			var mockLogger = new Mock<ILogger<EditConcernPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			
@@ -268,7 +268,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockLogger = new Mock<ILogger<EditConcernTypePageModel>>();
+			var mockLogger = new Mock<ILogger<EditConcernPageModel>>();
 
 			mockCaseModelService.Setup(c => c.PatchConcernType(It.IsAny<PatchCaseModel>()));
 			
@@ -297,15 +297,15 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(page.Url, Is.EqualTo("https://returnto/thispage"));
 		}
 		
-		private static EditConcernTypePageModel SetupEditConcernTypePageModel(ICaseModelService mockCaseModelService, 
+		private static EditConcernPageModel SetupEditConcernTypePageModel(ICaseModelService mockCaseModelService, 
 			ITypeModelService mockTypeModelService, 
 			IRecordModelService mockRecordModelService,
-			ILogger<EditConcernTypePageModel> mockLogger, 
+			ILogger<EditConcernPageModel> mockLogger, 
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new EditConcernTypePageModel(mockTypeModelService, mockCaseModelService, mockRecordModelService, mockLogger)
+			return new EditConcernPageModel(mockTypeModelService, mockCaseModelService, mockRecordModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

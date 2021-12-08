@@ -1,5 +1,5 @@
-﻿@page "/case/concerntype"
-@model ConcernsCaseWork.Pages.Case.ConcernTypePageModel
+﻿@page "/case/concern"
+@model ConcernsCaseWork.Pages.Case.ConcernPageModel
 
 @{
 	ViewData["Title"] = "New Case Concern type";
@@ -62,7 +62,7 @@
 								What is the risk rating?
 							</legend>
 
-							<partial name="_RiskRating" model="@Model.RatingsModel"/>
+							<partial name="_Rating" model="@Model.RatingsModel"/>
 
 						</fieldset>
 					</div>

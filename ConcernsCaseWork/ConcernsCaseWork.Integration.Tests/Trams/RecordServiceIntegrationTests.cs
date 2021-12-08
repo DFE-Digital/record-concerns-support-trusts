@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		[Test]
 		public async Task WhenPatchRecordByUrn_UpdatesRecord()
 		{
-			// arange 
+			// arrange 
 			var recordService = _factory.Services.GetRequiredService<IRecordService>();
 			var caseUrn = await FetchRandomCaseUrn();
 			var typeUrn = await FetchRandomTypeUrn();
@@ -130,8 +130,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 
 			return apiWrapperTrusts.Data[index].UkPrn;
 		}
-
-
+		
 		private async Task<long> FetchRandomCaseUrn()
 		{
 			var caseService = _factory.Services.GetRequiredService<ICaseService>();
