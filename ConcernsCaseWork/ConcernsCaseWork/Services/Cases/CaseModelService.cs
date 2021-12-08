@@ -222,16 +222,17 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				// Fetch Status
 				var statusDto = await _statusCachedService.GetStatusByName(patchCaseModel.StatusName);
-				
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				
+				// TODO multiple concerns work temporary fix for existing cases that don't have rating urn
+				caseDto = await RecoverCaseRating(caseDto);
+				
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
 				
 				// TODO multiple concerns will need some refactor
 				var recordDto = recordsDto.FirstOrDefault();
 				
-				// Patch source dtos
 				recordDto = RecordMapping.MapClosure(patchCaseModel, recordDto, statusDto);
 				caseDto = CaseMapping.MapClosure(patchCaseModel, caseDto, statusDto);
 				
@@ -257,12 +258,14 @@ namespace ConcernsCaseWork.Services.Cases
 			try
 			{
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				// TODO multiple concerns work temporary fix for existing cases that don't have rating urn
+				caseDto = await RecoverCaseRating(caseDto);
+				
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
 				
 				// TODO multiple concerns will need some refactor
 				var recordDto = recordsDto.FirstOrDefault();
 				
-				// Patch source dtos
 				recordDto = RecordMapping.MapConcernType(patchCaseModel, recordDto);
 				caseDto = CaseMapping.Map(patchCaseModel, caseDto);
 				
@@ -283,12 +286,14 @@ namespace ConcernsCaseWork.Services.Cases
 			{
 				// Fetch Rating
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				// TODO multiple concerns work temporary fix for existing cases that don't have rating urn
+				caseDto = await RecoverCaseRating(caseDto);
+				
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
 				
 				// TODO multiple concerns will need some refactor
 				var recordDto = recordsDto.FirstOrDefault();
 				
-				// Patch source dtos
 				recordDto = RecordMapping.MapRiskRating(patchCaseModel, recordDto);
 				caseDto = CaseMapping.Map(patchCaseModel, caseDto);
 
@@ -315,8 +320,9 @@ namespace ConcernsCaseWork.Services.Cases
 			try
 			{
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				// TODO multiple concerns work temporary fix for existing cases that don't have rating urn
+				caseDto = await RecoverCaseRating(caseDto);
 				
-				// Patch source dtos
 				caseDto = CaseMapping.MapDirectionOfTravel(patchCaseModel, caseDto);
 
 				await _caseCachedService.PatchCaseByUrn(caseDto);
@@ -337,6 +343,8 @@ namespace ConcernsCaseWork.Services.Cases
 			try
 			{
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				// TODO multiple concerns work temporary fix for existing cases that don't have rating urn
+				caseDto = await RecoverCaseRating(caseDto);
 				
 				// Patch source dtos
 				caseDto = CaseMapping.MapIssue(patchCaseModel, caseDto);
@@ -359,6 +367,8 @@ namespace ConcernsCaseWork.Services.Cases
 			try
 			{
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				// TODO multiple concerns work temporary fix for existing cases that don't have rating urn
+				caseDto = await RecoverCaseRating(caseDto);
 				
 				// Patch source dtos
 				caseDto = CaseMapping.MapCaseAim(patchCaseModel, caseDto);
@@ -381,6 +391,8 @@ namespace ConcernsCaseWork.Services.Cases
 			try
 			{
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				// TODO multiple concerns work temporary fix for existing cases that don't have rating urn
+				caseDto = await RecoverCaseRating(caseDto);
 				
 				// Patch source dtos
 				caseDto = CaseMapping.MapCurrentStatus(patchCaseModel, caseDto);
@@ -403,6 +415,8 @@ namespace ConcernsCaseWork.Services.Cases
 			try
 			{
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				// TODO multiple concerns work temporary fix for existing cases that don't have rating urn
+				caseDto = await RecoverCaseRating(caseDto);
 				
 				// Patch source dtos
 				caseDto = CaseMapping.MapDeEscalationPoint(patchCaseModel, caseDto);
@@ -425,6 +439,8 @@ namespace ConcernsCaseWork.Services.Cases
 			try
 			{
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				// TODO multiple concerns work temporary fix for existing cases that don't have rating urn
+				caseDto = await RecoverCaseRating(caseDto);
 
 				// Patch source dtos
 				caseDto = CaseMapping.MapNextSteps(patchCaseModel, caseDto);
@@ -450,7 +466,6 @@ namespace ConcernsCaseWork.Services.Cases
 				var statusDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
 				
 				// TODO Multiple Concerns
-				// In a 1:1 case -> record (not multiple concerns) this flag is always true.
 				// When multiple concerns is develop take into consideration the number of records attached to the case.
 
 				// Create a case
@@ -483,6 +498,18 @@ namespace ConcernsCaseWork.Services.Cases
 
 				throw;
 			}
+		}
+
+		private async Task<CaseDto> RecoverCaseRating(CaseDto caseDto)
+		{
+			// TODO multiple concerns work temporary fix for existing cases that don't have rating urn
+			if (caseDto.RatingUrn != 0) return caseDto;
+			
+			// Fetch Ratings
+			var defaultRating = await _ratingCachedService.GetDefaultRating();
+			caseDto.RatingUrn = defaultRating.Urn;
+
+			return caseDto;
 		}
 	}
 }
