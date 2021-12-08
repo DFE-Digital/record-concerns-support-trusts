@@ -56,7 +56,7 @@ namespace Service.Redis.Tests.Trusts
 			Assert.That(actualTrust.GiasData.GroupContactAddress, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress));
 			Assert.That(actualTrust.GiasData.GroupTypeCode, Is.EqualTo(expectedTrust.GiasData.GroupTypeCode));
 			
-			mockCacheProvider.Verify(c => c.GetFromCache<IDictionary<string, TrustDetailsDto>>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.GetFromCache<IDictionary<string, TrustDetailsDto>>(It.IsAny<string>()), Times.Exactly(2));
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<IDictionary<string, TrustDetailsDto>>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
 			mockTrustService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
 		}
@@ -125,7 +125,7 @@ namespace Service.Redis.Tests.Trusts
 			Assert.That(actualTrust.GiasData.GroupContactAddress, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress));
 			Assert.That(actualTrust.GiasData.GroupTypeCode, Is.EqualTo(expectedTrust.GiasData.GroupTypeCode));
 			
-			mockCacheProvider.Verify(c => c.GetFromCache<IDictionary<string, TrustDetailsDto>>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.GetFromCache<IDictionary<string, TrustDetailsDto>>(It.IsAny<string>()), Times.Exactly(2));
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<IDictionary<string, TrustDetailsDto>>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
 			mockTrustService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
 		}
