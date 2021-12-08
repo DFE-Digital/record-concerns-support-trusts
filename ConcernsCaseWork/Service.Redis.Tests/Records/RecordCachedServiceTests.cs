@@ -43,7 +43,6 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord.Name, Is.EqualTo(newRecordDto.Name));
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(newRecordDto.Description));
-			Assert.That(actualRecord.Primary, Is.EqualTo(newRecordDto.Primary));
 			Assert.That(actualRecord.Reason, Is.EqualTo(newRecordDto.Reason));
 			Assert.That(actualRecord.StatusUrn, Is.EqualTo(newRecordDto.StatusUrn));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(newRecordDto.CaseUrn));
@@ -88,7 +87,6 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord.Name, Is.EqualTo(newRecordDto.Name));
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(newRecordDto.Description));
-			Assert.That(actualRecord.Primary, Is.EqualTo(newRecordDto.Primary));
 			Assert.That(actualRecord.Reason, Is.EqualTo(newRecordDto.Reason));
 			Assert.That(actualRecord.StatusUrn, Is.EqualTo(newRecordDto.StatusUrn));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(newRecordDto.CaseUrn));
@@ -136,7 +134,6 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord.Name, Is.EqualTo(newRecordDto.Name));
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(newRecordDto.Description));
-			Assert.That(actualRecord.Primary, Is.EqualTo(newRecordDto.Primary));
 			Assert.That(actualRecord.Reason, Is.EqualTo(newRecordDto.Reason));
 			Assert.That(actualRecord.StatusUrn, Is.EqualTo(newRecordDto.StatusUrn));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(newRecordDto.CaseUrn));
@@ -182,7 +179,6 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord.Name, Is.EqualTo(newRecordDto.Name));
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(newRecordDto.Description));
-			Assert.That(actualRecord.Primary, Is.EqualTo(newRecordDto.Primary));
 			Assert.That(actualRecord.Reason, Is.EqualTo(newRecordDto.Reason));
 			Assert.That(actualRecord.StatusUrn, Is.EqualTo(newRecordDto.StatusUrn));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(newRecordDto.CaseUrn));

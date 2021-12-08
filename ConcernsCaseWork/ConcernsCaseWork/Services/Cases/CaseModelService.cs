@@ -105,16 +105,16 @@ namespace ConcernsCaseWork.Services.Cases
 					var trustDetailsDto = trustDetailsTask.Result;
 					var records = recordsTask.Result;
 					
-					// Get primary record
-					var primaryRecordDto = records.FirstOrDefault(recordDto => recordDto.Primary);
-					if (primaryRecordDto is null) return null;
+					// Get first record
+					var firstRecordDto = records.FirstOrDefault();
+					if (firstRecordDto is null) return null;
 
 					// Find primary type
-					var primaryCaseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(primaryRecordDto.TypeUrn) == 0);
+					var primaryCaseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(firstRecordDto.TypeUrn) == 0);
 					if (primaryCaseType is null) return null;
 				
 					// Rag rating
-					var ratingName = ratingsDto.Where(r => r.Urn.CompareTo(primaryRecordDto.RatingUrn) == 0)
+					var ratingName = ratingsDto.Where(r => r.Urn.CompareTo(firstRecordDto.RatingUrn) == 0)
 						.Select(r => r.Name)
 						.First();
 
@@ -200,9 +200,6 @@ namespace ConcernsCaseWork.Services.Cases
 			
 				// Get results from tasks
 				var recordsDto = recordsTasks.SelectMany(recordTask => recordTask.Result).ToList();
-				
-				// Filter primary records
-				recordsDto = recordsDto.Where(r => r.Primary).ToList();
 				if (!recordsDto.Any()) return Array.Empty<TrustCasesModel>();
 				
 				// Fetch Ratings
@@ -230,7 +227,9 @@ namespace ConcernsCaseWork.Services.Cases
 				
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
-				var recordDto = recordsDto.First(r => r.Primary);
+				
+				// TODO multiple concerns will need some refactor
+				var recordDto = recordsDto.FirstOrDefault();
 				
 				// Patch source dtos
 				recordDto = RecordMapping.MapClosure(patchCaseModel, recordDto, statusDto);
@@ -259,7 +258,9 @@ namespace ConcernsCaseWork.Services.Cases
 			{
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
-				var recordDto = recordsDto.First(r => r.Primary);
+				
+				// TODO multiple concerns will need some refactor
+				var recordDto = recordsDto.FirstOrDefault();
 				
 				// Patch source dtos
 				recordDto = RecordMapping.MapConcernType(patchCaseModel, recordDto);
@@ -283,7 +284,9 @@ namespace ConcernsCaseWork.Services.Cases
 				// Fetch Rating
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
-				var recordDto = recordsDto.First(r => r.Primary);
+				
+				// TODO multiple concerns will need some refactor
+				var recordDto = recordsDto.FirstOrDefault();
 				
 				// Patch source dtos
 				recordDto = RecordMapping.MapRiskRating(patchCaseModel, recordDto);
@@ -446,10 +449,10 @@ namespace ConcernsCaseWork.Services.Cases
 				// Fetch Status
 				var statusDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
 				
+				// TODO Multiple Concerns
 				// In a 1:1 case -> record (not multiple concerns) this flag is always true.
 				// When multiple concerns is develop take into consideration the number of records attached to the case.
-				const bool isCasePrimary = true;
-				
+
 				// Create a case
 				createCaseModel.StatusUrn = statusDto.Urn;
 				var newCase = await _caseCachedService.PostCase(CaseMapping.Map(createCaseModel));
@@ -458,7 +461,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var currentDate = DateTimeOffset.Now;
 				var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, 
 					currentDate, createCaseModel.Type, createCaseModel.SubType, createCaseModel.TypeDisplay, newCase.Urn, 
-					createCaseModel.TypeUrn, createCaseModel.RagRatingUrn, isCasePrimary, statusDto.Urn);
+					createCaseModel.TypeUrn, createCaseModel.RagRatingUrn, statusDto.Urn);
 				var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 				
 				// Create case history event

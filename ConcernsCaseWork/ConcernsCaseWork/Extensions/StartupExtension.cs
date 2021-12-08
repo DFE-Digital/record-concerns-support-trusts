@@ -58,7 +58,7 @@ namespace ConcernsCaseWork.Extensions
 				Log.Information("Starting Redis Server Port - {Port}", port);
 				Log.Information("Starting Redis Server TLS - {Tls}", tls);
 
-				var redisConfigurationOptions = new ConfigurationOptions { Password = password, EndPoints = { $"{host}:{port}" }, Ssl = tls };
+				var redisConfigurationOptions = new ConfigurationOptions { Password = password, EndPoints = { $"{host}:{port}" }, Ssl = tls, AsyncTimeout = 15000 };
 				var redisConnection = Implementation.Connect(redisConfigurationOptions);
 
 				services.AddStackExchangeRedisCache(

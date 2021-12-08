@@ -21,7 +21,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(recordDto, Is.Not.Null);
 			Assert.That(recordDto.Description, Is.EqualTo(patchCaseModel.SubType));
 			Assert.That(recordDto.Name, Is.EqualTo(patchCaseModel.Type));
-			Assert.That(recordDto.Primary, Is.EqualTo(record.Primary));
 			Assert.That(recordDto.Reason, Is.EqualTo(record.Reason));
 			Assert.That(recordDto.StatusUrn, Is.EqualTo(record.StatusUrn));
 			Assert.That(recordDto.Urn, Is.EqualTo(record.Urn));
@@ -48,7 +47,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(recordDto, Is.Not.Null);
 			Assert.That(recordDto.Description, Is.EqualTo(record.Description));
 			Assert.That(recordDto.Name, Is.EqualTo(record.Name));
-			Assert.That(recordDto.Primary, Is.EqualTo(record.Primary));
 			Assert.That(recordDto.Reason, Is.EqualTo(record.Reason));
 			Assert.That(recordDto.StatusUrn, Is.EqualTo(record.StatusUrn));
 			Assert.That(recordDto.Urn, Is.EqualTo(record.Urn));

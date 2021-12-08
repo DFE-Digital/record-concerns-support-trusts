@@ -84,7 +84,6 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 				postRecordDto.CaseUrn,
 				postRecordDto.TypeUrn,
 				updatedRatingUrn,
-				postRecordDto.Primary,
 				postRecordDto.Urn,
 				postRecordDto.StatusUrn
 				);
@@ -104,7 +103,6 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			Assert.That(updatedRecordDto.CaseUrn, Is.EqualTo(postRecordDto.CaseUrn));
 			Assert.That(updatedRecordDto.TypeUrn, Is.EqualTo(postRecordDto.TypeUrn));
 			Assert.That(updatedRecordDto.RatingUrn, Is.EqualTo(updatedRatingUrn));
-			Assert.That(updatedRecordDto.Primary, Is.EqualTo(postRecordDto.Primary));
 			Assert.That(updatedRecordDto.Urn, Is.EqualTo(postRecordDto.Urn));
 			Assert.That(updatedRecordDto.StatusUrn, Is.EqualTo(postRecordDto.StatusUrn));
 		}
