@@ -95,10 +95,15 @@ namespace ConcernsCaseWork.Services.Cases
 				var typesDto = await _typeCachedService.GetTypes();
 				
 				// Execute in parallel each case contained logic
-				var listHomeModelTasks = casesDto.Select(async caseDto =>
+				var listHomeModel = casesDto.Select(caseDto =>
 				{
-					var trustDetailsDto = await _trustCachedService.GetTrustByUkPrn(caseDto.TrustUkPrn);
-					var records = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
+					var trustDetailsTask = _trustCachedService.GetTrustByUkPrn(caseDto.TrustUkPrn);
+					var recordsTask = _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
+
+					Task.WaitAll(trustDetailsTask, recordsTask);
+
+					var trustDetailsDto = trustDetailsTask.Result;
+					var records = recordsTask.Result;
 					
 					// Get primary record
 					var primaryRecordDto = records.FirstOrDefault(recordDto => recordDto.Primary);
@@ -132,11 +137,9 @@ namespace ConcernsCaseWork.Services.Cases
 						primaryCaseType.Description,
 						rag,
 						ragCss);
-				}).ToList();
+					
+				}).Where(homeModel => homeModel != null).ToList();
 				
-				await Task.WhenAll(listHomeModelTasks);
-				var listHomeModel = listHomeModelTasks.Select(homeModelTask => homeModelTask.Result).Where(homeModel => homeModel != null).ToList();
-
 				return statusEnum switch
 				{
 					StatusEnum.Live => listHomeModel.OrderByDescending(homeModel => homeModel.Updated).ToList(),

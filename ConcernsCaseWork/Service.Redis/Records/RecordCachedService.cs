@@ -53,7 +53,7 @@ namespace Service.Redis.Records
 				
 				if(userState.CasesDetails.TryGetValue(caseUrn, out caseWrapper))
 				{
-					caseWrapper.Records ??= new ConcurrentDictionary<long, RecordWrapper>();
+					caseWrapper.Records ??= new Dictionary<long, RecordWrapper>();
 					
 					if (recordsDto.Any())
 					{
