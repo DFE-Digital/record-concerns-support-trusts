@@ -55,18 +55,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					5, 1)
 			};
 		}
-
-		public static List<RecordDto> BuildListNonPrimaryRecordDtoByCaseUrn(long caseUrn = 1)
-		{
-			var currentDate = DateTimeOffset.Now;
-			return new List<RecordDto>
-			{
-				new RecordDto(currentDate, currentDate, currentDate, currentDate,
-					Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, 1, 1,
-					1, 1)
-			};
-		}
-
+		
 		public static RecordDto BuildRecordDto(long caseUrn = 1, long typeUrn = 1)
 		{
 			var currentDate = DateTimeOffset.Now;
@@ -97,7 +86,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<long>(), 
 				Fixture.Create<long>(),
 				Fixture.Create<long>(),
-				Fixture.Create<bool>(),
 				Fixture.Create<long>(),
 				Fixture.Create<long>()
 				);
