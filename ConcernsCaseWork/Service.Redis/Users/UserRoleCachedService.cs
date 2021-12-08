@@ -80,7 +80,7 @@ namespace Service.Redis.Users
 				(string key, List<RoleEnum> value) = userRole;
 				userRoleClaimState.UserRoleClaim.Add(key,
 					key.Equals(UserRoleMap.AdminUserName, StringComparison.OrdinalIgnoreCase)
-						? new RoleClaimWrapper { Users = users.Where(u => !u.Equals(UserRoleMap.AdminUserName, StringComparison.OrdinalIgnoreCase)).ToList(), Roles = value }
+						? new RoleClaimWrapper { Users = UserRoleMap.GetDefaultUsersExcludedList(users), Roles = value }
 						: new RoleClaimWrapper { Roles = value });
 			});
 			

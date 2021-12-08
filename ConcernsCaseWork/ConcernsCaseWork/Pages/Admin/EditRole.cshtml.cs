@@ -92,7 +92,7 @@ namespace ConcernsCaseWork.Pages.Admin
 			
 			UserName = userName;
 			DefaultRoles = new List<RoleEnum> { RoleEnum.Admin, RoleEnum.Leader, RoleEnum.User };
-			DefaultUsers = _rbacManager.GetDefaultUsers().Where(u => !u.Equals(UserName, StringComparison.OrdinalIgnoreCase)).ToList();
+			DefaultUsers = _rbacManager.GetDefaultUsers();
 			UserRoleClaimWrapper = await _rbacManager.GetUserRoleClaimWrapper(UserName);
 			PreviousUrl = url;
 
