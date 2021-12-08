@@ -65,6 +65,7 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				// Complete create case model
 				var userState = await GetUserState();
+				
 				var createCaseModel = userState.CreateCaseModel;
 				createCaseModel.Issue = issue;
 				createCaseModel.CurrentStatus = currentStatus;

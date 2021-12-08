@@ -116,7 +116,8 @@ namespace ConcernsCaseWork.Pages.Case
 					TypeUrn = long.Parse(typeUrn),
 					TrustUkPrn = trustUkPrn,
 					TrustName = trustName,
-					DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString()
+					DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString(),
+					RatingUrn = long.Parse(ragRatingUrn)			// Remove or fix when multiple concerns is done
 				};
 					
 				// Store case model in cache for the details page
