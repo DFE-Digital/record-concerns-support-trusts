@@ -446,31 +446,29 @@ namespace ConcernsCaseWork.Services.Cases
 				// Create a case
 				createCaseModel.StatusUrn = statusDto.Urn;
 				var newCase = await _caseCachedService.PostCase(CaseMapping.Map(createCaseModel));
-
-
 				var currentDate = DateTimeOffset.Now;
-				//TODOEA resolve type urn
+
 				// create records
 				createCaseModel.CreateRecordsModel.Select(async r =>
 				{
-					//var createRecordDto = new CreateRecordDto(
-					//	currentDate, 
-					//	currentDate, 
-					//	currentDate,
-					//	currentDate, 
-					//	r.TypeModel.CheckedType, 
-					//	r.TypeModel.CheckedSubType, 
-					//	r.TypeModel.TypeDisplay, 
-					//	newCase.Urn,
-					//	100, 
-					//	r.RatingModel.Urn, 
-					//	statusDto.Urn);
+					var createRecordDto = new CreateRecordDto(
+						currentDate,
+						currentDate,
+						currentDate,
+						currentDate,
+						r.Type,
+						r.SubType,
+						r.Reason,
+						newCase.Urn,
+						r.TypeUrn,
+						r.RatingUrn,
+						statusDto.Urn);
 
-					//var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
+					var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 
-					//// Create a rating history
-					//var createRecordRatingHistoryDto = new RecordRatingHistoryDto(currentDate, newRecord.Urn, r.RatingModel.Urn);
-					//await _recordRatingHistoryCachedService.PostRecordRatingHistory(createRecordRatingHistoryDto, createCaseModel.CreatedBy, newCase.Urn);
+					// Create a rating history
+					var createRecordRatingHistoryDto = new RecordRatingHistoryDto(currentDate, newRecord.Urn, r.RatingUrn);
+					await _recordRatingHistoryCachedService.PostRecordRatingHistory(createRecordRatingHistoryDto, createCaseModel.CreatedBy, newCase.Urn);
 				}
 				);
 

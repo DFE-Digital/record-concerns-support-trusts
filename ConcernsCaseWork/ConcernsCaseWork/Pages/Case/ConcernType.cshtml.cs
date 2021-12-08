@@ -123,8 +123,15 @@ namespace ConcernsCaseWork.Pages.Case
 	
 				var createRecordModel = new CreateRecordModel
 				{
-					
+					TypeUrn = long.Parse(typeUrn),
+					Type = type,
+					SubType = subType,
+					RatingUrn = long.Parse(ragRatingUrn),
+					RatingName = ragRatingName,
+					RagRating = RatingMapping.FetchRag(ragRatingName),
+					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName)
 				};
+
 
 				userState.CreateCaseModel.CreateRecordsModel.Add(createRecordModel);
 
@@ -141,6 +148,16 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			
 			return await LoadPage(trustUkPrn);
+		}
+
+		public async Task<ActionResult> OnGetCancelCreateCase()
+		{
+			var userState = await GetUserState();
+			userState.CreateCaseModel.CreateRecordsModel.Clear();
+			await _cachedService.StoreData(User.Identity.Name, userState);
+
+			//return new JsonResult(new { redirectUrl = Url.Page("../home") });
+			return new JsonResult(new { redirectUrl = Url.Page("../index") });
 		}
 
 		private async Task<ActionResult> LoadPage(string trustUkPrn)
@@ -162,5 +179,6 @@ namespace ConcernsCaseWork.Pages.Case
 			
 			return userState;
 		}
+
 	}
 }

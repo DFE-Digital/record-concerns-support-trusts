@@ -1,4 +1,4 @@
-﻿@page "/case/concerntype"
+﻿@page "/case/concerntype/{handler?}"
 @model ConcernsCaseWork.Pages.Case.ConcernTypePageModel
 
 @{
@@ -48,17 +48,17 @@
 
 							@*<partial name="_RiskRating" model="@concern.RagRating" />*@
 							//TODOEA 
-							@*@concern.TypeModel.TypeDisplay
+							@concern.Reason
 
 							<div class="govuk-label-wrapper">
 
-								@for (var index = 0; index < concern.RatingModel.RagRating.Item2.Count; ++index)
+								@for (var index = 0; index < concern.RagRating.Item2.Count; ++index)
 								{
-									<span class="govuk-tag ragtag @concern.RatingModel.RagRatingCss.ElementAt(index)">
-										@concern.RatingModel.RagRating.Item2.ElementAt(index)
+									<span class="govuk-tag ragtag @concern.RagRatingCss.ElementAt(index)">
+										@concern.RagRating.Item2.ElementAt(index)
 									</span>
 								}
-							</div>*@
+							</div>
 
 							<br />
 						}
@@ -114,7 +114,7 @@
 					<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
 						Add to case
 					</button>
-					<a class="govuk-link" asp-page="../home">Cancel</a>
+					<a class="govuk-link">Cancel</a>
 				</div>
 
 			</form>
@@ -128,7 +128,7 @@
 					Add another concern
 				</a>
 
-				<a class="govuk-link" asp-page="../home">Cancel</a>
+				<a class="govuk-link">Cancel</a>
 			</div>
 
 				<script type="application/javascript" nonce="@nonce">
@@ -152,7 +152,19 @@
 						$('#addAConcernButton').on("click", function(){
 							$('#case-concern-type-form').show();
 							$('#add-another-concern-button-group').hide();
-						})
+						});
+
+						$('.govuk-link').on("click", function(){
+							// Ajax Post 
+							$.get("concerntype/CancelCreateCase")
+							.done(function (result) {
+								window.location.replace(result.redirectUrl)
+							})
+							.fail(function() {
+								showGlobalError();
+							});
+						});
+
 					});
 				</script>
 				}
