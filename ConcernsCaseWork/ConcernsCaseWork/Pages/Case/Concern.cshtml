@@ -65,9 +65,13 @@
 						<dd class="govuk-summary-list__actions">
 							@foreach (var concern in Model.CreateRecordsModel)
 							{
-								<a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 govuk-!-margin-top-6 float__right" href="#">
-									Edit
-								</a>
+								<div class="govuk-!-padding-bottom-1">
+									<div class="govuk-grid-column-two-third">
+										<a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="#">
+											Edit
+										</a>
+									</div>
+								</div>
 							}
 						</dd>
 					</div>
