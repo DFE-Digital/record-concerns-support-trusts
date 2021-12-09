@@ -22,10 +22,6 @@
 			else
 			{
 				<!-- Trust details -->
-				<a asp-page="index" class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 govuk-!-margin-top-6 float__right">
-					Change trust
-				</a>
-
 				<dl class="govuk-summary-list">
 					<div class="govuk-summary-list__row">
 							<dt class="govuk-summary-list__key">Trust</dt>
@@ -35,24 +31,21 @@
 								<br />
 								@Model.TrustDetailsModel.GiasData.GroupContactAddress.DisplayAddress
 							</dd>
+						<dd class="govuk-summary-list__actions">
+							<a asp-page="index" class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 govuk-!-margin-top-6 float__right">
+                            	Change trust
+                            </a>
+						</dd>
 					</div>
 					<div id="concerns-summary-list" class="govuk-summary-list__row">
 					<dt class="govuk-summary-list__key">Concerns</dt>
-					<dd class="govuk-summary-list__value">
-						@foreach (var concern in Model.CreateRecordsModel)
-						{
-							<div>
-								<a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 govuk-!-margin-top-6 float__right" href="#">
-									Edit
-								</a>
-							</div>
-
-							<div>
-								@concern.Reason
-							</div>
-
-							<div>
-								<div class="govuk-label-wrapper">
+						<dd class="govuk-summary-list__value">
+							@foreach (var concern in Model.CreateRecordsModel)
+							{
+								<span class="govuk-!-padding-right-4">
+									@concern.Reason
+								</span>
+								<div class="govuk-!-display-inline govuk-label-wrapper">
 									@*<partial name="_RiskRating" model="@concern.RagRating" />*@
 									@for (var index = 0; index < concern.RagRating.Item2.Count; ++index)
 									{
@@ -61,11 +54,18 @@
 										</span>
 									}
 								</div>
-							</div>
-							<br />
+								<br/>
+							}
+						</dd>
+						<dd class="govuk-summary-list__actions">
+						@foreach (var concern in Model.CreateRecordsModel)
+						{
+							<a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 govuk-!-margin-top-6 float__right" href="#">
+								Edit
+							</a>
 						}
-					</dd>
-				</div>
+						</dd>
+					</div>
 		
 				</dl>
 
