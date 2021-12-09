@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
+			var mockLogger = new Mock<ILogger<EditRatingPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			var recordModel = RecordFactory.BuildRecordModel();
@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
+			var mockLogger = new Mock<ILogger<EditRatingPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			var recordModel = RecordFactory.BuildRecordModel();
@@ -105,7 +105,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
+			var mockLogger = new Mock<ILogger<EditRatingPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			var recordModel = RecordFactory.BuildRecordModel();
@@ -145,7 +145,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
+			var mockLogger = new Mock<ILogger<EditRatingPageModel>>();
 
 			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockRatingModelService.Object, mockRecordModelService.Object, mockLogger.Object);
 			
@@ -173,7 +173,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
+			var mockLogger = new Mock<ILogger<EditRatingPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			var recordModel = RecordFactory.BuildRecordModel();
@@ -224,7 +224,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockLogger = new Mock<ILogger<EditRiskRatingPageModel>>();
+			var mockLogger = new Mock<ILogger<EditRatingPageModel>>();
 
 			mockCaseModelService.Setup(c => c.PatchRiskRating(It.IsAny<PatchCaseModel>()));
 
@@ -252,12 +252,12 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(page.Url, Is.EqualTo("https://returnto/thispage"));
 		}
 
-		private static EditRiskRatingPageModel SetupEditRiskRatingPageModel(
-			ICaseModelService mockCaseModelService, IRatingModelService mockRatingModelService, IRecordModelService mockRecordModelService, ILogger<EditRiskRatingPageModel> mockLogger, bool isAuthenticated = false)
+		private static EditRatingPageModel SetupEditRiskRatingPageModel(
+			ICaseModelService mockCaseModelService, IRatingModelService mockRatingModelService, IRecordModelService mockRecordModelService, ILogger<EditRatingPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new EditRiskRatingPageModel(mockCaseModelService, mockRatingModelService, mockRecordModelService, mockLogger)
+			return new EditRatingPageModel(mockCaseModelService, mockRatingModelService, mockRecordModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

@@ -14,20 +14,20 @@ namespace ConcernsCaseWork.Pages.Case
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class EditRiskRatingPageModel : AbstractPageModel
+	public class EditRatingPageModel : AbstractPageModel
 	{
 		private readonly ICaseModelService _caseModelService;
 		private readonly IRecordModelService _recordModelService;
 		private readonly IRatingModelService _ratingModelService;
-		private readonly ILogger<EditRiskRatingPageModel> _logger;
+		private readonly ILogger<EditRatingPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
 
-		public EditRiskRatingPageModel(ICaseModelService caseModelService, 
+		public EditRatingPageModel(ICaseModelService caseModelService, 
 			IRatingModelService ratingModelService, 
 			IRecordModelService recordModelService, 
-			ILogger<EditRiskRatingPageModel> logger)
+			ILogger<EditRatingPageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_recordModelService = recordModelService;
