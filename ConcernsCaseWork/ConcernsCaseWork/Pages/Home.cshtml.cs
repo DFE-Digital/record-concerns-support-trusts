@@ -21,7 +21,6 @@ namespace ConcernsCaseWork.Pages
 	    private readonly IRbacManager _rbacManager;
 	    
         public IList<HomeModel> CasesActive { get; private set; }
-        public IList<HomeModel> CasesMonitoring { get; private set; }
         public IList<HomeModel> CasesTeamActive { get; private set; }
         public bool UserAsRoleLeader { get; private set; }
         
@@ -50,25 +49,22 @@ namespace ConcernsCaseWork.Pages
 	        
 	        // Get all live and monitoring cases
 	        Task<IList<HomeModel>> liveCases = _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Live);
-	        Task<IList<HomeModel>> monitoringCases = _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Monitoring);
 
 	        // Wait until all tasks are completed
 	        if (liveCasesTeamLead != null)
 	        {
-		        await Task.WhenAll(liveCases, monitoringCases, liveCasesTeamLead);
+		        await Task.WhenAll(liveCases, liveCasesTeamLead);
 
 		        // Assign responses to UI public properties
 		        CasesActive = liveCases.Result;
-		        CasesMonitoring = monitoringCases.Result;
 		        CasesTeamActive = liveCasesTeamLead.Result;
 	        }
 	        else
 	        {
-		        await Task.WhenAll(liveCases, monitoringCases);
+		        Task.WaitAll(liveCases);
 		        
 		        // Assign responses to UI public properties
 		        CasesActive = liveCases.Result;
-		        CasesMonitoring = monitoringCases.Result;   
 	        }
         }
     }
