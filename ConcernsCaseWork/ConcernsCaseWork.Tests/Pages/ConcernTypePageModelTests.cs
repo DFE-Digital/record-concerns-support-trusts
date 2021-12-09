@@ -55,14 +55,17 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(pageModel.RatingsModel, Is.Not.Null);
 			Assert.That(pageModel.TypeModel, Is.Not.Null);
 			Assert.That(pageModel.TrustDetailsModel, Is.Not.Null);
+			Assert.That(pageModel.CreateRecordsModel, Is.Not.Null);
 			
 			var trustDetailsModel = pageModel.TrustDetailsModel;
 			var typesDictionary = pageModel.TypeModel.TypesDictionary;
 			var ratingsModel = pageModel.RatingsModel;
+			var createRecordsModel = pageModel.CreateRecordsModel;
 			
 			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			Assert.IsAssignableFrom<List<RatingModel>>(ratingsModel);
 			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsModel);
+			Assert.IsAssignableFrom<List<CreateRecordModel>>(createRecordsModel);
 			Assert.IsAssignableFrom<Dictionary<string, IList<TypeModel.TypeValueModel>>>(typesDictionary);
 
 			Assert.That(typesDictionary, Is.Not.Null);
@@ -170,7 +173,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 		
 		[Test]
-		public async Task WhenOnPostAsync_ReturnDetailsPage()
+		public async Task WhenOnPostAsync_ReturnConcernTypePage()
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<ConcernPageModel>>();
@@ -205,7 +208,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var page = pageResponse as RedirectToPageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(page.PageName, Is.EqualTo("details"));
+			Assert.That(page.PageName, Is.EqualTo("concern"));
 			
 			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
 			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Once);
@@ -243,7 +246,50 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Never);
 			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Never);
 		}
-		
+
+		[Test]
+		public async Task WhenOnGetCancelCreateCase_EmptiesCreateRecords_ReturnsHome()
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<ConcernPageModel>>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockCachedService = new Mock<ICachedService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+
+			var expected = CaseFactory.BuildCreateCaseModel();
+			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+
+			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
+
+			var pageModel = SetupConcernTypePageModel(mockTrustModelService.Object, mockCachedService.Object,
+				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
+
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "type", new StringValues("Force Majeure") },
+					{ "sub-type", new StringValues("123:subType") },
+					{ "rating", new StringValues("123:ragRating") },
+					{ "trust-ukprn", new StringValues("trustUkprn") },
+					{ "trust-name", new StringValues("trustName") }
+				});
+
+			// act
+			//var pageResponse = await pageModel.OnGetCancelCreateCase();
+
+			// assert
+			//Assert.That(pageResponse, Is.InstanceOf<RedirectToPageResult>());
+			//var page = pageResponse as RedirectToPageResult;
+
+			//Assert.That(page, Is.Not.Null);
+			//Assert.That(page.PageName, Is.EqualTo("concerntype"));
+
+			//mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
+			//mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Once);
+		}
+
+
 		[TestCase("", "", "", "")]
 		[TestCase(null, null, null, null)]
 		[TestCase("test", "", "ragRating", "trustUkprn")]

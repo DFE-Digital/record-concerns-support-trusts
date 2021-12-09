@@ -20,7 +20,6 @@ namespace ConcernsCaseWork.Mappers
 				createCaseModel.ReviewAt, 
 				createCaseModel.ClosedAt, 
 				createCaseModel.CreatedBy, 
-				createCaseModel.Description, 
 				createCaseModel.CrmEnquiry, 
 				createCaseModel.TrustUkPrn, 
 				createCaseModel.ReasonAtReview,

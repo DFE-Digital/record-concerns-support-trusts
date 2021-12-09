@@ -31,7 +31,8 @@ namespace ConcernsCaseWork.Pages.Case
 		public TypeModel TypeModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
-		
+		public IList<CreateRecordModel> CreateRecordsModel { get; set; }
+
 		public ConcernPageModel(ITrustModelService trustModelService, 
 			ICachedService cachedService, 
 			ITypeModelService typeModelService, 
@@ -53,7 +54,8 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				// Get cached data from case page.
 				var userState = await GetUserState();
-				
+				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
+
 				// Fetch UI data
 				await LoadPage(userState.TrustUkPrn);
 			}
@@ -95,12 +97,12 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				// Redis state
 				var userState = await GetUserState();
-				
+
 				// Create a case model
 				var currentDate = DateTimeOffset.Now;
+				var existingRecords = userState.CreateCaseModel.CreateRecordsModel;
 				userState.CreateCaseModel = new CreateCaseModel
 				{
-					Description = $"{type} {subType}",
 					CreatedAt = currentDate,
 					ReviewAt = currentDate,
 					UpdatedAt = currentDate,
@@ -108,22 +110,31 @@ namespace ConcernsCaseWork.Pages.Case
 					CreatedBy = User.Identity.Name,
 					DeEscalation = currentDate,
 					RagRatingName = ragRatingName,
-					RagRatingUrn = long.Parse(ragRatingUrn),
 					RagRating = RatingMapping.FetchRag(ragRatingName),
 					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
-					Type = type,
-					SubType = subType,
-					TypeUrn = long.Parse(typeUrn),
 					TrustUkPrn = trustUkPrn,
 					TrustName = trustName,
 					DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString(),
-					RatingUrn = long.Parse(ragRatingUrn)			// Remove or fix when multiple concerns is done
+					RatingUrn = long.Parse(ragRatingUrn),			// Remove or fix when multiple concerns is done
+					CreateRecordsModel = existingRecords
 				};
-					
+
+				var createRecordModel = new CreateRecordModel
+				{
+					TypeUrn = long.Parse(typeUrn),
+					Type = type,
+					SubType = subType,
+					RatingUrn = long.Parse(ragRatingUrn),
+					RatingName = ragRatingName,
+					RagRating = RatingMapping.FetchRag(ragRatingName),
+					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName)
+				};
+				userState.CreateCaseModel.CreateRecordsModel.Add(createRecordModel);
+
 				// Store case model in cache for the details page
 				await _cachedService.StoreData(User.Identity.Name, userState);
 				
-				return RedirectToPage("details");
+				return RedirectToPage("concern");
 			}
 			catch (Exception ex)
 			{
@@ -133,6 +144,16 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			
 			return await LoadPage(trustUkPrn);
+		}
+
+		public async Task<ActionResult> OnGetCancelCreateCase()
+		{
+			//TODO try catch
+			var userState = await GetUserState();
+			userState.CreateCaseModel.CreateRecordsModel.Clear();
+			await _cachedService.StoreData(User.Identity.Name, userState);
+
+			return new JsonResult(new { redirectUrl = Url.Page("../home") });
 		}
 
 		private async Task<ActionResult> LoadPage(string trustUkPrn)

@@ -464,27 +464,28 @@ namespace ConcernsCaseWork.Services.Cases
 			{
 				// Fetch Status
 				var statusDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
-				
-				// TODO Multiple Concerns
-				// When multiple concerns is develop take into consideration the number of records attached to the case.
 
 				// Create a case
 				createCaseModel.StatusUrn = statusDto.Urn;
 				var newCase = await _caseCachedService.PostCase(CaseMapping.Map(createCaseModel));
 
-				// Create a record
+				// Create records
 				var currentDate = DateTimeOffset.Now;
-				var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, 
-					currentDate, createCaseModel.Type, createCaseModel.SubType, createCaseModel.TypeDisplay, newCase.Urn, 
-					createCaseModel.TypeUrn, createCaseModel.RagRatingUrn, statusDto.Urn);
-				var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
+				createCaseModel.CreateRecordsModel.Select(async r => 
+				{
+					var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, currentDate, 
+						r.Type, r.SubType, r.Reason, newCase.Urn, r.TypeUrn,r.RatingUrn, statusDto.Urn);
+
+					var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
+
+					// Create a rating history
+					var createRecordRatingHistoryDto = new RecordRatingHistoryDto(DateTimeOffset.Now, newRecord.Urn, r.RatingUrn);
+					await _recordRatingHistoryCachedService.PostRecordRatingHistory(createRecordRatingHistoryDto, createCaseModel.CreatedBy, newCase.Urn);
+
+				});
 				
 				// Create case history event
 				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Concern, newCase.Urn), newCase.CreatedBy);
-				
-				// Create a rating history
-				var createRecordRatingHistoryDto = new RecordRatingHistoryDto(DateTimeOffset.Now, newRecord.Urn, createCaseModel.RagRatingUrn);
-				await _recordRatingHistoryCachedService.PostRecordRatingHistory(createRecordRatingHistoryDto, createCaseModel.CreatedBy, newCase.Urn);
 
 				// Create case history event
 				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Case, newCase.Urn), newCase.CreatedBy);

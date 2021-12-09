@@ -20,9 +20,6 @@ namespace Service.TRAMS.Cases
 		[JsonProperty("createdBy")]
 		public string CreatedBy { get; }
 		
-		[JsonProperty("description")]
-		public string Description { get; }
-		
 		[JsonProperty("crmEnquiry")]
 		public string CrmEnquiry { get; }
 		
@@ -64,14 +61,14 @@ namespace Service.TRAMS.Cases
 
 		[JsonConstructor]
 		public CreateCaseDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
-			DateTimeOffset closedAt, string createdBy, string description, string crmEnquiry, string trustUkPrn, 
+			DateTimeOffset closedAt, string createdBy, string crmEnquiry, string trustUkPrn, 
 			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
 			string nextSteps, string caseAim, string deEscalationPoint, string directionOfTravel, long statusUrn,
 			long ratingUrn) => 
-			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
+			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, CreatedBy, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, CaseAim, DeEscalationPoint, DirectionOfTravel, 
 				StatusUrn, RatingUrn) = 
-			(createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn,
+			(createdAt, updatedAt, reviewAt, closedAt, createdBy, crmEnquiry, trustUkPrn,
 				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, caseAim, deEscalationPoint, directionOfTravel, 
 				statusUrn, ratingUrn);
 	}

@@ -163,7 +163,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				dateTimeNow, 
 				dateTimeNow, 
 				createdBy ?? Fixture.Create<string>(), 
-				Fixture.Create<string>(), 
 				Fixture.Create<string>(),
 				trustUkprn ?? Fixture.Create<string>(), 
 				Fixture.Create<string>(), 
@@ -188,7 +187,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				ReviewAt = dateTimeNow, 
 				ClosedAt = dateTimeNow, 
 				CreatedBy = Fixture.Create<string>(), 
-				Description = Fixture.Create<string>(), 
 				CrmEnquiry = Fixture.Create<string>(),
 				TrustUkPrn = Fixture.Create<string>(), 
 				ReasonAtReview = Fixture.Create<string>(), 
@@ -199,10 +197,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				CaseAim = Fixture.Create<string>(),
 				DeEscalationPoint = Fixture.Create<string>(),
 				DirectionOfTravel = Fixture.Create<string>(),
-				StatusUrn = 1, 
-				Type = caseType, 
-				SubType = caseSubType, 
-				RagRatingName = Fixture.Create<string>()
+				StatusUrn = 1
 			};
 		}
 		
