@@ -152,10 +152,10 @@ namespace Service.Redis.Tests.Cases
 			
 			// assert
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
-			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
 			
 			Assert.That(actualCasesHistoryDto, Is.Not.Null);
-			Assert.That(actualCasesHistoryDto.Count, Is.EqualTo(expectedCasesHistoryDto.Count));
+			Assert.That(actualCasesHistoryDto.Count, Is.EqualTo(0));
 		}
 	}
 }

@@ -84,7 +84,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Once);
 			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()), Times.Once);
-			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()), Times.Exactly(2));
+			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()), Times.Exactly(1));
 		}
 
 		[Test]
@@ -127,7 +127,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Once);
 			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()), Times.Never);
-			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()), Times.Exactly(2));
+			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()), Times.Exactly(1));
 		}
 		
 		private static HomePageModel SetupHomeModel(ICaseModelService mockCaseModelService, IRbacManager mockRbacManager, ILogger<HomePageModel> mockLogger, bool isAuthenticated = false)

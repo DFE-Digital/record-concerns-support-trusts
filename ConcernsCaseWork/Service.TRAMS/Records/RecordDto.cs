@@ -36,11 +36,8 @@ namespace Service.TRAMS.Records
 		[JsonProperty("ratingUrn")]
 		public long RatingUrn { get; }
 		
-		[JsonProperty("primary")]
-		public bool Primary { get; }
-		
 		[JsonProperty("urn")]
-		public long Urn { get; set; } // TODO Remove setter when Academy API is live
+		public long Urn { get; set; }
 		
 		[JsonProperty("statusUrn")]
 		public long StatusUrn { get; }
@@ -48,8 +45,8 @@ namespace Service.TRAMS.Records
 		[JsonConstructor]
 		public RecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
 			string name, string description, string reason, long caseUrn, long typeUrn, 
-			long ratingUrn, bool primary, long urn, long statusUrn) => 
-			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Urn, StatusUrn) = 
-			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, primary, urn, statusUrn);
+			long ratingUrn, long urn, long statusUrn) => 
+			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Urn, StatusUrn) = 
+			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, urn, statusUrn);
 	}
 }

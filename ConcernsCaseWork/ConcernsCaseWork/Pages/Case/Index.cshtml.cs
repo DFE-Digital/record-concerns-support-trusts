@@ -34,7 +34,7 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			try
 			{
-				_logger.LogInformation("Case::IndexPageModel::OnGetTrustsPartial");
+				_logger.LogInformation("Case::IndexPageModel::OnGetTrustsSearchResult");
 				
 				// Double check search query.
 				if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < SearchQueryMinLength)
@@ -70,7 +70,7 @@ namespace ConcernsCaseWork.Pages.Case
 				userState.TrustUkPrn = trustUkPrn;
 				await _cachedService.StoreData(User.Identity.Name, userState);
 
-				return new JsonResult(new { redirectUrl = Url.Page("ConcernType") });
+				return new JsonResult(new { redirectUrl = Url.Page("Concern") });
 			}
 			catch (Exception ex)
 			{

@@ -8,5 +8,6 @@ namespace Service.Redis.Ratings
 	{
 		Task ClearData();
 		Task<IList<RatingDto>> GetRatings();
+		Task<RatingDto> GetDefaultRating();
 	}
 }

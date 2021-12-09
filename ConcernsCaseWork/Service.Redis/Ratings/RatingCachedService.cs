@@ -2,6 +2,7 @@
 using Service.Redis.Base;
 using Service.TRAMS.Ratings;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Ratings
@@ -40,6 +41,14 @@ namespace Service.Redis.Ratings
 			await StoreData(RatingsKey, ratings);
 			
 			return ratings;
+		}
+
+		public async Task<RatingDto> GetDefaultRating()
+		{
+			var ratingsDto = await GetRatings();
+			var ratingDto = ratingsDto.FirstOrDefault(r => r.Name.Equals("n/a"));
+
+			return ratingDto;
 		}
 	}
 }

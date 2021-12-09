@@ -1,65 +1,65 @@
 ﻿@model ConcernsCaseWork.Models.TrustDetailsModel
 
 @{ 
-	var trustContactNumber = !String.IsNullOrEmpty(Model.IfdData.TrustContactPhoneNumber) ? Model.IfdData.TrustContactPhoneNumber : "Visit trust website";
+	var trustContactNumber = !string.IsNullOrEmpty(Model.IfdData.TrustContactPhoneNumber) ? Model.IfdData.TrustContactPhoneNumber : "Visit trust website";
 }
 
 <dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-3">
 	<div class="govuk-summary-list__row">
-	<dt class="govuk-summary-list__key">Type</dt>
-	<dd class="govuk-summary-list__value">
-		@Model.IfdData.TrustType
-	</dd>
+		<dt class="govuk-summary-list__key">Type</dt>
+		<dd class="govuk-summary-list__value">
+			@Model.IfdData.TrustType
+		</dd>
 	</div>
 
 	<div class="govuk-summary-list__row">
-	<dt class="govuk-summary-list__key">Address</dt>
-	<dd class="govuk-summary-list__value">
-		@Model.GiasData.GroupContactAddress.DisplayAddress
-	</dd>
+		<dt class="govuk-summary-list__key">Address</dt>
+		<dd class="govuk-summary-list__value">
+			@Model.GiasData.GroupContactAddress.DisplayAddress
+		</dd>
 	</div>
 	<div class="govuk-summary-list__row">
-	<dt class="govuk-summary-list__key">Number of academies</dt>
-	<dd class="govuk-summary-list__value">
-		@Model.Establishments.Count
-	</dd>
+		<dt class="govuk-summary-list__key">Number of academies</dt>
+		<dd class="govuk-summary-list__value">
+			@Model.Establishments.Count
+		</dd>
 	</div>
 	<div class="govuk-summary-list__row">
-	<dt class="govuk-summary-list__key">Total pupil capacity</dt>
-	<dd class="govuk-summary-list__value">
-		@Model.TotalPupilCapacity
-	</dd>
+		<dt class="govuk-summary-list__key">Total pupil capacity</dt>
+		<dd class="govuk-summary-list__value">
+			@Model.TotalPupilCapacity
+		</dd>
 	</div>
 	<div class="govuk-summary-list__row">
-	<dt class="govuk-summary-list__key">Number of pupils</dt>
-	<dd class="govuk-summary-list__value">
-		@Model.TotalPupils (@Model.PupilCapacityPercentage%)
-	</dd>
+		<dt class="govuk-summary-list__key">Number of pupils</dt>
+		<dd class="govuk-summary-list__value">
+			@Model.TotalPupils (@Model.PupilCapacityPercentage%)
+		</dd>
 	</div>
 	<div class="govuk-summary-list__row">
-	<dt class="govuk-summary-list__key">Group Id</dt>
-	<dd class="govuk-summary-list__value">
-		@Model.GiasData.GroupId
-	</dd>
+		<dt class="govuk-summary-list__key">Group Id</dt>
+		<dd class="govuk-summary-list__value">
+			@Model.GiasData.GroupId
+		</dd>
 	</div>
 	<div class="govuk-summary-list__row">
-	<dt class="govuk-summary-list__key">UKPRN</dt>
-	<dd class="govuk-summary-list__value">
-		@Model.GiasData.UkPrn
-	</dd>
+		<dt class="govuk-summary-list__key">UKPRN</dt>
+		<dd class="govuk-summary-list__value">
+			@Model.GiasData.UkPrn
+		</dd>
 	</div>
 	<div class="govuk-summary-list__row">
-	<dt class="govuk-summary-list__key">Trust Phone Number</dt>
-	<dd class="govuk-summary-list__value">
-		@trustContactNumber
-	</dd>
+		<dt class="govuk-summary-list__key">Trust Phone Number</dt>
+		<dd class="govuk-summary-list__value">
+			@trustContactNumber
+		</dd>
 	</div>
 	<div class="govuk-summary-list__row">
-	<dt class="govuk-summary-list__key">Companies House</dt>
-	<dd class="govuk-summary-list__value">
-		<a href="@Model.GiasData.CompaniesHouseWebsite" target="_blank">
-			@Model.GiasData.CompaniesHouseNumber
-		</a>
-	</dd>
+		<dt class="govuk-summary-list__key">Companies House</dt>
+		<dd class="govuk-summary-list__value">
+			<a href="@Model.GiasData.CompaniesHouseWebsite" target="_blank">
+				@Model.GiasData.CompaniesHouseNumber
+			</a>
+		</dd>
 	</div>
 </dl>

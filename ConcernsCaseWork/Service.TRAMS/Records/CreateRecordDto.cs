@@ -35,17 +35,14 @@ namespace Service.TRAMS.Records
 		[JsonProperty("ratingUrn")]
 		public long RatingUrn { get; }
 		
-		[JsonProperty("primary")]
-		public bool Primary { get; }
-		
 		[JsonProperty("statusUrn")]
 		public long StatusUrn { get; }
 		
 		[JsonConstructor]
 		public CreateRecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
 			string name, string description, string reason, long caseUrn, long typeUrn, 
-			long ratingUrn, bool primary, long statusUrn) => 
-			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, StatusUrn) = 
-			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, primary, statusUrn);
+			long ratingUrn, long statusUrn) => 
+			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, StatusUrn) = 
+			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, statusUrn);
 	}
 }
