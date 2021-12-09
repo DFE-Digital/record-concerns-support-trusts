@@ -4,6 +4,7 @@ using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.Redis.Sequence;
 using Service.TRAMS.Cases;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -80,13 +81,16 @@ namespace Service.Redis.Cases
 				return caseWrapper.CasesHistoryDto;
 			}
 
-			var casesHistory = await _caseSearchService.GetCasesHistoryByCaseSearch(caseSearch);
-			userState ??= new UserState();
-			userState.CasesDetails.Add(caseSearch.CaseUrn, new CaseWrapper { CasesHistoryDto = casesHistory });
+			return Array.Empty<CaseHistoryDto>();
 
-			await StoreData(caseworker, userState);
-
-			return casesHistory;
+			// TODO Include when Academies API is live
+			// var casesHistory = await _caseSearchService.GetCasesHistoryByCaseSearch(caseSearch);
+			// userState ??= new UserState();
+			// userState.CasesDetails.Add(caseSearch.CaseUrn, new CaseWrapper { CasesHistoryDto = casesHistory });
+			//
+			// await StoreData(caseworker, userState);
+			//
+			// return casesHistory;
 		}
 	}
 }

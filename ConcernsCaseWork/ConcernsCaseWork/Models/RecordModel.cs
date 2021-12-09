@@ -27,16 +27,14 @@ namespace ConcernsCaseWork.Models
 
 		public long RatingUrn { get; }
 		
-		public bool Primary { get; }
-		
 		public long Urn { get; }
 		
 		public long StatusUrn { get; }
 		
 		public RecordModel(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
 			DateTimeOffset closedAt, string name, string description, string reason, long caseUrn, long typeUrn, 
-			long ratingUrn, bool primary, long urn, long statusUrn) => 
-			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Primary, Urn, StatusUrn) = 
-			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, primary, urn, statusUrn);
+			long ratingUrn, long urn, long statusUrn) => 
+			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Urn, StatusUrn) = 
+			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, urn, statusUrn);
 	}
 }

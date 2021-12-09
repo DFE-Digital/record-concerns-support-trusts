@@ -209,12 +209,39 @@ namespace Service.Redis.Tests.Cases
 			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			// act
-			var casesDto = await caseCachedService.GetCaseByUrn("testing", 1);
+			var casesDto = await caseCachedService.GetCaseByUrn(expectedCaseDto.CreatedBy, 1);
 			
 			// assert
 			Assert.That(casesDto, Is.Not.Null);
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
+			mockCaseService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Once);
+		}
+		
+		[Test]
+		public async Task WhenGetCaseByUrn_FromAcademiesApi_CaseBelongsToAnotherCaseworker_ReturnsCasesDto()
+		{
+			// arrange
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
+			var mockLogger = new Mock<ILogger<CaseCachedService>>();
+
+			var expectedCaseDto = CaseFactory.BuildCaseDto();
+			
+			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
+				ReturnsAsync((UserState)null);
+			mockCaseService.Setup(c => c.GetCaseByUrn(It.IsAny<long>())).ReturnsAsync(expectedCaseDto);
+			
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
+			
+			// act
+			var casesDto = await caseCachedService.GetCaseByUrn("caseworker", 1);
+			
+			// assert
+			Assert.That(casesDto, Is.Not.Null);
+			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
 			mockCaseService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Once);
 		}
 		

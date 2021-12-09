@@ -62,17 +62,21 @@ namespace Service.TRAMS.Cases
 		
 		[JsonProperty("statusUrn")]
 		public long StatusUrn { get; }
+		
+		[JsonProperty("ratingUrn")]
+		public long RatingUrn { get; set; }	// TODO re-think on this hole for cases created before rating was included on the domain
 
 		[JsonConstructor]
 		public CaseDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
 			DateTimeOffset closedAt, string createdBy, string description, string crmEnquiry, string trustUkPrn, 
 			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
-			string nextSteps, string caseAim, string deEscalationPoint, string directionOfTravel, long urn, long statusUrn) => 
+			string nextSteps, string caseAim, string deEscalationPoint, string directionOfTravel, 
+			long urn, long statusUrn, long ratingUrn) => 
 			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, CaseAim, DeEscalationPoint, 
-				DirectionOfTravel, Urn, StatusUrn) = 
+				DirectionOfTravel, Urn, StatusUrn, RatingUrn) = 
 			(createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn,
 				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, caseAim, deEscalationPoint, 
-				directionOfTravel, urn, statusUrn);
+				directionOfTravel, urn, statusUrn, ratingUrn);
 	}
 }

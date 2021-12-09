@@ -42,6 +42,8 @@ namespace Service.Redis.Models
 		
 		public long StatusUrn { get; set; }
 		
+		public long RatingUrn { get; set; }
+		
 		public string TypeDisplay
 		{
 			get

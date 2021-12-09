@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		[Test]
 		public async Task WhenPatchRecordByUrn_UpdatesRecord()
 		{
-			// arange 
+			// arrange 
 			var recordService = _factory.Services.GetRequiredService<IRecordService>();
 			var caseUrn = await FetchRandomCaseUrn();
 			var typeUrn = await FetchRandomTypeUrn();
@@ -84,7 +84,6 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 				postRecordDto.CaseUrn,
 				postRecordDto.TypeUrn,
 				updatedRatingUrn,
-				postRecordDto.Primary,
 				postRecordDto.Urn,
 				postRecordDto.StatusUrn
 				);
@@ -104,7 +103,6 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			Assert.That(updatedRecordDto.CaseUrn, Is.EqualTo(postRecordDto.CaseUrn));
 			Assert.That(updatedRecordDto.TypeUrn, Is.EqualTo(postRecordDto.TypeUrn));
 			Assert.That(updatedRecordDto.RatingUrn, Is.EqualTo(updatedRatingUrn));
-			Assert.That(updatedRecordDto.Primary, Is.EqualTo(postRecordDto.Primary));
 			Assert.That(updatedRecordDto.Urn, Is.EqualTo(postRecordDto.Urn));
 			Assert.That(updatedRecordDto.StatusUrn, Is.EqualTo(postRecordDto.StatusUrn));
 		}
@@ -130,8 +128,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 
 			return apiWrapperTrusts.Data[index].UkPrn;
 		}
-
-
+		
 		private async Task<long> FetchRandomCaseUrn()
 		{
 			var caseService = _factory.Services.GetRequiredService<ICaseService>();

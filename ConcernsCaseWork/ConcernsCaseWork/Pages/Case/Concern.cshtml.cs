@@ -20,10 +20,10 @@ namespace ConcernsCaseWork.Pages.Case
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class ConcernTypePageModel : AbstractPageModel
+	public class ConcernPageModel : AbstractPageModel
 	{
 		private readonly IRatingModelService _ratingModelService;
-		private readonly ILogger<ConcernTypePageModel> _logger;
+		private readonly ILogger<ConcernPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly ITypeModelService _typeModelService;
 		private readonly ICachedService _cachedService;
@@ -32,11 +32,11 @@ namespace ConcernsCaseWork.Pages.Case
 		public IList<RatingModel> RatingsModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
-		public ConcernTypePageModel(ITrustModelService trustModelService, 
+		public ConcernPageModel(ITrustModelService trustModelService, 
 			ICachedService cachedService, 
 			ITypeModelService typeModelService, 
 			IRatingModelService ratingModelService,
-			ILogger<ConcernTypePageModel> logger)
+			ILogger<ConcernPageModel> logger)
 		{
 			_ratingModelService = ratingModelService;
 			_trustModelService = trustModelService;
@@ -116,7 +116,8 @@ namespace ConcernsCaseWork.Pages.Case
 					TypeUrn = long.Parse(typeUrn),
 					TrustUkPrn = trustUkPrn,
 					TrustName = trustName,
-					DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString()
+					DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString(),
+					RatingUrn = long.Parse(ragRatingUrn)			// Remove or fix when multiple concerns is done
 				};
 					
 				// Store case model in cache for the details page
