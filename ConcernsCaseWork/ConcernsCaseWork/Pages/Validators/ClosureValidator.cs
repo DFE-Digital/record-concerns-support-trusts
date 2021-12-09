@@ -5,6 +5,11 @@ using System;
 
 namespace ConcernsCaseWork.Pages.Validators
 {
+	/// <summary>
+	/// Monitoring cases was removed from the service until future notice.
+	/// At some point ask Richard Machen if monitoring cases will be on the feature development.
+	/// If not, remove this validator.
+	/// </summary>
 	public static class ClosureValidator
 	{
 		public static bool IsValid(IFormCollection formCollection)

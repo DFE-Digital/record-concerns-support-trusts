@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Service.TRAMS.Status;
 using System;
-using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Services.Trusts;
 using System.Threading.Tasks;
 
@@ -64,47 +62,22 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
-				{
 					throw new Exception("ClosurePageModel::CaseUrn is null or invalid to parse");
-				}
-				
-				if(!ClosureValidator.IsValid(Request.Form))
+
+				var caseOutcomes = Request.Form["case-outcomes"];
+				if(string.IsNullOrEmpty(caseOutcomes))
 					throw new Exception("Case::ClosurePageModel::Missing form values");
 				
-				var caseOutcomes = Request.Form["case-outcomes"];
-				var monitoring = Request.Form["monitoring"];
-				var dayToReview = Request.Form["dtr-day"];
-				var monthToReview = Request.Form["dtr-month"];
-				var yearToReview = Request.Form["dtr-year"];
-				
-				var isMonitoring = monitoring.ToString().ToBoolean();
-				var patchCaseModel = new PatchCaseModel();
-					
-				if (isMonitoring)
-				{
-					// Convert parts
-					var year = int.Parse(yearToReview);
-					var month = int.Parse(monthToReview);
-					var day = int.Parse(dayToReview);
-						
-					DateTime sourceDate = new DateTime(year, month, day, 0, 0, 0);
-					DateTime utcTime = DateTime.SpecifyKind(sourceDate, DateTimeKind.Utc);
-						
-					// Set review at
-					patchCaseModel.ReviewAt = new DateTimeOffset(utcTime);
-				}
-				else
-				{
-					patchCaseModel.ClosedAt = DateTimeOffset.Now;
-				}
-					
-				// Update patch case model
-				patchCaseModel.Urn = caseUrn;
-				patchCaseModel.CreatedBy = User.Identity.Name;
-				patchCaseModel.UpdatedAt = DateTimeOffset.Now;
-				patchCaseModel.StatusName = isMonitoring ? StatusEnum.Monitoring.ToString() : StatusEnum.Close.ToString();
-				patchCaseModel.ReasonAtReview = caseOutcomes;
-				
+				var patchCaseModel = new PatchCaseModel {
+					// Update patch case model
+					Urn = caseUrn, 
+					CreatedBy = User.Identity.Name, 
+					ClosedAt = DateTimeOffset.Now, 
+					UpdatedAt = DateTimeOffset.Now,
+					StatusName = StatusEnum.Close.ToString(),
+					ReasonAtReview = caseOutcomes
+				};
+
 				await _caseModelService.PatchClosure(patchCaseModel);
 					
 				return Redirect("/");
