@@ -34,8 +34,14 @@ namespace Service.Redis.Records
 			var userState = await GetData<UserState>(caseworker);
 			if (userState is null) return recordsDto;
 			
-			// If case urn doesn't exist on the cache return empty records
-			if (!userState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper)) return recordsDto;
+			// If case urn doesn't exist on the cache may mean it belongs to another caseworker
+			// Edge case fetching records that don't belong to the logged casework
+			if (!userState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper))
+			{
+				recordsDto = await _recordService.GetRecordsByCaseUrn(caseUrn);
+				
+				return recordsDto;
+			}
 			
 			// Checking records was cached before
 			if (caseWrapper.Records != null)
@@ -53,7 +59,7 @@ namespace Service.Redis.Records
 				
 				if(userState.CasesDetails.TryGetValue(caseUrn, out caseWrapper))
 				{
-					caseWrapper.Records ??= new ConcurrentDictionary<long, RecordWrapper>();
+					caseWrapper.Records ??= new Dictionary<long, RecordWrapper>();
 					
 					if (recordsDto.Any())
 					{

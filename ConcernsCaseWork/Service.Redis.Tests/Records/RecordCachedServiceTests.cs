@@ -43,7 +43,6 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord.Name, Is.EqualTo(newRecordDto.Name));
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(newRecordDto.Description));
-			Assert.That(actualRecord.Primary, Is.EqualTo(newRecordDto.Primary));
 			Assert.That(actualRecord.Reason, Is.EqualTo(newRecordDto.Reason));
 			Assert.That(actualRecord.StatusUrn, Is.EqualTo(newRecordDto.StatusUrn));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(newRecordDto.CaseUrn));
@@ -88,7 +87,6 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord.Name, Is.EqualTo(newRecordDto.Name));
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(newRecordDto.Description));
-			Assert.That(actualRecord.Primary, Is.EqualTo(newRecordDto.Primary));
 			Assert.That(actualRecord.Reason, Is.EqualTo(newRecordDto.Reason));
 			Assert.That(actualRecord.StatusUrn, Is.EqualTo(newRecordDto.StatusUrn));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(newRecordDto.CaseUrn));
@@ -136,7 +134,6 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord.Name, Is.EqualTo(newRecordDto.Name));
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(newRecordDto.Description));
-			Assert.That(actualRecord.Primary, Is.EqualTo(newRecordDto.Primary));
 			Assert.That(actualRecord.Reason, Is.EqualTo(newRecordDto.Reason));
 			Assert.That(actualRecord.StatusUrn, Is.EqualTo(newRecordDto.StatusUrn));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(newRecordDto.CaseUrn));
@@ -182,7 +179,6 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord.Name, Is.EqualTo(newRecordDto.Name));
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(newRecordDto.Description));
-			Assert.That(actualRecord.Primary, Is.EqualTo(newRecordDto.Primary));
 			Assert.That(actualRecord.Reason, Is.EqualTo(newRecordDto.Reason));
 			Assert.That(actualRecord.StatusUrn, Is.EqualTo(newRecordDto.StatusUrn));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(newRecordDto.CaseUrn));
@@ -220,34 +216,6 @@ namespace Service.Redis.Tests.Records
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
 			mockRecordService.Verify(c => c.PostRecordByCaseUrn(It.IsAny<CreateRecordDto>()), Times.Once);
 		}		
-		
-		[Test]
-		public async Task WhenGetRecordsByCaseUrn_CacheNotNull_KeyNotExists_Return_EmptyRecordsDto()
-		{
-			// arrange
-			var mockCacheProvider = new Mock<ICacheProvider>();
-			var mockRecordService = new Mock<IRecordService>();
-			var mockLogger = new Mock<ILogger<RecordCachedService>>();
-			
-			var userState = new UserState();
-			
-			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
-				ReturnsAsync(userState);
-			
-			var recordRecordCachedService = new RecordCachedService(
-				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
-			
-			// act
-			var actualRecordsDto = await recordRecordCachedService.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>());
-
-			// assert
-			Assert.That(actualRecordsDto, Is.Not.Null);
-			Assert.That(actualRecordsDto.Count, Is.EqualTo(0));
-
-			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
-			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
-			mockRecordService.Verify(c => c.GetRecordsByCaseUrn(It.IsAny<long>()), Times.Never);
-		}
 		
 		[Test]
 		public async Task WhenGetRecordsByCaseUrn_CacheIsNull_Return_EmptyRecords()
@@ -411,6 +379,7 @@ namespace Service.Redis.Tests.Records
 			var mockRecordService = new Mock<IRecordService>();
 			var mockLogger = new Mock<ILogger<RecordCachedService>>();
 
+			var recordsDto = RecordFactory.BuildListRecordDto();
 			var userState = new UserState
 			{
 				TrustUkPrn = "trust-ukprn",
@@ -435,6 +404,8 @@ namespace Service.Redis.Tests.Records
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
 				ReturnsAsync(userState);
+			mockRecordService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<long>()))
+				.ReturnsAsync(recordsDto);
 			
 			var recordRecordCachedService = new RecordCachedService(
 				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
@@ -446,12 +417,11 @@ namespace Service.Redis.Tests.Records
 
 			// assert
 			Assert.That(actualRecords, Is.Not.Null);
-			Assert.That(actualRecords.Count, Is.EqualTo(0));
+			Assert.That(actualRecords.Count, Is.EqualTo(recordsDto.Count));
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
-			mockRecordService.Verify(c => 
-				c.GetRecordsByCaseUrn(It.IsAny<long>()), Times.Never);
+			mockRecordService.Verify(c => c.GetRecordsByCaseUrn(It.IsAny<long>()), Times.Once);
 		}
 		
 		[Test]

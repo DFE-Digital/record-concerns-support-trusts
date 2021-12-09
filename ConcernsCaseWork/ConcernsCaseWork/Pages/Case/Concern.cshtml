@@ -1,5 +1,5 @@
-﻿@page "/case/concerntype/{handler?}"
-@model ConcernsCaseWork.Pages.Case.ConcernTypePageModel
+﻿@page "/case/concern/{handler?}"
+@model ConcernsCaseWork.Pages.Case.ConcernPageModel
 
 @{
 	ViewData["Title"] = "New Case Concern type";
@@ -28,54 +28,55 @@
 
 				<dl class="govuk-summary-list">
 					<div class="govuk-summary-list__row">
-					<dt class="govuk-summary-list__key">Trust</dt>
-					<dd class="govuk-summary-list__value">
-						@Model.TrustDetailsModel.GiasData.GroupName (@Model.TrustDetailsModel.IfdData.GroupContactAddress.County)
-						@* TODOEA if county is empty remove () *@
-						<br />
-						@Model.TrustDetailsModel.GiasData.GroupContactAddress.DisplayAddress
-					</dd>
-			</div>
-			@{
-				<div id="concerns-summary-list" class="govuk-summary-list__row">
+							<dt class="govuk-summary-list__key">Trust</dt>
+							<dd class="govuk-summary-list__value">
+								@Model.TrustDetailsModel.GiasData.GroupName (@Model.TrustDetailsModel.IfdData.GroupContactAddress.County)
+								@* TODOEA if county is empty remove () *@
+								<br />
+								@Model.TrustDetailsModel.GiasData.GroupContactAddress.DisplayAddress
+							</dd>
+					</div>
+					<div id="concerns-summary-list" class="govuk-summary-list__row">
 					<dt class="govuk-summary-list__key">Concerns</dt>
 					<dd class="govuk-summary-list__value">
 						@foreach (var concern in Model.CreateRecordsModel)
 						{
-							<a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 govuk-!-margin-top-6 float__right" href="#">
-								Edit
-							</a>
-
-							@*<partial name="_RiskRating" model="@concern.RagRating" />*@
-							//TODOEA 
-							@concern.Reason
-
-							<div class="govuk-label-wrapper">
-
-								@for (var index = 0; index < concern.RagRating.Item2.Count; ++index)
-								{
-									<span class="govuk-tag ragtag @concern.RagRatingCss.ElementAt(index)">
-										@concern.RagRating.Item2.ElementAt(index)
-									</span>
-								}
+							<div>
+								<a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 govuk-!-margin-top-6 float__right" href="#">
+									Edit
+								</a>
 							</div>
 
+							<div>
+								@concern.Reason
+							</div>
+
+							<div>
+								<div class="govuk-label-wrapper">
+									@*<partial name="_RiskRating" model="@concern.RagRating" />*@
+									@for (var index = 0; index < concern.RagRating.Item2.Count; ++index)
+									{
+										<span class="govuk-tag ragtag @concern.RagRatingCss.ElementAt(index)">
+											@concern.RagRating.Item2.ElementAt(index)
+										</span>
+									}
+								</div>
+							</div>
 							<br />
 						}
 					</dd>
 				</div>
-			}
-			</dl>
-
+		
+				</dl>
 
 			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+			<h2 class="govuk-heading-m govuk-!-margin-top-9">Select concern type</h2>
 
 			<input type="hidden" id="numOfRecords" value="@Model.CreateRecordsModel.Count">
 
 			<!-- FORM -->
 			<form role="form" method="post" id="case-concern-type-form" novalidate>
-				<h2 class="govuk-heading-m govuk-!-margin-top-9">Select a concern</h2>
-
 				<!--Trust UkPrn-->
 				<input type="hidden" name="trust-ukprn" value="@Model.TrustDetailsModel?.GiasData.UkPrn">
 				<input type="hidden" name="trust-name" value="@Model.TrustDetailsModel?.GiasData.GroupName">
@@ -91,7 +92,7 @@
 							</a> to assess the type of Concern
 						</div>
 
-						<partial name="_ConcernType" model="@Model.TypeModel" />
+						<partial name="_Concern" model="@Model.TypeModel" />
 
 					</fieldset>
 				</div>
@@ -104,17 +105,16 @@
 							What is the risk rating?
 						</legend>
 
-						<partial name="_RiskRating" model="@Model.RatingsModel" />
+						<partial name="_Rating" model="@Model.RatingsModel" />
 
 					</fieldset>
 				</div>
 
 				<div class="govuk-button-group">
-
 					<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
-						Add to case
+						Next step
 					</button>
-					<a class="govuk-link">Cancel</a>
+					<a class="govuk-link" asp-page="../home">Cancel</a>
 				</div>
 
 			</form>
@@ -131,43 +131,43 @@
 				<a class="govuk-link">Cancel</a>
 			</div>
 
-				<script type="application/javascript" nonce="@nonce">
-					$(function () {
-						let validator = formValidator($("#case-concern-type-form")[0]);
-						addConcernTypeValidator(validator);
-						addRagRatingValidator(validator);
+			<script type="application/javascript" nonce="@nonce">
+				$(function () {
+					let validator = formValidator($("#case-concern-type-form")[0]);
+					addConcernTypeValidator(validator);
+					addRagRatingValidator(validator);
 
-						let numOfRecords = $('#numOfRecords').val();
+					let numOfRecords = $('#numOfRecords').val();
 
-						if(numOfRecords == 0)
-						{
-							$('#concerns-summary-list').hide();
-							$('#add-another-concern-button-group').hide();
-						}else
-						{
-							$('#case-concern-type-form').hide();
-							$('#add-another-concern-button-group').show();
-						}
+					if(numOfRecords == 0)
+					{
+						$('#concerns-summary-list').hide();
+						$('#add-another-concern-button-group').hide();
+					}else
+					{
+						$('#case-concern-type-form').hide();
+						$('#add-another-concern-button-group').show();
+					}
 
-						$('#addAConcernButton').on("click", function(){
-							$('#case-concern-type-form').show();
-							$('#add-another-concern-button-group').hide();
-						});
-
-						$('.govuk-link').on("click", function(){
-							// Ajax Post 
-							$.get("concerntype/CancelCreateCase")
-							.done(function (result) {
-								window.location.replace(result.redirectUrl)
-							})
-							.fail(function() {
-								showGlobalError();
-							});
-						});
-
+					$('#addAConcernButton').on("click", function(){
+						$('#case-concern-type-form').show();
+						$('#add-another-concern-button-group').hide();
 					});
-				</script>
-				}
-			</div>
+
+					$('.govuk-link').on("click", function(){
+
+						// Ajax Post
+						$.get("concern/CancelCreateCase")
+						.done(function (result) {
+							window.location.replace(result.redirectUrl)
+						})
+						.fail(function() {
+							showGlobalError();
+						});
+					});
+				});
+			</script>
+		}
 		</div>
+	</div>
 </div>

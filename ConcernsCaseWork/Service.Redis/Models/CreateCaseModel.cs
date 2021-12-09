@@ -40,6 +40,10 @@ namespace Service.Redis.Models
 		
 		public long StatusUrn { get; set; }
 		
+		public long RatingUrn { get; set; }
+		
+		public string RagRatingName { get; set; }
+		
 		public Tuple<int, IList<string>> RagRating { get; set; }
 
 		public IList<string> RagRatingCss { get; set; }

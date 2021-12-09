@@ -2,6 +2,7 @@
 using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.TRAMS.Cases;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -66,11 +67,16 @@ namespace Service.Redis.Cases
 			}
 
 			var caseDto = await _caseService.GetCaseByUrn(urn);
+			
+			// Edge case fetching a case that doesn't belong to the logged casework
+			// Trust overview shows all cases for a trust which some aren't from the logged caseworker
+			if (!caseDto.CreatedBy.Equals(caseworker, StringComparison.OrdinalIgnoreCase)) return caseDto;
+			
 			userState ??= new UserState();
 			userState.CasesDetails.Add(urn, new CaseWrapper { CaseDto = caseDto });
 
 			await StoreData(caseworker, userState);
-			
+
 			return caseDto;
 		}
 

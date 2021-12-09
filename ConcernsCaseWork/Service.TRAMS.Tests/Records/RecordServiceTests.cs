@@ -60,7 +60,6 @@ namespace Service.TRAMS.Tests.Records
 					Assert.That(actualRecord.Urn, Is.EqualTo(expectedRecord.Urn));
 					Assert.That(actualRecord.CreatedAt, Is.EqualTo(expectedRecord.CreatedAt));
 					Assert.That(actualRecord.Description, Is.EqualTo(expectedRecord.Description));
-					Assert.That(actualRecord.Primary, Is.EqualTo(expectedRecord.Primary));
 					Assert.That(actualRecord.Reason, Is.EqualTo(expectedRecord.Reason));
 					Assert.That(actualRecord.StatusUrn, Is.EqualTo(expectedRecord.StatusUrn));
 					Assert.That(actualRecord.CaseUrn, Is.EqualTo(expectedRecord.CaseUrn));
@@ -264,7 +263,6 @@ namespace Service.TRAMS.Tests.Records
 			Assert.That(actualRecord.Urn, Is.EqualTo(expectedRecord.Urn));
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(expectedRecord.Description));
-			Assert.That(actualRecord.Primary, Is.EqualTo(expectedRecord.Primary));
 			Assert.That(actualRecord.Reason, Is.EqualTo(expectedRecord.Reason));
 			Assert.That(actualRecord.StatusUrn, Is.EqualTo(expectedRecord.StatusUrn));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(expectedRecord.CaseUrn));

@@ -62,7 +62,6 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			Assert.That(recordModel, Is.Not.Null);
 			Assert.That(recordModel.Description, Is.EqualTo(recordDto.Description));
 			Assert.That(recordModel.Name, Is.EqualTo(recordDto.Name));
-			Assert.That(recordModel.Primary, Is.EqualTo(recordDto.Primary));
 			Assert.That(recordModel.Reason, Is.EqualTo(recordDto.Reason));
 			Assert.That(recordModel.Urn, Is.EqualTo(recordDto.Urn));
 			Assert.That(recordModel.CaseUrn, Is.EqualTo(recordDto.CaseUrn));

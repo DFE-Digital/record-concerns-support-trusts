@@ -15,9 +15,9 @@ namespace ConcernsCaseWork.Pages.Case
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class EditConcernTypePageModel : AbstractPageModel
+	public class EditConcernPageModel : AbstractPageModel
 	{
-		private readonly ILogger<EditConcernTypePageModel> _logger;
+		private readonly ILogger<EditConcernPageModel> _logger;
 		private readonly IRecordModelService _recordModelService;
 		private readonly ICaseModelService _caseModelService;
 		private readonly ITypeModelService _typeModelService;
@@ -25,10 +25,10 @@ namespace ConcernsCaseWork.Pages.Case
 		public CaseModel CaseModel { get; private set; }
 		public TypeModel TypeModel { get; private set; }
 		
-		public EditConcernTypePageModel(ITypeModelService typeModelService, 
+		public EditConcernPageModel(ITypeModelService typeModelService, 
 			ICaseModelService caseModelService, 
 			IRecordModelService recordModelService,
-			ILogger<EditConcernTypePageModel> logger)
+			ILogger<EditConcernPageModel> logger)
 		{
 			_recordModelService = recordModelService;
 			_typeModelService = typeModelService;

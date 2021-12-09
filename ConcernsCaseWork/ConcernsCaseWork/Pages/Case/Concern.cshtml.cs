@@ -20,10 +20,10 @@ namespace ConcernsCaseWork.Pages.Case
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class ConcernTypePageModel : AbstractPageModel
+	public class ConcernPageModel : AbstractPageModel
 	{
 		private readonly IRatingModelService _ratingModelService;
-		private readonly ILogger<ConcernTypePageModel> _logger;
+		private readonly ILogger<ConcernPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly ITypeModelService _typeModelService;
 		private readonly ICachedService _cachedService;
@@ -31,13 +31,13 @@ namespace ConcernsCaseWork.Pages.Case
 		public TypeModel TypeModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
-		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
+		public IList<CreateRecordModel> CreateRecordsModel { get; set; }
 
-		public ConcernTypePageModel(ITrustModelService trustModelService, 
+		public ConcernPageModel(ITrustModelService trustModelService, 
 			ICachedService cachedService, 
 			ITypeModelService typeModelService, 
 			IRatingModelService ratingModelService,
-			ILogger<ConcernTypePageModel> logger)
+			ILogger<ConcernPageModel> logger)
 		{
 			_ratingModelService = ratingModelService;
 			_trustModelService = trustModelService;
@@ -55,7 +55,7 @@ namespace ConcernsCaseWork.Pages.Case
 				// Get cached data from case page.
 				var userState = await GetUserState();
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
-				
+
 				// Fetch UI data
 				await LoadPage(userState.TrustUkPrn);
 			}
@@ -97,11 +97,10 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				// Redis state
 				var userState = await GetUserState();
-				var existingRecords = userState.CreateCaseModel.CreateRecordsModel;
-				
+
 				// Create a case model
 				var currentDate = DateTimeOffset.Now;
-				// TODO EA remove properties that have been moved to createRecordModel
+				var existingRecords = userState.CreateCaseModel.CreateRecordsModel;
 				userState.CreateCaseModel = new CreateCaseModel
 				{
 					CreatedAt = currentDate,
@@ -110,17 +109,16 @@ namespace ConcernsCaseWork.Pages.Case
 					ClosedAt = currentDate,
 					CreatedBy = User.Identity.Name,
 					DeEscalation = currentDate,
-					//RagRatingName = ragRatingName,
-					//RagRatingUrn = long.Parse(ragRatingUrn),
+					RagRatingName = ragRatingName,
 					RagRating = RatingMapping.FetchRag(ragRatingName),
 					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
 					TrustUkPrn = trustUkPrn,
 					TrustName = trustName,
 					DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString(),
+					RatingUrn = long.Parse(ragRatingUrn),			// Remove or fix when multiple concerns is done
 					CreateRecordsModel = existingRecords
 				};
 
-	
 				var createRecordModel = new CreateRecordModel
 				{
 					TypeUrn = long.Parse(typeUrn),
@@ -131,14 +129,12 @@ namespace ConcernsCaseWork.Pages.Case
 					RagRating = RatingMapping.FetchRag(ragRatingName),
 					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName)
 				};
-
-
 				userState.CreateCaseModel.CreateRecordsModel.Add(createRecordModel);
 
 				// Store case model in cache for the details page
 				await _cachedService.StoreData(User.Identity.Name, userState);
 				
-				return RedirectToPage("concerntype");
+				return RedirectToPage("concern");
 			}
 			catch (Exception ex)
 			{
@@ -179,6 +175,5 @@ namespace ConcernsCaseWork.Pages.Case
 			
 			return userState;
 		}
-
 	}
 }

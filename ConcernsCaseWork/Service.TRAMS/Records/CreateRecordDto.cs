@@ -34,7 +34,7 @@ namespace Service.TRAMS.Records
 
 		[JsonProperty("ratingUrn")]
 		public long RatingUrn { get; }
-				
+		
 		[JsonProperty("statusUrn")]
 		public long StatusUrn { get; }
 		
