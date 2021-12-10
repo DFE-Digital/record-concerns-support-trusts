@@ -2,7 +2,7 @@
 describe('Footer links direct to the correct pages from Trust page', () => {
     before(() => {
 		cy.login();
-        cy.visit(Cypress.env('url')+"/closed");
+        cy.visit(Cypress.env('url')+"/case/closed");
 	});
 
 	afterEach(() => {
@@ -45,6 +45,5 @@ describe('Footer links direct to the correct pages from Trust page', () => {
     after(function () {
         cy.clearLocalStorage();
         cy.clearCookies()
-        cy.getCookies().should('be.empty')
     });
 });
