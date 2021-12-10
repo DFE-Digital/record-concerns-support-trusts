@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Case;
+using ConcernsCaseWork.Pages.Case.Concern;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages
+namespace ConcernsCaseWork.Tests.Pages.Concern
 {
 	[Parallelizable(ParallelScope.All)]
 	public class ConcernTypePageModelTests
@@ -29,7 +29,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenOnGetAsync_ReturnsModel()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<ConcernPageModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
@@ -62,7 +62,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			var ratingsModel = pageModel.RatingsModel;
 			var createRecordsModel = pageModel.CreateRecordsModel;
 			
-			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			Assert.IsAssignableFrom<List<RatingModel>>(ratingsModel);
 			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsModel);
 			Assert.IsAssignableFrom<List<CreateRecordModel>>(createRecordsModel);
@@ -93,13 +92,15 @@ namespace ConcernsCaseWork.Tests.Pages
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
+			
+			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 		}
 		
 		[Test]
 		public async Task WhenOnGetAsync_MissingCacheUserState_ThrowsException()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<ConcernPageModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
@@ -116,12 +117,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			// act
 			await pageModel.OnGetAsync();
-
-			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
-			Assert.That(pageModel.TypeModel, Is.Null);
-
+			
 			// Verify ILogger
 			mockLogger.Verify(
 				m => m.Log(
@@ -131,13 +127,19 @@ namespace ConcernsCaseWork.Tests.Pages
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
+			
+			// assert
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			
+			Assert.That(pageModel.TypeModel, Is.Null);
 		}
 
 		[Test]
 		public async Task WhenOnPostAsync_UserStateIsNull_ThrowsException()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<ConcernPageModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
@@ -176,7 +178,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenOnPostAsync_ReturnConcernTypePage()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<ConcernPageModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
@@ -218,7 +220,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenOnPostAsync_MissingFormData_ThrowsException()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<ConcernPageModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
@@ -251,7 +253,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenOnGetCancelCreateCase_EmptiesCreateRecords_ReturnsHome()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<ConcernPageModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
@@ -296,7 +298,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenOnPostAsync_InvalidFormData_ThrowsException(string type, string subType, string ragRating, string trustUkprn)
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<ConcernPageModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
@@ -335,13 +337,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Never);
 		}
 		
-		private static ConcernPageModel SetupConcernTypePageModel(
+		private static IndexPageModel SetupConcernTypePageModel(
 			ITrustModelService mockTrustModelService, ICachedService mockCachedService, ITypeModelService mockTypeModelService, 
-			IRatingModelService mockRatingModelService, ILogger<ConcernPageModel> mockLogger, bool isAuthenticated = false)
+			IRatingModelService mockRatingModelService, ILogger<IndexPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new ConcernPageModel(mockTrustModelService, mockCachedService, mockTypeModelService, mockRatingModelService, mockLogger)
+			return new IndexPageModel(mockTrustModelService, mockCachedService, mockTypeModelService, mockRatingModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

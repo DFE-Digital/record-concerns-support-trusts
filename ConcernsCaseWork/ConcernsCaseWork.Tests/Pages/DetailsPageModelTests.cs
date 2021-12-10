@@ -42,7 +42,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			var createCaseModel = pageModel.CreateCaseModel;
 
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			Assert.IsAssignableFrom<CreateCaseModel>(createCaseModel);
 			
 			Assert.That(createCaseModel, Is.Not.Null);
@@ -58,7 +57,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(createCaseModel.NextSteps, Is.EqualTo(expected.NextSteps));
 			Assert.That(createCaseModel.RagRating, Is.EqualTo(expected.RagRating));
 			Assert.That(createCaseModel.ReviewAt, Is.EqualTo(expected.ReviewAt));
-			Assert.That(createCaseModel.TrustName, Is.EqualTo(expected.TrustName));
 			Assert.That(createCaseModel.UpdatedAt, Is.EqualTo(expected.UpdatedAt));
 			Assert.That(createCaseModel.DeEscalationPoint, Is.EqualTo(expected.DeEscalationPoint));
 			Assert.That(createCaseModel.DirectionOfTravel, Is.EqualTo(expected.DirectionOfTravel));
@@ -74,6 +72,8 @@ namespace ConcernsCaseWork.Tests.Pages
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
+			
+			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 		}
 		
 		[Test]

@@ -16,14 +16,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Pages.Case
+namespace ConcernsCaseWork.Pages.Case.Concern
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class ConcernPageModel : AbstractPageModel
+	public class IndexPageModel : AbstractPageModel
 	{
 		private readonly IRatingModelService _ratingModelService;
-		private readonly ILogger<ConcernPageModel> _logger;
+		private readonly ILogger<IndexPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly ITypeModelService _typeModelService;
 		private readonly ICachedService _cachedService;
@@ -31,13 +31,13 @@ namespace ConcernsCaseWork.Pages.Case
 		public TypeModel TypeModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
-		public IList<CreateRecordModel> CreateRecordsModel { get; set; }
+		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 
-		public ConcernPageModel(ITrustModelService trustModelService, 
+		public IndexPageModel(ITrustModelService trustModelService, 
 			ICachedService cachedService, 
 			ITypeModelService typeModelService, 
 			IRatingModelService ratingModelService,
-			ILogger<ConcernPageModel> logger)
+			ILogger<IndexPageModel> logger)
 		{
 			_ratingModelService = ratingModelService;
 			_trustModelService = trustModelService;
@@ -50,18 +50,14 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			try
 			{
-				_logger.LogInformation("Case::ConcernTypePageModel::OnGetAsync");
+				_logger.LogInformation("Case::Concern::IndexPageModel::OnGetAsync");
 				
-				// Get cached data from case page.
-				var userState = await GetUserState();
-				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
-
 				// Fetch UI data
-				await LoadPage(userState.TrustUkPrn);
+				await LoadPage();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::ConcernTypePageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::Concern::IndexPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 				
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
@@ -69,14 +65,12 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public async Task<IActionResult> OnPostAsync()
 		{
-			var trustUkPrn = string.Empty;
-			
 			try
 			{
-				_logger.LogInformation("Case::ConcernTypePageModel::OnPostAsync");
+				_logger.LogInformation("Case::Concern::IndexPageModel::OnPostAsync");
 
 				if (!ConcernTypeValidator.IsValid(Request.Form))
-					throw new Exception("Case::ConcernTypePageModel::Missing form values");
+					throw new Exception("Case::Concern::IndexPageModel::Missing form values");
 				
 				string typeUrn;
 				
@@ -84,8 +78,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var type = Request.Form["type"].ToString();
 				var subType = Request.Form["sub-type"].ToString();
 				var ragRating = Request.Form["rating"].ToString();
-				var trustName = Request.Form["trust-name"].ToString();
-				trustUkPrn = Request.Form["trust-ukprn"].ToString();
+				var trustUkPrn = Request.Form["trust-ukprn"].ToString();
 				
 				// Type
 				(typeUrn, type, subType) = type.SplitType(subType);
@@ -113,7 +106,6 @@ namespace ConcernsCaseWork.Pages.Case
 					RagRating = RatingMapping.FetchRag(ragRatingName),
 					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
 					TrustUkPrn = trustUkPrn,
-					TrustName = trustName,
 					DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString(),
 					RatingUrn = long.Parse(ragRatingUrn),			// Remove or fix when multiple concerns is done
 					CreateRecordsModel = existingRecords
@@ -134,32 +126,35 @@ namespace ConcernsCaseWork.Pages.Case
 				// Store case model in cache for the details page
 				await _cachedService.StoreData(User.Identity.Name, userState);
 				
-				return RedirectToPage("concern");
+				return RedirectToPage("add");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::ConcernTypePageModel::OnPostAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::Concern::IndexPageModel::OnPostAsync::Exception - {Message}", ex.Message);
 				
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 			
-			return await LoadPage(trustUkPrn);
+			return await LoadPage();
 		}
 
-		public async Task<ActionResult> OnGetCancelCreateCase()
+		public async Task<ActionResult> OnGetCancelCase()
 		{
-			//TODO try catch
 			var userState = await GetUserState();
-			userState.CreateCaseModel.CreateRecordsModel.Clear();
+			userState.CreateCaseModel = new CreateCaseModel();
 			await _cachedService.StoreData(User.Identity.Name, userState);
-
-			return new JsonResult(new { redirectUrl = Url.Page("../home") });
+			
+			return new JsonResult(new { redirectUrl = "/" });
 		}
 
-		private async Task<ActionResult> LoadPage(string trustUkPrn)
+		private async Task<ActionResult> LoadPage()
 		{
+			var userState = await GetUserState();
+			var trustUkPrn = userState.TrustUkPrn;
+			
 			if (string.IsNullOrEmpty(trustUkPrn)) return Page();
 			
+			CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
 			RatingsModel = await _ratingModelService.GetRatingsModel();
 			TypeModel = await _typeModelService.GetTypeModel();
@@ -171,7 +166,7 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			var userState = await _cachedService.GetData<UserState>(User.Identity.Name);
 			if (userState is null)
-				throw new Exception("Case::ConcernTypePageModel::Cache CaseStateData is null");
+				throw new Exception("Case::Concern::IndexPageModel::Cache CaseStateData is null");
 			
 			return userState;
 		}

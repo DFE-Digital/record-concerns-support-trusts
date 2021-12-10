@@ -18,8 +18,6 @@ namespace Service.Redis.Models
 		
 		public string CrmEnquiry { get; set; }
 		
-		public string TrustName { get; set; }
-		
 		public string TrustUkPrn { get; set; }
 		
 		public string ReasonAtReview { get; set; }

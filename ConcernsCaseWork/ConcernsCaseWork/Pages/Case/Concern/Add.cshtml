@@ -1,0 +1,70 @@
+﻿@page "/case/concern/add/{handler?}"
+@model ConcernsCaseWork.Pages.Case.Concern.AddPageModel
+
+@{
+	ViewData["Title"] = "Add Case Concern";
+	var nonce = HttpContext.GetNonce();
+}
+
+<div class="govuk-width-container">
+<partial name="_BannerError"/>
+	
+<span class="govuk-caption-l">Create case</span>
+<h1 class="govuk-heading-l">Concerns </h1>
+
+@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+{
+	<partial name="_Error" />
+}
+else
+{
+	<!-- Trust summary and records -->
+	<dl class="govuk-summary-list">
+		<partial name="_TrustSummary" model="Model.TrustDetailsModel"/>
+		<partial name="_RecordsSummary" model="Model.CreateRecordsModel"/>
+	</dl>
+
+	<div class="govuk-button-group">
+		<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
+			Next step
+		</button>
+		<a data-prevent-double-click="true" id="add-concern" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button">
+			Add another concern
+		</a>
+		<a data-prevent-double-click="true" id="cancel-case" class="govuk-link" href="#" data-module="govuk-button" role="button">
+			Cancel
+		</a>
+	</div>
+	
+	<script type="application/javascript" nonce="@nonce">
+		$(function () {
+
+			$('#add-concern').click(function(evt) {
+				evt.preventDefault();
+								
+				// Ajax Get
+				$.get("add/Concern")
+				.done(function (result) {
+					window.location.replace(result.redirectUrl);
+				})
+				.fail(function() {
+					showGlobalError();
+				});
+			});
+
+			$('#cancel-case').click(function(evt) {
+				evt.preventDefault();
+									
+				// Ajax Get
+				$.get("add/CancelCase")
+				.done(function (result) {
+					window.location.replace(result.redirectUrl);
+				})
+				.fail(function() {
+					showGlobalError();
+				});
+			});
+		});
+	</script>
+}
+</div>

@@ -1,35 +1,12 @@
-﻿@model Service.Redis.Models.CreateCaseModel
+﻿@model ConcernsCaseWork.Models.TrustDetailsModel
 
-<h2 class="govuk-heading-m">@Model.TrustName</h2>
-
-<dl class="govuk-summary-list">
-	
-	<div class="govuk-summary-list__row">
-		<dt class="govuk-summary-list__key">Primary Concern</dt>
-		<dd class="govuk-summary-list__value">
-			@*@Model.TypeDisplay*@
-			@*TODOEA revisit*@
-		</dd>
-	</div>
-
-	<div class="govuk-summary-list__row">
-		<dt class="govuk-summary-list__key">Risk rating</dt>
-		<dd class="govuk-summary-list__value govuk-label-wrapper">
-			@for (var index = 0; index < Model.RagRating.Item2.Count; ++index)
-			{
-				<span class="govuk-tag ragtag @Model.RagRatingCss.ElementAt(index)">
-					@Model.RagRating.Item2.ElementAt(index)
-				</span>
-			}
-		</dd>
-	</div>
-
-	<div class="govuk-summary-list__row">
-		<dt class="govuk-summary-list__key">Direction of travel</dt>
-		<dd class="govuk-summary-list__value">
-			@Model.DirectionOfTravel
-		</dd>
-	</div>
-
-</dl>
+<div class="govuk-summary-list__row">
+	<dt class="govuk-summary-list__key">Trust</dt>
+	<dd class="govuk-summary-list__value">
+		@Model.GiasData.GroupName (@Model.IfdData.GroupContactAddress.County)
+		@* TODO EA if county is empty remove () Maybe change the way we fetch this data, on the root create some public methods to build the data*@
+		<br/>
+		@Model.GiasData.GroupContactAddress.DisplayAddress
+	</dd>
+</div>
 

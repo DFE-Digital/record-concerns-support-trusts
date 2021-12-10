@@ -1,4 +1,6 @@
-﻿@model ConcernsCaseWork.Models.TrustDetailsModel
+﻿@*Case Management partial page*@
+
+@model ConcernsCaseWork.Models.TrustDetailsModel
 
 @{ 
 	var trustContactNumber = !string.IsNullOrEmpty(Model.IfdData.TrustContactPhoneNumber) ? Model.IfdData.TrustContactPhoneNumber : "Visit trust website";
