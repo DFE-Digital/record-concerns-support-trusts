@@ -80,7 +80,7 @@
 		<!-- NOTE - Elijah can we make this block hidden without the page balancing on page load -->
 		<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-		<h2 class="govuk-heading-m govuk-!-margin-top-9">Select concern</h2>
+		<h2 class="govuk-heading-m govuk-!-margin-top-6">Select concern</h2>
 
 		<input type="hidden" id="numOfRecords" value="@Model.CreateRecordsModel.Count">
 
@@ -91,7 +91,7 @@
 			<input type="hidden" name="trust-name" value="@Model.TrustDetailsModel?.GiasData.GroupName">
 
 			<!--Q Concern type-->
-			<div class="govuk-form-group">
+			<div class="govuk-form-group govuk-!-margin-top-6">
 				<fieldset class="govuk-fieldset">
 
 					<div class="govuk-hint" id="case-issue-hint">
@@ -111,7 +111,7 @@
 				<fieldset class="govuk-fieldset">
 
 					<legend class="govuk-fieldset__legend govuk-!-font-weight-bold">
-						What is the risk rating?
+						Select concern risk rating
 					</legend>
 
 					<partial name="_Rating" model="@Model.RatingsModel" />
@@ -120,48 +120,45 @@
 			</div>
 
 			<div class="govuk-button-group">
-				<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+				<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
 					Next step
 				</button>
-				<a class="govuk-link" asp-page="../home">Cancel</a>
+				<a data-prevent-double-click="true" id="add-concern" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button">
+                	Add another concern
+                </a>
+				<a data-prevent-double-click="true" class="govuk-link" asp-page="../home" data-module="govuk-button" role="button">
+					Cancel
+				</a>
 			</div>
 
 		</form>
-
-		<div id="add-another-concern-button-group" class="govuk-button-group">
-			<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
-				Next step
-			</button>
-			<a id="addAConcernButton" class="govuk-button govuk-button--secondary" role="button">
-				Add another concern
-			</a>
-			<a class="govuk-link">Cancel</a>
-		</div>
-
+		
 		<script type="application/javascript" nonce="@nonce">
 			$(function () {
 				let validator = formValidator($("#case-concern-type-form")[0]);
-				addConcernTypeValidator(validator);
-				addRagRatingValidator(validator);
+				addConcernValidator(validator);
+				addRatingValidator(validator);
 
 				let numOfRecords = $('#numOfRecords').val();
+				console.log(numOfRecords);
 
-				if(numOfRecords === 0)
+				@*if(numOfRecords == 0)
 				{
 					$('#concerns-summary-list').hide();
 					$('#add-another-concern-button-group').hide();
-				}else
+				}
+				else
 				{
 					$('#case-concern-type-form').hide();
 					$('#add-another-concern-button-group').show();
-				}
+				}*@
 
-				$('#addAConcernButton').on("click", function(){
+				$('#add-concern').on("click", function() {
 					$('#case-concern-type-form').show();
 					$('#add-another-concern-button-group').hide();
 				});
 
-				$('.govuk-link').on("click", function(){
+				$('.govuk-link').on("click", function() {
 
 					// Ajax Post
 					$.get("concern/CancelCreateCase")
