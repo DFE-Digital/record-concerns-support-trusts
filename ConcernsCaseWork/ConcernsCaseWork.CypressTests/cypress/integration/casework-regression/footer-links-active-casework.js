@@ -1,5 +1,5 @@
 
-describe('Footer links direct to the correct pages', () => {
+describe('Footer links direct to the correct pages from Active Casework page', () => {
     before(() => {
 		cy.login();
 	});
