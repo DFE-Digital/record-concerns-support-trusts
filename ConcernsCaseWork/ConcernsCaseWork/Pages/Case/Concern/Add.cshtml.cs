@@ -51,7 +51,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 
 		public ActionResult OnGetConcern()
 		{
-			return new JsonResult(new { redirectUrl = "index" });
+			return RedirectToPage("index");
 		}
 		
 		public async Task<ActionResult> OnGetCancelCase()
@@ -59,8 +59,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			var userState = await GetUserState();
 			userState.CreateCaseModel = new CreateCaseModel();
 			await _cachedService.StoreData(User.Identity.Name, userState);
-
-			return new JsonResult(new { redirectUrl = "/" });
+			
+			return Redirect("/");
 		}
 
 		private async Task<ActionResult> LoadPage()

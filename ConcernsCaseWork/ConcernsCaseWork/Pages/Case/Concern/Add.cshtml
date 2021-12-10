@@ -3,7 +3,6 @@
 
 @{
 	ViewData["Title"] = "Add Case Concern";
-	var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
@@ -28,43 +27,12 @@ else
 		<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
 			Next step
 		</button>
-		<a data-prevent-double-click="true" id="add-concern" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button">
+		<a data-prevent-double-click="true" id="add-concern" asp-page-handler="Concern" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button">
 			Add another concern
 		</a>
-		<a data-prevent-double-click="true" id="cancel-case" class="govuk-link" href="#" data-module="govuk-button" role="button">
+		<a data-prevent-double-click="true" id="cancel-case" class="govuk-link" asp-page-handler="CancelCase" data-module="govuk-button" role="button">
 			Cancel
 		</a>
 	</div>
-	
-	<script type="application/javascript" nonce="@nonce">
-		$(function () {
-
-			$('#add-concern').click(function(evt) {
-				evt.preventDefault();
-								
-				// Ajax Get
-				$.get("add/Concern")
-				.done(function (result) {
-					window.location.replace(result.redirectUrl);
-				})
-				.fail(function() {
-					showGlobalError();
-				});
-			});
-
-			$('#cancel-case').click(function(evt) {
-				evt.preventDefault();
-									
-				// Ajax Get
-				$.get("add/CancelCase")
-				.done(function (result) {
-					window.location.replace(result.redirectUrl);
-				})
-				.fail(function() {
-					showGlobalError();
-				});
-			});
-		});
-	</script>
 }
 </div>

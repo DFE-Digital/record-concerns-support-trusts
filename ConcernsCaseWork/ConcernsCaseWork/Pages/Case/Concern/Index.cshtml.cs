@@ -144,7 +144,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			userState.CreateCaseModel = new CreateCaseModel();
 			await _cachedService.StoreData(User.Identity.Name, userState);
 			
-			return new JsonResult(new { redirectUrl = "/" });
+			return Redirect("/");
 		}
 
 		private async Task<ActionResult> LoadPage()
