@@ -14,6 +14,7 @@ using Service.Redis.Models;
 using Service.TRAMS.Cases;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Concern
@@ -92,25 +93,26 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				var userState = await GetUserState();
 
 				// Create a case model
-				var currentDate = DateTimeOffset.Now;
-				var existingRecords = userState.CreateCaseModel.CreateRecordsModel;
-				userState.CreateCaseModel = new CreateCaseModel
+				if (!userState.CreateCaseModel.CreateRecordsModel.Any())
 				{
-					CreatedAt = currentDate,
-					ReviewAt = currentDate,
-					UpdatedAt = currentDate,
-					ClosedAt = currentDate,
-					CreatedBy = User.Identity.Name,
-					DeEscalation = currentDate,
-					RagRatingName = ragRatingName,
-					RagRating = RatingMapping.FetchRag(ragRatingName),
-					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
-					TrustUkPrn = trustUkPrn,
-					DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString(),
-					RatingUrn = long.Parse(ragRatingUrn),			// Remove or fix when multiple concerns is done
-					CreateRecordsModel = existingRecords
-				};
-
+					var currentDate = DateTimeOffset.Now;
+					userState.CreateCaseModel = new CreateCaseModel
+					{
+						CreatedAt = currentDate,
+						ReviewAt = currentDate,
+						UpdatedAt = currentDate,
+						ClosedAt = currentDate,
+						CreatedBy = User.Identity.Name,
+						DeEscalation = currentDate,
+						RagRatingName = ragRatingName,
+						RagRating = RatingMapping.FetchRag(ragRatingName),
+						RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
+						TrustUkPrn = trustUkPrn,
+						DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString(),
+						RatingUrn = long.Parse(ragRatingUrn)			// Remove or fix when multiple concerns is done
+					};
+				}
+				
 				var createRecordModel = new CreateRecordModel
 				{
 					TypeUrn = long.Parse(typeUrn),
@@ -121,8 +123,9 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					RagRating = RatingMapping.FetchRag(ragRatingName),
 					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName)
 				};
+				
 				userState.CreateCaseModel.CreateRecordsModel.Add(createRecordModel);
-
+				
 				// Store case model in cache for the details page
 				await _cachedService.StoreData(User.Identity.Name, userState);
 				
