@@ -5,6 +5,8 @@
 	/// </summary>
 	public sealed class RecordModel
 	{
+		public long Urn { get; }
+		
 		public long CaseUrn { get; }
 
 		public long TypeUrn { get; }
@@ -14,8 +16,6 @@
 		public long RatingUrn { get; }
 		
 		public RatingModel RatingModel { get; set; }
-		
-		public long Urn { get; }
 		
 		public long StatusUrn { get; }
 		

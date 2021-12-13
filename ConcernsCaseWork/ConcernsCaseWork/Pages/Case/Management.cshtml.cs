@@ -60,10 +60,10 @@ namespace ConcernsCaseWork.Pages.Case
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
 				{
-					throw new Exception("ManagementPageModel::CaseUrn is null or invalid to parse");
+					throw new Exception("CaseUrn is null or invalid to parse");
 				}
 
-				// Get case
+				// Get Case
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
 				
 				// Map Case Rating

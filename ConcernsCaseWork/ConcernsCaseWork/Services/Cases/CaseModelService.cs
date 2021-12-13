@@ -472,7 +472,7 @@ namespace ConcernsCaseWork.Services.Cases
 
 				await Task.WhenAll(recordTasks);
 				
-				// Create case history event
+				// Create concern history event
 				var concernEventTask = _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Concern, newCase.Urn), newCase.CreatedBy);
 
 				// Create case history event
