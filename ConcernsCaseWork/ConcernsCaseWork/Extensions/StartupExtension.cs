@@ -13,7 +13,6 @@ using Service.Redis.Base;
 using Service.Redis.Cases;
 using Service.Redis.Configuration;
 using Service.Redis.Ratings;
-using Service.Redis.RecordRatingHistory;
 using Service.Redis.Records;
 using Service.Redis.Security;
 using Service.Redis.Sequence;
@@ -133,7 +132,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ITrustCachedService, TrustCachedService>();
 			services.AddSingleton<ICaseCachedService, CaseCachedService>();
 			services.AddSingleton<IRecordCachedService, RecordCachedService>();
-			services.AddSingleton<IRecordRatingHistoryCachedService, RecordRatingHistoryCachedService>();
 			services.AddSingleton<ICaseHistoryCachedService, CaseHistoryCachedService>();
 			
 			// AD Integration

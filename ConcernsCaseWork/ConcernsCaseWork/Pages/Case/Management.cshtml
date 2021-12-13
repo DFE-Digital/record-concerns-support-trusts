@@ -1,6 +1,5 @@
 ﻿@page "/case/{urn:long}/management"
 @model ConcernsCaseWork.Pages.Case.ManagementPageModel
-@*@using static ConcernsCaseWork.Security.RoleManager*@
 
 @{
 	ViewData["Title"] = "Case management";
@@ -10,14 +9,13 @@
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
 
-	<div class="govuk-grid-row">
-
-		@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")) || Model.CaseModel is null)
-		{
-			<partial name="_Error"/>
-		}
-		else
-		{
+	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+	{
+		<partial name="_Error"/>
+	}
+	else
+	{
+		<div class="govuk-grid-row">
 			<div class="buttons-topOfPage">
 				<a asp-page="../home" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
 					Back to casework
@@ -54,75 +52,86 @@
 				<div class="govuk-tabs__panel" id="case-details">
 					<dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-6">
 
-						<!-- Concern -->
+						<!-- Trust -->
 						<div class="govuk-summary-list__row">
 							<dt class="dfe-width-30percent govuk-summary-list__key">
-								Primary Concern
-							</dt>
-							@foreach (var (key, value) in Model.TypeModelMap)
-							{
-								<dd class="govuk-summary-list__value">
-									<span class="caseDetail_type">
-										@value.TypeDisplay
-									</span>
-								</dd>
-								<dd class="dfe-width-15percent govuk-summary-list__actions">
-									@if (Model.UserHasEditCasePrivileges())
-									{
-										<a class="govuk-link" href="@Request.Path/record/@key/edit_concern">
-											Change<span class="govuk-visually-hidden"> primary concern</span>
-										</a>
-									}
-								</dd>
-							}
-
-						</div>
-
-						<!-- Risk Rating -->
-						<div class="govuk-summary-list__row">
-							<dt class="dfe-width-30percent govuk-summary-list__key">
-								Risk rating
-							</dt>
-
-							@foreach(var (key, value) in Model.RatingModelMap)
-							{
-								<dd class="govuk-summary-list__value govuk-label-wrapper">
-									@for (var index = 0; index < value.RagRating.Item2.Count; ++index)
-									{
-										<span class="govuk-tag ragtag @value.RagRatingCss.ElementAt(index)">
-											@value.RagRating.Item2.ElementAt(index)
-										</span>
-									}
-								</dd>
-								<dd class="dfe-width-15percent govuk-summary-list__actions">
-									@if (Model.UserHasEditCasePrivileges())
-									{
-										<a class="govuk-link" href="@Request.Path/record/@key/edit_rating">
-											Change<span class="govuk-visually-hidden"> risk rating</span>
-										</a>
-									}
-								</dd>
-							}
-						</div>
-
-						<!-- Direction of travel -->
-						<div class="govuk-summary-list__row">
-							<dt class="dfe-width-30percent govuk-summary-list__key">
-								Direction of travel
+								Trust
 							</dt>
 							<dd class="govuk-summary-list__value">
-								@Model.CaseModel.DirectionOfTravel
-							</dd>
-							<dd class="dfe-width-15percent govuk-summary-list__actions">
-								@if (Model.UserHasEditCasePrivileges())
-								{
-									<a class="govuk-link" href="@Request.Path/edit_directionoftravel">
-										Change<span class="govuk-visually-hidden"> direction of travel</span>
-									</a>
-								}
+								@Model.TrustDetailsModel.GiasData.GroupName
 							</dd>
 						</div>
-
+						
+						<!-- Risk to Trust -->
+						<div class="govuk-summary-list__row">
+                        	<dt class="dfe-width-30percent govuk-summary-list__key">
+                        		Risk rating
+                        	</dt>
+							<dd class="govuk-summary-list__value govuk-label-wrapper">
+                        		@for (var index = 0; index < Model.CaseModel.RatingModel.RagRating.Item2.Count; ++index)
+                        		{
+                        			<span class="govuk-tag ragtag @Model.CaseModel.RatingModel.RagRatingCss.ElementAt(index)">
+                        				@Model.CaseModel.RatingModel.RagRating.Item2.ElementAt(index)
+                        			</span>
+                        		}
+                        	</dd>
+                        	<dd class="dfe-width-15percent govuk-summary-list__actions">
+                        		@if (Model.UserHasEditCasePrivileges())
+                        		{
+                        			<a class="govuk-link" href="@Request.Path/@Model.CaseModel.Urn/edit_rating">
+                        				Change<span class="govuk-visually-hidden"> risk rating</span>
+                        			</a>
+                        		}
+                        	</dd>
+						</div>
+						
+						<!-- Direction of travel -->
+                        <div class="govuk-summary-list__row">
+                        	<dt class="dfe-width-30percent govuk-summary-list__key">
+                        		Direction of travel
+                        	</dt>
+                        	<dd class="govuk-summary-list__value">
+                        		@Model.CaseModel.DirectionOfTravel
+                        	</dd>
+                        	<dd class="dfe-width-15percent govuk-summary-list__actions">
+                        		@if (Model.UserHasEditCasePrivileges())
+                        		{
+                        			<a class="govuk-link" href="@Request.Path/edit_directionoftravel">
+                        				Change<span class="govuk-visually-hidden"> direction of travel</span>
+                        			</a>
+                        		}
+                        	</dd>
+                        </div>
+						
+						<!-- Concerns -->
+						<div id="concerns-summary-list" class="govuk-summary-list__row">
+                        	<dt class="govuk-summary-list__key">Concerns</dt>
+                        	<dd class="govuk-summary-list__value">
+                        		<div class="govuk-grid-row">
+                    
+                        			@foreach (var concern in Model.CaseModel.RecordModels)
+                        			{
+                        				<div class="govuk-!-padding-bottom-1">
+                        					<span class="govuk-!-padding-right-1 govuk-grid-column-two-thirds">
+                        						@concern.TypeModel.TypeDisplay
+                        					</span>
+                        					<div class="govuk-!-display-inline govuk-label-wrapper govuk-grid-column-two-third">
+                        						@for (var index = 0; index < concern.RatingModel.RagRating.Item2.Count; ++index)
+                        						{
+                        							<span class="govuk-tag ragtag @concern.RatingModel.RagRatingCss.ElementAt(index)">
+                        								@concern.RatingModel.RagRating.Item2.ElementAt(index)
+                        							</span>
+                        						}
+                        					</div>
+                        				</div>
+                        			}
+                    
+                        		</div>
+                        	</dd>
+                        	<dd class="govuk-summary-list__actions">
+                        		<a href="#" class="govuk-link govuk-link-no-visited-state">Edit</a>
+                            </dd>
+                        </div>
 					</dl>
 
 					<!--Accordions-->
@@ -229,12 +238,12 @@
 					</table>
 				</div>
 			</div>
-			<script type="application/javascript" nonce="@nonce">
-				$(function () {
-					$("button[id^='accordion-default-heading']").attr("aria-expanded", "true");
-					$(".govuk-accordion__section").addClass("govuk-accordion__section--expanded");
-				});
-			</script>
-		}
-	</div>
+		</div>
+		<script type="application/javascript" nonce="@nonce">
+			$(function () {
+				$("button[id^='accordion-default-heading']").attr("aria-expanded", "true");
+				$(".govuk-accordion__section").addClass("govuk-accordion__section--expanded");
+			});
+		</script>
+	}
 </div>

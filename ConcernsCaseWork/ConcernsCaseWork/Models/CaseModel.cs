@@ -1,5 +1,6 @@
 ﻿using Service.TRAMS.Cases;
 using System;
+using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Models
 {
@@ -48,9 +49,15 @@ namespace ConcernsCaseWork.Models
 
 		public long Urn { get; set; }
 
+		public long RatingUrn { get; set; }
+		
+		public RatingModel RatingModel { get; set; }
+		
 		public long StatusUrn { get; set; }
 		
 		public string StatusName { get; set; } = string.Empty;
+
+		public IList<RecordModel> RecordModels { get; } = new List<RecordModel>();
 		
 		public string PreviousUrl { get; set; }
 	}

@@ -28,11 +28,11 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ILogger<ManagementPageModel> _logger;
 		
 		public CaseModel CaseModel { get; private set; }
-		public IDictionary<long, TypeModel> TypeModelMap { get; private set; }
+		// public IDictionary<long, TypeModel> TypeModelMap { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<TrustCasesModel> TrustCasesModel { get; private set; }
 		public IList<CaseHistoryModel> CasesHistoryModel { get; private set; }
-		public IDictionary<long, RatingModel> RatingModelMap { get; private set; }
+		// public IDictionary<long, RatingModel> RatingModelMap { get; private set; }
 
 		public ManagementPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
@@ -63,20 +63,34 @@ namespace ConcernsCaseWork.Pages.Case
 					throw new Exception("ManagementPageModel::CaseUrn is null or invalid to parse");
 				}
 
+				// Get case
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
-				CasesHistoryModel = await _caseHistoryModelService.GetCasesHistory(User.Identity.Name, caseUrn);
-				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
-				TrustCasesModel = await _caseModelService.GetCasesByTrustUkprn(CaseModel.TrustUkPrn);
 				
+				// Map Case Rating
+				CaseModel.RatingModel = await _ratingModelService.GetRatingModelByUrn(CaseModel.RatingUrn);
+				
+				// Map Case concerns
 				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
+				var recordTasks = recordsModel.Select(async recordModel =>
+				{
+					recordModel.RatingModel = await _ratingModelService.GetRatingModelByUrn(recordModel.RatingUrn);
+					recordModel.TypeModel = await _typeModelService.GetTypeModelByUrn(recordModel.TypeUrn);
 
-				var ratingTasks = recordsModel.Select(async r => new { r.Urn, RatingModel = await _ratingModelService.GetRatingModelByUrn(r.RatingUrn) });
-				var ratingsResult = await Task.WhenAll(ratingTasks);
-				RatingModelMap = ratingsResult.ToDictionary(pair => pair.Urn, pair => pair.RatingModel);
-				
-				var typeTasks = recordsModel.Select(async r => new { r.Urn, TypeModel = await _typeModelService.GetTypeModelByUrn(r.TypeUrn) });
-				var typesResult = await Task.WhenAll(typeTasks);
-				TypeModelMap = typesResult.ToDictionary(pair => pair.Urn, pair => pair.TypeModel);
+					return recordModel;
+				}).ToList();
+
+				await Task.WhenAll(recordTasks);
+				recordTasks.ForEach(rt => CaseModel.RecordModels.Add(rt.Result));
+
+				var caseHistoryTask = _caseHistoryModelService.GetCasesHistory(User.Identity.Name, caseUrn);
+				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
+				var trustCasesTask = _caseModelService.GetCasesByTrustUkprn(CaseModel.TrustUkPrn);
+
+				Task.WaitAll(caseHistoryTask, trustDetailsTask, trustCasesTask);
+
+				CasesHistoryModel = caseHistoryTask.Result;
+				TrustDetailsModel = trustDetailsTask.Result;
+				TrustCasesModel = trustCasesTask.Result;
 			}
 			catch (Exception ex)
 			{

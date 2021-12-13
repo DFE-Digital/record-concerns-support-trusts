@@ -56,7 +56,8 @@ namespace ConcernsCaseWork.Mappers
 				DirectionOfTravel = caseDto.DirectionOfTravel, 
 				Urn = caseDto.Urn,
 				StatusUrn = caseDto.StatusUrn,
-				StatusName = status
+				StatusName = status,
+				RatingUrn = caseDto.RatingUrn
 			};
 		}
 

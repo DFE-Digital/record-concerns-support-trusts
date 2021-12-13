@@ -4,13 +4,11 @@ using Microsoft.Extensions.Logging;
 using Service.Redis.Cases;
 using Service.Redis.Models;
 using Service.Redis.Ratings;
-using Service.Redis.RecordRatingHistory;
 using Service.Redis.Records;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
 using Service.Redis.Types;
 using Service.TRAMS.Cases;
-using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
 using System;
@@ -22,7 +20,6 @@ namespace ConcernsCaseWork.Services.Cases
 {
 	public sealed class CaseModelService : ICaseModelService
 	{
-		private readonly IRecordRatingHistoryCachedService _recordRatingHistoryCachedService;
 		private readonly ICaseHistoryCachedService _caseHistoryCachedService;
 		private readonly IRatingCachedService _ratingCachedService;
 		private readonly IStatusCachedService _statusCachedService;
@@ -38,13 +35,11 @@ namespace ConcernsCaseWork.Services.Cases
 			IRecordCachedService recordCachedService, 
 			IRatingCachedService ratingCachedService,
 			ITypeCachedService typeCachedService,
-			IRecordRatingHistoryCachedService recordRatingHistoryCachedService,
 			IStatusCachedService statusCachedService,
 			ICaseSearchService caseSearchService,
 			ICaseHistoryCachedService caseHistoryCachedService,
 			ILogger<CaseModelService> logger)
 		{
-			_recordRatingHistoryCachedService = recordRatingHistoryCachedService;
 			_caseHistoryCachedService = caseHistoryCachedService;
 			_statusCachedService = statusCachedService;
 			_ratingCachedService = ratingCachedService;
@@ -296,14 +291,10 @@ namespace ConcernsCaseWork.Services.Cases
 				
 				recordDto = RecordMapping.MapRiskRating(patchCaseModel, recordDto);
 				caseDto = CaseMapping.Map(patchCaseModel, caseDto);
-
-				var timeNow = DateTimeOffset.Now;
-				var recordRatingHistory = new RecordRatingHistoryDto(timeNow, recordDto.Urn, patchCaseModel.RatingUrn);
 				
 				await _recordCachedService.PatchRecordByUrn(recordDto, patchCaseModel.CreatedBy);
 				await _caseCachedService.PatchCaseByUrn(caseDto);
-				await _recordRatingHistoryCachedService.PostRecordRatingHistory(recordRatingHistory, patchCaseModel.CreatedBy, patchCaseModel.Urn);
-				
+
 				// Create case history event
 				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.RiskRating, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
@@ -471,26 +462,24 @@ namespace ConcernsCaseWork.Services.Cases
 
 				// Create records
 				var currentDate = DateTimeOffset.Now;
-				createCaseModel.CreateRecordsModel.Select(async r => 
+				var recordTasks = createCaseModel.CreateRecordsModel.Select(recordModel => 
 				{
 					var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, currentDate, 
-						r.Type, r.SubType, r.Reason, newCase.Urn, r.TypeUrn,r.RatingUrn, statusDto.Urn);
+						recordModel.Type, recordModel.SubType, recordModel.Reason, newCase.Urn, recordModel.TypeUrn,recordModel.RatingUrn, statusDto.Urn);
 
-					var newRecord = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
-
-					// Create a rating history
-					var createRecordRatingHistoryDto = new RecordRatingHistoryDto(DateTimeOffset.Now, newRecord.Urn, r.RatingUrn);
-					await _recordRatingHistoryCachedService.PostRecordRatingHistory(createRecordRatingHistoryDto, createCaseModel.CreatedBy, newCase.Urn);
-
+					return _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 				});
+
+				await Task.WhenAll(recordTasks);
 				
 				// Create case history event
-				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Concern, newCase.Urn), newCase.CreatedBy);
+				var concernEventTask = _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Concern, newCase.Urn), newCase.CreatedBy);
 
 				// Create case history event
-				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Case, newCase.Urn), newCase.CreatedBy);
+				var caseEventTask = _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Case, newCase.Urn), newCase.CreatedBy);
+
+				Task.WaitAll(concernEventTask, caseEventTask);
 				
-				// Return case urn, if required return type can be changed to CaseModel.
 				return newCase.Urn;
 			}
 			catch (Exception ex)
@@ -501,9 +490,13 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 		}
 
+		/// <summary>
+		/// TODO multiple concerns work temporary fix for existing cases that don't have rating urn
+		/// </summary>
+		/// <param name="caseDto"></param>
+		/// <returns></returns>
 		private async Task<CaseDto> RecoverCaseRating(CaseDto caseDto)
 		{
-			// TODO multiple concerns work temporary fix for existing cases that don't have rating urn
 			if (caseDto.RatingUrn != 0) return caseDto;
 			
 			// Fetch Ratings

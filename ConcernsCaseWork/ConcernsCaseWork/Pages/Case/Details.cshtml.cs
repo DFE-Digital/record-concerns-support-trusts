@@ -78,6 +78,7 @@ namespace ConcernsCaseWork.Pages.Case
 				createCaseModel.NextSteps = nextSteps;
 				createCaseModel.CaseAim = caseAim;
 				createCaseModel.DeEscalationPoint = deEscalationPoint;
+				createCaseModel.TrustUkPrn = userState.TrustUkPrn;
 					
 				var caseUrn = await _caseModelService.PostCase(createCaseModel);
 				

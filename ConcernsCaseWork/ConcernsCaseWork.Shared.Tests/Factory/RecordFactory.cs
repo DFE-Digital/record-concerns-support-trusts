@@ -74,19 +74,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		
 		public static RecordModel BuildRecordModel()
 		{
-			var currentDate = DateTimeOffset.Now;
 			return new RecordModel(
-				currentDate, 
-				currentDate, 
-				currentDate, 
-				currentDate, 
-				Fixture.Create<string>(), 
-				Fixture.Create<string>(), 
-				Fixture.Create<string>(), 
 				Fixture.Create<long>(), 
-				Fixture.Create<long>(),
-				Fixture.Create<long>(),
-				Fixture.Create<long>(),
+				Fixture.Create<long>(), 
+				Fixture.Create<long>(), 
+				Fixture.Create<long>(), 
 				Fixture.Create<long>()
 				);
 		}

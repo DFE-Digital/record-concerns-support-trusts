@@ -143,8 +143,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.That(expectedFirstCaseHistoryModel.Urn, Is.EqualTo(actualFirstCaseHistoryModel.Urn));
 			Assert.That(expectedFirstCaseHistoryModel.CreatedAt, Is.EqualTo(actualFirstCaseHistoryModel.CreatedAt));
 			
-			Assert.That(pageModel.RatingModelMap, Is.Not.Null);
-			Assert.That(pageModel.TypeModelMap, Is.Not.Null);
+			// Assert.That(pageModel.RatingModelMap, Is.Not.Null);
+			// Assert.That(pageModel.TypeModelMap, Is.Not.Null);
 		}
 
 		[Test]
