@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
@@ -75,6 +76,8 @@ namespace ConcernsCaseWork.Pages.Case
 				// Update cache model
 				userState.CreateCaseModel.RatingUrn = long.Parse(ragRatingUrn);
 				userState.CreateCaseModel.RagRatingName = ragRatingName;
+				userState.CreateCaseModel.RagRating = RatingMapping.FetchRag(ragRatingName);
+				userState.CreateCaseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRatingName);
 				
 				// Store case model in cache for the details page
 				await _cachedService.StoreData(User.Identity.Name, userState);

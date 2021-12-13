@@ -1,11 +1,14 @@
-﻿using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
@@ -14,15 +17,21 @@ namespace ConcernsCaseWork.Pages.Case
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class DetailsPageModel : AbstractPageModel
 	{
+		private readonly ITrustModelService _trustModelService;
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<DetailsPageModel> _logger;
 		private readonly ICachedService _cachedService;
 		
 		public CreateCaseModel CreateCaseModel { get; private set; }
+		public TrustDetailsModel TrustDetailsModel { get; private set; }
+		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 		
 		public DetailsPageModel(ICaseModelService caseModelService, 
-			ICachedService cachedService, ILogger<DetailsPageModel> logger)
+			ITrustModelService trustModelService,
+			ICachedService cachedService, 
+			ILogger<DetailsPageModel> logger)
 		{
+			_trustModelService = trustModelService;
 			_caseModelService = caseModelService;
 			_cachedService = cachedService;
 			_logger = logger;
@@ -34,11 +43,8 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				_logger.LogInformation("Case::DetailsPageModel::OnGetAsync");
 				
-				// Get cached data from case page.
-				var caseStateModel = await GetUserState();
-
 				// Fetch UI data
-				CreateCaseModel = caseStateModel.CreateCaseModel;
+				await LoadPage();
 			}
 			catch (Exception ex)
 			{
@@ -84,7 +90,21 @@ namespace ConcernsCaseWork.Pages.Case
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 			
-			return Redirect("details");
+			return await LoadPage();
+		}
+		
+		private async Task<ActionResult> LoadPage()
+		{
+			var userState = await GetUserState();
+			var trustUkPrn = userState.TrustUkPrn;
+			
+			if (string.IsNullOrEmpty(trustUkPrn)) return Page();
+			
+			CreateCaseModel = userState.CreateCaseModel;
+			CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
+			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
+			
+			return Page();
 		}
 		
 		private async Task<UserState> GetUserState()
