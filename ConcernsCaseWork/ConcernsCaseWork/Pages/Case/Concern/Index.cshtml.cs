@@ -79,7 +79,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				var type = Request.Form["type"].ToString();
 				var subType = Request.Form["sub-type"].ToString();
 				var ragRating = Request.Form["rating"].ToString();
-				var trustUkPrn = Request.Form["trust-ukprn"].ToString();
 				
 				// Type
 				(typeUrn, type, subType) = type.SplitType(subType);
@@ -107,9 +106,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 						RagRatingName = ragRatingName,
 						RagRating = RatingMapping.FetchRag(ragRatingName),
 						RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
-						TrustUkPrn = trustUkPrn,
-						DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString(),
-						RatingUrn = long.Parse(ragRatingUrn)			// Remove or fix when multiple concerns is done
+						DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString()
 					};
 				}
 				
@@ -141,7 +138,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			return await LoadPage();
 		}
 
-		public async Task<ActionResult> OnGetCancelCase()
+		public async Task<ActionResult> OnGetCancel()
 		{
 			var userState = await GetUserState();
 			userState.CreateCaseModel = new CreateCaseModel();

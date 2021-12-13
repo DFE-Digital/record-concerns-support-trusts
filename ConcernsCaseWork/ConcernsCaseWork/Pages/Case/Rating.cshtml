@@ -1,8 +1,8 @@
-﻿@page "/case/concern/{handler?}"
-@model ConcernsCaseWork.Pages.Case.Concern.IndexPageModel
+﻿@page "/case/rating/{handler?}"
+@model ConcernsCaseWork.Pages.Case.RatingPageModel
 
 @{
-	ViewData["Title"] = "New Case Concern";
+	ViewData["Title"] = "Add Case Rating";
 	var nonce = HttpContext.GetNonce();
 }
 
@@ -10,7 +10,7 @@
 	<partial name="_BannerError"/>
 	
 	<span class="govuk-caption-l">Create case</span>
-	<h1 class="govuk-heading-l">Concerns</h1>
+	<h1 class="govuk-heading-l">Trust risk</h1>
 
 	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
 	{
@@ -25,34 +25,16 @@
 		</dl>
 		
 		<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
-
-		<h2 class="govuk-heading-m govuk-!-margin-top-6">Select concern</h2>
 		
 		<!-- FORM -->
-		<form role="form" method="post" id="case-concern-form" novalidate>
+		<form role="form" method="post" id="case-rating-form" novalidate>
 			
-			<!--Q Concern type-->
-			<div class="govuk-form-group govuk-!-margin-top-6">
-				<fieldset class="govuk-fieldset">
-
-					<div class="govuk-hint" id="case-issue-hint">
-						Use the
-						<a target="_blank" href="@Url.Page("../FileResource", "DownloadRiskManagementPdf")" class="govuk-link" rel="noreferrer noopener">
-							Risk Management Framework (opens in new tab)
-						</a> to assess the type of Concern
-					</div>
-
-					<partial name="_Concern" model="@Model.TypeModel" />
-
-				</fieldset>
-			</div>
-
 			<!-- Q Risk rating -->
 			<div class="govuk-form-group govuk-!-margin-top-6">
 				<fieldset class="govuk-fieldset">
 
 					<legend class="govuk-fieldset__legend govuk-!-font-weight-bold">
-						Select concern risk rating
+						What is the rick to the trust?
 					</legend>
 
 					<partial name="_Rating" model="@Model.RatingsModel" />
@@ -62,7 +44,7 @@
 
 			<div class="govuk-button-group">
 				<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
-					Add to case
+					Next step
 				</button>
 				<a data-prevent-double-click="true" class="govuk-link" asp-page-handler="Cancel" data-module="govuk-button" role="button">
 					Cancel
@@ -73,8 +55,7 @@
 		
 		<script type="application/javascript" nonce="@nonce">
 			$(function () {
-				let validator = formValidator($("#case-concern-form")[0]);
-				addConcernValidator(validator);
+				let validator = formValidator($("#case-rating-form")[0]);
 				addRatingValidator(validator);
 			});
 		</script>
