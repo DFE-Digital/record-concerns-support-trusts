@@ -13,10 +13,10 @@ using Service.Redis.Users;
 using System;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages
+namespace ConcernsCaseWork.Tests.Pages.Admin
 {
 	[Parallelizable(ParallelScope.All)]
-	public class AdminPageModelTests
+	public class IndexPageModelTests
 	{
 		[Test]
 		public async Task WhenOnGetAsync_Return_Page()
@@ -80,8 +80,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.UsersRole, Is.Null);
-			Assert.That(pageModel.TempData, Is.Not.Empty);
+			Assert.IsNull(pageModel.UsersRole);
+			Assert.IsNotEmpty(pageModel.TempData);
 			
 			mockLogger.Verify(
 				m => m.Log(

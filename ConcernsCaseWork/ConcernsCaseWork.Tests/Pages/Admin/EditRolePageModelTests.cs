@@ -15,7 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages
+namespace ConcernsCaseWork.Tests.Pages.Admin
 {
 	[Parallelizable(ParallelScope.All)]
 	public class EditRolePageModelTests
@@ -93,12 +93,12 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			// assert
 			Assert.That(pageResponse, Is.Not.Null);
-			Assert.That(pageModel.UserName, Is.Null);
-			Assert.That(pageModel.PreviousUrl, Is.Null);
-			Assert.That(pageModel.DefaultRoles, Is.Null);
-			Assert.That(pageModel.DefaultUsers, Is.Null);
-			Assert.That(pageModel.UserRoleClaimWrapper, Is.Null);
-			Assert.That(pageModel.TempData, Is.Not.Empty);
+			Assert.IsNull(pageModel.UserName);
+			Assert.IsNull(pageModel.PreviousUrl);
+			Assert.IsNull(pageModel.DefaultRoles);
+			Assert.IsNull(pageModel.DefaultUsers);
+			Assert.IsNull(pageModel.UserRoleClaimWrapper);
+			Assert.IsNotEmpty(pageModel.TempData);
 
 			mockLogger.Verify(
 				m => m.Log(
@@ -141,12 +141,12 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			Assert.That(page, Is.Not.Null);
 			
-			Assert.That(pageModel.UserName, Is.Null);
-			Assert.That(pageModel.PreviousUrl, Is.Null);
-			Assert.That(pageModel.DefaultRoles, Is.Null);
-			Assert.That(pageModel.DefaultUsers, Is.Null);
-			Assert.That(pageModel.UserRoleClaimWrapper, Is.Null);
-			Assert.That(pageModel.TempData, Is.Empty);
+			Assert.IsNull(pageModel.UserName);
+			Assert.IsNull(pageModel.PreviousUrl);
+			Assert.IsNull(pageModel.DefaultRoles);
+			Assert.IsNull(pageModel.DefaultUsers);
+			Assert.IsNull(pageModel.UserRoleClaimWrapper);
+			Assert.IsEmpty(pageModel.TempData);
 
 			mockLogger.Verify(
 				m => m.Log(
@@ -181,12 +181,12 @@ namespace ConcernsCaseWork.Tests.Pages
 			
 			Assert.That(page, Is.Not.Null);
 			
-			Assert.That(pageModel.UserName, Is.Null);
-			Assert.That(pageModel.PreviousUrl, Is.Null);
-			Assert.That(pageModel.DefaultRoles, Is.Null);
-			Assert.That(pageModel.DefaultUsers, Is.Null);
-			Assert.That(pageModel.UserRoleClaimWrapper, Is.Null);
-			Assert.That(pageModel.TempData, Is.Not.Empty);
+			Assert.IsNull(pageModel.UserName);
+			Assert.IsNull(pageModel.PreviousUrl);
+			Assert.IsNull(pageModel.DefaultRoles);
+			Assert.IsNull(pageModel.DefaultUsers);
+			Assert.IsNull(pageModel.UserRoleClaimWrapper);
+			Assert.IsNotEmpty(pageModel.TempData);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 
 			mockLogger.Verify(
