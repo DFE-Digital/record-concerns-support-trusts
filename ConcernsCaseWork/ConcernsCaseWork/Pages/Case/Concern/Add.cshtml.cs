@@ -65,22 +65,33 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 
 		private async Task<ActionResult> LoadPage()
 		{
-			var userState = await GetUserState();
-			var trustUkPrn = userState.TrustUkPrn;
+			try
+			{
+				var userState = await GetUserState();
+				var trustUkPrn = userState.TrustUkPrn;
 			
-			if (string.IsNullOrEmpty(trustUkPrn)) return Page();
+				if (string.IsNullOrEmpty(trustUkPrn))
+					throw new Exception("Cache TrustUkprn is null");
 			
-			CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
-			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
+				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
+				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
 			
-			return Page();
+				return Page();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::Concern::AddPageModel::LoadPage::Exception - {Message}", ex.Message);
+				
+				TempData["Error.Message"] = ErrorOnGetPage;
+				return Page();
+			}
 		}
 		
 		private async Task<UserState> GetUserState()
 		{
 			var userState = await _cachedService.GetData<UserState>(User.Identity.Name);
 			if (userState is null)
-				throw new Exception("Case::Concern::AddPageModel::Cache CaseStateData is null");
+				throw new Exception("Cache CaseStateData is null");
 			
 			return userState;
 		}

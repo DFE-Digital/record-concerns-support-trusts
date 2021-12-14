@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Tests.Pages.Concern
 {
 	[Parallelizable(ParallelScope.All)]
-	public class ConcernTypePageModelTests
+	public class ConcernPageModelTests
 	{
 		[Test]
 		public async Task WhenOnGetAsync_ReturnsModel()
@@ -88,7 +88,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("ConcernTypePageModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -123,7 +123,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 				m => m.Log(
 					LogLevel.Error,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("ConcernTypePageModel")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -156,9 +156,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 				{
 					{ "type", new StringValues("type") },
 					{ "sub-type", new StringValues("999:subType") },
-					{ "rating", new StringValues("ragRating:123") },
-					{ "trust-ukprn", new StringValues("trustUkprn") },
-					{ "trust-name", new StringValues("trustName") }
+					{ "rating", new StringValues("ragRating:123") }
 				});
 			
 			// act
@@ -170,12 +168,12 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 			
 			Assert.That(page, Is.Not.Null);
 			
-			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
+			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Exactly(2));
 			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Never);
 		}
 		
 		[Test]
-		public async Task WhenOnPostAsync_ReturnConcernTypePage()
+		public async Task WhenOnPostAsync_ReturnConcernPage()
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
@@ -197,9 +195,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 				{
 					{ "type", new StringValues("Force Majeure") },
 					{ "sub-type", new StringValues("123:subType") },
-					{ "rating", new StringValues("123:ragRating") },
-					{ "trust-ukprn", new StringValues("trustUkprn") },
-					{ "trust-name", new StringValues("trustName") }
+					{ "rating", new StringValues("123:ragRating") }
 				});
 			
 			// act
@@ -210,7 +206,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 			var page = pageResponse as RedirectToPageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(page.PageName, Is.EqualTo("concern"));
+			Assert.That(page.PageName, Is.EqualTo("add"));
 			
 			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
 			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Once);
@@ -245,7 +241,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 			Assert.That(page, Is.Not.Null);
 			
-			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Never);
+			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
 			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Never);
 		}
 
@@ -272,30 +268,27 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 				{
 					{ "type", new StringValues("Force Majeure") },
 					{ "sub-type", new StringValues("123:subType") },
-					{ "rating", new StringValues("123:ragRating") },
-					{ "trust-ukprn", new StringValues("trustUkprn") },
-					{ "trust-name", new StringValues("trustName") }
+					{ "rating", new StringValues("123:ragRating") }
 				});
 
 			// act
-			//var pageResponse = await pageModel.OnGetCancelCreateCase();
+			var pageResponse = await pageModel.OnGetCancel();
 
 			// assert
-			//Assert.That(pageResponse, Is.InstanceOf<RedirectToPageResult>());
-			//var page = pageResponse as RedirectToPageResult;
+			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
+			var page = pageResponse as RedirectResult;
 
-			//Assert.That(page, Is.Not.Null);
-			//Assert.That(page.PageName, Is.EqualTo("concerntype"));
+			Assert.That(page, Is.Not.Null);
+			Assert.That(page.Url, Is.EqualTo("/"));
 
-			//mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
-			//mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Once);
+			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
+			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Once);
 		}
-
-
-		[TestCase("", "", "", "")]
-		[TestCase(null, null, null, null)]
-		[TestCase("test", "", "ragRating", "trustUkprn")]
-		public async Task WhenOnPostAsync_InvalidFormData_ThrowsException(string type, string subType, string ragRating, string trustUkprn)
+		
+		[TestCase("", "", "")]
+		[TestCase(null, null, null)]
+		[TestCase("test", "", "ragRating")]
+		public async Task WhenOnPostAsync_InvalidFormData_ThrowsException(string type, string subType, string ragRating)
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
@@ -304,7 +297,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			
-			var expected = CaseFactory.BuildCreateCaseModel(type, subType);
+			var expected = CaseFactory.BuildCreateCaseModel();
 			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
@@ -317,9 +310,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 				{
 					{ "type", new StringValues(type) },
 					{ "sub-type", new StringValues(subType) },
-					{ "rating", new StringValues(ragRating) },
-					{ "trust-ukprn", new StringValues(trustUkprn) },
-					{ "trust-name", new StringValues() }
+					{ "rating", new StringValues(ragRating) }
 				});
 			
 			// act
@@ -333,7 +324,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 			Assert.That(page, Is.Not.Null);
 			
-			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Never);
+			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
 			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Never);
 		}
 		
