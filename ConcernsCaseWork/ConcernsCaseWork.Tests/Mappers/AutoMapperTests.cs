@@ -22,10 +22,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var trustsDto = TrustFactory.BuildListTrustSummaryDto();
 			
 			// act
-			var trustsModel = mapper.Map<IList<TrustSummaryModel>>(trustsDto);
+			var trustsModel = mapper.Map<IList<TrustSearchModel>>(trustsDto);
 			
 			// assert
-			Assert.IsAssignableFrom<List<TrustSummaryModel>>(trustsModel);
+			Assert.IsAssignableFrom<List<TrustSearchModel>>(trustsModel);
 			Assert.That(trustsModel.Count, Is.EqualTo(trustsDto.Count));
 			foreach (var expected in trustsModel)
 			{

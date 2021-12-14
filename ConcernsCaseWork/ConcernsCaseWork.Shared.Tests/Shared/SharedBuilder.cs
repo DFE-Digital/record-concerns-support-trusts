@@ -7,30 +7,30 @@ namespace ConcernsCaseWork.Shared.Tests.Shared
 {
 	public static class SharedBuilder
 	{
-		public static string BuildDisplayName(TrustSummaryDto trustSummaryDto)
+		public static string BuildDisplayName(TrustSearchDto trustSearchDto)
 		{
 			var sb = new StringBuilder();
-			sb.Append(string.IsNullOrEmpty(trustSummaryDto.GroupName) ? "-".PadRight(2) : trustSummaryDto.GroupName.ToTitle());
+			sb.Append(string.IsNullOrEmpty(trustSearchDto.GroupName) ? "-".PadRight(2) : trustSearchDto.GroupName.ToTitle());
 			sb.Append(",").Append(" ");
-			sb.Append(string.IsNullOrEmpty(trustSummaryDto.UkPrn) ? "-".PadRight(2) : trustSummaryDto.UkPrn);
+			sb.Append(string.IsNullOrEmpty(trustSearchDto.UkPrn) ? "-".PadRight(2) : trustSearchDto.UkPrn);
 			sb.Append(",").Append(" ");
-			sb.Append(string.IsNullOrEmpty(trustSummaryDto.CompaniesHouseNumber) ? "-".PadRight(2) : trustSummaryDto.CompaniesHouseNumber);
+			sb.Append(string.IsNullOrEmpty(trustSearchDto.CompaniesHouseNumber) ? "-".PadRight(2) : trustSearchDto.CompaniesHouseNumber);
 			sb.Append(" ");
-			sb.Append(string.IsNullOrEmpty(trustSummaryDto.GroupContactAddress?.Town) ? "-".PadRight(2) : $"({trustSummaryDto.GroupContactAddress.Town})");	
+			sb.Append(string.IsNullOrEmpty(trustSearchDto.GroupContactAddress?.Town) ? "-".PadRight(2) : $"({trustSearchDto.GroupContactAddress.Town})");	
 			
 			return sb.ToString();
 		}
 		
-		public static string BuildDisplayName(TrustSummaryModel trustSummaryModel)
+		public static string BuildDisplayName(TrustSearchModel trustSearchModel)
 		{
 			var sb = new StringBuilder();
-			sb.Append(string.IsNullOrEmpty(trustSummaryModel.GroupName) ? "-".PadRight(2) : trustSummaryModel.GroupName.ToTitle());
+			sb.Append(string.IsNullOrEmpty(trustSearchModel.GroupName) ? "-".PadRight(2) : trustSearchModel.GroupName.ToTitle());
 			sb.Append(",").Append(" ");
-			sb.Append(string.IsNullOrEmpty(trustSummaryModel.UkPrn) ? "-".PadRight(2) : trustSummaryModel.UkPrn);
+			sb.Append(string.IsNullOrEmpty(trustSearchModel.UkPrn) ? "-".PadRight(2) : trustSearchModel.UkPrn);
 			sb.Append(",").Append(" ");
-			sb.Append(string.IsNullOrEmpty(trustSummaryModel.CompaniesHouseNumber) ? "-".PadRight(2) : trustSummaryModel.CompaniesHouseNumber);
+			sb.Append(string.IsNullOrEmpty(trustSearchModel.CompaniesHouseNumber) ? "-".PadRight(2) : trustSearchModel.CompaniesHouseNumber);
 			sb.Append(" ");
-			sb.Append(string.IsNullOrEmpty(trustSummaryModel.GroupContactAddress?.Town) ? "-".PadRight(2) : $"({trustSummaryModel.GroupContactAddress.Town})");	
+			sb.Append(string.IsNullOrEmpty(trustSearchModel.GroupContactAddress?.Town) ? "-".PadRight(2) : $"({trustSearchModel.GroupContactAddress.Town})");	
 			
 			return sb.ToString();
 		}

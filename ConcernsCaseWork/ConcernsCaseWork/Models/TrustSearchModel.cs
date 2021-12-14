@@ -7,7 +7,7 @@ namespace ConcernsCaseWork.Models
 	/// <summary>
 	/// Frontend model classes used only for UI rendering
 	/// </summary>
-	public sealed class TrustSummaryModel
+	public sealed class TrustSearchModel
 	{
 		private readonly string _isNullOrEmpty = "-".PadRight(2);
 		
@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Models
 			}
 		}
 
-		public TrustSummaryModel(string ukprn, string urn, string groupName, 
+		public TrustSearchModel(string ukprn, string urn, string groupName, 
 			string companiesHouseNumber, string trustType, GroupContactAddressModel groupContactAddress, 
 			List<EstablishmentSummaryModel> establishments) 
 			=> (UkPrn, Urn, GroupName, CompaniesHouseNumber, TrustType, GroupContactAddress, Establishments) = 

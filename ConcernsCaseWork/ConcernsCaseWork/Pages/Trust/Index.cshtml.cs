@@ -39,7 +39,7 @@ namespace ConcernsCaseWork.Pages.Trust
 				// Double check search query.
 				if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < SearchQueryMinLength)
 				{
-					return new JsonResult(Array.Empty<TrustSummaryModel>());
+					return new JsonResult(Array.Empty<TrustSearchModel>());
 				}
 
 				var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);

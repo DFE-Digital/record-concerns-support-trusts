@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Service.TRAMS.Trusts
 {
-	public sealed class TrustSummaryDto
+	public sealed class TrustSearchDto
 	{		
 		[JsonProperty("ukprn")]
 		public string UkPrn { get; }
@@ -27,7 +27,7 @@ namespace Service.TRAMS.Trusts
 		public List<EstablishmentSummaryDto> Establishments { get; }
 
 		[JsonConstructor]
-		public TrustSummaryDto(string ukprn, string urn, string groupName, 
+		public TrustSearchDto(string ukprn, string urn, string groupName, 
 			string companiesHouseNumber, string trustType, GroupContactAddressDto groupContactAddress,
 			List<EstablishmentSummaryDto> establishments) => 
 			(UkPrn, Urn, GroupName, CompaniesHouseNumber, TrustType, GroupContactAddress, Establishments) = 

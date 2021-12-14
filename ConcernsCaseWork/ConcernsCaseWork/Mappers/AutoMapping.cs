@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.Mappers
 		public AutoMapping()
 		{
 			// Trust summary
-			CreateMap<TrustSummaryDto, TrustSummaryModel>();
+			CreateMap<TrustSearchDto, TrustSearchModel>();
 			CreateMap<EstablishmentSummaryDto, EstablishmentSummaryModel>();
 			
 			// Trust details
