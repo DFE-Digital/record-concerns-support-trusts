@@ -106,16 +106,27 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		private async Task<ActionResult> LoadPage()
 		{
-			var userState = await GetUserState();
-			var trustUkPrn = userState.TrustUkPrn;
-			
-			if (string.IsNullOrEmpty(trustUkPrn)) return Page();
-			
-			CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
-			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-			RatingsModel = await _ratingModelService.GetRatingsModel();
-			
-			return Page();
+			try
+			{
+				var userState = await GetUserState();
+				var trustUkPrn = userState.TrustUkPrn;
+				
+				if (string.IsNullOrEmpty(trustUkPrn)) 
+					throw new Exception("Cache TrustUkprn is null");
+				
+				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
+				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
+				RatingsModel = await _ratingModelService.GetRatingsModel();
+				
+				return Page();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::RatingPageModel::LoadPage::Exception - {Message}", ex.Message);
+				
+				TempData["Error.Message"] = ErrorOnGetPage;
+				return Page();
+			}
 		}
 		
 		private async Task<UserState> GetUserState()
