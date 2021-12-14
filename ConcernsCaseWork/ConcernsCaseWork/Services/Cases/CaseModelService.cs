@@ -275,7 +275,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 		}
 
-		public async Task PatchRiskRating(PatchCaseModel patchCaseModel)
+		public async Task PatchCaseRating(PatchCaseModel patchCaseModel)
 		{
 			try
 			{
@@ -283,20 +283,35 @@ namespace ConcernsCaseWork.Services.Cases
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
 				// TODO multiple concerns work temporary fix for existing cases that don't have rating urn
 				caseDto = await RecoverCaseRating(caseDto);
+				caseDto = CaseMapping.MapRating(patchCaseModel, caseDto);
 				
-				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
-				
-				// TODO multiple concerns will need some refactor
-				var recordDto = recordsDto.FirstOrDefault();
-				
-				recordDto = RecordMapping.MapRiskRating(patchCaseModel, recordDto);
-				caseDto = CaseMapping.Map(patchCaseModel, caseDto);
-				
-				await _recordCachedService.PatchRecordByUrn(recordDto, patchCaseModel.CreatedBy);
 				await _caseCachedService.PatchCaseByUrn(caseDto);
 
 				// Create case history event
 				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.RiskRating, patchCaseModel.Urn), patchCaseModel.CreatedBy);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("CaseModelService::PatchRiskRating exception {Message}", ex.Message);
+
+				throw;
+			}
+		}
+
+		public async Task PatchRecordRating(PatchRecordModel patchRecordModel)
+		{
+			try
+			{
+				// Fetch Records
+				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(patchRecordModel.CreatedBy, patchRecordModel.CaseUrn);
+
+				var recordDto = recordsDto.FirstOrDefault(r => r.Urn.CompareTo(patchRecordModel.Urn) == 0);
+				recordDto = RecordMapping.MapRiskRating(patchRecordModel, recordDto);
+
+				await _recordCachedService.PatchRecordByUrn(recordDto, patchRecordModel.CreatedBy);
+
+				// Create case history event
+				//await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.RiskRating, 0), "");
 			}
 			catch (Exception ex)
 			{

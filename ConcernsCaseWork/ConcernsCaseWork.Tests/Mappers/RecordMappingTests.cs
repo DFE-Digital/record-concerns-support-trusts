@@ -37,11 +37,11 @@ namespace ConcernsCaseWork.Tests.Mappers
 		public void WhenMapRiskRating_ReturnsRecordDto()
 		{
 			// arrange
-			var patchCaseModel = CaseFactory.BuildPatchCaseModel();
+			var patchRecordModel = RecordFactory.BuildPatchRecordModel();
 			var record = RecordFactory.BuildRecordDto();
 			
 			// act
-			var recordDto = RecordMapping.MapRiskRating(patchCaseModel, record);
+			var recordDto = RecordMapping.MapRiskRating(patchRecordModel, record);
 
 			// assert
 			Assert.That(recordDto, Is.Not.Null);
@@ -53,10 +53,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(recordDto.CaseUrn, Is.EqualTo(record.CaseUrn));
 			Assert.That(recordDto.ClosedAt, Is.EqualTo(record.ClosedAt));
 			Assert.That(recordDto.CreatedAt, Is.EqualTo(record.CreatedAt));
-			Assert.That(recordDto.RatingUrn, Is.EqualTo(patchCaseModel.RatingUrn));
+			Assert.That(recordDto.RatingUrn, Is.EqualTo(patchRecordModel.RatingUrn));
 			Assert.That(recordDto.ReviewAt, Is.EqualTo(record.ReviewAt));
 			Assert.That(recordDto.TypeUrn, Is.EqualTo(record.TypeUrn));
-			Assert.That(recordDto.UpdatedAt, Is.EqualTo(patchCaseModel.UpdatedAt));
+			Assert.That(recordDto.UpdatedAt, Is.EqualTo(patchRecordModel.UpdatedAt));
 		}
 	}
 }

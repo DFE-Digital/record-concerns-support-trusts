@@ -226,7 +226,7 @@ namespace ConcernsCaseWork.Tests.Pages.Management
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockLogger = new Mock<ILogger<EditRatingPageModel>>();
 
-			mockCaseModelService.Setup(c => c.PatchRiskRating(It.IsAny<PatchCaseModel>()));
+			mockCaseModelService.Setup(c => c.PatchCaseRating(It.IsAny<PatchCaseModel>()));
 
 			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockRatingModelService.Object, mockRecordModelService.Object, mockLogger.Object);
 			pageModel.HttpContext.Request.Form = new FormCollection(

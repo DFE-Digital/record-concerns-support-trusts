@@ -74,16 +74,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				var splitRagRating = riskRating.Split(":");
 				var ratingUrn = splitRagRating[0];
 
-				// Create patch case model
-				var patchCaseModel = new PatchCaseModel
+				// Create patch record model
+				var patchRecordModel = new PatchRecordModel
 				{
-					Urn = caseUrn,
-					CreatedBy = User.Identity.Name,
 					UpdatedAt = DateTimeOffset.Now,
-					RatingUrn = long.Parse(ratingUrn)
+					Urn = recordUrn,
+					CaseUrn = caseUrn,
+					RatingUrn = long.Parse(ratingUrn),
+					CreatedBy = User.Identity.Name
 				};
-					
-				await _caseModelService.PatchRiskRating(patchCaseModel);
+
+				await _caseModelService.PatchRecordRating(patchRecordModel);
 					
 				return Redirect(url);
 

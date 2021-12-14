@@ -14,11 +14,11 @@ namespace ConcernsCaseWork.Mappers
 				recordDto.Urn, recordDto.StatusUrn);
 		}
 		
-		public static RecordDto MapRiskRating(PatchCaseModel patchCaseModel, RecordDto recordDto)
+		public static RecordDto MapRiskRating(PatchRecordModel patchRecordModel, RecordDto recordDto)
 		{
-			return new RecordDto(recordDto.CreatedAt, patchCaseModel.UpdatedAt, recordDto.ReviewAt,
+			return new RecordDto(recordDto.CreatedAt, patchRecordModel.UpdatedAt, recordDto.ReviewAt,
 				recordDto.ClosedAt, recordDto.Name, recordDto.Description, 
-				recordDto.Reason, recordDto.CaseUrn, recordDto.TypeUrn, patchCaseModel.RatingUrn, 
+				recordDto.Reason, recordDto.CaseUrn, recordDto.TypeUrn, patchRecordModel.RatingUrn, 
 				recordDto.Urn, recordDto.StatusUrn);
 		}
 		
