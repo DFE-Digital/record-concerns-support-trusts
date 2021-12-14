@@ -131,11 +131,21 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 
 		public async Task<ActionResult> OnGetCancel()
 		{
-			var userState = await GetUserState();
-			userState.CreateCaseModel = new CreateCaseModel();
-			await _cachedService.StoreData(User.Identity.Name, userState);
-			
-			return Redirect("/");
+			try
+			{
+				var userState = await GetUserState();
+				userState.CreateCaseModel = new CreateCaseModel();
+				await _cachedService.StoreData(User.Identity.Name, userState);
+				
+				return Redirect("/");
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::Concern::AddPageModel::OnGetCancel::Exception - {Message}", ex.Message);
+					
+				TempData["Error.Message"] = ErrorOnGetPage;
+				return Page();
+			}
 		}
 
 		private async Task<ActionResult> LoadPage()

@@ -136,6 +136,48 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 		}
 
 		[Test]
+		public async Task WhenOnGetAsync_TrustUkprnIsNullOrEmpty_Return_Page()
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockCachedService = new Mock<ICachedService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+
+			var createCaseModel = CaseFactory.BuildCreateCaseModel();
+			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
+			var userState = new UserState { CreateCaseModel = createCaseModel };
+			
+			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
+
+			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
+				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
+			
+			// act
+			await pageModel.OnGetAsync();
+			
+			// assert
+			Assert.That(pageModel, Is.Not.Null);
+			Assert.IsNull(pageModel.TrustDetailsModel);
+			Assert.IsNull(pageModel.CreateRecordsModel);
+			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+			
+			// Verify ILogger
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Error,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+
+			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
+			mockTrustModelService.Verify(s => s.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
+		}
+		
+		[Test]
 		public async Task WhenOnPostAsync_UserStateIsNull_ThrowsException()
 		{
 			// arrange
@@ -262,15 +304,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 
 			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
 				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "type", new StringValues("Force Majeure") },
-					{ "sub-type", new StringValues("123:subType") },
-					{ "rating", new StringValues("123:ragRating") }
-				});
-
+			
 			// act
 			var pageResponse = await pageModel.OnGetCancel();
 
@@ -284,6 +318,32 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
 			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Once);
 		}
+		
+		[Test]
+		public async Task WhenOnGetCancel_UserStateIsNull_Return_Page()
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockCachedService = new Mock<ICachedService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			
+			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync((UserState)null);
+			mockCachedService.Setup(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()));
+			
+			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
+				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
+			
+			// act
+			var pageResponse = await pageModel.OnGetCancel();
+			var pageResponseInstance = pageResponse as PageResult;
+			
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			Assert.IsNotNull(pageResponseInstance);
+			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+		}		
 		
 		[TestCase("", "", "")]
 		[TestCase(null, null, null)]
