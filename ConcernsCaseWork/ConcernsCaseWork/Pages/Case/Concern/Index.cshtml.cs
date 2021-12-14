@@ -49,19 +49,10 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		
 		public async Task OnGetAsync()
 		{
-			try
-			{
-				_logger.LogInformation("Case::Concern::IndexPageModel::OnGetAsync");
+			_logger.LogInformation("Case::Concern::IndexPageModel::OnGetAsync");
 				
-				// Fetch UI data
-				await LoadPage();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::Concern::IndexPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-			}
+			// Fetch UI data
+			await LoadPage();
 		}
 		
 		public async Task<IActionResult> OnPostAsync()

@@ -34,36 +34,32 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		
 		public async Task OnGetAsync()
 		{
-			try
-			{
-				_logger.LogInformation("Case::Concern::AddPageModel::OnGetAsync");
+			_logger.LogInformation("Case::Concern::AddPageModel::OnGetAsync");
 				
-				// Fetch UI data
-				await LoadPage();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::Concern::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-			}
-		}
-
-		public ActionResult OnGetConcern()
-		{
-			return RedirectToPage("index");
+			// Fetch UI data
+			await LoadPage();
 		}
 		
 		public async Task<ActionResult> OnGetCancel()
 		{
-			var userState = await GetUserState();
-			userState.CreateCaseModel = new CreateCaseModel();
-			await _cachedService.StoreData(User.Identity.Name, userState);
-			
-			return Redirect("/");
+			try
+			{
+				var userState = await GetUserState();
+				userState.CreateCaseModel = new CreateCaseModel();
+				await _cachedService.StoreData(User.Identity.Name, userState);
+				
+				return Redirect("/");
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::Concern::AddPageModel::OnGetCancel::Exception - {Message}", ex.Message);
+				
+				TempData["Error.Message"] = ErrorOnGetPage;
+				return Page();
+			}
 		}
 
-		private async Task<ActionResult> LoadPage()
+		private async Task LoadPage()
 		{
 			try
 			{
@@ -75,15 +71,15 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-			
-				return Page();
+
+				Page();
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Case::Concern::AddPageModel::LoadPage::Exception - {Message}", ex.Message);
 				
 				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
+				Page();
 			}
 		}
 		

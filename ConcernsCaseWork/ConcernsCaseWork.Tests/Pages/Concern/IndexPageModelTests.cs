@@ -44,7 +44,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
 			mockRatingModelService.Setup(r => r.GetRatingsModel()).ReturnsAsync(expectedRatingsModel);
 			
-			var pageModel = SetupConcernTypePageModel(mockTrustModelService.Object, mockCachedService.Object, 
+			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
 				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
 			
 			// act
@@ -112,7 +112,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync((UserState)null);
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
 			
-			var pageModel = SetupConcernTypePageModel(mockTrustModelService.Object, mockCachedService.Object, 
+			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
 				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
 			
 			// act
@@ -148,7 +148,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>()))
 				.ReturnsAsync((UserState)null);
 
-			var pageModel = SetupConcernTypePageModel(mockTrustModelService.Object, mockCachedService.Object, 
+			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
 				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
 			
 			pageModel.HttpContext.Request.Form = new FormCollection(
@@ -187,7 +187,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
 
-			var pageModel = SetupConcernTypePageModel(mockTrustModelService.Object, mockCachedService.Object, 
+			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
 				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
 			
 			pageModel.HttpContext.Request.Form = new FormCollection(
@@ -227,7 +227,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
 
-			var pageModel = SetupConcernTypePageModel(mockTrustModelService.Object, mockCachedService.Object, 
+			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
 				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
 			
 			// act
@@ -260,7 +260,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
 
-			var pageModel = SetupConcernTypePageModel(mockTrustModelService.Object, mockCachedService.Object,
+			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
 				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
@@ -302,7 +302,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
 
-			var pageModel = SetupConcernTypePageModel(mockTrustModelService.Object, mockCachedService.Object, 
+			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
 				mockTypeModelService.Object, mockRatingModelService.Object, mockLogger.Object, true);
 			
 			pageModel.HttpContext.Request.Form = new FormCollection(
@@ -328,7 +328,7 @@ namespace ConcernsCaseWork.Tests.Pages.Concern
 			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Never);
 		}
 		
-		private static IndexPageModel SetupConcernTypePageModel(
+		private static IndexPageModel SetupIndexPageModel(
 			ITrustModelService mockTrustModelService, ICachedService mockCachedService, ITypeModelService mockTypeModelService, 
 			IRatingModelService mockRatingModelService, ILogger<IndexPageModel> mockLogger, bool isAuthenticated = false)
 		{
