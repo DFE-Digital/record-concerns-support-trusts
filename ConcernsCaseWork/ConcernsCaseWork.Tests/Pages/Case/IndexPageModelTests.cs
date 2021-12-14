@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages
+namespace ConcernsCaseWork.Tests.Pages.Case
 {
 	[Parallelizable(ParallelScope.All)]
 	public class IndexPageModelTests

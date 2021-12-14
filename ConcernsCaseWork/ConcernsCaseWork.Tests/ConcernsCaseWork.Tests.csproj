@@ -21,8 +21,4 @@
       <ProjectReference Include="..\ConcernsCaseWork.Shared.Tests\ConcernsCaseWork.Shared.Tests.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Pages\Case" />
-    </ItemGroup>
-
 </Project>

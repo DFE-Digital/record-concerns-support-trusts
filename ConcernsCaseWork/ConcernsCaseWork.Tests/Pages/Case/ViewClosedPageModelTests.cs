@@ -15,7 +15,7 @@ using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages
+namespace ConcernsCaseWork.Tests.Pages.Case
 {
 	[Parallelizable(ParallelScope.All)]
 	public class ViewClosedPageModelTests
@@ -107,7 +107,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			await pageModel.OnGetAsync();
 			
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
+			Assert.IsNull(pageModel.TempData["Error.Message"]);
 			Assert.That(pageModel.CaseModel, Is.Not.Null);
 			Assert.That(pageModel.CaseModel.Description, Is.EqualTo(caseModel.Description));
 			Assert.That(pageModel.CaseModel.Issue, Is.EqualTo(caseModel.Issue));
