@@ -15,7 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages.Concern
+namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 {
 	[Parallelizable(ParallelScope.All)]
 	public class AddPageModelTests

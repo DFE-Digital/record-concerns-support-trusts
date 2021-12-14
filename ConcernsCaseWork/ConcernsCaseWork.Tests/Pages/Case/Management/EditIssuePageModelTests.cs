@@ -14,7 +14,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages.Management
+namespace ConcernsCaseWork.Tests.Pages.Case.Management
 {
 	[Parallelizable(ParallelScope.All)]
 	public class EditIssuePageModelTests
@@ -71,7 +71,7 @@ namespace ConcernsCaseWork.Tests.Pages.Management
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.IsNull(pageModel.CaseModel);
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 			
@@ -96,7 +96,7 @@ namespace ConcernsCaseWork.Tests.Pages.Management
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.IsNull(pageModel.CaseModel);
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 
@@ -171,7 +171,7 @@ namespace ConcernsCaseWork.Tests.Pages.Management
 			var page = pageResponse as RedirectResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.IsNull(pageModel.CaseModel);
 			Assert.That(page.Url, Is.EqualTo("https://returnto/thispage"));
 			
 			mockCaseModelService.Verify(c => 

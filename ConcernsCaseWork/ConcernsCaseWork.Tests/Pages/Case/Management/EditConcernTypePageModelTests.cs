@@ -16,7 +16,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages.Management
+namespace ConcernsCaseWork.Tests.Pages.Case.Management
 {
 	[Parallelizable(ParallelScope.All)]
 	public class EditConcernTypePageModelTests
@@ -111,7 +111,7 @@ namespace ConcernsCaseWork.Tests.Pages.Management
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.IsNull(pageModel.CaseModel);
 
 			mockRecordModelService.Verify(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
 			mockTypeModelService.Verify(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()), Times.Never);
@@ -141,7 +141,7 @@ namespace ConcernsCaseWork.Tests.Pages.Management
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.IsNull(pageModel.CaseModel);
 
 			mockRecordModelService.Verify(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
 			mockTypeModelService.Verify(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()), Times.Never);
@@ -167,7 +167,7 @@ namespace ConcernsCaseWork.Tests.Pages.Management
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.IsNull(pageModel.CaseModel);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 			
 			mockRecordModelService.Verify(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
@@ -199,7 +199,7 @@ namespace ConcernsCaseWork.Tests.Pages.Management
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.IsNull(pageModel.CaseModel);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 
 			mockRecordModelService.Verify(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
@@ -244,7 +244,7 @@ namespace ConcernsCaseWork.Tests.Pages.Management
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.IsNull(pageModel.CaseModel);
 			
 			mockRecordModelService.Verify(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
 			mockTypeModelService.Verify(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()), Times.Never);
@@ -293,7 +293,7 @@ namespace ConcernsCaseWork.Tests.Pages.Management
 			var page = pageResponse as RedirectResult;
 			
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.CaseModel, Is.Null);
+			Assert.IsNull(pageModel.CaseModel);
 			Assert.That(page.Url, Is.EqualTo("https://returnto/thispage"));
 		}
 		
