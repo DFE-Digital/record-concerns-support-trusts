@@ -1,0 +1,55 @@
+﻿@page "/case/{urn:long}/management/edit_de_escalation_point"
+@model ConcernsCaseWork.Pages.Case.Management.EditDeEscalationPointPageModel
+
+@{
+	ViewData["Title"] = "Edit DeEscalation point";
+	var nonce = HttpContext.GetNonce();
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError"/>
+
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+
+			<h1 class="govuk-heading-l">
+				Edit de-escalation point
+			</h1>
+
+			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+            	<partial name="_Error"/>
+            }
+			else
+			{
+
+				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+				<form role="form" asp-page-handler="editDeEscalationPoint" method="post" id="de-escalation-point-form" novalidate>
+
+					<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
+
+					<partial name="_EditDeEscalationPoint" model="@Model.CaseModel"/>
+
+					<!--Button group-->
+					<div class="govuk-button-group">
+						<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
+							Apply
+						</button>
+						<partial name="_Cancel"/>
+					</div>
+
+				</form>
+
+				<script type="application/javascript" nonce="@nonce">
+					$(function () {	
+						let validator = formValidator($("#de-escalation-point-form")[0]);
+						addDeEscalationPointValidator(validator);
+						
+						autoResizer();
+					});
+				</script>
+			}
+		</div>
+	</div>
+</div>

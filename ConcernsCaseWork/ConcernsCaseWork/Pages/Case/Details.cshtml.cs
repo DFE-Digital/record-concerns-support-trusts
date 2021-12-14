@@ -82,7 +82,7 @@ namespace ConcernsCaseWork.Pages.Case
 					
 				var caseUrn = await _caseModelService.PostCase(createCaseModel);
 				
-				return RedirectToPage("Management", new { urn = caseUrn });
+				return RedirectToPage("management/index", new { urn = caseUrn });
 			}
 			catch (Exception ex)
 			{
