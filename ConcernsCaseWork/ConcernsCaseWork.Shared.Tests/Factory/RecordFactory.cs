@@ -89,7 +89,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new List<RecordModel> { BuildRecordModel() };
 		}
 
-		private static CreateRecordModel BuildCreateRecordModel()
+		public static CreateRecordModel BuildCreateRecordModel()
 		{
 			return new CreateRecordModel
 			{

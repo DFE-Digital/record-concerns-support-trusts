@@ -39,19 +39,10 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public async Task OnGetAsync()
 		{
-			try
-			{
-				_logger.LogInformation("Case::DetailsPageModel::OnGetAsync");
-				
-				// Fetch UI data
-				await LoadPage();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::DetailsPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-			}
+			_logger.LogInformation("Case::DetailsPageModel::OnGetAsync");
+			
+			// Fetch UI data
+			await LoadPage();
 		}
 		
 		public async Task<IActionResult> OnPostAsync()
