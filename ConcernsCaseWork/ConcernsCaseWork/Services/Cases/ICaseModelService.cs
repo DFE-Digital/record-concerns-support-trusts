@@ -13,8 +13,8 @@ namespace ConcernsCaseWork.Services.Cases
 		Task<CaseModel> GetCaseByUrn(string caseworker, long urn);
 		Task<IList<TrustCasesModel>> GetCasesByTrustUkprn(string trustUkprn);
 		Task PatchClosure(PatchCaseModel patchCaseModel);
-		Task PatchConcernType(PatchCaseModel patchCaseModel);
-		Task PatchRiskRating(PatchCaseModel patchCaseModel);
+		Task PatchCaseRating(PatchCaseModel patchCaseModel);
+		Task PatchRecordRating(PatchRecordModel patchRecordModel);
 		Task PatchDirectionOfTravel(PatchCaseModel patchCaseModel);
 		Task PatchIssue(PatchCaseModel patchCaseModel);
 		Task PatchCaseAim(PatchCaseModel patchCaseModel);

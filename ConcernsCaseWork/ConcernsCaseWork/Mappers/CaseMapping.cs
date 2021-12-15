@@ -253,6 +253,31 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.RatingUrn);
 		}
 
+		public static CaseDto MapRating(PatchCaseModel patchCaseModel, CaseDto caseDto)
+		{
+			return new CaseDto(
+				caseDto.CreatedAt,
+				patchCaseModel.UpdatedAt,
+				caseDto.ReviewAt,
+				caseDto.ClosedAt,
+				caseDto.CreatedBy,
+				caseDto.Description,
+				caseDto.CrmEnquiry,
+				caseDto.TrustUkPrn,
+				caseDto.ReasonAtReview,
+				caseDto.DeEscalation,
+				caseDto.Issue,
+				caseDto.CurrentStatus,
+				caseDto.NextSteps,
+				caseDto.CaseAim,
+				caseDto.DeEscalationPoint,
+				caseDto.DirectionOfTravel,
+				caseDto.Urn,
+				caseDto.StatusUrn,
+				patchCaseModel.RatingUrn);
+		}
+
+
 		public static List<TrustCasesModel> MapTrustCases(IEnumerable<RecordDto> recordsDto, IList<RatingDto> ragsRatingDto, IList<TypeDto> typesDto,
 			IList<CaseDto> casesDto, StatusDto liveStatus, StatusDto closeStatus)
 		{

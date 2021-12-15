@@ -91,6 +91,18 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new List<RecordModel> { BuildRecordModel() };
 		}
 
+		public static PatchRecordModel BuildPatchRecordModel()
+		{
+			return new PatchRecordModel
+			{
+				UpdatedAt = Fixture.Create<DateTimeOffset>(),
+				Urn = 1,
+				CaseUrn = 1,
+				RatingUrn = 1,
+				CreatedBy = Fixture.Create<string>()
+			};
+		}
+
 		public static CreateRecordModel BuildCreateRecordModel()
 		{
 			return new CreateRecordModel
