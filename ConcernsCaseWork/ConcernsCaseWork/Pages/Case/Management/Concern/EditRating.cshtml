@@ -10,10 +10,11 @@
 	<partial name="_BannerError"/>
 
 	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
+		<div class="govuk-grid-column">
 
 			<h1 class="govuk-heading-l">
-				Change risk rating
+				<span class="govuk-caption-l">Case ID @Model.CaseModel.Urn</span>
+				Edit Concern
 			</h1>
 
 			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
@@ -22,6 +23,45 @@
             }
 			else
 			{
+
+				<dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-6">
+
+					<!-- Trust -->
+					<div class="govuk-summary-list__row">
+						<dt class="govuk-summary-list__key">
+							Trust
+						</dt>
+						<dd class="govuk-summary-list__value">
+							@Model.TrustDetailsModel.GiasData.GroupName
+						</dd>
+						<dd class="govuk-summary-list__actions"></dd>
+					</div>
+
+					<!-- Concern -->
+					<div class="govuk-summary-list__row">
+						<dt class="govuk-summary-list__key">
+							Concern
+						</dt>
+						<dd class="govuk-summary-list__value">
+							@Model.TypeModel.TypeDisplay
+						</dd>
+						<dd class="govuk-summary-list__actions"></dd>
+					</div>
+				</dl>
+
+				<h2 class="govuk-heading-m govuk-!-margin-top-6">Concern risk rating
+					<a href="#" role="button" class="govuk-button govuk-button--warning float__right" data-module="govuk-button">
+						Close concern
+					</a>
+				</h2>
+
+				<div class="govuk-hint" id="case-issue-hint">
+					Use the
+					<a target="_blank" href="@Url.Page("../FileResource", "DownloadRiskManagementPdf")" class="govuk-link" rel="noreferrer noopener">
+						Risk Management Framework (opens in new tab)
+					</a> to assess the type of Concern
+				</div>
+
 				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
 				<form role="form" asp-page-handler="editRiskRating" method="post" id="risk-rating-form" novalidate>
@@ -38,7 +78,7 @@
 					<!--Button group-->
 					<div class="govuk-button-group">
 						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
-							Apply
+							Save Changes
 						</button>
 						<partial name="_Cancel"/>
 					</div>

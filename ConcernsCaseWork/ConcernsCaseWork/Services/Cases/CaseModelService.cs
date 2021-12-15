@@ -292,7 +292,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("CaseModelService::PatchRiskRating exception {Message}", ex.Message);
+				_logger.LogError("CaseModelService::PatchCaseRating exception {Message}", ex.Message);
 
 				throw;
 			}
@@ -309,13 +309,10 @@ namespace ConcernsCaseWork.Services.Cases
 				recordDto = RecordMapping.MapRiskRating(patchRecordModel, recordDto);
 
 				await _recordCachedService.PatchRecordByUrn(recordDto, patchRecordModel.CreatedBy);
-
-				// Create case history event
-				//await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.RiskRating, 0), "");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("CaseModelService::PatchRiskRating exception {Message}", ex.Message);
+				_logger.LogError("CaseModelService::PatchRecordRating exception {Message}", ex.Message);
 
 				throw;
 			}
