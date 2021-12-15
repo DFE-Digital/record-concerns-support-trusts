@@ -52,9 +52,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
-				{
 					throw new Exception("CaseUrn is null or invalid to parse");
-				}
 
 				// Get Case
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);

@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -86,14 +87,60 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			{
 				foreach (var actual in casesDto.Where(actual => expected.CaseUrn.Equals(actual.Urn.ToString())))
 				{
+					Assert.That(expected.Closed, Is.EqualTo(actual.ClosedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
+					Assert.That(expected.Review, Is.EqualTo(actual.ReviewAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
-					Assert.That(expected.RatingModel, Is.EqualTo(RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn)));
+					Assert.That(expected.TrustNameTitle, Is.EqualTo(TrustMapping.FetchTrustName(trustDto).ToTitle()));
 					
-					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoLiveCases, typesDto, ratingsDto));
+					// Case rating
+					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn);
+					Assert.NotNull(expected.RatingModel);
+					Assert.NotNull(actualCaseRatingModel);
+					Assert.That(expected.RatingModel.Checked, Is.EqualTo(actualCaseRatingModel.Checked));
+					Assert.That(expected.RatingModel.Name, Is.EqualTo(actualCaseRatingModel.Name));
+					Assert.That(expected.RatingModel.Urn, Is.EqualTo(actualCaseRatingModel.Urn));
+					Assert.That(expected.RatingModel.RagRating, Is.EqualTo(actualCaseRatingModel.RagRating));
+					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
+
+					// Records
+					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoLiveCases, typesDto, ratingsDto);
+					var expectedRecordsModel = expected.RecordsModel;
+					
+					Assert.NotNull(expectedRecordsModel);
+					Assert.NotNull(actualRecordsModel);
+					Assert.That(expectedRecordsModel.Count, Is.EqualTo(actualRecordsModel.Count));
+					
+					for (var index = 0; index < expectedRecordsModel.Count; ++index)
+					{
+						Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(actualRecordsModel.ElementAt(index).Urn));
+						Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).CaseUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeUrn));
+						
+						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
+						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
+						Assert.NotNull(expectedRecordRatingModel);
+						Assert.NotNull(actualRecordRatingModel);
+						Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
+						Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
+						Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
+						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
+						
+						var expectedRecordTypeModel = expectedRecordsModel.ElementAt(index).TypeModel;
+						var actualRecordTypeModel = actualRecordsModel.ElementAt(index).TypeModel;
+						Assert.NotNull(expectedRecordTypeModel);
+						Assert.NotNull(actualRecordTypeModel);
+						Assert.That(expectedRecordTypeModel.Type, Is.EqualTo(actualRecordTypeModel.Type));
+						Assert.That(expectedRecordTypeModel.SubType, Is.EqualTo(actualRecordTypeModel.SubType));
+						Assert.That(expectedRecordTypeModel.TypeDisplay, Is.EqualTo(actualRecordTypeModel.TypeDisplay));
+						Assert.That(expectedRecordTypeModel.TypesDictionary, Is.EqualTo(actualRecordTypeModel.TypesDictionary));
+					}
 				}
 			}
 		}
@@ -215,14 +262,60 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			{
 				foreach (var actual in casesDto.Where(actual => expected.CaseUrn.Equals(actual.Urn.ToString())))
 				{
+					Assert.That(expected.Closed, Is.EqualTo(actual.ClosedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
+					Assert.That(expected.Review, Is.EqualTo(actual.ReviewAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
-					Assert.That(expected.RatingModel, Is.EqualTo(RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn)));
+					Assert.That(expected.TrustNameTitle, Is.EqualTo(TrustMapping.FetchTrustName(trustDto).ToTitle()));
 					
-					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoLiveCases, typesDto, ratingsDto));
+					// Case rating
+					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn);
+					Assert.NotNull(expected.RatingModel);
+					Assert.NotNull(actualCaseRatingModel);
+					Assert.That(expected.RatingModel.Checked, Is.EqualTo(actualCaseRatingModel.Checked));
+					Assert.That(expected.RatingModel.Name, Is.EqualTo(actualCaseRatingModel.Name));
+					Assert.That(expected.RatingModel.Urn, Is.EqualTo(actualCaseRatingModel.Urn));
+					Assert.That(expected.RatingModel.RagRating, Is.EqualTo(actualCaseRatingModel.RagRating));
+					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
+
+					// Records
+					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoLiveCases, typesDto, ratingsDto);
+					var expectedRecordsModel = expected.RecordsModel;
+					
+					Assert.NotNull(expectedRecordsModel);
+					Assert.NotNull(actualRecordsModel);
+					Assert.That(expectedRecordsModel.Count, Is.EqualTo(actualRecordsModel.Count));
+					
+					for (var index = 0; index < expectedRecordsModel.Count; ++index)
+					{
+						Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(actualRecordsModel.ElementAt(index).Urn));
+						Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).CaseUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeUrn));
+						
+						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
+						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
+						Assert.NotNull(expectedRecordRatingModel);
+						Assert.NotNull(actualRecordRatingModel);
+						Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
+						Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
+						Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
+						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
+						
+						var expectedRecordTypeModel = expectedRecordsModel.ElementAt(index).TypeModel;
+						var actualRecordTypeModel = actualRecordsModel.ElementAt(index).TypeModel;
+						Assert.NotNull(expectedRecordTypeModel);
+						Assert.NotNull(actualRecordTypeModel);
+						Assert.That(expectedRecordTypeModel.Type, Is.EqualTo(actualRecordTypeModel.Type));
+						Assert.That(expectedRecordTypeModel.SubType, Is.EqualTo(actualRecordTypeModel.SubType));
+						Assert.That(expectedRecordTypeModel.TypeDisplay, Is.EqualTo(actualRecordTypeModel.TypeDisplay));
+						Assert.That(expectedRecordTypeModel.TypesDictionary, Is.EqualTo(actualRecordTypeModel.TypesDictionary));
+					}
 				}
 			}
 		}
@@ -287,14 +380,60 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			{
 				foreach (var actual in casesDto.Where(actual => expected.CaseUrn.Equals(actual.Urn.ToString())))
 				{
+					Assert.That(expected.Closed, Is.EqualTo(actual.ClosedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
+					Assert.That(expected.Review, Is.EqualTo(actual.ReviewAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
-					Assert.That(expected.RatingModel, Is.EqualTo(RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn)));
+					Assert.That(expected.TrustNameTitle, Is.EqualTo(TrustMapping.FetchTrustName(trustDto).ToTitle()));
 					
-					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoMonitoringCases, typesDto, ratingsDto));
+					// Case rating
+					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn);
+					Assert.NotNull(expected.RatingModel);
+					Assert.NotNull(actualCaseRatingModel);
+					Assert.That(expected.RatingModel.Checked, Is.EqualTo(actualCaseRatingModel.Checked));
+					Assert.That(expected.RatingModel.Name, Is.EqualTo(actualCaseRatingModel.Name));
+					Assert.That(expected.RatingModel.Urn, Is.EqualTo(actualCaseRatingModel.Urn));
+					Assert.That(expected.RatingModel.RagRating, Is.EqualTo(actualCaseRatingModel.RagRating));
+					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
+
+					// Records
+					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoMonitoringCases, typesDto, ratingsDto);
+					var expectedRecordsModel = expected.RecordsModel;
+					
+					Assert.NotNull(expectedRecordsModel);
+					Assert.NotNull(actualRecordsModel);
+					Assert.That(expectedRecordsModel.Count, Is.EqualTo(actualRecordsModel.Count));
+					
+					for (var index = 0; index < expectedRecordsModel.Count; ++index)
+					{
+						Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(actualRecordsModel.ElementAt(index).Urn));
+						Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).CaseUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeUrn));
+						
+						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
+						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
+						Assert.NotNull(expectedRecordRatingModel);
+						Assert.NotNull(actualRecordRatingModel);
+						Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
+						Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
+						Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
+						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
+						
+						var expectedRecordTypeModel = expectedRecordsModel.ElementAt(index).TypeModel;
+						var actualRecordTypeModel = actualRecordsModel.ElementAt(index).TypeModel;
+						Assert.NotNull(expectedRecordTypeModel);
+						Assert.NotNull(actualRecordTypeModel);
+						Assert.That(expectedRecordTypeModel.Type, Is.EqualTo(actualRecordTypeModel.Type));
+						Assert.That(expectedRecordTypeModel.SubType, Is.EqualTo(actualRecordTypeModel.SubType));
+						Assert.That(expectedRecordTypeModel.TypeDisplay, Is.EqualTo(actualRecordTypeModel.TypeDisplay));
+						Assert.That(expectedRecordTypeModel.TypesDictionary, Is.EqualTo(actualRecordTypeModel.TypesDictionary));
+					}
 				}
 			}
 		}
@@ -359,14 +498,60 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			{
 				foreach (var actual in casesDto.Where(actual => expected.CaseUrn.Equals(actual.Urn.ToString())))
 				{
+					Assert.That(expected.Closed, Is.EqualTo(actual.ClosedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
+					Assert.That(expected.Review, Is.EqualTo(actual.ReviewAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
-					Assert.That(expected.RatingModel, Is.EqualTo(RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn)));
+					Assert.That(expected.TrustNameTitle, Is.EqualTo(TrustMapping.FetchTrustName(trustDto).ToTitle()));
 					
-					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoClosedCases, typesDto, ratingsDto));
+					// Case rating
+					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn);
+					Assert.NotNull(expected.RatingModel);
+					Assert.NotNull(actualCaseRatingModel);
+					Assert.That(expected.RatingModel.Checked, Is.EqualTo(actualCaseRatingModel.Checked));
+					Assert.That(expected.RatingModel.Name, Is.EqualTo(actualCaseRatingModel.Name));
+					Assert.That(expected.RatingModel.Urn, Is.EqualTo(actualCaseRatingModel.Urn));
+					Assert.That(expected.RatingModel.RagRating, Is.EqualTo(actualCaseRatingModel.RagRating));
+					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
+
+					// Records
+					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoClosedCases, typesDto, ratingsDto);
+					var expectedRecordsModel = expected.RecordsModel;
+					
+					Assert.NotNull(expectedRecordsModel);
+					Assert.NotNull(actualRecordsModel);
+					Assert.That(expectedRecordsModel.Count, Is.EqualTo(actualRecordsModel.Count));
+					
+					for (var index = 0; index < expectedRecordsModel.Count; ++index)
+					{
+						Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(actualRecordsModel.ElementAt(index).Urn));
+						Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).CaseUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeUrn));
+						
+						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
+						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
+						Assert.NotNull(expectedRecordRatingModel);
+						Assert.NotNull(actualRecordRatingModel);
+						Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
+						Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
+						Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
+						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
+						
+						var expectedRecordTypeModel = expectedRecordsModel.ElementAt(index).TypeModel;
+						var actualRecordTypeModel = actualRecordsModel.ElementAt(index).TypeModel;
+						Assert.NotNull(expectedRecordTypeModel);
+						Assert.NotNull(actualRecordTypeModel);
+						Assert.That(expectedRecordTypeModel.Type, Is.EqualTo(actualRecordTypeModel.Type));
+						Assert.That(expectedRecordTypeModel.SubType, Is.EqualTo(actualRecordTypeModel.SubType));
+						Assert.That(expectedRecordTypeModel.TypeDisplay, Is.EqualTo(actualRecordTypeModel.TypeDisplay));
+						Assert.That(expectedRecordTypeModel.TypesDictionary, Is.EqualTo(actualRecordTypeModel.TypesDictionary));
+					}
 				}
 			}
 		}
@@ -446,135 +631,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		}
 		
 		[Test]
-		public async Task WhenGetCasesByCaseworker_FetchFromCache_ReturnsCases()
-		{
-			// arrange
-			var mockCaseCachedService = new Mock<ICaseCachedService>();
-			var mockTrustCachedService = new Mock<ITrustCachedService>();
-			var mockRecordCachedService = new Mock<IRecordCachedService>();
-			var mockRatingCachedService = new Mock<IRatingCachedService>();
-			var mockTypeCachedService = new Mock<ITypeCachedService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockLogger = new Mock<ILogger<CaseModelService>>();
-			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
-
-			var casesDto = CaseFactory.BuildListCaseDto();
-			var casesDtoLive = casesDto.Where(c => c.StatusUrn.CompareTo(1) == 0).ToList();
-			var casesDtoMonitoring = casesDto.Where(c => c.StatusUrn.CompareTo(2) == 0).ToList();
-			
-			// All the records from cases
-			var recordsDto = new List<RecordDto>();
-			foreach (var caseDto in casesDto)
-			{
-				recordsDto.AddRange(RecordFactory.BuildListRecordDtoByCaseUrn(caseDto.Urn));
-			}
-			
-			// Partial view of records against a case
-			var recordsDtoLiveCases = RecordFactory.BuildListRecordDtoByCaseUrn(casesDtoLive.ElementAt(0).Urn);
-			var recordsDtoMonitoringCases = RecordFactory.BuildListRecordDtoByCaseUrn(casesDtoMonitoring.ElementAt(0).Urn);
-
-			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), casesDtoLive.First().Urn);
-			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), casesDtoMonitoring.First().Urn);
-			var ratingsDto = RatingFactory.BuildListRatingDto();
-			var typesDto = TypeFactory.BuildListTypeDto();
-			var trustDto = TrustFactory.BuildTrustDetailsDto(casesDto.First().TrustUkPrn);
-			
-			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>()))
-				.ReturnsAsync(statusLiveDto)
-				.ReturnsAsync(statusMonitoringDto);
-			mockCaseCachedService.SetupSequence(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(casesDtoLive)
-				.ReturnsAsync(casesDtoMonitoring);
-			mockRatingCachedService.Setup(r => r.GetRatings())
-				.ReturnsAsync(ratingsDto);
-			mockTypeCachedService.Setup(t => t.GetTypes())
-				.ReturnsAsync(typesDto);
-			mockTrustCachedService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
-				.ReturnsAsync(trustDto);
-			mockRecordCachedService.SetupSequence(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(recordsDtoLiveCases)
-				.ReturnsAsync(recordsDtoMonitoringCases);
-			
-			// act
-			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
-				mockTrustCachedService.Object, mockRecordCachedService.Object,
-				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
-			
-			var activeCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>());
-
-			// assert
-			Assert.IsAssignableFrom<List<HomeModel>>(activeCasesModel);
-			Assert.That(activeCasesModel.Count, Is.EqualTo(2));
-			
-			foreach (var expected in activeCasesModel)
-			{
-				foreach (var actual in casesDto.Where(actual => expected.CaseUrn.Equals(actual.Urn.ToString())))
-				{
-					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
-					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
-					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
-					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
-					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
-					Assert.That(expected.RatingModel, Is.EqualTo(RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn)));
-					
-					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDto, typesDto, ratingsDto));
-				}
-			}
-		}
-		
-		[Test]
-		public async Task WhenGetCasesByCaseworker_PrimaryCaseType_IsNull_ReturnsEmptyCases()
-		{
-			// arrange
-			var mockCaseCachedService = new Mock<ICaseCachedService>();
-			var mockTrustCachedService = new Mock<ITrustCachedService>();
-			var mockRecordCachedService = new Mock<IRecordCachedService>();
-			var mockRatingCachedService = new Mock<IRatingCachedService>();
-			var mockTypeCachedService = new Mock<ITypeCachedService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockLogger = new Mock<ILogger<CaseModelService>>();
-			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
-
-			var casesDto = CaseFactory.BuildListCaseDto();
-			var recordsDto = RecordFactory.BuildListRecordDto();
-
-			var statusCloseDto = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), casesDto.First().Urn);
-			var ratingsDto = RatingFactory.BuildListRatingDto();
-			var typesDto = TypeFactory.BuildListOrphanTypeDto();
-			var trustDto = TrustFactory.BuildTrustDetailsDto(casesDto.First().TrustUkPrn);
-
-			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
-				.ReturnsAsync(statusCloseDto);
-			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(casesDto);
-			mockRatingCachedService.Setup(r => r.GetRatings())
-				.ReturnsAsync(ratingsDto);
-			mockTypeCachedService.Setup(t => t.GetTypes())
-				.ReturnsAsync(typesDto);
-			mockTrustCachedService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
-				.ReturnsAsync(trustDto);
-			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(recordsDto);
-
-			// act
-			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
-				mockTrustCachedService.Object, mockRecordCachedService.Object,
-				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
-
-			var closedCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), StatusEnum.Close);
-
-			// assert
-			Assert.IsAssignableFrom<List<HomeModel>>(closedCasesModel);
-			Assert.That(closedCasesModel.Count, Is.EqualTo(0));
-		}
-
-		[Test]
 		public async Task WhenGetCasesByCaseworker_StatusUnknown_ReturnsEmptyCases()
 		{
 			// arrange
@@ -624,7 +680,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		}
 
 		[Test]
-		public async Task WhenGetCasesByCaseworker_FetchFromCache_MissingCasesDto_ReturnsEmptyCases()
+		public async Task WhenGetCasesByCaseworker_FetchFromCache_MissingCasesDto_ReturnsCases()
 		{
 			// arrange
 			var mockCaseCachedService = new Mock<ICaseCachedService>();
@@ -670,8 +726,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var activeCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>());
 
 			// assert
-			Assert.IsAssignableFrom<HomeModel[]>(activeCasesModel);
-			Assert.That(activeCasesModel.Count, Is.EqualTo(0));
+			Assert.IsAssignableFrom<List<HomeModel>>(activeCasesModel);
+			Assert.That(activeCasesModel.Count, Is.EqualTo(casesDto.Count));
 		}
 
 		[Test]
