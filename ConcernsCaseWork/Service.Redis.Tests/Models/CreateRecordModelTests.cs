@@ -14,7 +14,7 @@ namespace Service.Redis.Tests.Models
 			
 			// assert
 			Assert.That(createRecordModel, Is.Not.Null);
-			Assert.That(createRecordModel.Reason, Is.Not.Null);
+			Assert.That(createRecordModel.TypeDisplay, Is.Not.Null);
 			Assert.That(createRecordModel.Type, Is.Not.Null);
 			Assert.That(createRecordModel.RagRating, Is.Not.Null);
 			Assert.That(createRecordModel.RatingName, Is.Not.Null);

@@ -14,15 +14,15 @@ namespace ConcernsCaseWork.Tests.Models
 			// arrange
 			var typeModel = new TypeModel
 			{
-				CheckedType = "governance",
-				CheckedSubType = "governance",
+				Type = "governance",
+				SubType = "governance",
 				TypesDictionary = new Dictionary<string, IList<TypeModel.TypeValueModel>>()
 			};
 			
 			// assert
 			Assert.That(typeModel, Is.Not.Null);
-			Assert.That(typeModel.CheckedType, Is.EqualTo("governance"));
-			Assert.That(typeModel.CheckedSubType, Is.EqualTo("governance"));
+			Assert.That(typeModel.Type, Is.EqualTo("governance"));
+			Assert.That(typeModel.SubType, Is.EqualTo("governance"));
 			Assert.That(typeModel.TypeDisplay, Is.EqualTo("governance: governance"));
 			Assert.That(typeModel.TypesDictionary, Is.Not.Null);
 			Assert.That(typeModel.TypesDictionary.Count, Is.EqualTo(0));
@@ -34,8 +34,8 @@ namespace ConcernsCaseWork.Tests.Models
 			// arrange
 			var typeModel = new TypeModel
 			{
-				CheckedType = "governance",
-				CheckedSubType = "governance",
+				Type = "governance",
+				SubType = "governance",
 				TypesDictionary = new Dictionary<string, IList<TypeModel.TypeValueModel>>
 				{
 					{
@@ -50,8 +50,8 @@ namespace ConcernsCaseWork.Tests.Models
 			
 			// assert
 			Assert.That(typeModel, Is.Not.Null);
-			Assert.That(typeModel.CheckedType, Is.EqualTo("governance"));
-			Assert.That(typeModel.CheckedSubType, Is.EqualTo("governance"));
+			Assert.That(typeModel.Type, Is.EqualTo("governance"));
+			Assert.That(typeModel.SubType, Is.EqualTo("governance"));
 			Assert.That(typeModel.TypeDisplay, Is.EqualTo("governance: governance"));
 			Assert.That(typeModel.TypesDictionary, Is.Not.Null);
 			Assert.That(typeModel.TypesDictionary.Count, Is.EqualTo(1));

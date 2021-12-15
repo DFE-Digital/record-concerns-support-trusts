@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Models;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Types;
 using Service.TRAMS.Types;
@@ -55,8 +56,8 @@ namespace ConcernsCaseWork.Services.Types
 			var typeModel = await GetTypeModel();
 
 			var selectedTypeDto = typesDto.FirstOrDefault(t => t.Urn.CompareTo(urn) == 0) ?? typesDto.First();
-			typeModel.CheckedType = selectedTypeDto.Name ?? string.Empty;
-			typeModel.CheckedSubType = selectedTypeDto.Description ?? string.Empty;
+			typeModel.Type = selectedTypeDto.Name ?? string.Empty;
+			typeModel.SubType = selectedTypeDto.Description ?? string.Empty;
 
 			return typeModel;
 		}
@@ -66,12 +67,8 @@ namespace ConcernsCaseWork.Services.Types
 			_logger.LogInformation("TypeModelService::GetTypeModelByUrn");
 
 			var typesDto = await GetTypes();
-			var selectedTypeDto = typesDto.FirstOrDefault(t => t.Urn.CompareTo(urn) == 0) ?? typesDto.First();
 			
-			return new TypeModel{ 
-				CheckedType = selectedTypeDto.Name ?? string.Empty,
-				CheckedSubType = selectedTypeDto.Description ?? string.Empty
-			};
+			return TypeMapping.MapDtoToModel(typesDto, urn);
 		}
 
 		private async Task<IList<TypeDto>> GetTypes()

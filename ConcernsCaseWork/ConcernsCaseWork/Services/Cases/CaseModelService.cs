@@ -98,26 +98,26 @@ namespace ConcernsCaseWork.Services.Cases
 					Task.WaitAll(trustDetailsTask, recordsTask);
 
 					var trustDetailsDto = trustDetailsTask.Result;
-					var records = recordsTask.Result;
+					var recordsDto = recordsTask.Result;
+
+					// Map records dto to model
+					var recordsModel = RecordMapping.MapDtoToModel(recordsDto);
 					
-					// Get first record
-					var firstRecordDto = records.FirstOrDefault();
-					if (firstRecordDto is null) return null;
-
-					// Find primary type
-					var primaryCaseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(firstRecordDto.TypeUrn) == 0);
-					if (primaryCaseType is null) return null;
-				
-					// Rag rating
-					var ratingName = ratingsDto.Where(r => r.Urn.CompareTo(firstRecordDto.RatingUrn) == 0)
-						.Select(r => r.Name)
-						.First();
-
-					var rag = RatingMapping.FetchRag(ratingName);
-					var ragCss = RatingMapping.FetchRagCss(ratingName);
-
+					// Map records type
+					foreach (var recordModel in recordsModel)
+					{
+						recordModel.TypeModel = TypeMapping.MapDtoToModel(typesDto, recordModel.TypeUrn);
+					}
+					
+					// Map records rating
+					foreach (var recordModel in recordsModel)
+					{
+						recordModel.RatingModel = RatingMapping.MapDtoToModel(ratingsDto, recordModel.RatingUrn);
+					}
+					
+					// Case rating
+					var caseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, caseDto.RatingUrn);
 					var trustName = TrustMapping.FetchTrustName(trustDetailsDto);
-					var academies = TrustMapping.FetchAcademies(trustDetailsDto);
 					
 					return new HomeModel(
 						caseDto.Urn.ToString(), 
@@ -127,13 +127,11 @@ namespace ConcernsCaseWork.Services.Cases
 						caseDto.ReviewAt,
 						caseDto.CreatedBy,
 						trustName,
-						academies,
-						primaryCaseType.Name,
-						primaryCaseType.Description,
-						rag,
-						ragCss);
+						caseRatingModel,
+						recordsModel
+					);
 					
-				}).Where(homeModel => homeModel != null).ToList();
+				}).ToList();
 				
 				return statusEnum switch
 				{
@@ -465,7 +463,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var recordTasks = createCaseModel.CreateRecordsModel.Select(recordModel => 
 				{
 					var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, currentDate, 
-						recordModel.Type, recordModel.SubType, recordModel.Reason, newCase.Urn, recordModel.TypeUrn,recordModel.RatingUrn, statusDto.Urn);
+						recordModel.Type, recordModel.SubType, recordModel.TypeDisplay, newCase.Urn, recordModel.TypeUrn,recordModel.RatingUrn, statusDto.Urn);
 
 					return _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 				});

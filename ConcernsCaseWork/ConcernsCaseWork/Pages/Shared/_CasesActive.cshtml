@@ -16,10 +16,10 @@
 			Trust/Academy
 		</th>
 		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col" aria-sort="ascending">
-			Primary case type
+			Concerns
 		</th>
 		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
-			RAG rating
+			Trust risk
 		</th>
 		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
 			Created
@@ -50,13 +50,18 @@
 					@homeModel.TrustNameTitle
 				</td>
 				<td class="govuk-table__cell">
-					@homeModel.CaseTypeDescription
-				</td>
-				<td class="govuk-table__cell govuk-label-wrapper" data-sort-value="@homeModel.RagRating.Item1">
-					@for (var index = 0; index < homeModel.RagRating.Item2.Count; ++index)
+					@foreach (var record in homeModel.RecordsModel)
 					{
-						<span class="govuk-tag ragtag @homeModel.RagRatingCss.ElementAt(index)">
-							@homeModel.RagRating.Item2.ElementAt(index)
+						<div class="govuk-!-padding-bottom-1">
+							@record.TypeModel.TypeDisplay
+						</div>
+					}
+				</td>
+				<td class="govuk-table__cell govuk-label-wrapper" data-sort-value="@homeModel.RatingModel.RagRating.Item1">
+					@for (var index = 0; index < homeModel.RatingModel.RagRating.Item2.Count; ++index)
+					{
+						<span class="govuk-tag ragtag @homeModel.RatingModel.RagRatingCss.ElementAt(index)">
+							@homeModel.RatingModel.RagRating.Item2.ElementAt(index)
 						</span>
 					}
 				</td>

@@ -50,14 +50,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 					Assert.That(expected.Created, Is.EqualTo(actual.Created));
 					Assert.That(expected.Updated, Is.EqualTo(actual.Updated));
 					Assert.That(expected.Review, Is.EqualTo(actual.Review));
-					Assert.That(expected.AcademyNames, Is.EqualTo(actual.AcademyNames));
-					Assert.That(expected.CaseType, Is.EqualTo(actual.CaseType));
-					Assert.That(expected.CaseSubType, Is.EqualTo(actual.CaseSubType));
-					Assert.That(expected.CaseTypeDescription, Is.EqualTo($"{actual.CaseType}: {actual.CaseSubType}"));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.CaseUrn));
-					Assert.That(expected.RagRating, Is.EqualTo(actual.RagRating));
 					Assert.That(expected.TrustName, Is.EqualTo(actual.TrustName));
-					Assert.That(expected.RagRatingCss, Is.EqualTo(actual.RagRatingCss));
+					
+					
+					// TODO assert typemodel, rating model, record model.
 				}
 			}
 			

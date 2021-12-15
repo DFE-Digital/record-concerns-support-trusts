@@ -86,28 +86,14 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			{
 				foreach (var actual in casesDto.Where(actual => expected.CaseUrn.Equals(actual.Urn.ToString())))
 				{
-					var establishmentNames = string.Join(",", trustDto.Establishments.Select(e => e.EstablishmentName));
-					var recordDto = recordsDtoLiveCases.FirstOrDefault(r => r.CaseUrn.CompareTo(actual.Urn) == 0);
-					Assert.IsNotNull(recordDto);
-
-					var caseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(recordDto.TypeUrn) == 0);
-					Assert.IsNotNull(caseType);
-
-					var rating = ratingsDto.Where(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0)
-						.Select(r => r.Name)
-						.First();
-					Assert.IsNotNull(rating);
-
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
-					Assert.That(expected.AcademyNames, Is.EqualTo(establishmentNames));
-					Assert.That(expected.CaseType, Is.EqualTo(caseType.Name));
-					Assert.That(expected.CaseSubType, Is.EqualTo(caseType.Description));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
-					Assert.That(expected.RagRating, Is.EqualTo(RatingMapping.FetchRag(rating)));
-					Assert.That(expected.RagRatingCss, Is.EqualTo(RatingMapping.FetchRagCss(rating)));
+					Assert.That(expected.RatingModel, Is.EqualTo(RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn)));
+					
+					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoLiveCases));
 				}
 			}
 		}
@@ -229,28 +215,14 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			{
 				foreach (var actual in casesDto.Where(actual => expected.CaseUrn.Equals(actual.Urn.ToString())))
 				{
-					var establishmentNames = string.Join(",", trustDto.Establishments.Select(e => e.EstablishmentName));
-					var recordDto = recordsDtoLiveCases.FirstOrDefault(r => r.CaseUrn.CompareTo(actual.Urn) == 0);
-					Assert.IsNotNull(recordDto);
-
-					var caseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(recordDto.TypeUrn) == 0);
-					Assert.IsNotNull(caseType);
-
-					var rating = ratingsDto.Where(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0)
-						.Select(r => r.Name)
-						.First();
-					Assert.IsNotNull(rating);
-
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
-					Assert.That(expected.AcademyNames, Is.EqualTo(establishmentNames));
-					Assert.That(expected.CaseType, Is.EqualTo(caseType.Name));
-					Assert.That(expected.CaseSubType, Is.EqualTo(caseType.Description));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
-					Assert.That(expected.RagRating, Is.EqualTo(RatingMapping.FetchRag(rating)));
-					Assert.That(expected.RagRatingCss, Is.EqualTo(RatingMapping.FetchRagCss(rating)));
+					Assert.That(expected.RatingModel, Is.EqualTo(RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn)));
+					
+					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoLiveCases));
 				}
 			}
 		}
@@ -315,28 +287,14 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			{
 				foreach (var actual in casesDto.Where(actual => expected.CaseUrn.Equals(actual.Urn.ToString())))
 				{
-					var establishmentNames = string.Join(",", trustDto.Establishments.Select(e => e.EstablishmentName));
-					var recordDto = recordsDtoMonitoringCases.FirstOrDefault(r => r.CaseUrn.CompareTo(actual.Urn) == 0);
-					Assert.IsNotNull(recordDto);
-
-					var caseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(recordDto.TypeUrn) == 0);
-					Assert.IsNotNull(caseType);
-
-					var rating = ratingsDto.Where(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0)
-						.Select(r => r.Name)
-						.First();
-					Assert.IsNotNull(rating);
-
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
-					Assert.That(expected.AcademyNames, Is.EqualTo(establishmentNames));
-					Assert.That(expected.CaseType, Is.EqualTo(caseType.Name));
-					Assert.That(expected.CaseSubType, Is.EqualTo(caseType.Description));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
-					Assert.That(expected.RagRating, Is.EqualTo(RatingMapping.FetchRag(rating)));
-					Assert.That(expected.RagRatingCss, Is.EqualTo(RatingMapping.FetchRagCss(rating)));
+					Assert.That(expected.RatingModel, Is.EqualTo(RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn)));
+					
+					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoMonitoringCases));
 				}
 			}
 		}
@@ -401,28 +359,14 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			{
 				foreach (var actual in casesDto.Where(actual => expected.CaseUrn.Equals(actual.Urn.ToString())))
 				{
-					var establishmentNames = string.Join(",", trustDto.Establishments.Select(e => e.EstablishmentName));
-					var recordDto = recordsDtoClosedCases.FirstOrDefault(r => r.CaseUrn.CompareTo(actual.Urn) == 0);
-					Assert.IsNotNull(recordDto);
-
-					var caseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(recordDto.TypeUrn) == 0);
-					Assert.IsNotNull(caseType);
-
-					var rating = ratingsDto.Where(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0)
-						.Select(r => r.Name)
-						.First();
-					Assert.IsNotNull(rating);
-
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
-					Assert.That(expected.AcademyNames, Is.EqualTo(establishmentNames));
-					Assert.That(expected.CaseType, Is.EqualTo(caseType.Name));
-					Assert.That(expected.CaseSubType, Is.EqualTo(caseType.Description));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
-					Assert.That(expected.RagRating, Is.EqualTo(RatingMapping.FetchRag(rating)));
-					Assert.That(expected.RagRatingCss, Is.EqualTo(RatingMapping.FetchRagCss(rating)));
+					Assert.That(expected.RatingModel, Is.EqualTo(RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn)));
+					
+					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoClosedCases));
 				}
 			}
 		}
@@ -569,28 +513,14 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			{
 				foreach (var actual in casesDto.Where(actual => expected.CaseUrn.Equals(actual.Urn.ToString())))
 				{
-					var establishmentNames = string.Join(",", trustDto.Establishments.Select(e => e.EstablishmentName));
-					var recordDto = recordsDto.FirstOrDefault(r => r.CaseUrn.CompareTo(actual.Urn) == 0);
-					Assert.IsNotNull(recordDto);
-
-					var caseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(recordDto.TypeUrn) == 0);
-					Assert.IsNotNull(caseType);
-					
-					var rating = ratingsDto.Where(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0)
-						.Select(r => r.Name)
-						.First();
-					Assert.IsNotNull(rating);
-					
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
-					Assert.That(expected.AcademyNames, Is.EqualTo(establishmentNames));
-					Assert.That(expected.CaseType, Is.EqualTo(caseType.Name));
-					Assert.That(expected.CaseSubType, Is.EqualTo(caseType.Description));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
-					Assert.That(expected.RagRating, Is.EqualTo(RatingMapping.FetchRag(rating)));
-					Assert.That(expected.RagRatingCss, Is.EqualTo(RatingMapping.FetchRagCss(rating)));
+					Assert.That(expected.RatingModel, Is.EqualTo(RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn)));
+					
+					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDto));
 				}
 			}
 		}

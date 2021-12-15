@@ -9,16 +9,16 @@ namespace ConcernsCaseWork.Models
 	{
 		public IDictionary<string, IList<TypeValueModel>> TypesDictionary { get; set; }
 		
-		public string CheckedType { get; set; } = string.Empty;
+		public string Type { get; set; } = string.Empty;
 
-		public string CheckedSubType { get; set; } = string.Empty;
+		public string SubType { get; set; } = string.Empty;
 		
 		public string TypeDisplay
 		{
 			get
 			{
-				var separator = string.IsNullOrEmpty(CheckedSubType) ? string.Empty : ":";
-				return $"{CheckedType}{separator} {CheckedSubType ?? string.Empty}";
+				var separator = string.IsNullOrEmpty(SubType) ? string.Empty : ":";
+				return $"{Type}{separator} {SubType ?? string.Empty}";
 			}
 		}
 

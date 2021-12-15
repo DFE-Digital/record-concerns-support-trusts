@@ -1,6 +1,8 @@
 ﻿using ConcernsCaseWork.Models;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ConcernsCaseWork.Mappers
 {
@@ -31,6 +33,17 @@ namespace ConcernsCaseWork.Mappers
 				recordDto.Reason, recordDto.CaseUrn, 
 				recordDto.TypeUrn, recordDto.RatingUrn,
 				recordDto.Urn, statusDto.Urn);
+		}
+
+		public static IList<RecordModel> MapDtoToModel(IList<RecordDto> recordsDto)
+		{
+			var recordsModel = new List<RecordModel>();
+			if (recordsDto is null || !recordsDto.Any()) return recordsModel;
+
+			recordsModel.AddRange(recordsDto.Select(recordDto => 
+				new RecordModel(recordDto.CaseUrn, recordDto.TypeUrn, recordDto.RatingUrn, recordDto.Urn, recordDto.StatusUrn)));
+
+			return recordsModel;
 		}
 	}
 }

@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.Pages
 	    
         public IList<HomeModel> CasesActive { get; private set; }
         public IList<HomeModel> CasesTeamActive { get; private set; }
-        public bool UserAsRoleLeader { get; private set; }
+        public bool UserHasRoleLeader { get; private set; }
         
         public HomePageModel(ICaseModelService caseModelService, IRbacManager rbacManager, ILogger<HomePageModel> logger)
         {
@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Pages
 	        if (userRoleClaimWrapper.Roles.Contains(RoleEnum.Leader))
 	        {
 		        var groupUsers = userRoleClaimWrapper.Users;
-		        UserAsRoleLeader = true;
+		        UserHasRoleLeader = true;
 		        
 		        liveCasesTeamLead = _caseModelService.GetCasesByCaseworkerAndStatus(groupUsers, StatusEnum.Live);
 	        }

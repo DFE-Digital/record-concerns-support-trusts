@@ -2,6 +2,7 @@
 using Service.TRAMS.Ratings;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConcernsCaseWork.Mappers
 {
@@ -51,6 +52,18 @@ namespace ConcernsCaseWork.Mappers
 				Urn = ratingDto.Urn,
 				RagRating = FetchRag(ratingDto.Name),
 				RagRatingCss = FetchRagCss(ratingDto.Name)
+			};
+		}
+		
+		public static RatingModel MapDtoToModel(IList<RatingDto> ratingsDto, long urn)
+		{
+			var selectedRatingDto = ratingsDto.FirstOrDefault(t => t.Urn.CompareTo(urn) == 0) ?? ratingsDto.First();
+			return new RatingModel
+			{
+				Name = selectedRatingDto.Name,
+				Urn = selectedRatingDto.Urn,
+				RagRating = FetchRag(selectedRatingDto.Name),
+				RagRatingCss = FetchRagCss(selectedRatingDto.Name)
 			};
 		}
 	}

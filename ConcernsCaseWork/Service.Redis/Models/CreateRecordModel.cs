@@ -12,7 +12,7 @@ namespace Service.Redis.Models
 
 		public string SubType { get; set; } = string.Empty;
 
-		public string Reason
+		public string TypeDisplay
 		{
 			get
 			{

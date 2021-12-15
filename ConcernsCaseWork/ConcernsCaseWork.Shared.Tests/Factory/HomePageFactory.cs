@@ -21,11 +21,9 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					dateTimeNow,
 					Fixture.Create<string>(),
 					Fixture.Create<string>(),
-					Fixture.Create<string>(),
-					Fixture.Create<string>(),
-					Fixture.Create<string>(),
-					new Tuple<int, IList<string>>(1, new List<string> { Fixture.Create<string>() }),
-					new List<string> { Fixture.Create<string>() })
+					Fixture.Create<RatingModel>(),
+					Fixture.Create<IList<RecordModel>>()
+				)
 			};
 		}
 	}

@@ -78,10 +78,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(pageModel.CaseModel.TrustUkPrn, Is.EqualTo(caseModel.TrustUkPrn));
 			
 			Assert.That(pageModel.TypeModel, Is.Not.Null);
-			Assert.That(pageModel.TypeModel.CheckedType, Is.EqualTo(typeModel.CheckedType));
+			Assert.That(pageModel.TypeModel.Type, Is.EqualTo(typeModel.Type));
 			Assert.That(pageModel.TypeModel.TypeDisplay, Is.EqualTo(typeModel.TypeDisplay));
 			Assert.That(pageModel.TypeModel.TypesDictionary, Is.EqualTo(typeModel.TypesDictionary));
-			Assert.That(pageModel.TypeModel.CheckedSubType, Is.EqualTo(typeModel.CheckedSubType));
+			Assert.That(pageModel.TypeModel.SubType, Is.EqualTo(typeModel.SubType));
 			
 			mockRecordModelService.Verify(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Once);
 			mockTypeModelService.Verify(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()), Times.Once);

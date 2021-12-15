@@ -60,15 +60,13 @@ namespace ConcernsCaseWork.Tests.Pages
 					Assert.That(DateTimeOffset.FromUnixTimeMilliseconds(expected.UpdatedUnixTime).ToString("dd-MM-yyyy"), Is.EqualTo(actual.Updated));
 					Assert.That(expected.Review, Is.EqualTo(actual.Review));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
-					Assert.That(expected.AcademyNames, Is.EqualTo(actual.AcademyNames));
-					Assert.That(expected.CaseType, Is.EqualTo(actual.CaseType));
-					Assert.That(expected.CaseSubType, Is.EqualTo(actual.CaseSubType));
-					Assert.That(expected.CaseTypeDescription, Is.EqualTo($"{actual.CaseType}: {actual.CaseSubType}"));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.CaseUrn));
-					Assert.That(expected.RagRating, Is.EqualTo(actual.RagRating));
 					Assert.That(expected.TrustName, Is.EqualTo(actual.TrustName));
 					Assert.That(expected.TrustNameTitle, Is.EqualTo(actual.TrustName.ToTitle()));
-					Assert.That(expected.RagRatingCss, Is.EqualTo(actual.RagRatingCss));
+				
+					
+					// TODO assert typemodel, rating model, record model.
+					
 				}
 			}
 			

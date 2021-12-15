@@ -6,13 +6,13 @@ namespace Service.TRAMS.Types
 	public sealed class TypeDto
 	{
 		/// <summary>
-		/// Record, SRMA, Safeguarding, Concern
+		/// Compliance, Irregularity, Financial
 		/// </summary>
 		[JsonProperty("name")]
 		public string Name { get; }
 		
 		/// <summary>
-		/// Record (Log information when it is not a Concern)
+		/// Financial reporting, Allegations and self reported concerns, Clawback
 		/// </summary>
 		[JsonProperty("description")]
 		public string Description { get; }

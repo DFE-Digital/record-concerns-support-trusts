@@ -31,7 +31,7 @@
 						Trust/Academy
 					</th>
 					<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-						Primary case type
+						Concerns
 					</th>
 					<th class="govuk-table__header govuk-table__cell__cases" scope="col">
 						Date closed
@@ -50,20 +50,25 @@
 				}
 				else
 				{
-					foreach (var caseModel in Model.CasesClosed)
+					foreach (var homeModel in Model.CasesClosed)
 					{
 						<tr class="govuk-table__row tr__large">
 							<td class="govuk-table__cell">
-								<a class="govuk-link" href="/case/@caseModel.CaseUrn/closed">@caseModel.CaseUrn</a>
+								<a class="govuk-link" href="/case/@homeModel.CaseUrn/closed">@homeModel.CaseUrn</a>
 							</td>
 							<td class="govuk-table__cell">
-								@caseModel.TrustNameTitle
+								@homeModel.TrustNameTitle
 							</td>
 							<td class="govuk-table__cell">
-								@caseModel.CaseTypeDescription
+								@foreach (var record in homeModel.RecordsModel)
+								{
+									<div class="govuk-!-padding-bottom-1">
+										@record.TypeModel.TypeDisplay
+									</div>
+								}
 							</td>
 							<td class="govuk-table__cell">
-								@caseModel.Closed
+								@homeModel.Closed
 							</td>
 						</tr>
 					}
