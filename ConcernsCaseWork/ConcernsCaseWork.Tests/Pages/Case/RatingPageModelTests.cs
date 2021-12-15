@@ -3,11 +3,13 @@ using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
@@ -219,9 +221,130 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
 			Assert.IsNotNull(pageResponseInstance);
 			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+		}
+
+		[Test]
+		public async Task WhenOnPostAsync_RedirectToPage_Details()
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<RatingPageModel>>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockCachedService = new Mock<ICachedService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			
+			var expected = CaseFactory.BuildCreateCaseModel();
+			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+			
+			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
+			
+			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
+				mockCachedService.Object, 
+				mockRatingModelService.Object,
+				mockLogger.Object, true);
+			
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "rating", new StringValues("123:red") }
+				});
+			
+			// act
+			var pageResponse = await pageModel.OnPostAsync();
+			var pageResponseInstance = pageResponse as RedirectToPageResult;
+			
+			// assert
+			Assert.NotNull(pageResponseInstance);
+			Assert.That(pageResponseInstance.PageName, Is.EqualTo("details"));
+
+			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
+			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Once);
+		}
+		
+		[Test]
+		public async Task WhenOnPostAsync_MissingFormData_ReloadPage()
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<RatingPageModel>>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockCachedService = new Mock<ICachedService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			
+			var createCaseModel = CaseFactory.BuildCreateCaseModel();
+			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
+			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
+			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
+			var ratingsModel = RatingFactory.BuildListRatingModel();
+
+			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetailsModel);
+			mockRatingModelService.Setup(r => r.GetRatingsModel()).ReturnsAsync(ratingsModel);
+			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
+			
+			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
+				mockCachedService.Object, 
+				mockRatingModelService.Object,
+				mockLogger.Object, true);
+			
+			// act
+			var pageResponse = await pageModel.OnPostAsync();
+			var pageResponseInstance = pageResponse as PageResult;
+			
+			// assert
+			Assert.NotNull(pageResponseInstance);
+			Assert.NotNull(pageModel.RatingsModel);
+			Assert.NotNull(pageModel.CreateRecordsModel);
+			Assert.NotNull(pageModel.TrustDetailsModel);
+
+			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
+			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Never);
+			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
+			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Once);
 		}		
 		
-		
+		[Test]
+		public async Task WhenOnPostAsync_IncorrectFormData_ReloadPage()
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<RatingPageModel>>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockCachedService = new Mock<ICachedService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			
+			var createCaseModel = CaseFactory.BuildCreateCaseModel();
+			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
+			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
+			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
+			var ratingsModel = RatingFactory.BuildListRatingModel();
+
+			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetailsModel);
+			mockRatingModelService.Setup(r => r.GetRatingsModel()).ReturnsAsync(ratingsModel);
+			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
+			
+			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
+				mockCachedService.Object, 
+				mockRatingModelService.Object,
+				mockLogger.Object, true);
+			
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "rating", new StringValues("") }
+				});
+			
+			// act
+			var pageResponse = await pageModel.OnPostAsync();
+			var pageResponseInstance = pageResponse as PageResult;
+			
+			// assert
+			Assert.NotNull(pageResponseInstance);
+			Assert.NotNull(pageModel.RatingsModel);
+			Assert.NotNull(pageModel.CreateRecordsModel);
+			Assert.NotNull(pageModel.TrustDetailsModel);
+
+			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
+			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<int>()), Times.Never);
+			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
+			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Once);
+		}
 		
 		private static RatingPageModel SetupRatingPageModel(
 			ITrustModelService mockTrustModelService, 
