@@ -26,9 +26,15 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			var mockTypeModelService = new Mock<ITypeModelService>();
 
 			var recordsDto = RecordFactory.BuildListRecordDto();
+			var typesDto = TypeFactory.BuildListTypeDto();
+			var ratingsDto = RatingFactory.BuildListRatingDto();
 
 			mockRecordCacheService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsDto);
+			mockTypeModelService.Setup(t => t.GetTypes())
+				.ReturnsAsync(typesDto);
+			mockRatingModelService.Setup(t => t.GetRatings())
+				.ReturnsAsync(ratingsDto);
 			
 			var recordModelService = new RecordModelService(mockRecordCacheService.Object, 
 				mockRatingModelService.Object, 
@@ -54,9 +60,15 @@ namespace ConcernsCaseWork.Tests.Services.Records
 
 			var recordsDto = RecordFactory.BuildListRecordDto();
 			var recordDto = recordsDto.First();
+			var typesDto = TypeFactory.BuildListTypeDto();
+			var ratingsDto = RatingFactory.BuildListRatingDto();
 
 			mockRecordCacheService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsDto);
+			mockTypeModelService.Setup(t => t.GetTypes())
+				.ReturnsAsync(typesDto);
+			mockRatingModelService.Setup(t => t.GetRatings())
+				.ReturnsAsync(ratingsDto);
 			
 			var recordModelService = new RecordModelService(mockRecordCacheService.Object, 
 				mockRatingModelService.Object, 
@@ -68,18 +80,24 @@ namespace ConcernsCaseWork.Tests.Services.Records
 
 			// assert
 			Assert.That(recordModel, Is.Not.Null);
-			// Assert.That(recordModel.Description, Is.EqualTo(recordDto.Description));
-			// Assert.That(recordModel.Name, Is.EqualTo(recordDto.Name));
-			// Assert.That(recordModel.Reason, Is.EqualTo(recordDto.Reason));
 			Assert.That(recordModel.Urn, Is.EqualTo(recordDto.Urn));
 			Assert.That(recordModel.CaseUrn, Is.EqualTo(recordDto.CaseUrn));
-			// Assert.That(recordModel.ClosedAt, Is.EqualTo(recordDto.ClosedAt));
-			// Assert.That(recordModel.CreatedAt, Is.EqualTo(recordDto.CreatedAt));
 			Assert.That(recordModel.RatingUrn, Is.EqualTo(recordDto.RatingUrn));
-			// Assert.That(recordModel.ReviewAt, Is.EqualTo(recordDto.ReviewAt));
 			Assert.That(recordModel.StatusUrn, Is.EqualTo(recordDto.StatusUrn));
 			Assert.That(recordModel.TypeUrn, Is.EqualTo(recordDto.TypeUrn));
-			// Assert.That(recordModel.UpdatedAt, Is.EqualTo(recordDto.UpdatedAt));
+
+			var firstRatingModel = ratingsDto.First();
+			var firstTypeModel = typesDto.First();
+			
+			Assert.NotNull(firstRatingModel);
+			Assert.NotNull(recordModel.RatingModel);
+			Assert.That(recordModel.RatingModel.Name, Is.EqualTo(firstRatingModel.Name));
+			Assert.That(recordModel.RatingModel.Urn, Is.EqualTo(firstRatingModel.Urn));
+
+			Assert.NotNull(firstTypeModel);
+			Assert.NotNull(recordModel.TypeModel);
+			Assert.That(recordModel.TypeModel.Type, Is.EqualTo(firstTypeModel.Name));
+			Assert.That(recordModel.TypeModel.SubType, Is.EqualTo(firstTypeModel.Description));
 		}
 		
 		[Test]
