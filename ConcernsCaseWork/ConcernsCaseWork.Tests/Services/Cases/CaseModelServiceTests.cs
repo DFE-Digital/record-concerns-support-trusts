@@ -1110,7 +1110,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 		}
 		
 		[Test]
-		public async Task WhenPatchRiskRating_ReturnsTask()
+		public async Task WhenPatchCaseRating_ReturnsTask()
 		{
 			// arrange
 			var mockCaseCachedService = new Mock<ICaseCachedService>();
@@ -1127,7 +1127,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var recordsDto = RecordFactory.BuildListRecordDto();
 
 			mockCaseCachedService.Setup(cs => cs.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(caseDto);
-			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn)).ReturnsAsync(recordsDto);
 			
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
@@ -1139,12 +1138,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			await caseModelService.PatchCaseRating(CaseFactory.BuildPatchCaseModel());
 
 			// assert
-			mockRecordCachedService.Verify(r => r.PatchRecordByUrn(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Once);
 			mockCaseCachedService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Once);
 		}
 		
 		[Test]
-		public void WhenPatchRiskRating_ThrowsException()
+		public void WhenPatchCaseRating_ThrowsException()
 		{
 			// arrange
 			var mockCaseCachedService = new Mock<ICaseCachedService>();
@@ -1170,7 +1168,66 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			mockRecordCachedService.Verify(r => r.PatchRecordByUrn(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Never);
 			mockCaseCachedService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Never);
 		}
-		
+
+		[Test]
+		public async Task WhenPatchRecordRating_ReturnsTask()
+		{
+			// arrange
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
+			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
+
+			var recordsDto = RecordFactory.BuildListRecordDto();
+
+			mockRecordCachedService.Setup(rs => rs.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(recordsDto);
+
+			// act
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object,
+				mockTrustCachedService.Object, mockRecordCachedService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object,
+				mockStatusCachedService.Object, mockCaseSearchService.Object,
+				mockCaseHistoryCachedService.Object, mockLogger.Object);
+
+			await caseModelService.PatchRecordRating(RecordFactory.BuildPatchRecordModel());
+
+			// assert
+			mockRecordCachedService.Verify(r => r.PatchRecordByUrn(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Once);
+		}
+
+		[Test]
+		public void WhenPatchRecordRating_ThrowsException()
+		{
+			// arrange
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
+			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
+
+			// act
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object,
+				mockTrustCachedService.Object, mockRecordCachedService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object,
+				mockStatusCachedService.Object, mockCaseSearchService.Object,
+				mockCaseHistoryCachedService.Object, mockLogger.Object);
+
+			Assert.ThrowsAsync<ArgumentNullException>(() => caseModelService.PatchRecordRating(RecordFactory.BuildPatchRecordModel()));
+
+			// assert
+			mockCaseCachedService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Never);
+		}
+
+
 		[Test]
 		public async Task WhenPatchClosure_ReturnsTask()
 		{

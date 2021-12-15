@@ -14,7 +14,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages.Management
+namespace ConcernsCaseWork.Tests.Pages.Case.Management
 {
 	[Parallelizable(ParallelScope.All)]
 	public class EditCaseAimPageModelTests

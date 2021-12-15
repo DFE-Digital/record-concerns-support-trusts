@@ -16,7 +16,7 @@ using NUnit.Framework;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages.Management
+namespace ConcernsCaseWork.Tests.Pages.Case.Management
 {
 	[Parallelizable(ParallelScope.All)]
 	public class ManagementPageModelTests

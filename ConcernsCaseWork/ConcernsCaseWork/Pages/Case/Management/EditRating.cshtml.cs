@@ -17,7 +17,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 	public class EditRatingPageModel : AbstractPageModel
 	{
 		private readonly ICaseModelService _caseModelService;
-		private readonly IRecordModelService _recordModelService;
 		private readonly IRatingModelService _ratingModelService;
 		private readonly ILogger<EditRatingPageModel> _logger;
 
@@ -26,11 +25,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		public EditRatingPageModel(ICaseModelService caseModelService, 
 			IRatingModelService ratingModelService, 
-			IRecordModelService recordModelService, 
 			ILogger<EditRatingPageModel> logger)
 		{
 			_caseModelService = caseModelService;
-			_recordModelService = recordModelService;
 			_ratingModelService = ratingModelService;
 			_logger = logger;
 		}

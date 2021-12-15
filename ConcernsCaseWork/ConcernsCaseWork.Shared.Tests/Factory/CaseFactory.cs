@@ -178,7 +178,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			);
 		}
 		
-		public static CreateCaseModel BuildCreateCaseModel(string caseType = "case-type", string caseSubType = "case-sub-type")
+		public static CreateCaseModel BuildCreateCaseModel()
 		{
 			var dateTimeNow = DateTime.Now;
 			return new CreateCaseModel {

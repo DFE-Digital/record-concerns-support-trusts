@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Models;
+using Service.Redis.Models;
 using Service.TRAMS.Records;
 using System;
 using System.Collections.Generic;
@@ -98,6 +99,25 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				RatingUrn = 1,
 				CreatedBy = Fixture.Create<string>()
 			};
+		}
+
+		public static CreateRecordModel BuildCreateRecordModel()
+		{
+			return new CreateRecordModel
+			{
+				Type = Fixture.Create<string>(),
+				RagRating = Fixture.Create<Tuple<int, IList<string>>>(),
+				RatingName = Fixture.Create<string>(),
+				RatingUrn = Fixture.Create<long>(),
+				SubType = Fixture.Create<string>(),
+				TypeUrn = Fixture.Create<long>(),
+				RagRatingCss = Fixture.Create<IList<string>>()
+			};
+		}
+		
+		public static IList<CreateRecordModel> BuildListCreateRecordModel()
+		{
+			return new List<CreateRecordModel> { BuildCreateRecordModel() };
 		}
 	}
 }

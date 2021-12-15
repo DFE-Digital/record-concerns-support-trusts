@@ -49,19 +49,10 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		
 		public async Task OnGetAsync()
 		{
-			try
-			{
-				_logger.LogInformation("Case::Concern::IndexPageModel::OnGetAsync");
+			_logger.LogInformation("Case::Concern::IndexPageModel::OnGetAsync");
 				
-				// Fetch UI data
-				await LoadPage();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::Concern::IndexPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-			}
+			// Fetch UI data
+			await LoadPage();
 		}
 		
 		public async Task<IActionResult> OnPostAsync()
@@ -140,33 +131,54 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 
 		public async Task<ActionResult> OnGetCancel()
 		{
-			var userState = await GetUserState();
-			userState.CreateCaseModel = new CreateCaseModel();
-			await _cachedService.StoreData(User.Identity.Name, userState);
-			
-			return Redirect("/");
+			try
+			{
+				var userState = await GetUserState();
+				userState.CreateCaseModel = new CreateCaseModel();
+				await _cachedService.StoreData(User.Identity.Name, userState);
+				
+				return Redirect("/");
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::Concern::AddPageModel::OnGetCancel::Exception - {Message}", ex.Message);
+					
+				TempData["Error.Message"] = ErrorOnGetPage;
+				return Page();
+			}
 		}
 
 		private async Task<ActionResult> LoadPage()
 		{
-			var userState = await GetUserState();
-			var trustUkPrn = userState.TrustUkPrn;
+			try
+			{
+				var userState = await GetUserState();
+				var trustUkPrn = userState.TrustUkPrn;
 			
-			if (string.IsNullOrEmpty(trustUkPrn)) return Page();
+				if (string.IsNullOrEmpty(trustUkPrn))
+					throw new Exception("Cache TrustUkprn is null");
 			
-			CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
-			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-			RatingsModel = await _ratingModelService.GetRatingsModel();
-			TypeModel = await _typeModelService.GetTypeModel();
+				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
+				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
+				RatingsModel = await _ratingModelService.GetRatingsModel();
+				TypeModel = await _typeModelService.GetTypeModel();
 			
-			return Page();
+				return Page();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::Concern::IndexPageModel::LoadPage::Exception - {Message}", ex.Message);
+				
+				TempData["Error.Message"] = ErrorOnGetPage;
+				return Page();
+			}
 		}
 		
 		private async Task<UserState> GetUserState()
 		{
 			var userState = await _cachedService.GetData<UserState>(User.Identity.Name);
 			if (userState is null)
-				throw new Exception("Case::Concern::IndexPageModel::Cache CaseStateData is null");
+				throw new Exception("Cache CaseStateData is null");
 			
 			return userState;
 		}

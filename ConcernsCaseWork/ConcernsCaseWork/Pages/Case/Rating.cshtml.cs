@@ -40,19 +40,10 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public async Task OnGetAsync()
 		{
-			try
-			{
-				_logger.LogInformation("Case::RatingPageModel::OnGetAsync");
+			_logger.LogInformation("Case::RatingPageModel::OnGetAsync");
 				
-				// Fetch UI data
-				await LoadPage();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::RatingPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-			}
+			// Fetch UI data
+			await LoadPage();
 		}
 		
 		public async Task<IActionResult> OnPostAsync()
@@ -96,11 +87,21 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public async Task<ActionResult> OnGetCancel()
 		{
-			var userState = await GetUserState();
-			userState.CreateCaseModel = new CreateCaseModel();
-			await _cachedService.StoreData(User.Identity.Name, userState);
-			
-			return Redirect("/");
+			try
+			{
+				var userState = await GetUserState();
+				userState.CreateCaseModel = new CreateCaseModel();
+				await _cachedService.StoreData(User.Identity.Name, userState);
+				
+				return Redirect("/");
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::RatingPageModel::OnGetCancel::Exception - {Message}", ex.Message);
+					
+				TempData["Error.Message"] = ErrorOnGetPage;
+				return Page();
+			}
 		}
 		
 		private async Task<ActionResult> LoadPage()
@@ -121,7 +122,7 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			var userState = await _cachedService.GetData<UserState>(User.Identity.Name);
 			if (userState is null)
-				throw new Exception("Case::RatingPageModel::Cache CaseStateData is null");
+				throw new Exception("Cache CaseStateData is null");
 			
 			return userState;
 		}
