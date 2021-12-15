@@ -64,7 +64,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
 				
 				// Map Case concerns
-				CaseModel.RecordModels = recordsModel;
+				CaseModel.RecordsModel = recordsModel;
 
 				var caseHistoryTask = _caseHistoryModelService.GetCasesHistory(User.Identity.Name, caseUrn);
 				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);

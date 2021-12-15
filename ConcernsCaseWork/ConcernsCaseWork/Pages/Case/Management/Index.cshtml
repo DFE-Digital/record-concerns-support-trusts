@@ -109,7 +109,7 @@
 					<dd class="govuk-summary-list__value">
 						<div class="govuk-grid-row">
 
-							@foreach (var concern in Model.CaseModel.RecordModels)
+							@foreach (var concern in Model.CaseModel.RecordsModel)
 							{
 								<div class="govuk-!-padding-bottom-1">
 									<span class="govuk-!-padding-right-1 govuk-grid-column-two-thirds">
@@ -132,7 +132,7 @@
 						</div>
 					</dd>
 					<dd class="govuk-summary-list__actions">
-						@foreach (var concern in Model.CaseModel.RecordModels)
+						@foreach (var concern in Model.CaseModel.RecordsModel)
 						{
 							<div class="govuk-!-padding-bottom-1">
 								<a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Urn/edit_rating">Edit</a>

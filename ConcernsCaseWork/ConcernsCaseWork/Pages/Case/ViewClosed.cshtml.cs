@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Pages.Case
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				
 				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
-				CaseModel.RecordModels = recordsModel;
+				CaseModel.RecordsModel = recordsModel;
 			}
 			catch (Exception ex)
 			{

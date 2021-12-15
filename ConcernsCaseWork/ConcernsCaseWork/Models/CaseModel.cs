@@ -57,7 +57,7 @@ namespace ConcernsCaseWork.Models
 		
 		public string StatusName { get; set; } = string.Empty;
 
-		public IList<RecordModel> RecordModels { get; set; } = new List<RecordModel>();
+		public IList<RecordModel> RecordsModel { get; set; } = new List<RecordModel>();
 		
 		public string PreviousUrl { get; set; }
 	}
