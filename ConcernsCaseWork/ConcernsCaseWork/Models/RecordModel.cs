@@ -11,15 +11,16 @@
 
 		public long TypeUrn { get; }
 		
-		public TypeModel TypeModel { get; set; }
+		public TypeModel TypeModel { get; }
 
 		public long RatingUrn { get; }
 		
-		public RatingModel RatingModel { get; set; }
+		public RatingModel RatingModel { get; }
 		
 		public long StatusUrn { get; }
 		
-		public RecordModel(long caseUrn, long typeUrn, long ratingUrn, long urn, long statusUrn) => 
-			(CaseUrn, TypeUrn, RatingUrn, Urn, StatusUrn) = (caseUrn, typeUrn, ratingUrn, urn, statusUrn);
+		public RecordModel(long caseUrn, long typeUrn, TypeModel typeModel, long ratingUrn, RatingModel ratingModel, long urn, long statusUrn) => 
+			(CaseUrn, TypeUrn, TypeModel, RatingUrn, RatingModel, Urn, StatusUrn) = 
+			(caseUrn, typeUrn, typeModel, ratingUrn, ratingModel, urn, statusUrn);
 	}
 }

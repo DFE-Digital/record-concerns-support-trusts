@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Services.Ratings;
+using ConcernsCaseWork.Services.Types;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Records;
 using System;
@@ -12,13 +14,18 @@ namespace ConcernsCaseWork.Services.Records
 	public sealed class RecordModelService : IRecordModelService
 	{
 		private readonly IRecordCachedService _recordCachedService;
+		private readonly IRatingModelService _ratingModelService;
+		private readonly ITypeModelService _typeModelService;
 		private readonly ILogger<RecordModelService> _logger;
-		private readonly IMapper _mapper;
-
-		public RecordModelService(IRecordCachedService recordCachedService, IMapper mapper, ILogger<RecordModelService> logger)
+		
+		public RecordModelService(IRecordCachedService recordCachedService, 
+			IRatingModelService ratingModelService,
+			ITypeModelService typeModelService,
+			ILogger<RecordModelService> logger)
 		{
 			_recordCachedService = recordCachedService;
-			_mapper = mapper;
+			_ratingModelService = ratingModelService;
+			_typeModelService = typeModelService;
 			_logger = logger;
 		}
 
@@ -27,9 +34,11 @@ namespace ConcernsCaseWork.Services.Records
 			_logger.LogInformation("RecordModelService::GetRecordsModelByCaseUrn");
 
 			var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseworker, caseUrn);
-
+			var typesDto = await _typeModelService.GetTypes();
+			var ratingsDto = await _ratingModelService.GetRatings();
+			
 			// Map the records dto to model
-			var recordsModel = _mapper.Map<IList<RecordModel>>(recordsDto);
+			var recordsModel = RecordMapping.MapDtoToModel(recordsDto, typesDto, ratingsDto);
 
 			return recordsModel;
 		}

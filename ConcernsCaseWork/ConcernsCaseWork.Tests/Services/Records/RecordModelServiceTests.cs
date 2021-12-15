@@ -1,6 +1,6 @@
-﻿using AutoMapper;
-using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
+using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -22,16 +22,20 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			// arrange
 			var mockRecordCacheService = new Mock<IRecordCachedService>();
 			var mockLogger = new Mock<ILogger<RecordModelService>>();
-			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
-			var mapper = config.CreateMapper();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
 
 			var recordsDto = RecordFactory.BuildListRecordDto();
 
 			mockRecordCacheService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsDto);
 			
+			var recordModelService = new RecordModelService(mockRecordCacheService.Object, 
+				mockRatingModelService.Object, 
+				mockTypeModelService.Object, 
+				mockLogger.Object);
+			
 			// act
-			var recordModelService = new RecordModelService(mockRecordCacheService.Object, mapper, mockLogger.Object);
 			var recordsModel = await recordModelService.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>());
 
 			// assert
@@ -45,8 +49,8 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			// arrange
 			var mockRecordCacheService = new Mock<IRecordCachedService>();
 			var mockLogger = new Mock<ILogger<RecordModelService>>();
-			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
-			var mapper = config.CreateMapper();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
 
 			var recordsDto = RecordFactory.BuildListRecordDto();
 			var recordDto = recordsDto.First();
@@ -54,8 +58,12 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			mockRecordCacheService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsDto);
 			
+			var recordModelService = new RecordModelService(mockRecordCacheService.Object, 
+				mockRatingModelService.Object, 
+				mockTypeModelService.Object, 
+				mockLogger.Object);
+			
 			// act
-			var recordModelService = new RecordModelService(mockRecordCacheService.Object, mapper, mockLogger.Object);
 			var recordModel = await recordModelService.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), recordDto.Urn);
 
 			// assert
@@ -80,14 +88,18 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			// arrange
 			var mockRecordCacheService = new Mock<IRecordCachedService>();
 			var mockLogger = new Mock<ILogger<RecordModelService>>();
-			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
-			var mapper = config.CreateMapper();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
 			
 			mockRecordCacheService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(Array.Empty<RecordDto>());
 			
+			var recordModelService = new RecordModelService(mockRecordCacheService.Object, 
+				mockRatingModelService.Object, 
+				mockTypeModelService.Object, 
+				mockLogger.Object);
+			
 			// act
-			var recordModelService = new RecordModelService(mockRecordCacheService.Object, mapper, mockLogger.Object);
 			Assert.ThrowsAsync<Exception>(() => recordModelService.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()));
 		}
 	}

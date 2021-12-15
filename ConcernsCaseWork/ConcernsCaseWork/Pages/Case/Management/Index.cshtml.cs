@@ -4,13 +4,11 @@ using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Types;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management
@@ -22,7 +20,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ICaseHistoryModelService _caseHistoryModelService;
 		private readonly ITrustModelService _trustModelService;
 		private readonly ICaseModelService _caseModelService;
-		private readonly ITypeModelService _typeModelService;
 		private readonly IRecordModelService _recordModelService;
 		private readonly IRatingModelService _ratingModelService;
 		private readonly ILogger<IndexPageModel> _logger;
@@ -35,7 +32,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public IndexPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
 			ICaseHistoryModelService caseHistoryModelService,
-			ITypeModelService typeModelService,
 			IRecordModelService recordModelService,
 			IRatingModelService ratingModelService,
 			ILogger<IndexPageModel> logger)
@@ -43,7 +39,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_caseHistoryModelService = caseHistoryModelService;
 			_trustModelService = trustModelService;
 			_caseModelService = caseModelService;
-			_typeModelService = typeModelService;
 			_recordModelService = recordModelService;
 			_ratingModelService = ratingModelService;
 			_logger = logger;
@@ -67,18 +62,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				// Map Case Rating
 				CaseModel.RatingModel = await _ratingModelService.GetRatingModelByUrn(CaseModel.RatingUrn);
 				
-				// Map Case concerns
+				// Get Case concerns
 				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
-				var recordTasks = recordsModel.Select(async recordModel =>
-				{
-					recordModel.RatingModel = await _ratingModelService.GetRatingModelByUrn(recordModel.RatingUrn);
-					recordModel.TypeModel = await _typeModelService.GetTypeModelByUrn(recordModel.TypeUrn);
-
-					return recordModel;
-				}).ToList();
-
-				await Task.WhenAll(recordTasks);
-				recordTasks.ForEach(rt => CaseModel.RecordModels.Add(rt.Result));
+				
+				// Map Case concerns
+				CaseModel.RecordModels = recordsModel;
 
 				var caseHistoryTask = _caseHistoryModelService.GetCasesHistory(User.Identity.Name, caseUrn);
 				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);

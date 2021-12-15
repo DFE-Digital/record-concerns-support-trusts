@@ -30,13 +30,13 @@
 					<!-- Concern -->
 					<div class="govuk-summary-list__row">
 						<dt class="dfe-width-30percent govuk-summary-list__key">
-							Primary Concern
+							Concerns
 						</dt>
-						@foreach (var (_, value) in Model.TypeModelMap)
+						@foreach (var recordModel in Model.CaseModel.RecordModels)
 						{
 							<dd class="govuk-summary-list__value">
 								<span class="caseDetail_type">
-									@value.TypeDisplay
+									@recordModel.TypeModel.TypeDisplay
 								</span>
 							</dd>
 						}

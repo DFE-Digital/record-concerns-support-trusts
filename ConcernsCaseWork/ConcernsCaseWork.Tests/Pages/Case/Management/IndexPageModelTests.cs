@@ -4,7 +4,6 @@ using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -31,10 +30,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 
 			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockCaseHistoryModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockLogger.Object);
+				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockLogger.Object);
 
 				// act
 			await pageModel.OnGetAsync();
@@ -62,15 +60,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 			
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var casesHistoryModel = CaseFactory.BuildListCasesHistoryModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
-			var typeModel = TypeFactory.BuildTypeModel();
-
+			
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
@@ -81,11 +77,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				.ReturnsAsync(casesHistoryModel);
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
-			mockTypeModelService.Setup(t => t.GetTypeModelByUrn(It.IsAny<long>()))
-				.ReturnsAsync(typeModel);
 			
 			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-					mockCaseHistoryModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object);
+					mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -157,14 +151,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
-			
+
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var casesHistoryModel = CaseFactory.BuildListCasesHistoryModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
-			var typeModel = TypeFactory.BuildTypeModel();
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
@@ -176,11 +168,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				.ReturnsAsync(casesHistoryModel);
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
-			mockTypeModelService.Setup(t => t.GetTypeModelByUrn(It.IsAny<long>()))
-				.ReturnsAsync(typeModel);
-			
+
 			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockCaseHistoryModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object);
+				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -203,14 +193,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
-			
+
 			var caseModel = CaseFactory.BuildCaseModel("Tester");
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var casesHistoryModel = CaseFactory.BuildListCasesHistoryModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
-			var typeModel = TypeFactory.BuildTypeModel();
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
@@ -222,11 +210,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				.ReturnsAsync(casesHistoryModel);
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
-			mockTypeModelService.Setup(t => t.GetTypeModelByUrn(It.IsAny<long>()))
-				.ReturnsAsync(typeModel);
-			
+
 			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockCaseHistoryModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object, true);
+				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -243,7 +229,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			ICaseModelService mockCaseModelService, 
 			ITrustModelService mockTrustModelService,
 			ICaseHistoryModelService mockCaseHistoryModelService,
-			ITypeModelService mockTypeModelService,
 			IRecordModelService mockRecordModelService,
 			IRatingModelService mockRatingModelService,
 			ILogger<IndexPageModel> mockLogger, 
@@ -251,7 +236,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new IndexPageModel(mockCaseModelService, mockTrustModelService, mockCaseHistoryModelService, mockTypeModelService, mockRecordModelService, mockRatingModelService, mockLogger)
+			return new IndexPageModel(mockCaseModelService, mockTrustModelService, mockCaseHistoryModelService, mockRecordModelService, mockRatingModelService, mockLogger)
 
 			{
 				PageContext = pageContext,

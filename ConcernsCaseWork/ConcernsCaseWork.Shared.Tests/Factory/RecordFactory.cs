@@ -77,11 +77,13 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			return new RecordModel(
 				Fixture.Create<long>(), 
-				Fixture.Create<long>(), 
-				Fixture.Create<long>(), 
-				Fixture.Create<long>(), 
+				Fixture.Create<long>(),
+				Fixture.Create<TypeModel>(),
+				Fixture.Create<long>(),
+				Fixture.Create<RatingModel>(),
+				Fixture.Create<long>(),
 				Fixture.Create<long>()
-				);
+			);
 		}
 		
 		public static List<RecordModel> BuildListRecordModel()

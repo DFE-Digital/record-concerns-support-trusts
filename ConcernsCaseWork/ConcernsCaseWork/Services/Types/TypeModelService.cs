@@ -71,7 +71,7 @@ namespace ConcernsCaseWork.Services.Types
 			return TypeMapping.MapDtoToModel(typesDto, urn);
 		}
 
-		private async Task<IList<TypeDto>> GetTypes()
+		public async Task<IList<TypeDto>> GetTypes()
 		{
 			_logger.LogInformation("TypeModelService::GetTypes");
 			

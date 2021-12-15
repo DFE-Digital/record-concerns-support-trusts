@@ -1,6 +1,8 @@
 ﻿using ConcernsCaseWork.Models;
+using Service.TRAMS.Ratings;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
+using Service.TRAMS.Types;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,14 +36,27 @@ namespace ConcernsCaseWork.Mappers
 				recordDto.TypeUrn, recordDto.RatingUrn,
 				recordDto.Urn, statusDto.Urn);
 		}
-
-		public static IList<RecordModel> MapDtoToModel(IList<RecordDto> recordsDto)
+		
+		public static IList<RecordModel> MapDtoToModel(IList<RecordDto> recordsDto, 
+			IList<TypeDto> typesDto, 
+			IList<RatingDto> ratingsDto)
 		{
 			var recordsModel = new List<RecordModel>();
 			if (recordsDto is null || !recordsDto.Any()) return recordsModel;
 
-			recordsModel.AddRange(recordsDto.Select(recordDto => 
-				new RecordModel(recordDto.CaseUrn, recordDto.TypeUrn, recordDto.RatingUrn, recordDto.Urn, recordDto.StatusUrn)));
+			recordsModel.AddRange(recordsDto.Select(recordDto =>
+			{
+				var recordModel = new RecordModel(
+					recordDto.CaseUrn,
+					recordDto.TypeUrn,
+					TypeMapping.MapDtoToModel(typesDto, recordDto.TypeUrn),
+					recordDto.RatingUrn,
+					RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingUrn),
+					recordDto.Urn,
+					recordDto.StatusUrn);
+
+				return recordModel;
+			}));
 
 			return recordsModel;
 		}

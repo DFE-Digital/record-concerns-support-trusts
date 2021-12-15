@@ -3,7 +3,6 @@ using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
-using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -27,10 +26,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ViewClosedPageModel>>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
 
-			var pageModel = SetupViewClosedPageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockLogger.Object);
+			var pageModel = SetupViewClosedPageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockLogger.Object);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -40,7 +38,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 			mockTrustModelService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
-			mockTypeModelService.Verify(c => c.GetTypeModelByUrn(It.IsAny<long>()), Times.Never);
 			mockRecordModelService.Verify(c => c.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 		
@@ -51,13 +48,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ViewClosedPageModel>>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.Throws<Exception>();
 			
-			var pageModel = SetupViewClosedPageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockLogger.Object);
+			var pageModel = SetupViewClosedPageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -70,7 +66,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 			mockTrustModelService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
-			mockTypeModelService.Verify(c => c.GetTypeModelByUrn(It.IsAny<long>()), Times.Never);
 			mockRecordModelService.Verify(c => c.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 		
@@ -81,24 +76,20 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockLogger = new Mock<ILogger<ViewClosedPageModel>>();
-			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
-			var typeModel = TypeFactory.BuildTypeModel();
-			
+
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
-			mockTypeModelService.Setup(t => t.GetTypeModelByUrn(It.IsAny<long>()))
-				.ReturnsAsync(typeModel);
 			
-			var pageModel = SetupViewClosedPageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockTypeModelService.Object, mockRecordModelService.Object, mockLogger.Object);
+			var pageModel = SetupViewClosedPageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -133,24 +124,22 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.That(pageModel.TrustDetailsModel.GiasData.GroupName, Is.EqualTo(trustDetailsModel.GiasData.GroupName));
 			Assert.That(pageModel.TrustDetailsModel.GiasData.GroupNameTitle, Is.EqualTo(trustDetailsModel.GiasData.GroupName.ToTitle()));
 			
-			Assert.That(pageModel.TypeModelMap, Is.Not.Null);
+			// Assert.That(pageModel.TypeModelMap, Is.Not.Null);
 			
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 			mockTrustModelService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
-			mockTypeModelService.Verify(c => c.GetTypeModelByUrn(It.IsAny<long>()), Times.Once);
 			mockRecordModelService.Verify(c => c.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 		}
 		
 		private static ViewClosedPageModel SetupViewClosedPageModel(
 			ICaseModelService mockCaseModelService, 
-			ITrustModelService mockTrustModelService, 
-			ITypeModelService mockTypeModelService,
+			ITrustModelService mockTrustModelService,
 			IRecordModelService mockRecordModelService,
 			ILogger<ViewClosedPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new ViewClosedPageModel(mockCaseModelService, mockTrustModelService, mockTypeModelService, mockRecordModelService, mockLogger)
+			return new ViewClosedPageModel(mockCaseModelService, mockTrustModelService, mockRecordModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

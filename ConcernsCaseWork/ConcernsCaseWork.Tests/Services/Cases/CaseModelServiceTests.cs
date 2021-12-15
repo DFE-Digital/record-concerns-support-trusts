@@ -93,7 +93,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
 					Assert.That(expected.RatingModel, Is.EqualTo(RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn)));
 					
-					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoLiveCases));
+					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoLiveCases, typesDto, ratingsDto));
 				}
 			}
 		}
@@ -222,7 +222,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
 					Assert.That(expected.RatingModel, Is.EqualTo(RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn)));
 					
-					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoLiveCases));
+					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoLiveCases, typesDto, ratingsDto));
 				}
 			}
 		}
@@ -294,7 +294,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
 					Assert.That(expected.RatingModel, Is.EqualTo(RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn)));
 					
-					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoMonitoringCases));
+					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoMonitoringCases, typesDto, ratingsDto));
 				}
 			}
 		}
@@ -366,7 +366,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
 					Assert.That(expected.RatingModel, Is.EqualTo(RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn)));
 					
-					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoClosedCases));
+					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDtoClosedCases, typesDto, ratingsDto));
 				}
 			}
 		}
@@ -520,7 +520,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
 					Assert.That(expected.RatingModel, Is.EqualTo(RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn)));
 					
-					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDto));
+					CollectionAssert.AreEqual(expected.RecordsModel, RecordMapping.MapDtoToModel(recordsDto, typesDto, ratingsDto));
 				}
 			}
 		}
