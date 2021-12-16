@@ -54,5 +54,25 @@ namespace ConcernsCaseWork.Services.Records
 
 			return recordModel;
 		}
+
+		public async Task PatchRecordStatus(PatchRecordModel patchRecordModel)
+		{
+			try
+			{
+				// Fetch Records
+				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(patchRecordModel.CreatedBy, patchRecordModel.CaseUrn);
+
+				var recordDto = recordsDto.FirstOrDefault(r => r.Urn.CompareTo(patchRecordModel.Urn) == 0);
+				recordDto = RecordMapping.MapStatus(patchRecordModel, recordDto);
+
+				await _recordCachedService.PatchRecordByUrn(recordDto, patchRecordModel.CreatedBy);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("RecordModelService::PatchRecordStatus exception {Message}", ex.Message);
+
+				throw;
+			}
+		}
 	}
 }
