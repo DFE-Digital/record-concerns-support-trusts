@@ -1,0 +1,11 @@
+
+    {
+        "accessibilityLink":"/accessibility",
+        "accessibilityTestText": "Accessibility on Concerns casework",
+        "cookiesLink":"/cookies",
+        "cookiesTestText": "Cookies on Concerns casework",
+        "privacyPolicyLink":"/privacypolicy",
+        "privacyPolicyText": "How we use your personal data when you use Concerns casework",
+        "adminLink":"/admin",
+        "adminText":"Users Roles and Groups"
+    }
