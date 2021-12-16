@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Validators;
@@ -11,12 +10,9 @@ using ConcernsCaseWork.Services.Types;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.TRAMS.Cases;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Concern
@@ -93,21 +89,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				// Rating
 				var splitRagRating = ragRating.Split(":");
 				var ragRatingUrn = splitRagRating[0];
-				var ragRatingName = splitRagRating[1];
-				
+
 				var createRecordModel = new CreateRecordModel
 				{
+					CaseUrn = caseUrn,
 					TypeUrn = long.Parse(typeUrn),
 					Type = type,
 					SubType = subType,
-					RatingUrn = long.Parse(ragRatingUrn),
-					RatingName = ragRatingName,
-					RagRating = RatingMapping.FetchRag(ragRatingName),
-					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName)
+					RatingUrn = long.Parse(ragRatingUrn)
 				};
 				
 				// Post record
-				
+				await _recordModelService.PostRecordByCaseUrn(createRecordModel, User.Identity.Name);
 				
 				return Redirect(url);
 			}

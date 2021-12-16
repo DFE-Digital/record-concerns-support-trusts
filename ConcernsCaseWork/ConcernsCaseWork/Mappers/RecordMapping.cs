@@ -32,11 +32,12 @@ namespace ConcernsCaseWork.Mappers
 		
 		public static IList<RecordModel> MapDtoToModel(IList<RecordDto> recordsDto, 
 			IList<TypeDto> typesDto, 
-			IList<RatingDto> ratingsDto)
+			IList<RatingDto> ratingsDto,
+			IList<StatusDto> statusesDto)
 		{
 			var recordsModel = new List<RecordModel>();
 			if (recordsDto is null || !recordsDto.Any()) return recordsModel;
-
+			
 			recordsModel.AddRange(recordsDto.Select(recordDto =>
 			{
 				var recordModel = new RecordModel(
@@ -46,7 +47,8 @@ namespace ConcernsCaseWork.Mappers
 					recordDto.RatingUrn,
 					RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingUrn),
 					recordDto.Urn,
-					recordDto.StatusUrn);
+					recordDto.StatusUrn,
+					null);
 
 				return recordModel;
 			}));
