@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
 
-			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
 				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockLogger.Object);
 
 				// act
@@ -78,7 +78,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
 			
-			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
 					mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
@@ -196,7 +196,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
 
-			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
 				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
@@ -238,7 +238,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
 
-			var pageModel = SetupManagementPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
 				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
@@ -252,7 +252,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.True(showEditActions);
 		}
 		
-		private static IndexPageModel SetupManagementPageModel(
+		private static IndexPageModel SetupIndexPageModel(
 			ICaseModelService mockCaseModelService, 
 			ITrustModelService mockTrustModelService,
 			ICaseHistoryModelService mockCaseHistoryModelService,

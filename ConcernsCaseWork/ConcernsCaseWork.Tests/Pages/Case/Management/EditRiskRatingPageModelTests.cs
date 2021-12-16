@@ -108,7 +108,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(page, Is.Not.Null);
 			Assert.IsNull(pageModel.CaseModel);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 			mockRatingModelService.Verify(c => c.GetSelectedRatingsModelByUrn(It.IsAny<long>()), Times.Never);

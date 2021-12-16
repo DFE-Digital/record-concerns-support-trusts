@@ -51,11 +51,23 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		
 		public async Task OnGetAsync()
 		{
-			_logger.LogInformation("Case::Management::Concern::IndexPageModel::OnGetAsync");
+			long caseUrn = 0;
+			
+			try
+			{
+				_logger.LogInformation("Case::Management::Concern::IndexPageModel::OnGetAsync");
+					
+				var caseUrnValue = RouteData.Values["urn"];
+				if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
+					throw new Exception("CaseUrn is null or invalid to parse");
+			
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::Management::Concern::IndexPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 				
-			var caseUrnValue = RouteData.Values["urn"];
-			if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
-				throw new Exception("CaseUrn is null or invalid to parse");
+				TempData["Error.Message"] = ErrorOnGetPage;
+			}
 			
 			// Fetch UI data
 			await LoadPage(Request.Headers["Referer"].ToString(), caseUrn);
