@@ -11,23 +11,36 @@ namespace ConcernsCaseWork.Mappers
 {
 	public static class RecordMapping
 	{
-		public static RecordDto MapRiskRating(PatchRecordModel patchRecordModel, RecordDto recordDto)
+		public static RecordDto MapRating(PatchRecordModel patchRecordModel, RecordDto recordDto)
 		{
-			return new RecordDto(recordDto.CreatedAt, patchRecordModel.UpdatedAt, recordDto.ReviewAt,
-				recordDto.ClosedAt, recordDto.Name, recordDto.Description, 
-				recordDto.Reason, recordDto.CaseUrn, recordDto.TypeUrn, patchRecordModel.RatingUrn, 
-				recordDto.Urn, recordDto.StatusUrn);
+			return new RecordDto(recordDto.CreatedAt, 
+				patchRecordModel.UpdatedAt, 
+				recordDto.ReviewAt,
+				recordDto.ClosedAt, 
+				recordDto.Name, 
+				recordDto.Description, 
+				recordDto.Reason, 
+				recordDto.CaseUrn, 
+				recordDto.TypeUrn, 
+				patchRecordModel.RatingUrn, 
+				recordDto.Urn, 
+				recordDto.StatusUrn);
 		}
 		
 		public static RecordDto MapClosure(PatchCaseModel patchCaseModel, RecordDto recordDto, StatusDto statusDto)
 		{
-			return new RecordDto(recordDto.CreatedAt, patchCaseModel.UpdatedAt,
+			return new RecordDto(recordDto.CreatedAt, 
+				patchCaseModel.UpdatedAt,
 				patchCaseModel.ReviewAt ?? recordDto.ReviewAt,
 				patchCaseModel.ClosedAt ?? recordDto.ClosedAt, 
-				recordDto.Name, recordDto.Description, 
-				recordDto.Reason, recordDto.CaseUrn, 
-				recordDto.TypeUrn, recordDto.RatingUrn,
-				recordDto.Urn, statusDto.Urn);
+				recordDto.Name, 
+				recordDto.Description, 
+				recordDto.Reason, 
+				recordDto.CaseUrn, 
+				recordDto.TypeUrn, 
+				recordDto.RatingUrn,
+				recordDto.Urn, 
+				statusDto.Urn);
 		}
 		
 		public static IList<RecordModel> MapDtoToModel(IList<RecordDto> recordsDto, 
@@ -70,6 +83,7 @@ namespace ConcernsCaseWork.Mappers
 				
 				var createRecordModel = new CreateRecordModel
 				{
+					CaseUrn = recordDto.CaseUrn,
 					TypeUrn = recordDto.TypeUrn,
 					Type = typeModel.Type,
 					SubType = typeModel.SubType,
