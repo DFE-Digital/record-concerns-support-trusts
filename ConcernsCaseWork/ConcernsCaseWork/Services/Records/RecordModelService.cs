@@ -36,19 +36,26 @@ namespace ConcernsCaseWork.Services.Records
 			_logger = logger;
 		}
 
-		public async Task<IList<RecordModel>> GetRecordsModelByCaseUrn(string caseworker, long caseUrn)
+		public Task<IList<RecordModel>> GetRecordsModelByCaseUrn(string caseworker, long caseUrn)
 		{
 			_logger.LogInformation("RecordModelService::GetRecordsModelByCaseUrn");
 
-			var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseworker, caseUrn);
-			var typesDto = await _typeModelService.GetTypes();
-			var ratingsDto = await _ratingModelService.GetRatings();
-			var statusesDto = await _statusCachedService.GetStatuses();
+			var recordsDtoTask = _recordCachedService.GetRecordsByCaseUrn(caseworker, caseUrn);
+			var typesDtoTask = _typeModelService.GetTypes();
+			var ratingsDtoTask = _ratingModelService.GetRatings();
+			var statusesDtoTask = _statusCachedService.GetStatuses();
 			
+			Task.WaitAll(recordsDtoTask, typesDtoTask, ratingsDtoTask, statusesDtoTask);
+				
+			var recordsDto = recordsDtoTask.Result;
+			var typesDto = typesDtoTask.Result;
+			var ratingsDto = ratingsDtoTask.Result;
+			var statusesDto = statusesDtoTask.Result;
+				
 			// Map the records dto to model
 			var recordsModel = RecordMapping.MapDtoToModel(recordsDto, typesDto, ratingsDto, statusesDto);
 
-			return recordsModel;
+			return Task.FromResult(recordsModel);
 		}
 
 		public async Task<RecordModel> GetRecordModelByUrn(string caseworker, long caseUrn, long urn)

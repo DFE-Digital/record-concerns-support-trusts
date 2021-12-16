@@ -18,7 +18,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
+namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 {
 	[Parallelizable(ParallelScope.All)]
 	public class EditRiskRatingPageModelTests
@@ -205,7 +205,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			var recordModel = RecordFactory.BuildRecordModel();
-			var ratingsModel = RatingFactory.BuildListRatingModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var typeModel = TypeFactory.BuildTypeModel();
 			var ratingModelList = RatingFactory.BuildListRatingModel();
