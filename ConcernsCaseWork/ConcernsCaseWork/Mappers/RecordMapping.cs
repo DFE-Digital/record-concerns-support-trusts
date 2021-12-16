@@ -11,12 +11,20 @@ namespace ConcernsCaseWork.Mappers
 {
 	public static class RecordMapping
 	{
-		public static RecordDto MapRiskRating(PatchRecordModel patchRecordModel, RecordDto recordDto)
+		public static RecordDto MapRating(PatchRecordModel patchRecordModel, RecordDto recordDto)
 		{
-			return new RecordDto(recordDto.CreatedAt, patchRecordModel.UpdatedAt, recordDto.ReviewAt,
-				recordDto.ClosedAt, recordDto.Name, recordDto.Description, 
-				recordDto.Reason, recordDto.CaseUrn, recordDto.TypeUrn, patchRecordModel.RatingUrn, 
-				recordDto.Urn, recordDto.StatusUrn);
+			return new RecordDto(recordDto.CreatedAt, 
+				patchRecordModel.UpdatedAt, 
+				recordDto.ReviewAt,
+				recordDto.ClosedAt, 
+				recordDto.Name, 
+				recordDto.Description, 
+				recordDto.Reason, 
+				recordDto.CaseUrn, 
+				recordDto.TypeUrn, 
+				patchRecordModel.RatingUrn, 
+				recordDto.Urn, 
+				recordDto.StatusUrn);
 		}
 		
 		public static RecordDto MapClosure(PatchRecordModel patchRecordModel, RecordDto recordDto, StatusDto statusDto)
@@ -71,6 +79,7 @@ namespace ConcernsCaseWork.Mappers
 				
 				var createRecordModel = new CreateRecordModel
 				{
+					CaseUrn = recordDto.CaseUrn,
 					TypeUrn = recordDto.TypeUrn,
 					Type = typeModel.Type,
 					SubType = typeModel.SubType,

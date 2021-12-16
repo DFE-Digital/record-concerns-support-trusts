@@ -127,5 +127,39 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			// act
 			Assert.ThrowsAsync<Exception>(() => recordModelService.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()));
 		}
+
+		[Test]
+		public async Task WhenGetCreateRecordsModelByCaseUrn_ReturnCreateRecordsModel()
+		{
+			// arrange
+			
+			
+			// act
+			
+			
+			// assert
+			
+			
+			
+			
+			
+		}
+		
+		[Test]
+		public async Task WhenPostRecordByCaseUrn_ReturnTask()
+		{
+			// arrange
+			
+			
+			// act
+			
+			
+			// assert
+			
+			
+			
+			
+			
+		}
 	}
 }

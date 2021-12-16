@@ -108,6 +108,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			return new CreateRecordModel
 			{
+				CaseUrn = Fixture.Create<long>(),
 				Type = Fixture.Create<string>(),
 				RagRating = Fixture.Create<Tuple<int, IList<string>>>(),
 				RatingName = Fixture.Create<string>(),

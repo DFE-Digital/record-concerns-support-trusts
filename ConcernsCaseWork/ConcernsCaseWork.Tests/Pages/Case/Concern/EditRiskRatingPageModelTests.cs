@@ -18,7 +18,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
+namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 {
 	[Parallelizable(ParallelScope.All)]
 	public class EditRiskRatingPageModelTests
@@ -185,7 +185,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			Assert.That(page, Is.Not.Null);
 			Assert.IsNull(pageModel.CaseModel);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 			mockRecordModelService.Verify(c => c.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
@@ -205,7 +205,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			var recordModel = RecordFactory.BuildRecordModel();
-			var ratingsModel = RatingFactory.BuildListRatingModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var typeModel = TypeFactory.BuildTypeModel();
 			var ratingModelList = RatingFactory.BuildListRatingModel();

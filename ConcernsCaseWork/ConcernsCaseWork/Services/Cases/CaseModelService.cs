@@ -257,7 +257,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(patchRecordModel.CreatedBy, patchRecordModel.CaseUrn);
 
 				var recordDto = recordsDto.FirstOrDefault(r => r.Urn.CompareTo(patchRecordModel.Urn) == 0);
-				recordDto = RecordMapping.MapRiskRating(patchRecordModel, recordDto);
+				recordDto = RecordMapping.MapRating(patchRecordModel, recordDto);
 
 				await _recordCachedService.PatchRecordByUrn(recordDto, patchRecordModel.CreatedBy);
 			}
