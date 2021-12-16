@@ -42,9 +42,7 @@ namespace ConcernsCaseWork.Pages.Case
 
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
-				{
-					throw new Exception("ViewClosedPageModel::CaseUrn is null or invalid to parse");
-				}
+					throw new Exception("CaseUrn is null or invalid to parse");
 
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);

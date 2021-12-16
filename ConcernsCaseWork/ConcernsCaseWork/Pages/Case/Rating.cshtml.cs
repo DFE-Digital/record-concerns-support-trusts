@@ -54,7 +54,7 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				var ragRating = Request.Form["rating"].ToString();
 				if (string.IsNullOrEmpty(ragRating))
-					throw new Exception("Case::RatingPageModel::Missing form values");
+					throw new Exception("Missing form values");
 				
 				// Rating
 				var splitRagRating = ragRating.Split(":");

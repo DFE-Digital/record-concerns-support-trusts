@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				_logger.LogInformation("Case::Concern::IndexPageModel::OnPostAsync");
 
 				if (!ConcernTypeValidator.IsValid(Request.Form))
-					throw new Exception("Case::Concern::IndexPageModel::Missing form values");
+					throw new Exception("Missing form values");
 				
 				string typeUrn;
 				
@@ -141,7 +141,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Concern::AddPageModel::OnGetCancel::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::Concern::IndexPageModel::OnGetCancel::Exception - {Message}", ex.Message);
 					
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();

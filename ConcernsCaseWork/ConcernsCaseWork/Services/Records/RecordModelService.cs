@@ -3,6 +3,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Types;
 using Microsoft.Extensions.Logging;
+using Service.Redis.Models;
 using Service.Redis.Records;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,20 @@ namespace ConcernsCaseWork.Services.Records
 			var recordModel = records.FirstOrDefault(r => r.Urn == urn) ?? records.First();
 
 			return recordModel;
+		}
+		
+		public async Task<IList<CreateRecordModel>> GetCreateRecordsModelByCaseUrn(string caseworker, long caseUrn)
+		{
+			_logger.LogInformation("RecordModelService::GetCreateRecordsModelByCaseUrn");
+
+			var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseworker, caseUrn);
+			var typesDto = await _typeModelService.GetTypes();
+			var ratingsDto = await _ratingModelService.GetRatings();
+			
+			// Map the records dto to model
+			var createRecordsModel = RecordMapping.MapDtoToCreateRecordModel(recordsDto, typesDto, ratingsDto);
+
+			return createRecordsModel;
 		}
 	}
 }

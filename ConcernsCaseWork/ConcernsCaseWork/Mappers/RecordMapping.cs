@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
+using Service.Redis.Models;
 using Service.TRAMS.Ratings;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
@@ -51,6 +52,35 @@ namespace ConcernsCaseWork.Mappers
 			}));
 
 			return recordsModel;
+		}
+		
+		public static IList<CreateRecordModel> MapDtoToCreateRecordModel(IList<RecordDto> recordsDto, 
+			IList<TypeDto> typesDto, 
+			IList<RatingDto> ratingsDto)
+		{
+			var createRecordsModel = new List<CreateRecordModel>();
+			if (recordsDto is null || !recordsDto.Any()) return createRecordsModel;
+		
+			createRecordsModel.AddRange(recordsDto.Select(recordDto =>
+			{
+				var typeModel = TypeMapping.MapDtoToModel(typesDto, recordDto.TypeUrn);
+				var ratingModel = RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingUrn);
+				
+				var createRecordModel = new CreateRecordModel
+				{
+					TypeUrn = recordDto.TypeUrn,
+					Type = typeModel.Type,
+					SubType = typeModel.SubType,
+					RatingUrn = recordDto.RatingUrn,
+					RatingName = ratingModel.Name,
+					RagRating = ratingModel.RagRating,
+					RagRatingCss = ratingModel.RagRatingCss
+				};
+
+				return createRecordModel;
+			}));
+			
+			return createRecordsModel;
 		}
 	}
 }
