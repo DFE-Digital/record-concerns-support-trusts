@@ -82,7 +82,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<long>(),
 				Fixture.Create<RatingModel>(),
 				Fixture.Create<long>(),
-				Fixture.Create<long>()
+				Fixture.Create<long>(),
+				Fixture.Create<StatusModel>()
 			);
 		}
 		

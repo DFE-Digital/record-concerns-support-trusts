@@ -8,7 +8,7 @@ namespace ConcernsCaseWork.Models
 	public sealed class PatchRecordModel
 	{
 		public DateTimeOffset UpdatedAt { get; set; }
-		public DateTimeOffset ClosedAt { get; set; }
+		public DateTimeOffset? ClosedAt { get; set; }
 		public long Urn { get; set; }
 		public long CaseUrn { get; set; }
 		public long RatingUrn { get; set; }

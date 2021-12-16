@@ -38,9 +38,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				// Fetch case urn
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
-				{
-					throw new Exception("Case::ClosurePageModel::CaseUrn is null or invalid to parse");
-				}
+					throw new Exception("CaseUrn is null or invalid to parse");
 
 				// Fetch UI data
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
@@ -62,11 +60,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
-					throw new Exception("ClosurePageModel::CaseUrn is null or invalid to parse");
+					throw new Exception("CaseUrn is null or invalid to parse");
 
 				var caseOutcomes = Request.Form["case-outcomes"];
 				if(string.IsNullOrEmpty(caseOutcomes))
-					throw new Exception("Case::ClosurePageModel::Missing form values");
+					throw new Exception("Missing form values");
 				
 				var patchCaseModel = new PatchCaseModel {
 					// Update patch case model

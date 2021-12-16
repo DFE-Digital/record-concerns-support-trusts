@@ -34,13 +34,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
-				{
-					throw new Exception("Case::EditDeEscalationPointPageModel::CaseUrn is null or invalid to parse");
-				}
+					throw new Exception("CaseUrn is null or invalid to parse");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditCurrentStatusPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::EditDeEscalationPointPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 				
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
@@ -54,14 +52,12 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			
 			try
 			{
-				_logger.LogInformation("Case::EditCurrentStatusPageModel::OnPostEditDeEscalationPoint");
+				_logger.LogInformation("Case::EditDeEscalationPointPageModel::OnPostEditDeEscalationPoint");
 				
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
-				{
-					throw new Exception("Case::EditCurrentStatusPageModel::CaseUrn is null or invalid to parse");
-				}
-				
+					throw new Exception("CaseUrn is null or invalid to parse");
+
 				var deEscalationPoint = Request.Form["de-escalation-point"];
 				
 				// Create patch case model
@@ -79,7 +75,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditCurrentStatusPageModel::OnPostEditDeEscalationPoint::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::EditDeEscalationPointPageModel::OnPostEditDeEscalationPoint::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
@@ -89,12 +85,23 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		
 		private async Task<ActionResult> LoadPage(string url, long caseUrn)
 		{
-			if (caseUrn == 0) return Page();
-			
-			CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
-			CaseModel.PreviousUrl = url;
-			
-			return Page();
+			try
+			{
+				if (caseUrn == 0)
+					throw new Exception("Case urn cannot be 0");
+				
+				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+				CaseModel.PreviousUrl = url;
+				
+				return Page();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::EditDeEscalationPointPageModel::LoadPage::Exception - {Message}", ex.Message);
+				
+				TempData["Error.Message"] = ErrorOnGetPage;
+				return Page();
+			}
 		}
 	}
 }

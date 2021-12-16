@@ -58,7 +58,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var deEscalationPoint = Request.Form["de-escalation-point"];
 
 				if (string.IsNullOrEmpty(issue)) 
-					throw new Exception("Case::DetailsPageModel::Missing form values");
+					throw new Exception("Missing form values");
 				
 				// Complete create case model
 				var userState = await GetUserState();

@@ -18,7 +18,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class ClosePageModel : AbstractPageModel
+	public class ClosurePageModel : AbstractPageModel
 	{
 		private readonly ICaseModelService _caseModelService;
 		private readonly IRecordModelService _recordModelService;
@@ -26,20 +26,20 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		private readonly ITrustModelService _trustModelService;
 		private readonly ITypeModelService _typeModelService;
 		private readonly IStatusService _statusService;
-		private readonly ILogger<ClosePageModel> _logger;
+		private readonly ILogger<ClosurePageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public TypeModel TypeModel { get; private set; }
 
-		public ClosePageModel(ICaseModelService caseModelService, 
+		public ClosurePageModel(ICaseModelService caseModelService, 
 			IRatingModelService ratingModelService, 
 			IRecordModelService recordModelService,
 			ITrustModelService trustModelService, 
 			ITypeModelService typeModelService,
 			IStatusService statusService,
-			ILogger<ClosePageModel> logger)
+			ILogger<ClosurePageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_recordModelService = recordModelService;
@@ -57,12 +57,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			
 			try
 			{
-				_logger.LogInformation("Case::Concern::ClosePageModel::OnGet");
+				_logger.LogInformation("Case::Concern::ClosurePageModel::OnGet");
 				(caseUrn, recordUrn) = GetRouteData();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Concern::ClosePageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::Concern::ClosurePageModel::OnGetAsync::Exception - {Message}", ex.Message);
 				
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
@@ -77,7 +77,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 
 			try
 			{
-				_logger.LogInformation("Case::Concern::ClosePageModel::CloseConcern");
+				_logger.LogInformation("Case::Concern::ClosurePageModel::CloseConcern");
 
 				(caseUrn, recordUrn) = GetRouteData();
 				var statuses = await _statusService.GetStatuses();
@@ -96,12 +96,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 
 				await _recordModelService.PatchRecordStatus(patchRecordModel);
 
-				return Redirect("/");
-
+				var url = $"/case/{caseUrn}/management";
+				return Redirect(url);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditRiskRatingPageModel::OnPostEditRiskRating::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::Concern::ClosurePageModel::CloseConcern::OnGetCloseConcern::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
@@ -117,12 +117,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			try
 			{
 				(caseUrn, recordUrn) = GetRouteData();
-				return Redirect("/");
-				//return RedirectToPage("management", new { urn = caseUrn });
+
+				var url = $"/case/{caseUrn}/management";
+				return Redirect(url);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Concern::ClosePageModel::OnGetCancel::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::Concern::ClosurePageModel::OnGetCancel::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
@@ -148,13 +149,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			var caseUrnValue = RouteData.Values["urn"];
 			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
 			{
-				throw new Exception("Case::Concern::EditRiskRatingPageModel::CaseUrn is null or invalid to parse");
+				throw new Exception("Case::Concern::ClosurePageModel::CaseUrn is null or invalid to parse");
 			}
 
 			var recordUrnValue = RouteData.Values["recordUrn"];
 			if (recordUrnValue == null || !long.TryParse(recordUrnValue.ToString(), out long recordUrn) || recordUrn == 0)
 			{
-				throw new Exception("Case::Concern::EditRiskRatingPageModel::RecordUrn is null or invalid to parse");
+				throw new Exception("Case::Concern::ClosurePageModel::RecordUrn is null or invalid to parse");
 			}
 
 			return (caseUrn, recordUrn);

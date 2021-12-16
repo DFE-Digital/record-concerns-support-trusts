@@ -89,6 +89,9 @@ namespace ConcernsCaseWork.Services.Cases
 				// Fetch types
 				var typesDto = await _typeCachedService.GetTypes();
 				
+				// Fetch statuses
+				var statusesDto = await _statusCachedService.GetStatuses();
+				
 				// Execute in parallel each case contained logic
 				var listHomeModel = casesDto.Select(caseDto =>
 				{
@@ -101,7 +104,7 @@ namespace ConcernsCaseWork.Services.Cases
 					var recordsDto = recordsTask.Result;
 
 					// Map records dto to model
-					var recordsModel = RecordMapping.MapDtoToModel(recordsDto, typesDto, ratingsDto);
+					var recordsModel = RecordMapping.MapDtoToModel(recordsDto, typesDto, ratingsDto, statusesDto);
 					
 					// Case rating
 					var caseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, caseDto.RatingUrn);
@@ -206,15 +209,8 @@ namespace ConcernsCaseWork.Services.Cases
 				var statusDto = await _statusCachedService.GetStatusByName(patchCaseModel.StatusName);
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
 				
-				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
-				
-				// TODO multiple concerns will need some refactor
-				var recordDto = recordsDto.FirstOrDefault();
-				
-				recordDto = RecordMapping.MapClosure(patchCaseModel, recordDto, statusDto);
 				caseDto = CaseMapping.MapClosure(patchCaseModel, caseDto, statusDto);
 				
-				await _recordCachedService.PatchRecordByUrn(recordDto, patchCaseModel.CreatedBy);
 				await _caseCachedService.PatchCaseByUrn(caseDto);
 				
 				// Create case history event
@@ -419,8 +415,18 @@ namespace ConcernsCaseWork.Services.Cases
 				var currentDate = DateTimeOffset.Now;
 				var recordTasks = createCaseModel.CreateRecordsModel.Select(recordModel => 
 				{
-					var createRecordDto = new CreateRecordDto(currentDate, currentDate, currentDate, currentDate, 
-						recordModel.Type, recordModel.SubType, recordModel.TypeDisplay, newCase.Urn, recordModel.TypeUrn,recordModel.RatingUrn, statusDto.Urn);
+					var createRecordDto = new CreateRecordDto(
+						currentDate, 
+						currentDate, 
+						currentDate, 
+						currentDate, 
+						recordModel.Type, 
+						recordModel.SubType, 
+						recordModel.TypeDisplay, 
+						newCase.Urn, 
+						recordModel.TypeUrn, 
+						recordModel.RatingUrn, 
+						statusDto.Urn);
 
 					return _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 				});

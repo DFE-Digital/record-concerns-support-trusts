@@ -107,7 +107,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
 					// Records
-					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoLiveCases, typesDto, ratingsDto);
+					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoLiveCases, typesDto, ratingsDto, null);
 					var expectedRecordsModel = expected.RecordsModel;
 					
 					Assert.NotNull(expectedRecordsModel);
@@ -282,7 +282,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
 					// Records
-					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoLiveCases, typesDto, ratingsDto);
+					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoLiveCases, typesDto, ratingsDto, null);
 					var expectedRecordsModel = expected.RecordsModel;
 					
 					Assert.NotNull(expectedRecordsModel);
@@ -400,7 +400,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
 					// Records
-					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoMonitoringCases, typesDto, ratingsDto);
+					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoMonitoringCases, typesDto, ratingsDto, null);
 					var expectedRecordsModel = expected.RecordsModel;
 					
 					Assert.NotNull(expectedRecordsModel);
@@ -518,7 +518,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
 					// Records
-					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoClosedCases, typesDto, ratingsDto);
+					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoClosedCases, typesDto, ratingsDto, null);
 					var expectedRecordsModel = expected.RecordsModel;
 					
 					Assert.NotNull(expectedRecordsModel);

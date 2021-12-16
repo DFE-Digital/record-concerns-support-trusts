@@ -6,6 +6,8 @@ namespace Service.Redis.Models
 	[Serializable]
 	public sealed class CreateRecordModel
 	{
+		public long CaseUrn { get; set; }
+		
 		public long TypeUrn { get; set; }
 
 		public string Type { get; set; } = string.Empty;

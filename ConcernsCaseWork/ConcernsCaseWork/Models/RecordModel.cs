@@ -19,8 +19,10 @@
 		
 		public long StatusUrn { get; }
 		
-		public RecordModel(long caseUrn, long typeUrn, TypeModel typeModel, long ratingUrn, RatingModel ratingModel, long urn, long statusUrn) => 
-			(CaseUrn, TypeUrn, TypeModel, RatingUrn, RatingModel, Urn, StatusUrn) = 
-			(caseUrn, typeUrn, typeModel, ratingUrn, ratingModel, urn, statusUrn);
+		public StatusModel StatusModel { get; }
+		
+		public RecordModel(long caseUrn, long typeUrn, TypeModel typeModel, long ratingUrn, RatingModel ratingModel, long urn, long statusUrn, StatusModel statusModel) => 
+			(CaseUrn, TypeUrn, TypeModel, RatingUrn, RatingModel, Urn, StatusUrn, StatusModel) = 
+			(caseUrn, typeUrn, typeModel, ratingUrn, ratingModel, urn, statusUrn, statusModel);
 	}
 }

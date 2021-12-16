@@ -34,9 +34,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
-				{
-					throw new Exception("Case::EditIssuePageModel::CaseUrn is null or invalid to parse");
-				}
+					throw new Exception("CaseUrn is null or invalid to parse");
 			}
 			catch (Exception ex)
 			{
@@ -58,14 +56,12 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
-				{
-					throw new Exception("Case::EditIssuePageModel::CaseUrn is null or invalid to parse");
-				}
-				
+					throw new Exception("CaseUrn is null or invalid to parse");
+
 				var issue = Request.Form["issue"];
 
 				if (string.IsNullOrEmpty(issue)) 
-					throw new Exception("Case::EditIssuePageModel::Missing form values");
+					throw new Exception("Missing form values");
 				
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel
@@ -92,12 +88,23 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		
 		private async Task<ActionResult> LoadPage(string url, long caseUrn)
 		{
-			if (caseUrn == 0) return Page();
-			
-			CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
-			CaseModel.PreviousUrl = url;
-			
-			return Page();
+			try
+			{
+				if (caseUrn == 0)
+					throw new Exception("Case urn cannot be 0");
+				
+				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+				CaseModel.PreviousUrl = url;
+				
+				return Page();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::EditIssuePageModel::LoadPage::Exception - {Message}", ex.Message);
+				
+				TempData["Error.Message"] = ErrorOnGetPage;
+				return Page();
+			}
 		}
 	}
 }

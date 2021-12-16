@@ -1,5 +1,5 @@
-﻿@page "/case/concern/{handler?}"
-@model ConcernsCaseWork.Pages.Case.Concern.IndexPageModel
+﻿@page "/case/{urn:long}/management/concern/{handler?}"
+@model ConcernsCaseWork.Pages.Case.Management.Concern.IndexPageModel
 
 @{
 	ViewData["Title"] = "New Case Concern";
@@ -9,7 +9,7 @@
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
 	
-	<span class="govuk-caption-l">Create case</span>
+	<span class="govuk-caption-l">Management case</span>
 	<h1 class="govuk-heading-l">Concerns</h1>
 
 	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
@@ -31,13 +31,15 @@
 		<!-- FORM -->
 		<form role="form" method="post" id="case-concern-form" novalidate>
 			
+			<input type="hidden" value="@Model.PreviousUrl" name="url"/>
+			
 			<!--Q Concern type-->
 			<div class="govuk-form-group govuk-!-margin-top-6">
 				<fieldset class="govuk-fieldset">
 
 					<div class="govuk-hint" id="case-issue-hint">
 						Use the
-						<a target="_blank" href="@Url.Page("../../FileResource", "DownloadRiskManagementPdf")" class="govuk-link" rel="noreferrer noopener">
+						<a target="_blank" href="@Url.Page("../../../FileResource", "DownloadRiskManagementPdf")" class="govuk-link" rel="noreferrer noopener">
 							Risk Management Framework (opens in new tab)
 						</a> to assess the type of Concern
 					</div>
@@ -64,7 +66,7 @@
 				<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
 					Add to case
 				</button>
-				<a data-prevent-double-click="true" class="govuk-link" asp-page-handler="Cancel" data-module="govuk-button" role="button">
+				<a data-prevent-double-click="true" class="govuk-link" href="@Model.PreviousUrl" data-module="govuk-button" role="button">
 					Cancel
 				</a>
 			</div>

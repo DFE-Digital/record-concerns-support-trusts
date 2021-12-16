@@ -38,9 +38,7 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				// Double check search query.
 				if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < SearchQueryMinLength)
-				{
 					return new JsonResult(Array.Empty<TrustSearchModel>());
-				}
 
 				var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);
 				var trustSearchResponse = await _trustModelService.GetTrustsBySearchCriteria(trustSearch);
@@ -63,7 +61,7 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				// Double check selected trust.
 				if (string.IsNullOrEmpty(trustUkPrn) || trustUkPrn.Contains("-") || trustUkPrn.Length < SearchQueryMinLength)
-					throw new Exception($"Case::IndexModel::OnGetSelectedTrust::Selected trust is incorrect - {trustUkPrn}");
+					throw new Exception($"Selected trust is incorrect - {trustUkPrn}");
 				
 				// Store CaseState into cache.
 				var userState = await _cachedService.GetData<UserState>(User.Identity.Name) ?? new UserState();

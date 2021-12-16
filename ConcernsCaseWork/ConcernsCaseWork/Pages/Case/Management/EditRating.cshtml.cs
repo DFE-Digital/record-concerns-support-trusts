@@ -38,12 +38,12 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			
 			try
 			{
-				_logger.LogInformation("Case::EditRiskRatingPageModel::OnGet");
+				_logger.LogInformation("Case::EditRatingPageModel::OnGet");
 				caseUrn = GetRouteData();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditRiskRatingPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::EditRatingPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 				
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
@@ -57,14 +57,14 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			try
 			{
-				_logger.LogInformation("Case::EditRiskRatingPageModel::OnPostEditRiskRating");
+				_logger.LogInformation("Case::EditRatingPageModel::OnPostEditRiskRating");
 				
 				caseUrn = GetRouteData();
 				
 				var riskRating = Request.Form["rating"].ToString();
 
 				if (string.IsNullOrEmpty(riskRating)) 
-					throw new Exception("Case::EditRiskRatingPageModel::Missing form values");
+					throw new Exception("Missing form values");
 
 				var splitRagRating = riskRating.Split(":");
 				var ratingUrn = splitRagRating[0];
@@ -85,7 +85,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditRiskRatingPageModel::OnPostEditRiskRating::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::EditRatingPageModel::OnPostEditRiskRating::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
@@ -95,13 +95,24 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		
 		private async Task<ActionResult> LoadPage(string url, long caseUrn)
 		{
-			if (caseUrn == 0) return Page();
-			
-			CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
-			RatingsModel = await _ratingModelService.GetSelectedRatingsModelByUrn(CaseModel.RatingUrn);
-			CaseModel.PreviousUrl = url;
+			try
+			{
+				if (caseUrn == 0)
+					throw new Exception("Case urn cannot be 0");
+				
+				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+				RatingsModel = await _ratingModelService.GetSelectedRatingsModelByUrn(CaseModel.RatingUrn);
+				CaseModel.PreviousUrl = url;
 
-			return Page();
+				return Page();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::EditRatingPageModel::LoadPage::Exception - {Message}", ex.Message);
+				
+				TempData["Error.Message"] = ErrorOnGetPage;
+				return Page();
+			}
 		} 
 
 		private long GetRouteData()
@@ -109,7 +120,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			var caseUrnValue = RouteData.Values["urn"];
 			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
 			{
-				throw new Exception("Case::EditRiskRatingPageModel::CaseUrn is null or invalid to parse");
+				throw new Exception("Case::EditRatingPageModel::CaseUrn is null or invalid to parse");
 			}
 
 			return caseUrn;

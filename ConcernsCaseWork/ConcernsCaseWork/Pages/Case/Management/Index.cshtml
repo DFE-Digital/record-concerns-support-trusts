@@ -1,9 +1,11 @@
 ﻿@page "/case/{urn:long}/management"
 @model ConcernsCaseWork.Pages.Case.Management.IndexPageModel
+@using Service.TRAMS.Status;
 
 @{
 	ViewData["Title"] = "Case management";
 	var nonce = HttpContext.GetNonce();
+	
 }
 
 <div class="govuk-width-container">
@@ -117,8 +119,7 @@
 									</span>
 									<div class="govuk-!-display-inline govuk-label-wrapper govuk-grid-column-two-third">
 										@{
-											// TODO shouldn't reference this by urn
-											if (concern.StatusUrn == 3)
+											if (concern.StatusModel.Name.CompareTo(StatusEnum.Close.ToString()) == 0)
 											{
 												<span class="govuk-tag ragtag ragtag__grey">
 													Closed
@@ -142,14 +143,13 @@
 
 						</div>
 						<div class="govuk-o-grid__item--one-half">
-							<a asp-page="/concern/index" class="govuk-link govuk-link-no-visited-state">Add concern</a>
+							<a href="@Request.Path/concern" class="govuk-link govuk-link-no-visited-state">Add concern</a>
 						</div>
 					</dd>
 					<dd class="govuk-summary-list__actions">
 						@foreach (var concern in Model.CaseModel.RecordsModel)
 						{
-							// TODO shouldn't reference this by urn
-							if (concern.StatusUrn == 3)
+							if (concern.StatusModel.Name.CompareTo(StatusEnum.Close.ToString()) == 0)
 							{
 								<br />
 							}
