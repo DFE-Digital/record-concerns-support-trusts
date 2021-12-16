@@ -60,30 +60,6 @@ namespace ConcernsCaseWork.Mappers
 				RatingUrn = caseDto.RatingUrn
 			};
 		}
-
-		public static CaseDto Map(PatchCaseModel patchCaseModel, CaseDto caseDto)
-		{
-			return new CaseDto(
-				caseDto.CreatedAt, 
-				patchCaseModel.UpdatedAt,
-				caseDto.ReviewAt, 
-				caseDto.ClosedAt, 
-				caseDto.CreatedBy, 
-				caseDto.Description,
-				caseDto.CrmEnquiry, 
-				caseDto.TrustUkPrn, 
-				caseDto.ReasonAtReview,
-				caseDto.DeEscalation, 
-				caseDto.Issue, 
-				caseDto.CurrentStatus,
-				caseDto.NextSteps, 
-				caseDto.CaseAim, 
-				caseDto.DeEscalationPoint, 
-				caseDto.DirectionOfTravel,
-				caseDto.Urn, 
-				caseDto.StatusUrn, 
-				caseDto.RatingUrn);
-		}
 		
 		public static CaseDto MapClosure(PatchCaseModel patchCaseModel, CaseDto caseDto, StatusDto statusDto)
 		{

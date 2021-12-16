@@ -897,6 +897,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
 			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
+			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
 
 			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
 			mockCaseCachedService.Setup(cs => cs.PostCase(It.IsAny<CreateCaseDto>())).ReturnsAsync(caseDto);
@@ -1000,6 +1001,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			Assert.That(actualCaseModel.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
 			Assert.That(actualCaseModel.Urn, Is.EqualTo(1));
 			Assert.That(actualCaseModel.StatusUrn, Is.EqualTo(1));
+			Assert.That(actualCaseModel.RatingUrn, Is.EqualTo(caseDto.RatingUrn));
+			Assert.IsNull(actualCaseModel.RatingModel);
 		}
 		
 		[Test]

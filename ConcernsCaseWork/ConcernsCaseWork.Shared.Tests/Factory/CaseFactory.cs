@@ -234,10 +234,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			{
 				Urn = 1,
 				CreatedBy = Fixture.Create<string>(),
-				Type = Fixture.Create<string>(),
-				TypeUrn = 1,
 				UpdatedAt = Fixture.Create<DateTimeOffset>(),
-				SubType = Fixture.Create<string>(),
 				RatingUrn = 1,
 				DirectionOfTravel = Fixture.Create<string>(),
 				Issue = Fixture.Create<string>(),
