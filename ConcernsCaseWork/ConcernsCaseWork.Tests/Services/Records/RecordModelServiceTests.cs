@@ -5,7 +5,6 @@ using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Models;
 using Service.Redis.Records;
 using Service.Redis.Status;
 using Service.TRAMS.Records;

@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.Mappers
 	{
 		public static StatusModel MapDtoToModel(IList<StatusDto> statusesDto, long urn)
 		{
-			var selectedStatusDto = statusesDto.FirstOrDefault(s => s.Urn.CompareTo(urn) == 0);
+			var selectedStatusDto = statusesDto.FirstOrDefault(s => s.Urn.CompareTo(urn) == 0) ?? statusesDto.First();
 
 			return new StatusModel(selectedStatusDto.Name, selectedStatusDto.Urn);
 		}

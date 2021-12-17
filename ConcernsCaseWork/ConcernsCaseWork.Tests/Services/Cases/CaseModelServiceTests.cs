@@ -56,9 +56,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
 			var trustDto = TrustFactory.BuildTrustDetailsDto();
+			var statusesDto = StatusFactory.BuildListStatusDto();
 
 			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(statusLiveDto);
+			mockStatusCachedService.Setup(s => s.GetStatuses())
+				.ReturnsAsync(statusesDto);
 			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(casesDtoLive);
 			mockRatingCachedService.Setup(r => r.GetRatings())
@@ -107,7 +110,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
 					// Records
-					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoLiveCases, typesDto, ratingsDto, null);
+					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoLiveCases, typesDto, ratingsDto, statusesDto);
 					var expectedRecordsModel = expected.RecordsModel;
 					
 					Assert.NotNull(expectedRecordsModel);
@@ -227,13 +230,15 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			// status
 			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), casesDtoLive.First().Urn);
-			
+			var statusesDto = StatusFactory.BuildListStatusDto();
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
 			var trustDto = TrustFactory.BuildTrustDetailsDto();
 
 			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(statusLiveDto);
+			mockStatusCachedService.Setup(s => s.GetStatuses())
+				.ReturnsAsync(statusesDto);
 			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(casesDtoLive);
 			mockRatingCachedService.Setup(r => r.GetRatings())
@@ -282,7 +287,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
 					// Records
-					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoLiveCases, typesDto, ratingsDto, null);
+					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoLiveCases, typesDto, ratingsDto, statusesDto);
 					var expectedRecordsModel = expected.RecordsModel;
 					
 					Assert.NotNull(expectedRecordsModel);
@@ -345,13 +350,15 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			// status
 			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), casesDtoMonitoring.First().Urn);
-			
+			var statusesDto = StatusFactory.BuildListStatusDto();
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
 			var trustDto = TrustFactory.BuildTrustDetailsDto();
 
 			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(statusMonitoringDto);
+			mockStatusCachedService.Setup(s => s.GetStatuses())
+				.ReturnsAsync(statusesDto);
 			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(casesDtoMonitoring);
 			mockRatingCachedService.Setup(r => r.GetRatings())
@@ -400,7 +407,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
 					// Records
-					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoMonitoringCases, typesDto, ratingsDto, null);
+					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoMonitoringCases, typesDto, ratingsDto, statusesDto);
 					var expectedRecordsModel = expected.RecordsModel;
 					
 					Assert.NotNull(expectedRecordsModel);
@@ -463,13 +470,15 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			// status
 			var statusClosedDto = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), casesDtoClosed.First().Urn);
-			
+			var statusesDto = StatusFactory.BuildListStatusDto();
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
 			var trustDto = TrustFactory.BuildTrustDetailsDto();
 
 			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(statusClosedDto);
+			mockStatusCachedService.Setup(s => s.GetStatuses())
+				.ReturnsAsync(statusesDto);
 			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(casesDtoClosed);
 			mockRatingCachedService.Setup(r => r.GetRatings())
@@ -518,7 +527,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
 					// Records
-					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoClosedCases, typesDto, ratingsDto, null);
+					var actualRecordsModel = RecordMapping.MapDtoToModel(recordsDtoClosedCases, typesDto, ratingsDto, statusesDto);
 					var expectedRecordsModel = expected.RecordsModel;
 					
 					Assert.NotNull(expectedRecordsModel);
@@ -702,8 +711,10 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
 			var trustDto = TrustFactory.BuildTrustDetailsDto(firstCaseDto.TrustUkPrn);
-
+			var statusesDto = StatusFactory.BuildListStatusDto();
+			
 			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusLiveDto).ReturnsAsync(statusMonitoringDto);
+			mockStatusCachedService.Setup(s => s.GetStatuses()).ReturnsAsync(statusesDto);
 			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(firstCaseDto.CreatedBy, firstCaseDto.Urn)).ReturnsAsync(recordsDto);
 			mockRatingCachedService.Setup(r => r.GetRatings()).ReturnsAsync(ratingsDto);
 			mockTypeCachedService.Setup(t => t.GetTypes()).ReturnsAsync(typesDto);
@@ -1169,12 +1180,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
-			var recordsDto = RecordFactory.BuildListRecordDto();
 			var statusDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
 
 			mockStatusCachedService.Setup(t => t.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusDto);
 			mockCaseCachedService.Setup(cs => cs.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(caseDto);
-			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn)).ReturnsAsync(recordsDto);
+			mockCaseCachedService.Setup(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()));
 			mockCaseHistoryCachedService.Setup(c => c.PostCaseHistory(It.IsAny<CreateCaseHistoryDto>(), It.IsAny<string>()));
 			
 			// act
@@ -1187,8 +1197,10 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			await caseModelService.PatchClosure(CaseFactory.BuildPatchCaseModel());
 
 			// assert
-			mockRecordCachedService.Verify(r => r.PatchRecordByUrn(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Once);
+			mockCaseHistoryCachedService.Verify(c => c.PostCaseHistory(It.IsAny<CreateCaseHistoryDto>(), It.IsAny<string>()), Times.Once);
 			mockCaseCachedService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Once);
+			mockStatusCachedService.Verify(t => t.GetStatusByName(It.IsAny<string>()), Times.Once);
+			mockCaseCachedService.Verify(cs => cs.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 		}
 		
 		[Test]
