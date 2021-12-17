@@ -5,6 +5,7 @@ using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Service.Redis.Models;
 using Service.Redis.Records;
 using Service.Redis.Status;
 using Service.TRAMS.Records;
@@ -132,34 +133,88 @@ namespace ConcernsCaseWork.Tests.Services.Records
 		public async Task WhenGetCreateRecordsModelByCaseUrn_ReturnCreateRecordsModel()
 		{
 			// arrange
+			var mockRecordCacheService = new Mock<IRecordCachedService>();
+			var mockLogger = new Mock<ILogger<RecordModelService>>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+
+			var recordsDto = RecordFactory.BuildListRecordDto();
+			var typesDto = TypeFactory.BuildListTypeDto();
+			var ratingsDto = RatingFactory.BuildListRatingDto();
 			
+			mockRecordCacheService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(recordsDto);
+			mockTypeModelService.Setup(t => t.GetTypes())
+				.ReturnsAsync(typesDto);
+			mockRatingModelService.Setup(t => t.GetRatings())
+				.ReturnsAsync(ratingsDto);
+			
+			var recordModelService = new RecordModelService(mockRecordCacheService.Object,
+				mockStatusCachedService.Object,
+				mockRatingModelService.Object, 
+				mockTypeModelService.Object, 
+				mockLogger.Object);
 			
 			// act
-			
-			
+			var createRecordsModel = await recordModelService.GetCreateRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>());
+
 			// assert
+			Assert.NotNull(createRecordsModel);
+			Assert.That(createRecordsModel.Count, Is.EqualTo(recordsDto.Count));
+
+			for (var index = 0; index < createRecordsModel.Count; ++index)
+			{
+				var actualRecordModel = createRecordsModel.ElementAt(index);
+				var expectedRecordDto = recordsDto.ElementAt(index);
+				
+				Assert.That(actualRecordModel.TypeUrn, Is.EqualTo(expectedRecordDto.TypeUrn));
+				Assert.That(actualRecordModel.CaseUrn, Is.EqualTo(expectedRecordDto.CaseUrn));
+				Assert.That(actualRecordModel.RatingUrn, Is.EqualTo(expectedRecordDto.RatingUrn));
+			}
 			
-			
-			
-			
-			
+			mockRecordCacheService.Verify(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
+			mockTypeModelService.Verify(t => t.GetTypes(), Times.Once);
+			mockRatingModelService.Verify(t => t.GetRatings(), Times.Once);
 		}
 		
 		[Test]
 		public async Task WhenPostRecordByCaseUrn_ReturnTask()
 		{
 			// arrange
+			var mockRecordCacheService = new Mock<IRecordCachedService>();
+			var mockLogger = new Mock<ILogger<RecordModelService>>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+
+			var recordDto = RecordFactory.BuildRecordDto();
+			var statusDto = StatusFactory.BuildStatusDto("live", 1);
+			var createRecordModel = RecordFactory.BuildCreateRecordModel();
 			
+			mockRecordCacheService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordDto>(), It.IsAny<string>()))
+				.ReturnsAsync(recordDto);
+			mockStatusCachedService.Setup(t => t.GetStatusByName(It.IsAny<string>()))
+				.ReturnsAsync(statusDto);
+			
+			var recordModelService = new RecordModelService(mockRecordCacheService.Object,
+				mockStatusCachedService.Object,
+				mockRatingModelService.Object, 
+				mockTypeModelService.Object, 
+				mockLogger.Object);
 			
 			// act
-			
+			var actualRecordDto = await recordModelService.PostRecordByCaseUrn(createRecordModel, It.IsAny<string>());
 			
 			// assert
+			Assert.NotNull(actualRecordDto);
+			Assert.That(actualRecordDto.TypeUrn, Is.EqualTo(recordDto.TypeUrn));
+			Assert.That(actualRecordDto.CaseUrn, Is.EqualTo(recordDto.CaseUrn));
+			Assert.That(actualRecordDto.RatingUrn, Is.EqualTo(recordDto.RatingUrn));
+			Assert.That(actualRecordDto.StatusUrn, Is.EqualTo(recordDto.StatusUrn));
 			
-			
-			
-			
-			
+			mockRecordCacheService.Verify(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordDto>(), It.IsAny<string>()), Times.Once);
+			mockStatusCachedService.Verify(t => t.GetStatusByName(It.IsAny<string>()), Times.Once);
 		}
 	}
 }
