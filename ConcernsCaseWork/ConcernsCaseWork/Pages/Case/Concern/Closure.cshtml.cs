@@ -106,7 +106,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
-			return await LoadPage("", caseUrn, recordUrn);
+			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn, recordUrn);
 		}
 
 		public ActionResult OnGetCancel()
