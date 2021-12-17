@@ -1,5 +1,6 @@
 ﻿@page "/case/{urn:long}/management"
 @model ConcernsCaseWork.Pages.Case.Management.IndexPageModel
+@using Service.TRAMS.Status;
 
 @{
 	ViewData["Title"] = "Case management";
@@ -116,12 +117,25 @@
 										@concern.TypeModel.TypeDisplay
 									</span>
 									<div class="govuk-!-display-inline govuk-label-wrapper govuk-grid-column-two-third">
-										@for (var index = 0; index < concern.RatingModel.RagRating.Item2.Count; ++index)
-										{
-											<span class="govuk-tag ragtag @concern.RatingModel.RagRatingCss.ElementAt(index)">
-												@concern.RatingModel.RagRating.Item2.ElementAt(index)
-											</span>
+										@{
+											if (concern.StatusModel.Name.CompareTo(StatusEnum.Close.ToString()) == 0)
+											{
+												<span class="govuk-tag ragtag ragtag__grey">
+													Closed
+												</span>
+											}
+											else
+											{
+												for (var index = 0; index < concern.RatingModel.RagRating.Item2.Count; ++index)
+												{
+													<span class="govuk-tag ragtag @concern.RatingModel.RagRatingCss.ElementAt(index)">
+														@concern.RatingModel.RagRating.Item2.ElementAt(index)
+													</span>
+												}
+											}
 										}
+
+
 									</div>
 								</div>
 							}
@@ -134,9 +148,16 @@
 					<dd class="govuk-summary-list__actions">
 						@foreach (var concern in Model.CaseModel.RecordsModel)
 						{
-							<div class="govuk-!-padding-bottom-1">
-								<a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Urn/edit_rating">Edit</a>
-							</div>
+							if (concern.StatusModel.Name.CompareTo(StatusEnum.Close.ToString()) == 0)
+							{
+								<br />
+							}
+							else
+							{
+								<div class="govuk-!-padding-bottom-1">
+									<a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Urn/edit_rating">Edit</a>
+								</div>
+							}
 						}
 					</dd>
 				</div>

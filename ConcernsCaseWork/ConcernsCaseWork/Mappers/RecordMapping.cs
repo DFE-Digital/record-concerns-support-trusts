@@ -27,22 +27,18 @@ namespace ConcernsCaseWork.Mappers
 				recordDto.StatusUrn);
 		}
 		
-		public static RecordDto MapClosure(PatchCaseModel patchCaseModel, RecordDto recordDto, StatusDto statusDto)
+		public static RecordDto MapClosure(PatchRecordModel patchRecordModel, RecordDto recordDto, StatusDto statusDto)
 		{
-			return new RecordDto(recordDto.CreatedAt, 
-				patchCaseModel.UpdatedAt,
-				patchCaseModel.ReviewAt ?? recordDto.ReviewAt,
-				patchCaseModel.ClosedAt ?? recordDto.ClosedAt, 
-				recordDto.Name, 
-				recordDto.Description, 
-				recordDto.Reason, 
-				recordDto.CaseUrn, 
-				recordDto.TypeUrn, 
-				recordDto.RatingUrn,
-				recordDto.Urn, 
-				statusDto.Urn);
+			return new RecordDto(recordDto.CreatedAt,
+				patchRecordModel.UpdatedAt,
+				recordDto.ReviewAt,
+				patchRecordModel.ClosedAt ?? recordDto.ClosedAt, 
+				recordDto.Name, recordDto.Description, 
+				recordDto.Reason, recordDto.CaseUrn, 
+				recordDto.TypeUrn, recordDto.RatingUrn,
+				recordDto.Urn, statusDto.Urn);
 		}
-		
+
 		public static IList<RecordModel> MapDtoToModel(IList<RecordDto> recordsDto, 
 			IList<TypeDto> typesDto, 
 			IList<RatingDto> ratingsDto,
@@ -61,7 +57,7 @@ namespace ConcernsCaseWork.Mappers
 					RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingUrn),
 					recordDto.Urn,
 					recordDto.StatusUrn,
-					null);
+					StatusMapping.MapDtoToModel(statusesDto, recordDto.StatusUrn));
 
 				return recordModel;
 			}));

@@ -209,15 +209,8 @@ namespace ConcernsCaseWork.Services.Cases
 				var statusDto = await _statusCachedService.GetStatusByName(patchCaseModel.StatusName);
 				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
 				
-				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
-				
-				// TODO multiple concerns will need some refactor
-				var recordDto = recordsDto.FirstOrDefault();
-				
-				recordDto = RecordMapping.MapClosure(patchCaseModel, recordDto, statusDto);
 				caseDto = CaseMapping.MapClosure(patchCaseModel, caseDto, statusDto);
 				
-				await _recordCachedService.PatchRecordByUrn(recordDto, patchCaseModel.CreatedBy);
 				await _caseCachedService.PatchCaseByUrn(caseDto);
 				
 				// Create case history event
