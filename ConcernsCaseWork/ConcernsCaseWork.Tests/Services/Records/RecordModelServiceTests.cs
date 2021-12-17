@@ -30,6 +30,7 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			var recordsDto = RecordFactory.BuildListRecordDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
 			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var statusesDto = StatusFactory.BuildListStatusDto();
 
 			mockRecordCacheService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsDto);
@@ -37,6 +38,8 @@ namespace ConcernsCaseWork.Tests.Services.Records
 				.ReturnsAsync(typesDto);
 			mockRatingModelService.Setup(t => t.GetRatings())
 				.ReturnsAsync(ratingsDto);
+			mockStatusCachedService.Setup(s => s.GetStatuses())
+				.ReturnsAsync(statusesDto);
 			
 			var recordModelService = new RecordModelService(mockRecordCacheService.Object,
 				mockStatusCachedService.Object,
@@ -66,6 +69,7 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			var recordDto = recordsDto.First();
 			var typesDto = TypeFactory.BuildListTypeDto();
 			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var statusesDto = StatusFactory.BuildListStatusDto();
 
 			mockRecordCacheService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsDto);
@@ -73,6 +77,8 @@ namespace ConcernsCaseWork.Tests.Services.Records
 				.ReturnsAsync(typesDto);
 			mockRatingModelService.Setup(t => t.GetRatings())
 				.ReturnsAsync(ratingsDto);
+			mockStatusCachedService.Setup(s => s.GetStatuses())
+				.ReturnsAsync(statusesDto);
 			
 			var recordModelService = new RecordModelService(mockRecordCacheService.Object,
 				mockStatusCachedService.Object,
