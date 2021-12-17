@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Case.Concern;
 using ConcernsCaseWork.Pages.Case.Management.Concern;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
@@ -14,14 +13,12 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Base;
-using Service.Redis.Models;
+using Service.Redis.Status;
 using Service.TRAMS.Status;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages.Case.Concern
+namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 {
 	[Parallelizable(ParallelScope.All)]
 	public class ClosurePageModelTests
@@ -35,12 +32,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
-			var mockStatusModelService = new Mock<IStatusService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			var recordModel = RecordFactory.BuildRecordModel();
-			var ratingsmodel = RatingFactory.BuildListRatingModel();
+			var ratingsModel = RatingFactory.BuildListRatingModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var typeModel = TypeFactory.BuildTypeModel();
 
@@ -49,7 +46,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			mockRecordModelService.Setup(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
 				.ReturnsAsync(recordModel);
 			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()))
-				.ReturnsAsync(ratingsmodel);
+				.ReturnsAsync(ratingsModel);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
 			mockTypeModelService.Setup(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()))
@@ -61,7 +58,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 				mockRecordModelService.Object,
 				mockTrustModelService.Object,
 				mockTypeModelService.Object,
-				mockStatusModelService.Object,
+				mockStatusCachedService.Object,
 				mockLogger.Object);
 
 
@@ -106,7 +103,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
-			var mockStatusModelService = new Mock<IStatusService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var pageModel = SetupClosurePageModel(
@@ -115,7 +112,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 				mockRecordModelService.Object,
 				mockTrustModelService.Object,
 				mockTypeModelService.Object,
-				mockStatusModelService.Object,
+				mockStatusCachedService.Object,
 				mockLogger.Object);
 
 
@@ -156,15 +153,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
-			var mockStatusModelService = new Mock<IStatusService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			var recordModel = RecordFactory.BuildRecordModel();
-			var ratingsmodel = RatingFactory.BuildListRatingModel();
+			var ratingsModel = RatingFactory.BuildListRatingModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var typeModel = TypeFactory.BuildTypeModel();
-			var statusesModel = StatusFactory.BuildListStatusDto();
+			var statusDto = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 1);
 			var expectedUrl = $"/case/{caseModel.Urn}/management";
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
@@ -172,13 +169,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			mockRecordModelService.Setup(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
 				.ReturnsAsync(recordModel);
 			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()))
-				.ReturnsAsync(ratingsmodel);
+				.ReturnsAsync(ratingsModel);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
 			mockTypeModelService.Setup(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()))
 				.ReturnsAsync(typeModel);
-			mockStatusModelService.Setup(s => s.GetStatuses())
-				.ReturnsAsync(statusesModel);
+			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+				.ReturnsAsync(statusDto);
 
 			var pageModel = SetupClosurePageModel(
 				mockCaseModelService.Object,
@@ -186,7 +183,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 				mockRecordModelService.Object,
 				mockTrustModelService.Object,
 				mockTypeModelService.Object,
-				mockStatusModelService.Object,
+				mockStatusCachedService.Object,
 				mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
@@ -203,7 +200,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			Assert.IsNotNull(pageResponseInstance);
 			Assert.That(pageResponseInstance.Url, Is.EqualTo(expectedUrl));
 
-			mockStatusModelService.Verify(s => s.GetStatuses(), Times.Once);
+			mockStatusCachedService.Verify(s => s.GetStatuses(), Times.Once);
 			mockRecordModelService.Verify(r => r.PatchRecordStatus(It.IsAny<PatchRecordModel>()), Times.Once);
 		}
 
@@ -216,7 +213,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
-			var mockStatusModelService = new Mock<IStatusService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var pageModel = SetupClosurePageModel(
@@ -225,14 +222,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 				mockRecordModelService.Object,
 				mockTrustModelService.Object,
 				mockTypeModelService.Object,
-				mockStatusModelService.Object,
+				mockStatusCachedService.Object,
 				mockLogger.Object);
 
 			// act
 			var pageResponse = await pageModel.OnGetCloseConcern();
-			var pageResponseInstance = pageResponse as RedirectResult;
 
 			// assert
+			Assert.NotNull(pageResponse);
 			Assert.IsNotNull(pageModel);
 			Assert.IsNull(pageModel.TrustDetailsModel);
 			Assert.IsNull(pageModel.RatingsModel);
@@ -240,11 +237,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			Assert.IsNull(pageModel.TypeModel);
 			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
 
-			mockStatusModelService.Verify(s => s.GetStatuses(), Times.Never);
+			mockStatusCachedService.Verify(s => s.GetStatuses(), Times.Never);
 			mockRecordModelService.Verify(r => r.PatchRecordStatus(It.IsAny<PatchRecordModel>()), Times.Never);
 		}
-
-
+		
 		[Test]
 		public void WhenOnGetCancel_Return_ManagementPage()
 		{
@@ -254,12 +250,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
-			var mockStatusModelService = new Mock<IStatusService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			var recordModel = RecordFactory.BuildRecordModel();
-			var ratingsmodel = RatingFactory.BuildListRatingModel();
+			var ratingsModel = RatingFactory.BuildListRatingModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var typeModel = TypeFactory.BuildTypeModel();
 			var expectedUrl = $"/case/{caseModel.Urn}/management";
@@ -269,7 +265,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			mockRecordModelService.Setup(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
 				.ReturnsAsync(recordModel);
 			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()))
-				.ReturnsAsync(ratingsmodel);
+				.ReturnsAsync(ratingsModel);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
 			mockTypeModelService.Setup(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()))
@@ -281,7 +277,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 				mockRecordModelService.Object,
 				mockTrustModelService.Object,
 				mockTypeModelService.Object,
-				mockStatusModelService.Object,
+				mockStatusCachedService.Object,
 				mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
@@ -308,7 +304,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
-			var mockStatusModelService = new Mock<IStatusService>();
+			var mockStatusModelService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var pageModel = SetupClosurePageModel(
@@ -324,6 +320,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var pageResponse = pageModel.OnGetCancel();
 
 			// assert
+			Assert.NotNull(pageResponse);
 			Assert.IsNotNull(pageModel);
 			Assert.IsNull(pageModel.TrustDetailsModel);
 			Assert.IsNull(pageModel.RatingsModel);
@@ -338,7 +335,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			IRecordModelService mockRecordModelService,
 			ITrustModelService mockTrustModelService,
 			ITypeModelService mockTypeModelService,
-			IStatusService mockStatusService,
+			IStatusCachedService mockStatusCachedService,
 			ILogger<ClosurePageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
@@ -348,7 +345,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 				mockRecordModelService, 
 				mockTrustModelService, 
 				mockTypeModelService, 
-				mockStatusService, 
+				mockStatusCachedService, 
 				mockLogger)
 			{
 				PageContext = pageContext,
@@ -356,9 +353,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 				Url = new UrlHelper(actionContext),
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
-
-
-
 		}
 	}
 }

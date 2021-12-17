@@ -18,10 +18,10 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages.Case.Concern
+namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 {
 	[Parallelizable(ParallelScope.All)]
-	public class EditRiskRatingPageModelTests
+	public class EditRatingPageModelTests
 	{
 		[Test]
 		public async Task WhenOnGet_ReturnsPage()
