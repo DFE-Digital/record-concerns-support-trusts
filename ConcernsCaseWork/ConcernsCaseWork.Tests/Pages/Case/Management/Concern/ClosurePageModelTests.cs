@@ -145,6 +145,58 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 		}
 
 		[Test]
+		public async Task WhenOnGetAsync_RecordUrnIsNullOrEmpty_Returns_Page()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
+
+			var pageModel = SetupClosurePageModel(
+				mockCaseModelService.Object,
+				mockRatingModelService.Object,
+				mockRecordModelService.Object,
+				mockTrustModelService.Object,
+				mockTypeModelService.Object,
+				mockStatusCachedService.Object,
+				mockLogger.Object);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+
+			// act
+			await pageModel.OnGet();
+
+			// assert
+			Assert.IsNotNull(pageModel);
+			Assert.IsNull(pageModel.TrustDetailsModel);
+			Assert.IsNull(pageModel.RatingsModel);
+			Assert.IsNull(pageModel.TrustDetailsModel);
+			Assert.IsNull(pageModel.TypeModel);
+			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+
+			// Verify ILogger
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Information,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("ClosurePageModel")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			mockRecordModelService.Verify(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
+			mockRatingModelService.Verify(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()), Times.Never);
+			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
+			mockTypeModelService.Verify(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()), Times.Never);
+		}
+		
+		[Test]
 		public async Task WhenOnGetCloseConcern_Return_ManagementPage()
 		{
 			// arrange
@@ -200,7 +252,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			Assert.IsNotNull(pageResponseInstance);
 			Assert.That(pageResponseInstance.Url, Is.EqualTo(expectedUrl));
 
-			mockStatusCachedService.Verify(s => s.GetStatuses(), Times.Once);
+			mockStatusCachedService.Verify(s => s.GetStatusByName(It.IsAny<string>()), Times.Once);
 			mockRecordModelService.Verify(r => r.PatchRecordStatus(It.IsAny<PatchRecordModel>()), Times.Once);
 		}
 
