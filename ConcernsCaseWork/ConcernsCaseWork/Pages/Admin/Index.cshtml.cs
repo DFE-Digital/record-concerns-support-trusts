@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Pages.Admin
 	        
 	        await _userRoleCachedService.ClearData();
 
-	        await LoadPage();
+	        Redirect("/admin");
         }
         
         private async Task LoadPage()

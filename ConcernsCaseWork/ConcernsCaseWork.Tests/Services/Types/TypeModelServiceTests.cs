@@ -65,10 +65,10 @@ namespace ConcernsCaseWork.Tests.Services.Types
 			
 			// assert
 			Assert.That(actualTypeModel, Is.Not.Null);
-			Assert.That(actualTypeModel.CheckedType, Is.EqualTo(expectedTypeModel.CheckedType));
+			Assert.That(actualTypeModel.Type, Is.EqualTo(expectedTypeModel.Type));
 			Assert.That(actualTypeModel.TypeDisplay, Is.EqualTo(expectedTypeModel.TypeDisplay));
 			Assert.That(actualTypeModel.TypesDictionary, Is.Not.Null);
-			Assert.That(actualTypeModel.CheckedSubType, Is.EqualTo(expectedTypeModel.CheckedSubType));
+			Assert.That(actualTypeModel.SubType, Is.EqualTo(expectedTypeModel.SubType));
 		}
 		
 		[Test]
@@ -91,10 +91,10 @@ namespace ConcernsCaseWork.Tests.Services.Types
 			
 			// assert
 			Assert.That(actualTypeModel, Is.Not.Null);
-			Assert.That(actualTypeModel.CheckedType, Is.EqualTo(expectedTypeModel.CheckedType));
+			Assert.That(actualTypeModel.Type, Is.EqualTo(expectedTypeModel.Type));
 			Assert.That(actualTypeModel.TypeDisplay, Is.EqualTo(expectedTypeModel.TypeDisplay));
 			Assert.That(actualTypeModel.TypesDictionary, Is.Null);
-			Assert.That(actualTypeModel.CheckedSubType, Is.EqualTo(expectedTypeModel.CheckedSubType));
+			Assert.That(actualTypeModel.SubType, Is.EqualTo(expectedTypeModel.SubType));
 		}
 	}
 }

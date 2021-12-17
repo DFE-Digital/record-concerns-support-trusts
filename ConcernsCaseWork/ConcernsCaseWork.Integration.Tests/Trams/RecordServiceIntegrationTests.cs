@@ -40,7 +40,6 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		}
 
 		[Test]
-		[Ignore("Academies not release to staging")]
 		public async Task WhenGetRecordsByCaseUrn_ReturnsListRecordDto()
 		{
 			// arrange

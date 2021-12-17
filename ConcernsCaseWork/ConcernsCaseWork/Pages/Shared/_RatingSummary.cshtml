@@ -1,0 +1,15 @@
+﻿@model Service.Redis.Models.CreateCaseModel
+
+<div class="govuk-summary-list__row">
+	<dt class="govuk-summary-list__key">Risk to trust</dt>
+	<dd class="govuk-summary-list__value">
+		<div class="govuk-!-display-inline govuk-label-wrapper govuk-grid-column-two-third">
+        	@for (var index = 0; index < Model.RagRating.Item2.Count; ++index)
+        	{
+        		<span class="govuk-tag ragtag @Model.RagRatingCss.ElementAt(index)">
+        			@Model.RagRating.Item2.ElementAt(index)
+        		</span>
+        	}
+        </div>
+	</dd>
+</div>

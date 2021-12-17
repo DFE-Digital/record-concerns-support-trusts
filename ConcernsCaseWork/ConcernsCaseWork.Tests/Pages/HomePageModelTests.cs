@@ -42,13 +42,15 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCaseModelService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
 				.ReturnsAsync(homeModels);
 			
-			// act
 			var homePageModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object);
+			
+			// act
 			await homePageModel.OnGetAsync();
 			
 			// assert
 			Assert.IsAssignableFrom<List<HomeModel>>(homePageModel.CasesActive);
 			Assert.That(homePageModel.CasesActive.Count, Is.EqualTo(homeModels.Count));
+			
 			foreach (var expected in homePageModel.CasesActive)
 			{
 				foreach (var actual in homeModels.Where(actual => expected.CaseUrn.Equals(actual.CaseUrn)))
@@ -60,15 +62,40 @@ namespace ConcernsCaseWork.Tests.Pages
 					Assert.That(DateTimeOffset.FromUnixTimeMilliseconds(expected.UpdatedUnixTime).ToString("dd-MM-yyyy"), Is.EqualTo(actual.Updated));
 					Assert.That(expected.Review, Is.EqualTo(actual.Review));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
-					Assert.That(expected.AcademyNames, Is.EqualTo(actual.AcademyNames));
-					Assert.That(expected.CaseType, Is.EqualTo(actual.CaseType));
-					Assert.That(expected.CaseSubType, Is.EqualTo(actual.CaseSubType));
-					Assert.That(expected.CaseTypeDescription, Is.EqualTo($"{actual.CaseType}: {actual.CaseSubType}"));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.CaseUrn));
-					Assert.That(expected.RagRating, Is.EqualTo(actual.RagRating));
 					Assert.That(expected.TrustName, Is.EqualTo(actual.TrustName));
 					Assert.That(expected.TrustNameTitle, Is.EqualTo(actual.TrustName.ToTitle()));
-					Assert.That(expected.RagRatingCss, Is.EqualTo(actual.RagRatingCss));
+
+					var expectedRecordsModel = expected.RecordsModel;
+					var actualRecordsModel = actual.RecordsModel;
+					
+					for (var index = 0; index < expectedRecordsModel.Count; ++index)
+					{
+						Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(actualRecordsModel.ElementAt(index).Urn));
+						Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).CaseUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeUrn));
+						
+						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
+						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
+						Assert.NotNull(expectedRecordRatingModel);
+						Assert.NotNull(actualRecordRatingModel);
+						Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
+						Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
+						Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
+						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
+						
+						var expectedRecordTypeModel = expectedRecordsModel.ElementAt(index).TypeModel;
+						var actualRecordTypeModel = actualRecordsModel.ElementAt(index).TypeModel;
+						Assert.NotNull(expectedRecordTypeModel);
+						Assert.NotNull(actualRecordTypeModel);
+						Assert.That(expectedRecordTypeModel.Type, Is.EqualTo(actualRecordTypeModel.Type));
+						Assert.That(expectedRecordTypeModel.SubType, Is.EqualTo(actualRecordTypeModel.SubType));
+						Assert.That(expectedRecordTypeModel.TypeDisplay, Is.EqualTo(actualRecordTypeModel.TypeDisplay));
+						Assert.That(expectedRecordTypeModel.TypesDictionary, Is.EqualTo(actualRecordTypeModel.TypesDictionary));
+					}
 				}
 			}
 			

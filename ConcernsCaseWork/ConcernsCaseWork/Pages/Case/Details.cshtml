@@ -9,26 +9,29 @@
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
 	
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
+	<span class="govuk-caption-l">Create case</span>
+	<h1 class="govuk-heading-l">Details</h1>
 
-			<span class="govuk-caption-l">Create case</span>
-			<h1 class="govuk-heading-l">Concern </h1>
+	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+	{
+		<partial name="_Error"/>
+	}
+	else
+	{
+		<!-- Trust summary and records -->
+		<dl class="govuk-summary-list">
+			<partial name="_TrustSummary" model="Model.TrustDetailsModel"/>
+			<partial name="_RecordsSummary" model="Model.CreateRecordsModel"/>
+			<partial name="_RatingSummary" model="Model.CreateCaseModel"/>
+		</dl>
 
-			@if (!string.IsNullOrEmpty((string) TempData.Peek("Error.Message")))
-            {
-	            <partial name="_Error"/>
-            }
-			else
-			{
-				<!-- Trust summary -->
-				<partial name="_TrustSummary" model="@Model.CreateCaseModel"/>
-				
+		<div class="govuk-grid-row">
+			<div class="govuk-grid-column-two-thirds">
 				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
-				                                                                                                                                                          
+
 				<!-- FORM -->
 				<form role="form" method="post" id="case-details-form" novalidate>
-					
+
 					<h2 class="govuk-heading-l govuk-!-margin-top-9">Initial case details</h2>
 					<div id="initial-details-hint" class="govuk-hint">
 						You only need enter the issue at this stage. Further details can be included on the case management page when you have them.
@@ -50,27 +53,28 @@
 					<partial name="_NextSteps"/>
 
 					<div class="govuk-button-group">
-						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
 							Create case
 						</button>
-						<a class="govuk-link" asp-page="../home">Cancel</a>
+						<a data-prevent-double-click="true" class="govuk-link" asp-page="../home" data-module="govuk-button" role="button">
+							Cancel
+						</a>
 					</div>
 
 				</form>
-				
-				<script type="application/javascript" nonce="@nonce">
-					$(function () {
-						let validator = formValidator($("#case-details-form")[0]);
-						addIssueValidator(validator);
-						addCurrentStatusValidator(validator);
-						addNextStepsValidator(validator);
-						addDeEscalationPointValidator(validator);
-						addCaseAimValidator(validator);
-
-						autoResizer();
-					});
-				</script>
-			}
+			</div>
 		</div>
-	</div>
+		<script type="application/javascript" nonce="@nonce">
+			$(function () {
+				let validator = formValidator($("#case-details-form")[0]);
+				addIssueValidator(validator);
+				addCurrentStatusValidator(validator);
+				addNextStepsValidator(validator);
+				addDeEscalationPointValidator(validator);
+				addCaseAimValidator(validator);
+
+				autoResizer();
+			});
+		</script>
+	}
 </div>

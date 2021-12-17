@@ -55,8 +55,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			return new TypeModel
 			{
-				CheckedType = "Compliance",
-				CheckedSubType = "Compliance: Financial reporting",
+				Type = "Compliance",
+				SubType = "Compliance: Financial reporting",
 				TypesDictionary = new Dictionary<string, IList<TypeModel.TypeValueModel>>()
 			};
 		}

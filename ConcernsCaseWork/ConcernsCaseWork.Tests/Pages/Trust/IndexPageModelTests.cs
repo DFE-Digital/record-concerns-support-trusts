@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			var partialPage = response as JsonResult;
 			
 			Assert.That(partialPage, Is.Not.Null);
-			Assert.That(partialPage.Value, Is.InstanceOf<IList<TrustSummaryModel>>());
+			Assert.That(partialPage.Value, Is.InstanceOf<IList<TrustSearchModel>>());
 			
 			// Verify ILogger
 			mockLogger.Verify(
@@ -76,9 +76,9 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			var partialPage = response as JsonResult;
 			
 			Assert.That(partialPage, Is.Not.Null);
-			Assert.That(partialPage.Value, Is.InstanceOf<IList<TrustSummaryModel>>());
+			Assert.That(partialPage.Value, Is.InstanceOf<IList<TrustSearchModel>>());
 			
-			foreach (var expected in (IList<TrustSummaryModel>)partialPage.Value)
+			foreach (var expected in (IList<TrustSearchModel>)partialPage.Value)
 			{
 				foreach (var actual in trustSummaryModel.Where(actual => expected.UkPrn.Equals(actual.UkPrn)))
 				{
