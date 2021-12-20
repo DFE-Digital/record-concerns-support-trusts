@@ -167,3 +167,26 @@ jobs:
           TF_VAR_app_username: ${{ secrets.APP_USERNAME }}
           TF_VAR_app_password: ${{ secrets.APP_PASSWORD }}
           TF_VAR_logit_sink_url: ${{ secrets.LOGIT_SINK_URL }}
+
+  cypress-tests:
+    needs: deploy-image
+    environment: dev
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ApplyToBecomeInternal/ApplyToBecomeCypressTests
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+      - name: Npm install
+        run: npm install
+      - name: Run cypress
+        run: npm run cy:run -- --env username='${{ secrets.USERNAME }}',password='${{ secrets.PASSWORD }}',url='${{ secrets.ENDPOINT }}'
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+           name: screenshots
+           path: ApplyToBecomeInternal/ApplyToBecomeCypressTests/cypress/screenshots
