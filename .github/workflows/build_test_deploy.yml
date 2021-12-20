@@ -174,7 +174,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ApplyToBecomeInternal/ApplyToBecomeCypressTests
+        working-directory: ConcernsCaseWork/ConcernsCaseWork.CypressTests
     steps:
       - uses: actions/checkout@v2
       - name: Setup node.js
@@ -189,4 +189,4 @@ jobs:
         if: failure()
         with:
            name: screenshots
-           path: ApplyToBecomeInternal/ApplyToBecomeCypressTests/cypress/screenshots
+           path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots
