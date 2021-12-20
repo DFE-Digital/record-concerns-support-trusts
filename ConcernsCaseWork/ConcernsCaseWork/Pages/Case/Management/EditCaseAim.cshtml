@@ -1,0 +1,54 @@
+﻿@page "/case/{urn:long}/management/edit_case_aim"
+@model ConcernsCaseWork.Pages.Case.Management.EditCaseAimPageModel
+
+@{
+	ViewData["Title"] = "Edit Case aim";
+	var nonce = HttpContext.GetNonce();
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError"/>
+	
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+
+			<h1 class="govuk-heading-l">
+				Edit case aim
+			</h1>
+
+			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+            	<partial name="_Error"/>
+            }
+			else
+			{
+				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+				<form role="form" asp-page-handler="editCaseAim" method="post" id="case-aim-form" novalidate>
+
+					<input type="hidden" value="@Model.CaseModel.PreviousUrl" name="url"/>
+
+					<partial name="_EditCaseAim" model="@Model.CaseModel"/>
+
+					<!--Button group-->
+					<div class="govuk-button-group">
+						<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
+							Apply
+						</button>
+						<partial name="_Cancel"/>
+					</div>
+
+				</form>
+
+				<script type="application/javascript" nonce="@nonce">
+					$(function () {	
+						let validator = formValidator($("#case-aim-form")[0]);
+						addCaseAimValidator(validator);
+						
+						autoResizer();
+					});
+				</script>
+			}
+		</div>
+	</div>
+</div>

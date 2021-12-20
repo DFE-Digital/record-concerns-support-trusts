@@ -19,7 +19,7 @@
 			Trust/Academy
 		</th>
 		<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-			Primary case type
+			Concerns
 		</th>
 		<th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="none">
 			Review date
@@ -48,7 +48,12 @@
 					@homeModel.TrustNameTitle
 				</td>
 				<td class="govuk-table__cell">
-					@homeModel.CaseTypeDescription
+					@foreach (var record in homeModel.RecordsModel)
+					{
+						<div class="govuk-!-padding-bottom-1">
+							@record.TypeModel.TypeDisplay
+						</div>
+					}
 				</td>
 				<td class="govuk-table__cell">
 					@homeModel.Review

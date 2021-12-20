@@ -39,7 +39,7 @@ namespace ConcernsCaseWork.Pages.Trust
 				// Double check search query.
 				if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < SearchQueryMinLength)
 				{
-					return new JsonResult(Array.Empty<TrustSummaryModel>());
+					return new JsonResult(Array.Empty<TrustSearchModel>());
 				}
 
 				var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);
@@ -68,6 +68,7 @@ namespace ConcernsCaseWork.Pages.Trust
 				// Store CaseState into cache.
 				var userState = await _cachedService.GetData<UserState>(User.Identity.Name) ?? new UserState();
 				userState.TrustUkPrn = trustUkPrn;
+				userState.CreateCaseModel = new CreateCaseModel();
 				await _cachedService.StoreData(User.Identity.Name, userState);
 
 				return new JsonResult(new { redirectUrl = Url.Page("Overview", new { id = trustUkPrn }) });

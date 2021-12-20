@@ -64,7 +64,7 @@ namespace Service.TRAMS.Cases
 		public long StatusUrn { get; }
 		
 		[JsonProperty("ratingUrn")]
-		public long RatingUrn { get; set; }	// TODO re-think on this hole for cases created before rating was included on the domain
+		public long RatingUrn { get; set; }
 
 		[JsonConstructor]
 		public CaseDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 

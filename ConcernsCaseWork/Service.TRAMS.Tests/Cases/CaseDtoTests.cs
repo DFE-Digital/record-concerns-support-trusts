@@ -51,7 +51,6 @@ namespace Service.TRAMS.Tests.Cases
 			Assert.That(createCaseDto, Is.Not.Null);
 			Assert.That(expectedCaseDto, Is.Not.Null);
 			Assert.That(expectedCaseDto.Urn, Is.EqualTo(0));
-			Assert.That(createCaseDto.Description, Is.EqualTo(expectedCaseDto.Description));
 			Assert.That(createCaseDto.Issue, Is.EqualTo(expectedCaseDto.Issue));
 			Assert.That(createCaseDto.StatusUrn, Is.EqualTo(expectedCaseDto.StatusUrn));
 			Assert.That(createCaseDto.ClosedAt, Is.EqualTo(expectedCaseDto.ClosedAt));

@@ -36,7 +36,6 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		}
 
 		[Test]
-		[Ignore("Academies not release to staging")]
 		public async Task WhenGetCasesByCaseworkerAndStatus_ReturnsListCaseDto()
 		{
 			// arrange
@@ -159,7 +158,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			return await caseService.PostCase(createCaseDto);
 		}
 
-		private async Task<TrustSummaryDto> FetchRandomTrust(string searchParameter)
+		private async Task<TrustSearchDto> FetchRandomTrust(string searchParameter)
 		{
 			var trustService = _factory.Services.GetRequiredService<ITrustService>();
 			var apiWrapperTrusts= await trustService.GetTrustsByPagination(

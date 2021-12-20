@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Pages.Shared
 		/// <summary>
 		/// Don't render component for this paths
 		/// </summary>
-		private const string Pattern = ".*\\+/([.\\w+]+)|management(?!.*closure)|home|login|logout|concerntype|overview|admin";
+		private const string Pattern = ".*\\+/([.\\w+]+)|management(?!.*closure)|home|login|logout|concern|overview|admin|case/rating|case/details";
 
 		public static bool CanRender(string requestPath)
 		{

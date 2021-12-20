@@ -24,15 +24,15 @@ namespace ConcernsCaseWork.Services.Trusts
 			_logger = logger;
 		}
 		
-		public async Task<IList<TrustSummaryModel>> GetTrustsBySearchCriteria(TrustSearch trustSearch)
+		public async Task<IList<TrustSearchModel>> GetTrustsBySearchCriteria(TrustSearch trustSearch)
 		{
 			_logger.LogInformation("TrustModelService::GetTrustsBySearchCriteria");
 			
 			// Fetch trusts by criteria
-			var trustsDto = await _trustSearchService.GetTrustsBySearchCriteria(trustSearch);
+			var trustsSearchDto = await _trustSearchService.GetTrustsBySearchCriteria(trustSearch);
 			
 			// Map trusts dto to model
-			var trustsSummary = _mapper.Map<IList<TrustSummaryModel>>(trustsDto);
+			var trustsSummary = _mapper.Map<IList<TrustSearchModel>>(trustsSearchDto);
 
 			// Filter trusts that haven't correct properties and sort
 			var trustsSummaryOrderedFiltered = from t in trustsSummary 

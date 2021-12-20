@@ -16,8 +16,9 @@ namespace ConcernsCaseWork.Tests.Pages
 		[TestCase("/case", true)]
 		[TestCase("home", false)]
 		[TestCase("/home", false)]
-		[TestCase("/case/details", true)]
-		[TestCase("/case/concerntype", false)]
+		[TestCase("/case/details", false)]
+		[TestCase("/case/rating", false)]
+		[TestCase("/case/concern", false)]
 		[TestCase("/case/1/management", false)]
 		[TestCase("/case/1/management/closure", true)]
 		public void WhenCanRender_ReturnsExpected(string requestPath, bool expected)

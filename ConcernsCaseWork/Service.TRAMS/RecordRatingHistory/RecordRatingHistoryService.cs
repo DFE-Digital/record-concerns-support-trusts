@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Service.TRAMS.RecordRatingHistory
 {
+	/// <summary>
+	/// TODO waiting for PO, BA and DM to define if we will need this service at all or replace with a more generic one.
+	/// </summary>
 	public sealed class RecordRatingHistoryService : AbstractService, IRecordRatingHistoryService
 	{
 		private readonly ILogger<RecordRatingHistoryService> _logger;

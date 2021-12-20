@@ -17,7 +17,7 @@ namespace Service.TRAMS.Trusts
 			_logger = logger;
 		}
 		
-		public async Task<ApiListWrapper<TrustSummaryDto>> GetTrustsByPagination(TrustSearch trustSearch)
+		public async Task<ApiListWrapper<TrustSearchDto>> GetTrustsByPagination(TrustSearch trustSearch)
 		{
 			try
 			{
@@ -39,7 +39,7 @@ namespace Service.TRAMS.Trusts
 				var content = await response.Content.ReadAsStringAsync();
 
 				// Deserialize content to POCO
-				var apiWrapperTrusts = JsonConvert.DeserializeObject<ApiListWrapper<TrustSummaryDto>>(content);
+				var apiWrapperTrusts = JsonConvert.DeserializeObject<ApiListWrapper<TrustSearchDto>>(content);
 				
 				return apiWrapperTrusts;
 			}

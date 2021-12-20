@@ -38,7 +38,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			var trustsSummaryModel = await trustModelService.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>());
 
 			// assert
-			Assert.IsAssignableFrom<List<TrustSummaryModel>>(trustsSummaryModel);
+			Assert.IsAssignableFrom<List<TrustSearchModel>>(trustsSummaryModel);
 			Assert.That(trustsSummaryModel.Count, Is.EqualTo(trustSummaryDto.Count));
 			foreach (var expected in trustsSummaryModel)
 			{
@@ -85,14 +85,14 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
 
-			mockTrustSearchService.Setup(ts => ts.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(Array.Empty<TrustSummaryDto>());
+			mockTrustSearchService.Setup(ts => ts.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(Array.Empty<TrustSearchDto>());
 
 			// act
 			var trustModelService = new TrustModelService(mockTrustSearchService.Object, mockTrustCachedService.Object, mapper, mockLogger.Object);
 			var trustsSummaryModel = await trustModelService.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>());
 
 			// assert
-			Assert.IsAssignableFrom<List<TrustSummaryModel>>(trustsSummaryModel.ToList());
+			Assert.IsAssignableFrom<List<TrustSearchModel>>(trustsSummaryModel.ToList());
 			Assert.That(trustsSummaryModel.Count, Is.EqualTo(0));
 		}
 		

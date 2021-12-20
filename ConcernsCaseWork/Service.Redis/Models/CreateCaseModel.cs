@@ -15,12 +15,8 @@ namespace Service.Redis.Models
 		public DateTimeOffset ClosedAt { get; set; }
 
 		public string CreatedBy { get; set; }
-
-		public string Description { get; set; }
 		
 		public string CrmEnquiry { get; set; }
-		
-		public string TrustName { get; set; }
 		
 		public string TrustUkPrn { get; set; }
 		
@@ -44,27 +40,12 @@ namespace Service.Redis.Models
 		
 		public long RatingUrn { get; set; }
 		
-		public string TypeDisplay
-		{
-			get
-			{
-				var separator = string.IsNullOrEmpty(SubType) ? string.Empty : ":";
-				return $"{Type}{separator} {SubType ?? string.Empty}";
-			}
-		}
-		
-		public long TypeUrn { get; set; }
-		
-		public string Type { get; set; }
-		
-		public string SubType { get; set; }
-		
 		public string RagRatingName { get; set; }
-		
-		public long RagRatingUrn { get; set; }
 		
 		public Tuple<int, IList<string>> RagRating { get; set; }
 
 		public IList<string> RagRatingCss { get; set; }
+
+		public IList<CreateRecordModel> CreateRecordsModel { get; set; } = new List<CreateRecordModel>();
 	}
 }

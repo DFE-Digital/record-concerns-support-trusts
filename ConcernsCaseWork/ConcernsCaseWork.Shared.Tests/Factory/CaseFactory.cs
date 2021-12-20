@@ -163,7 +163,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				dateTimeNow, 
 				dateTimeNow, 
 				createdBy ?? Fixture.Create<string>(), 
-				Fixture.Create<string>(), 
 				Fixture.Create<string>(),
 				trustUkprn ?? Fixture.Create<string>(), 
 				Fixture.Create<string>(), 
@@ -179,7 +178,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			);
 		}
 		
-		public static CreateCaseModel BuildCreateCaseModel(string caseType = "case-type", string caseSubType = "case-sub-type")
+		public static CreateCaseModel BuildCreateCaseModel()
 		{
 			var dateTimeNow = DateTime.Now;
 			return new CreateCaseModel {
@@ -188,7 +187,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				ReviewAt = dateTimeNow, 
 				ClosedAt = dateTimeNow, 
 				CreatedBy = Fixture.Create<string>(), 
-				Description = Fixture.Create<string>(), 
 				CrmEnquiry = Fixture.Create<string>(),
 				TrustUkPrn = Fixture.Create<string>(), 
 				ReasonAtReview = Fixture.Create<string>(), 
@@ -199,10 +197,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				CaseAim = Fixture.Create<string>(),
 				DeEscalationPoint = Fixture.Create<string>(),
 				DirectionOfTravel = Fixture.Create<string>(),
-				StatusUrn = 1, 
-				Type = caseType, 
-				SubType = caseSubType, 
-				RagRatingName = Fixture.Create<string>()
+				StatusUrn = 1
 			};
 		}
 		
@@ -239,10 +234,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			{
 				Urn = 1,
 				CreatedBy = Fixture.Create<string>(),
-				Type = Fixture.Create<string>(),
-				TypeUrn = 1,
 				UpdatedAt = Fixture.Create<DateTimeOffset>(),
-				SubType = Fixture.Create<string>(),
 				RatingUrn = 1,
 				DirectionOfTravel = Fixture.Create<string>(),
 				Issue = Fixture.Create<string>(),

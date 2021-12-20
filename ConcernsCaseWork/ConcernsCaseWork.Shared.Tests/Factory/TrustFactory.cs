@@ -7,12 +7,12 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class TrustFactory
 	{
-		public static IList<TrustSummaryDto> BuildListTrustSummaryDto()
+		public static IList<TrustSearchDto> BuildListTrustSummaryDto()
 		{
 			Fixture fixture = new Fixture();
-			return new List<TrustSummaryDto>
+			return new List<TrustSearchDto>
 			{
-				new TrustSummaryDto(
+				new TrustSearchDto(
 					fixture.Create<string>(), 
 					fixture.Create<string>(), 
 					fixture.Create<string>(), 
@@ -28,12 +28,12 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new TrustSearch(groupName, ukprn, companiesHouseNumber);
 		}
 
-		public static IList<TrustSummaryModel> BuildListTrustSummaryModel()
+		public static IList<TrustSearchModel> BuildListTrustSummaryModel()
 		{
 			Fixture fixture = new Fixture();
-			return new List<TrustSummaryModel>
+			return new List<TrustSearchModel>
 			{
-				new TrustSummaryModel(
+				new TrustSearchModel(
 					fixture.Create<string>(), 
 					fixture.Create<string>(), 
 					fixture.Create<string>(), 

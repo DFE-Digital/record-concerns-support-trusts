@@ -6,7 +6,6 @@ using NUnit.Framework;
 using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.Redis.Records;
-using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
 using System;
 using System.Collections.Generic;
@@ -259,11 +258,7 @@ namespace Service.Redis.Tests.Records
 						{
 							{ 1, new RecordWrapper
 							{
-								RecordDto = RecordFactory.BuildRecordDto(), 
-								RecordsRatingHistory = new List<RecordRatingHistoryDto>
-								{
-									new RecordRatingHistoryDto(DateTimeOffset.Now, 1, 1)
-								}
+								RecordDto = RecordFactory.BuildRecordDto()
 							} }
 						}
 					} }
@@ -391,11 +386,7 @@ namespace Service.Redis.Tests.Records
 						{
 							{ 99, new RecordWrapper
 							{
-								RecordDto = RecordFactory.BuildRecordDto(), 
-								RecordsRatingHistory = new List<RecordRatingHistoryDto>
-								{
-									new RecordRatingHistoryDto(DateTimeOffset.Now, 1, 1)
-								}
+								RecordDto = RecordFactory.BuildRecordDto()
 							} }
 						}
 					} }
@@ -444,11 +435,7 @@ namespace Service.Redis.Tests.Records
 						{
 							{ 1, new RecordWrapper
 							{
-								RecordDto = recordDto, 
-								RecordsRatingHistory = new List<RecordRatingHistoryDto>
-								{
-									new RecordRatingHistoryDto(DateTimeOffset.Now, 1, 1)
-								}
+								RecordDto = recordDto
 							} }
 						}
 					} }
@@ -492,11 +479,7 @@ namespace Service.Redis.Tests.Records
 						{
 							{ 99, new RecordWrapper
 							{
-								RecordDto = recordDto, 
-								RecordsRatingHistory = new List<RecordRatingHistoryDto>
-								{
-									new RecordRatingHistoryDto(DateTimeOffset.Now, 1, 1)
-								}
+								RecordDto = recordDto
 							} }
 						}
 					} }
@@ -524,11 +507,7 @@ namespace Service.Redis.Tests.Records
 			
 			caseWrapper.Records.Add(999, new RecordWrapper
 			{
-				RecordDto = RecordFactory.BuildRecordDto(), 
-				RecordsRatingHistory = new List<RecordRatingHistoryDto>
-				{
-					new RecordRatingHistoryDto(DateTimeOffset.Now, 2, 1)
-				}
+				RecordDto = RecordFactory.BuildRecordDto()
 			});
 			
 			Assert.That(caseWrapper.Records.Count, Is.EqualTo(2));
@@ -558,11 +537,7 @@ namespace Service.Redis.Tests.Records
 						{
 							{ 99, new RecordWrapper
 							{
-								RecordDto = recordDto, 
-								RecordsRatingHistory = new List<RecordRatingHistoryDto>
-								{
-									new RecordRatingHistoryDto(DateTimeOffset.Now, 1, 1)
-								}
+								RecordDto = recordDto
 							} }
 						}
 					} }
@@ -590,11 +565,7 @@ namespace Service.Redis.Tests.Records
 			
 			caseWrapper.Records.Add(999, new RecordWrapper
 			{
-				RecordDto = RecordFactory.BuildRecordDto(), 
-				RecordsRatingHistory = new List<RecordRatingHistoryDto>
-				{
-					new RecordRatingHistoryDto(DateTimeOffset.Now, 2, 1)
-				}
+				RecordDto = RecordFactory.BuildRecordDto()
 			});
 			
 			Assert.That(caseWrapper.Records.Count, Is.EqualTo(3));

@@ -5,6 +5,6 @@ namespace Service.TRAMS.Trusts
 {
 	public interface ITrustSearchService
 	{
-		Task<IList<TrustSummaryDto>> GetTrustsBySearchCriteria(TrustSearch trustSearch);
+		Task<IList<TrustSearchDto>> GetTrustsBySearchCriteria(TrustSearch trustSearch);
 	}
 }

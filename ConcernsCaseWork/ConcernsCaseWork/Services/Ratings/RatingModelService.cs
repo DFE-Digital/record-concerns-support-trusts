@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Models;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Ratings;
+using Service.TRAMS.Ratings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +21,20 @@ namespace ConcernsCaseWork.Services.Ratings
 			_logger = logger;
 		}
 
+		public async Task<IList<RatingDto>> GetRatings()
+		{
+			_logger.LogInformation("RatingModelService::GetRatings");
+			
+			var ratingsDto = await _ratingCachedService.GetRatings();
+
+			return ratingsDto;
+		}
+		
 		public async Task<IList<RatingModel>> GetRatingsModel()
 		{
 			_logger.LogInformation("RatingModelService::GetRatingsModel");
 
-			var ratingsDto = await _ratingCachedService.GetRatings();
+			var ratingsDto = await GetRatings();
 			
 			// Filter n/a rating
 			ratingsDto = ratingsDto.Where(r => !r.Name.Equals(RatingMapping.NotApplicable, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -57,9 +67,11 @@ namespace ConcernsCaseWork.Services.Ratings
 		{
 			_logger.LogInformation("RatingModelService::GetRatingModelByUrn");
 			
-			var ratings = await GetRatingsModel();
-
-			return ratings.FirstOrDefault(r => r.Urn == urn);
+			var ratingsDto = await GetRatings();
+			
+			var ratingModel = ratingsDto.Select(RatingMapping.MapDtoToModel).FirstOrDefault(r => r.Urn == urn);
+			
+			return ratingModel;
 		}
 	}
 }

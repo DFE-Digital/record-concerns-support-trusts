@@ -23,7 +23,7 @@ namespace Service.TRAMS.Tests.Trusts
 		{
 			// arrange
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
-			var expectedApiWrapperTrust = new ApiListWrapper<TrustSummaryDto>(expectedTrusts, null);
+			var expectedApiWrapperTrust = new ApiListWrapper<TrustSearchDto>(expectedTrusts, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			

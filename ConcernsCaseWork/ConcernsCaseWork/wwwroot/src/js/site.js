@@ -46,7 +46,7 @@ window.addIssueValidator = function(validator) {
 		message: 'Issue must be 2000 characters or less'
 	}]);
 }
-window.addRagRatingValidator = function(validator) {
+window.addRatingValidator = function(validator) {
 	validator.addValidator('rating', [{
 		method: function(field) {
 			return field.value.trim().length > 0;
@@ -54,7 +54,7 @@ window.addRagRatingValidator = function(validator) {
 		message: 'Select risk rating'
 	}]);
 }
-window.addConcernTypeValidator = function(validator) {
+window.addConcernValidator = function(validator) {
 	validator.addValidator('type', [{
 		method: function(field) {
 			return field.value.trim().length > 0;
