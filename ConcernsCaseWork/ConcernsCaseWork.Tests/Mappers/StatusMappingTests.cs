@@ -19,8 +19,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// act
 			var statusModel = StatusMapping.MapDtoToModel(statusesDto, statusDto.Urn);
 
-			//// assert
+			// assert
 			Assert.That(statusModel, Is.Not.Null);
+			Assert.That(statusModel.Urn, Is.EqualTo(statusDto.Urn));
+			Assert.That(statusModel.Name, Is.EqualTo(statusDto.Name));
 		}
 
 		[Test]
@@ -28,12 +30,15 @@ namespace ConcernsCaseWork.Tests.Mappers
 		{
 			//arrange
 			var statusesDto = StatusFactory.BuildListStatusDto();
+			var firstStatusDto = statusesDto.First();
 
 			// act
 			var statusModel = StatusMapping.MapDtoToModel(statusesDto, 0);
 
-			//// assert
+			// assert
 			Assert.That(statusModel, Is.Not.Null);
+			Assert.That(statusModel.Urn, Is.EqualTo(firstStatusDto.Urn));
+			Assert.That(statusModel.Name, Is.EqualTo(firstStatusDto.Name));
 		}
 
 	}
