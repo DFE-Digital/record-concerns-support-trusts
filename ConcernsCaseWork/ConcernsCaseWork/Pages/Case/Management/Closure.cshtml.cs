@@ -8,6 +8,9 @@ using Service.TRAMS.Status;
 using System;
 using ConcernsCaseWork.Services.Trusts;
 using System.Threading.Tasks;
+using ConcernsCaseWork.Services.Records;
+using Service.Redis.Status;
+using System.Linq;
 
 namespace ConcernsCaseWork.Pages.Case.Management
 {
@@ -17,15 +20,19 @@ namespace ConcernsCaseWork.Pages.Case.Management
 	{
 		private readonly ICaseModelService _caseModelService;
 		private readonly ITrustModelService _trustModelService;
+		private readonly IRecordModelService _recordModelService;
+		private readonly IStatusCachedService _statusCachedService;
 		private readonly ILogger<ClosurePageModel> _logger;
 		
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
-		public ClosurePageModel(ICaseModelService caseModelService, ITrustModelService trustModelService, ILogger<ClosurePageModel> logger)
+		public ClosurePageModel(ICaseModelService caseModelService, ITrustModelService trustModelService, IRecordModelService recordModelService, IStatusCachedService statusCachedService, ILogger<ClosurePageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_trustModelService = trustModelService;
+			_recordModelService = recordModelService;
+			_statusCachedService = statusCachedService;
 			_logger = logger;
 		}
 		
@@ -57,10 +64,21 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			try
 			{
 				_logger.LogInformation("Case::ClosurePageModel::OnPostCloseCase");
-				
+
+
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
 					throw new Exception("CaseUrn is null or invalid to parse");
+
+				var recordsModels = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
+				var liveStatus = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
+				var numberOfOpenConcerns = recordsModels.Where(r => r.StatusUrn.CompareTo(liveStatus.Urn) == 0).Count();
+
+				if (numberOfOpenConcerns > 0)
+				{
+					TempData["Error.Message"] = "Cases cannot be closed with open concerns. Please close all concerns if you want to close the case";
+					return Redirect("closure");
+				}
 
 				var caseOutcomes = Request.Form["case-outcomes"];
 				if(string.IsNullOrEmpty(caseOutcomes))

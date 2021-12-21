@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
@@ -12,6 +13,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
+using Service.Redis.Status;
+using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -27,6 +30,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 			
 			var expectedCaseModel = CaseFactory.BuildCaseModel();
@@ -37,7 +42,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(expectedTrustDetailsModel);
 			
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -99,9 +104,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 			
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockLogger.Object, true);
 			
 			// act
 			await pageModel.OnGetAsync();
@@ -122,16 +129,28 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		}
 		
 		[Test]
-		public async Task WhenOnPostCloseCase_RedirectToHomePage()
+		public async Task WhenOnPostCloseCase_When_No_Open_Concerns_RedirectToHomePage()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
-			
+
+			var closedRecordModel = RecordFactory.BuildRecordModel(3);
+			var recordsList = new List<RecordModel>() { closedRecordModel };
+			var liveStatusDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
+
+			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(recordsList);
+
+			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+				.ReturnsAsync(liveStatusDto);
+
 			mockCaseModelService.Setup(c => c.PatchClosure(It.IsAny<PatchCaseModel>()));
 			
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -162,17 +181,75 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				Times.Once);
 			
 			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
-		}		
-		
+		}
+
+		[Test]
+		public async Task WhenOnPostCloseCase_When_Open_Concerns_RedirectToClosurePage()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
+
+			var openRecordModel = RecordFactory.BuildRecordModel();
+			var recordsList = new List<RecordModel>() { openRecordModel };
+			var liveStatusDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
+
+			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(recordsList);
+
+			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+				.ReturnsAsync(liveStatusDto);
+
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockLogger.Object, true);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "case-outcomes", new StringValues("case-outcomes") }
+				});
+
+			// act
+			var actionResult = await pageModel.OnPostCloseCase();
+			var redirectResult = actionResult as RedirectResult;
+
+			// assert
+			Assert.That(actionResult, Is.AssignableFrom<RedirectResult>());
+			Assert.That(redirectResult, Is.Not.Null);
+			Assert.That(redirectResult.Url, Is.EqualTo("closure"));
+
+			// Verify ILogger
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Information,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("ClosurePageModel")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+
+			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("Cases cannot be closed with open concerns. Please close all concerns if you want to close the case"));
+			mockCaseModelService.Verify(c => c.PatchClosure(It.IsAny<PatchCaseModel>()), Times.Never);
+		}
+
+
 		[Test]
 		public async Task WhenOnPostCloseCase_MissingRoutes_ThrowsException()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 			
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockLogger.Object, true);
 			
 			// act
 			var actionResult = await pageModel.OnPostCloseCase();
@@ -202,9 +279,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 			
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockLogger.Object, true);
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
 			
@@ -237,11 +316,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		}		
 		
 		private static ClosurePageModel SetupClosurePageModel(
-			ICaseModelService mockCaseModelService, ITrustModelService mockTrustModelService, ILogger<ClosurePageModel> mockLogger, bool isAuthenticated = false)
+			ICaseModelService mockCaseModelService, ITrustModelService mockTrustModelService, IRecordModelService mockRecordModelService, IStatusCachedService mockStatusCachedService, ILogger<ClosurePageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new ClosurePageModel(mockCaseModelService, mockTrustModelService, mockLogger)
+			return new ClosurePageModel(mockCaseModelService, mockTrustModelService, mockRecordModelService, mockStatusCachedService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
