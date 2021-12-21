@@ -73,7 +73,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				1);
 		}
 		
-		public static RecordModel BuildRecordModel()
+		public static RecordModel BuildRecordModel(long statusUrn = 1)
 		{
 			return new RecordModel(
 				Fixture.Create<long>(), 
@@ -82,7 +82,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<long>(),
 				Fixture.Create<RatingModel>(),
 				Fixture.Create<long>(),
-				Fixture.Create<long>(),
+				statusUrn,
 				Fixture.Create<StatusModel>()
 			);
 		}
