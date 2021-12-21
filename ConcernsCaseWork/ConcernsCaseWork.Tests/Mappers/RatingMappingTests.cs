@@ -1,12 +1,14 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
+using Service.TRAMS.Ratings;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Mappers
 {
 	[Parallelizable(ParallelScope.All)]
-	public class RagMappingTests
+	public class RatingMappingTests
 	{
 		[TestCase(null, "-", 0)]
 		[TestCase("", "n/a", 0)]
@@ -60,6 +62,26 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// act
 			var ratingModel = RatingMapping.MapDtoToModel(ratingDto);
 			
+			// assert
+			Assert.That(ratingModel, Is.Not.Null);
+			Assert.That(ratingModel.Checked, Is.Not.Null);
+			Assert.That(ratingModel.Name, Is.Not.Null);
+			Assert.That(ratingModel.Urn, Is.Not.Null);
+			Assert.That(ratingModel.RagRating, Is.Not.Null);
+			Assert.That(ratingModel.RagRatingCss, Is.Not.Null);
+		}
+
+		[Test]
+		public void WhenMapDtoToModel_When_Urn_IsUknown_ReturnsFirstRatingModel()
+		{
+			// arrange
+			var uknownUrn = 0;
+			var ratingDto = RatingFactory.BuildRatingDto();
+			var ratingsDto = new List<RatingDto>() { ratingDto };
+
+			// act
+			var ratingModel = RatingMapping.MapDtoToModel(ratingsDto, uknownUrn);
+
 			// assert
 			Assert.That(ratingModel, Is.Not.Null);
 			Assert.That(ratingModel.Checked, Is.Not.Null);

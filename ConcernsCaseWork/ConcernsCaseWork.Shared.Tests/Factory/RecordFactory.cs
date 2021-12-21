@@ -100,7 +100,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Urn = 1,
 				CaseUrn = 1,
 				RatingUrn = 1,
-				CreatedBy = Fixture.Create<string>()
+				CreatedBy = Fixture.Create<string>(),
+				StatusUrn = 1
 			};
 		}
 

@@ -241,11 +241,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				CurrentStatus = Fixture.Create<string>(),
 				CaseAim = Fixture.Create<string>(),
 				DeEscalationPoint = Fixture.Create<string>(),
-				ClosedAt = Fixture.Create<DateTimeOffset>(),
 				NextSteps = Fixture.Create<string>(),
-				StatusName = Fixture.Create<string>(),
-				ReasonAtReview = Fixture.Create<string>(),
-				ReviewAt = Fixture.Create<DateTimeOffset>()
+				StatusName = Fixture.Create<string>()
 			};
 		}
 

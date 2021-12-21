@@ -2,6 +2,8 @@
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
 using Service.TRAMS.Records;
+using Service.TRAMS.Status;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,7 +13,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 	public class RecordMappingTests
 	{
 		[Test]
-		public void WhenMapRiskRating_ReturnsRecordDto()
+		public void WhenMapRating_ReturnsRecordDto()
 		{
 			// arrange
 			var patchRecordModel = RecordFactory.BuildPatchRecordModel();
@@ -31,6 +33,61 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(recordDto.ClosedAt, Is.EqualTo(record.ClosedAt));
 			Assert.That(recordDto.CreatedAt, Is.EqualTo(record.CreatedAt));
 			Assert.That(recordDto.RatingUrn, Is.EqualTo(patchRecordModel.RatingUrn));
+			Assert.That(recordDto.ReviewAt, Is.EqualTo(record.ReviewAt));
+			Assert.That(recordDto.TypeUrn, Is.EqualTo(record.TypeUrn));
+			Assert.That(recordDto.UpdatedAt, Is.EqualTo(patchRecordModel.UpdatedAt));
+		}
+
+		[Test]
+		public void WhenMapClosure_ReturnsRecordDto()
+		{
+			// arrange
+			var patchRecordModel = RecordFactory.BuildPatchRecordModel();
+			var record = RecordFactory.BuildRecordDto();
+			var statusDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
+
+			// act
+			var recordDto = RecordMapping.MapClosure(patchRecordModel, record, statusDto);
+
+			// assert
+			Assert.That(recordDto, Is.Not.Null);
+			Assert.That(recordDto.Description, Is.EqualTo(record.Description));
+			Assert.That(recordDto.Name, Is.EqualTo(record.Name));
+			Assert.That(recordDto.Reason, Is.EqualTo(record.Reason));
+			Assert.That(recordDto.StatusUrn, Is.EqualTo(record.StatusUrn));
+			Assert.That(recordDto.Urn, Is.EqualTo(record.Urn));
+			Assert.That(recordDto.CaseUrn, Is.EqualTo(record.CaseUrn));
+			Assert.That(recordDto.ClosedAt, Is.EqualTo(record.ClosedAt));
+			Assert.That(recordDto.CreatedAt, Is.EqualTo(record.CreatedAt));
+			Assert.That(recordDto.RatingUrn, Is.EqualTo(record.RatingUrn));
+			Assert.That(recordDto.ReviewAt, Is.EqualTo(record.ReviewAt));
+			Assert.That(recordDto.TypeUrn, Is.EqualTo(record.TypeUrn));
+			Assert.That(recordDto.UpdatedAt, Is.EqualTo(patchRecordModel.UpdatedAt));
+		}
+
+		[Test]
+		public void WhenMapClosure_When_ClosedDate_IsNotNull_ReturnsRecordDto()
+		{
+			// arrange
+			var patchRecordModel = RecordFactory.BuildPatchRecordModel();
+			patchRecordModel.ClosedAt = DateTimeOffset.Now;
+			var record = RecordFactory.BuildRecordDto();
+			var statusDto = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
+
+			// act
+			var recordDto = RecordMapping.MapClosure(patchRecordModel, record, statusDto);
+
+			// assert
+			Assert.That(recordDto, Is.Not.Null);
+			Assert.That(recordDto.Description, Is.EqualTo(record.Description));
+			Assert.That(recordDto.Name, Is.EqualTo(record.Name));
+			Assert.That(recordDto.Reason, Is.EqualTo(record.Reason));
+			Assert.That(recordDto.StatusUrn, Is.EqualTo(statusDto.Urn));
+			Assert.That(recordDto.Urn, Is.EqualTo(record.Urn));
+			Assert.That(recordDto.CaseUrn, Is.EqualTo(record.CaseUrn));
+			Assert.That(recordDto.ClosedAt, Is.EqualTo(patchRecordModel.ClosedAt));
+			Assert.That(recordDto.CreatedAt, Is.EqualTo(record.CreatedAt));
+			Assert.That(recordDto.RatingUrn, Is.EqualTo(record.RatingUrn));
 			Assert.That(recordDto.ReviewAt, Is.EqualTo(record.ReviewAt));
 			Assert.That(recordDto.TypeUrn, Is.EqualTo(record.TypeUrn));
 			Assert.That(recordDto.UpdatedAt, Is.EqualTo(patchRecordModel.UpdatedAt));
@@ -78,7 +135,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 
 			// act
-			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(recordsDto, typesDto, ratingsDto);
+			var createRecordsDto = RecordMapping.MapDtoToCreateRecordModel(null, typesDto, ratingsDto);
 
 			// assert
 			Assert.NotNull(createRecordsDto);
