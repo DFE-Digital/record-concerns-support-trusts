@@ -47,6 +47,17 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
 					throw new Exception("CaseUrn is null or invalid to parse");
 
+				var recordsModels = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
+				var liveStatus = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
+				var numberOfOpenConcerns = recordsModels.Where(r => r.StatusUrn.CompareTo(liveStatus.Urn) == 0).Count();
+
+				if (numberOfOpenConcerns > 0)
+				{
+					TempData["OpenConcerns.Message"] = "Cases cannot be closed with open concerns. Please close all concerns if you want to close the case";
+
+					return;
+				}
+
 				// Fetch UI data
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
@@ -65,20 +76,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			{
 				_logger.LogInformation("Case::ClosurePageModel::OnPostCloseCase");
 
-
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
 					throw new Exception("CaseUrn is null or invalid to parse");
-
-				var recordsModels = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
-				var liveStatus = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
-				var numberOfOpenConcerns = recordsModels.Where(r => r.StatusUrn.CompareTo(liveStatus.Urn) == 0).Count();
-
-				if (numberOfOpenConcerns > 0)
-				{
-					TempData["Error.Message"] = "Cases cannot be closed with open concerns. Please close all concerns if you want to close the case";
-					return Redirect("closure");
-				}
 
 				var caseOutcomes = Request.Form["case-outcomes"];
 				if(string.IsNullOrEmpty(caseOutcomes))

@@ -16,6 +16,12 @@
 			{
 				<partial name="_Error"/>
 			}
+			else if (!string.IsNullOrEmpty((string)TempData.Peek("OpenConcerns.Message"))) 
+			{
+				<div class="govuk-heading-l moj-banner__message">
+					<p class="govuk-body">@TempData["OpenConcerns.Message"]</p>
+				</div>
+			}
 			else
 			{
 				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
