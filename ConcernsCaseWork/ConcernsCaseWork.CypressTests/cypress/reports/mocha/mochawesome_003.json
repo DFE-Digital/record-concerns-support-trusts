@@ -1,0 +1,164 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 4,
+    "passes": 4,
+    "pending": 0,
+    "failures": 0,
+    "start": "2021-12-23T20:10:23.254Z",
+    "end": "2021-12-23T20:10:28.187Z",
+    "duration": 4933,
+    "testsRegistered": 4,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "dd859b48-5afa-47e6-b326-c300bee6577f",
+      "title": "",
+      "fullFile": "cypress/integration/casework-regression/create-case-route.js",
+      "file": "cypress/integration/casework-regression/create-case-route.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "be374ca5-58b3-478d-9d6c-a6db5148cfc2",
+          "title": "User interactions via Create Case route",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "User clicks on Create Case and should see Search Trusts",
+              "fullTitle": "User interactions via Create Case route User clicks on Create Case and should see Search Trusts",
+              "timedOut": null,
+              "duration": 1665,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.get('[href=\"/case\"]').click();\ncy.get(\"#search\").should(\"be.visible\");",
+              "err": {},
+              "uuid": "2682350a-c487-4f61-b849-69da0268447e",
+              "parentUUID": "be374ca5-58b3-478d-9d6c-a6db5148cfc2",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "User searches for a valid Trust and selects it",
+              "fullTitle": "User interactions via Create Case route User searches for a valid Trust and selects it",
+              "timedOut": null,
+              "duration": 1142,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.get(\"#search\").type(searchTerm + \"{enter}\");\ncy.get(\"#search__option--0\").click();",
+              "err": {},
+              "uuid": "cfa423fc-4be1-40f0-9041-ff982c4d3e51",
+              "parentUUID": "be374ca5-58b3-478d-9d6c-a6db5148cfc2",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Should display the Concern details of the specified Trust",
+              "fullTitle": "User interactions via Create Case route Should display the Concern details of the specified Trust",
+              "timedOut": null,
+              "duration": 530,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.get(\".govuk-summary-list .govuk-summary-list__row:nth-of-type(1) .govuk-summary-list__value\").should(\"contain.text\", 'Accrington');\ncy.get('[href=\"/case/concern/cancel\"').should(\"be.visible\").click();",
+              "err": {},
+              "uuid": "08a5509a-7f5c-403a-bc91-fbde27b589d4",
+              "parentUUID": "be374ca5-58b3-478d-9d6c-a6db5148cfc2",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Should display an error when a user types fewer than 3 letters in the search bar",
+              "fullTitle": "User interactions via Create Case route Should display an error when a user types fewer than 3 letters in the search bar",
+              "timedOut": null,
+              "duration": 327,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.get('[href=\"/case\"]').click();\ncy.get(\"#search\").should(\"be.visible\");\ncy.get(\"#search\").type(searchTerm.substring(0, 1) + '{enter}');\ncy.get('.govuk-list.govuk-error-summary__list a').should('contain.text', 'Enter search criteria higher than three characters');",
+              "err": {},
+              "uuid": "9eafb8b9-de94-474b-9201-93549727d71d",
+              "parentUUID": "be374ca5-58b3-478d-9d6c-a6db5148cfc2",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "2682350a-c487-4f61-b849-69da0268447e",
+            "cfa423fc-4be1-40f0-9041-ff982c4d3e51",
+            "08a5509a-7f5c-403a-bc91-fbde27b589d4",
+            "9eafb8b9-de94-474b-9201-93549727d71d"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 3664,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.0.1"
+    },
+    "marge": {
+      "options": {
+        "id": "default",
+        "reportDir": "cypress/reports/mocha",
+        "quite": true,
+        "overwrite": false,
+        "html": false,
+        "json": true
+      },
+      "version": "6.0.1"
+    }
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 4,
+    "passes": 4,
+    "pending": 0,
+    "failures": 0,
+    "start": "2021-12-23T20:10:41.695Z",
+    "end": "2021-12-23T20:10:46.637Z",
+    "duration": 4942,
+    "testsRegistered": 4,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "caa92352-feb4-486c-a600-b07029bbfbc0",
+      "title": "",
+      "fullFile": "cypress/integration/casework-regression/footer-links-active-casework.js",
+      "file": "cypress/integration/casework-regression/footer-links-active-casework.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "179ef86d-88b1-4624-bb6d-8c29d9706854",
+          "title": "Footer links direct to the correct pages from Active Casework page",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Should open Accessibility link",
+              "fullTitle": "Footer links direct to the correct pages from Active Casework page Should open Accessibility link",
+              "timedOut": null,
+              "duration": 2118,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.fixture('footer-links-fixture').then(footerLinkData => {\n  cy.get('.govuk-footer__link[href=\"' + footerLinkData.accessibilityLink + '\"]').click();\n  cy.get('.govuk-grid-column-two-thirds-from-desktop h1').contains(footerLinkData.accessibilityTestText);\n});\ncy.get('#back-link-event').click();",
+              "err": {},
+              "uuid": "c359b94a-faed-476f-a5f6-6702d87e53a3",
+              "parentUUID": "179ef86d-88b1-4624-bb6d-8c29d9706854",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Should open Cookies link",
+              "fullTitle": "Footer links direct to the correct pages from Active Casework page Should open Cookies link",
+              "timedOut": null,
+              "duration": 536,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.fixture('footer-links-fixture').then(footerLinkData => {\n  cy.get('.govuk-footer__link[href=\"' + footerLinkData.cookiesLink + '\"]').click();\n  cy.get('.govuk-grid-column-two-thirds-from-desktop h1').contains(footerLinkData.cookiesTestText);\n});\ncy.get('#back-link-event').click();",
+              "err": {},
+              "uuid": "118d9176-b8ac-4080-b211-564be634074c",
+              "parentUUID": "179ef86d-88b1-4624-bb6d-8c29d9706854",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Should open Privacy Policy link",
+              "fullTitle": "Footer links direct to the correct pages from Active Casework page Should open Privacy Policy link",
+              "timedOut": null,
+              "duration": 549,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.fixture('footer-links-fixture').then(footerLinkData => {\n  cy.get('.govuk-footer__link[href=\"' + footerLinkData.privacyPolicyLink + '\"]').click();\n  cy.get('.govuk-grid-column-two-thirds-from-desktop h2').contains(footerLinkData.privacyPolicyText);\n});\ncy.get('#back-link-event').click();",
+              "err": {},
+              "uuid": "dee43a19-96a5-4ec4-918e-37b730bc06ed",
+              "parentUUID": "179ef86d-88b1-4624-bb6d-8c29d9706854",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Should open Admin link and clicking the \"Back To Casework\" button should take the user back to the dashboard ",
+              "fullTitle": "Footer links direct to the correct pages from Active Casework page Should open Admin link and clicking the \"Back To Casework\" button should take the user back to the dashboard ",
+              "timedOut": null,
+              "duration": 616,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.fixture('footer-links-fixture').then(footerLinkData => {\n  cy.get('.govuk-footer__link[href=\"' + footerLinkData.adminLink + '\"]').click();\n  cy.get('.govuk-heading-l').contains(footerLinkData.adminText);\n});\ncy.get('.govuk-button--secondary[href=\"/\"]').click();\ncy.get('.govuk-button[href=\"/case\"]').should('be.visible');",
+              "err": {},
+              "uuid": "e1577b96-9d53-40d5-a07b-ccba2990a5c1",
+              "parentUUID": "179ef86d-88b1-4624-bb6d-8c29d9706854",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "c359b94a-faed-476f-a5f6-6702d87e53a3",
+            "118d9176-b8ac-4080-b211-564be634074c",
+            "dee43a19-96a5-4ec4-918e-37b730bc06ed",
+            "e1577b96-9d53-40d5-a07b-ccba2990a5c1"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 3819,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.0.1"
+    },
+    "marge": {
+      "options": {
+        "id": "default",
+        "reportDir": "cypress/reports/mocha",
+        "quite": true,
+        "overwrite": false,
+        "html": false,
+        "json": true
+      },
+      "version": "6.0.1"
+    }
+  }
+}

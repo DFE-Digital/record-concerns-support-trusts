@@ -1,0 +1,164 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 4,
+    "passes": 4,
+    "pending": 0,
+    "failures": 0,
+    "start": "2021-12-23T20:10:51.016Z",
+    "end": "2021-12-23T20:10:55.502Z",
+    "duration": 4486,
+    "testsRegistered": 4,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "bedd2aa8-c4b9-43eb-b16c-42708a2112d6",
+      "title": "",
+      "fullFile": "cypress/integration/casework-regression/footer-links-closed.js",
+      "file": "cypress/integration/casework-regression/footer-links-closed.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "3395a2f7-df53-4f86-8a39-f51a312bc836",
+          "title": "Footer links direct to the correct pages from Trust page",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Should open Accessibility link ",
+              "fullTitle": "Footer links direct to the correct pages from Trust page Should open Accessibility link ",
+              "timedOut": null,
+              "duration": 1944,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.fixture('footer-links-fixture').then(footerLinkData => {\n  cy.get('.govuk-footer__link[href=\"' + footerLinkData.accessibilityLink + '\"]').click();\n  cy.get('.govuk-grid-column-two-thirds-from-desktop h1').contains(footerLinkData.accessibilityTestText);\n});\ncy.get('#back-link-event').click();",
+              "err": {},
+              "uuid": "90a72ee0-8ec3-422c-85e4-fb623ac2359a",
+              "parentUUID": "3395a2f7-df53-4f86-8a39-f51a312bc836",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Should open Cookies link",
+              "fullTitle": "Footer links direct to the correct pages from Trust page Should open Cookies link",
+              "timedOut": null,
+              "duration": 286,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.fixture('footer-links-fixture').then(footerLinkData => {\n  cy.get('.govuk-footer__link[href=\"' + footerLinkData.cookiesLink + '\"]').click();\n  cy.get('.govuk-grid-column-two-thirds-from-desktop h1').contains(footerLinkData.cookiesTestText);\n});\ncy.get('#back-link-event').click();",
+              "err": {},
+              "uuid": "205dd040-aed5-4891-8388-0b1f180c9dbf",
+              "parentUUID": "3395a2f7-df53-4f86-8a39-f51a312bc836",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Should open Privacy Policy link",
+              "fullTitle": "Footer links direct to the correct pages from Trust page Should open Privacy Policy link",
+              "timedOut": null,
+              "duration": 294,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.fixture('footer-links-fixture').then(footerLinkData => {\n  cy.get('.govuk-footer__link[href=\"' + footerLinkData.privacyPolicyLink + '\"]').click();\n  cy.get('.govuk-grid-column-two-thirds-from-desktop h2').contains(footerLinkData.privacyPolicyText);\n});\ncy.get('#back-link-event').click();",
+              "err": {},
+              "uuid": "b1fe0cd7-511d-496d-b173-4a683ab42064",
+              "parentUUID": "3395a2f7-df53-4f86-8a39-f51a312bc836",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Should open Admin link and clicking the \"Back To Casework\" button should take the user back to the dashboard ",
+              "fullTitle": "Footer links direct to the correct pages from Trust page Should open Admin link and clicking the \"Back To Casework\" button should take the user back to the dashboard ",
+              "timedOut": null,
+              "duration": 579,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.fixture('footer-links-fixture').then(footerLinkData => {\n  cy.get('.govuk-footer__link[href=\"' + footerLinkData.adminLink + '\"]').click();\n  cy.get('.govuk-heading-l').contains(footerLinkData.adminText);\n});\ncy.get('.govuk-button--secondary[href=\"/\"]').click();\ncy.get('.govuk-button[href=\"/case\"]').should('be.visible');",
+              "err": {},
+              "uuid": "d8cabd00-177f-4827-a87e-239ddf7038c8",
+              "parentUUID": "3395a2f7-df53-4f86-8a39-f51a312bc836",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "90a72ee0-8ec3-422c-85e4-fb623ac2359a",
+            "205dd040-aed5-4891-8388-0b1f180c9dbf",
+            "b1fe0cd7-511d-496d-b173-4a683ab42064",
+            "d8cabd00-177f-4827-a87e-239ddf7038c8"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 3103,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.0.1"
+    },
+    "marge": {
+      "options": {
+        "id": "default",
+        "reportDir": "cypress/reports/mocha",
+        "quite": true,
+        "overwrite": false,
+        "html": false,
+        "json": true
+      },
+      "version": "6.0.1"
+    }
+  }
+}
