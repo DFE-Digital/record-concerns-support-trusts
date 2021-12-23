@@ -489,3 +489,5 @@ terraform.rc
 
 # Cypress files
 /ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
+/ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/reports
+/ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/videos

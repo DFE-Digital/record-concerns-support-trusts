@@ -195,4 +195,4 @@ jobs:
       - uses: actions/upload-artifact@v1
         with:
           name: reports
-          path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/reports
+          path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
