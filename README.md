@@ -227,6 +227,12 @@ The Cypress tests will run against the front-end of the application, so the cred
 To execute the tests locally and view the output, run the following:
 
 ```
+cd ConcernsCaseWork/ConcernsCaseWork.CypressTests/
+```
+
+Followed by:
+
+```
 npm run cy:open -- --env username='USERNAME',password='PASSWORD',url="BASE_URL_OF_APP"
 ```
 
