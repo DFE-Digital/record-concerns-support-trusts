@@ -54,7 +54,21 @@ namespace ConcernsCaseWork.Mappers
 				RagRatingCss = FetchRagCss(ratingDto.Name)
 			};
 		}
-		
+
+		public static List<RatingModel> MapDtoToModelList(IList<RatingDto> ratingsDto)
+		{
+			return ratingsDto.Select(ratingDto =>
+			{
+				return new RatingModel
+				{
+					Name = ratingDto.Name,
+					Urn = ratingDto.Urn,
+					RagRating = FetchRag(ratingDto.Name),
+					RagRatingCss = FetchRagCss(ratingDto.Name)
+				};
+			}).ToList();
+		}
+
 		public static RatingModel MapDtoToModel(IList<RatingDto> ratingsDto, long urn)
 		{
 			var selectedRatingDto = ratingsDto.FirstOrDefault(t => t.Urn.CompareTo(urn) == 0) ?? ratingsDto.First();

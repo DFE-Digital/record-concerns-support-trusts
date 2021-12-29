@@ -30,12 +30,19 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			return new List<RatingModel>
 			{
-				new RatingModel
-				{
-					Name = "Red-Plus",
-					Checked = true,
-					Urn = 1
-				}
+				BuildRatingModel()
+			};
+		}
+
+		public static RatingModel BuildRatingModel()
+		{
+			return new RatingModel
+			{
+				Name = "Red-Plus",
+				Checked = true,
+				Urn = 1,
+				RagRating = new Tuple<int, IList<string>>(1, new List<string>() { "red" }),
+				RagRatingCss = new List<string>() { "red" }
 			};
 		}
 	}

@@ -169,12 +169,11 @@ namespace ConcernsCaseWork.Services.Cases
 			{
 				var casesDto = await _caseSearchService.GetCasesByCaseTrustSearch(new CaseTrustSearch(trustUkprn));
 				if (!casesDto.Any()) return Array.Empty<TrustCasesModel>();
-				
-				// Fetch live and close status
-				var liveStatus = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
-				var monitoringStatus = await _statusCachedService.GetStatusByName(StatusEnum.Monitoring.ToString());
-				var closeStatus = await _statusCachedService.GetStatusByName(StatusEnum.Close.ToString());
-				
+
+				// Fetch statuses
+				var statuses = await _statusCachedService.GetStatuses();
+				var monitoringStatus = statuses.FirstOrDefault(s => s.Name.Equals(StatusEnum.Monitoring.ToString()));
+
 				// Filter cases that are for monitoring
 				casesDto = casesDto.Where(c => c.StatusUrn.CompareTo(monitoringStatus.Urn) != 0).ToList();
 				
@@ -187,12 +186,12 @@ namespace ConcernsCaseWork.Services.Cases
 				if (!recordsDto.Any()) return Array.Empty<TrustCasesModel>();
 				
 				// Fetch Ratings
-				var ragsRatingDto = await _ratingCachedService.GetRatings();
+				var ratingsDto = await _ratingCachedService.GetRatings();
 
 				// Fetch Types
 				var typesDto = await _typeCachedService.GetTypes();
 
-				return CaseMapping.MapTrustCases(recordsDto, ragsRatingDto, typesDto, casesDto, liveStatus, closeStatus);
+				return CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, statuses);
 			}
 			catch (Exception ex)
 			{

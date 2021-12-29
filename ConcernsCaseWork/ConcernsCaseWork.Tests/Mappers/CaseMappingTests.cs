@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Service.TRAMS.Ratings;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
+using Service.TRAMS.Types;
 using System;
 using System.Collections.Generic;
 
@@ -345,9 +346,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var liveStatus = StatusFactory.BuildStatusDto("live", 1);
 			var closeStatus = StatusFactory.BuildStatusDto("close", 3);
+			var statuses = new List<StatusDto>() { liveStatus, closeStatus };
 
 			// act
-			var expectedTrustCasesModel = CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, liveStatus, closeStatus);
+			var expectedTrustCasesModel = CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, statuses);
 
 			// assert
 			Assert.That(expectedTrustCasesModel, Is.Not.Null);
@@ -360,13 +362,14 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// arrange
 			var recordsDto = new List<RecordDto> { RecordFactory.BuildRecordDto(1, 0) };
 			var ratingsDto = RatingFactory.BuildListRatingDto();
-			var typesDto = TypeFactory.BuildListTypeDto();
+			var typesDto = Array.Empty<TypeDto>();
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var liveStatus = StatusFactory.BuildStatusDto("live", 1);
 			var closeStatus = StatusFactory.BuildStatusDto("close", 3);
+			var statuses = new List<StatusDto>() { liveStatus, closeStatus };
 
 			// act
-			var expectedTrustCasesModel = CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, liveStatus, closeStatus);
+			var expectedTrustCasesModel = CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, statuses);
 
 			// assert
 			Assert.That(expectedTrustCasesModel, Is.Not.Null);
@@ -383,9 +386,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var liveStatus = StatusFactory.BuildStatusDto("live", 1);
 			var closeStatus = StatusFactory.BuildStatusDto("close", 3);
+			var statuses = new List<StatusDto>() { liveStatus, closeStatus };
 
 			// act
-			var expectedTrustCasesModel = CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, liveStatus, closeStatus);
+			var expectedTrustCasesModel = CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, statuses);
 
 			// assert
 			Assert.That(expectedTrustCasesModel, Is.Not.Null);
@@ -402,9 +406,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var liveStatus = StatusFactory.BuildStatusDto("live", 1);
 			var closeStatus = StatusFactory.BuildStatusDto("close", 3);
+			var statuses = new List<StatusDto>() { liveStatus, closeStatus };
 
 			// act
-			var expectedTrustCasesModel = CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, liveStatus, closeStatus);
+			var expectedTrustCasesModel = CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, statuses);
 
 			// assert
 			Assert.That(expectedTrustCasesModel, Is.Not.Null);

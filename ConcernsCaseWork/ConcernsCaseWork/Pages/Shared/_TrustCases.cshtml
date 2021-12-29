@@ -6,16 +6,13 @@
 		Case ID
 	</th>
 	<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-		Primary concern
+		Concern Types
 	</th>
 	<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-		Risk rating
+		Risk Rating
 	</th>
 	<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-		Date closed
-	</th>
-	<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-		Status
+		Date Created
 	</th>
 </tr>
 </thead>
@@ -38,21 +35,23 @@ else
 				<a class="govuk-link" href="/case/@trustCase.CaseUrn/management">@trustCase.CaseUrn</a>
 			</td>
 			<td class="govuk-table__cell">
-				@trustCase.CaseTypeDescription
+				@foreach (var record in trustCase.RecordsModel)
+				{
+					<div class="govuk-!-padding-bottom-1">
+						@record.TypeModel.TypeDisplay
+					</div>
+				}
 			</td>
 			<td class="govuk-table__cell govuk-label-wrapper">
-				@for (var index = 0; index < trustCase.RagRating.Item2.Count; ++index)
+				@for (var index = 0; index < trustCase.RatingModel.RagRating.Item2.Count; ++index)
 				{
-					<span class="govuk-tag ragtag @trustCase.RagRatingCss.ElementAt(index)">
-						@trustCase.RagRating.Item2.ElementAt(index)
+					<span class="govuk-tag ragtag @trustCase.RatingModel.RagRatingCss.ElementAt(index)">
+						@trustCase.RatingModel.RagRating.Item2.ElementAt(index)
 					</span>
 				}
 			</td>
 			<td class="govuk-table__cell">
-				@trustCase.Closed
-			</td>
-			<td class="govuk-table__cell">
-				@trustCase.StatusDescription
+				@trustCase.Created
 			</td>
 		</tr>
 	}
