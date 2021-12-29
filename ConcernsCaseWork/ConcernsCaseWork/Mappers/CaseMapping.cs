@@ -254,36 +254,33 @@ namespace ConcernsCaseWork.Mappers
 		}
 
 
-		public static List<TrustCasesModel> MapTrustCases(IEnumerable<RecordDto> recordsDto, IList<RatingDto> ragsRatingDto, IList<TypeDto> typesDto,
-			IList<CaseDto> casesDto, StatusDto liveStatus, StatusDto closeStatus)
+		public static List<TrustCasesModel> MapTrustCases(IEnumerable<RecordDto> recordsDto, IList<RatingDto> ratingsDto, IList<TypeDto> typesDto,
+			IList<CaseDto> casesDto, IList<StatusDto> statusesDto)
 		{
 			var trustCases = new List<TrustCasesModel>();
-				
+
+			if (!recordsDto.Any() | !ratingsDto.Any() | !typesDto.Any() | !statusesDto.Any()) return trustCases;
+			
+			var ratingsModel = RatingMapping.MapDtoToModelList(ratingsDto);
+			var recordsModel = RecordMapping.MapDtoToModel(recordsDto.ToList(), typesDto, ratingsDto, statusesDto);
+
 			trustCases.AddRange(
-				recordsDto.Select(recordDto =>
-				{
-					var ragRatingDto = ragsRatingDto.FirstOrDefault(r => r.Urn.CompareTo(recordDto.RatingUrn) == 0);
-					if (ragRatingDto is null) return null;
+				casesDto.Select(caseDto =>
+			{
+				var ratingModel = ratingsModel.FirstOrDefault(r => r.Urn.CompareTo(caseDto.RatingUrn) == 0);
+				if (ratingModel is null) return null;
 
-					var caseType = typesDto.FirstOrDefault(t => t.Urn.CompareTo(recordDto.TypeUrn) == 0);
-					if (caseType is null) return null;
+				var caseRecordsModel = recordsModel.Where(r => r.CaseUrn.CompareTo(caseDto.Urn) == 0).ToList();
+				if (!caseRecordsModel.Any()) return null;
 
-					var caseDto = casesDto.FirstOrDefault(c => c.Urn.CompareTo(recordDto.CaseUrn) == 0);
-					if (caseDto is null) return null;
-					
-					var trustCase = new TrustCasesModel(
-						recordDto.CaseUrn,
-						caseType.Name,
-						caseType.Description,
-						RatingMapping.FetchRag(ragRatingDto.Name),
-						RatingMapping.FetchRagCss(ragRatingDto.Name),
-						caseDto.CreatedAt,
-						caseDto.ClosedAt,
-						caseDto.StatusUrn.CompareTo(liveStatus.Urn) == 0 ? liveStatus.Name : closeStatus.Name);
+				var trustCase = new TrustCasesModel(caseDto.Urn,
+					caseRecordsModel,
+					ratingModel,
+					caseDto.CreatedAt);
 
-					return trustCase;
-				}).Where(trustCasesModel => trustCasesModel != null)
-			);
+				return trustCase;
+			}).Where(trustCasesModel => trustCasesModel != null)
+				);
 
 			return trustCases;
 		}

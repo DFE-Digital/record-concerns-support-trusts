@@ -75,11 +75,9 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			var actualFirstTrustCaseModel = trustCasesModel.First();
 			var expectedFirstTrustCaseModel = pageModel.TrustCasesModel.First();
 			Assert.That(expectedFirstTrustCaseModel.CaseUrn, Is.EqualTo(actualFirstTrustCaseModel.CaseUrn));
-			Assert.That(expectedFirstTrustCaseModel.RagRating, Is.EqualTo(actualFirstTrustCaseModel.RagRating));
-			Assert.That(expectedFirstTrustCaseModel.RagRatingCss, Is.EqualTo(actualFirstTrustCaseModel.RagRatingCss));
-			Assert.That(expectedFirstTrustCaseModel.Closed, Is.EqualTo(actualFirstTrustCaseModel.Closed));
-			Assert.That(expectedFirstTrustCaseModel.CaseTypeDescription, Is.EqualTo(actualFirstTrustCaseModel.CaseTypeDescription));
-			Assert.That(expectedFirstTrustCaseModel.StatusDescription, Is.EqualTo(actualFirstTrustCaseModel.StatusDescription));
+			Assert.That(expectedFirstTrustCaseModel.RecordsModel, Is.EqualTo(actualFirstTrustCaseModel.RecordsModel));
+			Assert.That(expectedFirstTrustCaseModel.Created, Is.EqualTo(actualFirstTrustCaseModel.Created));
+			Assert.That(expectedFirstTrustCaseModel.RatingModel, Is.EqualTo(actualFirstTrustCaseModel.RatingModel));
 		}
 
 		private static OverviewPageModel SetupOverviewPageModel(

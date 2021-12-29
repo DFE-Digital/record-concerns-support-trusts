@@ -791,6 +791,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var recordsDto = RecordFactory.BuildListRecordDto();
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
+			var statusesDto = StatusFactory.BuildListStatusDto();
 
 			mockCaseSearchService.Setup(c => c.GetCasesByCaseTrustSearch(It.IsAny<CaseTrustSearch>()))
 				.ReturnsAsync(casesDto);
@@ -798,10 +799,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 				.ReturnsAsync(recordsDto);
 			mockRatingCachedService.Setup(r => r.GetRatings()).ReturnsAsync(ratingsDto);
 			mockTypeCachedService.Setup(t => t.GetTypes()).ReturnsAsync(typesDto);
-			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>()))
-				.ReturnsAsync(StatusFactory.BuildStatusDto("live", 1))
-				.ReturnsAsync(StatusFactory.BuildStatusDto("monitoring", 2))
-				.ReturnsAsync(StatusFactory.BuildStatusDto("close", 3));
+			mockStatusCachedService.Setup(s => s.GetStatuses())
+				.ReturnsAsync(statusesDto);
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
@@ -815,7 +814,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			// assert
 			Assert.IsAssignableFrom<List<TrustCasesModel>>(actualTrustCasesModel);
 			Assert.That(actualTrustCasesModel, Is.Not.Null);
-			Assert.That(actualTrustCasesModel.Count, Is.EqualTo(9));
+			Assert.That(actualTrustCasesModel.Count, Is.EqualTo(3));
 		}
 
 		[Test]
@@ -835,6 +834,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
+			var statusesDto = StatusFactory.BuildListStatusDto();
 
 			mockCaseSearchService.Setup(c => c.GetCasesByCaseTrustSearch(It.IsAny<CaseTrustSearch>()))
 				.ReturnsAsync(casesDto);
@@ -842,10 +842,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 				.ReturnsAsync(new List<RecordDto>());
 			mockRatingCachedService.Setup(r => r.GetRatings()).ReturnsAsync(ratingsDto);
 			mockTypeCachedService.Setup(t => t.GetTypes()).ReturnsAsync(typesDto);
-			mockStatusCachedService.SetupSequence(s => s.GetStatusByName(It.IsAny<string>()))
-				.ReturnsAsync(StatusFactory.BuildStatusDto("live", 1))
-				.ReturnsAsync(StatusFactory.BuildStatusDto("monitoring", 2))
-				.ReturnsAsync(StatusFactory.BuildStatusDto("close", 3));
+			mockStatusCachedService.Setup(s => s.GetStatuses())
+				.ReturnsAsync(statusesDto);
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
