@@ -254,8 +254,8 @@ namespace ConcernsCaseWork.Mappers
 		}
 
 
-		public static List<TrustCasesModel> MapTrustCases(IEnumerable<RecordDto> recordsDto, IList<RatingDto> ratingsDto, IList<TypeDto> typesDto,
-			IList<CaseDto> casesDto, IList<StatusDto> statusesDto)
+		public static List<TrustCasesModel> MapTrustCases(IList<RecordDto> recordsDto, IList<RatingDto> ratingsDto, IList<TypeDto> typesDto,
+			IEnumerable<CaseDto> casesDto, IList<StatusDto> statusesDto)
 		{
 			var trustCases = new List<TrustCasesModel>();
 

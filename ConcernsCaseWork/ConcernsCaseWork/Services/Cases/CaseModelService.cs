@@ -172,7 +172,9 @@ namespace ConcernsCaseWork.Services.Cases
 
 				// Fetch statuses
 				var statuses = await _statusCachedService.GetStatuses();
-				var monitoringStatus = statuses.FirstOrDefault(s => s.Name.Equals(StatusEnum.Monitoring.ToString()));
+				
+				// Fetch monitoring status
+				var monitoringStatus = await _statusCachedService.GetStatusByName(StatusEnum.Monitoring.ToString());
 
 				// Filter cases that are for monitoring
 				casesDto = casesDto.Where(c => c.StatusUrn.CompareTo(monitoringStatus.Urn) != 0).ToList();
