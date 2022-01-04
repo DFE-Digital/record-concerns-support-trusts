@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				var recordsModels = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
 				var liveStatus = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
-				var numberOfOpenConcerns = recordsModels.Where(r => r.StatusUrn.CompareTo(liveStatus.Urn) == 0).Count();
+				var numberOfOpenConcerns = recordsModels.Count(r => r.StatusUrn.CompareTo(liveStatus.Urn) == 0);
 
 				if (numberOfOpenConcerns > 0)
 				{

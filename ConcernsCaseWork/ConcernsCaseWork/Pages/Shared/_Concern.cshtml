@@ -9,7 +9,7 @@
 
 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s"></legend>
 
-<div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+<div class="govuk-radios" data-module="govuk-radios">
 	@{
 		foreach (var (key, value) in types)
 		{
@@ -17,19 +17,19 @@
 			var hasSingleSubType = value.Any() && value.Count == 1;
 			var firstSubType = value.First();
 			var typeValue = hasSingleSubType ? firstSubType.Urn + ":" + key : key;
+			var strIdType = typeIndex == 1 ? "type" : "type-" + typeIndex;
 			
 			<div class="govuk-radios__item">
-					
-				<input class="govuk-radios__input" data-aria-controls="conditional-type-@typeIndex" id="type" name="type"
-				       type="radio" value="@typeValue" checked="@type.Equals(key)">
-				<label class="govuk-label govuk-radios__label" for="type">
+				<input class="govuk-radios__input" id="@strIdType" name="type"
+				       type="radio" value="@typeValue" checked="@type.Equals(key)" data-aria-controls="conditional-@strIdType">
+				<label class="govuk-label govuk-radios__label" for="@strIdType">
 					@key
 				</label>
 			</div>
 			
 			@if (!hasSingleSubType)
 			{
-				<div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-type-@typeIndex">
+				<div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-@strIdType">
 					<div class="govuk-form-group">
 						
 						@foreach (var subtype in value)

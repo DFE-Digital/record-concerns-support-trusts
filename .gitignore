@@ -486,3 +486,8 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Cypress files
+/ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
+/ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/reports
+/ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/videos

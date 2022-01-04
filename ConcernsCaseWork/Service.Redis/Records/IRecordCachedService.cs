@@ -1,5 +1,4 @@
-﻿using Service.TRAMS.Cases;
-using Service.TRAMS.Records;
+﻿using Service.TRAMS.Records;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

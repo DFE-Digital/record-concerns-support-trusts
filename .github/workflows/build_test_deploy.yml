@@ -190,3 +190,9 @@ jobs:
         with:
            name: screenshots
            path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots
+      - name: Upload test report
+        run: npm run generate:html:report
+      - uses: actions/upload-artifact@v1
+        with:
+          name: reports
+          path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports

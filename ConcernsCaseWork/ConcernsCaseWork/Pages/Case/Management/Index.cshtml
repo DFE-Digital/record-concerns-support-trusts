@@ -118,7 +118,7 @@
 									</span>
 									<div class="govuk-!-display-inline govuk-label-wrapper govuk-grid-column-two-third">
 										@{
-											if (concern.StatusModel.Name.CompareTo(StatusEnum.Close.ToString()) == 0)
+											if (concern.StatusModel.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
 											{
 												<span class="govuk-tag ragtag ragtag__grey">
 													Closed
@@ -134,8 +134,6 @@
 												}
 											}
 										}
-
-
 									</div>
 								</div>
 							}
@@ -151,7 +149,7 @@
 					<dd class="govuk-summary-list__actions">
 						@foreach (var concern in Model.CaseModel.RecordsModel)
 						{
-							if (concern.StatusModel.Name.CompareTo(StatusEnum.Close.ToString()) == 0)
+							if (concern.StatusModel.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
 							{
 								<br />
 							}

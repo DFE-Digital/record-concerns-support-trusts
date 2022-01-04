@@ -792,6 +792,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
 			var statusesDto = StatusFactory.BuildListStatusDto();
+			var monitoringStatus = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 1);
 
 			mockCaseSearchService.Setup(c => c.GetCasesByCaseTrustSearch(It.IsAny<CaseTrustSearch>()))
 				.ReturnsAsync(casesDto);
@@ -801,6 +802,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			mockTypeCachedService.Setup(t => t.GetTypes()).ReturnsAsync(typesDto);
 			mockStatusCachedService.Setup(s => s.GetStatuses())
 				.ReturnsAsync(statusesDto);
+			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+				.ReturnsAsync(monitoringStatus);
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
@@ -835,6 +838,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var typesDto = TypeFactory.BuildListTypeDto();
 			var statusesDto = StatusFactory.BuildListStatusDto();
+			var monitoringStatus = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 1);
 
 			mockCaseSearchService.Setup(c => c.GetCasesByCaseTrustSearch(It.IsAny<CaseTrustSearch>()))
 				.ReturnsAsync(casesDto);
@@ -844,6 +848,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			mockTypeCachedService.Setup(t => t.GetTypes()).ReturnsAsync(typesDto);
 			mockStatusCachedService.Setup(s => s.GetStatuses())
 				.ReturnsAsync(statusesDto);
+			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+				.ReturnsAsync(monitoringStatus);
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
