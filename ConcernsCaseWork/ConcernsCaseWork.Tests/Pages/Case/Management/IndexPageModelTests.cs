@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Service.Redis.Status;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,13 +29,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockLogger.Object);
+				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, mockLogger.Object);
 
-				// act
+			// act
 			await pageModel.OnGetAsync();
 			
 			// assert
@@ -58,6 +60,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
 			
@@ -66,6 +69,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var casesHistoryModel = CaseFactory.BuildListCasesHistoryModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
+			var statusesModel = StatusFactory.BuildListStatusDto();
 			
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
@@ -77,9 +81,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				.ReturnsAsync(casesHistoryModel);
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
+			mockStatusCachedService.Setup(s => s.GetStatuses())
+				.ReturnsAsync(statusesModel);
 			
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-					mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object);
+					mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -174,6 +180,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
 
@@ -195,14 +202,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				.ReturnsAsync(recordsModel);
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object);
+				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
 			
 			// act
 			await pageModel.OnGetAsync();
-			var showEditActions = pageModel.UserHasEditCasePrivileges();
+			var showEditActions = pageModel.IsEditableCase;
 			
 			// assert
 			Assert.False(showEditActions);
@@ -216,6 +223,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
 
@@ -224,6 +232,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var casesHistoryModel = CaseFactory.BuildListCasesHistoryModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
+			var statusesModel = StatusFactory.BuildListStatusDto();
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
@@ -235,16 +244,18 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				.ReturnsAsync(casesHistoryModel);
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
+			mockStatusCachedService.Setup(s => s.GetStatuses())
+				.ReturnsAsync(statusesModel);
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object, true);
+				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object,  mockLogger.Object, true);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
 			
 			// act
 			await pageModel.OnGetAsync();
-			var showEditActions = pageModel.UserHasEditCasePrivileges();
+			var showEditActions = pageModel.IsEditableCase;
 			
 			// assert
 			Assert.True(showEditActions);
@@ -256,12 +267,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			ICaseHistoryModelService mockCaseHistoryModelService,
 			IRecordModelService mockRecordModelService,
 			IRatingModelService mockRatingModelService,
+			IStatusCachedService mockStatusCachedService,
 			ILogger<IndexPageModel> mockLogger, 
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new IndexPageModel(mockCaseModelService, mockTrustModelService, mockCaseHistoryModelService, mockRecordModelService, mockRatingModelService, mockLogger)
+			return new IndexPageModel(mockCaseModelService, mockTrustModelService, mockCaseHistoryModelService, mockRecordModelService, mockRatingModelService, mockStatusCachedService, mockLogger)
 
 			{
 				PageContext = pageContext,
