@@ -1660,6 +1660,12 @@ span.summary-validation-symbol {
   font-size: 0;
 }
 
+.govuk-ragtag-wrapper {
+  font-size: 0;
+  display: inline-flex;
+  width: max-content;
+}
+
 label.govuk-label .govuk-tag {
   display: inline-flex;
 }
