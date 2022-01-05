@@ -191,6 +191,7 @@ jobs:
            name: screenshots
            path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots
       - name: Upload test report
+        if: always()
         run: npm run generate:html:report
       - uses: actions/upload-artifact@v1
         with:

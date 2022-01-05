@@ -1,4 +1,4 @@
-describe("User creates subsequent Concern to a case", () => {
+describe("User add subsequent Concern to a case", () => {
 	before(() => {
 		cy.login();
 	});
@@ -69,8 +69,8 @@ describe("User creates subsequent Concern to a case", () => {
 	});
 
 	it("Should display a Case Created entry", () => {
-		cy.get('#concerns-summary-list  div.govuk-grid-row > div:nth-child(1)> span').should('contain.text', 'Financial: Deficit')
-		cy.get('#concerns-summary-list  div.govuk-grid-row > div:nth-child(2)> span').should('contain.text', 'Compliance: Financial reporting')
+		cy.get('.govuk-table__row .govuk-table-case-details__cell_no_border .govuk-table__row:nth-of-type(1) td').should('contain.text', 'Financial: Deficit')
+		cy.get('.govuk-table__row .govuk-table-case-details__cell_no_border .govuk-table__row:nth-of-type(2) td').should('contain.text', 'Compliance: Financial reporting')
 		cy.get('.moj-timeline__description p').contains("Case created");
 	});
 
