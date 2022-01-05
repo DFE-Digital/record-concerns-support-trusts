@@ -94,6 +94,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Review, Is.EqualTo(actual.ReviewAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
+					Assert.That(expected.ClosedUnixTime, Is.EqualTo(actual.ClosedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.CreatedUnixTime, Is.EqualTo(actual.CreatedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.ReviewUnixTime, Is.EqualTo(actual.ReviewAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.UpdatedUnixTime, Is.EqualTo(actual.UpdatedAt.ToUnixTimeMilliseconds()));
+					
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
@@ -271,6 +276,10 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Review, Is.EqualTo(actual.ReviewAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
+					Assert.That(expected.ClosedUnixTime, Is.EqualTo(actual.ClosedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.CreatedUnixTime, Is.EqualTo(actual.CreatedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.ReviewUnixTime, Is.EqualTo(actual.ReviewAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.UpdatedUnixTime, Is.EqualTo(actual.UpdatedAt.ToUnixTimeMilliseconds()));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
@@ -391,6 +400,10 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Review, Is.EqualTo(actual.ReviewAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
+					Assert.That(expected.ClosedUnixTime, Is.EqualTo(actual.ClosedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.CreatedUnixTime, Is.EqualTo(actual.CreatedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.ReviewUnixTime, Is.EqualTo(actual.ReviewAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.UpdatedUnixTime, Is.EqualTo(actual.UpdatedAt.ToUnixTimeMilliseconds()));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
@@ -511,6 +524,10 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Review, Is.EqualTo(actual.ReviewAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
+					Assert.That(expected.ClosedUnixTime, Is.EqualTo(actual.ClosedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.CreatedUnixTime, Is.EqualTo(actual.CreatedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.ReviewUnixTime, Is.EqualTo(actual.ReviewAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.UpdatedUnixTime, Is.EqualTo(actual.UpdatedAt.ToUnixTimeMilliseconds()));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
