@@ -94,6 +94,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Review, Is.EqualTo(actual.ReviewAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
+					Assert.That(expected.ClosedUnixTime, Is.EqualTo(actual.ClosedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.CreatedUnixTime, Is.EqualTo(actual.CreatedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.ReviewUnixTime, Is.EqualTo(actual.ReviewAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.UpdatedUnixTime, Is.EqualTo(actual.UpdatedAt.ToUnixTimeMilliseconds()));
+					
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
@@ -145,6 +150,77 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.That(expectedRecordTypeModel.TypesDictionary, Is.EqualTo(actualRecordTypeModel.TypesDictionary));
 					}
 				}
+			}
+		}
+		
+		[Test]
+		public async Task WhenGetCasesByCaseworkerAndStatus_GroupCaseWorkers_Ordered_By_Descending_UpdatedDate_Return_LiveCases()
+		{
+			// arrange
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
+			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
+
+			const string trustUkPrn = "trust-ukprn";
+			
+			// cases
+			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
+			var casesDtoLive = casesDto.Where(c => c.StatusUrn.CompareTo(1) == 0).ToList();
+			
+			// records
+			var recordsDtoLiveCases = casesDtoLive.SelectMany(c => RecordFactory.BuildListRecordDtoByCaseUrn(c.Urn)).ToList();
+			
+			// status
+			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), casesDtoLive.First().Urn);
+			
+			var ratingsDto = RatingFactory.BuildListRatingDto();
+			var typesDto = TypeFactory.BuildListTypeDto();
+			var trustDto = TrustFactory.BuildTrustDetailsDto();
+			var statusesDto = StatusFactory.BuildListStatusDto();
+
+			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+				.ReturnsAsync(statusLiveDto);
+			mockStatusCachedService.Setup(s => s.GetStatuses())
+				.ReturnsAsync(statusesDto);
+			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(casesDtoLive);
+			mockRatingCachedService.Setup(r => r.GetRatings())
+				.ReturnsAsync(ratingsDto);
+			mockTypeCachedService.Setup(t => t.GetTypes())
+				.ReturnsAsync(typesDto);
+			mockTrustCachedService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+				.ReturnsAsync(trustDto);
+			mockRecordCachedService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(recordsDtoLiveCases);
+
+			// act
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
+				mockTrustCachedService.Object, mockRecordCachedService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object,  
+				mockStatusCachedService.Object, mockCaseSearchService.Object, 
+				mockCaseHistoryCachedService.Object, mockLogger.Object);
+
+			var liveCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(new[] {"userA", "userB"}, StatusEnum.Live);
+
+			// assert
+			Assert.IsAssignableFrom<List<HomeModel>>(liveCasesModel);
+			Assert.That(liveCasesModel.Count, Is.EqualTo(4));
+
+			var filteredHomeModel = liveCasesModel.SelectMany(c => casesDto.Where(homeModel => homeModel.Urn.ToString() == c.CaseUrn));
+			var orderedHomeModel = filteredHomeModel.OrderByDescending(c => c.UpdatedAt.ToUnixTimeMilliseconds()).ToList();
+
+			for (var index = 0; index < liveCasesModel.Count; ++index)
+			{
+				var expected = liveCasesModel.ElementAt(index).CaseUrn;
+				var actual = orderedHomeModel.ElementAt(index).Urn.ToString();
+					
+				Assert.That(expected, Is.EqualTo(actual));
 			}
 		}
 		
@@ -271,6 +347,10 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Review, Is.EqualTo(actual.ReviewAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
+					Assert.That(expected.ClosedUnixTime, Is.EqualTo(actual.ClosedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.CreatedUnixTime, Is.EqualTo(actual.CreatedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.ReviewUnixTime, Is.EqualTo(actual.ReviewAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.UpdatedUnixTime, Is.EqualTo(actual.UpdatedAt.ToUnixTimeMilliseconds()));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
@@ -391,6 +471,10 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Review, Is.EqualTo(actual.ReviewAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
+					Assert.That(expected.ClosedUnixTime, Is.EqualTo(actual.ClosedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.CreatedUnixTime, Is.EqualTo(actual.CreatedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.ReviewUnixTime, Is.EqualTo(actual.ReviewAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.UpdatedUnixTime, Is.EqualTo(actual.UpdatedAt.ToUnixTimeMilliseconds()));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));
@@ -511,6 +595,10 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.Created, Is.EqualTo(actual.CreatedAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Review, Is.EqualTo(actual.ReviewAt.ToString("dd-MM-yyyy")));
 					Assert.That(expected.Updated, Is.EqualTo(actual.UpdatedAt.ToString("dd-MM-yyyy")));
+					Assert.That(expected.ClosedUnixTime, Is.EqualTo(actual.ClosedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.CreatedUnixTime, Is.EqualTo(actual.CreatedAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.ReviewUnixTime, Is.EqualTo(actual.ReviewAt.ToUnixTimeMilliseconds()));
+					Assert.That(expected.UpdatedUnixTime, Is.EqualTo(actual.UpdatedAt.ToUnixTimeMilliseconds()));
 					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
 					Assert.That(expected.CaseUrn, Is.EqualTo(actual.Urn.ToString()));
 					Assert.That(expected.TrustName, Is.EqualTo(TrustMapping.FetchTrustName(trustDto)));

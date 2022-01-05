@@ -59,6 +59,14 @@ namespace ConcernsCaseWork.Models
 			}
 		}
 		
+		public long ClosedUnixTime
+		{
+			get
+			{
+				return ClosedDateTimeOffset.ToUnixTimeMilliseconds();
+			}
+		}
+		
 		private DateTimeOffset ReviewDateTimeOffset { get; }
 
 		public string Review
@@ -69,6 +77,14 @@ namespace ConcernsCaseWork.Models
 			}
 		}
 
+		public long ReviewUnixTime
+		{
+			get
+			{
+				return ReviewDateTimeOffset.ToUnixTimeMilliseconds();
+			}
+		}
+		
 		public string TrustNameTitle
 		{
 			get
