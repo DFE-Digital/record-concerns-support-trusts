@@ -201,7 +201,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			};
 		}
 		
-		public static CaseModel BuildCaseModel(string createdBy = "created-user")
+		public static CaseModel BuildCaseModel(string createdBy = "created-user", long statusUrn = 1)
 		{
 			var dateTimeNow = DateTimeOffset.Now;
 			return new CaseModel
@@ -223,7 +223,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				DeEscalationPoint = Fixture.Create<string>(),
 				DirectionOfTravel = Fixture.Create<string>(),
 				Urn = 1,
-				StatusUrn = 1,
+				StatusUrn = statusUrn,
 				StatusName = Fixture.Create<string>()
 			};
 		}

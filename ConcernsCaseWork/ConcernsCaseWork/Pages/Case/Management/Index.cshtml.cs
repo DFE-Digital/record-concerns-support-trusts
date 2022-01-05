@@ -7,8 +7,11 @@ using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Service.Redis.Status;
+using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management
@@ -22,18 +25,21 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ICaseModelService _caseModelService;
 		private readonly IRecordModelService _recordModelService;
 		private readonly IRatingModelService _ratingModelService;
+		private readonly IStatusCachedService _statusCachedService;
 		private readonly ILogger<IndexPageModel> _logger;
 		
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<TrustCasesModel> TrustCasesModel { get; private set; }
 		public IList<CaseHistoryModel> CasesHistoryModel { get; private set; }
+		public bool IsEditableCase { get; private set; }
 
 		public IndexPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
 			ICaseHistoryModelService caseHistoryModelService,
 			IRecordModelService recordModelService,
 			IRatingModelService ratingModelService,
+			IStatusCachedService statusCachedService,
 			ILogger<IndexPageModel> logger)
 		{
 			_caseHistoryModelService = caseHistoryModelService;
@@ -41,6 +47,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_caseModelService = caseModelService;
 			_recordModelService = recordModelService;
 			_ratingModelService = ratingModelService;
+			_statusCachedService = statusCachedService;
 			_logger = logger;
 		}
 
@@ -56,6 +63,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				// Get Case
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+
+				// Check if case is editable
+				IsEditableCase = await IsCaseEditable();
 				
 				// Map Case Rating
 				CaseModel.RatingModel = await _ratingModelService.GetRatingModelByUrn(CaseModel.RatingUrn);
@@ -84,10 +94,35 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			}
 		}
 		
-		public bool UserHasEditCasePrivileges()
+		private bool UserHasEditCasePrivileges()
 		{
 			bool result = CaseModel.CreatedBy.Equals(User.Identity.Name, StringComparison.OrdinalIgnoreCase);
 			return result;
+		}
+
+		private async Task<bool> IsCaseClosed()
+		{
+			var closedStatus = await _statusCachedService.GetStatusByName(StatusEnum.Close.ToString());
+
+			if (CaseModel.StatusUrn.CompareTo(closedStatus.Urn) == 0)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		private async Task<bool> IsCaseEditable()
+		{
+			var isCaseClosed = await IsCaseClosed();
+			var userHasEditCasePrivileges = UserHasEditCasePrivileges();
+
+			if (!isCaseClosed && userHasEditCasePrivileges)
+			{
+				return true;
+			}
+
+			return false;
 		}
 	}
 }
