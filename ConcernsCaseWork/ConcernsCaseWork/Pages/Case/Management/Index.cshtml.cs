@@ -102,10 +102,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		private async Task<bool> IsCaseClosed()
 		{
-			var statuses = await _statusCachedService.GetStatuses();
-			var caseStatus = statuses.FirstOrDefault(s => s.Urn.CompareTo(CaseModel.StatusUrn) == 0);
+			var closedStatus = await _statusCachedService.GetStatusByName(StatusEnum.Close.ToString());
 
-			if (caseStatus.Name.Equals(StatusEnum.Close.ToString()))
+			if (CaseModel.StatusUrn.CompareTo(closedStatus.Urn) == 0)
 			{
 				return true;
 			}
