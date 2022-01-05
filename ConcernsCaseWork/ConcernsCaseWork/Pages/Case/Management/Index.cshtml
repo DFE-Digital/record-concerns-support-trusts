@@ -50,151 +50,120 @@
 			</li>
 		</ul>
 		<div class="govuk-tabs__panel" id="case-details">
-			<dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-6">
 
-				<!-- Trust -->
-				<div class="govuk-summary-list__row">
-					<dt class="govuk-summary-list__key">
-						Trust
-					</dt>
-					<dd class="govuk-summary-list__value">
-						@Model.TrustDetailsModel.GiasData.GroupName
-					</dd>
-					<dd class="govuk-summary-list__actions"></dd>
-				</div>
-
-				<!-- Risk to Trust -->
-				<div class="govuk-summary-list__row">
-					<dt class="dfe-width-30percent govuk-summary-list__key">
-						Risk to trust
-					</dt>
-					<dd class="govuk-summary-list__value govuk-label-wrapper">
-						@for (var index = 0; index < Model.CaseModel.RatingModel.RagRating.Item2.Count; ++index)
-						{
-							<span class="govuk-tag ragtag @Model.CaseModel.RatingModel.RagRatingCss.ElementAt(index)">
-								@Model.CaseModel.RatingModel.RagRating.Item2.ElementAt(index)
-							</span>
-						}
-					</dd>
-					<dd class="govuk-summary-list__actions">
-						@if (Model.UserHasEditCasePrivileges())
-						{
-							<a class="govuk-link" href="@Request.Path/edit_rating">
-								Edit<span class="govuk-visually-hidden"> risk rating</span>
-							</a>
-						}
-					</dd>
-				</div>
-
-				<!-- Direction of travel -->
-				<div class="govuk-summary-list__row">
-					<dt class="dfe-width-30percent govuk-summary-list__key">
-						Direction of travel
-					</dt>
-					<dd class="govuk-summary-list__value">
-						@Model.CaseModel.DirectionOfTravel
-					</dd>
-					<dd class="govuk-summary-list__actions">
-						@if (Model.UserHasEditCasePrivileges())
-						{
-							<a class="govuk-link" href="@Request.Path/edit_directionoftravel">
-								Edit<span class="govuk-visually-hidden"> direction of travel</span>
-							</a>
-						}
-					</dd>
-				</div>
-
-				<!-- Concerns -->
-				<div id="concerns-summary-list" class="govuk-summary-list__row">
-					<dt class="govuk-summary-list__key">Concerns</dt>
-					<dd class="govuk-summary-list__value">
-						
-						<table class="govuk-table">
-							<tbody class="govuk-grid-row">
+			<!-- Case Details -->
+			<table class="govuk-table">
+				<caption class="govuk-table__caption govuk-table__caption--m"></caption>
+				<thead>
+					<tr>
+						<th scope="col"></th>
+						<th scope="col"></th>
+						<th scope="col"></th>
+					</tr>
+				</thead>
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-table-case-details__header">Trust</th>
+						<td class="govuk-table__cell">
+							@Model.TrustDetailsModel.GiasData.GroupName
+						</td>
+						<td class="govuk-table__cell govuk-table__header__right"></td>
+					</tr>
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-table-case-details__header">Risk to trust</th>
+						<td class="govuk-table__cell govuk-label-wrapper">
+							@for (var index = 0; index < Model.CaseModel.RatingModel.RagRating.Item2.Count; ++index)
+							{
+								<span class="govuk-tag ragtag @Model.CaseModel.RatingModel.RagRatingCss.ElementAt(index)">
+									@Model.CaseModel.RatingModel.RagRating.Item2.ElementAt(index)
+								</span>
+							}
+						</td>
+						<td class="govuk-table__cell govuk-table__header__right">
+							@if (Model.UserHasEditCasePrivileges())
+							{
+								<a class="govuk-link" href="@Request.Path/edit_rating">
+									Edit<span class="govuk-visually-hidden"> risk rating</span>
+								</a>
+							}
+						</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-table-case-details__header">Direction of travel</th>
+						<td class="govuk-table__cell">
+							@Model.CaseModel.DirectionOfTravel
+						</td>
+						<td class="govuk-table__cell govuk-table__header__right">
+							@if (Model.UserHasEditCasePrivileges())
+	                        {
+	                            <a class="govuk-link" href="@Request.Path/edit_directionoftravel">
+	                                Edit<span class="govuk-visually-hidden"> direction of travel</span>
+	                            </a>
+	                        }
+						</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-table-case-details__header__no_border">Concerns</th>
+						<td colspan="2" class="govuk-table-case-details__cell_no_border">
+							
+							<table class="govuk-table">
+								<tbody class="govuk-table__body">
 								@foreach (var concern in Model.CaseModel.RecordsModel)
 								{
-									<tr>
+									<tr class="govuk-table__row">
 										<td>
 											@concern.TypeModel.TypeDisplay
 										</td>
-										<td class="govuk-ragtag-wrapper">
+										<td>
+											<div class="govuk-ragtag-wrapper govuk-!-padding-bottom-1 govuk-!-padding-right-4">
+												@{
+													if (concern.StatusModel.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
+													{
+														<span class="govuk-tag ragtag ragtag__grey">
+															Closed
+														</span>
+													}
+													else
+													{
+														for (var index = 0; index < concern.RatingModel.RagRating.Item2.Count; ++index)
+														{
+															<span class="govuk-tag ragtag @concern.RatingModel.RagRatingCss.ElementAt(index)">
+																@concern.RatingModel.RagRating.Item2.ElementAt(index)
+															</span>
+														}
+													}
+												}
+											</div>
+										</td>
+										<td class="govuk-table__header__right">
 											@{
 												if (concern.StatusModel.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
 												{
-													<span class="govuk-tag ragtag ragtag__grey">
-														Closed
-													</span>
+													<br />
 												}
 												else
 												{
-													for (var index = 0; index < concern.RatingModel.RagRating.Item2.Count; ++index)
-													{
-														<span class="govuk-tag ragtag @concern.RatingModel.RagRatingCss.ElementAt(index)">
-															@concern.RatingModel.RagRating.Item2.ElementAt(index)
-														</span>
-													}
+													<div class="govuk-!-padding-bottom-1">
+														<a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Urn/edit_rating">Edit</a>
+													</div>
 												}
 											}
 										</td>
 									</tr>
 								}
-							</tbody>
-						</table>
-						
-						
-						@*<div class="govuk-grid-row">
-
-							@foreach (var concern in Model.CaseModel.RecordsModel)
-							{
-								<div class="govuk-!-padding-bottom-1">
-									<span class="govuk-!-padding-right-1 govuk-grid-column-two-thirds">
-										@concern.TypeModel.TypeDisplay
-									</span>
-									<div class="govuk-!-display-inline govuk-label-wrapper govuk-grid-column-two-third">
-										@{
-											if (concern.StatusModel.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
-											{
-												<span class="govuk-tag ragtag ragtag__grey">
-													Closed
-												</span>
-											}
-											else
-											{
-												for (var index = 0; index < concern.RatingModel.RagRating.Item2.Count; ++index)
-												{
-													<span class="govuk-tag ragtag @concern.RatingModel.RagRatingCss.ElementAt(index)">
-														@concern.RatingModel.RagRating.Item2.ElementAt(index)
-													</span>
-												}
-											}
-										}
-									</div>
-								</div>
-							}
-
-						</div>*@
-						<div class="govuk-o-grid__item--one-half">
-							<a href="@Request.Path/concern" class="govuk-link govuk-link-no-visited-state">Add concern</a>
-						</div>
-					</dd>
-					@*<dd class="govuk-summary-list__actions">
-						@foreach (var concern in Model.CaseModel.RecordsModel)
-						{
-							if (concern.StatusModel.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
-							{
-								<br />
-							}
-							else
-							{
-								<div class="govuk-!-padding-bottom-1">
-									<a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Urn/edit_rating">Edit</a>
-								</div>
-							}
-						}
-					</dd>*@
-				</div>
-			</dl>
-
+								</tbody>
+							</table>
+							
+							<div class="govuk-o-grid__item--one-half">
+		                        <a href="@Request.Path/concern" class="govuk-link govuk-link-no-visited-state">Add concern</a>
+		                    </div>
+							
+						</td>
+						<td class="govuk-table__header__right"></td>
+					</tr>
+				</tbody>
+			</table>
+		
 			<!--Accordions-->
 			<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
 

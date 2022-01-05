@@ -157,6 +157,10 @@ span.summary-validation-symbol {
   float: right;
 }
 
+.text-align-right {
+  text-align: right;
+}
+
 /// RAG rating tags ///
 
 .ragtag {
@@ -227,11 +231,11 @@ span.summary-validation-symbol {
   text-align: inherit;
 }
 
-.govuk-table__header__right{
+.govuk-table__header__right {
   text-align: right;
 }
 
-.govuk-table__header:last-child, .govuk-table__cell:last-child{
+.govuk-table__header:last-child, .govuk-table__cell:last-child {
   padding-right: 10px;
 }
 
@@ -1697,4 +1701,23 @@ label.govuk-label .govuk-tag {
    ========================================================================== */
 .govuk-body-accordion-limit {
   padding: 0 5em 0 0;
+}
+
+.govuk-table-case-details__header {
+  padding: 10px 20px 10px 0;
+  border-bottom: 1px solid #b1b4b6;
+  text-align: left;
+  vertical-align: top;
+}
+
+.govuk-table-case-details__cell_no_border {
+  padding: 10px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.govuk-table-case-details__header__no_border {
+  padding: 10px 20px 10px 0;
+  text-align: left;
+  vertical-align: top;
 }
