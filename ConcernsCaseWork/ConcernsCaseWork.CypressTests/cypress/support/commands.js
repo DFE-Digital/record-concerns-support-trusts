@@ -48,3 +48,35 @@ Cypress.Commands.add('storeSessionData',()=>{
         }
     });
 })
+
+Cypress.Commands.add('enterConcernDetails',()=>{
+    let date = new Date();
+    cy.get("#issue").type("Data entered at " + date);
+    cy.get("#current-status").type("Data entered at " + date);
+    cy.get("#case-aim").type("Data entered at " + date);
+    cy.get("#de-escalation-point").type("Data entered at " + date);
+    cy.get("#next-steps").type("Data entered at " + date);
+    cy.get("#case-details-form  button").click();
+})
+
+Cypress.Commands.add('selectRiskToTrust',()=>{
+    cy.get('[href="/case/rating"').click();
+    cy.get(".ragtag").should("be.visible");
+    //Randomly select a RAG status
+    cy.get(".govuk-radios .ragtag:nth-of-type(1)")
+        .its("length")
+        .then((ragtagElements) => {
+            let num = Math.floor(Math.random() * ragtagElements);
+            cy.get(".govuk-radios .ragtag:nth-of-type(1)").eq(num).click();
+        });
+    cy.get("#case-rating-form > div.govuk-button-group > button").click();
+})
+
+//TODO: make this more dynamic - current usability issue raised
+//under 83452
+Cypress.Commands.add('selectConcernType',()=>{
+    cy.get(".govuk-radios__item [value=Financial]").click();
+    cy.get("[id=sub-type-3]").click();
+    cy.get("[id=rating-3]").click();
+    cy.get(".govuk-button").click();
+})
