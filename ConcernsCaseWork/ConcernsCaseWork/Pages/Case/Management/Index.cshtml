@@ -144,7 +144,10 @@
 												else
 												{
 													<div class="govuk-!-padding-bottom-1">
-														<a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Urn/edit_rating">Edit</a>
+														@if (Model.IsEditableCase)
+														{
+															<a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Urn/edit_rating">Edit</a>
+														}
 													</div>
 												}
 											}
