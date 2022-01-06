@@ -52,24 +52,29 @@ namespace Service.Redis.Records
 			else 
 			{
 				recordsDto = await _recordService.GetRecordsByCaseUrn(caseUrn);
-				
-				await _semaphoreRecordsCase.WaitAsync();
-				
-				userState = await GetData<UserState>(caseworker);
-				
-				if(userState.CasesDetails.TryGetValue(caseUrn, out caseWrapper))
+
+				try
 				{
-					caseWrapper.Records ??= new Dictionary<long, RecordWrapper>();
+					await _semaphoreRecordsCase.WaitAsync();
 					
-					if (recordsDto.Any())
+					userState = await GetData<UserState>(caseworker);
+					
+					if(userState.CasesDetails.TryGetValue(caseUrn, out caseWrapper))
 					{
-						caseWrapper.Records = recordsDto.ToDictionary(recordDto => recordDto.Urn, recordDto => new RecordWrapper { RecordDto = recordDto } );
+						caseWrapper.Records ??= new Dictionary<long, RecordWrapper>();
+						
+						if (recordsDto.Any())
+						{
+							caseWrapper.Records = recordsDto.ToDictionary(recordDto => recordDto.Urn, recordDto => new RecordWrapper { RecordDto = recordDto } );
+						}
+						
+						await StoreData(caseworker, userState);
 					}
-					
-					await StoreData(caseworker, userState);
 				}
-				
-				_semaphoreRecordsCase.Release();
+				finally
+				{
+					_semaphoreRecordsCase.Release();
+				}
 			}
 
 			return recordsDto;
@@ -78,22 +83,30 @@ namespace Service.Redis.Records
 		public async Task<RecordDto> PostRecordByCaseUrn(CreateRecordDto createRecordDto, string caseworker)
 		{
 			_logger.LogInformation("RecordCachedService::PostRecordByCaseUrn {Caseworker} - {CaseUrn}", caseworker, createRecordDto.CaseUrn);
-			
+				
 			// Create record on Academies API
 			var newRecordDto = await _recordService.PostRecordByCaseUrn(createRecordDto);
 			
-			// Store in cache for 24 hours (default)
-			var userState = await GetData<UserState>(caseworker);
-			if (userState is null) return newRecordDto;
-			
-			// If case urn doesn't exist on the cache return new created record
-			if (!userState.CasesDetails.TryGetValue(newRecordDto.CaseUrn, out var caseWrapper)) return newRecordDto;
-			
-			// Add new record to the records cache
-			caseWrapper.Records ??= new ConcurrentDictionary<long, RecordWrapper>();
-			caseWrapper.Records.Add(newRecordDto.Urn, new RecordWrapper {  RecordDto = newRecordDto });
-			
-			await StoreData(caseworker, userState);
+			try
+			{
+				await _semaphoreRecordsCase.WaitAsync();
+				
+				var userState = await GetData<UserState>(caseworker);
+				if (userState is null) return newRecordDto;
+				
+				// If case urn doesn't exist on the cache return new created record
+				if (!userState.CasesDetails.TryGetValue(newRecordDto.CaseUrn, out var caseWrapper)) return newRecordDto;
+				
+				// Add new record to the records cache
+				caseWrapper.Records ??= new ConcurrentDictionary<long, RecordWrapper>();
+				caseWrapper.Records.Add(newRecordDto.Urn, new RecordWrapper { RecordDto = newRecordDto });
+				
+				await StoreData(caseworker, userState);
+			}
+			finally
+			{
+				_semaphoreRecordsCase.Release();
+			}
 			
 			return newRecordDto;
 		}
