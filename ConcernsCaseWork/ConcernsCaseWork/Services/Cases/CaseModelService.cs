@@ -126,9 +126,9 @@ namespace ConcernsCaseWork.Services.Cases
 				
 				return statusEnum switch
 				{
-					StatusEnum.Live => listHomeModel.OrderByDescending(homeModel => homeModel.Updated).ToList(),
-					StatusEnum.Monitoring => listHomeModel.OrderBy(homeModel => homeModel.Review).ToList(),
-					StatusEnum.Close => listHomeModel.OrderByDescending(homeModel => homeModel.Closed).ToList(),
+					StatusEnum.Live => listHomeModel.OrderByDescending(homeModel => homeModel.UpdatedUnixTime).ToList(),
+					StatusEnum.Monitoring => listHomeModel.OrderBy(homeModel => homeModel.ReviewUnixTime).ToList(),
+					StatusEnum.Close => listHomeModel.OrderByDescending(homeModel => homeModel.ClosedUnixTime).ToList(),
 					_ => throw new ArgumentOutOfRangeException(nameof(statusEnum), statusEnum, $"Invalid status enum {statusEnum}")
 				};
 			}
