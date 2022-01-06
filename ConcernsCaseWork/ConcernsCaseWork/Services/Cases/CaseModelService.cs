@@ -428,7 +428,7 @@ namespace ConcernsCaseWork.Services.Cases
 						recordModel.TypeUrn, 
 						recordModel.RatingUrn, 
 						statusDto.Urn);
-
+					
 					return _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 				});
 

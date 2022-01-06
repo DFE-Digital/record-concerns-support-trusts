@@ -41,18 +41,23 @@ namespace Service.Redis.Cases
 			
 			IList<CaseDto> casesDto = await _caseSearchService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch(caseworker, statusUrn));
 			if (!casesDto.Any()) return casesDto;
-			
-			await _semaphoreCasesCaseworkStatus.WaitAsync();
 
-			userState = await GetData<UserState>(caseworker);
-			userState ??= new UserState();
+			try
+			{
+				await _semaphoreCasesCaseworkStatus.WaitAsync();
 
-			Parallel.ForEach(casesDto, caseDto => userState.CasesDetails.TryAdd(caseDto.Urn, new CaseWrapper { CaseDto = caseDto }));
-			
-			await StoreData(caseworker, userState);
-			
-			_semaphoreCasesCaseworkStatus.Release();
+				userState = await GetData<UserState>(caseworker);
+				userState ??= new UserState();
+
+				Parallel.ForEach(casesDto, caseDto => userState.CasesDetails.TryAdd(caseDto.Urn, new CaseWrapper { CaseDto = caseDto }));
 				
+				await StoreData(caseworker, userState);
+			}
+			finally
+			{
+				_semaphoreCasesCaseworkStatus.Release();
+			}
+			
 			return casesDto;
 		}
 		

@@ -130,8 +130,8 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IStatusCachedService, StatusCachedService>();
 			services.AddSingleton<IRatingCachedService, RatingCachedService>();
 			services.AddSingleton<ITrustCachedService, TrustCachedService>();
-			services.AddSingleton<ICaseCachedService, CaseCachedService>();
-			services.AddSingleton<IRecordCachedService, RecordCachedService>();
+			services.AddTransient<ICaseCachedService, CaseCachedService>();
+			services.AddTransient<IRecordCachedService, RecordCachedService>();
 			services.AddSingleton<ICaseHistoryCachedService, CaseHistoryCachedService>();
 			
 			// AD Integration
