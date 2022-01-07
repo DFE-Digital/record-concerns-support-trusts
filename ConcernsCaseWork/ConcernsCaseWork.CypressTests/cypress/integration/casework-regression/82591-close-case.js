@@ -59,6 +59,13 @@ describe("User closes a case", () => {
 		);
 	});
 
+	it("Case should be visible under other cases", function () {
+		cy.visit(Cypress.env('url')+'/trust')
+		cy.get("#search").type(searchTerm + "{enter}");
+		cy.get("#search__option--0").click();
+		cy.get('.govuk-table:nth-of-type(2) tr').contains(this.closedCaseId)
+	});
+
 	after(function () {
 		cy.clearLocalStorage();
 		cy.clearCookies();
