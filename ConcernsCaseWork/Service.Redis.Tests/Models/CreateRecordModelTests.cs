@@ -23,5 +23,21 @@ namespace Service.Redis.Tests.Models
 			Assert.That(createRecordModel.TypeUrn, Is.Not.Null);
 			Assert.That(createRecordModel.RagRatingCss, Is.Not.Null);
 		}
+
+		[Test]
+		public void WhenCreateRecordModel_SubTypeIsNull_ReturnsValidTypeDisplay()
+		{
+			// arrange
+			var createRecordModel = RecordFactory.BuildCreateRecordModel();
+			createRecordModel.SubType = null;
+
+			// assert
+			Assert.That(createRecordModel, Is.Not.Null);
+			Assert.That(createRecordModel.Type, Is.Not.Null);
+			Assert.That(createRecordModel.TypeDisplay, Is.Not.Null);
+			var separator = string.IsNullOrEmpty(createRecordModel.SubType) ? string.Empty : ":";
+			var expectedTypeDisplay = $"{createRecordModel.Type}{separator} {createRecordModel.SubType ?? string.Empty}";
+			Assert.That(createRecordModel.TypeDisplay, Is.EqualTo(expectedTypeDisplay));
+		}
 	}
 }

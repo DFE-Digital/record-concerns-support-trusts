@@ -148,6 +148,13 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.That(expectedRecordTypeModel.SubType, Is.EqualTo(actualRecordTypeModel.SubType));
 						Assert.That(expectedRecordTypeModel.TypeDisplay, Is.EqualTo(actualRecordTypeModel.TypeDisplay));
 						Assert.That(expectedRecordTypeModel.TypesDictionary, Is.EqualTo(actualRecordTypeModel.TypesDictionary));
+
+						var expectedRecordStatusModel = expectedRecordsModel.ElementAt(index).StatusModel;
+						var actualRecordStatusModel = actualRecordsModel.ElementAt(index).StatusModel;
+						Assert.NotNull(expectedRecordStatusModel);
+						Assert.NotNull(actualRecordTypeModel);
+						Assert.That(expectedRecordStatusModel.Name, Is.EqualTo(actualRecordStatusModel.Name));
+						Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
 					}
 				}
 			}
@@ -400,6 +407,13 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.That(expectedRecordTypeModel.SubType, Is.EqualTo(actualRecordTypeModel.SubType));
 						Assert.That(expectedRecordTypeModel.TypeDisplay, Is.EqualTo(actualRecordTypeModel.TypeDisplay));
 						Assert.That(expectedRecordTypeModel.TypesDictionary, Is.EqualTo(actualRecordTypeModel.TypesDictionary));
+
+						var expectedRecordStatusModel = expectedRecordsModel.ElementAt(index).StatusModel;
+						var actualRecordStatusModel = actualRecordsModel.ElementAt(index).StatusModel;
+						Assert.NotNull(expectedRecordStatusModel);
+						Assert.NotNull(actualRecordTypeModel);
+						Assert.That(expectedRecordStatusModel.Name, Is.EqualTo(actualRecordStatusModel.Name));
+						Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
 					}
 				}
 			}
@@ -524,6 +538,13 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.That(expectedRecordTypeModel.SubType, Is.EqualTo(actualRecordTypeModel.SubType));
 						Assert.That(expectedRecordTypeModel.TypeDisplay, Is.EqualTo(actualRecordTypeModel.TypeDisplay));
 						Assert.That(expectedRecordTypeModel.TypesDictionary, Is.EqualTo(actualRecordTypeModel.TypesDictionary));
+
+						var expectedRecordStatusModel = expectedRecordsModel.ElementAt(index).StatusModel;
+						var actualRecordStatusModel = actualRecordsModel.ElementAt(index).StatusModel;
+						Assert.NotNull(expectedRecordStatusModel);
+						Assert.NotNull(actualRecordTypeModel);
+						Assert.That(expectedRecordStatusModel.Name, Is.EqualTo(actualRecordStatusModel.Name));
+						Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
 					}
 				}
 			}
@@ -648,6 +669,13 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.That(expectedRecordTypeModel.SubType, Is.EqualTo(actualRecordTypeModel.SubType));
 						Assert.That(expectedRecordTypeModel.TypeDisplay, Is.EqualTo(actualRecordTypeModel.TypeDisplay));
 						Assert.That(expectedRecordTypeModel.TypesDictionary, Is.EqualTo(actualRecordTypeModel.TypesDictionary));
+
+						var expectedRecordStatusModel = expectedRecordsModel.ElementAt(index).StatusModel;
+						var actualRecordStatusModel = actualRecordsModel.ElementAt(index).StatusModel;
+						Assert.NotNull(expectedRecordStatusModel);
+						Assert.NotNull(actualRecordTypeModel);
+						Assert.That(expectedRecordStatusModel.Name, Is.EqualTo(actualRecordStatusModel.Name));
+						Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
 					}
 				}
 			}
