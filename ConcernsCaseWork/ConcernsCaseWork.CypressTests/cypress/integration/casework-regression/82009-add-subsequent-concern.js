@@ -52,8 +52,7 @@ describe("User adds subsequent Concern to a case", () => {
 
 	it("Should display a Case Created entry", () => {
 		cy.get('.govuk-table__row .govuk-table-case-details__cell_no_border .govuk-table__row').should('contain.text', 'Financial')
-		cy.get('.govuk-table__row .govuk-table-case-details__cell_no_border .govuk-table__row').should('contain.text', 'Compliance: Financial reporting')
-		cy.get('.moj-timeline__description p').contains("Case created");
+		cy.get('.govuk-table__row .govuk-table-case-details__cell_no_border .govuk-table__row').should('contain.text', 'Financial')
 	});
 
 	after(function () {

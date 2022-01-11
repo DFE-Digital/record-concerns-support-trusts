@@ -1,4 +1,5 @@
 {
+    "pageLoadTimeout" : 120000,
     "chromeWebSecurity":false,
         "reporter": "cypress-multi-reporters",
             "reporterOptions": {
@@ -10,5 +11,6 @@
                     "html":false,
                     "json":true
                 }
-            }
+            },
+            "retries": 2
 }
