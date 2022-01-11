@@ -100,6 +100,7 @@ namespace ConcernsCaseWork.Tests.Services.Records
 
 			var firstRatingModel = ratingsDto.First();
 			var firstTypeModel = typesDto.First();
+			var firstStatusModel = statusesDto.First();
 			
 			Assert.NotNull(firstRatingModel);
 			Assert.NotNull(recordModel.RatingModel);
@@ -110,6 +111,11 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			Assert.NotNull(recordModel.TypeModel);
 			Assert.That(recordModel.TypeModel.Type, Is.EqualTo(firstTypeModel.Name));
 			Assert.That(recordModel.TypeModel.SubType, Is.EqualTo(firstTypeModel.Description));
+
+			Assert.NotNull(firstStatusModel);
+			Assert.NotNull(recordModel.StatusModel);
+			Assert.That(recordModel.StatusModel.Name, Is.EqualTo(firstStatusModel.Name));
+			Assert.That(recordModel.StatusModel.Urn, Is.EqualTo(firstStatusModel.Urn));
 		}
 
 		[Test]
@@ -157,6 +163,7 @@ namespace ConcernsCaseWork.Tests.Services.Records
 
 			var firstRatingModel = ratingsDto.First();
 			var firstTypeModel = typesDto.First();
+			var firstStatusModel = statusesDto.First();
 
 			Assert.NotNull(firstRatingModel);
 			Assert.NotNull(recordModel.RatingModel);
@@ -167,6 +174,11 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			Assert.NotNull(recordModel.TypeModel);
 			Assert.That(recordModel.TypeModel.Type, Is.EqualTo(firstTypeModel.Name));
 			Assert.That(recordModel.TypeModel.SubType, Is.EqualTo(firstTypeModel.Description));
+
+			Assert.NotNull(firstStatusModel);
+			Assert.NotNull(recordModel.StatusModel);
+			Assert.That(recordModel.StatusModel.Name, Is.EqualTo(firstStatusModel.Name));
+			Assert.That(recordModel.StatusModel.Urn, Is.EqualTo(firstStatusModel.Urn));
 		}
 
 
