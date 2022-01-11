@@ -13,7 +13,8 @@ describe('User can view and navigate Closed cases', () => {
     });
 
     it('User can view a closed case', () => {
-        cy.get('.govuk-table__body tr .govuk-link').click()
+        cy.get('[href*=closed]').first().should('be.visible')
+        cy.get('[href*=closed]').first().click()
         cy.get('[name=caseID]').should('be.visible')
     });
 

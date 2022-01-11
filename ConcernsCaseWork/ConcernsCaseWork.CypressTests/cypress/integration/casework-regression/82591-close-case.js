@@ -69,8 +69,8 @@ describe("User closes a case", () => {
 	});
 
 	it("Should display a Case Created entry", () => {
-		cy.get('.govuk-table__row .govuk-table-case-details__cell_no_border .govuk-table__row:nth-of-type(1) td').should('contain.text', 'Financial: Deficit')
-		cy.get('.govuk-table__row .govuk-table-case-details__cell_no_border .govuk-table__row:nth-of-type(2) td').should('contain.text', 'Compliance: Financial reporting')
+		cy.get('.govuk-table__row .govuk-table-case-details__cell_no_border .govuk-table__row:nth-of-type(1) td').should('contain.text', 'Financial')
+		cy.get('.govuk-table__row .govuk-table-case-details__cell_no_border .govuk-table__row:nth-of-type(2) td').should('contain.text', 'Financial')
 		cy.get('.moj-timeline__description p').contains("Case created");
 	});
 
