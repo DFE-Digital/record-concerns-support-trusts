@@ -29,6 +29,7 @@ Cypress.Commands.add("login",()=> {
 	cy.visit(Cypress.env('url')+"/login");
 	cy.get("#username").type(Cypress.env('username'));
 	cy.get("#password").type(Cypress.env('password')+"{enter}");
+    cy.get('[id=your-casework]').should('be.visible')
 	cy.saveLocalStorage();
 })
 
