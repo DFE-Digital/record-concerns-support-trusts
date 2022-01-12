@@ -13,39 +13,6 @@ describe("Home page tests", () => {
 		cy.get('.govuk-button[href="/case"]').should("be.visible");
 	});
 
-	it("user sorts by Primary Case Type", () => {
-		 cy.get('.govuk-table [data-index="3"]').click()
-		 cy.get('.govuk-table [data-index="3"]').click()
-
-          let optionsArray = []
-          let optionsArraySorted = []
-          cy.log(optionsArray)
-           cy.get('.govuk-table__row.tr__large td:nth-of-type(4)').each(($el) => {
-               optionsArray.push($el.text().replaceAll('\t','').replaceAll('\n','').trim())
-               optionsArraySorted.push($el.text().replaceAll('\t','').replaceAll('\n','').trim())
-           })
-            .then(() => {
-                expect(optionsArray).to.deep.equal(optionsArraySorted.sort())
-         })
-        cy.log(optionsArray==optionsArraySorted)
-	});
-
-	it("user sorts by Trust/Academy", () => {
-		cy.get('.govuk-table [data-index="2"]').click()
-
-		 let optionsArray = []
-		 let optionsArraySorted = []
-		 cy.log(optionsArray)
-		  cy.get('.govuk-table__row.tr__large td:nth-of-type(3)').each(($el) => {
-			  optionsArray.push($el.text().replaceAll('\t','').replaceAll('\n','').trim())
-			  optionsArraySorted.push($el.text().replaceAll('\t','').replaceAll('\n','').trim())
-		  })
-		   .then(() => {
-			   expect(optionsArray).to.deep.equal(optionsArraySorted.sort())
-		})
-	   cy.log(optionsArray==optionsArraySorted)
-   });
-
    it('User clicks on Create Case and should see Search Trusts', () => {
 	   cy.get('[href="/case"]').click()
 	   cy.get('#search').should('be.visible')

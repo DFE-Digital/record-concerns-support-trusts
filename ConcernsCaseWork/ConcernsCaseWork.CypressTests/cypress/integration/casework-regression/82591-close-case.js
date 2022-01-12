@@ -24,10 +24,10 @@ describe("User closes a case", () => {
 	it("Opens an active case", () => {
 		cy.get('.buttons-topOfPage [href="/"]').click();
 		//Stores the ID of the case...
-		cy.get("#main-content tr:nth-child(1) td:nth-child(1) a").then(($el) => {
+		cy.get('#your-casework tr:nth-child(1)  td:nth-child(1)  a').then(($el) => {
 			cy.wrap($el.text()).as("closedCaseId");
 		});
-		cy.get("#main-content tr:nth-child(1) td:nth-child(1) a").click();
+		cy.get('#your-casework tr:nth-child(1) td:nth-child(1) a').click();
 	});
 
 	it("User can close an open concern", function () {
