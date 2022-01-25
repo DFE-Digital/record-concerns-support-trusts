@@ -22,7 +22,7 @@
 			</a>
 			@if (Model.IsEditableCase)
 			{
-				<a href="@Request.Path/closure" role="button" class="govuk-button govuk-button--warning float__right" data-module="govuk-button">
+				<a href="@Request.Path/closure" role="button" class="govuk-button govuk-button--warning float__right" id="close-case-button" data-module="govuk-button">
 					Close case
 				</a>
 			}
@@ -279,6 +279,16 @@
 			$(function () {
 				$("button[id^='accordion-default-heading']").attr("aria-expanded", "true");
 				$(".govuk-accordion__section").addClass("govuk-accordion__section--expanded");
+
+				$(".govuk-tabs__tab").on("click", function(){
+						var url = window.location.href;
+
+						if(url.includes("#trust-overview")){
+							$("#close-case-button").css("display", "none");
+						}else{
+							$("#close-case-button").css("display", "block");
+						}
+				});
 			});
 		</script>
 	}
