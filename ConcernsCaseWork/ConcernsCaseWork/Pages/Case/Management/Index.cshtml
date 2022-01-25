@@ -22,7 +22,7 @@
 			</a>
 			@if (Model.IsEditableCase)
 			{
-				<a id="close-case-button" href="@Request.Path/closure" role="button" class="govuk-button govuk-button--warning float__right" data-module="govuk-button">
+				<a href="@Request.Path/closure" role="button" class="govuk-button govuk-button--warning float__right" id="close-case-button" data-module="govuk-button">
 					Close case
 				</a>
 			}
