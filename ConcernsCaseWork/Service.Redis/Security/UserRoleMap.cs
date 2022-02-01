@@ -17,10 +17,10 @@ namespace Service.Redis.Security
 		{
 			{ AdminUserName, new List<RoleEnum> { RoleEnum.User, RoleEnum.Admin, RoleEnum.Leader } },
 			{ UserE2ECypressUserName, new List<RoleEnum> { RoleEnum.User, RoleEnum.Admin, RoleEnum.Leader } },
-			{ "ben.memmott", new List<RoleEnum> { RoleEnum.User } },
+			{ "ben.memmott", new List<RoleEnum> { RoleEnum.User, RoleEnum.Admin, RoleEnum.Leader } },
 			{ "richard.machen", new List<RoleEnum> { RoleEnum.User } },
 			{ "steve.oconnor", new List<RoleEnum> { RoleEnum.User } },
-			{ "elijah.aremu", new List<RoleEnum> { RoleEnum.User } },
+			{ "elijah.aremu", new List<RoleEnum> { RoleEnum.User, RoleEnum.Admin, RoleEnum.Leader } },
 			{ "paulo.lancao", new List<RoleEnum> { RoleEnum.User } },
 			{ "richard.joseph", new List<RoleEnum> { RoleEnum.User } },
 			{ "william.cook", new List<RoleEnum> { RoleEnum.User } },
@@ -32,23 +32,9 @@ namespace Service.Redis.Security
 			return new List<RoleEnum> { RoleEnum.User };
 		}
 		
-		public static IDictionary<string, List<RoleEnum>> InitUserRoles(string[] users = null)
+		public static IDictionary<string, List<RoleEnum>> InitUserRoles()
 		{
-			if (users is null || users.Length == 0) return DefaultUserRoles;
-
-			var usersRoles = new Dictionary<string, List<RoleEnum>>();
-			foreach (var user in GetDefaultUsersExcludeE2E(users))
-			{
-				if (user.Equals(AdminUserName, StringComparison.OrdinalIgnoreCase))
-				{
-					usersRoles.Add(user, new List<RoleEnum> { RoleEnum.User, RoleEnum.Admin, RoleEnum.Leader });
-					continue;
-				}
-				
-				usersRoles.Add(user, DefaultUserRole());
-			}
-			
-			return usersRoles;
+			return DefaultUserRoles;
 		}
 
 		public static IList<string> GetDefaultUsersExcludedList(IEnumerable<string> users)
