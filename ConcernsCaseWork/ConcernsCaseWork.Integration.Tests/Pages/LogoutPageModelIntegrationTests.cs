@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.Integration.Tests.Pages
 			
 			// assert
 			Assert.That(logoutMessage, Is.Not.Null);
-			StringAssert.Contains(logoutMessage.InnerText.Trim(), "you have sign out from your DfE account");
+			StringAssert.Contains(logoutMessage.InnerText.Trim(), "You have been signed out from your DfE account");
 		}
 	}
 }
