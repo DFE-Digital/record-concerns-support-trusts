@@ -70,7 +70,7 @@ namespace Service.Redis.Users
 				return userRoleClaimState.UserRoleClaim;
 			
 			// Init user roles
-			var userRoles = UserRoleMap.InitUserRoles(users);
+			var userRoles = UserRoleMap.InitUserRoles();
 			
 			// Store cache
 			userRoleClaimState ??= new UserRoleClaimState();
