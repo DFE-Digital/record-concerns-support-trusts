@@ -24,7 +24,9 @@ namespace Service.Redis.Security
 			{ "paulo.lancao", new List<RoleEnum> { RoleEnum.User } },
 			{ "richard.joseph", new List<RoleEnum> { RoleEnum.User } },
 			{ "william.cook", new List<RoleEnum> { RoleEnum.User } },
-			{ "stephanie.maskery", new List<RoleEnum> { RoleEnum.User } }
+			{ "stephanie.maskery", new List<RoleEnum> { RoleEnum.User } },
+			{ "paul.simmons", new List<RoleEnum> { RoleEnum.User } },
+			{ "james.cheetham", new List<RoleEnum> { RoleEnum.User } },
 		};
 		
 		public static List<RoleEnum> DefaultUserRole()
