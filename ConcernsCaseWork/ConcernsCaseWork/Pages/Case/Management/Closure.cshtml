@@ -45,7 +45,7 @@
 					</div>
 					
 					<!--Close case-->
-					<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+					<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" id="close-case-button" data-module="govuk-button">
 						Close case
 					</button>
 
@@ -55,18 +55,29 @@
 					$(function () {
 						let validator = formValidator($("#close-case-form")[0]);
 						validator.addValidator('case-outcomes', [{
-							method: function(field) {				
+							method: function(field) {
 								return field.value.trim().length > 0;
 							},
 							message: 'You have not recorded an outcome'
 						},
 						{
-							method: function(field) {				
+							method: function(field) {
 								return field.value.trim().length <= 200;
 							},
 							message: 'Your case outcome contains too many characters'
 						}]);
-						
+
+						var closeButton = $("#close-case-button");
+						var timesClosedButtonClicked = 0;
+
+						closeButton.on("click", function(event){
+
+							if(timesClosedButtonClicked > 0){
+								closeButton.prop('disabled', true);
+							}
+
+							timesClosedButtonClicked++;
+						});
 						autoResizer();
 					});
 				</script>
