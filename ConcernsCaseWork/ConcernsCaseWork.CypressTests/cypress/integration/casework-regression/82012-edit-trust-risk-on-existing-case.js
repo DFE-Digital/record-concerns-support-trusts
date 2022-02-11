@@ -31,19 +31,7 @@ describe("User creates subsequent Concern to a case", () => {
 	it("Should allow the user to enter Concern details", () => {
 		cy.enterConcernDetails();
 	});
-/*
-	it("Should be able to add a concern via the Add Concern Link", () => {
-		cy.contains("Add concern").click();
-	});
 
-	it("Should allow a user to select a second concern type", () => {
-		cy.get(".govuk-summary-list__value").should(
-			"contain.text",
-			searchTerm.trim()
-		);
-		cy.selectConcernType();
-	});
-*/
 	it("Should allow navigation to the risk rating page", () => {
 		cy.get('span[class="govuk-visually-hidden"]').contains('risk rating').parent().click();
 		cy.editRiskToTrustRedPlus();
