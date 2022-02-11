@@ -61,7 +61,7 @@ Cypress.Commands.add('enterConcernDetails',()=>{
 })
 
 Cypress.Commands.add('selectRiskToTrust',()=>{
-    cy.get('[href="/case/rating"').click();
+    cy.get('[href="/case/rating"]').click();
     cy.get(".ragtag").should("be.visible");
     //Randomly select a RAG status
     cy.get(".govuk-radios .ragtag:nth-of-type(1)")
@@ -71,6 +71,11 @@ Cypress.Commands.add('selectRiskToTrust',()=>{
             cy.get(".govuk-radios .ragtag:nth-of-type(1)").eq(num).click();
         });
     cy.get("#case-rating-form > div.govuk-button-group > button").click();
+})
+
+Cypress.Commands.add('editRiskToTrustRedPlus',()=>{
+    cy.get('[id=rating-3]').click();   
+    cy.get('button[data-prevent-double-click=true]').click();
 })
 
 //TODO: make this more dynamic - current usability issue raised
