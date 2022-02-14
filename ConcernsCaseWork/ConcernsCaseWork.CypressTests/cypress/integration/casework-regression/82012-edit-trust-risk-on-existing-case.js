@@ -1,4 +1,4 @@
-describe("User creates subsequent Concern to a case", () => {
+describe("User edits the trust risk on existing case", () => {
 	before(() => {
 		cy.login();
 	});
@@ -34,13 +34,21 @@ describe("User creates subsequent Concern to a case", () => {
 
 	it("Should allow navigation to the risk rating page", () => {
 		cy.get('span[class="govuk-visually-hidden"]').contains('risk rating').parent().click();
-		cy.editRiskToTrustRedPlus();
-		cy.get('[class="govuk-tag ragtag ragtag__redplus"]').should("be.visible");
+		cy.editRiskToTrust("apply", "Amber");
+		cy.get('[class="govuk-table__cell govuk-label-wrapper"]').children()
+		.should('contain.text', 'Amber')
+		cy.get('[class="govuk-table__cell govuk-label-wrapper"]').should("be.visible");
 	});
 
 	it("Should navigate back to the case management page", () => {
 		cy.get('*[name="caseID"]').should('be.visible');
 		cy.get('[id="close-case-button"]').should('be.visible');
+	});
+
+	it("Should navigate to the management page on cancel", () => {
+		cy.get('span[class="govuk-visually-hidden"]').contains('risk rating').parent().click();
+		cy.editRiskToTrust("cancel");
+		cy.get('*[name="caseID"]').should('be.visible');
 	});
 	
 	after(function () {
