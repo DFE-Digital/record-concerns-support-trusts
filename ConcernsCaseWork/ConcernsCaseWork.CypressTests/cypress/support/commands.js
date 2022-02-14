@@ -73,10 +73,42 @@ Cypress.Commands.add('selectRiskToTrust',()=>{
     cy.get("#case-rating-form > div.govuk-button-group > button").click();
 })
 
-Cypress.Commands.add('editRiskToTrustRedPlus',()=>{
-    cy.get('[id=rating-3]').click();   
-    cy.get('button[data-prevent-double-click=true]').click();
+Cypress.Commands.add('editRiskToTrust',(cta, rag)=>{
+    selectRagRating(rag);
+    clickApplyOrCancel(cta);
 })
+
+function clickApplyOrCancel(cta) {
+    switch (cta) {
+        case "cancel":
+           cy.get('[id=cancel-link-event]').click();
+            break;
+        case "apply":
+            cy.get('button[data-prevent-double-click=true]').click();
+            break;
+        default:
+            cy.log("Could not click item");
+    }
+}
+
+function selectRagRating(ragStatus) {
+    switch (ragStatus) {
+        case 'Red plus':
+            cy.get('[id=rating-3]').click();
+            break;
+        case "Amber":
+            cy.get('[id=rating]').click();
+            break;
+        case "Green":
+            cy.get('[id=rating]').click();
+            break;
+        case "Red":
+            cy.get('[id=rating-2]').click();
+            break;
+        default:
+            cy.log("Could not make selection");
+    }
+}
 
 //TODO: make this more dynamic - current usability issue raised
 //under 83452
