@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using ConcernsCaseWork.Services.Records;
 using Service.Redis.Status;
 using System.Linq;
+using Service.Redis.Cases;
 
 namespace ConcernsCaseWork.Pages.Case.Management
 {
@@ -23,11 +24,12 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly IRecordModelService _recordModelService;
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly ILogger<ClosurePageModel> _logger;
-		
+
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
-		public ClosurePageModel(ICaseModelService caseModelService, ITrustModelService trustModelService, IRecordModelService recordModelService, IStatusCachedService statusCachedService, ILogger<ClosurePageModel> logger)
+		public ClosurePageModel(ICaseModelService caseModelService, ITrustModelService trustModelService, IRecordModelService recordModelService, 
+			IStatusCachedService statusCachedService, ILogger<ClosurePageModel> logger, ICaseCachedService caseCachedService )
 		{
 			_caseModelService = caseModelService;
 			_trustModelService = trustModelService;
@@ -45,7 +47,15 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				// Fetch case urn
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
+				{
 					throw new Exception("CaseUrn is null or invalid to parse");
+				}
+
+				if (await IsCaseAlreadyClosed(User.Identity.Name, caseUrn))
+				{
+					TempData["OpenConcerns.Message"] = "This case is already closed.";
+					return;
+				}
 
 				var recordsModels = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
 				var liveStatus = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
@@ -54,7 +64,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				if (numberOfOpenConcerns > 0)
 				{
 					TempData["OpenConcerns.Message"] = "Cases cannot be closed with open concerns. Please close all concerns if you want to close the case";
-
 					return;
 				}
 
@@ -78,23 +87,31 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
+				{
 					throw new Exception("CaseUrn is null or invalid to parse");
+				}
 
-				var caseOutcomes = Request.Form["case-outcomes"];
-				if(string.IsNullOrEmpty(caseOutcomes))
-					throw new Exception("Missing form values");
-				
-				var patchCaseModel = new PatchCaseModel {
-					// Update patch case model
-					Urn = caseUrn, 
-					CreatedBy = User.Identity.Name, 
-					ClosedAt = DateTimeOffset.Now, 
-					UpdatedAt = DateTimeOffset.Now,
-					StatusName = StatusEnum.Close.ToString(),
-					ReasonAtReview = caseOutcomes
-				};
+				if (!(await IsCaseAlreadyClosed(User.Identity.Name, caseUrn)))
+				{
+					var caseOutcomes = Request.Form["case-outcomes"];
+					if (string.IsNullOrEmpty(caseOutcomes))
+					{
+						throw new Exception("Missing form values");
+					}
 
-				await _caseModelService.PatchClosure(patchCaseModel);
+					var patchCaseModel = new PatchCaseModel
+					{
+						// Update patch case model
+						Urn = caseUrn,
+						CreatedBy = User.Identity.Name,
+						ClosedAt = DateTimeOffset.Now,
+						UpdatedAt = DateTimeOffset.Now,
+						StatusName = StatusEnum.Close.ToString(),
+						ReasonAtReview = caseOutcomes
+					};
+
+					await _caseModelService.PatchClosure(patchCaseModel);
+				}
 					
 				return Redirect("/");
 			}
@@ -106,6 +123,14 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			}
 
 			return Redirect("closure");
+		}
+
+		private async Task<bool> IsCaseAlreadyClosed(string userName, long urn)
+		{
+			var closedState = await _statusCachedService.GetStatusByName(StatusEnum.Close.ToString());
+			var caseDto = await _caseModelService.GetCaseByUrn(userName, urn);
+
+			return closedState != null && caseDto?.StatusUrn == closedState?.Urn;
 		}
 	}
 }
