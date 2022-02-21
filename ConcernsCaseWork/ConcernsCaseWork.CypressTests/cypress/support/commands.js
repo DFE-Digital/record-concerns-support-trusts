@@ -25,11 +25,22 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import "cypress-localstorage-commands";
 
+const concernsRgx = new RegExp(/(Compliance|Financial|Force majeure|Governance|Irregularity)/, 'i');
+const trustRgx = new RegExp(/(School|Academy|Accrington)/, 'i');
+const ragRgx = new RegExp(/(amber|green|red|redPlus|Red Plus)/, 'i');
+const dotRgx = new RegExp(/(Deteriorating|Unchanged|Improving)/, 'i');
+
 Cypress.Commands.add("login",()=> {
 	cy.visit(Cypress.env('url')+"/login");
 	cy.get("#username").type(Cypress.env('username'));
 	cy.get("#password").type(Cypress.env('password')+"{enter}");
     cy.get('[id=your-casework]').should('be.visible')
+	cy.saveLocalStorage();
+})
+
+//example/case/5880/management"
+Cypress.Commands.add("visitPage",(slug)=> {
+	cy.visit(Cypress.env('url')+slug);
 	cy.saveLocalStorage();
 })
 
@@ -123,20 +134,20 @@ Cypress.Commands.add('validateCreateCaseDetailsComponent',()=>{
     //Trust Address
     cy.get(".govuk-summary-list__value").then(($address) =>{
         expect($address).to.be.visible
-        expect($address.text()).to.match(/(School|Academy|Accrington)/i)
+        expect($address.text()).to.match(trustRgx)
         })
     //Concerns
     cy.get("#concerns-summary-list").then(($concerns) =>{
         expect($concerns).to.be.visible
         expect($concerns.text())
-        .to.match(/(Compliance|Financial|Force majeure|Governance|Irregularity)/i)
+        .to.match(concernsRgx)
         })
         let rtlength = 0;
         let rowlength = 0;
     cy.get('[class="govuk-grid-row"] *[class^="govuk-tag ragtag ragtag"]')
         .then(($ragtag) =>{
         expect($ragtag).to.be.visible
-        expect($ragtag).to.contains(/(amber|green|red|redPlus)/i)
+        expect($ragtag).to.contains(ragRgx)
          rtlength = $ragtag.length
          rowlength = 0;
         })
@@ -157,7 +168,7 @@ Cypress.Commands.add('validateCreateCaseDetailsComponent',()=>{
          .and('match', /ragtag/i)
          .and('match', /(amber|green|red|redPlus)/i); //Asserts class name range
     cy.get('div:nth-child(3) > dd > div > span').then(($conragtag) =>{
-         expect($conragtag.text()).to.match(/(Amber|Green|Red|Red Plus)/i); //Asserts text range on page
+         expect($conragtag.text()).to.match(ragRgx); //Asserts text range on page
     });
 
 })
@@ -235,4 +246,67 @@ Cypress.Commands.add('validateCreateCaseInitialDetails',()=>{
             expect($error).to.be.visible
             expect($error.text()).to.match(/(There is a problem)/i);
         })
+    })
+
+
+Cypress.Commands.add('validateCaseManagPage',()=>{
+
+        cy.get('*[class^="govuk-button govuk-button--secondary"]')
+            .should(($backcasw) => {
+            expect($backcasw).to.be.visible
+            expect($backcasw.text().trim()).equal("Back to casework")
+        })
+
+        cy.get('[id="close-case-button"]').should(($clscse) => {
+            expect($clscse).to.be.visible
+            expect($clscse.text().trim()).equal("Close case")
+        })
+
+        cy.get('[name="caseID"]').children().should(($casid) => {
+            expect($casid).to.be.visible
+            expect($casid.text().trim()).equal("Case ID")
+            expect($casid.text()).to.match(/(Case ID)/gi);
+
+        })
+        cy.get('[name="caseID"]').then(($test) =>{
+            expect($test.text()).to.match(/(\n(\d*))/gi)//matches any case number on a new line  
+    })
+
+        cy.get('[class="govuk-heading-m"]').should(($tradd) => {
+            expect($tradd).to.be.visible
+            expect($tradd.text()).to.match(trustRgx);
+        })
+
+        cy.get('[id="tab_case-details"]').should(($tabcd) => {
+            expect($tabcd).to.be.visible
+            expect($tabcd.text().trim()).equal("Case Details")
+        })
+
+        cy.get('[id="tab_trust-overview"]').should(($tabto) => {
+            expect($tabto).to.be.visible
+            expect($tabto.text().trim()).equal("Trust Overview")
+        })
+        
+        cy.get('[class="govuk-table-case-details__header"]').contains("Trust")
+            .should(($tru) => {
+            expect($tru.text().trim()).equal("Trust")
+        })
+
+        cy.get('tr[class=govuk-table__row]').should(($row) => {
+            expect($row).to.have.lengthOf.at.least(4);
+            expect($row.eq(0).text().trim()).to.contain('Trust').and.to.match(trustRgx);
+            expect($row.eq(1).text().trim()).to.contain('Risk to trust').and.to.match(ragRgx).and.to.match(/(Edit risk rating)/);
+            expect($row.eq(2).text().trim()).to.contain('Direction of travel').and.to.match(dotRgx).and.to.match(/(Edit direction of travel)/);
+            expect($row.eq(3).text().trim()).to.contain('Concerns').and.to.match(concernsRgx).and.to.match(/(Add concern)/).and.to.match(/(Edit)/); 
+        })
+
+        cy.get('[class^="govuk-accordion__section govuk-accordion"]').should(($accord) => {
+            expect($accord).to.have.length(5);
+            expect($accord.eq(0).text().trim()).to.contain('Issue').and.to.match(/Edit/);
+            expect($accord.eq(1).text().trim()).to.contain('Current status').and.to.match(/Edit/);
+            expect($accord.eq(2).text().trim()).to.contain('Case aim').and.to.match(/(Edit)/);
+            expect($accord.eq(3).text().trim()).to.contain('De-escalation point').and.to.match(/(Edit)/);
+            expect($accord.eq(4).text().trim()).to.contain('Next steps').and.to.match(/(Edit)/);
+        })
+
 })
