@@ -29,7 +29,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
 		public ClosurePageModel(ICaseModelService caseModelService, ITrustModelService trustModelService, IRecordModelService recordModelService, 
-			IStatusCachedService statusCachedService, ILogger<ClosurePageModel> logger, ICaseCachedService caseCachedService )
+			IStatusCachedService statusCachedService, ILogger<ClosurePageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_trustModelService = trustModelService;
@@ -83,6 +83,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		{
 			try
 			{
+				await Task.Delay(5000);
 				_logger.LogInformation("Case::ClosurePageModel::OnPostCloseCase");
 
 				var caseUrnValue = RouteData.Values["urn"];
