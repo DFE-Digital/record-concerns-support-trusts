@@ -37,6 +37,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var closedRecordModel = RecordFactory.BuildRecordModel(3);
 			var recordsList = new List<RecordModel>() { closedRecordModel };
 			var liveStatusDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
+			var closeStatusDto = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
 
 			var expectedCaseModel = CaseFactory.BuildCaseModel();
 			var expectedTrustDetailsModel = TrustFactory.BuildTrustDetailsModel();
@@ -44,8 +45,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsList);
 
-			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+			mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Live.ToString()))
 				.ReturnsAsync(liveStatusDto);
+
+			mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Close.ToString()))
+				.ReturnsAsync(closeStatusDto);
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(expectedCaseModel);
@@ -156,7 +160,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(pageModel.TempData["OpenConcerns.Message"], Is.Not.Null);
 			Assert.That(pageModel.TempData["OpenConcerns.Message"], Is.EqualTo("Cases cannot be closed with open concerns. Please close all concerns if you want to close the case"));
 
-			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 		}
 

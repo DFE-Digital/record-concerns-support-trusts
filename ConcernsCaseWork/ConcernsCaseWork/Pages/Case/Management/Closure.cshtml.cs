@@ -83,7 +83,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		{
 			try
 			{
-				await Task.Delay(5000);
 				_logger.LogInformation("Case::ClosurePageModel::OnPostCloseCase");
 
 				var caseUrnValue = RouteData.Values["urn"];
