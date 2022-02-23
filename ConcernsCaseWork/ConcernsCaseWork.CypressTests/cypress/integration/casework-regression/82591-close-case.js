@@ -7,8 +7,8 @@ describe("User closes a case", () => {
 		cy.storeSessionData();
 	});
 
-	const searchTerm =
-		"Accrington St Christopher's Church Of England High School";
+	const searchTerm = "Bridgnorth Endowed School"
+		//"Accrington St Christopher's Church Of England High School";
 
 	it("User creates a case", () => {
 		cy.get('[href="/case"]').click();
