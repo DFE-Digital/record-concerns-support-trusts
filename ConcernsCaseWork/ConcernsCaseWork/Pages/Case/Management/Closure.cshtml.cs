@@ -29,7 +29,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
 		public ClosurePageModel(ICaseModelService caseModelService, ITrustModelService trustModelService, IRecordModelService recordModelService, 
-			IStatusCachedService statusCachedService, ILogger<ClosurePageModel> logger, ICaseCachedService caseCachedService )
+			IStatusCachedService statusCachedService, ILogger<ClosurePageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_trustModelService = trustModelService;
