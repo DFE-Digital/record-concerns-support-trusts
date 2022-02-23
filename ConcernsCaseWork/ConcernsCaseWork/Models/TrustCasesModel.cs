@@ -16,6 +16,8 @@ namespace ConcernsCaseWork.Models
 
 		public RatingModel RatingModel { get; set; }
 
+		public StatusEnum Status { get; private set; }
+
 		public string Created 
 		{ 
 			get
@@ -26,8 +28,8 @@ namespace ConcernsCaseWork.Models
 	
 		private DateTimeOffset CreatedAtDateTimeOffset { get; }
 		
-		public TrustCasesModel(long caseUrn, IList<RecordModel> recordsModel, RatingModel ratingModel, DateTimeOffset createdAt) => 
-			(CaseUrn, RecordsModel, RatingModel, CreatedAtDateTimeOffset) = 
-			(caseUrn, recordsModel, ratingModel, createdAt);
+		public TrustCasesModel(long caseUrn, IList<RecordModel> recordsModel, RatingModel ratingModel, DateTimeOffset createdAt, StatusEnum status) => 
+			(CaseUrn, RecordsModel, RatingModel, CreatedAtDateTimeOffset, Status) = 
+			(caseUrn, recordsModel, ratingModel, createdAt, status);
 	}
 }

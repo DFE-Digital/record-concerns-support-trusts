@@ -5,6 +5,7 @@ using Service.TRAMS.Ratings;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
 using Service.TRAMS.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -276,13 +277,22 @@ namespace ConcernsCaseWork.Mappers
 				var trustCase = new TrustCasesModel(caseDto.Urn,
 					caseRecordsModel,
 					ratingModel,
-					caseDto.CreatedAt);
+					caseDto.CreatedAt,
+					ConvertStatusToEnum(caseDto.StatusUrn, statusesDto));
 
 				return trustCase;
 			}).Where(trustCasesModel => trustCasesModel != null)
 				);
 
 			return trustCases;
+		}
+
+		private static StatusEnum ConvertStatusToEnum(long caseStatusUrn, IList<StatusDto> statusesDto)
+		{
+			var caseStatusDto = statusesDto?.SingleOrDefault(s => s.Urn == caseStatusUrn);
+			Enum.TryParse(typeof(StatusEnum), caseStatusDto.Name, ignoreCase: true, out object status);
+
+			return (StatusEnum)(status ?? StatusEnum.Unknown);
 		}
 	}
 }
