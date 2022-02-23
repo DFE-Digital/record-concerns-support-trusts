@@ -3,6 +3,7 @@ using ConcernsCaseWork.Models;
 using Service.Redis.Models;
 using Service.TRAMS.Base;
 using Service.TRAMS.Cases;
+using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
 
@@ -254,7 +255,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<long>(),
 					Fixture.Create<IList<RecordModel>>(),
 					Fixture.Create<RatingModel>(),
-					Fixture.Create<DateTimeOffset>()
+					Fixture.Create<DateTimeOffset>(),
+					Fixture.Create<StatusEnum>()
 					)
 			};
 		}
