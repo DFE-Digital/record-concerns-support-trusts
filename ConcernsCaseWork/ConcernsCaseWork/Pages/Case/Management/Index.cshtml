@@ -268,9 +268,15 @@
 
 			<table class="govuk-table  govuk-!-margin-top-9">
 				<caption class="govuk-table__caption govuk-table__caption--m">
-					Other cases
+					Active cases
 				</caption>
-				<partial name="_TrustCases" model="@Model.TrustCasesModel"/>
+				<partial name="_TrustActiveCases" model="@Model.TrustCasesModel"/>
+			</table>
+            <table class="govuk-table  govuk-!-margin-top-9">
+				<caption class="govuk-table__caption govuk-table__caption--m">
+					Closed cases
+				</caption>
+				<partial name="_TrustClosedCases" model="@Model.TrustCasesModel"/>
 			</table>
 		</div>
 		</div>

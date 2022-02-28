@@ -16,6 +16,7 @@ namespace ConcernsCaseWork.Tests.Models
 		{
 			// arrange
 			var createdAtDate = DateTimeOffset.Now;
+			var closedAdDate = default(DateTimeOffset);
 			var ratingModel = RatingFactory.BuildRatingModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
 			
@@ -24,6 +25,7 @@ namespace ConcernsCaseWork.Tests.Models
 				recordsModel,
 				ratingModel,
 				createdAtDate,
+				closedAdDate,
 				StatusEnum.Live
 			);
 			

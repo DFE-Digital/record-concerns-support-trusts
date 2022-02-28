@@ -1,6 +1,10 @@
 ﻿@model IList<ConcernsCaseWork.Models.TrustCasesModel>
 @using Service.TRAMS.Status;
 
+@{
+    var activeCases = Model?.Where(c => c.Status != StatusEnum.Close) ?? Enumerable.Empty<ConcernsCaseWork.Models.TrustCasesModel>();
+}
+
 <thead class="govuk-table__head">
     <tr class="govuk-table__row tr__large">
         <th class="govuk-table__header govuk-table__cell__cases" scope="col">
@@ -19,17 +23,17 @@
 </thead>
 
 <tbody class="govuk-table__body">
-    @if (Model.Count == 0)
+    @if (activeCases.Count() == 0)
     {
         <tr class="govuk-table__row tr__large">
             <td class="govuk-table__cell__cases govuk-oneline-row">
-                <span>There are no cases available.</span>
+                <span>There are no active cases available.</span>
             </td>
         </tr>
     }
     else
     {
-        foreach (var trustCase in Model)
+        foreach (var trustCase in activeCases)
         {
             <tr class="govuk-table__row tr__large">
                 <td class="govuk-table__cell">

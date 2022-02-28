@@ -256,6 +256,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					Fixture.Create<IList<RecordModel>>(),
 					Fixture.Create<RatingModel>(),
 					Fixture.Create<DateTimeOffset>(),
+					Fixture.Create<DateTimeOffset>(),
 					Fixture.Create<StatusEnum>()
 					)
 			};

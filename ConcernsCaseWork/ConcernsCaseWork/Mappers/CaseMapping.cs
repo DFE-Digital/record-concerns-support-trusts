@@ -273,11 +273,11 @@ namespace ConcernsCaseWork.Mappers
 
 				var caseRecordsModel = recordsModel.Where(r => r.CaseUrn.CompareTo(caseDto.Urn) == 0).ToList();
 				if (!caseRecordsModel.Any()) return null;
-
+				
 				var trustCase = new TrustCasesModel(caseDto.Urn,
 					caseRecordsModel,
 					ratingModel,
-					caseDto.CreatedAt,
+					caseDto.CreatedAt, caseDto.ClosedAt,
 					ConvertStatusToEnum(caseDto.StatusUrn, statusesDto));
 
 				return trustCase;
