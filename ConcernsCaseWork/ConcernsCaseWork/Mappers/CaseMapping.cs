@@ -5,6 +5,7 @@ using Service.TRAMS.Ratings;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
 using Service.TRAMS.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,217 +16,217 @@ namespace ConcernsCaseWork.Mappers
 		public static CreateCaseDto Map(CreateCaseModel createCaseModel)
 		{
 			return new CreateCaseDto(
-				createCaseModel.CreatedAt, 
-				createCaseModel.UpdatedAt, 
-				createCaseModel.ReviewAt, 
-				createCaseModel.ClosedAt, 
-				createCaseModel.CreatedBy, 
-				createCaseModel.CrmEnquiry, 
-				createCaseModel.TrustUkPrn, 
+				createCaseModel.CreatedAt,
+				createCaseModel.UpdatedAt,
+				createCaseModel.ReviewAt,
+				createCaseModel.ClosedAt,
+				createCaseModel.CreatedBy,
+				createCaseModel.CrmEnquiry,
+				createCaseModel.TrustUkPrn,
 				createCaseModel.ReasonAtReview,
-				createCaseModel.DeEscalation, 
-				createCaseModel.Issue, 
-				createCaseModel.CurrentStatus, 
-				createCaseModel.NextSteps, 
+				createCaseModel.DeEscalation,
+				createCaseModel.Issue,
+				createCaseModel.CurrentStatus,
+				createCaseModel.NextSteps,
 				createCaseModel.CaseAim,
-				createCaseModel.DeEscalationPoint, 
-				createCaseModel.DirectionOfTravel, 
-				createCaseModel.StatusUrn, 
+				createCaseModel.DeEscalationPoint,
+				createCaseModel.DirectionOfTravel,
+				createCaseModel.StatusUrn,
 				createCaseModel.RatingUrn);
 		}
-		
+
 		public static CaseModel Map(CaseDto caseDto, string status = null)
 		{
 			return new CaseModel
 			{
-				CreatedAt = caseDto.CreatedAt, 
-				UpdatedAt = caseDto.UpdatedAt, 
-				ReviewAt = caseDto.ReviewAt, 
+				CreatedAt = caseDto.CreatedAt,
+				UpdatedAt = caseDto.UpdatedAt,
+				ReviewAt = caseDto.ReviewAt,
 				ClosedAt = caseDto.ClosedAt,
-				CreatedBy = caseDto.CreatedBy, 
-				Description = caseDto.Description, 
-				CrmEnquiry = caseDto.CrmEnquiry, 
-				TrustUkPrn = caseDto.TrustUkPrn, 
+				CreatedBy = caseDto.CreatedBy,
+				Description = caseDto.Description,
+				CrmEnquiry = caseDto.CrmEnquiry,
+				TrustUkPrn = caseDto.TrustUkPrn,
 				ReasonAtReview = caseDto.ReasonAtReview,
-				DeEscalation = caseDto.DeEscalation, 
-				Issue = caseDto.Issue, 
-				CurrentStatus = caseDto.CurrentStatus, 
-				NextSteps = caseDto.NextSteps, 
+				DeEscalation = caseDto.DeEscalation,
+				Issue = caseDto.Issue,
+				CurrentStatus = caseDto.CurrentStatus,
+				NextSteps = caseDto.NextSteps,
 				CaseAim = caseDto.CaseAim,
 				DeEscalationPoint = caseDto.DeEscalationPoint,
-				DirectionOfTravel = caseDto.DirectionOfTravel, 
+				DirectionOfTravel = caseDto.DirectionOfTravel,
 				Urn = caseDto.Urn,
 				StatusUrn = caseDto.StatusUrn,
 				StatusName = status,
 				RatingUrn = caseDto.RatingUrn
 			};
 		}
-		
+
 		public static CaseDto MapClosure(PatchCaseModel patchCaseModel, CaseDto caseDto, StatusDto statusDto)
 		{
 			return new CaseDto(
-				caseDto.CreatedAt, 
+				caseDto.CreatedAt,
 				patchCaseModel.UpdatedAt,
-				patchCaseModel.ReviewAt ?? caseDto.ReviewAt, 
-				patchCaseModel.ClosedAt ?? caseDto.ClosedAt, 
-				caseDto.CreatedBy, 
+				patchCaseModel.ReviewAt ?? caseDto.ReviewAt,
+				patchCaseModel.ClosedAt ?? caseDto.ClosedAt,
+				caseDto.CreatedBy,
 				caseDto.Description,
-				caseDto.CrmEnquiry, 
-				caseDto.TrustUkPrn, 
+				caseDto.CrmEnquiry,
+				caseDto.TrustUkPrn,
 				patchCaseModel.ReasonAtReview,
-				caseDto.DeEscalation, 
-				caseDto.Issue, 
+				caseDto.DeEscalation,
+				caseDto.Issue,
 				caseDto.CurrentStatus,
-				caseDto.NextSteps, 
-				caseDto.CaseAim, 
-				caseDto.DeEscalationPoint, 
+				caseDto.NextSteps,
+				caseDto.CaseAim,
+				caseDto.DeEscalationPoint,
 				caseDto.DirectionOfTravel,
-				caseDto.Urn, 
-				statusDto.Urn, 
+				caseDto.Urn,
+				statusDto.Urn,
 				caseDto.RatingUrn);
 		}
-		
+
 		public static CaseDto MapDirectionOfTravel(PatchCaseModel patchCaseModel, CaseDto caseDto)
 		{
 			return new CaseDto(
-				caseDto.CreatedAt, 
+				caseDto.CreatedAt,
 				patchCaseModel.UpdatedAt,
-				caseDto.ReviewAt, 
-				caseDto.ClosedAt, 
-				caseDto.CreatedBy, 
+				caseDto.ReviewAt,
+				caseDto.ClosedAt,
+				caseDto.CreatedBy,
 				caseDto.Description,
-				caseDto.CrmEnquiry, 
-				caseDto.TrustUkPrn, 
+				caseDto.CrmEnquiry,
+				caseDto.TrustUkPrn,
 				caseDto.ReasonAtReview,
-				caseDto.DeEscalation, 
-				caseDto.Issue, 
+				caseDto.DeEscalation,
+				caseDto.Issue,
 				caseDto.CurrentStatus,
-				caseDto.NextSteps, 
-				caseDto.CaseAim, 
-				caseDto.DeEscalationPoint, 
+				caseDto.NextSteps,
+				caseDto.CaseAim,
+				caseDto.DeEscalationPoint,
 				patchCaseModel.DirectionOfTravel,
-				caseDto.Urn, 
-				caseDto.StatusUrn, 
+				caseDto.Urn,
+				caseDto.StatusUrn,
 				caseDto.RatingUrn);
 		}
-		
+
 		public static CaseDto MapIssue(PatchCaseModel patchCaseModel, CaseDto caseDto)
 		{
 			return new CaseDto(
-				caseDto.CreatedAt, 
+				caseDto.CreatedAt,
 				patchCaseModel.UpdatedAt,
-				caseDto.ReviewAt, 
-				caseDto.ClosedAt, 
-				caseDto.CreatedBy, 
+				caseDto.ReviewAt,
+				caseDto.ClosedAt,
+				caseDto.CreatedBy,
 				caseDto.Description,
-				caseDto.CrmEnquiry, 
-				caseDto.TrustUkPrn, 
+				caseDto.CrmEnquiry,
+				caseDto.TrustUkPrn,
 				caseDto.ReasonAtReview,
-				caseDto.DeEscalation, 
-				patchCaseModel.Issue, 
+				caseDto.DeEscalation,
+				patchCaseModel.Issue,
 				caseDto.CurrentStatus,
-				caseDto.NextSteps, 
-				caseDto.CaseAim, 
-				caseDto.DeEscalationPoint, 
+				caseDto.NextSteps,
+				caseDto.CaseAim,
+				caseDto.DeEscalationPoint,
 				caseDto.DirectionOfTravel,
-				caseDto.Urn, 
-				caseDto.StatusUrn, 
+				caseDto.Urn,
+				caseDto.StatusUrn,
 				caseDto.RatingUrn);
 		}
-		
+
 		public static CaseDto MapCurrentStatus(PatchCaseModel patchCaseModel, CaseDto caseDto)
 		{
 			return new CaseDto(
-				caseDto.CreatedAt, 
+				caseDto.CreatedAt,
 				patchCaseModel.UpdatedAt,
-				caseDto.ReviewAt, 
-				caseDto.ClosedAt, 
-				caseDto.CreatedBy, 
+				caseDto.ReviewAt,
+				caseDto.ClosedAt,
+				caseDto.CreatedBy,
 				caseDto.Description,
-				caseDto.CrmEnquiry, 
-				caseDto.TrustUkPrn, 
+				caseDto.CrmEnquiry,
+				caseDto.TrustUkPrn,
 				caseDto.ReasonAtReview,
-				caseDto.DeEscalation, 
-				caseDto.Issue, 
+				caseDto.DeEscalation,
+				caseDto.Issue,
 				patchCaseModel.CurrentStatus,
-				caseDto.NextSteps, 
-				caseDto.CaseAim, 
-				caseDto.DeEscalationPoint, 
+				caseDto.NextSteps,
+				caseDto.CaseAim,
+				caseDto.DeEscalationPoint,
 				caseDto.DirectionOfTravel,
-				caseDto.Urn, 
-				caseDto.StatusUrn, 
+				caseDto.Urn,
+				caseDto.StatusUrn,
 				caseDto.RatingUrn);
 		}
-		
+
 		public static CaseDto MapCaseAim(PatchCaseModel patchCaseModel, CaseDto caseDto)
 		{
 			return new CaseDto(
-				caseDto.CreatedAt, 
+				caseDto.CreatedAt,
 				patchCaseModel.UpdatedAt,
-				caseDto.ReviewAt, 
-				caseDto.ClosedAt, 
-				caseDto.CreatedBy, 
+				caseDto.ReviewAt,
+				caseDto.ClosedAt,
+				caseDto.CreatedBy,
 				caseDto.Description,
-				caseDto.CrmEnquiry, 
-				caseDto.TrustUkPrn, 
+				caseDto.CrmEnquiry,
+				caseDto.TrustUkPrn,
 				caseDto.ReasonAtReview,
-				caseDto.DeEscalation, 
-				caseDto.Issue, 
+				caseDto.DeEscalation,
+				caseDto.Issue,
 				caseDto.CurrentStatus,
-				caseDto.NextSteps, 
-				patchCaseModel.CaseAim, 
-				caseDto.DeEscalationPoint, 
+				caseDto.NextSteps,
+				patchCaseModel.CaseAim,
+				caseDto.DeEscalationPoint,
 				caseDto.DirectionOfTravel,
-				caseDto.Urn, 
-				caseDto.StatusUrn, 
+				caseDto.Urn,
+				caseDto.StatusUrn,
 				caseDto.RatingUrn);
 		}
-		
+
 		public static CaseDto MapDeEscalationPoint(PatchCaseModel patchCaseModel, CaseDto caseDto)
 		{
 			return new CaseDto(
 				caseDto.CreatedAt,
 				patchCaseModel.UpdatedAt,
 				caseDto.ReviewAt,
-				caseDto.ClosedAt, 
-				caseDto.CreatedBy, 
+				caseDto.ClosedAt,
+				caseDto.CreatedBy,
 				caseDto.Description,
-				caseDto.CrmEnquiry, 
-				caseDto.TrustUkPrn, 
+				caseDto.CrmEnquiry,
+				caseDto.TrustUkPrn,
 				caseDto.ReasonAtReview,
-				caseDto.DeEscalation, 
-				caseDto.Issue, 
+				caseDto.DeEscalation,
+				caseDto.Issue,
 				caseDto.CurrentStatus,
-				caseDto.NextSteps, 
-				caseDto.CaseAim, 
-				patchCaseModel.DeEscalationPoint, 
+				caseDto.NextSteps,
+				caseDto.CaseAim,
+				patchCaseModel.DeEscalationPoint,
 				caseDto.DirectionOfTravel,
-				caseDto.Urn, 
-				caseDto.StatusUrn, 
+				caseDto.Urn,
+				caseDto.StatusUrn,
 				caseDto.RatingUrn);
 		}
 
 		public static CaseDto MapNextSteps(PatchCaseModel patchCaseModel, CaseDto caseDto)
 		{
 			return new CaseDto(
-				caseDto.CreatedAt, 
+				caseDto.CreatedAt,
 				patchCaseModel.UpdatedAt,
-				caseDto.ReviewAt, 
-				caseDto.ClosedAt, 
-				caseDto.CreatedBy, 
+				caseDto.ReviewAt,
+				caseDto.ClosedAt,
+				caseDto.CreatedBy,
 				caseDto.Description,
-				caseDto.CrmEnquiry, 
-				caseDto.TrustUkPrn, 
+				caseDto.CrmEnquiry,
+				caseDto.TrustUkPrn,
 				caseDto.ReasonAtReview,
-				caseDto.DeEscalation, 
-				caseDto.Issue, 
+				caseDto.DeEscalation,
+				caseDto.Issue,
 				caseDto.CurrentStatus,
-				patchCaseModel.NextSteps, 
-				caseDto.CaseAim, 
-				caseDto.DeEscalationPoint, 
+				patchCaseModel.NextSteps,
+				caseDto.CaseAim,
+				caseDto.DeEscalationPoint,
 				caseDto.DirectionOfTravel,
-				caseDto.Urn, 
-				caseDto.StatusUrn, 
+				caseDto.Urn,
+				caseDto.StatusUrn,
 				caseDto.RatingUrn);
 		}
 
@@ -260,7 +261,7 @@ namespace ConcernsCaseWork.Mappers
 			var trustCases = new List<TrustCasesModel>();
 
 			if (!recordsDto.Any() | !ratingsDto.Any() | !typesDto.Any() | !statusesDto.Any()) return trustCases;
-			
+
 			var ratingsModel = RatingMapping.MapDtoToModelList(ratingsDto);
 			var recordsModel = RecordMapping.MapDtoToModel(recordsDto.ToList(), typesDto, ratingsDto, statusesDto);
 
@@ -272,17 +273,32 @@ namespace ConcernsCaseWork.Mappers
 
 				var caseRecordsModel = recordsModel.Where(r => r.CaseUrn.CompareTo(caseDto.Urn) == 0).ToList();
 				if (!caseRecordsModel.Any()) return null;
-
+				
 				var trustCase = new TrustCasesModel(caseDto.Urn,
 					caseRecordsModel,
 					ratingModel,
-					caseDto.CreatedAt);
+					caseDto.CreatedAt, caseDto.ClosedAt,
+					ConvertStatusToEnum(caseDto.StatusUrn, statusesDto));
 
 				return trustCase;
 			}).Where(trustCasesModel => trustCasesModel != null)
 				);
 
 			return trustCases;
+		}
+
+		private static StatusEnum ConvertStatusToEnum(long caseStatusUrn, IList<StatusDto> statusesDto)
+		{
+			var caseStatusDto = statusesDto?.SingleOrDefault(s => s.Urn == caseStatusUrn);
+
+			StatusEnum returnValue = StatusEnum.Unknown;
+
+			if (caseStatusDto != null && Enum.TryParse(typeof(StatusEnum), caseStatusDto.Name, ignoreCase: true, out object status))
+			{
+				returnValue = (StatusEnum)(status ?? StatusEnum.Unknown);
+			}
+
+			return returnValue;
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
+using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace ConcernsCaseWork.Tests.Models
 		{
 			// arrange
 			var createdAtDate = DateTimeOffset.Now;
+			var closedAdDate = default(DateTimeOffset);
 			var ratingModel = RatingFactory.BuildRatingModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
 			
@@ -22,7 +24,9 @@ namespace ConcernsCaseWork.Tests.Models
 				1,
 				recordsModel,
 				ratingModel,
-				createdAtDate
+				createdAtDate,
+				closedAdDate,
+				StatusEnum.Live
 			);
 			
 			// assert
