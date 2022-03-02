@@ -67,17 +67,6 @@
 							message: 'Your case outcome contains too many characters'
 						}]);
 
-						var closeButton = $("#close-case-button");
-						var timesClosedButtonClicked = 0;
-
-						closeButton.on("click", function(event){
-
-							if(timesClosedButtonClicked > 0){
-								closeButton.prop('disabled', true);
-							}
-
-							timesClosedButtonClicked++;
-						});
 						autoResizer();
 					});
 				</script>
