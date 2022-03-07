@@ -84,7 +84,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				CasesHistoryModel = caseHistoryTask.Result;
 				TrustDetailsModel = trustDetailsTask.Result;
-				TrustCasesModel = trustCasesTask.Result.Where(c => c.CaseUrn != caseUrn).ToList();
+				TrustCasesModel = trustCasesTask.Result;
 			}
 			catch (Exception ex)
 			{
