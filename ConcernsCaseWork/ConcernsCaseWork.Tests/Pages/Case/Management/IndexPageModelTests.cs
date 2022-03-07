@@ -181,6 +181,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		}
 
 		[Test]
+		[Ignore("Implementation related to this test has been reversed (ticket: 89799)")]
 		public async Task WhenOnGetAsync_Returns_Only_Other_Trust_Cases_ReturnsPageModel()
 		{
 			// arrange
