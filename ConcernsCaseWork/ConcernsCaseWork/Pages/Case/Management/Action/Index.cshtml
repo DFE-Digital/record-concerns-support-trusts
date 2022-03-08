@@ -1,5 +1,5 @@
 ﻿@page "/case/{urn:long}/management/action"
-@model ConcernsCaseWork.Pages.Case.Management.IndexPageModel
+@model ConcernsCaseWork.Pages.Case.Management.Action.IndexPageModel
 
 @{
 	ViewData["Title"] = "Case Actions";
@@ -7,18 +7,122 @@
 }
 
 <div class="govuk-width-container">
-	<partial name="_BannerError"/>
+	<partial name="_BannerError" />
 
 	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
 	{
-		<partial name="_Error"/>
+		<partial name="_Error" />
 	}
 	else
 	{
-		<h1>Add to case</h1>
+		<h1 class="govuk-heading-l">Add to case</h1>
+
+		<h2 class="govuk-heading-m">What action are you taking?</h2>
+
+		<!-- FORM -->
+		<form role="form" method="post" id="case-action-form" novalidate>
+
+			<!--Case Action radios-->
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="dfesupport" name="action" type="radio" value="dfesupport" disabled="disabled">
+				<label class="govuk-label govuk-radios__label" for="dfesupport">
+					<span>
+						DfE support
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="financialforecast" name="action" type="radio" value="financialforecast" disabled="disabled">
+				<label class="govuk-label govuk-radios__label" for="financialforecast">
+					<span>
+						Financial forecast
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="financialplan" name="action" type="radio" value="financialplan" disabled="disabled">
+				<label class="govuk-label govuk-radios__label" for="financialplan">
+					<span>
+						Financial plan
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="financialreturns" name="action" type="radio" value="financialreturns" disabled="disabled">
+				<label class="govuk-label govuk-radios__label" for="financialreturns">
+					<span>
+						Financial returns
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="financialsupport" name="action" type="radio" value="financialsupport" disabled="disabled">
+				<label class="govuk-label govuk-radios__label" for="financialsupport">
+					<span>
+						Financial support
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="forcedtermination" name="action" type="radio" value="forcedtermination" disabled="disabled">
+				<label class="govuk-label govuk-radios__label" for="forcedtermination">
+					<span>
+						Forced termination
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="nti" name="action" type="radio" value="nti" disabled="disabled">
+				<label class="govuk-label govuk-radios__label" for="nti">
+					<span>
+						Notice To Improve (NTI)
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="recoveryplan" name="action" type="radio" value="recoveryplan" disabled="disabled">
+				<label class="govuk-label govuk-radios__label" for="recoveryplan">
+					<span>
+						Recovery plan
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="srma" name="action" type="radio" value="srma">
+				<label class="govuk-label govuk-radios__label" for="srma">
+					<span>
+						School Resource Management Adviser (SRMA)
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="tff" name="action" type="radio" value="tff" disabled>
+				<label class="govuk-label govuk-radios__label" for="tff">
+					<span>
+						Trust Financial Forecast (TFF)
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-button-group">
+				<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
+					Continue
+				</button>
+				<partial name="_Cancel" />
+			</div>
+		</form>
 		<script type="application/javascript" nonce="@nonce">
 			$(function () {
-	
+
 			});
 		</script>
 	}

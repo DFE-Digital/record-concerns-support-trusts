@@ -1,0 +1,28 @@
+﻿@page "/case/{urn:long}/management/action/srma"
+@model ConcernsCaseWork.Pages.Case.Management.Action.SRMA.IndexPageModel
+
+@{
+	ViewData["Title"] = "SRMA";
+	var nonce = HttpContext.GetNonce();
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError" />
+
+	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+	{
+		<partial name="_Error" />
+	}
+	else
+	{
+		<h1 class="govuk-heading-l">
+			<span class="govuk-caption-m">SRMA</span>
+		</h1>
+
+		<script type="application/javascript" nonce="@nonce">
+			$(function () {
+
+			});
+		</script>
+	}
+</div>
