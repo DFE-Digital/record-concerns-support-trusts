@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\Case\Management\Action\SRMA\" />
     <Folder Include="wwwroot\assets" />
     <Folder Include="wwwroot\dist" />
   </ItemGroup>

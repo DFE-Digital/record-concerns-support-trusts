@@ -1,0 +1,25 @@
+﻿@page "/case/{urn:long}/management/action"
+@model ConcernsCaseWork.Pages.Case.Management.IndexPageModel
+
+@{
+	ViewData["Title"] = "Case Actions";
+	var nonce = HttpContext.GetNonce();
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError"/>
+
+	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+	{
+		<partial name="_Error"/>
+	}
+	else
+	{
+		<h1>Add to case</h1>
+		<script type="application/javascript" nonce="@nonce">
+			$(function () {
+	
+			});
+		</script>
+	}
+</div>
