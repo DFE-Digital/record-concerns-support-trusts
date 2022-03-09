@@ -16,42 +16,22 @@ describe("Users can see warning messages on the case closure page", () => {
 
 	//Opens the first active case in the list
 	it("Opens an active case", () => {
-		cy.visit('https://amsd-casework-dev.london.cloudapps.digital')
+		cy.visitPage('')
 		//Storing case id string - not used
 		cy.get('#your-casework tr:nth-child(1)  td:nth-child(1)  a').then(($el) => {
 			cy.wrap($el.text()).as("closedCaseId");
-
 		});
-
 		cy.get('#your-casework tr:nth-child(1) td:nth-child(1) a').click();
 	});
 
 	it("User can close any open concerns", () => {
-			const elem = '.govuk-table-case-details__cell_no_border [href*="edit_rating"]';
-			if (Cypress.$(elem).length > 0) { //Cypress.$ needed to handle element missing exception
-
-				cy.get('.govuk-table-case-details__cell_no_border [href*="edit_rating"]').its('length').then(($elLen) => {
-					cy.log($elLen)
-
-				while ($elLen > 0) {
-						cy.get('.govuk-table-case-details__cell_no_border [href*="edit_rating"]').eq($elLen-1).click();
-						cy.get('[href*="closure"]').click();
-						cy.get('.govuk-button-group [href*="edit_rating/closure"]:nth-of-type(1)').click();
-						$elLen = $elLen-1
-						cy.log($elLen+" more open concerns")				
-						}
-					});
-			}else {
-				cy.log('All concerns closed')
-			}
-
+		cy.closeAllOpenConcerns();
 		});
 
 	it("User can enter case closure page", () => {
 		cy.get('#close-case-button').click()
 	})
 
-	
 	it("User can type 200 characters max into the outcome box", function () {
 		cy.get("#case-outcomes-info").then(($info) =>{
             expect($info).to.be.visible
@@ -62,8 +42,8 @@ describe("Users can see warning messages on the case closure page", () => {
             
         cy.get('#case-outcomes').invoke('val', text);
         cy.get('#case-outcomes').type('{shift}{alt}'+ '1');
-	})
-});
+		})
+	});
 
 	it("User can see the character count reduce accordingly", () => {
         cy.get("#case-outcomes-info").then(($info2) =>{
@@ -72,12 +52,13 @@ describe("Users can see warning messages on the case closure page", () => {
             })
         })
 
-	it("User can see the text box expand when typing large numbers", () => {
-		cy.get('#case-outcomes').should(($box) => {
-			expect($box).to.not.have.attr('style', 'height: 113px; border-color: black;')
-			expect($box).to.have.attr('style', 'height: 139px; border-color: green;')
+		it("User can see the text box expand when typing large numbers", () => {
+			cy.get('#case-outcomes').should(($box) => {
+				expect($box).to.not.have.attr('style', 'height: 113px; border-color: black;')
+				})
+				cy.get('#case-outcomes').should('have.attr', 'style').and('match', /(138px|139px|140px|141px|142px)/i)
+				cy.get('#case-outcomes').should('have.attr', 'style').and('match', /(border-color: green)/i)
 			})
-        })
 
 	it("User closing a case with outcome exceeding max characters is shown error", () => {
 	    cy.get('#close-case-button').click();
@@ -86,7 +67,6 @@ describe("Users can see warning messages on the case closure page", () => {
 		   expect($error.text()).to.match(/(too many characters)/i);
 		   cy.get('#case-outcomes').scrollIntoView().clear().wait(1000);
 		})
-
 	})
 
 //	Reload required due to Bug Number 88567
