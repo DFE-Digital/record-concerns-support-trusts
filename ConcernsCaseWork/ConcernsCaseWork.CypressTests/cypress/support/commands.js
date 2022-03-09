@@ -31,16 +31,17 @@ const ragRgx = new RegExp(/(amber|green|red|redPlus|Red Plus)/, 'i');
 const dotRgx = new RegExp(/(Deteriorating|Unchanged|Improving)/, 'i');
 
 Cypress.Commands.add("login",()=> {
-	cy.visit(Cypress.env('url')+"/login");
+    cy.visit(Cypress.env('url')+"/login", { timeout: 30000 })
+    cy.get('#username', { timeout: 30000 }).should('be.visible')
 	cy.get("#username").type(Cypress.env('username'));
 	cy.get("#password").type(Cypress.env('password')+"{enter}");
-    cy.get('[id=your-casework]').should('be.visible')
+    cy.get('[id=your-casework]', { timeout: 30000 }).should('be.visible')
 	cy.saveLocalStorage();
 })
 
-//example/case/5880/management"
+//example: /case/5880/management"
 Cypress.Commands.add("visitPage",(slug)=> {
-	cy.visit(Cypress.env('url')+slug);
+	cy.visit(Cypress.env('url')+slug, { timeout: 30000 });
 	cy.saveLocalStorage();
 })
 
@@ -122,7 +123,6 @@ function selectRagRating(ragStatus) {
 }
 
 //TODO: make this more dynamic - current usability issue raised
-//under 83452
 Cypress.Commands.add('selectConcernType',()=>{
     cy.get(".govuk-radios__item [value=Financial]").click();
     cy.get("[id=sub-type-3]").click();
@@ -310,3 +310,26 @@ Cypress.Commands.add('validateCaseManagPage',()=>{
         })
 
 })
+
+Cypress.Commands.add('closeAllOpenConcerns',()=>{
+    const elem = '.govuk-table-case-details__cell_no_border [href*="edit_rating"]';
+if (Cypress.$(elem).length > 0) { //Cypress.$ needed to handle element missing exception
+
+    cy.get('.govuk-table-case-details__cell_no_border [href*="edit_rating"]').its('length').then(($elLen) => {
+        cy.log($elLen)
+
+    while ($elLen > 0) {
+            cy.get('.govuk-table-case-details__cell_no_border [href*="edit_rating"]').eq($elLen-1).click();
+            cy.get('[href*="closure"]').click();
+            cy.get('.govuk-button-group [href*="edit_rating/closure"]:nth-of-type(1)').click();
+            $elLen = $elLen-1
+            cy.log($elLen+" more open concerns")				
+            }
+        });
+}else {
+    cy.log('All concerns closed')
+}
+
+})
+
+
