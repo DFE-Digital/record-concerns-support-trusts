@@ -7,7 +7,7 @@ describe("User closes a case", () => {
 		cy.storeSessionData();
 	});
 
-	const searchTerm = "Bridgnorth Endowed School"
+	const searchTerm = "10058682"
 		//"Accrington St Christopher's Church Of England High School";
 
 	it("User creates a case", () => {
@@ -31,11 +31,7 @@ describe("User closes a case", () => {
 	});
 
 	it("User can close an open concern", function () {
-		cy.get('.govuk-table__row:nth-of-type(1) [href*="edit_rating"]').click();
-		cy.get('[href*="closure"]').click();
-		cy.get(
-			'.govuk-button-group [href*="edit_rating/closure"]:nth-of-type(1)'
-		).click();
+		cy.closeAllOpenConcerns();
 	});
 
 	it("User can close an open case", function () {
@@ -54,20 +50,39 @@ describe("User closes a case", () => {
 		});
 		cy.get('[href*="/case/closed"]').click();
 		//Checks the case ID is listed as closed
-		cy.get("#main-content tr:nth-child(1) td:nth-child(1)").contains(
-			this.closedCaseId
-		);
+		cy.get("#main-content tr:nth-child(1) td:nth-child(1)").should('contain', this.closedCaseId);
 	});
 
-	it("Case should be visible under other cases", function () {
-		cy.visit(Cypress.env('url')+'/trust')
+	it("The Trust page should contain a closed cases table", () => {
+		cy.visitPage('/trust')
+		//cy.visit(Cypress.env('url')+'/trust')
 		cy.get("#search").type(searchTerm + "{enter}");
-		cy.get("#search__option--0").click();
-		cy.get('.govuk-table:nth-of-type(2) tr').contains(this.closedCaseId)
+		cy.get("#search__option--0").click();			
+		cy.get('table:nth-child(6) > caption').scrollIntoView();
+		cy.get('table:nth-child(6) > caption').should(($titl) => {
+			expect($titl.text().trim()).equal("Closed cases");
+		});
+	});
+
+	it("Case should be visible in the Trust page under closed cases", function () {
+		cy.get('table:nth-child(6) > tbody').children().should('contain', this.closedCaseId);
+	});
+
+	it("User is taken to the Case Page when clicking the closed case id", function () {
+		cy.get('table:nth-child(6) > tbody').children().contains(this.closedCaseId).click()
+		cy.get('[id="tab_trust-overview"]').click();
+	});
+
+	it("Case should be visible in the Case Page Trust Tab under closed cases", function () {				
+		cy.get('table:nth-child(4) > caption').scrollIntoView();
+		cy.get('table:nth-child(4) > caption').should(($titl) => {
+			expect($titl.text().trim()).equal("Closed cases")
+		});
+		cy.get('table:nth-child(4) > tbody').children().should('contain', this.closedCaseId)
 	});
 
 	after(function () {
 		cy.clearLocalStorage();
 		cy.clearCookies();
+		});
 	});
-});
