@@ -2,27 +2,104 @@
 @model ConcernsCaseWork.Pages.Case.Management.Action.SRMA.AddPageModel
 
 @{
-	ViewData["Title"] = "Add srma";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Add srma";
+    var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
-	<partial name="_BannerError" />
+    <partial name="_BannerError" />
 
-	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-	{
-		<partial name="_Error" />
-	}
-	else
-	{
-		<h1 class="govuk-heading-l">
-			<span class="govuk-caption-m"> Add SRMA</span>
-		</h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
 
-		<script type="application/javascript" nonce="@nonce">
-			$(function () {
 
-			});
-		</script>
-	}
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+                <partial name="_Error" />
+            }
+            else
+            {
+                <h1 class="govuk-heading-l">
+                    <span class="govuk-caption-m">Add to case</span>
+                    School Resource Management Adviser (SRMA)
+                </h1>
+
+                <h2 class="govuk-heading-m">What is the status of the SRMA?</h2>
+
+                <form role="form" method="post" id="case-action-form" novalidate>
+
+                    @* Status *@
+                    <fieldset class="govuk-fieldset">
+                        @foreach (var status in Model.SRMAStatuses)
+                        {
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="srma" name="action" type="radio" value="srma">
+                                <label class="govuk-label govuk-radios__label" for="srma">
+                                    <span>
+                                        @status
+                                    </span>
+                                </label>
+                            </div>
+                        }
+                    </fieldset>
+
+                    @* date *@
+                    <div class="govuk-form-group govuk-!-margin-top-9">
+                        <fieldset class="govuk-fieldset">
+                            <h2 class="govuk-heading-m">Date SRMA offered to Trust?</h2>
+                            <div class="govuk-date-input" id="dtr">
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="dtr-day">
+                                            Day
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day"
+                                           name="dtr-day" type="text" maxlength="2" inputmode="numeric">
+                                    </div>
+                                </div>
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="dtr-month">
+                                            Month
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month"
+                                           name="dtr-month" type="text" maxlength="2" inputmode="numeric">
+                                    </div>
+                                </div>
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="dtr-year">
+                                            Year
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year"
+                                           name="dtr-year" type="text" maxlength="4" inputmode="numeric">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    @* Notes *@
+                    <div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="200">
+                        <div class="govuk-form-group">
+                            <h2 class="govuk-heading-m">Notes</h2>
+                            <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-outcomes" name="case-outcomes" rows="3" aria-describedby="case-outcomes-info"></textarea>
+                        </div>
+                        <div id="case-outcomes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+                            You can enter up to 200 characters
+                        </div>
+                    </div>
+
+                    <div class="govuk-button-group">
+                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
+                            Continue
+                        </button>
+                        <partial name="_Cancel" />
+                    </div>
+
+                </form>
+            }
+
+        </div>
+    </div>
 </div>
