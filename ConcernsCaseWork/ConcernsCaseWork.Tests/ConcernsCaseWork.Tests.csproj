@@ -21,4 +21,8 @@
       <ProjectReference Include="..\ConcernsCaseWork.Shared.Tests\ConcernsCaseWork.Shared.Tests.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Pages\Case\Management\Action\SRMA\" />
+    </ItemGroup>
+
 </Project>
