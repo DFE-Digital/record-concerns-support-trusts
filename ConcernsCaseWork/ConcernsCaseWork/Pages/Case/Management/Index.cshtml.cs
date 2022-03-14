@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
@@ -27,12 +28,14 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly IRatingModelService _ratingModelService;
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly ILogger<IndexPageModel> _logger;
-		
+		private readonly ISRMAService srmaService;
+
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<TrustCasesModel> TrustCasesModel { get; private set; }
 		public IList<CaseHistoryModel> CasesHistoryModel { get; private set; }
 		public bool IsEditableCase { get; private set; }
+		public List<CaseAction> CaseActions { get; private set; }
 
 		public IndexPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
@@ -40,7 +43,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			IRecordModelService recordModelService,
 			IRatingModelService ratingModelService,
 			IStatusCachedService statusCachedService,
-			ILogger<IndexPageModel> logger)
+			ILogger<IndexPageModel> logger, 
+			ISRMAService srmaService)
 		{
 			_caseHistoryModelService = caseHistoryModelService;
 			_trustModelService = trustModelService;
@@ -49,6 +53,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_ratingModelService = ratingModelService;
 			_statusCachedService = statusCachedService;
 			_logger = logger;
+			this.srmaService = srmaService;
 		}
 
 		public async Task OnGetAsync()
@@ -79,8 +84,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				var caseHistoryTask = _caseHistoryModelService.GetCasesHistory(User.Identity.Name, caseUrn);
 				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				var trustCasesTask = _caseModelService.GetCasesByTrustUkprn(CaseModel.TrustUkPrn);
+				var caseActionsTask = PopulateCaseActions(caseUrn);
 
-				Task.WaitAll(caseHistoryTask, trustDetailsTask, trustCasesTask);
+				Task.WaitAll(caseHistoryTask, trustDetailsTask, trustCasesTask, caseActionsTask);
 
 				CasesHistoryModel = caseHistoryTask.Result;
 				TrustDetailsModel = trustDetailsTask.Result;
@@ -93,7 +99,13 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 		}
-		
+
+		private async Task PopulateCaseActions(long caseUrn)
+		{
+			CaseActions = CaseActions ?? new List<CaseAction>();
+			CaseActions.AddRange(await srmaService.GetSRMAsForCase(caseUrn));
+		}
+
 		private bool UserHasEditCasePrivileges()
 		{
 			bool result = CaseModel.CreatedBy.Equals(User.Identity.Name, StringComparison.OrdinalIgnoreCase);

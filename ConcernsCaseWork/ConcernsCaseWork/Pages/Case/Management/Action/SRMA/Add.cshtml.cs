@@ -58,8 +58,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 			// dtr-day, dtr-month, dtr-year
 			// srma-notes
-
-			return Page();
+			//case/ @homeModel.CaseUrn / management
+			return RedirectToPage("case/managementllll", new { urn = validationResp.newSRMA.CaseUrn});
 		}
 
 		private (CaseActionModels.SRMA newSRMA, List<string> validationErrors) ValidateAndCreateSRMA()
@@ -69,13 +69,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			var validationErrors = new List<string>();
 
 			var status = Request.Form["status"];
+
 			if (string.IsNullOrEmpty(status))
 			{
 				validationErrors.Add("SRMA status not selected");
 				validationFailed = true;
 			}
 
-			if (!Enum.TryParse<SRMAStatus>(status, out SRMAStatus srmaStatus))
+			if (!Enum.TryParse<SRMAStatus>(status, ignoreCase:true, out SRMAStatus srmaStatus))
 			{
 				_logger.Log(LogLevel.Error, $"Can't parse SRMA status ");
 				validationFailed = true;
