@@ -17,8 +17,22 @@
             {
                 <partial name="_Error" />
             }
+            else if (TempData["SRMA.Message"] != null)
+            {
+                <div class="govuk-heading-l moj-banner__message">
+                    <h3>Errors found</h3>
+                    <ul>
+                        @foreach (var msg in (TempData["SRMA.Message"] as IEnumerable<string>))
+                        {
+                            <li>@msg</li>
+                        }
+                    </ul>
+                </div>
+            }
             else
             {
+                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
                 <h1 class="govuk-heading-l">
                     <span class="govuk-caption-m">Add to case</span>
                     School Resource Management Adviser (SRMA)
@@ -26,17 +40,17 @@
 
                 <h2 class="govuk-heading-m">What is the status of the SRMA?</h2>
 
-                <form role="form" method="post" id="case-action-form" novalidate>
+                <form role="form" method="post" id="add-srma-form" novalidate>
 
                     @* Status *@
                     <fieldset class="govuk-fieldset">
                         @foreach (var status in Model.SRMAStatuses)
                         {
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="srma" name="action" type="radio" value="srma">
-                                <label class="govuk-label govuk-radios__label" for="srma">
+                                <input class="govuk-radios__input" id="@status.Id" name="status" type="radio" value="@status.Id">
+                                <label class="govuk-label govuk-radios__label" for="@status.Id">
                                     <span>
-                                        @status
+                                        @status.Text
                                     </span>
                                 </label>
                             </div>
@@ -54,7 +68,7 @@
                                             Day
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day"
-                                           name="dtr-day" type="text" maxlength="2" inputmode="numeric">
+                                           name="dtr-day" type="text" maxlength="2" inputmode="numeric" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -63,7 +77,7 @@
                                             Month
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month"
-                                           name="dtr-month" type="text" maxlength="2" inputmode="numeric">
+                                           name="dtr-month" type="text" maxlength="2" inputmode="numeric" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -72,7 +86,7 @@
                                             Year
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year"
-                                           name="dtr-year" type="text" maxlength="4" inputmode="numeric">
+                                           name="dtr-year" type="text" maxlength="4" inputmode="numeric" />
                                     </div>
                                 </div>
                             </div>
@@ -80,26 +94,47 @@
                     </div>
 
                     @* Notes *@
-                    <div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="200">
+                    <div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
                         <div class="govuk-form-group">
                             <h2 class="govuk-heading-m">Notes</h2>
-                            <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-outcomes" name="case-outcomes" rows="3" aria-describedby="case-outcomes-info"></textarea>
+                            <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="srma-notes" name="srma-notes" rows="3" aria-describedby="srma-notes-info"></textarea>
                         </div>
-                        <div id="case-outcomes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-                            You can enter up to 200 characters
+                        <div id="srma-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+                            You can enter up to @Model.NotesMaxLength characters
                         </div>
                     </div>
 
                     <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
+                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
                             Continue
                         </button>
                         <partial name="_Cancel" />
                     </div>
 
                 </form>
+
+                <script type="application/javascript" nonce="@nonce">
+                    $(function () {
+                        let validator = formValidator($("#add-srma-form")[0]);
+                        validator.addValidator('srma-notes', [{
+                            method: function(field) {
+                                return field.value.trim().length > 0;
+                            },
+                            message: 'You have not recorded any notes'
+                        },
+                        {
+                            method: function(field) {
+                                return field.value.trim().length <= @Model.NotesMaxLength;
+                            },
+                            message: 'Your case outcome contains too many characters'
+                        }]);
+
+                        autoResizer();
+                    });
+                </script>
             }
 
         </div>
     </div>
 </div>
+
