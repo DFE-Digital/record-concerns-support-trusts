@@ -56,10 +56,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 			await SRMAService.SaveSRMA(validationResp.newSRMA);
 
-			// dtr-day, dtr-month, dtr-year
-			// srma-notes
-			//case/ @homeModel.CaseUrn / management
-			return RedirectToPage("case/managementllll", new { urn = validationResp.newSRMA.CaseUrn});
+			return Redirect($"/case/{validationResp.newSRMA.CaseUrn}/management");
 		}
 
 		private (CaseActionModels.SRMA newSRMA, List<string> validationErrors) ValidateAndCreateSRMA()
