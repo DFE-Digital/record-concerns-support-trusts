@@ -1,0 +1,144 @@
+﻿@page "/case/{urn:long}/management/action"
+@model ConcernsCaseWork.Pages.Case.Management.Action.IndexPageModel
+@using Service.TRAMS.Cases;
+
+@{
+	ViewData["Title"] = "Case Actions";
+	var nonce = HttpContext.GetNonce();
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError" />
+
+	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+	{
+		<partial name="_Error" />
+	}
+	else
+	{
+		<h1 class="govuk-heading-l">Add to case</h1>
+
+		@if (!string.IsNullOrEmpty((string)TempData.Peek("CaseAction.Error")))
+		{
+			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
+				<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
+				<div class="govuk-error-summary__body">
+					<ul class="govuk-list govuk-error-summary__list">
+						<li>
+							<a href="#">@TempData["CaseAction.Error"]</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		}
+
+		<h2 class="govuk-heading-m">What action are you taking?</h2>
+
+		<!-- FORM -->
+		<form role="form" method="post" id="case-action-form" novalidate>
+
+			<!--Case Action radios-->
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="@CaseActionEnum.DfESupport" name="action" type="radio" value="@CaseActionEnum.DfESupport">
+				<label class="govuk-label govuk-radios__label" for="@CaseActionEnum.DfESupport">
+					<span>
+						DfE support
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="@CaseActionEnum.FinancialForecast" name="action" type="radio" value="@CaseActionEnum.FinancialForecast" disabled="disabled">
+				<label class="govuk-label govuk-radios__label" for="@CaseActionEnum.FinancialForecast">
+					<span>
+						Financial forecast
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="@CaseActionEnum.FinancialPlan" name="action" type="radio" value="@CaseActionEnum.FinancialPlan" disabled="disabled">
+				<label class="govuk-label govuk-radios__label" for="@CaseActionEnum.FinancialPlan">
+					<span>
+						Financial plan
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="@CaseActionEnum.FinancialReturns" name="action" type="radio" value="@CaseActionEnum.FinancialReturns" disabled="disabled">
+				<label class="govuk-label govuk-radios__label" for="@CaseActionEnum.FinancialReturns">
+					<span>
+						Financial returns
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="@CaseActionEnum.FinancialSupport" name="action" type="radio" value="@CaseActionEnum.FinancialSupport" disabled="disabled">
+				<label class="govuk-label govuk-radios__label" for="@CaseActionEnum.FinancialSupport">
+					<span>
+						Financial support
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="@CaseActionEnum.ForcedTermination" name="action" type="radio" value="@CaseActionEnum.ForcedTermination" disabled="disabled">
+				<label class="govuk-label govuk-radios__label" for="@CaseActionEnum.ForcedTermination">
+					<span>
+						Forced termination
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="@CaseActionEnum.Nti" name="action" type="radio" value="@CaseActionEnum.Nti" disabled="disabled">
+				<label class="govuk-label govuk-radios__label" for="@CaseActionEnum.Nti">
+					<span>
+						Notice To Improve (NTI)
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="@CaseActionEnum.RecoveryPlan" name="action" type="radio" value="@CaseActionEnum.RecoveryPlan" disabled="disabled">
+				<label class="govuk-label govuk-radios__label" for="@CaseActionEnum.RecoveryPlan">
+					<span>
+						Recovery plan
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="@CaseActionEnum.Srma" name="action" type="radio" value="@CaseActionEnum.Srma">
+				<label class="govuk-label govuk-radios__label" for="@CaseActionEnum.Srma">
+					<span>
+						School Resource Management Adviser (SRMA)
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-radios__item">
+				<input class="govuk-radios__input" id="@CaseActionEnum.Tff" name="action" type="radio" value="@CaseActionEnum.Tff" disabled>
+				<label class="govuk-label govuk-radios__label" for="@CaseActionEnum.Tff">
+					<span>
+						Trust Financial Forecast (TFF)
+					</span>
+				</label>
+			</div>
+
+			<div class="govuk-button-group">
+				<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
+					Continue
+				</button>
+				<partial name="_Cancel" />
+			</div>
+		</form>
+		<script type="application/javascript" nonce="@nonce">
+			$(function () {
+
+			});
+		</script>
+	}
+</div>
