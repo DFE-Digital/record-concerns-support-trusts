@@ -33,9 +33,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
+			var mockSrmaService = new Mock<ISRMAService>();
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, mockLogger.Object);
+				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, mockLogger.Object, mockSrmaService.Object);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -64,7 +65,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
-			
+			var mockSrmaService = new Mock<ISRMAService>();
+
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
@@ -86,7 +88,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				.ReturnsAsync(closedStatusModel);
 			
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-					mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, mockLogger.Object);
+					mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, mockLogger.Object, mockSrmaService.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -192,6 +194,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var closeStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
+			var mockSrmaService = new Mock<ISRMAService>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
@@ -211,7 +214,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				.ReturnsAsync(recordsModel);
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, mockLogger.Object);
+				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, mockLogger.Object, mockSrmaService.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -235,6 +238,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
+			var mockSrmaService = new Mock<ISRMAService>();
 
 			var caseModel = CaseFactory.BuildCaseModel("Tester");
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
@@ -257,7 +261,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				.ReturnsAsync(closeStatusModel);
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object,  mockLogger.Object, true);
+				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object,  mockLogger.Object, mockSrmaService.Object, isAuthenticated:true);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -281,6 +285,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
+			var mockSrmaService = new Mock<ISRMAService>();
 
 			var caseModel = CaseFactory.BuildCaseModel("Tester", 3);
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
@@ -303,7 +308,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				.ReturnsAsync(closeStatusModel);
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, mockLogger.Object, true);
+				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, mockLogger.Object, mockSrmaService.Object, isAuthenticated:true);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -324,12 +329,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			IRecordModelService mockRecordModelService,
 			IRatingModelService mockRatingModelService,
 			IStatusCachedService mockStatusCachedService,
-			ILogger<IndexPageModel> mockLogger, 
+			ILogger<IndexPageModel> mockLogger,
+			ISRMAService mockSrmaService, 
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new IndexPageModel(mockCaseModelService, mockTrustModelService, mockCaseHistoryModelService, mockRecordModelService, mockRatingModelService, mockStatusCachedService, mockLogger)
+			return new IndexPageModel(mockCaseModelService, mockTrustModelService, mockCaseHistoryModelService, mockRecordModelService, mockRatingModelService, mockStatusCachedService, mockLogger, mockSrmaService)
 
 			{
 				PageContext = pageContext,
