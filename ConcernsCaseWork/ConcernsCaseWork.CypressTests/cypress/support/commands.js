@@ -332,4 +332,19 @@ if (Cypress.$(elem).length > 0) { //Cypress.$ needed to handle element missing e
 
 })
 
+Cypress.Commands.add('addActionItemToCase', () =>{
+
+    cy.get('[class="govuk-heading-l"]').should('contain.text', 'Add to case');
+
+    cy.get('[class="govuk-heading-m"]').should('contain.text', 'What action are you taking?');
+
+    cy.get('[id='+option+']').click()
+    cy.get('[id='+option+']').children().text.trim().should('contain.text', 'What action are you taking?');
+
+    cy.get('[id='+option+']').children().should(($text) => {
+        expect($text.text().trim()).to.contain('School Resource Management Adviser (SRMA)');
+
+    });
+
+});
 
