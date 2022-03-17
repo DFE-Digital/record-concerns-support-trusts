@@ -43,8 +43,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			IRecordModelService recordModelService,
 			IRatingModelService ratingModelService,
 			IStatusCachedService statusCachedService,
-			ILogger<IndexPageModel> logger, 
-			ISRMAService srmaService)
+			ISRMAService srmaService,
+			ILogger<IndexPageModel> logger
+			)
 		{
 			_caseHistoryModelService = caseHistoryModelService;
 			_trustModelService = trustModelService;
@@ -52,8 +53,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_recordModelService = recordModelService;
 			_ratingModelService = ratingModelService;
 			_statusCachedService = statusCachedService;
-			_logger = logger;
 			this.srmaService = srmaService;
+			_logger = logger;
 		}
 
 		public async Task OnGetAsync()

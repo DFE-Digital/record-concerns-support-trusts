@@ -34,10 +34,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		}
 
 		public AddPageModel(
-			ILogger<AddPageModel> logger, ISRMAService SRMAService)
+			ISRMAService SRMAService, ILogger<AddPageModel> logger)
 		{
-			_logger = logger;
 			this.SRMAService = SRMAService;
+			_logger = logger;
 		}
 
 		public async Task OnGetAsync()
