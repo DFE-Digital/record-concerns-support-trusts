@@ -61,7 +61,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 		private (CaseActionModels.SRMA newSRMA, List<string> validationErrors) ValidateAndCreateSRMA()
 		{
-			bool validationFailed;
 			var srma = new CaseActionModels.SRMA();
 			var validationErrors = new List<string>();
 
@@ -79,13 +78,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			if (string.IsNullOrEmpty(status))
 			{
 				validationErrors.Add("SRMA status not selected");
-				validationFailed = true;
 			}
 
 			if (!Enum.TryParse<SRMAStatus>(status, ignoreCase:true, out SRMAStatus srmaStatus))
 			{
 				_logger.Log(LogLevel.Error, $"Can't parse SRMA status ");
-				validationFailed = true;
 			}
 			else
 			{
@@ -96,7 +93,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			if (!DateTime.TryParse(dtString, out DateTime dateOffered))
 			{
 				validationErrors.Add("SRMA offered date is not valid");
-				validationFailed = true;
 			}
 			else
 			{
