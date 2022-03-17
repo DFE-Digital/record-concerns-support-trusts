@@ -123,6 +123,14 @@ window.addDirectionOfTravelValidator = function(validator) {
 		message: 'Select direction of travel'
 	}]);
 }
+window.addCaseActionValidator = function (validator) {
+	validator.addValidator('action', [{
+		method: function (field) {
+			return field.value.trim().length > 0;
+		},
+		message: 'Please select an action to add.'
+	}]);
+}
 window.addRolesValidator = function(validator) {
 	validator.addValidator('role', [{
 		method: function() {
