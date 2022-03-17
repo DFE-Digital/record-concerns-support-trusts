@@ -65,6 +65,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			var srma = new CaseActionModels.SRMA();
 			var validationErrors = new List<string>();
 
+			if (!long.TryParse(Convert.ToString(RouteData.Values["urn"]), out long caseUrn))
+			{
+				validationErrors.Add("Invalid case Id");
+			}
+			else
+			{
+				srma.CaseUrn = caseUrn;
+			}
+
 			var status = Request.Form["status"];
 
 			if (string.IsNullOrEmpty(status))
@@ -83,7 +92,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				srma.Status = srmaStatus;
 			}
 
-			if (!DateTime.TryParse($"{Request.Form["dtr-day"]}-{Request.Form["dtr-month"]}-{Request.Form["dtr-year"]}", out DateTime dateOffered))
+			var dtString = $"{Request.Form["dtr-day"]}-{Request.Form["dtr-month"]}-{Request.Form["dtr-year"]}";
+			if (!DateTime.TryParse(dtString, out DateTime dateOffered))
 			{
 				validationErrors.Add("SRMA offered date is not valid");
 				validationFailed = true;
@@ -100,15 +110,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			else
 			{
 				srma.Notes = Request.Form["srma-notes"];
-			}
-
-			if(!long.TryParse(Convert.ToString(RouteData.Values["urn"]), out long caseUrn))
-			{
-				validationErrors.Add("Invalid case Id");
-			}
-			else
-			{
-				srma.CaseUrn = caseUrn;
 			}
 
 			return (srma, validationErrors);
