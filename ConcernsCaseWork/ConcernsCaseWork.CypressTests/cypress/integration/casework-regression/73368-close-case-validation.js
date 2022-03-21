@@ -8,20 +8,12 @@ describe("Users can see warning messages on the case closure page", () => {
 		cy.storeSessionData();
 	});
 
-	const searchTerm =
-		"Accrington St Christopher's Church Of England High School";
-
 	const lstring =
 		'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx';
 
 	//Opens the first active case in the list
 	it("Opens an active case", () => {
-		cy.visitPage('')
-		//Storing case id string - not used
-		cy.get('#your-casework tr:nth-child(1)  td:nth-child(1)  a').then(($el) => {
-			cy.wrap($el.text()).as("closedCaseId");
-		});
-		cy.get('#your-casework tr:nth-child(1) td:nth-child(1) a').click();
+		cy.get('.govuk-link[href^="case"]').eq(0).click();
 	});
 
 	it("User can close any open concerns", () => {
@@ -52,13 +44,13 @@ describe("Users can see warning messages on the case closure page", () => {
             })
         })
 
-		it("User can see the text box expand when typing large numbers", () => {
-			cy.get('#case-outcomes').should(($box) => {
-				expect($box).to.not.have.attr('style', 'height: 113px; border-color: black;')
-				})
-				cy.get('#case-outcomes').should('have.attr', 'style').and('match', /(138px|139px|140px|141px|142px)/i)
-				cy.get('#case-outcomes').should('have.attr', 'style').and('match', /(border-color: green)/i)
+	it("User can see the text box expand when typing large numbers", () => {
+		cy.get('#case-outcomes').should(($box) => {
+			expect($box).to.not.have.attr('style', 'height: 113px; border-color: black;')
 			})
+			cy.get('#case-outcomes').should('have.attr', 'style').and('match', /(138px|139px|140px|141px|142px)/i)
+			cy.get('#case-outcomes').should('have.attr', 'style').and('match', /(border-color: green)/i)
+		})
 
 	it("User closing a case with outcome exceeding max characters is shown error", () => {
 	    cy.get('#close-case-button').click();
@@ -69,7 +61,7 @@ describe("Users can see warning messages on the case closure page", () => {
 		})
 	})
 
-//	Reload required due to Bug Number 88567
+//Reload required due to Bug Number 88567
 	it("User closing a case with no outcome text is shown an error", () => {
 		cy.reload()
 	    cy.get('#close-case-button').click();

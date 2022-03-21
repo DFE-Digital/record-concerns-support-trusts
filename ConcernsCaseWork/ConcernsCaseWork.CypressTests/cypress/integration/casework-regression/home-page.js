@@ -18,7 +18,7 @@ describe("Home page tests", () => {
 	   cy.get('#search').should('be.visible')
    });
 
-   it('User clicks Back  and should be taken back to the Active Casework screen', () => {
+   it('User clicks Back and should be taken back to the Active Casework screen', () => {
     cy.get('#back-link-event').click()
 	cy.get('[href="/case"').should('be.visible')
 	cy.get('[href="/trust"').should('be.visible')
@@ -28,18 +28,17 @@ describe("Home page tests", () => {
    it('User clicks on Find Trust and should see Search Trusts', () => {
 	cy.get('[href="/trust"]').click()
 	cy.get('#search').should('be.visible')
+	});
+
+	it('User clicks Back and should be taken back to the Active Casework screen', () => {
+		cy.get('#back-link-event').click()
+		cy.get('[href="/case"').should('be.visible')
+		cy.get('[href="/trust"').should('be.visible')
+		cy.get('[href="/case/closed"').should('be.visible')
+	});
 });
 
-it('User clicks Back  and should be taken back to the Active Casework screen', () => {
-    cy.get('#back-link-event').click()
-	cy.get('[href="/case"').should('be.visible')
-	cy.get('[href="/trust"').should('be.visible')
-	cy.get('[href="/case/closed"').should('be.visible')
-   });
-});
-
-
-after(function () {
-	cy.clearLocalStorage();
-	cy.clearCookies();
-});
+	after(function () {
+		cy.clearLocalStorage();
+		cy.clearCookies();
+	});
