@@ -1,4 +1,4 @@
-describe("User creates subsequent Concern to a case", () => {
+describe("User creates and adds subsequent concern to a case", () => {
 	before(() => {
 		cy.login();
 	});
@@ -37,10 +37,10 @@ describe("User creates subsequent Concern to a case", () => {
 	});
 
 	it("Should allow a user to select a second concern type", () => {
-		cy.get(".govuk-summary-list__value").should(
-			"contain.text",
-			searchTerm.trim()
-		);
+		cy.get(".govuk-summary-list__value").then(($el) =>{
+			expect($el.text()).to.match(/(school|england|academy)/i)
+		});
+
 		cy.selectConcernType();
 	});
 

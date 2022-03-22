@@ -7,8 +7,7 @@ describe("User can manage cases from the case management page", () => {
 		cy.storeSessionData();
 	});
 
-	const searchTerm =
-		"Accrington St Christopher's Church Of England High School";
+	let term = ""
 
 	it("User clicks on Create Case and should see Search Trusts", () => {
 		cy.get('[href="/case"]').click();
@@ -16,7 +15,7 @@ describe("User can manage cases from the case management page", () => {
 	});
 
 	it("User searches for a valid Trust and selects it", () => {
-		cy.get("#search").type(searchTerm + "{enter}");
+		cy.randomSelectTrust();
 		cy.get("#search__option--0").click();
 	});
 
@@ -31,7 +30,6 @@ describe("User can manage cases from the case management page", () => {
 	it("Should allow the user to enter Concern details", () => {
 		cy.enterConcernDetails();
 	});
-
 
 	it("Should verify items are visibile on the case management page", () => {
 		cy.validateCaseManagPage();
