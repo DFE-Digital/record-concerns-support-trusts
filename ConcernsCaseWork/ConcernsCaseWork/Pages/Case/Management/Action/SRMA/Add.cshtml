@@ -41,26 +41,30 @@
                 <form role="form" method="post" id="add-srma-form" novalidate>
 
                     @* Status *@
-                    <fieldset class="govuk-fieldset">
-                        <h2 class="govuk-heading-m">What is the status of the SRMA?</h2>
-                        <div class="govuk-radios" data-module="govuk-radios">
-                            @{
-                                int id = 0;
-                            }
-                            @foreach (var status in Model.SRMAStatuses)
-                            {
-                                var idStr = id++ == 0 ? "status" : "status-" + id;
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id">
-                                    <label class="govuk-label govuk-radios__label" for="@status.Id">
-                                        <span>
-                                            @status.Text
-                                        </span>
-                                    </label>
-                                </div>
-                            }
-                        </div>
-                    </fieldset>
+                    <div class="govuk-form-group govuk-!-margin-top-9">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">What is the status of the SRMA?</h2>
+                            </legend>
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                @{
+                                    int id = 0;
+                                }
+                                @foreach (var status in Model.SRMAStatuses)
+                                {
+                                    var idStr = id++ == 0 ? "status" : "status-" + id;
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id">
+                                        <label class="govuk-label govuk-radios__label" for="@status.Id">
+                                            <span>
+                                                @status.Text
+                                            </span>
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </fieldset>
+                    </div>
 
                     @* date *@
                     <div class="govuk-form-group govuk-!-margin-top-9">
@@ -123,7 +127,7 @@
                         let validator = formValidator($("#add-srma-form")[0]);
                         validator.addValidator('srma-notes', [{
                             method: function(field) {
-                                return field.value.trim().length > 0;
+                                return true; @* not mandatory *@
                             },
                             message: 'You have not recorded any notes'
                         },
@@ -195,7 +199,7 @@
                                     return false;
                                 }
 
-                                return reviewAt >= reviewAtTomorrow;
+                                return true; // reviewAt >= reviewAtTomorrow;
                             },
                             message: 'Enter a valid date',
                             params: {
@@ -227,12 +231,12 @@
                         });
 
                         // allow year to be current year or higher
-                        $("input[name='dtr-year']").focusout(function () {
-                            let currentYear =  new Date().getFullYear();
-                            if ($(this).val() < currentYear) {
-                                $(this).val('');
-                            }
-                        });
+                        //$("input[name='dtr-year']").focusout(function () {
+                        //    let currentYear =  new Date().getFullYear();
+                        //    if ($(this).val() < currentYear) {
+                        //        $(this).val('');
+                        //    }
+                        //});
 
                         function monthDays(year, month) {
                             let d= new Date(year, month + 1, 0);
