@@ -199,7 +199,7 @@
                                     return false;
                                 }
 
-                                return true; // reviewAt >= reviewAtTomorrow;
+                                return reviewAt >= reviewAtTomorrow;
                             },
                             message: 'Enter a valid date',
                             params: {
@@ -231,12 +231,12 @@
                         });
 
                         // allow year to be current year or higher
-                        //$("input[name='dtr-year']").focusout(function () {
-                        //    let currentYear =  new Date().getFullYear();
-                        //    if ($(this).val() < currentYear) {
-                        //        $(this).val('');
-                        //    }
-                        //});
+                        $("input[name='dtr-year']").focusout(function () {
+                            let currentYear =  new Date().getFullYear();
+                            if ($(this).val() < currentYear) {
+                                $(this).val('');
+                            }
+                        });
 
                         function monthDays(year, month) {
                             let d= new Date(year, month + 1, 0);
