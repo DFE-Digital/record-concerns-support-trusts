@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CaseActionModels = ConcernsCaseWork.Models.CaseActions;
 
-namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
+namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
