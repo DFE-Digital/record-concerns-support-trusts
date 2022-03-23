@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Case.Management.Action;
+﻿using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Pages.Case.Management.Action;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
@@ -25,9 +26,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockLogger.Object);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -37,11 +39,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 		}
 
 		[Test]
-		//TODO - EA to fill this out as the page grows
 		public async Task WhenOnGetAsync_ReturnsPageModel()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
@@ -49,7 +51,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -73,9 +75,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockLogger.Object);
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -104,9 +107,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -131,11 +135,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockLogger.Object);
 
-			pageModel.IsCaseSRMAOpen = false;
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -165,11 +169,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockLogger.Object);
-
-			pageModel.IsCaseSRMAOpen = false;
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -194,11 +197,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockLogger.Object);
-
-			pageModel.IsCaseSRMAOpen = true;
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -208,6 +210,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 				{
 					{ "action", new StringValues(CaseActionEnum.Srma.ToString()) }
 				});
+
+			var srmaModelList = SrmaFactory.BuildListSrmaModel(SRMAStatus.TrustConsidering);
+
+			mockSrmaService.Setup(s => s.GetSRMAsForCase(It.IsAny<long>())).ReturnsAsync(srmaModelList);
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -220,12 +226,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 
 		private static IndexPageModel SetupIndexPageModel(
 			ICaseModelService mockCaseModelService,
-			ILogger<IndexPageModel> mockLogger, 
+			ISRMAService mockSrmaService,
+			ILogger<IndexPageModel> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
-			
-			return new IndexPageModel(mockCaseModelService, mockLogger)
+
+			return new IndexPageModel(mockCaseModelService, mockSrmaService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
@@ -234,4 +241,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			};
 		}
 	}
+
+
 }

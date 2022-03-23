@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
@@ -6,7 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Service.TRAMS.Cases;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using CaseActions = ConcernsCaseWork.Models.CaseActions;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action
 {
@@ -15,14 +20,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 	public class IndexPageModel : AbstractPageModel
 	{
 		private readonly ICaseModelService _caseModelService;
+		private readonly ISRMAService _srmaService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
-		public bool IsCaseSRMAOpen { get; set; }
+		public List<CaseAction> CaseActions { get; private set; }
 
-		public IndexPageModel(ICaseModelService caseModelService, ILogger<IndexPageModel> logger)
+		public IndexPageModel(ICaseModelService caseModelService,
+			ISRMAService srmaService,
+			ILogger<IndexPageModel> logger)
 		{
 			_caseModelService = caseModelService;
+			_srmaService = srmaService;
 			_logger = logger;
 		}
 
@@ -65,14 +74,22 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 					throw new Exception($"{action} - is not a recognized case action");
 				}
 
+				CaseActions = CaseActions ?? new List<CaseAction>();
+
 				switch (caseAction)
 				{
 					case CaseActionEnum.Srma:
-						// TODO - complete implementation on checking if a case has an open SRMA
-						if (IsCaseSRMAOpen)
+					
+						CaseActions.AddRange(await _srmaService.GetSRMAsForCase(caseUrn));
+
+						//Check if case action is SRMA and status is not deployed
+						var openSrma = CaseActions.Where(ca => ca is CaseActions.SRMA && !(((CaseActions.SRMA)ca).Status.CompareTo(SRMAStatus.Deployed) == 0)).FirstOrDefault();
+
+						if (openSrma != null)
 							throw new ApplicationException("There is already an open SRMA action linked to this case. Please resolve that before opening another one.");
 						break;
 					default:
+						throw new NotImplementedException($"{caseAction} - has not been implemented");
 						break;
 				}
 
@@ -104,5 +121,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 
 			return caseUrn;
 		}
+	
 	}
 }
