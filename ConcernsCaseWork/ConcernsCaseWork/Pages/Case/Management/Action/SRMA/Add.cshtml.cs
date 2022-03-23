@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using CaseActionModels = ConcernsCaseWork.Models.CaseActions;
 
@@ -90,7 +91,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			}
 
 			var dtString = $"{Request.Form["dtr-day"]}-{Request.Form["dtr-month"]}-{Request.Form["dtr-year"]}";
-			if (!DateTime.TryParse(dtString, out DateTime dateOffered))
+			if (!DateTime.TryParseExact(dtString, "dd-MM-yyyy", CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.None, out DateTime dateOffered))
 			{
 				validationErrors.Add("SRMA offered date is not valid");
 			}
