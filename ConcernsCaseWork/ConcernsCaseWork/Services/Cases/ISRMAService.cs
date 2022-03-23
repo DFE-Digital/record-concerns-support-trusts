@@ -8,5 +8,6 @@ namespace ConcernsCaseWork.Services.Cases
 	{
 		public Task SaveSRMA(SRMA srma);
 		public Task<IEnumerable<SRMA>> GetSRMAsForCase(long caseUrn);
+		public Task<SRMA> GetSRMAById(long srmaId);
 	}
 }

@@ -26,8 +26,13 @@ namespace ConcernsCaseWork.Services.Cases
 
 		public Task<IEnumerable<SRMA>> GetSRMAsForCase(long caseUrn)
 		{
-			var srmaList = SRMAs?.Where(s => s.CaseUrn == caseUrn);
-			return Task.FromResult(srmaList?.Count() > 0 ? srmaList: CreateTestData(caseUrn));
+			var srmaList = SRMAs.Where(s => s.CaseUrn == caseUrn);
+			return Task.FromResult(srmaList?.Count() > 0 ? srmaList : CreateTestData(caseUrn));
+		}
+
+		public Task<SRMA> GetSRMAById(long srmaId)
+		{
+			return Task.FromResult(SRMAs.SingleOrDefault(s => s.Id == srmaId));
 		}
 
 		private SRMA[] CreateTestData(long caseUrn)
