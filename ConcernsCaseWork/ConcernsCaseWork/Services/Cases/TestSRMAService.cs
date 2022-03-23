@@ -35,16 +35,19 @@ namespace ConcernsCaseWork.Services.Cases
 			return Task.FromResult(SRMAs.SingleOrDefault(s => s.Id == srmaId));
 		}
 
-		private SRMA[] CreateTestData(long caseUrn)
+		private List<SRMA> CreateTestData(long caseUrn)
 		{
-			return new SRMA[] {
-				new SRMA {
-					CaseUrn = caseUrn,
-					DateOffered = DateTime.Now,
-					Notes = "Auto generated test data",
-					Status = SRMAStatus.TrustConsidering
-				}
+			var testSRMA = new SRMA
+			{
+				Id = DateTime.Now.Millisecond,
+				CaseUrn = caseUrn,
+				DateOffered = DateTime.Now,
+				Notes = "Auto generated test data",
+				Status = SRMAStatus.TrustConsidering
 			};
+
+			SRMAs.Add(testSRMA);
+			return SRMAs;
 		}
 	}
 }

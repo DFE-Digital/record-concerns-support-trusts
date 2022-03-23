@@ -1,28 +1,74 @@
-﻿@page "/case/{urn:long}/management/action/srma"
+﻿@page "/case/{urn:long}/management/action/srma/{srmaId:long}"
 @model ConcernsCaseWork.Pages.Case.Management.Action.SRMA.IndexPageModel
 
+@using ConcernsCaseWork.Helpers;
+
 @{
-	ViewData["Title"] = "SRMA";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "SRMA";
+    var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
-	<partial name="_BannerError" />
+    <partial name="_BannerError" />
 
-	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-	{
-		<partial name="_Error" />
-	}
-	else
-	{
-		<h1 class="govuk-heading-l">
-			<span class="govuk-caption-m">SRMA</span>
-		</h1>
+    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+    {
+        <partial name="_Error" />
+    }
+    else if (TempData["SRMA.Message"] != null)
+    {
+        <div class="govuk-heading-l moj-banner__message">
+            <h3>Errors found</h3>
+            <ul>
+                <li>@TempData["SRMA.Message"]</li>
+            </ul>
+        </div>
+    }
+    else
+    {
+        <h1 class="govuk-heading-l">
+            <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
+            School Resource Management Adviser (SRMA)
+        </h1>
 
-		<script type="application/javascript" nonce="@nonce">
-			$(function () {
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m"></caption>
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
 
-			});
-		</script>
-	}
+                @* Status *@
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table-case-details__header">Status</th>
+                    <td class="govuk-table__cell">
+                       @EnumHelper.GetEnumDescription(Model.SRMA.Status) 
+                    </td>
+                    <td class="govuk-table__cell govuk-table__header__right"></td>
+                </tr>
+
+                @* Date offered *@
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table-case-details__header">Trust</th>
+                    <td class="govuk-table__cell">
+                        GroupName
+                    </td>
+                    <td class="govuk-table__cell govuk-table__header__right"></td>
+                </tr>
+
+                @* Reason *@
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table-case-details__header">Trust</th>
+                    <td class="govuk-table__cell">
+                        GroupName
+                    </td>
+                    <td class="govuk-table__cell govuk-table__header__right"></td>
+                </tr>
+            </tbody>
+        </table>
+    }
 </div>
