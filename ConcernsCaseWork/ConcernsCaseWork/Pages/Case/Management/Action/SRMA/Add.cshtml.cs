@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		public async Task<IActionResult> OnPostAsync()
 		{
 			var validationResp = ValidateAndCreateSRMA();
-			if(validationResp.validationErrors?.Count > 0)
+			if (validationResp.validationErrors?.Count > 0)
 			{
 				TempData["SRMA.Message"] = validationResp.validationErrors;
 				return Page();
@@ -80,7 +80,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				validationErrors.Add("SRMA status not selected");
 			}
 
-			if (!Enum.TryParse<SRMAStatus>(status, ignoreCase:true, out SRMAStatus srmaStatus))
+			if (!Enum.TryParse<SRMAStatus>(status, ignoreCase: true, out SRMAStatus srmaStatus))
 			{
 				_logger.Log(LogLevel.Error, $"Can't parse SRMA status ");
 			}
@@ -99,13 +99,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				srma.DateOffered = dateOffered;
 			}
 
-			if (string.IsNullOrEmpty(Request.Form["srma-notes"]))
+			if (!string.IsNullOrEmpty(Request.Form["srma-notes"]))
 			{
-				validationErrors.Add("Notes not provided");
-			}
-			else
-			{
-				srma.Notes = Request.Form["srma-notes"];
+				var notes = Request.Form["srma-notes"].ToString();
+				if (notes.Length > NotesMaxLength)
+				{
+					validationErrors.Add($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
+				}
 			}
 
 			return (srma, validationErrors);
