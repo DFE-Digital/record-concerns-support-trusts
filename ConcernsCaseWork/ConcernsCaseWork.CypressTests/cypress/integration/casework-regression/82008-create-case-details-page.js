@@ -16,15 +16,14 @@ describe("The correct items are visible on the details page", () => {
 	});
 
 	it("User searches for a valid Trust and selects it", () => {
-		cy.get("#search").type(searchTerm + "{enter}");
+		cy.randomSelectTrust();
 		cy.get("#search__option--0").click();
 	});
 
 	it("Should allow a user to select a concern type (Financial: Deficit)", () => {
-		cy.get(".govuk-summary-list__value").should(
-			"contain.text",
-			searchTerm.trim()
-		);
+		cy.get(".govuk-summary-list__value").then(($el) =>{
+			expect($el.text()).to.match(/(school|england|academy|trust)/i)
+		});
 		cy.selectConcernType();
 	});
 
@@ -33,10 +32,9 @@ describe("The correct items are visible on the details page", () => {
 	});
 
 	it("Should validate the create-case details component", () => {
-		cy.get(".govuk-summary-list__value").should(
-			"contain.text",
-			searchTerm.trim()
-		);
+		cy.get(".govuk-summary-list__value").then(($el) =>{
+			expect($el.text()).to.match(/(school|england|academy|trust)/i)
+		});
 		cy.validateCreateCaseDetailsComponent();
 	});
 

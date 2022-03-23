@@ -26,7 +26,7 @@
 import "cypress-localstorage-commands";
 
 const concernsRgx = new RegExp(/(Compliance|Financial|Force majeure|Governance|Irregularity)/, 'i');
-const trustRgx = new RegExp(/(School|Academy|Accrington)/, 'i');
+const trustRgx = new RegExp(/(School|Academy|Accrington|South|North|East|West)/, 'i');
 const ragRgx = new RegExp(/(amber|green|red|redPlus|Red Plus)/, 'i');
 const dotRgx = new RegExp(/(Deteriorating|Unchanged|Improving)/, 'i');
 
@@ -122,13 +122,44 @@ function selectRagRating(ragStatus) {
     }
 }
 
-//TODO: make this more dynamic - current usability issue raised
+Cypress.Commands.add('selectConcern', (expectedNumberOfRagStatus, ragStatus) => {
+
+    switch (ragStatus) {
+        case "Red plus":
+            cy.get(
+                ".govuk-table__body .govuk-table__row .govuk-ragtag-wrapper .ragtag__redplus"
+            ).should("have.length", expectedNumberOfRagStatus);
+            break;
+        case "Amber":
+            cy.get(
+                ".govuk-table__body .govuk-table__row .govuk-ragtag-wrapper .ragtag__amber"
+            ).should("have.length", expectedNumberOfRagStatus);
+            break;
+        case "Green":
+            cy.get(
+                ".govuk-table__body .govuk-table__row .govuk-ragtag-wrapper .ragtag__green"
+            ).should("have.length", expectedNumberOfRagStatus);
+            break;
+        case "Red":
+            cy.get(
+                ".govuk-table__body .govuk-table__row .govuk-ragtag-wrapper .ragtag__red"
+            ).should("have.length", expectedNumberOfRagStatus);
+            break;
+        default:
+            cy.log("Could not do the thing");
+    }
+    return expectedNumberOfRagStatus;
+
+})
+
+//TODO: make this more dynamic
 Cypress.Commands.add('selectConcernType',()=>{
     cy.get(".govuk-radios__item [value=Financial]").click();
     cy.get("[id=sub-type-3]").click();
     cy.get("[id=rating-3]").click();
     cy.get(".govuk-button").click();
 })
+
 
 Cypress.Commands.add('validateCreateCaseDetailsComponent',()=>{
     //Trust Address
@@ -248,7 +279,8 @@ Cypress.Commands.add('validateCreateCaseInitialDetails',()=>{
         })
     })
 
-
+//TODO:
+//Break these out into 2 or 3 separate commands per component (not page)
 Cypress.Commands.add('validateCaseManagPage',()=>{
 
         cy.get('*[class^="govuk-button govuk-button--secondary"]')
@@ -308,7 +340,6 @@ Cypress.Commands.add('validateCaseManagPage',()=>{
             expect($accord.eq(3).text().trim()).to.contain('De-escalation point').and.to.match(/(Edit)/);
             expect($accord.eq(4).text().trim()).to.contain('Next steps').and.to.match(/(Edit)/);
         })
-
 })
 
 Cypress.Commands.add('closeAllOpenConcerns',()=>{
@@ -328,8 +359,75 @@ if (Cypress.$(elem).length > 0) { //Cypress.$ needed to handle element missing e
         });
 }else {
     cy.log('All concerns closed')
-}
+    }
 
 })
 
+Cypress.Commands.add('randomSelectTrust', () =>{
+    let searchTerm =
+      ["10058372", "10060045", "10060278", "10058372", "10059732", "10060186",
+        "10030314", "10080822", "10081341", "10058833", "1087656", "10058354", 
+        "10066108", "10058598", "10059919", "10057355", "10058295", "10059877",
+        "10060927", "10059550", "10058417", "10059171", "10060716", "10060832",
+        "10066116", "10058998", "10058772", "10059020", "10058154", "10059577",
+        "10059981", "10058198", "10060069", "10059834", "10064323", "10060619",
+        "10058893", "10058873", "10060447", "10057945", "10058340", "10058890",
+        "10059880", "10060445", "10058715", "10059448", "10060131", "10058725",
+        "10058630", "10060260", "10058560", "10058776", "10059501", "10058240",
+        "10059063", "10059055", "10060233", "10058723", "10059998", "10058813",
+        "10059324", "10058181", "10061208", "10060877", "10058468", "10064307"]
+                        
+        let num = Math.floor(Math.random()*searchTerm.length); 
+        console.log(searchTerm[num]);
+        cy.get("#search").type(searchTerm[num] + "{enter}");
 
+        return cy.wrap(searchTerm[num]).as('term');
+
+
+});
+
+Cypress.Commands.add('checkForExistingCase', () =>{
+        const elem = '.govuk-link[href^="case"]';
+        cy.log((elem).length )
+            if (Cypress.$(elem).length > 1) { //Cypress.$ needed to handle element missing exception
+                cy.get('.govuk-link[href^="case"]').eq(0).click();
+
+            }else {
+                cy.log('No cases present, start case creation')
+
+                cy.get('[href="/case"]').click();
+                cy.get("#search").should("be.visible");
+                //User searches for a valid Trust and selects it", () => {
+                    //cy.get("#search").type(searchTerm + "{enter}");
+                cy.randomSelectTrust();
+                cy.get("#search__option--0").click();
+                //Should allow a user to select a concern type (Financial: Deficit)", () => {
+                    //cy.get(".govuk-summary-list__value").should(
+                cy.get(".govuk-summary-list__value").then(($el) =>{
+                    expect($el.text()).to.match(/(school|england|academy|trust)/i)
+                });
+                cy.selectConcernType();
+                //Should allow a user to select the risk to the trust", () => {
+                cy.selectRiskToTrust();
+                //Should allow the user to enter Concern details", () => {
+                cy.enterConcernDetails();
+
+            }
+
+});
+
+//descrition: selects an action item from the add to case page
+//Location used: case/6325/management/action
+//parameters: takes a string from the value attribute eg: value="srma"
+Cypress.Commands.add('addActionItemToCase', (option, textToVerify) =>{
+    
+    cy.get('[class="govuk-heading-l"]').should('contain.text', 'Add to case');
+    cy.get('h2[class="govuk-heading-m"]').should('contain.text', 'What action are you taking?');
+    cy.get('[value="'+option+'"]').click()
+    cy.get('[value="'+option+'"]').siblings().should('contain.text', textToVerify);
+
+    cy.get('[value="'+option+'"]').siblings().should(($text) => {
+        expect($text.text().trim()).equal(textToVerify)
+    });
+
+});

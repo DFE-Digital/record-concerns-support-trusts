@@ -41,26 +41,30 @@
                 <form role="form" method="post" id="add-srma-form" novalidate>
 
                     @* Status *@
-                    <fieldset class="govuk-fieldset">
-                        <h2 class="govuk-heading-m">What is the status of the SRMA?</h2>
-                        <div class="govuk-radios" data-module="govuk-radios">
-                            @{
-                                int id = 0;
-                            }
-                            @foreach (var status in Model.SRMAStatuses)
-                            {
-                                var idStr = id++ == 0 ? "status" : "status-" + id;
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id">
-                                    <label class="govuk-label govuk-radios__label" for="@status.Id">
-                                        <span>
-                                            @status.Text
-                                        </span>
-                                    </label>
-                                </div>
-                            }
-                        </div>
-                    </fieldset>
+                    <div class="govuk-form-group govuk-!-margin-top-9">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">What is the status of the SRMA?</h2>
+                            </legend>
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                @{
+                                    int id = 0;
+                                }
+                                @foreach (var status in Model.SRMAStatuses)
+                                {
+                                    var idStr = id++ == 0 ? "status" : "status-" + id;
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id">
+                                        <label class="govuk-label govuk-radios__label" for="@status.Id">
+                                            <span>
+                                                @status.Text
+                                            </span>
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </fieldset>
+                    </div>
 
                     @* date *@
                     <div class="govuk-form-group govuk-!-margin-top-9">
@@ -123,7 +127,7 @@
                         let validator = formValidator($("#add-srma-form")[0]);
                         validator.addValidator('srma-notes', [{
                             method: function(field) {
-                                return field.value.trim().length > 0;
+                                return true; @* not mandatory *@
                             },
                             message: 'You have not recorded any notes'
                         },
@@ -142,106 +146,38 @@
                         }]);
 
                         validator.addValidator('dtr-day', [{
-                            method: function(field, params) {
-                                return (params.day.value.length !== 0 && params.month.value.length !== 0 && params.year.value !== 0);
-                            },
-                            message: 'Enter date to review',
-                            params: {
-                                day: document.getElementById('dtr-day'),
-                                month: document.getElementById('dtr-month'),
-                                year: document.getElementById('dtr-year')
-                            }
+                          method: function(field, params) {
+                            return (params.day.value.length !== 0 && params.month.value.length !== 0 && params.year.value !== 0);
+                          },
+                          message: 'Enter a valid date',
+                          params: {
+                            day: document.getElementById('dtr-day'),
+                            month: document.getElementById('dtr-month'),
+                            year: document.getElementById('dtr-year')
+                          }
                         }, {
-                            method: function(field, params) {
-                                let reviewAt = new Date(parseInt(params.year.value, 10), parseInt(params.month.value, 10) - 1, parseInt(params.day.value, 10));
-                                return reviewAt instanceof Date && !isNaN(reviewAt.getDate());
-                            },
-                            message: 'Enter a valid date to review',
-                            params: {
-                                day: document.getElementById('dtr-day'),
-                                month: document.getElementById('dtr-month'),
-                                year: document.getElementById('dtr-year')
+                          method: function(field, params) {
+                            if(!isValidDate(params)) {
+                                return false;
                             }
-                        }, {
-                            method: function(field, params) {
-                                let year = parseInt(params.year.value, 10);
-                                let month = parseInt(params.month.value, 10) - 1;
-                                let day = parseInt(params.day.value, 10);
-
-                                let reviewAt = new Date(year, month, day);
-                                let reviewAtTomorrow = new Date();
-                                reviewAtTomorrow.setDate(reviewAtTomorrow.getDate() + 1);
-                                reviewAtTomorrow.setHours(0, 0, 0, 0);
-
-                                if (leapYear(year) && month === 1 && day > 29) {
-                                    params.day.value = '';
-                                    return false;
-                                }
-                                if (!leapYear(year) && month === 1 && day > 28) {
-                                    params.day.value = '';
-                                    return false;
-                                }
-
-                                if (year !== undefined && month !== undefined) {
-                                    let days = monthDays(year,  month);
-                                    if (day > days) {
-                                        params.day.value = '';
-                                        return false;
-                                    }
-                                }
-
-                                if (reviewAt < reviewAtTomorrow) {
-                                    params.year.value = '';
-                                    return false;
-                                }
-
-                                return reviewAt >= reviewAtTomorrow;
-                            },
-                            message: 'Enter a valid date',
-                            params: {
-                                day: document.getElementById('dtr-day'),
-                                month: document.getElementById('dtr-month'),
-                                year: document.getElementById('dtr-year')
-                            }
+                            var d = new Date(parseInt(params.year.value, 10), parseInt(params.month.value, 10) - 1, parseInt(params.day.value, 10) - 1);
+                            console.log(d);
+                            return d instanceof Date && !isNaN(d);
+                          },
+                          message: 'Enter a valid date',
+                          params: {
+                            day: document.getElementById('dtr-day'),
+                            month: document.getElementById('dtr-month'),
+                            year: document.getElementById('dtr-year')
+                          }
                         }]);
 
-                        // allow only numbers
-                        $(".govuk-date-input__input").on('input', function () {
-                            $(this).val($(this).val().replace(/[^0-9]/g, ''));
-                        });
-
-                        // allow 1-31
-                        $("input[name='dtr-day']").on('input', function () {
-                            let match = $(this).val().match(/^(([0]?[1-9])|([1-2][0-9])|(3[01]))$/);
-                            if (match === null) {
-                                $(this).val('');
-                            }
-                        });
-
-                        // allow 1-12
-                        $("input[name='dtr-month']").on('input', function () {
-                            let match = $(this).val().match(/(^0?[1-9]$)|(^1[0-2]$)/);
-                            if (match === null) {
-                                $(this).val('');
-                            }
-                        });
-
-                        // allow year to be current year or higher
-                        $("input[name='dtr-year']").focusout(function () {
-                            let currentYear =  new Date().getFullYear();
-                            if ($(this).val() < currentYear) {
-                                $(this).val('');
-                            }
-                        });
-
-                        function monthDays(year, month) {
-                            let d= new Date(year, month + 1, 0);
-                            return d.getDate();
-                        }
-
-                        // is leap year
-                        function leapYear(year) {
-                          return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
+                        function isValidDate(date) {
+                            return !isNaN(date.year.value)
+                                && !isNaN(date.month.value)
+                                && !isNaN(date.day.value)
+                                && date.month.value >= 1 && date.month.value <= 12
+                                && date.day.value >= 1 && date.month.value <= 31;
                         }
 
                         autoResizer();
