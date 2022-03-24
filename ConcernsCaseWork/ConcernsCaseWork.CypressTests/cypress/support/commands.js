@@ -386,26 +386,23 @@ Cypress.Commands.add('randomSelectTrust', () =>{
 
 });
 
+//descrition: checks for a new case, then creates one if none exist
+//Location used: https://amsd-casework-dev.london.cloudapps.digital/
+//parameters: takes a true/false arg to allow forcing of case creation
 Cypress.Commands.add('checkForExistingCase', (forceCreate) =>{
-        let caseExists = false
         const elem = '.govuk-link[href^="case"]';
-
         cy.log((elem).length )
             if (Cypress.$(elem).length > 1 ) { //Cypress.$ needed to handle element missing exception
-                caseExists = true
                     if (forceCreate == true) {
                         cy.log('Force Create set, start case creation')
                         cy.createCase();
                     }else{
                         cy.get('.govuk-link[href^="case"]').eq(0).click();
                     }
-
             }else {
                 cy.log('No cases present, start case creation')
                 cy.createCase();
             }
-
-            //return caseExists;
 
 });
 
@@ -416,19 +413,13 @@ Cypress.Commands.add('createCase', () =>{
 
                 cy.get('[href="/case"]').click();
                 cy.get("#search").should("be.visible");
-                //User searches for a valid Trust and selects it", () => {
-                    //cy.get("#search").type(searchTerm + "{enter}");
                 cy.randomSelectTrust();
                 cy.get("#search__option--0").click();
-                //Should allow a user to select a concern type (Financial: Deficit)", () => {
-                    //cy.get(".govuk-summary-list__value").should(
                 cy.get(".govuk-summary-list__value").then(($el) =>{
                     expect($el.text()).to.match(/(school|england|academy|trust)/i)
                 });
                 cy.selectConcernType();
-                //Should allow a user to select the risk to the trust", () => {
                 cy.selectRiskToTrust();
-                //Should allow the user to enter Concern details", () => {
                 cy.enterConcernDetails();
 });
 

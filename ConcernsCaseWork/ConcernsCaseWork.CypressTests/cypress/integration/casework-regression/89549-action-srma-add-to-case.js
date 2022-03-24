@@ -25,13 +25,10 @@ describe("User can add action srma to existing case", () => {
 
 		   cy.get('[class="govuk-list govuk-error-summary__list"]')
 		   		.should('contain.text', 'Please select an action to add');
-			//Cleanup to remove any lingering validation code for next steps
 			cy.reload();
 		});
 
-	//Currently failing due to existing bug:
 	it("User can Cancel and is returned to the Case ID Page", () => {
-		//cy.addActionItemToCase();
 		cy.get('[id="cancel-link-event"]').click();
 
 		cy.get('[class="govuk-caption-m"]').then(($heading) =>{
