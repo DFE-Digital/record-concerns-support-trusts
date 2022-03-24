@@ -386,14 +386,33 @@ Cypress.Commands.add('randomSelectTrust', () =>{
 
 });
 
-Cypress.Commands.add('checkForExistingCase', () =>{
+Cypress.Commands.add('checkForExistingCase', (forceCreate) =>{
+        let caseExists = false
         const elem = '.govuk-link[href^="case"]';
+
         cy.log((elem).length )
-            if (Cypress.$(elem).length > 1) { //Cypress.$ needed to handle element missing exception
-                cy.get('.govuk-link[href^="case"]').eq(0).click();
+            if (Cypress.$(elem).length > 1 ) { //Cypress.$ needed to handle element missing exception
+                caseExists = true
+                    if (forceCreate == true) {
+                        cy.log('Force Create set, start case creation')
+                        cy.createCase();
+                    }else{
+                        cy.get('.govuk-link[href^="case"]').eq(0).click();
+                    }
 
             }else {
                 cy.log('No cases present, start case creation')
+                cy.createCase();
+            }
+
+            //return caseExists;
+
+});
+
+//descrition: creates a new case from the case list (home) page
+//Location used: https://amsd-casework-dev.london.cloudapps.digital/
+//parameters: takes no arguments
+Cypress.Commands.add('createCase', () =>{
 
                 cy.get('[href="/case"]').click();
                 cy.get("#search").should("be.visible");
@@ -411,14 +430,11 @@ Cypress.Commands.add('checkForExistingCase', () =>{
                 cy.selectRiskToTrust();
                 //Should allow the user to enter Concern details", () => {
                 cy.enterConcernDetails();
-
-            }
-
 });
 
 //descrition: selects an action item from the add to case page
 //Location used: case/6325/management/action
-//parameters: takes a string from the value attribute eg: value="srma"
+//parameters: takes a string args from the value attribute eg: value="srma"
 Cypress.Commands.add('addActionItemToCase', (option, textToVerify) =>{
     
     cy.get('[class="govuk-heading-l"]').should('contain.text', 'Add to case');
