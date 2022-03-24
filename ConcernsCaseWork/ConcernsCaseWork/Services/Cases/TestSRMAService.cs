@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Services.Cases
 				CaseUrn = caseUrn,
 				DateOffered = DateTime.Now,
 				Notes = "Auto generated test data",
-				Status = SRMAStatus.TrustConsidering
+				Status = SRMAStatus.TrustConsidering,
 			};
 
 			SRMAs.Add(testSRMA);
