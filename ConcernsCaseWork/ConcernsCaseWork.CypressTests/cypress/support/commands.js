@@ -342,6 +342,9 @@ Cypress.Commands.add('validateCaseManagPage',()=>{
         })
 })
 
+//Description: closes any open concerns
+//Location used: https://amsd-casework-dev.london.cloudapps.digital/case/<caseID...>/management
+//parameters: none
 Cypress.Commands.add('closeAllOpenConcerns',()=>{
     const elem = '.govuk-table-case-details__cell_no_border [href*="edit_rating"]';
 if (Cypress.$(elem).length > 0) { //Cypress.$ needed to handle element missing exception
@@ -363,6 +366,10 @@ if (Cypress.$(elem).length > 0) { //Cypress.$ needed to handle element missing e
 
 })
 
+//Description: randomly selects a UKPRN from an array
+//Location used: https://amsd-casework-dev.london.cloudapps.digital/case
+//parameters: none
+//Returns the randomised result as string
 Cypress.Commands.add('randomSelectTrust', () =>{
     let searchTerm =
       ["10058372", "10060045", "10060278", "10058372", "10059732", "10060186",
@@ -382,43 +389,48 @@ Cypress.Commands.add('randomSelectTrust', () =>{
         cy.get("#search").type(searchTerm[num] + "{enter}");
 
         return cy.wrap(searchTerm[num]).as('term');
-
-
 });
 
-Cypress.Commands.add('checkForExistingCase', () =>{
+//Description: checks for a new case, then creates one if none exist
+//Location used: https://amsd-casework-dev.london.cloudapps.digital/
+//parameters: takes a true/false arg to allow forcing of case creation
+Cypress.Commands.add('checkForExistingCase', (forceCreate) =>{
         const elem = '.govuk-link[href^="case"]';
         cy.log((elem).length )
-            if (Cypress.$(elem).length > 1) { //Cypress.$ needed to handle element missing exception
-                cy.get('.govuk-link[href^="case"]').eq(0).click();
-
+            if (Cypress.$(elem).length > 1 ) { //Cypress.$ needed to handle element missing exception
+                    if (forceCreate == true) {
+                        cy.log('Force Create set, start case creation')
+                        cy.createCase();
+                    }else{
+                        cy.get('.govuk-link[href^="case"]').eq(0).click();
+                    }
             }else {
                 cy.log('No cases present, start case creation')
-
-                cy.get('[href="/case"]').click();
-                cy.get("#search").should("be.visible");
-                //User searches for a valid Trust and selects it", () => {
-                    //cy.get("#search").type(searchTerm + "{enter}");
-                cy.randomSelectTrust();
-                cy.get("#search__option--0").click();
-                //Should allow a user to select a concern type (Financial: Deficit)", () => {
-                    //cy.get(".govuk-summary-list__value").should(
-                cy.get(".govuk-summary-list__value").then(($el) =>{
-                    expect($el.text()).to.match(/(school|england|academy|trust)/i)
-                });
-                cy.selectConcernType();
-                //Should allow a user to select the risk to the trust", () => {
-                cy.selectRiskToTrust();
-                //Should allow the user to enter Concern details", () => {
-                cy.enterConcernDetails();
-
+                cy.createCase();
             }
 
 });
 
-//descrition: selects an action item from the add to case page
+//Description: creates a new case from the case list (home) page
+//Location used: https://amsd-casework-dev.london.cloudapps.digital/
+//parameters: takes no arguments
+Cypress.Commands.add('createCase', () =>{
+
+                cy.get('[href="/case"]').click();
+                cy.get("#search").should("be.visible");
+                cy.randomSelectTrust();
+                cy.get("#search__option--0").click();
+                cy.get(".govuk-summary-list__value").then(($el) =>{
+                    expect($el.text()).to.match(/(school|england|academy|trust)/i)
+                });
+                cy.selectConcernType();
+                cy.selectRiskToTrust();
+                cy.enterConcernDetails();
+});
+
+//Description: selects an action item from the add to case page
 //Location used: case/6325/management/action
-//parameters: takes a string from the value attribute eg: value="srma"
+//parameters: takes a string args from the value attribute eg: value="srma"
 Cypress.Commands.add('addActionItemToCase', (option, textToVerify) =>{
     
     cy.get('[class="govuk-heading-l"]').should('contain.text', 'Add to case');
