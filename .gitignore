@@ -491,3 +491,4 @@ terraform.rc
 /ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
 /ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/reports
 /ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/videos
+/ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/videos/casework-regression
