@@ -7,13 +7,14 @@ describe("User closes a case", () => {
 		cy.storeSessionData();
 	});
 
-	const searchTerm = "10058682"
-		//"Accrington St Christopher's Church Of England High School";
-
-	it("User creates a case", () => {
+	it("User creates a case", function () {
 		cy.get('[href="/case"]').click();
 		cy.get("#search").should("be.visible");
-		cy.get("#search").type(searchTerm + "{enter}");
+		cy.randomSelectTrust().then(term => {
+			cy.wrap(term).as("ukprn");
+			cy.log(this.ukprn)
+		})
+
 		cy.get("#search__option--0").click();
 		cy.selectConcernType();
 		cy.selectRiskToTrust();
@@ -21,11 +22,12 @@ describe("User closes a case", () => {
 	});
 
 	//Opens the first active case in the list
-	it("Opens an active case", () => {
+	it("Opens an active case", function  () {
 		cy.get('.buttons-topOfPage [href="/"]').click();
-		//Stores the ID of the case...
+		//Stores the ID of the case
 		cy.get('#your-casework tr:nth-child(1)  td:nth-child(1)  a').then(($el) => {
 			cy.wrap($el.text()).as("closedCaseId");
+			cy.log(this.closedCaseId)
 		});
 		cy.get('#your-casework tr:nth-child(1) td:nth-child(1) a').click();
 	});
@@ -44,19 +46,18 @@ describe("User closes a case", () => {
 
 	it("Case should be marked as closed and removed from active cases", function () {
 		cy.get("#main-content tr:nth-child(1) td:nth-child(1) a").then(($el) => {
-			cy.wrap($el.text()).as("caseIdAfter");
-			//Checks the the Case ID is no longer listed as Active
-			expect(this.closedCaseId).to.not.equal($el.text());
+		cy.wrap($el.text()).as("caseIdAfter");
+		//Checks the the Case ID is no longer listed as Active
+		expect(this.closedCaseId).to.not.equal($el.text());
 		});
 		cy.get('[href*="/case/closed"]').click();
 		//Checks the case ID is listed as closed
 		cy.get("#main-content tr:nth-child(1) td:nth-child(1)").should('contain', this.closedCaseId);
 	});
 
-	it("The Trust page should contain a closed cases table", () => {
+	it("The Trust page should contain a closed cases table", function () {
 		cy.visitPage('/trust')
-		//cy.visit(Cypress.env('url')+'/trust')
-		cy.get("#search").type(searchTerm + "{enter}");
+		cy.get("#search").type(this.ukprn + "{enter}");
 		cy.get("#search__option--0").click();			
 		cy.get('table:nth-child(6) > caption').scrollIntoView();
 		cy.get('table:nth-child(6) > caption').should(($titl) => {

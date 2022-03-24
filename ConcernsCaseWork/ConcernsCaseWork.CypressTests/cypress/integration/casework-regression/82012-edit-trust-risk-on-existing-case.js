@@ -16,7 +16,7 @@ describe("User edits the trust risk on existing case", () => {
 	});
 
 	it("User searches for a valid Trust and selects it", () => {
-		cy.get("#search").type(searchTerm + "{enter}");
+		cy.randomSelectTrust();
 		cy.get("#search__option--0").click();
 	});
 

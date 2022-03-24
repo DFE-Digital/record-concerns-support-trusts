@@ -8,10 +8,11 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using CaseActionModels = ConcernsCaseWork.Models.CaseActions;
 
-namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
+namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -48,7 +49,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		public async Task<IActionResult> OnPostAsync()
 		{
 			var validationResp = ValidateAndCreateSRMA();
-			if(validationResp.validationErrors?.Count > 0)
+			if (validationResp.validationErrors?.Count > 0)
 			{
 				TempData["SRMA.Message"] = validationResp.validationErrors;
 				return Page();
@@ -80,7 +81,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				validationErrors.Add("SRMA status not selected");
 			}
 
-			if (!Enum.TryParse<SRMAStatus>(status, ignoreCase:true, out SRMAStatus srmaStatus))
+			if (!Enum.TryParse<SRMAStatus>(status, ignoreCase: true, out SRMAStatus srmaStatus))
 			{
 				_logger.Log(LogLevel.Error, $"Can't parse SRMA status ");
 			}
@@ -90,7 +91,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			}
 
 			var dtString = $"{Request.Form["dtr-day"]}-{Request.Form["dtr-month"]}-{Request.Form["dtr-year"]}";
-			if (!DateTime.TryParse(dtString, out DateTime dateOffered))
+			if (!DateTime.TryParseExact(dtString, "dd-MM-yyyy", CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.None, out DateTime dateOffered))
 			{
 				validationErrors.Add("SRMA offered date is not valid");
 			}
@@ -99,13 +100,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				srma.DateOffered = dateOffered;
 			}
 
-			if (string.IsNullOrEmpty(Request.Form["srma-notes"]))
+			if (!string.IsNullOrEmpty(Request.Form["srma-notes"]))
 			{
-				validationErrors.Add("Notes not provided");
-			}
-			else
-			{
-				srma.Notes = Request.Form["srma-notes"];
+				var notes = Request.Form["srma-notes"].ToString();
+				if (notes.Length > NotesMaxLength)
+				{
+					validationErrors.Add($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
+				}
 			}
 
 			return (srma, validationErrors);

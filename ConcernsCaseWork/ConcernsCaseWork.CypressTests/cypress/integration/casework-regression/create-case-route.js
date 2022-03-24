@@ -9,6 +9,7 @@ describe("User interactions via Create Case route", () => {
 
 	const searchTerm =
 		"Accrington St Christopher's Church Of England High School";
+		let term = ""
 
 	it("User clicks on Create Case and should see Search Trusts", () => {
 		cy.get('[href="/case"]').click();
@@ -17,13 +18,16 @@ describe("User interactions via Create Case route", () => {
 
 	it("User searches for a valid Trust and selects it", () => {
 		cy.get("#search").type(searchTerm + "{enter}");
+		cy.get("#search__option--0").invoke('text').then(text => {
+			term = text;
+			cy.log(term.substring(0,15))
 		cy.get("#search__option--0").click();
+		});
 	});
 
 	it("Should display the Concern details of the specified Trust", () => {
-		cy.get(
-			".govuk-summary-list .govuk-summary-list__row:nth-of-type(1) .govuk-summary-list__value"
-		).should("contain.text", 'Accrington');
+		cy.get(".govuk-summary-list .govuk-summary-list__row:nth-of-type(1) .govuk-summary-list__value").should("contain.text", term.substring(9,10));
+		
 		cy.get('[href="/case/concern/cancel"').should("be.visible").click();
 	});
 
