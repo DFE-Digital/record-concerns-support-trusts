@@ -28,15 +28,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 		public async Task OnGetAsync()
 		{
-			if (long.TryParse(Convert.ToString(RouteData.Values["urn"]), out long caseUrn) == false || caseUrn <= 0)
+			var caseUrnValue = Convert.ToString(RouteData.Values["urn"]);
+			if (caseUrnValue == null || !long.TryParse(caseUrnValue, out long caseUrn) || caseUrn <= 0)
 			{
-				TempData["Error.Message"] = "Case Id Not Provided";
+				TempData["Error.Message"] = "Case Id not provided or invalid";
 				return;
 			}
 
-			if (long.TryParse(Convert.ToString(RouteData.Values["srmaId"]), out long srmaId) == false || srmaId <= 0)
+			var srmaIdValue = Convert.ToString(RouteData.Values["srmaId"]);
+			if (srmaIdValue == null || !long.TryParse(srmaIdValue, out long srmaId) || srmaId <= 0)
 			{
-				TempData["Error.Message"] = "SRMA Id Not Provided";
+				TempData["Error.Message"] = "SRMA Id not provided or invalid";
 				return;
 			}
 
