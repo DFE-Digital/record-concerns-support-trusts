@@ -1,4 +1,4 @@
-describe("User adds subsequent Concern to a case", () => {
+describe("User can add action srma to existing case", () => {
 	before(() => {
 		cy.login();
 	});
@@ -11,7 +11,7 @@ describe("User adds subsequent Concern to a case", () => {
 		"Accrington St Christopher's Church Of England High School";
 
 	it("User enters the case page case", () => {
-		cy.checkForExistingCase()
+		cy.checkForExistingCase(true);
 	});
 
 	it("User on the Case page is warned when proceeding without selecting an action", () => {
@@ -25,16 +25,11 @@ describe("User adds subsequent Concern to a case", () => {
 
 		   cy.get('[class="govuk-list govuk-error-summary__list"]')
 		   		.should('contain.text', 'Please select an action to add');
-			//Cleanup to remove any lingering validation code for next steps
 			cy.reload();
 		});
 
-
-/*
-	//Currently failing due to existing bug:
 	it("User can Cancel and is returned to the Case ID Page", () => {
-		//cy.addActionItemToCase();
-		cy.get('[href*="Cancel"]').click();
+		cy.get('[id="cancel-link-event"]').click();
 
 		cy.get('[class="govuk-caption-m"]').then(($heading) =>{
 			expect($heading).to.be.visible
@@ -42,8 +37,8 @@ describe("User adds subsequent Concern to a case", () => {
 		});
 	});
 
-*/	
 	it("User has option to add an action item to case", () => {
+		cy.get('[class="govuk-button"][role="button"]').click();
 		cy.addActionItemToCase('Srma', 'School Resource Management Adviser (SRMA)');
 	});
 
