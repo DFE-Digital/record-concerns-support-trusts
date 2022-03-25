@@ -9,14 +9,14 @@ namespace ConcernsCaseWork.Services.Cases
 {
 	public class TestSRMAService : ISRMAService
 	{
-		private readonly List<SRMA> SRMAs;
+		private readonly List<SRMAModel> SRMAs;
 
 		public TestSRMAService()
 		{
-			SRMAs = new List<SRMA>();
+			SRMAs = new List<SRMAModel>();
 		}
 
-		public Task SaveSRMA(SRMA srma)
+		public Task SaveSRMA(SRMAModel srma)
 		{
 			srma.Notes = "TEST DATA: " + srma.Notes;
 			SRMAs.Add(srma);
@@ -24,20 +24,20 @@ namespace ConcernsCaseWork.Services.Cases
 			return Task.CompletedTask;
 		}
 
-		public Task<IEnumerable<SRMA>> GetSRMAsForCase(long caseUrn)
+		public Task<IEnumerable<SRMAModel>> GetSRMAsForCase(long caseUrn)
 		{
 			var srmaList = SRMAs.Where(s => s.CaseUrn == caseUrn);
 			return Task.FromResult(srmaList?.Count() > 0 ? srmaList : CreateTestData(caseUrn));
 		}
 
-		public Task<SRMA> GetSRMAById(long srmaId)
+		public Task<SRMAModel> GetSRMAById(long srmaId)
 		{
 			return Task.FromResult(SRMAs.SingleOrDefault(s => s.Id == srmaId));
 		}
 
-		private List<SRMA> CreateTestData(long caseUrn)
+		private List<SRMAModel> CreateTestData(long caseUrn)
 		{
-			var testSRMA = new SRMA
+			var testSRMA = new SRMAModel
 			{
 				Id = DateTime.Now.Millisecond,
 				CaseUrn = caseUrn,

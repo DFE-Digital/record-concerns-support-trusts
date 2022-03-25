@@ -3,7 +3,7 @@ using System;
 
 namespace ConcernsCaseWork.Models.CaseActions
 {
-	public class SRMA : CaseAction
+	public class SRMAModel : CaseActionModel
 	{
 		public long Id { get; set; }
 		public DateTime	DateOffered { get; set; }

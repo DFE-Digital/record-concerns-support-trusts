@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
-		public List<CaseAction> CaseActions { get; private set; }
+		public List<CaseActionModel> CaseActions { get; private set; }
 
 		public IndexPageModel(ICaseModelService caseModelService,
 			ISRMAService srmaService,
@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 					throw new Exception($"{action} - is not a recognized case action");
 				}
 
-				CaseActions = CaseActions ?? new List<CaseAction>();
+				CaseActions = CaseActions ?? new List<CaseActionModel>();
 
 				switch (caseAction)
 				{
@@ -83,7 +83,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 						CaseActions.AddRange(await _srmaService.GetSRMAsForCase(caseUrn));
 
 						//Check if case action is SRMA and status is not deployed
-						var openSrma = CaseActions.Where(ca => ca is CaseActions.SRMA && !(((CaseActions.SRMA)ca).Status.CompareTo(SRMAStatus.Deployed) == 0)).FirstOrDefault();
+						var openSrma = CaseActions.Where(ca => ca is CaseActions.SRMAModel && !(((CaseActions.SRMAModel)ca).Status.CompareTo(SRMAStatus.Deployed) == 0)).FirstOrDefault();
 
 						if (openSrma != null)
 							throw new ApplicationException("There is already an open SRMA action linked to this case. Please resolve that before opening another one.");

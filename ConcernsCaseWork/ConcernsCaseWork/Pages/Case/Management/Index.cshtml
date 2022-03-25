@@ -267,7 +267,7 @@
 
                 <table class="govuk-table">
                     <tbody class="govuk-table__body">
-                        @foreach (SRMA srma in Model.CaseActions?.Where(ca => ca is SRMA))
+                        @foreach (SRMAModel srma in Model.CaseActions?.Where(ca => ca is SRMAModel))
                         {
                             <tr class="govuk-table__row">
                                 <td>

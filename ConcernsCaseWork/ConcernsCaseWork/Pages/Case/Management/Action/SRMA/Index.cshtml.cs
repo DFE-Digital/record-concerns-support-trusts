@@ -18,7 +18,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public long CaseUrn { get; set; }
-		public CaseActionModels.SRMA SRMA { get; set; }
+		public CaseActionModels.SRMAModel SRMA { get; set; }
 
 		public IndexPageModel(ISRMAService srmaService, ILogger<IndexPageModel> logger)
 		{

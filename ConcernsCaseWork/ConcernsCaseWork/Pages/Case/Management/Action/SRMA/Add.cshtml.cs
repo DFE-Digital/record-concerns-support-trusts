@@ -60,9 +60,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			return Redirect($"/case/{validationResp.newSRMA.CaseUrn}/management");
 		}
 
-		private (CaseActionModels.SRMA newSRMA, List<string> validationErrors) ValidateAndCreateSRMA()
+		private (CaseActionModels.SRMAModel newSRMA, List<string> validationErrors) ValidateAndCreateSRMA()
 		{
-			var srma = new CaseActionModels.SRMA();
+			var srma = new CaseActionModels.SRMAModel();
 			var validationErrors = new List<string>();
 
 			if (!long.TryParse(Convert.ToString(RouteData.Values["urn"]), out long caseUrn))
