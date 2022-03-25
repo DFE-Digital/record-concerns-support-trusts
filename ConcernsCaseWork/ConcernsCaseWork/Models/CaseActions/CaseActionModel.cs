@@ -1,6 +1,6 @@
 ﻿namespace ConcernsCaseWork.Models.CaseActions
 {
-	public class CaseAction
+	public class CaseActionModel
 	{
 		public long CaseUrn { get; set; }
 	}

@@ -10,17 +10,17 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 	{
 		private readonly static Fixture Fixture = new Fixture();
 
-		public static List<SRMA> BuildListSrmaModel(SRMAStatus status)
+		public static List<SRMAModel> BuildListSrmaModel(SRMAStatus status)
 		{
-			return new List<SRMA>
+			return new List<SRMAModel>
 			{
 				BuildSrmaModel(status)
 			};
 		}
 
-		public static SRMA BuildSrmaModel(SRMAStatus status)
+		public static SRMAModel BuildSrmaModel(SRMAStatus status)
 		{
-			return new SRMA
+			return new SRMAModel
 			{
 				DateOffered = Fixture.Create<DateTime>(),
 				Status = status,

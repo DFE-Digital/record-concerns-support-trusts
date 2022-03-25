@@ -6,7 +6,8 @@ namespace ConcernsCaseWork.Services.Cases
 {
 	public interface ISRMAService
 	{
-		public Task SaveSRMA(SRMA srma);
-		public Task<IEnumerable<SRMA>> GetSRMAsForCase(long caseUrn);
+		public Task SaveSRMA(SRMAModel srma);
+		public Task<IEnumerable<SRMAModel>> GetSRMAsForCase(long caseUrn);
+		public Task<SRMAModel> GetSRMAById(long srmaId);
 	}
 }

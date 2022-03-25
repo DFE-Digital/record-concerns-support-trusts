@@ -35,7 +35,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public IList<TrustCasesModel> TrustCasesModel { get; private set; }
 		public IList<CaseHistoryModel> CasesHistoryModel { get; private set; }
 		public bool IsEditableCase { get; private set; }
-		public List<CaseAction> CaseActions { get; private set; }
+		public List<CaseActionModel> CaseActions { get; private set; }
 
 		public IndexPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
@@ -103,7 +103,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		private async Task PopulateCaseActions(long caseUrn)
 		{
-			CaseActions = CaseActions ?? new List<CaseAction>();
+			CaseActions = CaseActions ?? new List<CaseActionModel>();
 			CaseActions.AddRange(await srmaService.GetSRMAsForCase(caseUrn));
 		}
 
