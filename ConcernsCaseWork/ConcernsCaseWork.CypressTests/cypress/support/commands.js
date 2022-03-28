@@ -405,7 +405,7 @@ Cypress.Commands.add('checkForExistingCase', (forceCreate) =>{
                 cy.createCase();
             }
 
-            //return caseExists;
+            //return caseExists; //Current limitation with cypress (cant return with cusotm commnds calling cy commands))
 
 });
 
@@ -416,19 +416,17 @@ Cypress.Commands.add('createCase', () =>{
 
                 cy.get('[href="/case"]').click();
                 cy.get("#search").should("be.visible");
-                //User searches for a valid Trust and selects it", () => {
-                    //cy.get("#search").type(searchTerm + "{enter}");
+
                 cy.randomSelectTrust();
                 cy.get("#search__option--0").click();
-                //Should allow a user to select a concern type (Financial: Deficit)", () => {
-                    //cy.get(".govuk-summary-list__value").should(
-                cy.get(".govuk-summary-list__value").then(($el) =>{
-                    expect($el.text()).to.match(/(school|england|academy|trust)/i)
+
+               cy.get(".govuk-summary-list__value").then(($el) =>{
+                    expect($el.text()).to.match(/(school|england|academy|trust|West|East|North|South)/i)
                 });
                 cy.selectConcernType();
-                //Should allow a user to select the risk to the trust", () => {
+
                 cy.selectRiskToTrust();
-                //Should allow the user to enter Concern details", () => {
+
                 cy.enterConcernDetails();
 });
 
