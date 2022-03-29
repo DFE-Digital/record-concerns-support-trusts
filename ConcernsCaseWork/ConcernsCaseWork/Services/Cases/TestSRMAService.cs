@@ -19,6 +19,7 @@ namespace ConcernsCaseWork.Services.Cases
 		public Task SaveSRMA(SRMAModel srma)
 		{
 			srma.Notes = "TEST DATA: " + srma.Notes;
+			srma.Id = DateTime.Now.Millisecond;
 			SRMAs.Add(srma);
 
 			return Task.CompletedTask;
