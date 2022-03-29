@@ -22,9 +22,8 @@ describe("User can add action srma to existing case", () => {
 			expect($btn.text()).to.match(/(Add to case)/i);
 		cy.get('button[data-prevent-double-click^="true"]').click();
 		});
-
-        
-		});
+       
+	});
 
 	it("User can Cancel and is returned to the Case ID Page", () => {
 	
@@ -45,8 +44,6 @@ describe("User can add action srma to existing case", () => {
 
 	it("User clicking add to case is taken to the action page", () => {
 		cy.get('button[data-prevent-double-click*="true"]').click();
-
-
 
 /*
 		const err = '[class="govuk-list govuk-error-summary__list"]';
@@ -103,21 +100,10 @@ describe("User can add action srma to existing case", () => {
 		const lstring =
         'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx';
 
-		
-		//cy.get('[class="govuk-heading-m"]').contains('Notes').should('be.visible');
-
-	   //cy.get('id="srma-notes"').should('be.visible');
-
-	       //Notes validation
-		  // cy.get('[class="govuk-grid-row"] *[for="issue"]').should(($notes) => {
-           // expect($notes.text().trim()).equal("Notes");
-         // })
-
         cy.get('#srma-notes').should('be.visible');
         cy.get('#srma-notes-info').then(($inf) =>{
             expect($inf).to.be.visible
             expect($inf.text()).to.match(/(500 characters remaining)/i)   
-		//});
 
             let text = Cypress._.repeat(lstring, 10)
             expect(text).to.have.length(500);
@@ -138,8 +124,6 @@ describe("User can add action srma to existing case", () => {
 			cy.get('[id="add-srma-button"]').click();
 			//cy.get('[class="govuk-list govuk-error-summary__list"]').should('contain.text', 'Notes');//  <<<<<Currently failing due to bug
 
-			//cy.get('#srma-notes').invoke('val', text);
-
 	});
 
 
@@ -158,7 +142,6 @@ describe("User can add action srma to existing case", () => {
 		cy.get('[id="dtr-month"]').type(Math.floor(Math.random() *3) + 10);
 		cy.get('[id="dtr-year"]').type("2022");
 		
-		//cy.addActionItemToCase('Srma', 'School Resource Management Adviser (SRMA)');
 		cy.get('[id="add-srma-button"]').click();
 		cy.reload();
 	});
