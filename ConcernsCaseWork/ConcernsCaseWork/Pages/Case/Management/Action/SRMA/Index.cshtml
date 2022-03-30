@@ -11,7 +11,7 @@
 
 @section BeforeMain {
 <div class="govuk-width-container">
-    <a id="back-to-case-link" class="govuk-back-link" href="#">
+    <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
         Back to case
     </a>
 </div>
@@ -65,7 +65,7 @@
                         </td>
                         <td class="govuk-table__cell govuk-table__header__right">
                             @{
-                                RenderLink(Model.SRMA.Status, "SRMA status");
+                                RenderLink(Model.SRMA.Status, "SRMA status", $@"{Request.Path}\status");
                             }
                         </td>
                     </tr>
@@ -80,7 +80,7 @@
                         </td>
                         <td class="govuk-table__cell govuk-table__header__right">
                             @{
-                                RenderLink(Model.SRMA.DateOffered, "SRMA date offered");
+                                RenderLink(Model.SRMA.DateOffered, "SRMA date offered", "#");
                             }
                         </td>
                     </tr>
@@ -95,7 +95,7 @@
                         </td>
                         <td class="govuk-table__cell govuk-table__header__right">
                             @{
-                                RenderLink(Model.SRMA.Reason, "SRMA reason");
+                                RenderLink(Model.SRMA.Reason, "SRMA reason", "#");
                             }
                         </td>
                     </tr>
@@ -110,7 +110,7 @@
                         </td>
                         <td class="govuk-table__cell govuk-table__header__right">
                             @{
-                                RenderLink(Model.SRMA.DateAccepted, "SRMA date accepted");
+                                RenderLink(Model.SRMA.DateAccepted, "SRMA date accepted", "#");
                             }
                         </td>
                     </tr>
@@ -137,7 +137,7 @@
                         </td>
                         <td class="govuk-table__cell govuk-table__header__right">
                             @{
-                                RenderLink(Model.SRMA.DateVisitStart, "SRMA Dates of visit");
+                                RenderLink(Model.SRMA.DateVisitStart, "SRMA Dates of visit", "#");
                             }
                         </td>
                     </tr>
@@ -153,7 +153,7 @@
                         </td>
                         <td class="govuk-table__cell govuk-table__header__right">
                             @{
-                                RenderLink(Model.SRMA.DateReportSentToTrust, "SRMA Date report sent to trust");
+                                RenderLink(Model.SRMA.DateReportSentToTrust, "SRMA Date report sent to trust", "#");
                             }
                         </td>
                     </tr>
@@ -168,7 +168,7 @@
                         </td>
                         <td class="govuk-table__cell govuk-table__header__right">
                             @{
-                                RenderLink(Model.SRMA.Notes, "SRMA Notes");
+                                RenderLink(Model.SRMA.Notes, "SRMA Notes", "#");
                             }
                         </td>
                     </tr>
@@ -187,12 +187,6 @@
     }
 </div>
 
-<script nonce="@nonce">
-    $("#back-to-case-link").click(function() {
-       history.back();
-    });
-</script>
-
 @functions {
     private void RenderValue<T>(T value)
     {
@@ -206,9 +200,9 @@
         }
     }
 
-    private void RenderLink<T>(T value, string fieldName)
+    private void RenderLink<T>(T value, string fieldName, string url)
     {
-        <a class="govuk-link" href="#">
+        <a class="govuk-link" href="@url">
             @(IsEmpty(value) ? "Add" : "Edit")
             <span class="govuk-visually-hidden">@fieldName</span>
         </a>
