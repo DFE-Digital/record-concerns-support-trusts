@@ -19,6 +19,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 		public long CaseUrn { get; set; }
 		public CaseActionModels.SRMAModel SRMA { get; set; }
+		public string DeclineCompleteButtonLabel { get; private set; }
 
 		public IndexPageModel(ISRMAService srmaService, ILogger<IndexPageModel> logger)
 		{
@@ -49,6 +50,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			{
 				TempData["SRMA.Message"] =  "Could not load this SRMA";
 				return;
+			}
+			else
+			{
+				switch (SRMA.Status)
+				{
+					case Enums.SRMAStatus.Deployed:
+						DeclineCompleteButtonLabel = "SRMA complete";
+						break;
+					default:
+						DeclineCompleteButtonLabel = "SRMA declined";
+						break;
+				}
 			}
 
 		}
