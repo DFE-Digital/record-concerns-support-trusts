@@ -3,9 +3,9 @@
 
 @{
 	ViewData["Title"] = "SRMA Status";
+    ViewData["CancelButtonLabel"] = "Cancel and return to SRMA"; // label used for _Cancel partial view
 	var nonce = HttpContext.GetNonce();
 }
-
 
 <div class="govuk-width-container">
     <partial name="_BannerError" />
@@ -69,7 +69,7 @@
 
                     <div class="govuk-button-group">
                         <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
-                            Continue
+                            Save and return to SRMA
                         </button>
                         <partial name="_Cancel" />
                     </div>
