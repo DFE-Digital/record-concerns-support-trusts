@@ -26,17 +26,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 		public int NotesMaxLength => 500;
 		public IEnumerable<RadioItem> SRMAStatuses => getStatuses();
 
-		private IEnumerable<RadioItem> getStatuses()
-		{
-			var statuses = (SRMAStatus[])Enum.GetValues(typeof(SRMAStatus));
-			return statuses.Where(s => s != SRMAStatus.Unknown)
-						   .Select(s => new RadioItem
-						   {
-							   Id = s.ToString(),
-							   Text = EnumHelper.GetEnumDescription(s)
-						   });
-		}
-
 		public AddPageModel(
 			ISRMAService SRMAService, ILogger<AddPageModel> logger)
 		{
@@ -113,6 +102,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			}
 
 			return (srma, validationErrors);
+		}
+
+		private IEnumerable<RadioItem> getStatuses()
+		{
+			var statuses = (SRMAStatus[])Enum.GetValues(typeof(SRMAStatus));
+			return statuses.Where(s => s != SRMAStatus.Unknown)
+						   .Select(s => new RadioItem
+						   {
+							   Id = s.ToString(),
+							   Text = EnumHelper.GetEnumDescription(s)
+						   });
 		}
 	}
 }

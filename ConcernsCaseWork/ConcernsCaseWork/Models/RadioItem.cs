@@ -8,6 +8,8 @@ namespace ConcernsCaseWork.Models
 
 		private string id;
 
+		public bool IsChecked { get; set; }
+
 		public string Id
 		{
 			get { return id ?? Text?.Trim()?.ToLower()?.Replace(" ", "") ?? throw new ArgumentNullException("Text not set"); }

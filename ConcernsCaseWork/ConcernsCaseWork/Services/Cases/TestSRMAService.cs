@@ -11,6 +11,7 @@ namespace ConcernsCaseWork.Services.Cases
 	{
 		private readonly List<SRMAModel> SRMAs;
 		private readonly Random random;
+		private readonly bool autoGenerateSRMAs = false;
 
 		public TestSRMAService()
 		{
@@ -30,8 +31,10 @@ namespace ConcernsCaseWork.Services.Cases
 		public Task<IEnumerable<SRMAModel>> GetSRMAsForCase(long caseUrn)
 		{
 			var srmaList = SRMAs.Where(s => s.CaseUrn == caseUrn);
-			// return Task.FromResult(srmaList?.Count() > 0 ? srmaList : CreateTestData(caseUrn));
-			return Task.FromResult(srmaList);
+			if (autoGenerateSRMAs)
+				return Task.FromResult(srmaList?.Count() > 0 ? srmaList : CreateTestData(caseUrn));
+			else
+				return Task.FromResult(srmaList);
 		}
 
 		public Task<SRMAModel> GetSRMAById(long srmaId)
@@ -52,6 +55,12 @@ namespace ConcernsCaseWork.Services.Cases
 
 			SRMAs.Add(testSRMA);
 			return SRMAs;
+		}
+
+		public Task SetStatus(long srmaId, SRMAStatus status)
+		{
+			SRMAs.Single(s => s.Id == srmaId).Status = status;
+			return Task.CompletedTask;
 		}
 	}
 }
