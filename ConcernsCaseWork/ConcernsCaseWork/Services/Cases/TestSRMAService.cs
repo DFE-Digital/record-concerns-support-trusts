@@ -10,16 +10,18 @@ namespace ConcernsCaseWork.Services.Cases
 	public class TestSRMAService : ISRMAService
 	{
 		private readonly List<SRMAModel> SRMAs;
+		private readonly Random random;
 
 		public TestSRMAService()
 		{
 			SRMAs = new List<SRMAModel>();
+			random = new Random(DateTime.Now.Millisecond);
 		}
 
 		public Task SaveSRMA(SRMAModel srma)
 		{
 			srma.Notes = "TEST DATA: " + srma.Notes;
-			srma.Id = DateTime.Now.Millisecond;
+			srma.Id = random.Next(100000);
 			SRMAs.Add(srma);
 
 			return Task.CompletedTask;
