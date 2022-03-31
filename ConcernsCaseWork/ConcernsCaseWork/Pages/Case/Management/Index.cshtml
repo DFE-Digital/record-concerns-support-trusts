@@ -1,5 +1,6 @@
 ﻿@page "/case/{urn:long}/management"
 @model ConcernsCaseWork.Pages.Case.Management.IndexPageModel
+@using ConcernsCaseWork.Helpers
 @using Service.TRAMS.Status;
 @using Models.CaseActions;
 @using ConcernsCaseWork.Extensions;
@@ -276,7 +277,7 @@
                                     </a>
                                 </td>
                                 <td>
-                                    @srma.Status
+                                    @EnumHelper.GetEnumDescription(srma.Status)
                                 </td>
                                 <td>
                                     @DateExtension.ToDayMonthYear(srma.DateOffered)

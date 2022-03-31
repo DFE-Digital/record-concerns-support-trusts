@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
@@ -9,6 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using CaseActionModels = ConcernsCaseWork.Models.CaseActions;
 
@@ -23,16 +25,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 
 		public int NotesMaxLength => 500;
 		public IEnumerable<RadioItem> SRMAStatuses => getStatuses();
-
-		private IEnumerable<RadioItem> getStatuses()
-		{
-			return new RadioItem[]
-			{
-				new RadioItem { Text = "Trust considering" },
-				new RadioItem { Text = "Preparing for deployment" },
-				new RadioItem { Text = "Deployed" }
-			};
-		}
 
 		public AddPageModel(
 			ISRMAService SRMAService, ILogger<AddPageModel> logger)
@@ -110,6 +102,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			}
 
 			return (srma, validationErrors);
+		}
+
+		private IEnumerable<RadioItem> getStatuses()
+		{
+			var statuses = (SRMAStatus[])Enum.GetValues(typeof(SRMAStatus));
+			return statuses.Where(s => s != SRMAStatus.Unknown)
+						   .Select(s => new RadioItem
+						   {
+							   Id = s.ToString(),
+							   Text = EnumHelper.GetEnumDescription(s)
+						   });
 		}
 	}
 }

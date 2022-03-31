@@ -1,7 +1,9 @@
 ﻿@{
-	var nonce = Context.GetNonce();
+    var nonce = Context.GetNonce();
+    var buttonLbl = Convert.ToString(ViewData["CancelButtonLabel"]);
+    buttonLbl = string.IsNullOrWhiteSpace(buttonLbl) ? "Cancel" : buttonLbl;
 }
-<a id="cancel-link-event" class="govuk-link" href="#">Cancel</a>
+<a id="cancel-link-event" class="govuk-link" href="#">@buttonLbl</a>
 <script nonce="@nonce">
 	$("#cancel-link-event").click(function() {
 		history.back();
