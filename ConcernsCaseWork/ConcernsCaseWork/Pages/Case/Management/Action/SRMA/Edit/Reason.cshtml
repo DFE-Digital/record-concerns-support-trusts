@@ -1,0 +1,99 @@
+﻿@page "/case/{caseUrn:long}/management/action/srma/{srmaId:long}/reason"
+@model ConcernsCaseWork.Pages.Case.Management.Action.SRMA.EditSRMAReasonOfferedPageModel
+
+@{
+	ViewData["Title"] = "SRMA Reason Offered";
+    ViewData["CancelButtonLabel"] = "Cancel and return to SRMA"; // label used for _Cancel partial view
+	var nonce = HttpContext.GetNonce();
+}
+
+<div class="govuk-width-container">
+    <partial name="_BannerError" />
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+                <partial name="_Error" />
+            }
+            else if (TempData["SRMA.Message"] != null)
+            {
+                <div class="govuk-heading-l moj-banner__message">
+                    <h3>Errors found</h3>
+                    <ul>
+                        @foreach (var msg in (TempData["SRMA.Message"] as IEnumerable<string>))
+                        {
+                            <li>@msg</li>
+                        }
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+                <h1 class="govuk-heading-l">
+                    <span class="govuk-caption-m">SRMA</span>
+                    Reason
+                </h1>
+
+                <form role="form" method="post" id="change-reason-form" novalidate>
+
+                    @* reason *@
+                    <div class="govuk-form-group govuk-!-margin-top-9">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">Why was the SRMA offered?</h2>
+                            </legend>
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                @{
+                                    int id = 0;
+                                }
+                                @foreach (var reason in Model.Reasons)
+                                {
+                                    var idStr = id++ == 0 ? "reason" : "reason-" + id;
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="@idStr" name="reason" type="radio" value="@reason.Id" checked="@reason.IsChecked">
+                                        <label class="govuk-label govuk-radios__label" for="@idStr">
+                                            <span>
+                                                @reason.Text
+                                            </span>
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </fieldset>
+                    </div>
+
+
+                    <div class="govuk-button-group">
+                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
+                            Save and return to SRMA
+                        </button>
+                        <partial name="_Cancel" />
+                    </div>
+
+                </form>
+
+                <script type="application/javascript" nonce="@nonce">
+                    $(function () {
+                        let validator = formValidator($("#change-reason-form")[0]);
+                        
+                        validator.addValidator('reason', [{
+                            method: function(field) {
+                                return ((typeof(field) != "undefined") && field.value.trim().length > 0);
+                            },
+                            message: 'Select status'
+                        }]);
+
+                        
+
+                        autoResizer();
+                    });
+                </script>
+            }
+
+        </div>
+    </div>
+</div>

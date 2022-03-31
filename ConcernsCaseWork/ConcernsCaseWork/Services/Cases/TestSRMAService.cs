@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.Services.Cases
 	{
 		private readonly List<SRMAModel> SRMAs;
 		private readonly Random random;
-		private readonly bool autoGenerateSRMAs = false;
+		private readonly bool autoGenerateSRMAs = true;
 
 		public TestSRMAService()
 		{
@@ -60,6 +60,12 @@ namespace ConcernsCaseWork.Services.Cases
 		public Task SetStatus(long srmaId, SRMAStatus status)
 		{
 			SRMAs.Single(s => s.Id == srmaId).Status = status;
+			return Task.CompletedTask;
+		}
+
+		public Task SetReason(long srmaId, SRMAReasonOffered reason)
+		{
+			SRMAs.Single(s => s.Id == srmaId).Reason = reason;
 			return Task.CompletedTask;
 		}
 	}

@@ -13,7 +13,7 @@ namespace ConcernsCaseWork.Models.CaseActions
 		public DateTime DateVisitEnd { get; set; }
 		public SRMAStatus Status { get; set; }
 		public string Notes { get; set; }
-		public string Reason { get; set; }
+		public SRMAReasonOffered Reason { get; set; }
 
 	}
 }
