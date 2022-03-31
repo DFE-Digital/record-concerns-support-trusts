@@ -135,7 +135,7 @@
                             method: function(field) {
                                 return field.value.trim().length <= @Model.NotesMaxLength;
                             },
-                            message: 'Your case outcome contains too many characters'
+                            message: 'The notes section contains too many characters'
                         }]);
 
                         validator.addValidator('status', [{
