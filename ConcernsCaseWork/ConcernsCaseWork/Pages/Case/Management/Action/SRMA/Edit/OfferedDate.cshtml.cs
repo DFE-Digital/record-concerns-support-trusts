@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,15 +17,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class EditSRMAReasonOfferedPageModel : AbstractPageModel
+	public class EditOfferedDatePageModel : AbstractPageModel
 	{
 		private readonly ISRMAService srmaService;
-		private readonly ILogger<EditSRMAReasonOfferedPageModel> _logger;
+		private readonly ILogger<EditOfferedDatePageModel> _logger;
 
 		public SRMAModel SRMA { get; set; }
-		public IEnumerable<RadioItem> Reasons { get; private set; }
 
-		public EditSRMAReasonOfferedPageModel(ISRMAService srmaService, ILogger<EditSRMAReasonOfferedPageModel> logger)
+		//public string Year { get; set; }
+		//public string Month { get; set; }
+		//public string Day { get; set; }
+
+		public EditOfferedDatePageModel(ISRMAService srmaService, ILogger<EditOfferedDatePageModel> logger)
 		{
 			this.srmaService = srmaService;
 			_logger = logger;
@@ -34,7 +38,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		{
 			try
 			{
-				_logger.LogInformation("Case::EditSRMAReasonOfferedPageModel::OnGetAsync");
+				_logger.LogInformation("Case::EditOfferedDatePageModel::OnGetAsync");
 
 				var validationResponse = ValidateInputsForGet();
 				if (validationResponse.validationErrors.Count() > 0)
@@ -44,12 +48,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				else
 				{
 					SRMA = await srmaService.GetSRMAById(validationResponse.srmaId);
-					Reasons = GetReasons();
 				}
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditSRMAReasonOfferedPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::EditOfferedDatePageModel::OnGetAsync::Exception - {Message}", ex.Message);
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 
@@ -60,7 +63,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		{
 			try
 			{
-				_logger.LogInformation("Case::EditSRMAReasonOfferedPageModel::OnPostAsync");
+				_logger.LogInformation("Case::EditOfferedDatePageModel::OnPostEditOfferedDate");
 
 				var validationResponse = ValidateInputsForPost();
 
@@ -70,12 +73,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 					return Page();
 				}
 
-				await srmaService.SetReason(validationResponse.srmaId, validationResponse.reason);
+				await srmaService.SetOfferedDate(validationResponse.srmaId, validationResponse.dateOffered);
 				return Redirect($"/case/{validationResponse.caseId}/management/action/srma/{validationResponse.srmaId}");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditSRMAReasonOfferedPageModel::OnPostAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::EditOfferedDatePageModel::OnPostEditOfferedDate::Exception - {Message}", ex.Message);
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
@@ -101,11 +104,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			return (validationErrors, srmaId, caseUrn);
 		}
 
-		private (List<string> validationErrors, long srmaId, SRMAReasonOffered reason, long caseId) ValidateInputsForPost()
+		private (List<string> validationErrors, long srmaId, DateTime dateOffered, long caseId) ValidateInputsForPost()
 		{
 			var validationErrors = new List<string>();
-			SRMAReasonOffered srmaReason = SRMAReasonOffered.Unknown;
-
+			
 			var caseUrnStr = Convert.ToString(RouteData.Values["caseUrn"]);
 			if (!long.TryParse(caseUrnStr, out long caseUrn))
 			{
@@ -118,29 +120,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				validationErrors.Add("SRMA Id not found");
 			}
 
-			var reason = Convert.ToString(Request.Form["reason"]);
-			if (string.IsNullOrEmpty(reason))
+			var allowedFormats = new string[] { "dd-MM-yyyy", "d-M-yyyy" };
+			var dtString = $"{Request.Form["dtr-day"]}-{Request.Form["dtr-month"]}-{Request.Form["dtr-year"]}";
+			if (!DateTime.TryParseExact(dtString, allowedFormats, CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.None, out DateTime dateOffered))
 			{
-				validationErrors.Add("A reason not selected");
-			}
-			else if (!Enum.TryParse<SRMAReasonOffered>(reason, out srmaReason))
-			{
-				validationErrors.Add("Invalid reason");
+				validationErrors.Add("SRMA offered date is not valid");
 			}
 
-			return (validationErrors, srmaId, srmaReason, caseUrn);
-		}
-
-		private IEnumerable<RadioItem> GetReasons()
-		{
-			var reasons = (SRMAReasonOffered[])Enum.GetValues(typeof(SRMAReasonOffered));
-			return reasons.Where(r => r != SRMAReasonOffered.Unknown)
-						   .Select(r => new RadioItem
-						   {
-							   Id = r.ToString(),
-							   Text = EnumHelper.GetEnumDescription(r),
-							   IsChecked = r == SRMA.Reason
-						   });
+			return (validationErrors, srmaId, dateOffered, caseUrn);
 		}
 	}
 }
