@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.Services.Cases
 	{
 		private readonly List<SRMAModel> SRMAs;
 		private readonly Random random;
-		private readonly bool autoGenerateSRMAs = true;
+		private readonly bool autoGenerateSRMAs = false;
 
 		public TestSRMAService()
 		{
