@@ -62,5 +62,11 @@ namespace ConcernsCaseWork.Services.Cases
 			SRMAs.Single(s => s.Id == srmaId).Status = status;
 			return Task.CompletedTask;
 		}
+
+		public Task SetReason(long srmaId, SRMAReasonOffered reason)
+		{
+			SRMAs.Single(s => s.Id == srmaId).Reason = reason;
+			return Task.CompletedTask;
+		}
 	}
 }

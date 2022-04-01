@@ -11,5 +11,6 @@ namespace ConcernsCaseWork.Services.Cases
 		public Task<IEnumerable<SRMAModel>> GetSRMAsForCase(long caseUrn);
 		public Task<SRMAModel> GetSRMAById(long srmaId);
 		public Task SetStatus(long srmaId, SRMAStatus status);
+		public Task SetReason(long srmaId, SRMAReasonOffered reason);
 	}
 }

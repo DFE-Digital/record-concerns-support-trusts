@@ -90,12 +90,15 @@
                         <th scope="row" class="govuk-table-case-details__header">Reason</th>
                         <td class="govuk-table__cell">
                             @{
-                                RenderValue(Model.SRMA.Reason);
+                                var reasonStr = Model.SRMA.Reason == Enums.SRMAReasonOffered.Unknown ? string.Empty
+                                : @EnumHelper.GetEnumDescription(Model.SRMA.Reason);
+                                
+                                RenderValue(reasonStr);
                             }
                         </td>
                         <td class="govuk-table__cell govuk-table__header__right">
                             @{
-                                RenderLink(Model.SRMA.Reason, "SRMA reason", "#");
+                                RenderLink(Model.SRMA.Reason, "SRMA reason", $@"{Request.Path}\reason");
                             }
                         </td>
                     </tr>
