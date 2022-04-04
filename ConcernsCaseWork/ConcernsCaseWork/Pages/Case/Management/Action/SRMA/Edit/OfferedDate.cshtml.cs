@@ -24,10 +24,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 		public SRMAModel SRMA { get; set; }
 
-		//public string Year { get; set; }
-		//public string Month { get; set; }
-		//public string Day { get; set; }
-
 		public EditOfferedDatePageModel(ISRMAService srmaService, ILogger<EditOfferedDatePageModel> logger)
 		{
 			this.srmaService = srmaService;

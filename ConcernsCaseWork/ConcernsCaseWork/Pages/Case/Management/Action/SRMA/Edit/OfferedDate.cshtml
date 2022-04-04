@@ -17,7 +17,7 @@
             {
                 <partial name="_Error" />
             }
-            else if (TempData["SRMA.Message"] != null)
+            else if (TempData.Peek("SRMA.Message") != null)
             {
                 <div class="govuk-heading-l moj-banner__message">
                     <h3>Errors found</h3>
