@@ -1,0 +1,135 @@
+﻿@page "/case/{caseUrn:long}/management/action/srma/{srmaId:long}/offeredDate"
+@model ConcernsCaseWork.Pages.Case.Management.Action.SRMA.EditOfferedDatePageModel
+
+@{
+    ViewData["Title"] = "SRMA Offered Date";
+    ViewData["CancelButtonLabel"] = "Cancel and return to SRMA"; // label used for _Cancel partial view
+    var nonce = HttpContext.GetNonce();
+}
+
+<div class="govuk-width-container">
+    <partial name="_BannerError" />
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+                <partial name="_Error" />
+            }
+            else if (TempData.Peek("SRMA.Message") != null)
+            {
+                <div class="govuk-heading-l moj-banner__message">
+                    <h3>Errors found</h3>
+                    <ul>
+                        @foreach (var msg in (TempData["SRMA.Message"] as IEnumerable<string>))
+                        {
+                            <li>@msg</li>
+                        }
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+                <h1 class="govuk-heading-l">
+                    <span class="govuk-caption-m">SRMA</span>
+                    Offered date
+                </h1>
+
+                <form role="form" method="post" id="change-offeredDate-form" novalidate>
+
+                    @* date *@
+                    <div class="govuk-form-group govuk-!-margin-top-9">
+                        <fieldset class="govuk-fieldset">
+                            <h2 class="govuk-heading-m">Date SRMA offered to Trust?</h2>
+                            <div class="govuk-date-input" id="dtr">
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="dtr-day">
+                                            Day
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day"
+                                           name="dtr-day" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.SRMA.DateOffered.Day:00}")" />
+                                    </div>
+                                </div>
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="dtr-month">
+                                            Month
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month"
+                                           name="dtr-month" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.SRMA.DateOffered.Month:00}")" />
+                                    </div>
+                                </div>
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="dtr-year">
+                                            Year
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year"
+                                           name="dtr-year" type="text" maxlength="4" inputmode="numeric" value="@($"{Model.SRMA.DateOffered.Year}")" />
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+
+                    <div class="govuk-button-group">
+                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
+                            Save and return to SRMA
+                        </button>
+                        <partial name="_Cancel" />
+                    </div>
+
+                </form>
+
+                <script type="application/javascript" nonce="@nonce">
+                    $(function () {
+                        let validator = formValidator($("#change-offeredDate-form")[0]);
+
+                        validator.addValidator('dtr-day', [{
+                          method: function(field, params) {
+                            return (params.day.value.length !== 0 && params.month.value.length !== 0 && params.year.value !== 0);
+                          },
+                          message: 'Enter a valid date',
+                          params: {
+                            day: document.getElementById('dtr-day'),
+                            month: document.getElementById('dtr-month'),
+                            year: document.getElementById('dtr-year')
+                          }
+                        }, {
+                          method: function(field, params) {
+                            if(!isValidDate(params)) {
+                                return false;
+                            }
+                            var d = new Date(parseInt(params.year.value, 10), parseInt(params.month.value, 10) - 1, parseInt(params.day.value, 10) - 1);
+                            console.log(d);
+                            return d instanceof Date && !isNaN(d);
+                          },
+                          message: 'Enter a valid date',
+                          params: {
+                            day: document.getElementById('dtr-day'),
+                            month: document.getElementById('dtr-month'),
+                            year: document.getElementById('dtr-year')
+                          }
+                        }]);
+
+                        function isValidDate(date) {
+                            return !isNaN(date.year.value)
+                                && !isNaN(date.month.value)
+                                && !isNaN(date.day.value)
+                                && date.month.value >= 1 && date.month.value <= 12
+                                && date.day.value >= 1 && date.month.value <= 31;
+                        }
+
+                        autoResizer();
+                    });
+                </script>
+            }
+
+        </div>
+    </div>
+</div>

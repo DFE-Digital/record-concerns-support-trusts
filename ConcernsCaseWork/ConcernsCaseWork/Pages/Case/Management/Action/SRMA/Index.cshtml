@@ -80,7 +80,7 @@
                         </td>
                         <td class="govuk-table__cell govuk-table__header__right">
                             @{
-                                RenderLink(Model.SRMA.DateOffered, "SRMA date offered", "#");
+                                RenderLink(Model.SRMA.DateOffered, "SRMA date offered", $@"{Request.Path}\offeredDate");
                             }
                         </td>
                     </tr>

@@ -68,5 +68,11 @@ namespace ConcernsCaseWork.Services.Cases
 			SRMAs.Single(s => s.Id == srmaId).Reason = reason;
 			return Task.CompletedTask;
 		}
+
+		public Task SetOfferedDate(long srmaId, DateTime offeredDate)
+		{
+			SRMAs.Single(s => s.Id == srmaId).DateOffered = offeredDate;
+			return Task.CompletedTask;
+		}
 	}
 }
