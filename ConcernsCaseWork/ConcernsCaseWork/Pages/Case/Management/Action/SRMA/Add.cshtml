@@ -12,22 +12,9 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
 
-
             @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
             {
                 <partial name="_Error" />
-            }
-            else if (TempData["SRMA.Message"] != null)
-            {
-                <div class="govuk-heading-l moj-banner__message">
-                    <h3>Errors found</h3>
-                    <ul>
-                        @foreach (var msg in (TempData["SRMA.Message"] as IEnumerable<string>))
-                        {
-                            <li>@msg</li>
-                        }
-                    </ul>
-                </div>
             }
             else
             {
@@ -122,7 +109,7 @@
 
                 </form>
 
-                <script type="application/javascript" nonce="@nonce">
+				<script type="application/javascript" nonce="@nonce">
                     $(function () {
                         let validator = formValidator($("#add-srma-form")[0]);
                         validator.addValidator('srma-notes', [{
@@ -161,10 +148,9 @@
                                 return false;
                             }
                             var d = new Date(parseInt(params.year.value, 10), parseInt(params.month.value, 10) - 1, parseInt(params.day.value, 10) - 1);
-                            console.log(d);
                             return d instanceof Date && !isNaN(d);
                           },
-                          message: 'Enter a valid date',
+                          message: 'Enter the date SRMA was offered to the trust',
                           params: {
                             day: document.getElementById('dtr-day'),
                             month: document.getElementById('dtr-month'),
@@ -182,7 +168,7 @@
 
                         autoResizer();
                     });
-                </script>
+				</script>
             }
 
         </div>
