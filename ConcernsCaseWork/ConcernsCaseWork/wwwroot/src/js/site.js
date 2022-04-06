@@ -46,7 +46,7 @@ window.addIssueValidator = function(validator) {
 		message: 'Issue must be 2000 characters or less'
 	}]);
 }
-window.addRatingValidator = function(validator) {
+window.addRatingValidator = function (validator) {
 	validator.addValidator('rating', [{
 		method: function(field) {
 			return field.value.trim().length > 0;
@@ -149,6 +149,15 @@ window.addUsersValidator = function(validator) {
 		message: 'Select user(s)'
 	}]);
 }
+window.addSRMANotesValidator = function (validator) {
+	validator.addValidator('srma-notes', [{
+		method: function (field) {
+			return field.value.trim().length <= 500;
+		},
+		message: 'Notes must be 500 characters or less'
+	}]);
+}
+
 
 // Auto resizer textBox
 window.autoResizer = function() {

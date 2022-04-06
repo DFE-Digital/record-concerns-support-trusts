@@ -1,0 +1,61 @@
+﻿@page "/case/{caseUrn:long}/management/action/srma/{srmaId:long}/notes"
+@model ConcernsCaseWork.Pages.Case.Management.Action.SRMA.EditNotesPageModel
+
+@{
+    ViewData["Title"] = "SRMA Offered Date";
+    ViewData["CancelButtonLabel"] = "Cancel and return to SRMA"; // label used for _Cancel partial view
+    var nonce = HttpContext.GetNonce();
+}
+
+<div class="govuk-width-container">
+    <partial name="_BannerError" />
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+                <partial name="_Error" />
+            }
+            else
+            {
+                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+                <h1 class="govuk-heading-l">
+                    Notes
+                </h1>
+
+				<form role="form" method="post" id="edit-notes-form" novalidate>
+
+					<div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
+						<div class="govuk-form-group">
+							<h2 class="govuk-heading-m">Notes</h2>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="srma-notes" name="srma-notes" rows="3" aria-describedby="srma-notes-info">@Model.SRMAModel.Notes</textarea>
+						</div>
+						<div id="srma-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+							You can enter up to @Model.NotesMaxLength characters
+						</div>
+					</div>
+
+					<div class="govuk-button-group">
+						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
+							Save and return to SRMA
+						</button>
+						<partial name="_Cancel" />
+					</div>
+
+				</form>
+
+				<script type="application/javascript" nonce="@nonce">
+					$(function () {
+						let validator = formValidator($("#edit-notes-form")[0]);
+						addSRMANotesValidator(validator);
+
+						autoResizer();
+					});
+				</script>
+            }
+
+        </div>
+    </div>
+</div>

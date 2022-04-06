@@ -22,6 +22,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			return new SRMAModel
 			{
+				Id = Fixture.Create<long>(),
+				CaseUrn = Fixture.Create<long>(),
 				DateOffered = Fixture.Create<DateTime>(),
 				Status = status,
 				Notes = Fixture.Create<string>()
