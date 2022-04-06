@@ -14,5 +14,6 @@ namespace ConcernsCaseWork.Services.Cases
 		public Task SetStatus(long srmaId, SRMAStatus status);
 		public Task SetReason(long srmaId, SRMAReasonOffered reason);
 		public Task SetOfferedDate(long srmaId, DateTime offeredDate);
+		public Task SetNotes(long srmaId, string notes);
 	}
 }

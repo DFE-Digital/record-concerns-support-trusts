@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Services.Cases
 
 		public Task SaveSRMA(SRMAModel srma)
 		{
-			srma.Notes = "TEST DATA: " + srma.Notes;
+			srma.Notes = srma.Notes;
 			srma.Id = random.Next(100000);
 			SRMAs.Add(srma);
 
@@ -72,6 +72,12 @@ namespace ConcernsCaseWork.Services.Cases
 		public Task SetOfferedDate(long srmaId, DateTime offeredDate)
 		{
 			SRMAs.Single(s => s.Id == srmaId).DateOffered = offeredDate;
+			return Task.CompletedTask;
+		}
+
+		public Task SetNotes(long srmaId, string notes)
+		{
+			SRMAs.Single(s => s.Id == srmaId).Notes = notes;
 			return Task.CompletedTask;
 		}
 	}
