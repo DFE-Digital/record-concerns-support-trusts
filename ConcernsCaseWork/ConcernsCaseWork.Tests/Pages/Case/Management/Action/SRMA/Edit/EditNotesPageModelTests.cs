@@ -129,7 +129,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA.Edit
 			Assert.That(page.Url, Is.EqualTo($"/case/{srmaModel.CaseUrn}/management/action/srma/{srmaModel.Id}"));
 		}
 
-
 		private static EditNotesPageModel SetupEditNotesPageModel(
 			ISRMAService mockSrmaModelService, ILogger<EditNotesPageModel> mockLogger, bool isAuthenticated = false)
 		{
