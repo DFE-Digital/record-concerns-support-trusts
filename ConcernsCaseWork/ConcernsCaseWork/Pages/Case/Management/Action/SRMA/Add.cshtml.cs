@@ -131,8 +131,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			var dtr_day = Request.Form["dtr-day"];
 			var dtr_month = Request.Form["dtr-month"];
 			var dtr_year = Request.Form["dtr-year"];
+			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
 
-			srma.DateOffered = DateTime.Parse($"{dtr_day}-{dtr_month}-{dtr_year}");
+			var allowedFormats = new string[] { "dd-MM-yyyy", "d-M-yyyy" };
+			srma.DateOffered = DateTime.ParseExact(dtString, allowedFormats, CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.None);
 
 			var notes = Request.Form["srma-notes"].ToString();
 
