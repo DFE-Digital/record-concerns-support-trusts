@@ -129,18 +129,18 @@
                                 }
                                 else
                                 {
-                                    @DateExtension.ToDayMonthYear(Model.SRMA.DateVisitStart)
+                                    @DateExtension.ToDayMonthYear(Model.SRMA.DateVisitStart.Value)
                                     if (!IsEmpty(Model.SRMA.DateVisitEnd))
                                     {
                                         <text> - </text>
-                                        @DateExtension.ToDayMonthYear(Model.SRMA.DateVisitEnd)
+                                        @DateExtension.ToDayMonthYear(Model.SRMA.DateVisitEnd.Value)
                                     }
                                 }
                             }
                         </td>
                         <td class="govuk-table__cell govuk-table__header__right">
                             @{
-                                RenderLink(Model.SRMA.DateVisitStart, "SRMA Dates of visit", "#");
+                                RenderLink(Model.SRMA.DateVisitStart, "SRMA Dates of visit", $@"{Request.Path}\visitdates");
                             }
                         </td>
                     </tr>

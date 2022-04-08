@@ -1,0 +1,141 @@
+﻿@page "/case/{caseUrn:long}/management/action/srma/{srmaId:long}/visitdates"
+@model ConcernsCaseWork.Pages.Case.Management.Action.SRMA.EditDateOfVisitPageModel
+
+@{
+    ViewData["Title"] = "SRMA Date Of Visit";
+    ViewData["CancelButtonLabel"] = "Cancel and return to SRMA"; // label used for _Cancel partial view
+    var nonce = HttpContext.GetNonce();
+
+	var startDate = Model.SRMAModel.DateVisitStart;
+	var endDate = Model.SRMAModel.DateVisitEnd;
+}
+
+<div class="govuk-width-container">
+    <partial name="_BannerError" />
+
+    <div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+
+			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+			{
+				<partial name="_Error" />
+			}
+			else
+			{
+				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+				@if (!string.IsNullOrEmpty((string)TempData.Peek("SRMA.Message")))
+				{
+					<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
+						<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
+						<div class="govuk-error-summary__body">
+							<ul class="govuk-list govuk-error-summary__list">
+								<li>
+									<a href="#">@TempData["SRMA.Message"]</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				}
+
+				<h1 class="govuk-heading-l">
+					<span class="govuk-caption-m">SRMA</span>
+					Dates of visit
+				</h1>
+
+				<form role="form" method="post" id="edit-dates-of-visit-form" novalidate>
+
+					@* start date *@
+					<div class="govuk-form-group govuk-!-margin-top-9">
+						<fieldset class="govuk-fieldset">
+							<h2 class="govuk-heading-m">Start</h2>
+							<div class="govuk-date-input" id="dtr">
+								<div class="govuk-date-input__item">
+									<div class="govuk-form-group">
+										<label class="govuk-label govuk-date-input__label" for="start-dtr-day">
+											Day
+										</label>
+
+										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="start-dtr-day"
+											   name="start-dtr-day" type="text" maxlength="2" inputmode="numeric" value="@(startDate.HasValue ? $"{startDate.Value.Day:00}" : "")" />
+									</div>
+								</div>
+								<div class="govuk-date-input__item">
+									<div class="govuk-form-group">
+										<label class="govuk-label govuk-date-input__label" for="start-dtr-month">
+											Month
+										</label>
+										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="start-dtr-month"
+											   name="start-dtr-month" type="text" maxlength="2" inputmode="numeric" value="@(startDate.HasValue ? $"{startDate.Value.Month:00}" : "")" />
+									</div>
+								</div>
+								<div class="govuk-date-input__item">
+									<div class="govuk-form-group">
+										<label class="govuk-label govuk-date-input__label" for="start-dtr-year">
+											Year
+										</label>
+										<input class="govuk-input govuk-date-input__input govuk-input--width-4" id="start-dtr-year"
+											   name="start-dtr-year" type="text" maxlength="4" inputmode="numeric" value="@(startDate.HasValue ? $"{startDate.Value.Year:00}" : "")" />
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+
+
+					@* end date *@
+					<div class="govuk-form-group govuk-!-margin-top-9">
+						<fieldset class="govuk-fieldset">
+							<h2 class="govuk-heading-m">End</h2>
+							<div class="govuk-date-input" id="dtr">
+								<div class="govuk-date-input__item">
+									<div class="govuk-form-group">
+										<label class="govuk-label govuk-date-input__label" for="end-dtr-day">
+											Day
+										</label>
+										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="end-dtr-day"
+											   name="end-dtr-day" type="text" maxlength="2" inputmode="numeric" value="@(endDate.HasValue ? $"{endDate.Value.Day:00}" : "")" />
+									</div>
+								</div>
+								<div class="govuk-date-input__item">
+									<div class="govuk-form-group">
+										<label class="govuk-label govuk-date-input__label" for="end-dtr-month">
+											Month
+										</label>
+										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="end-dtr-month"
+											   name="end-dtr-month" type="text" maxlength="2" inputmode="numeric" value="@(endDate.HasValue ? $"{endDate.Value.Month:00}" : "")" />
+									</div>
+								</div>
+								<div class="govuk-date-input__item">
+									<div class="govuk-form-group">
+										<label class="govuk-label govuk-date-input__label" for="end-dtr-year">
+											Year
+										</label>
+										<input class="govuk-input govuk-date-input__input govuk-input--width-4" id="end-dtr-year"
+											   name="end-dtr-year" type="text" maxlength="4" inputmode="numeric" value="@(endDate.HasValue ? $"{endDate.Value.Year:00}" : "")" />
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+
+
+					<div class="govuk-button-group">
+						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
+							Save and return to SRMA
+						</button>
+						<partial name="_Cancel" />
+					</div>
+
+				</form>
+
+				<script type="application/javascript" nonce="@nonce">
+					$(function () {
+						autoResizer();
+					});
+				</script>
+			}
+
+		</div>
+    </div>
+</div>

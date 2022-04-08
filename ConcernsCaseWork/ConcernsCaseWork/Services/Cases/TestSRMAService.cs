@@ -80,5 +80,14 @@ namespace ConcernsCaseWork.Services.Cases
 			SRMAs.Single(s => s.Id == srmaId).Notes = notes;
 			return Task.CompletedTask;
 		}
+
+		public Task SetVisitDates(long srmaId, DateTime startDate, DateTime? endDate)
+		{
+			var srma = SRMAs.Single(s => s.Id == srmaId);
+
+			srma.DateVisitStart = startDate;
+			srma.DateVisitEnd = endDate;
+			return Task.CompletedTask;
+		}
 	}
 }
