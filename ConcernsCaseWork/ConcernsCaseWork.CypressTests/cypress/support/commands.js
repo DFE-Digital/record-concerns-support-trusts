@@ -366,7 +366,7 @@ if (Cypress.$(elem).length > 0) { //Cypress.$ needed to handle element missing e
 Cypress.Commands.add('randomSelectTrust', () =>{
     let searchTerm =
       ["10058372", "10060045", "10060278", "10058372", "10059732", "10060186",
-        "10030314", "10080822", "10081341", "10058833", "1087656", "10058354", 
+        "10080822", "10081341", "10058833", "1087656", "10058354", 
         "10066108", "10058598", "10059919", "10057355", "10058295", "10059877",
         "10060927", "10059550", "10058417", "10059171", "10060716", "10060832",
         "10066116", "10058998", "10058772", "10059020", "10058154", "10059577",
@@ -386,7 +386,7 @@ Cypress.Commands.add('randomSelectTrust', () =>{
 
 });
 
-Cypress.Commands.add('checkForExistingCase', (forceCreate) =>{
+Cypress.Commands.add('checkForExistingCase', function (forceCreate){
         let caseExists = false
         const elem = '.govuk-link[href^="case"]';
 
@@ -405,7 +405,7 @@ Cypress.Commands.add('checkForExistingCase', (forceCreate) =>{
                 cy.createCase();
             }
 
-            //return caseExists; //Current limitation with cypress (cant return with cusotm commnds calling cy commands))
+            //return cy.wrap(caseExists).as('caseEx'); //Current limitation with cypress (cant return with cusotm commands calling cy commands))
 
 });
 
