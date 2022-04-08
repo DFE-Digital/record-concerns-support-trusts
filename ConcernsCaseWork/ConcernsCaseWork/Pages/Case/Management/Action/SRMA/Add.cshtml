@@ -110,64 +110,53 @@
                 </form>
 
 				<script type="application/javascript" nonce="@nonce">
-                    $(function () {
-                        let validator = formValidator($("#add-srma-form")[0]);
-                        validator.addValidator('srma-notes', [{
-                            method: function(field) {
-                                return true; @* not mandatory *@
-                            },
-                            message: 'You have not recorded any notes'
-                        },
-                        {
-                            method: function(field) {
-                                return field.value.trim().length <= @Model.NotesMaxLength;
-                            },
-                            message: 'The notes section contains too many characters'
-                        }]);
+					$(function () {
+						let validator = formValidator($("#add-srma-form")[0]);
+						addSRMANotesValidator(validator);
 
-                        validator.addValidator('status', [{
-                            method: function(field) {
-                                return ((typeof(field) != "undefined") && field.value.trim().length > 0);
-                            },
-                            message: 'Select status'
-                        }]);
+						validator.addValidator('status', [{
+							method: function(field) {
+								return ((typeof(field) != "undefined") && field.value.trim().length > 0);
+							},
+							message: 'Select status'
+						}]);
 
-                        validator.addValidator('dtr-day', [{
-                          method: function(field, params) {
-                            return (params.day.value.length !== 0 && params.month.value.length !== 0 && params.year.value !== 0);
-                          },
-                          message: 'Enter a valid date',
-                          params: {
-                            day: document.getElementById('dtr-day'),
-                            month: document.getElementById('dtr-month'),
-                            year: document.getElementById('dtr-year')
-                          }
-                        }, {
-                          method: function(field, params) {
-                            if(!isValidDate(params)) {
-                                return false;
-                            }
-                            var d = new Date(parseInt(params.year.value, 10), parseInt(params.month.value, 10) - 1, parseInt(params.day.value, 10) - 1);
-                            return d instanceof Date && !isNaN(d);
-                          },
-                          message: 'Enter the date SRMA was offered to the trust',
-                          params: {
-                            day: document.getElementById('dtr-day'),
-                            month: document.getElementById('dtr-month'),
-                            year: document.getElementById('dtr-year')
-                          }
-                        }]);
+						validator.addValidator('dtr-day', [{
+						  method: function(field, params) {
+							return (params.day.value.length !== 0 && params.month.value.length !== 0 && params.year.value !== 0);
+						  },
+						  message: 'Enter a valid date',
+						  params: {
+							day: document.getElementById('dtr-day'),
+							month: document.getElementById('dtr-month'),
+							year: document.getElementById('dtr-year')
+						  }
+						}, {
+						  method: function(field, params) {
+							if(!isValidDate(params)) {
+								return false;
+							}
+							var d = new Date(parseInt(params.year.value, 10), parseInt(params.month.value, 10) - 1, parseInt(params.day.value, 10) - 1);
+							return d instanceof Date && !isNaN(d);
+						  },
+						  message: 'Enter the date SRMA was offered to the trust',
+						  params: {
+							day: document.getElementById('dtr-day'),
+							month: document.getElementById('dtr-month'),
+							year: document.getElementById('dtr-year')
+						  }
+						}]);
 
-                        function isValidDate(date) {
-                            return !isNaN(date.year.value)
-                                && !isNaN(date.month.value)
-                                && !isNaN(date.day.value)
-                                && date.month.value >= 1 && date.month.value <= 12
-                                && date.day.value >= 1 && date.month.value <= 31;
-                        }
+						function isValidDate(date) {
+							return !isNaN(date.year.value)
+								&& !isNaN(date.month.value)
+								&& !isNaN(date.day.value)
+								&& date.month.value >= 1 && date.month.value <= 12
+								&& date.day.value >= 1 && date.month.value <= 31;
+						}
 
-                        autoResizer();
-                    });
+						autoResizer();
+					});
 				</script>
             }
 
