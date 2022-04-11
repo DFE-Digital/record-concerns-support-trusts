@@ -108,12 +108,19 @@
                         <th scope="row" class="govuk-table-case-details__header">Date accepted</th>
                         <td class="govuk-table__cell">
                             @{
-                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.SRMA.DateAccepted));
+								if (Model.SRMA.DateAccepted.HasValue)
+								{
+									RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.SRMA.DateAccepted.Value));
+								}
+								else
+								{
+									RenderEmptyLabel();
+								}
                             }
                         </td>
                         <td class="govuk-table__cell govuk-table__header__right">
                             @{
-                                RenderLink(Model.SRMA.DateAccepted, "SRMA date accepted", "#");
+                                RenderLink(Model.SRMA.DateAccepted, "SRMA date accepted", $@"{Request.Path}\dateaccepted");
                             }
                         </td>
                     </tr>

@@ -16,5 +16,6 @@ namespace ConcernsCaseWork.Services.Cases
 		public Task SetOfferedDate(long srmaId, DateTime offeredDate);
 		public Task SetNotes(long srmaId, string notes);
 		public Task SetVisitDates(long srmaId, DateTime startDate, DateTime? endDate);
+		public Task SetDateAccepted(long srmaId, DateTime? acceptedDate);
 	}
 }

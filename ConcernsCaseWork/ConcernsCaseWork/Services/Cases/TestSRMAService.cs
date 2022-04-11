@@ -89,5 +89,11 @@ namespace ConcernsCaseWork.Services.Cases
 			srma.DateVisitEnd = endDate;
 			return Task.CompletedTask;
 		}
+
+		public Task SetDateAccepted(long srmaId, DateTime? acceptedDate)
+		{
+			SRMAs.Single(s => s.Id == srmaId).DateAccepted = acceptedDate;
+			return Task.CompletedTask;
+		}
 	}
 }
