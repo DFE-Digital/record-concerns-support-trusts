@@ -79,9 +79,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				await _srmaModelService.SetVisitDates(srmaId, visitDates.startDate, visitDates.endDate);
 				return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}");
 			}
-			catch (ApplicationException ex)
+			catch (InvalidOperationException ex)
 			{
-				_logger.LogError("Case::Action::SRMA::EditDateOfVisitPageModel::OnPostAsync::ApplicationException - {Message}", ex.Message);
 				TempData["SRMA.Message"] = ex.Message;
 			}
 			catch (Exception ex)
@@ -110,15 +109,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		{
 
 			if (!DateTimeHelper.TryParseExact(startDateString, out DateTime start_dt))
-				throw new ApplicationException($"Start date {startDateString} is an invalid date");
+				throw new InvalidOperationException($"Start date {startDateString} is an invalid date");
 
 			if (!string.IsNullOrEmpty(endDateString))
 			{
 				if (!DateTimeHelper.TryParseExact(endDateString, out DateTime end_dt))
-					throw new ApplicationException($"End date {endDateString} is an invalid date");
+					throw new InvalidOperationException($"End date {endDateString} is an invalid date");
 
 				if (end_dt < start_dt)
-					throw new ApplicationException($"Please ensure end date is same as or after start date.");
+					throw new InvalidOperationException($"Please ensure end date is same as or after start date.");
 			}
 
 		}
