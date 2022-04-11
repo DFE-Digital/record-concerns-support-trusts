@@ -100,7 +100,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA.Edit
 		}
 
 		[Test]
-		public async Task WhenOnPostEditIssue_RouteData_RequestForm_()
+		public async Task WhenOnPostAsync_RouteData_RequestForm_Return_To_SRMA_Page()
 		{
 			// arrange 
 			var mockSRMAModelService = new Mock<ISRMAService>();
