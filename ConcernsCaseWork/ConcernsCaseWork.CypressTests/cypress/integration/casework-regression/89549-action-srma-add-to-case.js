@@ -114,7 +114,7 @@ describe("User can add action srma to existing case", () => {
 			expect($inf2.text()).to.match(/(1 character too many)/i);      
 			})
 			cy.get('[id="add-srma-button"]').click();
-			cy.get('[class="govuk-list govuk-error-summary__list"]').should('contain.text', 'The notes section contains too many characters');
+			cy.get('[class="govuk-list govuk-error-summary__list"]').should('contain.text', 'Notes must be 500 characters or less');
 			cy.reload();
 
 	});
@@ -225,8 +225,6 @@ describe("User can add action srma to existing case", () => {
 			cy.wrap(term.trim()).as("stText");
 
 			cy.log("Status set as "+term);
-			//cy.log("inside then=> this.stText2 ="+this.stText);//used for assrtions outside of this test scope
-
 			cy.get('[id="add-srma-button"]').click();
 
 			cy.get('[class="govuk-table__row"]').should(($row) => {
@@ -245,7 +243,7 @@ describe("User can add action srma to existing case", () => {
 			cy.get('[id="dtr-year"]').type("2021");
 	
 			cy.get('[id="add-srma-button"]').click();// We need to retrun to the page to handle value updates
-			cy.get('[class="govuk-link"]').eq(1).click();// We need to retrun to the page to handle value updates
+			cy.get('[class="govuk-link"]').eq(1).click();
 
 			cy.get('[id="dtr-day"]').invoke('val').then(dtrday => {
 				cy.wrap(dtrday.trim()).as("day");
@@ -306,7 +304,24 @@ describe("User can add action srma to existing case", () => {
 	});
 
 	it("User can Add/Edit SRMA Notes", function () {
-		cy.log("test");
+
+		let date = new Date();
+		const lstring ='Cypress test run '+date;
+
+		cy.get('[class="govuk-link"]').eq(6).click();
+
+        cy.get('#srma-notes').should('be.visible');
+        cy.get('#srma-notes-info').then(($inf) =>{
+            //expect($inf).to.be.visible
+            //expect($inf.text()).to.match(/(500 characters remaining)/i)   
+
+            //let text = Cypress._.repeat(lstring, 10)
+            //expect(text).to.have.length(500);
+            
+        cy.get('#srma-notes').invoke('val', lstring);
+        //cy.get('#srma-notes').type('{shift}{alt}'+ '1');
+       
+		})
 	});
 
 	it("User on the SRMA page can see conditional buttons based on Status", function () {
