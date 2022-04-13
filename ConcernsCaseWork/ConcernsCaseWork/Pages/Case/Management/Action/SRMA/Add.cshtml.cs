@@ -7,12 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using CaseActionModels = ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.CaseActions;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 {
@@ -33,9 +31,22 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			_logger = logger;
 		}
 
-		public async Task OnGetAsync()
+		public async Task<IActionResult> OnGetAsync()
 		{
 			_logger.LogInformation("Case::Action::SRMA::AddPageModel::OnGetAsync");
+
+			try
+			{
+				GetRouteData();
+				return Page();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::SRMA::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+
+				TempData["Error.Message"] = ErrorOnGetPage;
+				return Page();
+			}
 		}
 
 		public async Task<IActionResult> OnPostAsync()
@@ -48,7 +59,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 				var srma = CreateSRMA(caseUrn);
 				await _srmaModelService.SaveSRMA(srma);
 
-				return Redirect($"/case/{srma.CaseUrn}/management");
+				return RedirectToPage($"/case/{srma.CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
@@ -116,9 +127,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			}
 		}
 
-		private CaseActionModels.SRMAModel CreateSRMA(long caseUrn)
+		private SRMAModel CreateSRMA(long caseUrn)
 		{
-			var srma = new CaseActionModels.SRMAModel();
+			var srma = new SRMAModel();
 
 			srma.CaseUrn = caseUrn;
 
