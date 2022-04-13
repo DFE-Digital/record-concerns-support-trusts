@@ -97,11 +97,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			var dtr_month = Request.Form["dtr-month"];
 			var dtr_year = Request.Form["dtr-year"];
 
-			var allowedFormats = new string[] { "dd-MM-yyyy", "d-M-yyyy" };
-
 			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
 
-			if (!DateTime.TryParseExact(dtString, allowedFormats, CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.None, out DateTime dateOffered))
+			if (!DateTimeHelper.TryParseExact(dtString, out DateTime dateOffered))
 			{
 				throw new Exception($"SRMA offered date is not valid {dtString}");
 			}
@@ -133,9 +131,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			var dtr_year = Request.Form["dtr-year"];
 			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
 
-			var allowedFormats = new string[] { "dd-MM-yyyy", "d-M-yyyy" };
-			srma.DateOffered = DateTime.ParseExact(dtString, allowedFormats, CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.None);
-
+			srma.DateOffered = DateTimeHelper.ParseExact(dtString);
+				
 			var notes = Request.Form["srma-notes"].ToString();
 
 			srma.Notes = notes;

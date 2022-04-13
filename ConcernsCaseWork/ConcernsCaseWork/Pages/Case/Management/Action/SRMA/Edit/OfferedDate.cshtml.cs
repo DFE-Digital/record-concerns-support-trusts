@@ -116,9 +116,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				validationErrors.Add("SRMA Id not found");
 			}
 
-			var allowedFormats = new string[] { "dd-MM-yyyy", "d-M-yyyy" };
 			var dtString = $"{Request.Form["dtr-day"]}-{Request.Form["dtr-month"]}-{Request.Form["dtr-year"]}";
-			if (!DateTime.TryParseExact(dtString, allowedFormats, CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.None, out DateTime dateOffered))
+
+			if (!DateTimeHelper.TryParseExact(dtString, out DateTime dateOffered))
 			{
 				validationErrors.Add("SRMA offered date is not valid");
 			}
