@@ -147,7 +147,7 @@
                         </td>
                         <td class="govuk-table__cell govuk-table__header__right">
                             @{
-                                RenderLink(Model.SRMA.DateVisitStart, "SRMA Dates of visit", $@"{Request.Path}\visitdates");
+                                RenderLink(Model.SRMA.DateVisitStart, "SRMA Dates of visit", $@"{Request.Path}\visitdates"); 
                             }
                         </td>
                     </tr>
@@ -158,12 +158,19 @@
                         <th scope="row" class="govuk-table-case-details__header">Date report sent to trust</th>
                         <td class="govuk-table__cell">
                             @{
-                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.SRMA.DateReportSentToTrust));
+								if (Model.SRMA.DateReportSentToTrust.HasValue)
+								{
+									RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.SRMA.DateReportSentToTrust.Value));
+								}
+								else
+								{
+									RenderEmptyLabel();
+								}
                             }
                         </td>
                         <td class="govuk-table__cell govuk-table__header__right">
                             @{
-                                RenderLink(Model.SRMA.DateReportSentToTrust, "SRMA Date report sent to trust", "#");
+								RenderLink(Model.SRMA.DateReportSentToTrust, "SRMA Date report sent to trust", $@"{Request.Path}\datereportsent");
                             }
                         </td>
                     </tr>
@@ -173,7 +180,7 @@
                         <th scope="row" class="govuk-table-case-details__header">Notes</th>
                         <td class="govuk-table__cell">
                             @{
-                                RenderValue(Model.SRMA.Notes);
+								RenderValue(Model.SRMA.Notes);
                             }
                         </td>
                         <td class="govuk-table__cell govuk-table__header__right">
