@@ -11,7 +11,6 @@ namespace ConcernsCaseWork.Services.Cases
 	{
 		private readonly List<SRMAModel> SRMAs;
 		private readonly Random random;
-		private readonly bool autoGenerateSRMAs = false;
 
 		public TestSRMAService()
 		{
@@ -21,7 +20,6 @@ namespace ConcernsCaseWork.Services.Cases
 
 		public Task SaveSRMA(SRMAModel srma)
 		{
-			srma.Notes = srma.Notes;
 			srma.Id = random.Next(100000);
 			SRMAs.Add(srma);
 
@@ -31,30 +29,13 @@ namespace ConcernsCaseWork.Services.Cases
 		public Task<IEnumerable<SRMAModel>> GetSRMAsForCase(long caseUrn)
 		{
 			var srmaList = SRMAs.Where(s => s.CaseUrn == caseUrn);
-			if (autoGenerateSRMAs)
-				return Task.FromResult(srmaList?.Count() > 0 ? srmaList : CreateTestData(caseUrn));
-			else
-				return Task.FromResult(srmaList);
+
+			return Task.FromResult(srmaList);
 		}
 
 		public Task<SRMAModel> GetSRMAById(long srmaId)
 		{
 			return Task.FromResult(SRMAs.SingleOrDefault(s => s.Id == srmaId));
-		}
-
-		private List<SRMAModel> CreateTestData(long caseUrn)
-		{
-			var testSRMA = new SRMAModel
-			{
-				Id = DateTime.Now.Millisecond,
-				CaseUrn = caseUrn,
-				DateOffered = DateTime.Now,
-				Notes = "Auto generated test data",
-				Status = SRMAStatus.TrustConsidering,
-			};
-
-			SRMAs.Add(testSRMA);
-			return SRMAs;
 		}
 
 		public Task SetStatus(long srmaId, SRMAStatus status)

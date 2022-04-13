@@ -231,12 +231,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var pageResponse = await pageModel.OnPostAsync();
 
 			// assert
-			Assert.That(pageResponse, Is.InstanceOf<RedirectToPageResult>());
-			var page = pageResponse as RedirectToPageResult;
+			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
+			var page = pageResponse as RedirectResult;
 
 			Assert.IsEmpty(pageModel.TempData);
 			Assert.That(page, Is.Not.Null);
-			Assert.That(page.PageName, Is.EqualTo($"/case/{caseUrn}/management"));
+			Assert.That(page.Url, Is.EqualTo($"/case/{caseUrn}/management"));
 		}
 
 		private static AddPageModel SetupAddPageModel(

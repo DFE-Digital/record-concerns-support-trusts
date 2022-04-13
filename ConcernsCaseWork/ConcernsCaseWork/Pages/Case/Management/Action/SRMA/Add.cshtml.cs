@@ -59,7 +59,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 				var srma = CreateSRMA(caseUrn);
 				await _srmaModelService.SaveSRMA(srma);
 
-				return RedirectToPage($"/case/{srma.CaseUrn}/management");
+				return Redirect($"/case/{srma.CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
@@ -129,26 +129,27 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 
 		private SRMAModel CreateSRMA(long caseUrn)
 		{
-			var srma = new SRMAModel();
-
-			srma.CaseUrn = caseUrn;
-
 			var status = Request.Form["status"];
-
-			srma.Status = Enum.Parse<SRMAStatus>(status);
-
+			var notes = Request.Form["srma-notes"].ToString();
 			var dtr_day = Request.Form["dtr-day"];
 			var dtr_month = Request.Form["dtr-month"];
 			var dtr_year = Request.Form["dtr-year"];
 			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
+			var dateOffered = DateTimeHelper.ParseExact(dtString);
 
-			srma.DateOffered = DateTimeHelper.ParseExact(dtString);
-				
-			var notes = Request.Form["srma-notes"].ToString();
+			var srma = new SRMAModel(
+				0,
+				dateOffered,
+				null,
+				null,
+				null,
+				null,
+				Enum.Parse<SRMAStatus>(status),
+				notes,
+				SRMAReasonOffered.Unknown
+				);
 
-			srma.Notes = notes;
-
-
+			srma.CaseUrn = caseUrn;
 			return srma;
 		}
 	}
