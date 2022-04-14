@@ -70,7 +70,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditOfferedDatePageModel::OnPostEditOfferedDate::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::Action::SRMA::EditNotesPageModel::OnPostAsync::Exception - {Message}", ex.Message);
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
