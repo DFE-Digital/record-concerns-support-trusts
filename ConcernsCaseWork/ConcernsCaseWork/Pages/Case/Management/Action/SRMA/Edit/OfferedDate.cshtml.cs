@@ -32,19 +32,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 		public async Task<ActionResult> OnGetAsync()
 		{
+			long srmaId = 0;
+
 			try
 			{
 				_logger.LogInformation("Case::EditOfferedDatePageModel::OnGetAsync");
 
-				var validationResponse = ValidateInputsForGet();
-				if (validationResponse.validationErrors.Count() > 0)
-				{
-					TempData["SRMA.Message"] = validationResponse.validationErrors;
-				}
-				else
-				{
-					SRMA = await srmaService.GetSRMAById(validationResponse.srmaId);
-				}
+				(_, srmaId) = GetRouteData();
+
+				SRMA = await srmaService.GetSRMAById(srmaId);
 			}
 			catch (Exception ex)
 			{
@@ -55,49 +51,43 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			return Page();
 		}
 
-		public async Task<ActionResult> OnPostAsync(string url)
+		public async Task<ActionResult> OnPostAsync()
 		{
+			long caseUrn = 0;
+			long srmaId = 0;
+
 			try
 			{
-				_logger.LogInformation("Case::EditOfferedDatePageModel::OnPostEditOfferedDate");
+				_logger.LogInformation("Case::Action::SRMA::EditOfferedDatePageModel::OnPostAsync");
 
-				var validationResponse = ValidateInputsForPost();
+				(caseUrn, srmaId) = GetRouteData();
 
-				if (validationResponse.validationErrors.Count() > 0)
+				var dtr_day = Request.Form["dtr-day"].ToString();
+				var dtr_month = Request.Form["dtr-month"].ToString();
+				var dtr_year = Request.Form["dtr-year"].ToString();
+
+				var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
+
+				if (!DateTimeHelper.TryParseExact(dtString, out DateTime dt))
 				{
-					TempData["SRMA.Message"] = validationResponse.validationErrors;
-					return Page();
+					throw new InvalidOperationException($"{dtString} is an invalid date");
 				}
 
-				await srmaService.SetOfferedDate(validationResponse.srmaId, validationResponse.dateOffered);
-				return Redirect($"/case/{validationResponse.caseId}/management/action/srma/{validationResponse.srmaId}");
+				await srmaService.SetOfferedDate(srmaId, dt);
+				return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}");
+			}
+			catch (InvalidOperationException ex)
+			{
+				TempData["SRMA.Message"] = ex.Message;
+				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditOfferedDatePageModel::OnPostEditOfferedDate::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::Action::SRMA::EditOfferedDatePageModel::OnPostAsync::Exception - {Message}", ex.Message);
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
 			return Page();
-		}
-
-		private (List<string> validationErrors, long srmaId, long caseId) ValidateInputsForGet()
-		{
-			var validationErrors = new List<string>();
-
-			var caseUrnStr = Convert.ToString(RouteData.Values["caseUrn"]);
-			if (!long.TryParse(caseUrnStr, out long caseUrn))
-			{
-				validationErrors.Add("Invalid case Id");
-			}
-
-			var srmaIdStr = Convert.ToString(RouteData.Values["srmaId"]);
-			if (!long.TryParse(srmaIdStr, out long srmaId))
-			{
-				validationErrors.Add("SRMA Id not found");
-			}
-
-			return (validationErrors, srmaId, caseUrn);
 		}
 
 		private (List<string> validationErrors, long srmaId, DateTime dateOffered, long caseId) ValidateInputsForPost()
@@ -124,6 +114,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			}
 
 			return (validationErrors, srmaId, dateOffered, caseUrn);
+		}
+
+		private (long caseUrn, long srmaId) GetRouteData()
+		{
+			var caseUrnValue = RouteData.Values["caseUrn"];
+			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
+				throw new Exception("CaseUrn is null or invalid to parse");
+
+			var srmaIdValue = RouteData.Values["srmaId"];
+			if (srmaIdValue == null || !long.TryParse(srmaIdValue.ToString(), out long srmaId) || srmaId == 0)
+				throw new Exception("srmaId is null or invalid to parse");
+
+			return (caseUrn, srmaId);
 		}
 	}
 }
