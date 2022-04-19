@@ -1,6 +1,4 @@
-﻿using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Helpers;
-using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
@@ -8,25 +6,22 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class EditOfferedDatePageModel : AbstractPageModel
+	public class EditDateOfferedPageModel : AbstractPageModel
 	{
-		private readonly ISRMAService srmaService;
-		private readonly ILogger<EditOfferedDatePageModel> _logger;
+		private readonly ISRMAService _srmaModelService;
+		private readonly ILogger<EditDateOfferedPageModel> _logger;
 
-		public SRMAModel SRMA { get; set; }
+		public SRMAModel SRMAModel { get; set; }
 
-		public EditOfferedDatePageModel(ISRMAService srmaService, ILogger<EditOfferedDatePageModel> logger)
+		public EditDateOfferedPageModel(ISRMAService srmaService, ILogger<EditDateOfferedPageModel> logger)
 		{
-			this.srmaService = srmaService;
+			_srmaModelService = srmaService;
 			_logger = logger;
 		}
 
@@ -36,15 +31,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 			try
 			{
-				_logger.LogInformation("Case::EditOfferedDatePageModel::OnGetAsync");
+				_logger.LogInformation("Case::EditDateOfferedPageModel::OnGetAsync");
 
 				(_, srmaId) = GetRouteData();
 
-				SRMA = await srmaService.GetSRMAById(srmaId);
+				SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditOfferedDatePageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::EditDateOfferedPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 
@@ -58,7 +53,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 			try
 			{
-				_logger.LogInformation("Case::Action::SRMA::EditOfferedDatePageModel::OnPostAsync");
+				_logger.LogInformation("Case::Action::SRMA::EditDateOfferedPageModel::OnPostAsync");
 
 				(caseUrn, srmaId) = GetRouteData();
 
@@ -73,7 +68,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 					throw new InvalidOperationException($"{dtString} is an invalid date");
 				}
 
-				await srmaService.SetOfferedDate(srmaId, dt);
+				await _srmaModelService.SetOfferedDate(srmaId, dt);
 				return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}");
 			}
 			catch (InvalidOperationException ex)
@@ -83,37 +78,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Action::SRMA::EditOfferedDatePageModel::OnPostAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::Action::SRMA::EditDateOfferedPageModel::OnPostAsync::Exception - {Message}", ex.Message);
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
 			return Page();
-		}
-
-		private (List<string> validationErrors, long srmaId, DateTime dateOffered, long caseId) ValidateInputsForPost()
-		{
-			var validationErrors = new List<string>();
-			
-			var caseUrnStr = Convert.ToString(RouteData.Values["caseUrn"]);
-			if (!long.TryParse(caseUrnStr, out long caseUrn))
-			{
-				validationErrors.Add("Invalid case Id");
-			}
-
-			var srmaIdStr = Convert.ToString(RouteData.Values["srmaId"]);
-			if (!long.TryParse(srmaIdStr, out long srmaId))
-			{
-				validationErrors.Add("SRMA Id not found");
-			}
-
-			var dtString = $"{Request.Form["dtr-day"]}-{Request.Form["dtr-month"]}-{Request.Form["dtr-year"]}";
-
-			if (!DateTimeHelper.TryParseExact(dtString, out DateTime dateOffered))
-			{
-				validationErrors.Add("SRMA offered date is not valid");
-			}
-
-			return (validationErrors, srmaId, dateOffered, caseUrn);
 		}
 
 		private (long caseUrn, long srmaId) GetRouteData()
