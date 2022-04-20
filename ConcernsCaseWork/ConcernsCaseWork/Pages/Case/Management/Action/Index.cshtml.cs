@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CaseActions = ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.CaseActions;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action
 {
@@ -83,7 +83,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 						CaseActions.AddRange(await _srmaService.GetSRMAsForCase(caseUrn));
 
 						//Check if case action is SRMA and status is not deployed
-						var openSrma = CaseActions.Where(ca => ca is CaseActions.SRMAModel && !(((CaseActions.SRMAModel)ca).Status.CompareTo(SRMAStatus.Deployed) == 0)).FirstOrDefault();
+						var openSrma = CaseActions.Where(ca => ca is SRMAModel && !(((SRMAModel)ca).Status.CompareTo(SRMAStatus.Deployed) == 0)).FirstOrDefault();
 
 						if (openSrma != null)
 							throw new ApplicationException("There is already an open SRMA action linked to this case. Please resolve that before opening another one.");

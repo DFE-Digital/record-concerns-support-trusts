@@ -7,12 +7,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using CaseActionModels = ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.CaseActions;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 {
@@ -33,30 +31,49 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			_logger = logger;
 		}
 
-		public async Task OnGetAsync()
+		public async Task<IActionResult> OnGetAsync()
 		{
 			_logger.LogInformation("Case::Action::SRMA::AddPageModel::OnGetAsync");
+
+			try
+			{
+				GetRouteData();
+				return Page();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::SRMA::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+
+				TempData["Error.Message"] = ErrorOnGetPage;
+				return Page();
+			}
 		}
 
 		public async Task<IActionResult> OnPostAsync()
 		{
 			try
 			{
+				var caseUrn = GetRouteData();
+
 				ValidateSRMA();
 
-				var caseUrn = GetRouteData();
 				var srma = CreateSRMA(caseUrn);
 				await _srmaModelService.SaveSRMA(srma);
 
 				return Redirect($"/case/{srma.CaseUrn}/management");
+			}
+			catch (InvalidOperationException ex)
+			{
+				TempData["SRMA.Message"] = ex.Message;
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Case::SRMA::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
-				return Page();
 			}
+
+			return Page();
 		}
 
 		private IEnumerable<RadioItem> getStatuses()
@@ -97,13 +114,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			var dtr_month = Request.Form["dtr-month"];
 			var dtr_year = Request.Form["dtr-year"];
 
-			var allowedFormats = new string[] { "dd-MM-yyyy", "d-M-yyyy" };
-
 			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
 
-			if (!DateTime.TryParseExact(dtString, allowedFormats, CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.None, out DateTime dateOffered))
+			if (!DateTimeHelper.TryParseExact(dtString, out DateTime dateOffered))
 			{
-				throw new Exception($"SRMA offered date is not valid {dtString}");
+				throw new InvalidOperationException($"SRMA offered date is not valid {dtString}");
 			}
 
 			var srma_notes = Request.Form["srma-notes"];
@@ -118,28 +133,28 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			}
 		}
 
-		private CaseActionModels.SRMAModel CreateSRMA(long caseUrn)
+		private SRMAModel CreateSRMA(long caseUrn)
 		{
-			var srma = new CaseActionModels.SRMAModel();
-
-			srma.CaseUrn = caseUrn;
-
 			var status = Request.Form["status"];
-
-			srma.Status = Enum.Parse<SRMAStatus>(status);
-
+			var notes = Request.Form["srma-notes"].ToString();
 			var dtr_day = Request.Form["dtr-day"];
 			var dtr_month = Request.Form["dtr-month"];
 			var dtr_year = Request.Form["dtr-year"];
 			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
+			var dateOffered = DateTimeHelper.ParseExact(dtString);
 
-			var allowedFormats = new string[] { "dd-MM-yyyy", "d-M-yyyy" };
-			srma.DateOffered = DateTime.ParseExact(dtString, allowedFormats, CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.None);
-
-			var notes = Request.Form["srma-notes"].ToString();
-
-			srma.Notes = notes;
-
+			var srma = new SRMAModel(
+				0,
+				caseUrn,
+				dateOffered,
+				null,
+				null,
+				null,
+				null,
+				Enum.Parse<SRMAStatus>(status),
+				notes,
+				SRMAReasonOffered.Unknown
+				);
 
 			return srma;
 		}

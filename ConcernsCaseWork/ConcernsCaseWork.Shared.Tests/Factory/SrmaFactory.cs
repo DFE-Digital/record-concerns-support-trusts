@@ -20,14 +20,22 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 
 		public static SRMAModel BuildSrmaModel(SRMAStatus status)
 		{
-			return new SRMAModel
-			{
-				Id = Fixture.Create<long>(),
-				CaseUrn = Fixture.Create<long>(),
-				DateOffered = Fixture.Create<DateTime>(),
-				Status = status,
-				Notes = Fixture.Create<string>()
-			};
+			var srma = new SRMAModel
+			(
+				Fixture.Create<long>(),
+				Fixture.Create<long>(),
+				Fixture.Create<DateTime>(),
+				Fixture.Create<DateTime>(),
+				Fixture.Create<DateTime>(),
+				Fixture.Create<DateTime>(),
+				Fixture.Create<DateTime>(),
+				status,
+				Fixture.Create<string>(),
+				Fixture.Create<SRMAReasonOffered>()
+			);
+
+			srma.CaseUrn = Fixture.Create<long>();
+			return srma;
 		}
 	}
 }
