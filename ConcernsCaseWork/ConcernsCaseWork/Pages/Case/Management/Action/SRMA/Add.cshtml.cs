@@ -139,6 +139,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 
 			var srma = new SRMAModel(
 				0,
+				caseUrn,
 				dateOffered,
 				null,
 				null,
@@ -149,7 +150,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 				SRMAReasonOffered.Unknown
 				);
 
-			srma.CaseUrn = caseUrn;
 			return srma;
 		}
 	}

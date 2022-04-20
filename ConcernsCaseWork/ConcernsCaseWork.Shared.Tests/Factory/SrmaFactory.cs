@@ -23,6 +23,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			var srma = new SRMAModel
 			(
 				Fixture.Create<long>(),
+				Fixture.Create<long>(),
 				Fixture.Create<DateTime>(),
 				Fixture.Create<DateTime>(),
 				Fixture.Create<DateTime>(),

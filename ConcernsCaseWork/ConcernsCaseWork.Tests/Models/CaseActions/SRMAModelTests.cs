@@ -21,6 +21,7 @@ namespace ConcernsCaseWork.Tests.Models
 
 			var srmaModel = new SRMAModel(
 				1,
+				1,
 				date,
 				date, 
 				date, 
@@ -33,6 +34,7 @@ namespace ConcernsCaseWork.Tests.Models
 			
 			// assert
 			Assert.That(srmaModel.Id, Is.EqualTo(1));
+			Assert.That(srmaModel.CaseUrn, Is.EqualTo(1));
 			Assert.That(srmaModel.DateOffered, Is.EqualTo(date));
 			Assert.That(srmaModel.DateAccepted, Is.EqualTo(date));
 			Assert.That(srmaModel.DateReportSentToTrust, Is.EqualTo(date));

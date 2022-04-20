@@ -15,9 +15,9 @@ namespace ConcernsCaseWork.Models.CaseActions
 		public string Notes { get; set; }
 		public SRMAReasonOffered Reason { get; set; }
 
-		public SRMAModel(long id, DateTime dateOffered, DateTime? dateAccepted, DateTime? dateReportSentToTrust, DateTime? dateVisitStart, DateTime? dateVisitEnd, SRMAStatus status, string notes, SRMAReasonOffered reason) =>
-		(Id, DateOffered, DateAccepted, DateReportSentToTrust, DateVisitStart, DateVisitEnd, Status, Notes, Reason) =
-		(id, dateOffered, dateAccepted, dateReportSentToTrust, dateVisitStart, dateVisitEnd, status, notes, reason);
+		public SRMAModel(long id, long caseUrn, DateTime dateOffered, DateTime? dateAccepted, DateTime? dateReportSentToTrust, DateTime? dateVisitStart, DateTime? dateVisitEnd, SRMAStatus status, string notes, SRMAReasonOffered reason) =>
+		(Id, CaseUrn, DateOffered, DateAccepted, DateReportSentToTrust, DateVisitStart, DateVisitEnd, Status, Notes, Reason) =
+		(id, caseUrn, dateOffered, dateAccepted, dateReportSentToTrust, dateVisitStart, dateVisitEnd, status, notes, reason);
 
 	}
 }
