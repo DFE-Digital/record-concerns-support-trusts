@@ -168,7 +168,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			// assert
 			Assert.That(pageResponse, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["SRMA.Message"], Is.EqualTo("SRMA offered date is not valid 00-00-0000"));
 		}
 
 		[Test]

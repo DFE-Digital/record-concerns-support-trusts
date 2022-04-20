@@ -53,9 +53,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 		{
 			try
 			{
+				var caseUrn = GetRouteData();
+
 				ValidateSRMA();
 
-				var caseUrn = GetRouteData();
 				var srma = CreateSRMA(caseUrn);
 				await _srmaModelService.SaveSRMA(srma);
 
