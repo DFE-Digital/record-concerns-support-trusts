@@ -61,13 +61,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 
 				return Redirect($"/case/{srma.CaseUrn}/management");
 			}
+			catch (InvalidOperationException ex)
+			{
+				TempData["SRMA.Message"] = ex.Message;
+			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Case::SRMA::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
-				return Page();
 			}
+
+			return Page();
 		}
 
 		private IEnumerable<RadioItem> getStatuses()
@@ -112,7 +117,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 
 			if (!DateTimeHelper.TryParseExact(dtString, out DateTime dateOffered))
 			{
-				throw new Exception($"SRMA offered date is not valid {dtString}");
+				throw new InvalidOperationException($"SRMA offered date is not valid {dtString}");
 			}
 
 			var srma_notes = Request.Form["srma-notes"];

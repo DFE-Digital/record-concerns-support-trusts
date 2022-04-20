@@ -10,104 +10,118 @@
     <partial name="_BannerError" />
 
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+		<div class="govuk-grid-column-two-thirds">
 
-            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-                <partial name="_Error" />
-            }
-            else
-            {
-                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+			{
+				<partial name="_Error" />
+			}
+			else
+			{
+				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-                <h1 class="govuk-heading-l">
-                    <span class="govuk-caption-m">Add to case</span>
-                    School Resource Management Adviser (SRMA)
-                </h1>
+				@if (!string.IsNullOrEmpty((string)TempData.Peek("SRMA.Message")))
+				{
+					<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
+						<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
+						<div class="govuk-error-summary__body">
+							<ul class="govuk-list govuk-error-summary__list">
+								<li>
+									<a href="#">@TempData["SRMA.Message"]</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				}
 
-                <form role="form" method="post" id="add-srma-form" novalidate>
+				<h1 class="govuk-heading-l">
+					<span class="govuk-caption-m">Add to case</span>
+					School Resource Management Adviser (SRMA)
+				</h1>
 
-                    @* Status *@
-                    <div class="govuk-form-group govuk-!-margin-top-9">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">What is the status of the SRMA?</h2>
-                            </legend>
-                            <div class="govuk-radios" data-module="govuk-radios">
-                                @{
-                                    int id = 0;
-                                }
-                                @foreach (var status in Model.SRMAStatuses)
-                                {
-                                    var idStr = id++ == 0 ? "status" : "status-" + id;
-                                    <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id">
-                                        <label class="govuk-label govuk-radios__label" for="@idStr">
-                                            <span>
-                                                @status.Text
-                                            </span>
-                                        </label>
-                                    </div>
-                                }
-                            </div>
-                        </fieldset>
-                    </div>
+				<form role="form" method="post" id="add-srma-form" novalidate>
 
-                    @* date *@
-                    <div class="govuk-form-group govuk-!-margin-top-9">
-                        <fieldset class="govuk-fieldset">
-                            <h2 class="govuk-heading-m">Date SRMA offered to Trust?</h2>
-                            <div class="govuk-date-input" id="dtr">
-                                <div class="govuk-date-input__item">
-                                    <div class="govuk-form-group">
-                                        <label class="govuk-label govuk-date-input__label" for="dtr-day">
-                                            Day
-                                        </label>
-                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day"
-                                           name="dtr-day" type="text" maxlength="2" inputmode="numeric" />
-                                    </div>
-                                </div>
-                                <div class="govuk-date-input__item">
-                                    <div class="govuk-form-group">
-                                        <label class="govuk-label govuk-date-input__label" for="dtr-month">
-                                            Month
-                                        </label>
-                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month"
-                                           name="dtr-month" type="text" maxlength="2" inputmode="numeric" />
-                                    </div>
-                                </div>
-                                <div class="govuk-date-input__item">
-                                    <div class="govuk-form-group">
-                                        <label class="govuk-label govuk-date-input__label" for="dtr-year">
-                                            Year
-                                        </label>
-                                        <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year"
-                                           name="dtr-year" type="text" maxlength="4" inputmode="numeric" />
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
+					@* Status *@
+					<div class="govuk-form-group govuk-!-margin-top-9">
+						<fieldset class="govuk-fieldset">
+							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+								<h2 class="govuk-heading-m">What is the status of the SRMA?</h2>
+							</legend>
+							<div class="govuk-radios" data-module="govuk-radios">
+								@{
+									int id = 0;
+								}
+								@foreach (var status in Model.SRMAStatuses)
+								{
+									var idStr = id++ == 0 ? "status" : "status-" + id;
+									<div class="govuk-radios__item">
+										<input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id">
+										<label class="govuk-label govuk-radios__label" for="@idStr">
+											<span>
+												@status.Text
+											</span>
+										</label>
+									</div>
+								}
+							</div>
+						</fieldset>
+					</div>
 
-                    @* Notes *@
-                    <div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
-                        <div class="govuk-form-group">
-                            <h2 class="govuk-heading-m">Notes</h2>
-                            <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="srma-notes" name="srma-notes" rows="3" aria-describedby="srma-notes-info"></textarea>
-                        </div>
-                        <div id="srma-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-                            You can enter up to @Model.NotesMaxLength characters
-                        </div>
-                    </div>
+					@* date *@
+					<div class="govuk-form-group govuk-!-margin-top-9">
+						<fieldset class="govuk-fieldset">
+							<h2 class="govuk-heading-m">Date SRMA offered to Trust?</h2>
+							<div class="govuk-date-input" id="dtr">
+								<div class="govuk-date-input__item">
+									<div class="govuk-form-group">
+										<label class="govuk-label govuk-date-input__label" for="dtr-day">
+											Day
+										</label>
+										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day"
+											   name="dtr-day" type="text" maxlength="2" inputmode="numeric" />
+									</div>
+								</div>
+								<div class="govuk-date-input__item">
+									<div class="govuk-form-group">
+										<label class="govuk-label govuk-date-input__label" for="dtr-month">
+											Month
+										</label>
+										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month"
+											   name="dtr-month" type="text" maxlength="2" inputmode="numeric" />
+									</div>
+								</div>
+								<div class="govuk-date-input__item">
+									<div class="govuk-form-group">
+										<label class="govuk-label govuk-date-input__label" for="dtr-year">
+											Year
+										</label>
+										<input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year"
+											   name="dtr-year" type="text" maxlength="4" inputmode="numeric" />
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					</div>
 
-                    <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
-                            Continue
-                        </button>
-                        <partial name="_Cancel" />
-                    </div>
+					@* Notes *@
+					<div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
+						<div class="govuk-form-group">
+							<h2 class="govuk-heading-m">Notes</h2>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="srma-notes" name="srma-notes" rows="3" aria-describedby="srma-notes-info"></textarea>
+						</div>
+						<div id="srma-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+							You can enter up to @Model.NotesMaxLength characters
+						</div>
+					</div>
 
-                </form>
+					<div class="govuk-button-group">
+						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
+							Continue
+						</button>
+						<partial name="_Cancel" />
+					</div>
+
+				</form>
 
 				<script type="application/javascript" nonce="@nonce">
 					$(function () {
@@ -158,9 +172,9 @@
 						autoResizer();
 					});
 				</script>
-            }
+			}
 
-        </div>
+		</div>
     </div>
 </div>
 
