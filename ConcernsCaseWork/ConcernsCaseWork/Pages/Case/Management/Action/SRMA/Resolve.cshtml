@@ -1,0 +1,37 @@
+﻿@page "/case/{urn:long}/management/action/srma/{srmaId:long}/resolve"
+@model ConcernsCaseWork.Pages.Case.Management.Action.Srma.ResolvePageModel
+
+@{
+    ViewData["Title"] = "Resolve srma";
+    var nonce = HttpContext.GetNonce();
+}
+
+<div class="govuk-width-container">
+    <partial name="_BannerError" />
+
+    <div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+
+			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+			{
+				<partial name="_Error" />
+			}
+			else
+			{
+				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+				<h1 class="govuk-heading-l">
+					Resolve SRMA
+				</h1>
+
+				<script type="application/javascript" nonce="@nonce">
+					$(function () {
+						autoResizer();
+					});
+				</script>
+			}
+
+		</div>
+    </div>
+</div>
+
