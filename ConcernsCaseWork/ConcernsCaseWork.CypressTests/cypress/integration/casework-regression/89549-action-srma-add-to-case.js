@@ -11,6 +11,7 @@ describe("User can add action srma to existing case", () => {
 	let term = "";
 	let $status = "";
 	let concatDate = ["date1", "date2"];
+	let concatEndDate = "";
 	let arrDate = ["day1", "month1", "year1","day2", "month2", "year2", ];
 
 	it("User enters the case page", () => {
@@ -146,8 +147,8 @@ describe("User can add action srma to existing case", () => {
 		});
 		
 		cy.log(this.day+"-"+this.month+"-"+this.year);	
-		concatDate[0] = (this.day+"-"+this.month+"-"+this.year);
-		cy.log(concatDate[0]);
+		concatDate = (this.day+"-"+this.month+"-"+this.year);
+		cy.log(concatDate);
 	});
 
 	it("User can successfully add SRMA to a case", () => {
@@ -258,11 +259,11 @@ describe("User can add action srma to existing case", () => {
 			});
 						
 			concatDate = (arrDate[0]+"-"+arrDate[1]+"-"+arrDate[2]);
-			cy.log(concatDate[0]);
+			cy.log(concatDate);
 	
 				cy.get('[id="add-srma-button"]').click();
 				cy.get('[class="govuk-table__row"]').should(($row) => {
-					expect($row.eq(1).text().trim()).to.contain(concatDate[0].trim()).and.to.match(/Date offered/i);
+					expect($row.eq(1).text().trim()).to.contain(concatDate.trim()).and.to.match(/Date offered/i);
 				});
 			})
 
@@ -288,7 +289,7 @@ describe("User can add action srma to existing case", () => {
 
 	});
 
-	/*
+
 	it("User can Add/Edit SRMA Date accepted", function () {
 
 		cy.get('[class="govuk-link"]').eq(3).click();
@@ -314,108 +315,112 @@ describe("User can add action srma to existing case", () => {
 			cy.wrap(dtryr.trim()).as("year");
 			arrDate[2] = dtryr;
 		});
-					
-		concatDate[0] = (arrDate[0]+"-"+arrDate[1]+"-"+arrDate[2]);
-		cy.log(concatDate[0]);
+		
+		concatDate = (arrDate[0]+"-"+arrDate[1]+"-"+arrDate[2]);
+
+
+		cy.log(concatDate);
 
 			cy.get('[id="add-srma-button"]').click();
 			cy.get('[class="govuk-table__row"]').should(($row) => {
-				expect($row.eq(3).text().trim()).to.contain(concatDate[0].trim()).and.to.match(/Date accepted/i);
+				expect($row.eq(3).text().trim()).to.contain(concatDate.trim()).and.to.match(/Date accepted/i);
 			});
 
 
 	});
+
 
 	it("User can Add/Edit SRMA Date of visit", function () {
 
 			cy.get('[class="govuk-link"]').eq(4).click();
 	
 			//Start date
-			cy.get('[id="dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
-			cy.get('[id="dtr-month"]').type(Math.floor(Math.random() *3) + 10);
-			cy.get('[id="dtr-year"]').type("2021");
+			cy.get('[id="start-dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
+			cy.get('[id="start-dtr-month"]').type(Math.floor(Math.random() *3) + 10);
+			cy.get('[id="start-dtr-year"]').type("2021");
+
+			cy.get('[id="add-srma-button"]').click(); // We need to retrun to the page to handle value updates
+	
+
+			//Tests that there is no error validation to force entry of both dates
+			const err = '[class="govuk-list govuk-error-summary__list"]';   
+			cy.log((err).length);
+	
+				if ((err).length > 0 ) { 
+	
+					cy.get('[class="govuk-list govuk-error-summary__list"]').should('not.exist')
+				}
+
+			cy.get('[class="govuk-link"]').eq(4).click();
 
 
 			//End date
-			cy.get('[id="dtr-day-end"]').type(Math.floor(Math.random() * 21) + 10);
-			cy.get('[id="dtr-month-end"]').type(Math.floor(Math.random() *3) + 10);
-			cy.get('[id="dtr-year-end"]').type("2023");
+			cy.get('[id="end-dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
+			cy.get('[id="end-dtr-month"]').type(Math.floor(Math.random() *3) + 10);
+			cy.get('[id="end-dtr-year"]').type("2023");
 
 			// return to Page
-			cy.get('[class="govuk-link"]').eq(4).click(); // We need to retrun to the page to handle value updates
+			cy.get('[id="add-srma-button"]').click(); // We need to retrun to the page to handle value updates
+
+			cy.get('[class="govuk-link"]').eq(4).click();
 	
 			//Validation of Start date
-			cy.get('[id="dtr-day"]').invoke('val').then(dtrday => {
+			cy.get('[id="start-dtr-day"]').invoke('val').then(dtrday => {
 				cy.wrap(dtrday.trim()).as("day");
 				arrDate[0] = dtrday;
 			});
 	
-			cy.get('[id="dtr-month"]').invoke('val').then(dtrmon => {
+			cy.get('[id="start-dtr-month"]').invoke('val').then(dtrmon => {
 				cy.wrap(dtrmon.trim()).as("month");
 				arrDate[1] = dtrmon;
 			});
 	
-			cy.get('[id="dtr-year"]').invoke('val').then(dtryr => {
+			cy.get('[id="start-dtr-year"]').invoke('val').then(dtryr => {
 				cy.wrap(dtryr.trim()).as("year");
 				arrDate[2] = dtryr;
 			});
 						
-			concatDate[0] = (arrDate[0]+"-"+arrDate[1]+"-"+arrDate[2]);
-			cy.log(concatDate[0]);
+			concatDate = (arrDate[0]+"-"+arrDate[1]+"-"+arrDate[2]);
+			cy.log(concatDate);
 
 
 			//Validation of End date
-			cy.get('[id="dtr-day-end"]').invoke('val').then(dtrday => {
+			cy.get('[id="end-dtr-day"]').invoke('val').then(dtrday => {
 				cy.wrap(dtrday.trim()).as("day");
 				arrDate[3] = dtrday;
 			});
 	
-			cy.get('[id="dtr-month-end"]').invoke('val').then(dtrmon => {
+			cy.get('[id="end-dtr-month"]').invoke('val').then(dtrmon => {
 				cy.wrap(dtrmon.trim()).as("month");
 				arrDate[4] = dtrmon;
 			});
 	
-			cy.get('[id="dtr-year"]').invoke('val').then(dtryr => {
+			cy.get('[id="end-dtr-year"]').invoke('val').then(dtryr => {
 				cy.wrap(dtryr.trim()).as("year");
 				arrDate[5] = dtryr;
 			});
 						
-			concatDate[1] = (arrDate[3]+"-"+arrDate[4]+"-"+arrDate[5]);
-			cy.log(concatDate[1]);
+			concatEndDate = (arrDate[3]+"-"+arrDate[4]+"-"+arrDate[5]);
+			cy.log(concatEndDate);
 	
 			cy.get('[id="add-srma-button"]').click();
 
 			//back on srma page validation
 			cy.get('[class="govuk-table__row"]').should(($row) => {
-				expect($row.eq(4).text().trim()).to.contain(concatDate[0].trim()).and.to.match(/Date of visit/i);
+				expect($row.eq(4).text().trim()).to.contain(concatDate.trim()).and.to.match(/Dates of visit/i);
 			});
 
-			cy.get('[id="add-srma-button"]').click();
+			//cy.get('[id="add-srma-button"]').click();
 			cy.get('[class="govuk-table__row"]').should(($row) => {
-				expect($row.eq(4).text().trim()).to.contain(concatDate[1].trim()).and.to.match(/Date of visit/i);
+				expect($row.eq(4).text().trim()).to.contain(concatEndDate.trim()); 
 			});
 
-
-			//Tests that there is no errpr validation to force entry of both dates
-
-			const err = '[class="govuk-list govuk-error-summary__list"]';   
-		cy.log((err).length);
-
-			if ((err).length > 0 ) { 
-
-				cy.visit(Cypress.env('url'), { timeout: 30000 });
-
-				cy.checkForExistingCase(true);
-				cy.get('[class="govuk-button"][role="button"]').click();
-				cy.addActionItemToCase('Srma', 'School Resource Management Adviser (SRMA)');
-				cy.get('button[data-prevent-double-click*="true"]').click();
-			}else{
-				cy.log("No SRMA exists")
-			}
 
 
 
 	});
+
+
 
 	it("User can Add/Edit SRMA Date report sent to trust", function () {
 
@@ -443,15 +448,17 @@ describe("User can add action srma to existing case", () => {
 			arrDate[2] = dtryr;
 		});
 					
-		concatDate[0] = (arrDate[0]+"-"+arrDate[1]+"-"+arrDate[2]);
-		cy.log(concatDate[0]);
+		concatDate = (arrDate[0]+"-"+arrDate[1]+"-"+arrDate[2]);
+		cy.log(concatDate);
 
 			cy.get('[id="add-srma-button"]').click();
 			cy.get('[class="govuk-table__row"]').should(($row) => {
-				expect($row.eq(5).text().trim()).to.contain(concatDate[0].trim()).and.to.match(/Date report sent to trust/i);
+				expect($row.eq(5).text().trim()).to.contain(concatDate.trim()).and.to.match(/Date report sent to trust/i);
 			});
 
 	});
+
+	/*
 */
 	it("User can Add/Edit SRMA Notes", function () {
 
