@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Enums;
+using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 {
@@ -36,27 +37,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				_logger.LogInformation("Case::Action::SRMA::IndexPageModel::OnGetAsync");
 
 				(caseUrn, srmaId) = GetRouteData();
-				// TODO - get SRMA by case ID and SRMA ID
-				SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
 
-				if (SRMAModel == null)
-				{
-					throw new InvalidOperationException("Could not load this SRMA");
-				}
-
-				switch (SRMAModel.Status)
-				{
-					case SRMAStatus.Deployed:
-						DeclineCompleteButtonLabel = "SRMA complete";
-						break;
-					default:
-						DeclineCompleteButtonLabel = "SRMA declined";
-						break;
-				}
-			}
-			catch (InvalidOperationException ex)
-			{
-				TempData["SRMA.Message"] = ex.Message;
+				SetPageData(caseUrn, srmaId);
 			}
 			catch (Exception ex)
 			{
@@ -72,17 +54,32 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 		public async Task<ActionResult> OnGetCancel()
 		{
+			long caseUrn = 0;
+			long srmaId = 0;
+
 			try
 			{
+				(caseUrn, srmaId) = GetRouteData();
+
+				SetPageData(caseUrn, srmaId);
+
+				var validationErrors = CreateValidationErrors();
+
+				if (validationErrors.Count > 0)
+				{
+					TempData["SRMA.Message"] = validationErrors;
+					return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}");
+				}
+
 				return Redirect("resolve");
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Case::Action::SRMA::IndexPageModel::OnGetCancel::Exception - {Message}", ex.Message);
-
 				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
 			}
+
+			return Page();
 		}
 
 		private (long caseUrn, long srmaId) GetRouteData()
@@ -97,5 +94,39 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 			return (caseUrn, srmaId);
 		}
+	
+		private async void SetPageData(long caseUrn, long srmaId)
+		{
+			// TODO - get SRMA by case ID and SRMA ID
+			SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
+
+			if (SRMAModel == null)
+			{
+				throw new Exception("Could not load this SRMA");
+			}
+
+			switch (SRMAModel.Status)
+			{
+				case SRMAStatus.Deployed:
+					DeclineCompleteButtonLabel = "SRMA complete";
+					break;
+				default:
+					DeclineCompleteButtonLabel = "SRMA declined";
+					break;
+			}
+		}
+	
+		private List<string> CreateValidationErrors()
+		{
+			List<string> validationErrors = new List<string>();
+
+			if (SRMAModel.Reason.Equals(SRMAReasonOffered.Unknown))
+			{
+				validationErrors.Add("Enter the reason");
+			}
+
+			return validationErrors;
+		}
+	
 	}
 }
