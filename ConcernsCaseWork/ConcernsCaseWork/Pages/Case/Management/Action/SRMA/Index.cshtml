@@ -1,4 +1,4 @@
-﻿@page "/case/{urn:long}/management/action/srma/{srmaId:long}"
+﻿@page "/case/{urn:long}/management/action/srma/{srmaId:long}/{handler?}"
 @model ConcernsCaseWork.Pages.Case.Management.Action.SRMA.IndexPageModel
 
 @using ConcernsCaseWork.Helpers;
@@ -7,6 +7,10 @@
 @{
     ViewData["Title"] = "SRMA";
     var nonce = HttpContext.GetNonce();
+
+	var srmaValidationErrors = TempData["SRMA.Message"] as IEnumerable<string>;
+
+	var reasonError = false;
 }
 
 @section BeforeMain {
@@ -18,190 +22,199 @@
 }
 
 <div class="govuk-width-container">
-    <partial name="_BannerError" />
+	<partial name="_BannerError" />
 
-    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-    {
-        <partial name="_Error" />
-    }
-    else
-    {
-        if (TempData["SRMA.Message"] != null)
-        {
-            <div class="govuk-heading-l moj-banner__message">
-                <h3>Errors found</h3>
-                <ul>
-                    <li>@TempData["SRMA.Message"]</li>
-                </ul>
-            </div>
-        }
-        else
-        {
-            <h1 class="govuk-heading-l">
-                <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
-                School Resource Management Adviser (SRMA)
-            </h1>
+	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+	{
+		<partial name="_Error" />
+	}
+	else
+	{
 
-            <table class="govuk-table">
-                <caption class="govuk-table__caption govuk-table__caption--m"></caption>
-                <thead>
-                    <tr>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody class="govuk-table__body">
+		@if (TempData["SRMA.Message"] != null)
+		{
+			reasonError = srmaValidationErrors.Contains("Enter the reason");
 
-                    @* Status *@
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Status</th>
-                        <td class="govuk-table__cell">
-                            @{
-                                var statusStr = Model.SRMA.Status == Enums.SRMAStatus.Unknown ? string.Empty
-                                : @EnumHelper.GetEnumDescription(Model.SRMA.Status);
-                                RenderValue(statusStr);
-                            }
-                        </td>
-                        <td class="govuk-table__cell govuk-table__header__right">
-                            @{
-                                RenderLink(Model.SRMA.Status, "SRMA status", $@"{Request.Path}\status");
-                            }
-                        </td>
-                    </tr>
+			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
+				<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
+				<div class="govuk-error-summary__body">
+					<ul class="govuk-list govuk-error-summary__list">
+						@foreach (var msg in srmaValidationErrors)
+						{
+							<li class="govuk-error-message">@msg</li>
+						}
+					</ul>
+				</div>
+			</div>
+		}
 
-                    @* Date offered *@
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Date offered</th>
-                        <td class="govuk-table__cell">
-                            @{
-                                RenderValue(DateExtension.ToDayMonthYear(Model.SRMA.DateOffered));
-                            }
-                        </td>
-                        <td class="govuk-table__cell govuk-table__header__right">
-                            @{
-                                RenderLink(Model.SRMA.DateOffered, "SRMA date offered", $@"{Request.Path}\offeredDate");
-                            }
-                        </td>
-                    </tr>
+		<h1 class="govuk-heading-l">
+			<span class="govuk-caption-m">Case ID @Model.SRMAModel.CaseUrn</span>
+			School Resource Management Adviser (SRMA)
+		</h1>
 
-                    @* Reason *@
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Reason</th>
-                        <td class="govuk-table__cell">
-                            @{
-                                var reasonStr = Model.SRMA.Reason == Enums.SRMAReasonOffered.Unknown ? string.Empty
-                                : @EnumHelper.GetEnumDescription(Model.SRMA.Reason);
-                                
-                                RenderValue(reasonStr);
-                            }
-                        </td>
-                        <td class="govuk-table__cell govuk-table__header__right">
-                            @{
-                                RenderLink(Model.SRMA.Reason, "SRMA reason", $@"{Request.Path}\reason");
-                            }
-                        </td>
-                    </tr>
+		<table class="govuk-table">
+			<caption class="govuk-table__caption govuk-table__caption--m"></caption>
+			<thead>
+				<tr>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+				</tr>
+			</thead>
+			<tbody class="govuk-table__body">
 
-                    @* Date accepted *@
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Date accepted</th>
-                        <td class="govuk-table__cell">
-                            @{
-								if (Model.SRMA.DateAccepted.HasValue)
+				@* Status *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">Status</th>
+					<td class="govuk-table__cell">
+						@{
+							var statusStr = Model.SRMAModel.Status == Enums.SRMAStatus.Unknown ? string.Empty
+							: @EnumHelper.GetEnumDescription(Model.SRMAModel.Status);
+							RenderValue(statusStr);
+						}
+					</td>
+					<td class="govuk-table__cell govuk-table__header__right">
+						@{
+							RenderLink(Model.SRMAModel.Status, "SRMA status", $@"{Request.Path}\status");
+						}
+					</td>
+				</tr>
+
+				@* Date offered *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">Date offered</th>
+					<td class="govuk-table__cell">
+						@{
+							RenderValue(DateExtension.ToDayMonthYear(Model.SRMAModel.DateOffered));
+						}
+					</td>
+					<td class="govuk-table__cell govuk-table__header__right">
+						@{
+							RenderLink(Model.SRMAModel.DateOffered, "SRMA date offered", $@"{Request.Path}\offeredDate");
+						}
+					</td>
+				</tr>
+
+				@* Reason *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">
+						<span class="@(reasonError ? "govuk-error-message" : "")">Reason</span></th>
+					<td class="govuk-table__cell">
+						@{
+							var reasonStr = Model.SRMAModel.Reason == Enums.SRMAReasonOffered.Unknown ? string.Empty
+							: @EnumHelper.GetEnumDescription(Model.SRMAModel.Reason);
+
+							RenderValue(reasonStr);
+						}
+					</td>
+					<td class="govuk-table__cell govuk-table__header__right">
+						@{
+							RenderLink(Model.SRMAModel.Reason, "SRMA reason", $@"{Request.Path}\reason");
+						}
+					</td>
+				</tr>
+
+				@* Date accepted *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">
+						Date accepted
+					</th>
+					<td class="govuk-table__cell">
+						@{
+							if (Model.SRMAModel.DateAccepted.HasValue)
+							{
+								RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.SRMAModel.DateAccepted.Value));
+							}
+							else
+							{
+								RenderEmptyLabel();
+							}
+						}
+					</td>
+					<td class="govuk-table__cell govuk-table__header__right">
+						@{
+							RenderLink(Model.SRMAModel.DateAccepted, "SRMA date accepted", $@"{Request.Path}\dateaccepted");
+						}
+					</td>
+				</tr>
+
+				@* Dates of visit *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">Dates of visit</th>
+					<td class="govuk-table__cell">
+						@{
+							if (IsEmpty(Model.SRMAModel.DateVisitStart))
+							{
+								RenderEmptyLabel();
+							}
+							else
+							{
+								@DateExtension.ToDayMonthYear(Model.SRMAModel.DateVisitStart.Value)
+								if (!IsEmpty(Model.SRMAModel.DateVisitEnd))
 								{
-									RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.SRMA.DateAccepted.Value));
+									<text> - </text>
+									@DateExtension.ToDayMonthYear(Model.SRMAModel.DateVisitEnd.Value)
 								}
-								else
-								{
-									RenderEmptyLabel();
-								}
-                            }
-                        </td>
-                        <td class="govuk-table__cell govuk-table__header__right">
-                            @{
-                                RenderLink(Model.SRMA.DateAccepted, "SRMA date accepted", $@"{Request.Path}\dateaccepted");
-                            }
-                        </td>
-                    </tr>
-
-                    @* Dates of visit *@
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Dates of visit</th>
-                        <td class="govuk-table__cell">
-                            @{
-                                if (IsEmpty(Model.SRMA.DateVisitStart))
-                                {
-                                    RenderEmptyLabel();
-                                }
-                                else
-                                {
-                                    @DateExtension.ToDayMonthYear(Model.SRMA.DateVisitStart.Value)
-                                    if (!IsEmpty(Model.SRMA.DateVisitEnd))
-                                    {
-                                        <text> - </text>
-                                        @DateExtension.ToDayMonthYear(Model.SRMA.DateVisitEnd.Value)
-                                    }
-                                }
-                            }
-                        </td>
-                        <td class="govuk-table__cell govuk-table__header__right">
-                            @{
-                                RenderLink(Model.SRMA.DateVisitStart, "SRMA Dates of visit", $@"{Request.Path}\visitdates"); 
-                            }
-                        </td>
-                    </tr>
+							}
+						}
+					</td>
+					<td class="govuk-table__cell govuk-table__header__right">
+						@{
+							RenderLink(Model.SRMAModel.DateVisitStart, "SRMA Dates of visit", $@"{Request.Path}\visitdates");
+						}
+					</td>
+				</tr>
 
 
-                    @* Date report sent *@
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Date report sent to trust</th>
-                        <td class="govuk-table__cell">
-                            @{
-								if (Model.SRMA.DateReportSentToTrust.HasValue)
-								{
-									RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.SRMA.DateReportSentToTrust.Value));
-								}
-								else
-								{
-									RenderEmptyLabel();
-								}
-                            }
-                        </td>
-                        <td class="govuk-table__cell govuk-table__header__right">
-                            @{
-								RenderLink(Model.SRMA.DateReportSentToTrust, "SRMA Date report sent to trust", $@"{Request.Path}\datereportsent");
-                            }
-                        </td>
-                    </tr>
+				@* Date report sent *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">Date report sent to trust</th>
+					<td class="govuk-table__cell">
+						@{
+							if (Model.SRMAModel.DateReportSentToTrust.HasValue)
+							{
+								RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.SRMAModel.DateReportSentToTrust.Value));
+							}
+							else
+							{
+								RenderEmptyLabel();
+							}
+						}
+					</td>
+					<td class="govuk-table__cell govuk-table__header__right">
+						@{
+							RenderLink(Model.SRMAModel.DateReportSentToTrust, "SRMA Date report sent to trust", $@"{Request.Path}\datereportsent");
+						}
+					</td>
+				</tr>
 
-                    @* Notes *@
-                    <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table-case-details__header">Notes</th>
-                        <td class="govuk-table__cell">
-                            @{
-								RenderValue(Model.SRMA.Notes);
-                            }
-                        </td>
-                        <td class="govuk-table__cell govuk-table__header__right">
-                            @{
-                                RenderLink(Model.SRMA.Notes, "SRMA Notes", $@"{Request.Path}\notes");
-                            }
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+				@* Notes *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">Notes</th>
+					<td class="govuk-table__cell">
+						@{
+							RenderValue(Model.SRMAModel.Notes);
+						}
+					</td>
+					<td class="govuk-table__cell govuk-table__header__right">
+						@{
+							RenderLink(Model.SRMAModel.Notes, "SRMA Notes", $@"{Request.Path}\notes");
+						}
+					</td>
+				</tr>
+			</tbody>
+		</table>
 
-            <div class="govuk-button-group">
-                <button data-prevent-double-click="true" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="complete-decline-srma-button">
-                    @Model.DeclineCompleteButtonLabel
-                </button>
-                <button data-prevent-double-click="true" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="cancel-srma-button">
-                    SRMA canceled
-                </button>
-            </div>
-        }
-    }
+		<div class="govuk-button-group">
+			<a data-prevent-double-click="true" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="complete-decline-srma-button">
+				@Model.DeclineCompleteButtonLabel
+			</a>
+			<a data-prevent-double-click="true" asp-page-handler="Cancel" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button">
+				SRMA canceled
+			</a>
+		</div>
+	}
 </div>
 
 @functions {
