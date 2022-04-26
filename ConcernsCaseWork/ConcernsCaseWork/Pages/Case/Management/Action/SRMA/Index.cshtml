@@ -5,12 +5,16 @@
 @using ConcernsCaseWork.Extensions;
 
 @{
-    ViewData["Title"] = "SRMA";
-    var nonce = HttpContext.GetNonce();
+	ViewData["Title"] = "SRMA";
+	var nonce = HttpContext.GetNonce();
 
+	var errorClass = "govuk-error-message";
 	var srmaValidationErrors = TempData["SRMA.Message"] as IEnumerable<string>;
 
 	var reasonError = false;
+	var dateAcceptedError = false;
+	var dateVisitError = false;
+	var dateReportSentError = false;
 }
 
 @section BeforeMain {
@@ -33,7 +37,10 @@
 
 		@if (TempData["SRMA.Message"] != null)
 		{
-			reasonError = srmaValidationErrors.Contains("Enter the reason");
+			reasonError = srmaValidationErrors.Contains(Model.ReasonErrorMessage);
+			dateAcceptedError = srmaValidationErrors.Contains(Model.DateAcceptedErrorMessage);
+			dateVisitError = srmaValidationErrors.Contains(Model.DateVisitErrorMessage);
+			dateReportSentError = srmaValidationErrors.Contains(Model.DateReportErrorMessage);
 
 			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
 				<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
@@ -99,7 +106,7 @@
 				@* Reason *@
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-table-case-details__header">
-						<span class="@(reasonError ? "govuk-error-message" : "")">Reason</span></th>
+						<span class="@(reasonError ? errorClass : "")">Reason</span></th>
 					<td class="govuk-table__cell">
 						@{
 							var reasonStr = Model.SRMAModel.Reason == Enums.SRMAReasonOffered.Unknown ? string.Empty
@@ -118,7 +125,7 @@
 				@* Date accepted *@
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-table-case-details__header">
-						Date accepted
+						<span class="@(dateAcceptedError ? errorClass : "")">Date accepted</span>
 					</th>
 					<td class="govuk-table__cell">
 						@{
@@ -141,7 +148,9 @@
 
 				@* Dates of visit *@
 				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table-case-details__header">Dates of visit</th>
+					<th scope="row" class="govuk-table-case-details__header">
+						<span class="@(dateVisitError ? errorClass : "")">Dates of visit</span>
+					</th>
 					<td class="govuk-table__cell">
 						@{
 							if (IsEmpty(Model.SRMAModel.DateVisitStart))
@@ -169,7 +178,9 @@
 
 				@* Date report sent *@
 				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table-case-details__header">Date report sent to trust</th>
+					<th scope="row" class="govuk-table-case-details__header">
+						<span class="@(dateReportSentError ? errorClass : "")">Date report sent to trust</span>
+					</th>
 					<td class="govuk-table__cell">
 						@{
 							if (Model.SRMAModel.DateReportSentToTrust.HasValue)
@@ -207,7 +218,7 @@
 		</table>
 
 		<div class="govuk-button-group">
-			<a data-prevent-double-click="true" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="complete-decline-srma-button">
+			<a data-prevent-double-click="true" asp-page-handler="DeclineComplete" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="complete-decline-srma-button">
 				@Model.DeclineCompleteButtonLabel
 			</a>
 			<a data-prevent-double-click="true" asp-page-handler="Cancel" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button">
