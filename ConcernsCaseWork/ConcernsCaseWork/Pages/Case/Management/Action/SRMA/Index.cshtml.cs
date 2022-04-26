@@ -95,9 +95,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			{
 				_logger.LogError("Case::Action::SRMA::IndexPageModel::OnGetDeclineComplete::Exception - {Message}", ex.Message);
 				TempData["Error.Message"] = ErrorOnGetPage;
+				
+				return Page();
 			}
-
-			return Page();
 		}
 
 		public async Task<ActionResult> OnGetCancel()
@@ -127,7 +127,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 			return Page();
 		}
-
 
 		private (long caseUrn, long srmaId) GetRouteData()
 		{
@@ -177,7 +176,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				validationErrors.Add(DateAcceptedErrorMessage);
 			}
 
-			if (!SRMAModel.DateVisitStart.HasValue)
+			if (!SRMAModel.DateVisitStart.HasValue || !SRMAModel.DateVisitEnd.HasValue)
 			{
 				validationErrors.Add(DateVisitErrorMessage);
 			}

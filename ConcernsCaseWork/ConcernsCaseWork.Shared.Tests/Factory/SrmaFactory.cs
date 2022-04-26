@@ -10,15 +10,15 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 	{
 		private readonly static Fixture Fixture = new Fixture();
 
-		public static List<SRMAModel> BuildListSrmaModel(SRMAStatus status)
+		public static List<SRMAModel> BuildListSrmaModel(SRMAStatus status = SRMAStatus.Deployed, SRMAReasonOffered reason = SRMAReasonOffered.Unknown)
 		{
 			return new List<SRMAModel>
 			{
-				BuildSrmaModel(status)
+				BuildSrmaModel(status, reason)
 			};
 		}
 
-		public static SRMAModel BuildSrmaModel(SRMAStatus status)
+		public static SRMAModel BuildSrmaModel(SRMAStatus status, SRMAReasonOffered reason = SRMAReasonOffered.Unknown)
 		{
 			var srma = new SRMAModel
 			(
@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<DateTime>(),
 				status,
 				Fixture.Create<string>(),
-				Fixture.Create<SRMAReasonOffered>()
+				reason
 			);
 
 			srma.CaseUrn = Fixture.Create<long>();
