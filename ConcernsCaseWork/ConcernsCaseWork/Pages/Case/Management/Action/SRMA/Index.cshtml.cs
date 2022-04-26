@@ -18,6 +18,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		private readonly ISRMAService _srmaModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 
+		public string ReasonErrorMessage = "Enter the reason";
+		public string DateAcceptedErrorMessage = "Enter date accepted";
+		public string DateVisitErrorMessage = "Enter date of visit";
+		public string DateReportErrorMessage = "Enter date report sent to trust";
+
 		public SRMAModel SRMAModel { get; set; }
 		public string DeclineCompleteButtonLabel { get; private set; }
 
@@ -52,7 +57,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			return RedirectToPage("index");
 		}
 
-		public async Task<ActionResult> OnGetCancel()
+		public async Task<ActionResult> OnGetDeclineComplete()
 		{
 			long caseUrn = 0;
 			long srmaId = 0;
@@ -62,12 +67,53 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				(caseUrn, srmaId) = GetRouteData();
 
 				SetPageData(caseUrn, srmaId);
+				var srmaIndexPage = $"/case/{caseUrn}/management/action/srma/{srmaId}";
 
-				var validationErrors = CreateValidationErrors();
-
-				if (validationErrors.Count > 0)
+				if (SRMAModel.Status.Equals(SRMAStatus.Deployed))
 				{
-					TempData["SRMA.Message"] = validationErrors;
+					var validationErrors = CreateValidationErrors();
+
+					if (validationErrors.Count > 0)
+					{
+						TempData["SRMA.Message"] = validationErrors;
+						return Redirect(srmaIndexPage);
+					}
+				}
+				else
+				{
+					if (SRMAModel.Reason.Equals(SRMAReasonOffered.Unknown))
+					{
+						TempData["SRMA.Message"] = new List<string>() { ReasonErrorMessage };
+
+						return Redirect(srmaIndexPage);
+					}
+				}
+
+				return Redirect("resolve");
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::Action::SRMA::IndexPageModel::OnGetDeclineComplete::Exception - {Message}", ex.Message);
+				TempData["Error.Message"] = ErrorOnGetPage;
+			}
+
+			return Page();
+		}
+
+		public async Task<ActionResult> OnGetCancel()
+		{
+			long caseUrn = 0;
+			long srmaId = 0;
+
+			try
+			{
+				(caseUrn, srmaId) = GetRouteData();
+				SetPageData(caseUrn, srmaId);
+
+				if (SRMAModel.Reason.Equals(SRMAReasonOffered.Unknown))
+				{
+					TempData["SRMA.Message"] = new List<string>() { ReasonErrorMessage };
+
 					return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}");
 				}
 
@@ -75,12 +121,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Action::SRMA::IndexPageModel::OnGetCancel::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::Action::SRMA::IndexPageModel::OnGetDeclineComplete::Exception - {Message}", ex.Message);
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 
 			return Page();
 		}
+
 
 		private (long caseUrn, long srmaId) GetRouteData()
 		{
@@ -122,7 +169,22 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 			if (SRMAModel.Reason.Equals(SRMAReasonOffered.Unknown))
 			{
-				validationErrors.Add("Enter the reason");
+				validationErrors.Add(ReasonErrorMessage);
+			}
+
+			if (!SRMAModel.DateAccepted.HasValue)
+			{
+				validationErrors.Add(DateAcceptedErrorMessage);
+			}
+
+			if (!SRMAModel.DateVisitStart.HasValue)
+			{
+				validationErrors.Add(DateVisitErrorMessage);
+			}
+
+			if (!SRMAModel.DateReportSentToTrust.HasValue)
+			{
+				validationErrors.Add(DateReportErrorMessage);
 			}
 
 			return validationErrors;
