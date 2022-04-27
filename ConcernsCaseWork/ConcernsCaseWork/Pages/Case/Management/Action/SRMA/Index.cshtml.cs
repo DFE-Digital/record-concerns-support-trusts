@@ -18,10 +18,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		private readonly ISRMAService _srmaModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 
-		public string ReasonErrorMessage = "Enter the reason";
-		public string DateAcceptedErrorMessage = "Enter date accepted";
-		public string DateVisitErrorMessage = "Enter date of visit";
-		public string DateReportErrorMessage = "Enter date report sent to trust";
+		public readonly string ReasonErrorMessage = "Enter the reason";
+		public readonly string DateAcceptedErrorMessage = "Enter date accepted";
+		public readonly string DateVisitErrorMessage = "Enter date of visit";
+		public readonly string DateReportErrorMessage = "Enter date report sent to trust";
+
+		private readonly string SRMACompleteText = "SRMA complete";
+		private readonly string SRMADeclineText = "SRMA declined";
 
 		public SRMAModel SRMAModel { get; set; }
 		public string DeclineCompleteButtonLabel { get; private set; }
@@ -89,7 +92,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 					}
 				}
 
-				return Redirect("resolve");
+				var action = DeclineCompleteButtonLabel.Equals(SRMACompleteText) ? "complete" : "decline";
+
+
+				return Redirect($"resolve/{action}");
 			}
 			catch (Exception ex)
 			{
@@ -117,7 +123,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 					return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}");
 				}
 
-				return Redirect("resolve");
+				return Redirect("resolve/cancel");
 			}
 			catch (Exception ex)
 			{
@@ -154,10 +160,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			switch (SRMAModel.Status)
 			{
 				case SRMAStatus.Deployed:
-					DeclineCompleteButtonLabel = "SRMA complete";
+					DeclineCompleteButtonLabel = SRMACompleteText;
 					break;
 				default:
-					DeclineCompleteButtonLabel = "SRMA declined";
+					DeclineCompleteButtonLabel = SRMADeclineText;
 					break;
 			}
 		}

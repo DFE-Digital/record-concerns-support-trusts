@@ -82,8 +82,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 					
 						CaseActions.AddRange(await _srmaService.GetSRMAsForCase(caseUrn));
 
-						//Check if case action is SRMA and status is not deployed
-						var openSrma = CaseActions.Where(ca => ca is SRMAModel && !(((SRMAModel)ca).Status.CompareTo(SRMAStatus.Deployed) == 0)).FirstOrDefault();
+						//Check if case action is SRMA and status is not canceled, declined or complete
+						var openSrma = CaseActions.Where(ca => (
+							ca is SRMAModel &&
+							(
+								!(((SRMAModel)ca).Status.Equals(SRMAStatus.Canceled)) &&
+								!(((SRMAModel)ca).Status.Equals(SRMAStatus.Declined)) &&
+								!(((SRMAModel)ca).Status.Equals(SRMAStatus.Complete))
+							)
+						)).FirstOrDefault();
 
 						if (openSrma != null)
 							throw new ApplicationException("There is already an open SRMA action linked to this case. Please resolve that before opening another one.");
