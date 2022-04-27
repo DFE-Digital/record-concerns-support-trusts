@@ -13,6 +13,15 @@ namespace ConcernsCaseWork.Enums
 		PreparingForDeployment,
 
 		[Description("Deployed")]
-		Deployed
+		Deployed,
+
+		[Description("SRMA Declined")]
+		Declined,
+
+		[Description("SRMA Canceled")]
+		Canceled,
+
+		[Description("SRMA Complete")]
+		Complete
 	}
 }

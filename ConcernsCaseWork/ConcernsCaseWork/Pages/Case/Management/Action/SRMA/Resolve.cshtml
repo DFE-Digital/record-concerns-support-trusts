@@ -1,15 +1,15 @@
-﻿@page "/case/{urn:long}/management/action/srma/{srmaId:long}/resolve"
+﻿@page "/case/{urn:long}/management/action/srma/{srmaId:long}/resolve/{resolution}"
 @model ConcernsCaseWork.Pages.Case.Management.Action.Srma.ResolvePageModel
 
 @{
-    ViewData["Title"] = "Resolve srma";
-    var nonce = HttpContext.GetNonce();
+	ViewData["Title"] = "Resolve srma";
+	var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
-    <partial name="_BannerError" />
+	<partial name="_BannerError" />
 
-    <div class="govuk-grid-row">
+	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds">
 
 			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
@@ -24,14 +24,56 @@
 					Resolve SRMA
 				</h1>
 
+				<form role="form" method="post" id="resolve-srma-form">
+
+					<div class="govuk-form-group">
+						<div class="govuk-checkboxes" data-module="govuk-checkboxes">
+							<div class="govuk-checkboxes__item">
+								<input class="govuk-checkboxes__input" id="confirmChk" name="confirmChk" type="checkbox">
+								<label class="govuk-label govuk-checkboxes__label" for="confirmChk">
+									@Model.ConfirmText
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="500">
+						<div class="govuk-form-group">
+							<h2 class="govuk-heading-m">Notes</h2>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="srma-notes" name="srma-notes" rows="3" aria-describedby="srma-notes-info">@Model.SRMAModel.Notes</textarea>
+						</div>
+						<div id="srma-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+							You can enter up to 500 characters
+						</div>
+					</div>
+
+					<div class="govuk-button-group">
+						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
+							Resolve SRMA
+						</button>
+						<partial name="_Cancel" />
+					</div>
+
+				</form>
+
 				<script type="application/javascript" nonce="@nonce">
 					$(function () {
+
+						let validator = formValidator($("#resolve-srma-form")[0]);
+
+						validator.addValidator('confirmChk', [{
+							method: function() {
+								let checkbox = $('input[name="confirmChk"]:checked');
+								return checkbox.length > 0;
+							},
+							message: '@Model.ConfirmText'
+						}]);
+
 						autoResizer();
 					});
 				</script>
 			}
 
 		</div>
-    </div>
+	</div>
 </div>
-

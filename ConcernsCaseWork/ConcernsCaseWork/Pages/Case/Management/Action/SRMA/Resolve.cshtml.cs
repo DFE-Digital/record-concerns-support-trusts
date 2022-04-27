@@ -21,6 +21,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 		private readonly ILogger<ResolvePageModel> _logger;
 		private readonly ISRMAService _srmaModelService;
 
+		private const string ResolutionComplete = "complete";
+		private const string ResolutionCanceled = "cancel";
+		private const string ResolutionDeclined = "decline";
+
+		public string ConfirmText { get; set; }
+
+		public SRMAModel SRMAModel { get; set; }
+
 		public ResolvePageModel(
 			ISRMAService srmaModelService, ILogger<ResolvePageModel> logger)
 		{
@@ -30,11 +38,34 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::SRMA::ResolvePageModel::OnGetAsync");
+			long caseUrn = 0;
+			long srmaId = 0;
+			string resoultion = "";
 
 			try
 			{
-				GetRouteData();
+				_logger.LogInformation("Case::Action::SRMA::ResolvePageModel::OnGetAsync");
+				(caseUrn, srmaId, resoultion) = GetRouteData();
+
+				// TODO - get SRMA by case ID and SRMA ID
+				SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
+
+				switch (resoultion)
+				{
+					case ResolutionCanceled:
+						ConfirmText = "Confirm SRMA was canceled";
+						break;
+					case ResolutionDeclined:
+						ConfirmText = "Confirm SRMA was declined by trust";
+						break;
+					case ResolutionComplete:
+						ConfirmText = "Confirm SRMA is complete";
+						break;
+					default:
+						throw new Exception("resolution value is null or invalid to parse");
+						break;
+				}
+
 			}
 			catch (Exception ex)
 			{
@@ -48,9 +79,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 
 		public async Task<IActionResult> OnPostAsync()
 		{
+			long caseUrn = 0;
+			long srmaId = 0;
+			string resoultion = "";
+
 			try
 			{
-				var caseUrn = GetRouteData();
+				(caseUrn, srmaId, resoultion) = GetRouteData();
+
+				var srmaNotes = Request.Form["srma-notes"].ToString();
+				await _srmaModelService.SetNotes(srmaId, srmaNotes);
+
 
 				return Redirect($"/case/{caseUrn}/management");
 			}
@@ -63,7 +102,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			}
 		}
 
-		private (long caseUrn, long srmaId) GetRouteData()
+		private (long caseUrn, long srmaId, string resolution) GetRouteData()
 		{
 			var caseUrnValue = RouteData.Values["urn"];
 			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
@@ -73,7 +112,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			if (srmaIdValue == null || !long.TryParse(srmaIdValue.ToString(), out long srmaId) || srmaId == 0)
 				throw new Exception("srmaId is null or invalid to parse");
 
-			return (caseUrn, srmaId);
+			var validResolutions = new List<string>() { ResolutionComplete, ResolutionDeclined, ResolutionCanceled };
+			var resolutionValue = RouteData.Values["resolution"].ToString();
+
+			if (string.IsNullOrEmpty(resolutionValue) || !validResolutions.Contains(resolutionValue) )
+			{
+				throw new Exception("resolution value is null or invalid to parse");
+			}
+
+			return (caseUrn, srmaId, resolutionValue);
 		}
 	}
 }
