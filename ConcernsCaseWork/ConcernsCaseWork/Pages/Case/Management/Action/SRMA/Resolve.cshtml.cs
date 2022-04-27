@@ -65,7 +65,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 						throw new Exception("resolution value is null or invalid to parse");
 						break;
 				}
-
 			}
 			catch (Exception ex)
 			{
@@ -87,9 +86,27 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			{
 				(caseUrn, srmaId, resoultion) = GetRouteData();
 
+				SRMAStatus resolvedStatus;
+
+				switch (resoultion)
+				{
+					case ResolutionComplete:
+						resolvedStatus = SRMAStatus.Complete;
+						break;
+					case ResolutionCanceled:
+						resolvedStatus = SRMAStatus.Canceled;
+						break;
+					case ResolutionDeclined:
+						resolvedStatus = SRMAStatus.Declined;
+						break;
+					default:
+						throw new Exception("resolution value is null or invalid to parse");
+						break;
+				}
+
 				var srmaNotes = Request.Form["srma-notes"].ToString();
 				await _srmaModelService.SetNotes(srmaId, srmaNotes);
-
+				await _srmaModelService.SetStatus(srmaId, resolvedStatus);
 
 				return Redirect($"/case/{caseUrn}/management");
 			}

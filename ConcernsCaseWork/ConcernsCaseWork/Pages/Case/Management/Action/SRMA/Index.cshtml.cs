@@ -92,12 +92,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 					}
 				}
 
-				var action = "decline";
+				var action = DeclineCompleteButtonLabel.Equals(SRMACompleteText) ? "complete" : "decline";
 
-				if (DeclineCompleteButtonLabel.Equals(SRMACompleteText))
-				{
-					action = "complete";
-				}
 
 				return Redirect($"resolve/{action}");
 			}

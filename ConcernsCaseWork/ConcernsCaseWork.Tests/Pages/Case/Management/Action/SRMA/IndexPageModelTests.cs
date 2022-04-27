@@ -117,7 +117,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			// assert
 			Assert.NotNull(pageResponseInstance);
-			Assert.That(pageResponseInstance.Url, Is.EqualTo("resolve"));
+			Assert.That(pageResponseInstance.Url, Is.EqualTo("resolve/complete"));
 		}
 
 		[Test]
@@ -259,7 +259,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			// assert
 			Assert.NotNull(pageResponseInstance);
-			Assert.That(pageResponseInstance.Url, Is.EqualTo("resolve"));
+			Assert.That(pageResponseInstance.Url, Is.EqualTo("resolve/cancel"));
 		}
 
 		private static IndexPageModel SetupIndexPageModel(
