@@ -24,14 +24,12 @@ describe("User can add action srma to existing case", () => {
 		cy.get('button[data-prevent-double-click^="true"]').then(($btn) =>{
 			expect($btn.text()).to.match(/(Add to case)/i);
 		cy.get('button[data-prevent-double-click^="true"]').click();
-		});
-       
+		}); 
 	});
 
 	it("User can Cancel and is returned to the Case ID Page", () => {
 	
 		cy.get('[id="cancel-link-event"]').click();
-
 		cy.get('[class="govuk-caption-m"]').then(($heading) =>{
 			expect($heading).to.be.visible
 			expect($heading.text()).to.match(/(Case ID)/i);
@@ -44,7 +42,6 @@ describe("User can add action srma to existing case", () => {
 		cy.addActionItemToCase('Srma', 'School Resource Management Adviser (SRMA)');
 	});
 
-
 	it("User clicking add to case is taken to the action page", function () {
 		cy.get('button[data-prevent-double-click*="true"]').click();
 
@@ -52,9 +49,7 @@ describe("User can add action srma to existing case", () => {
 		cy.log((err).length);
 
 			if ((err).length > 0 ) { 
-
 				cy.visit(Cypress.env('url'), { timeout: 30000 });
-
 				cy.checkForExistingCase(true);
 				cy.get('[class="govuk-button"][role="button"]').click();
 				cy.addActionItemToCase('Srma', 'School Resource Management Adviser (SRMA)');
@@ -68,7 +63,6 @@ describe("User can add action srma to existing case", () => {
 		cy.get('[id="dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
 		cy.get('[id="dtr-month"]').type(Math.floor(Math.random() *3) + 10);
 		cy.get('[id="dtr-year"]').type("2022");
-
 		cy.get('[id="add-srma-button"]').click();
 		cy.get('[class="govuk-list govuk-error-summary__list"]').should('contain.text', 'Select status');
 		cy.reload();
@@ -81,7 +75,6 @@ describe("User can add action srma to existing case", () => {
 		cy.get('[id="dtr-month"]').type("0");
 		cy.get('[id="dtr-year"]').type("0");
 		cy.get('[id="add-srma-button"]').click();
-
 		cy.get('[class="govuk-list govuk-error-summary__list"]').should('contain.text', 'Enter the date SRMA was offered to the trust');
 		cy.reload();
 	});
@@ -99,11 +92,8 @@ describe("User can add action srma to existing case", () => {
             expect(text).to.have.length(500);
             
         cy.get('#srma-notes').invoke('val', text);
-        cy.get('#srma-notes').type('{shift}{alt}'+ '1');
-       
+        cy.get('#srma-notes').type('{shift}{alt}'+ '1');     
 		})
-
-
 	});
 
 	it("User is given a warning for remaining text", () => {
@@ -114,9 +104,7 @@ describe("User can add action srma to existing case", () => {
 			cy.get('[id="add-srma-button"]').click();
 			cy.get('[class="govuk-list govuk-error-summary__list"]').should('contain.text', 'Notes must be 500 characters or less');
 			cy.reload();
-
 	});
-
 
 	it("User can select an SRMA status", function () {
 
@@ -174,7 +162,6 @@ describe("User can add action srma to existing case", () => {
 	it("User on a live SRMA page can see a list of items", function () {
 
 		cy.get('[class="govuk-table__row"]').should(($row) => {
-
 			expect($row).to.have.length(7);
             expect($row.eq(0).text().trim()).to.contain(this.stText).and.to.match(/Status/i);
 			expect($row.eq(1).text().trim()).to.contain('Date offered').and.to.match(/(Date offered)/i);
@@ -184,9 +171,7 @@ describe("User can add action srma to existing case", () => {
 			expect($row.eq(5).text().trim()).to.contain('Date report sent to trust').and.to.match(/(Date report sent to trust)/i);
 			expect($row.eq(6).text().trim()).to.contain('Notes').and.to.match(/(Notes)/i);
 	});
-
 });
-
 
 	it("User on a live SRMA page can see conditional Edit/Add links", function () {
 
@@ -221,10 +206,8 @@ describe("User can add action srma to existing case", () => {
 		cy.get('[id*="status"]').eq(rand).click();
 		cy.get('label.govuk-label.govuk-radios__label').eq(rand).invoke('text').then(term => {
 			cy.wrap(term.trim()).as("stText");
-
 			cy.log("Status set as "+term);
 			cy.get('[id="add-srma-button"]').click();
-
 			cy.get('[class="govuk-table__row"]').should(($row) => {
 				expect($row.eq(0).text().trim()).to.contain(term.trim()).and.to.match(/Status/i);
 			});
@@ -233,16 +216,12 @@ describe("User can add action srma to existing case", () => {
 	});
 
 		it("User can Add/Edit SRMA Date offered", function () {
-
 			cy.get('[class="govuk-link"]').eq(1).click();
-
 			cy.get('[id="dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
 			cy.get('[id="dtr-month"]').type(Math.floor(Math.random() *3) + 10);
-			cy.get('[id="dtr-year"]').type("2021");
-	
+			cy.get('[id="dtr-year"]').type("2021");	
 			cy.get('[id="add-srma-button"]').click();// We need to retrun to the page to handle value updates
 			cy.get('[class="govuk-link"]').eq(1).click();
-
 			cy.get('[id="dtr-day"]').invoke('val').then(dtrday => {
 				cy.wrap(dtrday.trim()).as("day");
 				arrDate[0] = dtrday;
@@ -276,28 +255,20 @@ describe("User can add action srma to existing case", () => {
 		cy.get('[id^="reason"]').eq(rand).click();
 		cy.get('label.govuk-label.govuk-radios__label').eq(rand).invoke('text').then(term => {
 			cy.wrap(term.trim()).as("stText");
-
 			cy.log("Reason set as "+term);
-			//cy.log("inside then=> this.stText2 ="+this.stText);//used for assrtions outside of this test scope
-
 			cy.get('[id="add-srma-button"]').click();
-
 			cy.get('[class="govuk-table__row"]').should(($row) => {
 				expect($row.eq(2).text().trim()).to.contain(term.trim()).and.to.match(/Reason/i);
 			});
 		})
-
 	});
-
 
 	it("User can Add/Edit SRMA Date accepted", function () {
 
 		cy.get('[class="govuk-link"]').eq(3).click();
-
 		cy.get('[id="dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
 		cy.get('[id="dtr-month"]').type(Math.floor(Math.random() *3) + 10);
 		cy.get('[id="dtr-year"]').type("2021");
-
 		cy.get('[id="add-srma-button"]').click();// We need to retrun to the page to handle value updates
 		cy.get('[class="govuk-link"]').eq(3).click();
 
@@ -317,16 +288,11 @@ describe("User can add action srma to existing case", () => {
 		});
 		
 		concatDate = (arrDate[0]+"-"+arrDate[1]+"-"+arrDate[2]);
-
-
 		cy.log(concatDate);
-
 			cy.get('[id="add-srma-button"]').click();
 			cy.get('[class="govuk-table__row"]').should(($row) => {
 				expect($row.eq(3).text().trim()).to.contain(concatDate.trim()).and.to.match(/Date accepted/i);
 			});
-
-
 	});
 
 
@@ -383,7 +349,6 @@ describe("User can add action srma to existing case", () => {
 			concatDate = (arrDate[0]+"-"+arrDate[1]+"-"+arrDate[2]);
 			cy.log(concatDate);
 
-
 			//Validation of End date
 			cy.get('[id="end-dtr-day"]').invoke('val').then(dtrday => {
 				cy.wrap(dtrday.trim()).as("day");
@@ -402,7 +367,6 @@ describe("User can add action srma to existing case", () => {
 						
 			concatEndDate = (arrDate[3]+"-"+arrDate[4]+"-"+arrDate[5]);
 			cy.log(concatEndDate);
-	
 			cy.get('[id="add-srma-button"]').click();
 
 			//back on srma page validation
@@ -410,29 +374,19 @@ describe("User can add action srma to existing case", () => {
 				expect($row.eq(4).text().trim()).to.contain(concatDate.trim()).and.to.match(/Dates of visit/i);
 			});
 
-			//cy.get('[id="add-srma-button"]').click();
 			cy.get('[class="govuk-table__row"]').should(($row) => {
 				expect($row.eq(4).text().trim()).to.contain(concatEndDate.trim()); 
 			});
-
-
-
-
 	});
-
-
 
 	it("User can Add/Edit SRMA Date report sent to trust", function () {
 
 		cy.get('[class="govuk-link"]').eq(5).click();
-
 		cy.get('[id="dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
 		cy.get('[id="dtr-month"]').type(Math.floor(Math.random() *3) + 10);
 		cy.get('[id="dtr-year"]').type("2021");
-
 		cy.get('[id="add-srma-button"]').click();// We need to retrun to the page to handle value updates
 		cy.get('[class="govuk-link"]').eq(5).click();
-
 		cy.get('[id="dtr-day"]').invoke('val').then(dtrday => {
 			cy.wrap(dtrday.trim()).as("day");
 			arrDate[0] = dtrday;
@@ -458,8 +412,6 @@ describe("User can add action srma to existing case", () => {
 
 	});
 
-	/*
-*/
 	it("User can Add/Edit SRMA Notes", function () {
 
 		let date = new Date();
@@ -467,15 +419,10 @@ describe("User can add action srma to existing case", () => {
 
 		cy.get('[class="govuk-link"]').eq(6).click();
         cy.get('#srma-notes').should('be.visible');
-
         cy.get('#srma-notes-info').then(($inf) =>{         
-        cy.get('#srma-notes').invoke('val', lstring);
-       
+        cy.get('#srma-notes').invoke('val', lstring); 
 		})
-
-
 		cy.get('#srma-notes').invoke('val').then(value => {
-			//cy.wrap(value.trim()).as("term");
 			term = value;
 		});
 
@@ -483,10 +430,6 @@ describe("User can add action srma to existing case", () => {
 				cy.get('[class="govuk-table__row"]').should(($row) => {
 					expect($row.eq(6).text().trim()).to.contain(term.trim()).and.to.match(/Notes/i);
 				});
-	});
-
-	it("User on the SRMA page can see conditional buttons based on Status", function () {
-		cy.log("test");
 	});
 
 	after(function () {
