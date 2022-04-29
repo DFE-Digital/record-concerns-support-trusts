@@ -12,6 +12,8 @@ using ConcernsCaseWork.Services.Records;
 using Service.Redis.Status;
 using System.Linq;
 using Service.Redis.Cases;
+using System.Collections.Generic;
+using ConcernsCaseWork.Enums;
 
 namespace ConcernsCaseWork.Pages.Case.Management
 {
@@ -23,18 +25,20 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ITrustModelService _trustModelService;
 		private readonly IRecordModelService _recordModelService;
 		private readonly IStatusCachedService _statusCachedService;
+		private readonly ISRMAService _srmaModelService;
 		private readonly ILogger<ClosurePageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
 		public ClosurePageModel(ICaseModelService caseModelService, ITrustModelService trustModelService, IRecordModelService recordModelService, 
-			IStatusCachedService statusCachedService, ILogger<ClosurePageModel> logger)
+			IStatusCachedService statusCachedService, ISRMAService srmaModelService, ILogger<ClosurePageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_trustModelService = trustModelService;
 			_recordModelService = recordModelService;
 			_statusCachedService = statusCachedService;
+			_srmaModelService = srmaModelService;
 			_logger = logger;
 		}
 		
@@ -51,19 +55,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 					throw new Exception("CaseUrn is null or invalid to parse");
 				}
 
-				if (await IsCaseAlreadyClosed(User.Identity.Name, caseUrn))
-				{
-					TempData["OpenConcerns.Message"] = "This case is already closed.";
-					return;
-				}
+				var validationMessages = await ValidateCloseConcern(caseUrn);
 
-				var recordsModels = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
-				var liveStatus = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
-				var numberOfOpenConcerns = recordsModels.Count(r => r.StatusUrn.CompareTo(liveStatus.Urn) == 0);
-
-				if (numberOfOpenConcerns > 0)
+				if (validationMessages.Count > 0)
 				{
-					TempData["OpenConcerns.Message"] = "Cases cannot be closed with open concerns. Please close all concerns if you want to close the case";
+					TempData["OpenActions.Message"] = validationMessages;
 					return;
 				}
 
@@ -131,6 +127,42 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			var caseDto = await _caseModelService.GetCaseByUrn(userName, urn);
 
 			return closedState != null && caseDto?.StatusUrn == closedState?.Urn;
+		}
+
+
+		private async Task<List<string>> ValidateCloseConcern(long caseUrn)
+		{
+			List<string> errorMessages = new List<string>();
+
+			var recordsModels = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
+			var liveStatus = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
+			var numberOfOpenConcerns = recordsModels.Count(r => r.StatusUrn.CompareTo(liveStatus.Urn) == 0);
+
+
+			var srmaModels = (await _srmaModelService.GetSRMAsForCase(caseUrn)).ToList();
+
+			var numberOfOpenSRMAs = srmaModels.Where(s =>
+													!s.Status.Equals(SRMAStatus.Canceled) &&
+													!s.Status.Equals(SRMAStatus.Declined) &&
+													!s.Status.Equals(SRMAStatus.Complete)).ToList().Count;
+
+			if (numberOfOpenConcerns > 0)
+			{
+				errorMessages.Add("Resolve Concerns");
+			}
+
+			if (numberOfOpenSRMAs > 0)
+			{
+				errorMessages.Add("Resolve SRMA");
+			}
+
+			if (await IsCaseAlreadyClosed(User.Identity.Name, caseUrn))
+			{
+				errorMessages.Add("This case is already closed.");
+			}
+
+
+			return errorMessages;
 		}
 	}
 }
