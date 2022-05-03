@@ -1,0 +1,120 @@
+﻿@page "/case/{urn:long}/management/action/srma/{srmaId:long}/closed"
+@model ConcernsCaseWork.Pages.Case.Management.Action.SRMA.ClosedPageModel
+
+@using ConcernsCaseWork.Helpers;
+@using ConcernsCaseWork.Extensions;
+
+@{
+	ViewData["Title"] = "SRMA";
+	var nonce = HttpContext.GetNonce();
+}
+
+@section BeforeMain {
+<div class="govuk-width-container">
+    <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
+        Back to case
+    </a>
+</div>
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError" />
+
+	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+	{
+		<partial name="_Error" />
+	}
+	else
+	{
+		<h1 class="govuk-heading-l">
+			<span class="govuk-caption-m">Case ID @Model.SRMAModel.CaseUrn</span>
+			School Resource Management Adviser (SRMA)
+		</h1>
+
+		<table class="govuk-table">
+			<caption class="govuk-table__caption govuk-table__caption--m"></caption>
+			<thead>
+				<tr>
+					<th scope="col"></th>
+					<th scope="col"></th>
+				</tr>
+			</thead>
+			<tbody class="govuk-table__body">
+
+				@* Status *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">Status</th>
+					<td class="govuk-table__cell">
+						@EnumHelper.GetEnumDescription(Model.SRMAModel.Status)
+					</td>
+				</tr>
+
+				@* Date offered *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">Date offered</th>
+					<td class="govuk-table__cell">
+						@DateExtension.ToDayMonthYear(Model.SRMAModel.DateOffered)
+					</td>
+				</tr>
+
+				@* Reason *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">
+						Reason
+					</th>
+					<td class="govuk-table__cell">
+						@EnumHelper.GetEnumDescription(Model.SRMAModel.Reason)
+					</td>
+				</tr>
+
+				@* Date accepted *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">
+						Date accepted
+					</th>
+					<td class="govuk-table__cell">
+						@if (Model.SRMAModel.DateAccepted.HasValue)
+						{
+							@DateExtension.ToDayMonthYearWithDefault(Model.SRMAModel.DateAccepted.Value)
+						}
+					</td>
+				</tr>
+
+				@* Dates of visit *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">
+						Dates of visit
+					</th>
+					<td class="govuk-table__cell">
+						@if (Model.SRMAModel.DateVisitStart.HasValue && Model.SRMAModel.DateVisitEnd.HasValue)
+						{
+							@DateExtension.ToDayMonthYear(Model.SRMAModel.DateVisitStart.Value) <text> - </text> @DateExtension.ToDayMonthYear(Model.SRMAModel.DateVisitEnd.Value)
+						}
+					</td>
+				</tr>
+
+
+				@* Date report sent *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">
+						Date report sent to trust
+					</th>
+					<td class="govuk-table__cell">
+						@if (Model.SRMAModel.DateReportSentToTrust.HasValue)
+						{
+							@DateExtension.ToDayMonthYearWithDefault(Model.SRMAModel.DateReportSentToTrust.Value)
+						}
+					</td>
+				</tr>
+
+				@* Notes *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">Notes</th>
+					<td class="govuk-table__cell">
+						@Model.SRMAModel.Notes
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	}
+</div>

@@ -107,6 +107,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 				var srmaNotes = Request.Form["srma-notes"].ToString();
 				await _srmaModelService.SetNotes(srmaId, srmaNotes);
 				await _srmaModelService.SetStatus(srmaId, resolvedStatus);
+				await _srmaModelService.SetDateClosed(srmaId, DateTime.Now);
 
 				return Redirect($"/case/{caseUrn}/management");
 			}
