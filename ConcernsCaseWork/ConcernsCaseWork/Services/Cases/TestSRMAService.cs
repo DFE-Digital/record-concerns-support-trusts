@@ -106,5 +106,11 @@ namespace ConcernsCaseWork.Services.Cases
 			SRMAs.Single(s => s.Id == srmaId).DateReportSentToTrust = reportSentDate;
 			return Task.CompletedTask;
 		}
+
+		public Task SetDateClosed(long srmaId, DateTime closedDate)
+		{
+			SRMAs.Single(s => s.Id == srmaId).DateClosed = closedDate;
+			return Task.CompletedTask;
+		}
 	}
 }
