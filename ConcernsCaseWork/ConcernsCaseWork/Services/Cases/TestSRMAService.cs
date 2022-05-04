@@ -50,7 +50,8 @@ namespace ConcernsCaseWork.Services.Cases
 										now, 
 										SRMAStatus.TrustConsidering, 
 										"Auto generated test data", 
-										SRMAReasonOffered.RDDIntervention);
+										SRMAReasonOffered.RDDIntervention,
+										now);
 
 
 			SRMAs.Add(testSRMA);
@@ -109,7 +110,7 @@ namespace ConcernsCaseWork.Services.Cases
 
 		public Task SetDateClosed(long srmaId, DateTime closedDate)
 		{
-			SRMAs.Single(s => s.Id == srmaId).DateClosed = closedDate;
+			SRMAs.Single(s => s.Id == srmaId).ClosedAt = closedDate;
 			return Task.CompletedTask;
 		}
 	}
