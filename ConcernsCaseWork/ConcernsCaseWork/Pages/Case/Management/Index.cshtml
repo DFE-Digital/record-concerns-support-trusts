@@ -298,7 +298,7 @@
 										</a>
 									</td>
 									<td class="govuk-table__cell govuk-table__header__right">
-										@DateExtension.ToDayMonthYear(srma.DateOffered)
+										@DateExtension.ToDayMonthYear(srma.CreatedAt)
 									</td>
 								</tr>
 							}
@@ -332,10 +332,9 @@
 										</a>
 									</td>
 									<td class="govuk-table__cell">
-										@*@EnumHelper.GetEnumDescription(srma.Status)*@
 									</td>
 									<td class="govuk-table__cell govuk-table__header__right">
-										@DateExtension.ToDayMonthYear(srma.DateClosed.Value)
+										@DateExtension.ToDayMonthYear(srma.ClosedAt.Value)
 									</td>
 								</tr>
 							}

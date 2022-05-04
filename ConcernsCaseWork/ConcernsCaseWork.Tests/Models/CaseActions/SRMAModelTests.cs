@@ -29,7 +29,8 @@ namespace ConcernsCaseWork.Tests.Models
 				date, 
 				status, 
 				notes, 
-				reason
+				reason,
+				date
 			);
 			
 			// assert

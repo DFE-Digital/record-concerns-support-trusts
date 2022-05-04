@@ -153,7 +153,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 				null,
 				Enum.Parse<SRMAStatus>(status),
 				notes,
-				SRMAReasonOffered.Unknown
+				SRMAReasonOffered.Unknown,
+				DateTime.Now
 				);
 
 			return srma;

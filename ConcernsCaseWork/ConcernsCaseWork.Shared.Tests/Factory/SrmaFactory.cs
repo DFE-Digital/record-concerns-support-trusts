@@ -31,10 +31,10 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<DateTime>(),
 				status,
 				Fixture.Create<string>(),
-				reason
+				reason,
+				Fixture.Create<DateTime>()
 			);
 
-			srma.CaseUrn = Fixture.Create<long>();
 			return srma;
 		}
 	}
