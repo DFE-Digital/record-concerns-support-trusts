@@ -191,12 +191,6 @@ describe("User can add action srma to existing case", () => {
 			});
 });
 
-	it("If no entry is recorded in a section, the user should see a grey Empty note in the middle column", function () {
-		cy.log("test");
-	});
-
-
-
 	it("User can Add/Edit SRMA Status", function () {
 
 		cy.get('[class="govuk-link"]').eq(0).click();

@@ -1,4 +1,4 @@
-describe("User can add action srma to existing case", () => {
+describe("User can resolve an SRMA and is given validation based on options chosen", () => {
 	before(() => {
 		cy.login();
 	});
@@ -112,7 +112,6 @@ describe("User can add action srma to existing case", () => {
 			cy.get('[id="add-srma-button"]').click();
 
 			cy.get('[class="govuk-table__row"]').should(($row) => {
-				//expect($row.eq(0).text().trim()).to.contain("Trust considering").trim().and.to.match(/Status/i);
 				expect($row.eq(0).text().trim()).to.contain("Trust considering").and.to.match(/Status/i);
 			});
 		})
@@ -128,7 +127,6 @@ describe("User can add action srma to existing case", () => {
 	
 					cy.get('[class="govuk-list govuk-error-summary__list"]').should('be.visible');
 					cy.get('[class="govuk-list govuk-error-summary__list"]').should('contain.text', 'Enter the reason');
-					//cy.reload();
 				}else{
 					//this code path is a fallback in case the data is altered mid test
 					cy.get('[class="govuk-tag ragtag ragtag__grey"]').eq(2).should('not.be.visible')
@@ -150,7 +148,6 @@ describe("User can add action srma to existing case", () => {
 
 				cy.get('[class="govuk-list govuk-error-summary__list"]').should('be.visible')
 				cy.get('[class="govuk-list govuk-error-summary__list"]').should('contain.text', 'Enter the reason');
-				//cy.reload();
 			}else{
 				//this code path is a fallback in case the data is altered mid test
 				cy.get('[class="govuk-tag ragtag ragtag__grey"]').eq(2).should('not.be.visible')
@@ -188,7 +185,6 @@ describe("User can add action srma to existing case", () => {
 
 				cy.get('[class="govuk-list govuk-error-summary__list"]').should('be.visible')
 				cy.get('[class="govuk-list govuk-error-summary__list"]').should('contain.text', 'Enter the reason');
-				//cy.reload();
 			}else{
 				//this code path is a fallback in case the data is altered mid test
 				cy.get('[class="govuk-tag ragtag ragtag__grey"]').eq(2).should('not.be.visible')
@@ -196,8 +192,6 @@ describe("User can add action srma to existing case", () => {
 
 			cy.reload();
 	});
-
-
 
 	it("User on the SRMA page cannot cancel SRMA without reason populated", function () {
 		cy.get('[href*="/cancel"]').click();
@@ -210,7 +204,6 @@ describe("User can add action srma to existing case", () => {
 
 				cy.get('[class="govuk-list govuk-error-summary__list"]').should('be.visible')
 				cy.get('[class="govuk-list govuk-error-summary__list"]').should('contain.text', 'Enter the reason');
-				//cy.reload();
 			}else{
 				//this code path is a fallback in case the data is altered mid test
 				cy.get('[class="govuk-tag ragtag ragtag__grey"]').eq(2).should('not.be.visible')
@@ -237,6 +230,14 @@ describe("User can add action srma to existing case", () => {
 				expect($row.eq(0).text().trim()).to.contain("Preparing for deployment").and.to.match(/Status/i);
 			});
 		})
+
+	});
+
+
+	it("User CAN cancel with reason populated", function () {
+
+		cy.get('[class="govuk-link"]').eq(2).click();
+
 
 	});
 
