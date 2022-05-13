@@ -108,7 +108,7 @@ namespace ConcernsCaseWork.Services.Cases
 			return Task.CompletedTask;
 		}
 
-		public Task SetDateClosed(long srmaId, DateTime closedDate)
+		public Task SetDateClosed(long srmaId, DateTime? closedDate)
 		{
 			SRMAs.Single(s => s.Id == srmaId).ClosedAt = closedDate;
 			return Task.CompletedTask;
