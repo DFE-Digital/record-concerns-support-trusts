@@ -20,7 +20,11 @@ describe("Users can see warning messages on the case closure page", () => {
 		cy.closeAllOpenConcerns();
 		});
 
+
+
 	it("User can enter case closure page", () => {
+		cy.closeSRMA();
+		
 		cy.get('#close-case-button').click()
 	})
 
@@ -61,7 +65,6 @@ describe("Users can see warning messages on the case closure page", () => {
 		})
 	})
 
-//Reload required due to Bug Number 88567
 	it("User closing a case with no outcome text is shown an error", () => {
 		cy.reload()
 	    cy.get('#close-case-button').click();

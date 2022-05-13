@@ -79,6 +79,7 @@ describe("User can resolve an SRMA and is given validation based on options chos
 		cy.get('[id="add-srma-button"]').click();
 	});
 
+
 	it("User can click on a link to view a live SRMA record", function () {
 
 		cy.get('table:nth-child(4) > tbody').children().should(($srma) => {
@@ -86,19 +87,14 @@ describe("User can resolve an SRMA and is given validation based on options chos
 			expect($srma.text()).to.contain("SRMA");
         })
 
-		cy.get('table:nth-child(4) > tbody > tr > td:nth-child(2)').should(($status) => {
-            expect($status).to.be.visible
+			cy.get('table:nth-child(4) > tbody > tr').should(($status) => {
+			expect($status).to.be.visible
 			expect($status.text().trim()).to.contain(this.stText);
         })
 
 		cy.get('a[href*="/action/srma/"]').click();
 
 	});
-
-	it("If no entry is recorded in a section, the user should see a grey Empty note in the middle column", function () {
-		cy.log("test");
-	});
-
 
 
 	it("User can set status to Trust Considering", function () {
