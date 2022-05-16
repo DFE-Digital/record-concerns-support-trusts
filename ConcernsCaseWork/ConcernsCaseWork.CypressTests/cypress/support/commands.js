@@ -448,12 +448,13 @@ Cypress.Commands.add('addActionItemToCase', (option, textToVerify) =>{
 
 Cypress.Commands.add('closeSRMA', function (){
     let SRMAExists = false
-    const elem = 'a[href*="/action/srma/"]'
+
+    const elem = 'table:nth-child(4) > tbody > tr > td:nth-child(1) > a'
 
     cy.log((elem).length )
         if (Cypress.$(elem).length > 0 ) { //Cypress.$ needed to handle element missing exception
 
-                cy.get('a[href*="/action/srma/"]').click();
+                cy.get('table:nth-child(4) > tbody > tr > td:nth-child(1) > a').click();
 
             // Sets status to Trust Considering
             cy.get('[class="govuk-link"]').eq(0).click();
