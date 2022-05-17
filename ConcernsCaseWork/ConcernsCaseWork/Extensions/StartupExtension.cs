@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
@@ -12,6 +13,7 @@ using Serilog;
 using Service.Redis.Base;
 using Service.Redis.Cases;
 using Service.Redis.Configuration;
+using Service.Redis.FinancialPlan;
 using Service.Redis.Ratings;
 using Service.Redis.Records;
 using Service.Redis.Security;
@@ -22,6 +24,7 @@ using Service.Redis.Types;
 using Service.Redis.Users;
 using Service.TRAMS.Cases;
 using Service.TRAMS.Configuration;
+using Service.TRAMS.FinancialPlan;
 using Service.TRAMS.Ratings;
 using Service.TRAMS.RecordAcademy;
 using Service.TRAMS.RecordRatingHistory;
@@ -108,6 +111,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IRatingModelService, RatingModelService>();
 			services.AddSingleton<IRecordModelService, RecordModelService>();
 			services.AddSingleton<ISRMAService, TestSRMAService>();
+			services.AddSingleton<IFinancialPlanModelService, FinancialPlanModelService>();
 
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
@@ -123,6 +127,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ITypeService, TypeService>();
 			services.AddSingleton<ICaseSearchService, CaseSearchService>();
 			services.AddSingleton<ICaseHistoryService, CaseHistoryService>();
+			services.AddSingleton<IFinancialPlanService, FinancialPlanService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
@@ -134,6 +139,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddTransient<ICaseCachedService, CaseCachedService>();
 			services.AddTransient<IRecordCachedService, RecordCachedService>();
 			services.AddSingleton<ICaseHistoryCachedService, CaseHistoryCachedService>();
+			services.AddSingleton<IFinancialPlanCachedService, FinancialPlanCachedService>();
 			
 			// AD Integration
 			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();

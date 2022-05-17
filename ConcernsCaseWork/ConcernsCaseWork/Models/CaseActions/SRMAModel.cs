@@ -5,7 +5,6 @@ namespace ConcernsCaseWork.Models.CaseActions
 {
 	public class SRMAModel : CaseActionModel
 	{
-		public long Id { get; set; }
 		public DateTime	DateOffered { get; set; }
 		public DateTime? DateAccepted { get; set; }
 		public DateTime? DateReportSentToTrust { get; set; }
