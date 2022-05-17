@@ -31,7 +31,8 @@ namespace Service.TRAMS.CaseActions
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
 
-				return JsonConvert.DeserializeObject<SRMADto>(content);
+				var wrapper = JsonConvert.DeserializeObject<ApiWrapper<SRMADto>>(content);
+				return wrapper.Data;
 			}
 			catch (Exception ex)
 			{

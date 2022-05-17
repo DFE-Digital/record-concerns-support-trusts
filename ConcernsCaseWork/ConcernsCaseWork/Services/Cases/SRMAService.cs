@@ -1,16 +1,26 @@
 ﻿using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
+using Service.Redis.CaseActions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Cases
 {
-	public class SRMAService : ISRMAService
+	public class SRMAService : ISRMAIntermediateService
 	{
-		public Task<SRMAModel> GetSRMAById(long srmaId)
+		private readonly CachedSRMAProvider _cachedSrmaProvider;
+
+		public SRMAService(CachedSRMAProvider cachedSrmaProvider)
 		{
-			throw new NotImplementedException();
+			_cachedSrmaProvider = cachedSrmaProvider;
+		}
+
+		public async Task<SRMAModel> GetSRMAById(long srmaId)
+		{
+			var srmaDto = await _cachedSrmaProvider.GetSRMAById(srmaId);
+			return CaseActionsMapping.Map(srmaDto);
 		}
 
 		public Task<IEnumerable<SRMAModel>> GetSRMAsForCase(long caseUrn)
