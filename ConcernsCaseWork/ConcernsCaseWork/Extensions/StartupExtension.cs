@@ -88,9 +88,6 @@ namespace ConcernsCaseWork.Extensions
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			var tramsApiKey = configuration["trams:api_key"];
 
-			tramsApiEndpoint = "https://localhost:44305";
-			tramsApiKey = "71137e8b-d881-4e73-9cc1-f6a755e38bf4";
-
 			if (string.IsNullOrEmpty(tramsApiEndpoint) || string.IsNullOrEmpty(tramsApiKey))
 				throw new Exception("AddTramsApi::missing configuration");
 
