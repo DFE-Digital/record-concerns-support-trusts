@@ -40,6 +40,18 @@ namespace Service.Redis.CaseActions
 			return srma;
 		}
 
+		public async Task<SRMADto> SaveSRMA(SRMADto srma)
+		{
+			var created = await _srmaProvider.SaveSRMA(srma);
+			if (created != null)
+			{
+				var cacheKey = GetCacheKeyForSrmaBySrmaIdKey(srma.Id);
+				await StoreData<SRMADto>(cacheKey, created);
+			}
+
+			return created;
+		}
+
 		private string GetCacheKeyForSrmaBySrmaIdKey(long srmaId)
 		{
 			return $"SRMA:SRMAId:{srmaId}";

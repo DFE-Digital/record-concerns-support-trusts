@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
 using Service.TRAMS.CaseActions;
+using System;
 
 namespace ConcernsCaseWork.Mappers
 {
@@ -12,7 +13,6 @@ namespace ConcernsCaseWork.Mappers
 				Id = srmaDto.Id,
 				CaseUrn = srmaDto.CaseId,
 				ClosedAt = srmaDto.ClosedAt,
-				CreatedAt = srmaDto.DateOffered,
 				DateOffered = srmaDto.DateOffered,
 				DateAccepted = srmaDto.DateAccepted,
 				DateReportSentToTrust = srmaDto.DateReportSentToTrust,
@@ -21,6 +21,25 @@ namespace ConcernsCaseWork.Mappers
 				Notes = srmaDto.Notes,
 				Reason = (Enums.SRMAReasonOffered)srmaDto.Reason,
 				Status = (Enums.SRMAStatus)srmaDto.Status
+			};
+		}
+
+		public static SRMADto Map(SRMAModel srmaModel)
+		{
+			return new SRMADto
+			{
+				Id = Convert.ToInt32(srmaModel.Id),
+				CaseId = Convert.ToInt32(srmaModel.CaseUrn),
+				ClosedAt = srmaModel.ClosedAt,
+				DateAccepted = srmaModel.DateAccepted,
+				DateOffered = srmaModel.DateOffered,
+				DateReportSentToTrust = srmaModel.DateReportSentToTrust,
+				DateVisitEnd = srmaModel.DateVisitEnd,
+				DateVisitStart = srmaModel.DateVisitStart,
+				Notes = srmaModel.Notes,
+				Reason = (SRMAReasonOffered)srmaModel.Reason,
+				Status = (SRMAStatus)srmaModel.Status,
+
 			};
 		}
 	}

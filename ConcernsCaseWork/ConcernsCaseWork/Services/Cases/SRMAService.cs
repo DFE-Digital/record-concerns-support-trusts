@@ -23,15 +23,16 @@ namespace ConcernsCaseWork.Services.Cases
 			return CaseActionsMapping.Map(srmaDto);
 		}
 
+		public async Task SaveSRMA(SRMAModel srma)
+		{
+			var savedSRMA = await _cachedSrmaProvider.SaveSRMA(CaseActionsMapping.Map(srma));
+		}
+
 		public Task<IEnumerable<SRMAModel>> GetSRMAsForCase(long caseUrn)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Task SaveSRMA(SRMAModel srma)
-		{
-			throw new NotImplementedException();
-		}
 
 		public Task SetDateAccepted(long srmaId, DateTime? acceptedDate)
 		{
