@@ -14,6 +14,9 @@
 	var srmaModels = Model.CaseActions?.Where(ca => ca is SRMAModel).Select(srma =>{ return srma as SRMAModel;}).ToList();
 	var openSRMAs = srmaModels.Where(srma => !srma.Status.Equals(SRMAStatus.Canceled) && !srma.Status.Equals(SRMAStatus.Declined) && !srma.Status.Equals(SRMAStatus.Complete)).ToList();
 	var closedSRMAs = srmaModels.Except(openSRMAs).ToList();
+
+	var financialPlanModels = Model.CaseActions?.Where(ca => ca is FinancialPlanModel).Select(fp => { return fp as FinancialPlanModel; }).ToList();
+	var openFinancialPlanModels = financialPlanModels.Where(fp => !fp.ClosedAt.HasValue).ToList();
 }
 
 <div class="govuk-width-container">
@@ -274,7 +277,7 @@
 
 
 
-				@if (openSRMAs.Count > 0)
+				@if (openSRMAs.Count > 0 || openFinancialPlanModels.Count > 0)
 				{
 					<table class="govuk-table">
 						<thead class="govuk-table__head">
@@ -299,6 +302,21 @@
 									</td>
 									<td class="govuk-table__cell govuk-table__header__right">
 										@DateExtension.ToDayMonthYear(srma.CreatedAt)
+									</td>
+								</tr>
+							}
+
+							@foreach (FinancialPlanModel fp in openFinancialPlanModels)
+							{
+								<tr class="govuk-table__row">
+									<td class="govuk-table__cell">
+										<a href="@Request.Path/action/srma/@fp.Id" class="govuk-link govuk-link-no-visited-state">
+											@*Financial Plan:@EnumHelper.GetEnumDescription(fp.Status)*@
+											Financial Plan:@EnumHelper.GetEnumDescription(fp.Status)
+										</a>
+									</td>
+									<td class="govuk-table__cell govuk-table__header__right">
+										@DateExtension.ToDayMonthYear(fp.CreatedAt)
 									</td>
 								</tr>
 							}

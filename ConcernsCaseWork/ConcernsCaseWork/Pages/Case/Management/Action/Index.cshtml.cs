@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Services.FinancialPlan;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action
 {
@@ -21,6 +21,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 	{
 		private readonly ICaseModelService _caseModelService;
 		private readonly ISRMAService _srmaService;
+		private readonly IFinancialPlanModelService _financialPlanModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
@@ -28,10 +29,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 
 		public IndexPageModel(ICaseModelService caseModelService,
 			ISRMAService srmaService,
+			IFinancialPlanModelService financialPlanModelService,
 			ILogger<IndexPageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_srmaService = srmaService;
+			_financialPlanModelService = financialPlanModelService;
 			_logger = logger;
 		}
 
@@ -76,46 +79,48 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 
 				CaseActions = CaseActions ?? new List<CaseActionModel>();
 
+				var pageToRedirect = "";
+
 				switch (caseAction)
 				{
 					case CaseActionEnum.Srma:
-					
+						pageToRedirect = $"{action.ToLower()}/add";
 						CaseActions.AddRange(await _srmaService.GetSRMAsForCase(caseUrn));
 
-						//Check if case action is SRMA and status is not canceled, declined or complete
-						var openSrma = CaseActions.Where(ca => (
-							ca is SRMAModel &&
-							(
-								!(((SRMAModel)ca).Status.Equals(SRMAStatus.Canceled)) &&
-								!(((SRMAModel)ca).Status.Equals(SRMAStatus.Declined)) &&
-								!(((SRMAModel)ca).Status.Equals(SRMAStatus.Complete))
-							)
-						)).FirstOrDefault();
+						if (HasOpenSRMA())
+						{
+							throw new InvalidOperationException("There is already an open SRMA action linked to this case. Please resolve that before opening another one.");
+						}
+						break;
+					case CaseActionEnum.FinancialPlan:
+						pageToRedirect = $"{action.ToLower()}/edit";
+						CaseActions.AddRange(await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name));
 
-						if (openSrma != null)
-							throw new ApplicationException("There is already an open SRMA action linked to this case. Please resolve that before opening another one.");
+						if (HasOpenFinancialPlan())
+						{
+							throw new InvalidOperationException("There is already an open Financial Plan action linked to this case. Please resolve that before opening another one.");
+						}
 						break;
 					default:
 						throw new NotImplementedException($"{caseAction} - has not been implemented");
 						break;
 				}
 
-				return RedirectToPage($"{action.ToLower()}/add", new { urn = caseUrn });
+				return RedirectToPage(pageToRedirect, new { urn = caseUrn });
 			}
-			catch (ApplicationException ex)
+			catch (InvalidOperationException ex)
 			{
-				_logger.LogError("Case::Action::IndexPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-
 				TempData["CaseAction.Error"] = ex.Message;
-				return Page();
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Case::Action::IndexPageModel::OnPostAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
-				return Page();
 			}
+
+			return Page();
+
 		}
 
 		private long GetRouteData()
@@ -128,6 +133,36 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 
 			return caseUrn;
 		}
-	
+
+		private bool HasOpenSRMA()
+		{
+			//Check if case action is SRMA and status is not canceled, declined or complete
+			var openSRMA = CaseActions.Where(ca => (
+							ca is SRMAModel &&
+							(
+								!(((SRMAModel)ca).Status.Equals(SRMAStatus.Canceled)) &&
+								!(((SRMAModel)ca).Status.Equals(SRMAStatus.Declined)) &&
+								!(((SRMAModel)ca).Status.Equals(SRMAStatus.Complete))
+							)
+						)).FirstOrDefault();
+
+			return openSRMA != null;
+		}
+
+		private bool HasOpenFinancialPlan()
+		{
+			// Check for financial plans that do not have a closed date value
+			var openFinancialPlan = CaseActions.Where(ca => (
+							ca is FinancialPlanModel &&
+							(
+								!((FinancialPlanModel)ca).ClosedAt.HasValue
+							)
+						)).FirstOrDefault();
+
+
+
+			return openFinancialPlan != null;
+		}
+
 	}
 }
