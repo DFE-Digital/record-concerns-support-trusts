@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Mappers
 				DateVisitEnd = srmaDto.DateVisitEnd,
 				DateVisitStart = srmaDto.DateVisitStart,
 				Notes = srmaDto.Notes,
-				Reason = (Enums.SRMAReasonOffered)srmaDto.Reason,
+				Reason = (Enums.SRMAReasonOffered)(srmaDto.Reason ?? SRMAReasonOffered.Unknown),
 				Status = (Enums.SRMAStatus)srmaDto.Status
 			};
 		}

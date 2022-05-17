@@ -27,7 +27,7 @@ namespace Service.Redis.CaseActions
 
 			var srma = await GetData<SRMADto>(cacheKey);
 
-			if(srma == null)
+			if (srma == null)
 			{
 				srma = await _srmaProvider.GetSRMAById(srmaId);
 
@@ -50,6 +50,25 @@ namespace Service.Redis.CaseActions
 			}
 
 			return created;
+		}
+
+		public async Task<List<SRMADto>> GetSRMAsForCase(long caseUrn)
+		{
+			var cacheKey = $"SRMAsForCase:CaseId:{caseUrn}";
+
+			var srmas = await GetData<List<SRMADto>>(cacheKey);
+
+			if(srmas == null || srmas.Count == 0)
+			{
+				srmas = await _srmaProvider.GetSRMAsForCase(caseUrn);
+				
+				if (srmas?.Count > 0)
+				{
+					await StoreData<List<SRMADto>>(cacheKey, srmas);
+				}
+			}
+
+			return srmas;
 		}
 
 		private string GetCacheKeyForSrmaBySrmaIdKey(long srmaId)

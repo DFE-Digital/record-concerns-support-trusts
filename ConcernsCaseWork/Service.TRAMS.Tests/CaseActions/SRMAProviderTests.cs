@@ -49,7 +49,9 @@ namespace Service.TRAMS.Tests.CaseActions
 				Notes = "Test3"
 			}};
 
-			var httpClientFactory = CreateMockFactory(srmas);
+			var wrapped = new ApiWrapper<List<SRMADto>>(srmas.ToList());
+
+			var httpClientFactory = CreateMockFactory(wrapped);
 
 			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object);
 

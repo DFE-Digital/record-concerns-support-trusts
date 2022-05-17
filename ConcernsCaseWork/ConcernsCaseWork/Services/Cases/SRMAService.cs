@@ -5,6 +5,7 @@ using Service.Redis.CaseActions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace ConcernsCaseWork.Services.Cases
 {
@@ -28,11 +29,11 @@ namespace ConcernsCaseWork.Services.Cases
 			var savedSRMA = await _cachedSrmaProvider.SaveSRMA(CaseActionsMapping.Map(srma));
 		}
 
-		public Task<IEnumerable<SRMAModel>> GetSRMAsForCase(long caseUrn)
+		public async Task<IEnumerable<SRMAModel>> GetSRMAsForCase(long caseUrn)
 		{
-			throw new NotImplementedException();
+			var srmas = await _cachedSrmaProvider.GetSRMAsForCase(caseUrn);
+			return srmas?.Select(dto => CaseActionsMapping.Map(dto));
 		}
-
 
 		public Task SetDateAccepted(long srmaId, DateTime? acceptedDate)
 		{
