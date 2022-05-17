@@ -35,9 +35,9 @@ namespace ConcernsCaseWork.Services.Cases
 			return srmas?.Select(dto => CaseActionsMapping.Map(dto));
 		}
 
-		public Task SetDateAccepted(long srmaId, DateTime? acceptedDate)
+		public async Task SetDateAccepted(long srmaId, DateTime? acceptedDate)
 		{
-			throw new NotImplementedException();
+			await _cachedSrmaProvider.SetDateAccepted(srmaId, acceptedDate);	
 		}
 
 		public Task SetDateClosed(long srmaId, DateTime? ClosedDate)

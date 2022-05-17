@@ -71,6 +71,18 @@ namespace Service.Redis.CaseActions
 			return srmas;
 		}
 
+		public async Task<SRMADto> SetDateAccepted(long srmaId, DateTime? acceptedDate)
+		{ 
+			var patched = await _srmaProvider.SetDateAccepted(srmaId, acceptedDate);
+			if (patched != null)
+			{
+				var cacheKey = GetCacheKeyForSrmaBySrmaIdKey(srmaId);
+				await StoreData<SRMADto>(cacheKey, patched);
+			}
+
+			return patched;
+		}
+
 		private string GetCacheKeyForSrmaBySrmaIdKey(long srmaId)
 		{
 			return $"SRMA:SRMAId:{srmaId}";

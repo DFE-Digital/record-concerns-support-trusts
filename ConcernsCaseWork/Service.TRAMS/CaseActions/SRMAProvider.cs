@@ -89,7 +89,7 @@ namespace Service.TRAMS.CaseActions
 				var client = _httpClientFactory.CreateClient(HttpClientName);
 				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-date-accepted?acceptedDate={acceptedDate?.ToShortDateString() ?? String.Empty}");
 
-				var response = await client.SendAsync(request);
+				var response = await client.SendAsync(request); 
 				var content = await response.Content.ReadAsStringAsync();
 
 				return JsonConvert.DeserializeObject<SRMADto>(content);
