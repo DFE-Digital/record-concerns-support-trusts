@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Cases
 {
-	public class SRMAService : ISRMAIntermediateService
+	public class SRMAService : ISRMAService
 	{
 		private readonly CachedSRMAProvider _cachedSrmaProvider;
 

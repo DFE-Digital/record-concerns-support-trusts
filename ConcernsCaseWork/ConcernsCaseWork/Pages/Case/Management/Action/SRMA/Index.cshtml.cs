@@ -29,7 +29,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		public SRMAModel SRMAModel { get; set; }
 		public string DeclineCompleteButtonLabel { get; private set; }
 
-		public IndexPageModel(ISRMAIntermediateService srmaService, ILogger<IndexPageModel> logger)
+		public IndexPageModel(ISRMAService srmaService, ILogger<IndexPageModel> logger)
 		{
 			_srmaModelService = srmaService;
 			_logger = logger;

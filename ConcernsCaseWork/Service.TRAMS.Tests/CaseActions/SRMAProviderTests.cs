@@ -14,6 +14,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using Service.TRAMS.Base;
 
 namespace Service.TRAMS.Tests.CaseActions
 {
@@ -76,7 +77,9 @@ namespace Service.TRAMS.Tests.CaseActions
 				Notes = "Test"
 			};
 
-			var httpClientFactory = CreateMockFactory(srmaDto);
+			var wrapped = new ApiWrapper<SRMADto>(srmaDto);
+
+			var httpClientFactory = CreateMockFactory(wrapped);
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 

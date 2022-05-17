@@ -110,8 +110,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ICaseHistoryModelService, CaseHistoryModelService>();
 			services.AddSingleton<IRatingModelService, RatingModelService>();
 			services.AddSingleton<IRecordModelService, RecordModelService>();
-			services.AddSingleton<ISRMAService, TestSRMAService>();
-			services.AddSingleton<ISRMAIntermediateService, SRMAService>();
+			services.AddSingleton<ISRMAService, SRMAService>();
 
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();

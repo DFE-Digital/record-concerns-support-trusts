@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 		public IEnumerable<RadioItem> SRMAStatuses => getStatuses();
 
 		public AddPageModel(
-			ISRMAIntermediateService srmaModelService, ILogger<AddPageModel> logger)
+			ISRMAService srmaModelService, ILogger<AddPageModel> logger)
 		{
 			_srmaModelService = srmaModelService;
 			_logger = logger;
