@@ -220,12 +220,12 @@ namespace Service.TRAMS.CaseActions
 			try
 			{
 				var client = _httpClientFactory.CreateClient(HttpClientName);
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-visit-dates?startDate={startDate.ToShortDateString()}&endDate={endDate?.ToShortDateString() ?? String.Empty}");
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-visit-dates?startDate={SerialiseDateTime(startDate)}&endDate={SerialiseDateTime(endDate)}");
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
 
-				return JsonConvert.DeserializeObject<SRMADto>(content);
+				return JsonConvert.DeserializeObject<ApiWrapper<SRMADto>>(content).Data;
 			}
 			catch (Exception ex)
 			{

@@ -58,10 +58,10 @@ namespace Service.Redis.CaseActions
 
 			var srmas = await GetData<List<SRMADto>>(cacheKey);
 
-			if(srmas == null || srmas.Count == 0)
+			if (srmas == null || srmas.Count == 0)
 			{
 				srmas = await _srmaProvider.GetSRMAsForCase(caseUrn);
-				
+
 				if (srmas?.Count > 0)
 				{
 					await StoreData<List<SRMADto>>(cacheKey, srmas);
@@ -72,7 +72,7 @@ namespace Service.Redis.CaseActions
 		}
 
 		public async Task<SRMADto> SetDateAccepted(long srmaId, DateTime? acceptedDate)
-		{ 
+		{
 			var patched = await _srmaProvider.SetDateAccepted(srmaId, acceptedDate);
 			if (patched != null)
 			{
@@ -81,6 +81,16 @@ namespace Service.Redis.CaseActions
 			}
 
 			return patched;
+		}
+
+		public async Task SetVisitDates(long srmaId, DateTime startDate, DateTime? endDate)
+		{
+			var patched = await _srmaProvider.SetVisitDates(srmaId, startDate, endDate);	
+			if(patched != null)
+			{
+				var cacheKey = GetCacheKeyForSrmaBySrmaIdKey(srmaId);
+				await StoreData<SRMADto>(cacheKey, patched);
+			}
 		}
 
 		private string GetCacheKeyForSrmaBySrmaIdKey(long srmaId)

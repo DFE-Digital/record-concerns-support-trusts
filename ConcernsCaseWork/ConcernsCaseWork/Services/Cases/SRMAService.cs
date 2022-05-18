@@ -70,9 +70,9 @@ namespace ConcernsCaseWork.Services.Cases
 			throw new NotImplementedException();
 		}
 
-		public Task SetVisitDates(long srmaId, DateTime startDate, DateTime? endDate)
+		public async Task SetVisitDates(long srmaId, DateTime startDate, DateTime? endDate)
 		{
-			throw new NotImplementedException();
+			await _cachedSrmaProvider.SetVisitDates(srmaId, startDate, endDate);
 		}
 	}
 }
