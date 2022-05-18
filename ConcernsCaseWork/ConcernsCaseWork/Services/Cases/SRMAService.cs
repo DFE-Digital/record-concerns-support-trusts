@@ -45,9 +45,9 @@ namespace ConcernsCaseWork.Services.Cases
 			throw new NotImplementedException();
 		}
 
-		public Task SetDateReportSent(long srmaId, DateTime? reportSentDate)
+		public async Task SetDateReportSent(long srmaId, DateTime? reportSentDate)
 		{
-			throw new NotImplementedException();
+			await _cachedSrmaProvider.SetDateReportSent(srmaId, reportSentDate);
 		}
 
 		public Task SetNotes(long srmaId, string notes)

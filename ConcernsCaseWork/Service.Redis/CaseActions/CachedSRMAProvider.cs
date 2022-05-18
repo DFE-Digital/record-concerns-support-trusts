@@ -85,7 +85,17 @@ namespace Service.Redis.CaseActions
 
 		public async Task SetVisitDates(long srmaId, DateTime startDate, DateTime? endDate)
 		{
-			var patched = await _srmaProvider.SetVisitDates(srmaId, startDate, endDate);	
+			var patched = await _srmaProvider.SetVisitDates(srmaId, startDate, endDate);
+			if (patched != null)
+			{
+				var cacheKey = GetCacheKeyForSrmaBySrmaIdKey(srmaId);
+				await StoreData<SRMADto>(cacheKey, patched);
+			}
+		}
+
+		public async Task SetDateReportSent(long srmaId, DateTime? reportSentDate)
+		{
+			var patched = await _srmaProvider.SetDateReportSent(srmaId, reportSentDate);
 			if(patched != null)
 			{
 				var cacheKey = GetCacheKeyForSrmaBySrmaIdKey(srmaId);
