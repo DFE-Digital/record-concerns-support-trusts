@@ -87,12 +87,12 @@ namespace Service.TRAMS.CaseActions
 			try
 			{
 				var client = _httpClientFactory.CreateClient(HttpClientName);
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-date-accepted?acceptedDate={acceptedDate?.ToShortDateString() ?? String.Empty}");
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-date-accepted?acceptedDate={SerialiseDateTime(acceptedDate)}");
 
 				var response = await client.SendAsync(request); 
 				var content = await response.Content.ReadAsStringAsync();
 
-				return JsonConvert.DeserializeObject<SRMADto>(content);
+				return JsonConvert.DeserializeObject<ApiWrapper<SRMADto>>(content).Data;
 			}
 			catch (Exception ex)
 			{
@@ -232,6 +232,16 @@ namespace Service.TRAMS.CaseActions
 				_logger.LogError(ex, $"Error occured while trying to set SRMA OfferedDate");
 				throw;
 			}
+		}
+
+		private string SerialiseDateTime(DateTime dateTime)
+		{
+			return dateTime.ToString("dd-MM-yyyy");
+		}
+
+		private string SerialiseDateTime(DateTime? dateTime)
+		{
+			return dateTime == null ? String.Empty : SerialiseDateTime(dateTime.Value);	
 		}
 	}
 }
