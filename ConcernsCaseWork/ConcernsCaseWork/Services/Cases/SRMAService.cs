@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Trams = Service.TRAMS.CaseActions;
 
 namespace ConcernsCaseWork.Services.Cases
 {
@@ -40,9 +41,9 @@ namespace ConcernsCaseWork.Services.Cases
 			await _cachedSrmaProvider.SetDateAccepted(srmaId, acceptedDate);	
 		}
 
-		public Task SetDateClosed(long srmaId, DateTime? ClosedDate)
+		public async Task SetDateClosed(long srmaId, DateTime? ClosedDate)
 		{
-			throw new NotImplementedException();
+			await _cachedSrmaProvider.SetDateClosed(srmaId, ClosedDate);	
 		}
 
 		public async Task SetDateReportSent(long srmaId, DateTime? reportSentDate)
@@ -50,24 +51,24 @@ namespace ConcernsCaseWork.Services.Cases
 			await _cachedSrmaProvider.SetDateReportSent(srmaId, reportSentDate);
 		}
 
-		public Task SetNotes(long srmaId, string notes)
+		public async Task SetNotes(long srmaId, string notes)
 		{
-			throw new NotImplementedException();
+			await _cachedSrmaProvider.SetNotes(srmaId, notes);
 		}
 
-		public Task SetOfferedDate(long srmaId, DateTime offeredDate)
+		public async Task SetOfferedDate(long srmaId, DateTime offeredDate)
 		{
-			throw new NotImplementedException();
+			await _cachedSrmaProvider.SetOfferedDate(srmaId, offeredDate);	
 		}
 
-		public Task SetReason(long srmaId, SRMAReasonOffered reason)
+		public async Task SetReason(long srmaId, SRMAReasonOffered reason)
 		{
-			throw new NotImplementedException();
+			await _cachedSrmaProvider.SetReason(srmaId, (Trams.SRMAReasonOffered)reason);	
 		}
 
-		public Task SetStatus(long srmaId, SRMAStatus status)
+		public async Task SetStatus(long srmaId, SRMAStatus status)
 		{
-			throw new NotImplementedException();
+			await _cachedSrmaProvider.SetStatus(srmaId, (Trams.SRMAStatus)status);
 		}
 
 		public async Task SetVisitDates(long srmaId, DateTime startDate, DateTime? endDate)

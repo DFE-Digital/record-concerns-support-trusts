@@ -3,6 +3,7 @@ using Service.Redis.Base;
 using Service.TRAMS.CaseActions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,8 +46,7 @@ namespace Service.Redis.CaseActions
 			var created = await _srmaProvider.SaveSRMA(srma);
 			if (created != null)
 			{
-				var cacheKey = GetCacheKeyForSrmaBySrmaIdKey(srma.Id);
-				await StoreData<SRMADto>(cacheKey, created);
+				UpdateCachedSrma(created);
 			}
 
 			return created;
@@ -54,8 +54,8 @@ namespace Service.Redis.CaseActions
 
 		public async Task<List<SRMADto>> GetSRMAsForCase(long caseUrn)
 		{
-			var cacheKey = $"SRMAsForCase:CaseId:{caseUrn}";
-
+			var cacheKey = GetCacheKeyForSrmasForCase(caseUrn);
+			//await ClearData(GetCacheKeyForSrmasForCase(caseUrn));
 			var srmas = await GetData<List<SRMADto>>(cacheKey);
 
 			if (srmas == null || srmas.Count == 0)
@@ -64,6 +64,7 @@ namespace Service.Redis.CaseActions
 
 				if (srmas?.Count > 0)
 				{
+					cacheKey = GetCacheKeyForSrmasForCase(srmas.First().CaseId);
 					await StoreData<List<SRMADto>>(cacheKey, srmas);
 				}
 			}
@@ -76,8 +77,12 @@ namespace Service.Redis.CaseActions
 			var patched = await _srmaProvider.SetDateAccepted(srmaId, acceptedDate);
 			if (patched != null)
 			{
-				var cacheKey = GetCacheKeyForSrmaBySrmaIdKey(srmaId);
-				await StoreData<SRMADto>(cacheKey, patched);
+				if (patched.Id != srmaId)
+				{
+					throw new InvalidOperationException("Patched SRMA returned from the API is invalid");
+				}
+
+				UpdateCachedSrma(patched);
 			}
 
 			return patched;
@@ -88,24 +93,115 @@ namespace Service.Redis.CaseActions
 			var patched = await _srmaProvider.SetVisitDates(srmaId, startDate, endDate);
 			if (patched != null)
 			{
-				var cacheKey = GetCacheKeyForSrmaBySrmaIdKey(srmaId);
-				await StoreData<SRMADto>(cacheKey, patched);
+				if (patched.Id != srmaId)
+				{
+					throw new InvalidOperationException("Patched SRMA returned from the API is invalid");
+				}
+
+				UpdateCachedSrma(patched);
 			}
 		}
 
 		public async Task SetDateReportSent(long srmaId, DateTime? reportSentDate)
 		{
 			var patched = await _srmaProvider.SetDateReportSent(srmaId, reportSentDate);
+			if (patched != null)
+			{
+				if (patched.Id != srmaId)
+				{
+					throw new InvalidOperationException("Patched SRMA returned from the API is invalid");
+				}
+
+				UpdateCachedSrma(patched);
+			}
+		}
+
+		public async Task SetDateClosed(long srmaId, DateTime? ClosedDate)
+		{
+			var patched = await _srmaProvider.SetDateClosed(srmaId, ClosedDate);
+			if (patched != null)
+			{
+				if (patched.Id != srmaId)
+				{
+					throw new InvalidOperationException("Patched SRMA returned from the API is invalid");
+				}
+
+				UpdateCachedSrma(patched);
+			}
+		}
+
+		public async Task SetOfferedDate(long srmaId, DateTime offeredDate)
+		{
+			var patched = await _srmaProvider.SetOfferedDate(srmaId, offeredDate);
+			if (patched != null)
+			{
+				if (patched.Id != srmaId)
+				{
+					throw new InvalidOperationException("Patched SRMA returned from the API is invalid");
+				}
+
+				UpdateCachedSrma(patched);
+			}
+		}
+
+		public async Task SetNotes(long srmaId, string notes)
+		{
+			var patched = await _srmaProvider.SetNotes(srmaId, notes);
+			if (patched != null)
+			{
+				if (patched.Id != srmaId)
+				{
+					throw new InvalidOperationException("Patched SRMA returned from the API is invalid");
+				}
+
+				UpdateCachedSrma(patched);
+			}
+		}
+
+		public async Task SetStatus(long srmaId, SRMAStatus status)
+		{
+			var patched = await _srmaProvider.SetStatus(srmaId, status);
+			if (patched != null)
+			{
+				if (patched.Id != srmaId)
+				{
+					throw new InvalidOperationException("Patched SRMA returned from the API is invalid");
+				}
+
+				UpdateCachedSrma(patched);
+			}
+		}
+
+		public async Task SetReason(long srmaId, SRMAReasonOffered reason)
+		{
+			var patched = await _srmaProvider.SetReason(srmaId, reason);
 			if(patched != null)
 			{
-				var cacheKey = GetCacheKeyForSrmaBySrmaIdKey(srmaId);
-				await StoreData<SRMADto>(cacheKey, patched);
+				if(patched.Id != srmaId)
+				{
+					throw new InvalidOperationException("Patched SRMA returned from the API is invalid");
+				}
+
+				UpdateCachedSrma(patched);
 			}
+		}
+
+		private async void UpdateCachedSrma(SRMADto srma)
+		{
+			var cacheKey = GetCacheKeyForSrmaBySrmaIdKey(srma.Id);
+			await StoreData<SRMADto>(cacheKey, srma);
+
+			await ClearData(GetCacheKeyForSrmasForCase(srma.CaseId));
 		}
 
 		private string GetCacheKeyForSrmaBySrmaIdKey(long srmaId)
 		{
 			return $"SRMA:SRMAId:{srmaId}";
+		}
+
+		private static string GetCacheKeyForSrmasForCase(long caseUrn)
+		{
+			return $"SRMAsForCase:CaseId:{caseUrn}";
 		}
 	}
 }

@@ -73,7 +73,7 @@ namespace Service.TRAMS.CaseActions
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
 
-				return JsonConvert.DeserializeObject<SRMADto>(content);
+				return JsonConvert.DeserializeObject<ApiWrapper<SRMADto>>(content).Data;
 			}
 			catch (Exception ex)
 			{
@@ -106,12 +106,12 @@ namespace Service.TRAMS.CaseActions
 			try
 			{
 				var client = _httpClientFactory.CreateClient(HttpClientName);
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-closed-date?dateClosed={closedDate?.ToShortDateString() ?? String.Empty}");
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-closed-date?dateClosed={SerialiseDateTime(closedDate)}");
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
 
-				return JsonConvert.DeserializeObject<SRMADto>(content);
+				return JsonConvert.DeserializeObject<ApiWrapper<SRMADto>>(content).Data;
 			}
 			catch (Exception ex)
 			{
@@ -149,7 +149,7 @@ namespace Service.TRAMS.CaseActions
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
 
-				return JsonConvert.DeserializeObject<SRMADto>(content);
+				return JsonConvert.DeserializeObject<ApiWrapper<SRMADto>>(content).Data;
 			}
 			catch (Exception ex)
 			{
@@ -163,12 +163,12 @@ namespace Service.TRAMS.CaseActions
 			try
 			{
 				var client = _httpClientFactory.CreateClient(HttpClientName);
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-offered-date?offeredDate={offeredDate.ToShortDateString()}");
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-offered-date?offeredDate={SerialiseDateTime(offeredDate)}");
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
 
-				return JsonConvert.DeserializeObject<SRMADto>(content);
+				return JsonConvert.DeserializeObject<ApiWrapper<SRMADto>>(content).Data;
 			}
 			catch (Exception ex)
 			{
@@ -187,7 +187,7 @@ namespace Service.TRAMS.CaseActions
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
 
-				return JsonConvert.DeserializeObject<SRMADto>(content);
+				return JsonConvert.DeserializeObject<ApiWrapper<SRMADto>>(content).Data;
 			}
 			catch (Exception ex)
 			{
@@ -206,7 +206,7 @@ namespace Service.TRAMS.CaseActions
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
 
-				return JsonConvert.DeserializeObject<SRMADto>(content);
+				return JsonConvert.DeserializeObject<ApiWrapper<SRMADto>>(content).Data;
 			}
 			catch (Exception ex)
 			{
