@@ -49,9 +49,7 @@ namespace Service.TRAMS.Tests.CaseActions
 				Notes = "Test3"
 			}};
 
-			var wrapped = new ApiWrapper<List<SRMADto>>(srmas.ToList());
-
-			var httpClientFactory = CreateMockFactory(wrapped);
+			var httpClientFactory = CreateMockFactory(srmas.ToList());
 
 			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object);
 
@@ -79,9 +77,7 @@ namespace Service.TRAMS.Tests.CaseActions
 				Notes = "Test"
 			};
 
-			var wrapped = new ApiWrapper<SRMADto>(srmaDto);
-
-			var httpClientFactory = CreateMockFactory(wrapped);
+			var httpClientFactory = CreateMockFactory(srmaDto);
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
@@ -374,7 +370,7 @@ namespace Service.TRAMS.Tests.CaseActions
 				.ReturnsAsync(new HttpResponseMessage
 				{
 					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(content))
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(new ApiWrapper<T>(content)))
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
