@@ -1,4 +1,4 @@
-describe('Error messages should be displayed when user ommmits data', () => {
+describe('Error messages should be displayed when user omits data', () => {
 	before(() => {
 		cy.login();
 	});

@@ -405,11 +405,11 @@ Cypress.Commands.add('checkForExistingCase', function (forceCreate){
                 cy.createCase();
             }
 
-            //return cy.wrap(caseExists).as('caseEx'); //Current limitation with cypress (cant return with cusotm commands calling cy commands))
+            //return cy.wrap(caseExists).as('caseEx'); //commented out due to current limitation with cypress)
 
 });
 
-//descrition: creates a new case from the case list (home) page
+//description: creates a new case from the case list (home) page
 //Location used: https://amsd-casework-dev.london.cloudapps.digital/
 //parameters: takes no arguments
 Cypress.Commands.add('createCase', () =>{
@@ -443,5 +443,41 @@ Cypress.Commands.add('addActionItemToCase', (option, textToVerify) =>{
     cy.get('[value="'+option+'"]').siblings().should(($text) => {
         expect($text.text().trim()).equal(textToVerify)
     });
+
+});
+
+Cypress.Commands.add('closeSRMA', function (){
+    let SRMAExists = false
+
+    const elem = 'table:nth-child(4) > tbody > tr > td:nth-child(1) > a'
+
+    cy.log((elem).length )
+        if (Cypress.$(elem).length > 0 ) { //Cypress.$ needed to handle element missing exception
+
+                cy.get('table:nth-child(4) > tbody > tr > td:nth-child(1) > a').click();
+
+            // Sets status to Trust Considering
+            cy.get('[class="govuk-link"]').eq(0).click();
+            cy.get('[id*="status"]').eq(0).click();
+            cy.get('[id="add-srma-button"]').click();
+
+            cy.get('[class="govuk-link"]').eq(2).click();
+    
+            let rand = Math.floor(Math.random()*2)
+            cy.get('[id^="reason"]').eq(rand).click();
+            cy.get('[id="add-srma-button"]').click();
+
+            
+            cy.get('[id="complete-decline-srma-button"]').click();
+
+            cy.get('[id="confirmChk"]').click();
+            cy.get('[id="add-srma-button"]').click();
+
+
+        }else {
+            cy.log('No SRMA present')
+
+        }
+
 
 });

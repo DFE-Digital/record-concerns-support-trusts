@@ -150,8 +150,8 @@ describe("User can add action srma to existing case", () => {
 			expect($srma.text()).to.contain("SRMA");
         })
 
-		cy.get('table:nth-child(4) > tbody > tr > td:nth-child(2)').should(($status) => {
-            expect($status).to.be.visible
+			cy.get('table:nth-child(4) > tbody > tr').should(($status) => {
+			expect($status).to.be.visible
 			expect($status.text().trim()).to.contain(this.stText);
         })
 
@@ -190,12 +190,6 @@ describe("User can add action srma to existing case", () => {
 					})
 			});
 });
-
-	it("If no entry is recorded in a section, the user should see a grey Empty note in the middle column", function () {
-		cy.log("test");
-	});
-
-
 
 	it("User can Add/Edit SRMA Status", function () {
 

@@ -157,6 +157,14 @@ window.addSRMANotesValidator = function (validator) {
 		message: 'Notes must be 500 characters or less'
 	}]);
 }
+window.addFinancialPlanNotesValidator = function (validator) {
+	validator.addValidator('financial-plan-notes', [{
+		method: function (field) {
+			return field.value.trim().length <= 2000;
+		},
+		message: 'Notes must be 2000 characters or less'
+	}]);
+}
 
 
 // Auto resizer textBox

@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
@@ -27,8 +28,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly IRecordModelService _recordModelService;
 		private readonly IRatingModelService _ratingModelService;
 		private readonly IStatusCachedService _statusCachedService;
-		private readonly ILogger<IndexPageModel> _logger;
 		private readonly ISRMAService srmaService;
+		private readonly IFinancialPlanModelService _financialPlanModelService;
+		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
@@ -44,6 +46,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			IRatingModelService ratingModelService,
 			IStatusCachedService statusCachedService,
 			ISRMAService srmaService,
+			IFinancialPlanModelService financialPlanModelService,
 			ILogger<IndexPageModel> logger
 			)
 		{
@@ -54,6 +57,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_ratingModelService = ratingModelService;
 			_statusCachedService = statusCachedService;
 			this.srmaService = srmaService;
+			_financialPlanModelService = financialPlanModelService;
 			_logger = logger;
 		}
 
@@ -105,6 +109,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		{
 			CaseActions = CaseActions ?? new List<CaseActionModel>();
 			CaseActions.AddRange(await srmaService.GetSRMAsForCase(caseUrn));
+			CaseActions.AddRange(await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name));
 		}
 
 		private bool UserHasEditCasePrivileges()

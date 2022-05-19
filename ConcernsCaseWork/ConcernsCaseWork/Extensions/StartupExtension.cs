@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
@@ -12,6 +13,7 @@ using Serilog;
 using Service.Redis.Base;
 using Service.Redis.Cases;
 using Service.Redis.Configuration;
+using Service.Redis.FinancialPlan;
 using Service.Redis.Ratings;
 using Service.Redis.Records;
 using Service.Redis.Security;
@@ -23,6 +25,7 @@ using Service.Redis.Users;
 using Service.Redis.CaseActions;
 using Service.TRAMS.Cases;
 using Service.TRAMS.Configuration;
+using Service.TRAMS.FinancialPlan;
 using Service.TRAMS.Ratings;
 using Service.TRAMS.RecordAcademy;
 using Service.TRAMS.RecordRatingHistory;
@@ -110,6 +113,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ICaseHistoryModelService, CaseHistoryModelService>();
 			services.AddSingleton<IRatingModelService, RatingModelService>();
 			services.AddSingleton<IRecordModelService, RecordModelService>();
+			services.AddSingleton<IFinancialPlanModelService, FinancialPlanModelService>();
 			services.AddSingleton<ISRMAService, SRMAService>();
 
 			// Trams api services
@@ -126,6 +130,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ITypeService, TypeService>();
 			services.AddSingleton<ICaseSearchService, CaseSearchService>();
 			services.AddSingleton<ICaseHistoryService, CaseHistoryService>();
+			services.AddSingleton<IFinancialPlanService, FinancialPlanService>();
 			services.AddSingleton<SRMAProvider, SRMAProvider>();
 
 			// Redis services
@@ -138,6 +143,8 @@ namespace ConcernsCaseWork.Extensions
 			services.AddTransient<ICaseCachedService, CaseCachedService>();
 			services.AddTransient<IRecordCachedService, RecordCachedService>();
 			services.AddSingleton<ICaseHistoryCachedService, CaseHistoryCachedService>();
+			services.AddSingleton<IFinancialPlanCachedService, FinancialPlanCachedService>();
+			
 			services.AddSingleton<CachedSRMAProvider, CachedSRMAProvider>();
 
 			// AD Integration
