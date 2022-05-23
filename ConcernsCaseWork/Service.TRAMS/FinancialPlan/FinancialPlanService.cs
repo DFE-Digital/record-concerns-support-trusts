@@ -54,6 +54,41 @@ namespace Service.TRAMS.FinancialPlan
 			return Array.Empty<FinancialPlanDto>();
 		}
 
+		public async Task<FinancialPlanDto> GetFinancialPlansById(long caseUrn, long financialPlanId)
+		{
+			try
+			{
+				_logger.LogInformation("FinancialPlanService::GetFinancialPlansById");
+
+				// Create a request
+				var request = new HttpRequestMessage(HttpMethod.Get,
+					$"/{EndpointsVersion}/record-srma/record/urn/{caseUrn}");
+
+				// Create http client
+				var client = ClientFactory.CreateClient(HttpClientName);
+
+				// Execute request
+				var response = await client.SendAsync(request);
+
+				// Check status code
+				response.EnsureSuccessStatusCode();
+
+				// Read response content
+				var content = await response.Content.ReadAsStringAsync();
+
+				// Deserialize content to POJO
+				var financialPlanDto = JsonConvert.DeserializeObject<FinancialPlanDto>(content);
+
+				return financialPlanDto;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("FinancialPlanService::GetFinancialPlansById::Exception message::{Message}", ex.Message);
+			}
+
+			return null;
+		}
+
 		public async Task<FinancialPlanDto> PostFinancialPlanByCaseUrn(CreateFinancialPlanDto createFinancialPlanDto)
 		{
 			try

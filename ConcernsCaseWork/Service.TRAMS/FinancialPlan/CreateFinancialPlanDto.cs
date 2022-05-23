@@ -15,7 +15,7 @@ namespace Service.TRAMS.FinancialPlan
 		public string CreatedBy { get; set; }
 
 		[JsonProperty("statusId")]
-		public long StatusId { get; }
+		public long? StatusId { get; }
 
 		[JsonProperty("datePlanRequested")]
 		public DateTime? DatePlanRequested { get; }
@@ -27,7 +27,7 @@ namespace Service.TRAMS.FinancialPlan
 		public string Notes { get; }
 
 		[JsonConstructor]
-		public CreateFinancialPlanDto(long caseUrn, DateTime createdAt, string createdBy, long statusId, DateTime? datePlanRequested, DateTime? dateViablePlanReceived, string notes) =>
+		public CreateFinancialPlanDto(long caseUrn, DateTime createdAt, string createdBy, long? statusId, DateTime? datePlanRequested, DateTime? dateViablePlanReceived, string notes) =>
 			(CaseUrn, CreatedAt, CreatedBy, StatusId, DatePlanRequested, DateViablePlanReceived, Notes) =
 			(caseUrn, createdAt, createdBy, statusId, datePlanRequested, dateViablePlanReceived, notes);
 	}

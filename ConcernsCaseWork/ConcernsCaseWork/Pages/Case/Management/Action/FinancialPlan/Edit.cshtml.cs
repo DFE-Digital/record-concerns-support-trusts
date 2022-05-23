@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.FinancialPlan;
 using Service.Redis.Models;
+using Service.Redis.FinancialPlan;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
@@ -21,15 +22,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 	{
 		private readonly ILogger<EditPageModel> _logger;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
+		private readonly IFinancialPlanStatusCachedService _financialPlanStatusCachedService;
 
 		public FinancialPlanModel FinancialPlanModel { get; set; }
 		public int NotesMaxLength => 2000;
 		public IEnumerable<RadioItem> FinancialPlanStatuses => getStatuses();
 
 		public EditPageModel(
-			IFinancialPlanModelService financialPlanModelService, ILogger<EditPageModel> logger)
+			IFinancialPlanModelService financialPlanModelService, IFinancialPlanStatusCachedService financialPlanStatusService, ILogger<EditPageModel> logger)
 		{
 			_financialPlanModelService = financialPlanModelService;
+			_financialPlanStatusCachedService = financialPlanStatusService;
 			_logger = logger;
 		}
 
@@ -37,9 +40,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		{
 			_logger.LogInformation("Case::Action::FinancialPlan::EditPageModel::OnGetAsync");
 
+			long caseUrn = 0;
+			long? financialPlanId = null;
+
 			try
 			{
-				LoadPageData();
+				(caseUrn, financialPlanId) = GetRouteData();
+
+				if (financialPlanId.HasValue)
+				{
+					FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId.Value, User.Identity.Name);
+				}
 
 				return Page();
 			}
@@ -60,24 +71,52 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			try
 			{
 				(caseUrn, financialPlanId) = GetRouteData();
-				LoadPageData();
+
+				if (financialPlanId.HasValue)
+				{
+					FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId.Value, User.Identity.Name);
+				}
 
 				ValidateFinancialPlan();
 
-				var notes = Request.Form["financial-plan-notes"];
+				// Store form data
+				var statusString = Request.Form["status"].ToString();
+				var dateRequestedDay = Request.Form["dtr-day-plan-requested"].ToString();
+				var dateRequestedMonth = Request.Form["dtr-month-plan-requested"].ToString();
+				var dateRequestedYear = Request.Form["dtr-year-plan-requested"].ToString();
+				var dateViablePlanDay = Request.Form["dtr-day-viable-plan"].ToString();
+				var dateViablePlanMonth = Request.Form["dtr-month-viable-plan"].ToString();
+				var dateViablePlanYear = Request.Form["dtr-year-viable-plan"].ToString();
+				var notes = Request.Form["financial-plan-notes"].ToString();
 				var currentUser = User.Identity.Name;
 
+				// Check if date, month or year values have been entered
+				var requested_dtString = CreateDateString(dateRequestedDay, dateRequestedMonth, dateRequestedYear);
+				var viablePlanReceviced_dtString = CreateDateString(dateViablePlanDay, dateViablePlanMonth, dateViablePlanYear);
+
+				// Check if dates entered are valid
+				var financialPlanDates = ParseFinancialPlanDates(requested_dtString, viablePlanReceviced_dtString);
+
+				// Fetch statuses from cache and compare them to the selected status
+				var statuses = await _financialPlanStatusCachedService.GetFinancialPlanStatuses();
+				var selecetedStatus = statuses.FirstOrDefault(s => s.Name.Equals(statusString));
+				var selecetedStatusId = selecetedStatus != null ? selecetedStatus.Id : (long?)null;
+
+
+				// if financialPlanId found in URL string then financial plan should be edited
 				if (financialPlanId.HasValue)
 				{
 					var patchFinancialPlanModel = new PatchFinancialPlanModel()
 					{
 						Id = financialPlanId.Value,
 						CaseUrn = caseUrn,
+						StatusId = selecetedStatusId,
+						DatePlanRequested = financialPlanDates.planRequestedDate,
+						DateViablePlanReceived = financialPlanDates.viablePlanReceivedDate,
 						Notes = notes
 					};
 
-
-					//_financialPlanModelService.PatchFinancialPlanStatus
+					await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel, currentUser);
 				}
 				else
 				{
@@ -85,11 +124,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					{
 						CaseUrn = caseUrn,
 						CreatedAt = DateTime.Now,
+						DatePlanRequested = financialPlanDates.planRequestedDate,
+						DateViablePlanReceived = financialPlanDates.viablePlanReceivedDate,
+						StatusId = selecetedStatusId,
 						CreatedBy = currentUser,
 						Notes = notes
 					};
 
-					// Post Financial Plan 
 					await _financialPlanModelService.PostFinancialPlanByCaseUrn(createFinancialPlanModel, currentUser);
 				}
 
@@ -112,6 +153,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		private IEnumerable<RadioItem> getStatuses()
 		{
 			var statuses = (FinancialPlanStatus[])Enum.GetValues(typeof(FinancialPlanStatus));
+
 			return statuses.Where(f => f != FinancialPlanStatus.Unknown)
 						   .Select(f => new RadioItem
 						   {
@@ -123,14 +165,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		private (long, long?) GetRouteData()
 		{
 			var caseUrnValue = RouteData.Values["urn"];
+			var financialPlanIdValue = RouteData.Values["finanicialplanid"];
+			long? financialPlanId = null;
+
 			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
 			{
 				throw new Exception("CaseUrn is null or invalid to parse");
 			}
-
-			var financialPlanIdValue = RouteData.Values["finanicialplanid"];
-
-			long? financialPlanId = null;
 
 			if (financialPlanIdValue != null)
 			{
@@ -147,7 +188,32 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 		private void ValidateFinancialPlan()
 		{
-			var financial_plan_notes = Request.Form["financial-plan-notes"];
+			var dateRequestedDay = Request.Form["dtr-day-plan-requested"].ToString();
+			var dateRequestedMonth = Request.Form["dtr-month-plan-requested"].ToString();
+			var dateRequestedYear = Request.Form["dtr-year-plan-requested"].ToString();
+			var dateViablePlanDay = Request.Form["dtr-day-viable-plan"].ToString();
+			var dateViablePlanMonth = Request.Form["dtr-month-viable-plan"].ToString();
+			var dateViablePlanYear = Request.Form["dtr-year-viable-plan"].ToString();
+			var financial_plan_notes = Request.Form["financial-plan-notes"].ToString();
+
+			var requested_dtString = CreateDateString(dateRequestedDay, dateRequestedMonth, dateRequestedYear);
+			var viablePlanReceviced_dtString = CreateDateString(dateViablePlanDay, dateViablePlanMonth, dateViablePlanYear);
+
+			if (!string.IsNullOrEmpty(requested_dtString))
+			{
+				if (!DateTimeHelper.TryParseExact(requested_dtString, out DateTime requestedDate))
+				{
+					throw new InvalidOperationException($"Plan requested {requested_dtString} is an invalid date");
+				}
+			}
+
+			if (!string.IsNullOrEmpty(viablePlanReceviced_dtString))
+			{
+				if (!DateTimeHelper.TryParseExact(viablePlanReceviced_dtString, out DateTime viablePlanReceivedDate))
+				{
+					throw new InvalidOperationException($"Viable Plan {viablePlanReceviced_dtString} is an invalid date");
+				}
+			}
 
 			if (!string.IsNullOrEmpty(financial_plan_notes))
 			{
@@ -157,31 +223,31 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					throw new InvalidOperationException($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
 				}
 			}
-
 		}
 
-		private async void LoadPageData()
+		private string CreateDateString(string day, string month, string year)
 		{
-			long caseUrn = 0;
-			long? financialPlanId = null;
+			var dtString = (string.IsNullOrEmpty(day) && string.IsNullOrEmpty(month) && string.IsNullOrEmpty(year)) ? String.Empty : $"{day}-{month}-{year}";
 
-			try
+			return dtString;
+		}
+
+		private (DateTime? planRequestedDate, DateTime? viablePlanReceivedDate) ParseFinancialPlanDates(string planRequestedString, string viablePlanReceivedString)
+		{
+			DateTime? planRequested_date = null;
+			DateTime? viablePlanReceived_date = null;
+
+			if (DateTimeHelper.TryParseExact(planRequestedString, out var requestedDate))
 			{
-				(caseUrn, financialPlanId) = GetRouteData();
-
-				if (financialPlanId.HasValue)
-				{
-					//var financialPlansModel = await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name);
-					//FinancialPlanModel = financialPlansModel.FirstOrDefault(fp => fp.Id == financialPlanId.Value);
-				}
-
+				planRequested_date = requestedDate;
 			}
-			catch (Exception ex)
+
+			if (DateTimeHelper.TryParseExact(viablePlanReceivedString, out var receivedDate))
 			{
-				_logger.LogError("Case::FinancialPlan::EditPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
+				viablePlanReceived_date = receivedDate;
 			}
+
+			return (planRequested_date, viablePlanReceived_date);
 		}
 	}
 }

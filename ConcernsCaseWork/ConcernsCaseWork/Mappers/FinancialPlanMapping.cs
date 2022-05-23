@@ -9,7 +9,26 @@ namespace ConcernsCaseWork.Mappers
 {
 	public static class FinancialPlanMapping
 	{
-		public static IList<FinancialPlanModel> MapDtoToModel(IList<FinancialPlanDto> financialPlanDtos)
+
+		public static FinancialPlanModel MapDtoToModel(FinancialPlanDto financialPlanDto, IList<FinancialPlanStatusDto> statuses)
+		{
+			var selectedStatus = statuses.FirstOrDefault(s => s.Id.CompareTo(financialPlanDto.StatusId) == 0);
+			var selectedStatusId = selectedStatus != null ? selectedStatus.Id : (long?)null;
+
+			var financialPlanModel = new FinancialPlanModel(
+				financialPlanDto.Id,
+				financialPlanDto.CaseUrn,
+				financialPlanDto.CreatedAt,
+				financialPlanDto.DatePlanRequested,
+				financialPlanDto.DateViablePlanReceived,
+				financialPlanDto.Notes,
+				FinancialPlanStatusMapping.MapDtoToModel(statuses, selectedStatusId)
+				);
+
+			return financialPlanModel;
+		}
+
+		public static IList<FinancialPlanModel> MapDtoToModel(IList<FinancialPlanDto> financialPlanDtos, IList<FinancialPlanStatusDto> statuses)
 		{
 			var financialPlanModels = new List<FinancialPlanModel>();
 
@@ -18,18 +37,16 @@ namespace ConcernsCaseWork.Mappers
 				return financialPlanModels;
 			}
 
-
-			// TODO - get accurate status
 			financialPlanModels.AddRange(financialPlanDtos.Select(financialPlanDto =>
 			{
 				var financialPlanModel = new FinancialPlanModel(
 					financialPlanDto.Id,
 					financialPlanDto.CaseUrn,
 					financialPlanDto.CreatedAt,
-					Enums.FinancialPlanStatus.ViablePlanReceived,
 					financialPlanDto.DatePlanRequested,
 					financialPlanDto.DateViablePlanReceived,
-					financialPlanDto.Notes);
+					financialPlanDto.Notes,
+					FinancialPlanStatusMapping.MapDtoToModel(statuses, financialPlanDto.StatusId));
 
 				return financialPlanModel;
 			}
@@ -39,11 +56,24 @@ namespace ConcernsCaseWork.Mappers
 			return financialPlanModels;
 		}
 	
-		public static FinancialPlanDto MapNotes(PatchFinancialPlanModel patchFinancialPlanModel,
-			FinancialPlanDto financialPlanDto)
+		public static FinancialPlanDto MapPatchFinancialPlanModelToDto(PatchFinancialPlanModel patchFinancialPlanModel,
+			FinancialPlanDto financialPlanDto, IList<FinancialPlanStatusDto> statuses)
 		{
-			//return new FinancialPlanDto()
-			return null;
+			var selectedStatus = statuses.FirstOrDefault(s => s.Id.CompareTo(patchFinancialPlanModel.StatusId) == 0);
+			var selectedStatusId = selectedStatus != null ? selectedStatus.Id : (long?)null;
+
+			var updatedFinancialPlanDto = new FinancialPlanDto(
+				financialPlanDto.Id,
+				financialPlanDto.CaseUrn,
+				financialPlanDto.CreatedAt,
+				financialPlanDto.ClosedAt,
+				financialPlanDto.CreatedBy,
+				selectedStatusId,
+				patchFinancialPlanModel.DatePlanRequested,
+				patchFinancialPlanModel.DateViablePlanReceived,
+				patchFinancialPlanModel.Notes);
+
+			return updatedFinancialPlanDto;
 		}
 	
 	}

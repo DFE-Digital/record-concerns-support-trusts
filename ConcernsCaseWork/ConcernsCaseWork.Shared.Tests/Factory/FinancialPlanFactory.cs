@@ -16,10 +16,10 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<long>(),
 				Fixture.Create<long>(),
 				Fixture.Create<DateTime>(),
-				Fixture.Create<FinancialPlanStatus>(),
 				Fixture.Create<DateTime>(),
 				Fixture.Create<DateTime>(),
-				Fixture.Create<string>()
+				Fixture.Create<string>(),
+				Fixture.Create<FinancialPlanStatusModel>()
 			);
 		} 
 
