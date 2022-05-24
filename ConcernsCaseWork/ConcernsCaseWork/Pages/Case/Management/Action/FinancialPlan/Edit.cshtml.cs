@@ -24,6 +24,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		private readonly IFinancialPlanModelService _financialPlanModelService;
 		private readonly IFinancialPlanStatusCachedService _financialPlanStatusCachedService;
 
+		public long CaseUrn { get; private set; }
 		public FinancialPlanModel FinancialPlanModel { get; set; }
 		public int NotesMaxLength => 2000;
 		public IEnumerable<RadioItem> FinancialPlanStatuses => getStatuses();
@@ -46,6 +47,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			try
 			{
 				(caseUrn, financialPlanId) = GetRouteData();
+
+				CaseUrn = caseUrn;
 
 				if (financialPlanId.HasValue)
 				{
@@ -71,6 +74,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			try
 			{
 				(caseUrn, financialPlanId) = GetRouteData();
+
+				CaseUrn = caseUrn;
+
 
 				if (financialPlanId.HasValue)
 				{
