@@ -430,7 +430,7 @@ Cypress.Commands.add('createCase', () =>{
                 cy.enterConcernDetails();
 });
 
-//descrition: selects an action item from the add to case page
+//description: selects an action item from the add to case page
 //Location used: case/6325/management/action
 //parameters: takes a string args from the value attribute eg: value="srma"
 Cypress.Commands.add('addActionItemToCase', (option, textToVerify) =>{
@@ -449,12 +449,48 @@ Cypress.Commands.add('addActionItemToCase', (option, textToVerify) =>{
 Cypress.Commands.add('closeSRMA', function (){
     let SRMAExists = false
 
-    const elem = 'table:nth-child(4) > tbody > tr > td:nth-child(1) > a'
+    const elem = 'table:nth-child(4) > tbody > tr > td:nth-child(1)'
 
     cy.log((elem).length )
         if (Cypress.$(elem).length > 0 ) { //Cypress.$ needed to handle element missing exception
 
-                cy.get('table:nth-child(4) > tbody > tr > td:nth-child(1) > a').click();
+            cy.get('table:nth-child(4) > tbody > tr > td:nth-child(1) > a').eq(0).scrollIntoView();
+            cy.get('table:nth-child(4) > tbody > tr > td:nth-child(1) > a').eq(0).click();
+            cy.wait(500)
+
+            // Sets status to Trust Considering
+            cy.get('[class="govuk-link"]').eq(0).click();
+            cy.get('[id*="status"]').eq(0).click();
+            cy.get('[id="add-srma-button"]').click();
+
+            cy.get('[class="govuk-link"]').eq(2).click();
+    
+            let rand = Math.floor(Math.random()*2)
+            cy.get('[id^="reason"]').eq(rand).click();
+            cy.get('[id="add-srma-button"]').click();    
+            cy.get('[id="complete-decline-srma-button"]').click();
+            cy.get('[id="confirmChk"]').click();
+            cy.get('[id="add-srma-button"]').click();
+
+
+        }else {
+            cy.log('No SRMA present');
+
+        }
+});
+
+/*
+Cypress.Commands.add('closeSRMA', function (){
+    let SRMAExists = false
+
+    const elem = 'table:nth-child(4) > tbody > tr > td:nth-child(1)'
+
+    cy.log((elem).length )
+        if (Cypress.$(elem).length > 0 ) { //Cypress.$ needed to handle element missing exception
+
+            cy.get('table:nth-child(4) > tbody > tr > td:nth-child(1) > a').eq(0).scrollIntoView();
+            cy.get('table:nth-child(4) > tbody > tr > td:nth-child(1) > a').eq(0).click();
+            cy.wait(500)
 
             // Sets status to Trust Considering
             cy.get('[class="govuk-link"]').eq(0).click();
@@ -466,10 +502,7 @@ Cypress.Commands.add('closeSRMA', function (){
             let rand = Math.floor(Math.random()*2)
             cy.get('[id^="reason"]').eq(rand).click();
             cy.get('[id="add-srma-button"]').click();
-
-            
             cy.get('[id="complete-decline-srma-button"]').click();
-
             cy.get('[id="confirmChk"]').click();
             cy.get('[id="add-srma-button"]').click();
 
@@ -479,5 +512,22 @@ Cypress.Commands.add('closeSRMA', function (){
 
         }
 
+*/
+     Cypress.Commands.add('createSRMA', function (){
 
-});
+        cy.get('[class="govuk-button"][role="button"]').click();
+		cy.addActionItemToCase('Srma', 'School Resource Management Adviser (SRMA)');
+		cy.get('button[data-prevent-double-click*="true"]').click();
+
+		//User sets SRMA status 
+		cy.get('[id*="status"]').eq(0).click();
+		cy.get('label.govuk-label.govuk-radios__label').eq(0);
+
+		cy.get('[id="dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
+		cy.get('[id="dtr-month"]').type(Math.floor(Math.random() *3) + 10);
+		cy.get('[id="dtr-year"]').type("2022");
+		cy.get('[id="add-srma-button"]').click();
+
+    });
+
+//});
