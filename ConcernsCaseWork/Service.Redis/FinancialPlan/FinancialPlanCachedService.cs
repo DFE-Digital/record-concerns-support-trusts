@@ -81,6 +81,62 @@ namespace Service.Redis.FinancialPlan
 			return financialPlansDto;
 		}
 
+		public async Task<FinancialPlanDto> GetFinancialPlansById(long caseUrn, long financialPlanId, string caseworker)
+		{
+			_logger.LogInformation("FinancialPlanCachedService::GetFinancialPlansById {Caseworker} - {CaseUrn} - {FinancialPlanID}", caseworker, caseUrn, financialPlanId);
+
+
+			// Store in cache for 24 hours (default)
+			var userState = await GetData<UserState>(caseworker);
+	
+			if (!userState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper))
+			{
+				var financialPlanDto = await _financialPlanService.GetFinancialPlansById(caseUrn, financialPlanId);
+				return financialPlanDto;
+			}
+
+			// Checking finance plan was cached before
+			if (caseWrapper.FinancialPlans != null)
+			{
+				if (caseWrapper.FinancialPlans.TryGetValue(financialPlanId, out var financialPlanWrapper))
+				{
+					return financialPlanWrapper.FinancialPlanDto;
+				}
+
+				var financialPlanDto = await _financialPlanService.GetFinancialPlansById(caseUrn, financialPlanId);
+				caseWrapper.FinancialPlans.Add(financialPlanId, new FinancialPlanWrapper { FinancialPlanDto = financialPlanDto });
+
+				return financialPlanDto;
+			}
+			else
+			{
+				var financialPlanDto = await _financialPlanService.GetFinancialPlansById(caseUrn, financialPlanId);
+
+				try
+				{
+					await _semaphoreFinancialPlan.WaitAsync();
+
+					userState = await GetData<UserState>(caseworker);
+
+					if (userState.CasesDetails.TryGetValue(caseUrn, out caseWrapper))
+					{
+						caseWrapper.FinancialPlans ??= new Dictionary<long, FinancialPlanWrapper>();
+
+						caseWrapper.FinancialPlans.Add(financialPlanId, new FinancialPlanWrapper { FinancialPlanDto = financialPlanDto });
+
+						await StoreData(caseworker, userState);
+					}
+				}
+				finally
+				{
+					_semaphoreFinancialPlan.Release();
+				}
+
+				return financialPlanDto;
+			}
+
+		}
+
 		public async Task PatchFinancialPlanById(FinancialPlanDto financialPlanDto, string caseworker)
 		{
 			_logger.LogInformation("FinancialPlanCachedService::PatchFinancialPlanById {Caseworker} - {CaseUrn}", caseworker, financialPlanDto.CaseUrn);
@@ -129,7 +185,7 @@ namespace Service.Redis.FinancialPlan
 					return newFinancialPlanDto;
 				}
 
-				// Add new record to the records cache
+				// Add new financial plan to the records cache
 				caseWrapper.FinancialPlans ??= new ConcurrentDictionary<long, FinancialPlanWrapper>();
 				caseWrapper.FinancialPlans.Add(newFinancialPlanDto.Id, new FinancialPlanWrapper { FinancialPlanDto = newFinancialPlanDto });
 
@@ -142,7 +198,6 @@ namespace Service.Redis.FinancialPlan
 
 			return newFinancialPlanDto;
 		}
-
 
 		// TODO - Remove once API has been implemented
 		private FinancialPlanDto MapCreateDtoToDto(CreateFinancialPlanDto createFinancialPlanDto)

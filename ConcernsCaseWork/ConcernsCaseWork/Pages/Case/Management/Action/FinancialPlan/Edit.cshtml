@@ -17,7 +17,7 @@
 	var dateViablePlanReceivedYear =  "";
 
 	var financialPlanNotes =  "";
-	var financialPlanStatus = FinancialPlanStatus.Unknown;
+	var financialPlanStatusEnum = FinancialPlanStatus.Unknown;
 
 	if (Model.FinancialPlanModel != null)
 	{
@@ -34,7 +34,13 @@
 		dateViablePlanReceivedYear = dateViablePlanReceivedValue != null ? $"{dateViablePlanReceivedValue.Value.Year:00}" : "";
 
 		financialPlanNotes = Model.FinancialPlanModel.Notes;
-		financialPlanStatus = Model.FinancialPlanModel.Status;
+		var financialPlanStatusName = Model.FinancialPlanModel.Status != null ? Model.FinancialPlanModel.Status.Name : "";
+
+		if (Enum.TryParse<FinancialPlanStatus>(financialPlanStatusName, out FinancialPlanStatus parsedStatus))
+		{
+			financialPlanStatusEnum = parsedStatus;
+		}
+
 	}
 }
 
@@ -67,15 +73,22 @@
 				}
 
 				<h1 class="govuk-heading-l">
-					<span class="govuk-caption-m">Add to case</span>
+					<span class="govuk-caption-m">Case ID: @Model.CaseUrn</span>
 					Financial Plan
 				</h1>
 
 
 				<form role="form" method="post" id="edit-financial-plan-form" novalidate>
 
+
+					<div class="govuk-hint" id="case-issue-hint">
+						<a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Trust%20financial%20plans.aspx" class="govuk-link" rel="noreferrer noopener">
+							AMSD Knowledge: Financial Plan
+						</a>
+					</div>
+
 					@* Status *@
-					<div class="govuk-form-group govuk-!-margin-top-9">
+					<div class="govuk-form-group govuk-!-margin-top-6">
 						<fieldset class="govuk-fieldset">
 							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
 								<h2 class="govuk-heading-m">Current Status</h2>
@@ -89,7 +102,7 @@
 									var idStr = id++ == 0 ? "status" : "status-" + id;
 									<div class="govuk-radios__item">
 
-										@if (EnumHelper.GetEnumDescription(financialPlanStatus) == status.Text)
+										@if (EnumHelper.GetEnumDescription(financialPlanStatusEnum) == status.Text)
 										{
 											<input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id" checked>
 										}
@@ -97,7 +110,7 @@
 										{
 											<input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id">
 										}
-										
+
 										<label class="govuk-label govuk-radios__label" for="@idStr">
 											<span>
 												@status.Text
@@ -188,7 +201,7 @@
 							<h2 class="govuk-heading-m">Notes</h2>
 							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="financial-plan-notes" name="financial-plan-notes" rows="3" aria-describedby="financial-plan-notes-info">@financialPlanNotes</textarea>
 						</div>
-						<div id="srma-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+						<div id="financial-plan-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
 							You can enter up to @Model.NotesMaxLength characters
 						</div>
 					</div>
@@ -206,41 +219,6 @@
 					$(function () {
 						let validator = formValidator($("#edit-financial-plan-form")[0]);
 						addFinancialPlanNotesValidator(validator);
-
-						validator.addValidator('dtr-day', [{
-						  method: function(field, params) {
-							return (params.day.value.length !== 0 && params.month.value.length !== 0 && params.year.value !== 0);
-						  },
-						  message: 'Enter a valid date',
-						  params: {
-							day: document.getElementById('dtr-day'),
-							month: document.getElementById('dtr-month'),
-							year: document.getElementById('dtr-year')
-						  }
-						}, {
-						  method: function(field, params) {
-							if(!isValidDate(params)) {
-								return false;
-							}
-							var d = new Date(parseInt(params.year.value, 10), parseInt(params.month.value, 10) - 1, parseInt(params.day.value, 10) - 1);
-							return d instanceof Date && !isNaN(d);
-						  },
-						  message: 'Enter the date SRMA was offered to the trust',
-						  params: {
-							day: document.getElementById('dtr-day'),
-							month: document.getElementById('dtr-month'),
-							year: document.getElementById('dtr-year')
-						  }
-						}]);
-
-						function isValidDate(date) {
-							return !isNaN(date.year.value)
-								&& !isNaN(date.month.value)
-								&& !isNaN(date.day.value)
-								&& date.month.value >= 1 && date.month.value <= 12
-								&& date.day.value >= 1 && date.month.value <= 31;
-						}
-
 						autoResizer();
 					});
 				</script>

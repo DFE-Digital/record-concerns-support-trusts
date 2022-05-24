@@ -14,14 +14,14 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 {
 	public class FinancialPlanModelService : IFinancialPlanModelService
 	{
-		private readonly List<FinancialPlanModel> FinancialPlans;
-		private readonly Random random;
 		private readonly IFinancialPlanCachedService _financialPlanCachedService;
+		private readonly IFinancialPlanStatusCachedService _financialPlanStatusCachedService;
 		private readonly ILogger<FinancialPlanModelService> _logger;
 
-		public FinancialPlanModelService(IFinancialPlanCachedService financialPlanCachedService, ILogger<FinancialPlanModelService> logger)
+		public FinancialPlanModelService(IFinancialPlanCachedService financialPlanCachedService, IFinancialPlanStatusCachedService financialPlanStatusCachedService, ILogger<FinancialPlanModelService> logger)
 		{
 			_financialPlanCachedService = financialPlanCachedService;
+			_financialPlanStatusCachedService = financialPlanStatusCachedService;
 			_logger = logger;
 		}
 
@@ -30,28 +30,47 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 			_logger.LogInformation("FinancialPlanModelService::GetFinancialPlansModelByCaseUrn");
 
 			var financialPlansDtoTask = _financialPlanCachedService.GetFinancialPlansByCaseUrn(caseUrn, caseworker);
+			var statusesDtoTask = _financialPlanStatusCachedService.GetFinancialPlanStatuses();
 
-			Task.WaitAll(financialPlansDtoTask);
+			Task.WaitAll(financialPlansDtoTask, statusesDtoTask);
 
 			var financialPlansDto = financialPlansDtoTask.Result;
+			var statusesDto = statusesDtoTask.Result;
 
 			// Map the financial plan dtos to model 
-			var financialPlanModels = FinancialPlanMapping.MapDtoToModel(financialPlansDto);
+			var financialPlanModels = FinancialPlanMapping.MapDtoToModel(financialPlansDto, statusesDto);
 
 			return Task.FromResult(financialPlanModels);
 		}
 
-		public async Task PatchFinancialPlanNotes(PatchFinancialPlanModel patchFinancialPlanModel, string caseworker)
+		public async Task<FinancialPlanModel> GetFinancialPlansModelById(long caseUrn, long financialPlanId, string caseworker)
 		{
 			try
 			{
-				// Fetch Records & statuses
-				//var statusesDto = await _statusCachedService.GetStatuses();
-				var financialPlanDtos =  await _financialPlanCachedService.GetFinancialPlansByCaseUrn(patchFinancialPlanModel.CaseUrn, caseworker);
-				var financialPlanDto = financialPlanDtos.FirstOrDefault(fp => fp.Id.CompareTo(patchFinancialPlanModel.Id) == 0);
-				//var statusDto = statusesDto.FirstOrDefault(s => s.Urn.CompareTo(patchRecordModel.StatusUrn) == 0);
+				var statusesDto = await _financialPlanStatusCachedService.GetFinancialPlanStatuses();
 
-				financialPlanDto = FinancialPlanMapping.MapNotes(patchFinancialPlanModel, financialPlanDto);
+				var financialPlanDto = await _financialPlanCachedService.GetFinancialPlansById(caseUrn, financialPlanId, caseworker);
+				var financialPlanModel = FinancialPlanMapping.MapDtoToModel(financialPlanDto, statusesDto);
+
+				return financialPlanModel;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("FinancialPlanModelService::GetFinancialPlansModelById exception {Message}", ex.Message);
+
+				throw;
+			}
+		}	
+
+		public async Task PatchFinancialById(PatchFinancialPlanModel patchFinancialPlanModel, string caseworker)
+		{
+			try
+			{
+				// Fetch Financial Plan & statuses
+				var financialPlanDto = await _financialPlanCachedService.GetFinancialPlansById(patchFinancialPlanModel.CaseUrn, patchFinancialPlanModel.Id, caseworker);
+				var statusesDto = await _financialPlanStatusCachedService.GetFinancialPlanStatuses();
+
+				financialPlanDto = FinancialPlanMapping.MapPatchFinancialPlanModelToDto(patchFinancialPlanModel, financialPlanDto, statusesDto);
 
 				await _financialPlanCachedService.PatchFinancialPlanById(financialPlanDto, caseworker);
 			}
@@ -61,35 +80,6 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 
 				throw;
 			}
-		}
-
-		public async Task PatchFinancialPlanStatus(PatchFinancialPlanModel patchFinancialPlanModel, string caseworker)
-		{
-
-			throw new NotImplementedException();
-
-
-			//try
-			//{
-			//	// Fetch Records & statuses
-			//	//var statusesDto = await _statusCachedService.GetStatuses();
-			//	var financialPlanDtos = await _financialPlanCachedService.GetFinancialPlansByCaseUrn(patchFinancialPlanModel.CaseUrn, caseworker);
-
-			//	var financialPlanDto = financialPlanDtos.FirstOrDefault(fp => fp.Id.CompareTo(patchFinancialPlanModel.Id) == 0);
-			//	//var statusDto = statusesDto.FirstOrDefault(s => s.Urn.CompareTo(patchRecordModel.StatusUrn) == 0);
-
-			//	//recordDto = RecordMapping.MapClosure(patchRecordModel, recordDto, statusDto);
-
-			//	financialPlanDto = FinancialPlanMapping.MapDtoToModel(patchFinancialPlanModel);
-
-			//	//_financialPlanCachedService.PatchFinancialPlanById()
-			//}
-			//catch (Exception ex)
-			//{
-			//	_logger.LogError("RecordModelService::PatchRecordStatus exception {Message}", ex.Message);
-
-			//	throw;
-			//}
 		}
 
 		public async Task<FinancialPlanDto> PostFinancialPlanByCaseUrn(CreateFinancialPlanModel createFinancialPlanModel, string caseworker)
