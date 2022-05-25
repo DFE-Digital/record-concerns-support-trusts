@@ -11,59 +11,71 @@ describe("Users can log into the application", () => {
 	const lstring =
 		'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx';
 
-
-	it("User can sucessfully log into the application with valid credentials", () => {
-        cy.visit(Cypress.env('url')+"/login", { timeout: 30000 })
-        LoginPage.getUserName({ timeout: 30000 }).should('be.visible');
-		LoginPage.getUserName({ timeout: 30000 }).type('invalid username');
-		LoginPage.getPassword().type(Cypress.env('password'));
-
-		LoginPage.getSubmitButton().click();
-		HomePage.getHeadingText().should('be.visible');
-
-	});
-
 	it("User is denied access to the application with invalid credentials", () => {
         cy.visit(Cypress.env('url')+"/login", { timeout: 30000 })
 		LoginPage.getUserName({ timeout: 30000 }).should('be.visible');
 		LoginPage.getUserName({ timeout: 30000 }).type('invalid username');
-		LoginPage.getPassword().type('invalid password');
+
+		LoginPage.getPassword({ timeout: 30000 }).should('be.visible');
+		LoginPage.getPassword({ timeout: 30000 }).type('invalid password');
 
 		LoginPage.getSubmitButton().click();
-		cy.url().should('not.contain.text', Cypress.env('url')+"/login");
+		//cy.url().should('have.text', (Cypress.env('url')+"/login").trim() );
+		//cy.url().should('match', /(https:\/\/amsd-casework-)(london.cloudapps.digital\/login)/i);
 
+		//cy.url().should('contain.text', (Cypress.env('url')+"/login").trim());
 
+		cy.url({ timeout: 30000 }).should('eq', (Cypress.env('url')+"/login").trim());
+		 //(Cypress.env('url')+"/login").trim());
+		
 	});
 
 	it("User is shown error validation messages when no credentials are entered", () => {
 
-		LoginPage.getUserName({ timeout: 30000 }).should('be.visible');
-		LoginPage.getUserName({ timeout: 30000 }).type('');
-		LoginPage.getPassword().type('');
+		cy.reload(true);
 
-		LoginPage.getSubmitButton().click();
+		LoginPage.getUserName({ timeout: 30000 }).should('be.visible');
+		LoginPage.getUserName({ timeout: 30000 }).type('empty string').clear();
+
+		LoginPage.getPassword({ timeout: 30000 }).should('be.visible');
+		LoginPage.getPassword({ timeout: 30000 }).type('empty string').clear();
+
+		LoginPage.getSubmitButton({ timeout: 30000 }).click();
 	
 		//Tests that there is error validation displayed
-		const err = '[class="govuk-list govuk-error-summary__list"]';   
+		//const err = '[id="error-summary-title"]'; 
+		const err = '[.govuk-list.govuk-error-summary__list]'
 		cy.log((err).length);
 
 			if ((err).length > 0 ) { 
 				LoginPage.getgetErrorBox().should('be.visible');
-				LoginPage.getgetErrorBox().should('contain.text', 'Please enter a valid username');
-				LoginPage.getgetErrorBox().should('contain.text', 'Please enter a valid password');
+				LoginPage.getgetErrorBox().should('contain.text', 'Incorrect username or password');
+
 			}else{
-				//cy.get('[class="govuk-tag ragtag ragtag__grey"]').eq(2).should('not.be.visible');
+
 				cy.log('2nd attempt at clearing credentials');
 				cy.reload();
 				LoginPage.getUserName().clear();
 				LoginPage.getPassword().clear();
 				LoginPage.getSubmitButton().click();
 				LoginPage.getgetErrorBox().should('be.visible');
-				LoginPage.getgetErrorBox().should('contain.text', 'Please enter a valid username');
-				LoginPage.getgetErrorBox().should('contain.text', 'Please enter a valid password');
+				LoginPage.getgetErrorBox().should('contain.text', 'Incorrect username or password');
 
 			}
-			cy.reload();
+			//cy.reload();
+	});
+
+	it("User can sucessfully log into the application with valid credentials", () => {
+		
+		cy.reload(true);
+        cy.visit(Cypress.env('url')+"/login", { timeout: 30000 })
+        LoginPage.getUserName({ timeout: 30000 }).should('be.visible');
+		LoginPage.getUserName({ timeout: 30000 }).type(Cypress.env('username'));
+		LoginPage.getPassword({ timeout: 30000 }).type(Cypress.env('password'));
+
+		LoginPage.getSubmitButton().click();
+		HomePage.getHeadingText({ timeout: 40000 }).should('be.visible');
+
 	});
 
 

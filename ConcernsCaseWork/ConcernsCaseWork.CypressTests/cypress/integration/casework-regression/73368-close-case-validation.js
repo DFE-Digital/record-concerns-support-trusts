@@ -1,7 +1,10 @@
+import LoginPage from "/cypress/pages/loginPage";
+import HomePage from "/cypress/pages/homePage";
+
 
 describe("Users can see warning messages on the case closure page", () => {
 	before(() => {
-		cy.login();
+		LoginPage.login();
 	});
 
 	afterEach(() => {
@@ -21,13 +24,15 @@ describe("Users can see warning messages on the case closure page", () => {
 		});
 
 
+
 	it("User can enter case closure page", () => {
+		//cy.closeSRMA();
 
 		const $elem = Cypress.$('table:nth-child(4) > thead > tr > th:nth-child(1)');
 
    		cy.log(($elem).length)
 			if (Cypress.$($elem).length > 1 ) { //Cypress.$ needed to handle element missing exception (>1 due to DOM)
-			
+
 			cy.log('Found Open Actions');
 
 						if (Cypress.$('[href*="/closed"]').length > 0 ) {
@@ -44,8 +49,9 @@ describe("Users can see warning messages on the case closure page", () => {
 			}
 
 		cy.get('#close-case-button').click()
-		});
-
+		
+		//cy.get('#close-case-button').click()
+	})
 
 	it("User can type 200 characters max into the outcome box", function () {
 		cy.get("#case-outcomes-info").then(($info) =>{
