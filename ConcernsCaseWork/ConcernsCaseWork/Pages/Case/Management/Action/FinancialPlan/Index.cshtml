@@ -152,13 +152,6 @@
         }
     }
 
-    private void RenderLink<T>(T value, string fieldName, string url)
-    {
-        <a class="govuk-link" href="@url">
-            @(IsEmpty(value) ? "Add" : "Edit")
-            <span class="govuk-visually-hidden">@fieldName</span>
-        </a>
-    }
 
     private bool IsEmpty<T>(T value)
     {

@@ -101,7 +101,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 						throw new NotImplementedException($"{caseAction} - has not been implemented");
 						break;
 				}
-
 				return RedirectToPage($"{action.ToLower()}/add", new { urn = caseUrn });
 			}
 			catch (InvalidOperationException ex)
