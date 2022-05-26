@@ -14,6 +14,7 @@ using System.Linq;
 using Service.Redis.Cases;
 using System.Collections.Generic;
 using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Services.FinancialPlan;
 
 namespace ConcernsCaseWork.Pages.Case.Management
 {
@@ -26,19 +27,21 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly IRecordModelService _recordModelService;
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly ISRMAService _srmaModelService;
+		private readonly IFinancialPlanModelService _financialPlanModelService;
 		private readonly ILogger<ClosurePageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
 		public ClosurePageModel(ICaseModelService caseModelService, ITrustModelService trustModelService, IRecordModelService recordModelService, 
-			IStatusCachedService statusCachedService, ISRMAService srmaModelService, ILogger<ClosurePageModel> logger)
+			IStatusCachedService statusCachedService, ISRMAService srmaModelService, IFinancialPlanModelService financialPlanModelService, ILogger<ClosurePageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_trustModelService = trustModelService;
 			_recordModelService = recordModelService;
 			_statusCachedService = statusCachedService;
 			_srmaModelService = srmaModelService;
+			_financialPlanModelService = financialPlanModelService;
 			_logger = logger;
 		}
 		
@@ -146,6 +149,10 @@ namespace ConcernsCaseWork.Pages.Case.Management
 													!s.Status.Equals(SRMAStatus.Declined) &&
 													!s.Status.Equals(SRMAStatus.Complete)).ToList().Count;
 
+			var hasOpenFinancialPlans = (await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name))
+										?.Any(fp => fp.ClosedAt == null) == true;
+			
+
 			if (numberOfOpenConcerns > 0)
 			{
 				errorMessages.Add("Resolve Concerns");
@@ -154,6 +161,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			if (numberOfOpenSRMAs > 0)
 			{
 				errorMessages.Add("Resolve SRMA");
+			}
+
+			if(hasOpenFinancialPlans)
+			{
+				errorMessages.Add("Close Financial Plan");
 			}
 
 			if (await IsCaseAlreadyClosed(User.Identity.Name, caseUrn))
