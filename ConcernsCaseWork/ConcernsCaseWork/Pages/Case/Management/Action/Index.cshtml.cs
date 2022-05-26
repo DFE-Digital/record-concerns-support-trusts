@@ -79,12 +79,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 
 				CaseActions = CaseActions ?? new List<CaseActionModel>();
 
-				var pageToRedirect = "";
-
 				switch (caseAction)
 				{
 					case CaseActionEnum.Srma:
-						pageToRedirect = $"{action.ToLower()}/add";
 						CaseActions.AddRange(await _srmaService.GetSRMAsForCase(caseUrn));
 
 						if (HasOpenSRMA())
@@ -93,7 +90,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 						}
 						break;
 					case CaseActionEnum.FinancialPlan:
-						pageToRedirect = $"{action.ToLower()}/edit";
 						CaseActions.AddRange(await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name));
 
 						if (HasOpenFinancialPlan())
@@ -106,7 +102,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 						break;
 				}
 
-				return RedirectToPage(pageToRedirect, new { urn = caseUrn });
+				return RedirectToPage($"{action.ToLower()}/add", new { urn = caseUrn });
 			}
 			catch (InvalidOperationException ex)
 			{

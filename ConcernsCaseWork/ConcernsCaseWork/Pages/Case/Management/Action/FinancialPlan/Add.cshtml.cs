@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.FinancialPlan;
 using Service.Redis.Models;
 using Service.Redis.FinancialPlan;
@@ -18,18 +17,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class EditPageModel : AbstractPageModel
+	public class AddPageModel : AbstractPageModel
 	{
-		private readonly ILogger<EditPageModel> _logger;
+		private readonly ILogger<AddPageModel> _logger;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
 		private readonly IFinancialPlanStatusCachedService _financialPlanStatusCachedService;
 
-		public FinancialPlanModel FinancialPlanModel { get; set; }
 		public int NotesMaxLength => 2000;
 		public IEnumerable<RadioItem> FinancialPlanStatuses => getStatuses();
 
-		public EditPageModel(
-			IFinancialPlanModelService financialPlanModelService, IFinancialPlanStatusCachedService financialPlanStatusService, ILogger<EditPageModel> logger)
+		public AddPageModel(
+			IFinancialPlanModelService financialPlanModelService, IFinancialPlanStatusCachedService financialPlanStatusService, ILogger<AddPageModel> logger)
 		{
 			_financialPlanModelService = financialPlanModelService;
 			_financialPlanStatusCachedService = financialPlanStatusService;
@@ -38,22 +36,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::FinancialPlan::EditPageModel::OnGetAsync");
-
-			long caseUrn = 0;
-			long financialPlanId = 0;
+			_logger.LogInformation("Case::Action::FinancialPlan::AddPageModel::OnGetAsync");
 
 			try
 			{
-				(caseUrn, financialPlanId) = GetRouteData();
-
-				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, User.Identity.Name);
+				GetRouteData();
 
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::FinancialPlan::EditPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::FinancialPlan::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
@@ -62,13 +55,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 		public async Task<IActionResult> OnPostAsync()
 		{
-			long caseUrn = 0;
-			long financialPlanId = 0;
-
 			try
 			{
-				(caseUrn, financialPlanId) = GetRouteData();
-				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, User.Identity.Name);
+				long caseUrn = GetRouteData();
 
 				ValidateFinancialPlan();
 
@@ -95,17 +84,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				var selecetedStatus = statuses.FirstOrDefault(s => s.Name.Equals(statusString));
 				var selecetedStatusId = selecetedStatus != null ? selecetedStatus.Id : (long?)null;
 
-				var patchFinancialPlanModel = new PatchFinancialPlanModel()
+				var createFinancialPlanModel = new CreateFinancialPlanModel
 				{
-					Id = financialPlanId,
 					CaseUrn = caseUrn,
-					StatusId = selecetedStatusId,
+					CreatedAt = DateTime.Now,
 					DatePlanRequested = financialPlanDates.planRequestedDate,
 					DateViablePlanReceived = financialPlanDates.viablePlanReceivedDate,
+					StatusId = selecetedStatusId,
+					CreatedBy = currentUser,
 					Notes = notes
 				};
 
-				await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel, currentUser);
+				await _financialPlanModelService.PostFinancialPlanByCaseUrn(createFinancialPlanModel, currentUser);
 
 				return Redirect($"/case/{caseUrn}/management");
 			}
@@ -135,22 +125,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 						   });
 		}
 
-		private (long, long) GetRouteData()
+		private long GetRouteData()
 		{
 			var caseUrnValue = RouteData.Values["urn"];
-			var financialPlanIdValue = RouteData.Values["finanicialplanid"];
 
 			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
 			{
 				throw new Exception("CaseUrn is null or invalid to parse");
 			}
 
-			if (!long.TryParse(financialPlanIdValue.ToString(), out long financialPlanId) || financialPlanId == 0)
-			{
-				throw new Exception("FinancialId is 0 or invalid to parse");
-			}
-
-			return (caseUrn, financialPlanId);
+			return caseUrn;
 		}
 
 		private void ValidateFinancialPlan()

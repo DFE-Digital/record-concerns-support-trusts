@@ -1,47 +1,12 @@
-﻿@page "/case/{urn:long}/management/action/financialplan/{finanicialplanid:long}/edit"
-@model ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan.EditPageModel
+﻿@page "/case/{urn:long}/management/action/financialplan/add"
+@model ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan.AddPageModel
 
 @using ConcernsCaseWork.Enums;
 @using ConcernsCaseWork.Helpers;
 
 @{
-	ViewData["Title"] = "Edit Financial Plan";
+	ViewData["Title"] = "Add Financial Plan";
 	var nonce = HttpContext.GetNonce();
-
-	var datePlanRequestedDay = "";
-	var datePlanRequestedMonth = "";
-	var datePlanRequestedYear = "";
-
-	var dateViablePlanReceivedDay =  "";
-	var dateViablePlanReceivedMonth = "";
-	var dateViablePlanReceivedYear =  "";
-
-	var financialPlanNotes =  "";
-	var financialPlanStatusEnum = FinancialPlanStatus.Unknown;
-
-	if (Model.FinancialPlanModel != null)
-	{
-		var datePlanRequestedValue = Model.FinancialPlanModel.DatePlanRequested.HasValue ? Model.FinancialPlanModel.DatePlanRequested.Value : (DateTime?)null;
-		var dateViablePlanReceivedValue = Model.FinancialPlanModel.DateViablePlanReceived.HasValue ? Model.FinancialPlanModel.DateViablePlanReceived.Value : (DateTime?)null;
-
-		datePlanRequestedDay = datePlanRequestedValue != null ? $"{datePlanRequestedValue.Value.Day:00}" : "";
-		datePlanRequestedMonth = datePlanRequestedValue != null ? $"{datePlanRequestedValue.Value.Month:00}" : "";
-		datePlanRequestedYear = datePlanRequestedValue != null ? $"{datePlanRequestedValue.Value.Year:00}" : "";
-
-		dateViablePlanReceivedDay = dateViablePlanReceivedValue != null ? $"{dateViablePlanReceivedValue.Value.Day:00}" : "";
-		dateViablePlanReceivedMonth = dateViablePlanReceivedValue != null ? $"{dateViablePlanReceivedValue.Value.Month:00}" : "";
-
-		dateViablePlanReceivedYear = dateViablePlanReceivedValue != null ? $"{dateViablePlanReceivedValue.Value.Year:00}" : "";
-
-		financialPlanNotes = Model.FinancialPlanModel.Notes;
-		var financialPlanStatusName = Model.FinancialPlanModel.Status != null ? Model.FinancialPlanModel.Status.Name : "";
-
-		if (Enum.TryParse<FinancialPlanStatus>(financialPlanStatusName, out FinancialPlanStatus parsedStatus))
-		{
-			financialPlanStatusEnum = parsedStatus;
-		}
-
-	}
 }
 
 <div class="govuk-width-container">
@@ -78,7 +43,7 @@
 				</h1>
 
 
-				<form role="form" method="post" id="edit-financial-plan-form" novalidate>
+				<form role="form" method="post" id="add-financial-plan-form" novalidate>
 
 					<div class="govuk-hint" id="financial-plan-hint">
 						<a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Trust%20financial%20plans.aspx" class="govuk-link" rel="noreferrer noopener">
@@ -101,15 +66,8 @@
 									var idStr = id++ == 0 ? "status" : "status-" + id;
 									<div class="govuk-radios__item">
 
-										@if (EnumHelper.GetEnumDescription(financialPlanStatusEnum) == status.Text)
-										{
-											<input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id" checked>
-										}
-										else
-										{
 											<input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id">
-										}
-
+										
 										<label class="govuk-label govuk-radios__label" for="@idStr">
 											<span>
 												@status.Text
@@ -132,7 +90,7 @@
 											Day
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-plan-requested"
-											   name="dtr-day-plan-requested" type="text" maxlength="2" inputmode="numeric" value="@datePlanRequestedDay" />
+											   name="dtr-day-plan-requested" type="text" maxlength="2" inputmode="numeric" />
 									</div>
 								</div>
 								<div class="govuk-date-input__item">
@@ -141,7 +99,7 @@
 											Month
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-plan-requested"
-											   name="dtr-month-plan-requested" type="text" maxlength="2" inputmode="numeric" value="@datePlanRequestedMonth" />
+											   name="dtr-month-plan-requested" type="text" maxlength="2" inputmode="numeric" />
 									</div>
 								</div>
 								<div class="govuk-date-input__item">
@@ -150,7 +108,7 @@
 											Year
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-plan-requested"
-											   name="dtr-year-plan-requested" type="text" maxlength="4" inputmode="numeric" value="@datePlanRequestedYear" />
+											   name="dtr-year-plan-requested" type="text" maxlength="4" inputmode="numeric" />
 									</div>
 								</div>
 							</div>
@@ -168,7 +126,7 @@
 											Day
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-viable-plan"
-											   name="dtr-day-viable-plan" type="text" maxlength="2" inputmode="numeric" value="@dateViablePlanReceivedDay" />
+											   name="dtr-day-viable-plan" type="text" maxlength="2" inputmode="numeric" />
 									</div>
 								</div>
 								<div class="govuk-date-input__item">
@@ -177,7 +135,7 @@
 											Month
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-viable-plan"
-											   name="dtr-month-viable-plan" type="text" maxlength="2" inputmode="numeric" value="@dateViablePlanReceivedMonth" />
+											   name="dtr-month-viable-plan" type="text" maxlength="2" inputmode="numeric" />
 									</div>
 								</div>
 								<div class="govuk-date-input__item">
@@ -186,7 +144,7 @@
 											Year
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-viable-plan"
-											   name="dtr-year-viable-plan" type="text" maxlength="4" inputmode="numeric" value="@dateViablePlanReceivedYear" />
+											   name="dtr-year-viable-plan" type="text" maxlength="4" inputmode="numeric" />
 									</div>
 								</div>
 							</div>
@@ -198,7 +156,7 @@
 					<div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
 						<div class="govuk-form-group">
 							<h2 class="govuk-heading-m">Notes</h2>
-							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="financial-plan-notes" name="financial-plan-notes" rows="3" aria-describedby="financial-plan-notes-info">@financialPlanNotes</textarea>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="financial-plan-notes" name="financial-plan-notes" rows="3" aria-describedby="financial-plan-notes-info"></textarea>
 						</div>
 						<div id="financial-plan-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
 							You can enter up to @Model.NotesMaxLength characters
@@ -216,7 +174,7 @@
 
 				<script type="application/javascript" nonce="@nonce">
 					$(function () {
-						let validator = formValidator($("#edit-financial-plan-form")[0]);
+						let validator = formValidator($("#add-financial-plan-form")[0]);
 						addFinancialPlanNotesValidator(validator);
 						autoResizer();
 					});
