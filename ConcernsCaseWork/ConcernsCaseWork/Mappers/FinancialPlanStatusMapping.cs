@@ -8,7 +8,7 @@ namespace ConcernsCaseWork.Mappers
 {
 	public static class FinancialPlanStatusMapping
 	{
-		public static FinancialPlanStatusModel? MapDtoToModel(IList<FinancialPlanStatusDto> statusesDto, long? id)
+		public static FinancialPlanStatusModel MapDtoToModel(IList<FinancialPlanStatusDto> statusesDto, long? id)
 		{
 			var selectedStatusDto = statusesDto.FirstOrDefault(s => s.Id.CompareTo(id) == 0) ?? null;
 

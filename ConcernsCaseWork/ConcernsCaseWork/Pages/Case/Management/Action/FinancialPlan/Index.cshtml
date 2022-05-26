@@ -1,0 +1,177 @@
+﻿@page "/case/{urn:long}/management/action/financialplan/{financialPlanId:long}/{handler?}"
+@model ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan.IndexPageModel
+
+@using ConcernsCaseWork.Helpers;
+@using ConcernsCaseWork.Extensions;
+@using ConcernsCaseWork.Enums;
+
+@{
+	ViewData["Title"] = "Financial Plan";
+	var nonce = HttpContext.GetNonce();
+
+	var errorClass = "govuk-error-message";
+	var srmaValidationErrors = TempData["SRMA.Message"] as IEnumerable<string>;
+
+}
+
+@section BeforeMain {
+<div class="govuk-width-container">
+    <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
+        Back to case
+    </a>
+</div>
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError" />
+
+	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+	{
+		<partial name="_Error" />
+	}
+	else
+	{
+
+		<h1 class="govuk-heading-l">
+			<span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
+			Financial Plan
+		</h1>
+
+		<div class="govuk-hint" id="financial-plan-hint">
+			<a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Trust%20financial%20plans.aspx" class="govuk-link" rel="noreferrer noopener">
+				AMSD Knowledge: Financial Plan
+			</a>
+		</div>
+
+		<table class="govuk-table">
+			<caption class="govuk-table__caption govuk-table__caption--m"></caption>
+			<thead>
+				<tr>
+					<th scope="col"></th>
+					<th scope="col"></th>
+				</tr>
+			</thead>
+			<tbody class="govuk-table__body">
+
+				@* Status *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">Current Status</th>
+					<td class="govuk-table__cell">
+						@{
+
+							if (Model.FinancialPlanModel.Status != null)
+							{
+
+								var statusName = Model.FinancialPlanModel.Status.Name;
+								var statusEnum = (FinancialPlanStatus)@Enum.Parse(typeof(FinancialPlanStatus), statusName);
+
+								<span>@EnumHelper.GetEnumDescription(statusEnum)</span>
+							}
+							else
+							{
+								RenderEmptyLabel();
+							}
+						}
+					</td>
+				</tr>
+
+				@* Date plan requested *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">Date plan requested</th>
+					<td class="govuk-table__cell">
+						@{
+							if (Model.FinancialPlanModel.DatePlanRequested.HasValue)
+							{
+								RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.FinancialPlanModel.DatePlanRequested.Value));
+							}
+							else
+							{
+								RenderEmptyLabel();
+							}
+						}
+					</td>
+				</tr>
+
+				@* Date viable plan received *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">Date viable plan received</th>
+					<td class="govuk-table__cell">
+						@{
+							if (Model.FinancialPlanModel.DateViablePlanReceived.HasValue)
+							{
+								RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.FinancialPlanModel.DateViablePlanReceived.Value));
+							}
+							else
+							{
+								RenderEmptyLabel();
+							}
+						}
+					</td>
+				</tr>
+
+				@* Notes *@
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header">Notes</th>
+					<td class="govuk-table__cell">
+						@{
+							if (!string.IsNullOrEmpty(Model.FinancialPlanModel.Notes))
+							{
+								<span>@Model.FinancialPlanModel.Notes</span>
+							}
+							else
+							{
+								RenderEmptyLabel();
+							}
+						}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="govuk-button-group">
+			<a data-prevent-double-click="true" href="@Request.Path/edit" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-financialplan-button">
+				Edit Information
+			</a>
+			<a data-prevent-double-click="true" asp-page-handler="Cancel" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button">
+				Close Financial Plan
+			</a>
+		</div>
+	}
+</div>
+
+@functions {
+    private void RenderValue<T>(T value)
+    {
+        if (IsEmpty(value))
+        {
+            RenderEmptyLabel();
+        }
+        else
+        {
+            @value
+        }
+    }
+
+    private void RenderLink<T>(T value, string fieldName, string url)
+    {
+        <a class="govuk-link" href="@url">
+            @(IsEmpty(value) ? "Add" : "Edit")
+            <span class="govuk-visually-hidden">@fieldName</span>
+        </a>
+    }
+
+    private bool IsEmpty<T>(T value)
+    {
+        if (value is string)
+        {
+            return string.IsNullOrWhiteSpace(value as string);
+        }
+
+        return value == null || value.Equals(default(T));
+    }
+
+    private void RenderEmptyLabel()
+    {
+        <span class="govuk-tag ragtag ragtag__grey">Empty</span>
+    }
+}
