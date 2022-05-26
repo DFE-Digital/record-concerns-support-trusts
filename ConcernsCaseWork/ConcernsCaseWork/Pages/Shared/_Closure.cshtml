@@ -87,7 +87,7 @@
 		$(".govuk-date-input__input").on('input', function () {
 			$(this).val($(this).val().replace(/[^0-9]/g, ''));
 		});
-		
+
 		// allow 1-31
 		$("input[name='dtr-day']").on('input', function () {
 			let match = $(this).val().match(/^(([0]?[1-9])|([1-2][0-9])|(3[01]))$/);
@@ -95,7 +95,7 @@
 				$(this).val('');
 			}
 		});
-		
+
 		// allow 1-12
 		$("input[name='dtr-month']").on('input', function () {
 			let match = $(this).val().match(/(^0?[1-9]$)|(^1[0-2]$)/);
@@ -103,7 +103,7 @@
 				$(this).val('');
 			}
 		});
-		
+
 		// allow year to be current year or higher
 		$("input[name='dtr-year']").focusout(function () {
 			let currentYear =  new Date().getFullYear();
@@ -111,26 +111,26 @@
 				$(this).val('');
 			}
 		});
-		
+
 		function monthDays(year, month) {
 			let d= new Date(year, month + 1, 0);
 			return d.getDate();
 		}
-		
+
 		// is leap year
 		function leapYear(year) {
 		  return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
 		}
-		
+
 		let validator = formValidator($("#close-case-form")[0]);
 		validator.addValidator('case-outcomes', [{
-			method: function(field) {				
+			method: function(field) {
 				return field.value.trim().length > 0;
 			},
-			message: 'You have not recorded an outcome'
+			message: 'You have not recorded rational for closure'
 		},
 		{
-			method: function(field) {				
+			method: function(field) {
 				return field.value.trim().length <= 200;
 			},
 			message: 'Your case outcome contains too many characters'
@@ -138,12 +138,12 @@
 		validator.addValidator('monitoring', [{
 			method: function(field) {
 				if (field.value === 'yes') {
-					
+
 					// Adds validator if doesnt exist
 					if(!validator.validators.some(validator => validator.fieldName === "dtr-day")) {
-						
+
 						validator.addValidator('dtr-day', [{
-							method: function(field, params) {							
+							method: function(field, params) {
 								return (params.day.value.length !== 0 && params.month.value.length !== 0 && params.year.value !== 0);
 							},
 							message: 'Enter date to review',
@@ -154,7 +154,7 @@
 							}
 						}, {
 							method: function(field, params) {
-								let reviewAt = new Date(parseInt(params.year.value, 10), parseInt(params.month.value, 10) - 1, parseInt(params.day.value, 10));	
+								let reviewAt = new Date(parseInt(params.year.value, 10), parseInt(params.month.value, 10) - 1, parseInt(params.day.value, 10));
 								return reviewAt instanceof Date && !isNaN(reviewAt.getDate());
 							},
 							message: 'Enter a valid date to review',
@@ -168,21 +168,21 @@
 								let year = parseInt(params.year.value, 10);
 								let month = parseInt(params.month.value, 10) - 1;
 								let day = parseInt(params.day.value, 10);
-																
+
 								let reviewAt = new Date(year, month, day);
 								let reviewAtTomorrow = new Date();
 								reviewAtTomorrow.setDate(reviewAtTomorrow.getDate() + 1);
 								reviewAtTomorrow.setHours(0, 0, 0, 0);
-								
+
 								if (leapYear(year) && month === 1 && day > 29) {
 									params.day.value = '';
 									return false;
-								} 
+								}
 								if (!leapYear(year) && month === 1 && day > 28) {
 									params.day.value = '';
 									return false;
 								}
-								
+
 								if (year !== undefined && month !== undefined) {
 									let days = monthDays(year,  month);
 									if (day > days) {
@@ -190,12 +190,12 @@
 										return false;
 									}
 								}
-								
+
 								if (reviewAt < reviewAtTomorrow) {
 									params.year.value = '';
 									return false;
 								}
-								
+
 								return reviewAt >= reviewAtTomorrow;
 							},
 							message: 'Enter a valid date',
@@ -214,12 +214,12 @@
 						return value.fieldName !== "dtr-day";
 					});
 				}
-				
+
 				return field.value.trim().length > 0;
 			},
 			message: 'Select monitoring'
 		}]);
-		
+
 		autoResizer();
 	});
 </script>
