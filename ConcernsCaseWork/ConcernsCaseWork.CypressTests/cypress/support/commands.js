@@ -24,6 +24,12 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import "cypress-localstorage-commands";
+import LoginPage from "/cypress/pages/loginPage";
+import HomePage from "/cypress/pages/homePage";
+import CaseManagementPage from "/cypress/pages/caseMangementPage";
+import caseMangementPage from "/cypress/pages/caseMangementPage";
+import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
+
 
 const concernsRgx = new RegExp(/(Compliance|Financial|Force majeure|Governance|Irregularity)/, 'i');
 const trustRgx = new RegExp(/(School|Academy|Accrington|South|North|East|West)/, 'i');
@@ -31,11 +37,11 @@ const ragRgx = new RegExp(/(amber|green|red|redPlus|Red Plus)/, 'i');
 const dotRgx = new RegExp(/(Deteriorating|Unchanged|Improving)/, 'i');
 
 Cypress.Commands.add("login",()=> {
-    cy.visit(Cypress.env('url')+"/login", { timeout: 30000 })
-    cy.get('#username', { timeout: 30000 }).should('be.visible')
+    cy.visit(Cypress.env('url')+"/login", { timeout: 40000 })
+    cy.get('#username', { timeout: 40000 }).should('be.visible')
 	cy.get("#username").type(Cypress.env('username'));
 	cy.get("#password").type(Cypress.env('password')+"{enter}");
-    cy.get('[id=your-casework]', { timeout: 30000 }).should('be.visible')
+    cy.get('[id=your-casework]', { timeout: 40000 }).should('be.visible')
 	cy.saveLocalStorage();
 })
 
@@ -366,7 +372,7 @@ if (Cypress.$(elem).length > 0) { //Cypress.$ needed to handle element missing e
 Cypress.Commands.add('randomSelectTrust', () =>{
     let searchTerm =
       ["10058372", "10060045", "10060278", "10058372", "10059732", "10060186",
-        "10080822", "10081341", "10058833", "1087656", "10058354", 
+        "10080822", "10081341", "10058833", "10058354", 
         "10066108", "10058598", "10059919", "10057355", "10058295", "10059877",
         "10060927", "10059550", "10058417", "10059171", "10060716", "10060832",
         "10066116", "10058998", "10058772", "10059020", "10058154", "10059577",
@@ -435,10 +441,18 @@ Cypress.Commands.add('createCase', () =>{
 //parameters: takes a string args from the value attribute eg: value="srma"
 Cypress.Commands.add('addActionItemToCase', (option, textToVerify) =>{
     
-    cy.get('[class="govuk-heading-l"]').should('contain.text', 'Add to case');
-    cy.get('h2[class="govuk-heading-m"]').should('contain.text', 'What action are you taking?');
-    cy.get('[value="'+option+'"]').click()
-    cy.get('[value="'+option+'"]').siblings().should('contain.text', textToVerify);
+    //cy.get('[class="govuk-heading-l"]').should('contain.text', 'Add to case');
+    AddToCasePage.getHeadingText().should('contain.text', 'Add to case');
+ 
+    //cy.get('h2[class="govuk-heading-m"]').should('contain.text', 'What action are you taking?');
+    AddToCasePage.getSubHeadingText().should('contain.text', 'What action are you taking?');
+
+
+    //cy.get('[value="'+option+'"]').click()
+    AddToCasePage.getCaseActionRadio(option).click();
+
+    //cy.get('[value="'+option+'"]').siblings().should('contain.text', textToVerify);
+    AddToCasePage.getCaseActionRadio(option).siblings().should('contain.text', textToVerify);
 
     cy.get('[value="'+option+'"]').siblings().should(($text) => {
         expect($text.text().trim()).equal(textToVerify)

@@ -95,7 +95,7 @@ describe("Users can see warning messages on the case closure page", () => {
 	    cy.get('#close-case-button').click();
 	    cy.get('#errorSummary').children().then(($error) =>{
 		   expect($error).to.be.visible
-		   expect($error.text()).to.match(/(not recorded an outcome)/i);
+		   expect($error.text()).to.match(/(not recorded rationale for closure)/i);
 		})
 
 	})
