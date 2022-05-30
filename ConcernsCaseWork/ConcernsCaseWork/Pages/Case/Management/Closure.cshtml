@@ -43,7 +43,7 @@
 
 						<div class="govuk-form-group">
 							<label class="govuk-label govuk-!-font-weight-bold" for="case-outcomes">
-								Case outcomes
+								Rationale for closure
 							</label>
 							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-outcomes" name="case-outcomes" rows="3" aria-describedby="case-outcomes-info"></textarea>
 						</div>
@@ -66,13 +66,13 @@
 							method: function(field) {
 								return field.value.trim().length > 0;
 							},
-							message: 'You have not recorded an outcome'
+							message: 'You have not recorded rationale for closure'
 						},
 						{
 							method: function(field) {
 								return field.value.trim().length <= 200;
 							},
-							message: 'Your case outcome contains too many characters'
+							message: 'Your rationale for closure contains too many characters'
 						}]);
 
 						autoResizer();

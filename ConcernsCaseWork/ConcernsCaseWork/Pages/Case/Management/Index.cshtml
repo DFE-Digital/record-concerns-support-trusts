@@ -275,11 +275,9 @@
 					Add to case
 				</a>
 
-
-
 				@if (openSRMAs.Count > 0 || openFinancialPlanModels.Count > 0)
 				{
-					<table class="govuk-table">
+					<table id="open-case-actions" class="govuk-table">
 						<thead class="govuk-table__head">
 							<tr class="govuk-table__row tr__large">
 								<th class="govuk-table__header govuk-table__cell__cases" scope="col">
@@ -310,9 +308,20 @@
 							{
 								<tr class="govuk-table__row">
 									<td class="govuk-table__cell">
-										<a href="@Request.Path/action/srma/@fp.Id" class="govuk-link govuk-link-no-visited-state">
-											@*Financial Plan:@EnumHelper.GetEnumDescription(fp.Status)*@
-											Financial Plan:@EnumHelper.GetEnumDescription(fp.Status)
+										<a href="@Request.Path/action/financialplan/@fp.Id" class="govuk-link govuk-link-no-visited-state">
+
+											@{ 
+												if (fp.Status != null)
+												{
+													var financialStatusEnum = (FinancialPlanStatus)Enum.Parse(typeof(FinancialPlanStatus), fp.Status.Name);
+													<span>Financial Plan:@EnumHelper.GetEnumDescription(financialStatusEnum)</span>
+												}
+												else
+												{
+													<span>Financial Plan</span>
+												}
+											}
+
 										</a>
 									</td>
 									<td class="govuk-table__cell govuk-table__header__right">
@@ -326,7 +335,7 @@
 
 				@if (closedSRMAs.Count > 0)
 				{
-					<table class="govuk-table">
+					<table  id="close-case-actions" class="govuk-table">
 						<thead class="govuk-table__head">
 							<tr class="govuk-table__row tr__large">
 								<th class="govuk-table__header govuk-table__cell__cases" scope="col">

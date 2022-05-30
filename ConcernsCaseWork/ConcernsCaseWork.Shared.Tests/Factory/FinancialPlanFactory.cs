@@ -3,6 +3,7 @@ using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Models.CaseActions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory
 {
@@ -16,16 +17,21 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<long>(),
 				Fixture.Create<long>(),
 				Fixture.Create<DateTime>(),
-				Fixture.Create<FinancialPlanStatus>(),
 				Fixture.Create<DateTime>(),
 				Fixture.Create<DateTime>(),
-				Fixture.Create<string>()
+				Fixture.Create<string>(),
+				Fixture.Create<FinancialPlanStatusModel>()
 			);
 		} 
 
 		public static List<FinancialPlanModel> BuildListFinancialPlanModel()
 		{
 			return new List<FinancialPlanModel>() { BuildFinancialPlanModel() };
+		}
+
+		public static List<FinancialPlanModel> BuildListFinancialPlanModel(params FinancialPlanModel[] financialPlanModels)
+		{
+			return financialPlanModels.ToList();
 		}
 	}
 }

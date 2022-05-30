@@ -1,3 +1,5 @@
+import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
+
 describe("User can add action srma to existing case", () => {
 	before(() => {
 		cy.login();
@@ -25,11 +27,15 @@ describe("User can add action srma to existing case", () => {
 			expect($btn.text()).to.match(/(Add to case)/i);
 		cy.get('button[data-prevent-double-click^="true"]').click();
 		}); 
+		cy.reload();
 	});
 
 	it("User can Cancel and is returned to the Case ID Page", () => {
-	
-		cy.get('[id="cancel-link-event"]').click();
+
+		AddToCasePage.getCancelBtn().scrollIntoView();
+		AddToCasePage.getCancelBtn().click();
+
+
 		cy.get('[class="govuk-caption-m"]').then(($heading) =>{
 			expect($heading).to.be.visible
 			expect($heading.text()).to.match(/(Case ID)/i);
@@ -42,24 +48,33 @@ describe("User can add action srma to existing case", () => {
 		cy.addActionItemToCase('Srma', 'School Resource Management Adviser (SRMA)');
 	});
 
-	it("User clicking add to case is taken to the action page", function () {
+	it("User clicking add to case is taken to the case action page", function () {
 		cy.get('button[data-prevent-double-click*="true"]').click();
 
-		const err = '[class="govuk-list govuk-error-summary__list"]';
-		cy.log((err).length);
+		cy.wait(500);
+			const err = '.govuk-list.govuk-error-summary__list';
+			cy.log(err.length);
 
-			if ((err).length > 0 ) { 
-				cy.visit(Cypress.env('url'), { timeout: 30000 });
-				cy.checkForExistingCase(true);
-				cy.get('[class="govuk-button"][role="button"]').click();
-				cy.addActionItemToCase('Srma', 'School Resource Management Adviser (SRMA)');
-				cy.get('button[data-prevent-double-click*="true"]').click();
-			}else{
-				cy.log("No SRMA exists")
-			}
-	});
+			if (err.length > 0) { //Cypress.$ needed to handle element missing exception
+				
+				cy.log("SRMA exists")
+
+					cy.visit(Cypress.env('url'), { timeout: 30000 });
+					cy.checkForExistingCase(true);
+					cy.get('[class="govuk-button"][role="button"]').click();
+
+					AddToCasePage.getHeadingText().should('contain.text', 'Add to case');
+				}else{
+					cy.log("No SRMA exists")	
+					AddToCasePage.getHeadingText().should('contain.text', 'Add to case');
+				}
+			});
+
 
 	it("User is shown validation and cannot proceed without selecting a status", () => {
+		cy.addActionItemToCase('Srma', 'School Resource Management Adviser (SRMA)');
+		cy.get('button[data-prevent-double-click*="true"]').click();
+
 		cy.get('[id="dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
 		cy.get('[id="dtr-month"]').type(Math.floor(Math.random() *3) + 10);
 		cy.get('[id="dtr-year"]').type("2022");

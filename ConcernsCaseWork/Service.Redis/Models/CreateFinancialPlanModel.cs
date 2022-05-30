@@ -11,7 +11,7 @@ namespace Service.Redis.Models
 		public DateTime CreatedAt { get; set; }
 		public DateTime? DatePlanRequested { get; set; }
 		public DateTime? DateViablePlanReceived { get; set; }
-		public long StatusId { get; set; }
+		public long? StatusId { get; set; }
 		public string Notes { get; set; }
 		public string CreatedBy { get; set; }
 	}
