@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 				(caseUrn, srmaId) = GetRouteData();
 
-				SetPageData(caseUrn, srmaId);
+				await SetPageData(caseUrn, srmaId);
 			}
 			catch (Exception ex)
 			{
@@ -69,7 +69,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			{
 				(caseUrn, srmaId) = GetRouteData();
 
-				SetPageData(caseUrn, srmaId);
+				await SetPageData(caseUrn, srmaId);
 				var srmaIndexPage = $"/case/{caseUrn}/management/action/srma/{srmaId}";
 
 				if (SRMAModel.Status.Equals(SRMAStatus.Deployed))
@@ -114,7 +114,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			try
 			{
 				(caseUrn, srmaId) = GetRouteData();
-				SetPageData(caseUrn, srmaId);
+				await SetPageData(caseUrn, srmaId);
 
 				if (SRMAModel.Reason.Equals(SRMAReasonOffered.Unknown))
 				{
@@ -147,7 +147,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			return (caseUrn, srmaId);
 		}
 	
-		private async void SetPageData(long caseUrn, long srmaId)
+		private async Task SetPageData(long caseUrn, long srmaId)
 		{
 			// TODO - get SRMA by case ID and SRMA ID
 			SRMAModel = await _srmaModelService.GetSRMAById(srmaId);

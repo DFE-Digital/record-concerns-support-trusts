@@ -4,24 +4,24 @@ namespace ConcernsCaseWork.Enums
 {
 	public enum SRMAStatus
 	{
-		Unknown,
+		Unknown = 0,
 		
 		[Description("Trust considering")]
-		TrustConsidering,
+		TrustConsidering = 1,
 
 		[Description("Preparing for deployment")]
-		PreparingForDeployment,
+		PreparingForDeployment = 2,
 
 		[Description("Deployed")]
-		Deployed,
+		Deployed = 3,
 
 		[Description("SRMA Declined")]
-		Declined,
+		Declined = 4,
 
 		[Description("SRMA Canceled")]
-		Canceled,
+		Canceled = 5,
 
 		[Description("SRMA Complete")]
-		Complete
+		Complete = 6
 	}
 }

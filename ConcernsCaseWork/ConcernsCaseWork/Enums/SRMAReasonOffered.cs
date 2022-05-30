@@ -4,13 +4,12 @@ namespace ConcernsCaseWork.Enums
 {
 	public enum SRMAReasonOffered
 	{
-		Unknown,
+		Unknown = 0,
 		[Description("Offer linked with grant funding or other offer of support")]
-		OfferLinked,
+		OfferLinked = 1,
 		[Description("AMSD Intervention")]
-		AMSDIntervention,
+		AMSDIntervention = 2,
 		[Description("RDD Intervention")]
-		RDDIntervention
-
+		RDDIntervention = 3
 	}
 }

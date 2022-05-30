@@ -22,6 +22,7 @@ using Service.Redis.Status;
 using Service.Redis.Trusts;
 using Service.Redis.Types;
 using Service.Redis.Users;
+using Service.Redis.CaseActions;
 using Service.TRAMS.Cases;
 using Service.TRAMS.Configuration;
 using Service.TRAMS.FinancialPlan;
@@ -37,6 +38,7 @@ using Service.TRAMS.Types;
 using StackExchange.Redis;
 using System;
 using System.Net.Mime;
+using Service.TRAMS.CaseActions;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -44,7 +46,7 @@ namespace ConcernsCaseWork.Extensions
 	{
 		private static readonly IRedisMultiplexer RedisMultiplexer = new RedisMultiplexer();
 		public static IRedisMultiplexer Implementation { private get; set; } = RedisMultiplexer;
-		
+
 		public static void AddRedis(this IServiceCollection services, IConfiguration configuration)
 		{
 			try
@@ -88,11 +90,12 @@ namespace ConcernsCaseWork.Extensions
 		{
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			var tramsApiKey = configuration["trams:api_key"];
-			if (string.IsNullOrEmpty(tramsApiEndpoint) || string.IsNullOrEmpty(tramsApiKey)) 
+
+			if (string.IsNullOrEmpty(tramsApiEndpoint) || string.IsNullOrEmpty(tramsApiKey))
 				throw new Exception("AddTramsApi::missing configuration");
-			
+
 			Log.Information("Starting Trams API Endpoint - {TramsApiEndpoint}", tramsApiEndpoint);
-			
+
 			services.AddHttpClient("TramsClient", client =>
 			{
 				client.BaseAddress = new Uri(tramsApiEndpoint);
@@ -110,8 +113,8 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ICaseHistoryModelService, CaseHistoryModelService>();
 			services.AddSingleton<IRatingModelService, RatingModelService>();
 			services.AddSingleton<IRecordModelService, RecordModelService>();
-			services.AddSingleton<ISRMAService, TestSRMAService>();
 			services.AddSingleton<IFinancialPlanModelService, FinancialPlanModelService>();
+			services.AddSingleton<ISRMAService, SRMAService>();
 
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
@@ -128,6 +131,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ICaseSearchService, CaseSearchService>();
 			services.AddSingleton<ICaseHistoryService, CaseHistoryService>();
 			services.AddSingleton<IFinancialPlanService, FinancialPlanService>();
+			services.AddSingleton<SRMAProvider, SRMAProvider>();
 			services.AddSingleton<IFinancialPlanStatusService, FinancialPlanStatusService>();
 
 			// Redis services
@@ -143,11 +147,13 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IFinancialPlanCachedService, FinancialPlanCachedService>();
 			services.AddSingleton<IFinancialPlanStatusCachedService, FinancialPlanStatusCachedService>();
 			
+			services.AddSingleton<CachedSRMAProvider, CachedSRMAProvider>();
+
 			// AD Integration
 			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
 			services.AddSingleton<IUserRoleCachedService, UserRoleCachedService>();
 			services.AddSingleton<IRbacManager, RbacManager>();
-			
+
 			// Redis Sequence
 			services.AddSingleton<ISequenceCachedService, SequenceCachedService>();
 		}
