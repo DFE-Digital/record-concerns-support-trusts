@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
@@ -156,6 +157,44 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 				new Dictionary<string, StringValues>
 				{
 					{ "action", new StringValues(CaseActionEnum.Srma.ToString()) }
+				});
+
+			// act
+			var pageResponse = await pageModel.OnPostAsync();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<RedirectToPageResult>());
+			var page = pageResponse as RedirectToPageResult;
+
+			Assert.IsEmpty(pageModel.TempData);
+			Assert.That(page, Is.Not.Null);
+			Assert.That(page.PageName, Is.EqualTo(expectedRedirectLink));
+		}
+
+		[Test]
+		public async Task WhenOnPostAsync_FormData_ActionIs_FinancialPlan_ReturnsToAddSRMAPage()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockSrmaService = new Mock<ISRMAService>();
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
+			var financialPlanModels = new List<FinancialPlanModel>();
+
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object, mockLogger.Object);
+
+			mockFinancialPlanModelService.Setup(f => f.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
+				.ReturnsAsync(financialPlanModels);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+
+			var expectedRedirectLink = "financialplan/add";
+
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "action", new StringValues(CaseActionEnum.FinancialPlan.ToString()) }
 				});
 
 			// act

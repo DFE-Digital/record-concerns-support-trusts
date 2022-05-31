@@ -131,13 +131,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 
 		private bool HasOpenSRMA()
 		{
-			//Check if case action is SRMA and status is not canceled, declined or complete
+			//Check for SRMAs that do not have a closed date value
 			var openSRMA = CaseActions.Where(ca => (
 							ca is SRMAModel &&
 							(
-								!(((SRMAModel)ca).Status.Equals(SRMAStatus.Canceled)) &&
-								!(((SRMAModel)ca).Status.Equals(SRMAStatus.Declined)) &&
-								!(((SRMAModel)ca).Status.Equals(SRMAStatus.Complete))
+								!((SRMAModel)ca).ClosedAt.HasValue
+								
 							)
 						)).FirstOrDefault();
 

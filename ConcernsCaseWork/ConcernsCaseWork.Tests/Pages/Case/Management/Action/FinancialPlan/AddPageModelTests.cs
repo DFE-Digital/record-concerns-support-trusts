@@ -1,8 +1,6 @@
-﻿using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Case.Management.Action;
-using ConcernsCaseWork.Pages.Case.Management.Action.Srma;
+﻿using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +11,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.TRAMS.Cases;
+using Service.Redis.FinancialPlan;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
+namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 {
 	[Parallelizable(ParallelScope.All)]
 	public class AddPageModelTests
@@ -27,10 +25,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
 		{
 			// arrange
-			var mockSrmaService = new Mock<ISRMAService>();
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -43,11 +42,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		public async Task WhenOnGetAsync_ReturnsPageModel()
 		{
 			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockSrmaService = new Mock<ISRMAService>();
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -70,10 +69,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		public async Task WhenOnPostAsync_MissingRouteData_ThrowsException_ReturnsPage()
 		{
 			// arrange
-			var mockSrmaService = new Mock<ISRMAService>();
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -91,10 +91,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		public async Task WhenOnPostAsync_Missing_Status_FormData_ThrowsException_ReturnsPage()
 		{
 			// arrange
-			var mockSrmaService = new Mock<ISRMAService>();
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -118,10 +119,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		public async Task WhenOnPostAsync_Invalid_SRMA_Status_FormData_ThrowsException_ReturnsPage()
 		{
 			// arrange
-			var mockSrmaService = new Mock<ISRMAService>();
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -145,10 +147,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		public async Task WhenOnPostAsync_Invalid_Date_FormData_ThrowsException_ReturnsPage()
 		{
 			// arrange
-			var mockSrmaService = new Mock<ISRMAService>();
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -175,10 +178,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		public async Task WhenOnPostAsync_Invalid_NotesLength_FormData_ThrowsException_ReturnsPage()
 		{
 			// arrange
-			var mockSrmaService = new Mock<ISRMAService>();
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
 			var exceededNotesLength = "Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data";
 
@@ -208,10 +212,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		public async Task WhenOnPostAsync_FormData_IsValid_SRMA_Is_Created_ReturnsToManagementPage()
 		{
 			// arrange
-			var mockSrmaService = new Mock<ISRMAService>();
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+
 			var caseUrn = 1;
 
 			var routeData = pageModel.RouteData.Values;
@@ -240,13 +246,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		}
 
 		private static AddPageModel SetupAddPageModel(
-			ISRMAService mockSrmaService,
+			IFinancialPlanModelService mockFinancialPlanModelService, 
+			IFinancialPlanStatusCachedService mockFinancialPlanStatusService,
 			ILogger<AddPageModel> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new AddPageModel(mockSrmaService, mockLogger)
+			return new AddPageModel(mockFinancialPlanModelService, mockFinancialPlanStatusService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
