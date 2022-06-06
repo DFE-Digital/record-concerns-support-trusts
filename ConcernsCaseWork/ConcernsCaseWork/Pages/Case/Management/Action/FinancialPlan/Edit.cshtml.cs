@@ -105,6 +105,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					Notes = notes
 				};
 
+				patchFinancialPlanModel.ClosedAt = DateTime.Now;
+
 				await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel, currentUser);
 
 				return Redirect($"/case/{caseUrn}/management");
@@ -115,7 +117,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::SRMA::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::FinancialPlan::EditPageModel::OnPostAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}

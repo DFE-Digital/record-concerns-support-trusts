@@ -152,9 +152,9 @@ namespace Service.Redis.FinancialPlan
 			// If case urn doesn't exist on the cache return
 			if (!userState.CasesDetails.TryGetValue(patchFinancialPlanDto.CaseUrn, out var caseWrapper)) return;
 
-			if (caseWrapper.FinancialPlans.TryGetValue(patchFinancialPlanDto.Id, out var recordWrapper))
+			if (caseWrapper.FinancialPlans.TryGetValue(patchFinancialPlanDto.Id, out var financialPlanWrapper))
 			{
-				recordWrapper.FinancialPlanDto = patchFinancialPlanDto;
+				financialPlanWrapper.FinancialPlanDto = patchFinancialPlanDto;
 			}
 			else
 			{

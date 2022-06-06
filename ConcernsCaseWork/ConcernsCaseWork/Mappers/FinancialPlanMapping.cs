@@ -22,7 +22,8 @@ namespace ConcernsCaseWork.Mappers
 				financialPlanDto.DatePlanRequested,
 				financialPlanDto.DateViablePlanReceived,
 				financialPlanDto.Notes,
-				FinancialPlanStatusMapping.MapDtoToModel(statuses, selectedStatusId)
+				FinancialPlanStatusMapping.MapDtoToModel(statuses, selectedStatusId),
+				financialPlanDto.ClosedAt
 				);
 
 			return financialPlanModel;
@@ -46,7 +47,8 @@ namespace ConcernsCaseWork.Mappers
 					financialPlanDto.DatePlanRequested,
 					financialPlanDto.DateViablePlanReceived,
 					financialPlanDto.Notes,
-					FinancialPlanStatusMapping.MapDtoToModel(statuses, financialPlanDto.StatusId));
+					FinancialPlanStatusMapping.MapDtoToModel(statuses, financialPlanDto.StatusId),
+					financialPlanDto.ClosedAt);
 
 				return financialPlanModel;
 			}
@@ -66,7 +68,7 @@ namespace ConcernsCaseWork.Mappers
 				financialPlanDto.Id,
 				financialPlanDto.CaseUrn,
 				financialPlanDto.CreatedAt,
-				financialPlanDto.ClosedAt,
+				patchFinancialPlanModel.ClosedAt,
 				financialPlanDto.CreatedBy,
 				selectedStatusId,
 				patchFinancialPlanModel.DatePlanRequested,
