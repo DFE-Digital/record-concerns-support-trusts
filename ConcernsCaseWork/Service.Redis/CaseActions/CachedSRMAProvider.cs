@@ -55,7 +55,7 @@ namespace Service.Redis.CaseActions
 		public async Task<List<SRMADto>> GetSRMAsForCase(long caseUrn)
 		{
 			var cacheKey = GetCacheKeyForSrmasForCase(caseUrn);
-			//await ClearData(GetCacheKeyForSrmasForCase(caseUrn));
+
 			var srmas = await GetData<List<SRMADto>>(cacheKey);
 
 			if (srmas == null || srmas.Count == 0)
@@ -64,7 +64,7 @@ namespace Service.Redis.CaseActions
 
 				if (srmas?.Count > 0)
 				{
-					cacheKey = GetCacheKeyForSrmasForCase(srmas.First().CaseId);
+					cacheKey = GetCacheKeyForSrmasForCase(srmas.First().CaseUrn);
 					await StoreData<List<SRMADto>>(cacheKey, srmas);
 				}
 			}
@@ -191,7 +191,7 @@ namespace Service.Redis.CaseActions
 			var cacheKey = GetCacheKeyForSrmaBySrmaIdKey(srma.Id);
 			await StoreData<SRMADto>(cacheKey, srma);
 
-			await ClearData(GetCacheKeyForSrmasForCase(srma.CaseId));
+			await ClearData(GetCacheKeyForSrmasForCase(srma.CaseUrn));
 		}
 
 		private string GetCacheKeyForSrmaBySrmaIdKey(long srmaId)
