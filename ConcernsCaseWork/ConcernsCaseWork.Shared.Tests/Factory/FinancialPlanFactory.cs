@@ -20,7 +20,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<DateTime>(),
 				Fixture.Create<DateTime>(),
 				Fixture.Create<string>(),
-				Fixture.Create<FinancialPlanStatusModel>()
+				Fixture.Create<FinancialPlanStatusModel>(),
+				Fixture.Create<DateTime>()
 			);
 		} 
 
