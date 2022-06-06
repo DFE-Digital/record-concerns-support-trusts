@@ -66,7 +66,7 @@ namespace ConcernsCaseWork.Mappers
 				financialPlanDto.Id,
 				financialPlanDto.CaseUrn,
 				financialPlanDto.CreatedAt,
-				financialPlanDto.ClosedAt,
+				patchFinancialPlanModel?.ClosedAt?.DateTime ?? financialPlanDto.ClosedAt,
 				financialPlanDto.CreatedBy,
 				selectedStatusId,
 				patchFinancialPlanModel.DatePlanRequested,

@@ -1,4 +1,5 @@
-﻿@page "/case/{urn:long}/management/action/financialplan/{finanicialplanid:long}/edit"
+﻿@* Routes for this page is configured in Startup.cs *@
+@page 
 @model ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan.EditPageModel
 
 @using ConcernsCaseWork.Enums;
@@ -207,7 +208,7 @@
 
 					<div class="govuk-button-group">
 						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-financial-plan-button">
-							Update
+						 @(Model.EditMode == FinancialPlanEditMode.Close ? "Update And Close" :	"Update")
 						</button>
 						<partial name="_Cancel" />
 					</div>
