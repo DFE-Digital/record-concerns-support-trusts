@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.Mappers
 			return new SRMAModel
 			{
 				Id = srmaDto.Id,
-				CaseUrn = srmaDto.CaseId,
+				CaseUrn = srmaDto.CaseUrn,
 				CreatedAt = srmaDto.CreatedAt,
 				ClosedAt = srmaDto.ClosedAt,
 				DateOffered = srmaDto.DateOffered,
@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Mappers
 			return new SRMADto
 			{
 				Id = Convert.ToInt32(srmaModel.Id),
-				CaseId = Convert.ToInt32(srmaModel.CaseUrn),
+				CaseUrn = Convert.ToInt32(srmaModel.CaseUrn),
 				CreatedAt = srmaModel.CreatedAt,
 				ClosedAt = srmaModel.ClosedAt,
 				DateAccepted = srmaModel.DateAccepted,

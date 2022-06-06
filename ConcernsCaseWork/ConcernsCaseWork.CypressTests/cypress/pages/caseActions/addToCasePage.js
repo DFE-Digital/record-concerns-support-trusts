@@ -1,5 +1,13 @@
 class AddToCasePage {
 
+    constructor() {
+        this.actionOptions = ["DfE support", "Financial forecast", "Financial plan",
+                            "Financial returns", "Financial support", "Forced termination",
+                            "Notice To Improve (NTI)", "Recovery plan", "School Resource Management Adviser (SRMA)"];
+
+    }
+
+
     //locators
     getHeadingText() {
         return     cy.get('h1[class="govuk-heading-l"]');
@@ -13,27 +21,35 @@ class AddToCasePage {
         return     cy.get('[id="cancel-link"]', { timeout: 30000 });
     }
 
-    //Option accepts the following args:
-    // DfE support, Financial forecast, Financial plan, Financial returns,
-    // Financial support| Forced termination| Notice To Improve (NTI)| Recovery plan, School Resource Management Adviser (SRMA) |
+    getAddToCaseBtn() {
+        return     cy.get('[data-prevent-double-click="true"]', { timeout: 30000 }).contains('Add to case');
+    }
+
+
+    //current status
+
+
+    //Option accepts the following args: DfESupport | FinancialForecast | FinancialPlan | FinancialReturns |
+    //FinancialSupport| ForcedTermination | Nti| RecoveryPlan | Srma | Tff |
     getCaseActionRadio(option) {
         return     cy.get('[value="'+option+'"]');
     }    
 
 
     //Methods
-    login() {
 
-        cy.visit(Cypress.env('url')+"/login", { timeout: 30000 })
-        this.getUserName({ timeout: 30000 }).should('be.visible');
-        this.getUserName({ timeout: 30000 }).type(Cypress.env('username'));
-        this.getPassword().type(Cypress.env('password')+"{enter}");
-        //cy.get('[id=your-casework]', { timeout: 30000 }).should('be.visible')  //verified at the test level and calls homePage
-        cy.saveLocalStorage();
+    addToCase(option) {
 
-    }
+                //cy.get('[class="govuk-heading-l"]').should('contain.text', 'Add to case');
+                this.getHeadingText().should('contain.text', 'Add to case');
 
+                this.getSubHeadingText().should('contain.text', 'What action are you taking?');
 
+            this.getCaseActionRadio(option).click();
+
+            //this.getCaseActionRadio(option).siblings().should('contain.text', textToVerify);
+        }
+        
     }
     
     export default new AddToCasePage();
