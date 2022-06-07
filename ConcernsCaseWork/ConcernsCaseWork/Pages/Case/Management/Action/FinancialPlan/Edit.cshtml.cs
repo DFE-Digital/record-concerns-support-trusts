@@ -105,8 +105,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					Notes = notes
 				};
 
-				patchFinancialPlanModel.ClosedAt = DateTime.Now;
-
 				await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel, currentUser);
 
 				return Redirect($"/case/{caseUrn}/management");
