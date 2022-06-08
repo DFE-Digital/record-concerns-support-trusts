@@ -17,6 +17,7 @@
 
 	var financialPlanModels = Model.CaseActions?.Where(ca => ca is FinancialPlanModel).Select(fp => { return fp as FinancialPlanModel; }).ToList();
 	var openFinancialPlanModels = financialPlanModels.Where(fp => !fp.ClosedAt.HasValue).ToList();
+	var closedFinancialPlanModels = financialPlanModels.Except(openFinancialPlanModels).ToList();
 }
 
 <div class="govuk-width-container">
@@ -333,7 +334,7 @@
 					</table>
 				}
 
-				@if (closedSRMAs.Count > 0)
+				@if (closedSRMAs.Count > 0 || closedFinancialPlanModels.Count > 0)
 				{
 					<table  id="close-case-actions" class="govuk-table">
 						<thead class="govuk-table__head">
@@ -363,6 +364,27 @@
 									</td>
 									<td class="govuk-table__cell govuk-table__header__right">
 										@DateExtension.ToDayMonthYear(srma.ClosedAt.Value)
+									</td>
+								</tr>
+							}
+
+							@foreach (FinancialPlanModel financialPlanModel in closedFinancialPlanModels)
+							{
+
+								var statusName = financialPlanModel.Status.Name;
+								var statusEnum = (FinancialPlanStatus)@Enum.Parse(typeof(FinancialPlanStatus), statusName);
+
+								<tr class="govuk-table__row">
+									<td class="govuk-table__cell">
+										<a href="@Request.Path/action/financialplan/@financialPlanModel.Id/closed" class="govuk-link govuk-link-no-visited-state">
+											Financial Plan
+										</a>
+									</td>
+									<td class="govuk-table__cell">
+										@EnumHelper.GetEnumDescription(statusEnum)
+									</td>
+									<td class="govuk-table__cell govuk-table__header__right">
+										@DateExtension.ToDayMonthYear(financialPlanModel.ClosedAt.Value)
 									</td>
 								</tr>
 							}

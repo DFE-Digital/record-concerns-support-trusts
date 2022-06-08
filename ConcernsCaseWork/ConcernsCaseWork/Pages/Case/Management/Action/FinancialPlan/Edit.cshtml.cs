@@ -126,7 +126,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::SRMA::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::FinancialPlan::EditPageModel::OnPostAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}

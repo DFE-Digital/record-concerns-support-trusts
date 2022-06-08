@@ -1,5 +1,5 @@
-﻿@page "/case/{urn:long}/management/action/financialplan/{financialPlanId:long}/{handler?}"
-@model ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan.IndexPageModel
+﻿@page "/case/{urn:long}/management/action/financialplan/{financialPlanId:long}/closed"
+@model ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan.ClosedPageModel
 
 @using ConcernsCaseWork.Helpers;
 @using ConcernsCaseWork.Extensions;
@@ -51,13 +51,12 @@
 
 				@* Status *@
 				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-table-case-details__header">Current Status</th>
+					<th scope="row" class="govuk-table-case-details__header">Status when closed</th>
 					<td class="govuk-table__cell">
 						@{
 
 							if (Model.FinancialPlanModel.Status != null)
 							{
-
 								var statusName = Model.FinancialPlanModel.Status.Name;
 								var statusEnum = (FinancialPlanStatus)@Enum.Parse(typeof(FinancialPlanStatus), statusName);
 
@@ -123,15 +122,6 @@
 				</tr>
 			</tbody>
 		</table>
-
-		<div class="govuk-button-group">
-			<a data-prevent-double-click="true" href="@Request.Path/edit" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-financialplan-button">
-				Edit Information
-			</a>
-			<a data-prevent-double-click="true" asp-page-handler="Close" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button">
-				Close Financial Plan
-			</a>
-		</div>
 	}
 </div>
 
