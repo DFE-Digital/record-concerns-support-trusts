@@ -27,6 +27,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		public FinancialPlanModel FinancialPlanModel { get; set; }
 		public int NotesMaxLength => 2000;
 		public IEnumerable<RadioItem> FinancialPlanStatuses => getStatuses();
+		public FinancialPlanEditMode EditMode { get; private set; }
 
 		public EditPageModel(
 			IFinancialPlanModelService financialPlanModelService, IFinancialPlanStatusCachedService financialPlanStatusService, ILogger<EditPageModel> logger)
@@ -42,12 +43,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 			long caseUrn = 0;
 			long financialPlanId = 0;
+			var editModeEnum = FinancialPlanEditMode.Unknown;
 
 			try
 			{
-				(caseUrn, financialPlanId) = GetRouteData();
+				(caseUrn, financialPlanId, editModeEnum) = GetRouteData();
 
 				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, User.Identity.Name);
+
+				EditMode = editModeEnum;
 
 				return Page();
 			}
@@ -64,10 +68,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		{
 			long caseUrn = 0;
 			long financialPlanId = 0;
+			var editModeEnum = FinancialPlanEditMode.Unknown;
 
 			try
 			{
-				(caseUrn, financialPlanId) = GetRouteData();
+				(caseUrn, financialPlanId, editModeEnum) = GetRouteData();
 				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, User.Identity.Name);
 
 				ValidateFinancialPlan();
@@ -105,6 +110,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					Notes = notes
 				};
 
+				if(editModeEnum == FinancialPlanEditMode.Close)
+				{
+					// todo: closed date is currently set to server date across the system. This should ideally be converted to UTC
+					patchFinancialPlanModel.ClosedAt = DateTime.Now;
+				}
+
 				await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel, currentUser);
 
 				return Redirect($"/case/{caseUrn}/management");
@@ -135,10 +146,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 						   });
 		}
 
-		private (long, long) GetRouteData()
+		private (long, long, FinancialPlanEditMode) GetRouteData()
 		{
 			var caseUrnValue = RouteData.Values["urn"];
 			var financialPlanIdValue = RouteData.Values["finanicialplanid"];
+			var editMode = RouteData.Values["editMode"];
 
 			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
 			{
@@ -150,7 +162,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				throw new Exception("FinancialId is 0 or invalid to parse");
 			}
 
-			return (caseUrn, financialPlanId);
+			if(!Enum.TryParse<FinancialPlanEditMode>(Convert.ToString(editMode), ignoreCase:true, out var editModeEnum))
+			{
+				throw new InvalidOperationException("Edit more could not be resolved");
+			}
+
+			return (caseUrn, financialPlanId, editModeEnum);
 		}
 
 		private void ValidateFinancialPlan()
