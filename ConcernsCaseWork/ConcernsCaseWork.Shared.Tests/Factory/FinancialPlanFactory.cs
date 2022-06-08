@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 	{
 		private readonly static Fixture Fixture = new Fixture();
 
-		public static FinancialPlanModel BuildFinancialPlanModel()
+		public static FinancialPlanModel BuildFinancialPlanModel(DateTime? closedAt = null)
 		{
 			return new FinancialPlanModel(
 				Fixture.Create<long>(),
@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<DateTime>(),
 				Fixture.Create<string>(),
 				Fixture.Create<FinancialPlanStatusModel>(),
-				Fixture.Create<DateTime>()
+				closedAt
 			);
 		} 
 
