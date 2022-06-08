@@ -113,7 +113,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				if(editModeEnum == FinancialPlanEditMode.Close)
 				{
 					// todo: closed date is currently set to server date across the system. This should ideally be converted to UTC
-					patchFinancialPlanModel.ClosedAt = DateTimeOffset.Now;
+					patchFinancialPlanModel.ClosedAt = DateTime.Now;
 				}
 
 				await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel, currentUser);
