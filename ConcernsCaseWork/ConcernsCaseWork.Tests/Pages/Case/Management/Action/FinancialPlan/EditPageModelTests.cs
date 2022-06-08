@@ -101,6 +101,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
 			routeData.Add("finanicialplanid", 1);
+			routeData.Add("editMode", "edit");
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
@@ -132,6 +133,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
 			routeData.Add("finanicialplanid", 1);
+			routeData.Add("editMode", "edit");
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
@@ -150,7 +152,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		}
 
 		[Test]
-		public async Task WhenOnPostAsync_Valid_Calls_Patch_Method()
+		[TestCase("edit")]
+		[TestCase("close")]
+		public async Task WhenOnPostAsync_Valid_Calls_Patch_Method(string editMode)
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
@@ -167,6 +171,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
 			routeData.Add("finanicialplanid", 1);
+			routeData.Add("editMode", editMode);
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
@@ -179,11 +184,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
 
-			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>(), It.IsAny<string>()), Times.Once);
+			// assert
+			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
+			editMode == "close" ? fpm.ClosedAt != null : fpm.ClosedAt == null), It.IsAny<string>()), Times.Once);
 		}
 
 		private static EditPageModel SetupEditPageModel(
-			IFinancialPlanModelService mockFinancialPlanModelService, 
+			IFinancialPlanModelService mockFinancialPlanModelService,
 			IFinancialPlanStatusCachedService mockFinancialPlanStatusService,
 			ILogger<EditPageModel> mockLogger,
 			bool isAuthenticated = false)
