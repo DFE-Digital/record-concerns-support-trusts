@@ -1,12 +1,49 @@
 ﻿@{
-	var nonce = Context.GetNonce();
-	<div class="govuk-heading-l moj-banner__message">
-		<p class="govuk-body">@TempData["Error.Message"]</p>
-	</div>
-	<script type="application/javascript" nonce="@nonce">
+    var nonce = Context.GetNonce();
+    <div class="govuk-heading-l moj-banner__message">
+        <p class="govuk-body">@TempData["Error.Message"]</p>
+    </div>
+
+    @* supports details either as a string or a collection of strings *@
+    var errorDetails = GetErrorDetails();
+    if (errorDetails?.Count() > 0)
+    {
+        <h2 class="govuk-heading-m govuk-!-margin-top-6">Error details</h2>
+        <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+                @foreach (var detail in errorDetails)
+                {
+                    <li>
+                        <span class="govuk-error-message">@detail</span>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
+    <script type="application/javascript" nonce="@nonce">
         $(function () {
             showGlobalError();
-		});
+        });
     </script>
 }
 
+@functions
+{
+    private IEnumerable<string> GetErrorDetails()
+    {
+        var tempData = TempData["Error.Details"];
+        if (tempData is IEnumerable<string>)
+        {
+            return tempData as IEnumerable<string>;
+        }
+        else if (tempData is string)
+        {
+            return new string[] { tempData as string };
+        }
+        else
+        {
+             return Enumerable.Empty<string>();
+        }
+    }
+}
