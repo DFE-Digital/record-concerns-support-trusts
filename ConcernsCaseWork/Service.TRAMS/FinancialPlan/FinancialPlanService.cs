@@ -27,7 +27,7 @@ namespace Service.TRAMS.FinancialPlan
 
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get,
-					$"/{EndpointsVersion}/record-srma/record/urn/{caseUrn}");
+					$"/{EndpointsVersion}/case-actions/financial-plan/case/{caseUrn}");
 
 				// Create http client
 				var client = ClientFactory.CreateClient(HttpClientName);
@@ -42,9 +42,9 @@ namespace Service.TRAMS.FinancialPlan
 				var content = await response.Content.ReadAsStringAsync();
 
 				// Deserialize content to POJO
-				var financialPlansDto = JsonConvert.DeserializeObject<IList<FinancialPlanDto>>(content);
+				var financialPlansDto = JsonConvert.DeserializeObject<ApiWrapper<IList<FinancialPlanDto>>>(content);
 
-				return financialPlansDto;
+				return financialPlansDto.Data;
 			}
 			catch (Exception ex)
 			{
@@ -62,7 +62,7 @@ namespace Service.TRAMS.FinancialPlan
 
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get,
-					$"/{EndpointsVersion}/record-srma/record/urn/{caseUrn}");
+					$"/{EndpointsVersion}/case-actions/financial-plan/{financialPlanId}");
 
 				// Create http client
 				var client = ClientFactory.CreateClient(HttpClientName);
@@ -106,7 +106,7 @@ namespace Service.TRAMS.FinancialPlan
 
 				// Execute request
 				var response = await client.PostAsync(
-					$"/{EndpointsVersion}/record-srma/record/urn/{createFinancialPlanDto.CaseUrn}", request);
+					$"/{EndpointsVersion}/case-actions/financial-plan", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -144,7 +144,7 @@ namespace Service.TRAMS.FinancialPlan
 
 				// Execute request
 				var response = await client.PatchAsync(
-					$"/{EndpointsVersion}/record-srma/urn/{financialPlanDto.CaseUrn}", request);
+					$"/{EndpointsVersion}/case-actions/financial-plan", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
