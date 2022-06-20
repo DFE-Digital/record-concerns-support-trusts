@@ -45,9 +45,9 @@ namespace Service.Redis.FinancialPlan
 			}
 
 			// Checking finance plan was cached before
-			if (caseWrapper.FinancialPlans != null)
+			if (caseWrapper.FinancialPlans?.Count > 0)
 			{
-				if (!caseWrapper.FinancialPlans.Any()) return financialPlansDto;
+				// if (!caseWrapper.FinancialPlans.Any()) return financialPlansDto;
 				financialPlansDto = caseWrapper.FinancialPlans.Values.Select(r => r.FinancialPlanDto).ToList();
 			}
 			else
@@ -142,8 +142,7 @@ namespace Service.Redis.FinancialPlan
 			_logger.LogInformation("FinancialPlanCachedService::PatchFinancialPlanById {Caseworker} - {CaseUrn}", caseworker, financialPlanDto.CaseUrn);
 
 			// Patch financial plan on Academies API
-			//var patchFinancialPlanDto = await _financialPlanService.PatchFinancialPlanById(financialPlanDto);
-			var patchFinancialPlanDto = financialPlanDto;
+			var patchFinancialPlanDto = await _financialPlanService.PatchFinancialPlanById(financialPlanDto);
 
 			// Store in cache for 24 hours (default)
 			var userState = await GetData<UserState>(caseworker);
@@ -169,25 +168,24 @@ namespace Service.Redis.FinancialPlan
 			_logger.LogInformation("FinancialPlanCachedService::PostFinancialPlanByCaseUrn {Caseworker} - {CaseUrn}", caseworker, createFinancialPlanDto.CaseUrn);
 
 			// Create financial plan on Academies API
-			//var newFinancialPlanDto = await _financialPlanService.PostFinancialPlanByCaseUrn(createFinancialPlanDto);
-			var newFinancialPlanDto = MapCreateDtoToDto(createFinancialPlanDto);
+			var createdFinancialPlanDto = await _financialPlanService.PostFinancialPlanByCaseUrn(createFinancialPlanDto);
 
 			try
 			{
 				await _semaphoreFinancialPlan.WaitAsync();
 
 				var userState = await GetData<UserState>(caseworker);
-				if (userState is null) return newFinancialPlanDto;
+				if (userState is null) return createdFinancialPlanDto;
 
 				// If case urn doesn't exist on the cache return new created financial plan
-				if (!userState.CasesDetails.TryGetValue(newFinancialPlanDto.CaseUrn, out var caseWrapper))
+				if (!userState.CasesDetails.TryGetValue(createdFinancialPlanDto.CaseUrn, out var caseWrapper))
 				{
-					return newFinancialPlanDto;
+					return createdFinancialPlanDto;
 				}
 
 				// Add new financial plan to the records cache
 				caseWrapper.FinancialPlans ??= new ConcurrentDictionary<long, FinancialPlanWrapper>();
-				caseWrapper.FinancialPlans.Add(newFinancialPlanDto.Id, new FinancialPlanWrapper { FinancialPlanDto = newFinancialPlanDto });
+				caseWrapper.FinancialPlans.Add(createdFinancialPlanDto.Id, new FinancialPlanWrapper { FinancialPlanDto = createdFinancialPlanDto });
 
 				await StoreData(caseworker, userState);
 			}
@@ -196,27 +194,7 @@ namespace Service.Redis.FinancialPlan
 				_semaphoreFinancialPlan.Release();
 			}
 
-			return newFinancialPlanDto;
-		}
-
-		// TODO - Remove once API has been implemented
-		private FinancialPlanDto MapCreateDtoToDto(CreateFinancialPlanDto createFinancialPlanDto)
-		{
-
-			var random = new Random(DateTime.Now.Millisecond);
-
-			var id = random.Next(10000);
-
-			return new FinancialPlanDto(id,
-				createFinancialPlanDto.CaseUrn,
-				createFinancialPlanDto.CreatedAt,
-				null,
-				createFinancialPlanDto.CreatedBy,
-				createFinancialPlanDto.StatusId,
-				createFinancialPlanDto.DatePlanRequested,
-				createFinancialPlanDto.DateViablePlanReceived,
-				createFinancialPlanDto.Notes
-				);
+			return createdFinancialPlanDto;
 		}
 	}
 }

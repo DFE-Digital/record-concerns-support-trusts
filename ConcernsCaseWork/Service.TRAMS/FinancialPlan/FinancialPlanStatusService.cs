@@ -24,7 +24,7 @@ namespace Service.TRAMS.FinancialPlan
 				_logger.LogInformation("FinancialPlanStatusService::GetFinancialPlansStatuses");
 
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/concerns-ratings");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/case-actions/financial-plan/all-statuses");
 
 				// Create http client
 				var client = ClientFactory.CreateClient(HttpClientName);
@@ -44,19 +44,7 @@ namespace Service.TRAMS.FinancialPlan
 				// Unwrap response
 				if (apiWrapperRatingsDto is { Data: { } })
 				{
-					//return apiWrapperRatingsDto.Data;
-
-					var now = DateTime.Now;
-
-					var statuses = new List<FinancialPlanStatusDto>() 
-					{
-						new FinancialPlanStatusDto("AwaitingPlan", now, now, 1),
-						new FinancialPlanStatusDto("ReturnToTrust", now, now, 2),
-						new FinancialPlanStatusDto("ViablePlanReceived", now, now, 3),
-						new FinancialPlanStatusDto("Abandoned", now, now, 4)
-					};
-
-					return statuses;
+					return apiWrapperRatingsDto.Data;
 				}
 
 				throw new Exception("Academies API error unwrap response");

@@ -25,22 +25,20 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 			_logger = logger;
 		}
 
-		public Task<IList<FinancialPlanModel>> GetFinancialPlansModelByCaseUrn(long caseUrn, string caseworker)
+		public async Task<IList<FinancialPlanModel>> GetFinancialPlansModelByCaseUrn(long caseUrn, string caseworker)
 		{
 			_logger.LogInformation("FinancialPlanModelService::GetFinancialPlansModelByCaseUrn");
 
 			var financialPlansDtoTask = _financialPlanCachedService.GetFinancialPlansByCaseUrn(caseUrn, caseworker);
 			var statusesDtoTask = _financialPlanStatusCachedService.GetFinancialPlanStatuses();
 
-			Task.WaitAll(financialPlansDtoTask, statusesDtoTask);
+			await Task.WhenAll(financialPlansDtoTask, statusesDtoTask);
 
 			var financialPlansDto = financialPlansDtoTask.Result;
 			var statusesDto = statusesDtoTask.Result;
 
 			// Map the financial plan dtos to model 
-			var financialPlanModels = FinancialPlanMapping.MapDtoToModel(financialPlansDto, statusesDto);
-
-			return Task.FromResult(financialPlanModels);
+			return FinancialPlanMapping.MapDtoToModel(financialPlansDto, statusesDto);
 		}
 
 		public async Task<FinancialPlanModel> GetFinancialPlansModelById(long caseUrn, long financialPlanId, string caseworker)
