@@ -22,6 +22,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 		private readonly ICaseModelService _caseModelService;
 		private readonly ISRMAService _srmaService;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
+		private readonly INtiUnderConsiderationModelService _ntiUnderConsiderationModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
@@ -30,11 +31,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 		public IndexPageModel(ICaseModelService caseModelService,
 			ISRMAService srmaService,
 			IFinancialPlanModelService financialPlanModelService,
+			INtiUnderConsiderationModelService ntiUnderConsiderationModelService,
 			ILogger<IndexPageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_srmaService = srmaService;
 			_financialPlanModelService = financialPlanModelService;
+			_ntiUnderConsiderationModelService = ntiUnderConsiderationModelService;
 			_logger = logger;
 		}
 
@@ -97,6 +100,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 							throw new InvalidOperationException("There is already an open Financial Plan action linked to this case. Please resolve that before opening another one.");
 						}
 						break;
+					case CaseActionEnum.NtiUnderConsideration:
+						CaseActions.AddRange(await _ntiUnderConsiderationModelService.GetNtiUnderConsiderationsForCase(caseUrn));
+						if(HasOpenCaseAction<NtiUnderConsiderationModel>(null))
+						{
+							throw new InvalidOperationException("There is already an open NTI: Under consideration action linked to this case. Please resolve that before opening another one.");
+						}
+						break;
 					default:
 						throw new NotImplementedException($"{caseAction} - has not been implemented");
 						break;
@@ -127,6 +137,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 			}
 
 			return caseUrn;
+		}
+
+		private bool HasOpenCaseAction<T>(Func<T, bool> additionalValidations) where T : CaseActionModel
+		{
+			return CaseActions.Any(ca => ca is T && ca.ClosedAt == null 
+					&& (additionalValidations == null || additionalValidations.Invoke(ca as T)));
 		}
 
 		private bool HasOpenSRMA()

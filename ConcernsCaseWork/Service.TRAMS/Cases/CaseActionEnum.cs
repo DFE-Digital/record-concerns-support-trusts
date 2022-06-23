@@ -11,6 +11,7 @@
 		Nti,
 		RecoveryPlan,
 		Srma,
-		Tff
+		Tff,
+		NtiUnderConsideration
 	}
 }

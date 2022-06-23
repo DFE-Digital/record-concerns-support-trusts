@@ -29,9 +29,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object
+				, mockNtiUnderConsiderationModelService.Object, mockLogger.Object);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -47,6 +49,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
@@ -54,7 +57,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object
+				, mockNtiUnderConsiderationModelService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -80,9 +84,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object
+				, mockNtiUnderConsiderationModelService.Object, mockLogger.Object);
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -113,9 +119,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object
+				, mockNtiUnderConsiderationModelService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -142,9 +150,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object
+				, mockNtiUnderConsiderationModelService.Object, mockLogger.Object);
 
 
 			var routeData = pageModel.RouteData.Values;
@@ -177,9 +187,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object
+				, mockNtiUnderConsiderationModelService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -206,9 +218,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object, mockNtiUnderConsiderationModelService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -236,12 +249,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			ICaseModelService mockCaseModelService,
 			ISRMAService mockSrmaService,
 			IFinancialPlanModelService mockFinancialPlanModelService,
+			INtiUnderConsiderationModelService ntiUnderConsiderationModelService,
 			ILogger<IndexPageModel> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new IndexPageModel(mockCaseModelService, mockSrmaService, mockFinancialPlanModelService, mockLogger)
+			return new IndexPageModel(mockCaseModelService, mockSrmaService, mockFinancialPlanModelService, ntiUnderConsiderationModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
