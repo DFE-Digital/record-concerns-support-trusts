@@ -10,171 +10,144 @@
     <partial name="_BannerError" />
 
     <div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
+        <div class="govuk-grid-column-two-thirds">
 
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-			{
-				<partial name="_Error" />
-			}
-			else
-			{
-				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+                <partial name="_Error" />
+            }
+            else
+            {
+                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-				@if (!string.IsNullOrEmpty((string)TempData.Peek("SRMA.Message")))
-				{
-					<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
-						<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
-						<div class="govuk-error-summary__body">
-							<ul class="govuk-list govuk-error-summary__list">
-								<li>
-									<a href="#">@TempData["SRMA.Message"]</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-				}
+                @if (!string.IsNullOrEmpty((string)TempData.Peek("SRMA.Message")))
+                {
+                    <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
+                        <h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
+                        <div class="govuk-error-summary__body">
+                            <ul class="govuk-list govuk-error-summary__list">
+                                <li>
+                                    <a href="#">@TempData["SRMA.Message"]</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                }
 
-				<h1 class="govuk-heading-l">
-					<span class="govuk-caption-m">Add to case</span>
-					School Resource Management Adviser (SRMA)
-				</h1>
+                <h1 class="govuk-heading-l">
+                    <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
+                    NTI: Under consideration
+                </h1>
 
-				<form role="form" method="post" id="add-srma-form" novalidate>
+                <form role="form" method="post" id="add-srma-form" novalidate>
 
-					@* Status *@
-					<div class="govuk-form-group govuk-!-margin-top-9">
-						<fieldset class="govuk-fieldset">
-							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-								<h2 class="govuk-heading-m">What is the status of the SRMA?</h2>
-							</legend>
-							<div class="govuk-radios" data-module="govuk-radios">
-								@{
-									int id = 0;
-								}
-								@foreach (var status in Model.SRMAStatuses)
-								{
-									var idStr = id++ == 0 ? "status" : "status-" + id;
-									<div class="govuk-radios__item">
-										<input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id">
-										<label class="govuk-label govuk-radios__label" for="@idStr">
-											<span>
-												@status.Text
-											</span>
-										</label>
-									</div>
-								}
-							</div>
-						</fieldset>
-					</div>
+                    @* Status *@
+                    <div class="govuk-form-group govuk-!-margin-top-9">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">What are the reasons for considering a Notice To Improve</h2>
+                            </legend>
+                            <div id="waste-hint" class="govuk-hint">
+                                Select all reasons that apply.
+                            </div>
+                            <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                                @{
+                                    int id = 0;
+                                }
+                                @foreach (var reason in Model.NTIReasonsToConsider)
+                                {
+                                    var idStr = id++ == 0 ? "reason" : "reason-" + id;
+                                   @* <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@reason.Id">
+                                        <label class="govuk-label govuk-radios__label" for="@idStr">
+                                            <span>
+                                                @reason.Text
+                                            </span>
+                                        </label>
+                                    </div>*@
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input" id="@idStr" name="reason" type="checkbox" value="@reason.Id">
+                                        <label class="govuk-label govuk-checkboxes__label" for="@idStr">
+                                            @reason.Text
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </fieldset>
+                    </div>
 
-					@* date *@
-					<div class="govuk-form-group govuk-!-margin-top-9">
-						<fieldset class="govuk-fieldset">
-							<h2 class="govuk-heading-m">Date SRMA offered to Trust?</h2>
-							<div class="govuk-date-input" id="dtr">
-								<div class="govuk-date-input__item">
-									<div class="govuk-form-group">
-										<label class="govuk-label govuk-date-input__label" for="dtr-day">
-											Day
-										</label>
-										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day"
-											   name="dtr-day" type="text" maxlength="2" inputmode="numeric" />
-									</div>
-								</div>
-								<div class="govuk-date-input__item">
-									<div class="govuk-form-group">
-										<label class="govuk-label govuk-date-input__label" for="dtr-month">
-											Month
-										</label>
-										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month"
-											   name="dtr-month" type="text" maxlength="2" inputmode="numeric" />
-									</div>
-								</div>
-								<div class="govuk-date-input__item">
-									<div class="govuk-form-group">
-										<label class="govuk-label govuk-date-input__label" for="dtr-year">
-											Year
-										</label>
-										<input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year"
-											   name="dtr-year" type="text" maxlength="4" inputmode="numeric" />
-									</div>
-								</div>
-							</div>
-						</fieldset>
-					</div>
+                    @* Notes *@
+                    <div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
+                        <div class="govuk-form-group">
+                            <h2 class="govuk-heading-m">Notes</h2>
+                            <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="nti-notes" name="nti-notes" rows="3" aria-describedby="nti-notes-info"></textarea>
+                        </div>
+                        <div id="nti-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+                            You can enter up to @Model.NotesMaxLength characters
+                        </div>
+                    </div>
 
-					@* Notes *@
-					<div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
-						<div class="govuk-form-group">
-							<h2 class="govuk-heading-m">Notes</h2>
-							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="srma-notes" name="srma-notes" rows="3" aria-describedby="srma-notes-info"></textarea>
-						</div>
-						<div id="srma-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-							You can enter up to @Model.NotesMaxLength characters
-						</div>
-					</div>
+                    <div class="govuk-button-group">
+                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
+                            Continue
+                        </button>
+                        <partial name="_Cancel" />
+                    </div>
 
-					<div class="govuk-button-group">
-						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
-							Continue
-						</button>
-						<partial name="_Cancel" />
-					</div>
+                </form>
 
-				</form>
+                <script type="application/javascript" nonce="@nonce">
+                    $(function () {
+                        let validator = formValidator($("#add-srma-form")[0]);
+                        addSRMANotesValidator(validator);
 
-				<script type="application/javascript" nonce="@nonce">
-					$(function () {
-						let validator = formValidator($("#add-srma-form")[0]);
-						addSRMANotesValidator(validator);
+                        validator.addValidator('status', [{
+                            method: function(field) {
+                                return ((typeof(field) != "undefined") && field.value.trim().length > 0);
+                            },
+                            message: 'Select status'
+                        }]);
 
-						validator.addValidator('status', [{
-							method: function(field) {
-								return ((typeof(field) != "undefined") && field.value.trim().length > 0);
-							},
-							message: 'Select status'
-						}]);
+                        validator.addValidator('dtr-day', [{
+                          method: function(field, params) {
+                            return (params.day.value.length !== 0 && params.month.value.length !== 0 && params.year.value !== 0);
+                          },
+                          message: 'Enter a valid date',
+                          params: {
+                            day: document.getElementById('dtr-day'),
+                            month: document.getElementById('dtr-month'),
+                            year: document.getElementById('dtr-year')
+                          }
+                        }, {
+                          method: function(field, params) {
+                            if(!isValidDate(params)) {
+                                return false;
+                            }
+                            var d = new Date(parseInt(params.year.value, 10), parseInt(params.month.value, 10) - 1, parseInt(params.day.value, 10) - 1);
+                            return d instanceof Date && !isNaN(d);
+                          },
+                          message: 'Enter the date SRMA was offered to the trust',
+                          params: {
+                            day: document.getElementById('dtr-day'),
+                            month: document.getElementById('dtr-month'),
+                            year: document.getElementById('dtr-year')
+                          }
+                        }]);
 
-						validator.addValidator('dtr-day', [{
-						  method: function(field, params) {
-							return (params.day.value.length !== 0 && params.month.value.length !== 0 && params.year.value !== 0);
-						  },
-						  message: 'Enter a valid date',
-						  params: {
-							day: document.getElementById('dtr-day'),
-							month: document.getElementById('dtr-month'),
-							year: document.getElementById('dtr-year')
-						  }
-						}, {
-						  method: function(field, params) {
-							if(!isValidDate(params)) {
-								return false;
-							}
-							var d = new Date(parseInt(params.year.value, 10), parseInt(params.month.value, 10) - 1, parseInt(params.day.value, 10) - 1);
-							return d instanceof Date && !isNaN(d);
-						  },
-						  message: 'Enter the date SRMA was offered to the trust',
-						  params: {
-							day: document.getElementById('dtr-day'),
-							month: document.getElementById('dtr-month'),
-							year: document.getElementById('dtr-year')
-						  }
-						}]);
+                        function isValidDate(date) {
+                            return !isNaN(date.year.value)
+                                && !isNaN(date.month.value)
+                                && !isNaN(date.day.value)
+                                && date.month.value >= 1 && date.month.value <= 12
+                                && date.day.value >= 1 && date.month.value <= 31;
+                        }
 
-						function isValidDate(date) {
-							return !isNaN(date.year.value)
-								&& !isNaN(date.month.value)
-								&& !isNaN(date.day.value)
-								&& date.month.value >= 1 && date.month.value <= 12
-								&& date.day.value >= 1 && date.month.value <= 31;
-						}
+                        autoResizer();
+                    });
+                </script>
+            }
 
-						autoResizer();
-					});
-				</script>
-			}
-
-		</div>
+        </div>
     </div>
 </div>
 

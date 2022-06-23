@@ -21,8 +21,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		private readonly ILogger<AddPageModel> _logger;
 		private readonly ISRMAService _srmaModelService;
 
-		public int NotesMaxLength => 500;
-		public IEnumerable<RadioItem> SRMAStatuses => getStatuses();
+		public int NotesMaxLength => 2000;
+		public IEnumerable<RadioItem> NTIReasonsToConsider => GetReasons();
+
+		public long CaseUrn { get; private set; }
 
 		public AddPageModel(
 			ISRMAService srmaModelService, ILogger<AddPageModel> logger)
@@ -37,7 +39,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 			try
 			{
-				GetRouteData();
+				CaseUrn = GetRouteValueInt64("urn");
 				return Page();
 			}
 			catch (Exception ex)
@@ -76,10 +78,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			return Page();
 		}
 
-		private IEnumerable<RadioItem> getStatuses()
+		private IEnumerable<RadioItem> GetReasons()
 		{
-			var statuses = (SRMAStatus[])Enum.GetValues(typeof(SRMAStatus));
-			return statuses.Where(s => s != SRMAStatus.Unknown && s != SRMAStatus.Declined && s != SRMAStatus.Canceled && s != SRMAStatus.Complete)
+			var statuses = (NtiReasonForConsidering[])Enum.GetValues(typeof(NtiReasonForConsidering));
+			return statuses.Where(r => r != NtiReasonForConsidering.None)
 						   .Select(s => new RadioItem
 						   {
 							   Id = s.ToString(),
@@ -98,7 +100,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 		private void ValidateSRMA()
 		{
-			var status = Request.Form["status"];
+			var status = Request.Form["reason"];
 
 			if (string.IsNullOrEmpty(status))
 			{
