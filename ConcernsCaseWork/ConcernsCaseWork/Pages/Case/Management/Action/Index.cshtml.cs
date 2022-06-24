@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 		private readonly ICaseModelService _caseModelService;
 		private readonly ISRMAService _srmaService;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
-		private readonly INtiUnderConsiderationModelService _ntiUnderConsiderationModelService;
+		private readonly INtiModelService _ntiUnderConsiderationModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 		public IndexPageModel(ICaseModelService caseModelService,
 			ISRMAService srmaService,
 			IFinancialPlanModelService financialPlanModelService,
-			INtiUnderConsiderationModelService ntiUnderConsiderationModelService,
+			INtiModelService ntiUnderConsiderationModelService,
 			ILogger<IndexPageModel> logger)
 		{
 			_caseModelService = caseModelService;
@@ -102,7 +102,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 						break;
 					case CaseActionEnum.NtiUnderConsideration:
 						CaseActions.AddRange(await _ntiUnderConsiderationModelService.GetNtiUnderConsiderationsForCase(caseUrn));
-						if(HasOpenCaseAction<NtiUnderConsiderationModel>(null))
+						if(HasOpenCaseAction<NtiModel>(null))
 						{
 							throw new InvalidOperationException("There is already an open NTI: Under consideration action linked to this case. Please resolve that before opening another one.");
 						}

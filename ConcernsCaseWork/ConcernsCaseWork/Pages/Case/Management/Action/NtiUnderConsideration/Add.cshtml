@@ -57,14 +57,6 @@
                                 @foreach (var reason in Model.NTIReasonsToConsider)
                                 {
                                     var idStr = id++ == 0 ? "reason" : "reason-" + id;
-                                   @* <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@reason.Id">
-                                        <label class="govuk-label govuk-radios__label" for="@idStr">
-                                            <span>
-                                                @reason.Text
-                                            </span>
-                                        </label>
-                                    </div>*@
                                     <div class="govuk-checkboxes__item">
                                         <input class="govuk-checkboxes__input" id="@idStr" name="reason" type="checkbox" value="@reason.Id">
                                         <label class="govuk-label govuk-checkboxes__label" for="@idStr">

@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.Enums
 		None = 0,
 		
 		[Description("Cash flow problems")]
-		CashFlowProblems = 1 << 0,
+		CashFlowProblems = 1,
 
 		[Description("Cumulative deficit (actual)")]
 		CumulativeDeficitActual = 1 << 1,

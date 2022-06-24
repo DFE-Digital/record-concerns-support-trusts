@@ -133,7 +133,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IFinancialPlanService, FinancialPlanService>();
 			services.AddSingleton<SRMAProvider, SRMAProvider>();
 			services.AddSingleton<IFinancialPlanStatusService, FinancialPlanStatusService>();
-			services.AddSingleton<INtiUnderConsiderationModelService, NtiUnderConsiderationModelService>();
+			services.AddSingleton<INtiModelService, NtiModelService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();

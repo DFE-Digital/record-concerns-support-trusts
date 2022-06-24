@@ -7,17 +7,18 @@ namespace ConcernsCaseWork.Pages.Base
 		internal const string ErrorOnGetPage = "An error occurred loading the page, please try again. If the error persists contact the service administrator.";
 		internal const string ErrorOnPostPage = "An error occurred posting the form, please try again. If the error persists contact the service administrator.";
 
-		protected long GetRouteValueInt64(string routeKey)
+		protected bool TryGetRouteValueInt64(string routeKey, out long value)
 		{
-			long value = default(long);
+			value = default(long);
+			var status = false;
 
 			var rawVal = RouteData.Values[routeKey];
 			if (rawVal != null)
 			{
-				long.TryParse(rawVal.ToString(), out value);
+				status = long.TryParse(rawVal.ToString(), out value);
 			}
 
-			return value;
+			return status;
 		}
 
 	}
