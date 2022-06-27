@@ -1,13 +1,14 @@
 ﻿using ConcernsCaseWork.Enums;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Models.CaseActions
 {
 	public class NtiModel : CaseActionModel
 	{
-		public NtiReasonForConsidering NtiReasonForConsidering { get; set; }
+		public ICollection<NtiReasonForConsideringModel> NtiReasonsForConsidering { get; set; }
 		public string Notes { get; set; }
-
 
 	}
 }

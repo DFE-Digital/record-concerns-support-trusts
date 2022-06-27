@@ -11,5 +11,6 @@ namespace Service.TRAMS.Nti
 		public ICollection<NtiReasonDto> Reasons { get; set; }
 		public DateTimeOffset CreatedAt { get; }
 		public DateTimeOffset UpdatedAt { get; }
+		public string Notes { get; set; }
 	}
 }

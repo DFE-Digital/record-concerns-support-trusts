@@ -18,12 +18,12 @@ namespace ConcernsCaseWork.Services.Cases
 
 		public async Task<NtiModel> CreateNti(NtiModel nti)
 		{
-			var created = await _ntiCachedService.CreateNti(NtiMappers.ToDBModel(nti));
+			var dto = await _ntiCachedService.CreateNti(NtiMappers.ToDBModel(nti));
+			return NtiMappers.ToServiceModel(dto);
 		}
 
 		public Task<IEnumerable<NtiModel>> GetNtiUnderConsiderationsForCase(long caseUrn)
 		{
-
 			return Task.FromResult(Enumerable.Empty<NtiModel>());
 		}
 	}

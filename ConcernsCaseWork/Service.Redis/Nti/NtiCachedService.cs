@@ -54,5 +54,18 @@ namespace Service.Redis.Nti
 		{
 			return $"NtisForCase:CaseUrn:{caseUrn}";
 		}
+
+		public async Task<ICollection<NtiDto>> GetNtisForCase(long caseUrn)
+		{
+			var cacheKey = GetCacheKeyForNtisForCase(caseUrn);
+			var ntis = await GetData<ICollection<NtiDto>>(cacheKey);
+			if(ntis==null || ntis.Count == 0)
+			{
+				ntis = await _ntiTramsService.GetNtisForCase(caseUrn);
+				await StoreData<ICollection<NtiDto>>(cacheKey, ntis);
+			}
+
+			return ntis;
+		}
 	}
 }

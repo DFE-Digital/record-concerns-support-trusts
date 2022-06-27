@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Service.Redis.Nti
 {
-	public interface INtiCachedService
+	public interface INtiReasonsCachedService
 	{
-		Task<NtiDto> CreateNti(NtiDto nti);
-		Task<ICollection<NtiDto>> GetNtisForCase(long caseUrn);
+		Task<ICollection<NtiReasonDto>> GetAllReasons();
 	}
 }

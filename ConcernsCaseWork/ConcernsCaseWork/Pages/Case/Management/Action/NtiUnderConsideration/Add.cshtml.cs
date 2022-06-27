@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
+using Service.Redis.Nti;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -19,19 +20,22 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	public class AddPageModel : AbstractPageModel
 	{
 		private readonly INtiModelService _ntiModelService;
+		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<AddPageModel> _logger;
 		
 
 		public int NotesMaxLength => 2000;
-		public IEnumerable<RadioItem> NTIReasonsToConsider => GetReasons();
+		public IEnumerable<RadioItem> NTIReasonsToConsider;
 
 		public long CaseUrn { get; private set; }
 
 		public AddPageModel(
 			INtiModelService ntiModelService,
+			INtiReasonsCachedService ntiReasonsCachedService,
 			ISRMAService srmaModelService, ILogger<AddPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
+			_ntiReasonsCachedService = ntiReasonsCachedService;
 			_logger = logger;
 		}
 
@@ -41,6 +45,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 			try
 			{
+				NTIReasonsToConsider = await GetReasons();
 				ExtractCaseUrnFromRoute();
 
 				return Page();
@@ -93,28 +98,22 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 		}
 
-		private IEnumerable<RadioItem> GetReasons()
+		private async Task<IEnumerable<RadioItem>> GetReasons()
 		{
-			var statuses = (NtiReasonForConsidering[])Enum.GetValues(typeof(NtiReasonForConsidering));
-			return statuses.Where(r => r != NtiReasonForConsidering.None)
-						   .Select(s => new RadioItem
+			var reasons = await _ntiReasonsCachedService.GetAllReasons();
+			return reasons.Select(r => new RadioItem
 						   {
-							   Id = s.ToString(),
-							   Text = EnumHelper.GetEnumDescription(s)
+							   Id = Convert.ToString(r.Id),
+							   Text = r.Name
 						   });
 		}
 
 		private NtiModel PopulateNtiFromRequest()
 		{
 			var reasons = Request.Form["reason"];
-			var reasonsStr = string.Join("," ,reasons);
-
+			
 			var nti = new NtiModel() { CaseUrn = CaseUrn };
-			if (Enum.TryParse<NtiReasonForConsidering>(reasonsStr, out var reasonsEnum))
-			{
-				nti.NtiReasonForConsidering = reasonsEnum;
-			}
-			// else: no validation necessary - reason is not a mandatory field atm
+			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = long.Parse(r) }).ToArray();
 
 			var notes = Convert.ToString(Request.Form["nti-notes"]);
 

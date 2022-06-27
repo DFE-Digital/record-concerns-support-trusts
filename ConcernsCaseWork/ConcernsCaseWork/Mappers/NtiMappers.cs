@@ -3,6 +3,7 @@ using ConcernsCaseWork.Models.CaseActions;
 using Service.TRAMS.Nti;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConcernsCaseWork.Mappers
 {
@@ -14,7 +15,8 @@ namespace ConcernsCaseWork.Mappers
 			{
 				Id = ntiModel.Id,
 				CaseUrn = ntiModel.CaseUrn,
-				Reasons = EnumToReasons(ntiModel.NtiReasonForConsidering)
+				Reasons = ntiModel.NtiReasonsForConsidering?.Select(r => ToDBModel(r)).ToArray(),
+				Notes = ntiModel.Notes,
 			};
 		}
 
@@ -24,12 +26,29 @@ namespace ConcernsCaseWork.Mappers
 			{
 				Id = ntiDto.Id,
 				CaseUrn = ntiDto.CaseUrn,
+				NtiReasonsForConsidering = ntiDto.Reasons?.Select(r => ToServiceModel(r)).ToArray()
 			};
 		}
 
-		private static ICollection<NtiReasonDto> EnumToReasons(NtiReasonForConsidering ntiReasonForConsidering)
+		public static NtiReasonDto ToDBModel(NtiReasonForConsideringModel ntiReasonModel)
 		{
-			throw new NotImplementedException();
+			return new NtiReasonDto
+			{
+				Id = ntiReasonModel.Id,
+				Name = ntiReasonModel.Name,
+			};
 		}
+
+		public static  NtiReasonForConsideringModel ToServiceModel(NtiReasonDto ntiDto)
+		{
+			return new NtiReasonForConsideringModel
+			{
+				Id = ntiDto.Id,
+				Name = ntiDto.Name
+			};
+		}
+
+
+
 	}
 }

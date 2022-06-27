@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace Service.TRAMS.Nti
 {
-	public interface INtiService
+	public interface INtiReasonsService
 	{
-		Task<NtiDto> CreateNti(NtiDto ntiDto);
-		Task<ICollection<NtiDto>> GetNtisForCase(long caseUrn);	
+		Task<ICollection<NtiReasonDto>> GetAllReasons();
 	}
 }
