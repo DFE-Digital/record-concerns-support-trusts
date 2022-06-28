@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		public AddPageModel(
 			INtiModelService ntiModelService,
 			INtiReasonsCachedService ntiReasonsCachedService,
-			ISRMAService srmaModelService, ILogger<AddPageModel> logger)
+			ILogger<AddPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
 			_ntiReasonsCachedService = ntiReasonsCachedService;
@@ -71,10 +71,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				await _ntiModelService.CreateNti(newNti);
 
 				return Redirect($"/case/{CaseUrn}/management");
-			}
-			catch (InvalidOperationException ex)
-			{
-				TempData["SRMA.Message"] = ex.Message;
 			}
 			catch (Exception ex)
 			{
