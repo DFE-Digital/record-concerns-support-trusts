@@ -42,9 +42,15 @@ namespace Service.TRAMS.FinancialPlan
 				var content = await response.Content.ReadAsStringAsync();
 
 				// Deserialize content to POJO
-				var financialPlansDto = JsonConvert.DeserializeObject<ApiWrapper<IList<FinancialPlanDto>>>(content);
+				var apiWrapperFinancialPlansDto = JsonConvert.DeserializeObject<ApiListWrapper<FinancialPlanDto>>(content);
 
-				return financialPlansDto.Data;
+				// Unwrap response
+				if (apiWrapperFinancialPlansDto is { Data: { } })
+				{
+					return apiWrapperFinancialPlansDto.Data;
+				}
+
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{
@@ -77,9 +83,15 @@ namespace Service.TRAMS.FinancialPlan
 				var content = await response.Content.ReadAsStringAsync();
 
 				// Deserialize content to POJO
-				var financialPlanDto = JsonConvert.DeserializeObject<FinancialPlanDto>(content);
+				var apiWrapperFinancialPlanDto = JsonConvert.DeserializeObject<ApiWrapper<FinancialPlanDto>>(content);
 
-				return financialPlanDto;
+				// Unwrap response
+				if (apiWrapperFinancialPlanDto is { Data: { } })
+				{
+					return apiWrapperFinancialPlanDto.Data;
+				}
+
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{
@@ -115,9 +127,15 @@ namespace Service.TRAMS.FinancialPlan
 				var content = await response.Content.ReadAsStringAsync();
 
 				// Deserialize content to POJO
-				var newFinancialPlanDto = JsonConvert.DeserializeObject<FinancialPlanDto>(content);
+				var apiWrapperFinancialPlanDto = JsonConvert.DeserializeObject<ApiWrapper<FinancialPlanDto>>(content);
 
-				return newFinancialPlanDto;
+				// Unwrap response
+				if (apiWrapperFinancialPlanDto is { Data: { } })
+				{
+					return apiWrapperFinancialPlanDto.Data;
+				}
+
+				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{
@@ -152,10 +170,18 @@ namespace Service.TRAMS.FinancialPlan
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 
-				// Deserialize content to POJO
-				var updatedFinancialPlanDto = JsonConvert.DeserializeObject<FinancialPlanDto>(content);
 
-				return updatedFinancialPlanDto;
+				// Deserialize content to POJO
+				var apiWrapperFinancialPlanDto = JsonConvert.DeserializeObject<ApiWrapper<FinancialPlanDto>>(content);
+
+				// Unwrap response
+				if (apiWrapperFinancialPlanDto is { Data: { } })
+				{
+					return apiWrapperFinancialPlanDto.Data;
+				}
+
+				throw new Exception("Academies API error unwrap response");
+
 			}
 			catch (Exception ex)
 			{
