@@ -18,6 +18,10 @@
 	var financialPlanModels = Model.CaseActions?.Where(ca => ca is FinancialPlanModel).Select(fp => { return fp as FinancialPlanModel; }).ToList();
 	var openFinancialPlanModels = financialPlanModels.Where(fp => !fp.ClosedAt.HasValue).ToList();
 	var closedFinancialPlanModels = financialPlanModels.Except(openFinancialPlanModels).ToList();
+
+    var ntis = Model.CaseActions?.Where(ca => ca is NtiModel).Select(nti => nti as NtiModel).ToList();
+	var openNtis = ntis.Where(nti => nti.ClosedAt == null).ToList();
+	var closedNtis = ntis.Except(openNtis).ToList();
 }
 
 <div class="govuk-width-container">
@@ -276,7 +280,7 @@
 					Add to case
 				</a>
 
-				@if (openSRMAs.Count > 0 || openFinancialPlanModels.Count > 0)
+				@if (openSRMAs.Count > 0 || openFinancialPlanModels.Count > 0 || openNtis.Count > 0)
 				{
 					<table id="open-case-actions" class="govuk-table">
 						<thead class="govuk-table__head">
@@ -329,6 +333,23 @@
                                     </td>
 									<td class="govuk-table__cell govuk-table__header__right">
 										@DateExtension.ToDayMonthYear(fp.CreatedAt)
+									</td>
+								</tr>
+							}
+
+                            @foreach (NtiModel nti in openNtis)
+							{
+								<tr class="govuk-table__row">
+									<td class="govuk-table__cell">
+                                        <a href="@Request.Path/action/nti/@nti.Id" class="govuk-link govuk-link-no-visited-state">
+                                            <span>NTI</span>
+                                        </a>
+									</td>
+                                    <td class="govuk-table__cell">
+                                       Not Implemented Yet
+                                    </td>
+									<td class="govuk-table__cell govuk-table__header__right">
+										@DateExtension.ToDayMonthYear(nti.CreatedAt)
 									</td>
 								</tr>
 							}
@@ -387,6 +408,23 @@
 									</td>
 									<td class="govuk-table__cell govuk-table__header__right">
 										@DateExtension.ToDayMonthYear(financialPlanModel.ClosedAt.Value)
+									</td>
+								</tr>
+							}
+
+							@foreach (NtiModel nti in closedNtis)
+							{
+								<tr class="govuk-table__row">
+									<td class="govuk-table__cell">
+										<a href="@Request.Path/action/nti/@nti.Id/closed" class="govuk-link govuk-link-no-visited-state">
+											NTI
+										</a>
+									</td>
+									<td class="govuk-table__cell">
+										Not Implemented Yet
+									</td>
+									<td class="govuk-table__cell govuk-table__header__right">
+										@DateExtension.ToDayMonthYear(nti.ClosedAt.Value)
 									</td>
 								</tr>
 							}

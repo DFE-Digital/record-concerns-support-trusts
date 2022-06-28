@@ -102,7 +102,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 						break;
 					case CaseActionEnum.NtiUnderConsideration:
 						CaseActions.AddRange(await _ntiUnderConsiderationModelService.GetNtiUnderConsiderationsForCase(caseUrn));
-						if(HasOpenCaseAction<NtiModel>(null))
+						if(HasOpenCaseAction<NtiModel>(additionalValidations: null))
 						{
 							throw new InvalidOperationException("There is already an open NTI: Under consideration action linked to this case. Please resolve that before opening another one.");
 						}

@@ -138,7 +138,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<SRMAProvider, SRMAProvider>();
 			services.AddSingleton<IFinancialPlanStatusService, FinancialPlanStatusService>();
 			services.AddSingleton<INtiReasonsService, NtiReasonsService>();
-			services.AddSingleton<INtiService, NtiService>();
+			services.AddSingleton<INtiService, NtiTempService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();

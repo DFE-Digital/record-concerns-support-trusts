@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using Service.Redis.Nti;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,13 +19,15 @@ namespace ConcernsCaseWork.Services.Cases
 
 		public async Task<NtiModel> CreateNti(NtiModel nti)
 		{
+			nti.CreatedAt = DateTime.Now;
 			var dto = await _ntiCachedService.CreateNti(NtiMappers.ToDBModel(nti));
 			return NtiMappers.ToServiceModel(dto);
 		}
 
-		public Task<IEnumerable<NtiModel>> GetNtiUnderConsiderationsForCase(long caseUrn)
+		public async Task<IEnumerable<NtiModel>> GetNtiUnderConsiderationsForCase(long caseUrn)
 		{
-			return Task.FromResult(Enumerable.Empty<NtiModel>());
+			var ntis = await _ntiCachedService.GetNtisForCase(caseUrn);
+			return ntis.Select(nti => NtiMappers.ToServiceModel(nti));
 		}
 	}
 }
