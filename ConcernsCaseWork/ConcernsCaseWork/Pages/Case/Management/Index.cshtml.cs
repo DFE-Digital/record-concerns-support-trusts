@@ -28,8 +28,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly IRecordModelService _recordModelService;
 		private readonly IRatingModelService _ratingModelService;
 		private readonly IStatusCachedService _statusCachedService;
-		private readonly ISRMAService srmaService;
+		private readonly ISRMAService _srmaService;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
+		private readonly INtiModelService _ntiModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
@@ -47,6 +48,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			IStatusCachedService statusCachedService,
 			ISRMAService srmaService,
 			IFinancialPlanModelService financialPlanModelService,
+			INtiModelService ntiModelService,
 			ILogger<IndexPageModel> logger
 			)
 		{
@@ -56,8 +58,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_recordModelService = recordModelService;
 			_ratingModelService = ratingModelService;
 			_statusCachedService = statusCachedService;
-			this.srmaService = srmaService;
+			_srmaService = srmaService;
 			_financialPlanModelService = financialPlanModelService;
+			_ntiModelService = ntiModelService;
 			_logger = logger;
 		}
 
@@ -108,8 +111,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private async Task PopulateCaseActions(long caseUrn)
 		{
 			CaseActions = CaseActions ?? new List<CaseActionModel>();
-			CaseActions.AddRange(await srmaService.GetSRMAsForCase(caseUrn));
+			CaseActions.AddRange(await _srmaService.GetSRMAsForCase(caseUrn));
 			CaseActions.AddRange(await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name));
+			CaseActions.AddRange(await _ntiModelService.GetNtiUnderConsiderationsForCase(caseUrn));
 		}
 
 		private bool UserHasEditCasePrivileges()

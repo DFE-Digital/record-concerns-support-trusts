@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
+using Service.Redis.Nti;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -18,57 +19,62 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class AddPageModel : AbstractPageModel
 	{
+		private readonly INtiModelService _ntiModelService;
+		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<AddPageModel> _logger;
-		private readonly ISRMAService _srmaModelService;
+		
 
-		public int NotesMaxLength => 500;
-		public IEnumerable<RadioItem> SRMAStatuses => getStatuses();
+		public int NotesMaxLength => 2000;
+		public IEnumerable<RadioItem> NTIReasonsToConsider;
+
+		public long CaseUrn { get; private set; }
 
 		public AddPageModel(
-			ISRMAService srmaModelService, ILogger<AddPageModel> logger)
+			INtiModelService ntiModelService,
+			INtiReasonsCachedService ntiReasonsCachedService,
+			ILogger<AddPageModel> logger)
 		{
-			_srmaModelService = srmaModelService;
+			_ntiModelService = ntiModelService;
+			_ntiReasonsCachedService = ntiReasonsCachedService;
 			_logger = logger;
 		}
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::SRMA::AddPageModel::OnGetAsync");
+			_logger.LogInformation("Case::Action::NTI-UC::AddPageModel::OnGetAsync");
 
 			try
 			{
-				GetRouteData();
+				NTIReasonsToConsider = await GetReasons();
+				ExtractCaseUrnFromRoute();
+
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::SRMA::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::NTI-UC::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
 			}
+
 		}
 
 		public async Task<IActionResult> OnPostAsync()
 		{
 			try
 			{
-				var caseUrn = GetRouteData();
+				ExtractCaseUrnFromRoute();
 
-				ValidateSRMA();
+				var newNti = PopulateNtiFromRequest();
 
-				var srma = CreateSRMA(caseUrn);
-				await _srmaModelService.SaveSRMA(srma);
+				await _ntiModelService.CreateNti(newNti);
 
-				return Redirect($"/case/{srma.CaseUrn}/management");
-			}
-			catch (InvalidOperationException ex)
-			{
-				TempData["SRMA.Message"] = ex.Message;
+				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::SRMA::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::NTI-UC::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
@@ -76,88 +82,50 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			return Page();
 		}
 
-		private IEnumerable<RadioItem> getStatuses()
+		private void ExtractCaseUrnFromRoute()
 		{
-			var statuses = (SRMAStatus[])Enum.GetValues(typeof(SRMAStatus));
-			return statuses.Where(s => s != SRMAStatus.Unknown && s != SRMAStatus.Declined && s != SRMAStatus.Canceled && s != SRMAStatus.Complete)
-						   .Select(s => new RadioItem
+			if (TryGetRouteValueInt64("urn", out var caseUrn))
+			{
+				CaseUrn = caseUrn;
+			}
+			else
+			{
+				throw new InvalidOperationException("CaseUrn not found in the route");
+			}
+		}
+
+		private async Task<IEnumerable<RadioItem>> GetReasons()
+		{
+			var reasons = await _ntiReasonsCachedService.GetAllReasons();
+			return reasons.Select(r => new RadioItem
 						   {
-							   Id = s.ToString(),
-							   Text = EnumHelper.GetEnumDescription(s)
+							   Id = Convert.ToString(r.Id),
+							   Text = r.Name
 						   });
 		}
 
-		private long GetRouteData()
+		private NtiModel PopulateNtiFromRequest()
 		{
-			var caseUrnValue = RouteData.Values["urn"];
-			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
-				throw new Exception("CaseUrn is null or invalid to parse");
+			var reasons = Request.Form["reason"];
+			
+			var nti = new NtiModel() { CaseUrn = CaseUrn };
+			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = long.Parse(r) }).ToArray();
 
-			return caseUrn;
-		}
+			var notes = Convert.ToString(Request.Form["nti-notes"]);
 
-		private void ValidateSRMA()
-		{
-			var status = Request.Form["status"];
-
-			if (string.IsNullOrEmpty(status))
+			if (!string.IsNullOrEmpty(notes))
 			{
-				throw new Exception("SRMA status not selected");
-			}
-
-			if (!Enum.TryParse<SRMAStatus>(status, ignoreCase: true, out SRMAStatus srmaStatus))
-			{
-				throw new Exception($"Can't parse SRMA status {srmaStatus}");
-			}
-
-			var dtr_day = Request.Form["dtr-day"];
-			var dtr_month = Request.Form["dtr-month"];
-			var dtr_year = Request.Form["dtr-year"];
-
-			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-
-			if (!DateTimeHelper.TryParseExact(dtString, out DateTime dateOffered))
-			{
-				throw new InvalidOperationException($"SRMA offered date is not valid {dtString}");
-			}
-
-			var srma_notes = Request.Form["srma-notes"];
-
-			if (!string.IsNullOrEmpty(srma_notes))
-			{
-				var notes = srma_notes.ToString();
 				if (notes.Length > NotesMaxLength)
 				{
 					throw new Exception($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
 				}
+				else
+				{
+					nti.Notes = notes;
+				}
 			}
-		}
 
-		private SRMAModel CreateSRMA(long caseUrn)
-		{
-			var status = Request.Form["status"];
-			var notes = Request.Form["srma-notes"].ToString();
-			var dtr_day = Request.Form["dtr-day"];
-			var dtr_month = Request.Form["dtr-month"];
-			var dtr_year = Request.Form["dtr-year"];
-			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-			var dateOffered = DateTimeHelper.ParseExact(dtString);
-
-			var srma = new SRMAModel(
-				0,
-				caseUrn,
-				dateOffered,
-				null,
-				null,
-				null,
-				null,
-				Enum.Parse<SRMAStatus>(status),
-				notes,
-				SRMAReasonOffered.Unknown,
-				DateTime.Now
-				);
-
-			return srma;
+			return nti;
 		}
 	}
 }

@@ -39,6 +39,8 @@ using StackExchange.Redis;
 using System;
 using System.Net.Mime;
 using Service.TRAMS.CaseActions;
+using Service.Redis.Nti;
+using Service.TRAMS.Nti;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -115,6 +117,8 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IRecordModelService, RecordModelService>();
 			services.AddSingleton<IFinancialPlanModelService, FinancialPlanModelService>();
 			services.AddSingleton<ISRMAService, SRMAService>();
+			services.AddSingleton<INtiReasonsCachedService, NtiReasonsCachedService>();
+			services.AddSingleton<INtiModelService, NtiModelService>();
 
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
@@ -133,7 +137,8 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IFinancialPlanService, FinancialPlanService>();
 			services.AddSingleton<SRMAProvider, SRMAProvider>();
 			services.AddSingleton<IFinancialPlanStatusService, FinancialPlanStatusService>();
-			services.AddSingleton<INtiUnderConsiderationModelService, NtiUnderConsiderationModelService>();
+			services.AddSingleton<INtiReasonsService, NtiReasonsService>();
+			services.AddSingleton<INtiService, NtiTempService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
@@ -147,8 +152,10 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ICaseHistoryCachedService, CaseHistoryCachedService>();
 			services.AddSingleton<IFinancialPlanCachedService, FinancialPlanCachedService>();
 			services.AddSingleton<IFinancialPlanStatusCachedService, FinancialPlanStatusCachedService>();
-			
+			services.AddSingleton<INtiReasonsCachedService, NtiReasonsCachedService>();
 			services.AddSingleton<CachedSRMAProvider, CachedSRMAProvider>();
+			services.AddSingleton<INtiReasonsCachedService, NtiReasonsCachedService>();
+			services.AddSingleton<INtiCachedService, NtiCachedService>();
 
 			// AD Integration
 			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
