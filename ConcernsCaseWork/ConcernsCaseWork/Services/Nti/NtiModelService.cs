@@ -29,5 +29,12 @@ namespace ConcernsCaseWork.Services.Cases
 			var ntis = await _ntiCachedService.GetNtisForCase(caseUrn);
 			return ntis.Select(nti => NtiMappers.ToServiceModel(nti));
 		}
+
+		public async Task<NtiModel> GetNTIUnderConsiderationById(long ntiUnderConsiderationId)
+		{
+			var ntiUnderConsideration = await _ntiCachedService.GetNTIUnderConsiderationById(ntiUnderConsiderationId);
+
+			return NtiMappers.ToServiceModel(ntiUnderConsideration);
+		}
 	}
 }

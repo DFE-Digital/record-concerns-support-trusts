@@ -10,9 +10,8 @@
 	ViewData["Title"] = "Case management";
 	var nonce = HttpContext.GetNonce();
 
-	//var srmaModels = Model.CaseActions?.Where(ca => ca is SRMAModel).ToList();
 	var srmaModels = Model.CaseActions?.Where(ca => ca is SRMAModel).Select(srma =>{ return srma as SRMAModel;}).ToList();
-	var openSRMAs = srmaModels.Where(srma => !srma.Status.Equals(SRMAStatus.Canceled) && !srma.Status.Equals(SRMAStatus.Declined) && !srma.Status.Equals(SRMAStatus.Complete)).ToList();
+	var openSRMAs = srmaModels.Where(srma => !srma.ClosedAt.HasValue).ToList();
 	var closedSRMAs = srmaModels.Except(openSRMAs).ToList();
 
 	var financialPlanModels = Model.CaseActions?.Where(ca => ca is FinancialPlanModel).Select(fp => { return fp as FinancialPlanModel; }).ToList();
@@ -341,7 +340,7 @@
 							{
 								<tr class="govuk-table__row">
 									<td class="govuk-table__cell">
-                                        <a href="@Request.Path/action/nti/@nti.Id" class="govuk-link govuk-link-no-visited-state">
+                                        <a href="@Request.Path/action/ntiunderconsideration/@nti.Id" class="govuk-link govuk-link-no-visited-state">
                                             <span>NTI</span>
                                         </a>
 									</td>

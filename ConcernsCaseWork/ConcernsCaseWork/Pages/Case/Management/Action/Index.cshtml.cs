@@ -87,7 +87,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 					case CaseActionEnum.Srma:
 						CaseActions.AddRange(await _srmaService.GetSRMAsForCase(caseUrn));
 
-						if (HasOpenSRMA())
+						if (HasOpenCaseAction<SRMAModel>(additionalValidations: null))
 						{
 							throw new InvalidOperationException("There is already an open SRMA action linked to this case. Please resolve that before opening another one.");
 						}
@@ -95,7 +95,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 					case CaseActionEnum.FinancialPlan:
 						CaseActions.AddRange(await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name));
 
-						if (HasOpenFinancialPlan())
+						if (HasOpenCaseAction<FinancialPlanModel>(additionalValidations: null))
 						{
 							throw new InvalidOperationException("There is already an open Financial Plan action linked to this case. Please resolve that before opening another one.");
 						}
@@ -144,36 +144,5 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 			return CaseActions.Any(ca => ca is T && ca.ClosedAt == null 
 					&& (additionalValidations == null || additionalValidations.Invoke(ca as T)));
 		}
-
-		private bool HasOpenSRMA()
-		{
-			//Check if case action is SRMA and status is not canceled, declined or complete
-			var openSRMA = CaseActions.Where(ca => (
-							ca is SRMAModel &&
-							(
-								!(((SRMAModel)ca).Status.Equals(SRMAStatus.Canceled)) &&
-								!(((SRMAModel)ca).Status.Equals(SRMAStatus.Declined)) &&
-								!(((SRMAModel)ca).Status.Equals(SRMAStatus.Complete))
-							)
-						)).FirstOrDefault();
-
-			return openSRMA != null;
-		}
-
-		private bool HasOpenFinancialPlan()
-		{
-			// Check for financial plans that do not have a closed date value
-			var openFinancialPlan = CaseActions.Where(ca => (
-							ca is FinancialPlanModel &&
-							(
-								!((FinancialPlanModel)ca).ClosedAt.HasValue
-							)
-						)).FirstOrDefault();
-
-
-
-			return openFinancialPlan != null;
-		}
-
 	}
 }

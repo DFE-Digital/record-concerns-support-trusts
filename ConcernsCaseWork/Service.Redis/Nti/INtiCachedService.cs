@@ -10,5 +10,6 @@ namespace Service.Redis.Nti
 	{
 		Task<NtiDto> CreateNti(NtiDto nti);
 		Task<ICollection<NtiDto>> GetNtisForCase(long caseUrn);
+		Task<NtiDto> GetNTIUnderConsiderationById(long underConsiderationId);
 	}
 }

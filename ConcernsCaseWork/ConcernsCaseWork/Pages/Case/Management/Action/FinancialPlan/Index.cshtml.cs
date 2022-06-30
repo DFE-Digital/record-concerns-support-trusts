@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			}
 		}
 
-		private (long caseUrn, long srmaId) GetRouteData()
+		private (long caseUrn, long financialPlanId) GetRouteData()
 		{
 			var caseUrnValue = RouteData.Values["urn"];
 			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)

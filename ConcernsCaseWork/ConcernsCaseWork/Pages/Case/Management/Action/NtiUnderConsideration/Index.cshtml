@@ -1,0 +1,132 @@
+﻿@page "/case/{urn:long}/management/action/ntiunderconsideration/{ntiUnderConsiderationId:long}/{handler?}"
+@model ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration.IndexPageModel
+
+@{
+	ViewData["Title"] = "NTI Under Consideration";
+	var nonce = HttpContext.GetNonce();
+}
+
+@section BeforeMain {
+<div class="govuk-width-container">
+    <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
+        Back to case
+    </a>
+</div>
+}
+
+<div class="govuk-width-container">
+    <partial name="_BannerError" />
+
+    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+    {
+        <partial name="_Error" />
+    }
+    else
+    {
+
+        <h1 class="govuk-heading-l">
+            <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
+            NTI: Under consideration
+        </h1>
+
+        <div class="govuk-hint" id="nti-underconsideration-hint">
+            <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Financial%20Notices%20to%20Improve.aspx" class="govuk-link" rel="noreferrer noopener">
+                AMSD Knowledge: NTI Guidance
+            </a>
+        </div>
+
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m"></caption>
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+
+                @* Reasons *@
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table-case-details__header">Reasons</th>
+                    <td class="govuk-table__cell">
+                        @{
+
+							if (Model.NTIUnderConsiderationModel.NtiReasonsForConsidering.Any())
+							{
+								foreach (var reason in Model.NTIUnderConsiderationModel.NtiReasonsForConsidering)
+								{
+                                    <div class="govuk-!-padding-bottom-2">
+                                        <span>@reason.Name</span>
+                                    </div>
+								}
+
+							}else{
+								RenderEmptyLabel();
+							}
+                        }
+                    </td>
+                </tr>
+
+                    
+
+                @* Notes *@
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table-case-details__header">Notes</th>
+                    <td class="govuk-table__cell">
+                        @{
+
+							if (!string.IsNullOrEmpty(Model.NTIUnderConsiderationModel.Notes))
+							{
+                                <span>@Model.NTIUnderConsiderationModel.Notes</span>
+							}
+							else
+							{
+								RenderEmptyLabel();
+							}
+                        }
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <div class="govuk-button-group">
+            <a data-prevent-double-click="true" href="@Request.Path/edit" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-uc-button">
+                Edit Information
+            </a>
+            <a data-prevent-double-click="true" asp-page-handler="Close" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button">
+                Close NTI: Under consideration
+            </a>
+        </div>
+
+    }
+</div>
+
+@functions {
+    private void RenderValue<T>(T value)
+    {
+        if (IsEmpty(value))
+        {
+            RenderEmptyLabel();
+        }
+        else
+        {
+            @value
+        }
+    }
+
+    private bool IsEmpty<T>(T value)
+    {
+        if (value is string)
+        {
+            return string.IsNullOrWhiteSpace(value as string);
+        }
+
+        return value == null || value.Equals(default(T));
+    }
+
+    private void RenderEmptyLabel()
+    {
+        <span class="govuk-tag ragtag ragtag__grey">Empty</span>
+    }
+}
