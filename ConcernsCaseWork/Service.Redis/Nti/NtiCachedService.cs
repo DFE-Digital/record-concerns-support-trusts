@@ -71,7 +71,7 @@ namespace Service.Redis.Nti
 
 		public async Task<NtiDto> GetNTIUnderConsiderationById(long underConsiderationId)
 		{
-			var key = $"Nti:NtiId:{underConsiderationId}";
+			var key = GetCacheKeyForNti(underConsiderationId);
 			var ntiUnderConsideration = await GetData<NtiDto>(key);
 
 
