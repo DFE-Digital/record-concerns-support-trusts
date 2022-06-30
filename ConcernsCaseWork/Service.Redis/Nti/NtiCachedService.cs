@@ -15,7 +15,7 @@ namespace Service.Redis.Nti
 		public NtiCachedService(INtiService ntiTramsService,
 			ICacheProvider cacheProvider,
 			ILogger<NtiCachedService> logger)
-			:base(cacheProvider)
+			: base(cacheProvider)
 		{
 			_ntiTramsService = ntiTramsService;
 		}
@@ -59,13 +59,48 @@ namespace Service.Redis.Nti
 		{
 			var cacheKey = GetCacheKeyForNtisForCase(caseUrn);
 			var ntis = await GetData<ICollection<NtiDto>>(cacheKey);
-			if(ntis==null || ntis.Count == 0)
+			if (ntis == null || ntis.Count == 0)
 			{
 				ntis = await _ntiTramsService.GetNtisForCase(caseUrn);
 				await StoreData<ICollection<NtiDto>>(cacheKey, ntis);
 			}
 
 			return ntis;
+		}
+
+		public async Task<NtiDto> PatchNti(NtiDto nti)
+		{
+			NtiDto patched = null;
+
+			if (nti.Id == default(long))
+			{
+				throw new InvalidOperationException($"Nti doesn't have a valid Id");
+			}
+
+			patched = await _ntiTramsService.PatchNti(nti);
+			if (patched?.Id != default(long))
+			{
+				var ntiCacheKey = GetCacheKeyForNti(nti);
+				await StoreData(ntiCacheKey, patched);
+
+				var cacheKeyForCase = GetCacheKeyForNtisForCase(nti.CaseUrn);
+				await ClearData(cacheKeyForCase);
+			}
+
+			return patched;
+		}
+
+		public async Task<NtiDto> GetNti(long ntiId)
+		{
+			var cacheKey = GetCacheKeyForNti(new NtiDto { Id = ntiId });
+			var nti = await GetData<NtiDto>(cacheKey);
+			if(nti == null)
+			{
+				nti = await _ntiTramsService.GetNti(ntiId);
+				await StoreData<NtiDto>(cacheKey, nti);	
+			}
+
+			return nti;
 		}
 	}
 }

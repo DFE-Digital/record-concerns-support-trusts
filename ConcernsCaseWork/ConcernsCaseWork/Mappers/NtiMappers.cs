@@ -28,7 +28,8 @@ namespace ConcernsCaseWork.Mappers
 				Id = ntiDto.Id,
 				CaseUrn = ntiDto.CaseUrn,
 				NtiReasonsForConsidering = ntiDto.Reasons?.Select(r => ToServiceModel(r)).ToArray(),
-				CreatedAt = ntiDto.CreatedAt.Date
+				CreatedAt = ntiDto.CreatedAt.Date,
+				Notes = ntiDto.Notes
 			};
 		}
 

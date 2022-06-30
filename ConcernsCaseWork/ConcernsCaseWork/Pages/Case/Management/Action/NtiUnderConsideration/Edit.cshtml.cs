@@ -69,11 +69,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		{
 			try
 			{
-				ExtractCaseUrnFromRoute();
+				CaseUrn = ExtractCaseUrnFromRoute();
+				var ntiWithUpdatedValues = PopulateNtiFromRequest();
 
-				var newNti = PopulateNtiFromRequest();
-
-				await _ntiModelService.CreateNti(newNti);
+				await _ntiModelService.PatchNtiUnderConsideration(ntiWithUpdatedValues);
 
 				return Redirect($"/case/{CaseUrn}/management");
 			}
@@ -126,7 +125,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		{
 			var reasons = Request.Form["reason"];
 			
-			var nti = new NtiModel() { CaseUrn = CaseUrn };
+			var nti = new NtiModel() { 
+				Id = ExtractNtiUcIdFromRoute(),
+				CaseUrn = CaseUrn,
+			};
+
 			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = long.Parse(r) }).ToArray();
 
 			var notes = Convert.ToString(Request.Form["nti-notes"]);

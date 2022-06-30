@@ -63,5 +63,34 @@ namespace Service.TRAMS.Nti
 				throw;
 			}
 		}
+
+		public async Task<NtiDto> PatchNti(NtiDto ntiDto)
+		{
+			try
+			{
+				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}");
+
+				request.Content = new StringContent(JsonConvert.SerializeObject(ntiDto),
+					Encoding.UTF8, MediaTypeNames.Application.Json);
+
+				var response = await client.SendAsync(request);
+				var content = await response.Content.ReadAsStringAsync();
+
+				response.EnsureSuccessStatusCode();
+
+				return JsonConvert.DeserializeObject<ApiWrapper<NtiDto>>(content).Data;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, $"Error occured while trying to patch NTI");
+				throw;
+			}
+		}
+
+		public Task<NtiDto> GetNti(long ntiId)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
