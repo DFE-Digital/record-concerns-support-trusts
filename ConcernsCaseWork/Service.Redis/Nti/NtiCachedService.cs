@@ -67,5 +67,23 @@ namespace Service.Redis.Nti
 
 			return ntis;
 		}
+
+
+		public async Task<NtiDto> GetNTIUnderConsiderationById(long underConsiderationId)
+		{
+			var key = $"Nti:NtiId:{underConsiderationId}";
+			var ntiUnderConsideration = await GetData<NtiDto>(key);
+
+
+			if (ntiUnderConsideration == null)
+			{
+				ntiUnderConsideration = await _ntiTramsService.GetNTIUnderConsiderationById(underConsiderationId);
+				await StoreData<NtiDto>(key, ntiUnderConsideration);
+			}
+
+			return ntiUnderConsideration;
+
+
+		}
 	}
 }
