@@ -39,15 +39,15 @@ namespace Service.Redis.Nti
 				throw new InvalidOperationException($"Nti is not valid to be cached (Id:{nti.Id})");
 			}
 
-			var key = GetCacheKeyForNti(nti);
+			var key = GetCacheKeyForNti(nti.Id);
 
 			await StoreData<NtiDto>(key, nti);
 			await ClearData(GetCacheKeyForNtisForCase(nti.CaseUrn));
 		}
 
-		private string GetCacheKeyForNti(NtiDto nti)
+		private string GetCacheKeyForNti(long underConsiderationId)
 		{
-			return $"Nti:NtiId:{nti.Id}";
+			return $"Nti:NtiId:{underConsiderationId}";
 		}
 
 		private string GetCacheKeyForNtisForCase(long caseUrn)
