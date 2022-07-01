@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 
 			var ntiunderConsiderationModel = NTIUnderConsiderationFactory.BuildNTIUnderConsiderationModel();
 
-			mockNtiUnderConsiderationModelService.Setup(n => n.GetNTIUnderConsiderationById(It.IsAny<long>()))
+			mockNtiUnderConsiderationModelService.Setup(n => n.GetNtiUnderConsideration(It.IsAny<long>()))
 				.ReturnsAsync(ntiunderConsiderationModel);
 
 			var pageModel = SetupIndexPageModel(mockNtiUnderConsiderationModelService, mockLogger);
