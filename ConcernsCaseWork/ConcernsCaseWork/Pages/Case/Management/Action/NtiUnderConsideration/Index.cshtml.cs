@@ -50,8 +50,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 		}
 
-		
-
 		private (long caseUrn, long ntiUnderConsiderationId) GetRouteData()
 		{
 			var caseUrnValue = RouteData.Values["urn"];

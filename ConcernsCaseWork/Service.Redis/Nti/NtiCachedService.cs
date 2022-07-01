@@ -102,20 +102,5 @@ namespace Service.Redis.Nti
 
 			return nti;
 		}
-
-		public async Task<NtiDto> GetNTIUnderConsiderationById(long underConsiderationId)
-		{
-			var key = GetCacheKeyForNti(underConsiderationId);
-			var ntiUnderConsideration = await GetData<NtiDto>(key);
-
-
-			if (ntiUnderConsideration == null)
-			{
-				ntiUnderConsideration = await _ntiTramsService.GetNTIUnderConsiderationById(underConsiderationId);
-				await StoreData<NtiDto>(key, ntiUnderConsideration);
-			}
-
-			return ntiUnderConsideration;
-		}
 	}
 }

@@ -16,6 +16,7 @@ namespace ConcernsCaseWork.Mappers
 				Id = ntiModel.Id,
 				CaseUrn = ntiModel.CaseUrn,
 				Reasons = ntiModel.NtiReasonsForConsidering?.Select(r => ToDBModel(r)).ToArray(),
+				UnderConsiderationReasonsMapping = ntiModel.NtiReasonsForConsidering?.Select(r => r.Id).ToArray(),
 				Notes = ntiModel.Notes,
 				CreatedAt = ntiModel.CreatedAt
 			};

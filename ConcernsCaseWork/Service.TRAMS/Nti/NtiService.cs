@@ -15,7 +15,7 @@ namespace Service.TRAMS.Nti
 	{
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly ILogger<NtiService> _logger;
-		private const string Url = @"/v2/case-actions/nti";
+		private const string Url = @"/v2/case-actions/nti-under-consideration";
 
 		public NtiService(IHttpClientFactory httpClientFactory, ILogger<NtiService> logger) : base(httpClientFactory)
 		{
@@ -40,7 +40,7 @@ namespace Service.TRAMS.Nti
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to create SRMA");
+				_logger.LogError(ex, $"Error occured while trying to create NTI");
 				throw;
 			}
 		}
@@ -59,7 +59,7 @@ namespace Service.TRAMS.Nti
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to GetSRMAById");
+				_logger.LogError(ex, $"Error occured while trying to GetNtisForCase");
 				throw;
 			}
 		}
@@ -120,9 +120,9 @@ namespace Service.TRAMS.Nti
 			}
 		}
 
-		public Task<NtiDto> GetNti(long ntiId)
+		public async Task<NtiDto> GetNti(long ntiId)
 		{
-			throw new NotImplementedException();
+			return await GetNTIUnderConsiderationById(ntiId);
 		}
 	}
 }

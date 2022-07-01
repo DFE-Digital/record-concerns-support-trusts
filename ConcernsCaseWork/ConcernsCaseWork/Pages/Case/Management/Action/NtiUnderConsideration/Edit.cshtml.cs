@@ -130,7 +130,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				CaseUrn = CaseUrn,
 			};
 
-			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = long.Parse(r) }).ToArray();
+			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = int.Parse(r) }).ToArray();
 
 			var notes = Convert.ToString(Request.Form["nti-notes"]);
 

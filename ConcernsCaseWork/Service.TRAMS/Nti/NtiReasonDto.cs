@@ -6,7 +6,7 @@ namespace Service.TRAMS.Nti
 {
 	public class NtiReasonDto
 	{
-		public long Id { get; set; }
+		public int Id { get; set; }
 		public string Name { get; set; }
 
 		public DateTimeOffset CreatedAt { get; set; }

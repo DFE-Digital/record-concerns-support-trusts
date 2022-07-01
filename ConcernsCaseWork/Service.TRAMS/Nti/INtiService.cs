@@ -9,6 +9,5 @@ namespace Service.TRAMS.Nti
 		Task<NtiDto> GetNti(long ntiId);
 		Task<ICollection<NtiDto>> GetNtisForCase(long caseUrn);
 		Task<NtiDto> PatchNti(NtiDto ntiDto);
-		Task<NtiDto> GetNTIUnderConsiderationById(long underConsiderationId);
 	}
 }
