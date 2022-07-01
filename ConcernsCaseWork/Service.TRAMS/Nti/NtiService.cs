@@ -64,6 +64,38 @@ namespace Service.TRAMS.Nti
 			}
 		}
 
+		public async Task<NtiDto> GetNTIUnderConsiderationById(long underConsiderationId)
+		{
+			_logger.LogInformation("NTIUnderConsiderationService::GetNTIUnderConsiderationById");
+
+			// Create a request
+			var request = new HttpRequestMessage(HttpMethod.Get,
+				$"{Url}/{underConsiderationId}");
+
+			// Create http client
+			var client = ClientFactory.CreateClient(HttpClientName);
+
+			// Execute request
+			var response = await client.SendAsync(request);
+
+			// Check status code
+			response.EnsureSuccessStatusCode();
+
+			// Read response content
+			var content = await response.Content.ReadAsStringAsync();
+
+			// Deserialize content to POJO
+			var apiWrapperNTIUnderConsiderationDto = JsonConvert.DeserializeObject<ApiWrapper<NtiDto>>(content);
+
+			// Unwrap response
+			if (apiWrapperNTIUnderConsiderationDto is { Data: { } })
+			{
+				return apiWrapperNTIUnderConsiderationDto.Data;
+			}
+
+			throw new Exception("Academies API error unwrap response");
+		}
+
 		public async Task<NtiDto> PatchNti(NtiDto ntiDto)
 		{
 			try

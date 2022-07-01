@@ -41,5 +41,12 @@ namespace ConcernsCaseWork.Services.Cases
 			var patched = await _ntiCachedService.PatchNti(NtiMappers.ToDBModel(nti));
 			return NtiMappers.ToServiceModel(patched);
 		}
+
+		public async Task<NtiModel> GetNTIUnderConsiderationById(long ntiUnderConsiderationId)
+		{
+			var ntiUnderConsideration = await _ntiCachedService.GetNTIUnderConsiderationById(ntiUnderConsiderationId);
+
+			return NtiMappers.ToServiceModel(ntiUnderConsideration);
+		}
 	}
 }

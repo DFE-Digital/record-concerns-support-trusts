@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.Nti
@@ -11,5 +9,6 @@ namespace Service.TRAMS.Nti
 		Task<NtiDto> GetNti(long ntiId);
 		Task<ICollection<NtiDto>> GetNtisForCase(long caseUrn);
 		Task<NtiDto> PatchNti(NtiDto ntiDto);
+		Task<NtiDto> GetNTIUnderConsiderationById(long underConsiderationId);
 	}
 }

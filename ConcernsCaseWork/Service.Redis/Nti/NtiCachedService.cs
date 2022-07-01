@@ -39,15 +39,15 @@ namespace Service.Redis.Nti
 				throw new InvalidOperationException($"Nti is not valid to be cached (Id:{nti.Id})");
 			}
 
-			var key = GetCacheKeyForNti(nti);
+			var key = GetCacheKeyForNti(nti.Id);
 
 			await StoreData<NtiDto>(key, nti);
 			await ClearData(GetCacheKeyForNtisForCase(nti.CaseUrn));
 		}
 
-		private string GetCacheKeyForNti(NtiDto nti)
+		private string GetCacheKeyForNti(long underConsiderationId)
 		{
-			return $"Nti:NtiId:{nti.Id}";
+			return $"Nti:NtiId:{underConsiderationId}";
 		}
 
 		private string GetCacheKeyForNtisForCase(long caseUrn)
@@ -66,6 +66,24 @@ namespace Service.Redis.Nti
 			}
 
 			return ntis;
+		}
+
+
+		public async Task<NtiDto> GetNTIUnderConsiderationById(long underConsiderationId)
+		{
+			var key = GetCacheKeyForNti(underConsiderationId);
+			var ntiUnderConsideration = await GetData<NtiDto>(key);
+
+
+			if (ntiUnderConsideration == null)
+			{
+				ntiUnderConsideration = await _ntiTramsService.GetNTIUnderConsiderationById(underConsiderationId);
+				await StoreData<NtiDto>(key, ntiUnderConsideration);
+			}
+
+			return ntiUnderConsideration;
+
+
 		}
 
 		public async Task<NtiDto> PatchNti(NtiDto nti)
