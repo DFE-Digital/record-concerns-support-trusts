@@ -87,6 +87,28 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 		}
 
+		[Test]
+		public async Task WhenOnPostAsync_ValidatesNotesLength_ThrowsException_ReturnsPage()
+		{
+			// arrange
+			Mock<INtiModelService> mockNtiModelService = new Mock<INtiModelService>();
+			Mock<INtiReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
+			Mock<ILogger<EditPageModel>> mockLogger = new Mock<ILogger<EditPageModel>>();
+
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsCachedService, mockLogger);
+
+			// act
+			var pageResponse = await pageModel.OnPostAsync();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			var page = pageResponse as PageResult;
+
+			Assert.That(page, Is.Not.Null);
+			Assert.That(pageModel.TempData, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+		}
+
 		private static EditPageModel SetupAddPageModel(
 			Mock<INtiModelService> mockNtiModelService,
 			Mock<INtiReasonsCachedService> mockNtiReasonsCachedService,
