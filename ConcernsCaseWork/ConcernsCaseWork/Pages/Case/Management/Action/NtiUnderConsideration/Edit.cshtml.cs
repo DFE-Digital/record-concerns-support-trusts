@@ -23,7 +23,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<EditPageModel> _logger;
 		
-
 		public int NotesMaxLength => 2000;
 		public IEnumerable<RadioItem> NTIReasonsToConsiderForUI;
 
