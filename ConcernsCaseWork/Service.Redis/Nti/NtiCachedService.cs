@@ -3,6 +3,7 @@ using Service.Redis.Base;
 using Service.TRAMS.Nti;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,13 +12,16 @@ namespace Service.Redis.Nti
 	public class NtiCachedService : CachedService, INtiCachedService
 	{
 		private readonly INtiService _ntiTramsService;
+		private readonly INtiReasonsCachedService _reasonsCachedService;
 
 		public NtiCachedService(INtiService ntiTramsService,
 			ICacheProvider cacheProvider,
+			INtiReasonsCachedService reasonsCachedService,
 			ILogger<NtiCachedService> logger)
 			: base(cacheProvider)
 		{
 			_ntiTramsService = ntiTramsService;
+			_reasonsCachedService = reasonsCachedService;
 		}
 
 		public async Task<NtiDto> CreateNti(NtiDto nti)
@@ -94,13 +98,27 @@ namespace Service.Redis.Nti
 		{
 			var cacheKey = GetCacheKeyForNti(ntiId);
 			var nti = await GetData<NtiDto>(cacheKey);
-			if (nti == null)
+			if (nti == null || nti.Reasons == null)
 			{
 				nti = await _ntiTramsService.GetNti(ntiId);
+				nti.Reasons = await GetReasons(nti);
 				await StoreData<NtiDto>(cacheKey, nti);
 			}
 
 			return nti;
+		}
+
+		private async Task<List<NtiReasonDto>> GetReasons(NtiDto ntiDto)
+		{
+			var allReasons = await _reasonsCachedService.GetAllReasons();
+			var reasonsForNti = new List<NtiReasonDto>();
+			foreach (var reasonId in ntiDto.UnderConsiderationReasonsMapping)
+			{
+				var matchingReason = allReasons.SingleOrDefault(r => r.Id == reasonId) ?? throw new InvalidOperationException($"A matching NTI Under Consideration reason could not find with the Id:{reasonId}");
+				reasonsForNti.Add(matchingReason);
+			}
+
+			return reasonsForNti;
 		}
 	}
 }

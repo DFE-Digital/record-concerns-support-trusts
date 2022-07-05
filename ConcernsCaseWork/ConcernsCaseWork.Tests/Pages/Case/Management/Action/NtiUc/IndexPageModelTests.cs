@@ -22,9 +22,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiModelService> ntiunderConsiderationModel = new Mock<INtiModelService>();
+			var mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
 			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(ntiunderConsiderationModel, mockLogger);
+			var pageModel = SetupIndexPageModel(ntiunderConsiderationModel, mockNtiReasonsCachedService, mockLogger);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -38,6 +39,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiModelService> mockNtiUnderConsiderationModelService = new Mock<INtiModelService>();
+			var mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
 			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var ntiunderConsiderationModel = NTIUnderConsiderationFactory.BuildNTIUnderConsiderationModel();
@@ -45,7 +47,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			mockNtiUnderConsiderationModelService.Setup(n => n.GetNtiUnderConsideration(It.IsAny<long>()))
 				.ReturnsAsync(ntiunderConsiderationModel);
 
-			var pageModel = SetupIndexPageModel(mockNtiUnderConsiderationModelService, mockLogger);
+			var pageModel = SetupIndexPageModel(mockNtiUnderConsiderationModelService, mockNtiReasonsCachedService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -74,9 +76,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiModelService> ntiunderConsiderationModel = new Mock<INtiModelService>();
+			var mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
 			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(ntiunderConsiderationModel, mockLogger);
+			var pageModel = SetupIndexPageModel(ntiunderConsiderationModel, mockNtiReasonsCachedService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
 
@@ -93,12 +96,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 
 		private static IndexPageModel SetupIndexPageModel(
 			Mock<INtiModelService> mockNtiModelService,
+			Mock<INtiReasonsCachedService> reasonsCachedService,
 			Mock<ILogger<IndexPageModel>> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new IndexPageModel(mockNtiModelService.Object, mockLogger.Object)
+			return new IndexPageModel(mockNtiModelService.Object, reasonsCachedService.Object, mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
@@ -107,6 +111,4 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			};
 		}
 	}
-
-
 }
