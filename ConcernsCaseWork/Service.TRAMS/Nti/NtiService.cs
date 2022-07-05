@@ -15,7 +15,7 @@ namespace Service.TRAMS.Nti
 	{
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly ILogger<NtiService> _logger;
-		private const string Url = @"/v2/case-actions/nti";
+		private const string Url = @"/v2/case-actions/nti-under-consideration";
 
 		public NtiService(IHttpClientFactory httpClientFactory, ILogger<NtiService> logger) : base(httpClientFactory)
 		{
@@ -40,7 +40,7 @@ namespace Service.TRAMS.Nti
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to create SRMA");
+				_logger.LogError(ex, $"Error occured while trying to create NTI");
 				throw;
 			}
 		}
@@ -59,7 +59,7 @@ namespace Service.TRAMS.Nti
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to GetSRMAById");
+				_logger.LogError(ex, $"Error occured while trying to GetNtisForCase");
 				throw;
 			}
 		}
@@ -94,6 +94,35 @@ namespace Service.TRAMS.Nti
 			}
 
 			throw new Exception("Academies API error unwrap response");
+		}
+
+		public async Task<NtiDto> PatchNti(NtiDto ntiDto)
+		{
+			try
+			{
+				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}");
+
+				request.Content = new StringContent(JsonConvert.SerializeObject(ntiDto),
+					Encoding.UTF8, MediaTypeNames.Application.Json);
+
+				var response = await client.SendAsync(request);
+				var content = await response.Content.ReadAsStringAsync();
+
+				response.EnsureSuccessStatusCode();
+
+				return JsonConvert.DeserializeObject<ApiWrapper<NtiDto>>(content).Data;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, $"Error occured while trying to patch NTI");
+				throw;
+			}
+		}
+
+		public async Task<NtiDto> GetNti(long ntiId)
+		{
+			return await GetNTIUnderConsiderationById(ntiId);
 		}
 	}
 }

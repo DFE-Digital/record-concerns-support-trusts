@@ -24,17 +24,22 @@ namespace ConcernsCaseWork.Services.Cases
 			return NtiMappers.ToServiceModel(dto);
 		}
 
+		public async Task<NtiModel> GetNtiUnderConsideration(long ntiUcId)
+		{
+			var dto = await _ntiCachedService.GetNti(ntiUcId);
+			return NtiMappers.ToServiceModel(dto);
+		}
+
 		public async Task<IEnumerable<NtiModel>> GetNtiUnderConsiderationsForCase(long caseUrn)
 		{
 			var ntis = await _ntiCachedService.GetNtisForCase(caseUrn);
 			return ntis.Select(nti => NtiMappers.ToServiceModel(nti));
 		}
 
-		public async Task<NtiModel> GetNTIUnderConsiderationById(long ntiUnderConsiderationId)
+		public async Task<NtiModel> PatchNtiUnderConsideration(NtiModel nti)
 		{
-			var ntiUnderConsideration = await _ntiCachedService.GetNTIUnderConsiderationById(ntiUnderConsiderationId);
-
-			return NtiMappers.ToServiceModel(ntiUnderConsideration);
+			var patched = await _ntiCachedService.PatchNti(NtiMappers.ToDBModel(nti));
+			return NtiMappers.ToServiceModel(patched);
 		}
 	}
 }

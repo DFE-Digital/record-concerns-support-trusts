@@ -15,8 +15,8 @@ namespace Service.Redis.Nti
 
 		private const string NtiReasonsCacheKey = "Nti.Reasons";
 
-		public NtiReasonsCachedService(INtiReasonsService tramsNtiReasonsService,
-			ICacheProvider cacheProvider,
+		public NtiReasonsCachedService(ICacheProvider cacheProvider,
+			INtiReasonsService tramsNtiReasonsService,
 			ILogger<NtiReasonsCachedService> logger) : base(cacheProvider)
 		{
 			_tramsNtiReasonsService = tramsNtiReasonsService;

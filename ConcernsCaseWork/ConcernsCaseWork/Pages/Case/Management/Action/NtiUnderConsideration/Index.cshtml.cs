@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 				(caseUrn, ntiUnderConsiderationId) = GetRouteData();
 
-				NTIUnderConsiderationModel = await _ntiModelService.GetNTIUnderConsiderationById(ntiUnderConsiderationId);
+				NTIUnderConsiderationModel = await _ntiModelService.GetNtiUnderConsideration(ntiUnderConsiderationId);
 
 				if (NTIUnderConsiderationModel == null)
 				{
@@ -49,8 +49,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 		}
-
-		
 
 		private (long caseUrn, long ntiUnderConsiderationId) GetRouteData()
 		{

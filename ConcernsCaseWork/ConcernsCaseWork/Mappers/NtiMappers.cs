@@ -16,6 +16,7 @@ namespace ConcernsCaseWork.Mappers
 				Id = ntiModel.Id,
 				CaseUrn = ntiModel.CaseUrn,
 				Reasons = ntiModel.NtiReasonsForConsidering?.Select(r => ToDBModel(r)).ToArray(),
+				UnderConsiderationReasonsMapping = ntiModel.NtiReasonsForConsidering?.Select(r => r.Id).ToArray(),
 				Notes = ntiModel.Notes,
 				CreatedAt = ntiModel.CreatedAt
 			};
@@ -27,8 +28,9 @@ namespace ConcernsCaseWork.Mappers
 			{
 				Id = ntiDto.Id,
 				CaseUrn = ntiDto.CaseUrn,
-				NtiReasonsForConsidering = ntiDto.Reasons?.Select(r => ToServiceModel(r)).ToArray(),
-				CreatedAt = ntiDto.CreatedAt.Date
+				NtiReasonsForConsidering = ntiDto.UnderConsiderationReasonsMapping?.Select(i => new NtiReasonForConsideringModel {  Id = i, Name = String.Empty }).ToArray(),
+				CreatedAt = ntiDto.CreatedAt.Date,
+				Notes = ntiDto.Notes
 			};
 		}
 

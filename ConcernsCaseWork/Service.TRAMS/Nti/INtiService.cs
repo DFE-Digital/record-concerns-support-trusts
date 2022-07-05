@@ -6,7 +6,8 @@ namespace Service.TRAMS.Nti
 	public interface INtiService
 	{
 		Task<NtiDto> CreateNti(NtiDto ntiDto);
+		Task<NtiDto> GetNti(long ntiId);
 		Task<ICollection<NtiDto>> GetNtisForCase(long caseUrn);
-		Task<NtiDto> GetNTIUnderConsiderationById(long underConsiderationId);
+		Task<NtiDto> PatchNti(NtiDto ntiDto);
 	}
 }

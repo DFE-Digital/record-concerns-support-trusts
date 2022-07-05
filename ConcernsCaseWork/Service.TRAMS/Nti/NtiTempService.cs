@@ -16,6 +16,11 @@ namespace Service.TRAMS.Nti
 			return Task.FromResult(ntiDto);
 		}
 
+		public async Task<NtiDto> GetNti(long ntiId)
+		{
+			return await Task.FromResult(ntiDtos.SingleOrDefault(nti => nti.Id == ntiId));
+		}
+
 		public async Task<ICollection<NtiDto>> GetNtisForCase(long caseUrn)
 		{
 			return await Task.FromResult(ntiDtos.Where(nti => nti.CaseUrn == caseUrn).ToArray());
@@ -24,6 +29,13 @@ namespace Service.TRAMS.Nti
 		public async Task<NtiDto> GetNTIUnderConsiderationById(long underConsiderationId)
 		{
 			return await Task.FromResult(ntiDtos.FirstOrDefault(nti => nti.Id == underConsiderationId));
+		}
+
+		public async Task<NtiDto> PatchNti(NtiDto ntiDto)
+		{
+			ntiDtos = ntiDtos.Where(nti => nti.Id != ntiDto.Id).ToList();
+			ntiDtos.Add(ntiDto);
+			return await Task.FromResult(ntiDto);
 		}
 	}
 }

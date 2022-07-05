@@ -17,22 +17,22 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class AddPageModel : AbstractPageModel
+	public class EditPageModel : AbstractPageModel
 	{
 		private readonly INtiModelService _ntiModelService;
 		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
-		private readonly ILogger<AddPageModel> _logger;
+		private readonly ILogger<EditPageModel> _logger;
 		
-
 		public int NotesMaxLength => 2000;
-		public IEnumerable<RadioItem> NTIReasonsToConsider;
+		public IEnumerable<RadioItem> NTIReasonsToConsiderForUI;
 
 		public long CaseUrn { get; private set; }
+		public NtiModel NtiModel { get; set; }
 
-		public AddPageModel(
+		public EditPageModel(
 			INtiModelService ntiModelService,
 			INtiReasonsCachedService ntiReasonsCachedService,
-			ILogger<AddPageModel> logger)
+			ILogger<EditPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
 			_ntiReasonsCachedService = ntiReasonsCachedService;
@@ -41,12 +41,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::NTI-UC::AddPageModel::OnGetAsync");
+			_logger.LogInformation("Case::Action::NTI-UC::EditPageModel::OnGetAsync");
 
 			try
 			{
-				NTIReasonsToConsider = await GetReasons();
-				ExtractCaseUrnFromRoute();
+				CaseUrn = ExtractCaseUrnFromRoute();
+				
+				var ntiUcId = ExtractNtiUcIdFromRoute();
+				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
+
+				NTIReasonsToConsiderForUI = await GetReasonsForUI(NtiModel);
 
 				return Page();
 			}
@@ -64,17 +68,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		{
 			try
 			{
-				ExtractCaseUrnFromRoute();
+				CaseUrn = ExtractCaseUrnFromRoute();
+				var ntiWithUpdatedValues = PopulateNtiFromRequest();
 
-				var newNti = PopulateNtiFromRequest();
-
-				await _ntiModelService.CreateNti(newNti);
+				await _ntiModelService.PatchNtiUnderConsideration(ntiWithUpdatedValues);
 
 				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-UC::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::NTI-UC::EditPageModel::OnPostAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
@@ -82,11 +85,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			return Page();
 		}
 
-		private void ExtractCaseUrnFromRoute()
+		private long ExtractCaseUrnFromRoute()
 		{
 			if (TryGetRouteValueInt64("urn", out var caseUrn))
 			{
-				CaseUrn = caseUrn;
+				return caseUrn;
 			}
 			else
 			{
@@ -94,13 +97,26 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 		}
 
-		private async Task<IEnumerable<RadioItem>> GetReasons()
+		private long ExtractNtiUcIdFromRoute()
+		{
+			if (TryGetRouteValueInt64("ntiUCId", out var ntiUcId))
+			{
+				return ntiUcId;
+			}
+			else
+			{
+				throw new InvalidOperationException("CaseUrn not found in the route");
+			}
+		}
+
+		private async Task<IEnumerable<RadioItem>> GetReasonsForUI(NtiModel ntiModel)
 		{
 			var reasons = await _ntiReasonsCachedService.GetAllReasons();
 			return reasons.Select(r => new RadioItem
 						   {
 							   Id = Convert.ToString(r.Id),
-							   Text = r.Name
+							   Text = r.Name,
+							   IsChecked = ntiModel?.NtiReasonsForConsidering?.Any(ntiR => ntiR.Id == r.Id) == true,	
 						   });
 		}
 
@@ -108,7 +124,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		{
 			var reasons = Request.Form["reason"];
 			
-			var nti = new NtiModel() { CaseUrn = CaseUrn };
+			var nti = new NtiModel() { 
+				Id = ExtractNtiUcIdFromRoute(),
+				CaseUrn = CaseUrn,
+			};
+
 			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = int.Parse(r) }).ToArray();
 
 			var notes = Convert.ToString(Request.Form["nti-notes"]);

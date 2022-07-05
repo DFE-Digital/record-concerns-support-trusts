@@ -1,8 +1,8 @@
-﻿@page "/case/{urn:long}/management/action/NtiUnderConsideration/add"
-@model ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration.AddPageModel
+﻿@page "/case/{urn:long}/management/action/NtiUnderConsideration/{ntiUCId:long}/edit"
+@model ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration.EditPageModel
 
 @{
-    ViewData["Title"] = "Add Nti Under Consideration";
+    ViewData["Title"] = "Edit Nti Under Consideration";
     var nonce = HttpContext.GetNonce();
 }
 
@@ -39,13 +39,7 @@
                     NTI: Under consideration
                 </h1>
 
-                <div class="govuk-hint" id="nti-underconsideration-hint">
-                    <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Financial%20Notices%20to%20Improve.aspx" class="govuk-link" rel="noreferrer noopener">
-                        AMSD Knowledge: NTI Guidance
-                    </a>
-                </div>
-
-                <form role="form" method="post" id="add-srma-form" novalidate>
+                <form role="form" method="post" id="add-nti-uc-form" novalidate>
 
                     @* Status *@
                     <div class="govuk-form-group govuk-!-margin-top-9">
@@ -60,11 +54,11 @@
                                 @{
                                     int id = 0;
                                 }
-                                @foreach (var reason in Model.NTIReasonsToConsider)
+                                @foreach (var reason in Model.NTIReasonsToConsiderForUI)
                                 {
                                     var idStr = id++ == 0 ? "reason" : "reason-" + id;
                                     <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" id="@idStr" name="reason" type="checkbox" value="@reason.Id">
+                                        <input class="govuk-checkboxes__input" id="@idStr" name="reason" type="checkbox" value="@reason.Id" checked="@reason.IsChecked">
                                         <label class="govuk-label govuk-checkboxes__label" for="@idStr">
                                             @reason.Text
                                         </label>
@@ -78,7 +72,7 @@
                     <div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
                         <div class="govuk-form-group">
                             <h2 class="govuk-heading-m">Notes</h2>
-                            <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="nti-notes" name="nti-notes" rows="3" aria-describedby="nti-notes-info"></textarea>
+                            <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="nti-notes" name="nti-notes" rows="3" aria-describedby="nti-notes-info">@(Model.NtiModel?.Notes ?? string.Empty)</textarea>
                         </div>
                         <div id="nti-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
                             You can enter up to @Model.NotesMaxLength characters
