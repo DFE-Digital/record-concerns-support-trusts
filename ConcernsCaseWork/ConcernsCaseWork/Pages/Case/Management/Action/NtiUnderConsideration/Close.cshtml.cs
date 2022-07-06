@@ -17,50 +17,51 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class EditPageModel : AbstractPageModel
+	public class ClosePageModel : AbstractPageModel
 	{
 		private readonly INtiModelService _ntiModelService;
-		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
-		private readonly ILogger<EditPageModel> _logger;
-		
+		private readonly INtiStatusesCachedService _ntiStatusesCachedService;
+		private readonly ILogger<ClosePageModel> _logger;
+
 		public int NotesMaxLength => 2000;
-		public IEnumerable<RadioItem> NTIReasonsToConsiderForUI;
+		public IEnumerable<RadioItem> NTIStatuses;
 
 		public long CaseUrn { get; private set; }
 		public NtiModel NtiModel { get; set; }
 
-		public EditPageModel(
+		public ClosePageModel(
 			INtiModelService ntiModelService,
-			INtiReasonsCachedService ntiReasonsCachedService,
-			ILogger<EditPageModel> logger)
+			INtiStatusesCachedService ntiStatusesCachedService,
+			ILogger<ClosePageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
-			_ntiReasonsCachedService = ntiReasonsCachedService;
+			_ntiStatusesCachedService = ntiStatusesCachedService;
 			_logger = logger;
 		}
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::NTI-UC::EditPageModel::OnGetAsync");
+			_logger.LogInformation("Case::Action::NTI-UC::ClosePageModel::OnGetAsync");
 
 			try
 			{
 				CaseUrn = ExtractCaseUrnFromRoute();
-				
+
 				var ntiUcId = ExtractNtiUcIdFromRoute();
 				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
 
-				NTIReasonsToConsiderForUI = await GetReasonsForUI(NtiModel);
+				NTIStatuses = await GetStatusesForUI();
 
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-UC::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::NTI-UC::ClosePageModel::OnGetAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
 			}
+
 		}
 
 		public async Task<IActionResult> OnPostAsync()
@@ -70,18 +71,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				CaseUrn = ExtractCaseUrnFromRoute();
 				var ntiWithUpdatedValues = PopulateNtiFromRequest();
 
-				var freshFromDb = await _ntiModelService.GetNtiUnderConsideration(ntiWithUpdatedValues.Id); // this db call is necessary as the API is only designed to simply patch the whole nti
+				var freshNti = await _ntiModelService.GetNtiUnderConsideration(ntiWithUpdatedValues.Id);
+				freshNti.Notes = ntiWithUpdatedValues.Notes;
+				freshNti.ClosedStatusId = ntiWithUpdatedValues.ClosedStatusId;
+				freshNti.ClosedAt = freshNti.UpdatedAt;
 
-				freshFromDb.NtiReasonsForConsidering = ntiWithUpdatedValues.NtiReasonsForConsidering;
-				freshFromDb.Notes = ntiWithUpdatedValues.Notes;
-				
-				var updated = await _ntiModelService.PatchNtiUnderConsideration(freshFromDb);
+				await _ntiModelService.PatchNtiUnderConsideration(freshNti);
 
-				return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{updated.Id}");
+				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-UC::EditPageModel::OnPostAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::NTI-UC::ClosePageModel::OnPostAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
@@ -113,29 +114,27 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 		}
 
-		private async Task<IEnumerable<RadioItem>> GetReasonsForUI(NtiModel ntiModel)
+		private async Task<IEnumerable<RadioItem>> GetStatusesForUI()
 		{
-			var reasons = await _ntiReasonsCachedService.GetAllReasons();
-			return reasons.Select(r => new RadioItem
-						   {
-							   Id = Convert.ToString(r.Id),
-							   Text = r.Name,
-							   IsChecked = ntiModel?.NtiReasonsForConsidering?.Any(ntiR => ntiR.Id == r.Id) == true,	
-						   });
+			var statuses = await _ntiStatusesCachedService.GetAllStatuses();
+			return statuses.Select(s => new RadioItem
+			{
+				Id = Convert.ToString(s.Id),
+				Text = s.Name,
+				IsChecked = false   // all statuses are unchecked when close page is opened
+			});
 		}
 
 		private NtiModel PopulateNtiFromRequest()
 		{
-			var reasons = Request.Form["reason"];
-			
-			var nti = new NtiModel() { 
+			var status = Request.Form["status"];
+			var notes = Convert.ToString(Request.Form["nti-notes"]);
+
+			var nti = new NtiModel()
+			{
 				Id = ExtractNtiUcIdFromRoute(),
 				CaseUrn = CaseUrn,
 			};
-
-			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = int.Parse(r) }).ToArray();
-
-			var notes = Convert.ToString(Request.Form["nti-notes"]);
 
 			if (!string.IsNullOrEmpty(notes))
 			{
@@ -147,6 +146,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				{
 					nti.Notes = notes;
 				}
+			}
+
+			if (int.TryParse(status, out var statusId))
+			{
+				nti.ClosedStatusId = statusId;
+			}
+			else
+			{
+				throw new Exception("Closing status Id could not be resolved");
 			}
 
 			return nti;

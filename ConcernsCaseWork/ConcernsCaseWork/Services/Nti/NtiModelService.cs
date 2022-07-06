@@ -20,6 +20,7 @@ namespace ConcernsCaseWork.Services.Cases
 		public async Task<NtiModel> CreateNti(NtiModel nti)
 		{
 			nti.CreatedAt = DateTime.Now;
+			nti.UpdatedAt = nti.CreatedAt;
 			var dto = await _ntiCachedService.CreateNti(NtiMappers.ToDBModel(nti));
 			return NtiMappers.ToServiceModel(dto);
 		}
@@ -38,6 +39,7 @@ namespace ConcernsCaseWork.Services.Cases
 
 		public async Task<NtiModel> PatchNtiUnderConsideration(NtiModel nti)
 		{
+			nti.UpdatedAt = DateTime.Now;
 			var patched = await _ntiCachedService.PatchNti(NtiMappers.ToDBModel(nti));
 			return NtiMappers.ToServiceModel(patched);
 		}
