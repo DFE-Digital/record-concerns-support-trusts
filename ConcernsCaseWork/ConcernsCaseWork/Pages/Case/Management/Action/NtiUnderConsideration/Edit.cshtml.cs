@@ -73,7 +73,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 				await _ntiModelService.PatchNtiUnderConsideration(ntiWithUpdatedValues);
 
-				return Redirect($"/case/{CaseUrn}/management");
+				return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{ntiWithUpdatedValues.Id}");
 			}
 			catch (Exception ex)
 			{
