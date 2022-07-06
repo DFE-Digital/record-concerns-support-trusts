@@ -61,7 +61,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
 			}
-
 		}
 
 		public async Task<IActionResult> OnPostAsync()
@@ -71,9 +70,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				CaseUrn = ExtractCaseUrnFromRoute();
 				var ntiWithUpdatedValues = PopulateNtiFromRequest();
 
-				await _ntiModelService.PatchNtiUnderConsideration(ntiWithUpdatedValues);
+				var freshFromDb = await _ntiModelService.GetNtiUnderConsideration(ntiWithUpdatedValues.Id); // this db call is necessary as the API is only designed to simply patch the whole nti
 
-				return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{ntiWithUpdatedValues.Id}");
+				freshFromDb.NtiReasonsForConsidering = ntiWithUpdatedValues.NtiReasonsForConsidering;
+				freshFromDb.Notes = ntiWithUpdatedValues.Notes;
+				freshFromDb.UpdatedAt = DateTime.Now;
+				
+				var updated = await _ntiModelService.PatchNtiUnderConsideration(freshFromDb);
+
+				return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{updated.Id}");
 			}
 			catch (Exception ex)
 			{
