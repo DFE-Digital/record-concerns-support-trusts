@@ -138,7 +138,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<SRMAProvider, SRMAProvider>();
 			services.AddSingleton<IFinancialPlanStatusService, FinancialPlanStatusService>();
 			services.AddSingleton<INtiReasonsService, NtiReasonsService>();
-			services.AddSingleton<INtiService, NtiTempService>();
+			services.AddSingleton<INtiService, NtiService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
@@ -152,7 +152,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ICaseHistoryCachedService, CaseHistoryCachedService>();
 			services.AddSingleton<IFinancialPlanCachedService, FinancialPlanCachedService>();
 			services.AddSingleton<IFinancialPlanStatusCachedService, FinancialPlanStatusCachedService>();
-			services.AddSingleton<INtiReasonsCachedService, NtiReasonsCachedService>();
 			services.AddSingleton<CachedSRMAProvider, CachedSRMAProvider>();
 			services.AddSingleton<INtiReasonsCachedService, NtiReasonsCachedService>();
 			services.AddSingleton<INtiCachedService, NtiCachedService>();
