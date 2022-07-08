@@ -19,7 +19,9 @@ namespace ConcernsCaseWork.Mappers
 				UnderConsiderationReasonsMapping = ntiModel.NtiReasonsForConsidering?.Select(r => r.Id).ToArray(),
 				Notes = ntiModel.Notes,
 				CreatedAt = ntiModel.CreatedAt,
-				UpdatedAt = ntiModel.UpdatedAt
+				UpdatedAt = ntiModel.UpdatedAt,
+				ClosedAt = ntiModel.ClosedAt,
+				ClosedStatusId = ntiModel.ClosedStatusId
 			};
 		}
 
@@ -32,8 +34,9 @@ namespace ConcernsCaseWork.Mappers
 				NtiReasonsForConsidering = ntiDto.Reasons?.Select(r => ToServiceModel(r)).ToArray(),	
 				CreatedAt = ntiDto.CreatedAt.Date,
 				Notes = ntiDto.Notes,
-				UpdatedAt = ntiDto.UpdatedAt.Date,
-				ClosedAt = ntiDto.ClosedAt
+				UpdatedAt = ntiDto.UpdatedAt,
+				ClosedAt = ntiDto.ClosedAt,
+				ClosedStatusId = ntiDto.ClosedStatusId
 			};
 		}
 

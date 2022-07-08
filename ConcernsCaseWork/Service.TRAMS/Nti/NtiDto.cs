@@ -10,8 +10,8 @@ namespace Service.TRAMS.Nti
 		public long Id { get; set; }
 		public long CaseUrn { get; set; }
 		public ICollection<NtiReasonDto> Reasons { get; set; }
-		public DateTimeOffset CreatedAt { get; set; }
-		public DateTimeOffset UpdatedAt { get; set; }
+		public DateTime CreatedAt { get; set; }
+		public DateTime UpdatedAt { get; set; }
 		public string Notes { get; set; }
 		public DateTime? ClosedAt { get; set; }
 		public int? ClosedStatusId { get; set; }

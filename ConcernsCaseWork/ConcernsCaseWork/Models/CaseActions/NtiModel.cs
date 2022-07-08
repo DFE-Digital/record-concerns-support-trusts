@@ -9,6 +9,6 @@ namespace ConcernsCaseWork.Models.CaseActions
 	{
 		public ICollection<NtiReasonForConsideringModel> NtiReasonsForConsidering { get; set; }
 		public string Notes { get; set; }
-
+		public int? ClosedStatusId { get; set; }
 	}
 }
