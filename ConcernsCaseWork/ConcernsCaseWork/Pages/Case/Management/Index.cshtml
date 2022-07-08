@@ -345,7 +345,7 @@
                                         </a>
 									</td>
                                     <td class="govuk-table__cell">
-                                       Not Implemented Yet
+                                       
                                     </td>
 									<td class="govuk-table__cell govuk-table__header__right">
 										@DateExtension.ToDayMonthYear(nti.CreatedAt)
@@ -356,7 +356,7 @@
 					</table>
 				}
 
-				@if (closedSRMAs.Count > 0 || closedFinancialPlanModels.Count > 0)
+				@if (closedSRMAs.Count > 0 || closedFinancialPlanModels.Count > 0 || closedNtis.Count > 0)
 				{
 					<table  id="close-case-actions" class="govuk-table">
 						<thead class="govuk-table__head">
@@ -415,12 +415,12 @@
 							{
 								<tr class="govuk-table__row">
 									<td class="govuk-table__cell">
-										<a href="@Request.Path/action/nti/@nti.Id/closed" class="govuk-link govuk-link-no-visited-state">
+										<a href="@Request.Path/action/ntiunderconsideration/@nti.Id" class="govuk-link govuk-link-no-visited-state">
 											NTI
 										</a>
 									</td>
 									<td class="govuk-table__cell">
-										Not Implemented Yet
+										@Model.NtiStatuses.SingleOrDefault(s => s.Id == nti.ClosedStatusId)?.Name 
 									</td>
 									<td class="govuk-table__cell govuk-table__header__right">
 										@DateExtension.ToDayMonthYear(nti.ClosedAt.Value)

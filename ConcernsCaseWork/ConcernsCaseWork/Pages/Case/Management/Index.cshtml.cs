@@ -9,7 +9,9 @@ using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Service.Redis.Nti;
 using Service.Redis.Status;
+using Service.TRAMS.Nti;
 using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
@@ -31,6 +33,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ISRMAService _srmaService;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
 		private readonly INtiModelService _ntiModelService;
+		private readonly INtiStatusesCachedService _ntiStatusesCachedService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
@@ -39,6 +42,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public IList<CaseHistoryModel> CasesHistoryModel { get; private set; }
 		public bool IsEditableCase { get; private set; }
 		public List<CaseActionModel> CaseActions { get; private set; }
+		public List<NtiStatusDto> NtiStatuses { get; set; }
+
 
 		public IndexPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
@@ -49,6 +54,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			ISRMAService srmaService,
 			IFinancialPlanModelService financialPlanModelService,
 			INtiModelService ntiModelService,
+			INtiStatusesCachedService ntiStatusesCachedService,
 			ILogger<IndexPageModel> logger
 			)
 		{
@@ -61,6 +67,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_srmaService = srmaService;
 			_financialPlanModelService = financialPlanModelService;
 			_ntiModelService = ntiModelService;
+			_ntiStatusesCachedService = ntiStatusesCachedService;
 			_logger = logger;
 		}
 
@@ -92,7 +99,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				var caseHistoryTask = _caseHistoryModelService.GetCasesHistory(User.Identity.Name, caseUrn);
 				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				var trustCasesTask = _caseModelService.GetCasesByTrustUkprn(CaseModel.TrustUkPrn);
-				var caseActionsTask = PopulateCaseActions(caseUrn);
+				var caseActionsTask = PopulateCaseActions(caseUrn).ContinueWith(async t => await PopulateAdditionalCaseInformation());
 
 				Task.WaitAll(caseHistoryTask, trustDetailsTask, trustCasesTask, caseActionsTask);
 
@@ -105,6 +112,14 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				_logger.LogError("Case::ManagementPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
+			}
+		}
+
+		private async Task PopulateAdditionalCaseInformation()
+		{
+			if(CaseActions?.Any(ca => ca is NtiModel) == true)
+			{
+				NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
 			}
 		}
 
@@ -146,5 +161,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			return false;
 		}
+
 	}
 }

@@ -2,8 +2,8 @@
 @model ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration.IndexPageModel
 
 @{
-	ViewData["Title"] = "NTI Under Consideration";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "NTI Under Consideration";
+    var nonce = HttpContext.GetNonce();
 }
 
 @section BeforeMain {
@@ -50,23 +50,25 @@
                     <th scope="row" class="govuk-table-case-details__header">Reasons</th>
                     <td class="govuk-table__cell">
                         @{
-							if (Model.NTIUnderConsiderationModel.NtiReasonsForConsidering.Any())
-							{
-								foreach (var reason in Model.NTIUnderConsiderationModel.NtiReasonsForConsidering)
-								{
+                            if (Model.NTIUnderConsiderationModel.NtiReasonsForConsidering.Any())
+                            {
+                                foreach (var reason in Model.NTIUnderConsiderationModel.NtiReasonsForConsidering)
+                                {
                                     <div class="govuk-!-padding-bottom-2">
                                         <span>@reason.Name</span>
                                     </div>
-								}
+                                }
 
-							}else{
-								RenderEmptyLabel();
-							}
+                            }
+                            else
+                            {
+                                RenderEmptyLabel();
+                            }
                         }
                     </td>
                 </tr>
 
-                    
+
 
                 @* Notes *@
                 <tr class="govuk-table__row">
@@ -74,14 +76,14 @@
                     <td class="govuk-table__cell">
                         @{
 
-							if (!string.IsNullOrEmpty(Model.NTIUnderConsiderationModel.Notes))
-							{
+                            if (!string.IsNullOrEmpty(Model.NTIUnderConsiderationModel.Notes))
+                            {
                                 <span>@Model.NTIUnderConsiderationModel.Notes</span>
-							}
-							else
-							{
-								RenderEmptyLabel();
-							}
+                            }
+                            else
+                            {
+                                RenderEmptyLabel();
+                            }
                         }
                     </td>
                 </tr>
@@ -89,15 +91,17 @@
             </tbody>
         </table>
 
-        <div class="govuk-button-group">
-            <a data-prevent-double-click="true" href="@Request.Path/edit" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-uc-button">
-                Edit Information
-            </a>
-            <a data-prevent-double-click="true" href="@Request.Path/close" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button">
-                Close NTI: Under consideration
-            </a>
-        </div>
-
+        @if (Model.NTIUnderConsiderationModel.ClosedAt == null)
+        {
+            <div class="govuk-button-group">
+                <a data-prevent-double-click="true" href="@Request.Path/edit" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-uc-button">
+                    Edit Information
+                </a>
+                <a data-prevent-double-click="true" href="@Request.Path/close" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button">
+                    Close NTI: Under consideration
+                </a>
+            </div>
+        }
     }
 </div>
 
