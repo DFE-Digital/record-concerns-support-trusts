@@ -11,7 +11,7 @@ using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.FinancialPlan;
-using Service.Redis.Nti;
+using Service.Redis.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

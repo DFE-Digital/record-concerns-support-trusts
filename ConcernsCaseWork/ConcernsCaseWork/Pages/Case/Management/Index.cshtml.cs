@@ -9,7 +9,7 @@ using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Nti;
+using Service.Redis.NtiUnderConsideration;
 using Service.Redis.Status;
 using Service.TRAMS.Nti;
 using Service.TRAMS.Status;

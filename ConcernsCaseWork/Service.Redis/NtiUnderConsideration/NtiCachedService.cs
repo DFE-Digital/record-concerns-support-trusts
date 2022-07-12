@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Nti
+namespace Service.Redis.NtiUnderConsideration
 {
 	public class NtiCachedService : CachedService, INtiCachedService
 	{

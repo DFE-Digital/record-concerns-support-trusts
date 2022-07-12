@@ -39,7 +39,7 @@ using StackExchange.Redis;
 using System;
 using System.Net.Mime;
 using Service.TRAMS.CaseActions;
-using Service.Redis.Nti;
+using Service.Redis.NtiUnderConsideration;
 using Service.TRAMS.Nti;
 
 namespace ConcernsCaseWork.Extensions
