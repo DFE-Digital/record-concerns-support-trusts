@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		private readonly INtiUnderConsiderationReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<IndexPageModel> _logger;
 
-		public NtiModel NTIUnderConsiderationModel { get; set; }
+		public NtiUnderConsiderationModel NTIUnderConsiderationModel { get; set; }
 
 		public IndexPageModel(INtiUnderConsiderationModelService ntiModelService, INtiUnderConsiderationReasonsCachedService ntiReasonsCachedService, ILogger<IndexPageModel> logger)
 		{

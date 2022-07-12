@@ -18,7 +18,7 @@
 	var openFinancialPlanModels = financialPlanModels.Where(fp => !fp.ClosedAt.HasValue).ToList();
 	var closedFinancialPlanModels = financialPlanModels.Except(openFinancialPlanModels).ToList();
 
-    var ntis = Model.CaseActions?.Where(ca => ca is NtiModel).Select(nti => nti as NtiModel).ToList();
+    var ntis = Model.CaseActions?.Where(ca => ca is NtiUnderConsiderationModel).Select(nti => nti as NtiUnderConsiderationModel).ToList();
 	var openNtis = ntis.Where(nti => nti.ClosedAt == null).ToList();
 	var closedNtis = ntis.Except(openNtis).ToList();
 }
@@ -336,7 +336,7 @@
 								</tr>
 							}
 
-                            @foreach (NtiModel nti in openNtis)
+                            @foreach (NtiUnderConsiderationModel nti in openNtis)
 							{
 								<tr class="govuk-table__row">
 									<td class="govuk-table__cell">
@@ -411,7 +411,7 @@
 								</tr>
 							}
 
-							@foreach (NtiModel nti in closedNtis)
+							@foreach (NtiUnderConsiderationModel nti in closedNtis)
 							{
 								<tr class="govuk-table__row">
 									<td class="govuk-table__cell">

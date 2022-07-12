@@ -117,7 +117,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		private async Task PopulateAdditionalCaseInformation()
 		{
-			if(CaseActions?.Any(ca => ca is NtiModel) == true)
+			if(CaseActions?.Any(ca => ca is NtiUnderConsiderationModel) == true)
 			{
 				NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
 			}

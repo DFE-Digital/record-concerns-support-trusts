@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.Mappers
 {
 	public static class NtiMappers
 	{
-		public static NtiUnderConsiderationDto ToDBModel(NtiModel ntiModel)
+		public static NtiUnderConsiderationDto ToDBModel(NtiUnderConsiderationModel ntiModel)
 		{
 			return new NtiUnderConsiderationDto
 			{
@@ -25,9 +25,9 @@ namespace ConcernsCaseWork.Mappers
 			};
 		}
 
-		public static NtiModel ToServiceModel(NtiUnderConsiderationDto ntiDto)
+		public static NtiUnderConsiderationModel ToServiceModel(NtiUnderConsiderationDto ntiDto)
 		{
-			return new NtiModel
+			return new NtiUnderConsiderationModel
 			{
 				Id = ntiDto.Id,
 				CaseUrn = ntiDto.CaseUrn,

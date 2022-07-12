@@ -104,11 +104,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 						   });
 		}
 
-		private NtiModel PopulateNtiFromRequest()
+		private NtiUnderConsiderationModel PopulateNtiFromRequest()
 		{
 			var reasons = Request.Form["reason"];
 			
-			var nti = new NtiModel() { CaseUrn = CaseUrn };
+			var nti = new NtiUnderConsiderationModel() { CaseUrn = CaseUrn };
 			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = int.Parse(r) }).ToArray();
 
 			var notes = Convert.ToString(Request.Form["nti-notes"]);

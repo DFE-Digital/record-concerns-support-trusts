@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Models.CaseActions
 {
-	public class NtiModel : CaseActionModel
+	public class NtiUnderConsiderationModel : CaseActionModel
 	{
 		public ICollection<NtiReasonForConsideringModel> NtiReasonsForConsidering { get; set; }
 		public string Notes { get; set; }

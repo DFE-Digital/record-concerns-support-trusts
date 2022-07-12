@@ -51,7 +51,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 		public void WhenMapDtoToDbModel_ReturnsCorrectModel()
 		{
 			//arrange
-			var serviceModel = new NtiModel
+			var serviceModel = new NtiUnderConsiderationModel
 			{
 				Id = 1L,
 				CaseUrn = 123L,

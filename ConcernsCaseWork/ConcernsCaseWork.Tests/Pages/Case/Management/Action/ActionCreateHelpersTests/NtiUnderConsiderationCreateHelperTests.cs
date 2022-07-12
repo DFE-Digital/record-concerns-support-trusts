@@ -49,10 +49,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockNtiService = new Mock<INtiUnderConsiderationModelService>();
 			var sut = new NtiUnderConsiderationCreateHelper(mockNtiService.Object);
 
-			var caseActions = new NtiModel[] {
-				new NtiModel { Id = 123, CaseUrn = 888, ClosedAt = DateTime.Now.AddDays(-10) },
-				new NtiModel { Id = 124, CaseUrn = 888, ClosedAt = DateTime.Now.AddDays(-8) },
-				new NtiModel { Id = 125, CaseUrn = 888, ClosedAt = DateTime.Now.AddDays(-5) },
+			var caseActions = new NtiUnderConsiderationModel[] {
+				new NtiUnderConsiderationModel { Id = 123, CaseUrn = 888, ClosedAt = DateTime.Now.AddDays(-10) },
+				new NtiUnderConsiderationModel { Id = 124, CaseUrn = 888, ClosedAt = DateTime.Now.AddDays(-8) },
+				new NtiUnderConsiderationModel { Id = 125, CaseUrn = 888, ClosedAt = DateTime.Now.AddDays(-5) },
 			}.AsEnumerable();
 
 			mockNtiService.Setup(svc => svc.GetNtiUnderConsiderationsForCase(888)).Returns(Task.FromResult(caseActions));
@@ -71,10 +71,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockNtiService = new Mock<INtiUnderConsiderationModelService>();
 			var sut = new NtiUnderConsiderationCreateHelper(mockNtiService.Object);
 
-			var caseActions = new NtiModel[] {
-				new NtiModel { Id = 123, CaseUrn = 888, ClosedAt = DateTime.Now.AddDays(-10) },
-				new NtiModel { Id = 124, CaseUrn = 888 },
-				new NtiModel { Id = 125, CaseUrn = 888, ClosedAt = DateTime.Now.AddDays(-5) },
+			var caseActions = new NtiUnderConsiderationModel[] {
+				new NtiUnderConsiderationModel { Id = 123, CaseUrn = 888, ClosedAt = DateTime.Now.AddDays(-10) },
+				new NtiUnderConsiderationModel { Id = 124, CaseUrn = 888 },
+				new NtiUnderConsiderationModel { Id = 125, CaseUrn = 888, ClosedAt = DateTime.Now.AddDays(-5) },
 			}.AsEnumerable();
 
 			mockNtiService.Setup(svc => svc.GetNtiUnderConsiderationsForCase(888)).Returns(Task.FromResult(caseActions));

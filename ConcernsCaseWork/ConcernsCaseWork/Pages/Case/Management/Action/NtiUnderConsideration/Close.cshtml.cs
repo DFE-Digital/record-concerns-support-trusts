@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		public IEnumerable<RadioItem> NTIStatuses;
 
 		public long CaseUrn { get; private set; }
-		public NtiModel NtiModel { get; set; }
+		public NtiUnderConsiderationModel NtiModel { get; set; }
 
 		public ClosePageModel(
 			INtiUnderConsiderationModelService ntiModelService,
@@ -125,12 +125,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			});
 		}
 
-		private NtiModel PopulateNtiFromRequest()
+		private NtiUnderConsiderationModel PopulateNtiFromRequest()
 		{
 			var status = Request.Form["status"];
 			var notes = Convert.ToString(Request.Form["nti-notes"]);
 
-			var nti = new NtiModel()
+			var nti = new NtiUnderConsiderationModel()
 			{
 				Id = ExtractNtiUcIdFromRoute(),
 				CaseUrn = CaseUrn,

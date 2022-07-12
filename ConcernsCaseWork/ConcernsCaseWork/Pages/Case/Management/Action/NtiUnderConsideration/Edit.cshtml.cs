@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		public IEnumerable<RadioItem> NTIReasonsToConsiderForUI;
 
 		public long CaseUrn { get; private set; }
-		public NtiModel NtiModel { get; set; }
+		public NtiUnderConsiderationModel NtiModel { get; set; }
 
 		public EditPageModel(
 			INtiUnderConsiderationModelService ntiModelService,
@@ -113,7 +113,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 		}
 
-		private async Task<IEnumerable<RadioItem>> GetReasonsForUI(NtiModel ntiModel)
+		private async Task<IEnumerable<RadioItem>> GetReasonsForUI(NtiUnderConsiderationModel ntiModel)
 		{
 			var reasons = await _ntiReasonsCachedService.GetAllReasons();
 			return reasons.Select(r => new RadioItem
@@ -124,11 +124,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 						   });
 		}
 
-		private NtiModel PopulateNtiFromRequest()
+		private NtiUnderConsiderationModel PopulateNtiFromRequest()
 		{
 			var reasons = Request.Form["reason"];
 			
-			var nti = new NtiModel() { 
+			var nti = new NtiUnderConsiderationModel() { 
 				Id = ExtractNtiUcIdFromRoute(),
 				CaseUrn = CaseUrn,
 			};
