@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		
 
 		public int NotesMaxLength => 2000;
-		public IEnumerable<RadioItem> NTIReasonsToConsider;
+		public IEnumerable<RadioItem> CurrentStatus { get; private set; }
 
 		public long CaseUrn { get; private set; }
 
@@ -45,7 +45,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 			try
 			{
-				NTIReasonsToConsider = await GetReasons();
+				CurrentStatus = await GetStatuses();
 				ExtractCaseUrnFromRoute();
 
 				return Page();
@@ -94,7 +94,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			}
 		}
 
-		private async Task<IEnumerable<RadioItem>> GetReasons()
+		private async Task<IEnumerable<RadioItem>> GetStatuses()
 		{
 			var reasons = await _ntiReasonsCachedService.GetAllReasons();
 			return reasons.Select(r => new RadioItem
