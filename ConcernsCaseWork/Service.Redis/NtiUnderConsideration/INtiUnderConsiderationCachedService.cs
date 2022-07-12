@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Service.Redis.NtiUnderConsideration
 {
-	public interface INtiCachedService
+	public interface INtiUnderConsiderationCachedService
 	{
 		Task<NtiDto> CreateNti(NtiDto nti);
 		Task<NtiDto> GetNti(long ntiId);

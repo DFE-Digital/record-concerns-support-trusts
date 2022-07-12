@@ -16,12 +16,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	public class IndexPageModel : AbstractPageModel
 	{
 		private readonly INtiUnderConsiderationModelService _ntiModelService;
-		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
+		private readonly INtiUnderConsiderationReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public NtiModel NTIUnderConsiderationModel { get; set; }
 
-		public IndexPageModel(INtiUnderConsiderationModelService ntiModelService, INtiReasonsCachedService ntiReasonsCachedService, ILogger<IndexPageModel> logger)
+		public IndexPageModel(INtiUnderConsiderationModelService ntiModelService, INtiUnderConsiderationReasonsCachedService ntiReasonsCachedService, ILogger<IndexPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
 			_ntiReasonsCachedService = ntiReasonsCachedService;

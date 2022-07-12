@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace Service.Redis.NtiUnderConsideration
 {
-	public class NtiStatusesCachedService : CachedService, INtiStatusesCachedService
+	public class NtiUnderConsiderationStatusesCachedService : CachedService, INtiUnderConsiderationStatusesCachedService
 	{
 		private readonly INtiStatusesService _tramsNtiStatusesService;
-		private readonly ILogger<NtiStatusesCachedService> _logger;
+		private readonly ILogger<NtiUnderConsiderationStatusesCachedService> _logger;
 
 		private const string NtiStatusesCacheKey = "Nti.Statuses";
 
-		public NtiStatusesCachedService(ICacheProvider cacheProvider,
+		public NtiUnderConsiderationStatusesCachedService(ICacheProvider cacheProvider,
 			INtiStatusesService tramsNtiStatusesService,
-			ILogger<NtiStatusesCachedService> logger) : base(cacheProvider)
+			ILogger<NtiUnderConsiderationStatusesCachedService> logger) : base(cacheProvider)
 		{
 			_tramsNtiStatusesService = tramsNtiStatusesService;
 			_logger = logger;

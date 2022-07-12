@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	public class AddPageModel : AbstractPageModel
 	{
 		private readonly INtiUnderConsiderationModelService _ntiModelService;
-		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
+		private readonly INtiUnderConsiderationReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<AddPageModel> _logger;
 		
 
@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 		public AddPageModel(
 			INtiUnderConsiderationModelService ntiModelService,
-			INtiReasonsCachedService ntiReasonsCachedService,
+			INtiUnderConsiderationReasonsCachedService ntiReasonsCachedService,
 			ILogger<AddPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;

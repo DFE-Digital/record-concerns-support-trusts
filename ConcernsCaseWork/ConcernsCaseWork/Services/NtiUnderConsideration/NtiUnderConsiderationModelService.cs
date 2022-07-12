@@ -10,9 +10,9 @@ namespace ConcernsCaseWork.Services.Cases
 {
 	public class NtiUnderConsiderationModelService : INtiUnderConsiderationModelService
 	{
-		private readonly INtiCachedService _ntiCachedService;
+		private readonly INtiUnderConsiderationCachedService _ntiCachedService;
 
-		public NtiUnderConsiderationModelService(INtiCachedService ntiCachedService)
+		public NtiUnderConsiderationModelService(INtiUnderConsiderationCachedService ntiCachedService)
 		{
 			_ntiCachedService = ntiCachedService;
 		}

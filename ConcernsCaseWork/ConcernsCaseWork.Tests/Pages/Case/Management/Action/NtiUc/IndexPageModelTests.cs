@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiUnderConsiderationModelService> ntiunderConsiderationModel = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
+			var mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var pageModel = SetupIndexPageModel(ntiunderConsiderationModel, mockNtiReasonsCachedService, mockLogger);
@@ -39,7 +39,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiUnderConsiderationModelService> mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
+			var mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var ntiunderConsiderationModel = NTIUnderConsiderationFactory.BuildNTIUnderConsiderationModel();
@@ -76,7 +76,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiUnderConsiderationModelService> ntiunderConsiderationModel = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
+			var mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var pageModel = SetupIndexPageModel(ntiunderConsiderationModel, mockNtiReasonsCachedService, mockLogger);
@@ -96,7 +96,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 
 		private static IndexPageModel SetupIndexPageModel(
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService,
-			Mock<INtiReasonsCachedService> reasonsCachedService,
+			Mock<INtiUnderConsiderationReasonsCachedService> reasonsCachedService,
 			Mock<ILogger<IndexPageModel>> mockLogger,
 			bool isAuthenticated = false)
 		{

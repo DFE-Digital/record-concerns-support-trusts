@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Service.Redis.NtiUnderConsideration
 {
-	public interface INtiStatusesCachedService
+	public interface INtiUnderConsiderationStatusesCachedService
 	{
 		Task<ICollection<NtiStatusDto>> GetAllStatuses();
 	}

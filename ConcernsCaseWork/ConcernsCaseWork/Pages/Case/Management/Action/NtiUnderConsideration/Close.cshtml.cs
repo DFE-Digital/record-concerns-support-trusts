@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	public class ClosePageModel : AbstractPageModel
 	{
 		private readonly INtiUnderConsiderationModelService _ntiModelService;
-		private readonly INtiStatusesCachedService _ntiStatusesCachedService;
+		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
 		private readonly ILogger<ClosePageModel> _logger;
 
 		public int NotesMaxLength => 2000;
@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 		public ClosePageModel(
 			INtiUnderConsiderationModelService ntiModelService,
-			INtiStatusesCachedService ntiStatusesCachedService,
+			INtiUnderConsiderationStatusesCachedService ntiStatusesCachedService,
 			ILogger<ClosePageModel> logger)
 		{
 			_ntiModelService = ntiModelService;

@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace Service.Redis.NtiUnderConsideration
 {
-	public class NtiCachedService : CachedService, INtiCachedService
+	public class NtiUnderConsiderationCachedService : CachedService, INtiUnderConsiderationCachedService
 	{
 		private readonly INtiService _ntiTramsService;
-		private readonly INtiReasonsCachedService _reasonsCachedService;
+		private readonly INtiUnderConsiderationReasonsCachedService _reasonsCachedService;
 
-		public NtiCachedService(INtiService ntiTramsService,
+		public NtiUnderConsiderationCachedService(INtiService ntiTramsService,
 			ICacheProvider cacheProvider,
-			INtiReasonsCachedService reasonsCachedService,
-			ILogger<NtiCachedService> logger)
+			INtiUnderConsiderationReasonsCachedService reasonsCachedService,
+			ILogger<NtiUnderConsiderationCachedService> logger)
 			: base(cacheProvider)
 		{
 			_ntiTramsService = ntiTramsService;

@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	public class EditPageModel : AbstractPageModel
 	{
 		private readonly INtiUnderConsiderationModelService _ntiModelService;
-		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
+		private readonly INtiUnderConsiderationReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<EditPageModel> _logger;
 		
 		public int NotesMaxLength => 2000;
@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 		public EditPageModel(
 			INtiUnderConsiderationModelService ntiModelService,
-			INtiReasonsCachedService ntiReasonsCachedService,
+			INtiUnderConsiderationReasonsCachedService ntiReasonsCachedService,
 			ILogger<EditPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;

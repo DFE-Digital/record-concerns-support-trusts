@@ -117,7 +117,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IRecordModelService, RecordModelService>();
 			services.AddSingleton<IFinancialPlanModelService, FinancialPlanModelService>();
 			services.AddSingleton<ISRMAService, SRMAService>();
-			services.AddSingleton<INtiReasonsCachedService, NtiReasonsCachedService>();
+			services.AddSingleton<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
 			services.AddSingleton<INtiUnderConsiderationModelService, NtiUnderConsiderationModelService>();
 
 			// Trams api services
@@ -154,9 +154,9 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IFinancialPlanCachedService, FinancialPlanCachedService>();
 			services.AddSingleton<IFinancialPlanStatusCachedService, FinancialPlanStatusCachedService>();
 			services.AddSingleton<CachedSRMAProvider, CachedSRMAProvider>();
-			services.AddSingleton<INtiReasonsCachedService, NtiReasonsCachedService>();
-			services.AddSingleton<INtiStatusesCachedService, NtiStatusesCachedService>();
-			services.AddSingleton<INtiCachedService, NtiCachedService>();
+			services.AddSingleton<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
+			services.AddSingleton<INtiUnderConsiderationStatusesCachedService, NtiUnderConsiderationStatusesCachedService>();
+			services.AddSingleton<INtiUnderConsiderationCachedService, NtiUnderConsiderationCachedService>();
 
 			// AD Integration
 			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
