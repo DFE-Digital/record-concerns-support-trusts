@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.Nti;
+﻿using Service.TRAMS.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,9 +8,9 @@ namespace Service.Redis.NtiUnderConsideration
 {
 	public interface INtiUnderConsiderationCachedService
 	{
-		Task<NtiDto> CreateNti(NtiDto nti);
-		Task<NtiDto> GetNti(long ntiId);
-		Task<ICollection<NtiDto>> GetNtisForCase(long caseUrn);
-		Task<NtiDto> PatchNti(NtiDto nti);
+		Task<NtiUnderConsiderationDto> CreateNti(NtiUnderConsiderationDto nti);
+		Task<NtiUnderConsiderationDto> GetNti(long ntiId);
+		Task<ICollection<NtiUnderConsiderationDto>> GetNtisForCase(long caseUrn);
+		Task<NtiUnderConsiderationDto> PatchNti(NtiUnderConsiderationDto nti);
 	}
 }

@@ -8,18 +8,18 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Nti
+namespace Service.TRAMS.NtiUnderConsideration
 {
-	public class NtiReasonsService : AbstractService, INtiReasonsService
+	public class NtiUnderConsiderationReasonsService : AbstractService, INtiUnderConsiderationReasonsService
 	{
-		private readonly ILogger<NtiReasonsService> _logger;
+		private readonly ILogger<NtiUnderConsiderationReasonsService> _logger;
 
-		public NtiReasonsService(IHttpClientFactory clientFactory, ILogger<NtiReasonsService> logger) : base(clientFactory)
+		public NtiUnderConsiderationReasonsService(IHttpClientFactory clientFactory, ILogger<NtiUnderConsiderationReasonsService> logger) : base(clientFactory)
 		{
 			_logger = logger;
 		}
 
-		public async Task<ICollection<NtiReasonDto>> GetAllReasons()
+		public async Task<ICollection<NtiUnderConsiderationReasonDto>> GetAllReasons()
 		{
 			try
 			{
@@ -41,7 +41,7 @@ namespace Service.TRAMS.Nti
 				var content = await response.Content.ReadAsStringAsync();
 
 				// Deserialize content to POCO
-				var apiWrapperRatingsDto = JsonConvert.DeserializeObject<ApiListWrapper<NtiReasonDto>>(content);
+				var apiWrapperRatingsDto = JsonConvert.DeserializeObject<ApiListWrapper<NtiUnderConsiderationReasonDto>>(content);
 
 				return apiWrapperRatingsDto.Data;
 			}

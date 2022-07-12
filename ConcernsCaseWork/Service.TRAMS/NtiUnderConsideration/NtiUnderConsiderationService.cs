@@ -9,21 +9,21 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.TRAMS.Nti
+namespace Service.TRAMS.NtiUnderConsideration
 {
-	public class NtiService : AbstractService, INtiService
+	public class NtiUnderConsiderationService : AbstractService, INtiUnderConsiderationService
 	{
 		private readonly IHttpClientFactory _httpClientFactory;
-		private readonly ILogger<NtiService> _logger;
+		private readonly ILogger<NtiUnderConsiderationService> _logger;
 		private const string Url = @"/v2/case-actions/nti-under-consideration";
 
-		public NtiService(IHttpClientFactory httpClientFactory, ILogger<NtiService> logger) : base(httpClientFactory)
+		public NtiUnderConsiderationService(IHttpClientFactory httpClientFactory, ILogger<NtiUnderConsiderationService> logger) : base(httpClientFactory)
 		{
 			_httpClientFactory = httpClientFactory;
 			_logger = logger;
 		}
 
-		public async Task<NtiDto> CreateNti(NtiDto ntiDto)
+		public async Task<NtiUnderConsiderationDto> CreateNti(NtiUnderConsiderationDto ntiDto)
 		{
 			try
 			{
@@ -36,7 +36,7 @@ namespace Service.TRAMS.Nti
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
 
-				return JsonConvert.DeserializeObject<ApiWrapper<NtiDto>>(content).Data;
+				return JsonConvert.DeserializeObject<ApiWrapper<NtiUnderConsiderationDto>>(content).Data;
 			}
 			catch (Exception ex)
 			{
@@ -45,7 +45,7 @@ namespace Service.TRAMS.Nti
 			}
 		}
 
-		public async Task<ICollection<NtiDto>> GetNtisForCase(long caseUrn)
+		public async Task<ICollection<NtiUnderConsiderationDto>> GetNtisForCase(long caseUrn)
 		{
 			try
 			{
@@ -55,7 +55,7 @@ namespace Service.TRAMS.Nti
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
 
-				return JsonConvert.DeserializeObject<ApiWrapper<List<NtiDto>>>(content).Data;
+				return JsonConvert.DeserializeObject<ApiWrapper<List<NtiUnderConsiderationDto>>>(content).Data;
 			}
 			catch (Exception ex)
 			{
@@ -64,7 +64,7 @@ namespace Service.TRAMS.Nti
 			}
 		}
 
-		public async Task<NtiDto> GetNTIUnderConsiderationById(long underConsiderationId)
+		public async Task<NtiUnderConsiderationDto> GetNTIUnderConsiderationById(long underConsiderationId)
 		{
 			_logger.LogInformation("NTIUnderConsiderationService::GetNTIUnderConsiderationById");
 
@@ -85,7 +85,7 @@ namespace Service.TRAMS.Nti
 			var content = await response.Content.ReadAsStringAsync();
 
 			// Deserialize content to POJO
-			var apiWrapperNTIUnderConsiderationDto = JsonConvert.DeserializeObject<ApiWrapper<NtiDto>>(content);
+			var apiWrapperNTIUnderConsiderationDto = JsonConvert.DeserializeObject<ApiWrapper<NtiUnderConsiderationDto>>(content);
 
 			// Unwrap response
 			if (apiWrapperNTIUnderConsiderationDto is { Data: { } })
@@ -96,7 +96,7 @@ namespace Service.TRAMS.Nti
 			throw new Exception("Academies API error unwrap response");
 		}
 
-		public async Task<NtiDto> PatchNti(NtiDto ntiDto)
+		public async Task<NtiUnderConsiderationDto> PatchNti(NtiUnderConsiderationDto ntiDto)
 		{
 			try
 			{
@@ -111,7 +111,7 @@ namespace Service.TRAMS.Nti
 
 				response.EnsureSuccessStatusCode();
 
-				return JsonConvert.DeserializeObject<ApiWrapper<NtiDto>>(content).Data;
+				return JsonConvert.DeserializeObject<ApiWrapper<NtiUnderConsiderationDto>>(content).Data;
 			}
 			catch (Exception ex)
 			{
@@ -120,7 +120,7 @@ namespace Service.TRAMS.Nti
 			}
 		}
 
-		public async Task<NtiDto> GetNti(long ntiId)
+		public async Task<NtiUnderConsiderationDto> GetNti(long ntiId)
 		{
 			return await GetNTIUnderConsiderationById(ntiId);
 		}

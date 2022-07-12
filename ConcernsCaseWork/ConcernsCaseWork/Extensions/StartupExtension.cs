@@ -40,7 +40,7 @@ using System;
 using System.Net.Mime;
 using Service.TRAMS.CaseActions;
 using Service.Redis.NtiUnderConsideration;
-using Service.TRAMS.Nti;
+using Service.TRAMS.NtiUnderConsideration;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -137,9 +137,9 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IFinancialPlanService, FinancialPlanService>();
 			services.AddSingleton<SRMAProvider, SRMAProvider>();
 			services.AddSingleton<IFinancialPlanStatusService, FinancialPlanStatusService>();
-			services.AddSingleton<INtiReasonsService, NtiReasonsService>();
-			services.AddSingleton<INtiStatusesService, NtiStatusesService>();
-			services.AddSingleton<INtiService, NtiService>();
+			services.AddSingleton<INtiUnderConsiderationReasonsService, NtiUnderConsiderationReasonsService>();
+			services.AddSingleton<INtiUnderConsiderationStatusesService, NtiUnderConsiderationStatusesService>();
+			services.AddSingleton<INtiUnderConsiderationService, NtiUnderConsiderationService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();

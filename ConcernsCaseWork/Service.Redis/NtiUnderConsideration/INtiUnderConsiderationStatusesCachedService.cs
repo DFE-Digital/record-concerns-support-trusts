@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.Nti;
+﻿using Service.TRAMS.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +8,6 @@ namespace Service.Redis.NtiUnderConsideration
 {
 	public interface INtiUnderConsiderationStatusesCachedService
 	{
-		Task<ICollection<NtiStatusDto>> GetAllStatuses();
+		Task<ICollection<NtiUnderConsiderationStatusDto>> GetAllStatuses();
 	}
 }

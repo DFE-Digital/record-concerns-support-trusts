@@ -15,7 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using Service.TRAMS.Base;
-using Service.TRAMS.Nti;
+using Service.TRAMS.NtiUnderConsideration;
 
 namespace Service.TRAMS.Tests.CaseActions
 {
@@ -25,20 +25,20 @@ namespace Service.TRAMS.Tests.CaseActions
 		public void GetNtisByCaseId_Returns_ListOfNtiDto()
 		{
 			// Arrange
-			var logger = new Mock<ILogger<NtiService>>();
+			var logger = new Mock<ILogger<NtiUnderConsiderationService>>();
 
-			var ntis = new List<NtiDto> {
-			new NtiDto
+			var ntis = new List<NtiUnderConsiderationDto> {
+			new NtiUnderConsiderationDto
 			{
 				Id = 654,
 				Notes = "Test1"
 			},
-			new NtiDto
+			new NtiUnderConsiderationDto
 			{
 				Id = 667,
 				Notes = "Test2"
 			},
-			new NtiDto
+			new NtiUnderConsiderationDto
 			{
 				Id = 948,
 				Notes = "Test3"
@@ -46,7 +46,7 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var httpClientFactory = CreateMockFactory(ntis);
 
-			var sut = new NtiService(httpClientFactory.Object, logger.Object);
+			var sut = new NtiUnderConsiderationService(httpClientFactory.Object, logger.Object);
 
 			// Act
 			var response = sut.GetNtisForCase(123).Result;
@@ -62,7 +62,7 @@ namespace Service.TRAMS.Tests.CaseActions
 		public void CreateNti_Returns_New_NtiDto()
 		{
 			// Arrange
-			var expectedNtiDto = new NtiDto
+			var expectedNtiDto = new NtiUnderConsiderationDto
 			{
 				Id = 654,
 
@@ -71,9 +71,9 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var httpClientFactory = CreateMockFactory(expectedNtiDto);
 
-			var logger = new Mock<ILogger<NtiService>>();
+			var logger = new Mock<ILogger<NtiUnderConsiderationService>>();
 
-			var sut = new NtiService(httpClientFactory.Object, logger.Object);
+			var sut = new NtiUnderConsiderationService(httpClientFactory.Object, logger.Object);
 
 			// Act
 			var response = sut.CreateNti(expectedNtiDto).Result;

@@ -2,7 +2,7 @@
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
-using Service.TRAMS.Nti;
+using Service.TRAMS.NtiUnderConsideration;
 using Service.TRAMS.Trusts;
 using System;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 		public void WhenMapDtoToServiceModel_ReturnsCorrectModel()
 		{
 			//arrange
-			var ntiDto = new NtiDto
+			var ntiDto = new NtiUnderConsiderationDto
 			{
 				Id = 1L,
 				CaseUrn = 123L,
@@ -24,10 +24,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 				ClosedAt = DateTime.Now,
 				ClosedStatusId = 1,
 				Notes = "Test notes",
-				Reasons = new NtiReasonDto[]
+				Reasons = new NtiUnderConsiderationReasonDto[]
 				{
-					new NtiReasonDto { Id = 11, Name = "Test reason 1"  },
-					new NtiReasonDto { Id = 21, Name = "Test reason 2"  }
+					new NtiUnderConsiderationReasonDto { Id = 11, Name = "Test reason 1"  },
+					new NtiUnderConsiderationReasonDto { Id = 21, Name = "Test reason 2"  }
 				},
 				UnderConsiderationReasonsMapping = new int[] { 11, 21 },
 				UpdatedAt = DateTime.Now.AddDays(-5)

@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.TRAMS.Nti;
+using Service.TRAMS.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +9,9 @@ namespace ConcernsCaseWork.Mappers
 {
 	public static class NtiMappers
 	{
-		public static NtiDto ToDBModel(NtiModel ntiModel)
+		public static NtiUnderConsiderationDto ToDBModel(NtiModel ntiModel)
 		{
-			return new NtiDto
+			return new NtiUnderConsiderationDto
 			{
 				Id = ntiModel.Id,
 				CaseUrn = ntiModel.CaseUrn,
@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.Mappers
 			};
 		}
 
-		public static NtiModel ToServiceModel(NtiDto ntiDto)
+		public static NtiModel ToServiceModel(NtiUnderConsiderationDto ntiDto)
 		{
 			return new NtiModel
 			{
@@ -40,16 +40,16 @@ namespace ConcernsCaseWork.Mappers
 			};
 		}
 
-		public static NtiReasonDto ToDBModel(NtiReasonForConsideringModel ntiReasonModel)
+		public static NtiUnderConsiderationReasonDto ToDBModel(NtiReasonForConsideringModel ntiReasonModel)
 		{
-			return new NtiReasonDto
+			return new NtiUnderConsiderationReasonDto
 			{
 				Id = ntiReasonModel.Id,
 				Name = ntiReasonModel.Name,
 			};
 		}
 
-		public static  NtiReasonForConsideringModel ToServiceModel(NtiReasonDto ntiDto)
+		public static  NtiReasonForConsideringModel ToServiceModel(NtiUnderConsiderationReasonDto ntiDto)
 		{
 			return new NtiReasonForConsideringModel
 			{

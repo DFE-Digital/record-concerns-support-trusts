@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
-using Service.TRAMS.Nti;
+using Service.TRAMS.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,22 +10,22 @@ namespace Service.Redis.NtiUnderConsideration
 {
 	public class NtiUnderConsiderationReasonsCachedService : CachedService, INtiUnderConsiderationReasonsCachedService
 	{
-		private readonly INtiReasonsService _tramsNtiReasonsService;
+		private readonly INtiUnderConsiderationReasonsService _tramsNtiReasonsService;
 		private readonly ILogger<NtiUnderConsiderationReasonsCachedService> _logger;
 
 		private const string NtiReasonsCacheKey = "Nti.Reasons";
 
 		public NtiUnderConsiderationReasonsCachedService(ICacheProvider cacheProvider,
-			INtiReasonsService tramsNtiReasonsService,
+			INtiUnderConsiderationReasonsService tramsNtiReasonsService,
 			ILogger<NtiUnderConsiderationReasonsCachedService> logger) : base(cacheProvider)
 		{
 			_tramsNtiReasonsService = tramsNtiReasonsService;
 			_logger = logger;
 		}
 
-		public async Task<ICollection<NtiReasonDto>> GetAllReasons()
+		public async Task<ICollection<NtiUnderConsiderationReasonDto>> GetAllReasons()
 		{
-			var reasons = await GetData<ICollection<NtiReasonDto>>(NtiReasonsCacheKey);
+			var reasons = await GetData<ICollection<NtiUnderConsiderationReasonDto>>(NtiReasonsCacheKey);
 			if(reasons == null || reasons.Count == 0)
 			{
 				reasons = await _tramsNtiReasonsService.GetAllReasons();

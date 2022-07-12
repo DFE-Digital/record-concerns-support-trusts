@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.TRAMS.Nti
+namespace Service.TRAMS.NtiUnderConsideration
 {
-	public class NtiReasonDto
+	public class NtiUnderConsiderationStatusDto
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }

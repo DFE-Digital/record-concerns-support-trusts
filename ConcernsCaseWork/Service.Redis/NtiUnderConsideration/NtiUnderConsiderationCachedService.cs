@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
-using Service.TRAMS.Nti;
+using Service.TRAMS.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +11,10 @@ namespace Service.Redis.NtiUnderConsideration
 {
 	public class NtiUnderConsiderationCachedService : CachedService, INtiUnderConsiderationCachedService
 	{
-		private readonly INtiService _ntiTramsService;
+		private readonly INtiUnderConsiderationService _ntiTramsService;
 		private readonly INtiUnderConsiderationReasonsCachedService _reasonsCachedService;
 
-		public NtiUnderConsiderationCachedService(INtiService ntiTramsService,
+		public NtiUnderConsiderationCachedService(INtiUnderConsiderationService ntiTramsService,
 			ICacheProvider cacheProvider,
 			INtiUnderConsiderationReasonsCachedService reasonsCachedService,
 			ILogger<NtiUnderConsiderationCachedService> logger)
@@ -24,7 +24,7 @@ namespace Service.Redis.NtiUnderConsideration
 			_reasonsCachedService = reasonsCachedService;
 		}
 
-		public async Task<NtiDto> CreateNti(NtiDto nti)
+		public async Task<NtiUnderConsiderationDto> CreateNti(NtiUnderConsiderationDto nti)
 		{
 			var createdNti = await _ntiTramsService.CreateNti(nti);
 			if (createdNti == null)
@@ -36,7 +36,7 @@ namespace Service.Redis.NtiUnderConsideration
 			return createdNti;
 		}
 
-		private async Task UpdateCachedNti(NtiDto nti)
+		private async Task UpdateCachedNti(NtiUnderConsiderationDto nti)
 		{
 			if (nti.Id == default(long))
 			{
@@ -45,7 +45,7 @@ namespace Service.Redis.NtiUnderConsideration
 
 			var key = GetCacheKeyForNti(nti.Id);
 
-			await StoreData<NtiDto>(key, nti);
+			await StoreData<NtiUnderConsiderationDto>(key, nti);
 			await ClearData(GetCacheKeyForNtisForCase(nti.CaseUrn));
 		}
 
@@ -59,22 +59,22 @@ namespace Service.Redis.NtiUnderConsideration
 			return $"NtisForCase:CaseUrn:{caseUrn}";
 		}
 
-		public async Task<ICollection<NtiDto>> GetNtisForCase(long caseUrn)
+		public async Task<ICollection<NtiUnderConsiderationDto>> GetNtisForCase(long caseUrn)
 		{
 			var cacheKey = GetCacheKeyForNtisForCase(caseUrn);
-			var ntis = await GetData<ICollection<NtiDto>>(cacheKey);
+			var ntis = await GetData<ICollection<NtiUnderConsiderationDto>>(cacheKey);
 			if (ntis == null || ntis.Count == 0)
 			{
 				ntis = await _ntiTramsService.GetNtisForCase(caseUrn);
-				await StoreData<ICollection<NtiDto>>(cacheKey, ntis);
+				await StoreData<ICollection<NtiUnderConsiderationDto>>(cacheKey, ntis);
 			}
 
 			return ntis;
 		}
 
-		public async Task<NtiDto> PatchNti(NtiDto nti)
+		public async Task<NtiUnderConsiderationDto> PatchNti(NtiUnderConsiderationDto nti)
 		{
-			NtiDto patched = null;
+			NtiUnderConsiderationDto patched = null;
 
 			if (nti.Id == default(long))
 			{
@@ -94,24 +94,24 @@ namespace Service.Redis.NtiUnderConsideration
 			return patched;
 		}
 
-		public async Task<NtiDto> GetNti(long ntiId)
+		public async Task<NtiUnderConsiderationDto> GetNti(long ntiId)
 		{
 			var cacheKey = GetCacheKeyForNti(ntiId);
-			var nti = await GetData<NtiDto>(cacheKey);
+			var nti = await GetData<NtiUnderConsiderationDto>(cacheKey);
 			if (nti == null || nti.Reasons == null)
 			{
 				nti = await _ntiTramsService.GetNti(ntiId);
 				nti.Reasons = await GetReasons(nti);
-				await StoreData<NtiDto>(cacheKey, nti);
+				await StoreData<NtiUnderConsiderationDto>(cacheKey, nti);
 			}
 
 			return nti;
 		}
 
-		private async Task<List<NtiReasonDto>> GetReasons(NtiDto ntiDto)
+		private async Task<List<NtiUnderConsiderationReasonDto>> GetReasons(NtiUnderConsiderationDto ntiDto)
 		{
 			var allReasons = await _reasonsCachedService.GetAllReasons();
-			var reasonsForNti = new List<NtiReasonDto>();
+			var reasonsForNti = new List<NtiUnderConsiderationReasonDto>();
 			foreach (var reasonId in ntiDto.UnderConsiderationReasonsMapping)
 			{
 				var matchingReason = allReasons.SingleOrDefault(r => r.Id == reasonId) ?? throw new InvalidOperationException($"A matching NTI Under Consideration reason could not find with the Id:{reasonId}");

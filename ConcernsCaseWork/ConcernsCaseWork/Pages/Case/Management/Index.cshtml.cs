@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Service.Redis.NtiUnderConsideration;
 using Service.Redis.Status;
-using Service.TRAMS.Nti;
+using Service.TRAMS.NtiUnderConsideration;
 using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public IList<CaseHistoryModel> CasesHistoryModel { get; private set; }
 		public bool IsEditableCase { get; private set; }
 		public List<CaseActionModel> CaseActions { get; private set; }
-		public List<NtiStatusDto> NtiStatuses { get; set; }
+		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
 
 
 		public IndexPageModel(ICaseModelService caseModelService, 
