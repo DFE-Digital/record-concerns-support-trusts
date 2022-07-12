@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiModelService = new Mock<INtiModelService>();
+			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNtiStatusesCachedService = new Mock<INtiStatusesCachedService>();
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
@@ -73,7 +73,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiModelService = new Mock<INtiModelService>();
+			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNtiStatusesCachedService = new Mock<INtiStatusesCachedService>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
@@ -209,7 +209,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiModelService = new Mock<INtiModelService>();
+			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNtiStatusesCachedService = new Mock<INtiStatusesCachedService>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
@@ -257,7 +257,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiModelService = new Mock<INtiModelService>();
+			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNtiStatusesCachedService = new Mock<INtiStatusesCachedService>();
 
 
@@ -309,7 +309,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiModelService = new Mock<INtiModelService>();
+			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNtiStatusesCachedService = new Mock<INtiStatusesCachedService>();
 
 			var caseModel = CaseFactory.BuildCaseModel("Tester", 3);
@@ -357,7 +357,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			IStatusCachedService mockStatusCachedService,
 			ISRMAService mockSrmaService, 
 			IFinancialPlanModelService mockFinancialPlanModelService,
-			INtiModelService mockNtiModelService,
+			INtiUnderConsiderationModelService mockNtiModelService,
 			INtiStatusesCachedService mockNtiStatusesCachedService,
 			ILogger<IndexPageModel> mockLogger,
 			bool isAuthenticated = false)

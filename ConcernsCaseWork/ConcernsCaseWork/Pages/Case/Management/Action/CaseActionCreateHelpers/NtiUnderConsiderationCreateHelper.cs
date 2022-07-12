@@ -9,9 +9,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers
 {
 	public class NtiUnderConsiderationCreateHelper : CaseActionCreateHelper
 	{
-		private readonly INtiModelService _ntiModelService;
+		private readonly INtiUnderConsiderationModelService _ntiModelService;
 
-		public NtiUnderConsiderationCreateHelper(INtiModelService ntiModelService)
+		public NtiUnderConsiderationCreateHelper(INtiUnderConsiderationModelService ntiModelService)
 		{
 			_ntiModelService = ntiModelService;
 		}

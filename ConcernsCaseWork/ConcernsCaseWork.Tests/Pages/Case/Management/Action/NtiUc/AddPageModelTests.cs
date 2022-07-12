@@ -26,7 +26,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 
-			Mock<INtiModelService> mockNtiModelService = new Mock<INtiModelService>();
+			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
 			Mock<INtiReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
 			Mock<ILogger<AddPageModel>> mockLogger = new Mock<ILogger<AddPageModel>>();
 
@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		public async Task WhenOnGetAsync_ReturnsPageModel()
 		{
 			// arrange
-			Mock<INtiModelService> mockNtiModelService = new Mock<INtiModelService>();
+			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
 			Mock<INtiReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
 			Mock<ILogger<AddPageModel>> mockLogger = new Mock<ILogger<AddPageModel>>();
 
@@ -70,7 +70,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		public async Task WhenOnPostAsync_MissingRouteData_ThrowsException_ReturnsPage()
 		{
 			// arrange
-			Mock<INtiModelService> mockNtiModelService = new Mock<INtiModelService>();
+			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
 			Mock<INtiReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
 			Mock<ILogger<AddPageModel>> mockLogger = new Mock<ILogger<AddPageModel>>();
 
@@ -89,7 +89,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		}
 
 		private static AddPageModel SetupAddPageModel(
-			Mock<INtiModelService> mockNtiModelService,
+			Mock<INtiUnderConsiderationModelService> mockNtiModelService,
 			Mock<INtiReasonsCachedService> mockNtiReasonsCachedService,
 			Mock<ILogger<AddPageModel>> mockLogger,
 			bool isAuthenticated = false)

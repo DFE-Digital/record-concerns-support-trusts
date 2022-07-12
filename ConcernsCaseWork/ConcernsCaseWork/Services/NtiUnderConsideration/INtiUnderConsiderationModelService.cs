@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Cases
 {
-	public interface INtiModelService
+	public interface INtiUnderConsiderationModelService
 	{
 		public Task<NtiModel> CreateNti(NtiModel nti);
 		public Task<IEnumerable<NtiModel>> GetNtiUnderConsiderationsForCase(long caseUrn);

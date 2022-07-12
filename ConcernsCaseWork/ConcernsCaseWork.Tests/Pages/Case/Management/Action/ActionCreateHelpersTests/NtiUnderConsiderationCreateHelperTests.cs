@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		public async Task NtiUnderConsiderationCreateHelper_CanHandle_RespondsCorrectly()
 		{
 			// arrange
-			var mockNtiService = new Mock<INtiModelService>();
+			var mockNtiService = new Mock<INtiUnderConsiderationModelService>();
 			var sut = new NtiUnderConsiderationCreateHelper(mockNtiService.Object);
 
 			// act
@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		public async Task NtiUnderConsiderationCreateHelper_NewCaseActionAllowed_ClearToAdd()
 		{
 			// arrange
-			var mockNtiService = new Mock<INtiModelService>();
+			var mockNtiService = new Mock<INtiUnderConsiderationModelService>();
 			var sut = new NtiUnderConsiderationCreateHelper(mockNtiService.Object);
 
 			var caseActions = new NtiModel[] {
@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		public async Task NtiUnderConsiderationCreateHelper_NewCaseActionAllowed_NotClearToAdd()
 		{
 			// arrange
-			var mockNtiService = new Mock<INtiModelService>();
+			var mockNtiService = new Mock<INtiUnderConsiderationModelService>();
 			var sut = new NtiUnderConsiderationCreateHelper(mockNtiService.Object);
 
 			var caseActions = new NtiModel[] {

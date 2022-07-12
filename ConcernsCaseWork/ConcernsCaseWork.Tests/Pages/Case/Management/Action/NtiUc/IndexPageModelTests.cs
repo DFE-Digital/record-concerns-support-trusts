@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
 		{
 			// arrange
-			Mock<INtiModelService> ntiunderConsiderationModel = new Mock<INtiModelService>();
+			Mock<INtiUnderConsiderationModelService> ntiunderConsiderationModel = new Mock<INtiUnderConsiderationModelService>();
 			var mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
 			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
 
@@ -38,7 +38,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		public async Task WhenOnGetAsync_ReturnsPageModel()
 		{
 			// arrange
-			Mock<INtiModelService> mockNtiUnderConsiderationModelService = new Mock<INtiModelService>();
+			Mock<INtiUnderConsiderationModelService> mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
 			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
 
@@ -75,7 +75,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		public async Task WhenOnGetAsync_MissingNTIUnderConsideration_ThrowsException_ReturnPage()
 		{
 			// arrange
-			Mock<INtiModelService> ntiunderConsiderationModel = new Mock<INtiModelService>();
+			Mock<INtiUnderConsiderationModelService> ntiunderConsiderationModel = new Mock<INtiUnderConsiderationModelService>();
 			var mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
 			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
 
@@ -95,7 +95,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 
 
 		private static IndexPageModel SetupIndexPageModel(
-			Mock<INtiModelService> mockNtiModelService,
+			Mock<INtiUnderConsiderationModelService> mockNtiModelService,
 			Mock<INtiReasonsCachedService> reasonsCachedService,
 			Mock<ILogger<IndexPageModel>> mockLogger,
 			bool isAuthenticated = false)

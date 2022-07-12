@@ -29,7 +29,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiUnderConsiderationModelService = new Mock<INtiModelService>();
+			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object
@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiUnderConsiderationModelService = new Mock<INtiModelService>();
+			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
@@ -84,7 +84,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiUnderConsiderationModelService = new Mock<INtiModelService>();
+			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object
@@ -119,7 +119,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiUnderConsiderationModelService = new Mock<INtiModelService>();
+			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object
@@ -150,7 +150,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiUnderConsiderationModelService = new Mock<INtiModelService>();
+			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object
@@ -187,7 +187,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiUnderConsiderationModelService = new Mock<INtiModelService>();
+			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object
@@ -218,7 +218,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiUnderConsiderationModelService = new Mock<INtiModelService>();
+			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object, mockNtiUnderConsiderationModelService.Object, mockLogger.Object);
@@ -249,7 +249,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			ICaseModelService mockCaseModelService,
 			ISRMAService mockSrmaService,
 			IFinancialPlanModelService mockFinancialPlanModelService,
-			INtiModelService ntiUnderConsiderationModelService,
+			INtiUnderConsiderationModelService ntiUnderConsiderationModelService,
 			ILogger<IndexPageModel> mockLogger,
 			bool isAuthenticated = false)
 		{

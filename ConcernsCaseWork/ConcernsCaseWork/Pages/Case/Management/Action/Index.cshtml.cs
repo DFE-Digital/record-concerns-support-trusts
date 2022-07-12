@@ -23,7 +23,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 		private readonly ICaseModelService _caseModelService;
 		private readonly ISRMAService _srmaService;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
-		private readonly INtiModelService _ntiUnderConsiderationModelService;
+		private readonly INtiUnderConsiderationModelService _ntiUnderConsiderationModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 		public IndexPageModel(ICaseModelService caseModelService,
 			ISRMAService srmaService,
 			IFinancialPlanModelService financialPlanModelService,
-			INtiModelService ntiUnderConsiderationModelService,
+			INtiUnderConsiderationModelService ntiUnderConsiderationModelService,
 			ILogger<IndexPageModel> logger)
 		{
 			_caseModelService = caseModelService;

@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class AddPageModel : AbstractPageModel
 	{
-		private readonly INtiModelService _ntiModelService;
+		private readonly INtiUnderConsiderationModelService _ntiModelService;
 		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<AddPageModel> _logger;
 		
@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		public long CaseUrn { get; private set; }
 
 		public AddPageModel(
-			INtiModelService ntiModelService,
+			INtiUnderConsiderationModelService ntiModelService,
 			INtiReasonsCachedService ntiReasonsCachedService,
 			ILogger<AddPageModel> logger)
 		{

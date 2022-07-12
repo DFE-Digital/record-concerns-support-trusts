@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly ISRMAService _srmaService;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
-		private readonly INtiModelService _ntiModelService;
+		private readonly INtiUnderConsiderationModelService _ntiModelService;
 		private readonly INtiStatusesCachedService _ntiStatusesCachedService;
 		private readonly ILogger<IndexPageModel> _logger;
 
@@ -53,7 +53,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			IStatusCachedService statusCachedService,
 			ISRMAService srmaService,
 			IFinancialPlanModelService financialPlanModelService,
-			INtiModelService ntiModelService,
+			INtiUnderConsiderationModelService ntiModelService,
 			INtiStatusesCachedService ntiStatusesCachedService,
 			ILogger<IndexPageModel> logger
 			)

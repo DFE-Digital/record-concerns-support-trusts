@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class ClosePageModel : AbstractPageModel
 	{
-		private readonly INtiModelService _ntiModelService;
+		private readonly INtiUnderConsiderationModelService _ntiModelService;
 		private readonly INtiStatusesCachedService _ntiStatusesCachedService;
 		private readonly ILogger<ClosePageModel> _logger;
 
@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		public NtiModel NtiModel { get; set; }
 
 		public ClosePageModel(
-			INtiModelService ntiModelService,
+			INtiUnderConsiderationModelService ntiModelService,
 			INtiStatusesCachedService ntiStatusesCachedService,
 			ILogger<ClosePageModel> logger)
 		{

@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Cases
 {
-	public class NtiModelService : INtiModelService
+	public class NtiUnderConsiderationModelService : INtiUnderConsiderationModelService
 	{
 		private readonly INtiCachedService _ntiCachedService;
 
-		public NtiModelService(INtiCachedService ntiCachedService)
+		public NtiUnderConsiderationModelService(INtiCachedService ntiCachedService)
 		{
 			_ntiCachedService = ntiCachedService;
 		}

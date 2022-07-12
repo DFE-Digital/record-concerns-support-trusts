@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class EditPageModel : AbstractPageModel
 	{
-		private readonly INtiModelService _ntiModelService;
+		private readonly INtiUnderConsiderationModelService _ntiModelService;
 		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<EditPageModel> _logger;
 		
@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		public NtiModel NtiModel { get; set; }
 
 		public EditPageModel(
-			INtiModelService ntiModelService,
+			INtiUnderConsiderationModelService ntiModelService,
 			INtiReasonsCachedService ntiReasonsCachedService,
 			ILogger<EditPageModel> logger)
 		{

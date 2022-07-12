@@ -118,7 +118,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IFinancialPlanModelService, FinancialPlanModelService>();
 			services.AddSingleton<ISRMAService, SRMAService>();
 			services.AddSingleton<INtiReasonsCachedService, NtiReasonsCachedService>();
-			services.AddSingleton<INtiModelService, NtiModelService>();
+			services.AddSingleton<INtiUnderConsiderationModelService, NtiUnderConsiderationModelService>();
 
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
