@@ -12,6 +12,7 @@
 		RecoveryPlan,
 		Srma,
 		Tff,
-		NtiUnderConsideration
+		NtiUnderConsideration,
+		NtiWarningLetter
 	}
 }

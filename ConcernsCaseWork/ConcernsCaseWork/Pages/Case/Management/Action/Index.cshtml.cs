@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Services.FinancialPlan;
+using ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action
 {
@@ -82,36 +83,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 
 				CaseActions = CaseActions ?? new List<CaseActionModel>();
 
-				switch (caseAction)
+				var actionStartHelpers = GetStartHelpers();
+
+				var caseActionStarter = actionStartHelpers.SingleOrDefault(s => s.CanHandle(caseAction)) 
+					?? throw new NotImplementedException($"{caseAction} - has not been implemented");
+
+				if (await caseActionStarter.NewCaseActionAllowed(caseUrn, User.Identity.Name))
 				{
-					case CaseActionEnum.Srma:
-						CaseActions.AddRange(await _srmaService.GetSRMAsForCase(caseUrn));
-
-						if (HasOpenCaseAction<SRMAModel>(additionalValidations: null))
-						{
-							throw new InvalidOperationException("There is already an open SRMA action linked to this case. Please resolve that before opening another one.");
-						}
-						break;
-					case CaseActionEnum.FinancialPlan:
-						CaseActions.AddRange(await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name));
-
-						if (HasOpenCaseAction<FinancialPlanModel>(additionalValidations: null))
-						{
-							throw new InvalidOperationException("There is already an open Financial Plan action linked to this case. Please resolve that before opening another one.");
-						}
-						break;
-					case CaseActionEnum.NtiUnderConsideration:
-						CaseActions.AddRange(await _ntiUnderConsiderationModelService.GetNtiUnderConsiderationsForCase(caseUrn));
-						if(HasOpenCaseAction<NtiModel>(additionalValidations: null))
-						{
-							throw new InvalidOperationException("There is already an open NTI: Under consideration action linked to this case. Please resolve that before opening another one.");
-						}
-						break;
-					default:
-						throw new NotImplementedException($"{caseAction} - has not been implemented");
-						break;
+					return RedirectToPage($"{action.ToLower()}/add", new { urn = caseUrn });
 				}
-				return RedirectToPage($"{action.ToLower()}/add", new { urn = caseUrn });
+				else
+				{
+					throw new InvalidOperationException($"Cannot create action of type {caseAction} for case {caseUrn}");
+				}
 			}
 			catch (InvalidOperationException ex)
 			{
@@ -126,6 +110,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 
 			return Page();
 
+		}
+
+		private List<CaseActionCreateHelper> GetStartHelpers()
+		{
+			return new List<CaseActionCreateHelper>
+			{
+				new SrmaCreateHelper(_srmaService),
+				new FinancialPlanCreateHelper(_financialPlanModelService),
+				new NtiUnderConsiderationCreateHelper(_ntiUnderConsiderationModelService),
+				new NtiWarningLetterCreateHelper()
+			};
 		}
 
 		private long GetRouteData()
