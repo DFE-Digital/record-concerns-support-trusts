@@ -41,6 +41,9 @@ using System.Net.Mime;
 using Service.TRAMS.CaseActions;
 using Service.Redis.NtiUnderConsideration;
 using Service.TRAMS.NtiUnderConsideration;
+using ConcernsCaseWork.Services.NtiWarningLetter;
+using Service.TRAMS.NtiWarningLetter;
+using Service.Redis.NtiWarningLetter;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -119,6 +122,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<ISRMAService, SRMAService>();
 			services.AddSingleton<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
 			services.AddSingleton<INtiUnderConsiderationModelService, NtiUnderConsiderationModelService>();
+			services.AddSingleton<INtiWarningLetterModelService, NtiWarningLetterModelService>();
 
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
@@ -140,6 +144,8 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiUnderConsiderationReasonsService, NtiUnderConsiderationReasonsService>();
 			services.AddSingleton<INtiUnderConsiderationStatusesService, NtiUnderConsiderationStatusesService>();
 			services.AddSingleton<INtiUnderConsiderationService, NtiUnderConsiderationService>();
+			services.AddSingleton<INtiWarningLetterStatusesService, TempNtiWarningLetterStatusesService>();
+			services.AddSingleton<INtiWarningLetterReasonsService, TempNtiWarningLetterReasonsService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
@@ -157,6 +163,8 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
 			services.AddSingleton<INtiUnderConsiderationStatusesCachedService, NtiUnderConsiderationStatusesCachedService>();
 			services.AddSingleton<INtiUnderConsiderationCachedService, NtiUnderConsiderationCachedService>();
+			services.AddSingleton<INtiWarningLetterStatusesCachedService, NtiWarningLetterStatusesCachedService>();
+			services.AddSingleton<INtiWarningLetterReasonsCachedService, NtiWarningLetterReasonsCachedService>();
 
 			// AD Integration
 			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();

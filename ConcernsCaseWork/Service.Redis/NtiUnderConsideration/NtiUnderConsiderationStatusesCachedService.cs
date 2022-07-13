@@ -13,7 +13,7 @@ namespace Service.Redis.NtiUnderConsideration
 		private readonly INtiUnderConsiderationStatusesService _tramsNtiStatusesService;
 		private readonly ILogger<NtiUnderConsiderationStatusesCachedService> _logger;
 
-		private const string NtiStatusesCacheKey = "Nti.Statuses";
+		private const string NtiStatusesCacheKey = "Nti.UnderConsideration.Statuses";
 
 		public NtiUnderConsiderationStatusesCachedService(ICacheProvider cacheProvider,
 			INtiUnderConsiderationStatusesService tramsNtiStatusesService,
