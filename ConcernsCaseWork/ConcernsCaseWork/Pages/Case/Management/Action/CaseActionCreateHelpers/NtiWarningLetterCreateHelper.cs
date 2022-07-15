@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.FinancialPlan;
+using ConcernsCaseWork.Services.NtiWarningLetter;
 using Service.TRAMS.Cases;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers
 {
 	public class NtiWarningLetterCreateHelper : CaseActionCreateHelper
 	{
-		public NtiWarningLetterCreateHelper()
+		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
+
+		public NtiWarningLetterCreateHelper(INtiWarningLetterModelService ntiWarningLetterModelService)
 		{
-			
+			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 		}
 
 		public override bool CanHandle(CaseActionEnum caseActionEnum)
@@ -19,9 +22,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers
 			return caseActionEnum == CaseActionEnum.NtiWarningLetter;
 		}
 
-		public override Task<bool> NewCaseActionAllowed(long caseUrn, string caseWorker)
+		public override async Task<bool> NewCaseActionAllowed(long caseUrn, string caseWorker)
 		{
-			return Task.FromResult(true);
+			var ntis = await _ntiWarningLetterModelService.GetNtiWLsForCase(caseUrn);
+			return base.HasOpenCaseAction(ntis) ? throw new InvalidOperationException("There is already an open NTI: Warning letter action linked to this case. Please resolve that before opening another one.")
+				: true;
 		}
 	}
 }

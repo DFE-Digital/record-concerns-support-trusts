@@ -125,15 +125,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		{
 			var reasons = Request.Form["reason"];
 			var status = Request.Form["status"];
-
 			var dtr_day = Request.Form["dtr-day"];
 			var dtr_month = Request.Form["dtr-month"];
 			var dtr_year = Request.Form["dtr-year"];
 			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-			var date = DateTimeHelper.ParseExact(dtString);
+			var sentDate = DateTimeHelper.TryParseExact(dtString, out DateTime parsed) ? parsed : (DateTime?)null;
 
 			var notes = Convert.ToString(Request.Form["nti-notes"]);
-
 			if (!string.IsNullOrEmpty(notes))
 			{
 				if (notes.Length > NotesMaxLength)
@@ -145,12 +143,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			var nti = new NtiWarningLetterModel()
 			{
 				CaseUrn = CaseUrn,
-				Reasons = reasons.Select(s => int.Parse(s)).ToArray(),
-				Status = int.Parse(status),
+				Reasons = reasons.Select(r => new NtiWarningLetterReasonModel { Id = int.Parse(r) }).ToArray(),
+				Status = int.TryParse(status, out int statusId) ? new NtiWarningLetterStatusModel { Id = statusId } : null,
 				Notes = notes,
-				SentDate = date
+				SentDate = sentDate,
+				CreatedAt = DateTime.Now.Date,
+				UpdatedAt = DateTime.Now.Date
 			};
-
 
 			return nti;
 		}

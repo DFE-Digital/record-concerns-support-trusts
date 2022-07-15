@@ -21,27 +21,27 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			nti.CreatedAt = DateTime.Now;
 			nti.UpdatedAt = nti.CreatedAt;
-			var dto = await _ntiCachedService.CreateNti(NtiMappers.ToDBModel(nti));
-			return NtiMappers.ToServiceModel(dto);
+			var dto = await _ntiCachedService.CreateNti(NtiUnderConsiderationMappers.ToDBModel(nti));
+			return NtiUnderConsiderationMappers.ToServiceModel(dto);
 		}
 
 		public async Task<NtiUnderConsiderationModel> GetNtiUnderConsideration(long ntiUcId)
 		{
 			var dto = await _ntiCachedService.GetNti(ntiUcId);
-			return NtiMappers.ToServiceModel(dto);
+			return NtiUnderConsiderationMappers.ToServiceModel(dto);
 		}
 
 		public async Task<IEnumerable<NtiUnderConsiderationModel>> GetNtiUnderConsiderationsForCase(long caseUrn)
 		{
 			var ntis = await _ntiCachedService.GetNtisForCase(caseUrn);
-			return ntis.Select(nti => NtiMappers.ToServiceModel(nti));
+			return ntis.Select(nti => NtiUnderConsiderationMappers.ToServiceModel(nti));
 		}
 
 		public async Task<NtiUnderConsiderationModel> PatchNtiUnderConsideration(NtiUnderConsiderationModel nti)
 		{
 			nti.UpdatedAt = DateTime.Now;
-			var patched = await _ntiCachedService.PatchNti(NtiMappers.ToDBModel(nti));
-			return NtiMappers.ToServiceModel(patched);
+			var patched = await _ntiCachedService.PatchNti(NtiUnderConsiderationMappers.ToDBModel(nti));
+			return NtiUnderConsiderationMappers.ToServiceModel(patched);
 		}
 	}
 }

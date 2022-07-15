@@ -35,7 +35,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 
 
 			// act
-			var serviceModel = NtiMappers.ToServiceModel(ntiDto);
+			var serviceModel = NtiUnderConsiderationMappers.ToServiceModel(ntiDto);
 
 			// assert
 			Assert.That(serviceModel, Is.Not.Null);
@@ -66,7 +66,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 
 
 			// act
-			var dbModel = NtiMappers.ToDBModel(serviceModel);
+			var dbModel = NtiUnderConsiderationMappers.ToDBModel(serviceModel);
 
 			// assert
 			Assert.That(dbModel, Is.Not.Null);

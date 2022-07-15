@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace ConcernsCaseWork.Mappers
 {
-	public static class NtiMappers
+	public static class NtiUnderConsiderationMappers
 	{
 		public static NtiUnderConsiderationDto ToDBModel(NtiUnderConsiderationModel ntiModel)
 		{

@@ -7,20 +7,25 @@
 @using ConcernsCaseWork.Enums;
 
 @{
-	ViewData["Title"] = "Case management";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Case management";
+    var nonce = HttpContext.GetNonce();
 
-	var srmaModels = Model.CaseActions?.Where(ca => ca is SRMAModel).Select(srma =>{ return srma as SRMAModel;}).ToList();
-	var openSRMAs = srmaModels.Where(srma => !srma.ClosedAt.HasValue).ToList();
-	var closedSRMAs = srmaModels.Except(openSRMAs).ToList();
+    var srmaModels = Model.CaseActions?.Where(ca => ca is SRMAModel).Select(srma => { return srma as SRMAModel; }).ToList();
+    var openSRMAs = srmaModels.Where(srma => !srma.ClosedAt.HasValue).ToList();
+    var closedSRMAs = srmaModels.Except(openSRMAs).ToList();
 
-	var financialPlanModels = Model.CaseActions?.Where(ca => ca is FinancialPlanModel).Select(fp => { return fp as FinancialPlanModel; }).ToList();
-	var openFinancialPlanModels = financialPlanModels.Where(fp => !fp.ClosedAt.HasValue).ToList();
-	var closedFinancialPlanModels = financialPlanModels.Except(openFinancialPlanModels).ToList();
+    var financialPlanModels = Model.CaseActions?.Where(ca => ca is FinancialPlanModel).Select(fp => { return fp as FinancialPlanModel; }).ToList();
+    var openFinancialPlanModels = financialPlanModels.Where(fp => !fp.ClosedAt.HasValue).ToList();
+    var closedFinancialPlanModels = financialPlanModels.Except(openFinancialPlanModels).ToList();
 
-    var ntis = Model.CaseActions?.Where(ca => ca is NtiUnderConsiderationModel).Select(nti => nti as NtiUnderConsiderationModel).ToList();
-	var openNtis = ntis.Where(nti => nti.ClosedAt == null).ToList();
-	var closedNtis = ntis.Except(openNtis).ToList();
+    var ntiUnderConsiderations = Model.CaseActions?.Where(ca => ca is NtiUnderConsiderationModel).Select(nti => nti as NtiUnderConsiderationModel).ToList();
+    var openNtiUCs = ntiUnderConsiderations.Where(nti => nti.ClosedAt == null).ToList();
+    var closedNtiUCs = ntiUnderConsiderations.Except(openNtiUCs).ToList();
+
+    var ntiWarningLetters = Model.CaseActions?.Where(ca => ca is NtiWarningLetterModel).Select(nti => nti as NtiWarningLetterModel).ToList();
+    var openNtiWLs = ntiWarningLetters.Where(nti => nti.ClosedAt == null).ToList();
+    var closedNtiWLs = ntiWarningLetters.Except(openNtiWLs).ToList();
+
 }
 
 <div class="govuk-width-container">
@@ -65,224 +70,224 @@
                     </a>
                 </li>
             </ul>
-			<div class="govuk-tabs__panel" id="case-details">
+            <div class="govuk-tabs__panel" id="case-details">
 
-				<!-- Case Details -->
-				<table class="govuk-table">
-					<caption class="govuk-table__caption govuk-table__caption--m"></caption>
-					<thead>
-						<tr>
-							<th scope="col"></th>
-							<th scope="col"></th>
-							<th scope="col"></th>
-						</tr>
-					</thead>
-					<tbody class="govuk-table__body">
-						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table-case-details__header">Trust</th>
-							<td class="govuk-table__cell">
-								@Model.TrustDetailsModel.GiasData.GroupName
-							</td>
-							<td class="govuk-table__cell govuk-table__header__right"></td>
-						</tr>
-						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table-case-details__header">Risk to trust</th>
-							<td class="govuk-table__cell govuk-label-wrapper">
-								@for (var index = 0; index < Model.CaseModel.RatingModel.RagRating.Item2.Count; ++index)
-								{
-									<span class="govuk-tag ragtag @Model.CaseModel.RatingModel.RagRatingCss.ElementAt(index)">
-										@Model.CaseModel.RatingModel.RagRating.Item2.ElementAt(index)
-									</span>
-								}
-							</td>
-							<td class="govuk-table__cell govuk-table__header__right">
-								@if (Model.IsEditableCase)
-								{
-									<a class="govuk-link" href="@Request.Path/edit_rating">
-										Edit<span class="govuk-visually-hidden"> risk rating</span>
-									</a>
-								}
-							</td>
-						</tr>
-						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table-case-details__header">Direction of travel</th>
-							<td class="govuk-table__cell">
-								@Model.CaseModel.DirectionOfTravel
-							</td>
-							<td class="govuk-table__cell govuk-table__header__right">
-								@if (Model.IsEditableCase)
-								{
-									<a class="govuk-link" href="@Request.Path/edit_directionoftravel">
-										Edit<span class="govuk-visually-hidden"> direction of travel</span>
-									</a>
-								}
-							</td>
-						</tr>
-						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table-case-details__header__no_border">Concerns</th>
-							<td colspan="2" class="govuk-table-case-details__cell_no_border">
+                <!-- Case Details -->
+            <table class="govuk-table">
+                    <caption class="govuk-table__caption govuk-table__caption--m"></caption>
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table-case-details__header">Trust</th>
+                            <td class="govuk-table__cell">
+                                @Model.TrustDetailsModel.GiasData.GroupName
+                            </td>
+                            <td class="govuk-table__cell govuk-table__header__right"></td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table-case-details__header">Risk to trust</th>
+                            <td class="govuk-table__cell govuk-label-wrapper">
+                                @for (var index = 0; index < Model.CaseModel.RatingModel.RagRating.Item2.Count; ++index)
+                                {
+                                    <span class="govuk-tag ragtag @Model.CaseModel.RatingModel.RagRatingCss.ElementAt(index)">
+                                        @Model.CaseModel.RatingModel.RagRating.Item2.ElementAt(index)
+                                    </span>
+                                }
+                            </td>
+                            <td class="govuk-table__cell govuk-table__header__right">
+                                @if (Model.IsEditableCase)
+                                {
+                                    <a class="govuk-link" href="@Request.Path/edit_rating">
+                                        Edit<span class="govuk-visually-hidden"> risk rating</span>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table-case-details__header">Direction of travel</th>
+                            <td class="govuk-table__cell">
+                                @Model.CaseModel.DirectionOfTravel
+                            </td>
+                            <td class="govuk-table__cell govuk-table__header__right">
+                                @if (Model.IsEditableCase)
+                                {
+                                    <a class="govuk-link" href="@Request.Path/edit_directionoftravel">
+                                        Edit<span class="govuk-visually-hidden"> direction of travel</span>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table-case-details__header__no_border">Concerns</th>
+                            <td colspan="2" class="govuk-table-case-details__cell_no_border">
 
-								<table class="govuk-table">
-									<tbody class="govuk-table__body">
-										@foreach (var concern in Model.CaseModel.RecordsModel)
-										{
-											<tr class="govuk-table__row">
-												<td>
-													@concern.TypeModel.TypeDisplay
-												</td>
-												<td>
-													<div class="govuk-ragtag-wrapper govuk-!-padding-bottom-1 govuk-!-padding-right-4">
-														@{
-															if (concern.StatusModel.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
-															{
-																<span class="govuk-tag ragtag ragtag__grey">
-																	Closed
-																</span>
-															}
-															else
-															{
-																for (var index = 0; index < concern.RatingModel.RagRating.Item2.Count; ++index)
-																{
-																	<span class="govuk-tag ragtag @concern.RatingModel.RagRatingCss.ElementAt(index)">
-																		@concern.RatingModel.RagRating.Item2.ElementAt(index)
-																	</span>
-																}
-															}
-														}
-													</div>
-												</td>
-												<td class="govuk-table__header__right">
-													@{
-														if (concern.StatusModel.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
-														{
-															<br />
-														}
-														else
-														{
-															<div class="govuk-!-padding-bottom-1">
-																@if (Model.IsEditableCase)
-																{
-																	<a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Urn/edit_rating">Edit</a>
-																}
-															</div>
-														}
-													}
-												</td>
-											</tr>
-										}
-									</tbody>
-								</table>
+                                <table class="govuk-table">
+                                    <tbody class="govuk-table__body">
+                                        @foreach (var concern in Model.CaseModel.RecordsModel)
+                                        {
+                                            <tr class="govuk-table__row">
+                                                <td>
+                                                    @concern.TypeModel.TypeDisplay
+                                                </td>
+                                                <td>
+                                                    <div class="govuk-ragtag-wrapper govuk-!-padding-bottom-1 govuk-!-padding-right-4">
+                                                        @{
+                                                            if (concern.StatusModel.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
+                                                            {
+                                                                <span class="govuk-tag ragtag ragtag__grey">
+                                                                    Closed
+                                                                </span>
+                                                            }
+                                                            else
+                                                            {
+                                                                for (var index = 0; index < concern.RatingModel.RagRating.Item2.Count; ++index)
+                                                                {
+                                                                    <span class="govuk-tag ragtag @concern.RatingModel.RagRatingCss.ElementAt(index)">
+                                                                        @concern.RatingModel.RagRating.Item2.ElementAt(index)
+                                                                    </span>
+                                                                }
+                                                            }
+                                                        }
+                                                    </div>
+                                                </td>
+                                                <td class="govuk-table__header__right">
+                                                    @{
+                                                        if (concern.StatusModel.Name.Equals(StatusEnum.Close.ToString(), StringComparison.OrdinalIgnoreCase))
+                                                        {
+                                                            <br />
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="govuk-!-padding-bottom-1">
+                                                                @if (Model.IsEditableCase)
+                                                                {
+                                                                    <a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Urn/edit_rating">Edit</a>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
 
-								<div class="govuk-o-grid__item--one-half">
-									@if (Model.IsEditableCase)
-									{
-										<a href="@Request.Path/concern" class="govuk-link govuk-link-no-visited-state">Add concern</a>
-									}
-								</div>
+                                <div class="govuk-o-grid__item--one-half">
+                                    @if (Model.IsEditableCase)
+                                    {
+                                        <a href="@Request.Path/concern" class="govuk-link govuk-link-no-visited-state">Add concern</a>
+                                    }
+                                </div>
 
-							</td>
-							<td class="govuk-table__header__right"></td>
-						</tr>
-					</tbody>
-				</table>
+                            </td>
+                            <td class="govuk-table__header__right"></td>
+                        </tr>
+                    </tbody>
+                </table>
 
-				<!--Accordions-->
-				<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+                <!--Accordions-->
+            <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
 
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-1">Issue</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1">
-							@if (Model.IsEditableCase)
-							{
-								<a class="govuk-link float__right" href="@Request.Path/edit_issue">Edit</a>
-							}
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.Issue</p>
-							</div>
-						</div>
-					</div>
+                    <div class="govuk-accordion__section">
+                        <div class="govuk-accordion__section-header">
+                            <h2 class="govuk-accordion__section-heading">
+                                <span class="govuk-accordion__section-button" id="accordion-default-heading-1">Issue</span>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1">
+                            @if (Model.IsEditableCase)
+                            {
+                                <a class="govuk-link float__right" href="@Request.Path/edit_issue">Edit</a>
+                            }
+                            <div class="govuk-body details govuk-body-accordion-limit">
+                                <p class="word-break">@Model.CaseModel.Issue</p>
+                            </div>
+                        </div>
+                    </div>
 
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-2">Current status</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-2" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-2">
-							@if (Model.IsEditableCase)
-							{
-								<a class="govuk-link float__right" href="@Request.Path/edit_current_status">Edit</a>
-							}
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.CurrentStatus</p>
-							</div>
-						</div>
-					</div>
+                    <div class="govuk-accordion__section">
+                        <div class="govuk-accordion__section-header">
+                            <h2 class="govuk-accordion__section-heading">
+                                <span class="govuk-accordion__section-button" id="accordion-default-heading-2">Current status</span>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="accordion-default-heading-2" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-2">
+                            @if (Model.IsEditableCase)
+                            {
+                                <a class="govuk-link float__right" href="@Request.Path/edit_current_status">Edit</a>
+                            }
+                            <div class="govuk-body details govuk-body-accordion-limit">
+                                <p class="word-break">@Model.CaseModel.CurrentStatus</p>
+                            </div>
+                        </div>
+                    </div>
 
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-3">Case aim</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-3" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-3">
-							@if (Model.IsEditableCase)
-							{
-								<a class="govuk-link float__right" href="@Request.Path/edit_case_aim">Edit</a>
-							}
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.CaseAim</p>
-							</div>
-						</div>
-					</div>
+                    <div class="govuk-accordion__section">
+                        <div class="govuk-accordion__section-header">
+                            <h2 class="govuk-accordion__section-heading">
+                                <span class="govuk-accordion__section-button" id="accordion-default-heading-3">Case aim</span>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="accordion-default-heading-3" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-3">
+                            @if (Model.IsEditableCase)
+                            {
+                                <a class="govuk-link float__right" href="@Request.Path/edit_case_aim">Edit</a>
+                            }
+                            <div class="govuk-body details govuk-body-accordion-limit">
+                                <p class="word-break">@Model.CaseModel.CaseAim</p>
+                            </div>
+                        </div>
+                    </div>
 
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-4">De-escalation point</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-4" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-4">
-							@if (Model.IsEditableCase)
-							{
-								<a class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point">Edit</a>
-							}
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.DeEscalationPoint</p>
-							</div>
-						</div>
-					</div>
+                    <div class="govuk-accordion__section">
+                        <div class="govuk-accordion__section-header">
+                            <h2 class="govuk-accordion__section-heading">
+                                <span class="govuk-accordion__section-button" id="accordion-default-heading-4">De-escalation point</span>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="accordion-default-heading-4" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-4">
+                            @if (Model.IsEditableCase)
+                            {
+                                <a class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point">Edit</a>
+                            }
+                            <div class="govuk-body details govuk-body-accordion-limit">
+                                <p class="word-break">@Model.CaseModel.DeEscalationPoint</p>
+                            </div>
+                        </div>
+                    </div>
 
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-5">Next steps</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
-							@if (Model.IsEditableCase)
-							{
-								<a class="govuk-link float__right" href="@Request.Path/edit_next_steps">Edit</a>
-							}
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.NextSteps</p>
-							</div>
-						</div>
-					</div>
-				</div>
+                    <div class="govuk-accordion__section">
+                        <div class="govuk-accordion__section-header">
+                            <h2 class="govuk-accordion__section-heading">
+                                <span class="govuk-accordion__section-button" id="accordion-default-heading-5">Next steps</span>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
+                            @if (Model.IsEditableCase)
+                            {
+                                <a class="govuk-link float__right" href="@Request.Path/edit_next_steps">Edit</a>
+                            }
+                            <div class="govuk-body details govuk-body-accordion-limit">
+                                <p class="word-break">@Model.CaseModel.NextSteps</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-				<a href="management/action" role="button" class="govuk-button" data-module="govuk-button">
-					Add to case
-				</a>
+                <a href="management/action" role="button" class="govuk-button" data-module="govuk-button">
+                    Add to case
+                </a>
 
-				@if (openSRMAs.Count > 0 || openFinancialPlanModels.Count > 0 || openNtis.Count > 0)
-				{
-					<table id="open-case-actions" class="govuk-table">
-						<thead class="govuk-table__head">
+                @if (openSRMAs.Count > 0 || openFinancialPlanModels.Count > 0 || openNtiUCs.Count > 0 || openNtiWLs.Count > 0)
+                {
+                    <table id="open-case-actions" class="govuk-table">
+                        <thead class="govuk-table__head">
                             <tr class="govuk-table__row tr__large">
                                 <th class="govuk-table__header govuk-table__cell__cases" scope="col">
                                     Open actions
@@ -293,34 +298,34 @@
                                     Date Opened
                                 </th>
                             </tr>
-						</thead>
+                        </thead>
 
-						<tbody class="govuk-table__body">
-							@foreach (SRMAModel srma in openSRMAs)
-							{
-								<tr class="govuk-table__row">
-									<td class="govuk-table__cell">
-										<a href="@Request.Path/action/srma/@srma.Id" class="govuk-link govuk-link-no-visited-state">
-											SRMA
-										</a>
-									</td>
-									<td class="govuk-table__cell">
-										@EnumHelper.GetEnumDescription(srma.Status)
-									</td>
-									<td class="govuk-table__cell govuk-table__header__right">
-										@DateExtension.ToDayMonthYear(srma.CreatedAt)
-									</td>
-								</tr>
-							}
+                        <tbody class="govuk-table__body">
+                            @foreach (SRMAModel srma in openSRMAs)
+                            {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">
+                                        <a href="@Request.Path/action/srma/@srma.Id" class="govuk-link govuk-link-no-visited-state">
+                                            SRMA
+                                        </a>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        @EnumHelper.GetEnumDescription(srma.Status)
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__header__right">
+                                        @DateExtension.ToDayMonthYear(srma.CreatedAt)
+                                    </td>
+                                </tr>
+                            }
 
-							@foreach (FinancialPlanModel fp in openFinancialPlanModels)
-							{
-								<tr class="govuk-table__row">
-									<td class="govuk-table__cell">
+                            @foreach (FinancialPlanModel fp in openFinancialPlanModels)
+                            {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">
                                         <a href="@Request.Path/action/financialplan/@fp.Id" class="govuk-link govuk-link-no-visited-state">
                                             <span>Financial Plan</span>
                                         </a>
-									</td>
+                                    </td>
                                     <td class="govuk-table__cell">
                                         @{
                                             if (fp.Status != null)
@@ -330,114 +335,146 @@
                                             }
                                         }
                                     </td>
-									<td class="govuk-table__cell govuk-table__header__right">
-										@DateExtension.ToDayMonthYear(fp.CreatedAt)
-									</td>
-								</tr>
-							}
-
-                            @foreach (NtiUnderConsiderationModel nti in openNtis)
-							{
-								<tr class="govuk-table__row">
-									<td class="govuk-table__cell">
-                                        <a href="@Request.Path/action/ntiunderconsideration/@nti.Id" class="govuk-link govuk-link-no-visited-state">
-                                            <span>NTI</span>
-                                        </a>
-									</td>
-                                    <td class="govuk-table__cell">
-                                       
+                                    <td class="govuk-table__cell govuk-table__header__right">
+                                        @DateExtension.ToDayMonthYear(fp.CreatedAt)
                                     </td>
-									<td class="govuk-table__cell govuk-table__header__right">
-										@DateExtension.ToDayMonthYear(nti.CreatedAt)
-									</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-				}
+                                </tr>
+                            }
 
-				@if (closedSRMAs.Count > 0 || closedFinancialPlanModels.Count > 0 || closedNtis.Count > 0)
-				{
-					<table  id="close-case-actions" class="govuk-table">
-						<thead class="govuk-table__head">
-							<tr class="govuk-table__row tr__large">
-								<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-									Closed actions
-								</th>
-								<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col">
-								</th>
-								<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__right" scope="col">
-									Date Closed
-								</th>
-							</tr>
-						</thead>
+                            @foreach (NtiUnderConsiderationModel nti in openNtiUCs)
+                            {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">
+                                        <a href="@Request.Path/action/ntiunderconsideration/@nti.Id" class="govuk-link govuk-link-no-visited-state">
+                                            <span>NTI: Under consideration</span>
+                                        </a>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__header__right">
+                                        @DateExtension.ToDayMonthYear(nti.CreatedAt)
+                                    </td>
+                                </tr>
+                            }
 
-						<tbody class="govuk-table__body">
-							@foreach (SRMAModel srma in closedSRMAs)
-							{
-								<tr class="govuk-table__row">
-									<td class="govuk-table__cell">
-										<a href="@Request.Path/action/srma/@srma.Id/closed" class="govuk-link govuk-link-no-visited-state">
-											SRMA
-										</a>
-									</td>
-									<td class="govuk-table__cell">
-										@EnumHelper.GetEnumDescription(srma.Status)
-									</td>
-									<td class="govuk-table__cell govuk-table__header__right">
-										@DateExtension.ToDayMonthYear(srma.ClosedAt.Value)
-									</td>
-								</tr>
-							}
+                            @foreach (NtiWarningLetterModel nti in openNtiWLs)
+                            {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">
+                                        <a href="@Request.Path/action/ntiwarningletter/@nti.Id" class="govuk-link govuk-link-no-visited-state">
+                                            <span>NTI: Warning letter</span>
+                                        </a>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__header__right">
+                                        @DateExtension.ToDayMonthYear(nti.CreatedAt)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
 
-							@foreach (FinancialPlanModel financialPlanModel in closedFinancialPlanModels)
-							{
+                @if (closedSRMAs.Count > 0 || closedFinancialPlanModels.Count > 0 || closedNtiUCs.Count > 0 || closedNtiWLs.Count > 0)
+                {
+                    <table id="close-case-actions" class="govuk-table">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row tr__large">
+                                <th class="govuk-table__header govuk-table__cell__cases" scope="col">
+                                    Closed actions
+                                </th>
+                                <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col">
+                                </th>
+                                <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__right" scope="col">
+                                    Date Closed
+                                </th>
+                            </tr>
+                        </thead>
 
-								var statusName = financialPlanModel.Status.Name;
-								var statusEnum = (FinancialPlanStatus)@Enum.Parse(typeof(FinancialPlanStatus), statusName);
+                        <tbody class="govuk-table__body">
+                            @foreach (SRMAModel srma in closedSRMAs)
+                            {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">
+                                        <a href="@Request.Path/action/srma/@srma.Id/closed" class="govuk-link govuk-link-no-visited-state">
+                                            SRMA
+                                        </a>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        @EnumHelper.GetEnumDescription(srma.Status)
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__header__right">
+                                        @DateExtension.ToDayMonthYear(srma.ClosedAt.Value)
+                                    </td>
+                                </tr>
+                            }
 
-								<tr class="govuk-table__row">
-									<td class="govuk-table__cell">
-										<a href="@Request.Path/action/financialplan/@financialPlanModel.Id/closed" class="govuk-link govuk-link-no-visited-state">
-											Financial Plan
-										</a>
-									</td>
-									<td class="govuk-table__cell">
-										@EnumHelper.GetEnumDescription(statusEnum)
-									</td>
-									<td class="govuk-table__cell govuk-table__header__right">
-										@DateExtension.ToDayMonthYear(financialPlanModel.ClosedAt.Value)
-									</td>
-								</tr>
-							}
+                            @foreach (FinancialPlanModel financialPlanModel in closedFinancialPlanModels)
+                            {
 
-							@foreach (NtiUnderConsiderationModel nti in closedNtis)
-							{
-								<tr class="govuk-table__row">
-									<td class="govuk-table__cell">
-										<a href="@Request.Path/action/ntiunderconsideration/@nti.Id" class="govuk-link govuk-link-no-visited-state">
-											NTI
-										</a>
-									</td>
-									<td class="govuk-table__cell">
-										@Model.NtiStatuses.SingleOrDefault(s => s.Id == nti.ClosedStatusId)?.Name 
-									</td>
-									<td class="govuk-table__cell govuk-table__header__right">
-										@DateExtension.ToDayMonthYear(nti.ClosedAt.Value)
-									</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-				}
+                                var statusName = financialPlanModel.Status.Name;
+                                var statusEnum = (FinancialPlanStatus)@Enum.Parse(typeof(FinancialPlanStatus), statusName);
+
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">
+                                        <a href="@Request.Path/action/financialplan/@financialPlanModel.Id/closed" class="govuk-link govuk-link-no-visited-state">
+                                            Financial Plan
+                                        </a>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        @EnumHelper.GetEnumDescription(statusEnum)
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__header__right">
+                                        @DateExtension.ToDayMonthYear(financialPlanModel.ClosedAt.Value)
+                                    </td>
+                                </tr>
+                            }
+
+                            @foreach (NtiUnderConsiderationModel nti in closedNtiUCs)
+                            {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">
+                                        <a href="@Request.Path/action/ntiunderconsideration/@nti.Id" class="govuk-link govuk-link-no-visited-state">
+                                            NTI: Under consideration
+                                        </a>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        @Model.NtiStatuses.SingleOrDefault(s => s.Id == nti.ClosedStatusId)?.Name
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__header__right">
+                                        @DateExtension.ToDayMonthYear(nti.ClosedAt.Value)
+                                    </td>
+                                </tr>
+                            }
+
+                            @foreach (NtiWarningLetterModel nti in closedNtiWLs)
+                            {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">
+                                        <a href="@Request.Path/action/ntiunderconsideration/@nti.Id" class="govuk-link govuk-link-no-visited-state">
+                                            NTI: Warning letter
+                                        </a>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        @nti.Status?.Name
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__header__right">
+                                        @DateExtension.ToDayMonthYear(nti.ClosedAt.Value)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
 
 
 
 
 
-				<partial name="_CaseHistory" model="@Model.CasesHistoryModel" />
+                <partial name="_CaseHistory" model="@Model.CasesHistoryModel" />
 
-			</div>
+            </div>
             <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="trust-overview">
                 <partial name="_TrustOverview" model="@Model.TrustDetailsModel" />
                 <partial name="_Academies" model="@Model.TrustDetailsModel.Establishments" />

@@ -11,7 +11,6 @@ namespace Service.Redis.NtiWarningLetter
 	public class NtiWarningLetterReasonsCachedService : CachedService, INtiWarningLetterReasonsCachedService
 	{
 		private readonly INtiWarningLetterReasonsService _ntiWarningLetterReasonsService;
-		private readonly ILogger<NtiWarningLetterReasonsCachedService> _logger;
 
 		private const string CacheKey = "Nti.WarningLetter.Reasons";
 
@@ -19,7 +18,6 @@ namespace Service.Redis.NtiWarningLetter
 			ILogger<NtiWarningLetterReasonsCachedService> logger) : base(cacheProvider)
 		{
 			_ntiWarningLetterReasonsService = ntiWarningLetterReasonsService;
-			_logger = logger;
 		}
 
 		public async Task<ICollection<NtiWarningLetterReasonDto>> GetAllReasonsAsync()

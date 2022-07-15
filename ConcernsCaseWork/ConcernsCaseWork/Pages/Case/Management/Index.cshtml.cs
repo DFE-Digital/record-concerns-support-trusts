@@ -3,6 +3,7 @@ using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
+using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
@@ -34,6 +35,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly IFinancialPlanModelService _financialPlanModelService;
 		private readonly INtiUnderConsiderationModelService _ntiModelService;
 		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
+		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
@@ -53,8 +55,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			IStatusCachedService statusCachedService,
 			ISRMAService srmaService,
 			IFinancialPlanModelService financialPlanModelService,
-			INtiUnderConsiderationModelService ntiModelService,
-			INtiUnderConsiderationStatusesCachedService ntiStatusesCachedService,
+			INtiUnderConsiderationModelService ntiUnderConsiderationModelService,
+			INtiUnderConsiderationStatusesCachedService ntiUCStatusesCachedService,
+			INtiWarningLetterModelService ntiWarningLetterModelService,
 			ILogger<IndexPageModel> logger
 			)
 		{
@@ -66,8 +69,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_statusCachedService = statusCachedService;
 			_srmaService = srmaService;
 			_financialPlanModelService = financialPlanModelService;
-			_ntiModelService = ntiModelService;
-			_ntiStatusesCachedService = ntiStatusesCachedService;
+			_ntiModelService = ntiUnderConsiderationModelService;
+			_ntiStatusesCachedService = ntiUCStatusesCachedService;
+			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_logger = logger;
 		}
 
@@ -129,6 +133,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			CaseActions.AddRange(await _srmaService.GetSRMAsForCase(caseUrn));
 			CaseActions.AddRange(await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name));
 			CaseActions.AddRange(await _ntiModelService.GetNtiUnderConsiderationsForCase(caseUrn));
+			CaseActions.AddRange(await _ntiWarningLetterModelService.GetNtiWLsForCase(caseUrn));
 		}
 
 		private bool UserHasEditCasePrivileges()

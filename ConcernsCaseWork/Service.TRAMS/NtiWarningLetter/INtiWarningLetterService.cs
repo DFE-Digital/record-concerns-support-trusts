@@ -1,16 +1,17 @@
-﻿using Service.TRAMS.NtiWarningLetter;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.Redis.NtiWarningLetter
+namespace Service.TRAMS.NtiWarningLetter
 {
-	public interface INtiWarningLetterCachedService
+	public interface INtiWarningLetterService
 	{
 		Task<NtiWarningLetterDto> CreateNtiWarningLetterAsync(NtiWarningLetterDto newNtiWarningLetter);
 		Task<ICollection<NtiWarningLetterDto>> GetNtiWarningLettersForCaseAsync(long caseUrn);
 		Task<NtiWarningLetterDto> GetNtiWarningLetterAsync(long ntiWarningLetterId);
-		Task<NtiWarningLetterDto> PatchNtiWarningLetterAsync(NtiWarningLetterDto ntiWarningLetter);
+		Task<NtiWarningLetterDto> PatchNtiWarningLetterAsync(NtiWarningLetterDto ntiWarningLetter);	
+
+		
 	}
 }
