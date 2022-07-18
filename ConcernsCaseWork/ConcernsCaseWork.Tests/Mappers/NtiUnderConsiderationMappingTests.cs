@@ -10,7 +10,7 @@ using System.Linq;
 namespace ConcernsCaseWork.Tests.Mappers
 {
 	[Parallelizable(ParallelScope.All)]
-	public class NtiMappingTests
+	public class NtiUnderConsiderationMappingTests
 	{
 		[Test]
 		public void WhenMapDtoToServiceModel_ReturnsCorrectModel()

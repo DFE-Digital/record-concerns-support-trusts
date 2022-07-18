@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
+using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.NtiUnderConsideration;
+using Service.Redis.NtiWarningLetter;
 using Service.Redis.Status;
 using Service.TRAMS.Status;
 using System.Linq;
@@ -360,18 +362,27 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			INtiUnderConsiderationModelService mockNtiModelService,
 			INtiUnderConsiderationStatusesCachedService mockNtiStatusesCachedService,
 			ILogger<IndexPageModel> mockLogger,
+			INtiWarningLetterModelService mockNtiWarningLetterModelService = null,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
 			return new IndexPageModel(mockCaseModelService, mockTrustModelService, mockCaseHistoryModelService, mockRecordModelService, mockRatingModelService, 
-				mockStatusCachedService, mockSrmaService, mockFinancialPlanModelService, mockNtiModelService, mockNtiStatusesCachedService, mockLogger)
+				mockStatusCachedService, mockSrmaService, mockFinancialPlanModelService, mockNtiModelService, mockNtiStatusesCachedService, 
+				mockNtiWarningLetterModelService ?? CreateMock<INtiWarningLetterModelService>(), 
+				mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
 				Url = new UrlHelper(actionContext),
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
+		}
+
+		private static T CreateMock<T>() where T : class
+		{
+			var moq = new Mock<T>();
+			return moq.Object;
 		}
 	}
 }
