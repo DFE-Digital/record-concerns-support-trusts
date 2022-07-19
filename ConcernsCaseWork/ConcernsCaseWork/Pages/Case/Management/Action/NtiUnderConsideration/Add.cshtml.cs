@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.Redis.Nti;
+using Service.Redis.NtiUnderConsideration;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -19,8 +19,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class AddPageModel : AbstractPageModel
 	{
-		private readonly INtiModelService _ntiModelService;
-		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
+		private readonly INtiUnderConsiderationModelService _ntiModelService;
+		private readonly INtiUnderConsiderationReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<AddPageModel> _logger;
 		
 
@@ -30,8 +30,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		public long CaseUrn { get; private set; }
 
 		public AddPageModel(
-			INtiModelService ntiModelService,
-			INtiReasonsCachedService ntiReasonsCachedService,
+			INtiUnderConsiderationModelService ntiModelService,
+			INtiUnderConsiderationReasonsCachedService ntiReasonsCachedService,
 			ILogger<AddPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
@@ -104,11 +104,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 						   });
 		}
 
-		private NtiModel PopulateNtiFromRequest()
+		private NtiUnderConsiderationModel PopulateNtiFromRequest()
 		{
 			var reasons = Request.Form["reason"];
 			
-			var nti = new NtiModel() { CaseUrn = CaseUrn };
+			var nti = new NtiUnderConsiderationModel() { CaseUrn = CaseUrn };
 			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = int.Parse(r) }).ToArray();
 
 			var notes = Convert.ToString(Request.Form["nti-notes"]);

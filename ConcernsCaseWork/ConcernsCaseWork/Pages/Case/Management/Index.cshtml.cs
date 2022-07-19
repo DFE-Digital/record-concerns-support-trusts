@@ -3,15 +3,16 @@ using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
+using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Nti;
+using Service.Redis.NtiUnderConsideration;
 using Service.Redis.Status;
-using Service.TRAMS.Nti;
+using Service.TRAMS.NtiUnderConsideration;
 using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
@@ -32,8 +33,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly ISRMAService _srmaService;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
-		private readonly INtiModelService _ntiModelService;
-		private readonly INtiStatusesCachedService _ntiStatusesCachedService;
+		private readonly INtiUnderConsiderationModelService _ntiModelService;
+		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
+		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
@@ -42,7 +44,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public IList<CaseHistoryModel> CasesHistoryModel { get; private set; }
 		public bool IsEditableCase { get; private set; }
 		public List<CaseActionModel> CaseActions { get; private set; }
-		public List<NtiStatusDto> NtiStatuses { get; set; }
+		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
 
 
 		public IndexPageModel(ICaseModelService caseModelService, 
@@ -53,8 +55,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			IStatusCachedService statusCachedService,
 			ISRMAService srmaService,
 			IFinancialPlanModelService financialPlanModelService,
-			INtiModelService ntiModelService,
-			INtiStatusesCachedService ntiStatusesCachedService,
+			INtiUnderConsiderationModelService ntiUnderConsiderationModelService,
+			INtiUnderConsiderationStatusesCachedService ntiUCStatusesCachedService,
+			INtiWarningLetterModelService ntiWarningLetterModelService,
 			ILogger<IndexPageModel> logger
 			)
 		{
@@ -66,8 +69,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_statusCachedService = statusCachedService;
 			_srmaService = srmaService;
 			_financialPlanModelService = financialPlanModelService;
-			_ntiModelService = ntiModelService;
-			_ntiStatusesCachedService = ntiStatusesCachedService;
+			_ntiModelService = ntiUnderConsiderationModelService;
+			_ntiStatusesCachedService = ntiUCStatusesCachedService;
+			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_logger = logger;
 		}
 
@@ -117,7 +121,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		private async Task PopulateAdditionalCaseInformation()
 		{
-			if(CaseActions?.Any(ca => ca is NtiModel) == true)
+			if(CaseActions?.Any(ca => ca is NtiUnderConsiderationModel) == true)
 			{
 				NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
 			}
@@ -129,6 +133,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			CaseActions.AddRange(await _srmaService.GetSRMAsForCase(caseUrn));
 			CaseActions.AddRange(await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name));
 			CaseActions.AddRange(await _ntiModelService.GetNtiUnderConsiderationsForCase(caseUrn));
+			CaseActions.AddRange(await _ntiWarningLetterModelService.GetNtiWLsForCase(caseUrn));
 		}
 
 		private bool UserHasEditCasePrivileges()

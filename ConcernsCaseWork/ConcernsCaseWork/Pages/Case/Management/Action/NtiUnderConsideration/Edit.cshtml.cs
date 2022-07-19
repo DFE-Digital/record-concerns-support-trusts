@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.Redis.Nti;
+using Service.Redis.NtiUnderConsideration;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -19,19 +19,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class EditPageModel : AbstractPageModel
 	{
-		private readonly INtiModelService _ntiModelService;
-		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
+		private readonly INtiUnderConsiderationModelService _ntiModelService;
+		private readonly INtiUnderConsiderationReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<EditPageModel> _logger;
 		
 		public int NotesMaxLength => 2000;
 		public IEnumerable<RadioItem> NTIReasonsToConsiderForUI;
 
 		public long CaseUrn { get; private set; }
-		public NtiModel NtiModel { get; set; }
+		public NtiUnderConsiderationModel NtiModel { get; set; }
 
 		public EditPageModel(
-			INtiModelService ntiModelService,
-			INtiReasonsCachedService ntiReasonsCachedService,
+			INtiUnderConsiderationModelService ntiModelService,
+			INtiUnderConsiderationReasonsCachedService ntiReasonsCachedService,
 			ILogger<EditPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
@@ -113,7 +113,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 		}
 
-		private async Task<IEnumerable<RadioItem>> GetReasonsForUI(NtiModel ntiModel)
+		private async Task<IEnumerable<RadioItem>> GetReasonsForUI(NtiUnderConsiderationModel ntiModel)
 		{
 			var reasons = await _ntiReasonsCachedService.GetAllReasons();
 			return reasons.Select(r => new RadioItem
@@ -124,11 +124,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 						   });
 		}
 
-		private NtiModel PopulateNtiFromRequest()
+		private NtiUnderConsiderationModel PopulateNtiFromRequest()
 		{
 			var reasons = Request.Form["reason"];
 			
-			var nti = new NtiModel() { 
+			var nti = new NtiUnderConsiderationModel() { 
 				Id = ExtractNtiUcIdFromRoute(),
 				CaseUrn = CaseUrn,
 			};

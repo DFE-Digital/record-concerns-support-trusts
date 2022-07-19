@@ -39,8 +39,11 @@ using StackExchange.Redis;
 using System;
 using System.Net.Mime;
 using Service.TRAMS.CaseActions;
-using Service.Redis.Nti;
-using Service.TRAMS.Nti;
+using Service.Redis.NtiUnderConsideration;
+using Service.TRAMS.NtiUnderConsideration;
+using ConcernsCaseWork.Services.NtiWarningLetter;
+using Service.TRAMS.NtiWarningLetter;
+using Service.Redis.NtiWarningLetter;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -117,8 +120,9 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IRecordModelService, RecordModelService>();
 			services.AddSingleton<IFinancialPlanModelService, FinancialPlanModelService>();
 			services.AddSingleton<ISRMAService, SRMAService>();
-			services.AddSingleton<INtiReasonsCachedService, NtiReasonsCachedService>();
-			services.AddSingleton<INtiModelService, NtiModelService>();
+			services.AddSingleton<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
+			services.AddSingleton<INtiUnderConsiderationModelService, NtiUnderConsiderationModelService>();
+			services.AddSingleton<INtiWarningLetterModelService, NtiWarningLetterModelService>();
 
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
@@ -137,9 +141,12 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IFinancialPlanService, FinancialPlanService>();
 			services.AddSingleton<SRMAProvider, SRMAProvider>();
 			services.AddSingleton<IFinancialPlanStatusService, FinancialPlanStatusService>();
-			services.AddSingleton<INtiReasonsService, NtiReasonsService>();
-			services.AddSingleton<INtiStatusesService, NtiStatusesService>();
-			services.AddSingleton<INtiService, NtiService>();
+			services.AddSingleton<INtiUnderConsiderationReasonsService, NtiUnderConsiderationReasonsService>();
+			services.AddSingleton<INtiUnderConsiderationStatusesService, NtiUnderConsiderationStatusesService>();
+			services.AddSingleton<INtiUnderConsiderationService, NtiUnderConsiderationService>();
+			services.AddSingleton<INtiWarningLetterStatusesService, TempNtiWarningLetterStatusesService>();
+			services.AddSingleton<INtiWarningLetterReasonsService, TempNtiWarningLetterReasonsService>();
+			services.AddSingleton<INtiWarningLetterService, TempNtiWarningLetterService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
@@ -154,9 +161,12 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IFinancialPlanCachedService, FinancialPlanCachedService>();
 			services.AddSingleton<IFinancialPlanStatusCachedService, FinancialPlanStatusCachedService>();
 			services.AddSingleton<CachedSRMAProvider, CachedSRMAProvider>();
-			services.AddSingleton<INtiReasonsCachedService, NtiReasonsCachedService>();
-			services.AddSingleton<INtiStatusesCachedService, NtiStatusesCachedService>();
-			services.AddSingleton<INtiCachedService, NtiCachedService>();
+			services.AddSingleton<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
+			services.AddSingleton<INtiUnderConsiderationStatusesCachedService, NtiUnderConsiderationStatusesCachedService>();
+			services.AddSingleton<INtiUnderConsiderationCachedService, NtiUnderConsiderationCachedService>();
+			services.AddSingleton<INtiWarningLetterStatusesCachedService, NtiWarningLetterStatusesCachedService>();
+			services.AddSingleton<INtiWarningLetterReasonsCachedService, NtiWarningLetterReasonsCachedService>();
+			services.AddSingleton<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
 
 			// AD Integration
 			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();

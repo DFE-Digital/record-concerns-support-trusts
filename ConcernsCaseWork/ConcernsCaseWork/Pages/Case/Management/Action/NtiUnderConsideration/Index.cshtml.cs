@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.Cases;
 using System.Linq;
-using Service.Redis.Nti;
+using Service.Redis.NtiUnderConsideration;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -15,13 +15,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class IndexPageModel : AbstractPageModel
 	{
-		private readonly INtiModelService _ntiModelService;
-		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
+		private readonly INtiUnderConsiderationModelService _ntiModelService;
+		private readonly INtiUnderConsiderationReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<IndexPageModel> _logger;
 
-		public NtiModel NTIUnderConsiderationModel { get; set; }
+		public NtiUnderConsiderationModel NTIUnderConsiderationModel { get; set; }
 
-		public IndexPageModel(INtiModelService ntiModelService, INtiReasonsCachedService ntiReasonsCachedService, ILogger<IndexPageModel> logger)
+		public IndexPageModel(INtiUnderConsiderationModelService ntiModelService, INtiUnderConsiderationReasonsCachedService ntiReasonsCachedService, ILogger<IndexPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
 			_ntiReasonsCachedService = ntiReasonsCachedService;

@@ -11,7 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.Redis.Nti;
+using Service.Redis.NtiUnderConsideration;
+using Service.Redis.NtiWarningLetter;
+using ConcernsCaseWork.Services.NtiWarningLetter;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 {
@@ -19,40 +21,44 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class AddPageModel : AbstractPageModel
 	{
-		private readonly INtiModelService _ntiModelService;
-		private readonly INtiReasonsCachedService _ntiReasonsCachedService;
+		private readonly INtiWarningLetterStatusesCachedService _ntiWarningLetterStatusesCachedService;
+		private readonly INtiWarningLetterReasonsCachedService _ntiWarningLetterReasonsCachedService;
+		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly ILogger<AddPageModel> _logger;
-		
 
 		public int NotesMaxLength => 2000;
-		public IEnumerable<RadioItem> NTIReasonsToConsider;
+		public IEnumerable<RadioItem> Statuses { get; private set; }
+		public IEnumerable<RadioItem> Reasons { get; private set; }
 
 		public long CaseUrn { get; private set; }
 
-		public AddPageModel(
-			INtiModelService ntiModelService,
-			INtiReasonsCachedService ntiReasonsCachedService,
+		public AddPageModel(INtiWarningLetterStatusesCachedService ntiWarningLetterStatusesCachedService,
+			INtiWarningLetterReasonsCachedService ntiWarningLetterReasonsCachedService,
+			INtiWarningLetterModelService ntiWarningLetterModelService,
 			ILogger<AddPageModel> logger)
 		{
-			_ntiModelService = ntiModelService;
-			_ntiReasonsCachedService = ntiReasonsCachedService;
+			_ntiWarningLetterStatusesCachedService = ntiWarningLetterStatusesCachedService;
+			_ntiWarningLetterReasonsCachedService = ntiWarningLetterReasonsCachedService;
+			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_logger = logger;
 		}
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::NTI-UC::AddPageModel::OnGetAsync");
+			_logger.LogInformation("Case::Action::NTI-WL::AddPageModel::OnGetAsync");
 
 			try
 			{
-				NTIReasonsToConsider = await GetReasons();
+				Statuses = await GetStatuses();
+				Reasons = await GetReasons();
+
 				ExtractCaseUrnFromRoute();
 
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-UC::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::NTI-WL::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
@@ -68,13 +74,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 				var newNti = PopulateNtiFromRequest();
 
-				await _ntiModelService.CreateNti(newNti);
+				await _ntiWarningLetterModelService.CreateNtiWarningLetter(newNti);
 
 				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-UC::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::NTI-WL::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
@@ -94,36 +100,56 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			}
 		}
 
-		private async Task<IEnumerable<RadioItem>> GetReasons()
+		private async Task<IEnumerable<RadioItem>> GetStatuses()
 		{
-			var reasons = await _ntiReasonsCachedService.GetAllReasons();
-			return reasons.Select(r => new RadioItem
-						   {
-							   Id = Convert.ToString(r.Id),
-							   Text = r.Name
-						   });
+			var statuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
+			return statuses.Select(r => new RadioItem
+			{
+				Id = Convert.ToString(r.Id),
+				Text = r.Name
+			});
 		}
 
-		private NtiModel PopulateNtiFromRequest()
+		private async Task<IEnumerable<RadioItem>> GetReasons()
+		{
+			var reasons = await _ntiWarningLetterReasonsCachedService.GetAllReasonsAsync();
+			return reasons.Select(r => new RadioItem
+			{
+				Id = Convert.ToString(r.Id),
+				Text = r.Name
+			});
+		}
+
+
+		private NtiWarningLetterModel PopulateNtiFromRequest()
 		{
 			var reasons = Request.Form["reason"];
-			
-			var nti = new NtiModel() { CaseUrn = CaseUrn };
-			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = int.Parse(r) }).ToArray();
+			var status = Request.Form["status"];
+			var dtr_day = Request.Form["dtr-day"];
+			var dtr_month = Request.Form["dtr-month"];
+			var dtr_year = Request.Form["dtr-year"];
+			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
+			var sentDate = DateTimeHelper.TryParseExact(dtString, out DateTime parsed) ? parsed : (DateTime?)null;
 
 			var notes = Convert.ToString(Request.Form["nti-notes"]);
-
 			if (!string.IsNullOrEmpty(notes))
 			{
 				if (notes.Length > NotesMaxLength)
 				{
 					throw new Exception($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
 				}
-				else
-				{
-					nti.Notes = notes;
-				}
 			}
+
+			var nti = new NtiWarningLetterModel()
+			{
+				CaseUrn = CaseUrn,
+				Reasons = reasons.Select(r => new NtiWarningLetterReasonModel { Id = int.Parse(r) }).ToArray(),
+				Status = int.TryParse(status, out int statusId) ? new NtiWarningLetterStatusModel { Id = statusId } : null,
+				Notes = notes,
+				SentDate = sentDate,
+				CreatedAt = DateTime.Now.Date,
+				UpdatedAt = DateTime.Now.Date
+			};
 
 			return nti;
 		}

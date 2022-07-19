@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.Redis.Nti;
+using Service.Redis.NtiUnderConsideration;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -19,19 +19,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class ClosePageModel : AbstractPageModel
 	{
-		private readonly INtiModelService _ntiModelService;
-		private readonly INtiStatusesCachedService _ntiStatusesCachedService;
+		private readonly INtiUnderConsiderationModelService _ntiModelService;
+		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
 		private readonly ILogger<ClosePageModel> _logger;
 
 		public int NotesMaxLength => 2000;
 		public IEnumerable<RadioItem> NTIStatuses;
 
 		public long CaseUrn { get; private set; }
-		public NtiModel NtiModel { get; set; }
+		public NtiUnderConsiderationModel NtiModel { get; set; }
 
 		public ClosePageModel(
-			INtiModelService ntiModelService,
-			INtiStatusesCachedService ntiStatusesCachedService,
+			INtiUnderConsiderationModelService ntiModelService,
+			INtiUnderConsiderationStatusesCachedService ntiStatusesCachedService,
 			ILogger<ClosePageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
@@ -125,12 +125,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			});
 		}
 
-		private NtiModel PopulateNtiFromRequest()
+		private NtiUnderConsiderationModel PopulateNtiFromRequest()
 		{
 			var status = Request.Form["status"];
 			var notes = Convert.ToString(Request.Form["nti-notes"]);
 
-			var nti = new NtiModel()
+			var nti = new NtiUnderConsiderationModel()
 			{
 				Id = ExtractNtiUcIdFromRoute(),
 				CaseUrn = CaseUrn,

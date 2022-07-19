@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Nti;
+using Service.Redis.NtiUnderConsideration;
 using System;
 using System.Threading.Tasks;
 
@@ -21,8 +21,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
 		{
 			// arrange
-			Mock<INtiModelService> ntiunderConsiderationModel = new Mock<INtiModelService>();
-			var mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
+			Mock<INtiUnderConsiderationModelService> ntiunderConsiderationModel = new Mock<INtiUnderConsiderationModelService>();
+			var mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var pageModel = SetupIndexPageModel(ntiunderConsiderationModel, mockNtiReasonsCachedService, mockLogger);
@@ -38,8 +38,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		public async Task WhenOnGetAsync_ReturnsPageModel()
 		{
 			// arrange
-			Mock<INtiModelService> mockNtiUnderConsiderationModelService = new Mock<INtiModelService>();
-			var mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
+			Mock<INtiUnderConsiderationModelService> mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
+			var mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var ntiunderConsiderationModel = NTIUnderConsiderationFactory.BuildNTIUnderConsiderationModel();
@@ -75,8 +75,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		public async Task WhenOnGetAsync_MissingNTIUnderConsideration_ThrowsException_ReturnPage()
 		{
 			// arrange
-			Mock<INtiModelService> ntiunderConsiderationModel = new Mock<INtiModelService>();
-			var mockNtiReasonsCachedService = new Mock<INtiReasonsCachedService>();
+			Mock<INtiUnderConsiderationModelService> ntiunderConsiderationModel = new Mock<INtiUnderConsiderationModelService>();
+			var mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var pageModel = SetupIndexPageModel(ntiunderConsiderationModel, mockNtiReasonsCachedService, mockLogger);
@@ -95,8 +95,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 
 
 		private static IndexPageModel SetupIndexPageModel(
-			Mock<INtiModelService> mockNtiModelService,
-			Mock<INtiReasonsCachedService> reasonsCachedService,
+			Mock<INtiUnderConsiderationModelService> mockNtiModelService,
+			Mock<INtiUnderConsiderationReasonsCachedService> reasonsCachedService,
 			Mock<ILogger<IndexPageModel>> mockLogger,
 			bool isAuthenticated = false)
 		{

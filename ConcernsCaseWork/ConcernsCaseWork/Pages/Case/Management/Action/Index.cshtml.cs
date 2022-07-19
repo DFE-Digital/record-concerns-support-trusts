@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers;
+using ConcernsCaseWork.Services.NtiWarningLetter;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action
 {
@@ -23,7 +24,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 		private readonly ICaseModelService _caseModelService;
 		private readonly ISRMAService _srmaService;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
-		private readonly INtiModelService _ntiUnderConsiderationModelService;
+		private readonly INtiUnderConsiderationModelService _ntiUnderConsiderationModelService;
+		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
@@ -32,13 +34,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 		public IndexPageModel(ICaseModelService caseModelService,
 			ISRMAService srmaService,
 			IFinancialPlanModelService financialPlanModelService,
-			INtiModelService ntiUnderConsiderationModelService,
+			INtiUnderConsiderationModelService ntiUnderConsiderationModelService,
+			INtiWarningLetterModelService ntiWarningLetterModelService,
 			ILogger<IndexPageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_srmaService = srmaService;
 			_financialPlanModelService = financialPlanModelService;
 			_ntiUnderConsiderationModelService = ntiUnderConsiderationModelService;
+			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_logger = logger;
 		}
 
@@ -109,7 +113,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 			}
 
 			return Page();
-
 		}
 
 		private List<CaseActionCreateHelper> GetStartHelpers()
@@ -119,7 +122,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 				new SrmaCreateHelper(_srmaService),
 				new FinancialPlanCreateHelper(_financialPlanModelService),
 				new NtiUnderConsiderationCreateHelper(_ntiUnderConsiderationModelService),
-				new NtiWarningLetterCreateHelper()
+				new NtiWarningLetterCreateHelper(_ntiWarningLetterModelService)
 			};
 		}
 
