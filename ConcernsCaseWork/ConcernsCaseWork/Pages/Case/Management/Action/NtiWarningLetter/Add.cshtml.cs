@@ -28,7 +28,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		public string ActionForAddConditionsButton = "add-conditions";
 		public string ActionForContinueButton = "continue";
-		public Guid? ContinuationId { get; private set; }
+
+		[TempData]
+		public Guid? ContinuationId { get; set; }
 
 		public int NotesMaxLength => 2000;
 		public IEnumerable<RadioItem> Statuses { get; private set; }
@@ -74,12 +76,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		{
 			try
 			{
-				ContinuationId = Guid.TryParse(Request.Form[ActionForAddConditionsButton], out Guid guid) ? guid as Guid? : null;
+				ContinuationId = Guid.TryParse(Request.Form["continuation-id"], out Guid guid) ? guid as Guid? : null;
 				ExtractCaseUrnFromRoute();
 
 				if (action.Equals(ActionForAddConditionsButton, StringComparison.OrdinalIgnoreCase))
 				{
-					return HandOverToConditions();
+					return await HandOverToConditions();
 				}
 				else if (action.Equals(ActionForContinueButton, StringComparison.OrdinalIgnoreCase))
 				{
@@ -99,6 +101,23 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		private async Task<RedirectResult> HandleContinue()
 		{
+			var ntiModel = await GetUpToDateModel();
+		
+			await _ntiWarningLetterModelService.CreateNtiWarningLetter(ntiModel);
+			 
+			return Redirect($"/case/{CaseUrn}/management");
+		}
+
+		private async Task<RedirectResult> HandOverToConditions()
+		{
+			var ntiModel = await GetUpToDateModel();
+			ContinuationId ??= Guid.NewGuid();
+
+			return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/addConditions");
+		}
+
+		private async Task<NtiWarningLetterModel> GetUpToDateModel()
+		{
 			NtiWarningLetterModel nti = null;
 
 			if (ContinuationId != null && ContinuationId != Guid.Empty) // conditions have been recorded
@@ -107,19 +126,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				nti = PopulateNtiFromRequest(nti); // populate current form values on top of values recorded in conditions form
 			}
 
-			nti = nti ?? PopulateNtiFromRequest();
-
-			await _ntiWarningLetterModelService.CreateNtiWarningLetter(nti);
-
-			return Redirect($"/case/{CaseUrn}/management");
-		}
-
-		private RedirectResult HandOverToConditions()
-		{
-			// record information from the create form
-			// 
-			// store nti in cache 
-			throw new NotImplementedException();
+			return nti ?? PopulateNtiFromRequest();
 		}
 
 		private void ExtractCaseUrnFromRoute()

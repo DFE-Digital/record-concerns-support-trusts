@@ -1,0 +1,54 @@
+﻿@page "/case/{urn:long}/management/action/NtiWarningLetter/addConditions"
+@model ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter.AddConditionsPageModel
+
+@{
+    ViewData["Title"] = "Add Nti Warning letter";
+    var nonce = HttpContext.GetNonce();
+}
+
+<div class="govuk-width-container">
+    <partial name="_BannerError" />
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+                <partial name="_Error" />
+            }
+            else
+            {
+                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+                @if (!string.IsNullOrEmpty((string)TempData.Peek("NTI-WL.Message")))
+                {
+                    <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
+                        <h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
+                        <div class="govuk-error-summary__body">
+                            <ul class="govuk-list govuk-error-summary__list">
+                                <li>
+                                    <a href="#">@TempData["NTI-WL.Message"]</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                }
+
+                <h1 class="govuk-heading-l">
+                    <span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
+                    NTI: Warning letter
+                </h1>
+
+                <div class="govuk-hint" id="nti-underconsideration-hint">
+                    <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Financial%20Notices%20to%20Improve.aspx" class="govuk-link" rel="noreferrer noopener">
+                        AMSD Knowledge: NTI Guidance
+                    </a>
+                </div>
+
+                
+            }
+
+        </div>
+    </div>
+</div>
+
