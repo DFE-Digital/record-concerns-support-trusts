@@ -26,6 +26,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly ILogger<AddPageModel> _logger;
 
+		public string ActionForAddConditionsButton = "add-conditions";
+		public string ActionForContinueButton = "continue";
+		public Guid? ContinuationId { get; private set; }
+
 		public int NotesMaxLength => 2000;
 		public IEnumerable<RadioItem> Statuses { get; private set; }
 		public IEnumerable<RadioItem> Reasons { get; private set; }
@@ -66,17 +70,22 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		}
 
-		public async Task<IActionResult> OnPostAsync()
+		public async Task<IActionResult> OnPostAsync(string action)
 		{
 			try
 			{
+				ContinuationId = Guid.TryParse(Request.Form[ActionForAddConditionsButton], out Guid guid) ? guid as Guid? : null;
 				ExtractCaseUrnFromRoute();
 
-				var newNti = PopulateNtiFromRequest();
+				if (action.Equals(ActionForAddConditionsButton, StringComparison.OrdinalIgnoreCase))
+				{
+					return HandOverToConditions();
+				}
+				else if (action.Equals(ActionForContinueButton, StringComparison.OrdinalIgnoreCase))
+				{
+					return await HandleContinue();
+				}
 
-				await _ntiWarningLetterModelService.CreateNtiWarningLetter(newNti);
-
-				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
@@ -86,6 +95,31 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			}
 
 			return Page();
+		}
+
+		private async Task<RedirectResult> HandleContinue()
+		{
+			NtiWarningLetterModel nti = null;
+
+			if (ContinuationId != null && ContinuationId != Guid.Empty) // conditions have been recorded
+			{
+				nti = await _ntiWarningLetterModelService.GetWarningLetterFromCache(ContinuationId.Value);
+				nti = PopulateNtiFromRequest(nti); // populate current form values on top of values recorded in conditions form
+			}
+
+			nti = nti ?? PopulateNtiFromRequest();
+
+			await _ntiWarningLetterModelService.CreateNtiWarningLetter(nti);
+
+			return Redirect($"/case/{CaseUrn}/management");
+		}
+
+		private RedirectResult HandOverToConditions()
+		{
+			// record information from the create form
+			// 
+			// store nti in cache 
+			throw new NotImplementedException();
 		}
 
 		private void ExtractCaseUrnFromRoute()
@@ -120,6 +154,25 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			});
 		}
 
+		private NtiWarningLetterModel PopulateNtiFromRequest(NtiWarningLetterModel ntiWarningLetterModel)
+		{
+			if (ntiWarningLetterModel == null)
+			{
+				throw new ArgumentException(nameof(ntiWarningLetterModel));
+			}
+
+			var newValues = PopulateNtiFromRequest();
+
+			ntiWarningLetterModel.CaseUrn = newValues.CaseUrn;
+			ntiWarningLetterModel.Reasons = newValues.Reasons;
+			ntiWarningLetterModel.Status = newValues.Status;
+			ntiWarningLetterModel.Notes = newValues.Notes;
+			ntiWarningLetterModel.SentDate = newValues.SentDate;
+			ntiWarningLetterModel.CreatedAt = newValues.CreatedAt;
+			ntiWarningLetterModel.UpdatedAt = newValues.UpdatedAt;
+
+			return ntiWarningLetterModel;
+		}
 
 		private NtiWarningLetterModel PopulateNtiFromRequest()
 		{

@@ -48,10 +48,10 @@ namespace Service.Redis.NtiWarningLetter
 				throw;
 			}
 
-			if(nti == null)
+			if (nti == null)
 			{
 				nti = await _ntiWarningLetterService.GetNtiWarningLetterAsync(ntiWarningLetterId);
-				if(nti != null)
+				if (nti != null)
 				{
 					await CacheNtiWLAsync(nti);
 				}
@@ -74,10 +74,10 @@ namespace Service.Redis.NtiWarningLetter
 				throw;
 			}
 
-			if(ntis == null)
+			if (ntis == null)
 			{
 				ntis = await _ntiWarningLetterService.GetNtiWarningLettersForCaseAsync(caseUrn);
-				if(ntis != null)
+				if (ntis != null)
 				{
 					await StoreData(cacheKey, ntis);
 				}
@@ -89,7 +89,7 @@ namespace Service.Redis.NtiWarningLetter
 		public async Task<NtiWarningLetterDto> PatchNtiWarningLetterAsync(NtiWarningLetterDto ntiWarningLetter)
 		{
 			var patched = await _ntiWarningLetterService.PatchNtiWarningLetterAsync(ntiWarningLetter);
-			if(patched != null)
+			if (patched != null)
 			{
 				await CacheNtiWLAsync(patched);
 				await ClearNtiWLForCaseFromCacheAsync(patched.Id);
@@ -101,8 +101,8 @@ namespace Service.Redis.NtiWarningLetter
 		private string CreateCacheKeyForNtiWarningLetter(long ntiWarningLetterId)
 		{
 			return $"{High_Level_Cache_Key}:NtiWarningLetter:Id:{ntiWarningLetterId}";
-		}	
-		
+		}
+
 		private string CreateCacheKeyForNtiWarningLettersForCase(long caseUrn)
 		{
 			return $"{High_Level_Cache_Key}:NtiWarningLetter:Case:{caseUrn}";
@@ -137,6 +137,26 @@ namespace Service.Redis.NtiWarningLetter
 				_logger.LogError(x, $"Error occured while trying to remove Nti Warning Letters for case {caseUrn}");
 				throw;
 			}
+		}
+
+		public async Task SaveNtiWarningLetterToCache(NtiWarningLetterDto ntiWarningLetter, Guid continuationId)
+		{
+			if (continuationId == Guid.Empty)
+			{
+				throw new ArgumentNullException(nameof(continuationId));
+			}
+
+			await StoreData(continuationId.ToString(), ntiWarningLetter);
+		}
+
+		public async Task<NtiWarningLetterDto> GetNtiWarningLetterFromCache(Guid continuationId)
+		{
+			if (continuationId == Guid.Empty)
+			{
+				throw new ArgumentNullException(nameof(continuationId));
+			}
+
+			return await GetData<NtiWarningLetterDto>(continuationId.ToString());
 		}
 	}
 }
