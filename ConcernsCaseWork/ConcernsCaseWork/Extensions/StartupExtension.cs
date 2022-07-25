@@ -147,6 +147,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiWarningLetterStatusesService, TempNtiWarningLetterStatusesService>();
 			services.AddSingleton<INtiWarningLetterReasonsService, TempNtiWarningLetterReasonsService>();
 			services.AddSingleton<INtiWarningLetterService, TempNtiWarningLetterService>();
+			services.AddSingleton<INtiWarningLetterConditionsService, TempNtiWarningLetterConditionsService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();

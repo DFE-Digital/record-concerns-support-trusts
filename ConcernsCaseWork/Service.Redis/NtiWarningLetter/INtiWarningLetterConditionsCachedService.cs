@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Service.Redis.NtiWarningLetter
 {
-	public interface INtiWarningLetterStatusesCachedService
+	public interface INtiWarningLetterConditionsCachedService
 	{
-		public Task<ICollection<NtiWarningLetterStatusDto>> GetAllStatusesAsync();
+		public Task<ICollection<NtiWarningLetterConditionDto>> GetAllConditionsAsync();
 	}
 }
