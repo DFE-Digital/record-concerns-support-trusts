@@ -59,7 +59,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				Reasons = await GetReasons();
 
 				ExtractCaseUrnFromRoute();
-
+				TempData.Keep(nameof(ContinuationId));
 				return Page();
 			}
 			catch (Exception ex)
@@ -69,14 +69,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
 			}
-
 		}
 
 		public async Task<IActionResult> OnPostAsync(string action)
 		{
 			try
 			{
-				ContinuationId = Guid.TryParse(Request.Form["continuation-id"], out Guid guid) ? guid as Guid? : null;
 				ExtractCaseUrnFromRoute();
 
 				if (action.Equals(ActionForAddConditionsButton, StringComparison.OrdinalIgnoreCase))
@@ -102,9 +100,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		private async Task<RedirectResult> HandleContinue()
 		{
 			var ntiModel = await GetUpToDateModel();
-		
+
 			await _ntiWarningLetterModelService.CreateNtiWarningLetter(ntiModel);
-			 
+
 			return Redirect($"/case/{CaseUrn}/management");
 		}
 
@@ -113,6 +111,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			var ntiModel = await GetUpToDateModel();
 			ContinuationId ??= Guid.NewGuid();
 
+			await _ntiWarningLetterModelService.StoreWarningLetterToCache(ntiModel, ContinuationId.Value);
+
+			TempData.Keep(nameof(ContinuationId));
 			return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/addConditions");
 		}
 

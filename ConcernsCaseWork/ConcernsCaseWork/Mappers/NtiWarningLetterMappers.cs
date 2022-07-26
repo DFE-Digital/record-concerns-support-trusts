@@ -18,7 +18,8 @@ namespace ConcernsCaseWork.Mappers
 				Reasons = ntiModel.Reasons.Select(r => new NtiWarningLetterReasonDto { Id = r.Id, Name = r.Name }).ToArray(),
 				Status = ntiModel.Status == null ? null : new NtiWarningLetterStatusDto { Id = ntiModel.Status.Id, Name = ntiModel.Status.Name },
 				SentDate = ntiModel.SentDate,
-				UpdatedAt = ntiModel.UpdatedAt
+				UpdatedAt = ntiModel.UpdatedAt,
+				Conditions = ntiModel.Conditions?.Select(c => ToDbModel(c)).ToArray()
 			};
 		}
 
@@ -33,7 +34,40 @@ namespace ConcernsCaseWork.Mappers
 				Notes = ntiDto.Notes,
 				SentDate = ntiDto.SentDate,
 				Status = ntiDto.Status == null ? null : new NtiWarningLetterStatusModel { Id = ntiDto.Status.Id, Name = ntiDto.Status.Name },
-				Reasons = ntiDto.Reasons?.Select(r => new NtiWarningLetterReasonModel { Id = r.Id, Name = r.Name }).ToArray()
+				Reasons = ntiDto.Reasons?.Select(r => new NtiWarningLetterReasonModel { Id = r.Id, Name = r.Name }).ToArray(),
+				Conditions = ntiDto.Conditions?.Select(c => ToServiceModel(c)).ToArray()
+			};
+		}
+
+		public static NtiWarningLetterConditionModel ToServiceModel(NtiWarningLetterConditionDto ntiConditionDto)
+		{
+			return new NtiWarningLetterConditionModel
+			{
+				Id = ntiConditionDto.Id,
+				Name = ntiConditionDto.Name,
+				Type = ntiConditionDto.Type == null ? null 
+				: new NtiWarningLetterConditionTypeModel
+				{
+					Id = ntiConditionDto.Type.Id,
+					Name = ntiConditionDto.Type.Name,
+					DisplayOrder = ntiConditionDto.Type.DisplayOrder
+				}
+			};
+		}
+
+		public static NtiWarningLetterConditionDto ToDbModel(NtiWarningLetterConditionModel serviceModel)
+		{
+			return new NtiWarningLetterConditionDto
+			{
+				Id = serviceModel.Id,
+				Name = serviceModel.Name,
+				Type = serviceModel.Type == null ? null
+				: new NtiWarningLetterConditionTypeDto
+				{
+					Id = serviceModel.Type.Id,
+					Name = serviceModel.Type.Name,
+					DisplayOrder = serviceModel.Type.DisplayOrder
+				}
 			};
 		}
 	}

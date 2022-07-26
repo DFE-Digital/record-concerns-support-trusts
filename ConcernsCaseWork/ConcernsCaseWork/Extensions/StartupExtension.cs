@@ -168,6 +168,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiWarningLetterStatusesCachedService, NtiWarningLetterStatusesCachedService>();
 			services.AddSingleton<INtiWarningLetterReasonsCachedService, NtiWarningLetterReasonsCachedService>();
 			services.AddSingleton<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
+			services.AddSingleton<INtiWarningLetterConditionsCachedService, NtiWarningLetterConditionsCachedServices>();
 
 			// AD Integration
 			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();

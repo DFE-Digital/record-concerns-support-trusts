@@ -38,11 +38,12 @@ namespace Service.TRAMS.NtiWarningLetter
 				}
 			};
 
+			var conditionId = 1;
 			var conditions = new List<NtiWarningLetterConditionDto>
 			{
 				new NtiWarningLetterConditionDto()
 				{
-					Id = 1,
+					Id = conditionId++,
 					Name = "Trust financial plan",
 					Type = types[0],
 				}
@@ -51,7 +52,7 @@ namespace Service.TRAMS.NtiWarningLetter
 			conditions.AddRange(Enumerable.Range(1, 4).Select(i =>
 				new NtiWarningLetterConditionDto
 				{
-					Id = i,
+					Id = conditionId++,
 					Name = $"{types[1].Name} Condition {i}",
 					Type = types[1],
 				}
@@ -60,7 +61,7 @@ namespace Service.TRAMS.NtiWarningLetter
 			conditions.AddRange(Enumerable.Range(1, 1).Select(i =>
 				new NtiWarningLetterConditionDto
 				{
-					Id = i,
+					Id = conditionId++,
 					Name = $"{types[2].Name} Condition {i}",
 					Type = types[2],
 				}
@@ -69,7 +70,7 @@ namespace Service.TRAMS.NtiWarningLetter
 			conditions.AddRange(Enumerable.Range(1, 1).Select(i =>
 				new NtiWarningLetterConditionDto
 				{
-					Id = i,
+					Id = conditionId++,
 					Name = $"{types[3].Name} Condition {i}",
 					Type = types[3],
 				}

@@ -14,6 +14,8 @@ using ConcernsCaseWork.Models.CaseActions;
 using Service.Redis.NtiUnderConsideration;
 using Service.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
+using Service.TRAMS.NtiWarningLetter;
+using ConcernsCaseWork.Mappers;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 {
@@ -24,22 +26,26 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		private readonly INtiWarningLetterStatusesCachedService _ntiWarningLetterStatusesCachedService;
 		private readonly INtiWarningLetterReasonsCachedService _ntiWarningLetterReasonsCachedService;
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
+		private readonly INtiWarningLetterConditionsCachedService _ntiWarningLetterConditionsCachedService;
 		private readonly ILogger<NtiWarningLetterConditionModel> _logger;
 
 		[TempData]
 		public Guid? ContinuationId { get; set; }
 
 		public long CaseUrn { get; private set; }
-		public ICollection<NtiWarningLetterConditionModel> Conditions { get; private set; }
+		public ICollection<NtiWarningLetterConditionModel> SelectedConditions { get; private set; }
+		public ICollection<NtiWarningLetterConditionDto> AllConditions { get; private set; }
 
 		public AddConditionsPageModel(INtiWarningLetterStatusesCachedService ntiWarningLetterStatusesCachedService,
 			INtiWarningLetterReasonsCachedService ntiWarningLetterReasonsCachedService,
 			INtiWarningLetterModelService ntiWarningLetterModelService,
+			INtiWarningLetterConditionsCachedService ntiWarningLetterConditionsCachedService,
 			ILogger<NtiWarningLetterConditionModel> logger)
 		{
 			_ntiWarningLetterStatusesCachedService = ntiWarningLetterStatusesCachedService;
 			_ntiWarningLetterReasonsCachedService = ntiWarningLetterReasonsCachedService;
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
+			_ntiWarningLetterConditionsCachedService = ntiWarningLetterConditionsCachedService;
 			_logger = logger;
 		}
 
@@ -57,8 +63,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				ExtractCaseUrnFromRoute();
 
 				var model = await GetUpToDateModel();
-				Conditions = model.Conditions;
+				SelectedConditions = model.Conditions;
 
+				AllConditions = await _ntiWarningLetterConditionsCachedService.GetAllConditionsAsync();
+
+				TempData.Keep(nameof(ContinuationId));
 				return Page();
 			}
 			catch (Exception ex)
@@ -68,34 +77,33 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
 			}
-
 		}
 
 		public async Task<IActionResult> OnPostAsync(string action)
 		{
 			try
 			{
-				//ContinuationId = Guid.TryParse(Request.Form[ActionForAddConditionsButton], out Guid guid) ? guid as Guid? : null;
-				//ExtractCaseUrnFromRoute();
+				AllConditions = await _ntiWarningLetterConditionsCachedService.GetAllConditionsAsync();
+				var conditions = Request.Form["condition"];
+				var model = await GetUpToDateModel();
+				model.Conditions = conditions.Select(s => NtiWarningLetterMappers.ToServiceModel(AllConditions.Single(c => c.Id == int.Parse(s)))).ToArray();
+				await _ntiWarningLetterModelService.StoreWarningLetterToCache(model, ContinuationId.Value);
 
-				//if (action.Equals(ActionForAddConditionsButton, StringComparison.OrdinalIgnoreCase))
-				//{
-				//	return HandOverToConditions();
-				//}
-				//else if (action.Equals(ActionForContinueButton, StringComparison.OrdinalIgnoreCase))
-				//{
-				//	return await HandleContinue();
-				//}
-
+				TempData.Keep(nameof(ContinuationId));
+				return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/add");
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Case::NTI-WL::AddConditionsPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
 			return Page();
+		}
+
+		public bool IsConditionSelected(NtiWarningLetterConditionDto condition)
+		{
+			return SelectedConditions?.Any(c => c.Id == condition.Id) ?? false;	
 		}
 
 		private async Task<NtiWarningLetterModel> GetUpToDateModel()

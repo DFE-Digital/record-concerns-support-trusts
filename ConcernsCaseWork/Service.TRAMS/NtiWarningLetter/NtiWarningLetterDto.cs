@@ -14,6 +14,7 @@ namespace Service.TRAMS.NtiWarningLetter
 		public DateTime? ClosedAt { get; set; }
 		public NtiWarningLetterStatusDto Status { get; set; }
 		public ICollection<NtiWarningLetterReasonDto> Reasons { get; set; }
+		public ICollection<NtiWarningLetterConditionDto> Conditions { get; set; }
 		public DateTime? SentDate { get; set; }
 
 	}
