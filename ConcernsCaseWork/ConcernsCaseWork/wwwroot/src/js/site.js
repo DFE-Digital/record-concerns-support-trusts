@@ -46,6 +46,14 @@ window.addIssueValidator = function(validator) {
 		message: 'Issue must be 2000 characters or less'
 	}]);
 }
+window.addMeansOfReferralValidator = function (validator) {
+	validator.addValidator('meansOfReferral', [{
+		method: function(field) {
+			return field.value.trim().length > 0;
+		},
+		message: 'Select means of referral'
+	}]);
+}
 window.addRatingValidator = function (validator) {
 	validator.addValidator('rating', [{
 		method: function(field) {
