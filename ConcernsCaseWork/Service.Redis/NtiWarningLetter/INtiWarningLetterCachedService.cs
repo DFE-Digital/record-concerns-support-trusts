@@ -12,7 +12,7 @@ namespace Service.Redis.NtiWarningLetter
 		Task<ICollection<NtiWarningLetterDto>> GetNtiWarningLettersForCaseAsync(long caseUrn);
 		Task<NtiWarningLetterDto> GetNtiWarningLetterAsync(long ntiWarningLetterId);
 		Task<NtiWarningLetterDto> PatchNtiWarningLetterAsync(NtiWarningLetterDto ntiWarningLetter);
-		Task SaveNtiWarningLetterToCache(NtiWarningLetterDto ntiWarningLetter, Guid continuationId);
-		Task<NtiWarningLetterDto> GetNtiWarningLetterFromCache(Guid continuationId);
+		Task SaveNtiWarningLetterToCache(NtiWarningLetterDto ntiWarningLetter, string continuationId);
+		Task<NtiWarningLetterDto> GetNtiWarningLetterFromCache(string continuationId);
 	}
 }

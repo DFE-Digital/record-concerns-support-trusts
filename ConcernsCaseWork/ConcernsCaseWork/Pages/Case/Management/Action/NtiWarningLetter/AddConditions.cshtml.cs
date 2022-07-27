@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		private readonly ILogger<NtiWarningLetterConditionModel> _logger;
 
 		[TempData]
-		public Guid? ContinuationId { get; set; }
+		public string ContinuationId { get; set; }
 
 		public long CaseUrn { get; private set; }
 		public ICollection<NtiWarningLetterConditionModel> SelectedConditions { get; private set; }
@@ -87,7 +87,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				var conditions = Request.Form["condition"];
 				var model = await GetUpToDateModel();
 				model.Conditions = conditions.Select(s => NtiWarningLetterMappers.ToServiceModel(AllConditions.Single(c => c.Id == int.Parse(s)))).ToArray();
-				await _ntiWarningLetterModelService.StoreWarningLetterToCache(model, ContinuationId.Value);
+				await _ntiWarningLetterModelService.StoreWarningLetterToCache(model, ContinuationId);
 
 				TempData.Keep(nameof(ContinuationId));
 				return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/add");
@@ -108,7 +108,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		private async Task<NtiWarningLetterModel> GetUpToDateModel()
 		{
-			return await _ntiWarningLetterModelService.GetWarningLetterFromCache(ContinuationId.Value);
+			return await _ntiWarningLetterModelService.GetWarningLetterFromCache(ContinuationId);
 		}
 
 		private void ExtractCaseUrnFromRoute()

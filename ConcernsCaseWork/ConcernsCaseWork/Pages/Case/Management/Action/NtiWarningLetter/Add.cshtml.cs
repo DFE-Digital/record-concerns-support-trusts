@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		public string ActionForContinueButton = "continue";
 
 		[TempData]
-		public Guid? ContinuationId { get; set; }
+		public string ContinuationId { get; set; }
 
 		public int NotesMaxLength => 2000;
 		public IEnumerable<RadioItem> Statuses { get; private set; }
@@ -85,7 +85,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				{
 					return await HandleContinue();
 				}
-
 			}
 			catch (Exception ex)
 			{
@@ -101,7 +100,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		{
 			var ntiModel = await GetUpToDateModel();
 
-			await _ntiWarningLetterModelService.CreateNtiWarningLetter(ntiModel);
+			// await _ntiWarningLetterModelService.CreateNtiWarningLetter(ntiModel);
 
 			return Redirect($"/case/{CaseUrn}/management");
 		}
@@ -109,9 +108,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		private async Task<RedirectResult> HandOverToConditions()
 		{
 			var ntiModel = await GetUpToDateModel();
-			ContinuationId ??= Guid.NewGuid();
+			if(string.IsNullOrWhiteSpace(ContinuationId))
+			{
+				ContinuationId = $"{CaseUrn}_{Guid.NewGuid()}";
+			}
 
-			await _ntiWarningLetterModelService.StoreWarningLetterToCache(ntiModel, ContinuationId.Value);
+			await _ntiWarningLetterModelService.StoreWarningLetterToCache(ntiModel, ContinuationId);
 
 			TempData.Keep(nameof(ContinuationId));
 			return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/addConditions");
@@ -121,9 +123,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		{
 			NtiWarningLetterModel nti = null;
 
-			if (ContinuationId != null && ContinuationId != Guid.Empty) // conditions have been recorded
+			if (!string.IsNullOrWhiteSpace(ContinuationId)) // conditions have been recorded
 			{
-				nti = await _ntiWarningLetterModelService.GetWarningLetterFromCache(ContinuationId.Value);
+				nti = await _ntiWarningLetterModelService.GetWarningLetterFromCache(ContinuationId);
 				nti = PopulateNtiFromRequest(nti); // populate current form values on top of values recorded in conditions form
 			}
 
