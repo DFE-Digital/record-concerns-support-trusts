@@ -1,0 +1,20 @@
+﻿@model IList<ConcernsCaseWork.Models.MeansOfReferralModel>
+
+<!--Risk meansOfReferral radios-->
+<div class="govuk-radios" data-module="govuk-radios">
+
+	@{ var id = 0; }
+	@foreach (var meansOfReferral in Model)
+	{
+		<div class="govuk-radios__item">
+			@{ var idStr = id == 0 ? "meansOfReferral" : "meansOfReferral-" + id; }
+			<input class="govuk-radios__input" id="@idStr" name="meansOfReferral" type="radio" value="@meansOfReferral.Urn">
+			<label class="govuk-label govuk-radios__label" for="@idStr">
+				@meansOfReferral.Name (@meansOfReferral.Description)
+			</label>
+		</div>
+		id++;
+	}
+	
+</div>
+

@@ -8,8 +8,10 @@
 		public long Urn { get; }
 		
 		public long CaseUrn { get; }
-
+		
 		public long TypeUrn { get; }
+		
+		public MeansOfReferralModel MeansOfReferralModel { get; }
 		
 		public TypeModel TypeModel { get; }
 

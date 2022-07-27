@@ -32,6 +32,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		public IList<RatingModel> RatingsModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
+		public IList<MeansOfReferralModel> MeansOfReferralModel { get; private set; }
 		public string PreviousUrl { get; private set; }
 		
 		public IndexPageModel(ICaseModelService caseModelService,
@@ -141,6 +142,21 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(caseModel.TrustUkPrn);
 				RatingsModel = await _ratingModelService.GetRatingsModel();
 				TypeModel = await _typeModelService.GetTypeModel();
+				MeansOfReferralModel = new List<MeansOfReferralModel>
+				{
+					new MeansOfReferralModel
+					{
+						Name = "Internal",
+						Urn = 1,
+						Description = "ESFA activity, TFFT or other departmental activity"
+					},
+					new MeansOfReferralModel
+					{
+						Name = "External",
+						Urn = 2,
+						Description = "CIU casework, whistleblowing, self reported, RSCs or other government bodies"
+					}
+				};
 			
 				return Page();
 			}
