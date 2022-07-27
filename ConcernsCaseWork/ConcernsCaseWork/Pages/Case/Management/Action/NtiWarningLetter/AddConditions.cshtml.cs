@@ -83,6 +83,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		{
 			try
 			{
+				ExtractCaseUrnFromRoute();
 				AllConditions = await _ntiWarningLetterConditionsCachedService.GetAllConditionsAsync();
 				var conditions = Request.Form["condition"];
 				var model = await GetUpToDateModel();

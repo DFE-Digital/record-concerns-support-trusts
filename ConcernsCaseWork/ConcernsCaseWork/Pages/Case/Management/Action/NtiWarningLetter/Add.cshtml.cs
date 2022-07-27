@@ -36,6 +36,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		public IEnumerable<RadioItem> Statuses { get; private set; }
 		public IEnumerable<RadioItem> Reasons { get; private set; }
 
+		public NtiWarningLetterModel WarningLetter { get; set; }
+
 		public long CaseUrn { get; private set; }
 
 		public AddPageModel(INtiWarningLetterStatusesCachedService ntiWarningLetterStatusesCachedService,
@@ -55,10 +57,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 			try
 			{
+				ExtractCaseUrnFromRoute();
+				if (!string.IsNullOrWhiteSpace(ContinuationId) && ContinuationId.StartsWith(CaseUrn.ToString()))
+				{
+					await LoadWarningLetterFromCache();
+				}
+
 				Statuses = await GetStatuses();
 				Reasons = await GetReasons();
 
-				ExtractCaseUrnFromRoute();
+
 				TempData.Keep(nameof(ContinuationId));
 				return Page();
 			}
@@ -101,14 +109,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			var ntiModel = await GetUpToDateModel();
 
 			// await _ntiWarningLetterModelService.CreateNtiWarningLetter(ntiModel);
-
+			TempData.Remove(nameof(ContinuationId));
 			return Redirect($"/case/{CaseUrn}/management");
 		}
 
 		private async Task<RedirectResult> HandOverToConditions()
 		{
 			var ntiModel = await GetUpToDateModel();
-			if(string.IsNullOrWhiteSpace(ContinuationId))
+			if(string.IsNullOrWhiteSpace(ContinuationId) || !ContinuationId.StartsWith(CaseUrn.ToString()))
 			{
 				ContinuationId = $"{CaseUrn}_{Guid.NewGuid()}";
 			}
@@ -123,7 +131,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		{
 			NtiWarningLetterModel nti = null;
 
-			if (!string.IsNullOrWhiteSpace(ContinuationId)) // conditions have been recorded
+			if (!string.IsNullOrWhiteSpace(ContinuationId) && ContinuationId.StartsWith(CaseUrn.ToString())) // conditions have been recorded
 			{
 				nti = await _ntiWarningLetterModelService.GetWarningLetterFromCache(ContinuationId);
 				nti = PopulateNtiFromRequest(nti); // populate current form values on top of values recorded in conditions form
@@ -147,10 +155,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		private async Task<IEnumerable<RadioItem>> GetStatuses()
 		{
 			var statuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
-			return statuses.Select(r => new RadioItem
+			return statuses.Select(s => new RadioItem
 			{
-				Id = Convert.ToString(r.Id),
-				Text = r.Name
+				Id = Convert.ToString(s.Id),
+				Text = s.Name,
+				IsChecked = WarningLetter?.Status?.Id == s.Id
 			});
 		}
 
@@ -160,7 +169,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			return reasons.Select(r => new RadioItem
 			{
 				Id = Convert.ToString(r.Id),
-				Text = r.Name
+				Text = r.Name,
+				IsChecked = WarningLetter?.Reasons?.Any(wl_r => wl_r.Id == r.Id) ?? false
 			});
 		}
 
@@ -216,5 +226,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 			return nti;
 		}
+
+		private async Task LoadWarningLetterFromCache()
+		{
+			WarningLetter = await _ntiWarningLetterModelService.GetWarningLetterFromCache(ContinuationId);
+		}
+
 	}
 }
