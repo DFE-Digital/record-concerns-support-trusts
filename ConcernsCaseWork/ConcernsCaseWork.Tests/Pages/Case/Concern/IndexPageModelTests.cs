@@ -19,6 +19,7 @@ using Service.Redis.Base;
 using Service.Redis.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Concern
@@ -40,11 +41,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var expected = TrustFactory.BuildTrustDetailsModel();
 			var expectedTypeModel = TypeFactory.BuildTypeModel();
 			var expectedRatingsModel = RatingFactory.BuildListRatingModel();
+			var expectedMeansOfReferralModels = MeansOfReferralFactory.BuildListMeansOfReferralModels();
 
 			mockTypeModelService.Setup(t => t.GetTypeModel()).ReturnsAsync(expectedTypeModel);
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(new UserState { TrustUkPrn = "trust-ukprn" });
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
 			mockRatingModelService.Setup(r => r.GetRatingsModel()).ReturnsAsync(expectedRatingsModel);
+			mockMeansOfReferralModelService.Setup(m => m.GetMeansOfReferrals()).ReturnsAsync(expectedMeansOfReferralModels);
 			
 			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
 				mockTypeModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object, true);
@@ -58,16 +61,19 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			Assert.That(pageModel.TypeModel, Is.Not.Null);
 			Assert.That(pageModel.TrustDetailsModel, Is.Not.Null);
 			Assert.That(pageModel.CreateRecordsModel, Is.Not.Null);
+			Assert.That(pageModel.MeansOfReferralModel, Is.Not.Null);
 			
 			var trustDetailsModel = pageModel.TrustDetailsModel;
 			var typesDictionary = pageModel.TypeModel.TypesDictionary;
 			var ratingsModel = pageModel.RatingsModel;
 			var createRecordsModel = pageModel.CreateRecordsModel;
+			var meansOfReferralModel = pageModel.MeansOfReferralModel;
 			
 			Assert.IsAssignableFrom<List<RatingModel>>(ratingsModel);
 			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsModel);
 			Assert.IsAssignableFrom<List<CreateRecordModel>>(createRecordsModel);
 			Assert.IsAssignableFrom<Dictionary<string, IList<TypeModel.TypeValueModel>>>(typesDictionary);
+			Assert.IsAssignableFrom<List<MeansOfReferralModel>>(meansOfReferralModel);
 
 			Assert.That(typesDictionary, Is.Not.Null);
 			Assert.That(trustDetailsModel, Is.Not.Null);
@@ -84,6 +90,16 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.Town, Is.EqualTo(expected.GiasData.GroupContactAddress.Town));
 			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.AdditionalLine, Is.EqualTo(expected.GiasData.GroupContactAddress.AdditionalLine));
 			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.DisplayAddress, Is.EqualTo(SharedBuilder.BuildDisplayAddress(expected.GiasData.GroupContactAddress)));
+			
+			Assert.That(meansOfReferralModel.Count, Is.EqualTo(2));
+						
+			Assert.That("Internal", Is.EqualTo(expectedMeansOfReferralModels.First().Name));
+			Assert.That("Some description 1", Is.EqualTo(expectedMeansOfReferralModels.First().Description));
+			Assert.That(1, Is.EqualTo(expectedMeansOfReferralModels.First().Urn));
+			
+			Assert.That("External", Is.EqualTo(expectedMeansOfReferralModels.Last().Name));
+			Assert.That("Some description 2", Is.EqualTo(expectedMeansOfReferralModels.Last().Description));
+			Assert.That(2, Is.EqualTo(expectedMeansOfReferralModels.Last().Urn));
 			
 			// Verify ILogger
 			mockLogger.Verify(
@@ -114,6 +130,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			mockTypeModelService.Setup(t => t.GetTypeModel()).ReturnsAsync(new TypeModel());
 			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync((UserState)null);
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
+			mockMeansOfReferralModelService.Setup(m => m.GetMeansOfReferrals()).ReturnsAsync(new List<MeansOfReferralModel>());
 			
 			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
 				mockTypeModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object, true);
@@ -203,7 +220,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 				{
 					{ "type", new StringValues("type") },
 					{ "sub-type", new StringValues("999:subType") },
-					{ "rating", new StringValues("ragRating:123") }
+					{ "rating", new StringValues("ragRating:123") },
+					{ "means-of-referral", new StringValues("1:Internal") }
 				});
 			
 			// act
@@ -243,7 +261,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 				{
 					{ "type", new StringValues("Force Majeure") },
 					{ "sub-type", new StringValues("123:subType") },
-					{ "rating", new StringValues("123:ragRating") }
+					{ "rating", new StringValues("123:ragRating") },
+					{ "means-of-referral", new StringValues("1:Internal") }
 				});
 			
 			// act

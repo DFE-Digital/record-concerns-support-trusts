@@ -13,10 +13,6 @@ namespace Service.TRAMS.MeansOfReferral
 		[JsonProperty("urn")]
 		public long Urn { get; set; }
 		
-		public MeansOfReferralDto()
-		{
-		}
-		
 		public MeansOfReferralDto(string name, string description, long urn)
 		{
 			Name = name;

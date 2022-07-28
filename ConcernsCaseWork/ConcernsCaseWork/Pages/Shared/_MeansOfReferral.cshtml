@@ -7,7 +7,7 @@
 	@foreach (var meansOfReferral in Model)
 	{
 		<div class="govuk-radios__item">
-			@{ var idStr = id == 0 ? "meansOfReferral" : "meansOfReferral-" + id; }
+			@{ var idStr = id == 0 ? "MeansOfReferral" : "MeansOfReferral-" + id; }
 			<input class="govuk-radios__input" id="@idStr" name="meansOfReferral" type="radio" value="@meansOfReferral.Urn">
 			<label class="govuk-label govuk-radios__label" for="@idStr">
 				@meansOfReferral.Name (@meansOfReferral.Description)

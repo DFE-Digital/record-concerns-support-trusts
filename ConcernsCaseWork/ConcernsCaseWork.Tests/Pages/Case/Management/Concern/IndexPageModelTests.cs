@@ -137,7 +137,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 				{
 					{ "type", new StringValues("governance") },
 					{ "sub-type", new StringValues("123:governance") },
-					{ "rating", new StringValues("123:red") }
+					{ "rating", new StringValues("123:red") },
+					{ "means-of-referral", new StringValues("1:Internal") }
 				});
 			
 			var routeData = pageModel.RouteData.Values;
@@ -154,6 +155,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			Assert.Null(pageModel.TypeModel);
 			Assert.Null(pageModel.CreateRecordsModel);
 			Assert.Null(pageModel.TrustDetailsModel);
+			Assert.Null(pageModel.MeansOfReferralModel);
 			Assert.Null(pageModel.TempData["Error.Message"]);
 			
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
@@ -161,6 +163,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Never);
 			mockTypeModelService.Verify(t => t.GetTypeModel(), Times.Never);
+			mockMeansOfReferralModelService.Verify(t => t.GetMeansOfReferrals(), Times.Never);
 			mockRecordModelService.Verify(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>(), It.IsAny<string>()), Times.Once());
 		}		
 		

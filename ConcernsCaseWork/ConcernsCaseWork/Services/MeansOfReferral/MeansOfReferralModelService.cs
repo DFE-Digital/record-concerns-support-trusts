@@ -30,12 +30,7 @@ namespace ConcernsCaseWork.Services.MeansOfReferral
 			var meansOfReferralDtos = await _meansOfReferralsCachedService.GetMeansOfReferralsAsync();
 
 			return meansOfReferralDtos
-				.Select(dto => new MeansOfReferralModel
-				{
-					Name = dto.Name, 
-					Urn = dto.Urn, 
-					Description = dto.Description
-				})
+				.Select(dto => _mapper.Map<MeansOfReferralModel>(dto))
 				.ToList();
 		}
 	}

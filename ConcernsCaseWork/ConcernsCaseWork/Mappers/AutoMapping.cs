@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
 using Service.TRAMS.Cases;
+using Service.TRAMS.MeansOfReferral;
 using Service.TRAMS.Trusts;
 
 namespace ConcernsCaseWork.Mappers
@@ -24,6 +25,8 @@ namespace ConcernsCaseWork.Mappers
 			
 			// Case
 			CreateMap<CaseHistoryDto, CaseHistoryModel>();
+			CreateMap<MeansOfReferralModel, MeansOfReferralDto>();
+			CreateMap<MeansOfReferralDto, MeansOfReferralModel>();
 		}
 	}
 }
