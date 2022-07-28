@@ -32,6 +32,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		[TempData]
 		public string ContinuationId { get; set; }
 
+		[TempData]
+		public bool IsReturningFromConditions { get; set; }
+
 		public long CaseUrn { get; private set; }
 		public ICollection<NtiWarningLetterConditionModel> SelectedConditions { get; private set; }
 		public ICollection<NtiWarningLetterConditionDto> AllConditions { get; private set; }
@@ -67,6 +70,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 				AllConditions = await _ntiWarningLetterConditionsCachedService.GetAllConditionsAsync();
 
+				IsReturningFromConditions = true;
 				TempData.Keep(nameof(ContinuationId));
 				return Page();
 			}
@@ -90,6 +94,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				model.Conditions = conditions.Select(s => NtiWarningLetterMappers.ToServiceModel(AllConditions.Single(c => c.Id == int.Parse(s)))).ToArray();
 				await _ntiWarningLetterModelService.StoreWarningLetterToCache(model, ContinuationId);
 
+				IsReturningFromConditions = true;
 				TempData.Keep(nameof(ContinuationId));
 				return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/add");
 			}

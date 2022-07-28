@@ -32,6 +32,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		[TempData]
 		public string ContinuationId { get; set; }
 
+		[TempData]
+		public bool IsReturningFromConditions { get; set; }
+
 		public int NotesMaxLength => 2000;
 		public IEnumerable<RadioItem> Statuses { get; private set; }
 		public IEnumerable<RadioItem> Reasons { get; private set; }
@@ -57,6 +60,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 			try
 			{
+				if(!IsReturningFromConditions) // this is a fresh request, not a return from the conditions page.
+				{
+					ContinuationId = string.Empty;
+				}
+
 				ExtractCaseUrnFromRoute();
 				if (!string.IsNullOrWhiteSpace(ContinuationId) && ContinuationId.StartsWith(CaseUrn.ToString()))
 				{
@@ -65,7 +73,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 				Statuses = await GetStatuses();
 				Reasons = await GetReasons();
-
 
 				TempData.Keep(nameof(ContinuationId));
 				return Page();
@@ -108,7 +115,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		{
 			var ntiModel = await GetUpToDateModel();
 
-			// await _ntiWarningLetterModelService.CreateNtiWarningLetter(ntiModel);
+			await _ntiWarningLetterModelService.CreateNtiWarningLetter(ntiModel);
+
 			TempData.Remove(nameof(ContinuationId));
 			return Redirect($"/case/{CaseUrn}/management");
 		}

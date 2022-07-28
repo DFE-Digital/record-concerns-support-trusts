@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
 using Service.TRAMS.NtiWarningLetter;
+using System;
 using System.Linq;
 
 namespace ConcernsCaseWork.Mappers
@@ -15,11 +16,11 @@ namespace ConcernsCaseWork.Mappers
 				ClosedAt = ntiModel.ClosedAt,
 				CreatedAt = ntiModel.CreatedAt,
 				Notes = ntiModel.Notes,
-				Reasons = ntiModel.Reasons.Select(r => new NtiWarningLetterReasonDto { Id = r.Id, Name = r.Name }).ToArray(),
-				Status = ntiModel.Status == null ? null : new NtiWarningLetterStatusDto { Id = ntiModel.Status.Id, Name = ntiModel.Status.Name },
-				SentDate = ntiModel.SentDate,
+				WarningLetterReasonsMapping = ntiModel.Reasons.Select(r => r.Id).ToArray(),
+				StatusId = ntiModel.Status?.Id,
+				DateLetterSent = ntiModel.SentDate,
 				UpdatedAt = ntiModel.UpdatedAt,
-				Conditions = ntiModel.Conditions?.Select(c => ToDbModel(c)).ToArray()
+				WarningLetterConditionsMapping = ntiModel.Conditions?.Select(c => c.Id).ToArray()
 			};
 		}
 
@@ -30,12 +31,12 @@ namespace ConcernsCaseWork.Mappers
 				Id = ntiDto.Id,
 				CaseUrn = ntiDto.CaseUrn,
 				CreatedAt = ntiDto.CreatedAt,
-				UpdatedAt = ntiDto.UpdatedAt,
+				UpdatedAt = ntiDto.UpdatedAt ?? default(DateTime),
 				Notes = ntiDto.Notes,
-				SentDate = ntiDto.SentDate,
-				Status = ntiDto.Status == null ? null : new NtiWarningLetterStatusModel { Id = ntiDto.Status.Id, Name = ntiDto.Status.Name },
-				Reasons = ntiDto.Reasons?.Select(r => new NtiWarningLetterReasonModel { Id = r.Id, Name = r.Name }).ToArray(),
-				Conditions = ntiDto.Conditions?.Select(c => ToServiceModel(c)).ToArray()
+				SentDate = ntiDto.DateLetterSent,
+				Status = ntiDto.StatusId == null ? null : new NtiWarningLetterStatusModel { Id = ntiDto.StatusId.Value },
+				Reasons = ntiDto.WarningLetterReasonsMapping?.Select(r => new NtiWarningLetterReasonModel { Id = r }).ToArray(),
+				Conditions = ntiDto.WarningLetterConditionsMapping?.Select(c => new NtiWarningLetterConditionModel {  Id = c }).ToArray()
 			};
 		}
 
@@ -45,7 +46,7 @@ namespace ConcernsCaseWork.Mappers
 			{
 				Id = ntiConditionDto.Id,
 				Name = ntiConditionDto.Name,
-				Type = ntiConditionDto.Type == null ? null 
+				Type = ntiConditionDto.Type == null ? null
 				: new NtiWarningLetterConditionTypeModel
 				{
 					Id = ntiConditionDto.Type.Id,
