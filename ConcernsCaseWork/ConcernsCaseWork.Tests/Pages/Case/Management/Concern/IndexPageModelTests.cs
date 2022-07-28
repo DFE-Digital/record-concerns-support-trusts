@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Pages.Case.Management.Concern;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.MeansOfReferral;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
@@ -32,6 +33,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var caseModel = CaseFactory.BuildCaseModel();
@@ -52,7 +54,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 				.ReturnsAsync(typeModel);
 			
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object);
+				mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object);
 
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
@@ -87,10 +89,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object);
+				mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object);
 			
 			// act
 			await pageModel.OnGetAsync();
@@ -119,12 +122,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			
 			mockRecordModelService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>(), It.IsAny<string>()));
 			
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object);
+				mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object);
 
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
@@ -169,12 +173,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			
 			mockRecordModelService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>(), It.IsAny<string>()));
 			
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object);
+				mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object);
 
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
@@ -218,12 +223,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var mockRecordModelService = new Mock<IRecordModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
+			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			
 			mockRecordModelService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>(), It.IsAny<string>()));
 			
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object,  mockLogger.Object);
+				mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object);
 
 			pageModel.Request.Headers.Add("Referer", "https://returnto/thispage");
 			
@@ -261,13 +267,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			ITypeModelService mockTypeModelService,
 			IRecordModelService mockRecordModelService,
 			IRatingModelService mockRatingModelService,
+			IMeansOfReferralModelService mockMeansOfReferralModelService,
 			ILogger<IndexPageModel> mockLogger, 
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new IndexPageModel(mockCaseModelService, mockRecordModelService, mockTrustModelService, mockTypeModelService, mockRatingModelService, mockLogger)
-
+			return new IndexPageModel(mockCaseModelService, mockRecordModelService, mockTrustModelService, mockTypeModelService, mockRatingModelService, mockMeansOfReferralModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

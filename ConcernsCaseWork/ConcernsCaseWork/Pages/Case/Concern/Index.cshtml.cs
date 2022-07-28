@@ -6,6 +6,7 @@ using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
+using ConcernsCaseWork.Services.MeansOfReferral;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -28,6 +29,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private readonly ITrustModelService _trustModelService;
 		private readonly ITypeModelService _typeModelService;
 		private readonly ICachedService _cachedService;
+		private readonly IMeansOfReferralModelService _meansOfReferralService;
 		
 		public TypeModel TypeModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
@@ -36,15 +38,17 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		public IList<MeansOfReferralModel> MeansOfReferralModel { get; private set; }
 
 		public IndexPageModel(ITrustModelService trustModelService, 
-			ICachedService cachedService, 
-			ITypeModelService typeModelService, 
+			ICachedService cachedService,
+			ITypeModelService typeModelService,
 			IRatingModelService ratingModelService,
+			IMeansOfReferralModelService meansOfReferralService,
 			ILogger<IndexPageModel> logger)
 		{
 			_ratingModelService = ratingModelService;
 			_trustModelService = trustModelService;
 			_typeModelService = typeModelService;
 			_cachedService = cachedService;
+			_meansOfReferralService = meansOfReferralService;
 			_logger = logger;
 		}
 		
@@ -163,21 +167,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
 				RatingsModel = await _ratingModelService.GetRatingsModel();
 				TypeModel = await _typeModelService.GetTypeModel();
-				MeansOfReferralModel = new List<MeansOfReferralModel>
-				{
-					new MeansOfReferralModel
-					{
-						Name = "Internal",
-						Urn = 1,
-						Description = "ESFA activity, TFFT or other departmental activity"
-					},
-					new MeansOfReferralModel
-					{
-						Name = "External",
-						Urn = 2,
-						Description = "CIU casework, whistleblowing, self reported, RSCs or other government bodies"
-					}
-				};
+				MeansOfReferralModel = await _meansOfReferralService.GetMeansOfReferrals();
 			
 				return Page();
 			}
