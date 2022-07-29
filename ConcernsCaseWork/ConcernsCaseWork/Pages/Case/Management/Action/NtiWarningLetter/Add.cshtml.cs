@@ -226,6 +226,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				CaseUrn = CaseUrn,
 				Reasons = reasons.Select(r => new NtiWarningLetterReasonModel { Id = int.Parse(r) }).ToArray(),
 				Status = int.TryParse(status, out int statusId) ? new NtiWarningLetterStatusModel { Id = statusId } : null,
+				Conditions = Array.Empty<NtiWarningLetterConditionModel>(),
 				Notes = notes,
 				SentDate = sentDate,
 				CreatedAt = DateTime.Now.Date,
