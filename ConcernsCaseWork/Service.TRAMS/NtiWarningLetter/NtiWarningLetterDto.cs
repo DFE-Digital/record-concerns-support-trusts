@@ -13,7 +13,6 @@ namespace Service.TRAMS.NtiWarningLetter
 		public int? StatusId { get; set; }
 		public ICollection<int> WarningLetterReasonsMapping { get; set; }
 		public ICollection<int> WarningLetterConditionsMapping { get; set; }
-		public string CreatedBy { get; set; }
 		public DateTime CreatedAt { get; set; }
 		public DateTime? UpdatedAt { get; set; }
 		public DateTime? ClosedAt { get; set; }

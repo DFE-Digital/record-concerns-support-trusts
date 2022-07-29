@@ -1,21 +1,17 @@
-﻿using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Helpers;
+﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.NtiWarningLetter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Service.Redis.NtiWarningLetter;
+using Service.TRAMS.NtiWarningLetter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
-using Service.Redis.NtiUnderConsideration;
-using Service.Redis.NtiWarningLetter;
-using ConcernsCaseWork.Services.NtiWarningLetter;
-using Service.TRAMS.NtiWarningLetter;
-using ConcernsCaseWork.Mappers;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 {
@@ -27,7 +23,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		private readonly INtiWarningLetterReasonsCachedService _ntiWarningLetterReasonsCachedService;
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly INtiWarningLetterConditionsCachedService _ntiWarningLetterConditionsCachedService;
-		private readonly ILogger<NtiWarningLetterConditionModel> _logger;
+		private readonly ILogger _logger;
 
 		[TempData]
 		public string ContinuationId { get; set; }

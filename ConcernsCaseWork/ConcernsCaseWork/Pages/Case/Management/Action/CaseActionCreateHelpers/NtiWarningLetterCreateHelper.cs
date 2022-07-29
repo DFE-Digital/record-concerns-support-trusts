@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers
 
 		public override async Task<bool> NewCaseActionAllowed(long caseUrn, string caseWorker)
 		{
-			var ntis = await _ntiWarningLetterModelService.GetNtiWLsForCase(caseUrn);
+			var ntis = await _ntiWarningLetterModelService.GetNtiWarningLettersForCase(caseUrn);
 			return base.HasOpenCaseAction(ntis) ? throw new InvalidOperationException("There is already an open NTI: Warning letter action linked to this case. Please resolve that before opening another one.")
 				: true;
 		}

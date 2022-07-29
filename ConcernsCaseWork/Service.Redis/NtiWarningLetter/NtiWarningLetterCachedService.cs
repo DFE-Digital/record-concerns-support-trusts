@@ -139,7 +139,7 @@ namespace Service.Redis.NtiWarningLetter
 			}
 		}
 
-		public async Task SaveNtiWarningLetterToCache(NtiWarningLetterDto ntiWarningLetter, string continuationId)
+		public async Task SaveNtiWarningLetter(NtiWarningLetterDto ntiWarningLetter, string continuationId)
 		{
 			if (string.IsNullOrWhiteSpace(continuationId))
 			{
@@ -149,7 +149,7 @@ namespace Service.Redis.NtiWarningLetter
 			await StoreData(continuationId, ntiWarningLetter);
 		}
 
-		public async Task<NtiWarningLetterDto> GetNtiWarningLetterFromCache(string continuationId)
+		public async Task<NtiWarningLetterDto> GetNtiWarningLetter(string continuationId)
 		{
 			if (string.IsNullOrWhiteSpace(continuationId))
 			{

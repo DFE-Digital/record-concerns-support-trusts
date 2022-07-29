@@ -19,7 +19,6 @@ namespace Service.TRAMS.NtiWarningLetter
 		private const string Url = @"/v2/case-actions/nti-warning-letter";
 
 		public NtiWarningLetterService(IHttpClientFactory httpClientFactory, 
-
 			ILogger<NtiWarningLetterService> logger) : base(httpClientFactory)
 		{
 			_httpClientFactory = httpClientFactory;
@@ -43,7 +42,7 @@ namespace Service.TRAMS.NtiWarningLetter
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Error occured while trying to create NTI WL");
+				_logger.LogError(ex, $"Error occured while trying to create NTI Warning Letter");
 				throw;
 			}
 		}

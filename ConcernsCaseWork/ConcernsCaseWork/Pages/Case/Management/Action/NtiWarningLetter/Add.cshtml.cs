@@ -132,7 +132,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			await _ntiWarningLetterModelService.StoreWarningLetterToCache(ntiModel, ContinuationId);
 
 			TempData.Keep(nameof(ContinuationId));
-			return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/addConditions");
+			return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/conditions");
 		}
 
 		private async Task<NtiWarningLetterModel> GetUpToDateModel()

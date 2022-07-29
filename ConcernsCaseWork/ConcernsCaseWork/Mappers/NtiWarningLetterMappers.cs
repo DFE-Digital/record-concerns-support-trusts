@@ -55,21 +55,5 @@ namespace ConcernsCaseWork.Mappers
 				}
 			};
 		}
-
-		public static NtiWarningLetterConditionDto ToDbModel(NtiWarningLetterConditionModel serviceModel)
-		{
-			return new NtiWarningLetterConditionDto
-			{
-				Id = serviceModel.Id,
-				Name = serviceModel.Name,
-				Type = serviceModel.Type == null ? null
-				: new NtiWarningLetterConditionTypeDto
-				{
-					Id = serviceModel.Type.Id,
-					Name = serviceModel.Type.Name,
-					DisplayOrder = serviceModel.Type.DisplayOrder
-				}
-			};
-		}
 	}
 }
