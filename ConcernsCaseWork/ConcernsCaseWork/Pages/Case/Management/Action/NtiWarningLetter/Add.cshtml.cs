@@ -129,7 +129,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				ContinuationId = $"{CaseUrn}_{Guid.NewGuid()}";
 			}
 
-			await _ntiWarningLetterModelService.StoreWarningLetterToCache(ntiModel, ContinuationId);
+			await _ntiWarningLetterModelService.StoreWarningLetter(ntiModel, ContinuationId);
 
 			TempData.Keep(nameof(ContinuationId));
 			return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/conditions");
@@ -141,7 +141,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 			if (!string.IsNullOrWhiteSpace(ContinuationId) && ContinuationId.StartsWith(CaseUrn.ToString())) // conditions have been recorded
 			{
-				nti = await _ntiWarningLetterModelService.GetWarningLetterFromCache(ContinuationId);
+				nti = await _ntiWarningLetterModelService.GetWarningLetter(ContinuationId);
 				nti = PopulateNtiFromRequest(nti); // populate current form values on top of values recorded in conditions form
 			}
 
@@ -238,7 +238,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		private async Task LoadWarningLetterFromCache()
 		{
-			WarningLetter = await _ntiWarningLetterModelService.GetWarningLetterFromCache(ContinuationId);
+			WarningLetter = await _ntiWarningLetterModelService.GetWarningLetter(ContinuationId);
 		}
 
 	}

@@ -88,7 +88,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				var conditions = Request.Form["condition"];
 				var model = await GetUpToDateModel();
 				model.Conditions = conditions.Select(s => NtiWarningLetterMappers.ToServiceModel(AllConditions.Single(c => c.Id == int.Parse(s)))).ToArray();
-				await _ntiWarningLetterModelService.StoreWarningLetterToCache(model, ContinuationId);
+				await _ntiWarningLetterModelService.StoreWarningLetter(model, ContinuationId);
 
 				IsReturningFromConditions = true;
 				TempData.Keep(nameof(ContinuationId));
@@ -110,7 +110,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		private async Task<NtiWarningLetterModel> GetUpToDateModel()
 		{
-			return await _ntiWarningLetterModelService.GetWarningLetterFromCache(ContinuationId);
+			return await _ntiWarningLetterModelService.GetWarningLetter(ContinuationId);
 		}
 
 		private void ExtractCaseUrnFromRoute()

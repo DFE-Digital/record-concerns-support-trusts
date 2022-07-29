@@ -29,7 +29,7 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 			return dtos?.Select(dto => NtiWarningLetterMappers.ToServiceModel(dto)).ToArray();
 		}
 
-		public async Task<NtiWarningLetterModel> GetWarningLetterFromCache(string continuationId)
+		public async Task<NtiWarningLetterModel> GetWarningLetter(string continuationId)
 		{
 			if(string.IsNullOrWhiteSpace(continuationId))
 			{
@@ -40,7 +40,7 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 			return NtiWarningLetterMappers.ToServiceModel(dto);
 		}
 
-		public async Task StoreWarningLetterToCache(NtiWarningLetterModel ntiWarningLetter, string continuationId)
+		public async Task StoreWarningLetter(NtiWarningLetterModel ntiWarningLetter, string continuationId)
 		{
 			if (string.IsNullOrWhiteSpace(continuationId))
 			{
