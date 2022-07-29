@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var testData = new 
 			{
 				Id = 1L,
-				CaseUrn = 123L,
+				CaseUrn = 123,
 				CreatedAt = DateTime.Now.AddDays(-5),
 				ClosedAt = DateTime.Now,
 				Notes = "Test notes",
@@ -38,10 +38,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CreatedAt = testData.CreatedAt,
 				ClosedAt = testData.ClosedAt,
 				Notes = testData.Notes,
-				Reasons = new NtiWarningLetterReasonDto[] { new NtiWarningLetterReasonDto { Id = testData.Reasons.First().Key, Name = testData.Reasons.First().Value } },
-				SentDate = testData.SentDate,
-				Status = new NtiWarningLetterStatusDto { Id = testData.Status.Key, Name = testData.Status.Value },
-				UpdatedAt = testData.UpdatedAt
+				DateLetterSent = testData.SentDate,
+				StatusId = testData.Status.Key,
+				UpdatedAt = testData.UpdatedAt,
+				WarningLetterReasonsMapping = testData.Reasons.Select(r => r.Key).ToArray()
 			};
 
 
@@ -95,13 +95,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(dbModel.CaseUrn, Is.EqualTo(testData.CaseUrn));
 			Assert.That(dbModel.Id, Is.EqualTo(testData.Id));
 
-			Assert.That(dbModel.Reasons, Is.Not.Null);
-			Assert.That(dbModel.Reasons.Count, Is.EqualTo(testData.Reasons.Length));
-			Assert.That(dbModel.Reasons.ElementAt(0).Id, Is.EqualTo(testData.Reasons.ElementAt(0).Key));
-
-			Assert.That(dbModel.Status, Is.Not.Null);
-			Assert.That(dbModel.Status.Id, Is.EqualTo(testData.Status.Key));
-			Assert.That(dbModel.Status.Name, Is.EqualTo(testData.Status.Value));
+			Assert.That(dbModel.StatusId, Is.Not.Null);
+			Assert.That(dbModel.StatusId, Is.EqualTo(testData.Status.Key));
 		}
 
 

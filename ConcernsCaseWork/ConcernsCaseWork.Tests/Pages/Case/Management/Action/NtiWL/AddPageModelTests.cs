@@ -81,7 +81,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			var pageModel = SetupAddPageModel(mockNtiWLModelService, mockNtiWLReasonsService, mockNtiWLStatusesService, mockLogger);
 
 			// act
-			var pageResponse = await pageModel.OnPostAsync();
+			var pageResponse = await pageModel.OnPostAsync(String.Empty);
 
 			// assert
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());

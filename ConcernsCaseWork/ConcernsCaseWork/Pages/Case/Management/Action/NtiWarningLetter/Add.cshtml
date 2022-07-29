@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Add Nti Warning letter";
+    ViewData["CancelBackLink"] = @$"/case/{Model.CaseUrn}/management/action";
     var nonce = HttpContext.GetNonce();
 }
 
@@ -60,7 +61,7 @@
                                 {
                                     var idStr = statusId++ == 0 ? "status" : "status-" + statusId;
                                     <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id">
+                                        <input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id" checked="@status.IsChecked">
                                         <label class="govuk-label govuk-radios__label" for="@idStr">
                                             <span>
                                                 @status.Text
@@ -85,7 +86,7 @@
                                             Day
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day"
-                                           name="dtr-day" type="text" maxlength="2" inputmode="numeric" />
+                                           name="dtr-day" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.WarningLetter?.SentDate?.Day:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -94,7 +95,7 @@
                                             Month
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month"
-                                           name="dtr-month" type="text" maxlength="2" inputmode="numeric" />
+                                           name="dtr-month" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.WarningLetter?.SentDate?.Month:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -103,7 +104,7 @@
                                             Year
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year"
-                                           name="dtr-year" type="text" maxlength="4" inputmode="numeric" />
+                                           name="dtr-year" type="text" maxlength="4" inputmode="numeric" value="@($"{Model.WarningLetter?.SentDate?.Year}")" />
                                     </div>
                                 </div>
                             </div>
@@ -114,7 +115,7 @@
                     <div class="govuk-form-group govuk-!-margin-top-9">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">What are the reasons for considering a Notice To Improve</h2>
+                                <h2 class="govuk-heading-m">Why are you issuing a warning letter?</h2>
                             </legend>
                             <div id="waste-hint" class="govuk-hint">
                                 Select all reasons that apply.
@@ -127,7 +128,7 @@
                                 {
                                     var idStr = reasonId++ == 0 ? "reason" : "reason-" + reasonId;
                                     <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" id="@idStr" name="reason" type="checkbox" value="@reason.Id">
+                                        <input class="govuk-checkboxes__input" id="@idStr" name="reason" type="checkbox" value="@reason.Id" checked="@reason.IsChecked">
                                         <label class="govuk-label govuk-checkboxes__label" for="@idStr">
                                             @reason.Text
                                         </label>
@@ -137,24 +138,35 @@
                         </fieldset>
                     </div>
 
+                    @* Conditions *@
+                    <div class="govuk-form-group govuk-!-margin-top-9">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">What are the conditions of the warning letter?</h2>
+                            </legend>
+                            <button class="govuk-button govuk-button--secondary" data-module="govuk-button" name="action" value="@Model.ActionForAddConditionsButton">
+                                Add conditions
+                            </button>
+                        </fieldset>
+                    </div>
+
                     @* Notes *@
                     <div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
                         <div class="govuk-form-group">
                             <h2 class="govuk-heading-m">Notes</h2>
-                            <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="nti-notes" name="nti-notes" rows="3" aria-describedby="nti-notes-info"></textarea>
+                            <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="nti-notes" name="nti-notes" rows="3" aria-describedby="nti-notes-info">@(Model.WarningLetter?.Notes)</textarea>
                         </div>
                         <div id="nti-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
                             You can enter up to @Model.NotesMaxLength characters
                         </div>
-                    </div> 
+                    </div>
 
                     <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-nti-wl-button">
+                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-nti-wl-button" name="action" value="@Model.ActionForContinueButton">
                             Continue
                         </button>
                         <partial name="_Cancel" />
                     </div>
-
                 </form>
 
                 <script type="application/javascript" nonce="@nonce">
