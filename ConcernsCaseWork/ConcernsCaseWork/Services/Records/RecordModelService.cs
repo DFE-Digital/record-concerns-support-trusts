@@ -126,7 +126,8 @@ namespace ConcernsCaseWork.Services.Records
 				createRecordModel.CaseUrn, 
 				createRecordModel.TypeUrn,
 				createRecordModel.RatingUrn, 
-				statusDto.Urn);
+				statusDto.Urn,
+				createRecordModel.MeansOfReferralUrn);
 			
 			var recordDto = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, caseworker);
 			

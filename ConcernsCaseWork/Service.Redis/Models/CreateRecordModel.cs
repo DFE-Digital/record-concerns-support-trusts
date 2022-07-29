@@ -30,5 +30,7 @@ namespace Service.Redis.Models
 		public Tuple<int, IList<string>> RagRating { get; set; }
 
 		public IList<string> RagRatingCss { get; set; }
+		
+		public long MeansOfReferralUrn { get; set; }
 	}
 }

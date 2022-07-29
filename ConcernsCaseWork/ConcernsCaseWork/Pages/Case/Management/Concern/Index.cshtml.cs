@@ -107,13 +107,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				var splitRagRating = ragRating.Split(":");
 				var ragRatingUrn = splitRagRating[0];
 
+				var meansOfReferral = Request.Form["meansOfReferral"].ToString();
+				
 				var createRecordModel = new CreateRecordModel
 				{
 					CaseUrn = caseUrn,
 					TypeUrn = long.Parse(typeUrn),
 					Type = type,
 					SubType = subType,
-					RatingUrn = long.Parse(ragRatingUrn)
+					RatingUrn = long.Parse(ragRatingUrn),
+					MeansOfReferralUrn = long.Parse(meansOfReferral)
 				};
 				
 				// Post record
