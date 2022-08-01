@@ -152,6 +152,10 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiWarningLetterReasonsService, TempNtiWarningLetterReasonsService>();
 			services.AddSingleton<INtiWarningLetterService, TempNtiWarningLetterService>();
 			services.AddSingleton<IMeansOfReferralService, MeansOfReferralService>();
+			services.AddSingleton<INtiWarningLetterStatusesService, NtiWarningLetterStatusesService>();
+			services.AddSingleton<INtiWarningLetterReasonsService, NtiWarningLetterReasonsService>();
+			services.AddSingleton<INtiWarningLetterService, NtiWarningLetterService>();
+			services.AddSingleton<INtiWarningLetterConditionsService, NtiWarningLetterConditionsService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
@@ -173,6 +177,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiWarningLetterReasonsCachedService, NtiWarningLetterReasonsCachedService>();
 			services.AddSingleton<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
 			services.AddSingleton<IMeansOfReferralCachedService, MeansOfReferralCachedService>();
+			services.AddSingleton<INtiWarningLetterConditionsCachedService, NtiWarningLetterConditionsCachedServices>();
 
 			// AD Integration
 			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();

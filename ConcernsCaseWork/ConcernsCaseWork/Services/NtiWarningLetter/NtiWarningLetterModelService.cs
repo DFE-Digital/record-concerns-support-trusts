@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using Service.Redis.NtiWarningLetter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,10 +23,31 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 			return NtiWarningLetterMappers.ToServiceModel(created);
 		}
 
-		public async Task<ICollection<NtiWarningLetterModel>> GetNtiWLsForCase(long caseUrn)
+		public async Task<ICollection<NtiWarningLetterModel>> GetNtiWarningLettersForCase(long caseUrn)
 		{
 			var dtos = await _ntiWarningLetterCachedService.GetNtiWarningLettersForCaseAsync(caseUrn);
 			return dtos?.Select(dto => NtiWarningLetterMappers.ToServiceModel(dto)).ToArray();
+		}
+
+		public async Task<NtiWarningLetterModel> GetWarningLetter(string continuationId)
+		{
+			if(string.IsNullOrWhiteSpace(continuationId))
+			{
+				throw new ArgumentNullException(nameof(continuationId));
+			}
+
+			var dto = await _ntiWarningLetterCachedService.GetNtiWarningLetter(continuationId);
+			return NtiWarningLetterMappers.ToServiceModel(dto);
+		}
+
+		public async Task StoreWarningLetter(NtiWarningLetterModel ntiWarningLetter, string continuationId)
+		{
+			if (string.IsNullOrWhiteSpace(continuationId))
+			{
+				throw new ArgumentNullException(nameof(continuationId));
+			}
+
+			await _ntiWarningLetterCachedService.SaveNtiWarningLetter(NtiWarningLetterMappers.ToDBModel(ntiWarningLetter), continuationId);
 		}
 	}
 }
