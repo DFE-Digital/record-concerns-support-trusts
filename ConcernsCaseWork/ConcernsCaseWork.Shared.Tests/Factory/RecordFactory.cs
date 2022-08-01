@@ -65,12 +65,12 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				1, 1);
 		}
 		
-		public static CreateRecordDto BuildCreateRecordDto(long caseUrn = 1, long typeUrn = 1, long ratingUrn = 1)
+		public static CreateRecordDto BuildCreateRecordDto(long caseUrn = 1, long typeUrn = 1, long ratingUrn = 1, long meansOfReferralUrn = 1)
 		{
 			var currentDate = DateTimeOffset.Now;
 			return new CreateRecordDto(currentDate, currentDate, currentDate, currentDate,
 				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, typeUrn, ratingUrn,
-				1);
+				1, meansOfReferralUrn);
 		}
 		
 		public static RecordModel BuildRecordModel(long statusUrn = 1)
@@ -83,7 +83,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<RatingModel>(),
 				Fixture.Create<long>(),
 				statusUrn,
-				Fixture.Create<StatusModel>()
+				Fixture.Create<StatusModel>(),
+				Fixture.Create<MeansOfReferralModel>()
 			);
 		}
 		

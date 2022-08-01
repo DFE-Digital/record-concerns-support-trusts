@@ -138,7 +138,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 					{ "type", new StringValues("governance") },
 					{ "sub-type", new StringValues("123:governance") },
 					{ "rating", new StringValues("123:red") },
-					{ "means-of-referral", new StringValues("1:Internal") }
+					{ "meansOfReferralUrn", new StringValues("1") }
 				});
 			
 			var routeData = pageModel.RouteData.Values;

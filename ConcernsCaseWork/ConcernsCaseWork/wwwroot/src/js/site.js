@@ -47,7 +47,7 @@ window.addIssueValidator = function(validator) {
 	}]);
 }
 window.addMeansOfReferralValidator = function (validator) {
-	validator.addValidator('means-of-referral', [{
+	validator.addValidator('means-of-referral-urn', [{
 		method: function(field) {
 			return field.value.trim().length > 0;
 		},

@@ -23,8 +23,29 @@
 		
 		public StatusModel StatusModel { get; }
 		
-		public RecordModel(long caseUrn, long typeUrn, TypeModel typeModel, long ratingUrn, RatingModel ratingModel, long urn, long statusUrn, StatusModel statusModel) => 
-			(CaseUrn, TypeUrn, TypeModel, RatingUrn, RatingModel, Urn, StatusUrn, StatusModel) = 
-			(caseUrn, typeUrn, typeModel, ratingUrn, ratingModel, urn, statusUrn, statusModel);
+		public RecordModel(
+			long caseUrn, 
+			long typeUrn, 
+			TypeModel typeModel, 
+			long ratingUrn, 
+			RatingModel ratingModel, 
+			long urn, 
+			long statusUrn, 
+			StatusModel statusModel, 
+			MeansOfReferralModel meansOfReferralModel) => 
+				(CaseUrn, TypeUrn, TypeModel, RatingUrn, RatingModel, Urn, StatusUrn, StatusModel, MeansOfReferralModel) = 
+				(caseUrn, typeUrn, typeModel, ratingUrn, ratingModel, urn, statusUrn, statusModel, meansOfReferralModel);
+		
+		public RecordModel(
+			long caseUrn, 
+			long typeUrn, 
+			TypeModel typeModel, 
+			long ratingUrn, 
+			RatingModel ratingModel, 
+			long urn, 
+			long statusUrn, 
+			StatusModel statusModel) => 
+				(CaseUrn, TypeUrn, TypeModel, RatingUrn, RatingModel, Urn, StatusUrn, StatusModel) = 
+				(caseUrn, typeUrn, typeModel, ratingUrn, ratingModel, urn, statusUrn, statusModel);
 	}
 }

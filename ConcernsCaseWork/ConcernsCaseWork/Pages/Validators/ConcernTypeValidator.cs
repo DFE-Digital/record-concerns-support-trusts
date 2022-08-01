@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.Pages.Validators
 			var type = formCollection["type"].ToString();
 			var subType = formCollection["sub-type"].ToString();
 			var ragRating = formCollection["rating"].ToString();
-			var meansOfReferral = formCollection["meansOfReferral"].ToString();
+			var meansOfReferral = formCollection["meansOfReferralUrn"].ToString();
 			
 			// Force majeure
 			var splitType = type.Split(":");
