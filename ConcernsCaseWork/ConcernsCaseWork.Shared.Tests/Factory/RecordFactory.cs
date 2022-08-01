@@ -117,7 +117,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				RatingUrn = Fixture.Create<long>(),
 				SubType = Fixture.Create<string>(),
 				TypeUrn = Fixture.Create<long>(),
-				RagRatingCss = Fixture.Create<IList<string>>()
+				RagRatingCss = Fixture.Create<IList<string>>(),
+				MeansOfReferralUrn = Fixture.Create<long>()
 			};
 		}
 		
