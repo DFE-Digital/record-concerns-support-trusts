@@ -148,9 +148,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiUnderConsiderationReasonsService, NtiUnderConsiderationReasonsService>();
 			services.AddSingleton<INtiUnderConsiderationStatusesService, NtiUnderConsiderationStatusesService>();
 			services.AddSingleton<INtiUnderConsiderationService, NtiUnderConsiderationService>();
-			services.AddSingleton<INtiWarningLetterStatusesService, TempNtiWarningLetterStatusesService>();
-			services.AddSingleton<INtiWarningLetterReasonsService, TempNtiWarningLetterReasonsService>();
-			services.AddSingleton<INtiWarningLetterService, TempNtiWarningLetterService>();
 			services.AddSingleton<IMeansOfReferralService, MeansOfReferralService>();
 			services.AddSingleton<INtiWarningLetterStatusesService, NtiWarningLetterStatusesService>();
 			services.AddSingleton<INtiWarningLetterReasonsService, NtiWarningLetterReasonsService>();
