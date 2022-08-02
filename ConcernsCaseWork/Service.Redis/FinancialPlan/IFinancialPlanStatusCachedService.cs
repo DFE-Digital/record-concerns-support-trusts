@@ -8,6 +8,5 @@ namespace Service.Redis.FinancialPlan
 	{
 		Task ClearData();
 		Task<IList<FinancialPlanStatusDto>> GetFinancialPlanStatuses();
-		Task<FinancialPlanStatusDto> GetDefaultFinancialPlan();
 	}
 }
