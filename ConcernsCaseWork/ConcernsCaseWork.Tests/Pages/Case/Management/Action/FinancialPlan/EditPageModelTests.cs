@@ -163,7 +163,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 			var statuses = FinancialPlanStatusFactory.BuildListFinancialPlanStatusDto();
 
-			mockFinancialPlanStatusService.Setup(fp => fp.GetFinancialPlanStatuses())
+			mockFinancialPlanStatusService.Setup(fp => fp.GetAllFinancialPlanStatuses())
 				.ReturnsAsync(statuses);
 
 			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);

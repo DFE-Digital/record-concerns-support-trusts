@@ -8,45 +8,56 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.FinancialPlan;
-using Service.Redis.Models;
 using Service.Redis.FinancialPlan;
+using Service.TRAMS.FinancialPlan;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class AddPageModel : AbstractPageModel
+	public class ClosePageModel : AbstractPageModel
 	{
-		private readonly ILogger<AddPageModel> _logger;
+		private readonly ILogger<ClosePageModel> _logger;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
 		private readonly IFinancialPlanStatusCachedService _financialPlanStatusCachedService;
+		private readonly Func<Task<IList<FinancialPlanStatusDto>>> _getFinancialPlanStatusesAsync;
 
+		public FinancialPlanModel FinancialPlanModel { get; set; }
 		public int NotesMaxLength => 2000;
-		public IEnumerable<RadioItem> FinancialPlanStatuses { get; set; }
+		public IEnumerable<RadioItem> FinancialPlanStatuses { get; set; } = new List<RadioItem>();
 
-		public AddPageModel(IFinancialPlanModelService financialPlanModelService, IFinancialPlanStatusCachedService financialPlanStatusService, ILogger<AddPageModel> logger)
+		public ClosePageModel(
+			IFinancialPlanModelService financialPlanModelService, IFinancialPlanStatusCachedService financialPlanStatusService, ILogger<ClosePageModel> logger)
 		{
 			_financialPlanModelService = financialPlanModelService;
 			_financialPlanStatusCachedService = financialPlanStatusService;
 			_logger = logger;
+			
+			_getFinancialPlanStatusesAsync = async () => await _financialPlanStatusCachedService.GetClosureFinancialPlansStatuses();
 		}
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::FinancialPlan::AddPageModel::OnGetAsync");
+			_logger.LogInformation("Case::Action::FinancialPlan::ClosePageModel::OnGetAsync");
 
 			try
 			{
-				GetRouteData();
+				long caseUrn;
+				long financialPlanId;
+				
+				(caseUrn, financialPlanId) = GetRouteData();
 
 				FinancialPlanStatuses = await GetStatusesAsync();
-				
+
+				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, User.Identity.Name);
+
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::FinancialPlan::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::FinancialPlan::ClosePageModel::OnGetAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
@@ -55,12 +66,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 		public async Task<IActionResult> OnPostAsync()
 		{
+			_logger.LogInformation("Case::Action::FinancialPlan::ClosePageModel::OnPostAsync");
+			
 			try
 			{
-				long caseUrn = GetRouteData();
+				long caseUrn;
+				long financialPlanId;
+				
+				(caseUrn, financialPlanId) = GetRouteData();
+				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, User.Identity.Name);
 
 				ValidateFinancialPlan();
-				
+
 				// Store form data
 				var statusString = Request.Form["status"].ToString();
 				var dateRequestedDay = Request.Form["dtr-day-plan-requested"].ToString();
@@ -79,26 +96,27 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				// Check if dates entered are valid
 				var financialPlanDates = ParseFinancialPlanDates(requestedDtString, viablePlanReceivedDtString);
 
-				// Fetch statuses from cache and compare them to the selected status
-				var statuses = await _financialPlanStatusCachedService.GetOpenFinancialPlansStatuses();
+				// Fetch statuses and compare them to the selected status
+				var statuses = await _getFinancialPlanStatusesAsync();
 				var selectedStatus = statuses.FirstOrDefault(s => s.Name.Equals(statusString));
 				if (selectedStatus is null)
 				{
-					throw new InvalidOperationException($"Status {statusString} not found");
+					throw new InvalidOperationException($"Status {statusString} is invalid");
 				}
-				
-				var createFinancialPlanModel = new CreateFinancialPlanModel
+
+				var patchFinancialPlanModel = new PatchFinancialPlanModel
 				{
+					Id = financialPlanId,
 					CaseUrn = caseUrn,
-					CreatedAt = DateTime.Now,
+					StatusId = selectedStatus.Id,
 					DatePlanRequested = financialPlanDates.planRequestedDate,
 					DateViablePlanReceived = financialPlanDates.viablePlanReceivedDate,
-					StatusId = selectedStatus.Id,
-					CreatedBy = currentUser,
-					Notes = notes
+					Notes = notes,
+					// todo: closed date is currently set to server date across the system. This should ideally be converted to UTC
+					ClosedAt = DateTime.Now
 				};
 
-				await _financialPlanModelService.PostFinancialPlanByCaseUrn(createFinancialPlanModel, currentUser);
+				await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel, currentUser);
 
 				return Redirect($"/case/{caseUrn}/management");
 			}
@@ -108,7 +126,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::SRMA::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::FinancialPlan::ClosePageModel::OnPostAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
@@ -117,7 +135,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		}
 
 		private async Task<IEnumerable<RadioItem>> GetStatusesAsync()
-			=> (await _financialPlanStatusCachedService.GetOpenFinancialPlansStatuses())
+			=> (await _getFinancialPlanStatusesAsync())
 				.Select(s => new RadioItem
 				{
 					Id = s.Name, 
@@ -125,16 +143,22 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					IsChecked = false
 				});
 
-		private long GetRouteData()
+		private (long, long) GetRouteData()
 		{
 			var caseUrnValue = RouteData.Values["urn"];
+			var financialPlanIdValue = RouteData.Values["financialplanid"];
 
 			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
 			{
 				throw new Exception("CaseUrn is null or invalid to parse");
 			}
 
-			return caseUrn;
+			if (!long.TryParse(financialPlanIdValue.ToString(), out long financialPlanId) || financialPlanId == 0)
+			{
+				throw new Exception("FinancialId is 0 or invalid to parse");
+			}
+
+			return (caseUrn, financialPlanId);
 		}
 
 		private void ValidateFinancialPlan()
@@ -150,20 +174,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			var requestedDtString = CreateDateString(dateRequestedDay, dateRequestedMonth, dateRequestedYear);
 			var viablePlanReceivedDtString = CreateDateString(dateViablePlanDay, dateViablePlanMonth, dateViablePlanYear);
 
-			if (!string.IsNullOrEmpty(requestedDtString))
+			if (!string.IsNullOrEmpty(requestedDtString) && !DateTimeHelper.TryParseExact(requestedDtString, out DateTime _))
 			{
-				if (!DateTimeHelper.TryParseExact(requestedDtString, out DateTime _))
-				{
-					throw new InvalidOperationException($"Plan requested {requestedDtString} is an invalid date");
-				}
+				throw new InvalidOperationException($"Plan requested {requestedDtString} is an invalid date");
 			}
 
-			if (!string.IsNullOrEmpty(viablePlanReceivedDtString))
+			if (!string.IsNullOrEmpty(viablePlanReceivedDtString) && !DateTimeHelper.TryParseExact(viablePlanReceivedDtString, out DateTime _))
 			{
-				if (!DateTimeHelper.TryParseExact(viablePlanReceivedDtString, out DateTime _))
-				{
-					throw new InvalidOperationException($"Viable Plan {viablePlanReceivedDtString} is an invalid date");
-				}
+				throw new InvalidOperationException($"Viable Plan {viablePlanReceivedDtString} is an invalid date");
 			}
 
 			if (financialPlanNotes?.Length > NotesMaxLength)

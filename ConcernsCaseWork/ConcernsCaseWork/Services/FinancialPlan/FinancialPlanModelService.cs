@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 			_logger.LogInformation("FinancialPlanModelService::GetFinancialPlansModelByCaseUrn");
 
 			var financialPlansDtoTask = _financialPlanCachedService.GetFinancialPlansByCaseUrn(caseUrn, caseworker);
-			var statusesDtoTask = _financialPlanStatusCachedService.GetFinancialPlanStatuses();
+			var statusesDtoTask = _financialPlanStatusCachedService.GetAllFinancialPlanStatuses();
 
 			await Task.WhenAll(financialPlansDtoTask, statusesDtoTask);
 
@@ -45,7 +45,7 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 		{
 			try
 			{
-				var statusesDto = await _financialPlanStatusCachedService.GetFinancialPlanStatuses();
+				var statusesDto = await _financialPlanStatusCachedService.GetAllFinancialPlanStatuses();
 
 				var financialPlanDto = await _financialPlanCachedService.GetFinancialPlansById(caseUrn, financialPlanId, caseworker);
 				var financialPlanModel = FinancialPlanMapping.MapDtoToModel(financialPlanDto, statusesDto);
@@ -66,7 +66,7 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 			{
 				// Fetch Financial Plan & statuses
 				var financialPlanDto = await _financialPlanCachedService.GetFinancialPlansById(patchFinancialPlanModel.CaseUrn, patchFinancialPlanModel.Id, caseworker);
-				var statusesDto = await _financialPlanStatusCachedService.GetFinancialPlanStatuses();
+				var statusesDto = await _financialPlanStatusCachedService.GetAllFinancialPlanStatuses();
 
 				financialPlanDto = FinancialPlanMapping.MapPatchFinancialPlanModelToDto(patchFinancialPlanModel, financialPlanDto, statusesDto);
 

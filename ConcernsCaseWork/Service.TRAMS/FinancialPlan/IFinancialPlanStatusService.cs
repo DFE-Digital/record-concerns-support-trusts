@@ -5,6 +5,8 @@ namespace Service.TRAMS.FinancialPlan
 {
 	public interface IFinancialPlanStatusService
 	{
-		Task<IList<FinancialPlanStatusDto>> GetFinancialPlansStatuses();
+		Task<IList<FinancialPlanStatusDto>> GetAllFinancialPlansStatuses();
+		Task<IList<FinancialPlanStatusDto>> GetClosureFinancialPlansStatuses();
+		Task<IList<FinancialPlanStatusDto>> GetOpenFinancialPlansStatuses();
 	}
 }

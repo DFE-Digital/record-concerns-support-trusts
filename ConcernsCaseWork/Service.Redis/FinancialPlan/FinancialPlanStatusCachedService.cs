@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.TRAMS.FinancialPlan;
-using Service.TRAMS.Ratings;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Service.Redis.FinancialPlan
@@ -14,6 +13,8 @@ namespace Service.Redis.FinancialPlan
 		private readonly IFinancialPlanStatusService _financialPlanStatusService;
 
 		private const string FinancialPlanStatusKey = "FinancialPlan.Statuses";
+		private const string FinancialPlanClosureStatusKey = "FinancialPlan.ClosureStatuses";
+		private const string FinancialPlanOpenStatusKey = "FinancialPlan.OpenStatuses";
 		
 		public FinancialPlanStatusCachedService(ICacheProvider cacheProvider, IFinancialPlanStatusService financialPlanStatusService, ILogger<FinancialPlanStatusCachedService> logger) 
 			: base(cacheProvider)
@@ -27,29 +28,46 @@ namespace Service.Redis.FinancialPlan
 			await ClearData(FinancialPlanStatusKey);
 		}
 
-		public async Task<IList<FinancialPlanStatusDto>> GetFinancialPlanStatuses()
+		public async Task<IList<FinancialPlanStatusDto>> GetAllFinancialPlanStatuses()
 		{
-			_logger.LogInformation("FinancialPlanStatusCachedService::GetFinancialPlanStatuses");
+			_logger.LogInformation("FinancialPlanStatusCachedService::GetAllFinancialPlanStatuses");
 			
+			return await GetFinancialPlansStatusesAsync(
+				async () => await _financialPlanStatusService.GetAllFinancialPlansStatuses(), 
+				FinancialPlanStatusKey);
+		}
+
+		public async Task<IList<FinancialPlanStatusDto>> GetClosureFinancialPlansStatuses()
+		{
+			_logger.LogInformation("FinancialPlanStatusCachedService::GetClosureFinancialPlansStatuses");
+			
+			return await GetFinancialPlansStatusesAsync(
+				async () => await _financialPlanStatusService.GetClosureFinancialPlansStatuses(), 
+				FinancialPlanClosureStatusKey);
+		}
+
+		public async Task<IList<FinancialPlanStatusDto>> GetOpenFinancialPlansStatuses()
+		{
+			_logger.LogInformation("FinancialPlanStatusCachedService::GetOpenFinancialPlansStatuses");
+			
+			return await GetFinancialPlansStatusesAsync(
+				async () => await _financialPlanStatusService.GetOpenFinancialPlansStatuses(), 
+				FinancialPlanOpenStatusKey);
+		}
+
+		private async Task<IList<FinancialPlanStatusDto>> GetFinancialPlansStatusesAsync(Func<Task<IList<FinancialPlanStatusDto>>> getFinancialPlanStatusesAsync, string cacheKey)
+		{
 			// Check cache
-			var financialPlanStatuses = await GetData<IList<FinancialPlanStatusDto>>(FinancialPlanStatusKey);
+			var financialPlanStatuses = await GetData<IList<FinancialPlanStatusDto>>(cacheKey);
 			if (financialPlanStatuses != null) return financialPlanStatuses;
 
 			// Fetch from Academies API
-			financialPlanStatuses = await _financialPlanStatusService.GetFinancialPlansStatuses();
+			financialPlanStatuses = await getFinancialPlanStatusesAsync();
 
-			// Store in cache for 24 hours (default)
-			await StoreData(FinancialPlanStatusKey, financialPlanStatuses);
-			
+			// Save to cache
+			await StoreData(cacheKey, financialPlanStatuses);
+				
 			return financialPlanStatuses;
-		}
-
-		public async Task<FinancialPlanStatusDto> GetDefaultFinancialPlan()
-		{
-			var financialPlanStatusesDto = await GetFinancialPlanStatuses();
-			var financialPlanStatusDto = financialPlanStatusesDto.FirstOrDefault(r => r.Name.Equals("Unknown"));
-
-			return financialPlanStatusDto;
 		}
 	}
 }

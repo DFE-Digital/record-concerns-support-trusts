@@ -8,16 +8,15 @@ namespace Service.TRAMS.FinancialPlan
 		[JsonProperty("name")]
 		public string Name { get; }
 		
-		[JsonProperty("createdAt")]
-		public DateTimeOffset CreatedAt { get; }
-		
-		[JsonProperty("updatedAt")]
-		public DateTimeOffset UpdatedAt { get; }
-		
 		[JsonProperty("id")]
 		public long Id { get; }
 		
-		public FinancialPlanStatusDto(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, long id) => 
-			(Name, CreatedAt, UpdatedAt, Id) = (name, createdAt, updatedAt, id);
+		[JsonProperty("description")]
+		public string Description { get; }
+		
+		[JsonProperty("isClosedStatus")]
+		public bool IsClosedStatus { get; }
+		
+		public FinancialPlanStatusDto(string name, string description, long id, bool isClosedStatus) => (Name, Description, Id, IsClosedStatus) = (name, description, id, isClosedStatus);
 	}
 }
