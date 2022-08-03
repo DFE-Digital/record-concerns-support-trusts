@@ -65,7 +65,5 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 
 			return NtiWarningLetterMappers.ToServiceModel(patchedDto);
 		}
-
-		
 	}
 }

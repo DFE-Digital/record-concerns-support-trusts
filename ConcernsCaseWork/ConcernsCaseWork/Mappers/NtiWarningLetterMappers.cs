@@ -56,5 +56,23 @@ namespace ConcernsCaseWork.Mappers
 				}
 			};
 		}
+
+		public static NtiWarningLetterStatusModel ToServiceModel(NtiWarningLetterStatusDto ntiStatusDto)
+		{
+			return new NtiWarningLetterStatusModel
+			{
+				Id = ntiStatusDto.Id,
+				Name = ntiStatusDto.Name
+			};
+		}
+
+		public static NtiWarningLetterReasonModel ToServiceModel(NtiWarningLetterReasonDto ntiWarningLetterReasonDto)
+		{
+			return new NtiWarningLetterReasonModel
+			{
+				Id = ntiWarningLetterReasonDto.Id,
+				Name = ntiWarningLetterReasonDto.Name
+			};
+		}
 	}
 }
