@@ -47,7 +47,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 				(_, ntiWLId) = GetRouteData();
 
-				NtiWarningLetterModel = await _ntiWarningLetterModelService.GetNtiWLById(ntiWLId);
+				NtiWarningLetterModel = await _ntiWarningLetterModelService.GetNtiWarningLetterId(ntiWLId);
 				NTIStatuses = await GetStatusesForUI();
 
 				return Page();
@@ -79,9 +79,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		{
 			var statuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
 
-			//.Where(s => s.IsClosedState)
-
-			return statuses.Select(s => new RadioItem
+			return statuses.Where(s => s.IsClosingState).Select(s => new RadioItem
 			{
 				Id = Convert.ToString(s.Id),
 				Text = s.Name,
@@ -105,7 +103,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				var notes = Request.Form["nti-notes"].ToString();
 				var statusId = int.Parse(status);
 
-				var ntiWarningLetter = await _ntiWarningLetterModelService.GetNtiWLById(ntiWLId);
+				var ntiWarningLetter = await _ntiWarningLetterModelService.GetNtiWarningLetterId(ntiWLId);
 				ntiWarningLetter.Notes = notes;
 				ntiWarningLetter.ClosedStatusId = statusId;
 				ntiWarningLetter.ClosedAt = DateTime.Now;

@@ -14,6 +14,7 @@ namespace ConcernsCaseWork.Mappers
 				Id = ntiModel.Id,
 				CaseUrn = ntiModel.CaseUrn,
 				ClosedAt = ntiModel.ClosedAt,
+				ClosedStatusId = ntiModel.ClosedStatusId,
 				CreatedAt = ntiModel.CreatedAt,
 				Notes = ntiModel.Notes,
 				WarningLetterReasonsMapping = ntiModel.Reasons.Select(r => r.Id).ToArray(),
