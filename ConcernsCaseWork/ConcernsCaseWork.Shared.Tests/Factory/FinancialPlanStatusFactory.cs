@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Enums;
 using Service.TRAMS.FinancialPlan;
+using System;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory
@@ -18,6 +19,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		}
 
 		private static FinancialPlanStatusDto BuildFinancialPlanStatusDto(FinancialPlanStatus financialPlanStatus, bool isClosedStatus)
-			=> new FinancialPlanStatusDto(financialPlanStatus.ToString(), financialPlanStatus.ToString().ToUpper(), (int)financialPlanStatus, isClosedStatus);
+			=> new FinancialPlanStatusDto(
+				financialPlanStatus.ToString(), 
+				financialPlanStatus.ToString().ToUpper(),
+				(int)financialPlanStatus, 
+				isClosedStatus, 
+				DateTime.Now, DateTime.Now);
 	}
 }

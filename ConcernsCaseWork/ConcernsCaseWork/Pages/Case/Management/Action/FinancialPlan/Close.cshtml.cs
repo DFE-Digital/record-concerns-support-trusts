@@ -80,21 +80,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 				// Store form data
 				var statusString = Request.Form["status"].ToString();
-				var dateRequestedDay = Request.Form["dtr-day-plan-requested"].ToString();
-				var dateRequestedMonth = Request.Form["dtr-month-plan-requested"].ToString();
-				var dateRequestedYear = Request.Form["dtr-year-plan-requested"].ToString();
-				var dateViablePlanDay = Request.Form["dtr-day-viable-plan"].ToString();
-				var dateViablePlanMonth = Request.Form["dtr-month-viable-plan"].ToString();
-				var dateViablePlanYear = Request.Form["dtr-year-viable-plan"].ToString();
 				var notes = Request.Form["financial-plan-notes"].ToString();
 				var currentUser = User.Identity.Name;
-
-				// Check if date, month or year values have been entered
-				var requestedDtString = CreateDateString(dateRequestedDay, dateRequestedMonth, dateRequestedYear);
-				var viablePlanReceivedDtString = CreateDateString(dateViablePlanDay, dateViablePlanMonth, dateViablePlanYear);
-
-				// Check if dates entered are valid
-				var financialPlanDates = ParseFinancialPlanDates(requestedDtString, viablePlanReceivedDtString);
 
 				// Fetch statuses and compare them to the selected status
 				var statuses = await _getFinancialPlanStatusesAsync();
@@ -109,8 +96,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					Id = financialPlanId,
 					CaseUrn = caseUrn,
 					StatusId = selectedStatus.Id,
-					DatePlanRequested = financialPlanDates.planRequestedDate,
-					DateViablePlanReceived = financialPlanDates.viablePlanReceivedDate,
 					Notes = notes,
 					// todo: closed date is currently set to server date across the system. This should ideally be converted to UTC
 					ClosedAt = DateTime.Now
@@ -140,6 +125,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				{
 					Id = s.Name, 
 					Text = s.Description, 
+					// todo : set ischecked
 					IsChecked = false
 				});
 
@@ -163,26 +149,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 		private void ValidateFinancialPlan()
 		{
-			var dateRequestedDay = Request.Form["dtr-day-plan-requested"].ToString();
-			var dateRequestedMonth = Request.Form["dtr-month-plan-requested"].ToString();
-			var dateRequestedYear = Request.Form["dtr-year-plan-requested"].ToString();
-			var dateViablePlanDay = Request.Form["dtr-day-viable-plan"].ToString();
-			var dateViablePlanMonth = Request.Form["dtr-month-viable-plan"].ToString();
-			var dateViablePlanYear = Request.Form["dtr-year-viable-plan"].ToString();
 			var financialPlanNotes = Request.Form["financial-plan-notes"].ToString();
-
-			var requestedDtString = CreateDateString(dateRequestedDay, dateRequestedMonth, dateRequestedYear);
-			var viablePlanReceivedDtString = CreateDateString(dateViablePlanDay, dateViablePlanMonth, dateViablePlanYear);
-
-			if (!string.IsNullOrEmpty(requestedDtString) && !DateTimeHelper.TryParseExact(requestedDtString, out DateTime _))
-			{
-				throw new InvalidOperationException($"Plan requested {requestedDtString} is an invalid date");
-			}
-
-			if (!string.IsNullOrEmpty(viablePlanReceivedDtString) && !DateTimeHelper.TryParseExact(viablePlanReceivedDtString, out DateTime _))
-			{
-				throw new InvalidOperationException($"Viable Plan {viablePlanReceivedDtString} is an invalid date");
-			}
 
 			if (financialPlanNotes?.Length > NotesMaxLength)
 			{

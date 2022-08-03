@@ -100,7 +100,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
-			routeData.Add("finanicialplanid", 1);
+			routeData.Add("financialplanid", 1);
 			routeData.Add("editMode", "edit");
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
@@ -132,7 +132,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
-			routeData.Add("finanicialplanid", 1);
+			routeData.Add("financialplanid", 1);
 			routeData.Add("editMode", "edit");
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
@@ -170,8 +170,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
-			routeData.Add("finanicialplanid", 1);
-			routeData.Add("editMode", editMode);
+			routeData.Add("financialplanid", 1);
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
@@ -206,6 +205,4 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			};
 		}
 	}
-
-
 }
