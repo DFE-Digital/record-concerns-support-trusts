@@ -10,5 +10,6 @@ namespace ConcernsCaseWork.Models.CaseActions
 		public ICollection<NtiWarningLetterConditionModel> Conditions { get; set; }
 		public string Notes { get; set; }
 		public DateTime? SentDate { get; set; }
+		public int? ClosedStatusId { get; set; }
 	}
 }

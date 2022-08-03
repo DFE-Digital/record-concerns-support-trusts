@@ -7,7 +7,9 @@ using Service.Redis.Ratings;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
 using Service.Redis.Types;
+using Service.Redis.NtiWarningLetter;
 using System.Threading.Tasks;
+using Service.Redis.NtiUnderConsideration;
 
 namespace ConcernsCaseWork.Pages
 {
@@ -19,6 +21,10 @@ namespace ConcernsCaseWork.Pages
 		private readonly IRatingCachedService _ratingCachedService;
 		private readonly ITrustCachedService _trustCachedService;
 		private readonly ITypeCachedService _typeCachedService;
+		private readonly INtiUnderConsiderationStatusesCachedService _ntiUnderConsiderationStatusesCachedService;
+		private readonly INtiUnderConsiderationReasonsCachedService _ntiUnderConsiderationReasonsCachedService;
+		private readonly INtiWarningLetterReasonsCachedService _ntiWarningLetterReasonCachedService; 
+		private readonly INtiWarningLetterStatusesCachedService _ntiWarningLetterStatusesCachedService; 
 		private readonly ILogger<ClearDataPageModel> _logger;
 		private readonly ICachedService _cachedService;
 		
@@ -27,12 +33,20 @@ namespace ConcernsCaseWork.Pages
 			IStatusCachedService statusCachedService, 
 			IRatingCachedService ratingCachedService,
 			ITrustCachedService trustCachedService,
+			INtiUnderConsiderationStatusesCachedService ntiUnderConsiderationStatusesCachedService,
+			INtiUnderConsiderationReasonsCachedService ntiUnderConsiderationReasonsCachedService,
+			INtiWarningLetterReasonsCachedService ntiWarningLetterReasonCachedService,
+			INtiWarningLetterStatusesCachedService ntiWarningLetterStatusesCachedService,
 			ILogger<ClearDataPageModel> logger)
 		{
 			_statusCachedService = statusCachedService;
 			_ratingCachedService = ratingCachedService;
 			_trustCachedService = trustCachedService;
 			_typeCachedService = typeCachedService;
+			_ntiUnderConsiderationStatusesCachedService = ntiUnderConsiderationStatusesCachedService;
+			_ntiUnderConsiderationReasonsCachedService = ntiUnderConsiderationReasonsCachedService;
+			_ntiWarningLetterReasonCachedService = ntiWarningLetterReasonCachedService;
+			_ntiWarningLetterStatusesCachedService = ntiWarningLetterStatusesCachedService;
 			_cachedService = cachedService;
 			_logger = logger;
 		}
@@ -48,6 +62,10 @@ namespace ConcernsCaseWork.Pages
 			await _statusCachedService.ClearData();
 			await _ratingCachedService.ClearData();
 			await _trustCachedService.ClearData();
+			await _ntiUnderConsiderationStatusesCachedService.ClearData();
+			await _ntiUnderConsiderationReasonsCachedService.ClearData();
+			await _ntiWarningLetterReasonCachedService.ClearData();
+			await _ntiWarningLetterStatusesCachedService.ClearData();
 
 			return RedirectToPage("home");
 		}
