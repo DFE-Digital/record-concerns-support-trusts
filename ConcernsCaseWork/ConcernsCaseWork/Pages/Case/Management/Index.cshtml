@@ -10,11 +10,11 @@
     ViewData["Title"] = "Case management";
     var nonce = HttpContext.GetNonce();
 
-    var srmaModels = Model.CaseActions?.Where(ca => ca is SRMAModel).Select(srma => { return srma as SRMAModel; }).ToList();
+    var srmaModels = Model.CaseActions?.Where(ca => ca is SRMAModel).Select(srma => srma as SRMAModel).ToList();
     var openSRMAs = srmaModels.Where(srma => !srma.ClosedAt.HasValue).ToList();
     var closedSRMAs = srmaModels.Except(openSRMAs).ToList();
 
-    var financialPlanModels = Model.CaseActions?.Where(ca => ca is FinancialPlanModel).Select(fp => { return fp as FinancialPlanModel; }).ToList();
+    var financialPlanModels = Model.CaseActions?.Where(ca => ca is FinancialPlanModel).Select(fp => fp as FinancialPlanModel).ToList();
     var openFinancialPlanModels = financialPlanModels.Where(fp => !fp.ClosedAt.HasValue).ToList();
     var closedFinancialPlanModels = financialPlanModels.Except(openFinancialPlanModels).ToList();
 
@@ -25,7 +25,6 @@
     var ntiWarningLetters = Model.CaseActions?.Where(ca => ca is NtiWarningLetterModel).Select(nti => nti as NtiWarningLetterModel).ToList();
     var openNtiWLs = ntiWarningLetters.Where(nti => nti.ClosedAt == null).ToList();
     var closedNtiWLs = ntiWarningLetters.Except(openNtiWLs).ToList();
-
 }
 
 <div class="govuk-width-container">

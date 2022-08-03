@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.TRAMS.NtiWarningLetter;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.Redis.NtiWarningLetter
@@ -22,8 +20,15 @@ namespace Service.Redis.NtiWarningLetter
 			_logger = logger;
 		}
 
+		public async Task ClearData()
+		{
+			await ClearData(CacheKey);
+		}
+
 		public async Task<ICollection<NtiWarningLetterStatusDto>> GetAllStatusesAsync()
 		{
+			_logger.LogInformation("NtiWarningLetterStatusesCachedService::GetAllStatusesAsync");
+
 			var statuses = await GetData<ICollection<NtiWarningLetterStatusDto>>(CacheKey);
 			if(statuses == null || statuses.Count == 0)
 			{

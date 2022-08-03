@@ -8,6 +8,7 @@ namespace Service.Redis.NtiUnderConsideration
 {
 	public interface INtiUnderConsiderationStatusesCachedService
 	{
+		Task ClearData();
 		Task<ICollection<NtiUnderConsiderationStatusDto>> GetAllStatuses();
 	}
 }
