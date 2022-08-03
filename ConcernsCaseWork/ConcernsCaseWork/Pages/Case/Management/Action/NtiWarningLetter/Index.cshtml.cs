@@ -71,7 +71,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		private async Task<NtiWarningLetterModel> GetWarningLetterModel(long ntiWarningLetterId)
 		{
-			var wl = await _ntiWarningLetterModelService.GetWarningLetter(ntiWarningLetterId);
+			var wl = await _ntiWarningLetterModelService.GetNtiWarningLetterId(ntiWarningLetterId);
 
 			if (wl != null)
 			{
