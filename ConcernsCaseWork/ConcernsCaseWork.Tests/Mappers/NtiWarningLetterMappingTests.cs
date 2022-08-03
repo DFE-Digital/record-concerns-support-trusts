@@ -18,7 +18,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 		public void WhenMapDtoToServiceModel_ReturnsCorrectModel()
 		{
 			//arrange
-			var testData = new 
+			var testData = new
 			{
 				Id = 1L,
 				CaseUrn = 123,
@@ -81,8 +81,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CreatedAt = testData.CreatedAt,
 				ClosedAt = testData.ClosedAt,
 				Notes = testData.Notes,
-				Reasons = new NtiWarningLetterReasonModel[] { new NtiWarningLetterReasonModel {  Id = testData.Reasons.First().Key, Name = testData.Reasons.First().Value } },
-				Status = new NtiWarningLetterStatusModel {  Id = testData.Status.Key, Name = testData.Status.Value },
+				Reasons = new NtiWarningLetterReasonModel[] { new NtiWarningLetterReasonModel { Id = testData.Reasons.First().Key, Name = testData.Reasons.First().Value } },
+				Status = new NtiWarningLetterStatusModel { Id = testData.Status.Key, Name = testData.Status.Value },
 				SentDate = testData.SentDate,
 				UpdatedAt = testData.UpdatedAt
 			};
@@ -99,6 +99,46 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(dbModel.StatusId, Is.EqualTo(testData.Status.Key));
 		}
 
+		[Test]
+		public void NtiWarningLetterReason_Dto_To_ServiceModel()
+		{
+			// arrange
+			var dto = new NtiWarningLetterReasonDto
+			{
+				Id = 1,
+				Name = "Name Name",
+				CreatedAt = new DateTime(2022, 02, 05),
+				UpdatedAt = new DateTime(2022, 02, 05)
+			};
 
+			// act
+			var model = NtiWarningLetterMappers.ToServiceModel(dto);
+
+			// assert
+			Assert.That(model, Is.Not.Null);
+			Assert.That(model.Id, Is.EqualTo(dto.Id));
+			Assert.That(model.Name, Is.EqualTo(dto.Name));
+		}
+
+		[Test]
+		public void NtiWarningLetterStatus_Dto_To_ServiceModel()
+		{
+			// arrange
+			var dto = new NtiWarningLetterStatusDto
+			{
+				Id = 1,
+				Name = "Name Name",
+				CreatedAt = new DateTime(2022, 02, 05),
+				UpdatedAt = new DateTime(2022, 02, 05)
+			};
+
+			// act
+			var model = NtiWarningLetterMappers.ToServiceModel(dto);
+
+			// assert
+			Assert.That(model, Is.Not.Null);
+			Assert.That(model.Id, Is.EqualTo(dto.Id));
+			Assert.That(model.Name, Is.EqualTo(dto.Name));
+		}
 	}
 }

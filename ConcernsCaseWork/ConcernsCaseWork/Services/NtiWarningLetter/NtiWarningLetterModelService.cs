@@ -49,5 +49,11 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 
 			await _ntiWarningLetterCachedService.SaveNtiWarningLetter(NtiWarningLetterMappers.ToDBModel(ntiWarningLetter), continuationId);
 		}
+
+		public async Task<NtiWarningLetterModel> GetWarningLetter(long warningLetterId)
+		{
+			var dto = await _ntiWarningLetterCachedService.GetNtiWarningLetterAsync(warningLetterId);
+			return NtiWarningLetterMappers.ToServiceModel(dto);
+		}
 	}
 }
