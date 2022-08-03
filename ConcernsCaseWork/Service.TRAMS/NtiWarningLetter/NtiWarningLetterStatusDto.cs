@@ -8,6 +8,8 @@ namespace Service.TRAMS.NtiWarningLetter
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
+		public string Description { get; set; }
+		public bool IsClosedState { get; set; }
 
 		public DateTimeOffset CreatedAt { get; set; }
 		public DateTimeOffset UpdatedAt { get; set; }
