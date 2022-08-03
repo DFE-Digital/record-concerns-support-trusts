@@ -133,7 +133,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			CaseActions.AddRange(await _srmaService.GetSRMAsForCase(caseUrn));
 			CaseActions.AddRange(await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name));
 			CaseActions.AddRange(await _ntiModelService.GetNtiUnderConsiderationsForCase(caseUrn));
-			CaseActions.AddRange(await _ntiWarningLetterModelService.GetNtiWLsForCase(caseUrn));
+			CaseActions.AddRange(await _ntiWarningLetterModelService.GetNtiWarningLettersForCase(caseUrn));
 		}
 
 		private bool UserHasEditCasePrivileges()
