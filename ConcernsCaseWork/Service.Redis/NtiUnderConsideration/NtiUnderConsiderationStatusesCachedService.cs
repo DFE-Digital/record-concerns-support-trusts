@@ -23,8 +23,15 @@ namespace Service.Redis.NtiUnderConsideration
 			_logger = logger;
 		}
 
+		public async Task ClearData()
+		{
+			await ClearData(NtiStatusesCacheKey);
+		}
+
 		public async Task<ICollection<NtiUnderConsiderationStatusDto>> GetAllStatuses()
 		{
+			_logger.LogInformation("NtiUnderConsiderationStatusesCachedService::GetAllStatuses");
+
 			var statuses = await GetData<ICollection<NtiUnderConsiderationStatusDto>>(NtiStatusesCacheKey);
 			if (statuses == null || statuses.Count == 0)
 			{
