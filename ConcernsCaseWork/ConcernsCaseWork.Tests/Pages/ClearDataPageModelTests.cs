@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
+using Service.Redis.NtiUnderConsideration;
+using Service.Redis.NtiWarningLetter;
 using Service.Redis.Ratings;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
@@ -28,10 +30,16 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockNTIUnderConsiderationStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
+			var mockNTIUnderConsiderationReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
+			var mockNTIWarningLetterReasonCachedService = new Mock<INtiWarningLetterReasonsCachedService>();
+			var mockNTIWarningLetterStatusesCachedService = new Mock<INtiWarningLetterStatusesCachedService>();
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
-			var pageModel = SetupClearDataModel(mockStatusCachedService.Object, mockRatingCachedService.Object, 
+			var pageModel = SetupClearDataModel(mockStatusCachedService.Object, mockRatingCachedService.Object,
 				mockTypeCachedService.Object, mockCachedService.Object, mockTrustCachedService.Object,
+				mockNTIUnderConsiderationStatusesCachedService.Object, mockNTIUnderConsiderationReasonsCachedService.Object,
+				mockNTIWarningLetterReasonCachedService.Object, mockNTIWarningLetterStatusesCachedService.Object,
 				mockLogger.Object, true);
 
 			// act
@@ -60,10 +68,17 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockTypeCachedService = new Mock<ITypeCachedService>();
 			var mockCachedService = new Mock<ICachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockNTIUnderConsiderationStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
+			var mockNTIUnderConsiderationReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
+			var mockNTIWarningLetterReasonCachedService = new Mock<INtiWarningLetterReasonsCachedService>();
+			var mockNTIWarningLetterStatusesCachedService = new Mock<INtiWarningLetterStatusesCachedService>();
+
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
 			var pageModel = SetupClearDataModel(mockStatusCachedService.Object, mockRatingCachedService.Object, 
 				mockTypeCachedService.Object, mockCachedService.Object, mockTrustCachedService.Object,
+				mockNTIUnderConsiderationStatusesCachedService.Object, mockNTIUnderConsiderationReasonsCachedService.Object,
+				mockNTIWarningLetterReasonCachedService.Object, mockNTIWarningLetterStatusesCachedService.Object,
 				mockLogger.Object);
 
 			// act
@@ -88,13 +103,19 @@ namespace ConcernsCaseWork.Tests.Pages
 			ITypeCachedService mockTypeCachedService, 
 			ICachedService mockCachedService,
 			ITrustCachedService mockTrustCachedService,
+			INtiUnderConsiderationStatusesCachedService mockNTIUnderConsiderationStatusesCachedService,
+			INtiUnderConsiderationReasonsCachedService mockNTIUnderConsiderationReasonsCachedService,
+			INtiWarningLetterReasonsCachedService mockNTIWarningLetterReasonCachedService,
+			INtiWarningLetterStatusesCachedService mockNTIWarningLetterStatusesCachedService,
 			ILogger<ClearDataPageModel> mockLogger, 
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
 			return new ClearDataPageModel(mockCachedService, mockTypeCachedService,
-				mockStatusCachedService, mockRatingCachedService, mockTrustCachedService, mockLogger)
+				mockStatusCachedService, mockRatingCachedService, mockTrustCachedService,
+				mockNTIUnderConsiderationStatusesCachedService, mockNTIUnderConsiderationReasonsCachedService,
+				mockNTIWarningLetterReasonCachedService, mockNTIWarningLetterStatusesCachedService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

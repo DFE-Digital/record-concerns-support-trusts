@@ -29,9 +29,10 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 			return dtos?.Select(dto => NtiWarningLetterMappers.ToServiceModel(dto)).ToArray();
 		}
 
+
 		public async Task<NtiWarningLetterModel> GetWarningLetter(string continuationId)
 		{
-			if(string.IsNullOrWhiteSpace(continuationId))
+			if (string.IsNullOrWhiteSpace(continuationId))
 			{
 				throw new ArgumentNullException(nameof(continuationId));
 			}
@@ -50,10 +51,21 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 			await _ntiWarningLetterCachedService.SaveNtiWarningLetter(NtiWarningLetterMappers.ToDBModel(ntiWarningLetter), continuationId);
 		}
 
-		public async Task<NtiWarningLetterModel> GetWarningLetter(long warningLetterId)
+		public async Task<NtiWarningLetterModel> GetNtiWarningLetterId(long wlId)
 		{
-			var dto = await _ntiWarningLetterCachedService.GetNtiWarningLetterAsync(warningLetterId);
+			var dto = await _ntiWarningLetterCachedService.GetNtiWarningLetterAsync(wlId);
 			return NtiWarningLetterMappers.ToServiceModel(dto);
 		}
+
+		public async Task<NtiWarningLetterModel> PatchNtiWarningLetter(NtiWarningLetterModel patchWarningLetter)
+		{
+			patchWarningLetter.UpdatedAt = DateTime.Now;
+			var dto = NtiWarningLetterMappers.ToDBModel(patchWarningLetter);
+			var patchedDto = await _ntiWarningLetterCachedService.PatchNtiWarningLetterAsync(dto);
+
+			return NtiWarningLetterMappers.ToServiceModel(patchedDto);
+		}
+
+		
 	}
 }
