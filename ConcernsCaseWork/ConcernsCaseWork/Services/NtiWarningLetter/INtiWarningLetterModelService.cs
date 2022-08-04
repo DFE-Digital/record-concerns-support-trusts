@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 		Task<NtiWarningLetterModel> CreateNtiWarningLetter(NtiWarningLetterModel ntiWarningLetterModel);
 		Task<NtiWarningLetterModel> GetNtiWarningLetterId(long wlId);
 		Task<NtiWarningLetterModel> PatchNtiWarningLetter(NtiWarningLetterModel patchWarningLetter);
-		Task<ICollection<NtiWarningLetterModel>> GetNtiWarningLettersForCase(long caseUrn);
+		Task<IEnumerable<NtiWarningLetterModel>> GetNtiWarningLettersForCase(long caseUrn);
 		Task<NtiWarningLetterModel> GetWarningLetter(string continuationId);
 		Task StoreWarningLetter(NtiWarningLetterModel ntiWarningLetter, string continuationId);
 	}

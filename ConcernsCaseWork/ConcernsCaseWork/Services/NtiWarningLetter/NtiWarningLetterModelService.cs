@@ -23,7 +23,7 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 			return NtiWarningLetterMappers.ToServiceModel(created);
 		}
 
-		public async Task<ICollection<NtiWarningLetterModel>> GetNtiWarningLettersForCase(long caseUrn)
+		public async Task<IEnumerable<NtiWarningLetterModel>> GetNtiWarningLettersForCase(long caseUrn)
 		{
 			var dtos = await _ntiWarningLetterCachedService.GetNtiWarningLettersForCaseAsync(caseUrn);
 			return dtos?.Select(dto => NtiWarningLetterMappers.ToServiceModel(dto)).ToArray();
@@ -65,7 +65,5 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 
 			return NtiWarningLetterMappers.ToServiceModel(patchedDto);
 		}
-
-		
 	}
 }
