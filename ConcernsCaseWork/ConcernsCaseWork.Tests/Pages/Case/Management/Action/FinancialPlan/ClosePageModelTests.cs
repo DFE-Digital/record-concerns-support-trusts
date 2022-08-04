@@ -97,6 +97,8 @@
 				Assert.That(pageModel.TempData, Is.Not.Null);
 				Assert.That(pageModel.TempData["Error.Message"],
 					Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+				
+				mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>(), It.IsAny<string>()), Times.Never);
 			}
 			
 			[Test]
@@ -124,6 +126,8 @@
 				Assert.That(pageModel.TempData, Is.Not.Null);
 				Assert.That(pageModel.TempData["Error.Message"],
 					Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+				
+				mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>(), It.IsAny<string>()), Times.Never);
 			}
 
 			[Test]
@@ -143,7 +147,7 @@
 				var caseUrn = 1;
 				var routeData = pageModel.RouteData.Values;
 				routeData.Add("urn", caseUrn);
-				routeData.Add("financialplanid", 1);
+				routeData.Add("financialplanid", 2);
 
 				pageModel.HttpContext.Request.Form = new FormCollection(
 					new Dictionary<string, StringValues>
@@ -165,6 +169,45 @@
 				
 				mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
 					fpm.ClosedAt != null), It.IsAny<string>()), Times.Once);
+			}
+			
+			[Test]
+			public async Task WhenOnPostAsync_WithEmptyStatus_ReturnsError()
+			{
+				// arrange
+				var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+				var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
+				var mockLogger = new Mock<ILogger<ClosePageModel>>();
+				
+				mockFinancialPlanStatusService.Setup(fp => fp.GetClosureFinancialPlansStatusesAsync())
+					.ReturnsAsync(GetListValidStatuses());
+
+				var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+
+				var caseUrn = 1;
+				var routeData = pageModel.RouteData.Values;
+				routeData.Add("urn", caseUrn);
+				routeData.Add("financialplanid", 2);
+
+				pageModel.HttpContext.Request.Form = new FormCollection(
+					new Dictionary<string, StringValues>
+					{
+						{ "status", ""}
+					});
+
+				// act
+				var pageResponse = await pageModel.OnPostAsync();
+
+				// assert
+				Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+				var page = pageResponse as PageResult;
+
+				Assert.That(page, Is.Not.Null);
+				Assert.That(pageModel.TempData, Is.Not.Null);
+				Assert.That(pageModel.TempData["Error.Message"],
+					Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+				
+				mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>(), It.IsAny<string>()), Times.Never);
 			}
 
 			private static ClosePageModel SetupClosePageModel(

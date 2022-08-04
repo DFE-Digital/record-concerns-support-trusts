@@ -211,6 +211,46 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
 			fpm.ClosedAt == null), It.IsAny<string>()), Times.Once);
 		}
+		
+		[Test]
+		public async Task WhenOnPostAsync_WithValidStatus_SucceedsInUpdating()
+		{
+			// arrange
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
+			var mockLogger = new Mock<ILogger<EditPageModel>>();
+
+			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
+			var caseUrn = 1L;
+			var financialPlanId = 2L;
+			
+			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn, statuses.First().Name);
+			
+			mockFinancialPlanModelService
+				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+				.ReturnsAsync(existingFinancialPlanModel);
+			
+			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
+
+			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+			routeData.Add("financialplanid", financialPlanId);
+
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "status", statuses.First().Name }
+				});
+
+			// act
+			var pageResponse = await pageModel.OnPostAsync();
+
+			// assert
+			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
+				fpm.ClosedAt == null), It.IsAny<string>()), Times.Once);
+		}
 
 		private static EditPageModel SetupEditPageModel(
 			IFinancialPlanModelService mockFinancialPlanModelService,
