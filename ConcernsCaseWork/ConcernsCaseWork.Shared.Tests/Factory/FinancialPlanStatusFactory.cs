@@ -2,12 +2,13 @@
 using Service.TRAMS.FinancialPlan;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class FinancialPlanStatusFactory
 	{
-		public static List<FinancialPlanStatusDto> BuildListFinancialPlanStatusDto()
+		public static List<FinancialPlanStatusDto> BuildListAllFinancialPlanStatusDto()
 		{
 			return new List<FinancialPlanStatusDto>
 			{
@@ -17,6 +18,12 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				BuildFinancialPlanStatusDto(FinancialPlanStatus.Abandoned, true)
 			};
 		}
+		
+		public static List<FinancialPlanStatusDto> BuildListOpenFinancialPlanStatusDto()
+			=> BuildListAllFinancialPlanStatusDto().Where(d => d.IsClosedStatus).ToList();
+		
+		public static List<FinancialPlanStatusDto> BuildListClosureFinancialPlanStatusDto()
+			=> BuildListAllFinancialPlanStatusDto().Where(d => !d.IsClosedStatus).ToList();
 
 		private static FinancialPlanStatusDto BuildFinancialPlanStatusDto(FinancialPlanStatus financialPlanStatus, bool isClosedStatus)
 			=> new FinancialPlanStatusDto(

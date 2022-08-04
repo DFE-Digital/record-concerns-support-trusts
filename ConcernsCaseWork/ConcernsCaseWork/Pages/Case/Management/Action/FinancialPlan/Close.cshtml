@@ -2,7 +2,6 @@
 @model ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan.ClosePageModel
 
 @using ConcernsCaseWork.Enums;
-@using ConcernsCaseWork.Extensions
 
 @{
 	ViewData["Title"] = "Close Finance Plan";
@@ -66,7 +65,7 @@
 								@foreach (var status in Model.FinancialPlanStatuses)
 								{
 									var idStr = id++ == 0 ? "status" : "status-" + id;
-									var checkedStr = financialPlanStatusName == status.Id ? "checked" : "";
+									var checkedStr = status.IsChecked ? "checked" : "";
 									<div class="govuk-radios__item">
 										<input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id" @checkedStr>
 										<label class="govuk-label govuk-radios__label" for="@idStr">

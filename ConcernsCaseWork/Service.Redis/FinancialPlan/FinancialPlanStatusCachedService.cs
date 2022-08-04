@@ -28,7 +28,7 @@ namespace Service.Redis.FinancialPlan
 			await ClearData(FinancialPlanStatusKey);
 		}
 
-		public async Task<IList<FinancialPlanStatusDto>> GetAllFinancialPlanStatuses()
+		public async Task<IList<FinancialPlanStatusDto>> GetAllFinancialPlanStatusesAsync()
 		{
 			_logger.LogInformation("FinancialPlanStatusCachedService::GetAllFinancialPlanStatuses");
 			
@@ -37,7 +37,7 @@ namespace Service.Redis.FinancialPlan
 				FinancialPlanStatusKey);
 		}
 
-		public async Task<IList<FinancialPlanStatusDto>> GetClosureFinancialPlansStatuses()
+		public async Task<IList<FinancialPlanStatusDto>> GetClosureFinancialPlansStatusesAsync()
 		{
 			_logger.LogInformation("FinancialPlanStatusCachedService::GetClosureFinancialPlansStatuses");
 			
@@ -46,7 +46,7 @@ namespace Service.Redis.FinancialPlan
 				FinancialPlanClosureStatusKey);
 		}
 
-		public async Task<IList<FinancialPlanStatusDto>> GetOpenFinancialPlansStatuses()
+		public async Task<IList<FinancialPlanStatusDto>> GetOpenFinancialPlansStatusesAsync()
 		{
 			_logger.LogInformation("FinancialPlanStatusCachedService::GetOpenFinancialPlansStatuses");
 			

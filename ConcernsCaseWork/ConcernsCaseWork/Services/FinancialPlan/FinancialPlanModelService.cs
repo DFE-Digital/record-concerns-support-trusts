@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using Microsoft.Extensions.Logging;
 using Service.Redis.FinancialPlan;
@@ -7,7 +6,6 @@ using Service.Redis.Models;
 using Service.TRAMS.FinancialPlan;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.FinancialPlan
@@ -30,7 +28,7 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 			_logger.LogInformation("FinancialPlanModelService::GetFinancialPlansModelByCaseUrn");
 
 			var financialPlansDtoTask = _financialPlanCachedService.GetFinancialPlansByCaseUrn(caseUrn, caseworker);
-			var statusesDtoTask = _financialPlanStatusCachedService.GetAllFinancialPlanStatuses();
+			var statusesDtoTask = _financialPlanStatusCachedService.GetAllFinancialPlanStatusesAsync();
 
 			await Task.WhenAll(financialPlansDtoTask, statusesDtoTask);
 
@@ -45,7 +43,7 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 		{
 			try
 			{
-				var statusesDto = await _financialPlanStatusCachedService.GetAllFinancialPlanStatuses();
+				var statusesDto = await _financialPlanStatusCachedService.GetAllFinancialPlanStatusesAsync();
 
 				var financialPlanDto = await _financialPlanCachedService.GetFinancialPlansById(caseUrn, financialPlanId, caseworker);
 				var financialPlanModel = FinancialPlanMapping.MapDtoToModel(financialPlanDto, statusesDto);
@@ -66,7 +64,7 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 			{
 				// Fetch Financial Plan & statuses
 				var financialPlanDto = await _financialPlanCachedService.GetFinancialPlansById(patchFinancialPlanModel.CaseUrn, patchFinancialPlanModel.Id, caseworker);
-				var statusesDto = await _financialPlanStatusCachedService.GetAllFinancialPlanStatuses();
+				var statusesDto = await _financialPlanStatusCachedService.GetAllFinancialPlanStatusesAsync();
 
 				financialPlanDto = FinancialPlanMapping.MapPatchFinancialPlanModelToDto(patchFinancialPlanModel, financialPlanDto, statusesDto);
 

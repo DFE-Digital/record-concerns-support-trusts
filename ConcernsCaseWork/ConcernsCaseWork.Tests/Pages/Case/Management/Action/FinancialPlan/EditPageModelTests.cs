@@ -14,6 +14,7 @@ using NUnit.Framework;
 using Service.Redis.FinancialPlan;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
@@ -96,11 +97,18 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
 
+			var caseUrn = 1L;
+			var financialPlanId = 2L;
+			
+			mockFinancialPlanModelService
+				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn));
+				
 			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-			routeData.Add("financialplanid", 1);
+			routeData.Add("urn", caseUrn);
+			routeData.Add("financialplanid", financialPlanId);
 			routeData.Add("editMode", "edit");
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
@@ -127,12 +135,19 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
-
+			
+			var caseUrn = 1L;
+			var financialPlanId = 2L;
+			
+			mockFinancialPlanModelService
+				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn));
+			
 			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-			routeData.Add("financialplanid", 1);
+			routeData.Add("urn", caseUrn);
+			routeData.Add("financialplanid", financialPlanId);
 			routeData.Add("editMode", "edit");
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
@@ -152,32 +167,41 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		}
 
 		[Test]
-		[TestCase("edit")]
-		[TestCase("close")]
-		public async Task WhenOnPostAsync_Valid_Calls_Patch_Method(string editMode)
+		public async Task WhenOnPostAsync_WithValidDayRequested_Succeeds()
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
 
-			var statuses = FinancialPlanStatusFactory.BuildListFinancialPlanStatusDto();
-
-			mockFinancialPlanStatusService.Setup(fp => fp.GetAllFinancialPlanStatuses())
-				.ReturnsAsync(statuses);
+			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
+			var caseUrn = 1L;
+			var financialPlanId = 2L;
+			
+			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn, statuses.First().Name);
+			
+			mockFinancialPlanModelService
+				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+				.ReturnsAsync(existingFinancialPlanModel);
+			
+			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
 
 			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
-			routeData.Add("financialplanid", 1);
+			routeData.Add("urn", caseUrn);
+			routeData.Add("financialplanid", financialPlanId);
+
+			var day = 2;
+			var month = 4;
+			var year = 2022;
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
-					{ "dtr-day-plan-requested", new StringValues("02") },
-					{ "dtr-month-plan-requested", new StringValues("04") },
-					{ "dtr-year-plan-requested", new StringValues("2022") },
+					{ "dtr-day-plan-requested", new StringValues($"0{day}") },
+					{ "dtr-month-plan-requested", new StringValues($"0{month}") },
+					{ "dtr-year-plan-requested", new StringValues(year.ToString()) }
 				});
 
 			// act
@@ -185,7 +209,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 			// assert
 			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
-			editMode == "close" ? fpm.ClosedAt != null : fpm.ClosedAt == null), It.IsAny<string>()), Times.Once);
+			fpm.ClosedAt == null), It.IsAny<string>()), Times.Once);
 		}
 
 		private static EditPageModel SetupEditPageModel(
@@ -204,5 +228,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
 		}
+
+		private static FinancialPlanModel SetupFinancialPlanModel(long planId, long caseUrn, string statusName = "")
+			=> new FinancialPlanModel(planId, 
+				caseUrn, 
+				DateTime.Now, 
+				null, 
+				null, 
+				String.Empty, 
+				new FinancialPlanStatusModel(statusName, 1, false), 
+				null);
 	}
 }

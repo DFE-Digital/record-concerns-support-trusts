@@ -13,5 +13,8 @@ namespace ConcernsCaseWork.Mappers
 
 			return selectedStatusDto is null ? null : new FinancialPlanStatusModel(selectedStatusDto.Name, selectedStatusDto.Id, selectedStatusDto.IsClosedStatus);
 		}
+		
+		public static FinancialPlanStatusModel MapDtoToModel(FinancialPlanStatusDto statusDto)
+			=> new FinancialPlanStatusModel(statusDto.Name, statusDto.Id, statusDto.IsClosedStatus);
 	}
 }

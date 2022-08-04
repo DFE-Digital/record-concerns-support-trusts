@@ -332,6 +332,10 @@
                                                 var financialStatusEnum = (FinancialPlanStatus)Enum.Parse(typeof(FinancialPlanStatus), fp.Status.Name);
                                                 <span>@EnumHelper.GetEnumDescription(financialStatusEnum)</span>
                                             }
+                                            else
+                                            {
+	                                            <span>In Progress</span>
+                                            }
                                         }
                                     </td>
                                     <td class="govuk-table__cell govuk-table__header__right">
