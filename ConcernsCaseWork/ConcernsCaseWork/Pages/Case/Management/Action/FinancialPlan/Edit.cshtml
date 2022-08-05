@@ -1,7 +1,6 @@
 ﻿@page "/case/{urn:long}/management/action/financialplan/{financialplanid:long}/edit"
 @model ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan.EditPageModel
 
-@using ConcernsCaseWork.Enums;
 @using ConcernsCaseWork.Extensions
 
 @{
@@ -11,7 +10,6 @@
 	var financialPlanNotes =  "";
 
 	financialPlanNotes = Model.FinancialPlanModel.Notes;
-	var financialPlanStatusName = Model.FinancialPlanModel.Status?.Name ?? FinancialPlanStatus.Unknown.ToString();
 }
 
 <div class="govuk-width-container">

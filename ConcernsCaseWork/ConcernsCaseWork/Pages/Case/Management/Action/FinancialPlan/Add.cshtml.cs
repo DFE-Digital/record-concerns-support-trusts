@@ -54,7 +54,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				var viablePlanReceivedDate = GetRequestedViablePlanReceivedDate();
 				var notes = GetRequestedNotes();
 				var statusName = GetRequestedStatus();
-				var selectedStatus = await GetStatusByNameAsync(statusName);
+				var selectedStatus = await GetOptionalStatusByNameAsync(statusName);
 				var currentUser = GetLoggedInUserName();
 
 				var createFinancialPlanModel = new CreateFinancialPlanModel

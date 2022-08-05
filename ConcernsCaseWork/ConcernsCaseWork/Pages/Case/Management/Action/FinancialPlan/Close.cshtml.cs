@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				var caseUrn = GetRequestedCaseUrn();
 				var financialPlanId = GetRequestedFinancialPlanId();
 				var statusName = GetRequestedStatus();
-				var status = await GetStatusByNameAsync(statusName);
+				var status = await GetRequiredStatusByNameAsync(statusName);
 				var notes = GetRequestedNotes();
 				var loggedInUserName = GetLoggedInUserName();
 
@@ -77,12 +77,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				};
 
 				await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel, loggedInUserName);
-
+	
 				return Redirect($"/case/{caseUrn}/management");
 			}
 			catch (InvalidOperationException ex)
 			{
 				TempData["FinancialPlan.Message"] = ex.Message;
+				
+				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(GetRequestedCaseUrn(), GetRequestedFinancialPlanId(), GetLoggedInUserName());
+				
+				var currentStatusName = FinancialPlanModel.Status.Name;
+				FinancialPlanStatuses = await GetStatusOptionsAsync(currentStatusName);
 			}
 			catch (Exception ex)
 			{
@@ -93,7 +98,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 			return Page();
 		}
-
+		
 		protected override async Task<IList<FinancialPlanStatusDto>> GetAvailableStatusesAsync()
 			=> await _financialPlanStatusCachedService.GetClosureFinancialPlansStatusesAsync();
 	}

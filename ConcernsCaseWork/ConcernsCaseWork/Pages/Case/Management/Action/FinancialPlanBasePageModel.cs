@@ -15,7 +15,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 	public abstract class FinancialPlanBasePageModel : AbstractPageModel
 	{
 		public readonly int NotesMaxLength = 2000;
-		public readonly string EmptyStatusText = "In Progress";
 		public FinancialPlanModel FinancialPlanModel { get; set; }
 		public IEnumerable<RadioItem> FinancialPlanStatuses { get; set; } = new List<RadioItem>();
 		
@@ -28,12 +27,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 					IsChecked = selectedStatusName == s.Name
 				});
 
-		protected async Task<FinancialPlanStatusModel> GetStatusByNameAsync(string statusName)
+		protected virtual async Task<FinancialPlanStatusModel> GetOptionalStatusByNameAsync(string statusName)
 		{
 			var status = (await GetAvailableStatusesAsync())
 				.FirstOrDefault(s => s.Name.Equals(statusName));
 			
 			return status is null ? null : FinancialPlanStatusMapping.MapDtoToModel(status);
+		}
+		
+		protected async Task<FinancialPlanStatusModel> GetRequiredStatusByNameAsync(string statusName)
+		{
+			var status = await GetOptionalStatusByNameAsync(statusName);
+			return status ?? throw new InvalidOperationException($"Please select a reason for closing the Financial Plan");
 		}
 
 		protected string GetRequestedStatus() => GetFormValue("status");
@@ -102,7 +107,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 			throw new InvalidOperationException($"Plan requested {viablePlanReceivedDtString} is an invalid date");
 		}
 		
-		// TODO: Is it valid that we can have partial date?
 		protected string CreateDateString(string day, string month, string year)
 			=> (string.IsNullOrEmpty(day) && string.IsNullOrEmpty(month) && string.IsNullOrEmpty(year)) ? String.Empty : $"{day}-{month}-{year}";
 

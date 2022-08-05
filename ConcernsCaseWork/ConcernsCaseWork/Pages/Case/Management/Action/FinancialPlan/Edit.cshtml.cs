@@ -73,7 +73,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				var viablePlanReceivedDate = GetRequestedViablePlanReceivedDate() ?? FinancialPlanModel.DateViablePlanReceived;
 				var notes = GetRequestedNotes() ?? FinancialPlanModel.Notes;
 				var statusName = GetRequestedStatus() ?? FinancialPlanModel.Status?.Name;
-				var selectedStatus = await GetStatusByNameAsync(statusName);
+				var selectedStatus = await GetOptionalStatusByNameAsync(statusName);
 
 				var patchFinancialPlanModel = new PatchFinancialPlanModel
 				{
