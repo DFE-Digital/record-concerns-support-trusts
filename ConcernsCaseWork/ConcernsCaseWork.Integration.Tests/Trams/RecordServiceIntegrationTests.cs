@@ -4,11 +4,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using Service.TRAMS.Cases;
+using Service.TRAMS.MeansOfReferral;
 using Service.TRAMS.Ratings;
 using Service.TRAMS.Records;
 using Service.TRAMS.Trusts;
 using Service.TRAMS.Types;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Integration.Tests.Trams
@@ -40,22 +42,38 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		}
 
 		[Test]
-		public async Task WhenGetRecordsByCaseUrn_ReturnsListRecordDto()
+		public async Task WhenCreateAndGetRecordsByCaseUrn_ReturnsListRecordDto()
 		{
 			// arrange
+			var startTime = DateTime.UtcNow;
 			var recordService = _factory.Services.GetRequiredService<IRecordService>();
 			var caseUrn = await FetchRandomCaseUrn();
 			var typeUrn = await FetchRandomTypeUrn();
 			var ratingUrn = await FetchRandomRatingUrn();
-			var createRecordDto = RecordFactory.BuildCreateRecordDto(caseUrn, typeUrn, ratingUrn);
+			var meansOfReferralUrn = await FetchRandomMeansOfReferralUrn();
+			var createRecordDto = RecordFactory.BuildCreateRecordDto(caseUrn, typeUrn, ratingUrn, meansOfReferralUrn);
 			await PostRecord(createRecordDto);
 
 			//act 
 			var recordsDto = await recordService.GetRecordsByCaseUrn(caseUrn);
 
 			// Assert
+			var endTime = DateTime.UtcNow;
+			
 			Assert.That(recordsDto, Is.Not.Null);
 			Assert.That(recordsDto.Count, Is.EqualTo(1));
+			
+			var resultDto = recordsDto.ToList().Single();
+			Assert.AreEqual(caseUrn, resultDto.CaseUrn);
+			Assert.AreEqual(typeUrn, resultDto.TypeUrn);
+			Assert.AreEqual(ratingUrn, resultDto.RatingUrn);
+			Assert.NotNull(resultDto.Description);
+			Assert.NotNull(resultDto.Name);
+			Assert.NotNull(resultDto.Reason);
+			Assert.Greater(resultDto.Urn, 0);
+			Assert.That(resultDto.ClosedAt >= startTime && resultDto.ClosedAt <= endTime);
+			Assert.That(resultDto.CreatedAt >= startTime && resultDto.CreatedAt <= endTime);
+			Assert.That(resultDto.UpdatedAt >= startTime && resultDto.UpdatedAt <= endTime);
 		}
 
 		[Test]
@@ -158,6 +176,17 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			var index = random.Next(ratings.Count);
 
 			return ratings[index].Urn;
+		}
+		
+		private async Task<long> FetchRandomMeansOfReferralUrn()
+		{
+			var meansOfReferralService = _factory.Services.GetRequiredService<IMeansOfReferralService>();
+			var meansOfReferrals = await meansOfReferralService.GetMeansOfReferrals();
+
+			var random = new Random();
+			var index = random.Next(meansOfReferrals.Count);
+
+			return meansOfReferrals[index].Urn;
 		}
 	}
 }

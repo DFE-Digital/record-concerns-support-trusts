@@ -3,6 +3,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.MeansOfReferral;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
@@ -26,12 +27,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		private readonly ITrustModelService _trustModelService;
 		private readonly ITypeModelService _typeModelService;
 		private readonly ICaseModelService _caseModelService;
+		private readonly IMeansOfReferralModelService _meansOfReferralService;
 		private readonly ILogger<IndexPageModel> _logger;
 		
 		public TypeModel TypeModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
+		public IList<MeansOfReferralModel> MeansOfReferralModel { get; private set; }
 		public string PreviousUrl { get; private set; }
 		
 		public IndexPageModel(ICaseModelService caseModelService,
@@ -39,10 +42,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			ITrustModelService trustModelService,
 			ITypeModelService typeModelService,
 			IRatingModelService ratingModelService,
+			IMeansOfReferralModelService meansOfReferralService,
 			ILogger<IndexPageModel> logger)
 		{
 			_recordModelService = recordModelService;
 			_ratingModelService = ratingModelService;
+			_meansOfReferralService = meansOfReferralService;
 			_trustModelService = trustModelService;
 			_typeModelService = typeModelService;
 			_caseModelService = caseModelService;
@@ -102,13 +107,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				var splitRagRating = ragRating.Split(":");
 				var ragRatingUrn = splitRagRating[0];
 
+				var meansOfReferral = Request.Form["means-of-referral-urn"].ToString();
+				
 				var createRecordModel = new CreateRecordModel
 				{
 					CaseUrn = caseUrn,
 					TypeUrn = long.Parse(typeUrn),
 					Type = type,
 					SubType = subType,
-					RatingUrn = long.Parse(ragRatingUrn)
+					RatingUrn = long.Parse(ragRatingUrn),
+					MeansOfReferralUrn = long.Parse(meansOfReferral)
 				};
 				
 				// Post record
@@ -141,6 +149,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(caseModel.TrustUkPrn);
 				RatingsModel = await _ratingModelService.GetRatingsModel();
 				TypeModel = await _typeModelService.GetTypeModel();
+				MeansOfReferralModel = 
+					MeansOfReferralModel = await _meansOfReferralService.GetMeansOfReferrals();
 			
 				return Page();
 			}

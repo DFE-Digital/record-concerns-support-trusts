@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
+using ConcernsCaseWork.Services.MeansOfReferral;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
@@ -42,8 +43,10 @@ using Service.TRAMS.CaseActions;
 using Service.Redis.NtiUnderConsideration;
 using Service.TRAMS.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiWarningLetter;
+using Service.Redis.MeansOfReferral;
 using Service.TRAMS.NtiWarningLetter;
 using Service.Redis.NtiWarningLetter;
+using Service.TRAMS.MeansOfReferral;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -123,6 +126,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
 			services.AddSingleton<INtiUnderConsiderationModelService, NtiUnderConsiderationModelService>();
 			services.AddSingleton<INtiWarningLetterModelService, NtiWarningLetterModelService>();
+			services.AddSingleton<IMeansOfReferralModelService, MeansOfReferralModelService>();
 
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
@@ -144,6 +148,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiUnderConsiderationReasonsService, NtiUnderConsiderationReasonsService>();
 			services.AddSingleton<INtiUnderConsiderationStatusesService, NtiUnderConsiderationStatusesService>();
 			services.AddSingleton<INtiUnderConsiderationService, NtiUnderConsiderationService>();
+			services.AddSingleton<IMeansOfReferralService, MeansOfReferralService>();
 			services.AddSingleton<INtiWarningLetterStatusesService, NtiWarningLetterStatusesService>();
 			services.AddSingleton<INtiWarningLetterReasonsService, NtiWarningLetterReasonsService>();
 			services.AddSingleton<INtiWarningLetterService, NtiWarningLetterService>();
@@ -168,6 +173,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiWarningLetterStatusesCachedService, NtiWarningLetterStatusesCachedService>();
 			services.AddSingleton<INtiWarningLetterReasonsCachedService, NtiWarningLetterReasonsCachedService>();
 			services.AddSingleton<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
+			services.AddSingleton<IMeansOfReferralCachedService, MeansOfReferralCachedService>();
 			services.AddSingleton<INtiWarningLetterConditionsCachedService, NtiWarningLetterConditionsCachedServices>();
 
 			// AD Integration
