@@ -9,7 +9,6 @@ namespace ConcernsCaseWork.Pages.Validators
 			var type = formCollection["type"].ToString();
 			var subType = formCollection["sub-type"].ToString();
 			var ragRating = formCollection["rating"].ToString();
-			var meansOfReferral = formCollection["meansOfReferralUrn"].ToString();
 			
 			// Force majeure
 			var splitType = type.Split(":");
@@ -27,7 +26,7 @@ namespace ConcernsCaseWork.Pages.Validators
 				typeUrn = splitSubtype[0];
 			}
 			
-			return !string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(ragRating) && !string.IsNullOrEmpty(typeUrn) && !string.IsNullOrEmpty(meansOfReferral);
+			return !string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(ragRating) && !string.IsNullOrEmpty(typeUrn);
 		}
 
 		public static bool IsEditValid(IFormCollection formCollection)

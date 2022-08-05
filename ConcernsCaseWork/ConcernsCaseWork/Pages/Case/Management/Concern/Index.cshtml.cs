@@ -107,7 +107,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				var splitRagRating = ragRating.Split(":");
 				var ragRatingUrn = splitRagRating[0];
 
-				var meansOfReferral = Request.Form["meansOfReferralUrn"].ToString();
+				var meansOfReferral = Request.Form["means-of-referral-urn"].ToString();
 				
 				var createRecordModel = new CreateRecordModel
 				{

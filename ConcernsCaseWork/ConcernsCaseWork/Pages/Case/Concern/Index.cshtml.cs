@@ -66,7 +66,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			{
 				_logger.LogInformation("Case::Concern::IndexPageModel::OnPostAsync");
 
-				if (!ConcernTypeValidator.IsValid(Request.Form))
+				if (!ConcernTypeValidator.IsValid(Request.Form) || string.IsNullOrWhiteSpace(Request.Form["means-of-referral-urn"].ToString()))
 					throw new Exception("Missing form values");
 				
 				string typeUrn;
@@ -83,6 +83,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				var splitRagRating = ragRating.Split(":");
 				var ragRatingUrn = splitRagRating[0];
 				var ragRatingName = splitRagRating[1];
+				
+				var meansOfReferral = Request.Form["means-of-referral-urn"].ToString();
 				
 				// Redis state
 				var userState = await GetUserState();
@@ -114,7 +116,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					RatingUrn = long.Parse(ragRatingUrn),
 					RatingName = ragRatingName,
 					RagRating = RatingMapping.FetchRag(ragRatingName),
-					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName)
+					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
+					MeansOfReferralUrn = long.Parse(meansOfReferral)
 				};
 				
 				userState.CreateCaseModel.CreateRecordsModel.Add(createRecordModel);
