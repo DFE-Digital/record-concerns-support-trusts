@@ -8,8 +8,10 @@
 		public long Urn { get; }
 		
 		public long CaseUrn { get; }
-
+		
 		public long TypeUrn { get; }
+		
+		public MeansOfReferralModel MeansOfReferralModel { get; }
 		
 		public TypeModel TypeModel { get; }
 
@@ -21,8 +23,17 @@
 		
 		public StatusModel StatusModel { get; }
 		
-		public RecordModel(long caseUrn, long typeUrn, TypeModel typeModel, long ratingUrn, RatingModel ratingModel, long urn, long statusUrn, StatusModel statusModel) => 
-			(CaseUrn, TypeUrn, TypeModel, RatingUrn, RatingModel, Urn, StatusUrn, StatusModel) = 
-			(caseUrn, typeUrn, typeModel, ratingUrn, ratingModel, urn, statusUrn, statusModel);
+		public RecordModel(
+			long caseUrn, 
+			long typeUrn, 
+			TypeModel typeModel, 
+			long ratingUrn, 
+			RatingModel ratingModel, 
+			long urn, 
+			long statusUrn, 
+			StatusModel statusModel, 
+			MeansOfReferralModel meansOfReferralModel = null) => 
+				(CaseUrn, TypeUrn, TypeModel, RatingUrn, RatingModel, Urn, StatusUrn, StatusModel, MeansOfReferralModel) = 
+				(caseUrn, typeUrn, typeModel, ratingUrn, ratingModel, urn, statusUrn, statusModel, meansOfReferralModel);
 	}
 }

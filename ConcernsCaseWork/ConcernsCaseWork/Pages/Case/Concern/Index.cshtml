@@ -59,6 +59,19 @@
 
 				</fieldset>
 			</div>
+			
+			<!-- Q Means of Referral -->
+			<div class="govuk-form-group govuk-!-margin-top-6">
+				<fieldset class="govuk-fieldset">
+
+					<legend class="govuk-fieldset__legend govuk-!-font-weight-bold">
+						Means of referral
+					</legend>
+
+					<partial name="_MeansOfReferral" model="@Model.MeansOfReferralModel" />
+
+				</fieldset>
+			</div>
 
 			<div class="govuk-button-group">
 				<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
@@ -76,6 +89,7 @@
 				let validator = formValidator($("#case-concern-form")[0]);
 				addConcernValidator(validator);
 				addRatingValidator(validator);
+				addMeansOfReferralValidator(validator);
 			});
 		</script>
 	}

@@ -6,6 +6,7 @@ using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
+using ConcernsCaseWork.Services.MeansOfReferral;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -28,22 +29,26 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private readonly ITrustModelService _trustModelService;
 		private readonly ITypeModelService _typeModelService;
 		private readonly ICachedService _cachedService;
+		private readonly IMeansOfReferralModelService _meansOfReferralService;
 		
 		public TypeModel TypeModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
+		public IList<MeansOfReferralModel> MeansOfReferralModel { get; private set; }
 
 		public IndexPageModel(ITrustModelService trustModelService, 
-			ICachedService cachedService, 
-			ITypeModelService typeModelService, 
+			ICachedService cachedService,
+			ITypeModelService typeModelService,
 			IRatingModelService ratingModelService,
+			IMeansOfReferralModelService meansOfReferralService,
 			ILogger<IndexPageModel> logger)
 		{
 			_ratingModelService = ratingModelService;
 			_trustModelService = trustModelService;
 			_typeModelService = typeModelService;
 			_cachedService = cachedService;
+			_meansOfReferralService = meansOfReferralService;
 			_logger = logger;
 		}
 		
@@ -61,7 +66,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			{
 				_logger.LogInformation("Case::Concern::IndexPageModel::OnPostAsync");
 
-				if (!ConcernTypeValidator.IsValid(Request.Form))
+				if (!ConcernTypeValidator.IsValid(Request.Form) || string.IsNullOrWhiteSpace(Request.Form["means-of-referral-urn"].ToString()))
 					throw new Exception("Missing form values");
 				
 				string typeUrn;
@@ -78,6 +83,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				var splitRagRating = ragRating.Split(":");
 				var ragRatingUrn = splitRagRating[0];
 				var ragRatingName = splitRagRating[1];
+				
+				var meansOfReferral = Request.Form["means-of-referral-urn"].ToString();
 				
 				// Redis state
 				var userState = await GetUserState();
@@ -109,7 +116,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 					RatingUrn = long.Parse(ragRatingUrn),
 					RatingName = ragRatingName,
 					RagRating = RatingMapping.FetchRag(ragRatingName),
-					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName)
+					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
+					MeansOfReferralUrn = long.Parse(meansOfReferral)
 				};
 				
 				userState.CreateCaseModel.CreateRecordsModel.Add(createRecordModel);
@@ -162,6 +170,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
 				RatingsModel = await _ratingModelService.GetRatingsModel();
 				TypeModel = await _typeModelService.GetTypeModel();
+				MeansOfReferralModel = await _meansOfReferralService.GetMeansOfReferrals();
 			
 				return Page();
 			}
