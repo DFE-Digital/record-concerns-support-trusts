@@ -4,6 +4,8 @@ namespace ConcernsCaseWork.Models
 {
 	public class RadioItem
 	{
+		public string Description { get; set; }
+
 		public string Text { get; set; }
 
 		private string id;

@@ -14,6 +14,7 @@ namespace ConcernsCaseWork.Mappers
 				Id = ntiModel.Id,
 				CaseUrn = ntiModel.CaseUrn,
 				ClosedAt = ntiModel.ClosedAt,
+				ClosedStatusId = ntiModel.ClosedStatusId,
 				CreatedAt = ntiModel.CreatedAt,
 				Notes = ntiModel.Notes,
 				WarningLetterReasonsMapping = ntiModel.Reasons.Select(r => r.Id).ToArray(),
@@ -53,6 +54,24 @@ namespace ConcernsCaseWork.Mappers
 					Name = ntiConditionDto.Type.Name,
 					DisplayOrder = ntiConditionDto.Type.DisplayOrder
 				}
+			};
+		}
+
+		public static NtiWarningLetterStatusModel ToServiceModel(NtiWarningLetterStatusDto ntiStatusDto)
+		{
+			return new NtiWarningLetterStatusModel
+			{
+				Id = ntiStatusDto.Id,
+				Name = ntiStatusDto.Name
+			};
+		}
+
+		public static NtiWarningLetterReasonModel ToServiceModel(NtiWarningLetterReasonDto ntiWarningLetterReasonDto)
+		{
+			return new NtiWarningLetterReasonModel
+			{
+				Id = ntiWarningLetterReasonDto.Id,
+				Name = ntiWarningLetterReasonDto.Name
 			};
 		}
 	}

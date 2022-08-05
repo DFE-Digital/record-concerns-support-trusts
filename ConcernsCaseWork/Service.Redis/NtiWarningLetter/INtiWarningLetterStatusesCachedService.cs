@@ -8,6 +8,7 @@ namespace Service.Redis.NtiWarningLetter
 {
 	public interface INtiWarningLetterStatusesCachedService
 	{
+		public Task ClearData();
 		public Task<ICollection<NtiWarningLetterStatusDto>> GetAllStatusesAsync();
 	}
 }

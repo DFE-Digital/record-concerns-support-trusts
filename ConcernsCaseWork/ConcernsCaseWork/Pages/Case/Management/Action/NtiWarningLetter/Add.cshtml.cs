@@ -163,7 +163,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		private async Task<IEnumerable<RadioItem>> GetStatuses()
 		{
 			var statuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
-			return statuses.Select(s => new RadioItem
+			return statuses.Where(s => !s.IsClosingState).Select(s => new RadioItem
 			{
 				Id = Convert.ToString(s.Id),
 				Text = s.Name,
