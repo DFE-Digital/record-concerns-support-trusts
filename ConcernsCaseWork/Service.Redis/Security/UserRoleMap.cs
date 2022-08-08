@@ -22,6 +22,8 @@ namespace Service.Redis.Security
 			{ "elijah.aremu", new List<RoleEnum> { RoleEnum.User, RoleEnum.Admin, RoleEnum.Leader } },
 			{ "paul.simmons", new List<RoleEnum> { RoleEnum.User } },
 			{ "menol.razeek", new List<RoleEnum> { RoleEnum.User, RoleEnum.Admin, RoleEnum.Leader } },
+			{ "emma.whitcroft", new List<RoleEnum> { RoleEnum.User, RoleEnum.Admin, RoleEnum.Leader } },
+			{ "chris.dexter", new List<RoleEnum> { RoleEnum.User, RoleEnum.Admin, RoleEnum.Leader } },
 			{ "anthon.thomas", new List<RoleEnum> { RoleEnum.User, RoleEnum.Admin, RoleEnum.Leader } },
 			{ "chanel.diep", new List<RoleEnum> { RoleEnum.User, RoleEnum.Leader } },
 			{ "israt.choudhury", new List<RoleEnum> { RoleEnum.User } },
