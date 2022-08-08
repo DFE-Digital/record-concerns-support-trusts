@@ -146,7 +146,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			// assert
 			Assert.That(pageResponse, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["FinancialPlan.Message"], Is.EqualTo("Viable plan received 00-00-0000 is an invalid date"));
+			Assert.That(pageModel.TempData["FinancialPlan.Message"], Is.EqualTo("Viable plan 00-00-0000 is an invalid date"));
 		}
 		[Test]
 		public async Task WhenOnPostAsync_PartialViablePlanDate_ThrowsException_ReturnsPage()
@@ -174,7 +174,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			// assert
 			Assert.That(pageResponse, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["FinancialPlan.Message"], Is.EqualTo("Viable plan received 02-04- is an invalid date"));
+			Assert.That(pageModel.TempData["FinancialPlan.Message"], Is.EqualTo("Viable plan 02-04- is an invalid date"));
 		}
 		
 		[Test]

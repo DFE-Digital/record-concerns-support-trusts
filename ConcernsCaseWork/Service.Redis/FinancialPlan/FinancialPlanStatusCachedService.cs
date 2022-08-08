@@ -30,28 +30,28 @@ namespace Service.Redis.FinancialPlan
 
 		public async Task<IList<FinancialPlanStatusDto>> GetAllFinancialPlanStatusesAsync()
 		{
-			_logger.LogInformation("FinancialPlanStatusCachedService::GetAllFinancialPlanStatuses");
+			_logger.LogInformation("FinancialPlanStatusCachedService::GetAllFinancialPlanStatusesAsync");
 			
 			return await GetFinancialPlansStatusesAsync(
-				async () => await _financialPlanStatusService.GetAllFinancialPlansStatuses(), 
+				async () => await _financialPlanStatusService.GetAllFinancialPlansStatusesAsync(), 
 				FinancialPlanStatusKey);
 		}
 
 		public async Task<IList<FinancialPlanStatusDto>> GetClosureFinancialPlansStatusesAsync()
 		{
-			_logger.LogInformation("FinancialPlanStatusCachedService::GetClosureFinancialPlansStatuses");
+			_logger.LogInformation("FinancialPlanStatusCachedService::GetClosureFinancialPlansStatusesAsync");
 			
 			return await GetFinancialPlansStatusesAsync(
-				async () => await _financialPlanStatusService.GetClosureFinancialPlansStatuses(), 
+				async () => await _financialPlanStatusService.GetClosureFinancialPlansStatusesAsync(), 
 				FinancialPlanClosureStatusKey);
 		}
 
 		public async Task<IList<FinancialPlanStatusDto>> GetOpenFinancialPlansStatusesAsync()
 		{
-			_logger.LogInformation("FinancialPlanStatusCachedService::GetOpenFinancialPlansStatuses");
+			_logger.LogInformation("FinancialPlanStatusCachedService::GetOpenFinancialPlansStatusesAsync");
 			
 			return await GetFinancialPlansStatusesAsync(
-				async () => await _financialPlanStatusService.GetOpenFinancialPlansStatuses(), 
+				async () => await _financialPlanStatusService.GetOpenFinancialPlansStatusesAsync(), 
 				FinancialPlanOpenStatusKey);
 		}
 

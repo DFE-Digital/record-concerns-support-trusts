@@ -104,7 +104,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 				return receivedDate;
 			}
 			
-			throw new InvalidOperationException($"Viable plan received {viablePlanReceivedDtString} is an invalid date");
+			throw new InvalidOperationException($"Viable plan {viablePlanReceivedDtString} is an invalid date");
 		}
 		
 		protected string CreateDateString(string day, string month, string year)

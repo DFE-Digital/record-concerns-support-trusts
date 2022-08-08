@@ -17,11 +17,11 @@ namespace Service.TRAMS.FinancialPlan
 			_logger = logger;
 		}
 
-		public async Task<IList<FinancialPlanStatusDto>> GetAllFinancialPlansStatuses()
+		public async Task<IList<FinancialPlanStatusDto>> GetAllFinancialPlansStatusesAsync()
 		{
 			try
 			{
-				_logger.LogInformation("FinancialPlanStatusService::GetAllFinancialPlansStatuses");
+				_logger.LogInformation("FinancialPlanStatusService::GetAllFinancialPlansStatusesAsync");
 
 				return await HttpClientWrapper<FinancialPlanStatusDto>.GetData($"/{EndpointsVersion}/case-actions/financial-plan/all-statuses", ClientFactory);
 			}
@@ -33,11 +33,11 @@ namespace Service.TRAMS.FinancialPlan
 			}
 		}
 		
-		public async Task<IList<FinancialPlanStatusDto>> GetClosureFinancialPlansStatuses()
+		public async Task<IList<FinancialPlanStatusDto>> GetClosureFinancialPlansStatusesAsync()
 		{
 			try
 			{
-				_logger.LogInformation("FinancialPlanStatusService::GetClosureFinancialPlansStatuses");
+				_logger.LogInformation("FinancialPlanStatusService::GetClosureFinancialPlansStatusesAsync");
 
 				return await HttpClientWrapper<FinancialPlanStatusDto>.GetData($"/{EndpointsVersion}/case-actions/financial-plan/closure-statuses", ClientFactory);
 			}
@@ -49,11 +49,11 @@ namespace Service.TRAMS.FinancialPlan
 			}
 		}
 				
-		public async Task<IList<FinancialPlanStatusDto>> GetOpenFinancialPlansStatuses()
+		public async Task<IList<FinancialPlanStatusDto>> GetOpenFinancialPlansStatusesAsync()
 		{
 			try
 			{
-				_logger.LogInformation("FinancialPlanStatusService::GetOpenFinancialPlansStatuses");
+				_logger.LogInformation("FinancialPlanStatusService::GetOpenFinancialPlansStatusesAsync");
 
 				return await HttpClientWrapper<FinancialPlanStatusDto>.GetData($"/{EndpointsVersion}/case-actions/financial-plan/open-statuses", ClientFactory);
 			}
