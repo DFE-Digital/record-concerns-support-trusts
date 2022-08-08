@@ -119,7 +119,6 @@ namespace ConcernsCaseWork.Tests.Pages.Admin
 			await pageModel.OnGetClearCache();
 
 			// assert
-			Assert.IsNull(pageModel.UsersRole);
 			Assert.IsEmpty(pageModel.TempData);
 			
 			mockLogger.Verify(
@@ -131,8 +130,8 @@ namespace ConcernsCaseWork.Tests.Pages.Admin
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 			
-			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Never);
-			mockRbacManager.Verify(r => r.GetUsersRoles(), Times.Never);
+			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Once);
+			mockRbacManager.Verify(r => r.GetUsersRoles(), Times.Once);
 			mockUserRoleCachedService.Verify(urc => urc.ClearData(), Times.Once);
 		}		
 		

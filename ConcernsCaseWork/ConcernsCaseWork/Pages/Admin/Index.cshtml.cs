@@ -41,8 +41,9 @@ namespace ConcernsCaseWork.Pages.Admin
 	        _logger.LogInformation("Admin::IndexPageModel::OnGetClearCache");
 	        
 	        await _userRoleCachedService.ClearData();
+			await LoadPage();
 
-	        Redirect("/admin");
+			Redirect("/admin");
         }
         
         private async Task LoadPage()
