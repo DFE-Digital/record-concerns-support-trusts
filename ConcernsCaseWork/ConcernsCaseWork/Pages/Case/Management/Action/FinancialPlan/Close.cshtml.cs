@@ -39,7 +39,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				
 				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, loggedInUserName);
 				
-				var currentStatusName = FinancialPlanModel.Status.Name;
+				var currentStatusName = FinancialPlanModel.Status?.Name;
 				FinancialPlanStatuses = await GetStatusOptionsAsync(currentStatusName);
 
 				return Page();
@@ -86,7 +86,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				
 				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(GetRequestedCaseUrn(), GetRequestedFinancialPlanId(), GetLoggedInUserName());
 				
-				var currentStatusName = FinancialPlanModel.Status.Name;
+				var currentStatusName = FinancialPlanModel.Status?.Name;
 				FinancialPlanStatuses = await GetStatusOptionsAsync(currentStatusName);
 			}
 			catch (Exception ex)

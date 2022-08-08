@@ -51,12 +51,25 @@
 				var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
 				var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+				var validStatuses = GetListValidStatuses();
+				
+				var caseUrn = 4;
+				var financialPlanId = 6;
+								
+				mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+					.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn, null));
+
+				mockFinancialPlanStatusService.Setup(fp => fp.GetClosureFinancialPlansStatusesAsync())
+					.ReturnsAsync(validStatuses);
 
 				var routeData = pageModel.RouteData.Values;
-				routeData.Add("urn", 1);
+				routeData.Add("urn", caseUrn);
+				routeData.Add("financialplanid", financialPlanId);
 
+				Assert.IsNull(pageModel.FinancialPlanModel);
+				
 				// act
-				await pageModel.OnGetAsync();
+				var response = await pageModel.OnGetAsync();
 
 				// assert
 				mockLogger.Verify(
@@ -67,6 +80,25 @@
 						null,
 						It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 					Times.Once);
+				
+				Assert.IsInstanceOf<PageResult>(response);
+				Assert.IsNotNull(pageModel.FinancialPlanModel);
+				Assert.AreEqual(pageModel.FinancialPlanModel.Id, financialPlanId);
+				Assert.AreEqual(pageModel.FinancialPlanModel.CaseUrn, caseUrn);
+				Assert.IsNotNull(pageModel.FinancialPlanStatuses);
+				Assert.AreEqual(2, pageModel.FinancialPlanStatuses.Count());
+				
+				Assert.IsFalse(pageModel.FinancialPlanStatuses.Any(s => s.IsChecked));
+
+				var testStatus1 = pageModel.FinancialPlanStatuses.First();
+				Assert.IsTrue(validStatuses.Select(s => s.Description).Contains(testStatus1.Text));
+				Assert.IsTrue(validStatuses.Select(s => s.Name).Contains(testStatus1.Id));
+			
+				var testStatus2 = pageModel.FinancialPlanStatuses.Last();
+				Assert.IsTrue(validStatuses.Select(s => s.Description).Contains(testStatus2.Text));
+				Assert.IsTrue(validStatuses.Select(s => s.Name).Contains(testStatus2.Id));
+				
+				Assert.IsNull(pageModel.TempData["Error.Message"]);
 			}
 
 			[Test]
@@ -85,35 +117,6 @@
 				var routeData = pageModel.RouteData.Values;
 				routeData.Add("urn", urn);
 				routeData.Add("financialplanid", financialId);
-
-				// act
-				var pageResponse = await pageModel.OnPostAsync();
-
-				// assert
-				Assert.That(pageResponse, Is.InstanceOf<PageResult>());
-				var page = pageResponse as PageResult;
-
-				Assert.That(page, Is.Not.Null);
-				Assert.That(pageModel.TempData, Is.Not.Null);
-				Assert.That(pageModel.TempData["Error.Message"],
-					Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
-				
-				mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>(), It.IsAny<string>()), Times.Never);
-			}
-			
-			[Test]
-			public async Task WhenOnPostAsync_MissingFinancialPlanId_ThrowsException_ReturnsPage()
-			{
-				// arrange
-				var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-				var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
-				var mockLogger = new Mock<ILogger<ClosePageModel>>();
-
-				var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
-				
-				var routeData = pageModel.RouteData.Values;
-				routeData.Add("urn", "1");
-				routeData.Add("financialplanid", "");
 
 				// act
 				var pageResponse = await pageModel.OnPostAsync();
@@ -179,15 +182,20 @@
 				var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 				var mockLogger = new Mock<ILogger<ClosePageModel>>();
 				
+				var caseUrn = 1;
+				var financialPlanId = 2;
+				
 				mockFinancialPlanStatusService.Setup(fp => fp.GetClosureFinancialPlansStatusesAsync())
 					.ReturnsAsync(GetListValidStatuses());
+				
+				mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+					.ReturnsAsync(SetupFinancialPlanModel(caseUrn, financialPlanId, null));
 
 				var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
-				var caseUrn = 1;
 				var routeData = pageModel.RouteData.Values;
 				routeData.Add("urn", caseUrn);
-				routeData.Add("financialplanid", 2);
+				routeData.Add("financialplanid", financialPlanId);
 
 				pageModel.HttpContext.Request.Form = new FormCollection(
 					new Dictionary<string, StringValues>
@@ -204,8 +212,7 @@
 
 				Assert.That(page, Is.Not.Null);
 				Assert.That(pageModel.TempData, Is.Not.Null);
-				Assert.That(pageModel.TempData["Error.Message"],
-					Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+				Assert.That(pageModel.TempData["FinancialPlan.Message"], Is.EqualTo("Please select a reason for closing the Financial Plan"));
 				
 				mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>(), It.IsAny<string>()), Times.Never);
 			}
@@ -225,6 +232,17 @@
 			}
 			
 			private static List<FinancialPlanStatusDto> GetListValidStatuses() => FinancialPlanStatusFactory.BuildListClosureFinancialPlanStatusDto().ToList();
+			
 			private static IEnumerable<string> GetListValidStatusNames() => GetListValidStatuses().Select(dto => dto.Name);
+			
+			private static FinancialPlanModel SetupFinancialPlanModel(long planId, long caseUrn, string statusName = "")
+				=> new FinancialPlanModel(planId, 
+					caseUrn, 
+					DateTime.Now, 
+					null, 
+					null, 
+					String.Empty, 
+					new FinancialPlanStatusModel(statusName, 1, false), 
+					null);
 		} 
 	}

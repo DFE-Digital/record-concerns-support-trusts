@@ -20,10 +20,10 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		}
 		
 		public static List<FinancialPlanStatusDto> BuildListOpenFinancialPlanStatusDto()
-			=> BuildListAllFinancialPlanStatusDto().Where(d => d.IsClosedStatus).ToList();
+			=> BuildListAllFinancialPlanStatusDto().Where(d => !d.IsClosedStatus).ToList();
 		
 		public static List<FinancialPlanStatusDto> BuildListClosureFinancialPlanStatusDto()
-			=> BuildListAllFinancialPlanStatusDto().Where(d => !d.IsClosedStatus).ToList();
+			=> BuildListAllFinancialPlanStatusDto().Where(d => d.IsClosedStatus).ToList();
 
 		private static FinancialPlanStatusDto BuildFinancialPlanStatusDto(FinancialPlanStatus financialPlanStatus, bool isClosedStatus)
 			=> new FinancialPlanStatusDto(
