@@ -10,30 +10,32 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 	{
 		private readonly static Fixture Fixture = new Fixture();
 
-		public static List<SRMAModel> BuildListSrmaModel(SRMAStatus status = SRMAStatus.Deployed, SRMAReasonOffered reason = SRMAReasonOffered.Unknown)
+		public static List<SRMAModel> BuildListSrmaModel(SRMAStatus status = SRMAStatus.Deployed, SRMAReasonOffered reason = SRMAReasonOffered.Unknown, DateTime? closedAt = null)
 		{
 			return new List<SRMAModel>
 			{
-				BuildSrmaModel(status, reason)
+				BuildSrmaModel(status, reason, closedAt)
 			};
 		}
 
-		public static SRMAModel BuildSrmaModel(SRMAStatus status, SRMAReasonOffered reason = SRMAReasonOffered.Unknown)
+		public static SRMAModel BuildSrmaModel(SRMAStatus status, SRMAReasonOffered reason = SRMAReasonOffered.Unknown, DateTime? closedAt = null)
 		{
+
 			var srma = new SRMAModel
-			(
-				Fixture.Create<long>(),
-				Fixture.Create<long>(),
-				Fixture.Create<DateTime>(),
-				Fixture.Create<DateTime>(),
-				Fixture.Create<DateTime>(),
-				Fixture.Create<DateTime>(),
-				Fixture.Create<DateTime>(),
-				status,
-				Fixture.Create<string>(),
-				reason,
-				Fixture.Create<DateTime>()
-			);
+			{
+				Id = Fixture.Create<long>(),
+				CaseUrn = Fixture.Create<long>(),
+				DateOffered = Fixture.Create<DateTime>(),
+				DateAccepted = Fixture.Create<DateTime>(),
+				DateReportSentToTrust = Fixture.Create<DateTime>(),
+				DateVisitStart = Fixture.Create<DateTime>(),
+				DateVisitEnd = Fixture.Create<DateTime>(),
+				Status = status,
+				Notes = Fixture.Create<string>(),
+				Reason = reason,
+				CreatedAt = Fixture.Create<DateTime>(),
+				ClosedAt = closedAt
+			};
 
 			return srma;
 		}
