@@ -38,7 +38,7 @@ namespace Service.TRAMS.Records
 		[JsonProperty("statusUrn")]
 		public long StatusUrn { get; }
 		
-		[JsonProperty("means-of-referral-urn")]
+		[JsonProperty("meansOfReferralUrn")]
 		public long MeansOfReferralUrn { get; }
 		
 		[JsonConstructor]
