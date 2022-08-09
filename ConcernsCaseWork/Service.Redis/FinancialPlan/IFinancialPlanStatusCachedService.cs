@@ -7,7 +7,8 @@ namespace Service.Redis.FinancialPlan
 	public interface IFinancialPlanStatusCachedService
 	{
 		Task ClearData();
-		Task<IList<FinancialPlanStatusDto>> GetFinancialPlanStatuses();
-		Task<FinancialPlanStatusDto> GetDefaultFinancialPlan();
+		Task<IList<FinancialPlanStatusDto>> GetAllFinancialPlanStatusesAsync();
+		Task<IList<FinancialPlanStatusDto>> GetClosureFinancialPlansStatusesAsync();
+		Task<IList<FinancialPlanStatusDto>> GetOpenFinancialPlansStatusesAsync();
 	}
 }

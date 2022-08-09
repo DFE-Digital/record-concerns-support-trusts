@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using ConcernsCaseWork.Extensions;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ConcernsCaseWork.Pages.Base
 {
@@ -21,6 +22,8 @@ namespace ConcernsCaseWork.Pages.Base
 			return status;
 		}
 
+		protected string GetFormValue(string propertyName) => Request.Form[propertyName].ToString().GetValueOrNullIfWhitespace();
+		
+		protected string GetRouteValue(string propertyName) => RouteData.Values[propertyName].ToString().GetValueOrNullIfWhitespace();
 	}
-
 }

@@ -1,48 +1,15 @@
-﻿@* Routes for this page is configured in Startup.cs *@
-@page 
+﻿@page "/case/{urn:long}/management/action/financialplan/{financialplanid:long}/edit"
 @model ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan.EditPageModel
 
-@using ConcernsCaseWork.Enums;
-@using ConcernsCaseWork.Helpers;
+@using ConcernsCaseWork.Extensions
 
 @{
 	ViewData["Title"] = "Edit Financial Plan";
 	var nonce = HttpContext.GetNonce();
 
-	var datePlanRequestedDay = "";
-	var datePlanRequestedMonth = "";
-	var datePlanRequestedYear = "";
-
-	var dateViablePlanReceivedDay =  "";
-	var dateViablePlanReceivedMonth = "";
-	var dateViablePlanReceivedYear =  "";
-
 	var financialPlanNotes =  "";
-	var financialPlanStatusEnum = FinancialPlanStatus.Unknown;
 
-	if (Model.FinancialPlanModel != null)
-	{
-		var datePlanRequestedValue = Model.FinancialPlanModel.DatePlanRequested.HasValue ? Model.FinancialPlanModel.DatePlanRequested.Value : (DateTime?)null;
-		var dateViablePlanReceivedValue = Model.FinancialPlanModel.DateViablePlanReceived.HasValue ? Model.FinancialPlanModel.DateViablePlanReceived.Value : (DateTime?)null;
-
-		datePlanRequestedDay = datePlanRequestedValue != null ? $"{datePlanRequestedValue.Value.Day:00}" : "";
-		datePlanRequestedMonth = datePlanRequestedValue != null ? $"{datePlanRequestedValue.Value.Month:00}" : "";
-		datePlanRequestedYear = datePlanRequestedValue != null ? $"{datePlanRequestedValue.Value.Year:00}" : "";
-
-		dateViablePlanReceivedDay = dateViablePlanReceivedValue != null ? $"{dateViablePlanReceivedValue.Value.Day:00}" : "";
-		dateViablePlanReceivedMonth = dateViablePlanReceivedValue != null ? $"{dateViablePlanReceivedValue.Value.Month:00}" : "";
-
-		dateViablePlanReceivedYear = dateViablePlanReceivedValue != null ? $"{dateViablePlanReceivedValue.Value.Year:00}" : "";
-
-		financialPlanNotes = Model.FinancialPlanModel.Notes;
-		var financialPlanStatusName = Model.FinancialPlanModel.Status != null ? Model.FinancialPlanModel.Status.Name : "";
-
-		if (Enum.TryParse<FinancialPlanStatus>(financialPlanStatusName, out FinancialPlanStatus parsedStatus))
-		{
-			financialPlanStatusEnum = parsedStatus;
-		}
-
-	}
+	financialPlanNotes = Model.FinancialPlanModel.Notes;
 }
 
 <div class="govuk-width-container">
@@ -100,16 +67,9 @@
 								@foreach (var status in Model.FinancialPlanStatuses)
 								{
 									var idStr = id++ == 0 ? "status" : "status-" + id;
+									var checkedStr = status.IsChecked ? "checked" : "";
 									<div class="govuk-radios__item">
-
-										@if (EnumHelper.GetEnumDescription(financialPlanStatusEnum) == status.Text)
-										{
-											<input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id" checked>
-										}
-										else
-										{
-											<input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id">
-										}
+										<input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id" @checkedStr>
 
 										<label class="govuk-label govuk-radios__label" for="@idStr">
 											<span>
@@ -133,7 +93,7 @@
 											Day
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-plan-requested"
-											   name="dtr-day-plan-requested" type="text" maxlength="2" inputmode="numeric" value="@datePlanRequestedDay" />
+											   name="dtr-day-plan-requested" type="text" maxlength="2" inputmode="numeric" value="@Model.FinancialPlanModel.DatePlanRequested.ParseDay()" />
 									</div>
 								</div>
 								<div class="govuk-date-input__item">
@@ -142,7 +102,7 @@
 											Month
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-plan-requested"
-											   name="dtr-month-plan-requested" type="text" maxlength="2" inputmode="numeric" value="@datePlanRequestedMonth" />
+											   name="dtr-month-plan-requested" type="text" maxlength="2" inputmode="numeric" value="@Model.FinancialPlanModel.DatePlanRequested.ParseMonth()" />
 									</div>
 								</div>
 								<div class="govuk-date-input__item">
@@ -151,7 +111,7 @@
 											Year
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-plan-requested"
-											   name="dtr-year-plan-requested" type="text" maxlength="4" inputmode="numeric" value="@datePlanRequestedYear" />
+											   name="dtr-year-plan-requested" type="text" maxlength="4" inputmode="numeric" value="@Model.FinancialPlanModel.DatePlanRequested.ParseYear()" />
 									</div>
 								</div>
 							</div>
@@ -169,7 +129,7 @@
 											Day
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-viable-plan"
-											   name="dtr-day-viable-plan" type="text" maxlength="2" inputmode="numeric" value="@dateViablePlanReceivedDay" />
+											   name="dtr-day-viable-plan" type="text" maxlength="2" inputmode="numeric" value="@Model.FinancialPlanModel.DateViablePlanReceived.ParseDay()" />
 									</div>
 								</div>
 								<div class="govuk-date-input__item">
@@ -178,7 +138,7 @@
 											Month
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-viable-plan"
-											   name="dtr-month-viable-plan" type="text" maxlength="2" inputmode="numeric" value="@dateViablePlanReceivedMonth" />
+											   name="dtr-month-viable-plan" type="text" maxlength="2" inputmode="numeric" value="@Model.FinancialPlanModel.DateViablePlanReceived.ParseMonth()" />
 									</div>
 								</div>
 								<div class="govuk-date-input__item">
@@ -187,7 +147,7 @@
 											Year
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-viable-plan"
-											   name="dtr-year-viable-plan" type="text" maxlength="4" inputmode="numeric" value="@dateViablePlanReceivedYear" />
+											   name="dtr-year-viable-plan" type="text" maxlength="4" inputmode="numeric" value="@Model.FinancialPlanModel.DateViablePlanReceived.ParseYear()" />
 									</div>
 								</div>
 							</div>
@@ -208,7 +168,7 @@
 
 					<div class="govuk-button-group">
 						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-financial-plan-button">
-						 @(Model.EditMode == FinancialPlanEditMode.Close ? "Update And Close" :	"Update")
+						 Update
 						</button>
 						<partial name="_Cancel" />
 					</div>

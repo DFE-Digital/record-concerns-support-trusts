@@ -1,9 +1,6 @@
 ﻿@page "/case/{urn:long}/management/action/financialplan/add"
 @model ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan.AddPageModel
 
-@using ConcernsCaseWork.Enums;
-@using ConcernsCaseWork.Helpers;
-
 @{
 	ViewData["Title"] = "Add Financial Plan";
 	var nonce = HttpContext.GetNonce();
@@ -66,8 +63,7 @@
 									var idStr = id++ == 0 ? "status" : "status-" + id;
 									<div class="govuk-radios__item">
 
-											<input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id">
-										
+										<input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id">
 										<label class="govuk-label govuk-radios__label" for="@idStr">
 											<span>
 												@status.Text
