@@ -25,9 +25,9 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			);
 		} 
 
-		public static List<FinancialPlanModel> BuildListFinancialPlanModel()
+		public static List<FinancialPlanModel> BuildListFinancialPlanModel(DateTime? closedAt = null)
 		{
-			return new List<FinancialPlanModel>() { BuildFinancialPlanModel() };
+			return new List<FinancialPlanModel>() { BuildFinancialPlanModel(closedAt) };
 		}
 
 		public static List<FinancialPlanModel> BuildListFinancialPlanModel(params FinancialPlanModel[] financialPlanModels)
