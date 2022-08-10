@@ -1,8 +1,5 @@
-﻿using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Models.CaseActions;
 using Service.TRAMS.NtiUnderConsideration;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace ConcernsCaseWork.Mappers
@@ -21,7 +18,8 @@ namespace ConcernsCaseWork.Mappers
 				CreatedAt = ntiModel.CreatedAt,
 				UpdatedAt = ntiModel.UpdatedAt,
 				ClosedAt = ntiModel.ClosedAt,
-				ClosedStatusId = ntiModel.ClosedStatusId
+				ClosedStatusId = ntiModel.ClosedStatusId,
+				ClosedStatusName = ntiModel.ClosedStatusName
 			};
 		}
 
@@ -36,7 +34,8 @@ namespace ConcernsCaseWork.Mappers
 				Notes = ntiDto.Notes,
 				UpdatedAt = ntiDto.UpdatedAt,
 				ClosedAt = ntiDto.ClosedAt,
-				ClosedStatusId = ntiDto.ClosedStatusId
+				ClosedStatusId = ntiDto.ClosedStatusId,
+				ClosedStatusName = ntiDto.ClosedStatusName
 			};
 		}
 

@@ -1,7 +1,4 @@
-﻿using ConcernsCaseWork.Enums;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Models.CaseActions
 {
@@ -10,5 +7,6 @@ namespace ConcernsCaseWork.Models.CaseActions
 		public ICollection<NtiReasonForConsideringModel> NtiReasonsForConsidering { get; set; }
 		public string Notes { get; set; }
 		public int? ClosedStatusId { get; set; }
+		public string ClosedStatusName { get; set; }
 	}
 }
