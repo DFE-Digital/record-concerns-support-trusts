@@ -689,7 +689,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				Times.Once);
 
 			Assert.That(pageModel.TempData["OpenActions.Message"], Is.Not.Null);
-			Assert.IsTrue((pageModel.TempData["OpenActions.Message"] as List<string>).Contains("Resolve NTI Under Consideration"));
+			Assert.IsTrue((pageModel.TempData["OpenActions.Message"] as List<string>).Contains("Close NTI Under Consideration"));
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
