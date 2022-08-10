@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Pages.Case.Management.Action
+namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
 	public abstract class FinancialPlanBasePageModel : AbstractPageModel
 	{
