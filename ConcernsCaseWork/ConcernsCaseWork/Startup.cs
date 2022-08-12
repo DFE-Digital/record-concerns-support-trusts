@@ -31,7 +31,6 @@ namespace ConcernsCaseWork
 				options.Conventions.AddPageRoute("/home", "");
 				options.Conventions.AddPageRoute("/notfound", "/error/404");
 				options.Conventions.AddPageRoute("/notfound", "/error/{code:int}");
-				options.Conventions.AddPageRoute("/case/management/action/financialplan/edit", "/case/{urn:long}/management/action/financialplan/{finanicialplanid:long}/{editMode:fpEditModes}");
 				options.Conventions.AddPageRoute("/case/management/action/NtiWarningLetter/add", "/case/{urn:long}/management/action/NtiWarningLetter/add");
 				options.Conventions.AddPageRoute("/case/management/action/NtiWarningLetter/addConditions", "/case/{urn:long}/management/action/NtiWarningLetter/conditions");
 

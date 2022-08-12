@@ -279,7 +279,8 @@
                     </div>
                 </div>
 
-                <a href="management/action" role="button" class="govuk-button" data-module="govuk-button">
+            <h3 class="govuk-heading-m">Case actions and decisions</h3>
+            <a href="management/action" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
                     Add to case
                 </a>
 
@@ -331,6 +332,10 @@
                                             {
                                                 var financialStatusEnum = (FinancialPlanStatus)Enum.Parse(typeof(FinancialPlanStatus), fp.Status.Name);
                                                 <span>@EnumHelper.GetEnumDescription(financialStatusEnum)</span>
+                                            }
+                                            else
+                                            {
+	                                            <span>In progress</span>
                                             }
                                         }
                                     </td>

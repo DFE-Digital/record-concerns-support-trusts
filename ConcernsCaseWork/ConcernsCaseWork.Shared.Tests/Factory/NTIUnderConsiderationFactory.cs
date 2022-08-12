@@ -10,20 +10,21 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 	{
 		private readonly static Fixture Fixture = new Fixture();
 
-		public static List<NtiUnderConsiderationModel> BuildListNTIUnderConsiderationModel()
+		public static List<NtiUnderConsiderationModel> BuildListNTIUnderConsiderationModel(DateTime? closedAt = null)
 		{
 			return new List<NtiUnderConsiderationModel>
 			{
-				BuildNTIUnderConsiderationModel()
+				BuildNTIUnderConsiderationModel(closedAt)
 			};
 		}
 
-		public static NtiUnderConsiderationModel BuildNTIUnderConsiderationModel()
+		public static NtiUnderConsiderationModel BuildNTIUnderConsiderationModel(DateTime? closedAt = null)
 		{
 			var ntiUnderConsideration = new NtiUnderConsiderationModel();
 			ntiUnderConsideration.Id = Fixture.Create<long>();
 			ntiUnderConsideration.CaseUrn = Fixture.Create<long>();
 			ntiUnderConsideration.Notes = Fixture.Create<string>();
+			ntiUnderConsideration.ClosedAt = closedAt;
 
 			return ntiUnderConsideration;
 		}
