@@ -47,6 +47,9 @@ using Service.Redis.MeansOfReferral;
 using Service.TRAMS.NtiWarningLetter;
 using Service.Redis.NtiWarningLetter;
 using Service.TRAMS.MeansOfReferral;
+using Service.TRAMS.Nti;
+using Service.Redis.Nti;
+using ConcernsCaseWork.Services.Nti;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -127,6 +130,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiUnderConsiderationModelService, NtiUnderConsiderationModelService>();
 			services.AddSingleton<INtiWarningLetterModelService, NtiWarningLetterModelService>();
 			services.AddSingleton<IMeansOfReferralModelService, MeansOfReferralModelService>();
+			services.AddSingleton<INtiModelService, NtiModelService>();
 
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
@@ -153,6 +157,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiWarningLetterReasonsService, NtiWarningLetterReasonsService>();
 			services.AddSingleton<INtiWarningLetterService, NtiWarningLetterService>();
 			services.AddSingleton<INtiWarningLetterConditionsService, NtiWarningLetterConditionsService>();
+			services.AddSingleton<INtiService, NtiService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
@@ -175,6 +180,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
 			services.AddSingleton<IMeansOfReferralCachedService, MeansOfReferralCachedService>();
 			services.AddSingleton<INtiWarningLetterConditionsCachedService, NtiWarningLetterConditionsCachedServices>();
+			services.AddSingleton<INtiCachedService, NtiCachedService>();
 
 			// AD Integration
 			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
