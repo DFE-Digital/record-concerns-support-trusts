@@ -56,7 +56,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.AMSDIntervention, closedAt);
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
-			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel(closedAt);
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildClosedListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
@@ -163,7 +163,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			DateTime closedAt = DateTime.Now;
 
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
-			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel(closedAt);
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
@@ -236,7 +236,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			DateTime closedAt = DateTime.Now;
 
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
-			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel(closedAt);
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
@@ -720,7 +720,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var closedAt = DateTime.Now;
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
 			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.AMSDIntervention, closedAt);
-			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel(closedAt);
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
@@ -800,7 +800,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
 			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.AMSDIntervention, closedAt);
-			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel(closedAt);
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsList);
@@ -876,7 +876,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var closedAt = DateTime.Now;
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
 			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.AMSDIntervention, closedAt);
-			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel(closedAt);
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
