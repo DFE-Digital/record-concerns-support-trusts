@@ -11,5 +11,6 @@ namespace ConcernsCaseWork.Models.CaseActions
 		public string Notes { get; set; }
 		public DateTime? SentDate { get; set; }
 		public int? ClosedStatusId { get; set; }
+		public NtiWarningLetterStatusModel ClosedStatus { get; set; }
 	}
 }

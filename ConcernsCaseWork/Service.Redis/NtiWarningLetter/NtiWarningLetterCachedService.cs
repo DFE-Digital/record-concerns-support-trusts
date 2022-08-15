@@ -92,7 +92,7 @@ namespace Service.Redis.NtiWarningLetter
 			if (patched != null)
 			{
 				await CacheNtiWLAsync(patched);
-				await ClearNtiWLForCaseFromCacheAsync(patched.Id);
+				await ClearNtiWLForCaseFromCacheAsync(patched.CaseUrn);
 			}
 
 			return patched;

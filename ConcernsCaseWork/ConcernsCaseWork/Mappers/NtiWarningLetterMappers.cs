@@ -37,7 +37,10 @@ namespace ConcernsCaseWork.Mappers
 				SentDate = ntiDto.DateLetterSent,
 				Status = ntiDto.StatusId == null ? null : new NtiWarningLetterStatusModel { Id = ntiDto.StatusId.Value },
 				Reasons = ntiDto.WarningLetterReasonsMapping?.Select(r => new NtiWarningLetterReasonModel { Id = r }).ToArray(),
-				Conditions = ntiDto.WarningLetterConditionsMapping?.Select(c => new NtiWarningLetterConditionModel {  Id = c }).ToArray()
+				Conditions = ntiDto.WarningLetterConditionsMapping?.Select(c => new NtiWarningLetterConditionModel { Id = c }).ToArray(),
+				ClosedStatusId = ntiDto.ClosedStatusId,
+				ClosedStatus = ntiDto.ClosedStatusId.HasValue ? new NtiWarningLetterStatusModel { Id = ntiDto.ClosedStatusId.Value } : null,
+				ClosedAt = ntiDto.ClosedAt
 			};
 		}
 
