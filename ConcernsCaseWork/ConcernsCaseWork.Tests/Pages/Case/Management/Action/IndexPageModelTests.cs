@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Pages.Case.Management.Action;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
+using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
@@ -253,12 +254,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			INtiUnderConsiderationModelService ntiUnderConsiderationModelService,
 			ILogger<IndexPageModel> mockLogger,
 			INtiWarningLetterModelService ntiWarningLetterModelService = null,
+			INtiModelService ntiModelService = null,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
 			return new IndexPageModel(mockCaseModelService, mockSrmaService, mockFinancialPlanModelService, ntiUnderConsiderationModelService
 				, ntiWarningLetterModelService ?? CreateMock<INtiWarningLetterModelService>()
+				, ntiModelService ?? CreateMock<INtiModelService>()
 				, mockLogger)
 			{
 				PageContext = pageContext,
