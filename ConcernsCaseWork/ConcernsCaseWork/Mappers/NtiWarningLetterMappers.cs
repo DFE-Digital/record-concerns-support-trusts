@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
 using Service.TRAMS.NtiWarningLetter;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ConcernsCaseWork.Mappers
@@ -25,7 +26,7 @@ namespace ConcernsCaseWork.Mappers
 			};
 		}
 
-		public static NtiWarningLetterModel ToServiceModel(NtiWarningLetterDto ntiDto)
+		public static NtiWarningLetterModel ToServiceModel(NtiWarningLetterDto ntiDto, ICollection<NtiWarningLetterStatusDto> statuses )
 		{
 			return new NtiWarningLetterModel
 			{
@@ -35,11 +36,11 @@ namespace ConcernsCaseWork.Mappers
 				UpdatedAt = ntiDto.UpdatedAt ?? default(DateTime),
 				Notes = ntiDto.Notes,
 				SentDate = ntiDto.DateLetterSent,
-				Status = ntiDto.StatusId == null ? null : new NtiWarningLetterStatusModel { Id = ntiDto.StatusId.Value },
+				Status = ntiDto.StatusId == null ? null : ToServiceModel(statuses.FirstOrDefault(s => s.Id == ntiDto.StatusId)),
 				Reasons = ntiDto.WarningLetterReasonsMapping?.Select(r => new NtiWarningLetterReasonModel { Id = r }).ToArray(),
 				Conditions = ntiDto.WarningLetterConditionsMapping?.Select(c => new NtiWarningLetterConditionModel { Id = c }).ToArray(),
 				ClosedStatusId = ntiDto.ClosedStatusId,
-				ClosedStatus = ntiDto.ClosedStatusId.HasValue ? new NtiWarningLetterStatusModel { Id = ntiDto.ClosedStatusId.Value } : null,
+				ClosedStatus = ntiDto.ClosedStatusId.HasValue ? ToServiceModel(statuses.FirstOrDefault(s => s.Id == ntiDto.ClosedStatusId)) : null,
 				ClosedAt = ntiDto.ClosedAt
 			};
 		}
