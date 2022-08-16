@@ -76,11 +76,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 			if (wl != null)
 			{
-				if (wl.Status != null)
-				{
-					wl.Status = NtiWarningLetterMappers.ToServiceModel(NtiWarningLetterStatuses.SingleOrDefault(s => s.Id == wl.Status.Id));
-				}
-
 				if (wl.Reasons?.Any() == true)
 				{
 					NtiWarningLetterReasons = await _ntiWarningLetterReasonsCachedService.GetAllReasonsAsync();
@@ -91,11 +86,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				{
 					NtiWarningLetterConditions = await _ntiWarningLetterConditionsCachedService.GetAllConditionsAsync();
 					wl.Conditions = NtiWarningLetterConditions.Where(c => wl.Conditions.Any(wlc => c.Id == wlc.Id)).Select(c => NtiWarningLetterMappers.ToServiceModel(c)).ToArray();
-				}
-
-				if (wl.ClosedStatus != null)
-				{
-					wl.ClosedStatus = NtiWarningLetterMappers.ToServiceModel(NtiWarningLetterStatuses.SingleOrDefault(s => s.Id == wl.ClosedStatus.Id));
 				}
 			}
 
