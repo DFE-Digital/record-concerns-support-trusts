@@ -28,8 +28,14 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Reasons = new KeyValuePair<int, string>[] { new KeyValuePair<int, string>(1, "Reason1") },
 				SentDate = DateTime.Now.AddDays(-1),
 				Status = new KeyValuePair<int, string>(1, "Status 1"),
-				UpdatedAt = DateTime.Now.AddDays(-1)
+				UpdatedAt = DateTime.Now.AddDays(-1),
+				ClosedStatus = new KeyValuePair<int, string>(3, "Status 3"),
 			};
+
+			var statuses = new List<NtiWarningLetterStatusDto>();
+			statuses.Add(new NtiWarningLetterStatusDto {Id = 1, Name = "Status 1" });
+			statuses.Add(new NtiWarningLetterStatusDto {Id = 2, Name = "Status 2" });
+			statuses.Add(new NtiWarningLetterStatusDto {Id = 3, Name = "Status 3" });
 
 			var ntiDto = new NtiWarningLetterDto
 			{
@@ -41,12 +47,13 @@ namespace ConcernsCaseWork.Tests.Mappers
 				DateLetterSent = testData.SentDate,
 				StatusId = testData.Status.Key,
 				UpdatedAt = testData.UpdatedAt,
-				WarningLetterReasonsMapping = testData.Reasons.Select(r => r.Key).ToArray()
+				WarningLetterReasonsMapping = testData.Reasons.Select(r => r.Key).ToArray(),
+				ClosedStatusId = testData.ClosedStatus.Key
 			};
 
 
 			// act
-			var serviceModel = NtiWarningLetterMappers.ToServiceModel(ntiDto);
+			var serviceModel = NtiWarningLetterMappers.ToServiceModel(ntiDto, statuses);
 
 			// assert
 			Assert.That(serviceModel, Is.Not.Null);
@@ -55,6 +62,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(serviceModel.Reasons, Is.Not.Null);
 			Assert.That(serviceModel.Reasons.Count, Is.EqualTo(testData.Reasons.Length));
 			Assert.That(serviceModel.Reasons.ElementAt(0).Id, Is.EqualTo(testData.Reasons.ElementAt(0).Key));
+			Assert.That(serviceModel.Status.Id, Is.EqualTo(testData.Status.Key));
+			Assert.That(serviceModel.Status.Name, Is.EqualTo(testData.Status.Value));
+			Assert.That(serviceModel.ClosedStatus.Id, Is.EqualTo(testData.ClosedStatus.Key));
+			Assert.That(serviceModel.ClosedStatus.Name, Is.EqualTo(testData.ClosedStatus.Value));
 		}
 
 		[Test]

@@ -72,15 +72,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		private async Task<NtiWarningLetterModel> GetWarningLetterModel(long ntiWarningLetterId)
 		{
 			var wl = await _ntiWarningLetterModelService.GetNtiWarningLetterId(ntiWarningLetterId);
+			NtiWarningLetterStatuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
 
 			if (wl != null)
 			{
-				if (wl.Status != null)
-				{
-					NtiWarningLetterStatuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
-					wl.Status = NtiWarningLetterMappers.ToServiceModel(NtiWarningLetterStatuses.SingleOrDefault(s => s.Id == wl.Status.Id));
-				}
-
 				if (wl.Reasons?.Any() == true)
 				{
 					NtiWarningLetterReasons = await _ntiWarningLetterReasonsCachedService.GetAllReasonsAsync();

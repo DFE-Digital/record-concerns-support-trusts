@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31321.278
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork", "ConcernsCaseWork\ConcernsCaseWork.csproj", "{3A7D75FE-FB97-4CE8-A234-76A0BA618C20}"
 EndProject
@@ -18,6 +18,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Integration.Tests", "ConcernsCaseWork.Integration.Tests\ConcernsCaseWork.Integration.Tests.csproj", "{770CC7CC-FCA7-4A12-B677-35FE458B8B54}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Shared.Tests", "ConcernsCaseWork.Shared.Tests\ConcernsCaseWork.Shared.Tests.csproj", "{E1460CF0-2592-4B5A-AC7A-D7B66FEDC3E0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{50900C52-FEC1-481F-91C1-66B987E483CE}"
+	ProjectSection(SolutionItems) = preProject
+		..\Dockerfile = ..\Dockerfile
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Concerns.Data", "Concerns.Data\Concerns.Data.csproj", "{45170F17-7677-4B17-B3D3-D7C7CDB77146}"
 EndProject
