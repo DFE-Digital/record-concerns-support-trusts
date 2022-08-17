@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Controllers
 {
-    [Route("v{version:apiVersion}/case-actions/financial-plan")]
     [ApiController]
+    [ApiVersion("2.0")]
+    [Route("v{version:apiVersion}/case-actions/financial-plan")]
     public class FinancialPlanController : Controller
     {
         private readonly ILogger<FinancialPlanController> _logger;

@@ -68,7 +68,7 @@ namespace Concerns.Data.Gateways
             query = query.Skip((page - 1) * count)
                 .Take(count)
                 .AsNoTracking();
-            
+
             return query.ToList();
         }
 

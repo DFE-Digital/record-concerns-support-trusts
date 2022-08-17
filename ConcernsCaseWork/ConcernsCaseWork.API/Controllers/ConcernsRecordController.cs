@@ -7,6 +7,7 @@ using System.Text.Json;
 namespace ConcernsCaseWork.API.Controllers
 {
     [ApiController]
+    [ApiVersion("2.0")]
     [Route("v{version:apiVersion}/concerns-records")]
     
     public class ConcernsRecordController : ControllerBase

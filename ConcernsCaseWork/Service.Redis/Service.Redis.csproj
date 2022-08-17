@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Service.TRAMS\Service.TRAMS.csproj" />
+      <ProjectReference Include="..\ConcernsCasework.Service\ConcernsCasework.Service.csproj" />
     </ItemGroup>
 
 </Project>

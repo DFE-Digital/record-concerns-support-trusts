@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Controllers
 {
-	[Route("v{version:apiVersion}/case-actions/nti-warning-letter")]
     [ApiController]
+	[ApiVersion("2.0")]
+	[Route("v{version:apiVersion}/case-actions/nti-warning-letter")]
     public class NTIWarningLetterController : Controller
     {
         private readonly ILogger<NTIWarningLetterController> _logger;

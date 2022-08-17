@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
-using Service.TRAMS.Nti;
+using ConcernsCasework.Service.Nti;
 
 namespace ConcernsCaseWork.Mappers
 {

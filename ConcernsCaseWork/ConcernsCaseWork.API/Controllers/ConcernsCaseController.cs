@@ -8,6 +8,7 @@ using System.Text.Json;
 namespace ConcernsCaseWork.API.Controllers
 {
     [ApiController]
+    [ApiVersion("2.0")]
     [Route("v{version:apiVersion}/concerns-cases")]
     public class ConcernsCaseController: ControllerBase
     { 

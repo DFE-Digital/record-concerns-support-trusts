@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.FinancialPlan;
+﻿using ConcernsCasework.Service.FinancialPlan;
 using System;
 
 namespace Service.Redis.Models

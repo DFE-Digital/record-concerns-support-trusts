@@ -11,7 +11,7 @@ using Service.Redis.NtiUnderConsideration;
 using Service.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using System.Collections.Generic;
-using Service.TRAMS.NtiWarningLetter;
+using ConcernsCasework.Service.NtiWarningLetter;
 using ConcernsCaseWork.Mappers;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter

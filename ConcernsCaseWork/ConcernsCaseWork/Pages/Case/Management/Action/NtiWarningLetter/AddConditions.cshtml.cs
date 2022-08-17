@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Service.Redis.NtiWarningLetter;
-using Service.TRAMS.NtiWarningLetter;
+using ConcernsCasework.Service.NtiWarningLetter;
 using System;
 using System.Collections.Generic;
 using System.Linq;

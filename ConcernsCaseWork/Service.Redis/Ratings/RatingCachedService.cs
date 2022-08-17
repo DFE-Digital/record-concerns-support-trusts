@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
-using Service.TRAMS.Ratings;
+using ConcernsCasework.Service.Ratings;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

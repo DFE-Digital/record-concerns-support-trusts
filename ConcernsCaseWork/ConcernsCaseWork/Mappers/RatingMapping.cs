@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.TRAMS.Ratings;
+using ConcernsCasework.Service.Ratings;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ConcernsCaseWork.API.Controllers
 {
     [ApiController]
+    [ApiVersion("2.0")]
     [Route("v{version:apiVersion}/concerns-ratings")]
     public class ConcernsRatingController: ControllerBase
     {

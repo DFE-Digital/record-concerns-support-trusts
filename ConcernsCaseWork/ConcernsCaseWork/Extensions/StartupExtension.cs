@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Security;
+﻿using ConcernsCaseWork.API.Extensions;
+using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.MeansOfReferral;
@@ -24,30 +25,30 @@ using Service.Redis.Trusts;
 using Service.Redis.Types;
 using Service.Redis.Users;
 using Service.Redis.CaseActions;
-using Service.TRAMS.Cases;
-using Service.TRAMS.Configuration;
-using Service.TRAMS.FinancialPlan;
-using Service.TRAMS.Ratings;
-using Service.TRAMS.RecordAcademy;
-using Service.TRAMS.RecordRatingHistory;
-using Service.TRAMS.Records;
-using Service.TRAMS.RecordSrma;
-using Service.TRAMS.RecordWhistleblower;
-using Service.TRAMS.Status;
-using Service.TRAMS.Trusts;
-using Service.TRAMS.Types;
+using ConcernsCasework.Service.Cases;
+using ConcernsCasework.Service.Configuration;
+using ConcernsCasework.Service.FinancialPlan;
+using ConcernsCasework.Service.Ratings;
+using ConcernsCasework.Service.RecordAcademy;
+using ConcernsCasework.Service.RecordRatingHistory;
+using ConcernsCasework.Service.Records;
+using ConcernsCasework.Service.RecordSrma;
+using ConcernsCasework.Service.RecordWhistleblower;
+using ConcernsCasework.Service.Status;
+using ConcernsCasework.Service.Trusts;
+using ConcernsCasework.Service.Types;
 using StackExchange.Redis;
 using System;
 using System.Net.Mime;
-using Service.TRAMS.CaseActions;
+using ConcernsCasework.Service.CaseActions;
 using Service.Redis.NtiUnderConsideration;
-using Service.TRAMS.NtiUnderConsideration;
+using ConcernsCasework.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using Service.Redis.MeansOfReferral;
-using Service.TRAMS.NtiWarningLetter;
+using ConcernsCasework.Service.NtiWarningLetter;
 using Service.Redis.NtiWarningLetter;
-using Service.TRAMS.MeansOfReferral;
-using Service.TRAMS.Nti;
+using ConcernsCasework.Service.MeansOfReferral;
+using ConcernsCasework.Service.Nti;
 using Service.Redis.Nti;
 using ConcernsCaseWork.Services.Nti;
 
@@ -113,6 +114,17 @@ namespace ConcernsCaseWork.Extensions
 				client.DefaultRequestHeaders.Add("ApiKey", tramsApiKey);
 				client.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
 			});
+		}
+		
+		/// <summary>
+		/// HttpFactory for Concerns API
+		/// </summary>
+		/// <param name="services"></param>
+		/// <param name="configuration"></param>
+		/// <exception cref="Exception"></exception>
+		public static void AddConcernsApi(this IServiceCollection services, IConfiguration configuration)
+		{
+			services.AddConcernsApiProject(configuration);
 		}
 
 		public static void AddInternalServices(this IServiceCollection services)

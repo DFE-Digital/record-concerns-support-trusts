@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.Records;
+﻿using ConcernsCasework.Service.Records;
 using System;
 
 namespace Service.Redis.Models

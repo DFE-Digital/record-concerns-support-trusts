@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
-using Service.TRAMS.Cases;
-using Service.TRAMS.MeansOfReferral;
-using Service.TRAMS.Trusts;
+using ConcernsCasework.Service.Cases;
+using ConcernsCasework.Service.MeansOfReferral;
+using ConcernsCasework.Service.Trusts;
 
 namespace ConcernsCaseWork.Mappers
 {

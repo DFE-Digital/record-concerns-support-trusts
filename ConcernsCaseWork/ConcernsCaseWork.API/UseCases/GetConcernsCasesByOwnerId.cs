@@ -1,8 +1,6 @@
 using Concerns.Data.Gateways;
 using ConcernsCaseWork.API.Factories;
 using ConcernsCaseWork.API.ResponseModels;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ConcernsCaseWork.API.UseCases
 {

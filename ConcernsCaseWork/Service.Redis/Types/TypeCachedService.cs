@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
-using Service.TRAMS.Types;
+using ConcernsCasework.Service.Types;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

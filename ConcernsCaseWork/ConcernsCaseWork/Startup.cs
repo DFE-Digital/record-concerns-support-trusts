@@ -1,14 +1,21 @@
+using ConcernsCaseWork.API;
+using ConcernsCaseWork.API.Controllers;
+using ConcernsCaseWork.API.Middleware;
 using ConcernsCaseWork.Constraints;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Security;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
+using System.Reflection;
 
 namespace ConcernsCaseWork
 {
@@ -24,10 +31,6 @@ namespace ConcernsCaseWork
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddControllers();
-			
-			services.AddMvc();
-
 			services.AddRazorPages(options =>
 			{
 				options.Conventions.AddPageRoute("/home", "");
@@ -50,8 +53,9 @@ namespace ConcernsCaseWork
 			// Redis
 			services.AddRedis(Configuration);
 
-			// TRAMS API
+			// APIs
 			services.AddTramsApi(Configuration);
+			services.AddConcernsApi(Configuration);
 
 			// AutoMapper
 			services.AddAutoMapper(typeof(Startup));
@@ -87,8 +91,10 @@ namespace ConcernsCaseWork
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
 		{
+			app.UseConcernsCaseworkSwagger(provider);
+			
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
@@ -100,6 +106,8 @@ namespace ConcernsCaseWork
 				app.UseHsts();
 			}
 
+			app.UseMiddleware<ExceptionHandlerMiddleware>();
+			
 			// Security headers
 			app.UseSecurityHeaders(
 				SecurityHeadersDefinitions.GetHeaderPolicyCollection(env.IsDevelopment()));
@@ -121,10 +129,12 @@ namespace ConcernsCaseWork
 			app.UseAuthentication();
 			app.UseAuthorization();
 
+			app.UseConcernsCaseworkEndpoints();
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapRazorPages();
 			});
+			
 		}
 	}
 }

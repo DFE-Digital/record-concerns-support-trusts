@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Controllers
 {
-    [Route("v{version:apiVersion}/case-actions/nti-under-consideration")]
     [ApiController]
+    [ApiVersion("2.0")]
+    [Route("v{version:apiVersion}/case-actions/nti-under-consideration")]
     public class NTIUnderConsiderationController : Controller
     {
         private readonly ILogger<NTIUnderConsiderationController> _logger;

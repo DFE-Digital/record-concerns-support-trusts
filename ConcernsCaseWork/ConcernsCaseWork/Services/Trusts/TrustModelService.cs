@@ -2,7 +2,7 @@
 using ConcernsCaseWork.Models;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Trusts;
-using Service.TRAMS.Trusts;
+using ConcernsCasework.Service.Trusts;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

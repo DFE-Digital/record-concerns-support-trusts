@@ -1,10 +1,10 @@
 ﻿using ConcernsCaseWork.Models;
 using Service.Redis.Models;
-using Service.TRAMS.Cases;
-using Service.TRAMS.Ratings;
-using Service.TRAMS.Records;
-using Service.TRAMS.Status;
-using Service.TRAMS.Types;
+using ConcernsCasework.Service.Cases;
+using ConcernsCasework.Service.Ratings;
+using ConcernsCasework.Service.Records;
+using ConcernsCasework.Service.Status;
+using ConcernsCasework.Service.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;

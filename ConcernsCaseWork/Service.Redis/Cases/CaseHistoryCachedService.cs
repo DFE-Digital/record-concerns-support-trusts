@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.Redis.Sequence;
-using Service.TRAMS.Cases;
+using ConcernsCasework.Service.Cases;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

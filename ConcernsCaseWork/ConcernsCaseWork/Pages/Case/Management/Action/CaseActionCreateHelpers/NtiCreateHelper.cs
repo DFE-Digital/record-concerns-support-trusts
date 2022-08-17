@@ -1,7 +1,7 @@
 ﻿using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiWarningLetter;
-using Service.TRAMS.Cases;
+using ConcernsCasework.Service.Cases;
 using System;
 using System.Threading.Tasks;
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.TRAMS.Records;
+using ConcernsCasework.Service.Records;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;

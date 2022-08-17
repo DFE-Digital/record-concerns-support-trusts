@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
-using Service.TRAMS.NtiUnderConsideration;
+using ConcernsCasework.Service.NtiUnderConsideration;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

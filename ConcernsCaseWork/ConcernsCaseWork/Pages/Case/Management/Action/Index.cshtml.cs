@@ -6,7 +6,7 @@ using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.TRAMS.Cases;
+using ConcernsCasework.Service.Cases;
 using System;
 using System.Collections.Generic;
 using System.Linq;

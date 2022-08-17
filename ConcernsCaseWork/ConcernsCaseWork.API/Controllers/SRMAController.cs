@@ -9,6 +9,7 @@ using System.Globalization;
 namespace ConcernsCaseWork.API.Controllers
 {
     [ApiController]
+    [ApiVersion("2.0")]
     [Route("v{version:apiVersion}/case-actions/srma")]
     public class SRMAController : Controller
     {

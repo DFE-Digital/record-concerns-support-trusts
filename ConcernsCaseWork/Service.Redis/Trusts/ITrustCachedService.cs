@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.Trusts;
+﻿using ConcernsCasework.Service.Trusts;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Trusts

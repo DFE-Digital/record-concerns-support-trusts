@@ -2,7 +2,7 @@
 using ConcernsCaseWork.Models;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Ratings;
-using Service.TRAMS.Ratings;
+using ConcernsCasework.Service.Ratings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
