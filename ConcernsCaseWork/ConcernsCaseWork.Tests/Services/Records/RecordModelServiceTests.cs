@@ -8,7 +8,7 @@ using Moq;
 using NUnit.Framework;
 using Service.Redis.Records;
 using Service.Redis.Status;
-using Service.TRAMS.Records;
+using ConcernsCasework.Service.Records;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

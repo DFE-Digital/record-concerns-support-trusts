@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Service.Redis.Base;
 using Service.Redis.Cases;
 using Service.Redis.Models;
-using Service.TRAMS.Cases;
+using ConcernsCasework.Service.Cases;
 using System;
 using System.Threading.Tasks;
 

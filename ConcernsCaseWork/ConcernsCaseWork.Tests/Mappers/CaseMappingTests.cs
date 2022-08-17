@@ -1,10 +1,10 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
-using Service.TRAMS.Ratings;
-using Service.TRAMS.Records;
-using Service.TRAMS.Status;
-using Service.TRAMS.Types;
+using ConcernsCasework.Service.Ratings;
+using ConcernsCasework.Service.Records;
+using ConcernsCasework.Service.Status;
+using ConcernsCasework.Service.Types;
 using System;
 using System.Collections.Generic;
 

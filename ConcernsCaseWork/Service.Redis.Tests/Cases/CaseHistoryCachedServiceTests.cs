@@ -7,7 +7,7 @@ using Service.Redis.Base;
 using Service.Redis.Cases;
 using Service.Redis.Models;
 using Service.Redis.Sequence;
-using Service.TRAMS.Cases;
+using ConcernsCasework.Service.Cases;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Tests.Cases

@@ -4,7 +4,7 @@ using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using Service.TRAMS.Trusts;
+using ConcernsCasework.Service.Trusts;
 using System.Linq;
 using System.Threading.Tasks;
 

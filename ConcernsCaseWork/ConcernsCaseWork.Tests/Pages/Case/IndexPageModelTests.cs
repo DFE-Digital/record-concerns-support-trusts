@@ -12,7 +12,7 @@ using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
 using Service.Redis.Models;
-using Service.TRAMS.Trusts;
+using ConcernsCasework.Service.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

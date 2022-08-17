@@ -12,7 +12,7 @@ using Moq;
 using NUnit.Framework;
 using Service.Redis.FinancialPlan;
 using Service.Redis.Models;
-using Service.TRAMS.FinancialPlan;
+using ConcernsCasework.Service.FinancialPlan;
 using System;
 using System.Collections.Generic;
 using System.Linq;

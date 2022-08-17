@@ -1,7 +1,7 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using NUnit.Framework;
-using Service.TRAMS.NtiUnderConsideration;
+using ConcernsCasework.Service.NtiUnderConsideration;
 using System;
 using System.Linq;
 

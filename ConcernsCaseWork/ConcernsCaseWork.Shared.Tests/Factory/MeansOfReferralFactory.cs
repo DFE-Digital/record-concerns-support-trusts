@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.TRAMS.MeansOfReferral;
+using ConcernsCasework.Service.MeansOfReferral;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory

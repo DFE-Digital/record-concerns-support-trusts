@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Extensions;
 using NUnit.Framework;
-using Service.TRAMS.Cases;
+using ConcernsCasework.Service.Cases;
 
 namespace ConcernsCaseWork.Tests.Extensions
 {

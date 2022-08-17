@@ -7,10 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork", "Concern
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Tests", "ConcernsCaseWork.Tests\ConcernsCaseWork.Tests.csproj", "{1F53107D-4787-448F-806B-E5EA57D0BF90}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.TRAMS", "Service.TRAMS\Service.TRAMS.csproj", "{28DCC808-54DF-43F3-9F1B-4F126B679CFC}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.TRAMS.Tests", "Service.TRAMS.Tests\Service.TRAMS.Tests.csproj", "{648B68C6-27EE-4211-BC27-49D8E146829C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Redis", "Service.Redis\Service.Redis.csproj", "{E340BEC0-5744-459A-99B7-B0339D38F647}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Redis.Tests", "Service.Redis.Tests\Service.Redis.Tests.csproj", "{C40689B1-9551-4364-91CB-FA8CD55F11BA}"
@@ -30,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.API", "Con
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCasework.Service", "ConcernsCasework.Service\ConcernsCasework.Service.csproj", "{BC0E438D-D677-41F9-BE15-C7B79161CCE2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.Service.Tests", "ConcernsCaseWork.Service.Tests\ConcernsCaseWork.Service.Tests.csproj", "{E7F30872-499F-4E41-969F-8853E8CDC51C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,14 +42,6 @@ Global
 		{1F53107D-4787-448F-806B-E5EA57D0BF90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F53107D-4787-448F-806B-E5EA57D0BF90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F53107D-4787-448F-806B-E5EA57D0BF90}.Release|Any CPU.Build.0 = Release|Any CPU
-		{28DCC808-54DF-43F3-9F1B-4F126B679CFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28DCC808-54DF-43F3-9F1B-4F126B679CFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28DCC808-54DF-43F3-9F1B-4F126B679CFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{28DCC808-54DF-43F3-9F1B-4F126B679CFC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{648B68C6-27EE-4211-BC27-49D8E146829C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{648B68C6-27EE-4211-BC27-49D8E146829C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{648B68C6-27EE-4211-BC27-49D8E146829C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{648B68C6-27EE-4211-BC27-49D8E146829C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E340BEC0-5744-459A-99B7-B0339D38F647}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E340BEC0-5744-459A-99B7-B0339D38F647}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E340BEC0-5744-459A-99B7-B0339D38F647}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -80,6 +70,10 @@ Global
 		{BC0E438D-D677-41F9-BE15-C7B79161CCE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC0E438D-D677-41F9-BE15-C7B79161CCE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC0E438D-D677-41F9-BE15-C7B79161CCE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7F30872-499F-4E41-969F-8853E8CDC51C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7F30872-499F-4E41-969F-8853E8CDC51C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7F30872-499F-4E41-969F-8853E8CDC51C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7F30872-499F-4E41-969F-8853E8CDC51C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

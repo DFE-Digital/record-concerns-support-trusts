@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Trusts;
-using Service.TRAMS.Trusts;
+using ConcernsCasework.Service.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

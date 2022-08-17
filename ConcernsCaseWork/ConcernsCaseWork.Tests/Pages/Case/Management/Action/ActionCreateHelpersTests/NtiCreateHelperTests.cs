@@ -16,7 +16,7 @@ using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.FinancialPlan;
-using Service.TRAMS.Cases;
+using ConcernsCasework.Service.Cases;
 using System;
 using System.Collections.Generic;
 using System.Linq;

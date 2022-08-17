@@ -2,9 +2,9 @@
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
-using Service.TRAMS.NtiUnderConsideration;
-using Service.TRAMS.NtiWarningLetter;
-using Service.TRAMS.Trusts;
+using ConcernsCasework.Service.NtiUnderConsideration;
+using ConcernsCasework.Service.NtiWarningLetter;
+using ConcernsCasework.Service.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

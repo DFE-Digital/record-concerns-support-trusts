@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using Service.TRAMS.RecordSrma;
+using ConcernsCasework.Service.RecordSrma;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory
@@ -21,6 +21,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		public static RecordSrmaDto BuildRecordSrmaDto()
 		{
 			return new RecordSrmaDto(Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), 1, 1);
+		}
+		
+		public static RecordSrmaDto BuildRecordSrmaDto(CreateRecordSrmaDto createRecordSrmaDto)
+		{
+			return new RecordSrmaDto(createRecordSrmaDto.Name, createRecordSrmaDto.Details, createRecordSrmaDto.Reason, createRecordSrmaDto.RecordUrn, Fixture.Create<int>());
 		}
 
 		public static CreateRecordSrmaDto BuildCreateRecordSrmaDto()

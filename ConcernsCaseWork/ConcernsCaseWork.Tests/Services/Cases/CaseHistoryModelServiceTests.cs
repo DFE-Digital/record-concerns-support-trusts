@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Cases;
-using Service.TRAMS.Cases;
+using ConcernsCasework.Service.Cases;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

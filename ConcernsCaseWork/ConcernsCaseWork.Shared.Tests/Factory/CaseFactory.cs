@@ -1,9 +1,9 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Models;
 using Service.Redis.Models;
-using Service.TRAMS.Base;
-using Service.TRAMS.Cases;
-using Service.TRAMS.Status;
+using ConcernsCasework.Service.Base;
+using ConcernsCasework.Service.Cases;
+using ConcernsCasework.Service.Status;
 using System;
 using System.Collections.Generic;
 

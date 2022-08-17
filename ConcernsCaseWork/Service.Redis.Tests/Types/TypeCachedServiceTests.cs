@@ -5,7 +5,7 @@ using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
 using Service.Redis.Types;
-using Service.TRAMS.Types;
+using ConcernsCasework.Service.Types;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

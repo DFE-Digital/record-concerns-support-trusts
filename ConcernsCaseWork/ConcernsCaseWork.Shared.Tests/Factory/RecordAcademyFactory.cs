@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.RecordAcademy;
+﻿using ConcernsCasework.Service.RecordAcademy;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory

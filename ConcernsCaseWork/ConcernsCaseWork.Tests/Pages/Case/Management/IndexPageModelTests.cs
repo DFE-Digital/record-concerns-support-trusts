@@ -17,7 +17,7 @@ using NUnit.Framework;
 using Service.Redis.NtiUnderConsideration;
 using Service.Redis.NtiWarningLetter;
 using Service.Redis.Status;
-using Service.TRAMS.Status;
+using ConcernsCasework.Service.Status;
 using System.Linq;
 using System.Threading.Tasks;
 

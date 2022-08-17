@@ -3,8 +3,8 @@ using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using Service.TRAMS.Cases;
-using Service.TRAMS.Trusts;
+using ConcernsCasework.Service.Cases;
+using ConcernsCasework.Service.Trusts;
 using System;
 using System.Threading.Tasks;
 
