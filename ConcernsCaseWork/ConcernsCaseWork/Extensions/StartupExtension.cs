@@ -50,6 +50,7 @@ using Service.TRAMS.MeansOfReferral;
 using Service.TRAMS.Nti;
 using Service.Redis.Nti;
 using ConcernsCaseWork.Services.Nti;
+using ConcernsCaseWork.Services.Teams;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -131,6 +132,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiWarningLetterModelService, NtiWarningLetterModelService>();
 			services.AddSingleton<IMeansOfReferralModelService, MeansOfReferralModelService>();
 			services.AddSingleton<INtiModelService, NtiModelService>();
+			services.AddSingleton<ITeamsService, TeamsService>();
 
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
@@ -158,6 +160,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiWarningLetterService, NtiWarningLetterService>();
 			services.AddSingleton<INtiWarningLetterConditionsService, NtiWarningLetterConditionsService>();
 			services.AddSingleton<INtiService, NtiService>();
+			services.AddSingleton<Service.TRAMS.Teams.ITeamsService, Service.TRAMS.Teams.TeamsService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();

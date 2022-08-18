@@ -8,10 +8,11 @@
   </PropertyGroup>
 	
   <ItemGroup>
+    <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.8" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.17.0" />
     <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" Version="0.17.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -217,9 +218,6 @@
   </ItemGroup>
 	
   <ItemGroup>
-    <Compile Update="Pages\Admin\Index.cshtml.cs">
-      <DependentUpon>Index.cshtml</DependentUpon>
-    </Compile>
     <Compile Update="Pages\Case\Concern\Index.cshtml.cs">
       <DependentUpon>Index.cshtml</DependentUpon>
     </Compile>

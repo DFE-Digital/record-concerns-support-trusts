@@ -27,9 +27,9 @@ namespace ConcernsCaseWork.Security
 			_defaultUsers = configuration["app:username"].Split(',');
 		}
 
-		public IList<string> GetDefaultUsers()
+		public Task<IList<string>> GetDefaultUsers()
 		{
-			return UserRoleMap.GetDefaultUsersExcludeE2E(_defaultUsers);
+			return Task.FromResult(UserRoleMap.GetDefaultUsersExcludeE2E(_defaultUsers));
 		}
 		
 		public async Task<IDictionary<string, RoleClaimWrapper>> GetUsersRoles()

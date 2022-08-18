@@ -41,17 +41,17 @@ namespace ConcernsCaseWork.Pages
 			Task<IList<HomeModel>> liveCasesTeamLead = null;
 
 			// cases belonging to this user
-			Task<IList<HomeModel>> liveCases = _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Live);
+			Task<IList<HomeModel>> currentUserLiveCases = _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Live);
 
 			// other uses to show
 			var userRoleClaimWrapper = await _rbacManager.GetUserRoleClaimWrapper(User.Identity.Name);
 			var groupUsers = userRoleClaimWrapper.Users;
 			liveCasesTeamLead = _caseModelService.GetCasesByCaseworkerAndStatus(groupUsers, StatusEnum.Live);
 			{
-				await Task.WhenAll(liveCases, liveCasesTeamLead);
+				await Task.WhenAll(currentUserLiveCases, liveCasesTeamLead);
 
 				// Assign responses to UI public properties
-				CasesActive = liveCases.Result;
+				CasesActive = currentUserLiveCases.Result;
 				CasesTeamActive = liveCasesTeamLead.Result;
 			}
 		}

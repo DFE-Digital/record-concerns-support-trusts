@@ -149,6 +149,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.IsAssignableFrom<List<HomeModel>>(indexModel.CasesActive);
 			Assert.That(indexModel.CasesActive.Count, Is.Zero);
 			
+			// Not sure that these verifications should take place. it leads to a brittle test.
 			// Verify ILogger
 			mockLogger.Verify(
 				m => m.Log(
@@ -160,8 +161,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				Times.Once);
 			
 			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Once);
-			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()), Times.Never);
-			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()), Times.Exactly(1));
+			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()), Times.Once);
 		}
 		
 		private static HomePageModel SetupHomeModel(ICaseModelService mockCaseModelService, IRbacManager mockRbacManager, ILogger<HomePageModel> mockLogger, bool isAuthenticated = false)

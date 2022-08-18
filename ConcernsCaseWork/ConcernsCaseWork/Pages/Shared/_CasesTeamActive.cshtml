@@ -5,77 +5,77 @@
 		Your team casework
 	</caption>
 	<thead class="govuk-table__head">
-	<tr class="govuk-table__row tr__large">
-		<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-			Case ID
-		</th>
-		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
-			Last update
-		</th>
-		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_10" scope="col" aria-sort="ascending">
-			Trust/Academy
-		</th>
-		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col" aria-sort="ascending">
-			Concerns
-		</th>
-		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="ascending">
-			Trust risk
-		</th>
-		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
-			Created
-		</th>
-		<th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="ascending">
-        	Assigned to
-        </th>
-	</tr>
+		<tr class="govuk-table__row tr__large">
+			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+				Case ID
+			</th>
+			<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
+				Last update
+			</th>
+			<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_10" scope="col" aria-sort="ascending">
+				Trust/Academy
+			</th>
+			<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col" aria-sort="ascending">
+				Concerns
+			</th>
+			<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="ascending">
+				Trust risk
+			</th>
+			<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
+				Created
+			</th>
+			<th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="ascending">
+				Assigned to
+			</th>
+		</tr>
 	</thead>
 	<tbody class="govuk-table__body">
-	@if (Model?.Count == 0)
-	{
-		<tr class="govuk-table__row tr__large">
-			<td class="govuk-table__cell__cases govuk-oneline-row">
-				<span>There are no cases available.</span>
-			</td>
-		</tr>
-	}
-	else
-	{
-		foreach (var homeModel in Model)
+		@if (Model?.Count == 0)
 		{
 			<tr class="govuk-table__row tr__large">
-				<td class="govuk-table__cell">
-					<a class="govuk-link" href="case/@homeModel.CaseUrn/management">@homeModel.CaseUrn</a>
+				<td class="govuk-table__cell__cases govuk-oneline-row">
+					<span>There are no cases available.</span>
 				</td>
-				<td class="govuk-table__cell" data-sort-value="@homeModel.UpdatedUnixTime">
-					@homeModel.Updated
-				</td>
-				<td class="govuk-table__cell">
-					@homeModel.TrustNameTitle
-				</td>
-				<td class="govuk-table__cell">
-					@foreach (var record in homeModel.RecordsModel)
-					{
-						<div class="govuk-!-padding-bottom-1">
-							@record.TypeModel.TypeDisplay
-						</div>
-					}
-				</td>
-				<td class="govuk-table__cell govuk-label-wrapper" data-sort-value="@homeModel.RatingModel.RagRating.Item1">
-					@for (var index = 0; index < homeModel.RatingModel.RagRating.Item2.Count; ++index)
-					{
-						<span class="govuk-tag ragtag @homeModel.RatingModel.RagRatingCss.ElementAt(index)">
-							@homeModel.RatingModel.RagRating.Item2.ElementAt(index)
-						</span>
-					}
-				</td>
-				<td class="govuk-table__cell" data-sort-value="@homeModel.CreatedUnixTime">
-					@homeModel.Created
-				</td>
-				<td class="govuk-table__cell">
-                	@homeModel.CreatedBy
-                </td>
 			</tr>
 		}
-	}
+		else
+		{
+			foreach (var homeModel in Model)
+			{
+				<tr class="govuk-table__row tr__large">
+					<td class="govuk-table__cell">
+						<a class="govuk-link" href="case/@homeModel.CaseUrn/management">@homeModel.CaseUrn</a>
+					</td>
+					<td class="govuk-table__cell" data-sort-value="@homeModel.UpdatedUnixTime">
+						@homeModel.Updated
+					</td>
+					<td class="govuk-table__cell">
+						@homeModel.TrustNameTitle
+					</td>
+					<td class="govuk-table__cell">
+						@foreach (var record in homeModel.RecordsModel)
+						{
+							<div class="govuk-!-padding-bottom-1">
+								@record.TypeModel.TypeDisplay
+							</div>
+						}
+					</td>
+					<td class="govuk-table__cell govuk-label-wrapper" data-sort-value="@homeModel.RatingModel.RagRating.Item1">
+						@for (var index = 0; index < homeModel.RatingModel.RagRating.Item2.Count; ++index)
+						{
+							<span class="govuk-tag ragtag @homeModel.RatingModel.RagRatingCss.ElementAt(index)">
+								@homeModel.RatingModel.RagRating.Item2.ElementAt(index)
+							</span>
+						}
+					</td>
+					<td class="govuk-table__cell" data-sort-value="@homeModel.CreatedUnixTime">
+						@homeModel.Created
+					</td>
+					<td class="govuk-table__cell">
+						@homeModel.CreatedBy
+					</td>
+				</tr>
+			}
+		}
 	</tbody>
 </table>

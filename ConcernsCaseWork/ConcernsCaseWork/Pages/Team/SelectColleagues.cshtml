@@ -1,0 +1,74 @@
+﻿@page "/team/selectColleagues"
+@using NetEscapades.AspNetCore.SecurityHeaders
+@model ConcernsCaseWork.Pages.Team.SelectColleaguesPageModel
+
+@{
+	ViewData["Title"] = "Select Colleagues";
+	var nonce = HttpContext.GetNonce();
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError"/>
+
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">			
+            <h1 class="govuk-heading-l">Select Colleagues to Show in Team Casework</h1>
+			
+			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+            	<partial name="_Error"/>
+            }
+			else
+			{
+				<form role="form" asp-page-handler="selectColleagues" method="post" id="edit-selected-colleagues-form" novalidate>
+					<div class="govuk-form-group">
+						<fieldset class="govuk-fieldset" aria-describedby="user-hint">
+							<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+								<h1 class="govuk-fieldset__heading">
+									Colleagues
+								</h1>
+							</legend>
+							<div id="user-hint" class="govuk-hint">
+								Select which colleagues you wish to see casework for.
+							</div>I''
+
+							<div class="govuk-checkboxes" data-module="govuk-checkboxes">
+								@{ var idUser = 0; }
+								@foreach (var user in Model.Users)
+								{
+									<div class="govuk-checkboxes__item">
+										@{
+											var idStr = idUser == 0 ? "user" : "user-" + idUser;
+											var checkedUser = Model.SelectedColleagues.Contains(user);
+										}
+										<input class="govuk-checkboxes__input" id="@idStr" name="SelectedColleagues" type="checkbox" value="@user" checked="@checkedUser">
+										<label class="govuk-label govuk-checkboxes__label" for="@idStr">
+											@user
+										</label>
+									</div>
+									idUser++;
+								}
+							</div>
+						</fieldset>
+					</div>
+
+					<!--Button group-->
+					<div class="govuk-button-group">
+						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button">
+							Apply
+						</button>
+						<partial name="_Cancel"/>
+					</div>
+				</form>
+						
+				<script type="application/javascript" nonce="@nonce">
+                    $(function () {	
+                        let validator = formValidator($("#edit-role-users-form")[0]);
+                        addRolesValidator(validator);
+						addUsersValidator(validator);
+                    });
+                </script>
+			}			
+		</div>
+	</div>
+</div>
