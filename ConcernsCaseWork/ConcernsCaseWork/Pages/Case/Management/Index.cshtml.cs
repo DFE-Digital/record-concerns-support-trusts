@@ -103,13 +103,15 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				var caseHistoryTask = _caseHistoryModelService.GetCasesHistory(User.Identity.Name, caseUrn);
 				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				var trustCasesTask = _caseModelService.GetCasesByTrustUkprn(CaseModel.TrustUkPrn);
-				var caseActionsTask = PopulateCaseActions(caseUrn).ContinueWith(async t => await PopulateAdditionalCaseInformation());
+				var caseActionsTask = PopulateCaseActions(caseUrn);
 
 				Task.WaitAll(caseHistoryTask, trustDetailsTask, trustCasesTask, caseActionsTask);
 
 				CasesHistoryModel = caseHistoryTask.Result;
 				TrustDetailsModel = trustDetailsTask.Result;
 				TrustCasesModel = trustCasesTask.Result;
+				
+				NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
 			}
 			catch (Exception ex)
 			{
