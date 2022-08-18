@@ -16,7 +16,7 @@ namespace ConcernsCaseWork.Tests.Security
 	public class RbacManagerTests
 	{
 		[Test]
-		public void WhenGetDefaultUsers_Return_Users()
+		public async Task WhenGetDefaultUsers_Return_Users()
 		{
 			// arrange
 			var mockUserRoleCachedService = new Mock<IUserRoleCachedService>();
@@ -25,12 +25,29 @@ namespace ConcernsCaseWork.Tests.Security
 			var rbacManager = new RbacManager(BuildConfiguration(), mockUserRoleCachedService.Object, mockLogger.Object);
 			
 			// act
-			var defaultUsers = rbacManager.GetDefaultUsers();
+			var defaultUsers = await rbacManager.GetDefaultUsers();
 
 			// assert
 			Assert.That(defaultUsers, Is.Not.Null);
 		}
-		
+
+		[Test]
+		public async Task WhenGetDefaultUsers_Return_Users_Except_For_Exclusions()
+		{
+			// arrange
+			var mockUserRoleCachedService = new Mock<IUserRoleCachedService>();
+			var mockLogger = new Mock<ILogger<RbacManager>>();
+
+			var rbacManager = new RbacManager(BuildConfiguration(), mockUserRoleCachedService.Object, mockLogger.Object);
+
+			// act
+			var defaultUsers = await rbacManager.GetDefaultUsers("user3");
+
+			// assert
+			Assert.That(defaultUsers, Is.Not.Null);
+			Assert.IsFalse(defaultUsers.Contains("user3"));
+		}
+
 		[Test]
 		public async Task WhenGetUsersRoles_Return_SortedDicUserRoleClaim()
 		{

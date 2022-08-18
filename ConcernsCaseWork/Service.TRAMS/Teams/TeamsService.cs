@@ -10,5 +10,10 @@ namespace Service.TRAMS.Teams
 		{			
 			return new TeamCaseworkUsersSelectionDto(username, new string[] { "emma.whitcroft" });						
 		}
+
+		public Task PutTeamCaseworkSelectedUsers(TeamCaseworkUsersSelectionDto selections)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

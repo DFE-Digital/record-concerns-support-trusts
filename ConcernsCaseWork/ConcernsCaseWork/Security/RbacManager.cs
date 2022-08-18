@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Service.Redis.Security;
 using Service.Redis.Users;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Security
@@ -27,9 +28,11 @@ namespace ConcernsCaseWork.Security
 			_defaultUsers = configuration["app:username"].Split(',');
 		}
 
-		public Task<IList<string>> GetDefaultUsers()
-		{
-			return Task.FromResult(UserRoleMap.GetDefaultUsersExcludeE2E(_defaultUsers));
+		public Task<IList<string>> GetDefaultUsers(params string[] excludes)
+		{			
+			return Task.FromResult(
+				UserRoleMap.GetDefaultUsersExcludeE2E(_defaultUsers.Where(x => !excludes.Contains(x)))			
+			);
 		}
 		
 		public async Task<IDictionary<string, RoleClaimWrapper>> GetUsersRoles()

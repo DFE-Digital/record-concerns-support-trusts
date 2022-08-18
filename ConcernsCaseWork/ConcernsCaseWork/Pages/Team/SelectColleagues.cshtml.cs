@@ -6,11 +6,9 @@ using ConcernsCaseWork.Services.Teams;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Team
@@ -78,17 +76,17 @@ namespace ConcernsCaseWork.Pages.Team
 
 		private async Task LoadPage()
 		{
-			if (! string.IsNullOrWhiteSpace(_CurrentUserName))
+			if (!string.IsNullOrWhiteSpace(_CurrentUserName))
 			{
 				var selectedColleagues = _teamsService.GetTeamCaseworkSelectedUsers(_CurrentUserName);
-				var users = _rbacManager.GetDefaultUsers();
+				var users = _rbacManager.GetDefaultUsers(excludes: _CurrentUserName);
 
-				Task.WaitAll(selectedColleagues, users);
+				await Task.WhenAll(selectedColleagues, users);
 
 				// TODO. Get selected colleagues from somewhere, using actual live data not hard coded.
 				// Get users from somewhere, possibly the rbacManager
 				SelectedColleagues = selectedColleagues.Result.SelectedTeamMembers;
-				Users = users.Result.Where(x => x != _CurrentUserName).ToArray();
+				Users = users.Result.ToArray();
 			}
 			else
 			{

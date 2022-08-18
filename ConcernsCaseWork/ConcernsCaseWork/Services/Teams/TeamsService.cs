@@ -38,10 +38,4 @@ namespace ConcernsCaseWork.Services.Teams
 			return Task.CompletedTask;
 		}
 	}
-
-	public interface ITeamsService
-	{
-		public Task<TeamCaseworkUsersSelectionModel> GetTeamCaseworkSelectedUsers(string currentUser);
-		public Task UpdateTeamCaseworkSelectedUsers(TeamCaseworkUsersSelectionModel selections);
-	}
 }

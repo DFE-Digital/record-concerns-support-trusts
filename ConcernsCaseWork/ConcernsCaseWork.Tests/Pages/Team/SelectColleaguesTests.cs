@@ -2,17 +2,14 @@
 using ConcernsCaseWork.Pages.Team;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using Service.Redis.Security;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -52,11 +49,11 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			// arrange
 			const string NewUsernameSelection = "Fred.Flintstone";
 			const string ExpectedRedirectUrl = "/#team-casework";
-			
+
 			var testFixture = new TestFixture()
 				.WithPreviouslySelectedUsers("Mr.Bean");
 
-			var pageModel = testFixture.BuildSut(authenticatedPage: true);			
+			var pageModel = testFixture.BuildSut(authenticatedPage: true);
 
 			// act
 			pageModel.SelectedColleagues = new List<string> { NewUsernameSelection };
@@ -67,10 +64,10 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			Assert.NotNull(page);
 			Assert.That(page, Is.Not.Null);
 			Assert.IsTrue(page.Url.Equals(ExpectedRedirectUrl));
-			
+
 			testFixture.VerifyMethodEntered(nameof(SelectColleaguesPageModel.OnPostSelectColleagues));
-			testFixture.MockTeamsService.Verify(x => x.UpdateTeamCaseworkSelectedUsers(It.Is<TeamCaseworkUsersSelectionModel>(m => m.UserName == testFixture.CurrentUserName 
-				&& m.SelectedTeamMembers.Length == 1 
+			testFixture.MockTeamsService.Verify(x => x.UpdateTeamCaseworkSelectedUsers(It.Is<TeamCaseworkUsersSelectionModel>(m => m.UserName == testFixture.CurrentUserName
+				&& m.SelectedTeamMembers.Length == 1
 				&& m.SelectedTeamMembers[0] == NewUsernameSelection
 			)));
 		}
@@ -143,7 +140,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			}
 
 			internal TestFixture WithUsersAvailableForSelection(params string[] users)
-			{				
+			{
 				this.MockRbacManager.Setup(r => r.GetDefaultUsers()).ReturnsAsync(users);
 				return this;
 			}
@@ -157,7 +154,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			}
 
 			internal TestFixture WithPreviouslySelectedUsers(string userName)
-			{				
+			{
 				MockTeamsService.Setup(x => x.GetTeamCaseworkSelectedUsers(CurrentUserName))
 					.ReturnsAsync(new TeamCaseworkUsersSelectionModel(CurrentUserName, new[] { userName }));
 
