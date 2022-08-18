@@ -74,11 +74,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				var freshNti = await _ntiModelService.GetNtiUnderConsideration(ntiWithUpdatedValues.Id);
 				freshNti.Notes = ntiWithUpdatedValues.Notes;
 				freshNti.ClosedStatusId = ntiWithUpdatedValues.ClosedStatusId;
-				freshNti.ClosedAt = freshNti.UpdatedAt;
+				freshNti.ClosedAt = DateTime.Now; // Note that we should probably be using UTC? Keeping this consistent with other areas which mostly use DateTime.Now. 
 
 				await _ntiModelService.PatchNtiUnderConsideration(freshNti);
 
 				return Redirect($"/case/{CaseUrn}/management");
+			}
+			catch (InvalidOperationException ex)
+			{
+				TempData["Error.Message"] = ex.Message;
 			}
 			catch (Exception ex)
 			{
@@ -127,37 +131,41 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 		private NtiUnderConsiderationModel PopulateNtiFromRequest()
 		{
-			var status = Request.Form["status"];
-			var notes = Convert.ToString(Request.Form["nti-notes"]);
+			var statusId = GetRequestedStatusId();
+			var notes = GetRequestedNotes();
+			var id = ExtractNtiUcIdFromRoute();
 
 			var nti = new NtiUnderConsiderationModel()
 			{
-				Id = ExtractNtiUcIdFromRoute(),
+				Id = id,
 				CaseUrn = CaseUrn,
+				Notes = notes,
+				ClosedStatusId = statusId
 			};
-
-			if (!string.IsNullOrEmpty(notes))
-			{
-				if (notes.Length > NotesMaxLength)
-				{
-					throw new Exception($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
-				}
-				else
-				{
-					nti.Notes = notes;
-				}
-			}
-
-			if (int.TryParse(status, out var statusId))
-			{
-				nti.ClosedStatusId = statusId;
-			}
-			else
-			{
-				throw new Exception("Closing status Id could not be resolved");
-			}
-
+			
 			return nti;
+		}
+		
+		private int GetRequestedStatusId()
+		{
+			var status = Request.Form["status"];
+			return int.TryParse(status, out var statusId) 
+				? statusId 
+				: throw new InvalidOperationException($"Please select a reason for closing NTI under consideration");
+		}
+
+		private string GetRequestedNotes()
+		{
+			var notes = Convert.ToString(Request.Form["nti-notes"]);
+
+			if (string.IsNullOrEmpty(notes)) return null;
+			
+			if (notes.Length > NotesMaxLength)
+			{
+				throw new InvalidOperationException($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
+			}
+
+			return notes;
 		}
 	}
 }
