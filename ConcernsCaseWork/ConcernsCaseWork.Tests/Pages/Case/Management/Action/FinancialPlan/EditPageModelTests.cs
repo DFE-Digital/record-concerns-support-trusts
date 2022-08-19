@@ -121,6 +121,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
 
+			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
+			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
+			
 			var caseUrn = 1L;
 			var financialPlanId = 2L;
 			
@@ -160,6 +163,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
 			
+			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
+			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
+			
 			var caseUrn = 1L;
 			var financialPlanId = 2L;
 			
@@ -198,6 +204,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
 
+			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
+			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
+			
 			var caseUrn = 1L;
 			var financialPlanId = 2L;
 			
@@ -236,6 +245,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
+			
+			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
+			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
 			
 			var caseUrn = 1L;
 			var financialPlanId = 2L;
