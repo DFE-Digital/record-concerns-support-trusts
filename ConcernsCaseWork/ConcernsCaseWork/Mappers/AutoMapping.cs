@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Mappers
 			CreateMap<MeansOfReferralDto, MeansOfReferralModel>();
 
 			// Teams
-			CreateMap<TeamCaseworkUsersSelectionDto, TeamCaseworkUsersSelectionModel>();
+			CreateMap<TeamCaseworkUsersSelectionDto, TeamCaseworkUsersSelectionModel>().ReverseMap();
 		}
 	}
 }

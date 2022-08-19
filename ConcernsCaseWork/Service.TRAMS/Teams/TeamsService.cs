@@ -6,6 +6,11 @@ namespace Service.TRAMS.Teams
 {
 	public class TeamsService : ITeamsService
 	{
+		public Task DeleteTeamCaseworkSelections(string userName)
+		{
+			throw new NotImplementedException();
+		}
+
 		public async Task<TeamCaseworkUsersSelectionDto> GetTeamCaseworkSelectedUsers(string username)
 		{			
 			return new TeamCaseworkUsersSelectionDto(username, new string[] { "emma.whitcroft" });						

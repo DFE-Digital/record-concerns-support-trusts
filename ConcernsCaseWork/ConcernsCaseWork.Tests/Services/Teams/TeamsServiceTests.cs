@@ -1,13 +1,15 @@
 ﻿using AutoFixture;
+using AutoFixture.AutoMoq;
+using AutoFixture.Idioms;
+using AutoFixture.Kernel;
 using AutoMapper;
 using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Services.Teams;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.TRAMS.Teams;
+using System;
 using System.Threading.Tasks;
-using ITeamsService = ConcernsCaseWork.Services.Teams.ITeamsService;
-using TeamsService = ConcernsCaseWork.Services.Teams.TeamsService;
 
 namespace ConcernsCaseWork.Tests.Services.Teams
 {
@@ -25,7 +27,7 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 		public async Task When_GetTeamCaseworkSelectedUsers_Returns_UsersArray_From_TramsApi()
 		{
 			var testFixture = new TestFixture()
-				.WithSelectedTeamMembers(new[] { "Fred.Flintstone", "Barney.Rubble" });
+				.WithPreviouslySelectedTeamMembers(new[] { "Fred.Flintstone", "Barney.Rubble" });
 
 			var sut = testFixture.BuildSut();
 
@@ -40,17 +42,51 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 		[Test]
 		public async Task When_UpdateTeamCaseworkSelectedUsers_And_SelectionEmpty_Then_RemovesSelectedUsers()
 		{
-			var testFixture = new TestFixture()
-				.WithSelectedTeamMembers(new[] { "Fred.Flintstone", "Barney.Rubble" });
+			var testFixture = new TestFixture();
 
 			var sut = testFixture.BuildSut();
 
-			//var results = await sut.UpdateTeamCaseworkSelectedUsers
+			await sut.UpdateTeamCaseworkSelectedUsers(new ConcernsCaseWork.Models.Teams.TeamCaseworkUsersSelectionModel(testFixture.CurrentUserName, Array.Empty<string>()));
+
+			testFixture.MockTramsService.Verify(x => x.PutTeamCaseworkSelectedUsers(It.IsAny<Service.TRAMS.Teams.TeamCaseworkUsersSelectionDto>()), Times.Never);
+			testFixture.MockTramsService.Verify(x => x.DeleteTeamCaseworkSelections(testFixture.CurrentUserName), Times.Once);
+		}
+
+		[Test]
+		public async Task When_UpdateTeamCaseworkSelectedUsers_And_SelectionsMade_Then_UpdatesSelectedUsers()
+		{
+			var testFixture = new TestFixture();
+
+			var sut = testFixture
+				.BuildSut();
+
+			await sut.UpdateTeamCaseworkSelectedUsers(new ConcernsCaseWork.Models.Teams.TeamCaseworkUsersSelectionModel(testFixture.CurrentUserName, new[] { "Fred.Flintstone" }));
+
+			testFixture.MockTramsService.Verify(x => x.PutTeamCaseworkSelectedUsers(It.Is<Service.TRAMS.Teams.TeamCaseworkUsersSelectionDto>(s => s.UserName == testFixture.CurrentUserName && s.SelectedTeamMembers[0] == "Fred.Flintstone")), Times.Once);
+			testFixture.MockTramsService.Verify(x => x.DeleteTeamCaseworkSelections(testFixture.CurrentUserName), Times.Never);
+		}
+
+		[Test]
+		public void TeamsService_Methods_GuardAgainstNullArgs()
+		{
+			var fixture = new TestFixture().AutoFixture;
+			fixture.Customize(new AutoMoqCustomization());
+			var assertion = fixture.Create<GuardClauseAssertion>();
+			assertion.Verify(typeof(TeamsService).GetMethods());
+		}
+
+		[Test]
+		public void TeamsService_Constructors_GuardAgainstNullArgs()
+		{
+			var fixture = new TestFixture().AutoFixture;
+			fixture.Customize(new AutoMoqCustomization());
+			var assertion = fixture.Create<GuardClauseAssertion>();
+			assertion.Verify(typeof(TeamsService).GetConstructors());
 		}
 
 		private class TestFixture
 		{
-			private Fixture _fixture;
+			public Fixture AutoFixture;
 			public Mock<Service.TRAMS.Teams.ITeamsService> MockTramsService;
 			public Mock<ILogger<TeamsService>> MockLogger;
 
@@ -60,10 +96,10 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 
 			public TestFixture()
 			{
-				_fixture = new Fixture();
+				AutoFixture = new Fixture();
 				MockTramsService = new Mock<Service.TRAMS.Teams.ITeamsService>();
 				MockLogger = new Mock<ILogger<TeamsService>>();
-				this.CurrentUserName = $"{_fixture.Create<string>()}.{_fixture.Create<string>()}";
+				this.CurrentUserName = $"{AutoFixture.Create<string>()}.{AutoFixture.Create<string>()}";
 
 				_mapper = this.CreateAutoMapper();
 			}
@@ -73,10 +109,10 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 				return new Mapper(new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>()));
 			}
 
-			public TestFixture WithSelectedTeamMembers(params string[] teamMembers)
+			public TestFixture WithPreviouslySelectedTeamMembers(params string[] teamMembers)
 			{
 				MockTramsService.Setup(x => x.GetTeamCaseworkSelectedUsers(this.CurrentUserName))
-					.ReturnsAsync(new TeamCaseworkUsersSelectionDto(this.CurrentUserName, new[] { "Fred.Flintstone", "Barney.Rubble" }));
+					.ReturnsAsync(new Service.TRAMS.Teams.TeamCaseworkUsersSelectionDto(this.CurrentUserName, new[] { "Fred.Flintstone", "Barney.Rubble" }));
 
 				return this;
 			}

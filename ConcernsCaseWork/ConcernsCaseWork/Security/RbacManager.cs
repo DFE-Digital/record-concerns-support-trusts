@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.Security
 			_defaultUsers = configuration["app:username"].Split(',');
 		}
 
-		public Task<IList<string>> GetDefaultUsers(params string[] excludes)
+		public Task<IList<string>> GetSystemUsers(params string[] excludes)
 		{			
 			return Task.FromResult(
 				UserRoleMap.GetDefaultUsersExcludeE2E(_defaultUsers.Where(x => !excludes.Contains(x)))			
@@ -53,11 +53,11 @@ namespace ConcernsCaseWork.Security
 			return roleClaimWrapper;
 		}
 
-		public async Task UpdateUserRoles(string user, IList<RoleEnum> roles, IList<string> users)
-		{
-			_logger.LogInformation("RbacManager::UpdateUserRoles {User}", user);
+		//public async Task UpdateUserRoles(string user, IList<RoleEnum> roles, IList<string> users)
+		//{
+		//	_logger.LogInformation("RbacManager::UpdateUserRoles {User}", user);
 			
-			await _userRoleCachedService.UpdateUserRoles(user, roles, users);
-		}
+		//	await _userRoleCachedService.UpdateUserRoles(user, roles, users);
+		//}
 	}
 }

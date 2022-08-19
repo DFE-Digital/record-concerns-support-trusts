@@ -79,7 +79,7 @@ namespace ConcernsCaseWork.Pages.Team
 			if (!string.IsNullOrWhiteSpace(_CurrentUserName))
 			{
 				var selectedColleagues = _teamsService.GetTeamCaseworkSelectedUsers(_CurrentUserName);
-				var users = _rbacManager.GetDefaultUsers(excludes: _CurrentUserName);
+				var users = _rbacManager.GetSystemUsers(excludes: _CurrentUserName);
 
 				await Task.WhenAll(selectedColleagues, users);
 

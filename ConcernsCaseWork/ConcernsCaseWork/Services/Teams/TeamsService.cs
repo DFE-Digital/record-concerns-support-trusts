@@ -2,10 +2,7 @@
 using AutoMapper;
 using ConcernsCaseWork.Models.Teams;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Service.TRAMS.Teams;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Teams
@@ -17,7 +14,7 @@ namespace ConcernsCaseWork.Services.Teams
 		private readonly IMapper _mapper;
 		private Service.TRAMS.Teams.ITeamsService _teamsServiceClient;
 
-		public TeamsService(ILogger<TeamsService> logger, 
+		public TeamsService(ILogger<TeamsService> logger,
 			IMapper mapper,
 			Service.TRAMS.Teams.ITeamsService teamsServiceClient)
 		{
@@ -26,16 +23,33 @@ namespace ConcernsCaseWork.Services.Teams
 			_mapper = Guard.Against.Null(mapper, nameof(mapper));
 		}
 
-		public async Task<TeamCaseworkUsersSelectionModel> GetTeamCaseworkSelectedUsers(string currentUser)
+		public Task<TeamCaseworkUsersSelectionModel> GetTeamCaseworkSelectedUsers(string currentUser)
 		{
-			var result = await _teamsServiceClient.GetTeamCaseworkSelectedUsers(currentUser);
-			return _mapper.Map<TeamCaseworkUsersSelectionModel>(result);
+			Guard.Against.NullOrEmpty(currentUser);
+
+			async Task<TeamCaseworkUsersSelectionModel> DoWork()
+			{
+				var result = await _teamsServiceClient.GetTeamCaseworkSelectedUsers(currentUser);
+				return _mapper.Map<TeamCaseworkUsersSelectionModel>(result);
+			}
+			return DoWork();
 		}
 
-		public Task UpdateTeamCaseworkSelectedUsers(TeamCaseworkUsersSelectionModel selectedUsers)
+		public Task UpdateTeamCaseworkSelectedUsers(TeamCaseworkUsersSelectionModel selectionModel)
 		{
-			// TODO:
-			return Task.CompletedTask;
+			Guard.Against.Null(selectionModel);
+
+			async Task DoWork() {
+				if (selectionModel.SelectedTeamMembers.Length == 0)
+				{
+					await _teamsServiceClient.DeleteTeamCaseworkSelections(selectionModel.UserName);
+				}
+				else
+				{
+					await _teamsServiceClient.PutTeamCaseworkSelectedUsers(_mapper.Map<TeamCaseworkUsersSelectionDto>(selectionModel));
+				}
+			}
+			return DoWork();
 		}
 	}
 }
