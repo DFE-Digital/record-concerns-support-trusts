@@ -41,7 +41,7 @@ public partial class ConcernsDbContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlServer("Data Source=127.0.0.1;Initial Catalog=local_trams_test_db;persist security info=True;User id=sa; Password=StrongPassword905");
+	        optionsBuilder.UseConcernsSqlServer("Data Source=127.0.0.1;Initial Catalog=local_trams_test_db;persist security info=True;User id=sa; Password=StrongPassword905");
         }
     }
 
@@ -508,4 +508,5 @@ public partial class ConcernsDbContext : DbContext
             .WithMany(n => n.WarningLetterConditionsMapping)
             .HasForeignKey(n => n.NTIWarningLetterConditionId);
     }
+
 }

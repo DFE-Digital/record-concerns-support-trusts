@@ -72,8 +72,10 @@ namespace ConcernsCaseWork.API.Extensions
 
 		public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
 		{
+			var connectionString = configuration.GetConnectionString("DefaultConnection");
 			services.AddDbContext<ConcernsDbContext>(options =>
-				options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+				options.UseConcernsSqlServer(connectionString)
+				);
 			
 
 			return services;
