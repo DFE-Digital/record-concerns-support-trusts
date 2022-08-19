@@ -74,6 +74,7 @@ namespace ConcernsCaseWork.API.Extensions
 		{
 			services.AddDbContext<ConcernsDbContext>(options =>
 				options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+			
 
 			return services;
 		}

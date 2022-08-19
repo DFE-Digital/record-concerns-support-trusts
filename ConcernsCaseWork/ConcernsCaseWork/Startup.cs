@@ -1,5 +1,4 @@
-using ConcernsCaseWork.API;
-using ConcernsCaseWork.API.Controllers;
+using ConcernsCaseWork.API.Extensions;
 using ConcernsCaseWork.API.Middleware;
 using ConcernsCaseWork.Constraints;
 using ConcernsCaseWork.Extensions;
@@ -7,15 +6,12 @@ using ConcernsCaseWork.Security;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
-using System.Reflection;
 
 namespace ConcernsCaseWork
 {

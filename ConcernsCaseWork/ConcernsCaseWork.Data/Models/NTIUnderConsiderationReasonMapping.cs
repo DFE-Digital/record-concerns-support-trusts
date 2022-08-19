@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Concerns.Data.Models
 {
-    [Table("NTIUnderConsiderationReasonMapping", Schema = "sdd")]
+    [Table("NTIUnderConsiderationReasonMapping")]
 	public class NTIUnderConsiderationReasonMapping
 	{
 		[Key]

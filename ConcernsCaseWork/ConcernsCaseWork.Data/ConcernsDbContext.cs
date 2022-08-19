@@ -47,29 +47,31 @@ public partial class ConcernsDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-		modelBuilder.HasSequence<int>("ConcernsGlobalSequence").HasMin(1).StartsAt(1);
+	    modelBuilder.HasDefaultSchema("concerns");
+	    
+		modelBuilder.HasSequence<int>("GlobalSequence").HasMin(1).StartsAt(1);
 
         modelBuilder.Entity<ConcernsCase>(entity =>
         {
-            entity.ToTable("ConcernsCase", "sdd");
+            entity.ToTable("ConcernsCase");
 
             entity.HasKey(e => e.Id)
                 .HasName("PK__CCase__C5B214360AF620234");
 
             entity.Property(e => e.Urn)
-                .HasDefaultValueSql("NEXT VALUE FOR ConcernsGlobalSequence");
+                .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
 
         });
 
         modelBuilder.Entity<ConcernsStatus>(entity =>
         {
-            entity.ToTable("ConcernsStatus", "sdd");
+            entity.ToTable("ConcernsStatus");
 
             entity.HasKey(e => e.Id)
                 .HasName("PK__CStatus__C5B214360AF620234");
 
             entity.Property(e => e.Urn)
-                .HasDefaultValueSql("NEXT VALUE FOR ConcernsGlobalSequence");
+                .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
 
             entity.HasData(
                 new ConcernsStatus
@@ -98,13 +100,13 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<ConcernsRecord>(entity =>
         {
-            entity.ToTable("ConcernsRecord", "sdd");
+            entity.ToTable("ConcernsRecord");
 
             entity.HasKey(e => e.Id)
                 .HasName("PK__CRecord");
 
             entity.Property(e => e.Urn)
-                .HasDefaultValueSql("NEXT VALUE FOR ConcernsGlobalSequence");
+                .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
 
             entity.HasOne(r => r.ConcernsCase)
                 .WithMany(c => c.ConcernsRecords)
@@ -129,13 +131,13 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<ConcernsType>(entity =>
         {
-            entity.ToTable("ConcernsType", "sdd");
+            entity.ToTable("ConcernsType");
 
             entity.HasKey(e => e.Id)
                 .HasName("PK__CType");
 
             entity.Property(e => e.Urn)
-                .HasDefaultValueSql("NEXT VALUE FOR ConcernsGlobalSequence");
+                .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
 
             entity.HasData(
                 new ConcernsType
@@ -246,13 +248,13 @@ public partial class ConcernsDbContext : DbContext
         });
         modelBuilder.Entity<ConcernsMeansOfReferral>(entity =>
         {
-            entity.ToTable("ConcernsMeansOfReferral", "sdd");
+            entity.ToTable("ConcernsMeansOfReferral");
 
             entity.HasKey(e => e.Id)
                 .HasName("PK__CMeansOfReferral");
             
             entity.Property(e => e.Urn)
-                .HasDefaultValueSql("NEXT VALUE FOR ConcernsGlobalSequence");
+                .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
 
             entity.HasData(
                 new ConcernsMeansOfReferral()
@@ -275,13 +277,13 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<ConcernsRating>(entity =>
         {
-            entity.ToTable("ConcernsRating", "sdd");
+            entity.ToTable("ConcernsRating");
 
             entity.HasKey(e => e.Id)
                 .HasName("PK__CRating");
 
             entity.Property(e => e.Urn)
-                .HasDefaultValueSql("NEXT VALUE FOR ConcernsGlobalSequence");
+                .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
 
             entity.HasData(
                 new ConcernsRating
@@ -323,7 +325,7 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<SRMAStatus>(entity =>
         {
-            entity.ToTable("SRMAStatus", "sdd");
+            entity.ToTable("SRMAStatus");
 
             entity.HasData(
                 Enum.GetValues(typeof(Enums.SRMAStatusEnum)).Cast<Enums.SRMAStatusEnum>()
@@ -339,7 +341,7 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<SRMAReason>(entity =>
         {
-            entity.ToTable("SRMAReason", "sdd");
+            entity.ToTable("SRMAReason");
 
             entity.HasData(
                 Enum.GetValues(typeof(Enums.SRMAReasonOfferedEnum)).Cast<Enums.SRMAReasonOfferedEnum>()
@@ -357,7 +359,7 @@ public partial class ConcernsDbContext : DbContext
         modelBuilder.Entity<FinancialPlanStatus>(entity =>
         {
             var createdAt = new DateTime(2022, 06, 15);
-            entity.ToTable("FinancialPlanStatus", "sdd");
+            entity.ToTable("FinancialPlanStatus");
 
             entity.HasData(
                  new FinancialPlanStatus[]
@@ -371,7 +373,7 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<NTIUnderConsiderationStatus>(entity =>
         {
-            entity.ToTable("NTIUnderConsiderationStatus", "sdd");
+            entity.ToTable("NTIUnderConsiderationStatus");
 
             var createdAt = new DateTime(2022, 07, 12);
 
@@ -386,7 +388,7 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<NTIUnderConsiderationReason>(entity =>
         {
-            entity.ToTable("NTIUnderConsiderationReason", "sdd");
+            entity.ToTable("NTIUnderConsiderationReason");
 
             var createdAt = new DateTime(2022, 07, 12);
 
@@ -406,6 +408,8 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<NTIWarningLetterConditionType>(entity =>
         {
+	        entity.ToTable("NTIWarningLetterConditionType");
+	        
             var createdAt = new DateTime(2022, 07, 12);
 
             entity.HasData(
@@ -420,6 +424,8 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<NTIWarningLetterCondition>(entity =>
         {
+	        entity.ToTable("NTIWarningLetterCondition");
+	        
             var createdAt = new DateTime(2022, 07, 12);
 
             entity.HasData(
@@ -437,6 +443,8 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<NTIWarningLetterReason>(entity =>
         {
+	        entity.ToTable("NTIWarningLetterReason");
+	        
             var createdAt = new DateTime(2022, 07, 12);
 
             entity.HasData(
@@ -455,6 +463,8 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<NTIWarningLetterStatus>(entity =>
         {
+	        entity.ToTable("NTIWarningLetterStatus");
+	        
             var createdAt = new DateTime(2022, 07, 12);
 
             entity.HasData(
