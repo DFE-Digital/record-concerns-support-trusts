@@ -141,7 +141,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 
 			internal TestFixture WithUsersAvailableForSelection(params string[] users)
 			{
-				this.MockRbacManager.Setup(r => r.GetDefaultUsers()).ReturnsAsync(users);
+				this.MockRbacManager.Setup(r => r.GetDefaultUsers(It.IsAny<string[]>())).ReturnsAsync(users);
 				return this;
 			}
 
