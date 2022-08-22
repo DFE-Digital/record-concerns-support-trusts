@@ -78,15 +78,30 @@ namespace ConcernsCaseWork.Pages.Team
 		{
 			if (!string.IsNullOrWhiteSpace(_CurrentUserName))
 			{
-				var selectedColleagues = _teamsService.GetTeamCaseworkSelectedUsers(_CurrentUserName);
-				var users = _rbacManager.GetSystemUsers(excludes: _CurrentUserName);
+				try
+				{
 
-				await Task.WhenAll(selectedColleagues, users);
+					var selectedColleagues = _teamsService.GetTeamCaseworkSelectedUsers(_CurrentUserName);
+					var users = _rbacManager.GetSystemUsers(excludes: _CurrentUserName);
 
-				// TODO. Get selected colleagues from somewhere, using actual live data not hard coded.
-				// Get users from somewhere, possibly the rbacManager
-				SelectedColleagues = selectedColleagues.Result.SelectedTeamMembers;
-				Users = users.Result.ToArray();
+					await Task.WhenAll(selectedColleagues, users);
+
+					// TODO. Get selected colleagues from somewhere, using actual live data not hard coded.
+					// Get users from somewhere, possibly the rbacManager
+					SelectedColleagues = selectedColleagues.Result.SelectedTeamMembers;
+					Users = users.Result.ToArray();
+				}
+				catch (AggregateException aggregateException)
+				{
+					foreach (var ex in aggregateException.InnerExceptions)
+					{
+						_logger.LogErrorMsg(ex);
+					}
+				}
+				catch (Exception ex)
+				{
+					_logger.LogErrorMsg(ex);
+				}
 			}
 			else
 			{

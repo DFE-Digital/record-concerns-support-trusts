@@ -7,15 +7,15 @@ namespace Service.TRAMS.Teams
 {
 	public sealed class TeamCaseworkUsersSelectionDto
 	{
-		[JsonProperty("userName")]
+		[JsonProperty("ownerId")]
 
-		public string UserName { get; }
+		public string OwnerId { get; }
 
 		[JsonProperty("selectedTeamMembers")]
 		public string[] SelectedTeamMembers { get; }
 
 		[JsonConstructor]
-		public TeamCaseworkUsersSelectionDto(string userName, string[] selectedTeamMembers) => 
-			(UserName, SelectedTeamMembers) = (Guard.Against.NullOrEmpty(userName, nameof(userName)), Guard.Against.Null(selectedTeamMembers, nameof(selectedTeamMembers)));
+		public TeamCaseworkUsersSelectionDto(string ownerId, string[] selectedTeamMembers) => 
+			(OwnerId, SelectedTeamMembers) = (Guard.Against.NullOrEmpty(ownerId, nameof(ownerId)), Guard.Against.Null(selectedTeamMembers, nameof(selectedTeamMembers)));
 	}
 }

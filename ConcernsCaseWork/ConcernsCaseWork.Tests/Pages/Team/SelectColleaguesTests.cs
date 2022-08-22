@@ -66,7 +66,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			Assert.IsTrue(page.Url.Equals(ExpectedRedirectUrl));
 
 			testFixture.VerifyMethodEntered(nameof(SelectColleaguesPageModel.OnPostSelectColleagues));
-			testFixture.MockTeamsService.Verify(x => x.UpdateTeamCaseworkSelectedUsers(It.Is<TeamCaseworkUsersSelectionModel>(m => m.UserName == testFixture.CurrentUserName
+			testFixture.MockTeamsService.Verify(x => x.UpdateTeamCaseworkSelectedUsers(It.Is<TeamCaseworkUsersSelectionModel>(m => m.OwnerId == testFixture.CurrentUserName
 				&& m.SelectedTeamMembers.Length == 1
 				&& m.SelectedTeamMembers[0] == NewUsernameSelection
 			)));

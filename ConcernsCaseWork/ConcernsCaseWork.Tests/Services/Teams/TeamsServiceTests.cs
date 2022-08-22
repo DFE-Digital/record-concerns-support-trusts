@@ -34,7 +34,7 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 			var result = await sut.GetTeamCaseworkSelectedUsers(testFixture.CurrentUserName);
 
 			Assert.IsNotNull(result);
-			Assert.That(result.UserName, Is.EqualTo(testFixture.CurrentUserName));
+			Assert.That(result.OwnerId, Is.EqualTo(testFixture.CurrentUserName));
 			Assert.That(result.SelectedTeamMembers, Is.Not.Null);
 			Assert.AreEqual(result.SelectedTeamMembers.Length, 2);
 		}
@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 
 			await sut.UpdateTeamCaseworkSelectedUsers(new ConcernsCaseWork.Models.Teams.TeamCaseworkUsersSelectionModel(testFixture.CurrentUserName, new[] { "Fred.Flintstone" }));
 
-			testFixture.MockTramsService.Verify(x => x.PutTeamCaseworkSelectedUsers(It.Is<Service.TRAMS.Teams.TeamCaseworkUsersSelectionDto>(s => s.UserName == testFixture.CurrentUserName && s.SelectedTeamMembers[0] == "Fred.Flintstone")), Times.Once);
+			testFixture.MockTramsService.Verify(x => x.PutTeamCaseworkSelectedUsers(It.Is<Service.TRAMS.Teams.TeamCaseworkUsersSelectionDto>(s => s.OwnerId == testFixture.CurrentUserName && s.SelectedTeamMembers[0] == "Fred.Flintstone")), Times.Once);
 			testFixture.MockTramsService.Verify(x => x.DeleteTeamCaseworkSelections(testFixture.CurrentUserName), Times.Never);
 		}
 

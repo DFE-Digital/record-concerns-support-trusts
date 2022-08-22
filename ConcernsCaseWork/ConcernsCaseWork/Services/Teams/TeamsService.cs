@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Services.Teams
 			async Task DoWork() {
 				if (selectionModel.SelectedTeamMembers.Length == 0)
 				{
-					await _teamsServiceClient.DeleteTeamCaseworkSelections(selectionModel.UserName);
+					await _teamsServiceClient.DeleteTeamCaseworkSelections(selectionModel.OwnerId);
 				}
 				else
 				{
