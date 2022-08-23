@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
-using AutoFixture.Kernel;
 using AutoMapper;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Services.Teams;

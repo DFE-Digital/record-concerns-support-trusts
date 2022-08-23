@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace ConcernsCaseWork.Tests.Models.Teams
 {
-	public class TeamCaseworkUsersSelectionModelTests
+	public class ConcernsTeamCaseworkModelTests
 	{
 		[Test]
 		public void Constructors_Guard_Against_Null_Arguments()

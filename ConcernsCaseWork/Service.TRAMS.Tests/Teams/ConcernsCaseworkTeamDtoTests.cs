@@ -6,7 +6,7 @@ using Service.TRAMS.Teams;
 
 namespace Service.TRAMS.Tests.Teams
 {
-	public class SelectedTeamMembersDtoTests
+	public class ConcernsCaseworkTeamDtoTests
 	{
 		[Test]
 		public void Constructors_Guard_Against_Null_Arguments()
