@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.FinancialPlan;
 using Service.Redis.NtiUnderConsideration;
 using Service.TRAMS.NtiUnderConsideration;
 using System;
@@ -358,7 +357,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		}
 
 		private static NtiUnderConsiderationModel SetupOpenNtiUnderConsiderationModel(int id, long caseUrn)
-			=> new NtiUnderConsiderationModel { Id = id, CaseUrn = caseUrn };
+			=> new() { Id = id, CaseUrn = caseUrn };
 
 		private static List<NtiUnderConsiderationStatusDto> GetListValidStatuses() => new List<NtiUnderConsiderationStatusDto>
 		{
