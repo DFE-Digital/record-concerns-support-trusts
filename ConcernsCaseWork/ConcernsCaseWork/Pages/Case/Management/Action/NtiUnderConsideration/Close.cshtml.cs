@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				var ntiUcId = ExtractNtiUcIdFromRoute();
 				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
 
-				NTIStatuses = await GetStatusesForUI();
+				NTIStatuses = await GetStatusesForUiAsync();
 
 				return Page();
 			}
@@ -82,7 +82,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 			catch (InvalidOperationException ex)
 			{
-				TempData["Error.Message"] = ex.Message;
+				TempData["NTI-UC.Message"] = ex.Message;
+
+				var ntiUcId = ExtractNtiUcIdFromRoute();
+				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
+				NTIStatuses = await GetStatusesForUiAsync();
 			}
 			catch (Exception ex)
 			{
@@ -118,7 +122,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 		}
 
-		private async Task<IEnumerable<RadioItem>> GetStatusesForUI()
+		private async Task<IEnumerable<RadioItem>> GetStatusesForUiAsync()
 		{
 			var statuses = await _ntiStatusesCachedService.GetAllStatuses();
 			return statuses.Select(s => new RadioItem
