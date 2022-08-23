@@ -23,14 +23,14 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 		}
 
 		[Test]
-		public async Task When_GetTeamCaseworkSelectedUsers_Returns_Team_From_TramsApi()
+		public async Task When_GetCaseworkTeam_Returns_Team_From_TramsApi()
 		{
 			var testFixture = new TestFixture()
 				.WithPreviouslySelectedTeamMembers(new[] { "Fred.Flintstone", "Barney.Rubble" });
 
 			var sut = testFixture.BuildSut();
 
-			var result = await sut.GetTeamCaseworkSelectedUsers(testFixture.CurrentUserName);
+			var result = await sut.GetCaseworkTeam(testFixture.CurrentUserName);
 
 			Assert.IsNotNull(result);
 			Assert.That(result.OwnerId, Is.EqualTo(testFixture.CurrentUserName));
@@ -39,7 +39,7 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 		}
 
 		[Test]
-		public async Task When_UpdateTeamCaseworkSelectedUsers_And_SelectionEmpty_Then_RemovesSelectedUsers()
+		public async Task When_UpdateCaseworkTeam_And_SelectionEmpty_Then_RemovesSelectedUsers()
 		{
 			var testFixture = new TestFixture();
 
@@ -51,7 +51,7 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 		}
 
 		[Test]
-		public async Task When_UpdateTeamCaseworkSelectedUsers_And_SelectionsMade_Then_UpdatesSelectedUsers()
+		public async Task When_UpdateCaseworkTeam_And_SelectionsMade_Then_UpdatesSelectedUsers()
 		{
 			var testFixture = new TestFixture();
 

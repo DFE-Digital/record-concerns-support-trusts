@@ -147,7 +147,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 
 			internal TestFixture WithoutPreviouslySelectedUsers(string userName)
 			{
-				MockTeamsService.Setup(x => x.GetTeamCaseworkSelectedUsers(CurrentUserName))
+				MockTeamsService.Setup(x => x.GetCaseworkTeam(CurrentUserName))
 					.ReturnsAsync(new ConcernsTeamCaseworkModel(CurrentUserName, Array.Empty<string>()));
 
 				return this;
@@ -155,7 +155,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 
 			internal TestFixture WithPreviouslySelectedUsers(string userName)
 			{
-				MockTeamsService.Setup(x => x.GetTeamCaseworkSelectedUsers(CurrentUserName))
+				MockTeamsService.Setup(x => x.GetCaseworkTeam(CurrentUserName))
 					.ReturnsAsync(new ConcernsTeamCaseworkModel(CurrentUserName, new[] { userName }));
 
 				return this;

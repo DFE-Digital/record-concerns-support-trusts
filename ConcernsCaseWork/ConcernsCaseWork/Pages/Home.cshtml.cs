@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.Pages
 			Task<IList<HomeModel>> currentUserLiveCases = _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Live);
 
 			// get any team members defined
-			var team = await _teamsService.GetTeamCaseworkSelectedUsers(User.Identity.Name);
+			var team = await _teamsService.GetCaseworkTeam(User.Identity.Name);
 
 			var liveCasesTeamLead = _caseModelService.GetCasesByCaseworkerAndStatus(team.TeamMembers, StatusEnum.Live);
 

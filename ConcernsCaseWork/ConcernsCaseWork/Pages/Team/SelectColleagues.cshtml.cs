@@ -80,7 +80,7 @@ namespace ConcernsCaseWork.Pages.Team
 			{
 				try
 				{
-					var teamMembers = _teamsService.GetTeamCaseworkSelectedUsers(_CurrentUserName);
+					var teamMembers = _teamsService.GetCaseworkTeam(_CurrentUserName);
 					var users = _rbacManager.GetSystemUsers(excludes: _CurrentUserName);
 
 					await Task.WhenAll(teamMembers, users);

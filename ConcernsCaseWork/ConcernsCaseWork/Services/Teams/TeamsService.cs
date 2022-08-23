@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.Services.Teams
 			_mapper = Guard.Against.Null(mapper, nameof(mapper));
 		}
 
-		public Task<ConcernsTeamCaseworkModel> GetTeamCaseworkSelectedUsers(string ownerId)
+		public Task<ConcernsTeamCaseworkModel> GetCaseworkTeam(string ownerId)
 		{
 			Guard.Against.NullOrWhiteSpace(ownerId);
 
