@@ -66,9 +66,9 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			Assert.IsTrue(page.Url.Equals(ExpectedRedirectUrl));
 
 			testFixture.VerifyMethodEntered(nameof(SelectColleaguesPageModel.OnPostSelectColleagues));
-			testFixture.MockTeamsService.Verify(x => x.UpdateTeamCaseworkSelectedUsers(It.Is<TeamCaseworkUsersSelectionModel>(m => m.OwnerId == testFixture.CurrentUserName
-				&& m.SelectedTeamMembers.Length == 1
-				&& m.SelectedTeamMembers[0] == NewUsernameSelection
+			testFixture.MockTeamsService.Verify(x => x.UpdateCaseworkTeam(It.Is<ConcernsTeamCaseworkModel>(m => m.OwnerId == testFixture.CurrentUserName
+				&& m.TeamMembers.Length == 1
+				&& m.TeamMembers[0] == NewUsernameSelection
 			)));
 		}
 
@@ -148,7 +148,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			internal TestFixture WithoutPreviouslySelectedUsers(string userName)
 			{
 				MockTeamsService.Setup(x => x.GetTeamCaseworkSelectedUsers(CurrentUserName))
-					.ReturnsAsync(new TeamCaseworkUsersSelectionModel(CurrentUserName, Array.Empty<string>()));
+					.ReturnsAsync(new ConcernsTeamCaseworkModel(CurrentUserName, Array.Empty<string>()));
 
 				return this;
 			}
@@ -156,7 +156,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			internal TestFixture WithPreviouslySelectedUsers(string userName)
 			{
 				MockTeamsService.Setup(x => x.GetTeamCaseworkSelectedUsers(CurrentUserName))
-					.ReturnsAsync(new TeamCaseworkUsersSelectionModel(CurrentUserName, new[] { userName }));
+					.ReturnsAsync(new ConcernsTeamCaseworkModel(CurrentUserName, new[] { userName }));
 
 				return this;
 			}

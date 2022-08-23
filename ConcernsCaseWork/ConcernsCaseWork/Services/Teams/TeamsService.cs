@@ -3,6 +3,8 @@ using AutoMapper;
 using ConcernsCaseWork.Models.Teams;
 using Microsoft.Extensions.Logging;
 using Service.TRAMS.Teams;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Teams
@@ -23,31 +25,28 @@ namespace ConcernsCaseWork.Services.Teams
 			_mapper = Guard.Against.Null(mapper, nameof(mapper));
 		}
 
-		public Task<TeamCaseworkUsersSelectionModel> GetTeamCaseworkSelectedUsers(string currentUser)
+		public Task<ConcernsTeamCaseworkModel> GetTeamCaseworkSelectedUsers(string ownerId)
 		{
-			Guard.Against.NullOrEmpty(currentUser);
+			Guard.Against.NullOrWhiteSpace(ownerId);
 
-			async Task<TeamCaseworkUsersSelectionModel> DoWork()
+			async Task<ConcernsTeamCaseworkModel> DoWork()
 			{
-				var result = await _teamsServiceClient.GetTeamCaseworkSelectedUsers(currentUser);
-				return _mapper.Map<TeamCaseworkUsersSelectionModel>(result);
+				// get the team. If null returned then no team exists so create a new empty one
+				var result = (await _teamsServiceClient.GetTeamCaseworkSelectedUsers(ownerId))
+					?? new ConcernsCaseworkTeamDto(ownerId, Array.Empty<string>());
+
+				return _mapper.Map<ConcernsTeamCaseworkModel>(result);
 			}
 			return DoWork();
 		}
 
-		public Task UpdateTeamCaseworkSelectedUsers(TeamCaseworkUsersSelectionModel selectionModel)
+		public Task UpdateCaseworkTeam(ConcernsTeamCaseworkModel team)
 		{
-			Guard.Against.Null(selectionModel);
+			Guard.Against.Null(team);
 
-			async Task DoWork() {
-				if (selectionModel.SelectedTeamMembers.Length == 0)
-				{
-					await _teamsServiceClient.DeleteTeamCaseworkSelections(selectionModel.OwnerId);
-				}
-				else
-				{
-					await _teamsServiceClient.PutTeamCaseworkSelectedUsers(_mapper.Map<TeamCaseworkUsersSelectionDto>(selectionModel));
-				}
+			async Task DoWork()
+			{
+				await _teamsServiceClient.PutTeamCaseworkSelectedUsers(new ConcernsCaseworkTeamDto(team.OwnerId, team.TeamMembers));
 			}
 			return DoWork();
 		}

@@ -57,7 +57,7 @@ namespace ConcernsCaseWork.Pages.Team
 
 				Guard.Against.Null(SelectedColleagues);
 
-				await _teamsService.UpdateTeamCaseworkSelectedUsers(new Models.Teams.TeamCaseworkUsersSelectionModel(_CurrentUserName, SelectedColleagues.ToArray()));
+				await _teamsService.UpdateCaseworkTeam(new Models.Teams.ConcernsTeamCaseworkModel(_CurrentUserName, SelectedColleagues.ToArray()));
 
 				// Todo, go back to home page, with team tab selected.
 				return Redirect("/#team-casework");
@@ -80,7 +80,6 @@ namespace ConcernsCaseWork.Pages.Team
 			{
 				try
 				{
-
 					var selectedColleagues = _teamsService.GetTeamCaseworkSelectedUsers(_CurrentUserName);
 					var users = _rbacManager.GetSystemUsers(excludes: _CurrentUserName);
 
@@ -88,7 +87,7 @@ namespace ConcernsCaseWork.Pages.Team
 
 					// TODO. Get selected colleagues from somewhere, using actual live data not hard coded.
 					// Get users from somewhere, possibly the rbacManager
-					SelectedColleagues = selectedColleagues.Result.SelectedTeamMembers;
+					SelectedColleagues = selectedColleagues.Result.TeamMembers;
 					Users = users.Result.ToArray();
 				}
 				catch (AggregateException aggregateException)

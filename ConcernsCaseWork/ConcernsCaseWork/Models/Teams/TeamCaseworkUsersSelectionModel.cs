@@ -2,15 +2,15 @@
 
 namespace ConcernsCaseWork.Models.Teams
 {
-	public class TeamCaseworkUsersSelectionModel
+	public class ConcernsTeamCaseworkModel
 	{
-		public TeamCaseworkUsersSelectionModel(string ownerId, string[] selectedTeamMembers)
+		public ConcernsTeamCaseworkModel(string ownerId, string[] teamMembers)
 		{
 			this.OwnerId = Guard.Against.NullOrWhiteSpace(ownerId);
-			this.SelectedTeamMembers = Guard.Against.Null(selectedTeamMembers);
+			this.TeamMembers = Guard.Against.Null(teamMembers);
 		}
 
-		public string[] SelectedTeamMembers { get; private set; }
+		public string[] TeamMembers { get; private set; }
 		public string OwnerId { get; private set; }
 	}
 }

@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
-using Service.TRAMS.Cases;
-using Service.TRAMS.Records;
 using System;
 using System.Net.Http;
+using System.Net.Mime;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.Teams
@@ -19,13 +19,10 @@ namespace Service.TRAMS.Teams
 			_logger = Guard.Against.Null(logger);
 		}
 
-		public Task DeleteTeamCaseworkSelections(string ownerId)
+		public async Task<ConcernsCaseworkTeamDto> GetTeamCaseworkSelectedUsers(string ownerId)
 		{
-			throw new NotImplementedException();
-		}
+			Guard.Against.NullOrWhiteSpace(ownerId);
 
-		public async Task<TeamCaseworkUsersSelectionDto> GetTeamCaseworkSelectedUsers(string ownerId)
-		{
 			// Create a request
 			var request = new HttpRequestMessage(HttpMethod.Get,
 				$"/{EndpointsVersion}/concerns-team-casework/owner/{ownerId}");
@@ -39,11 +36,16 @@ namespace Service.TRAMS.Teams
 			// Check status code
 			response.EnsureSuccessStatusCode();
 
+			if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+			{
+				return null;
+			}
+
 			// Read response content
 			var content = await response.Content.ReadAsStringAsync();
 
 			// Deserialize content to POCO
-			var apiWrapperRecordsDto = JsonConvert.DeserializeObject<ApiWrapper<TeamCaseworkUsersSelectionDto>>(content);
+			var apiWrapperRecordsDto = JsonConvert.DeserializeObject<ApiWrapper<ConcernsCaseworkTeamDto>>(content);
 
 			// Unwrap response
 			if (apiWrapperRecordsDto is { Data: { } })
@@ -54,9 +56,38 @@ namespace Service.TRAMS.Teams
 			throw new Exception("Academies API error unwrap response");
 		}
 
-		public Task PutTeamCaseworkSelectedUsers(TeamCaseworkUsersSelectionDto selections)
+		public async Task PutTeamCaseworkSelectedUsers(ConcernsCaseworkTeamDto team)
 		{
-			throw new NotImplementedException();
+			Guard.Against.Null(team);
+
+			// Create a request
+			var request = new StringContent(
+				JsonConvert.SerializeObject(team),
+				Encoding.UTF8,
+				MediaTypeNames.Application.Json);
+
+			// Create http client
+			var client = ClientFactory.CreateClient(HttpClientName);
+
+			// Execute request
+			var uri = $"/{EndpointsVersion}/concerns-team-casework/owner/{team.OwnerId}";
+			var response = await client.PutAsync(uri, request);
+
+			// Check status code
+			response.EnsureSuccessStatusCode();
+
+			// Read response content
+			var content = await response.Content.ReadAsStringAsync();
+
+			// Deserialize content to POCO
+			var apiWrapperRecordsDto = JsonConvert.DeserializeObject<ApiWrapper<ConcernsCaseworkTeamDto>>(content);
+
+			// Unwrap response
+			if (apiWrapperRecordsDto is { Data: { } })
+			{
+				return;
+			}
+			throw new Exception("Academies API error unwrap response");
 		}
 	}
 }

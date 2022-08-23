@@ -5,7 +5,7 @@ namespace ConcernsCaseWork.Services.Teams
 {
 	public interface ITeamsService
 	{
-		public Task<TeamCaseworkUsersSelectionModel> GetTeamCaseworkSelectedUsers(string currentUser);
-		public Task UpdateTeamCaseworkSelectedUsers(TeamCaseworkUsersSelectionModel selections);
+		public Task<ConcernsTeamCaseworkModel> GetTeamCaseworkSelectedUsers(string ownerId);
+		public Task UpdateCaseworkTeam(ConcernsTeamCaseworkModel selections);
 	}
 }

@@ -1,14 +1,7 @@
-﻿using AutoFixture.Idioms;
-using AutoFixture;
-using NUnit.Framework;
-using Service.TRAMS.Teams;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoFixture;
+using AutoFixture.Idioms;
 using ConcernsCaseWork.Models.Teams;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using NUnit.Framework;
 
 namespace ConcernsCaseWork.Tests.Models.Teams
 {
@@ -19,7 +12,7 @@ namespace ConcernsCaseWork.Tests.Models.Teams
 		{
 			var fixture = new Fixture();
 			var assertion = fixture.Create<GuardClauseAssertion>();
-			assertion.Verify(typeof(TeamCaseworkUsersSelectionModel).GetConstructors());
+			assertion.Verify(typeof(ConcernsTeamCaseworkModel).GetConstructors());
 		}
 
 		[Test]
@@ -30,7 +23,7 @@ namespace ConcernsCaseWork.Tests.Models.Teams
 			var assertion = fixture.Create<ConstructorInitializedMemberAssertion>();
 
 			// Act & Assert
-			assertion.Verify(typeof(TeamCaseworkUsersSelectionModel));
+			assertion.Verify(typeof(ConcernsTeamCaseworkModel));
 		}
 	}
 }

@@ -13,7 +13,7 @@ namespace Service.TRAMS.Tests.Teams
 		{
 			var fixture = new Fixture();
 			var assertion = fixture.Create<GuardClauseAssertion>();
-			assertion.Verify(typeof(TeamCaseworkUsersSelectionDto).GetConstructors());
+			assertion.Verify(typeof(ConcernsCaseworkTeamDto).GetConstructors());
 		}
 
 		[Test]
@@ -24,7 +24,7 @@ namespace Service.TRAMS.Tests.Teams
 			var assertion = fixture.Create<ConstructorInitializedMemberAssertion>();
 
 			// Act & Assert
-			assertion.Verify(typeof(TeamCaseworkUsersSelectionDto));
+			assertion.Verify(typeof(ConcernsCaseworkTeamDto));
 		}
 	}
 }

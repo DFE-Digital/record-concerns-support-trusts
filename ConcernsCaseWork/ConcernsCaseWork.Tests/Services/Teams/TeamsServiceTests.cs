@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 		}
 
 		[Test]
-		public async Task When_GetTeamCaseworkSelectedUsers_Returns_UsersArray_From_TramsApi()
+		public async Task When_GetTeamCaseworkSelectedUsers_Returns_Team_From_TramsApi()
 		{
 			var testFixture = new TestFixture()
 				.WithPreviouslySelectedTeamMembers(new[] { "Fred.Flintstone", "Barney.Rubble" });
@@ -35,8 +35,8 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 
 			Assert.IsNotNull(result);
 			Assert.That(result.OwnerId, Is.EqualTo(testFixture.CurrentUserName));
-			Assert.That(result.SelectedTeamMembers, Is.Not.Null);
-			Assert.AreEqual(result.SelectedTeamMembers.Length, 2);
+			Assert.That(result.TeamMembers, Is.Not.Null);
+			Assert.AreEqual(result.TeamMembers.Length, 2);
 		}
 
 		[Test]
@@ -46,10 +46,9 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 
 			var sut = testFixture.BuildSut();
 
-			await sut.UpdateTeamCaseworkSelectedUsers(new ConcernsCaseWork.Models.Teams.TeamCaseworkUsersSelectionModel(testFixture.CurrentUserName, Array.Empty<string>()));
+			await sut.UpdateCaseworkTeam(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel(testFixture.CurrentUserName, Array.Empty<string>()));
 
-			testFixture.MockTramsService.Verify(x => x.PutTeamCaseworkSelectedUsers(It.IsAny<Service.TRAMS.Teams.TeamCaseworkUsersSelectionDto>()), Times.Never);
-			testFixture.MockTramsService.Verify(x => x.DeleteTeamCaseworkSelections(testFixture.CurrentUserName), Times.Once);
+			testFixture.MockTramsService.Verify(x => x.PutTeamCaseworkSelectedUsers(It.IsAny<Service.TRAMS.Teams.ConcernsCaseworkTeamDto>()), Times.Once);
 		}
 
 		[Test]
@@ -60,10 +59,9 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 			var sut = testFixture
 				.BuildSut();
 
-			await sut.UpdateTeamCaseworkSelectedUsers(new ConcernsCaseWork.Models.Teams.TeamCaseworkUsersSelectionModel(testFixture.CurrentUserName, new[] { "Fred.Flintstone" }));
+			await sut.UpdateCaseworkTeam(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel(testFixture.CurrentUserName, new[] { "Fred.Flintstone" }));
 
-			testFixture.MockTramsService.Verify(x => x.PutTeamCaseworkSelectedUsers(It.Is<Service.TRAMS.Teams.TeamCaseworkUsersSelectionDto>(s => s.OwnerId == testFixture.CurrentUserName && s.SelectedTeamMembers[0] == "Fred.Flintstone")), Times.Once);
-			testFixture.MockTramsService.Verify(x => x.DeleteTeamCaseworkSelections(testFixture.CurrentUserName), Times.Never);
+			testFixture.MockTramsService.Verify(x => x.PutTeamCaseworkSelectedUsers(It.Is<Service.TRAMS.Teams.ConcernsCaseworkTeamDto>(s => s.OwnerId == testFixture.CurrentUserName && s.TeamMembers[0] == "Fred.Flintstone")), Times.Once);
 		}
 
 		[Test]
@@ -112,7 +110,7 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 			public TestFixture WithPreviouslySelectedTeamMembers(params string[] teamMembers)
 			{
 				MockTramsService.Setup(x => x.GetTeamCaseworkSelectedUsers(this.CurrentUserName))
-					.ReturnsAsync(new Service.TRAMS.Teams.TeamCaseworkUsersSelectionDto(this.CurrentUserName, new[] { "Fred.Flintstone", "Barney.Rubble" }));
+					.ReturnsAsync(new Service.TRAMS.Teams.ConcernsCaseworkTeamDto(this.CurrentUserName, new[] { "Fred.Flintstone", "Barney.Rubble" }));
 
 				return this;
 			}
