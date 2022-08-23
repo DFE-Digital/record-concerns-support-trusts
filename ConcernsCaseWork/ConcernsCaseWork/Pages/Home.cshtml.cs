@@ -1,10 +1,13 @@
-﻿using ConcernsCaseWork.Models;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Teams;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Sentry;
 using Service.TRAMS.Status;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,16 +20,18 @@ namespace ConcernsCaseWork.Pages
 	{
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<HomePageModel> _logger;
+		private readonly ITeamsService _teamsService;
 		private readonly IRbacManager _rbacManager;
 
 		public IList<HomeModel> CasesActive { get; private set; }
 		public IList<HomeModel> CasesTeamActive { get; private set; }
 
-		public HomePageModel(ICaseModelService caseModelService, IRbacManager rbacManager, ILogger<HomePageModel> logger)
+		public HomePageModel(ICaseModelService caseModelService, IRbacManager rbacManager, ILogger<HomePageModel> logger, ITeamsService teamsService)
 		{
-			_caseModelService = caseModelService;
-			_rbacManager = rbacManager;
-			_logger = logger;
+			_caseModelService = Guard.Against.Null(caseModelService);
+			_rbacManager = Guard.Against.Null(rbacManager);
+			_logger = Guard.Against.Null(logger);
+			_teamsService = Guard.Against.Null(teamsService);
 		}
 
 		public async Task OnGetAsync()
@@ -38,22 +43,20 @@ namespace ConcernsCaseWork.Pages
 
 			// Check if logged user as role leader
 			// And get all live cases for each caseworker
-			Task<IList<HomeModel>> liveCasesTeamLead = null;
 
 			// cases belonging to this user
 			Task<IList<HomeModel>> currentUserLiveCases = _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Live);
 
-			// other uses to show
-			var userRoleClaimWrapper = await _rbacManager.GetUserRoleClaimWrapper(User.Identity.Name);
-			var groupUsers = userRoleClaimWrapper.Users;
-			liveCasesTeamLead = _caseModelService.GetCasesByCaseworkerAndStatus(groupUsers, StatusEnum.Live);
-			{
-				await Task.WhenAll(currentUserLiveCases, liveCasesTeamLead);
+			// get any team members defined
+			var team = await _teamsService.GetTeamCaseworkSelectedUsers(User.Identity.Name);
 
-				// Assign responses to UI public properties
-				CasesActive = currentUserLiveCases.Result;
-				CasesTeamActive = liveCasesTeamLead.Result;
-			}
+			var liveCasesTeamLead = _caseModelService.GetCasesByCaseworkerAndStatus(team.TeamMembers, StatusEnum.Live);
+
+			await Task.WhenAll(currentUserLiveCases, liveCasesTeamLead);
+
+			// Assign responses to UI public properties
+			CasesActive = currentUserLiveCases.Result;
+			CasesTeamActive = liveCasesTeamLead.Result;
 		}
 	}
 }

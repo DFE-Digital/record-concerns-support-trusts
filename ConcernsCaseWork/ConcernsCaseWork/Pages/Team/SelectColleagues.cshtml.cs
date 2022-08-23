@@ -80,14 +80,14 @@ namespace ConcernsCaseWork.Pages.Team
 			{
 				try
 				{
-					var selectedColleagues = _teamsService.GetTeamCaseworkSelectedUsers(_CurrentUserName);
+					var teamMembers = _teamsService.GetTeamCaseworkSelectedUsers(_CurrentUserName);
 					var users = _rbacManager.GetSystemUsers(excludes: _CurrentUserName);
 
-					await Task.WhenAll(selectedColleagues, users);
+					await Task.WhenAll(teamMembers, users);
 
 					// TODO. Get selected colleagues from somewhere, using actual live data not hard coded.
 					// Get users from somewhere, possibly the rbacManager
-					SelectedColleagues = selectedColleagues.Result.TeamMembers;
+					SelectedColleagues = teamMembers.Result.TeamMembers;
 					Users = users.Result.ToArray();
 				}
 				catch (AggregateException aggregateException)
