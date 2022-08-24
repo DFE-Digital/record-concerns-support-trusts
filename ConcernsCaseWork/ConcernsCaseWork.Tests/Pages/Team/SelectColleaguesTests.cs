@@ -13,7 +13,7 @@ using NUnit.Framework.Internal;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ITeamsService = ConcernsCaseWork.Services.Teams.ITeamsService;
+using ITeamsModelService = ConcernsCaseWork.Services.Teams.ITeamsModelService;
 
 namespace ConcernsCaseWork.Tests.Pages.Team
 {
@@ -93,7 +93,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			testFixture.VerifyMethodEntered(nameof(SelectColleaguesPageModel.OnPostSelectColleagues));
 		}
 
-		private static SelectColleaguesPageModel BuildPageModel(IRbacManager rbacManager, ILogger<SelectColleaguesPageModel> logger, ITeamsService teamsService, bool isAuthenticated, string userName = "Tester")
+		private static SelectColleaguesPageModel BuildPageModel(IRbacManager rbacManager, ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService, bool isAuthenticated, string userName = "Tester")
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated, userName);
 
@@ -112,13 +112,13 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			{
 				CurrentUserName = "John.Smith";
 				MockLogger = new Mock<ILogger<SelectColleaguesPageModel>>();
-				MockTeamsService = new Mock<ITeamsService>();
+				MockTeamsService = new Mock<ITeamsModelService>();
 				MockRbacManager = new Mock<IRbacManager>();
 			}
 
 			public string CurrentUserName { get; private set; }
 			public Mock<ILogger<SelectColleaguesPageModel>> MockLogger { get; }
-			public Mock<ITeamsService> MockTeamsService { get; }
+			public Mock<ITeamsModelService> MockTeamsService { get; }
 			public Mock<IRbacManager> MockRbacManager { get; }
 
 			internal SelectColleaguesPageModel BuildSut(bool authenticatedPage = true)

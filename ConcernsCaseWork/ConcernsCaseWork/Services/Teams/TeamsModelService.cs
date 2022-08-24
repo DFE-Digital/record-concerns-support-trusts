@@ -2,23 +2,23 @@
 using AutoMapper;
 using ConcernsCaseWork.Models.Teams;
 using Microsoft.Extensions.Logging;
+using Service.Redis.Teams;
 using Service.TRAMS.Teams;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Teams
 {
 
-	public class TeamsService : ITeamsService
+	public class TeamsModelService : ITeamsModelService
 	{
-		private readonly ILogger<TeamsService> _logger;
+		private readonly ILogger<TeamsModelService> _logger;
 		private readonly IMapper _mapper;
-		private Service.TRAMS.Teams.ITeamsService _teamsServiceClient;
+		private ITeamsCachedService _teamsServiceClient;
 
-		public TeamsService(ILogger<TeamsService> logger,
+		public TeamsModelService(ILogger<TeamsModelService> logger,
 			IMapper mapper,
-			Service.TRAMS.Teams.ITeamsService teamsServiceClient)
+			ITeamsCachedService teamsServiceClient)
 		{
 			_logger = Guard.Against.Null(logger, nameof(logger));
 			_teamsServiceClient = Guard.Against.Null(teamsServiceClient, nameof(teamsServiceClient));
@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.Services.Teams
 			async Task<ConcernsTeamCaseworkModel> DoWork()
 			{
 				// get the team. If null returned then no team exists so create a new empty one
-				var result = (await _teamsServiceClient.GetTeamCaseworkSelectedUsers(ownerId))
+				var result = (await _teamsServiceClient.GetTeam(ownerId))
 					?? new ConcernsCaseworkTeamDto(ownerId, Array.Empty<string>());
 
 				return _mapper.Map<ConcernsTeamCaseworkModel>(result);
@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.Services.Teams
 
 			async Task DoWork()
 			{
-				await _teamsServiceClient.PutTeamCaseworkSelectedUsers(new ConcernsCaseworkTeamDto(team.OwnerId, team.TeamMembers));
+				await _teamsServiceClient.PutTeam(new ConcernsCaseworkTeamDto(team.OwnerId, team.TeamMembers));
 			}
 			return DoWork();
 		}

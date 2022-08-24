@@ -7,6 +7,8 @@ using ConcernsCaseWork.Services.Teams;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Service.Redis.Teams;
+using Service.TRAMS.Teams;
 using System;
 using System.Threading.Tasks;
 
@@ -19,7 +21,7 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 		public void TeamsService_Implements_ITeamsService()
 		{
 			var sut = new TestFixture().BuildSut();
-			Assert.IsInstanceOf<ITeamsService>(sut);
+			Assert.IsInstanceOf<ITeamsModelService>(sut);
 		}
 
 		[Test]
@@ -47,7 +49,7 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 
 			await sut.UpdateCaseworkTeam(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel(testFixture.CurrentUserName, Array.Empty<string>()));
 
-			testFixture.MockTramsService.Verify(x => x.PutTeamCaseworkSelectedUsers(It.IsAny<Service.TRAMS.Teams.ConcernsCaseworkTeamDto>()), Times.Once);
+			testFixture.MockCachedTeamsService.Verify(x => x.PutTeam(It.IsAny<Service.TRAMS.Teams.ConcernsCaseworkTeamDto>()), Times.Once);
 		}
 
 		[Test]
@@ -60,7 +62,7 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 
 			await sut.UpdateCaseworkTeam(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel(testFixture.CurrentUserName, new[] { "Fred.Flintstone" }));
 
-			testFixture.MockTramsService.Verify(x => x.PutTeamCaseworkSelectedUsers(It.Is<Service.TRAMS.Teams.ConcernsCaseworkTeamDto>(s => s.OwnerId == testFixture.CurrentUserName && s.TeamMembers[0] == "Fred.Flintstone")), Times.Once);
+			testFixture.MockCachedTeamsService.Verify(x => x.PutTeam(It.Is<Service.TRAMS.Teams.ConcernsCaseworkTeamDto>(s => s.OwnerId == testFixture.CurrentUserName && s.TeamMembers[0] == "Fred.Flintstone")), Times.Once);
 		}
 
 		[Test]
@@ -69,7 +71,7 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 			var fixture = new TestFixture().AutoFixture;
 			fixture.Customize(new AutoMoqCustomization());
 			var assertion = fixture.Create<GuardClauseAssertion>();
-			assertion.Verify(typeof(TeamsService).GetMethods());
+			assertion.Verify(typeof(TeamsModelService).GetMethods());
 		}
 
 		[Test]
@@ -78,14 +80,14 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 			var fixture = new TestFixture().AutoFixture;
 			fixture.Customize(new AutoMoqCustomization());
 			var assertion = fixture.Create<GuardClauseAssertion>();
-			assertion.Verify(typeof(TeamsService).GetConstructors());
+			assertion.Verify(typeof(TeamsModelService).GetConstructors());
 		}
 
 		private class TestFixture
 		{
 			public Fixture AutoFixture;
-			public Mock<Service.TRAMS.Teams.ITeamsService> MockTramsService;
-			public Mock<ILogger<TeamsService>> MockLogger;
+			public Mock<ITeamsCachedService> MockCachedTeamsService;
+			public Mock<ILogger<TeamsModelService>> MockLogger;
 
 			public string CurrentUserName { get; }
 
@@ -94,8 +96,8 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 			public TestFixture()
 			{
 				AutoFixture = new Fixture();
-				MockTramsService = new Mock<Service.TRAMS.Teams.ITeamsService>();
-				MockLogger = new Mock<ILogger<TeamsService>>();
+				MockCachedTeamsService = new Mock<ITeamsCachedService>();
+				MockLogger = new Mock<ILogger<TeamsModelService>>();
 				this.CurrentUserName = $"{AutoFixture.Create<string>()}.{AutoFixture.Create<string>()}";
 
 				_mapper = this.CreateAutoMapper();
@@ -108,16 +110,16 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 
 			public TestFixture WithPreviouslySelectedTeamMembers(params string[] teamMembers)
 			{
-				MockTramsService.Setup(x => x.GetTeamCaseworkSelectedUsers(this.CurrentUserName))
-					.ReturnsAsync(new Service.TRAMS.Teams.ConcernsCaseworkTeamDto(this.CurrentUserName, new[] { "Fred.Flintstone", "Barney.Rubble" }));
+				MockCachedTeamsService.Setup(x => x.GetTeam(this.CurrentUserName))
+					.ReturnsAsync(new ConcernsCaseworkTeamDto(this.CurrentUserName, new[] { "Fred.Flintstone", "Barney.Rubble" }));
 
 				return this;
 			}
 
-			public TeamsService BuildSut()
+			public TeamsModelService BuildSut()
 			{
 				// never mock out automapper, let it be tested more by using the real mapping configurations
-				return new TeamsService(MockLogger.Object, _mapper, MockTramsService.Object);
+				return new TeamsModelService(MockLogger.Object, _mapper, MockCachedTeamsService.Object);
 			}
 		}
 	}

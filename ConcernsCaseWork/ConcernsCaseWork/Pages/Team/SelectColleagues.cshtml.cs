@@ -19,13 +19,13 @@ namespace ConcernsCaseWork.Pages.Team
 	{
 		private readonly IRbacManager _rbacManager;
 		private readonly ILogger<SelectColleaguesPageModel> _logger;
-		private readonly ITeamsService _teamsService;
+		private readonly ITeamsModelService _teamsService;
 
 		[BindProperty]
 		public IList<string> SelectedColleagues { get; set; }
 		public string[] Users { get; set; }
 
-		public SelectColleaguesPageModel(IRbacManager rbacManager, ILogger<SelectColleaguesPageModel> logger, ITeamsService teamsService)
+		public SelectColleaguesPageModel(IRbacManager rbacManager, ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService)
 		{
 			_rbacManager = Guard.Against.Null(rbacManager);
 			_logger = Guard.Against.Null(logger);

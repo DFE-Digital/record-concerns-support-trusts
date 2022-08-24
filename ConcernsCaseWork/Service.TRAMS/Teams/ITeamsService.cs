@@ -4,7 +4,7 @@ namespace Service.TRAMS.Teams
 {
 	public interface ITeamsService
 	{
-		public Task<ConcernsCaseworkTeamDto> GetTeamCaseworkSelectedUsers(string ownerId);
-		public Task PutTeamCaseworkSelectedUsers(ConcernsCaseworkTeamDto team);
+		public Task<ConcernsCaseworkTeamDto> GetTeam(string ownerId);
+		public Task PutTeam(ConcernsCaseworkTeamDto team);
 	}
 }

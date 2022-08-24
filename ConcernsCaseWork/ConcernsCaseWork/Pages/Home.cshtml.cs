@@ -20,13 +20,13 @@ namespace ConcernsCaseWork.Pages
 	{
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<HomePageModel> _logger;
-		private readonly ITeamsService _teamsService;
+		private readonly ITeamsModelService _teamsService;
 		private readonly IRbacManager _rbacManager;
 
 		public IList<HomeModel> CasesActive { get; private set; }
 		public IList<HomeModel> CasesTeamActive { get; private set; }
 
-		public HomePageModel(ICaseModelService caseModelService, IRbacManager rbacManager, ILogger<HomePageModel> logger, ITeamsService teamsService)
+		public HomePageModel(ICaseModelService caseModelService, IRbacManager rbacManager, ILogger<HomePageModel> logger, ITeamsModelService teamsService)
 		{
 			_caseModelService = Guard.Against.Null(caseModelService);
 			_rbacManager = Guard.Against.Null(rbacManager);

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Teams
 {
-	public interface ITeamsService
+	public interface ITeamsModelService
 	{
 		public Task<ConcernsTeamCaseworkModel> GetCaseworkTeam(string ownerId);
 		public Task UpdateCaseworkTeam(ConcernsTeamCaseworkModel selections);

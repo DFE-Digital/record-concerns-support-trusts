@@ -17,7 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ITeamsService = ConcernsCaseWork.Services.Teams.ITeamsService;
+using ITeamsModelService = ConcernsCaseWork.Services.Teams.ITeamsModelService;
 
 namespace ConcernsCaseWork.Tests.Pages
 {
@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCaseModelService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
 				.ReturnsAsync(homeModels);
 
-			var mockTeamService = new Mock<ITeamsService>();
+			var mockTeamService = new Mock<ITeamsModelService>();
 			mockTeamService.Setup(x => x.GetCaseworkTeam(It.IsAny<string>()))
 				.ReturnsAsync(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel("random.user", Array.Empty<string>()));
 
@@ -146,7 +146,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCaseModelService.Setup(model => model.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
 				.ReturnsAsync(emptyList);
 
-			var mockTeamService = new Mock<ITeamsService>();
+			var mockTeamService = new Mock<ITeamsModelService>();
 			mockTeamService.Setup(x => x.GetCaseworkTeam(It.IsAny<string>()))
 				.ReturnsAsync(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel("random.user", Array.Empty<string>()));
 
@@ -173,7 +173,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()), Times.Once);
 		}
 
-		private static HomePageModel SetupHomeModel(ICaseModelService mockCaseModelService, IRbacManager mockRbacManager, ILogger<HomePageModel> mockLogger, ITeamsService mockTeamService, bool isAuthenticated = false)
+		private static HomePageModel SetupHomeModel(ICaseModelService mockCaseModelService, IRbacManager mockRbacManager, ILogger<HomePageModel> mockLogger, ITeamsModelService mockTeamService, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 

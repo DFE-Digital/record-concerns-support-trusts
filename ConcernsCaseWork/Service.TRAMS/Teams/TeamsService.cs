@@ -19,7 +19,7 @@ namespace Service.TRAMS.Teams
 			_logger = Guard.Against.Null(logger);
 		}
 
-		public async Task<ConcernsCaseworkTeamDto> GetTeamCaseworkSelectedUsers(string ownerId)
+		public async Task<ConcernsCaseworkTeamDto> GetTeam(string ownerId)
 		{
 			Guard.Against.NullOrWhiteSpace(ownerId);
 
@@ -56,7 +56,7 @@ namespace Service.TRAMS.Teams
 			throw new Exception("Academies API error unwrap response");
 		}
 
-		public async Task PutTeamCaseworkSelectedUsers(ConcernsCaseworkTeamDto team)
+		public async Task PutTeam(ConcernsCaseworkTeamDto team)
 		{
 			Guard.Against.Null(team);
 

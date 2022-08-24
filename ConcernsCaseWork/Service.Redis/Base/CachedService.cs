@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
+﻿using Ardalis.GuardClauses;
+using Microsoft.Extensions.Caching.Distributed;
 using System;
 using System.Threading.Tasks;
 
@@ -13,21 +14,31 @@ namespace Service.Redis.Base
 			_cacheProvider = cacheProvider;
 		}
 		
-		public async Task StoreData<T>(string key, T data, int expirationTimeInHours = 24) where T : class
+		public Task StoreData<T>(string key, T data, int expirationTimeInHours = 24) where T : class
 		{
-			var cacheEntryOptions = new DistributedCacheEntryOptions()
-				.SetSlidingExpiration(TimeSpan.FromHours(expirationTimeInHours));
-			await _cacheProvider.SetCache(key, data, cacheEntryOptions);
+			Guard.Against.NullOrWhiteSpace(key);
+			Guard.Against.Null(data);
+			Guard.Against.NegativeOrZero(expirationTimeInHours);
+
+			Task DoWork()
+			{
+				var cacheEntryOptions = new DistributedCacheEntryOptions()
+					.SetSlidingExpiration(TimeSpan.FromHours(expirationTimeInHours));
+				return _cacheProvider.SetCache(key, data, cacheEntryOptions);
+			}
+			return DoWork();
 		}
 		
-		public async Task<T> GetData<T>(string key) where T : class
+		public Task<T> GetData<T>(string key) where T : class
 		{
-			return await _cacheProvider.GetFromCache<T>(key);
+			Guard.Against.NullOrWhiteSpace(key);
+			return _cacheProvider.GetFromCache<T>(key);
 		}
 
-		public async Task ClearData(string key)
+		public Task ClearData(string key)
 		{
-			await _cacheProvider.ClearCache(key);
+			Guard.Against.NullOrWhiteSpace(key);			
+			return _cacheProvider.ClearCache(key);
 		}
 	}
 }
