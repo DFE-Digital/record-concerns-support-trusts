@@ -70,7 +70,6 @@ namespace Service.Redis.Teams
 				// go through to trams and update redis if successful
 				await _tramsTeamsService.PutTeam(team);
 				await UpdateCacheIfNotNullDto($"{CacheKeyPrefix}.{team.OwnerId}", team);
-				await UpdateCacheIfNotNullDto($"{CacheKeyPrefix}.{team.OwnerId}", team);
 			}
 
 			return DoWork();
