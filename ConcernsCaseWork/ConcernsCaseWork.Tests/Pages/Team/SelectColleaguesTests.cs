@@ -21,12 +21,12 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 	public class SelectColleaguesTests
 	{
 		[Test]
-		public async Task WhenOnGetAsync_Return_Page()
+		public async Task WhenOnGetAsync_WithPreviously_Selected_Team_Members_Return_Page()
 		{
 			// arrange
 			var testFixture = new TestFixture()
 				.WithUsersAvailableForSelection("user1", "user2", "Mr.Bean")
-				.WithPreviouslySelectedUsers("Mr.Bean");
+				.WithPreviouslySelectedUser("Mr.Bean");
 
 			var sut = testFixture.BuildSut(authenticatedPage: true);
 
@@ -44,6 +44,30 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 		}
 
 		[Test]
+		public async Task WhenOnGetAsync_With_No_Previously_Selected_Team_Members_Return_Page()
+		{
+			// arrange
+			var testFixture = new TestFixture();
+
+			var sut = testFixture
+				.WithNoUsersAvailableForSelection()
+				.WithNoPreviouslySelectedUsers()
+				.BuildSut(authenticatedPage: true);
+
+			// act
+			var pageResponse = await sut.OnGetAsync();
+
+			// assert
+			Assert.That(pageResponse, Is.Not.Null);
+			Assert.That(sut.SelectedColleagues, Is.Not.Null);
+			Assert.That(sut.Users, Is.Not.Null);
+			Assert.That(sut.Users.Length, Is.Zero);
+			Assert.That(sut.TempData, Is.Empty);
+
+			testFixture.VerifyMethodEntered(nameof(SelectColleaguesPageModel.OnGetAsync));
+		}
+
+		[Test]
 		public async Task WhenOnPostSelectColleagues_UpdatesSelections_And_Redirects_To_TeamCaseworkPage()
 		{
 			// arrange
@@ -51,7 +75,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			const string ExpectedRedirectUrl = "/#team-casework";
 
 			var testFixture = new TestFixture()
-				.WithPreviouslySelectedUsers("Mr.Bean");
+				.WithPreviouslySelectedUser("Mr.Bean");
 
 			var pageModel = testFixture.BuildSut(authenticatedPage: true);
 
@@ -145,7 +169,28 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 				return this;
 			}
 
-			internal TestFixture WithoutPreviouslySelectedUsers(string userName)
+
+			internal TestFixture WithNoUsersAvailableForSelection()
+			{
+				this.MockRbacManager.Setup(r => r.GetSystemUsers(It.IsAny<string[]>())).ReturnsAsync(Array.Empty<string>());
+				return this;
+			}
+
+			internal TestFixture WitNohUsersAvailableForSelection()
+			{
+				this.MockRbacManager.Setup(r => r.GetSystemUsers(It.IsAny<string[]>())).ReturnsAsync(Array.Empty<string>());
+				return this;
+			}
+
+			internal TestFixture WithPreviouslySelectedUser(string userName)
+			{
+				MockTeamsService.Setup(x => x.GetCaseworkTeam(CurrentUserName))
+					.ReturnsAsync(new ConcernsTeamCaseworkModel(CurrentUserName, new[] { userName }));
+
+				return this;
+			}
+
+			internal TestFixture WithNoPreviouslySelectedUsers()
 			{
 				MockTeamsService.Setup(x => x.GetCaseworkTeam(CurrentUserName))
 					.ReturnsAsync(new ConcernsTeamCaseworkModel(CurrentUserName, Array.Empty<string>()));
@@ -153,13 +198,6 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 				return this;
 			}
 
-			internal TestFixture WithPreviouslySelectedUsers(string userName)
-			{
-				MockTeamsService.Setup(x => x.GetCaseworkTeam(CurrentUserName))
-					.ReturnsAsync(new ConcernsTeamCaseworkModel(CurrentUserName, new[] { userName }));
-
-				return this;
-			}
 
 			internal TestFixture WithNoCurrentUser()
 			{

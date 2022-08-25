@@ -2,6 +2,7 @@
 using AutoFixture.Idioms;
 using ConcernsCaseWork.Models.Teams;
 using NUnit.Framework;
+using System;
 
 namespace ConcernsCaseWork.Tests.Models.Teams
 {
@@ -24,6 +25,15 @@ namespace ConcernsCaseWork.Tests.Models.Teams
 
 			// Act & Assert
 			assertion.Verify(typeof(ConcernsTeamCaseworkModel));
+		}
+
+		[Test]
+		public void Constructor_Allows_Empty_TeamsMebers()
+		{
+			// Arrange
+			var sut = new ConcernsTeamCaseworkModel("john.smith", Array.Empty<string>());
+			Assert.NotNull(sut);
+			Assert.That(sut.TeamMembers.Length, Is.Zero);
 		}
 	}
 }
