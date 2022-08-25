@@ -101,7 +101,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 		}
 
 		[Test]
-		public async Task WhenOnPostSelectColleagues_RequestForm_Missing_Return_ErrorOnPage()
+		public async Task WhenOnPostSelectColleagues_WithException_ErrorOnPage()
 		{
 			// arrange			
 			var testFixture = new TestFixture()
