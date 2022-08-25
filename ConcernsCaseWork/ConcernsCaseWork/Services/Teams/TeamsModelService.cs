@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models.Teams;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Teams;
@@ -27,6 +28,7 @@ namespace ConcernsCaseWork.Services.Teams
 
 		public Task<ConcernsTeamCaseworkModel> GetCaseworkTeam(string ownerId)
 		{
+			_logger.LogMethodEntered();
 			Guard.Against.NullOrWhiteSpace(ownerId);
 
 			async Task<ConcernsTeamCaseworkModel> DoWork()
@@ -42,6 +44,7 @@ namespace ConcernsCaseWork.Services.Teams
 
 		public Task UpdateCaseworkTeam(ConcernsTeamCaseworkModel team)
 		{
+			_logger.LogMethodEntered();
 			Guard.Against.Null(team);
 
 			async Task DoWork()

@@ -12,6 +12,7 @@ using NUnit.Framework;
 using NUnit.Framework.Internal;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ITeamsModelService = ConcernsCaseWork.Services.Teams.ITeamsModelService;
 
@@ -38,6 +39,9 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			Assert.That(sut.SelectedColleagues, Is.Not.Null);
 			Assert.That(sut.Users, Is.Not.Null);
 			Assert.That(sut.Users.Length, Is.EqualTo(3));
+			Assert.That(sut.Users.Count(x => x.Equals("user1")), Is.EqualTo(1));
+			Assert.That(sut.Users.Count(x => x.Equals("user2")), Is.EqualTo(1));
+			Assert.That(sut.Users.Count(x => x.Equals("Mr.Bean")), Is.EqualTo(1));
 			Assert.That(sut.TempData, Is.Empty);
 
 			testFixture.VerifyMethodEntered(nameof(SelectColleaguesPageModel.OnGetAsync));
