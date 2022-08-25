@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				var ntiUcId = ExtractNtiUcIdFromRoute();
 				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
 
-				NTIStatuses = await GetStatusesForUI();
+				NTIStatuses = await GetStatusesForUiAsync();
 
 				return Page();
 			}
@@ -69,9 +69,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			try
 			{
 				CaseUrn = ExtractCaseUrnFromRoute();
+				var ntiUcId = ExtractNtiUcIdFromRoute();
+				
+				var freshNti = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
+				
 				var ntiWithUpdatedValues = PopulateNtiFromRequest();
 
-				var freshNti = await _ntiModelService.GetNtiUnderConsideration(ntiWithUpdatedValues.Id);
 				freshNti.Notes = ntiWithUpdatedValues.Notes;
 				freshNti.ClosedStatusId = ntiWithUpdatedValues.ClosedStatusId;
 				freshNti.ClosedAt = DateTime.Now; // Note that we should probably be using UTC? Keeping this consistent with other areas which mostly use DateTime.Now. 
@@ -82,7 +85,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 			catch (InvalidOperationException ex)
 			{
-				TempData["Error.Message"] = ex.Message;
+				TempData["NTI-UC.Message"] = ex.Message;
+
+				var ntiUcId = ExtractNtiUcIdFromRoute();
+				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
+				NTIStatuses = await GetStatusesForUiAsync();
 			}
 			catch (Exception ex)
 			{
@@ -114,11 +121,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 			else
 			{
-				throw new Exception("CaseUrn not found in the route");
+				throw new Exception("NtiUcId not found in the route");
 			}
 		}
 
-		private async Task<IEnumerable<RadioItem>> GetStatusesForUI()
+		private async Task<IEnumerable<RadioItem>> GetStatusesForUiAsync()
 		{
 			var statuses = await _ntiStatusesCachedService.GetAllStatuses();
 			return statuses.Select(s => new RadioItem
