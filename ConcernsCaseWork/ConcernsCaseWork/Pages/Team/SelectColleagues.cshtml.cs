@@ -58,8 +58,6 @@ namespace ConcernsCaseWork.Pages.Team
 				Guard.Against.Null(SelectedColleagues);
 
 				await _teamsService.UpdateCaseworkTeam(new Models.Teams.ConcernsTeamCaseworkModel(_CurrentUserName, SelectedColleagues.ToArray()));
-
-				// Todo, go back to home page, with team tab selected.
 				return Redirect("/#team-casework");
 			}
 			catch (Exception ex)
