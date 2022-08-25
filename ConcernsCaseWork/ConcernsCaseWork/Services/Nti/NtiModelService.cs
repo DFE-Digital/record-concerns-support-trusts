@@ -34,13 +34,13 @@ namespace ConcernsCaseWork.Services.Nti
 			return NtiMappers.ToServiceModel(dto);
 		}
 
-		public async Task<NtiModel> GetNtiById(long ntiId)
+		public async Task<NtiModel> GetNtiByIdAsync(long ntiId)
 		{
 			var dto = await _ntiCachedService.GetNtiAsync(ntiId);
 			return NtiMappers.ToServiceModel(dto);
 		}
 
-		public async Task<ICollection<NtiModel>> GetNtisForCase(long caseUrn)
+		public async Task<ICollection<NtiModel>> GetNtisForCaseAsync(long caseUrn)
 		{
 			var ntiDtos = await _ntiCachedService.GetNtisForCaseAsync(caseUrn);
 			return ntiDtos.Select(dto => NtiMappers.ToServiceModel(dto)).ToArray();
@@ -55,7 +55,7 @@ namespace ConcernsCaseWork.Services.Nti
 			return NtiMappers.ToServiceModel(patchedDto);
 		}
 
-		public async Task StoreNti(NtiModel ntiModel, string continuationId)
+		public async Task StoreNtiAsync(NtiModel ntiModel, string continuationId)
 		{
 			if (string.IsNullOrWhiteSpace(continuationId))
 			{

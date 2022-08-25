@@ -61,6 +61,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			_logger = logger;
 		}
 
+
 		public async Task<IActionResult> OnGetAsync()
 		{
 			_logger.LogInformation("Case::Action::NTI::AddPageModel::OnGetAsync");
@@ -156,7 +157,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				ContinuationId = $"{CaseUrn}_{Guid.NewGuid()}";
 			}
 
-			await _ntiModelService.StoreNti(ntiModel, ContinuationId);
+			await _ntiModelService.StoreNtiAsync(ntiModel, ContinuationId);
 
 			TempData.Keep(nameof(ContinuationId));
 			if (NtiId == null)
@@ -183,7 +184,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			}
 			else if (NtiId.HasValue)
 			{
-				nti = await _ntiModelService.GetNtiById(NtiId.Value);
+				nti = await _ntiModelService.GetNtiByIdAsync(NtiId.Value);
 				nti = PopulateNtiFromRequest(nti);
 			}
 			else
@@ -213,7 +214,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		private void ExtractWarningLetterIdFromRoute()
 		{
-			NtiId = TryGetRouteValueInt64("warningLetterId", out var warningLetterId) ? (long?)warningLetterId : null;
+			NtiId = TryGetRouteValueInt64("NtiId", out var ntiId) ? (long?)ntiId : null;
 		}
 
 		private async Task<IEnumerable<RadioItem>> GetStatuses()
@@ -299,7 +300,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		private async Task LoadWarningLetterFromDB()
 		{
-			Nti  = await _ntiModelService.GetNtiById(NtiId.Value);
+			Nti  = await _ntiModelService.GetNtiByIdAsync(NtiId.Value);
 		}
 
 	}

@@ -3,14 +3,12 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Nti;
-using ConcernsCaseWork.Services.NtiWarningLetter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Nti;
 using Service.Redis.NtiWarningLetter;
 using Service.TRAMS.Nti;
-using Service.TRAMS.NtiWarningLetter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +24,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		private readonly INtiWarningLetterReasonsCachedService _ntiWarningLetterReasonsCachedService;
 		private readonly INtiModelService _ntiModelService;
 		private readonly INtiConditionsCachedService _ntiConditionsCachedService;
-		private readonly ILogger _logger;
+		private readonly ILogger<AddConditionsPageModel> _logger;
 
 		[TempData]
 		public string ContinuationId { get; set; }
@@ -44,7 +42,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			INtiWarningLetterReasonsCachedService ntiWarningLetterReasonsCachedService,
 			INtiModelService ntiModelService,
 			INtiConditionsCachedService ntiConditionsCachedService,
-			ILogger<NtiWarningLetterConditionModel> logger)
+			ILogger<AddConditionsPageModel> logger)
 		{
 			_ntiWarningLetterStatusesCachedService = ntiWarningLetterStatusesCachedService;
 			_ntiWarningLetterReasonsCachedService = ntiWarningLetterReasonsCachedService;
@@ -96,7 +94,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				var conditions = Request.Form["condition"];
 				var model = await GetUpToDateModel();
 				model.Conditions = conditions.Select(s => NtiMappers.ToServiceModel(AllConditions.Single(c => c.Id == int.Parse(s)))).ToArray();
-				await _ntiModelService.StoreNti(model, ContinuationId);
+				await _ntiModelService.StoreNtiAsync(model, ContinuationId);
 
 				IsReturningFromConditions = true;
 				TempData.Keep(nameof(ContinuationId));
@@ -165,9 +163,5 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				Text = r.Name
 			});
 		}
-
-
-
-
 	}
 }

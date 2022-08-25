@@ -12,8 +12,10 @@ using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Nti;
+using Service.TRAMS.Nti;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
@@ -41,18 +43,28 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		}
 
 		[Test]
-		public async Task WhenOnGetAsync_ReturnsPageModel()
+		public async Task WhenOnGetAsync_PopulatesPageModel()
 		{
 			// arrange
+			var caseUrn = 191L;
+
 			var mockNtiModelService = new Mock<INtiModelService>();
 			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
 			var mockNtiStatusesService = new Mock<INtiStatusesCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
+			mockNtiStatusesService.Setup(svc => svc.GetAllStatusesAsync()).ReturnsAsync(new NtiStatusDto[] {
+				new NtiStatusDto { Id = 1, Name = "Status 1" }
+			});
+
+			mockNtiReasonsService.Setup(svc => svc.GetAllReasonsAsync()).ReturnsAsync(new NtiReasonDto[] {
+				new NtiReasonDto { Id = 1, Name = "Reason 1" }
+			});
+
 			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
+			routeData.Add("urn", caseUrn);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -66,6 +78,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
+
+			Assert.That(pageModel, Is.Not.Null);
+			Assert.That(pageModel.CaseUrn, Is.EqualTo(caseUrn));
+			Assert.That(pageModel.Statuses.Single().Text, Is.EqualTo("Status 1"));
+			Assert.That(pageModel.Reasons.Single().Text, Is.EqualTo("Reason 1"));
+			Assert.That(pageModel.CancelLinkUrl, Is.Not.Null);
 		}
 
 		[Test]

@@ -95,9 +95,12 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(dbModel, Is.Not.Null);
 			Assert.That(dbModel.CaseUrn, Is.EqualTo(testData.CaseUrn));
 			Assert.That(dbModel.Id, Is.EqualTo(testData.Id));
-
 			Assert.That(dbModel.StatusId, Is.Not.Null);
 			Assert.That(dbModel.StatusId, Is.EqualTo(testData.Status.Key));
+			Assert.That(dbModel.Notes, Is.EqualTo(testData.Notes));
+			Assert.That(dbModel.ReasonsMapping.First(), Is.EqualTo(testData.Reasons.First().Key));
+			Assert.That(dbModel.DateLetterSent, Is.EqualTo(testData.SentDate));
+			Assert.That(dbModel.UpdatedAt, Is.EqualTo(testData.UpdatedAt));
 		}
 
 		[Test]
@@ -107,9 +110,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var dto = new NtiReasonDto
 			{
 				Id = 1,
-				Name = "Name Name",
-				CreatedAt = new DateTime(2022, 02, 05),
-				UpdatedAt = new DateTime(2022, 02, 05)
+				Name = "Name Name"
 			};
 
 			// act
@@ -128,9 +129,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var dto = new NtiStatusDto
 			{
 				Id = 1,
-				Name = "Name Name",
-				CreatedAt = new DateTime(2022, 02, 05),
-				UpdatedAt = new DateTime(2022, 02, 05)
+				Name = "Name Name"
 			};
 
 			// act
