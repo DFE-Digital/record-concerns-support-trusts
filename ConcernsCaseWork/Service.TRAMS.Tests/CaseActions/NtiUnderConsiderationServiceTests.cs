@@ -19,7 +19,7 @@ using Service.TRAMS.NtiUnderConsideration;
 
 namespace Service.TRAMS.Tests.CaseActions
 {
-	public class NtiServiceTests
+	public class NtiUnderConsiderationServiceTests
 	{
 		[Test]
 		public void GetNtisByCaseId_Returns_ListOfNtiDto()
