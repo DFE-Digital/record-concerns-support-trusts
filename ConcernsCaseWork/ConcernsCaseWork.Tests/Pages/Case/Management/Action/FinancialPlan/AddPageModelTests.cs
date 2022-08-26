@@ -97,6 +97,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
+			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
+			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
+			
 			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
@@ -127,6 +130,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
+			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
+			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
+			
 			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
@@ -155,7 +161,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
+			
+			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
+			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
+			
 			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
@@ -184,7 +193,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
-
+			
+			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
+			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
+			
 			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;

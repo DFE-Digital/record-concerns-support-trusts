@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ITeamsModelService = ConcernsCaseWork.Services.Teams.ITeamsModelService;
 
 namespace ConcernsCaseWork.Tests.Pages
 {
@@ -34,23 +35,27 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
 
 			var roles = RoleFactory.BuildListRoleEnum();
-			var defaultUsers = new[]{ "user1", "user2" };
+			var defaultUsers = new[] { "user1", "user2" };
 			var roleClaimWrapper = new RoleClaimWrapper { Roles = roles, Users = defaultUsers };
-			
+
 			mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
 				.ReturnsAsync(roleClaimWrapper);
 			mockCaseModelService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
 				.ReturnsAsync(homeModels);
-			
-			var homePageModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object);
-			
+
+			var mockTeamService = new Mock<ITeamsModelService>();
+			mockTeamService.Setup(x => x.GetCaseworkTeam(It.IsAny<string>()))
+				.ReturnsAsync(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel("random.user", Array.Empty<string>()));
+
+			var homePageModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object, mockTeamService.Object);
+
 			// act
 			await homePageModel.OnGetAsync();
-			
+
 			// assert
 			Assert.IsAssignableFrom<List<HomeModel>>(homePageModel.CasesActive);
 			Assert.That(homePageModel.CasesActive.Count, Is.EqualTo(homeModels.Count));
-			
+
 			foreach (var expected in homePageModel.CasesActive)
 			{
 				foreach (var actual in homeModels.Where(actual => expected.CaseUrn.Equals(actual.CaseUrn)))
@@ -68,7 +73,7 @@ namespace ConcernsCaseWork.Tests.Pages
 
 					var expectedRecordsModel = expected.RecordsModel;
 					var actualRecordsModel = actual.RecordsModel;
-					
+
 					for (var index = 0; index < expectedRecordsModel.Count; ++index)
 					{
 						Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(actualRecordsModel.ElementAt(index).Urn));
@@ -76,7 +81,7 @@ namespace ConcernsCaseWork.Tests.Pages
 						Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingUrn));
 						Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusUrn));
 						Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeUrn));
-						
+
 						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
 						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
 						Assert.NotNull(expectedRecordRatingModel);
@@ -86,7 +91,7 @@ namespace ConcernsCaseWork.Tests.Pages
 						Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
 						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
 						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
-						
+
 						var expectedRecordTypeModel = expectedRecordsModel.ElementAt(index).TypeModel;
 						var actualRecordTypeModel = actualRecordsModel.ElementAt(index).TypeModel;
 						Assert.NotNull(expectedRecordTypeModel);
@@ -105,7 +110,7 @@ namespace ConcernsCaseWork.Tests.Pages
 					}
 				}
 			}
-			
+
 			// Verify ILogger
 			mockLogger.Verify(
 				m => m.Log(
@@ -115,8 +120,8 @@ namespace ConcernsCaseWork.Tests.Pages
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
-			
-			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Once);
+
+			mockTeamService.Verify(x => x.GetCaseworkTeam(It.IsAny<string>()), Times.Once);
 			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()), Times.Once);
 			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()), Times.Exactly(1));
 		}
@@ -129,26 +134,31 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockRbacManager = new Mock<IRbacManager>();
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
 			var emptyList = new List<HomeModel>();
-			
+
 			var roles = RoleFactory.BuildListUserRoleEnum();
-			var defaultUsers = new[]{ "user1", "user2" };
+			var defaultUsers = new[] { "user1", "user2" };
 			var roleClaimWrapper = new RoleClaimWrapper { Roles = roles, Users = defaultUsers };
-			
+
 			mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
 				.ReturnsAsync(roleClaimWrapper);
 			mockCaseModelService.Setup(model => model.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()))
 				.ReturnsAsync(emptyList);
 			mockCaseModelService.Setup(model => model.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
 				.ReturnsAsync(emptyList);
-			
+
+			var mockTeamService = new Mock<ITeamsModelService>();
+			mockTeamService.Setup(x => x.GetCaseworkTeam(It.IsAny<string>()))
+				.ReturnsAsync(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel("random.user", Array.Empty<string>()));
+
 			// act
-			var indexModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object);
+			var indexModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object, mockTeamService.Object);
 			await indexModel.OnGetAsync();
-			
+
 			// assert
 			Assert.IsAssignableFrom<List<HomeModel>>(indexModel.CasesActive);
 			Assert.That(indexModel.CasesActive.Count, Is.Zero);
-			
+
+			// Not sure that these verifications should take place. it leads to a brittle test.
 			// Verify ILogger
 			mockLogger.Verify(
 				m => m.Log(
@@ -158,17 +168,16 @@ namespace ConcernsCaseWork.Tests.Pages
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
-			
-			mockRbacManager.Verify(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()), Times.Once);
-			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()), Times.Never);
-			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()), Times.Exactly(1));
+
+			mockTeamService.Verify(x => x.GetCaseworkTeam(It.IsAny<string>()), Times.Once);
+			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()), Times.Once);
 		}
-		
-		private static HomePageModel SetupHomeModel(ICaseModelService mockCaseModelService, IRbacManager mockRbacManager, ILogger<HomePageModel> mockLogger, bool isAuthenticated = false)
+
+		private static HomePageModel SetupHomeModel(ICaseModelService mockCaseModelService, IRbacManager mockRbacManager, ILogger<HomePageModel> mockLogger, ITeamsModelService mockTeamService, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
-			
-			return new HomePageModel(mockCaseModelService, mockRbacManager, mockLogger)
+
+			return new HomePageModel(mockCaseModelService, mockRbacManager, mockLogger, mockTeamService)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

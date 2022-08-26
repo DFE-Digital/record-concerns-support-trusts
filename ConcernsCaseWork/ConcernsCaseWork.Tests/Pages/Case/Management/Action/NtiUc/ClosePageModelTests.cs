@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration;
+﻿using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
@@ -10,10 +11,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.FinancialPlan;
 using Service.Redis.NtiUnderConsideration;
+using Service.TRAMS.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
@@ -22,20 +24,105 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 	public class ClosePageModelTests
 	{
 		[Test]
-		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
+		[TestCase("1", "")]
+		[TestCase("", "2")]
+		[TestCase("", "")]
+		public async Task WhenOnGetAsync_EmptyRouteData_ThrowsException_ReturnPage(string urn, string ntiUcId)
 		{
 			// arrange
-			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<INtiUnderConsiderationStatusesCachedService> mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
-			Mock<ILogger<ClosePageModel>> mockLogger = new Mock<ILogger<ClosePageModel>>();
+			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
+			var mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
+			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+			var pageModel = SetupClosePageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+			
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", urn);
+			routeData.Add("ntiUCId", ntiUcId);
 
 			// act
-			await pageModel.OnGetAsync();
+			var pageResponse = await pageModel.OnGetAsync();
 
 			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+
+			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.NtiModel, Is.Null);
+			Assert.That(pageModel.NTIStatuses, Is.Null);
+		}
+		
+		[Test]
+		public async Task WhenOnGetAsync_MissingRouteData_ThrowsException_ReturnPage()
+		{
+			// arrange
+			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
+			var mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
+			var mockLogger = new Mock<ILogger<ClosePageModel>>();
+
+			var pageModel = SetupClosePageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+
+			// act
+			var pageResponse = await pageModel.OnGetAsync();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+
+			Assert.That(pageModel.TempData, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.NtiModel, Is.Null);
+			Assert.That(pageModel.NTIStatuses, Is.Null);
+		}
+		
+		[Test]
+		public async Task WhenOnPostAsync_MissingRouteData_ThrowsException_ReturnsPage()
+		{
+			// arrange
+			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
+			var mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
+			var mockLogger = new Mock<ILogger<ClosePageModel>>();
+
+			var pageModel = SetupClosePageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+
+			// act
+			var pageResponse = await pageModel.OnPostAsync();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+
+			Assert.That(pageModel.TempData, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.NtiModel, Is.Null);
+			Assert.That(pageModel.NTIStatuses, Is.Null);
+		}
+		
+		[Test]
+		[TestCase("1", "")]
+		[TestCase("", "2")]
+		[TestCase("", "")]
+		public async Task WhenOnPostAsync_EmptyRouteData_ThrowsException_ReturnPage(string urn, string ntiUcId)
+		{
+			// arrange
+			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
+			var mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
+			var mockLogger = new Mock<ILogger<ClosePageModel>>();
+
+			var pageModel = SetupClosePageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+			
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", urn);
+			routeData.Add("ntiUCId", ntiUcId);
+
+			// act
+			var pageResponse = await pageModel.OnPostAsync();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+
+			Assert.That(pageModel.TempData, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.NtiModel, Is.Null);
+			Assert.That(pageModel.NTIStatuses, Is.Null);
 		}
 
 		[Test]
@@ -46,15 +133,48 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			Mock<INtiUnderConsiderationStatusesCachedService> mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
 			Mock<ILogger<ClosePageModel>> mockLogger = new Mock<ILogger<ClosePageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+			var caseUrn = 3;
+			var ntiId = 4;
+
+			var validStatuses = GetListValidStatuses();
+			var pageModel = SetupClosePageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+			var ntiModel = SetupOpenNtiUnderConsiderationModel(ntiId, caseUrn);
+
+			mockNtiStatusesCachedService
+				.Setup(fp => fp.GetAllStatuses())
+				.ReturnsAsync(validStatuses);
+				
+			mockNtiModelService
+				.Setup(fp => fp.GetNtiUnderConsideration(ntiId))
+				.ReturnsAsync(ntiModel);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
+			routeData.Add("urn", caseUrn);
+			routeData.Add("ntiUCId", ntiId);
+
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "status", validStatuses.First().Id.ToString()},
+					{ "nti-notes", "Some notes"}
+				});
 
 			// act
-			await pageModel.OnGetAsync();
+			var pageResponse = await pageModel.OnGetAsync();
 
 			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			var page = pageResponse as PageResult;
+
+			Assert.That(page, Is.Not.Null);
+			Assert.That(pageModel.TempData, Is.Empty);
+			
+			Assert.That(pageModel.NtiModel, Is.EqualTo(ntiModel));
+			
+			Assert.That(pageModel.NTIStatuses.Distinct().Count(), Is.EqualTo(validStatuses.Count));
+			Assert.Contains(validStatuses.First().Id.ToString(), pageModel.NTIStatuses.Select(s => s.Id).ToList());
+			Assert.Contains(validStatuses.Last().Id.ToString(), pageModel.NTIStatuses.Select(s => s.Id).ToList());
+			
 			mockLogger.Verify(
 				m => m.Log(
 					LogLevel.Information,
@@ -64,16 +184,39 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 		}
-
+		
 		[Test]
-		public async Task WhenOnPostAsync_MissingRouteData_ThrowsException_ReturnsPage()
+		public async Task WhenOnPostAsync_WithEmptyStatus_ReturnsError()
 		{
 			// arrange
-			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<INtiUnderConsiderationStatusesCachedService> mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
-			Mock<ILogger<ClosePageModel>> mockLogger = new Mock<ILogger<ClosePageModel>>();
+			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
+			var mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
+			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+			var caseUrn = 3;
+			var ntiId = 4;
+
+			var validStatuses = GetListValidStatuses();
+			var pageModel = SetupClosePageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+			var ntiModel = SetupOpenNtiUnderConsiderationModel(ntiId, caseUrn);
+
+			mockNtiStatusesCachedService
+				.Setup(fp => fp.GetAllStatuses())
+				.ReturnsAsync(validStatuses);
+				
+			mockNtiModelService
+				.Setup(fp => fp.GetNtiUnderConsideration(ntiId))
+				.ReturnsAsync(ntiModel);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+			routeData.Add("ntiUCId", ntiId);
+
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "status", ""}
+				});
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -84,18 +227,53 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["NTI-UC.Message"], Is.EqualTo("Please select a reason for closing NTI under consideration"));
+			
+			Assert.That(pageModel.NtiModel, Is.EqualTo(ntiModel));
+			
+			Assert.That(pageModel.NTIStatuses.Distinct().Count(), Is.EqualTo(validStatuses.Count));
+			Assert.Contains(validStatuses.First().Id.ToString(), pageModel.NTIStatuses.Select(s => s.Id).ToList());
+			Assert.Contains(validStatuses.Last().Id.ToString(), pageModel.NTIStatuses.Select(s => s.Id).ToList());
+				
+			mockNtiModelService.Verify(f => f.PatchNtiUnderConsideration(It.IsAny<NtiUnderConsiderationModel>()), Times.Never);
 		}
-
+		
 		[Test]
-		public async Task WhenOnPostAsync_ValidatesNotesLength_ThrowsException_ReturnsPage()
+		[TestCase(2001)]
+		[TestCase(2050)]
+		public async Task WhenOnPostAsync_WithNotesLengthTooLong_ReturnsError(int notesLength)
 		{
 			// arrange
-			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<INtiUnderConsiderationStatusesCachedService> mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
-			Mock<ILogger<ClosePageModel>> mockLogger = new Mock<ILogger<ClosePageModel>>();
+			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
+			var mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
+			var mockLogger = new Mock<ILogger<ClosePageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+			var caseUrn = 3;
+			var ntiId = 4;
+			var notes = new string('*', notesLength);
+
+			var validStatuses = GetListValidStatuses();
+			var pageModel = SetupClosePageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+			var ntiModel = SetupOpenNtiUnderConsiderationModel(ntiId, caseUrn);
+
+			mockNtiStatusesCachedService
+				.Setup(fp => fp.GetAllStatuses())
+				.ReturnsAsync(validStatuses);
+				
+			mockNtiModelService
+				.Setup(fp => fp.GetNtiUnderConsideration(ntiId))
+				.ReturnsAsync(ntiModel);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+			routeData.Add("ntiUCId", ntiId);
+
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "status", validStatuses.First().Id.ToString()},
+					{ "nti-notes", notes}
+				});
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -106,10 +284,62 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["NTI-UC.Message"], Is.EqualTo("Notes provided exceed maximum allowed length (2000 characters)."));
+			
+			Assert.That(pageModel.NtiModel, Is.EqualTo(ntiModel));
+			
+			Assert.That(pageModel.NTIStatuses.Distinct().Count(), Is.EqualTo(validStatuses.Count));
+			Assert.Contains(validStatuses.First().Id.ToString(), pageModel.NTIStatuses.Select(s => s.Id).ToList());
+			Assert.Contains(validStatuses.Last().Id.ToString(), pageModel.NTIStatuses.Select(s => s.Id).ToList());
+				
+			mockNtiModelService.Verify(f => f.PatchNtiUnderConsideration(It.IsAny<NtiUnderConsiderationModel>()), Times.Never);
+		}
+		
+		[Test]
+		public async Task WhenOnPostAsync_WithEmptyNotes_DoesNotError()
+		{
+			// arrange
+			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
+			var mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
+			var mockLogger = new Mock<ILogger<ClosePageModel>>();
+
+			var caseUrn = 3;
+			var ntiId = 4;
+			var notes = string.Empty;
+
+			var validStatuses = GetListValidStatuses();
+			var pageModel = SetupClosePageModel(mockNtiModelService, mockNtiStatusesCachedService, mockLogger);
+			var ntiModel = SetupOpenNtiUnderConsiderationModel(ntiId, caseUrn);
+
+			mockNtiStatusesCachedService
+				.Setup(fp => fp.GetAllStatuses())
+				.ReturnsAsync(validStatuses);
+				
+			mockNtiModelService
+				.Setup(fp => fp.GetNtiUnderConsideration(ntiId))
+				.ReturnsAsync(ntiModel);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+			routeData.Add("ntiUCId", ntiId);
+
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "status", validStatuses.First().Id.ToString()},
+					{ "nti-notes", notes}
+				});
+
+			// act
+			var pageResponse = await pageModel.OnPostAsync();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
+			Assert.That(pageResponse, Is.Not.Null);
+			Assert.That((pageResponse as RedirectResult)?.Url, Is.EqualTo($"/case/{caseUrn}/management"));
 		}
 
-		private static ClosePageModel SetupAddPageModel(
+		private static ClosePageModel SetupClosePageModel(
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService,
 			Mock<INtiUnderConsiderationStatusesCachedService> mockNtiStatusesCachedService,
 			Mock<ILogger<ClosePageModel>> mockLogger,
@@ -125,6 +355,23 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
 		}
+
+		private static NtiUnderConsiderationModel SetupOpenNtiUnderConsiderationModel(int id, long caseUrn)
+			=> new() { Id = id, CaseUrn = caseUrn };
+
+		private static List<NtiUnderConsiderationStatusDto> GetListValidStatuses() => new List<NtiUnderConsiderationStatusDto>
+		{
+			new ()
+			{
+				Id = 1,
+				Name = "Some status"
+			},
+			new ()
+			{
+				Id = 2,
+				Name = "Another status"
+			}
+		};
 	}
 
 
