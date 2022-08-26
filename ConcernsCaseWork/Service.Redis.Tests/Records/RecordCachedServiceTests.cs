@@ -228,7 +228,7 @@ namespace Service.Redis.Tests.Records
 				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
 			
 			// act
-			var actualRecordsDto = await recordRecordCachedService.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>());
+			var actualRecordsDto = await recordRecordCachedService.GetRecordsByCaseUrn("a.caseworker", 1);
 
 			// assert
 			Assert.That(actualRecordsDto, Is.Not.Null);

@@ -50,6 +50,9 @@ using Service.TRAMS.MeansOfReferral;
 using Service.TRAMS.Nti;
 using Service.Redis.Nti;
 using ConcernsCaseWork.Services.Nti;
+using ConcernsCaseWork.Services.Teams;
+using Service.Redis.Teams;
+using Service.TRAMS.Teams;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -131,6 +134,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiWarningLetterModelService, NtiWarningLetterModelService>();
 			services.AddSingleton<IMeansOfReferralModelService, MeansOfReferralModelService>();
 			services.AddSingleton<INtiModelService, NtiModelService>();
+			services.AddSingleton<ITeamsModelService, TeamsModelService>();
 
 			// Trams api services
 			services.AddSingleton<ICaseService, CaseService>();
@@ -158,6 +162,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<INtiWarningLetterService, NtiWarningLetterService>();
 			services.AddSingleton<INtiWarningLetterConditionsService, NtiWarningLetterConditionsService>();
 			services.AddSingleton<INtiService, NtiService>();
+			services.AddSingleton<ITeamsService, TeamsService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
@@ -181,6 +186,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IMeansOfReferralCachedService, MeansOfReferralCachedService>();
 			services.AddSingleton<INtiWarningLetterConditionsCachedService, NtiWarningLetterConditionsCachedServices>();
 			services.AddSingleton<INtiCachedService, NtiCachedService>();
+			services.AddSingleton<ITeamsCachedService, TeamsCachedService>();
 
 			// AD Integration
 			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
@@ -189,6 +195,7 @@ namespace ConcernsCaseWork.Extensions
 
 			// Redis Sequence
 			services.AddSingleton<ISequenceCachedService, SequenceCachedService>();
+
 		}
 
 		public static void AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)
