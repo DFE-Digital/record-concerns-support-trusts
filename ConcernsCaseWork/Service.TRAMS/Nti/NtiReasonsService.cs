@@ -1,31 +1,57 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Service.TRAMS.Base;
+using Service.TRAMS.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.Nti
 {
-	public class NtiReasonsService : INtiReasonsService
+	public class NtiReasonsService : AbstractService, INtiReasonsService
 	{
 		private readonly ILogger<NtiReasonsService> _logger;
 
-		public NtiReasonsService(ILogger<NtiReasonsService> logger)
+		public NtiReasonsService(IHttpClientFactory httpClientFactory, 
+			ILogger<NtiReasonsService> logger) : base(httpClientFactory)
 		{
 			_logger = logger;
 		}
 
 		public async Task<ICollection<NtiReasonDto>> GetNtiReasonsAsync()
 		{
-			var tempData = Enumerable.Range(1, 5).Select(i => new NtiReasonDto
+			try
 			{
-				Id = i,
-				CreatedAt = DateTime.Now,
-				Name = $"Reason {i}"
-			});
+				_logger.LogInformation($"{nameof(NtiReasonsService)}::{LoggingHelpers.EchoCallerName()}");
 
-			return await Task.FromResult(tempData.ToArray());
+				// Create a request
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/case-actions/notice-to-improve/all-reasons");
+
+				// Create http client
+				var client = ClientFactory.CreateClient(HttpClientName);
+
+				// Execute request
+				var response = await client.SendAsync(request);
+
+				// Check status code
+				response.EnsureSuccessStatusCode();
+
+				// Read response content
+				var content = await response.Content.ReadAsStringAsync();
+
+				// Deserialize content to POCO
+				var apiWrapperRatingsDto = JsonConvert.DeserializeObject<ApiListWrapper<NtiReasonDto>>(content);
+
+				return apiWrapperRatingsDto.Data;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, $"{nameof(NtiReasonsService)}::{LoggingHelpers.EchoCallerName()}");
+				throw;
+			}
 		}
 	}
 }

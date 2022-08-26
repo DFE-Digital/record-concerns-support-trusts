@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,7 +12,11 @@ namespace Service.TRAMS.Nti
 		public DateTime? DateLetterSent { get; set; }
 		public string Notes { get; set; }
 		public int? StatusId { get; set; }
+
+		[JsonProperty("NoticeToImproveReasonsMapping")]
 		public ICollection<int> ReasonsMapping { get; set; }
+
+		[JsonProperty("NoticeToImproveConditionsMapping")]
 		public ICollection<int> ConditionsMapping { get; set; }
 		public DateTime CreatedAt { get; set; }
 		public DateTime? UpdatedAt { get; set; }

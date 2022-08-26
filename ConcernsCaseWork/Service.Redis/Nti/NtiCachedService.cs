@@ -102,7 +102,7 @@ namespace Service.Redis.Nti
 			return $"{High_Level_Cache_Key}:Nti:Id:{ntiId}";
 		}
 
-		private string CreateCacheKeyForNtisForCase(long caseUrn)
+		private string CreateCacheKeyForNtisForCase(long caseUrn) 
 		{
 			return $"{High_Level_Cache_Key}:NtiForCase:CaseUrn:{caseUrn}";
 		}

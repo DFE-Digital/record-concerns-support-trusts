@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Service.TRAMS.Base;
+using Service.TRAMS.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,28 +23,35 @@ namespace Service.TRAMS.Nti
 
 		public async Task<ICollection<NtiConditionDto>> GetAllConditionsAsync()
 		{
-			var type1 = new NtiConditionTypeDto
+			try
 			{
-				Id = 1,
-				DisplayOrder = 1,
-				Name = "Type 1"
-			};
+				_logger.LogInformation($"{nameof(NtiConditionsService)}::{LoggingHelpers.EchoCallerName()}");
 
-			var type2 = new NtiConditionTypeDto
+				// Create a request
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/case-actions/notice-to-improve/all-conditions");
+
+				// Create http client
+				var client = ClientFactory.CreateClient(HttpClientName);
+
+				// Execute request
+				var response = await client.SendAsync(request);
+
+				// Check status code
+				response.EnsureSuccessStatusCode();
+
+				// Read response content
+				var content = await response.Content.ReadAsStringAsync();
+
+				// Deserialize content to POCO
+				var apiWrapperRatingsDto = JsonConvert.DeserializeObject<ApiListWrapper<NtiConditionDto>>(content);
+
+				return apiWrapperRatingsDto.Data;
+			}
+			catch (Exception ex)
 			{
-				Id = 2,
-				DisplayOrder = 2,
-				Name = "Type 2"
-			};
-
-			var tmpData = Enumerable.Range(1, 8).Select(x => new NtiConditionDto
-			{
-				Id = x,
-				Name = $"Condition {x}",
-				Type = x % 2 == 0 ? type2 : type1,
-			}).ToArray();
-
-			return await Task.FromResult(tmpData);
+				_logger.LogError(ex, $"{nameof(NtiConditionsService)}::{LoggingHelpers.EchoCallerName()}");
+				throw;
+			}
 		}
 	}
 }
