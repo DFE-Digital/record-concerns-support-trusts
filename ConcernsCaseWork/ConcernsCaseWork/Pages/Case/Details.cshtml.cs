@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
+using Service.Redis.Users;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ITrustModelService _trustModelService;
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<DetailsPageModel> _logger;
-		private readonly ICachedService _cachedService;
+		private readonly IUserStateCachedService _userStateCache;
 		
 		public CreateCaseModel CreateCaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
@@ -28,12 +29,12 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public DetailsPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
-			ICachedService cachedService, 
+			IUserStateCachedService userStateCache, 
 			ILogger<DetailsPageModel> logger)
 		{
 			_trustModelService = trustModelService;
 			_caseModelService = caseModelService;
-			_cachedService = cachedService;
+			_userStateCache = userStateCache;
 			_logger = logger;
 		}
 		
@@ -112,7 +113,7 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		private async Task<UserState> GetUserState()
 		{
-			var userState = await _cachedService.GetData<UserState>(User.Identity.Name);
+			var userState = await _userStateCache.GetData(User.Identity?.Name);
 			if (userState is null)
 				throw new Exception("Cache CaseStateData is null");
 			

@@ -10,6 +10,7 @@ using Service.Redis.Types;
 using Service.Redis.NtiWarningLetter;
 using System.Threading.Tasks;
 using Service.Redis.NtiUnderConsideration;
+using Service.Redis.Users;
 
 namespace ConcernsCaseWork.Pages
 {
@@ -26,9 +27,10 @@ namespace ConcernsCaseWork.Pages
 		private readonly INtiWarningLetterReasonsCachedService _ntiWarningLetterReasonCachedService; 
 		private readonly INtiWarningLetterStatusesCachedService _ntiWarningLetterStatusesCachedService; 
 		private readonly ILogger<ClearDataPageModel> _logger;
-		private readonly ICachedService _cachedService;
+		private readonly IUserStateCachedService _userStateCachedService;
 		
-		public ClearDataPageModel(ICachedService cachedService, 
+		public ClearDataPageModel(
+			IUserStateCachedService userStateCachedService, 
 			ITypeCachedService typeCachedService, 
 			IStatusCachedService statusCachedService, 
 			IRatingCachedService ratingCachedService,
@@ -47,7 +49,7 @@ namespace ConcernsCaseWork.Pages
 			_ntiUnderConsiderationReasonsCachedService = ntiUnderConsiderationReasonsCachedService;
 			_ntiWarningLetterReasonCachedService = ntiWarningLetterReasonCachedService;
 			_ntiWarningLetterStatusesCachedService = ntiWarningLetterStatusesCachedService;
-			_cachedService = cachedService;
+			_userStateCachedService = userStateCachedService;
 			_logger = logger;
 		}
 		
@@ -57,7 +59,7 @@ namespace ConcernsCaseWork.Pages
 			
 			if (!HttpContext.User.Identity.IsAuthenticated) return RedirectToPage("home");
 			
-			await _cachedService.ClearData(User.Identity.Name);
+			await _userStateCachedService.ClearData(User.Identity?.Name);
 			await _typeCachedService.ClearData();
 			await _statusCachedService.ClearData();
 			await _ratingCachedService.ClearData();

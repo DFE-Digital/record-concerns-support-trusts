@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Base;
 using Service.Redis.Models;
+using Service.Redis.Users;
 using Service.TRAMS.Trusts;
 using System;
 using System.Net;
@@ -18,15 +18,15 @@ namespace ConcernsCaseWork.Pages.Case
 	public class IndexPageModel : PageModel
 	{
 		private readonly ITrustModelService _trustModelService;
-		private readonly ICachedService _cachedService;
+		private readonly IUserStateCachedService _userStateCache;
 		private readonly ILogger<IndexPageModel> _logger;
 		
 		private const int SearchQueryMinLength = 3;
 		
-		public IndexPageModel(ITrustModelService trustModelService, ICachedService cachedService, ILogger<IndexPageModel> logger)
+		public IndexPageModel(ITrustModelService trustModelService, IUserStateCachedService userStateCache, ILogger<IndexPageModel> logger)
 		{
 			_trustModelService = trustModelService;
-			_cachedService = cachedService;
+			_userStateCache = userStateCache;
 			_logger = logger;
 		}
 		
@@ -64,11 +64,11 @@ namespace ConcernsCaseWork.Pages.Case
 					throw new Exception($"Selected trust is incorrect - {trustUkPrn}");
 				
 				// Store CaseState into cache.
-				var userState = await _cachedService.GetData<UserState>(User.Identity.Name) ?? new UserState();
+				var userState = await _userStateCache.GetData(User.Identity?.Name) ?? new UserState();
 				userState.TrustUkPrn = trustUkPrn;
 				userState.CreateCaseModel = new CreateCaseModel();
 				
-				await _cachedService.StoreData(User.Identity.Name, userState);
+				await _userStateCache.StoreData(User.Identity?.Name, userState);
 
 				return new JsonResult(new { redirectUrl = Url.Page("Concern/Index") });
 			}

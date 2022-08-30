@@ -59,7 +59,7 @@ namespace ConcernsCaseWork.Extensions
 	public static class StartupExtension
 	{
 		private static readonly IRedisMultiplexer RedisMultiplexer = new RedisMultiplexer();
-		public static IRedisMultiplexer Implementation { private get; set; } = RedisMultiplexer;
+		public static IRedisMultiplexer RedisMultiplexerImplementation { private get; set; } = RedisMultiplexer;
 
 		public static void AddRedis(this IServiceCollection services, IConfiguration configuration)
 		{
@@ -77,7 +77,7 @@ namespace ConcernsCaseWork.Extensions
 				Log.Information("Starting Redis Server TLS - {Tls}", tls);
 
 				var redisConfigurationOptions = new ConfigurationOptions { Password = password, EndPoints = { $"{host}:{port}" }, Ssl = tls, AsyncTimeout = 15000 };
-				var redisConnection = Implementation.Connect(redisConfigurationOptions);
+				var redisConnection = RedisMultiplexerImplementation.Connect(redisConfigurationOptions);
 
 				services.AddStackExchangeRedisCache(
 					options =>
@@ -85,7 +85,10 @@ namespace ConcernsCaseWork.Extensions
 						options.ConfigurationOptions = redisConfigurationOptions;
 						options.InstanceName = $"Redis-{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}";
 					});
+
 				services.AddDataProtection().PersistKeysToStackExchangeRedis(redisConnection, "DataProtectionKeys");
+
+				services.AddSingleton<IConnectionMultiplexer>(redisConnection);
 			}
 			catch (Exception ex)
 			{
@@ -121,81 +124,81 @@ namespace ConcernsCaseWork.Extensions
 		public static void AddInternalServices(this IServiceCollection services)
 		{
 			// Web application services
-			services.AddSingleton<ICaseModelService, CaseModelService>();
-			services.AddSingleton<ITrustModelService, TrustModelService>();
-			services.AddSingleton<ITypeModelService, TypeModelService>();
-			services.AddSingleton<ICaseHistoryModelService, CaseHistoryModelService>();
-			services.AddSingleton<IRatingModelService, RatingModelService>();
-			services.AddSingleton<IRecordModelService, RecordModelService>();
-			services.AddSingleton<IFinancialPlanModelService, FinancialPlanModelService>();
-			services.AddSingleton<ISRMAService, SRMAService>();
-			services.AddSingleton<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
-			services.AddSingleton<INtiUnderConsiderationModelService, NtiUnderConsiderationModelService>();
-			services.AddSingleton<INtiWarningLetterModelService, NtiWarningLetterModelService>();
-			services.AddSingleton<IMeansOfReferralModelService, MeansOfReferralModelService>();
-			services.AddSingleton<INtiModelService, NtiModelService>();
-			services.AddSingleton<ITeamsModelService, TeamsModelService>();
+			services.AddScoped<ICaseModelService, CaseModelService>();
+			services.AddScoped<ITrustModelService, TrustModelService>();
+			services.AddScoped<ITypeModelService, TypeModelService>();
+			services.AddScoped<ICaseHistoryModelService, CaseHistoryModelService>();
+			services.AddScoped<IRatingModelService, RatingModelService>();
+			services.AddScoped<IRecordModelService, RecordModelService>();
+			services.AddScoped<IFinancialPlanModelService, FinancialPlanModelService>();
+			services.AddScoped<ISRMAService, SRMAService>();
+			services.AddScoped<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
+			services.AddScoped<INtiUnderConsiderationModelService, NtiUnderConsiderationModelService>();
+			services.AddScoped<INtiWarningLetterModelService, NtiWarningLetterModelService>();
+			services.AddScoped<IMeansOfReferralModelService, MeansOfReferralModelService>();
+			services.AddScoped<INtiModelService, NtiModelService>();
+			services.AddScoped<ITeamsModelService, TeamsModelService>();
 
 			// Trams api services
-			services.AddSingleton<ICaseService, CaseService>();
-			services.AddSingleton<IRatingService, RatingService>();
-			services.AddSingleton<IRecordAcademyService, RecordAcademyService>();
-			services.AddSingleton<IRecordRatingHistoryService, RecordRatingHistoryService>();
-			services.AddSingleton<IRecordService, RecordService>();
-			services.AddSingleton<IRecordSrmaService, RecordSrmaService>();
-			services.AddSingleton<IRecordWhistleblowerService, RecordWhistleblowerService>();
-			services.AddSingleton<IStatusService, StatusService>();
-			services.AddSingleton<ITrustService, TrustService>();
-			services.AddSingleton<ITrustSearchService, TrustSearchService>();
-			services.AddSingleton<ITypeService, TypeService>();
-			services.AddSingleton<ICaseSearchService, CaseSearchService>();
-			services.AddSingleton<ICaseHistoryService, CaseHistoryService>();
-			services.AddSingleton<IFinancialPlanService, FinancialPlanService>();
-			services.AddSingleton<SRMAProvider, SRMAProvider>();
-			services.AddSingleton<IFinancialPlanStatusService, FinancialPlanStatusService>();
-			services.AddSingleton<INtiUnderConsiderationReasonsService, NtiUnderConsiderationReasonsService>();
-			services.AddSingleton<INtiUnderConsiderationStatusesService, NtiUnderConsiderationStatusesService>();
-			services.AddSingleton<INtiUnderConsiderationService, NtiUnderConsiderationService>();
-			services.AddSingleton<IMeansOfReferralService, MeansOfReferralService>();
-			services.AddSingleton<INtiWarningLetterStatusesService, NtiWarningLetterStatusesService>();
-			services.AddSingleton<INtiWarningLetterReasonsService, NtiWarningLetterReasonsService>();
-			services.AddSingleton<INtiWarningLetterService, NtiWarningLetterService>();
-			services.AddSingleton<INtiWarningLetterConditionsService, NtiWarningLetterConditionsService>();
-			services.AddSingleton<INtiService, NtiService>();
-			services.AddSingleton<ITeamsService, TeamsService>();
+			services.AddScoped<ICaseService, CaseService>();
+			services.AddScoped<IRatingService, RatingService>();
+			services.AddScoped<IRecordAcademyService, RecordAcademyService>();
+			services.AddScoped<IRecordRatingHistoryService, RecordRatingHistoryService>();
+			services.AddScoped<IRecordService, RecordService>();
+			services.AddScoped<IRecordSrmaService, RecordSrmaService>();
+			services.AddScoped<IRecordWhistleblowerService, RecordWhistleblowerService>();
+			services.AddScoped<IStatusService, StatusService>();
+			services.AddScoped<ITrustService, TrustService>();
+			services.AddScoped<ITrustSearchService, TrustSearchService>();
+			services.AddScoped<ITypeService, TypeService>();
+			services.AddScoped<ICaseSearchService, CaseSearchService>();
+			services.AddScoped<ICaseHistoryService, CaseHistoryService>();
+			services.AddScoped<IFinancialPlanService, FinancialPlanService>();
+			services.AddScoped<SRMAProvider, SRMAProvider>();
+			services.AddScoped<IFinancialPlanStatusService, FinancialPlanStatusService>();
+			services.AddScoped<INtiUnderConsiderationReasonsService, NtiUnderConsiderationReasonsService>();
+			services.AddScoped<INtiUnderConsiderationStatusesService, NtiUnderConsiderationStatusesService>();
+			services.AddScoped<INtiUnderConsiderationService, NtiUnderConsiderationService>();
+			services.AddScoped<IMeansOfReferralService, MeansOfReferralService>();
+			services.AddScoped<INtiWarningLetterStatusesService, NtiWarningLetterStatusesService>();
+			services.AddScoped<INtiWarningLetterReasonsService, NtiWarningLetterReasonsService>();
+			services.AddScoped<INtiWarningLetterService, NtiWarningLetterService>();
+			services.AddScoped<INtiWarningLetterConditionsService, NtiWarningLetterConditionsService>();
+			services.AddScoped<INtiService, NtiService>();
+			services.AddScoped<ITeamsService, TeamsService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
-			services.AddSingleton<ICachedService, CachedService>();
-			services.AddSingleton<ITypeCachedService, TypeCachedService>();
-			services.AddSingleton<IStatusCachedService, StatusCachedService>();
-			services.AddSingleton<IRatingCachedService, RatingCachedService>();
-			services.AddSingleton<ITrustCachedService, TrustCachedService>();
-			services.AddTransient<ICaseCachedService, CaseCachedService>();
-			services.AddTransient<IRecordCachedService, RecordCachedService>();
-			services.AddSingleton<ICaseHistoryCachedService, CaseHistoryCachedService>();
-			services.AddSingleton<IFinancialPlanCachedService, FinancialPlanCachedService>();
-			services.AddSingleton<IFinancialPlanStatusCachedService, FinancialPlanStatusCachedService>();
-			services.AddSingleton<CachedSRMAProvider, CachedSRMAProvider>();
-			services.AddSingleton<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
-			services.AddSingleton<INtiUnderConsiderationStatusesCachedService, NtiUnderConsiderationStatusesCachedService>();
-			services.AddSingleton<INtiUnderConsiderationCachedService, NtiUnderConsiderationCachedService>();
-			services.AddSingleton<INtiWarningLetterStatusesCachedService, NtiWarningLetterStatusesCachedService>();
-			services.AddSingleton<INtiWarningLetterReasonsCachedService, NtiWarningLetterReasonsCachedService>();
-			services.AddSingleton<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
-			services.AddSingleton<IMeansOfReferralCachedService, MeansOfReferralCachedService>();
-			services.AddSingleton<INtiWarningLetterConditionsCachedService, NtiWarningLetterConditionsCachedServices>();
-			services.AddSingleton<INtiCachedService, NtiCachedService>();
-			services.AddSingleton<ITeamsCachedService, TeamsCachedService>();
+			services.AddScoped<IUserStateCachedService, UserStateCachedService>();
+			services.AddScoped<ITypeCachedService, TypeCachedService>();
+			services.AddScoped<IStatusCachedService, StatusCachedService>();
+			services.AddScoped<IRatingCachedService, RatingCachedService>();
+			services.AddScoped<ITrustCachedService, TrustCachedService>();
+			services.AddScoped<ICaseCachedService, CaseCachedService>();
+			services.AddScoped<IRecordCachedService, RecordCachedService>();
+			services.AddScoped<ICaseHistoryCachedService, CaseHistoryCachedService>();
+			services.AddScoped<IFinancialPlanCachedService, FinancialPlanCachedService>();
+			services.AddScoped<IFinancialPlanStatusCachedService, FinancialPlanStatusCachedService>();
+			services.AddScoped<CachedSRMAProvider, CachedSRMAProvider>();
+			services.AddScoped<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
+			services.AddScoped<INtiUnderConsiderationStatusesCachedService, NtiUnderConsiderationStatusesCachedService>();
+			services.AddScoped<INtiUnderConsiderationCachedService, NtiUnderConsiderationCachedService>();
+			services.AddScoped<INtiWarningLetterStatusesCachedService, NtiWarningLetterStatusesCachedService>();
+			services.AddScoped<INtiWarningLetterReasonsCachedService, NtiWarningLetterReasonsCachedService>();
+			services.AddScoped<INtiWarningLetterCachedService, NtiWarningLetterCachedService>();
+			services.AddScoped<IMeansOfReferralCachedService, MeansOfReferralCachedService>();
+			services.AddScoped<INtiWarningLetterConditionsCachedService, NtiWarningLetterConditionsCachedServices>();
+			services.AddScoped<INtiCachedService, NtiCachedService>();
+			services.AddScoped<ITeamsCachedService, TeamsCachedService>();
+
+			// Redis Sequence
+			// TODO. This class looks very temporary. What's it for and how are we going to replace it.
+			services.AddScoped<ISequenceCachedService, SequenceCachedService>();
 
 			// AD Integration
 			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
-			services.AddSingleton<IUserRoleCachedService, UserRoleCachedService>();
-			services.AddSingleton<IRbacManager, RbacManager>();
-
-			// Redis Sequence
-			services.AddSingleton<ISequenceCachedService, SequenceCachedService>();
-
+			services.AddScoped<IUserRoleCachedService, UserRoleCachedService>();
+			services.AddScoped<IRbacManager, RbacManager>();
 		}
 
 		public static void AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)

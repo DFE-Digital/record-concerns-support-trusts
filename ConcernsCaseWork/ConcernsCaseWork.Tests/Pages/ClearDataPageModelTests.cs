@@ -14,6 +14,7 @@ using Service.Redis.Ratings;
 using Service.Redis.Status;
 using Service.Redis.Trusts;
 using Service.Redis.Types;
+using Service.Redis.Users;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages
@@ -28,7 +29,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockRatingCachedService = new Mock<IRatingCachedService>();
 			var mockTypeCachedService = new Mock<ITypeCachedService>();
-			var mockCachedService = new Mock<ICachedService>();
+			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
 			var mockNTIUnderConsiderationStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
 			var mockNTIUnderConsiderationReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
@@ -37,7 +38,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
 			var pageModel = SetupClearDataModel(mockStatusCachedService.Object, mockRatingCachedService.Object,
-				mockTypeCachedService.Object, mockCachedService.Object, mockTrustCachedService.Object,
+				mockTypeCachedService.Object, mockUserStateCachedService.Object, mockTrustCachedService.Object,
 				mockNTIUnderConsiderationStatusesCachedService.Object, mockNTIUnderConsiderationReasonsCachedService.Object,
 				mockNTIWarningLetterReasonCachedService.Object, mockNTIWarningLetterStatusesCachedService.Object,
 				mockLogger.Object, true);
@@ -55,7 +56,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockStatusCachedService.Verify(c => c.ClearData(), Times.Once);
 			mockRatingCachedService.Verify(c => c.ClearData(), Times.Once);
 			mockTypeCachedService.Verify(c => c.ClearData(), Times.Once);
-			mockCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Once);
+			mockUserStateCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Once);
 			mockTrustCachedService.Verify(c => c.ClearData(), Times.Once);
 		}
 		
@@ -66,7 +67,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockRatingCachedService = new Mock<IRatingCachedService>();
 			var mockTypeCachedService = new Mock<ITypeCachedService>();
-			var mockCachedService = new Mock<ICachedService>();
+			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustCachedService = new Mock<ITrustCachedService>();
 			var mockNTIUnderConsiderationStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
 			var mockNTIUnderConsiderationReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
@@ -76,7 +77,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<ClearDataPageModel>>();
 			
 			var pageModel = SetupClearDataModel(mockStatusCachedService.Object, mockRatingCachedService.Object, 
-				mockTypeCachedService.Object, mockCachedService.Object, mockTrustCachedService.Object,
+				mockTypeCachedService.Object, mockUserStateCachedService.Object, mockTrustCachedService.Object,
 				mockNTIUnderConsiderationStatusesCachedService.Object, mockNTIUnderConsiderationReasonsCachedService.Object,
 				mockNTIWarningLetterReasonCachedService.Object, mockNTIWarningLetterStatusesCachedService.Object,
 				mockLogger.Object);
@@ -94,14 +95,14 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockStatusCachedService.Verify(c => c.ClearData(), Times.Never);
 			mockRatingCachedService.Verify(c => c.ClearData(), Times.Never);
 			mockTypeCachedService.Verify(c => c.ClearData(), Times.Never);
-			mockCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Never);
+			mockUserStateCachedService.Verify(c => c.ClearData(It.IsAny<string>()), Times.Never);
 			mockTrustCachedService.Verify(c => c.ClearData(), Times.Never);
 		}
 		
 		private static ClearDataPageModel SetupClearDataModel(IStatusCachedService mockStatusCachedService, 
 			IRatingCachedService mockRatingCachedService, 
 			ITypeCachedService mockTypeCachedService, 
-			ICachedService mockCachedService,
+			IUserStateCachedService mockCachedService,
 			ITrustCachedService mockTrustCachedService,
 			INtiUnderConsiderationStatusesCachedService mockNTIUnderConsiderationStatusesCachedService,
 			INtiUnderConsiderationReasonsCachedService mockNTIUnderConsiderationReasonsCachedService,

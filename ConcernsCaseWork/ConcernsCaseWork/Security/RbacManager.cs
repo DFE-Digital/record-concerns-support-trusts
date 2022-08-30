@@ -52,12 +52,5 @@ namespace ConcernsCaseWork.Security
 			
 			return roleClaimWrapper;
 		}
-
-		//public async Task UpdateUserRoles(string user, IList<RoleEnum> roles, IList<string> users)
-		//{
-		//	_logger.LogInformation("RbacManager::UpdateUserRoles {User}", user);
-			
-		//	await _userRoleCachedService.UpdateUserRoles(user, roles, users);
-		//}
 	}
 }

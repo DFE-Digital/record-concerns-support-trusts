@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Service.Redis.Users;
 
 namespace ConcernsCaseWork.Pages.Case.Concern
 {
@@ -28,7 +29,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private readonly ILogger<IndexPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly ITypeModelService _typeModelService;
-		private readonly ICachedService _cachedService;
+		private readonly IUserStateCachedService _cachedService;
 		private readonly IMeansOfReferralModelService _meansOfReferralService;
 		
 		public TypeModel TypeModel { get; private set; }
@@ -38,7 +39,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		public IList<MeansOfReferralModel> MeansOfReferralModel { get; private set; }
 
 		public IndexPageModel(ITrustModelService trustModelService, 
-			ICachedService cachedService,
+			IUserStateCachedService cachedService,
 			ITypeModelService typeModelService,
 			IRatingModelService ratingModelService,
 			IMeansOfReferralModelService meansOfReferralService,
@@ -123,7 +124,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				userState.CreateCaseModel.CreateRecordsModel.Add(createRecordModel);
 				
 				// Store case model in cache for the details page
-				await _cachedService.StoreData(User.Identity.Name, userState);
+				await _cachedService.StoreData(User.Identity?.Name, userState);
 				
 				return RedirectToPage("add");
 			}
@@ -143,7 +144,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			{
 				var userState = await GetUserState();
 				userState.CreateCaseModel = new CreateCaseModel();
-				await _cachedService.StoreData(User.Identity.Name, userState);
+				await _cachedService.StoreData(User.Identity?.Name, userState);
 				
 				return Redirect("/");
 			}
@@ -185,7 +186,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		
 		private async Task<UserState> GetUserState()
 		{
-			var userState = await _cachedService.GetData<UserState>(User.Identity.Name);
+			var userState = await _cachedService.GetData(User.Identity.Name);
 			if (userState is null)
 				throw new Exception("Cache CaseStateData is null");
 			
