@@ -1,9 +1,13 @@
-﻿using ConcernsCaseWork.Security;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.MeansOfReferral;
+using ConcernsCaseWork.Services.Nti;
+using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
+using ConcernsCaseWork.Services.Teams;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
 using Microsoft.AspNetCore.DataProtection;
@@ -12,21 +16,31 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using Service.Redis.Base;
+using Service.Redis.CaseActions;
 using Service.Redis.Cases;
 using Service.Redis.Configuration;
 using Service.Redis.FinancialPlan;
+using Service.Redis.MeansOfReferral;
+using Service.Redis.Nti;
+using Service.Redis.NtiUnderConsideration;
+using Service.Redis.NtiWarningLetter;
 using Service.Redis.Ratings;
 using Service.Redis.Records;
 using Service.Redis.Security;
 using Service.Redis.Sequence;
 using Service.Redis.Status;
+using Service.Redis.Teams;
 using Service.Redis.Trusts;
 using Service.Redis.Types;
 using Service.Redis.Users;
-using Service.Redis.CaseActions;
+using Service.TRAMS.CaseActions;
 using Service.TRAMS.Cases;
 using Service.TRAMS.Configuration;
 using Service.TRAMS.FinancialPlan;
+using Service.TRAMS.MeansOfReferral;
+using Service.TRAMS.Nti;
+using Service.TRAMS.NtiUnderConsideration;
+using Service.TRAMS.NtiWarningLetter;
 using Service.TRAMS.Ratings;
 using Service.TRAMS.RecordAcademy;
 using Service.TRAMS.RecordRatingHistory;
@@ -34,32 +48,19 @@ using Service.TRAMS.Records;
 using Service.TRAMS.RecordSrma;
 using Service.TRAMS.RecordWhistleblower;
 using Service.TRAMS.Status;
+using Service.TRAMS.Teams;
 using Service.TRAMS.Trusts;
 using Service.TRAMS.Types;
 using StackExchange.Redis;
 using System;
 using System.Net.Mime;
-using Service.TRAMS.CaseActions;
-using Service.Redis.NtiUnderConsideration;
-using Service.TRAMS.NtiUnderConsideration;
-using ConcernsCaseWork.Services.NtiWarningLetter;
-using Service.Redis.MeansOfReferral;
-using Service.TRAMS.NtiWarningLetter;
-using Service.Redis.NtiWarningLetter;
-using Service.TRAMS.MeansOfReferral;
-using Service.TRAMS.Nti;
-using Service.Redis.Nti;
-using ConcernsCaseWork.Services.Nti;
-using ConcernsCaseWork.Services.Teams;
-using Service.Redis.Teams;
-using Service.TRAMS.Teams;
 
 namespace ConcernsCaseWork.Extensions
 {
 	public static class StartupExtension
 	{
-		private static readonly IRedisMultiplexer RedisMultiplexer = new RedisMultiplexer();
-		public static IRedisMultiplexer RedisMultiplexerImplementation { private get; set; } = RedisMultiplexer;
+		private static readonly IRedisMultiplexer _redisMultiplexer = new RedisMultiplexer();
+		public static IRedisMultiplexer RedisMultiplexerImplementation { private get; set; } = _redisMultiplexer;
 
 		public static void AddRedis(this IServiceCollection services, IConfiguration configuration)
 		{
@@ -199,6 +200,8 @@ namespace ConcernsCaseWork.Extensions
 			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
 			services.AddScoped<IUserRoleCachedService, UserRoleCachedService>();
 			services.AddScoped<IRbacManager, RbacManager>();
+
+			services.AddScoped<ICorrelationContext, CorrelationContext>();
 		}
 
 		public static void AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)
