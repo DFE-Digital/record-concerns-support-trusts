@@ -73,7 +73,7 @@ namespace Service.Redis.Nti
 				throw;
 			}
 
-			if (ntis == null)
+			if (ntis == null || ntis.Count == 0)
 			{
 				ntis = await _ntiService.GetNtisForCaseAsync(caseUrn);
 				if (ntis != null)
