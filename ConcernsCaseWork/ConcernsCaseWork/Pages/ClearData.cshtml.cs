@@ -10,6 +10,8 @@ using Service.Redis.Types;
 using Service.Redis.NtiWarningLetter;
 using System.Threading.Tasks;
 using Service.Redis.NtiUnderConsideration;
+using Service.Redis.Teams;
+using Ardalis.GuardClauses;
 using Service.Redis.Users;
 
 namespace ConcernsCaseWork.Pages
@@ -25,7 +27,8 @@ namespace ConcernsCaseWork.Pages
 		private readonly INtiUnderConsiderationStatusesCachedService _ntiUnderConsiderationStatusesCachedService;
 		private readonly INtiUnderConsiderationReasonsCachedService _ntiUnderConsiderationReasonsCachedService;
 		private readonly INtiWarningLetterReasonsCachedService _ntiWarningLetterReasonCachedService; 
-		private readonly INtiWarningLetterStatusesCachedService _ntiWarningLetterStatusesCachedService; 
+		private readonly INtiWarningLetterStatusesCachedService _ntiWarningLetterStatusesCachedService;
+		private readonly ITeamsCachedService _teamsCachedService;
 		private readonly ILogger<ClearDataPageModel> _logger;
 		private readonly IUserStateCachedService _userStateCachedService;
 		
@@ -39,18 +42,20 @@ namespace ConcernsCaseWork.Pages
 			INtiUnderConsiderationReasonsCachedService ntiUnderConsiderationReasonsCachedService,
 			INtiWarningLetterReasonsCachedService ntiWarningLetterReasonCachedService,
 			INtiWarningLetterStatusesCachedService ntiWarningLetterStatusesCachedService,
+			ITeamsCachedService teamsCachedService,
 			ILogger<ClearDataPageModel> logger)
 		{
-			_statusCachedService = statusCachedService;
-			_ratingCachedService = ratingCachedService;
-			_trustCachedService = trustCachedService;
-			_typeCachedService = typeCachedService;
-			_ntiUnderConsiderationStatusesCachedService = ntiUnderConsiderationStatusesCachedService;
-			_ntiUnderConsiderationReasonsCachedService = ntiUnderConsiderationReasonsCachedService;
-			_ntiWarningLetterReasonCachedService = ntiWarningLetterReasonCachedService;
-			_ntiWarningLetterStatusesCachedService = ntiWarningLetterStatusesCachedService;
-			_userStateCachedService = userStateCachedService;
-			_logger = logger;
+			_userStateCachedService = Guard.Against.Null(userStateCachedService);
+			_statusCachedService = Guard.Against.Null(statusCachedService);
+			_ratingCachedService = Guard.Against.Null(ratingCachedService);
+			_trustCachedService = Guard.Against.Null(trustCachedService);
+			_typeCachedService = Guard.Against.Null(typeCachedService);
+			_ntiUnderConsiderationStatusesCachedService = Guard.Against.Null(ntiUnderConsiderationStatusesCachedService);
+			_ntiUnderConsiderationReasonsCachedService = Guard.Against.Null(ntiUnderConsiderationReasonsCachedService);
+			_ntiWarningLetterReasonCachedService = Guard.Against.Null(ntiWarningLetterReasonCachedService);
+			_ntiWarningLetterStatusesCachedService = Guard.Against.Null(ntiWarningLetterStatusesCachedService);
+			_teamsCachedService = Guard.Against.Null(teamsCachedService);
+			_logger = Guard.Against.Null(logger);
 		}
 		
 		public async Task<IActionResult> OnGetAsync()
@@ -68,6 +73,7 @@ namespace ConcernsCaseWork.Pages
 			await _ntiUnderConsiderationReasonsCachedService.ClearData();
 			await _ntiWarningLetterReasonCachedService.ClearData();
 			await _ntiWarningLetterStatusesCachedService.ClearData();
+			await _teamsCachedService.ClearData(User.Identity?.Name);
 
 			return RedirectToPage("home");
 		}
