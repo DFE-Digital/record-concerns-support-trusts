@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Service.Redis.NtiUnderConsideration;
 using Service.Redis.Teams;
 using Ardalis.GuardClauses;
+using Service.Redis.Users;
 
 namespace ConcernsCaseWork.Pages
 {
@@ -29,9 +30,10 @@ namespace ConcernsCaseWork.Pages
 		private readonly INtiWarningLetterStatusesCachedService _ntiWarningLetterStatusesCachedService;
 		private readonly ITeamsCachedService _teamsCachedService;
 		private readonly ILogger<ClearDataPageModel> _logger;
-		private readonly ICachedService _cachedService;
+		private readonly IUserStateCachedService _userStateCachedService;
 		
-		public ClearDataPageModel(ICachedService cachedService, 
+		public ClearDataPageModel(
+			IUserStateCachedService userStateCachedService, 
 			ITypeCachedService typeCachedService, 
 			IStatusCachedService statusCachedService, 
 			IRatingCachedService ratingCachedService,
@@ -43,6 +45,7 @@ namespace ConcernsCaseWork.Pages
 			ITeamsCachedService teamsCachedService,
 			ILogger<ClearDataPageModel> logger)
 		{
+			_userStateCachedService = Guard.Against.Null(userStateCachedService);
 			_statusCachedService = Guard.Against.Null(statusCachedService);
 			_ratingCachedService = Guard.Against.Null(ratingCachedService);
 			_trustCachedService = Guard.Against.Null(trustCachedService);
@@ -52,7 +55,6 @@ namespace ConcernsCaseWork.Pages
 			_ntiWarningLetterReasonCachedService = Guard.Against.Null(ntiWarningLetterReasonCachedService);
 			_ntiWarningLetterStatusesCachedService = Guard.Against.Null(ntiWarningLetterStatusesCachedService);
 			_teamsCachedService = Guard.Against.Null(teamsCachedService);
-			_cachedService = Guard.Against.Null(cachedService);
 			_logger = Guard.Against.Null(logger);
 		}
 		
@@ -62,7 +64,7 @@ namespace ConcernsCaseWork.Pages
 			
 			if (!HttpContext.User.Identity.IsAuthenticated) return RedirectToPage("home");
 			
-			await _cachedService.ClearData(User.Identity.Name);
+			await _userStateCachedService.ClearData(User.Identity?.Name);
 			await _typeCachedService.ClearData();
 			await _statusCachedService.ClearData();
 			await _ratingCachedService.ClearData();
@@ -71,7 +73,7 @@ namespace ConcernsCaseWork.Pages
 			await _ntiUnderConsiderationReasonsCachedService.ClearData();
 			await _ntiWarningLetterReasonCachedService.ClearData();
 			await _ntiWarningLetterStatusesCachedService.ClearData();
-			await _teamsCachedService.ClearData(User.Identity.Name);
+			await _teamsCachedService.ClearData(User.Identity?.Name);
 
 			return RedirectToPage("home");
 		}

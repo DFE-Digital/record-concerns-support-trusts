@@ -1,5 +1,6 @@
 using ConcernsCaseWork.Constraints;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Middleware;
 using ConcernsCaseWork.Security;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -117,9 +118,9 @@ namespace ConcernsCaseWork
 
 			// Enable Sentry middleware for performance monitoring
 			app.UseSentryTracing();
-
 			app.UseAuthentication();
 			app.UseAuthorization();
+			app.UseMiddleware<CorrelationIdMiddleware>();
 
 			app.UseEndpoints(endpoints =>
 			{

@@ -5,15 +5,17 @@ using System.Threading.Tasks;
 
 namespace Service.Redis.Base
 {
-	public class CachedService : ICachedService
+	public abstract class CachedService : ICachedService
 	{
 		private readonly ICacheProvider _cacheProvider;
 
-		public CachedService(ICacheProvider cacheProvider)
+		protected CachedService(ICacheProvider cacheProvider)
 		{
 			_cacheProvider = cacheProvider;
 		}
 		
+		// Todo. scope these methods?
+
 		public Task StoreData<T>(string key, T data, int expirationTimeInHours = 24) where T : class
 		{
 			Guard.Against.NullOrWhiteSpace(key);

@@ -10,13 +10,21 @@ namespace Service.Redis.Tests.Base
 	[Parallelizable(ParallelScope.All)]
 	public class CachedServiceTests
 	{
+		private class TestCacheService : CachedService
+		{
+			public TestCacheService(ICacheProvider cacheProvider) : base(cacheProvider)
+			{
+			}
+		}
+
+
 		[Test]
 		public async Task WhenStoreData_Return_Successful()
 		{
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			
-			var cacheService = new CachedService(mockCacheProvider.Object);
+			var cacheService = new TestCacheService(mockCacheProvider.Object);
 
 			// act
 			await cacheService.StoreData("key", new UserState());
@@ -32,7 +40,7 @@ namespace Service.Redis.Tests.Base
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			
-			var cacheService = new CachedService(mockCacheProvider.Object);
+			var cacheService = new TestCacheService(mockCacheProvider.Object);
 
 			// act
 			await cacheService.GetData<UserState>("key");
@@ -48,7 +56,7 @@ namespace Service.Redis.Tests.Base
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
 			
-			var cacheService = new CachedService(mockCacheProvider.Object);
+			var cacheService = new TestCacheService(mockCacheProvider.Object);
 
 			// act
 			await cacheService.ClearData("key");
