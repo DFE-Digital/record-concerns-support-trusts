@@ -7,6 +7,9 @@ namespace Service.TRAMS.Nti
 {
 	public interface INtiService
 	{
-		public Task<ICollection<NtiDto>> GetNtisForCaseAsync(long caseUrn);
+		Task<ICollection<NtiDto>> GetNtisForCaseAsync(long caseUrn);
+		Task<NtiDto> CreateNtiAsync(NtiDto newNtiWarningLetter);
+		Task<NtiDto> GetNtiAsync(long ntiWarningLetterId);
+		Task<NtiDto> PatchNtiAsync(NtiDto ntiWarningLetter);
 	}
 }

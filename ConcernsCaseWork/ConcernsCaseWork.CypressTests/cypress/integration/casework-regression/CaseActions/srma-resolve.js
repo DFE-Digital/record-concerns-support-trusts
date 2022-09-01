@@ -1,3 +1,9 @@
+import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
+import CaseManagementPage from "/cypress/pages/caseMangementPage";
+import utils from "/cypress/support/utils"
+import srmaAddPage from "/cypress/pages/caseActions/srmaAddPage";
+import srmaEditPage from "/cypress/pages/caseActions/srmaEditPage";
+
 describe("User can resolve an SRMA and is given validation based on options chosen", () => {
 	before(() => {
 		cy.login();
@@ -10,9 +16,13 @@ describe("User can resolve an SRMA and is given validation based on options chos
 	const searchTerm ="Accrington St Christopher's Church Of England High School";
 	let term = "";
 	let $status = "";
-	let concatDate = ["date1", "date2"];
+	let concatDate = "";
 	let concatEndDate = "";
 	let arrDate = ["day1", "month1", "year1","day2", "month2", "year2", ];
+
+	let returnedDate = ["date1", "date2"];
+	let returnedDateEnd
+	let stText = "null";
 
 	it("User enters the case page", () => {
 		cy.checkForExistingCase();
@@ -20,28 +30,32 @@ describe("User can resolve an SRMA and is given validation based on options chos
 
 	it("User has option to add an action item to case", () => {
 		cy.reload();
-		cy.get('[class="govuk-button"][role="button"]').click();
-		cy.addActionItemToCase('Srma', 'School Resource Management Adviser (SRMA)');
+		CaseManagementPage.getAddToCaseBtn().click();
+		AddToCasePage.addToCase('Srma')
+		AddToCasePage.getCaseActionRadio('Srma').siblings().should('contain.text', AddToCasePage.actionOptions[8]);
 	});
 
 
 	it("User clicking add to case is taken to the action page", function () {
-		cy.get('button[data-prevent-double-click*="true"]').click();
+		//cy.get('button[data-prevent-double-click*="true"]').click();
 
-		const err = '[class="govuk-list govuk-error-summary__list"]';
-		cy.log((err).length);
+		AddToCasePage.getAddToCaseBtn().click();
+		cy.log(utils.checkForGovErrorSummaryList() );
 
-			if ((err).length > 0 ) { 
+		if (utils.checkForGovErrorSummaryList() > 0 ) { 
+			cy.log("Case Action already exists");
 
-				cy.visit(Cypress.env('url'), { timeout: 30000 });
+					cy.visit(Cypress.env('url'), { timeout: 30000 });
+					cy.checkForExistingCase(true);
+					CaseManagementPage.getAddToCaseBtn().click();
+					AddToCasePage.addToCase('Srma');
+					AddToCasePage.getCaseActionRadio('Srma').siblings().should('contain.text', AddToCasePage.actionOptions[8]);
+					AddToCasePage.getAddToCaseBtn().click();
 
-				cy.checkForExistingCase(true);
-				cy.get('[class="govuk-button"][role="button"]').click();
-				cy.addActionItemToCase('Srma', 'School Resource Management Adviser (SRMA)');
-				cy.get('button[data-prevent-double-click*="true"]').click();
-			}else{
-				cy.log("No SRMA exists")
-			}
+		}else {
+			cy.log("No Case Action exists");	
+			cy.log(utils.checkForGovErrorSummaryList() );
+		}
 	});
 
 	it("User can set SRMA status to  Trust Considering", function () {
@@ -81,18 +95,16 @@ describe("User can resolve an SRMA and is given validation based on options chos
 
 
 	it("User can click on a link to view a live SRMA record", function () {
-
-		cy.get('table:nth-child(4) > tbody').children().should(($srma) => {
-            expect($srma).to.be.visible
+		CaseManagementPage.getOpenActionsTable().children().should(($srma) => {
+			expect($srma).to.be.visible
 			expect($srma.text()).to.contain("SRMA");
-        })
+		})
 
-			cy.get('table:nth-child(4) > tbody > tr').should(($status) => {
+		CaseManagementPage.getOpenActionsTable().should(($status) => {
 			expect($status).to.be.visible
 			expect($status.text().trim()).to.contain(this.stText);
-        })
-
-		cy.get('a[href*="/action/srma/"]').click();
+		})
+		CaseManagementPage.getOpenActionLink("srma").click();
 
 	});
 

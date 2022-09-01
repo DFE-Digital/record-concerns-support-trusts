@@ -166,6 +166,9 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<INtiWarningLetterService, NtiWarningLetterService>();
 			services.AddScoped<INtiWarningLetterConditionsService, NtiWarningLetterConditionsService>();
 			services.AddScoped<INtiService, NtiService>();
+            services.AddScoped<INtiStatusesService, NtiStatusesService>();
+            services.AddScoped<INtiReasonsService, NtiReasonsService>();
+            services.AddScoped<INtiConditionsService, NtiConditionsService>();
 			services.AddScoped<ITeamsService, TeamsService>();
 
 			// Redis services
@@ -190,6 +193,9 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IMeansOfReferralCachedService, MeansOfReferralCachedService>();
 			services.AddScoped<INtiWarningLetterConditionsCachedService, NtiWarningLetterConditionsCachedServices>();
 			services.AddScoped<INtiCachedService, NtiCachedService>();
+            services.AddScoped<INtiStatusesCachedService, NtiStatusesCachedService>();
+            services.AddScoped<INtiReasonsCachedService, NtiReasonsCachedService>();
+            services.AddScoped<INtiConditionsCachedService, NtiConditionsCachedService>();
 			services.AddScoped<ITeamsCachedService, TeamsCachedService>();
 
 			// Redis Sequence
