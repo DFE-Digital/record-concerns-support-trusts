@@ -1,0 +1,230 @@
+﻿@page "/case/{urn:long}/management/action/nti/{ntiId:long}"
+@model ConcernsCaseWork.Pages.Case.Management.Action.Nti.IndexPageModel
+
+@using ConcernsCaseWork.Extensions
+
+@{
+    ViewData["Title"] = "NTI";
+    var nonce = HttpContext.GetNonce();
+}
+
+@section BeforeMain {
+<div class="govuk-width-container">
+    <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
+        Back to case
+    </a>
+</div>
+}
+
+<div class="govuk-width-container">
+    <partial name="_BannerError" />
+
+    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+    {
+        <partial name="_Error" />
+    }
+    else
+    {
+
+        <h1 class="govuk-heading-l">
+            <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
+            NTI
+        </h1>
+
+        <div class="govuk-hint" id="nti-underconsideration-hint">
+            <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Financial%20Notices%20to%20Improve.aspx" class="govuk-link" rel="noreferrer noopener">
+                AMSD Knowledge : NTI Guidance
+            </a>
+        </div>
+
+
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m"></caption>
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+
+                @* Status *@
+                <tr class="govuk-table__row">
+                    @if (Model.NtiModel.ClosedAt == null)
+                    {
+                        <th scope="row" class="govuk-table-case-details__header">Current status</th>
+                        <td class="govuk-table__cell">
+                            @{
+                                RenderValue(Model.NtiModel.Status.Name);
+                            }
+                        </td>
+                    }
+                    else
+                    {
+                        <th scope="row" class="govuk-table-case-details__header">Status</th>
+                        <td class="govuk-table__cell">
+                            @{
+                                RenderValue(Model.NtiModel.ClosedStatus.Name);
+                            }
+                        </td>
+                    }
+
+                </tr>
+
+                @* Date started *@
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table-case-details__header">Date started</th>
+                    <td class="govuk-table__cell">
+                        @{
+                            //RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.SentDate.Value));
+                        }
+                    </td>
+                </tr>
+
+                @* Reasons *@
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table-case-details__header">Reasons</th>
+                    <td class="govuk-table__cell">
+                        @{
+                            if (Model.NtiModel.Reasons.Any())
+                            {
+                                foreach (var reason in Model.NtiModel.Reasons)
+                                {
+                                    <div class="govuk-!-padding-bottom-2">
+                                        <span>@reason.Name</span>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                RenderEmptyLabel();
+                            }
+                        }
+                    </td>
+                </tr>
+
+                @* Conditions *@
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table-case-details__header">Conditions</th>
+                    <td class="govuk-table__cell">
+                        @{
+                            if (Model.NtiModel.Conditions.Any())
+                            {
+                                foreach (var condition in Model.NtiModel.Conditions)
+                                {
+                                    <div class="govuk-!-padding-bottom-2">
+                                        <span>@condition.Name</span>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                RenderEmptyLabel();
+                            }
+                        }
+                    </td>
+                </tr>
+
+                @* Notes *@
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table-case-details__header">Notes</th>
+                    <td class="govuk-table__cell">
+                        @{
+
+                            if (!string.IsNullOrEmpty(Model.NtiModel.Notes))
+                            {
+                                <span>@Model.NtiModel.Notes</span>
+                            }
+                            else
+                            {
+                                RenderEmptyLabel();
+                            }
+                        }
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+
+        @if (Model.NtiModel.ClosedAt == null)
+        {
+            <div class="govuk-button-group">
+                <ul class="govuk-list">
+                    <li>
+                        <div class="govuk-!-padding-bottom-6">
+                            <a data-prevent-double-click="true" href="@Request.Path/edit" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-wl-button">
+                                Edit Information
+                            </a>
+
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="govuk-!-padding-bottom-1">
+                            <a data-prevent-double-click="true" href="@Request.Path/cancel" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-wl-button">
+                                Cancel NTI
+                            </a>
+                            <p class="govuk-hint">
+                                The NTI is no longer needed.
+                            </p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="govuk-!-padding-bottom-1">
+                            <a data-prevent-double-click="true" href="@Request.Path/lift" class="govuk-button govuk-button--primary" data-module="govuk-button" role="button">
+                                Lift NTI
+                            </a>
+                            <p class="govuk-hint">
+                                The trust has met, or you are assured they will meet, the term and conditions
+                                of the NTI and we are assured that continued compliance is sustainable
+                            </p>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="govuk-!-padding-bottom-1">
+                            <a data-prevent-double-click="true" href="@Request.Path/close" class="govuk-button govuk-button--warning" data-module="govuk-button" role="button">
+                                Close NTI
+                            </a>
+                            <p class="govuk-hint">
+                                The trust has failed to meet the conditions of the NTI and the intervention has
+                                escalated to a academy transfers and/or trust closure.
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        }
+    }
+</div>
+
+@functions {
+    private void RenderValue<T>(T value)
+    {
+        if (IsEmpty(value))
+        {
+            RenderEmptyLabel();
+        }
+        else
+        {
+            @value
+        }
+    }
+
+    private bool IsEmpty<T>(T value)
+    {
+        if (value is string)
+        {
+            return string.IsNullOrWhiteSpace(value as string);
+        }
+
+        return value == null || value.Equals(default(T));
+    }
+
+    private void RenderEmptyLabel()
+    {
+        <span class="govuk-tag ragtag ragtag__grey">Empty</span>
+    }
+}

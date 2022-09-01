@@ -77,7 +77,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 			mockNtiUnderConsiderationService.Setup(svc => svc.GetNtiUnderConsiderationsForCase(caseUrn)).ReturnsAsync(underConsiderationActions);
 			mockNtiWarningLetterService.Setup(svc => svc.GetNtiWarningLettersForCase(caseUrn)).ReturnsAsync(warningLetterActions);
-			mockNtiService.Setup(svc => svc.GetNtisForCase(caseUrn)).ReturnsAsync(ntis);
+			mockNtiService.Setup(svc => svc.GetNtisForCaseAsync(caseUrn)).ReturnsAsync(ntis);
 
 			// act
 			var actual = sut.NewCaseActionAllowed(caseUrn, string.Empty).Result;
@@ -169,7 +169,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 			mockNtiUnderConsiderationService.Setup(svc => svc.GetNtiUnderConsiderationsForCase(caseUrn)).ReturnsAsync(underConsiderationActions);
 			mockNtiWarningLetterService.Setup(svc => svc.GetNtiWarningLettersForCase(caseUrn)).ReturnsAsync(warningLetterActions);
-			mockNtiService.Setup(svc => svc.GetNtisForCase(caseUrn)).ReturnsAsync(ntis);
+			mockNtiService.Setup(svc => svc.GetNtisForCaseAsync(caseUrn)).ReturnsAsync(ntis);
 
 			// act, assert
 			Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.NewCaseActionAllowed(caseUrn, string.Empty));
