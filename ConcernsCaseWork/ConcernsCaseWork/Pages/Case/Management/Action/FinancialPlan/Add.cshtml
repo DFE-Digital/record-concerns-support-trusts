@@ -3,6 +3,7 @@
 
 @{
 	ViewData["Title"] = "Add Financial Plan";
+	ViewData["CancelBackLink"] = $"/case/{@RouteData.Values["urn"]}/management";
 	var nonce = HttpContext.GetNonce();
 }
 

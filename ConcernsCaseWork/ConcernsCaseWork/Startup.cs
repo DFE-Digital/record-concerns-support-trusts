@@ -1,5 +1,6 @@
 using ConcernsCaseWork.Constraints;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Middleware;
 using ConcernsCaseWork.Security;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -36,6 +37,11 @@ namespace ConcernsCaseWork
 				options.Conventions.AddPageRoute("/home", "");
 				options.Conventions.AddPageRoute("/notfound", "/error/404");
 				options.Conventions.AddPageRoute("/notfound", "/error/{code:int}");
+				options.Conventions.AddPageRoute("/case/management/action/NtiWarningLetter/add", "/case/{urn:long}/management/action/NtiWarningLetter/add");
+				options.Conventions.AddPageRoute("/case/management/action/NtiWarningLetter/addConditions", "/case/{urn:long}/management/action/NtiWarningLetter/conditions");
+				options.Conventions.AddPageRoute("/case/management/action/Nti/add", "/case/{urn:long}/management/action/nti/add");
+				options.Conventions.AddPageRoute("/case/management/action/Nti/addConditions", "/case/{urn:long}/management/action/nti/conditions");
+
 
 				// TODO: 
 				// Consider adding: options.Conventions.AuthorizeFolder("/");
@@ -146,9 +152,9 @@ namespace ConcernsCaseWork
 
 			// Enable Sentry middleware for performance monitoring
 			app.UseSentryTracing();
-
 			app.UseAuthentication();
 			app.UseAuthorization();
+			app.UseMiddleware<CorrelationIdMiddleware>();
 
 			app.UseEndpoints(endpoints =>
 			{

@@ -1,10 +1,9 @@
 ﻿@page "/case/{urn:long}/management/action/financialplan/{financialplanid:long}/close"
 @model ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan.ClosePageModel
 
-@using ConcernsCaseWork.Enums;
-
 @{
 	ViewData["Title"] = "Close Finance Plan";
+	ViewData["CancelBackLink"] = $"/case/{@RouteData.Values["urn"]}/management";
 	var nonce = HttpContext.GetNonce();
 }
 

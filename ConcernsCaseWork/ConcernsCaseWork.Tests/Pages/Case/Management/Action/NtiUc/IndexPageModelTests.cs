@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration;
+﻿using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
@@ -7,8 +8,8 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
-using Service.Redis.NtiUnderConsideration;
 using System;
 using System.Threading.Tasks;
 
@@ -21,11 +22,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
 		{
 			// arrange
-			Mock<INtiUnderConsiderationModelService> ntiunderConsiderationModel = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
+			Mock<INtiUnderConsiderationModelService> ntiUnderConsiderationModel = new Mock<INtiUnderConsiderationModelService>();
 			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(ntiunderConsiderationModel, mockNtiReasonsCachedService, mockLogger);
+			var pageModel = SetupIndexPageModel(ntiUnderConsiderationModel, mockLogger);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -39,26 +39,63 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiUnderConsiderationModelService> mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var ntiunderConsiderationModel = NTIUnderConsiderationFactory.BuildNTIUnderConsiderationModel();
+			var ntiUnderConsiderationModel = NTIUnderConsiderationFactory.BuildNTIUnderConsiderationModel();
 
-			mockNtiUnderConsiderationModelService.Setup(n => n.GetNtiUnderConsideration(It.IsAny<long>()))
-				.ReturnsAsync(ntiunderConsiderationModel);
+			mockNtiUnderConsiderationModelService.Setup(n => n.GetNtiUnderConsideration(ntiUnderConsiderationModel.Id))
+				.ReturnsAsync(ntiUnderConsiderationModel);
 
-			var pageModel = SetupIndexPageModel(mockNtiUnderConsiderationModelService, mockNtiReasonsCachedService, mockLogger);
+			var expectedModel = Copy(ntiUnderConsiderationModel);
+
+			var pageModel = SetupIndexPageModel(mockNtiUnderConsiderationModelService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
-			routeData.Add("ntiUnderConsiderationId", 1);
+			routeData.Add("ntiUnderConsiderationId", ntiUnderConsiderationModel.Id);
 
 			// act
 			await pageModel.OnGetAsync();
 
 			// assert
 			Assert.IsNotNull(pageModel.NTIUnderConsiderationModel);
+			Assert.AreEqual(JsonConvert.SerializeObject(expectedModel), JsonConvert.SerializeObject(ntiUnderConsiderationModel));
+			
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Information,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::NTI-UC::IndexPageModel::OnGetAsync")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+		}
+		
+		[Test]
+		public async Task WhenOnGetAsync_StatusIsClosed_ReturnsPageModel()
+		{
+			// arrange
+			Mock<INtiUnderConsiderationModelService> mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
+			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
+			
+			var ntiUnderConsiderationModel = NTIUnderConsiderationFactory.BuildClosedNTIUnderConsiderationModel();
+			var expectedModel = Copy(ntiUnderConsiderationModel);
 
+			mockNtiUnderConsiderationModelService.Setup(n => n.GetNtiUnderConsideration(ntiUnderConsiderationModel.Id))
+				.ReturnsAsync(ntiUnderConsiderationModel);
+
+			var pageModel = SetupIndexPageModel(mockNtiUnderConsiderationModelService, mockLogger);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+			routeData.Add("ntiUnderConsiderationId", ntiUnderConsiderationModel.Id);
+
+			// act
+			await pageModel.OnGetAsync();
+
+			// assert
+			Assert.IsNotNull(pageModel.NTIUnderConsiderationModel);
+			Assert.AreEqual(JsonConvert.SerializeObject(expectedModel), JsonConvert.SerializeObject(ntiUnderConsiderationModel));
 
 			mockLogger.Verify(
 				m => m.Log(
@@ -70,16 +107,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 				Times.Once);
 		}
 
-
 		[Test]
 		public async Task WhenOnGetAsync_MissingNTIUnderConsideration_ThrowsException_ReturnPage()
 		{
 			// arrange
-			Mock<INtiUnderConsiderationModelService> ntiunderConsiderationModel = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
+			Mock<INtiUnderConsiderationModelService> ntiUnderConsiderationModel = new Mock<INtiUnderConsiderationModelService>();
 			Mock<ILogger<IndexPageModel>> mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupIndexPageModel(ntiunderConsiderationModel, mockNtiReasonsCachedService, mockLogger);
+			var pageModel = SetupIndexPageModel(ntiUnderConsiderationModel, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
 
@@ -96,13 +131,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 
 		private static IndexPageModel SetupIndexPageModel(
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService,
-			Mock<INtiUnderConsiderationReasonsCachedService> reasonsCachedService,
 			Mock<ILogger<IndexPageModel>> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new IndexPageModel(mockNtiModelService.Object, reasonsCachedService.Object, mockLogger.Object)
+			return new IndexPageModel(mockNtiModelService.Object, mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
@@ -110,5 +144,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
 		}
+
+		private static NtiUnderConsiderationModel Copy(NtiUnderConsiderationModel model)
+			=> JsonConvert.DeserializeObject<NtiUnderConsiderationModel>(JsonConvert.SerializeObject(model));
 	}
 }

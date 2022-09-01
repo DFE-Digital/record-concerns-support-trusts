@@ -13,6 +13,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 		cy.storeSessionData();
 	});
 
+<<<<<<< Updated upstream
 	const searchTerm ="Accrington St Christopher's Church Of England High School";
 	let term = "";
 	//let stText = "";
@@ -21,6 +22,18 @@ describe("User can add Financial Plan case action to an existing case", () => {
 	let concatDate = ["date1", "date2"];
 	let concatEndDate = "";
 	let arrDate = ["day1", "month1", "year1","day2", "month2", "year2", ];
+=======
+//	const searchTerm ="Accrington St Christopher's Church Of England High School";
+//	let term = "";
+//	let stText = "";
+//	let newString  = "";
+//	let $status = "";
+//	let concatDate = "null" //["date1", "date2"];
+//	let concatEndDate = "";
+//	let arrDate = ["day1", "month1", "year1","day2", "month2", "year2", ];
+	let dpreq = "";
+	let dprec = "";
+>>>>>>> Stashed changes
 
 	it("User enters the case page", () => {
 		cy.checkForExistingCase();
@@ -38,6 +51,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 	it("User is taken to the correct Case Action page", function () {
 		
 		AddToCasePage.getAddToCaseBtn().click();
+<<<<<<< Updated upstream
 
 		cy.wait(2000);
 			const err = Cypress.$('.govuk-list.govuk-error-summary__list');
@@ -46,12 +60,20 @@ describe("User can add Financial Plan case action to an existing case", () => {
 			if (err.length > 0) { //Cypress.$ needed to handle element missing exception
 				
 				cy.log("Case Action already exists");
+=======
+	
+		cy.log(utils.checkForGovErrorSummaryList() );
+
+		if (utils.checkForGovErrorSummaryList() > 0 ) { 
+			cy.log("Case Action already exists");
+>>>>>>> Stashed changes
 
 					cy.visit(Cypress.env('url'), { timeout: 30000 });
 					cy.checkForExistingCase(true);
 					CaseManagementPage.getAddToCaseBtn().click();
 					AddToCasePage.addToCase('FinancialPlan');
 					AddToCasePage.getCaseActionRadio('FinancialPlan').siblings().should('contain.text', AddToCasePage.actionOptions[2]);
+<<<<<<< Updated upstream
 					AddToCasePage.getAddToCaseBtn();
 					FinancialPlanPage.getHeadingText().then(term => {
 						expect(term.text().trim()).to.match(/(Financial plan)/i);
@@ -76,6 +98,20 @@ describe("User can add Financial Plan case action to an existing case", () => {
 		cy.reload();
 });
 */
+=======
+					AddToCasePage.getAddToCaseBtn().click();
+		}else {
+			cy.log("No Case Action exists");	
+			cy.log(utils.checkForGovErrorSummaryList() );
+		}
+	});
+
+	it("User is taken to the correct Case Action page", () => {
+		FinancialPlanPage.getHeadingText().then(term => {
+			expect(term.text().trim()).to.match(/(Financial Plan)/i);
+		});
+	});
+>>>>>>> Stashed changes
 
 
 	it("User is shown error when entering an invalid date", () => {
@@ -85,15 +121,17 @@ describe("User can add Financial Plan case action to an existing case", () => {
 		//FinancialPlanPage.getDatePlanRequestedYear().type("2022");
 		FinancialPlanPage.getUpdateBtn().click();
 		utils.validateGovErorrList('invalid date');
-		cy.reload();
+		cy.reload(true);
 
 	});
-
+/*
 	it("User can select a Financial Plan status", function () {
+		cy.reload(true);
 
 		FinancialPlanPage.statusSelect().then((pleaseWork) => {
 			cy.wrap(pleaseWork.trim()).as("stText");
 
+<<<<<<< Updated upstream
 			newString = pleaseWork
 
 			cy.log("inside "+newString);
@@ -102,6 +140,16 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
 	});
 
+=======
+		});
+
+	});
+*/
+	it("User cannot progress with more than the max character limit in the Notes section", function () {
+		const lstring =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx';
+		let date = new Date();
+>>>>>>> Stashed changes
 
 
 	it("User can enter a valid date", function () {
@@ -131,6 +179,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
 
 
+<<<<<<< Updated upstream
 
 		//cy.get('[id="dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
 		//cy.get('[id="dtr-month"]').type(Math.floor(Math.random() *3) + 10);
@@ -139,6 +188,12 @@ describe("User can add Financial Plan case action to an existing case", () => {
 		//cy.get('[id="dtr-day"]').invoke('val').then(dtrday => {
 		//	cy.wrap(dtrday.trim()).as("day");
 		//});
+=======
+			newString = returnedStatus
+			cy.log("inside "+returnedStatus);
+
+		});
+>>>>>>> Stashed changes
 
 		//cy.get('[id="dtr-month"]').invoke('val').then(dtrmon => {
 		//	cy.wrap(dtrmon.trim()).as("month");

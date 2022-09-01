@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Service.Redis.Security;
 using Service.Redis.Users;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Security
@@ -27,9 +28,11 @@ namespace ConcernsCaseWork.Security
 			_defaultUsers = configuration["app:username"].Split(',');
 		}
 
-		public IList<string> GetDefaultUsers()
-		{
-			return UserRoleMap.GetDefaultUsersExcludeE2E(_defaultUsers);
+		public Task<IList<string>> GetSystemUsers(params string[] excludes)
+		{			
+			return Task.FromResult(
+				UserRoleMap.GetDefaultUsersExcludeE2E(_defaultUsers.Where(x => !excludes.Contains(x)))			
+			);
 		}
 		
 		public async Task<IDictionary<string, RoleClaimWrapper>> GetUsersRoles()
@@ -48,13 +51,6 @@ namespace ConcernsCaseWork.Security
 			var roleClaimWrapper = await _userRoleCachedService.GetRoleClaimWrapper(_defaultUsers, user);
 			
 			return roleClaimWrapper;
-		}
-
-		public async Task UpdateUserRoles(string user, IList<RoleEnum> roles, IList<string> users)
-		{
-			_logger.LogInformation("RbacManager::UpdateUserRoles {User}", user);
-			
-			await _userRoleCachedService.UpdateUserRoles(user, roles, users);
 		}
 	}
 }

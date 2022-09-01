@@ -45,7 +45,21 @@
             </thead>
             <tbody class="govuk-table__body">
 
-                @* Reasons *@
+            @* Status *@
+            @{
+	            if (!string.IsNullOrEmpty(Model.NTIUnderConsiderationModel.ClosedStatusName)){
+		            <tr class="govuk-table__row">
+			            <th scope="row" class="govuk-table-case-details__header">Status</th>
+			            <td class="govuk-table__cell">
+				            <div class="govuk-!-padding-bottom-2">
+					            <span>@Model.NTIUnderConsiderationModel.ClosedStatusName</span>
+				            </div>
+			            </td>
+		            </tr>
+				}
+            }
+            
+            @* Reasons *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Reasons</th>
                     <td class="govuk-table__cell">
@@ -106,28 +120,6 @@
 </div>
 
 @functions {
-    private void RenderValue<T>(T value)
-    {
-        if (IsEmpty(value))
-        {
-            RenderEmptyLabel();
-        }
-        else
-        {
-            @value
-        }
-    }
-
-    private bool IsEmpty<T>(T value)
-    {
-        if (value is string)
-        {
-            return string.IsNullOrWhiteSpace(value as string);
-        }
-
-        return value == null || value.Equals(default(T));
-    }
-
     private void RenderEmptyLabel()
     {
         <span class="govuk-tag ragtag ragtag__grey">Empty</span>

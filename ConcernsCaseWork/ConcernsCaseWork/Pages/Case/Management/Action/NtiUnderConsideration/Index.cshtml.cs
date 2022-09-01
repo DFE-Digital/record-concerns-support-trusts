@@ -6,8 +6,6 @@ using System;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.Cases;
-using System.Linq;
-using Service.Redis.NtiUnderConsideration;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -16,28 +14,24 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	public class IndexPageModel : AbstractPageModel
 	{
 		private readonly INtiUnderConsiderationModelService _ntiModelService;
-		private readonly INtiUnderConsiderationReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public NtiUnderConsiderationModel NTIUnderConsiderationModel { get; set; }
 
-		public IndexPageModel(INtiUnderConsiderationModelService ntiModelService, INtiUnderConsiderationReasonsCachedService ntiReasonsCachedService, ILogger<IndexPageModel> logger)
+		public IndexPageModel(INtiUnderConsiderationModelService ntiModelService, ILogger<IndexPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
-			_ntiReasonsCachedService = ntiReasonsCachedService;
 			_logger = logger;
 		}
 
 		public async Task OnGetAsync()
 		{
-			long caseUrn = 0;
-			long ntiUnderConsiderationId = 0;
-
 			try
-			{
+			{			
+				long ntiUnderConsiderationId;
 				_logger.LogInformation("Case::Action::NTI-UC::IndexPageModel::OnGetAsync");
 
-				(caseUrn, ntiUnderConsiderationId) = GetRouteData();
+				(_, ntiUnderConsiderationId) = GetRouteData();
 
 				NTIUnderConsiderationModel = await _ntiModelService.GetNtiUnderConsideration(ntiUnderConsiderationId);
 
@@ -52,7 +46,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 		}
-
+		
 		private (long caseUrn, long ntiUnderConsiderationId) GetRouteData()
 		{
 			var caseUrnValue = RouteData.Values["urn"];
@@ -65,7 +59,5 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 			return (caseUrn, ntiUnderConsiderationId);
 		}
-
-
 	}
 }

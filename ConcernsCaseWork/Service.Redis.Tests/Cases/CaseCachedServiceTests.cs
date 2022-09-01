@@ -16,28 +16,19 @@ namespace Service.Redis.Tests.Cases
 	public class CaseCachedServiceTests
 	{
 		[Test]
-		public async Task WhenCreateCaseDataCache_IsSuccessful()
+		public async Task CaseCachedService_IsTypeOf_CachedService()
 		{
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();
-			var casesCachedService = new CachedService(mockCacheProvider.Object);
-			var caseStateModel = new UserState
-			{
-				TrustUkPrn = "999999"
-			};
-			
-			mockCacheProvider.Setup(c => c.CacheTimeToLive()).Returns(24);
-			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
-				Returns(Task.FromResult(caseStateModel));
+			var mockCaseService = new Mock<ICaseService>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
+			var mockLogger = new Mock<ILogger<CaseCachedService>>();
 
 			// act
-			await casesCachedService.StoreData("username", caseStateModel);
-			var cachedCaseStateData = await casesCachedService.GetData<UserState>("username");
+			var caseCachedService = new CaseCachedService(mockCacheProvider.Object, mockCaseService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			// assert
-			Assert.That(cachedCaseStateData, Is.Not.Null);
-			Assert.That(cachedCaseStateData, Is.InstanceOf<UserState>());
-			Assert.That(cachedCaseStateData.TrustUkPrn, Is.EqualTo(caseStateModel.TrustUkPrn));
+			Assert.That(caseCachedService, Is.InstanceOf<CachedService>());
 		}
 
 		[Test]

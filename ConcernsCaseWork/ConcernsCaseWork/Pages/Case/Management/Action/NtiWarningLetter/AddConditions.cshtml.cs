@@ -32,6 +32,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		public bool IsReturningFromConditions { get; set; }
 
 		public long CaseUrn { get; private set; }
+		public long? WarningLetterId { get; set; }
+
 		public ICollection<NtiWarningLetterConditionModel> SelectedConditions { get; private set; }
 		public ICollection<NtiWarningLetterConditionDto> AllConditions { get; private set; }
 
@@ -54,12 +56,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 			try
 			{
-				if(ContinuationId == null)
+				if (ContinuationId == null)
 				{
 					throw new InvalidOperationException("Continuation Id not found");
 				}
 
 				ExtractCaseUrnFromRoute();
+				ExtractWarningLetterIdFromRoute();
 
 				var model = await GetUpToDateModel();
 				SelectedConditions = model.Conditions;
@@ -84,6 +87,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			try
 			{
 				ExtractCaseUrnFromRoute();
+				ExtractWarningLetterIdFromRoute();
+
 				AllConditions = await _ntiWarningLetterConditionsCachedService.GetAllConditionsAsync();
 				var conditions = Request.Form["condition"];
 				var model = await GetUpToDateModel();
@@ -92,7 +97,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 				IsReturningFromConditions = true;
 				TempData.Keep(nameof(ContinuationId));
-				return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/add");
+
+				if (WarningLetterId != null)
+				{
+					return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/{WarningLetterId}/edit");
+				}
+				else
+				{
+					return Redirect($"/case/{CaseUrn}/management/action/NtiWarningLetter/add");
+				}
 			}
 			catch (Exception ex)
 			{
@@ -105,7 +118,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		public bool IsConditionSelected(NtiWarningLetterConditionDto condition)
 		{
-			return SelectedConditions?.Any(c => c.Id == condition.Id) ?? false;	
+			return SelectedConditions?.Any(c => c.Id == condition.Id) ?? false;
 		}
 
 		private async Task<NtiWarningLetterModel> GetUpToDateModel()
@@ -123,6 +136,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			{
 				throw new InvalidOperationException("CaseUrn not found in the route");
 			}
+		}
+
+		private void ExtractWarningLetterIdFromRoute()
+		{
+			WarningLetterId = TryGetRouteValueInt64("warningLetterId", out var warningLetterId) ? (long?)warningLetterId : null;
 		}
 
 		private async Task<IEnumerable<RadioItem>> GetStatuses()
@@ -145,8 +163,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			});
 		}
 
-	
 
-		
+
+
 	}
 }

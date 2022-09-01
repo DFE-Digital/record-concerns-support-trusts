@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers;
 using ConcernsCaseWork.Services.NtiWarningLetter;
+using ConcernsCaseWork.Services.Nti;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action
 {
@@ -26,6 +27,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 		private readonly IFinancialPlanModelService _financialPlanModelService;
 		private readonly INtiUnderConsiderationModelService _ntiUnderConsiderationModelService;
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
+		private readonly INtiModelService _ntiModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
@@ -36,6 +38,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 			IFinancialPlanModelService financialPlanModelService,
 			INtiUnderConsiderationModelService ntiUnderConsiderationModelService,
 			INtiWarningLetterModelService ntiWarningLetterModelService,
+			INtiModelService ntiModelService,
 			ILogger<IndexPageModel> logger)
 		{
 			_caseModelService = caseModelService;
@@ -43,6 +46,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 			_financialPlanModelService = financialPlanModelService;
 			_ntiUnderConsiderationModelService = ntiUnderConsiderationModelService;
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
+			_ntiModelService = ntiModelService;
 			_logger = logger;
 		}
 
@@ -121,7 +125,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 			{
 				new SrmaCreateHelper(_srmaService),
 				new FinancialPlanCreateHelper(_financialPlanModelService),
-				new NtiCreateHelper(_ntiUnderConsiderationModelService, _ntiWarningLetterModelService)
+				new NtiCreateHelper(_ntiUnderConsiderationModelService, _ntiWarningLetterModelService, _ntiModelService)
 			};
 		}
 

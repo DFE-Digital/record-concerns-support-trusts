@@ -14,6 +14,7 @@ using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
 using Service.Redis.Models;
+using Service.Redis.Users;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -29,7 +30,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
-			var mockCachedService = new Mock<ICachedService>();
+			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			
 			var expectedCreateCaseModel = CaseFactory.BuildCreateCaseModel();
@@ -44,12 +45,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(expectedTrustDetailsModel);
-			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>()))
+			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>()))
 				.ReturnsAsync(userState);
 			
 			var pageModel = SetupDetailsModel(mockCaseModelService.Object, 
 				mockTrustModelService.Object, 
-				mockCachedService.Object, 
+				mockUserStateCachedService.Object, 
 				mockLogger.Object, true);
 			
 			// act
@@ -90,7 +91,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.That(createRecordsModel, Is.Not.Null);
 			Assert.That(createRecordsModel.Count, Is.EqualTo(expectedCreateCaseModel.CreateRecordsModel.Count));
 			
-			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
+			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
 			
 			// Verify ILogger
@@ -112,15 +113,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
-			var mockCachedService = new Mock<ICachedService>();
+			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			
-			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>()))
+			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>()))
 				.ReturnsAsync(new UserState());
 			
 			var pageModel = SetupDetailsModel(mockCaseModelService.Object, 
 				mockTrustModelService.Object, 
-				mockCachedService.Object, 
+				mockUserStateCachedService.Object, 
 				mockLogger.Object, true);
 			
 			// act
@@ -135,7 +136,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.That(trustDetailsModel, Is.Null);
 			Assert.That(createRecordsModel, Is.Null);
 			
-			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
+			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 			
 			// Verify ILogger
@@ -158,12 +159,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
-			var mockCasesCachedService = new Mock<ICachedService>();
+			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 
 			var pageModel = SetupDetailsModel(mockCaseModelService.Object, 
 				mockTrustModelService.Object, 
-				mockCasesCachedService.Object, 
+				mockUserStateCachedService.Object, 
 				mockLogger.Object, true);
 			
 			// act
@@ -198,18 +199,18 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
-			var mockCachedService = new Mock<ICachedService>();
+			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			
 			var expected = CaseFactory.BuildCreateCaseModel();
 			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
-			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
+			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(1);
 			
 			var pageModel = SetupDetailsModel(mockCaseModelService.Object, 
 				mockTrustModelService.Object, 
-				mockCachedService.Object, 
+				mockUserStateCachedService.Object, 
 				mockLogger.Object, true);
 			
 			pageModel.HttpContext.Request.Form = new FormCollection(
@@ -239,19 +240,19 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
-			var mockCachedService = new Mock<ICachedService>();
+			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 
 			var expectedTrustByUkprn = TrustFactory.BuildTrustDetailsModel();
 			var expected = CaseFactory.BuildCreateCaseModel();
 			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
-			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
+			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(1);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expectedTrustByUkprn);
 			
 			var pageModel = SetupDetailsModel(mockCaseModelService.Object, 
-				mockTrustModelService.Object, mockCachedService.Object, 
+				mockTrustModelService.Object, mockUserStateCachedService.Object, 
 				mockLogger.Object, true);
 			
 			// act
@@ -263,7 +264,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			Assert.That(page, Is.Not.Null);
 			
-			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
+			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
 		}
 		
@@ -273,19 +274,19 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockLogger = new Mock<ILogger<DetailsPageModel>>();
-			var mockCachedService = new Mock<ICachedService>();
+			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 
 			var expectedTrustByUkprn = TrustFactory.BuildTrustDetailsModel();
 			var expected = CaseFactory.BuildCreateCaseModel();
 			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
-			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
+			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(1);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expectedTrustByUkprn);
 			
 			var pageModel = SetupDetailsModel(mockCaseModelService.Object, 
-				mockTrustModelService.Object, mockCachedService.Object, 
+				mockTrustModelService.Object, mockUserStateCachedService.Object, 
 				mockLogger.Object, true);
 			
 			pageModel.HttpContext.Request.Form = new FormCollection(
@@ -307,20 +308,20 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			Assert.That(page, Is.Not.Null);
 			
-			mockCachedService.Verify(c => c.GetData<UserState>(It.IsAny<string>()), Times.Once);
+			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
 		}
 		
 		private static DetailsPageModel SetupDetailsModel(
 			ICaseModelService mockCaseModelService, 
 			ITrustModelService mockTrustModelService,
-			ICachedService mockCachedService, 
+			IUserStateCachedService mockUserStateCachedService, 
 			ILogger<DetailsPageModel> mockLogger, 
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new DetailsPageModel(mockCaseModelService, mockTrustModelService, mockCachedService, mockLogger)
+			return new DetailsPageModel(mockCaseModelService, mockTrustModelService, mockUserStateCachedService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

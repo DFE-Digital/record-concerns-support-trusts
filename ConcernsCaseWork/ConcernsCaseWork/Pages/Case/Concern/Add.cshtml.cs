@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
 using Service.Redis.Models;
+using Service.Redis.Users;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,17 +19,17 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 	{
 		private readonly ILogger<AddPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
-		private readonly ICachedService _cachedService;
+		private readonly IUserStateCachedService _userStateCache;
 		
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 		
 		public AddPageModel(ITrustModelService trustModelService, 
-			ICachedService cachedService,
+			IUserStateCachedService userStateCache,
 			ILogger<AddPageModel> logger)
 		{
 			_trustModelService = trustModelService;
-			_cachedService = cachedService;
+			_userStateCache = userStateCache;
 			_logger = logger;
 		}
 		
@@ -46,7 +47,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			{
 				var userState = await GetUserState();
 				userState.CreateCaseModel = new CreateCaseModel();
-				await _cachedService.StoreData(User.Identity.Name, userState);
+				await _userStateCache.StoreData(User.Identity?.Name, userState);
 				
 				return Redirect("/");
 			}
@@ -85,7 +86,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		
 		private async Task<UserState> GetUserState()
 		{
-			var userState = await _cachedService.GetData<UserState>(User.Identity.Name);
+			var userState = await _userStateCache.GetData(User.Identity.Name);
 			if (userState is null)
 				throw new Exception("Cache CaseStateData is null");
 			

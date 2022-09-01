@@ -87,7 +87,7 @@ namespace ConcernsCaseWork.Integration.Tests.Redis
 			// clean up
 			await cacheProvider.ClearCache(cachedUserClaim.Email);
 			cachedUserClaim = await cacheProvider.GetFromCache<Claims>(userClaims.Email);
-			
+			  
 			Assert.That(cachedUserClaim, Is.Null);
 		}
 		

@@ -11,8 +11,10 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 	[TestFixture]
 	public class StatusServiceIntegrationTests
 	{
+		/// <summary>
 		/// Testing the class requires a running Redis,
 		/// startup is configured to use Redis with session storage.
+		/// </summary>
 		private IConfigurationRoot _configuration;
 		private WebAppFactory _factory;
 		
@@ -33,7 +35,8 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		public async Task WhenGetStatuses_ReturnsStatuses()
 		{
 			// arrange
-			var statusService = _factory.Services.GetRequiredService<IStatusService>();
+			using var serviceScope = _factory.Services.CreateScope();
+			var statusService = serviceScope.ServiceProvider.GetRequiredService<IStatusService>();
 			
 			// act
 			var statusesDto = await statusService.GetStatuses();

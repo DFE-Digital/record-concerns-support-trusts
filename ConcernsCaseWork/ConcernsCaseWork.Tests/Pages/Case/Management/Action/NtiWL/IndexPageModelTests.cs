@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 		{
 			// arrange
 			var mockNtiWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
-			var ntiWarningLetterModel = NTIWarningLetterFactory.BuildListNTIWarningLetterModel();
+			var ntiWarningLetterModel = NTIWarningLetterFactory.BuildNTIWarningLetterModel();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();	
 
 			mockNtiWarningLetterModelService.Setup(n => n.GetNtiWarningLetterId(It.IsAny<long>())).ReturnsAsync(ntiWarningLetterModel);
