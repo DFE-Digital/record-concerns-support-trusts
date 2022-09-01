@@ -16,7 +16,7 @@ namespace ConcernsCaseWork.Tests.Security
 	public class RbacManagerTests
 	{
 		[Test]
-		public void WhenGetDefaultUsers_Return_Users()
+		public async Task WhenGetSystemUsers_Return_Users()
 		{
 			// arrange
 			var mockUserRoleCachedService = new Mock<IUserRoleCachedService>();
@@ -25,12 +25,32 @@ namespace ConcernsCaseWork.Tests.Security
 			var rbacManager = new RbacManager(BuildConfiguration(), mockUserRoleCachedService.Object, mockLogger.Object);
 			
 			// act
-			var defaultUsers = rbacManager.GetDefaultUsers();
+			var defaultUsers = await rbacManager.GetSystemUsers();
 
 			// assert
 			Assert.That(defaultUsers, Is.Not.Null);
 		}
-		
+
+		[Test]
+		public async Task WhenGetSystemUsers_Return_Users_Except_For_Exclusions()
+		{
+			// arrange
+			var mockUserRoleCachedService = new Mock<IUserRoleCachedService>();
+			var mockLogger = new Mock<ILogger<RbacManager>>();
+
+			var rbacManager = new RbacManager(BuildConfiguration(), mockUserRoleCachedService.Object, mockLogger.Object);
+
+			// act
+			var defaultUsers = await rbacManager.GetSystemUsers("user3");
+
+			// assert
+			Assert.That(defaultUsers, Is.Not.Null);
+			Assert.IsFalse(defaultUsers.Contains("user3"));
+			Assert.IsTrue(defaultUsers.Contains("user1"));
+			Assert.IsTrue(defaultUsers.Contains("user2"));
+			Assert.IsTrue(defaultUsers.Contains("user4"));
+		}
+
 		[Test]
 		public async Task WhenGetUsersRoles_Return_SortedDicUserRoleClaim()
 		{
@@ -38,19 +58,19 @@ namespace ConcernsCaseWork.Tests.Security
 			var mockUserRoleCachedService = new Mock<IUserRoleCachedService>();
 			var mockLogger = new Mock<ILogger<RbacManager>>();
 
-			var userRoles = RoleFactory.BuildDicUsersRoles();
+			var expectedUserRoles = RoleFactory.BuildDicUsersRoles();
 			
 			mockUserRoleCachedService.Setup(urc => urc.GetUsersRoleClaim(It.IsAny<string[]>()))
-				.ReturnsAsync(userRoles);
+				.ReturnsAsync(expectedUserRoles);
 			
 			var rbacManager = new RbacManager(BuildConfiguration(), mockUserRoleCachedService.Object, mockLogger.Object);
 
 			// act
-			var usersRoles = await rbacManager.GetUsersRoles();
+			var actualUsersRoles = await rbacManager.GetUsersRoles();
 
 			// assert
-			Assert.That(usersRoles, Is.Not.Null);
-			CollectionAssert.AreEqual(userRoles, usersRoles);
+			Assert.That(actualUsersRoles, Is.Not.Null);
+			CollectionAssert.AreEqual(expectedUserRoles, actualUsersRoles);
 		}
 		
 		[Test]
@@ -75,24 +95,6 @@ namespace ConcernsCaseWork.Tests.Security
 			Assert.That(userRoleClaimWrapper, Is.Not.Null);
 			Assert.That(userRoleClaimWrapper.Roles, Is.Not.Null);
 			CollectionAssert.AreEqual(roleClaimWrapper.Roles, userRoleClaimWrapper.Roles);
-		}
-
-		[Test]
-		public async Task WhenUpdateUserRoles_Return_Task()
-		{
-			// arrange
-			var mockUserRoleCachedService = new Mock<IUserRoleCachedService>();
-			var mockLogger = new Mock<ILogger<RbacManager>>();
-			
-			mockUserRoleCachedService.Setup(urc => urc.UpdateUserRoles(It.IsAny<string>(), It.IsAny<IList<RoleEnum>>(), It.IsAny<IList<string>>()));
-			
-			var rbacManager = new RbacManager(BuildConfiguration(), mockUserRoleCachedService.Object, mockLogger.Object);
-
-			// act
-			await rbacManager.UpdateUserRoles(It.IsAny<string>(), It.IsAny<IList<RoleEnum>>(), It.IsAny<IList<string>>());
-
-			// assert
-			mockUserRoleCachedService.Verify(urc => urc.UpdateUserRoles(It.IsAny<string>(), It.IsAny<IList<RoleEnum>>(), It.IsAny<IList<string>>()), Times.Once);
 		}
 
 		private static IConfiguration BuildConfiguration()

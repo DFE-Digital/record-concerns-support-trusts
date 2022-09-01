@@ -40,16 +40,20 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, loggedInUser);
 				
 				FinancialPlanStatuses = await GetStatusOptionsAsync(FinancialPlanModel.Status?.Name);
-
-				return Page();
+			}
+			catch (InvalidOperationException ex)
+			{
+				TempData["FinancialPlan.Message"] = ex.Message;
+				FinancialPlanStatuses = await GetStatusOptionsAsync();
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Case::FinancialPlan::EditPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
 			}
+			
+			return Page();
 		}
 
 		public async Task<IActionResult> OnPostAsync()
@@ -92,6 +96,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			catch (InvalidOperationException ex)
 			{
 				TempData["FinancialPlan.Message"] = ex.Message;
+				
+				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(GetRequestedCaseUrn(), GetRequestedFinancialPlanId(), GetLoggedInUserName());
+				
+				var currentStatusName = FinancialPlanModel.Status?.Name;
+				FinancialPlanStatuses = await GetStatusOptionsAsync(currentStatusName);
 			}
 			catch (Exception ex)
 			{

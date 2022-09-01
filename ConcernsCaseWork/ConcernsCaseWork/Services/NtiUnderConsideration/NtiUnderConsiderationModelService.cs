@@ -11,10 +11,12 @@ namespace ConcernsCaseWork.Services.Cases
 	public class NtiUnderConsiderationModelService : INtiUnderConsiderationModelService
 	{
 		private readonly INtiUnderConsiderationCachedService _ntiCachedService;
+		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
 
-		public NtiUnderConsiderationModelService(INtiUnderConsiderationCachedService ntiCachedService)
+		public NtiUnderConsiderationModelService(INtiUnderConsiderationCachedService ntiCachedService, INtiUnderConsiderationStatusesCachedService ntiStatusesCachedService)
 		{
 			_ntiCachedService = ntiCachedService;
+			_ntiStatusesCachedService = ntiStatusesCachedService;
 		}
 
 		public async Task<NtiUnderConsiderationModel> CreateNti(NtiUnderConsiderationModel nti)
@@ -28,6 +30,13 @@ namespace ConcernsCaseWork.Services.Cases
 		public async Task<NtiUnderConsiderationModel> GetNtiUnderConsideration(long ntiUcId)
 		{
 			var dto = await _ntiCachedService.GetNti(ntiUcId);
+
+			if (dto.ClosedStatusId.HasValue)
+			{
+				var statuses = await _ntiStatusesCachedService.GetAllStatuses();
+				dto.ClosedStatusName = statuses.SingleOrDefault(s => s.Id == dto.ClosedStatusId)?
+					.Name;
+			}
 			return NtiUnderConsiderationMappers.ToServiceModel(dto);
 		}
 

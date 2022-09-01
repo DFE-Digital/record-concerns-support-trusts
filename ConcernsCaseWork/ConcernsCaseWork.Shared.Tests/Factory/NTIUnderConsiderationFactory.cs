@@ -1,5 +1,4 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Models.CaseActions;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,17 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			return new List<NtiUnderConsiderationModel>
 			{
-				BuildNTIUnderConsiderationModel()
+				BuildNTIUnderConsiderationModel(),
+				BuildClosedNTIUnderConsiderationModel()
+			};
+		}
+		
+		public static List<NtiUnderConsiderationModel> BuildClosedListNTIUnderConsiderationModel()
+		{
+			return new List<NtiUnderConsiderationModel>
+			{
+				BuildClosedNTIUnderConsiderationModel(),
+				BuildClosedNTIUnderConsiderationModel()
 			};
 		}
 
@@ -24,6 +33,16 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			ntiUnderConsideration.Id = Fixture.Create<long>();
 			ntiUnderConsideration.CaseUrn = Fixture.Create<long>();
 			ntiUnderConsideration.Notes = Fixture.Create<string>();
+
+			return ntiUnderConsideration;
+		}
+		public static NtiUnderConsiderationModel BuildClosedNTIUnderConsiderationModel()
+		{
+			var ntiUnderConsideration = BuildNTIUnderConsiderationModel();
+			
+			ntiUnderConsideration.ClosedAt = Fixture.Create<DateTime>();
+			ntiUnderConsideration.ClosedStatusId = Fixture.Create<int>();
+			ntiUnderConsideration.ClosedStatusName = Fixture.Create<string>();
 
 			return ntiUnderConsideration;
 		}

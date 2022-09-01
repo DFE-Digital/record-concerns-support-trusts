@@ -11,17 +11,18 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 	{
 		private readonly static Fixture Fixture = new Fixture();
 
-		public static List<NtiWarningLetterModel> BuildListNTIWarningLetterModels(int count)
+		public static List<NtiWarningLetterModel> BuildListNTIWarningLetterModels(int count, DateTime? closedAt = null)
 		{
-			return Enumerable.Range(0, count).Select(_ => BuildListNTIWarningLetterModel()).ToList();
+			return Enumerable.Range(0, count).Select(_ => BuildNTIWarningLetterModel(closedAt)).ToList();
 		}
 
-		public static NtiWarningLetterModel BuildListNTIWarningLetterModel()
+		public static NtiWarningLetterModel BuildNTIWarningLetterModel(DateTime? closedAt = null)
 		{
 			var ntiWarningLetter = new NtiWarningLetterModel();
 			ntiWarningLetter.Id = Fixture.Create<long>();
 			ntiWarningLetter.CaseUrn = Fixture.Create<long>();
 			ntiWarningLetter.Notes = Fixture.Create<string>();
+			ntiWarningLetter.ClosedAt = closedAt;
 
 			return ntiWarningLetter;
 		}

@@ -90,7 +90,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 			else
 			{
-				throw new InvalidOperationException("CaseUrn not found in the route");
+				throw new Exception("CaseUrn not found in the route");
 			}
 		}
 

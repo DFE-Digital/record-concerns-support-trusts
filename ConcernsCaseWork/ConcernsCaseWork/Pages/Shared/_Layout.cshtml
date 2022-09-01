@@ -71,7 +71,7 @@
                         <image src="/assets/images/moj-logotype-crest.png" xlink:href="" class="moj-header__logotype-crest-fallback-image" width="40" height="40"></image>
                     </svg>
                     <a class="moj-header__link moj-header__link--organisation-name" href="/">DfE</a>
-                    <a class="moj-header__link moj-header__link--service-name" href="/admin">Concerns casework</a>
+                    <a class="moj-header__link moj-header__link--service-name" href="/">Concerns casework</a>
                 </div>
 
                 @if (Context.User.Identity.IsAuthenticated)
@@ -120,17 +120,15 @@
                                 Privacy policy
                             </a>
                         </li>
-                        <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="/cleardata">
-                                Clear data
-                            </a>
-                        </li>
-                        <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="/admin">
-                                Admin
-                            </a>
-                        </li>
-                    </ul>
+						@if (!_env.IsProduction())
+						{
+							<li class="govuk-footer__inline-list-item">
+								<a class="govuk-footer__link" href="/cleardata">
+									Clear data
+								</a>
+							</li>
+						}
+					</ul>
                 </div>
                 <div class="govuk-footer__meta-item">
                     <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright</a>

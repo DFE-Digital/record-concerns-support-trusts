@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Service.TRAMS.NtiUnderConsideration
 {
@@ -15,6 +13,7 @@ namespace Service.TRAMS.NtiUnderConsideration
 		public string Notes { get; set; }
 		public DateTime? ClosedAt { get; set; }
 		public int? ClosedStatusId { get; set; }
+		public string ClosedStatusName { get; set; }
 		public ICollection<int> UnderConsiderationReasonsMapping { get; set; }
 	}
 }

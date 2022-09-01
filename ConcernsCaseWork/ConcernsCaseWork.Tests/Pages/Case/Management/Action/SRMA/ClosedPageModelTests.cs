@@ -242,7 +242,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.RDDIntervention);
+			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.RegionsGroupIntervention);
 
 			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
