@@ -131,7 +131,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			var pageModel = SetupAddConditionsPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockConditionsService, mockLogger);
 
-
 			// act, assert
 			Assert.ThrowsAsync<InvalidOperationException>(async () => await pageModel.OnGetAsync());
 		}
@@ -157,6 +156,4 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			};
 		}
 	}
-
-
 }
