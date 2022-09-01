@@ -3,7 +3,7 @@ class AddToCasePage {
     constructor() {
         this.actionOptions = ["DfE support", "Financial forecast", "Financial plan",
                             "Financial returns", "Financial support", "Forced termination",
-                            "Notice To Improve (NTI)", "Recovery plan", "School Resource Management Adviser (SRMA)"];
+                            "Notice To Improve (NTI)", "Recovery plan", "School Resource Management Adviser (SRMA)", "NTI: Under consideration", "NTI: Warning letter"];
 
     }
 
@@ -30,7 +30,7 @@ class AddToCasePage {
 
 
     //Option accepts the following args: DfESupport | FinancialForecast | FinancialPlan | FinancialReturns |
-    //FinancialSupport| ForcedTermination | Nti| RecoveryPlan | Srma | Tff |
+    //FinancialSupport| ForcedTermination | NtiUnderConsideration| RecoveryPlan | Srma | Tff |
     getCaseActionRadio(option) {
         return     cy.get('[value="'+option+'"]');
     }    
