@@ -1,3 +1,9 @@
+import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
+import CaseManagementPage from "/cypress/pages/caseMangementPage";
+import utils from "/cypress/support/utils"
+import srmaAddPage from "/cypress/pages/caseActions/srmaAddPage";
+import srmaEditPage from "/cypress/pages/caseActions/srmaEditPage";
+
 describe("User can resolve an SRMA when Status is Deployed and resolution reason is Complete", () => {
 	before(() => {
 		cy.login();
@@ -11,8 +17,10 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 	let term = "";
 	let $status = "";
 	let concatDate = "";
-	let concatEndDate = "";
 	let arrDate = ["day1", "month1", "year1","day2", "month2", "year2", ];
+	let returnedDate = ["date1", "date2"];
+	let returnedDateEnd
+
 
 	it("User enters the case page", () => {
 		cy.checkForExistingCase();
@@ -20,28 +28,33 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 
 	it("User has option to add an action item to case", () => {
 		cy.reload();
-		cy.get('[class="govuk-button"][role="button"]').click();
-		cy.addActionItemToCase('Srma', 'School Resource Management Adviser (SRMA)');
+		CaseManagementPage.getAddToCaseBtn().click();
+		AddToCasePage.addToCase('Srma')
+		AddToCasePage.getCaseActionRadio('Srma').siblings().should('contain.text', AddToCasePage.actionOptions[8]);
+
 	});
 
 
 	it("User clicking add to case is taken to the action page", function () {
-		cy.get('button[data-prevent-double-click*="true"]').click();
 
-		const err = '[class="govuk-list govuk-error-summary__list"]';
-		cy.log((err).length);
+				AddToCasePage.getAddToCaseBtn().click();
+				cy.log(utils.checkForGovErrorSummaryList() );
 
-			if ((err).length > 0 ) { 
+				if (utils.checkForGovErrorSummaryList() > 0 ) { 
+					cy.log("Case Action already exists");
 
-				cy.visit(Cypress.env('url'), { timeout: 30000 });
+							cy.visit(Cypress.env('url'), { timeout: 30000 });
+							cy.checkForExistingCase(true);
+							CaseManagementPage.getAddToCaseBtn().click();
+							AddToCasePage.addToCase('Srma');
+							AddToCasePage.getCaseActionRadio('Srma').siblings().should('contain.text', AddToCasePage.actionOptions[8]);
+							AddToCasePage.getAddToCaseBtn().click();
 
-				cy.checkForExistingCase(true);
-				cy.get('[class="govuk-button"][role="button"]').click();
-				cy.addActionItemToCase('Srma', 'School Resource Management Adviser (SRMA)');
-				cy.get('button[data-prevent-double-click*="true"]').click();
-			}else{
-				cy.log("No SRMA exists")
-			}
+				}else {
+					cy.log("No Case Action exists");	
+					cy.log(utils.checkForGovErrorSummaryList() );
+				}
+
 	});
 
 	it("User can set SRMA status to  Trust Considering", function () {
@@ -81,14 +94,16 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 
 	it("User can click on a link to view a live SRMA record", function () {
 
-		cy.get('table:nth-child(4) > tbody').children().should(($srma) => {
-            expect($srma).to.be.visible
+		CaseManagementPage.getOpenActionsTable().children().should(($srma) => {
+			expect($srma).to.be.visible
 			expect($srma.text()).to.contain("SRMA");
-			expect($srma.text()).to.contain(this.stText);
-        })
+		})
 
-		cy.get('a[href*="/action/srma/"]').click();
-
+		CaseManagementPage.getOpenActionsTable().should(($status) => {
+			expect($status).to.be.visible
+			expect($status.text().trim()).to.contain(this.stText);
+		})
+		CaseManagementPage.getOpenActionLink("srma").click();
 	});
 
 
@@ -107,7 +122,6 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 				expect($row.eq(0).text().trim()).to.contain("Deployed").and.to.match(/Status/i);
 			});
 		});
-
 	});
 
 
@@ -157,7 +171,6 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 			cy.log((err).length);
 	
 				if ((err).length > 0 ) { 
-	
 					cy.get('[class="govuk-list govuk-error-summary__list"]').should('be.visible');
 					cy.get('[class="govuk-list govuk-error-summary__list"]').should('not.contain.text', 'Enter the reason');
 					cy.get('[class="govuk-list govuk-error-summary__list"]').should('contain.text', 'Enter date accepted');
@@ -174,37 +187,28 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 
 	it("User can Add SRMA Date accepted to remove validation", function () {
 
-			cy.get('[class="govuk-link"]').eq(3).click();
-			cy.get('[id="dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
-			cy.get('[id="dtr-month"]').type(Math.floor(Math.random() *3) + 10);
-			cy.get('[id="dtr-year"]').type("2021");
-			cy.get('[id="add-srma-button"]').click();// We need to retrun to the page to handle value updates
-			cy.get('[class="govuk-link"]').eq(3).click();
-	
-			cy.get('[id="dtr-day"]').invoke('val').then(dtrday => {
-				cy.wrap(dtrday.trim()).as("day");
-				arrDate[0] = dtrday;
-			});
-	
-			cy.get('[id="dtr-month"]').invoke('val').then(dtrmon => {
-				cy.wrap(dtrmon.trim()).as("month");
-				arrDate[1] = dtrmon;
-			});
-	
-			cy.get('[id="dtr-year"]').invoke('val').then(dtryr => {
-				cy.wrap(dtryr.trim()).as("year");
-				arrDate[2] = dtryr;
-			});
-			
-			concatDate = (arrDate[0]+"-"+arrDate[1]+"-"+arrDate[2]);
-			cy.log(concatDate);
-				cy.get('[id="add-srma-button"]').click();
-				cy.get('[class="govuk-table__row"]').should(($row) => {
-					expect($row.eq(3).text().trim()).to.contain(concatDate.trim()).and.to.match(/Date accepted/i);
+			srmaEditPage.getTableAddEditLink().eq(3).click();
+			cy.log("date offered closure ").then(() => {
+				cy.log(srmaAddPage.setDateAccepted() ).then((returnedVal) => { 
+					cy.log("logging date offered closure inside nested "+returnedVal).then(() =>{
+						cy.wrap(returnedVal.trim()).as("returnedDate").then(() =>{
+
+						returnedDate = returnedVal;
+						cy.log("set Date logging date offered out 0 returnedVal "+returnedVal)
+						cy.log("set date logging date offered out 0 returnedDate "+returnedDate);
+					});
 				});
+			});
+			srmaAddPage.getAddCaseActionBtn().click();
+			srmaEditPage.getSrmaTableRow().should(($row) => {
+				expect($row.eq(3).text().trim()).to.contain(returnedDate.trim()).and.to.match(/Date accepted/i);
+				})
 
+			cy.log("logging date offered out 0 +self.stText "+self.stText);
+			cy.log("logging date offered out 0returnedDate "+returnedDate);
+			});
 
-			//Tests that validation is removed //  << Needs abstracting out into commands/functions into 	
+			//Tests that validation is removed //  << Needs abstracting out into commands/functions 	
 			cy.get('[id="complete-decline-srma-button"]').click();
 	
 			//Tests that there is error validation to force entry of both dates
@@ -222,94 +226,53 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 					//this code path is a fallback in case the data is altered mid test
 					cy.get('[class="govuk-tag ragtag ragtag__grey"]').eq(2).should('not.be.visible')
 				}
-	
 				cy.reload();
 		});
 
-
 		it( "User can Add SRMA Date of visit to remove validation", function () {
 
-			cy.get('[class="govuk-link"]').eq(4).click();
-	
-			//Start date
-			cy.get('[id="start-dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
-			cy.get('[id="start-dtr-month"]').type(Math.floor(Math.random() *3) + 10);
-			cy.get('[id="start-dtr-year"]').type("2021");
+			srmaEditPage.getTableAddEditLink().eq(4).click();
 
-			cy.get('[id="add-srma-button"]').click();
-	
-			//Tests that there is no error validation to force entry of both dates
-			const err = '[class="govuk-list govuk-error-summary__list"]';   
-			cy.log((err).length);
-				if ((err).length > 0 ) { 
-	
-					cy.get('[class="govuk-list govuk-error-summary__list"]').should('not.exist');
-				}
-			cy.get('[class="govuk-link"]').eq(4).click();
+			cy.log("dates of visit Start Date closure ").then(() => {
+				cy.log(srmaAddPage.setDateVisitStart() ).then((returnedVal) => { 
+					cy.log("logging nested "+returnedVal).then(() =>{
+						cy.wrap(returnedVal.trim()).as("returnedDate").then(() =>{
 
+						returnedDate = returnedVal;
+						cy.log("set Date logging date offered out 0 returnedVal "+returnedVal)
+						cy.log("set date logging date offered out 0 returnedDate "+returnedDate);
+						});
+					});
+				});
+			});
 
-			//End date
-			cy.get('[id="end-dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
-			cy.get('[id="end-dtr-month"]').type(Math.floor(Math.random() *3) + 10);
-			cy.get('[id="end-dtr-year"]').type("2023");
+			cy.log("dates of visit End Date closure ").then(() => {
+				cy.log(srmaAddPage.setDateVisitEnd() ).then((returnedVal) => { 
+					cy.log("logging nested "+returnedVal).then(() =>{
+						cy.wrap(returnedVal.trim()).as("returnedDate").then(() =>{
 
-			// return to Page
-			cy.get('[id="add-srma-button"]').click(); // We need to retrun to the page to handle value updates
-
-			cy.get('[class="govuk-link"]').eq(4).click();
-	
-			//Validation of Start date
-			cy.get('[id="start-dtr-day"]').invoke('val').then(dtrday => {
-				cy.wrap(dtrday.trim()).as("day");
-				arrDate[0] = dtrday;
-			});
-	
-			cy.get('[id="start-dtr-month"]').invoke('val').then(dtrmon => {
-				cy.wrap(dtrmon.trim()).as("month");
-				arrDate[1] = dtrmon;
-			});
-	
-			cy.get('[id="start-dtr-year"]').invoke('val').then(dtryr => {
-				cy.wrap(dtryr.trim()).as("year");
-				arrDate[2] = dtryr;
-			});
-						
-			concatDate = (arrDate[0]+"-"+arrDate[1]+"-"+arrDate[2]);
-			cy.log(concatDate);
-
-			//Validation of End date
-			cy.get('[id="end-dtr-day"]').invoke('val').then(dtrday => {
-				cy.wrap(dtrday.trim()).as("day");
-				arrDate[3] = dtrday;
-			});
-	
-			cy.get('[id="end-dtr-month"]').invoke('val').then(dtrmon => {
-				cy.wrap(dtrmon.trim()).as("month");
-				arrDate[4] = dtrmon;
-			});
-	
-			cy.get('[id="end-dtr-year"]').invoke('val').then(dtryr => {
-				cy.wrap(dtryr.trim()).as("year");
-				arrDate[5] = dtryr;
-			});
-						
-			concatEndDate = (arrDate[3]+"-"+arrDate[4]+"-"+arrDate[5]);
-			cy.log(concatEndDate);
-			
-			cy.get('[id="add-srma-button"]').click();
+						returnedDateEnd = returnedVal;
+						cy.log("set Date logging date offered out 0 returnedVal "+returnedVal)
+						cy.log("set date logging date offered out 0 returnedDate "+returnedDate);
+						});
+					});
+				});
+			srmaAddPage.getAddCaseActionBtn().click();
 
 			//back on srma page validation
-			cy.get('[class="govuk-table__row"]').should(($row) => {
-				expect($row.eq(4).text().trim()).to.contain(concatDate.trim()).and.to.match(/Dates of visit/i);
-			});
+				srmaEditPage.getSrmaTableRow().should(($row) => {
+				expect($row.eq(4).text().trim()).to.contain(returnedDate.trim()).and.to.match(/Dates of visit/i);
+				});
+	
 
 			cy.get('[class="govuk-table__row"]').should(($row) => {
-				expect($row.eq(4).text().trim()).to.contain(concatEndDate.trim()); 
+				expect($row.eq(4).text().trim()).to.contain(returnedDateEnd.trim()); 
+				});
 			});
 
 			cy.get('[id="complete-decline-srma-button"]').click();
 
-			//err = '[class="govuk-list govuk-error-summary__list"]';   
+			let err = '[class="govuk-list govuk-error-summary__list"]';   
 			cy.log((err).length);
 	
 				if ((err).length > 0 ) { 
@@ -323,22 +286,18 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 					//this code path is a fallback in case the data is altered mid test
 					cy.get('[class="govuk-tag ragtag ragtag__grey"]').eq(4).should('not.be.visible');
 				}
-	
 				cy.reload();
-
 		});
 
 		it( "User can Add SRMA Date report sent to trust to remove validation", function () {
 
 			cy.get('[id="complete-decline-srma-button"]').click();
-
 			cy.get('[class="govuk-link"]').eq(5).click();
 			cy.get('[id="dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
 			cy.get('[id="dtr-month"]').type(Math.floor(Math.random() *3) + 10);
 			cy.get('[id="dtr-year"]').type("2021");
 			cy.get('[id="add-srma-button"]').click();// We need to retrun to the page to handle value updates
 			cy.get('[class="govuk-link"]').eq(5).click();
-
 			cy.get('[id="dtr-day"]').invoke('val').then(dtrday => {
 				cy.wrap(dtrday.trim()).as("day");
 				arrDate[0] = dtrday;
@@ -381,7 +340,6 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 		it("User is navigated to resolve page when status is Deployed, Closure reason Complete", () => {
 
 			cy.get('[id="complete-decline-srma-button"]').click();
-
 			cy.get('[class="govuk-label govuk-checkboxes__label"]').should('contain.text', 'Confirm SRMA is complete');
 			cy.get('[id="add-srma-button"]').click();
 
@@ -396,8 +354,7 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 						}else{
 							//this code path is a fallback in case the data is altered mid test
 							cy.get('[class="govuk-tag ragtag ragtag__grey"]').eq(5).should('not.be.visible');
-						}
-						
+						}	
 			cy.reload(); //needed to handle validation bug
 			cy.get('[id="confirmChk"]').click();
 			cy.get('[id="add-srma-button"]').click();

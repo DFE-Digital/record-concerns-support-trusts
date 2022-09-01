@@ -86,6 +86,32 @@ class FinancialPlanPage {
 
     //Methods
 
+<<<<<<< Updated upstream
+=======
+
+    //sets the Case Action status
+    //Takes a string value of either "0", "1", "2" or "random"
+    setStatusSelect(value) {
+        //let random = false
+        cy.log("value "+value)
+
+        if(value == "random"){
+            let rand = Math.floor(Math.random()*2)
+
+            this.getStatusRadio().eq(rand).click();
+            cy.log(this.getStatusRadioLabel().eq(rand).invoke('text'));
+            return this.getStatusRadioLabel().eq(rand).invoke('text');
+
+        }else{
+            
+            this.getStatusRadio().eq(value).click();
+            cy.log(this.getStatusRadioLabel().eq(value).invoke('text'));
+            return this.getStatusRadioLabel().eq(value).invoke('text');
+
+        }
+	}
+
+>>>>>>> Stashed changes
     statusSelect() {
 		let rand = Math.floor(Math.random()*2)
 
