@@ -79,7 +79,7 @@ Cypress.Commands.add('enterConcernDetails',()=>{
 })
 
 Cypress.Commands.add('selectRiskToTrust',()=>{
-    cy.get('[href="/case/rating"]').click();
+   // cy.get('[href="/case/rating"]').click();
     cy.get(".ragtag").should("be.visible");
     //Randomly select a RAG status
     cy.get(".govuk-radios .ragtag:nth-of-type(1)")
@@ -88,7 +88,9 @@ Cypress.Commands.add('selectRiskToTrust',()=>{
             let num = Math.floor(Math.random() * ragtagElements);
             cy.get(".govuk-radios .ragtag:nth-of-type(1)").eq(num).click();
         });
-    cy.get("#case-rating-form > div.govuk-button-group > button").click();
+
+     cy.get("#case-rating-form > div.govuk-button-group > button").click();
+    
 })
 
 Cypress.Commands.add('editRiskToTrust',(cta, rag)=>{
@@ -163,7 +165,9 @@ Cypress.Commands.add('selectConcernType',()=>{
     cy.get(".govuk-radios__item [value=Financial]").click();
     cy.get("[id=sub-type-3]").click();
     cy.get("[id=rating-3]").click();
-    cy.get(".govuk-button").click();
+    cy.selectMoR();
+    //cy.get(".govuk-button").click();
+    cy.get('a[href="/case/rating"]').click();
 })
 
 
@@ -289,7 +293,7 @@ Cypress.Commands.add('validateCreateCaseInitialDetails',()=>{
 //Break these out into 2 or 3 separate commands per component (not page)
 Cypress.Commands.add('validateCaseManagPage',()=>{
 
-        cy.get('*[class^="govuk-button govuk-button--secondary"]')
+        cy.get('[class="buttons-topOfPage"] [class="govuk-button govuk-button--secondary"]')
             .should(($backcasw) => {
             expect($backcasw).to.be.visible
             expect($backcasw.text().trim()).equal("Back to casework")
@@ -304,11 +308,11 @@ Cypress.Commands.add('validateCaseManagPage',()=>{
             expect($casid).to.be.visible
             expect($casid.text().trim()).equal("Case ID")
             expect($casid.text()).to.match(/(Case ID)/gi);
-
         })
+
         cy.get('[name="caseID"]').then(($test) =>{
             expect($test.text()).to.match(/(\n(\d*))/gi)//matches any case number on a new line  
-    })
+        })
 
         cy.get('[class="govuk-heading-m"]').should(($tradd) => {
             expect($tradd).to.be.visible
@@ -429,9 +433,18 @@ Cypress.Commands.add('createCase', () =>{
                cy.get(".govuk-summary-list__value").then(($el) =>{
                     expect($el.text()).to.match(/(school|england|academy|trust|West|East|North|South)/i)
                 });
+
                 cy.selectConcernType();
 
+               // cy.log("selecting Risk To Trust ").then(() => {
+               //     cy.selectRiskToTrust().then(() => {
+               //         cy.selectMoR();
+               //     });
+               // });
+
                 cy.selectRiskToTrust();
+
+               // cy.selectMoR();
 
                 cy.enterConcernDetails();
 });
@@ -543,5 +556,24 @@ Cypress.Commands.add('closeSRMA', function (){
 		cy.get('[id="add-srma-button"]').click();
 
     });
+
+    Cypress.Commands.add('selectMoR', function (){
+
+        let rand = Math.floor(Math.random()*1)
+
+        cy.get('[id="means-of-referral-urn"]').eq(Math.floor(Math.random() * 1)).click();
+
+        cy.get('button[data-prevent-double-click="true"]').click();
+
+     //   if(rand == 0){
+     //       return "12574";
+     //   }else{
+     //       return "12574";
+     //   }
+
+    });
+
+
+    
 
 //});

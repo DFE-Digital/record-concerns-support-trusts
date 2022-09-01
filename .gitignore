@@ -492,3 +492,9 @@ terraform.rc
 /ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/reports
 /ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/videos
 /ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/videos/casework-regression
+*.png
+*.mp4
+*.mp4
+*.mp4
+*.mp4
+ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/videos/casework-regression/create-case-route.js.mp4
