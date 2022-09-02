@@ -1,8 +1,6 @@
 import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
 import CaseManagementPage from "/cypress/pages/caseMangementPage";
 import utils from "/cypress/support/utils"
-import srmaAddPage from "/cypress/pages/caseActions/srmaAddPage";
-import srmaEditPage from "/cypress/pages/caseActions/srmaEditPage";
 
 describe("User can resolve an SRMA and is given validation based on options chosen", () => {
 	before(() => {
@@ -13,16 +11,7 @@ describe("User can resolve an SRMA and is given validation based on options chos
 		cy.storeSessionData();
 	});
 
-	const searchTerm ="Accrington St Christopher's Church Of England High School";
-	let term = "";
-	let $status = "";
 	let concatDate = "";
-	let concatEndDate = "";
-	let arrDate = ["day1", "month1", "year1","day2", "month2", "year2", ];
-
-	let returnedDate = ["date1", "date2"];
-	let returnedDateEnd
-	let stText = "null";
 
 	it("User enters the case page", () => {
 		cy.checkForExistingCase();
@@ -37,7 +26,6 @@ describe("User can resolve an SRMA and is given validation based on options chos
 
 
 	it("User clicking add to case is taken to the action page", function () {
-		//cy.get('button[data-prevent-double-click*="true"]').click();
 
 		AddToCasePage.getAddToCaseBtn().click();
 		cy.log(utils.checkForGovErrorSummaryList() );
@@ -115,10 +103,8 @@ describe("User can resolve an SRMA and is given validation based on options chos
 		cy.get('[id*="status"]').eq(0).click();
 		cy.get('label.govuk-label.govuk-radios__label').eq(0).invoke('text').then(term => {
 			cy.wrap(term.trim()).as("stText");
-
 			cy.log("Status set as "+term);
 			cy.get('[id="add-srma-button"]').click();
-
 			cy.get('[class="govuk-table__row"]').should(($row) => {
 				expect($row.eq(0).text().trim()).to.contain("Trust considering").and.to.match(/Status/i);
 			});
@@ -167,14 +153,11 @@ describe("User can resolve an SRMA and is given validation based on options chos
 
 	it("User can set status to preparing for deployment", () => {
 		cy.get('[class="govuk-link"]').eq(0).click();
-
 		cy.get('[id*="status"]').eq(1).click();
 		cy.get('label.govuk-label.govuk-radios__label').eq(1).invoke('text').then(term => {
 			cy.wrap(term.trim()).as("stText");
-
 			cy.log("Status set as "+term);
 			cy.get('[id="add-srma-button"]').click();
-
 			cy.get('[class="govuk-table__row"]').should(($row) => {
 				expect($row.eq(0).text().trim()).to.contain(term.trim()).and.to.match(/Status/i);
 			});
@@ -243,10 +226,7 @@ describe("User can resolve an SRMA and is given validation based on options chos
 
 
 	it("User CAN cancel with reason populated", function () {
-
 		cy.get('[class="govuk-link"]').eq(2).click();
-
-
 	});
 
 	after(function () {

@@ -3,10 +3,9 @@ import caseActionsBase from "/cypress/pages/caseActions/caseActionsBasePage";
 class NTIAddPage {
 
     constructor() {
-        //this.something = 
+
         this.arrDate = ["day1", "month1", "year1","day2", "month2", "year2", ];
     }
-
 
     getHeadingText() {
         return     caseActionsBase.getHeadingText();
@@ -59,8 +58,6 @@ class NTIAddPage {
     getEditWLInformationBtn() {
         return cy.get('[id*="edit-nti"]', { timeout: 30000 });
     }
-
-
 
     getNtiTableRow() {
         return caseActionsBase.getTableRow();
@@ -142,8 +139,6 @@ class NTIAddPage {
             this.getCheckboxOption().its('length').as("len").then(() =>{
 				cy.log("logging len  "+self.len)
 			});
-          //  cy.log(len);
-
 
         if(value == "random"){
             let rand = Math.floor(Math.random()*6)
@@ -170,7 +165,6 @@ class NTIAddPage {
 
 
     setCloseStatus(value) {
-        //let random = false
         cy.log("value "+value)
 
         if(value == "random"){

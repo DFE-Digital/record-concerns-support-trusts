@@ -81,9 +81,6 @@ describe("User can add case actions to an existing case", () => {
 			expect($status).to.be.visible
         })
 		CaseManagementPage.getOpenActionLink("ntiunderconsideration").click();
-//
-//>>Add assertion here to validate the redirect was successful
-//
 	});
 
 	it("User can edit Reasons on an existing NTI Under Consideration record", function () {

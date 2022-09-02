@@ -1,5 +1,4 @@
 import CreateCaseConcernsPage from "/cypress/pages/createCase/createCaseConcernsPage";
-import CreateCaseDetailsPage from "/cypress/pages/createCase/createCaseDetailsPage";
 import CaseMangementPage from "/cypress/pages/caseMangementPage";
 
 describe("User creates and adds subsequent concern to a case", () => {
