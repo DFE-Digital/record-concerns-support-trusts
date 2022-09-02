@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Ratings;
@@ -23,7 +25,8 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ILogger<RatingPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly IUserStateCachedService _userStateCache;
-		
+		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
+
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
@@ -31,12 +34,14 @@ namespace ConcernsCaseWork.Pages.Case
 		public RatingPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
 			IRatingModelService ratingModelService,
-			ILogger<RatingPageModel> logger)
+			ILogger<RatingPageModel> logger, 
+			IClaimsPrincipalHelper claimsPrincipalHelper)
 		{
-			_ratingModelService = ratingModelService;
-			_trustModelService = trustModelService;
-			_userStateCache = userStateCache;
-			_logger = logger;
+			_ratingModelService = Guard.Against.Null(ratingModelService);
+			_trustModelService = Guard.Against.Null(trustModelService);
+			_userStateCache = Guard.Against.Null(userStateCache);
+			_logger = Guard.Against.Null(logger);
+			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 		}
 		
 		public async Task OnGetAsync()
@@ -139,14 +144,6 @@ namespace ConcernsCaseWork.Pages.Case
 			return userState;
 		}
 
-		private string GetUserName()
-		{
-			if (User?.Identity is null)
-			{
-				throw new NullReferenceException("User.Identity returned null");
-			}
-
-			return User.Identity.Name;
-		}
+		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 	}
 }

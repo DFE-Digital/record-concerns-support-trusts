@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
@@ -17,6 +18,7 @@ using Service.Redis.Models;
 using Service.Redis.Users;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case
@@ -353,9 +355,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			IRatingModelService mockRatingModelService,
 			ILogger<RatingPageModel> mockLogger, bool isAuthenticated = false)
 		{
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+			mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<ClaimsPrincipal>())).Returns("Tester");
+
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new RatingPageModel(mockTrustModelService, mockUserStateCachedService, mockRatingModelService, mockLogger)
+			return new RatingPageModel(mockTrustModelService, mockUserStateCachedService, mockRatingModelService, mockLogger, mockClaimsPrincipalHelper.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

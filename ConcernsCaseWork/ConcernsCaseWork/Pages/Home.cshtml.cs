@@ -1,6 +1,6 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Models.Teams;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Teams;
@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Sentry;
 using Service.Redis.Models;
 using Service.Redis.Users;
 using Service.TRAMS.Status;
@@ -22,6 +21,7 @@ namespace ConcernsCaseWork.Pages
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class HomePageModel : PageModel
 	{
+		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private readonly IUserStateCachedService _userStateCache;
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<HomePageModel> _logger;
@@ -35,13 +35,15 @@ namespace ConcernsCaseWork.Pages
 			IRbacManager rbacManager,
 			ILogger<HomePageModel> logger,
 			ITeamsModelService teamsService,
-			IUserStateCachedService userStateCache)
+			IUserStateCachedService userStateCache,
+			IClaimsPrincipalHelper claimsPrincipalHelper)
 		{
 			_caseModelService = Guard.Against.Null(caseModelService);
 			_rbacManager = Guard.Against.Null(rbacManager);
 			_logger = Guard.Against.Null(logger);
 			_teamsService = Guard.Against.Null(teamsService);
 			_userStateCache = Guard.Against.Null(userStateCache);
+			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 		}
 
 		public async Task OnGetAsync()
@@ -61,7 +63,7 @@ namespace ConcernsCaseWork.Pages
 			var team = await _teamsService.GetCaseworkTeam(GetUserName());
 
 			var liveCasesTeamLeadTask = _caseModelService.GetCasesByCaseworkerAndStatus(team.TeamMembers, StatusEnum.Live);
-			
+
 			var recordUserSignedTask = RecordUserSignIn(team);
 
 			await Task.WhenAll(currentUserLiveCases, liveCasesTeamLeadTask, recordUserSignedTask);
@@ -80,7 +82,12 @@ namespace ConcernsCaseWork.Pages
 		/// <exception cref="System.NotImplementedException"></exception>
 		private async Task RecordUserSignIn(Models.Teams.ConcernsTeamCaseworkModel team)
 		{
-			var userState = await _userStateCache.GetData(GetUserName()) ?? new UserState(GetUserName());
+			var userState = await _userStateCache.GetData(GetUserName());
+
+			if (userState is not null)
+			{
+				return;
+			}
 
 			if (team.TeamMembers.Length == 0)
 			{
@@ -89,17 +96,9 @@ namespace ConcernsCaseWork.Pages
 			}
 
 			// record in redis that we have recorded a user state
-			await _userStateCache.StoreData(GetUserName(), userState);
+			await _userStateCache.StoreData(GetUserName(), new UserState(GetUserName()));
 		}
 
-		private string GetUserName()
-		{
-			if (User?.Identity is null)
-			{
-				throw new NullReferenceException("User.Identity returned null");
-			}
-
-			return User.Identity.Name;
-		}
+		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 	}
 }

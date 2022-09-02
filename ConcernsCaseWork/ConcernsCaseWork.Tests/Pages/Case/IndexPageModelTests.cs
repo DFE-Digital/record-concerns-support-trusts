@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -17,6 +18,7 @@ using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case
@@ -232,9 +234,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		
 		private static IndexPageModel SetupIndexModel(ITrustModelService mockTrustModelService, IUserStateCachedService mockUserStateCachedService, ILogger<IndexPageModel> mockLogger, bool isAuthenticated = false)
 		{
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+			mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<ClaimsPrincipal>())).Returns("Tester");
+
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new IndexPageModel(mockTrustModelService, mockUserStateCachedService, mockLogger)
+			return new IndexPageModel(mockTrustModelService, mockUserStateCachedService, mockLogger, mockClaimsPrincipalHelper.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

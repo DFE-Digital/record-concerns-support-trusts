@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Models;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,14 +22,16 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ITrustModelService _trustModelService;
 		private readonly IUserStateCachedService _userStateCache;
 		private readonly ILogger<IndexPageModel> _logger;
-		
+		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
+
 		private const int SearchQueryMinLength = 3;
 		
-		public IndexPageModel(ITrustModelService trustModelService, IUserStateCachedService userStateCache, ILogger<IndexPageModel> logger)
+		public IndexPageModel(ITrustModelService trustModelService, IUserStateCachedService userStateCache, ILogger<IndexPageModel> logger, IClaimsPrincipalHelper claimsPrincipalHelper)
 		{
-			_trustModelService = trustModelService;
-			_userStateCache = userStateCache;
-			_logger = logger;
+			_trustModelService = Guard.Against.Null(trustModelService);
+			_userStateCache = Guard.Against.Null(userStateCache);
+			_logger = Guard.Against.Null(logger);
+			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 		}
 		
 		public async Task<ActionResult> OnGetTrustsSearchResult(string searchQuery)
@@ -80,14 +84,6 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 		}
 
-		private string GetUserName()
-		{
-			if (User?.Identity is null)
-			{
-				throw new NullReferenceException("User.Identity returned null");
-			}
-
-			return User.Identity.Name;
-		}
+		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 	}
 }

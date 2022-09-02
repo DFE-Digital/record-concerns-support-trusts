@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Logging;
+﻿using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
@@ -139,6 +140,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IMeansOfReferralModelService, MeansOfReferralModelService>();
 			services.AddScoped<INtiModelService, NtiModelService>();
 			services.AddScoped<ITeamsModelService, TeamsModelService>();
+			services.AddScoped<IClaimsPrincipalHelper, ClaimsPrincipalHelper>();
 
 			// Trams api services
 			services.AddScoped<ICaseService, CaseService>();
