@@ -42,14 +42,14 @@ namespace ConcernsCaseWork.Services.Teams
 			return DoWork();
 		}
 
-		public Task UpdateCaseworkTeam(ConcernsTeamCaseworkModel team)
+		public Task UpdateCaseworkTeam(ConcernsTeamCaseworkModel teamCaseworkModel)
 		{
 			_logger.LogMethodEntered();
-			Guard.Against.Null(team);
+			Guard.Against.Null(teamCaseworkModel);
 
 			async Task DoWork()
 			{
-				await _teamsServiceClient.PutTeam(new ConcernsCaseworkTeamDto(team.OwnerId, team.TeamMembers));
+				await _teamsServiceClient.PutTeam(new ConcernsCaseworkTeamDto(teamCaseworkModel.OwnerId, teamCaseworkModel.TeamMembers));
 			}
 			return DoWork();
 		}

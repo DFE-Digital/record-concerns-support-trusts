@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
@@ -17,6 +18,7 @@ using Service.Redis.Models;
 using Service.Redis.Users;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case
@@ -35,7 +37,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
 			var expected = TrustFactory.BuildTrustDetailsModel();
 			var ratingsModel = RatingFactory.BuildListRatingModel();
 			
@@ -92,7 +94,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
-			var userState = new UserState { CreateCaseModel = createCaseModel };
+			var userState = new UserState("testing") { CreateCaseModel = createCaseModel };
 			var expected = TrustFactory.BuildTrustDetailsModel();
 			var ratingsModel = RatingFactory.BuildListRatingModel();
 			
@@ -179,7 +181,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			
-			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(new UserState());
+			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(new UserState("testing"));
 			mockCachedService.Setup(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()));
 			
 			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
@@ -234,7 +236,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			
 			var expected = CaseFactory.BuildCreateCaseModel();
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 			
 			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 			
@@ -272,7 +274,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var ratingsModel = RatingFactory.BuildListRatingModel();
 
@@ -312,7 +314,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var ratingsModel = RatingFactory.BuildListRatingModel();
 
@@ -353,9 +355,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			IRatingModelService mockRatingModelService,
 			ILogger<RatingPageModel> mockLogger, bool isAuthenticated = false)
 		{
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+			mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<ClaimsPrincipal>())).Returns("Tester");
+
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new RatingPageModel(mockTrustModelService, mockUserStateCachedService, mockRatingModelService, mockLogger)
+			return new RatingPageModel(mockTrustModelService, mockUserStateCachedService, mockRatingModelService, mockLogger, mockClaimsPrincipalHelper.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

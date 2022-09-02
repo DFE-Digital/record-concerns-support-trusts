@@ -8,6 +8,8 @@ namespace Service.Redis.Users
 {
 	public class UserStateCachedService : CachedService, IUserStateCachedService
 	{
+		private const int _defaultCacheExpiryHours = 9;
+
 		public UserStateCachedService(ICacheProvider cacheProvider) : base(cacheProvider)
 		{
 		}
@@ -26,7 +28,7 @@ namespace Service.Redis.Users
 			// no need to store nulls
 			await (userState is null
 				? ClearData(userIdentity)
-				: base.StoreData(userIdentity, userState));
+				: base.StoreData(userIdentity, userState, _defaultCacheExpiryHours));
 		}
 	}
 }
