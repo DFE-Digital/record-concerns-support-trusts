@@ -46,7 +46,7 @@ namespace Service.Redis.Cases
 			}
 
 			userState = await GetData<UserState>(caseworker);
-			userState ??= new UserState();
+			userState ??= new UserState(caseworker);
 
 			Parallel.ForEach(casesDto, caseDto => userState.CasesDetails.TryAdd(caseDto.Urn, new CaseWrapper { CaseDto = caseDto }));
 
@@ -72,7 +72,7 @@ namespace Service.Redis.Cases
 			// Trust overview shows all cases for a trust which some aren't from the logged caseworker
 			if (!caseDto.CreatedBy.Equals(caseworker, StringComparison.OrdinalIgnoreCase)) return caseDto;
 
-			userState ??= new UserState();
+			userState ??= new UserState(caseworker);
 			userState.CasesDetails.Add(urn, new CaseWrapper { CaseDto = caseDto });
 
 			await StoreData(caseworker, userState);
@@ -91,7 +91,7 @@ namespace Service.Redis.Cases
 			var userState = await GetData<UserState>(newCase.CreatedBy);
 			if (userState is null)
 			{
-				userState = new UserState { CasesDetails = { { newCase.Urn, new CaseWrapper { CaseDto = newCase } } } };
+				userState = new UserState(createCaseDto.CreatedBy) { CasesDetails = { { newCase.Urn, new CaseWrapper { CaseDto = newCase } } } };
 			}
 			else
 			{
@@ -114,7 +114,7 @@ namespace Service.Redis.Cases
 			var userState = await GetData<UserState>(patchCaseDto.CreatedBy);
 			if (userState is null)
 			{
-				userState = new UserState { CasesDetails = { { patchCaseDto.Urn, new CaseWrapper { CaseDto = patchCaseDto } } } };
+				userState = new UserState(caseDto.CreatedBy) { CasesDetails = { { patchCaseDto.Urn, new CaseWrapper { CaseDto = patchCaseDto } } } };
 			}
 			else
 			{

@@ -72,7 +72,7 @@ namespace ConcernsCaseWork.Pages.Case
 				userState.CreateCaseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRatingName);
 				
 				// Store case model in cache for the details page
-				await _userStateCache.StoreData(User.Identity?.Name, userState);
+				await _userStateCache.StoreData(GetUserName(), userState);
 				
 				return RedirectToPage("details");
 			}
@@ -92,7 +92,7 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				var userState = await GetUserState();
 				userState.CreateCaseModel = new CreateCaseModel();
-				await _userStateCache.StoreData(User.Identity?.Name, userState);
+				await _userStateCache.StoreData(GetUserName(), userState);
 				
 				return Redirect("/");
 			}
@@ -132,11 +132,21 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		private async Task<UserState> GetUserState()
 		{
-			var userState = await _userStateCache.GetData(User.Identity.Name);
+			var userState = await _userStateCache.GetData(GetUserName());
 			if (userState is null)
 				throw new Exception("Cache CaseStateData is null");
 			
 			return userState;
+		}
+
+		private string GetUserName()
+		{
+			if (User?.Identity is null)
+			{
+				throw new NullReferenceException("User.Identity returned null");
+			}
+
+			return User.Identity.Name;
 		}
 	}
 }

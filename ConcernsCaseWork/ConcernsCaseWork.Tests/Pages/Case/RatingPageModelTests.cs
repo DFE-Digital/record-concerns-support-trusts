@@ -35,7 +35,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
 			var expected = TrustFactory.BuildTrustDetailsModel();
 			var ratingsModel = RatingFactory.BuildListRatingModel();
 			
@@ -92,7 +92,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
-			var userState = new UserState { CreateCaseModel = createCaseModel };
+			var userState = new UserState("testing") { CreateCaseModel = createCaseModel };
 			var expected = TrustFactory.BuildTrustDetailsModel();
 			var ratingsModel = RatingFactory.BuildListRatingModel();
 			
@@ -179,7 +179,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			
-			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(new UserState());
+			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(new UserState("testing"));
 			mockCachedService.Setup(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()));
 			
 			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
@@ -234,7 +234,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			
 			var expected = CaseFactory.BuildCreateCaseModel();
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 			
 			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 			
@@ -272,7 +272,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var ratingsModel = RatingFactory.BuildListRatingModel();
 
@@ -312,7 +312,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = createCaseModel };
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var ratingsModel = RatingFactory.BuildListRatingModel();
 

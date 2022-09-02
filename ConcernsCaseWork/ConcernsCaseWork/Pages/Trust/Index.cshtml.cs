@@ -67,10 +67,10 @@ namespace ConcernsCaseWork.Pages.Trust
 					throw new Exception($"Trust::IndexModel::OnGetSelectedTrust::Selected trust is incorrect - {trustUkPrn}");
 				
 				// Store CaseState into cache.
-				var userState = await _userStateCache.GetData(User.Identity?.Name) ?? new UserState();
+				var userState = await _userStateCache.GetData(GetUserName()) ?? new UserState(GetUserName());
 				userState.TrustUkPrn = trustUkPrn;
 				userState.CreateCaseModel = new CreateCaseModel();
-				await _userStateCache.StoreData(User.Identity?.Name, userState);
+				await _userStateCache.StoreData(GetUserName(), userState);
 
 				return new JsonResult(new { redirectUrl = Url.Page("Overview", new { id = trustUkPrn }) });
 			}
@@ -80,6 +80,16 @@ namespace ConcernsCaseWork.Pages.Trust
 					
 				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 			}
+		}
+
+		private string GetUserName()
+		{
+			if (User?.Identity is null)
+			{
+				throw new NullReferenceException("User.Identity returned null");
+			}
+
+			return User.Identity.Name;
 		}
 	}
 }

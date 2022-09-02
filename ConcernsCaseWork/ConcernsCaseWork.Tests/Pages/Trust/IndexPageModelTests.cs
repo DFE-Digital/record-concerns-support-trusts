@@ -160,7 +160,7 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockUserStateService = new Mock<IUserStateCachedService>();
 
-			var userState = new UserState();
+			var userState = new UserState("testing");
 			
 			mockUserStateService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 			mockUserStateService.Setup(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()))

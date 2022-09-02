@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Security;
+using Service.Redis.Users;
 using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockRbacManager = new Mock<IRbacManager>();
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
+			var mockUserStateCache = new Mock<IUserStateCachedService>();
 
 			var roles = RoleFactory.BuildListRoleEnum();
 			var defaultUsers = new[] { "user1", "user2" };
@@ -47,7 +49,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockTeamService.Setup(x => x.GetCaseworkTeam(It.IsAny<string>()))
 				.ReturnsAsync(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel("random.user", Array.Empty<string>()));
 
-			var homePageModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object, mockTeamService.Object);
+			var homePageModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object);
 
 			// act
 			await homePageModel.OnGetAsync();
@@ -133,6 +135,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockRbacManager = new Mock<IRbacManager>();
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
+			var mockUserStateCache = new Mock<IUserStateCachedService>();
 			var emptyList = new List<HomeModel>();
 
 			var roles = RoleFactory.BuildListUserRoleEnum();
@@ -151,7 +154,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				.ReturnsAsync(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel("random.user", Array.Empty<string>()));
 
 			// act
-			var indexModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object, mockTeamService.Object);
+			var indexModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object);
 			await indexModel.OnGetAsync();
 
 			// assert
@@ -173,11 +176,16 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()), Times.Once);
 		}
 
-		private static HomePageModel SetupHomeModel(ICaseModelService mockCaseModelService, IRbacManager mockRbacManager, ILogger<HomePageModel> mockLogger, ITeamsModelService mockTeamService, bool isAuthenticated = false)
+		private static HomePageModel SetupHomeModel(ICaseModelService mockCaseModelService,
+			IRbacManager mockRbacManager,
+			ILogger<HomePageModel> mockLogger,
+			ITeamsModelService mockTeamService,
+			IUserStateCachedService mockUserStateCachedService,
+			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new HomePageModel(mockCaseModelService, mockRbacManager, mockLogger, mockTeamService)
+			return new HomePageModel(mockCaseModelService, mockRbacManager, mockLogger, mockTeamService, mockUserStateCachedService)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
