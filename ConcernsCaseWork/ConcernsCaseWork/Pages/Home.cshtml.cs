@@ -84,7 +84,7 @@ namespace ConcernsCaseWork.Pages
 		{
 			var userState = await _userStateCache.GetData(GetUserName());
 
-			if (userState is not null)
+			if (userState is not null && !String.IsNullOrWhiteSpace(userState.UserName))
 			{
 				return;
 			}
