@@ -42,7 +42,6 @@ describe("User can add case actions to an existing case", () => {
 		CaseManagementPage.getAddToCaseBtn().click();
 		AddToCasePage.addToCase('Srma')
 		AddToCasePage.getCaseActionRadio('Srma').siblings().should('contain.text', AddToCasePage.actionOptions[8]);
-
 	});
 
 

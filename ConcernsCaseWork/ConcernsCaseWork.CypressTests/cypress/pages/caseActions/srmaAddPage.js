@@ -3,14 +3,10 @@ import caseActionsBase from "/cypress/pages/caseActions/caseActionsBasePage";
 class SRMAAddPage {
 
     constructor() {
-        //this.something = 
+
         this.arrDate = ["day1", "month1", "year1","day2", "month2", "year2", ];
     }
 
-    
-
-    //
-    //ADD SRMA ELEMENTS
 
 
     //locators
@@ -141,7 +137,7 @@ class SRMAAddPage {
     //sets the Case Action status
     //Takes a string value of either "0", "1", "2" or "random"
     setStatusSelect(value) {
-        //let random = false
+
         cy.log("value "+value)
 
         if(value == "random"){
@@ -156,7 +152,6 @@ class SRMAAddPage {
             this.getStatusRadio().eq(value).click();
             cy.log(this.getStatusRadioLabel().eq(value).invoke('text'));
             return this.getStatusRadioLabel().eq(value).invoke('text');
-
         }
 
 	}
@@ -268,9 +263,7 @@ class SRMAAddPage {
                      });
                    });
           });
-
-            
- 
+        
     }
 
     setDateVisitEnd() {
