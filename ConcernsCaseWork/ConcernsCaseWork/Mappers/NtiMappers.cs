@@ -1,6 +1,8 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
 using Service.TRAMS.Nti;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace ConcernsCaseWork.Mappers
@@ -19,13 +21,13 @@ namespace ConcernsCaseWork.Mappers
 				Notes = ntiModel.Notes,
 				ReasonsMapping = ntiModel.Reasons?.Select(r => r.Id).ToArray(),
 				StatusId = ntiModel.Status?.Id,
-				DateLetterSent = ntiModel.SentDate,
+				DateStarted = ntiModel.DateStarted,
 				UpdatedAt = ntiModel.UpdatedAt,
 				ConditionsMapping = ntiModel.Conditions?.Select(c => c.Id).ToArray()
 			};
 		}
 
-		public static NtiModel ToServiceModel(NtiDto ntiDto)
+		public static NtiModel ToServiceModel(NtiDto ntiDto, ICollection<NtiStatusDto> statuses)
 		{
 			return new NtiModel
 			{
@@ -34,8 +36,8 @@ namespace ConcernsCaseWork.Mappers
 				CreatedAt = ntiDto.CreatedAt,
 				UpdatedAt = ntiDto.UpdatedAt ?? default(DateTime),
 				Notes = ntiDto.Notes,
-				SentDate = ntiDto.DateLetterSent,
-				Status = ntiDto.StatusId == null ? null : new NtiStatusModel { Id = ntiDto.StatusId.Value },
+				DateStarted = ntiDto.DateStarted,
+				Status = ntiDto.StatusId == null ? null : ToServiceModel(statuses.FirstOrDefault(s => s.Id == ntiDto.StatusId.Value)),
 				Reasons = ntiDto.ReasonsMapping?.Select(r => new NtiReasonModel { Id = r }).ToArray(),
 				Conditions = ntiDto.ConditionsMapping?.Select(c => new NtiConditionModel { Id = c }).ToArray(),
 				ClosedStatusId = ntiDto.ClosedStatusId,

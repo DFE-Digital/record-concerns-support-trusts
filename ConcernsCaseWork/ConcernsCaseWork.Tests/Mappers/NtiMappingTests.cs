@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				ClosedAt = DateTime.Now,
 				Notes = "Test notes",
 				Reasons = new KeyValuePair<int, string>[] { new KeyValuePair<int, string>(1, "Reason1") },
-				SentDate = DateTime.Now.AddDays(-1),
+				DateStarted = DateTime.Now.AddDays(-1),
 				Status = new KeyValuePair<int, string>(1, "Status 1"),
 				UpdatedAt = DateTime.Now.AddDays(-1)
 			};
@@ -39,7 +39,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CreatedAt = testData.CreatedAt,
 				ClosedAt = testData.ClosedAt,
 				Notes = testData.Notes,
-				DateLetterSent = testData.SentDate,
+				DateStarted = testData.DateStarted,
 				StatusId = testData.Status.Key,
 				UpdatedAt = testData.UpdatedAt,
 				ReasonsMapping = testData.Reasons.Select(r => r.Key).ToArray()
@@ -70,7 +70,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				ClosedAt = DateTime.Now,
 				Notes = "Test notes",
 				Reasons = new KeyValuePair<int, string>[] { new KeyValuePair<int, string>(1, "Reason1") },
-				SentDate = DateTime.Now.AddDays(-1),
+				DateStarted = DateTime.Now.AddDays(-1),
 				Status = new KeyValuePair<int, string>(1, "Status 1"),
 				UpdatedAt = DateTime.Now.AddDays(-1)
 			};
@@ -84,7 +84,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Notes = testData.Notes,
 				Reasons = new NtiReasonModel[] { new NtiReasonModel { Id = testData.Reasons.First().Key, Name = testData.Reasons.First().Value } },
 				Status = new NtiStatusModel { Id = testData.Status.Key, Name = testData.Status.Value },
-				SentDate = testData.SentDate,
+				DateStarted = testData.DateStarted,
 				UpdatedAt = testData.UpdatedAt
 			};
 
@@ -99,7 +99,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(dbModel.StatusId, Is.EqualTo(testData.Status.Key));
 			Assert.That(dbModel.Notes, Is.EqualTo(testData.Notes));
 			Assert.That(dbModel.ReasonsMapping.First(), Is.EqualTo(testData.Reasons.First().Key));
-			Assert.That(dbModel.DateLetterSent, Is.EqualTo(testData.SentDate));
+			Assert.That(dbModel.DateStarted, Is.EqualTo(testData.DateStarted));
 			Assert.That(dbModel.UpdatedAt, Is.EqualTo(testData.UpdatedAt));
 		}
 
