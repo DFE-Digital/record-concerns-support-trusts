@@ -29,9 +29,7 @@
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "DockerfileRunArguments": "--link redis:redis",
-      "publishAllPorts": true,
-      "useSSL": true
+      "environmentVariables": {}
     }
   }
 }

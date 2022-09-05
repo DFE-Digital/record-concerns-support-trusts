@@ -46,8 +46,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 			};
 
 
+			var ntiStatuses = NTIStatusFactory.BuildListNTIStatusDto();
+
 			// act
-			var serviceModel = NtiMappers.ToServiceModel(ntiDto);
+			var serviceModel = NtiMappers.ToServiceModel(ntiDto, ntiStatuses);
 
 			// assert
 			Assert.That(serviceModel, Is.Not.Null);
