@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
+﻿using Ardalis.GuardClauses;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Service.Redis.Configuration;
@@ -25,22 +26,31 @@ namespace Service.Redis.Base
 
 		public async Task<T> GetFromCache<T>(string key) where T : class
 		{
+			Guard.Against.NullOrWhiteSpace(key);
+
 			var cachedData = await _cache.GetStringAsync(key);
 			return cachedData == null ? null : JsonConvert.DeserializeObject<T>(cachedData);
 		}
 
 		public async Task SetCache<T>(string key, T value, DistributedCacheEntryOptions options) where T : class
 		{
+			Guard.Against.NullOrWhiteSpace(key);
+
+			// do not store null values for cache, it's unnecessary
+			if (value == null)
+			{
+				await ClearCache(key);
+				return;
+			}
+
 			var user = JsonConvert.SerializeObject(value);
 			await _cache.SetStringAsync(key, user , options);
 		}
 
 		public async Task ClearCache(string key)
 		{
-			if (key == null)
-			{
-				throw new ArgumentNullException(nameof(key));
-			}
+			Guard.Against.NullOrWhiteSpace(key);
+
 			await _cache.RemoveAsync(key);
 		}
 	}

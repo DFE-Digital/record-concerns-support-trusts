@@ -813,7 +813,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockRecordCachedService = new Mock<IRecordCachedService>();
 			var mockRatingCachedService = new Mock<IRatingCachedService>();
 			var mockTypeCachedService = new Mock<ITypeCachedService>();
-			var mockCachedService = new Mock<ICachedService>();
+			//var mockCachedService = new Mock<ICachedService>();
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
@@ -837,11 +837,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			mockTrustCachedService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDto);
 			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(casesDto);
 
-			var userState = new UserState
+			var userState = new UserState("testing")
 			{
 				TrustUkPrn = firstCaseDto.TrustUkPrn
 			};
-			mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
+			//mockCachedService.Setup(c => c.GetData<UserState>(It.IsAny<string>())).ReturnsAsync(userState);
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 

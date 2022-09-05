@@ -14,7 +14,6 @@ namespace Service.Redis.Teams
 		private readonly ITeamsService _tramsTeamsService;
 
 		private const string CacheKeyPrefix = "Concerns.Teams";
-		private readonly SemaphoreSlim _semaphoreTeams = new SemaphoreSlim(1, 1);
 		private const int CacheExpiryTimeHours = 8;
 
 		public TeamsCachedService(ILogger<TeamsCachedService> logger, ITeamsService teamsService, ICacheProvider cacheProvider)

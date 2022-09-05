@@ -1,5 +1,4 @@
 import CreateCaseConcernsPage from "/cypress/pages/createCase/createCaseConcernsPage";
-import CreateCaseDetailsPage from "/cypress/pages/createCase/createCaseDetailsPage";
 import CaseMangementPage from "/cypress/pages/caseMangementPage";
 
 describe("User adds subsequent Concern to a case", () => {
@@ -49,16 +48,11 @@ describe("User adds subsequent Concern to a case", () => {
 
 	it("Should allow the user to enter Concern details", () => {
 		cy.enterConcernDetails();
-		//CreateCaseConcernsPage.selectConcernType();
 	});
 
 	it("Should display a Case Created entry", () => {
-		//cy.get('.govuk-table__row .govuk-table-case-details__cell_no_border .govuk-table__row')
-			
-		CaseMangementPage.getConcernTable().should('contain.text', 'Financial');
 
-		//cy.get('.govuk-table__row .govuk-table-case-details__cell_no_border .govuk-table__row')
-			//.should('contain.text', 'Financial');
+		CaseMangementPage.getConcernTable().should('contain.text', 'Financial');
 	});
 
 	after(function () {

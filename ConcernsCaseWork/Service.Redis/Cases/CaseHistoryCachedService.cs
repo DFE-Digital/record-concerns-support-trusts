@@ -48,7 +48,7 @@ namespace Service.Redis.Cases
 			{
 				var caseWrapper = new CaseWrapper();
 				caseWrapper.CasesHistoryDto.Add(newCaseHistoryDto);
-				userState = new UserState { CasesDetails = { { createCaseHistoryDto.CaseUrn, caseWrapper } } };
+				userState = new UserState(caseworker) { CasesDetails = { { createCaseHistoryDto.CaseUrn, caseWrapper } } };
 			}
 			else
 			{

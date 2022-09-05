@@ -53,7 +53,7 @@ namespace ConcernsCaseWork.Tests.Extensions
 			mockMultiplexer.Setup(m => m.Connect(It.IsAny<ConfigurationOptions>())).Returns(mockConnectionMultiplexer.Object);
 			
 			// Inject the mock so that it is used by the extension methods
-			StartupExtension.Implementation = mockMultiplexer.Object;
+			StartupExtension.RedisMultiplexerImplementation = mockMultiplexer.Object;
 			
 			// act
 			serviceCollection.AddRedis(new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build());

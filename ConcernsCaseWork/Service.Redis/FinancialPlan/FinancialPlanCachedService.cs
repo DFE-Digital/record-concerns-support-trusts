@@ -2,11 +2,9 @@
 using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.TRAMS.FinancialPlan;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Service.Redis.FinancialPlan
@@ -15,8 +13,6 @@ namespace Service.Redis.FinancialPlan
 	{
 		private readonly ILogger<FinancialPlanCachedService> _logger;
 		private readonly IFinancialPlanService _financialPlanService;
-
-		private readonly SemaphoreSlim _semaphoreFinancialPlan = new SemaphoreSlim(1, 1);
 
 		public FinancialPlanCachedService(ICacheProvider cacheProvider, IFinancialPlanService financialPlanService, ILogger<FinancialPlanCachedService> logger)
 		: base(cacheProvider)
@@ -54,27 +50,18 @@ namespace Service.Redis.FinancialPlan
 			{
 				financialPlansDto = await _financialPlanService.GetFinancialPlansByCaseUrn(caseUrn);
 
-				try
+				userState = await GetData<UserState>(caseworker);
+
+				if (userState.CasesDetails.TryGetValue(caseUrn, out caseWrapper))
 				{
-					await _semaphoreFinancialPlan.WaitAsync();
+					caseWrapper.FinancialPlans ??= new Dictionary<long, FinancialPlanWrapper>();
 
-					userState = await GetData<UserState>(caseworker);
-
-					if (userState.CasesDetails.TryGetValue(caseUrn, out caseWrapper))
+					if (financialPlansDto.Any())
 					{
-						caseWrapper.FinancialPlans ??= new Dictionary<long, FinancialPlanWrapper>();
-
-						if (financialPlansDto.Any())
-						{
-							caseWrapper.FinancialPlans = financialPlansDto.ToDictionary(financialPlanDto => financialPlanDto.Id, financialPlanDto => new FinancialPlanWrapper { FinancialPlanDto = financialPlanDto });
-						}
-
-						await StoreData(caseworker, userState);
+						caseWrapper.FinancialPlans = financialPlansDto.ToDictionary(financialPlanDto => financialPlanDto.Id, financialPlanDto => new FinancialPlanWrapper { FinancialPlanDto = financialPlanDto });
 					}
-				}
-				finally
-				{
-					_semaphoreFinancialPlan.Release();
+
+					await StoreData(caseworker, userState);
 				}
 			}
 
@@ -88,7 +75,7 @@ namespace Service.Redis.FinancialPlan
 
 			// Store in cache for 24 hours (default)
 			var userState = await GetData<UserState>(caseworker);
-	
+
 			if (!userState.CasesDetails.TryGetValue(caseUrn, out var caseWrapper))
 			{
 				var financialPlanDto = await _financialPlanService.GetFinancialPlansById(caseUrn, financialPlanId);
@@ -112,25 +99,17 @@ namespace Service.Redis.FinancialPlan
 			{
 				var financialPlanDto = await _financialPlanService.GetFinancialPlansById(caseUrn, financialPlanId);
 
-				try
+				userState = await GetData<UserState>(caseworker);
+
+				if (userState.CasesDetails.TryGetValue(caseUrn, out caseWrapper))
 				{
-					await _semaphoreFinancialPlan.WaitAsync();
+					caseWrapper.FinancialPlans ??= new Dictionary<long, FinancialPlanWrapper>();
 
-					userState = await GetData<UserState>(caseworker);
+					caseWrapper.FinancialPlans.Add(financialPlanId, new FinancialPlanWrapper { FinancialPlanDto = financialPlanDto });
 
-					if (userState.CasesDetails.TryGetValue(caseUrn, out caseWrapper))
-					{
-						caseWrapper.FinancialPlans ??= new Dictionary<long, FinancialPlanWrapper>();
-
-						caseWrapper.FinancialPlans.Add(financialPlanId, new FinancialPlanWrapper { FinancialPlanDto = financialPlanDto });
-
-						await StoreData(caseworker, userState);
-					}
+					await StoreData(caseworker, userState);
 				}
-				finally
-				{
-					_semaphoreFinancialPlan.Release();
-				}
+
 
 				return financialPlanDto;
 			}
@@ -170,29 +149,20 @@ namespace Service.Redis.FinancialPlan
 			// Create financial plan on Academies API
 			var createdFinancialPlanDto = await _financialPlanService.PostFinancialPlanByCaseUrn(createFinancialPlanDto);
 
-			try
+			var userState = await GetData<UserState>(caseworker);
+			if (userState is null) return createdFinancialPlanDto;
+
+			// If case urn doesn't exist on the cache return new created financial plan
+			if (!userState.CasesDetails.TryGetValue(createdFinancialPlanDto.CaseUrn, out var caseWrapper))
 			{
-				await _semaphoreFinancialPlan.WaitAsync();
-
-				var userState = await GetData<UserState>(caseworker);
-				if (userState is null) return createdFinancialPlanDto;
-
-				// If case urn doesn't exist on the cache return new created financial plan
-				if (!userState.CasesDetails.TryGetValue(createdFinancialPlanDto.CaseUrn, out var caseWrapper))
-				{
-					return createdFinancialPlanDto;
-				}
-
-				// Add new financial plan to the records cache
-				caseWrapper.FinancialPlans ??= new ConcurrentDictionary<long, FinancialPlanWrapper>();
-				caseWrapper.FinancialPlans.Add(createdFinancialPlanDto.Id, new FinancialPlanWrapper { FinancialPlanDto = createdFinancialPlanDto });
-
-				await StoreData(caseworker, userState);
+				return createdFinancialPlanDto;
 			}
-			finally
-			{
-				_semaphoreFinancialPlan.Release();
-			}
+
+			// Add new financial plan to the records cache
+			caseWrapper.FinancialPlans ??= new ConcurrentDictionary<long, FinancialPlanWrapper>();
+			caseWrapper.FinancialPlans.Add(createdFinancialPlanDto.Id, new FinancialPlanWrapper { FinancialPlanDto = createdFinancialPlanDto });
+
+			await StoreData(caseworker, userState);
 
 			return createdFinancialPlanDto;
 		}

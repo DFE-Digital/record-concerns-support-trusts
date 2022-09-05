@@ -13,8 +13,10 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 	[TestFixture]
 	public class TrustServiceIntegrationTests
 	{
+		/// <summary>
 		/// Testing the class requires a running Redis,
 		/// startup is configured to use Redis with session storage.
+		/// </summary>
 		private IConfigurationRoot _configuration;
 		private WebAppFactory _factory;
 		
@@ -35,7 +37,8 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		public async Task WhenRequestTrusts_ReturnsTrustsDtoWithPagination()
 		{
 			// arrange
-			var trustService = _factory.Services.GetRequiredService<ITrustService>();
+			using var serviceScope = _factory.Services.CreateScope();
+			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustService>();
 			const string searchParameter = "Northwood";
 			
 			// act
@@ -52,7 +55,8 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		public async Task WhenRequestTrusts_ReturnsTrustsModelWithPagination()
 		{
 			// arrange
-			var trustModelService = _factory.Services.GetRequiredService<ITrustModelService>();
+			using var serviceScope = _factory.Services.CreateScope();
+			var trustModelService = serviceScope.ServiceProvider.GetRequiredService<ITrustModelService>();
 			const string searchParameter = "Northwood";
 			
 			// act
@@ -68,7 +72,8 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		public async Task WhenRequestTrustByUkPrn_ReturnsTrustDetailsDto()
 		{
 			// arrange
-			var trustService = _factory.Services.GetRequiredService<ITrustService>();
+			using var serviceScope = _factory.Services.CreateScope();
+			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustService>();
 			const string searchParameter = "Northwood";
 			
 			// act
@@ -95,7 +100,8 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		public async Task WhenRequestTrustByUkPrn_ReturnsTrustDetailsModel()
 		{
 			// arrange
-			var trustModelService = _factory.Services.GetRequiredService<ITrustModelService>();
+			using var serviceScope = _factory.Services.CreateScope();
+			var trustModelService = serviceScope.ServiceProvider.GetRequiredService<ITrustModelService>();
 			const string searchParameter = "Northwood";
 			
 			// act
