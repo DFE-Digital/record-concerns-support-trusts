@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var expectedTrustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			expectedCreateCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
 			
-			var userState = new UserState
+			var userState = new UserState("testing")
 			{
 				TrustUkPrn = "trust-ukprn", 
 				CreateCaseModel = expectedCreateCaseModel
@@ -117,7 +117,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			
 			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>()))
-				.ReturnsAsync(new UserState());
+				.ReturnsAsync(new UserState("testing"));
 			
 			var pageModel = SetupDetailsModel(mockCaseModelService.Object, 
 				mockTrustModelService.Object, 
@@ -203,7 +203,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			
 			var expected = CaseFactory.BuildCreateCaseModel();
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
 			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(1);
@@ -245,7 +245,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 
 			var expectedTrustByUkprn = TrustFactory.BuildTrustDetailsModel();
 			var expected = CaseFactory.BuildCreateCaseModel();
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
 			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(1);
@@ -279,7 +279,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 
 			var expectedTrustByUkprn = TrustFactory.BuildTrustDetailsModel();
 			var expected = CaseFactory.BuildCreateCaseModel();
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
 			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 			mockCaseModelService.Setup(c => c.PostCase(It.IsAny<CreateCaseModel>())).ReturnsAsync(1);

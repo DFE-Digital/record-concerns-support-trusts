@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Models;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,14 +23,16 @@ namespace ConcernsCaseWork.Pages.Trust
 		private readonly ITrustModelService _trustModelService;
 		private readonly IUserStateCachedService _userStateCache;
 		private readonly ILogger<IndexPageModel> _logger;
-		
+		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
+
 		private const int SearchQueryMinLength = 3;
 		
-		public IndexPageModel(ITrustModelService trustModelService, IUserStateCachedService userStateCache, ILogger<IndexPageModel> logger)
+		public IndexPageModel(ITrustModelService trustModelService, IUserStateCachedService userStateCache, ILogger<IndexPageModel> logger, IClaimsPrincipalHelper claimsPrincipalHelper)
 		{
-			_trustModelService = trustModelService;
-			_userStateCache = userStateCache;
-			_logger = logger;
+			_trustModelService = Guard.Against.Null(trustModelService);
+			_userStateCache = Guard.Against.Null(userStateCache);
+			_logger = Guard.Against.Null(logger);
+			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 		}
 		
 		public async Task<ActionResult> OnGetTrustsSearchResult(string searchQuery)
@@ -67,10 +71,10 @@ namespace ConcernsCaseWork.Pages.Trust
 					throw new Exception($"Trust::IndexModel::OnGetSelectedTrust::Selected trust is incorrect - {trustUkPrn}");
 				
 				// Store CaseState into cache.
-				var userState = await _userStateCache.GetData(User.Identity?.Name) ?? new UserState();
+				var userState = await _userStateCache.GetData(GetUserName()) ?? new UserState(GetUserName());
 				userState.TrustUkPrn = trustUkPrn;
 				userState.CreateCaseModel = new CreateCaseModel();
-				await _userStateCache.StoreData(User.Identity?.Name, userState);
+				await _userStateCache.StoreData(GetUserName(), userState);
 
 				return new JsonResult(new { redirectUrl = Url.Page("Overview", new { id = trustUkPrn }) });
 			}
@@ -81,5 +85,7 @@ namespace ConcernsCaseWork.Pages.Trust
 				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 			}
 		}
+
+		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 	}
 }

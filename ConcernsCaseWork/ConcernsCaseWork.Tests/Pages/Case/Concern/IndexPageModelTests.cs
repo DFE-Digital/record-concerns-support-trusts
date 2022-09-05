@@ -45,7 +45,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var expectedMeansOfReferralModels = MeansOfReferralFactory.BuildListMeansOfReferralModels();
 
 			mockTypeModelService.Setup(t => t.GetTypeModel()).ReturnsAsync(expectedTypeModel);
-			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(new UserState { TrustUkPrn = "trust-ukprn" });
+			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(new UserState("testing") { TrustUkPrn = "trust-ukprn" });
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
 			mockRatingModelService.Setup(r => r.GetRatingsModel()).ReturnsAsync(expectedRatingsModel);
 			mockMeansOfReferralModelService.Setup(m => m.GetMeansOfReferrals()).ReturnsAsync(expectedMeansOfReferralModels);
@@ -169,7 +169,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
-			var userState = new UserState { CreateCaseModel = createCaseModel };
+			var userState = new UserState("testing") { CreateCaseModel = createCaseModel };
 			
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 
@@ -250,7 +250,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
 			
 			var expected = CaseFactory.BuildCreateCaseModel();
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 
@@ -292,7 +292,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
 			
 			var expected = CaseFactory.BuildCreateCaseModel();
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 
@@ -326,7 +326,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
 
 			var expected = CaseFactory.BuildCreateCaseModel();
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 
@@ -388,7 +388,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
 			
 			var expected = CaseFactory.BuildCreateCaseModel();
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 

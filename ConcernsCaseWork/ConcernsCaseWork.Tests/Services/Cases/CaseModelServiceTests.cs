@@ -837,7 +837,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			mockTrustCachedService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDto);
 			mockCaseCachedService.Setup(cs => cs.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(casesDto);
 
-			var userState = new UserState
+			var userState = new UserState("testing")
 			{
 				TrustUkPrn = firstCaseDto.TrustUkPrn
 			};

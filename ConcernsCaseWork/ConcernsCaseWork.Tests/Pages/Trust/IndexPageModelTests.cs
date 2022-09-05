@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Trust;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -17,6 +18,7 @@ using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Trust
@@ -160,7 +162,7 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockUserStateService = new Mock<IUserStateCachedService>();
 
-			var userState = new UserState();
+			var userState = new UserState("testing");
 			
 			mockUserStateService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 			mockUserStateService.Setup(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()))
@@ -232,9 +234,12 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 		
 		private static IndexPageModel SetupIndexModel(ITrustModelService mockTrustModelService, IUserStateCachedService mockUSerStateCachedService, ILogger<IndexPageModel> mockLogger, bool isAuthenticated = false)
 		{
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+			mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<ClaimsPrincipal>())).Returns("Tester");
+
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new IndexPageModel(mockTrustModelService, mockUSerStateCachedService, mockLogger)
+			return new IndexPageModel(mockTrustModelService, mockUSerStateCachedService, mockLogger, mockClaimsPrincipalHelper.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

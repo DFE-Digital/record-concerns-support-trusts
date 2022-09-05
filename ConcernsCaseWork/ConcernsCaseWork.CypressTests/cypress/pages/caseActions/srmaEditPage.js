@@ -4,13 +4,11 @@ class SRMAEditPage {
 
 
     constructor() {
-        //this.something = 
         this.arrDate =[];
     }
 
 
     //locators
-    //SRMAAddPage.getDateOfferedDay();
 
     getHeadingText() {
         return     cy.get('h1[class="govuk-heading-l"]');
@@ -21,7 +19,6 @@ class SRMAEditPage {
     }
 
     //SRMA TABLE
-    //
     getSrmaTable() {
         return    cy.get('[class="govuk-table__cell"]', { timeout: 30000 });
     }
@@ -31,7 +28,6 @@ class SRMAEditPage {
     }
 
     getSrmaTableRowEmpty() {
-       // return    cy.get('.govuk-tag.ragtag.ragtag__grey', { timeout: 30000 });
         return    cy.get('tr.govuk-table__row', { timeout: 30000 }).contains('Empty');
     }
 
@@ -61,8 +57,6 @@ class SRMAEditPage {
     //Methods
 
     checkForTableEntry() {
-
-        //let $elem = Cypress.$('.govuk-list.govuk-error-summary__list');
         let $elem = Cypress.$('.govuk-tag.ragtag.ragtag__grey');
         cy.log(($elem).length)
         

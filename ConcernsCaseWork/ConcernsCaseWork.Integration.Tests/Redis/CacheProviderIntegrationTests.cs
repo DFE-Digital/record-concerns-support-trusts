@@ -122,7 +122,7 @@ namespace ConcernsCaseWork.Integration.Tests.Redis
 			var cacheEntryOptions = new DistributedCacheEntryOptions()
 				.SetSlidingExpiration(TimeSpan.FromSeconds(cacheTimeToLive));
 			
-			var caseStateData = new UserState
+			var caseStateData = new UserState("test@email.com")
 			{
 				TrustUkPrn = "999999"
 			};
