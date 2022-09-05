@@ -27,7 +27,7 @@ namespace Service.Redis.Tests.Base
 			var cacheService = new TestCacheService(mockCacheProvider.Object);
 
 			// act
-			await cacheService.StoreData("key", new UserState());
+			await cacheService.StoreData("key", new UserState("testing"));
 
 			// assert
 			mockCacheProvider.Verify(c => 

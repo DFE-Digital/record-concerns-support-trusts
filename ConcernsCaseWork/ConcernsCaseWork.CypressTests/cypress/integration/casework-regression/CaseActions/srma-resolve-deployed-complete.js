@@ -13,9 +13,6 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 		cy.storeSessionData();
 	});
 
-	const searchTerm ="Accrington St Christopher's Church Of England High School";
-	let term = "";
-	let $status = "";
 	let concatDate = "";
 	let arrDate = ["day1", "month1", "year1","day2", "month2", "year2", ];
 	let returnedDate = ["date1", "date2"];
@@ -33,7 +30,6 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 		AddToCasePage.getCaseActionRadio('Srma').siblings().should('contain.text', AddToCasePage.actionOptions[8]);
 
 	});
-
 
 	it("User clicking add to case is taken to the action page", function () {
 

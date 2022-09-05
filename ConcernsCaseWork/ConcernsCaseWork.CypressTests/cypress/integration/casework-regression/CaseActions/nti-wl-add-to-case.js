@@ -13,7 +13,6 @@ describe("User can add case actions to an existing case", () => {
 		cy.storeSessionData();
 	});
 
-	let term = "";
 	let stText = "null";
 	let condText = "null";
 	let reasText = "null";
@@ -289,10 +288,6 @@ describe("User can add case actions to an existing case", () => {
 
 	});
 
-	/*
-
-	
-*/
 	after(function () {
 		cy.clearLocalStorage();
 		cy.clearCookies();

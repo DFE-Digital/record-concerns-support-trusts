@@ -28,16 +28,11 @@ class trustSelectPage {
                             
             let num = Math.floor(Math.random()*searchTerm.length); 
 
-
             this.getSearchBox.type(searchTerm[num] + "{enter}");
-
             return cy.wrap(searchTerm[num]).as('term');
     }
 
-    }
+}
     
-
-
-
 
     export default trustSelectPage

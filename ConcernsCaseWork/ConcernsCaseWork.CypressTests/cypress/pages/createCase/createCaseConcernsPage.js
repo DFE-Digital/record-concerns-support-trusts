@@ -84,41 +84,23 @@ class CreateCaseConcernsPage {
     }
 
     selectConcernType2(){
-        //cy.get(".govuk-radios__item [value=Financial]").click();
         this.getConcernRadio().click();
-        
-        //cy.get("[id=sub-type-3]").click();
         this.getConcernSubRadio("3").click();
-
-        //cy.get("[id=rating-3]").click();
         this.getConcernRatingRadio().eq(0).click();
-
-        cy.get(".govuk-button").click();
-        
+        cy.get(".govuk-button").click();  
     }
 
     selectConcernType(){
-       // cy.get(".govuk-radios__item [value=Financial]").click();
-       this.getConcernRadio().click();
-
-        //cy.get("[id=sub-type-3]").click();
+        this.getConcernRadio().click();
         this.getConcernSubRadio().click();
-
-        //cy.get("[id=rating-3]").click();
         this.getConcernRatingRadio().eq(0).click();
-
         this.selectMoR();
-        //cy.get(".govuk-button").click();
-
-
     }
 
     selectMoR(){
 
             let rand = Math.floor(Math.random()*1)
-
             this.getMorRadio().eq(Math.floor(Math.random() * 1)).click();
-
             cy.get('button[data-prevent-double-click="true"]').click();
 
     if(rand == 0){
@@ -126,7 +108,6 @@ class CreateCaseConcernsPage {
             }else{
                 return "12575";
             }
-
     }
 }
     

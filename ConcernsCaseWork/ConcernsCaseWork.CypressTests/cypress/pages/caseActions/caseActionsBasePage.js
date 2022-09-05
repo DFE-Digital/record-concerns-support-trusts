@@ -1,7 +1,6 @@
 class CaseActionsBasePage {
 
     constructor() {
-        //this.something = 
         this.arrDate = [];
     }
 
