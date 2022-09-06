@@ -42,44 +42,12 @@ describe("User creates and adds subsequent concern to a case", () => {
 
 	it("Should allow a user to select a second concern type", () => {
 		cy.get(".govuk-summary-list__value").then(($el) =>{
-			expect($el.text()).to.match(/(school|england|academy)/i)
+			expect($el.text()).to.match(/([A-Z])\w+/i)
 		});
 
 		CreateCaseConcernsPage.selectConcernType();
 	});
 
-/*
-	it("Expected number of concern types should be displayed", () => {
-		isCorrectNumberOfStatuses(2, "Red plus");
-	});
-
-	function isCorrectNumberOfStatuses(expectedNumberOfRagStatus, ragStatus) {
-		switch (ragStatus) {
-			case "Red plus":
-				cy.get(
-					".govuk-table__body .govuk-table__row .govuk-ragtag-wrapper .ragtag__redplus"
-				).should("have.length", expectedNumberOfRagStatus);
-				break;
-			case "Amber":
-				cy.get(
-					".govuk-table__body .govuk-table__row .govuk-ragtag-wrapper .ragtag__amber"
-				).should("have.length", expectedNumberOfRagStatus);
-				break;
-			case "Green":
-				cy.get(
-					".govuk-table__body .govuk-table__row .govuk-ragtag-wrapper .ragtag__green"
-				).should("have.length", expectedNumberOfRagStatus);
-				break;
-			case "Red":
-				cy.get(
-					".govuk-table__body .govuk-table__row .govuk-ragtag-wrapper .ragtag__red"
-				).should("have.length", expectedNumberOfRagStatus);
-				break;
-			default:
-				cy.log("Could not do the thing");
-		}
-	}
-*/
 	after(function () {
 		cy.clearLocalStorage();
 		cy.clearCookies();
