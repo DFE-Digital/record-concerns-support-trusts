@@ -58,6 +58,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(serviceModel.Reasons, Is.Not.Null);
 			Assert.That(serviceModel.Reasons.Count, Is.EqualTo(testData.Reasons.Length));
 			Assert.That(serviceModel.Reasons.ElementAt(0).Id, Is.EqualTo(testData.Reasons.ElementAt(0).Key));
+			Assert.That(serviceModel.Status, Is.Not.Null);
 		}
 
 		[Test]

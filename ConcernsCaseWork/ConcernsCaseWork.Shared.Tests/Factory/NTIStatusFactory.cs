@@ -12,15 +12,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 
 		public static NtiStatusDto BuildNTIStatusDto(int? id, bool isClosingState = false)
 		{
-			var currentDate = DateTimeOffset.Now;
-
-			var status = new NtiStatusDto();
-			status.Id = id ?? Fixture.Create<int>();
-			status.Name = Fixture.Create<string>();
-			status.Description = Fixture.Create<string>();
-			status.IsClosingState = isClosingState;
-			status.CreatedAt = currentDate;
-			status.UpdatedAt = currentDate;
+			var status = Fixture.Create<NtiStatusDto>();
+			status.Id = id ?? status.Id;
 
 			return status;
 		}
