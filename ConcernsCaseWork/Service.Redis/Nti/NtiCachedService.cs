@@ -26,7 +26,7 @@ namespace Service.Redis.Nti
 		{
 			var created = await _ntiService.CreateNtiAsync(newNti);
 
-			await CacheNtiWLAsync(created);
+			await CacheNtiAsync(created);
 			await ClearNtisForCaseFromCacheAsync(newNti.CaseUrn);
 
 			return created;
@@ -52,7 +52,7 @@ namespace Service.Redis.Nti
 				nti = await _ntiService.GetNtiAsync(ntiId);
 				if (nti != null)
 				{
-					await CacheNtiWLAsync(nti);
+					await CacheNtiAsync(nti);
 				}
 			}
 
@@ -90,7 +90,7 @@ namespace Service.Redis.Nti
 			var patched = await _ntiService.PatchNtiAsync(nti);
 			if (patched != null)
 			{
-				await CacheNtiWLAsync(patched);
+				await CacheNtiAsync(patched);
 				await ClearNtisForCaseFromCacheAsync(patched.CaseUrn);
 			}
 
@@ -107,7 +107,7 @@ namespace Service.Redis.Nti
 			return $"{High_Level_Cache_Key}:NtiForCase:CaseUrn:{caseUrn}";
 		}
 
-		private async Task CacheNtiWLAsync(NtiDto nti)
+		private async Task CacheNtiAsync(NtiDto nti)
 		{
 			try
 			{

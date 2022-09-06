@@ -77,7 +77,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-WL::AddConditionsPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::NTI::AddConditionsPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
