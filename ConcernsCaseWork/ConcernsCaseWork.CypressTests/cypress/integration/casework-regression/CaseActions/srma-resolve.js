@@ -211,11 +211,8 @@ describe("User can resolve an SRMA and is given validation based on options chos
 		cy.get('[id^="reason"]').eq(rand).click();
 		cy.get('label.govuk-label.govuk-radios__label').eq(rand).invoke('text').then(term => {
 			cy.wrap(term.trim()).as("stText");
-
 			cy.log("Reason set as "+term);
-
 			cy.get('[id="add-srma-button"]').click();
-
 			cy.get('[class="govuk-table__row"]').should(($row) => {
 				expect($row.eq(2).text().trim()).to.contain(term.trim()).and.to.match(/Reason/i);
 				expect($row.eq(0).text().trim()).to.contain("Preparing for deployment").and.to.match(/Status/i);
