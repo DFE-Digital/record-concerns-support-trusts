@@ -1,6 +1,6 @@
 {
-    "defaultCommandTimeout":30000,
-    "pageLoadTimeout":400000,
+    "defaultCommandTimeout":50000,
+    "pageLoadTimeout":500000,
     "chromeWebSecurity":false,
         "reporter": "cypress-multi-reporters",
             "reporterOptions": {
