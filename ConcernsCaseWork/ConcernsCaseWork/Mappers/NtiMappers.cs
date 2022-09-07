@@ -37,11 +37,11 @@ namespace ConcernsCaseWork.Mappers
 				UpdatedAt = ntiDto.UpdatedAt ?? default(DateTime),
 				Notes = ntiDto.Notes,
 				DateStarted = ntiDto.DateStarted,
-				Status = ntiDto.StatusId == null ? null : ToServiceModel(statuses.FirstOrDefault(s => s.Id == ntiDto.StatusId.Value)),
+				Status = ntiDto.StatusId.HasValue ? ToServiceModel(statuses.FirstOrDefault(s => s.Id == ntiDto.StatusId.Value)) : null,
 				Reasons = ntiDto.ReasonsMapping?.Select(r => new NtiReasonModel { Id = r }).ToArray(),
 				Conditions = ntiDto.ConditionsMapping?.Select(c => new NtiConditionModel { Id = c }).ToArray(),
 				ClosedStatusId = ntiDto.ClosedStatusId,
-				ClosedStatus = ntiDto.ClosedStatusId.HasValue ? new NtiStatusModel { Id = ntiDto.ClosedStatusId.Value } : null,
+				ClosedStatus = ntiDto.ClosedStatusId.HasValue ? ToServiceModel(statuses.FirstOrDefault(s => s.Id == ntiDto.ClosedStatusId.Value)) : null,
 				ClosedAt = ntiDto.ClosedAt
 			};
 		}
