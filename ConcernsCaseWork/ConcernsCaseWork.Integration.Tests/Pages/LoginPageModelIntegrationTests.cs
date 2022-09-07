@@ -36,7 +36,8 @@ namespace ConcernsCaseWork.Integration.Tests.Pages
 		}
 		
 		[Test]
-		[Category("Smoke")] 
+		[Category("Smoke")]
+		[Ignore("Not valid test for authentication with Azure AD")]
 		public async Task WhenSignInIsWithCorrectCredentials_ReturnHomePage()
 		{
 			// arrange
@@ -49,6 +50,7 @@ namespace ConcernsCaseWork.Integration.Tests.Pages
 		
 		[Test]
 		[Category("Smoke")]
+		[Ignore("Not valid test for authentication with Azure AD")]
 		public async Task WhenSignInIsWithInCorrectCredentials_ReturnLoginPage()
 		{
 			// arrange

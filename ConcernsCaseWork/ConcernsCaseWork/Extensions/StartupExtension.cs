@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Helpers;
+﻿using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Cases;
@@ -11,7 +11,9 @@ using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Teams;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
@@ -210,6 +212,12 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IRbacManager, RbacManager>();
 
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
+
+			// Authorization to allow cypress tests to access the app
+			//services.AddScoped(sp => sp.GetService<IHttpContextAccessor>().HttpContext.Session);
+			services.AddHttpContextAccessor();
+			services.AddScoped<IAuthorizationHandler, HeaderRequirementHandler>();
+			services.AddScoped<IAuthorizationHandler, ClaimsRequirementHandler>();
 		}
 
 		public static void AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)

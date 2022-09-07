@@ -1,5 +1,5 @@
 ﻿using Ardalis.GuardClauses;
-using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
