@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Helpers;
+﻿using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Trust;
 using ConcernsCaseWork.Services.Trusts;

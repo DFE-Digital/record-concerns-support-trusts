@@ -1,5 +1,5 @@
 ﻿using Ardalis.GuardClauses;
-using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;

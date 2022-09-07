@@ -3,7 +3,6 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Service.Redis.Configuration;
-using System;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Base
@@ -44,7 +43,7 @@ namespace Service.Redis.Base
 			}
 
 			var user = JsonConvert.SerializeObject(value);
-			await _cache.SetStringAsync(key, user , options);
+			await _cache.SetStringAsync(key, user, options);
 		}
 
 		public async Task ClearCache(string key)
