@@ -165,12 +165,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var page = pageResponse as RedirectResult;
 
 			Assert.That(page, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Null);
-
-
-			mockNtiModelService.Verify(n => n.PatchNtiAsync(It.IsAny<NtiModel>()), Times.Once));
+			mockNtiModelService.Verify(n => n.PatchNtiAsync(It.IsAny<NtiModel>()), Times.Once);
 		}
-
 
 		private static CancelPageModel SetupCancelPageModel(
 			Mock<INtiModelService> mockNtiModelService,
