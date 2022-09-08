@@ -99,6 +99,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		public async Task WhenOnPostAsync_MissingRouteData_ThrowsException_ReturnsPage()
 		{
 			// arrange
+			var caseUrn = 191L;
+
 			var mockNtiModelService = new Mock<INtiModelService>();
 			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
 			var mockNtiStatusesService = new Mock<INtiStatusesCachedService>();
@@ -106,6 +108,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var mockLogger = new Mock<ILogger<AddConditionsPageModel>>();
 
 			var pageModel = SetupAddConditionsPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockConditionsService, mockLogger);
+			
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync(String.Empty);

@@ -64,7 +64,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			try
 			{
 				ExtractCaseUrnFromRoute();
-				ExtractWarningLetterIdFromRoute();
+				ExtractIdFromRoute();
 
 				var model = await GetUpToDateModel();
 				SelectedConditions = model.Conditions;
@@ -89,7 +89,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			try
 			{
 				ExtractCaseUrnFromRoute();
-				ExtractWarningLetterIdFromRoute();
+				ExtractIdFromRoute();
 
 				AllConditions = await _ntiConditionsCachedService.GetAllConditionsAsync();
 				var conditions = Request.Form["condition"];
@@ -140,9 +140,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			}
 		}
 
-		private void ExtractWarningLetterIdFromRoute()
+		private void ExtractIdFromRoute()
 		{
-			NtiId = TryGetRouteValueInt64("warningLetterId", out var warningLetterId) ? (long?)warningLetterId : null;
+			NtiId = TryGetRouteValueInt64("ntiId", out var ntiId) ? (long?)ntiId : null;
 		}
 
 		private async Task<IEnumerable<RadioItem>> GetStatuses()
