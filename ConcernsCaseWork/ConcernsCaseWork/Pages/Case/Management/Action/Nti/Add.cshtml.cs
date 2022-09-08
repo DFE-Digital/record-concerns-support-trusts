@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				}
 
 				ExtractCaseUrnFromRoute();
-				ExtractWarningLetterIdFromRoute();
+				ExtractNtiIdFromRoute();
 
 				if (!string.IsNullOrWhiteSpace(ContinuationId) && ContinuationId.StartsWith(CaseUrn.ToString()))
 				{
@@ -111,7 +111,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			try
 			{
 				ExtractCaseUrnFromRoute();
-				ExtractWarningLetterIdFromRoute();
+				ExtractNtiIdFromRoute();
 
 				if (action.Equals(ActionForAddConditionsButton, StringComparison.OrdinalIgnoreCase))
 				{
@@ -212,7 +212,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			}
 		}
 
-		private void ExtractWarningLetterIdFromRoute()
+		private void ExtractNtiIdFromRoute()
 		{
 			NtiId = TryGetRouteValueInt64("NtiId", out var ntiId) ? (long?)ntiId : null;
 		}
