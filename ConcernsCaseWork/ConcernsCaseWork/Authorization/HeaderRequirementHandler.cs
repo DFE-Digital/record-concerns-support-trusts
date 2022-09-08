@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Authorization
 {
 	//Handler is registered from the method RequireAuthenticatedUser()
-	public class HeaderRequirementHandler : AuthorizationHandler<DenyAnonymousAuthorizationRequirement>,
+	public sealed class HeaderRequirementHandler : AuthorizationHandler<DenyAnonymousAuthorizationRequirement>,
 		IAuthorizationRequirement
 	{
 		private readonly IHostEnvironment _environment;
@@ -37,15 +37,14 @@ namespace ConcernsCaseWork.Authorization
 		public static bool ClientSecretHeaderValid(IHostEnvironment hostEnvironment,
 			IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
 		{
-			//Header authorisation not applicable for production
-			if (!hostEnvironment.IsStaging() && !hostEnvironment.IsDevelopment())
+			// Header authorization not applicable for production
+			if (!ShouldApplyToEnvironment(hostEnvironment))
 			{
 				return false;
 			}
 
 			//Allow client secret in header
-			var authHeader = httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Authorization].ToString()?
-				.Replace("Bearer ", string.Empty);
+			var authHeader = httpContextAccessor?.HttpContext?.Request?.Headers[HeaderNames.Authorization].ToString()?.Replace("Bearer ", string.Empty);
 
 			var secret = configuration.GetSection("AzureAd")["ClientSecret"];
 
@@ -57,13 +56,28 @@ namespace ConcernsCaseWork.Authorization
 			return authHeader == secret;
 		}
 
+		/// <summary>
+		/// Returns try only if the current environment is staging or development, due to possible insecurity
+		/// </summary>
+		/// <param name="hostEnvironment"></param>
+		/// <returns></returns>
+		private static bool ShouldApplyToEnvironment(IHostEnvironment hostEnvironment) => hostEnvironment.IsDevelopment() || hostEnvironment.IsStaging();
+
 		protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
 			DenyAnonymousAuthorizationRequirement requirement)
 		{
+			// Header authorization not applicable for production
+			if (!ShouldApplyToEnvironment(_environment))
+			{
+				return Task.CompletedTask;
+			}
+
 			if (ClientSecretHeaderValid(_environment, _httpContextAccessor, _configuration))
 			{
 				context.Succeed(requirement);
-				var headerRole = _httpContextAccessor.HttpContext.Request.Headers["AuthorizationRoles"].ToString();
+
+				// Use headers to set the role claims of the user, this allows cypress tests to work.
+				var headerRole = _httpContextAccessor?.HttpContext?.Request?.Headers["AuthorizationRoles"].ToString();
 				if (!string.IsNullOrWhiteSpace(headerRole))
 				{
 					var claims = headerRole.Split(',');
@@ -73,10 +87,11 @@ namespace ConcernsCaseWork.Authorization
 					}
 				}
 
-				var userName = _httpContextAccessor.HttpContext.Request.Headers["AuthorizationUserName"].ToString();
+				// Use also allow a header to set the user name
+				var userName = _httpContextAccessor?.HttpContext?.Request?.Headers["AuthorizationUserName"].ToString();
 				if (!string.IsNullOrWhiteSpace(userName))
 				{
-					context.User.Identities.FirstOrDefault()?.AddClaim(new Claim(ClaimTypes.Name ,userName));
+					context.User.Identities.FirstOrDefault()?.AddClaim(new Claim(ClaimTypes.Name, userName));
 				}
 			}
 
