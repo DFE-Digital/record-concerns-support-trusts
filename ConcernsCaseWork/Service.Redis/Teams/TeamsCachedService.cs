@@ -80,6 +80,12 @@ namespace Service.Redis.Teams
 			return DoWork();
 		}
 
+		public Task<string[]> GetTeamOwners()
+		{
+			// Not cached..
+			return _tramsTeamsService.GetTeamOwners();
+		}
+
 		private string GetCacheKey(string ownerId) => $"{CacheKeyPrefix}.{ownerId}";
 
 		public new Task ClearData(string ownerId)

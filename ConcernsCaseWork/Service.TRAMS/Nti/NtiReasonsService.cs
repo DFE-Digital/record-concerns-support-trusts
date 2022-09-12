@@ -16,7 +16,7 @@ namespace Service.TRAMS.Nti
 		private readonly ILogger<NtiReasonsService> _logger;
 
 		public NtiReasonsService(IHttpClientFactory httpClientFactory, 
-			ILogger<NtiReasonsService> logger) : base(httpClientFactory)
+			ILogger<NtiReasonsService> logger) : base(httpClientFactory, logger)
 		{
 			_logger = logger;
 		}

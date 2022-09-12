@@ -14,7 +14,7 @@ namespace Service.TRAMS.NtiUnderConsideration
 	{
 		private readonly ILogger<NtiUnderConsiderationReasonsService> _logger;
 
-		public NtiUnderConsiderationReasonsService(IHttpClientFactory clientFactory, ILogger<NtiUnderConsiderationReasonsService> logger) : base(clientFactory)
+		public NtiUnderConsiderationReasonsService(IHttpClientFactory clientFactory, ILogger<NtiUnderConsiderationReasonsService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}

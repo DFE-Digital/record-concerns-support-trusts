@@ -8,6 +8,6 @@ namespace ConcernsCaseWork.Security
 	{
 		Task<IList<string>> GetSystemUsers(params string[] excludes);
 		//Task<IDictionary<string, RoleClaimWrapper>> GetUsersRoles();
-		Task<RoleClaimWrapper> GetUserRoleClaimWrapper(string user);
+		//Task<RoleClaimWrapper> GetUserRoleClaimWrapper(string user);
 	}
 }
