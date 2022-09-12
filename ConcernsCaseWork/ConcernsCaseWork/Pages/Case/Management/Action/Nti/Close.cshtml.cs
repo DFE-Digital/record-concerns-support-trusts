@@ -23,9 +23,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		private readonly ILogger<ClosePageModel> _logger;
 
 		public int NotesMaxLength => 2000;
-		public IEnumerable<RadioItem> NTIStatuses;
-
-		public NtiWarningLetterModel NtiWarningLetterModel { get; set; }
+		
+		public NtiModel Nti { get; set; }
 
 		public ClosePageModel(
 			INtiWarningLetterModelService ntiWarningLetterModelService,
@@ -47,7 +46,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 				(_, ntiWLId) = GetRouteData();
 
-				NtiWarningLetterModel = await _ntiWarningLetterModelService.GetNtiWarningLetterId(ntiWLId);
+				Nti = await _ntiWarningLetterModelService.GetNtiWarningLetterId(ntiWLId);
 				NTIStatuses = await GetStatusesForUI();
 
 				return Page();
@@ -62,17 +61,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		}
 
-		private (long caseUrn, long ntiWLId) GetRouteData()
+		private (long caseUrn, long ntiId) GetRouteData()
 		{
 			var caseUrnValue = RouteData.Values["urn"];
 			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
 				throw new Exception("CaseUrn is null or invalid to parse");
 
-			var ntiWLIdValue = RouteData.Values["ntiWLId"];
-			if (ntiWLIdValue == null || !long.TryParse(ntiWLIdValue.ToString(), out long ntiWLId) || ntiWLId == 0)
-				throw new Exception("ntiWLId is null or invalid to parse");
+			var ntiWLIdValue = RouteData.Values["ntiId"];
+			if (ntiWLIdValue == null || !long.TryParse(ntiWLIdValue.ToString(), out long ntiId) || ntiId == 0)
+				throw new Exception("ntiId is null or invalid to parse");
 
-			return (caseUrn, ntiWLId);
+			return (caseUrn, ntiId);
 		}
 
 		private async Task<IEnumerable<RadioItem>> GetStatusesForUI()
