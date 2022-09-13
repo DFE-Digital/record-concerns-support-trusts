@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Services.NtiWarningLetter;
 using Service.Redis.NtiWarningLetter;
+using ConcernsCaseWork.Services.Nti;
+using Service.TRAMS.Helpers;
+using ConcernsCaseWork.Helpers;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 {
@@ -17,43 +19,38 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class ClosePageModel : AbstractPageModel
 	{
-		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
-
-		private readonly INtiWarningLetterStatusesCachedService _ntiWarningLetterStatusesCachedService;
+		private readonly INtiModelService _ntiModelService;
 		private readonly ILogger<ClosePageModel> _logger;
 
 		public int NotesMaxLength => 2000;
-		
+
 		public NtiModel Nti { get; set; }
 
 		public ClosePageModel(
-			INtiWarningLetterModelService ntiWarningLetterModelService,
-			INtiWarningLetterStatusesCachedService ntiWarningLetterStatusesCachedService,
+			INtiModelService ntiModelService,
 			ILogger<ClosePageModel> logger)
 		{
-			_ntiWarningLetterModelService = ntiWarningLetterModelService;
-			_ntiWarningLetterStatusesCachedService = ntiWarningLetterStatusesCachedService;
+			_ntiModelService = ntiModelService;
 			_logger = logger;
 		}
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::NTI-WL::ClosePageModel::OnGetAsync");
+			_logger.LogInformation($"{nameof(ClosePageModel)}::{LoggingHelpers.EchoCallerName()}");
 
 			try
 			{
-				long ntiWLId = 0;
+				long ntiId = 0;
 
-				(_, ntiWLId) = GetRouteData();
+				(_, ntiId) = GetRouteData();
 
-				Nti = await _ntiWarningLetterModelService.GetNtiWarningLetterId(ntiWLId);
-				NTIStatuses = await GetStatusesForUI();
+				Nti = await _ntiModelService.GetNtiByIdAsync(ntiId);
 
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-WL::ClosePageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError(ex, "Case::NTI::ClosePageModel::OnGetAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
@@ -74,40 +71,20 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			return (caseUrn, ntiId);
 		}
 
-		private async Task<IEnumerable<RadioItem>> GetStatusesForUI()
-		{
-			var statuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
-
-			return statuses.Where(s => s.IsClosingState).Select(s => new RadioItem
-			{
-				Id = Convert.ToString(s.Id),
-				Text = s.Name,
-				Description = s.Description,
-				IsChecked = false   // all statuses are unchecked when close page is opened
-			});
-		}
-
 		public async Task<IActionResult> OnPostAsync()
 		{
 			try
 			{
 				long caseUrn = 0;
-				long ntiWLId = 0;
+				long ntiId = 0;
 
-				(caseUrn, ntiWLId) = GetRouteData();
+				(caseUrn, ntiId) = GetRouteData();
 
 				ValidateForm();
 
-				var status = Request.Form["status"].ToString();
-				var notes = Request.Form["nti-notes"].ToString();
-				var statusId = int.Parse(status);
-
-				var ntiWarningLetter = await _ntiWarningLetterModelService.GetNtiWarningLetterId(ntiWLId);
-				ntiWarningLetter.Notes = notes;
-				ntiWarningLetter.ClosedStatusId = statusId;
-				ntiWarningLetter.ClosedAt = DateTime.Now;
-
-				await _ntiWarningLetterModelService.PatchNtiWarningLetter(ntiWarningLetter);
+				var nti = await _ntiModelService.GetNtiByIdAsync(ntiId);
+				var updated = UpdateNti(nti);
+				await _ntiModelService.PatchNtiAsync(nti);
 
 				return Redirect($"/case/{caseUrn}/management");
 			}
@@ -121,11 +98,38 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			return Page();
 		}
 
-		private void ValidateForm()
+		private NtiModel UpdateNti(NtiModel nti)
 		{
-			var status = Request.Form["status"];
 			var notes = Request.Form["nti-notes"].ToString();
 
+			var dtr_day = Request.Form["dtr-day"];
+			var dtr_month = Request.Form["dtr-month"];
+			var dtr_year = Request.Form["dtr-year"];
+			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
+			var date = DateTimeHelper.TryParseExact(dtString, out DateTime parsed) ? parsed : (DateTime?)null;
+
+			nti.Notes = notes;
+			nti.ClosedAt = date;
+
+			return nti;
+		}
+
+		private void ValidateForm()
+		{
+			var dtr_day = Request.Form["dtr-day"];
+			var dtr_month = Request.Form["dtr-month"];
+			var dtr_year = Request.Form["dtr-year"];
+
+			if (!AreAllEmpty(dtr_day, dtr_month, dtr_year))
+			{
+				var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
+				if (!DateTimeHelper.TryParseExact(dtString, out _))
+				{
+					throw new Exception("Date provided is invalid.");
+				}
+			}
+
+			var notes = Request.Form["nti-notes"].ToString();
 			if (!string.IsNullOrEmpty(notes))
 			{
 				if (notes.Length > NotesMaxLength)
@@ -133,11 +137,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 					throw new Exception($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
 				}
 			}
+		}
 
-			if (!int.TryParse(status, out var statusId))
-			{
-				throw new Exception("Closing status Id could not be resolved");
-			}
+		private bool AreAllEmpty(params string[] args)
+		{
+			return args.All(s => string.IsNullOrEmpty(s));
 		}
 	}
 }
