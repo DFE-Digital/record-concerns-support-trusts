@@ -18,13 +18,13 @@ namespace Service.TRAMS.Teams
 		public async Task<ConcernsCaseworkTeamDto> GetTeam(string ownerId)
 		{
 			Guard.Against.NullOrWhiteSpace(ownerId);
-			return await Get<ConcernsCaseworkTeamDto>($"/{EndpointsVersion}/concerns-team-casework/owner/{ownerId}", false);
+			return await Get<ConcernsCaseworkTeamDto>($"/{EndpointsVersion}/concerns-team-casework/owners/{ownerId}", false);
 		}
 
 		public Task PutTeam(ConcernsCaseworkTeamDto team)
 		{
 			Guard.Against.Null(team);
-			return Put($"/{EndpointsVersion}/concerns-team-casework/owner/{team.OwnerId}", team);
+			return Put($"/{EndpointsVersion}/concerns-team-casework/owners/{team.OwnerId}", team);
 		}
 
 		public async Task<string[]> GetTeamOwners()
