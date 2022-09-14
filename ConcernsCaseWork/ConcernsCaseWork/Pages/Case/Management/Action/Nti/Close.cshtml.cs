@@ -12,6 +12,7 @@ using Service.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Services.Nti;
 using Service.TRAMS.Helpers;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Enums;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 {
@@ -110,6 +111,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			nti.Notes = notes;
 			nti.ClosedAt = date;
 			nti.DateNTIClosed = date;
+			nti.ClosedStatusId = (int)NTIStatus.Closed;
 
 			return nti;
 		}

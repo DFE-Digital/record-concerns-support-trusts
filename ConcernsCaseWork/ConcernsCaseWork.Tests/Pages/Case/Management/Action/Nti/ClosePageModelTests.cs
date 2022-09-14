@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Nti;
@@ -86,6 +87,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 					&& nti.DateNTIClosed.Value.Month == closedDate.Month
 					&& nti.DateNTIClosed.Value.Day == closedDate.Day
 					&& string.Equals(nti.Notes, closureNotes, StringComparison.Ordinal)
+					&& nti.ClosedStatusId == (int)NTIStatus.Closed
 				)),
 				Times.Once());
 		}
