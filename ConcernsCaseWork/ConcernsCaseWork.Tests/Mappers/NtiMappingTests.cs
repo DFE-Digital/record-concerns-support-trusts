@@ -19,22 +19,20 @@ namespace ConcernsCaseWork.Tests.Mappers
 		public void WhenMapDtoToServiceModel_ReturnsCorrectModel()
 		{
 			//arrange
-			var now = DateTime.Now;
-
 			var testData = new
 			{
 				Id = 1L,
 				CaseUrn = 123,
 				CreatedAt = DateTime.Now.AddDays(-5),
-				ClosedAt = now,
+				ClosedAt = DateTime.Now,
 				Notes = "Test notes",
 				Reasons = new KeyValuePair<int, string>[] { new KeyValuePair<int, string>(1, "Reason1") },
 				DateStarted = DateTime.Now.AddDays(-1),
 				Status = new KeyValuePair<int, string>(1, "Status 1"),
 				UpdatedAt = DateTime.Now.AddDays(-1),
 				SumissionDecisionId = "1000001",
-				DateNTIClosed = now,
-				DateNTILifted = now
+				DateNTIClosed = DateTime.Now.AddDays(-3),
+				DateNTILifted = DateTime.Now.AddDays(-4)
 
 			};
 
@@ -77,22 +75,20 @@ namespace ConcernsCaseWork.Tests.Mappers
 		public void WhenMapDtoToDbModel_ReturnsCorrectModel()
 		{
 			//arrange
-			var now = DateTime.Now;
-
 			var testData = new
 			{
 				Id = 1L,
 				CaseUrn = 123L,
 				CreatedAt = DateTime.Now.AddDays(-5),
-				ClosedAt = now,
+				ClosedAt = DateTime.Now,
 				Notes = "Test notes",
 				Reasons = new KeyValuePair<int, string>[] { new KeyValuePair<int, string>(1, "Reason1") },
 				DateStarted = DateTime.Now.AddDays(-1),
 				Status = new KeyValuePair<int, string>(1, "Status 1"),
 				UpdatedAt = DateTime.Now.AddDays(-1),
 				SumissionDecisionId = "1000001",
-				DateNTIClosed = now,
-				DateNTILifted = now
+				DateNTIClosed = DateTime.Now.AddDays(-3),
+				DateNTILifted = DateTime.Now.AddDays(-4)
 			};
 
 			var serviceModel = new NtiModel
