@@ -21,21 +21,15 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 {
-	public class StringLengthValidatedType
-	{
-		[MinLength(2001)]
-		public string Notes { get; set; }
-	}
-
 	[Parallelizable(ParallelScope.All)]
-	public class CancelPageModelTests
+	public class LiftPageModelTests
 	{
 		[Test]
 		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
 		{
 			// arrange
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockLogger = new Mock<ILogger<CancelPageModel>>();
+			var mockLogger = new Mock<ILogger<LiftPageModel>>();
 
 			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
 
@@ -51,7 +45,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		{
 			// arrange
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockLogger = new Mock<ILogger<CancelPageModel>>();
+			var mockLogger = new Mock<ILogger<LiftPageModel>>();
 
 			var ntiModel = NTIFactory.BuildNTIModel();
 			mockNtiModelService.Setup(n => n.GetNtiByIdAsync(It.IsAny<long>()))
@@ -71,7 +65,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("CancelPageModel::OnGetAsync")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("LiftPageModel::OnGetAsync")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
@@ -84,7 +78,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		{
 			// arrange
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockLogger = new Mock<ILogger<CancelPageModel>>();
+			var mockLogger = new Mock<ILogger<LiftPageModel>>();
 
 			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
 
@@ -105,7 +99,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		{
 			// arrange
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockLogger = new Mock<ILogger<CancelPageModel>>();
+			var mockLogger = new Mock<ILogger<LiftPageModel>>();
 
 			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
 
@@ -135,11 +129,45 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		}
 
 		[Test]
+		public async Task WhenOnPostAsync_ValidatesDate_ThrowsException_ReturnsPage()
+		{
+			// arrange
+			var mockNtiModelService = new Mock<INtiModelService>();
+			var mockLogger = new Mock<ILogger<LiftPageModel>>();
+
+			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+			routeData.Add("ntiId", 1);
+
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "nti-notes", new StringValues("Valid string") },
+					{ "dtr-day", new StringValues("01") },
+					{ "dtr-month", new StringValues("02") }
+				});
+
+			// act
+			var pageResponse = await pageModel.OnPostAsync();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			var page = pageResponse as PageResult;
+
+			Assert.That(page, Is.Not.Null);
+			Assert.That(pageModel.TempData, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+		}
+
+
+		[Test]
 		public async Task WhenOnPostAsync_ReturnsPage()
 		{
 			// arrange
 			var mockNtiModelService = new Mock<INtiModelService>();
-			var mockLogger = new Mock<ILogger<CancelPageModel>>();
+			var mockLogger = new Mock<ILogger<LiftPageModel>>();
 
 			var ntiModel = NTIFactory.BuildNTIModel();
 			mockNtiModelService.Setup(n => n.GetNtiByIdAsync(It.IsAny<long>()))
@@ -168,14 +196,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			mockNtiModelService.Verify(n => n.PatchNtiAsync(It.IsAny<NtiModel>()), Times.Once);
 		}
 
-		private static CancelPageModel SetupCancelPageModel(
+		private static LiftPageModel SetupCancelPageModel(
 			Mock<INtiModelService> mockNtiModelService,
-			Mock<ILogger<CancelPageModel>> mockLogger,
+			Mock<ILogger<LiftPageModel>> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new CancelPageModel(mockNtiModelService.Object, mockLogger.Object)
+			return new LiftPageModel(mockNtiModelService.Object, mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
