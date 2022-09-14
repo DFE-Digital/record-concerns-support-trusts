@@ -4,6 +4,7 @@ using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
+using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
@@ -41,6 +42,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockNTIUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var closedRecordModel = RecordFactory.BuildRecordModel(3);
@@ -58,6 +60,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
 			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildClosedListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
+			var ntiModels = NTIFactory.BuildClosedListNTIModel();
+
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsList);
@@ -85,8 +89,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockNTIWarningLetterModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
 				.ReturnsAsync(ntiWarningLetterModels);
 
+			mockNTIModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModels);
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockLogger.Object, true);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -154,6 +160,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockNTIUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var openRecordModel = RecordFactory.BuildRecordModel();
@@ -165,6 +172,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
 			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
+			var ntiModels = NTIFactory.BuildClosedListNTIModel();
+
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsList);
@@ -181,7 +190,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockNTIWarningLetterModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
 				.ReturnsAsync(ntiWarningLetterModels);
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockLogger.Object, true);
+			mockNTIModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModels);
+
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockLogger.Object, true);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -224,6 +236,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockNTIUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var openRecordModel = RecordFactory.BuildRecordModel();
@@ -238,6 +251,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
 			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
+			var ntiModels = NTIFactory.BuildClosedListNTIModel();
+
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsList);
@@ -257,7 +272,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockNTIWarningLetterModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
 				.ReturnsAsync(ntiWarningLetterModels);
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockLogger.Object, true);
+			mockNTIModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModels);
+
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockLogger.Object, true);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -290,6 +308,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockFinancialPlanModelService.Verify(f => f.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()), Times.Once);
 			mockNTIUnderConsiderationModelService.Verify(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()), Times.Once);
 			mockNTIWarningLetterModelService.Verify(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()), Times.Once);
+			mockNTIModelService.Verify(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()), Times.Once);
+
 		}
 
 		[Test]
@@ -304,9 +324,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockNTIUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockLogger.Object, true);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -338,6 +359,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockNTIUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var closedRecordModel = RecordFactory.BuildRecordModel(3);
@@ -346,7 +368,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			mockCaseModelService.Setup(c => c.PatchClosure(It.IsAny<PatchCaseModel>()));
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockLogger.Object, true);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -391,9 +413,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockNTIUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockLogger.Object, true);
 
 			// act
 			var actionResult = await pageModel.OnPostCloseCase();
@@ -429,9 +452,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockNTIUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockLogger.Object, true);
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
 			
@@ -475,6 +499,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockNTIUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var openRecordModel = RecordFactory.BuildRecordModel();
@@ -486,6 +511,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2);
+			var ntiModels = NTIFactory.BuildClosedListNTIModel();
+
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsList);
@@ -505,7 +532,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockNTIWarningLetterModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
 				.ReturnsAsync(ntiWarningLetterModels);
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockLogger.Object, true);
+			mockNTIModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModels);
+
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockLogger.Object, true);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -538,6 +568,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockFinancialPlanModelService.Verify(f => f.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()), Times.Once);
 			mockNTIUnderConsiderationModelService.Verify(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()), Times.Once);
 			mockNTIWarningLetterModelService.Verify(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()), Times.Once);
+			mockNTIModelService.Verify(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()), Times.Once);
 		}
 
 		[Test]
@@ -551,7 +582,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockSRMAModelService = new Mock<ISRMAService>();
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockNTIUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>(); 
+			var mockNTIModelService = new Mock<INtiModelService>(); 
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var openRecordModel = RecordFactory.BuildRecordModel();
@@ -567,6 +599,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2);
+			var ntiModels = NTIFactory.BuildClosedListNTIModel();
+
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsList);
@@ -586,7 +620,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockNTIWarningLetterModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
 				.ReturnsAsync(ntiWarningLetterModels);
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockLogger.Object, true);
+			mockNTIModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModels);
+
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockLogger.Object, true);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -619,6 +656,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockFinancialPlanModelService.Verify(f => f.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()), Times.Once);
 			mockNTIUnderConsiderationModelService.Verify(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()), Times.Once);
 			mockNTIWarningLetterModelService.Verify(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()), Times.Once);
+			mockNTIModelService.Verify(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()), Times.Once);
 		}
 
 		[Test]
@@ -633,6 +671,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockNTIUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var recordsList = new List<RecordModel>();
@@ -644,6 +683,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
 			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.SchoolsFinancialSupportAndOversight, closedAt);
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
+			var ntiModels = NTIFactory.BuildClosedListNTIModel();
+
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsList);
@@ -663,7 +704,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockNTIWarningLetterModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
 				.ReturnsAsync(ntiWarningLetterModels);
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockLogger.Object, true);
+			mockNTIModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModels);
+
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockLogger.Object, true);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -688,7 +732,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				Times.Once);
 
 			Assert.That(pageModel.TempData["OpenActions.Message"], Is.Not.Null);
-			Assert.IsTrue((pageModel.TempData["OpenActions.Message"] as List<string>).Contains("Close NTI Under Consideration"));
+			Assert.IsTrue((pageModel.TempData["OpenActions.Message"] as List<string>).Contains("Resolve NTI Under Consideration"));
 			Assert.AreEqual(1, (pageModel.TempData["OpenActions.Message"] as List<string>).Count);
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
@@ -697,6 +741,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockFinancialPlanModelService.Verify(f => f.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()), Times.Once);
 			mockNTIUnderConsiderationModelService.Verify(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()), Times.Once);
 			mockNTIWarningLetterModelService.Verify(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()), Times.Once);
+			mockNTIModelService.Verify(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()), Times.Once);
 		}
 
 		[Test]
@@ -711,6 +756,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockNTIUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var openRecordModel = RecordFactory.BuildRecordModel();
@@ -720,8 +766,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var closedAt = DateTime.Now;
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
 			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.SchoolsFinancialSupportAndOversight, closedAt);
-			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildClosedListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
+			var ntiModels = NTIFactory.BuildClosedListNTIModel();
+
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsList);
@@ -741,7 +789,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockNTIWarningLetterModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
 				.ReturnsAsync(ntiWarningLetterModels);
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockLogger.Object, true);
+			mockNTIModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModels);
+
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockLogger.Object, true);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -774,6 +825,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockFinancialPlanModelService.Verify(f => f.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()), Times.Once);
 			mockNTIUnderConsiderationModelService.Verify(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()), Times.Once);
 			mockNTIWarningLetterModelService.Verify(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()), Times.Once);
+			mockNTIModelService.Verify(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()), Times.Once);
 		}
 
 		[Test]
@@ -788,6 +840,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockNTIUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var openRecordModel = RecordFactory.BuildRecordModel();
@@ -801,6 +854,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
 			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.SchoolsFinancialSupportAndOversight, closedAt);
 			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
+			var ntiModels = NTIFactory.BuildClosedListNTIModel();
+
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsList);
@@ -820,7 +875,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockNTIWarningLetterModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
 				.ReturnsAsync(ntiWarningLetterModels);
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockLogger.Object, true);
+			mockNTIModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModels);
+
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockLogger.Object, true);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -853,6 +911,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockFinancialPlanModelService.Verify(f => f.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()), Times.Once);
 			mockNTIUnderConsiderationModelService.Verify(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()), Times.Once);
 			mockNTIWarningLetterModelService.Verify(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()), Times.Once);
+			mockNTIModelService.Verify(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()), Times.Once);
 		}
 
 		[Test]
@@ -867,6 +926,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockNTIUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var openRecordModel = RecordFactory.BuildRecordModel();
@@ -878,6 +938,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.SchoolsFinancialSupportAndOversight, closedAt);
 			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
+			var ntiModels = NTIFactory.BuildClosedListNTIModel();
+
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsList);
@@ -897,7 +959,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockNTIWarningLetterModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
 				.ReturnsAsync(ntiWarningLetterModels);
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockLogger.Object, true);
+			mockNTIModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModels);
+
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockLogger.Object, true);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -930,15 +995,186 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockFinancialPlanModelService.Verify(f => f.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()), Times.Once);
 			mockNTIUnderConsiderationModelService.Verify(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()), Times.Once);
 			mockNTIWarningLetterModelService.Verify(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()), Times.Once);
+			mockNTIModelService.Verify(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()), Times.Once);
+		}
+
+		[Test]
+		public async Task WhenOnGetAsync_When_OpenNTI_Exists_ReturnsError()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockSRMAModelService = new Mock<ISRMAService>();
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockNTIUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
+			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNTIModelService = new Mock<INtiModelService>();
+			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
+
+			var openRecordModel = RecordFactory.BuildRecordModel();
+			var recordsList = new List<RecordModel>() { openRecordModel };
+			var liveStatusDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
+
+			DateTime closedAt = DateTime.Now;
+
+			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
+			var srmaModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.SchoolsFinancialSupportAndOversight, closedAt);
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildClosedListNTIUnderConsiderationModel();
+			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
+			var ntiModels = NTIFactory.BuildListNTIModel();
+			
+
+			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(recordsList);
+
+			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+				.ReturnsAsync(liveStatusDto);
+
+			mockSRMAModelService.Setup(s => s.GetSRMAsForCase(It.IsAny<long>()))
+				.ReturnsAsync(srmaModels);
+
+			mockFinancialPlanModelService.Setup(f => f.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
+				.ReturnsAsync(financialPlans);
+
+			mockNTIUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
+				.ReturnsAsync(ntiUnderConsiderationModels);
+
+			mockNTIWarningLetterModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
+				.ReturnsAsync(ntiWarningLetterModels);
+
+			mockNTIModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModels);
+
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockLogger.Object, true);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+
+			// act
+			await pageModel.OnGetAsync();
+			var caseModel = pageModel.CaseModel;
+			var trustDetailsModel = pageModel.TrustDetailsModel;
+
+			// assert
+			Assert.IsNull(caseModel);
+			Assert.IsNull(trustDetailsModel);
+
+			// Verify ILogger
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Information,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("ClosurePageModel")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+
+			Assert.That(pageModel.TempData["OpenActions.Message"], Is.Not.Null);
+			Assert.IsTrue((pageModel.TempData["OpenActions.Message"] as List<string>).Contains("Resolve NTI Notice To Improve"));
+
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
+			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
+			mockSRMAModelService.Verify(c => c.GetSRMAsForCase(It.IsAny<long>()), Times.Once);
+			mockFinancialPlanModelService.Verify(f => f.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()), Times.Once);
+			mockNTIUnderConsiderationModelService.Verify(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()), Times.Once);
+			mockNTIWarningLetterModelService.Verify(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()), Times.Once);
+			mockNTIModelService.Verify(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()), Times.Once);
+		}
+
+
+		
+		[Test]
+		public async Task WhenOnGetAsync_When_NoOpenNTIs_Exists_DoesntReturnError()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockSRMAModelService = new Mock<ISRMAService>();
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockNTIUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
+			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNTIModelService = new Mock<INtiModelService>();
+			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
+
+			var openRecordModel = RecordFactory.BuildRecordModel();
+			var recordsList = new List<RecordModel>() { openRecordModel };
+			var liveStatusDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
+
+			var closedAt = DateTime.Now;
+			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
+			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.SchoolsFinancialSupportAndOversight, closedAt);
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildClosedListNTIUnderConsiderationModel();
+			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
+			var ntiModels = NTIFactory.BuildClosedListNTIModel();
+
+			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(recordsList);
+
+			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+				.ReturnsAsync(liveStatusDto);
+
+			mockSRMAModelService.Setup(s => s.GetSRMAsForCase(It.IsAny<long>()))
+				.ReturnsAsync(openSRMAModels);
+
+			mockFinancialPlanModelService.Setup(f => f.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
+				.ReturnsAsync(financialPlans);
+
+			mockNTIUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
+				.ReturnsAsync(ntiUnderConsiderationModels);
+
+			mockNTIWarningLetterModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
+				.ReturnsAsync(ntiWarningLetterModels);
+
+			mockNTIModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModels);
+
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockLogger.Object, true);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+
+			// act
+			await pageModel.OnGetAsync();
+			var caseModel = pageModel.CaseModel;
+			var trustDetailsModel = pageModel.TrustDetailsModel;
+
+			// assert
+			Assert.IsNull(caseModel);
+			Assert.IsNull(trustDetailsModel);
+
+			// Verify ILogger
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Information,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("ClosurePageModel")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+
+			Assert.That(pageModel.TempData["OpenActions.Message"], Is.Not.Null);
+			Assert.IsFalse((pageModel.TempData["OpenActions.Message"] as List<string>).Contains("Resolve NTI Notice To Improve"));
+
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
+			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
+			mockSRMAModelService.Verify(c => c.GetSRMAsForCase(It.IsAny<long>()), Times.Once);
+			mockFinancialPlanModelService.Verify(f => f.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()), Times.Once);
+			mockNTIUnderConsiderationModelService.Verify(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()), Times.Once);
+			mockNTIWarningLetterModelService.Verify(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()), Times.Once);
+			mockNTIModelService.Verify(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()), Times.Once);
 		}
 
 
 		private static ClosurePageModel SetupClosurePageModel(
-			ICaseModelService mockCaseModelService, ITrustModelService mockTrustModelService, IRecordModelService mockRecordModelService, IStatusCachedService mockStatusCachedService, ISRMAService mockSRMAModelService, IFinancialPlanModelService mockFinancialPlanModelService, INtiUnderConsiderationModelService mockNTIUnderConsiderationService, INtiWarningLetterModelService mockNTIWarningLetterModelService, ILogger<ClosurePageModel> mockLogger, bool isAuthenticated = false)
+			ICaseModelService mockCaseModelService, ITrustModelService mockTrustModelService, IRecordModelService mockRecordModelService, IStatusCachedService mockStatusCachedService, ISRMAService mockSRMAModelService, IFinancialPlanModelService mockFinancialPlanModelService, INtiUnderConsiderationModelService mockNTIUnderConsiderationService, INtiWarningLetterModelService mockNTIWarningLetterModelService, INtiModelService mockNTIModelService, ILogger<ClosurePageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new ClosurePageModel(mockCaseModelService, mockTrustModelService, mockRecordModelService, mockStatusCachedService, mockSRMAModelService, mockFinancialPlanModelService, mockNTIUnderConsiderationService, mockNTIWarningLetterModelService, mockLogger)
+			return new ClosurePageModel(mockCaseModelService, mockTrustModelService, mockRecordModelService, mockStatusCachedService, mockSRMAModelService, mockFinancialPlanModelService, mockNTIUnderConsiderationService, mockNTIWarningLetterModelService, mockNTIModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

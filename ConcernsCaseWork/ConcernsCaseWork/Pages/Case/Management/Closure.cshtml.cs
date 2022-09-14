@@ -14,6 +14,7 @@ using System.Linq;
 using System.Collections.Generic;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.NtiWarningLetter;
+using ConcernsCaseWork.Services.Nti;
 
 namespace ConcernsCaseWork.Pages.Case.Management
 {
@@ -29,13 +30,15 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly IFinancialPlanModelService _financialPlanModelService;
 		private readonly INtiUnderConsiderationModelService _ntiUnderConsiderationModelService;
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
+		private readonly INtiModelService _ntiModelService;
+
 		private readonly ILogger<ClosurePageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
 		public ClosurePageModel(ICaseModelService caseModelService, ITrustModelService trustModelService, IRecordModelService recordModelService, 
-			IStatusCachedService statusCachedService, ISRMAService srmaModelService, IFinancialPlanModelService financialPlanModelService, INtiUnderConsiderationModelService ntiUnderConsiderationModelService, INtiWarningLetterModelService ntiWarningLetterModelService, ILogger<ClosurePageModel> logger)
+			IStatusCachedService statusCachedService, ISRMAService srmaModelService, IFinancialPlanModelService financialPlanModelService, INtiUnderConsiderationModelService ntiUnderConsiderationModelService, INtiWarningLetterModelService ntiWarningLetterModelService, INtiModelService ntiModelService, ILogger<ClosurePageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_trustModelService = trustModelService;
@@ -45,6 +48,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_financialPlanModelService = financialPlanModelService;
 			_ntiUnderConsiderationModelService = ntiUnderConsiderationModelService;
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
+			_ntiModelService = ntiModelService;
 			_logger = logger;
 		}
 		
@@ -148,11 +152,13 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			var financialPlanModels = (await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name)).ToList();
 			var ntiUnderConsiderationModels = (await _ntiUnderConsiderationModelService.GetNtiUnderConsiderationsForCase(caseUrn)).ToList();
 			var ntiWarningLetterModels = (await _ntiWarningLetterModelService.GetNtiWarningLettersForCase(caseUrn)).ToList();
+			var ntiModels = (await _ntiModelService.GetNtisForCaseAsync(caseUrn)).ToList();
 
 			var hasOpenSRMAs = srmaModels.Any(srma => srma.ClosedAt == null) == true;
 			var hasOpenFinancialPlans = financialPlanModels.Any(fp => fp.ClosedAt == null) == true;
 			var hasOpenNTIUnderConsiderations = ntiUnderConsiderationModels.ToList().Any(uc => uc.ClosedAt == null) == true;
-			var hasOpenNTIWarningLetters = ntiWarningLetterModels.ToList().Any(uc => uc.ClosedAt == null) == true;
+			var hasOpenNTIWarningLetters = ntiWarningLetterModels.ToList().Any(wl => wl.ClosedAt == null) == true;
+			var hasOpenNTIs = ntiModels.ToList().Any(nti => nti.ClosedAt == null) == true;
 
 
 			if (numberOfOpenConcerns > 0)
@@ -172,12 +178,17 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			if (hasOpenNTIUnderConsiderations)
 			{
-				errorMessages.Add("Close NTI Under Consideration");
+				errorMessages.Add("Resolve NTI Under Consideration");
 			}
 
 			if (hasOpenNTIWarningLetters)
 			{
 				errorMessages.Add("Resolve NTI Warning Letter");
+			}
+
+			if (hasOpenNTIs)
+			{
+				errorMessages.Add("Resolve NTI Notice To Improve");
 			}
 
 			if (await IsCaseAlreadyClosed(User.Identity.Name, caseUrn))
