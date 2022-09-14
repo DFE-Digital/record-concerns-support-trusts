@@ -85,13 +85,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				var nti = await _ntiModelService.GetNtiByIdAsync(ntiId);
 				var updated = UpdateNti(nti);
 				await _ntiModelService.PatchNtiAsync(nti);
-
+				 
 				return Redirect($"/case/{caseUrn}/management");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-WL::ClosePageModel::OnPostAsync::Exception - {Message}", ex.Message);
-
+				_logger.LogError("Case::NTI::ClosePageModel::OnPostAsync::Exception - {Message}", ex.Message);
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
@@ -110,6 +109,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 			nti.Notes = notes;
 			nti.ClosedAt = date;
+			nti.DateNTIClosed = date;
 
 			return nti;
 		}
