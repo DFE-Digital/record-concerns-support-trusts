@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.Tests.Security
 			var mockLogger = new Mock<ILogger<RbacManager>>();
 			var mockTeamsService = new Mock<ITeamsCachedService>();
 			
-			var rbacManager = new RbacManager(BuildConfiguration(), mockUserRoleCachedService.Object, mockLogger.Object, mockTeamsService.Object);
+			var rbacManager = new RbacManager(mockLogger.Object, mockTeamsService.Object);
 			
 			// act
 			var defaultUsers = await rbacManager.GetSystemUsers();
@@ -44,7 +44,7 @@ namespace ConcernsCaseWork.Tests.Security
 
 			mockTeamsService.Setup(x => x.GetTeamOwners()).ReturnsAsync(new[] { "user1", "user2", "user3", "user4" });
 
-			var rbacManager = new RbacManager(BuildConfiguration(), mockUserRoleCachedService.Object, mockLogger.Object, mockTeamsService.Object);
+			var rbacManager = new RbacManager(mockLogger.Object, mockTeamsService.Object);
 
 			// act
 			var defaultUsers = await rbacManager.GetSystemUsers("user3");
@@ -55,13 +55,6 @@ namespace ConcernsCaseWork.Tests.Security
 			Assert.IsTrue(defaultUsers.Contains("user1"));
 			Assert.IsTrue(defaultUsers.Contains("user2"));
 			Assert.IsTrue(defaultUsers.Contains("user4"));
-		}
-
-		private static IConfiguration BuildConfiguration()
-		{
-			var initialData = new Dictionary<string, string> { { "app:username", "user1,user2,user3,user4" } };
-			var config = new ConfigurationBuilder().ConfigurationInMemoryBuilder(initialData).Build();
-			return config;
 		}
 	}
 }

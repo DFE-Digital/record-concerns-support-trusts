@@ -1,9 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using Microsoft.Extensions.Logging;
-using Pipelines.Sockets.Unofficial.Buffers;
 using Service.Redis.Base;
 using Service.TRAMS.Teams;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Teams
@@ -13,8 +11,8 @@ namespace Service.Redis.Teams
 		private readonly ILogger<TeamsCachedService> _logger;
 		private readonly ITeamsService _tramsTeamsService;
 
-		private const string CacheKeyPrefix = "Concerns.Teams";
-		private const int CacheExpiryTimeHours = 8;
+		private const string _cacheKeyPrefix = "Concerns.Teams";
+		private const int _cacheExpiryTimeHours = 8;
 
 		public TeamsCachedService(ILogger<TeamsCachedService> logger, ITeamsService teamsService, ICacheProvider cacheProvider)
 			: base(Guard.Against.Null(cacheProvider))
@@ -24,7 +22,7 @@ namespace Service.Redis.Teams
 		}
 
 		public Task<ConcernsCaseworkTeamDto> GetTeam(string ownerId)
-		{			
+		{
 			Guard.Against.NullOrWhiteSpace(ownerId);
 			_logger.LogDebug($"Reading teams cache for ownerId: {ownerId}");
 
@@ -61,7 +59,7 @@ namespace Service.Redis.Teams
 			Guard.Against.Null(teamDto);
 
 			_logger.LogDebug($"Updating cache for team, ownerId: {teamDto.OwnerId}");
-			return StoreData(cacheKey, teamDto, CacheExpiryTimeHours);
+			return StoreData(cacheKey, teamDto, _cacheExpiryTimeHours);
 		}
 
 		public Task PutTeam(ConcernsCaseworkTeamDto team)
@@ -86,7 +84,7 @@ namespace Service.Redis.Teams
 			return _tramsTeamsService.GetTeamOwners();
 		}
 
-		private string GetCacheKey(string ownerId) => $"{CacheKeyPrefix}.{ownerId}";
+		private string GetCacheKey(string ownerId) => $"{_cacheKeyPrefix}.{ownerId}";
 
 		public new Task ClearData(string ownerId)
 		{
