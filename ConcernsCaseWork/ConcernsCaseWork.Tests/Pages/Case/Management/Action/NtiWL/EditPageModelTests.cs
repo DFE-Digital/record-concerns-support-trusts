@@ -149,7 +149,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			mockNtiWLModelService.Verify(
 				m => m.CreateNtiWarningLetter(It.Is<NtiWarningLetterModel>(wl => wl.CaseUrn == caseUrn)),
 				Times.Once());
-
 		}
 
 		[Test]
