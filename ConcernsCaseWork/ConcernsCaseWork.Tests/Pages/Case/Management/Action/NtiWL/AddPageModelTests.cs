@@ -96,12 +96,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			Mock<INtiWarningLetterReasonsCachedService> mockNtiWarningLetterReasonsCachedService,
 			Mock<INtiWarningLetterStatusesCachedService> mockNtiWarningLetterStatusesCachedService,
 			Mock<ILogger<AddPageModel>> mockLogger,
+			Mock<INtiWarningLetterConditionsCachedService> mockNtiWarningLetterConditionsCachedService = null,
 			bool isAuthenticated = false)
 		{
+			mockNtiWarningLetterConditionsCachedService ??= new Mock<INtiWarningLetterConditionsCachedService>();
+
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
 			return new AddPageModel(mockNtiWarningLetterStatusesCachedService.Object, mockNtiWarningLetterReasonsCachedService.Object,
-				mockNtiWarningLetterModelService.Object, mockLogger.Object)
+				mockNtiWarningLetterModelService.Object, mockNtiWarningLetterConditionsCachedService.Object, mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

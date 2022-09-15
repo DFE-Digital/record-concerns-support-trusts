@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.NtiWarningLetter;
@@ -14,8 +15,10 @@ using Moq;
 using NUnit.Framework;
 using Service.Redis.FinancialPlan;
 using Service.Redis.NtiWarningLetter;
+using Service.TRAMS.NtiWarningLetter;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
@@ -56,8 +59,25 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			var mockNtiWLReasonsService = new Mock<INtiWarningLetterReasonsCachedService>();
 			var mockNtiWLStatusesService = new Mock<INtiWarningLetterStatusesCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
+			var mockNtiWLConditionsService = new Mock<INtiWarningLetterConditionsCachedService>();
 
-			var pageModel = SetupAddPageModel(mockNtiWLModelService, mockNtiWLReasonsService, mockNtiWLStatusesService, mockLogger);
+			mockNtiWLConditionsService.Setup(cs => cs.GetAllConditionsAsync()).ReturnsAsync(
+					new NtiWarningLetterConditionDto[]
+					{
+						new NtiWarningLetterConditionDto
+						{
+							Id = (int)NtiWarningLetterCondition.FinancialReturns,
+							Name = "Doesn't matter"
+						},
+						new NtiWarningLetterConditionDto
+						{
+							Id = (int)NtiWarningLetterCondition.ActionPlan,
+							Name = "Doesn't matter"
+						}
+					}
+				);
+
+			var pageModel = SetupAddPageModel(mockNtiWLModelService, mockNtiWLReasonsService, mockNtiWLStatusesService, mockLogger, mockNtiWLConditionsService);
 
 			pageModel.RouteData.Values["urn"] = caseUrn;
 
@@ -90,8 +110,25 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			var mockNtiWLReasonsService = new Mock<INtiWarningLetterReasonsCachedService>();
 			var mockNtiWLStatusesService = new Mock<INtiWarningLetterStatusesCachedService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
+			var mockNtiWLConditionsService = new Mock<INtiWarningLetterConditionsCachedService>();
 
-			var pageModel = SetupAddPageModel(mockNtiWLModelService, mockNtiWLReasonsService, mockNtiWLStatusesService, mockLogger);
+			mockNtiWLConditionsService.Setup(cs => cs.GetAllConditionsAsync()).ReturnsAsync(
+					new NtiWarningLetterConditionDto[]
+					{
+						new NtiWarningLetterConditionDto
+						{
+							Id = (int)NtiWarningLetterCondition.FinancialReturns,
+							Name = "Doesn't matter"
+						},
+						new NtiWarningLetterConditionDto
+						{
+							Id = (int)NtiWarningLetterCondition.ActionPlan,
+							Name = "Doesn't matter"
+						}
+					}
+				);
+
+			var pageModel = SetupAddPageModel(mockNtiWLModelService, mockNtiWLReasonsService, mockNtiWLStatusesService, mockLogger, mockNtiWLConditionsService);
 
 			pageModel.RouteData.Values["urn"] = caseUrn;
 
@@ -127,7 +164,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
 			mockNtiWLModelService.Setup(ms => ms.GetNtiWarningLetterId(warningLetterId)).Returns(Task.FromResult(new NtiWarningLetterModel { Id = warningLetterId }));
-			
+
 			var pageModel = SetupAddPageModel(mockNtiWLModelService, mockNtiWLReasonsService, mockNtiWLStatusesService, mockLogger);
 
 			pageModel.RouteData.Values["urn"] = caseUrn;
@@ -159,12 +196,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			Mock<INtiWarningLetterReasonsCachedService> mockNtiWarningLetterReasonsCachedService,
 			Mock<INtiWarningLetterStatusesCachedService> mockNtiWarningLetterStatusesCachedService,
 			Mock<ILogger<AddPageModel>> mockLogger,
+			Mock<INtiWarningLetterConditionsCachedService> mockNtiWarningLetterConditionsCachedService = null,
 			bool isAuthenticated = false)
 		{
+			mockNtiWarningLetterConditionsCachedService ??= new Mock<INtiWarningLetterConditionsCachedService>();
+
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
 			return new AddPageModel(mockNtiWarningLetterStatusesCachedService.Object, mockNtiWarningLetterReasonsCachedService.Object,
-				mockNtiWarningLetterModelService.Object, mockLogger.Object)
+				mockNtiWarningLetterModelService.Object, mockNtiWarningLetterConditionsCachedService.Object, mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
