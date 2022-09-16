@@ -51,7 +51,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			var caseDto = await PostCase(serviceScope, createCaseDto);
 
 			// act
-			var casesDto = await caseService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch(createCaseDto.CreatedBy, createCaseDto.StatusUrn));
+			var casesDto = await caseService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch( createCaseDto.CreatedBy, createCaseDto.StatusUrn));
 
 			// assert
 			Assert.That(caseDto, Is.Not.Null);

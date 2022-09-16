@@ -75,13 +75,13 @@
                     </div>
 
                     @* Notes *@
-                    <div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
+                    <div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@AddPageModel.NotesMaxLength">
                         <div class="govuk-form-group">
                             <h2 class="govuk-heading-m">Notes</h2>
                             <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="nti-notes" name="nti-notes" rows="3" aria-describedby="nti-notes-info"></textarea>
                         </div>
                         <div id="nti-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-                            You can enter up to @Model.NotesMaxLength characters
+                            You can enter up to @AddPageModel.NotesMaxLength characters
                         </div>
                     </div>
 

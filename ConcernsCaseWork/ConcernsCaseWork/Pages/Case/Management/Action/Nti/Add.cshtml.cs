@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				}
 
 				ExtractCaseUrnFromRoute();
-				ExtractWarningLetterIdFromRoute();
+				ExtractNtiIdFromRoute();
 
 				if (!string.IsNullOrWhiteSpace(ContinuationId) && ContinuationId.StartsWith(CaseUrn.ToString()))
 				{
@@ -111,7 +111,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			try
 			{
 				ExtractCaseUrnFromRoute();
-				ExtractWarningLetterIdFromRoute();
+				ExtractNtiIdFromRoute();
 
 				if (action.Equals(ActionForAddConditionsButton, StringComparison.OrdinalIgnoreCase))
 				{
@@ -212,7 +212,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			}
 		}
 
-		private void ExtractWarningLetterIdFromRoute()
+		private void ExtractNtiIdFromRoute()
 		{
 			NtiId = TryGetRouteValueInt64("NtiId", out var ntiId) ? (long?)ntiId : null;
 		}
@@ -252,7 +252,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			ntiModel.Reasons = newValues.Reasons;
 			ntiModel.Status = newValues.Status;
 			ntiModel.Notes = newValues.Notes;
-			ntiModel.SentDate = newValues.SentDate;
+			ntiModel.DateStarted = newValues.DateStarted;
 			ntiModel.CreatedAt = newValues.CreatedAt;
 			ntiModel.UpdatedAt = newValues.UpdatedAt;
 
@@ -267,7 +267,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			var dtr_month = Request.Form["dtr-month"];
 			var dtr_year = Request.Form["dtr-year"];
 			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-			var sentDate = DateTimeHelper.TryParseExact(dtString, out DateTime parsed) ? parsed : (DateTime?)null;
+			var dateStarted = DateTimeHelper.TryParseExact(dtString, out DateTime parsed) ? parsed : (DateTime?)null;
 
 			var notes = Convert.ToString(Request.Form["nti-notes"]);
 			if (!string.IsNullOrEmpty(notes))
@@ -285,7 +285,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				Status = int.TryParse(status, out int statusId) ? new NtiStatusModel { Id = statusId } : null,
 				Conditions = Array.Empty<NtiConditionModel>(),
 				Notes = notes,
-				SentDate = sentDate,
+				DateStarted = dateStarted,
 				CreatedAt = DateTime.Now.Date,
 				UpdatedAt = DateTime.Now.Date
 			};

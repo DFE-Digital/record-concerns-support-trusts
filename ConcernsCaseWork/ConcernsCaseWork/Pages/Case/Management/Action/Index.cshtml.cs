@@ -139,11 +139,5 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 
 			return caseUrn;
 		}
-
-		private bool HasOpenCaseAction<T>(Func<T, bool> additionalValidations) where T : CaseActionModel
-		{
-			return CaseActions.Any(ca => ca is T && ca.ClosedAt == null 
-					&& (additionalValidations == null || additionalValidations.Invoke(ca as T)));
-		}
 	}
 }

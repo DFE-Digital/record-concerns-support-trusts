@@ -1,9 +1,6 @@
 import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
 import CaseManagementPage from "/cypress/pages/caseMangementPage";
-import utils from "/cypress/support/utils"
 import srmaAddPage from "/cypress/pages/caseActions/srmaAddPage";
-import srmaEditPage from "/cypress/pages/caseActions/srmaEditPage";
-
 
 describe("User can add case actions to an existing case", () => {
 	before(() => {
@@ -13,8 +10,6 @@ describe("User can add case actions to an existing case", () => {
 	afterEach(() => {
 		cy.storeSessionData();
 	});
-
-	let term = "";
 
 	it("User enters the case page", () => {
 		cy.checkForExistingCase();
@@ -31,36 +26,33 @@ describe("User can add case actions to an existing case", () => {
 	it("User is taken to the correct Case Action page", function () {
 		cy.get('button[data-prevent-double-click*="true"]').click();
 
-		cy.wait(500);
-			const err = '.govuk-list.govuk-error-summary__list';
+		cy.wait(500).then(() => {
+			const err = Cypress.$('.govuk-list.govuk-error-summary__list');
 			cy.log(err.length);
 		});
 
-	it("User can click to add Financial Plan Case Action to a case", function () {
-		
-		AddToCasePage.getAddToCaseBtn().click();
-		cy.log(utils.checkForGovErrorSummaryList() );
-
-			if (err.length > 0) { //Cypress.$ needed to handle element missing exception
-				
-				cy.log("SRMA exists")
-
-					cy.visit(Cypress.env('url'), { timeout: 30000 });
-					cy.checkForExistingCase(true);
-					cy.get('[class="govuk-button"][role="button"]').click();
-
-					AddToCasePage.getHeadingText().should('contain.text', 'Add to case');
-				}else{
-					cy.log("No SRMA exists")	
-					AddToCasePage.getHeadingText().should('contain.text', 'Add to case');
-				}
-
-		srmaAddPage.getAddCaseActionBtn().click();
-		srmaEditPage.getSrmaTableRow().should(($row) => {
-			expect($row.eq(6).text().trim()).to.contain(term.trim()).and.to.match(/Notes/i);
-		});
+		srmaAddPage.getHeadingText().should('contain.text', "School Resource Management Adviser (SRMA)")
 	});
-	
+
+	it("User is shown validation and cannot proceed without selecting a valid status", () => {
+
+		srmaAddPage.setDateOffered();
+		srmaAddPage.getAddCaseActionBtn().click();
+		cy.get('[class="govuk-list govuk-error-summary__list"]').should('contain.text', 'Select status');
+		cy.reload();
+	});
+
+	it("User is shown validation and cannot proceed without selecting a valid date", () => {
+
+		srmaAddPage.setStatusSelect(0);
+		cy.get('[id="dtr-day"]').type("0");
+		cy.get('[id="dtr-month"]').type("0");
+		cy.get('[id="dtr-year"]').type("0");
+		srmaAddPage.getAddCaseActionBtn().click();
+		cy.get('[class="govuk-list govuk-error-summary__list"]').should('contain.text', 'Enter the date SRMA was offered to the trust');
+		cy.reload();
+	});
+
 	after(function () {
 		cy.clearLocalStorage();
 		cy.clearCookies();

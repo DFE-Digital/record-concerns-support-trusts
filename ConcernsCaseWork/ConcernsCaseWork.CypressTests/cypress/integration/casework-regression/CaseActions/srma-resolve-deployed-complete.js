@@ -356,14 +356,12 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 			cy.get('[id="add-srma-button"]').click();
 	});
 
-
 		it("User is navigated back to the case page after completion,", () => {
 
 			cy.get('[class="govuk-caption-m"]').should('be.visible');
 			cy.get('[class="govuk-caption-m"]').should('contain.text', 'Case ID');
 		});
 			
-
 	after(function () {
 		cy.clearLocalStorage();
 		cy.clearCookies();

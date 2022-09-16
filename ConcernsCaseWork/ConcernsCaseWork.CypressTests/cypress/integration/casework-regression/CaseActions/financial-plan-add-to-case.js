@@ -23,13 +23,14 @@ describe("User can add Financial Plan case action to an existing case", () => {
 		AddToCasePage.getCaseActionRadio('FinancialPlan').siblings().should('contain.text', AddToCasePage.actionOptions[2]);
 	});
 
-	it("User is taken to the correct Case Action page", function () {
+	it("User is show validation when Case Action already exists", function () {
 		
 		AddToCasePage.getAddToCaseBtn().click();
 
-		cy.wait(2000);
+		cy.wait(2000).then(() => {
+
 			const err = Cypress.$('.govuk-list.govuk-error-summary__list');
-			cy.log(err.length);
+			cy.log("err.length "+err.length);
 
 			if (err.length > 0) { //Cypress.$ needed to handle element missing exception
 				cy.log("Case Action already exists");
@@ -63,6 +64,8 @@ describe("User can add Financial Plan case action to an existing case", () => {
 			cy.log("No Case Action exists");	
 			cy.log(utils.checkForGovErrorSummaryList() );
 		}
+	});
+
 	});
 
 	it("User is taken to the correct Case Action page", () => {
@@ -113,7 +116,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 	});
 
 	it("User can successfully add a Financial Plan case action to a case", () => {
-		cy.get('[id="add-srma-button"]').click();
+		FinancialPlanPage.getUpdateBtn().click();
 	});
 
 	after(function () {

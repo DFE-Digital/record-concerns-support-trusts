@@ -16,7 +16,7 @@ namespace Service.TRAMS.NtiWarningLetter
 		private readonly ILogger<NtiWarningLetterConditionsService> _logger;
 
 		public NtiWarningLetterConditionsService(IHttpClientFactory httpClientFactory,
-			ILogger<NtiWarningLetterConditionsService> logger) : base(httpClientFactory)
+			ILogger<NtiWarningLetterConditionsService> logger) : base(httpClientFactory, logger)
 		{
 			_logger = logger;
 		}
