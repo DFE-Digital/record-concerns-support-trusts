@@ -14,7 +14,7 @@ namespace Service.TRAMS.FinancialPlan
 	{
 		private readonly ILogger<FinancialPlanService> _logger;
 
-		public FinancialPlanService(IHttpClientFactory clientFactory, ILogger<FinancialPlanService> logger) : base(clientFactory)
+		public FinancialPlanService(IHttpClientFactory clientFactory, ILogger<FinancialPlanService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}

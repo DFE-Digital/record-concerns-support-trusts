@@ -14,7 +14,7 @@ namespace Service.TRAMS.Records
 	{
 		private readonly ILogger<RecordService> _logger;
 		
-		public RecordService(IHttpClientFactory clientFactory, ILogger<RecordService> logger) : base(clientFactory)
+		public RecordService(IHttpClientFactory clientFactory, ILogger<RecordService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}

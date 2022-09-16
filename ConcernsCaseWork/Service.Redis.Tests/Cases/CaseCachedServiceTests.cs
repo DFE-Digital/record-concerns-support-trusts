@@ -16,7 +16,7 @@ namespace Service.Redis.Tests.Cases
 	public class CaseCachedServiceTests
 	{
 		[Test]
-		public async Task CaseCachedService_IsTypeOf_CachedService()
+		public void CaseCachedService_IsTypeOf_CachedService()
 		{
 			// arrange
 			var mockCacheProvider = new Mock<ICacheProvider>();

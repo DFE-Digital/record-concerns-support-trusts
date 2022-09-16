@@ -17,7 +17,7 @@ namespace Service.TRAMS.NtiUnderConsideration
 		private readonly ILogger<NtiUnderConsiderationService> _logger;
 		private const string Url = @"/v2/case-actions/nti-under-consideration";
 
-		public NtiUnderConsiderationService(IHttpClientFactory httpClientFactory, ILogger<NtiUnderConsiderationService> logger) : base(httpClientFactory)
+		public NtiUnderConsiderationService(IHttpClientFactory httpClientFactory, ILogger<NtiUnderConsiderationService> logger) : base(httpClientFactory, logger)
 		{
 			_httpClientFactory = httpClientFactory;
 			_logger = logger;
