@@ -27,54 +27,106 @@ namespace Service.TRAMS.Base
 			_logger = Guard.Against.Null(logger);
 		}
 
-		public async Task<T> Get<T>(string endpoint, bool treatNoContentAsError = false)
+		public Task<T> Get<T>(string endpoint, bool treatNoContentAsError = false) where T : class 
 		{
 			Guard.Against.NullOrWhiteSpace(endpoint);
 
-			try
+			async Task<T> DoWork()
 			{
-				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
-
-				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
-
-				// Execute request
-				var response = await client.SendAsync(request);
-
-				// Check status code
-				response.EnsureSuccessStatusCode();
-
-				if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+				try
 				{
-					if (treatNoContentAsError)
+					// Create a request
+					var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+
+					// Create http client
+					var client = ClientFactory.CreateClient(HttpClientName);
+
+					// Execute request
+					var response = await client.SendAsync(request);
+
+					// Check status code
+					response.EnsureSuccessStatusCode();
+
+					if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
 					{
-						throw new ArgumentNullException(nameof(response.Content),
-							$"A GET from endpoint '{endpoint}' resulted in a NoContent response. Exception thrown because {nameof(treatNoContentAsError)} is 'true'");
+						if (treatNoContentAsError)
+						{
+							throw new ArgumentNullException(nameof(response.Content),
+								$"A GET from endpoint '{endpoint}' resulted in a NoContent response. Exception thrown because {nameof(treatNoContentAsError)} is 'true'");
+						}
+
+						return default;
 					}
 
-					return default;
+					// Read response content
+					var content = await response.Content.ReadAsStringAsync();
+
+					// Deserialize content to POCO
+					var apiWrapperRecordsDto = JsonConvert.DeserializeObject<ApiWrapper<T>>(content);
+
+					// Unwrap response
+					if (apiWrapperRecordsDto is { Data: { } })
+					{
+						return apiWrapperRecordsDto.Data;
+					}
+
+					throw new Exception("Academies API error unwrap response");
 				}
-
-				// Read response content
-				var content = await response.Content.ReadAsStringAsync();
-
-				// Deserialize content to POCO
-				var apiWrapperRecordsDto = JsonConvert.DeserializeObject<ApiWrapper<T>>(content);
-
-				// Unwrap response
-				if (apiWrapperRecordsDto is { Data: { } })
+				catch (Exception ex)
 				{
-					return apiWrapperRecordsDto.Data;
+					_logger.LogError(ex, ex.Message);
+					throw;
 				}
+			}
 
-				throw new Exception("Academies API error unwrap response");
-			}
-			catch (Exception ex)
+			return DoWork();
+		}
+
+		public Task<ApiListWrapper<T>> GetByPagination<T>(string endpoint, bool treatNoContentAsError = false) where T : class 
+		{
+			Guard.Against.NullOrWhiteSpace(endpoint);
+
+			async Task<ApiListWrapper<T>> DoWork()
 			{
-				_logger.LogError(ex, ex.Message);
-				throw;
+				try
+				{
+					// Create a request
+					var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+
+					// Create http client
+					var client = ClientFactory.CreateClient(HttpClientName);
+
+					// Execute request
+					var response = await client.SendAsync(request);
+
+					// Check status code
+					response.EnsureSuccessStatusCode();
+
+					if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+					{
+						if (treatNoContentAsError)
+						{
+							throw new ArgumentNullException(nameof(response.Content),
+								$"A GET from endpoint '{endpoint}' resulted in a NoContent response. Exception thrown because {nameof(treatNoContentAsError)} is 'true'");
+						}
+
+						return default;
+					}
+
+					// Read response content
+					var content = await response.Content.ReadAsStringAsync();
+
+					// Deserialize content to POCO
+					return JsonConvert.DeserializeObject<ApiListWrapper<T>>(content);
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, ex.Message);
+					throw;
+				}
 			}
+
+			return DoWork();
 		}
 
 		/// <summary>
@@ -85,46 +137,54 @@ namespace Service.TRAMS.Base
 		/// <param name="dto"></param>
 		/// <returns></returns>
 		/// <exception cref="Exception"></exception>
-		public async Task Put<T>(string endpoint, T dto)
+		public Task Put<T>(string endpoint, T dto)
 		{
-			try
+			Guard.Against.NullOrWhiteSpace(endpoint);
+			Guard.Against.Null(dto);
+
+			async Task DoWork()
 			{
-				Guard.Against.Null(dto);
-
-				// Create a request
-				var request = new StringContent(
-					JsonConvert.SerializeObject(dto),
-					Encoding.UTF8,
-					MediaTypeNames.Application.Json);
-
-				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
-
-				// Execute request
-				var response = await client.PutAsync(endpoint, request);
-
-				// Check status code
-				response.EnsureSuccessStatusCode();
-
-				// Read response content
-				var content = await response.Content.ReadAsStringAsync();
-
-				// Deserialize content to POCO
-				var apiWrapperRecordsDto = JsonConvert.DeserializeObject<ApiWrapper<T>>(content);
-
-				// Unwrap response
-				if (apiWrapperRecordsDto is { Data: { } })
+				try
 				{
-					return;
-				}
+					Guard.Against.Null(dto);
 
-				throw new Exception($"Academies API error unwrap response. Endpoint '{endpoint}' returned a non-success code ({response.StatusCode})");
+					// Create a request
+					var request = new StringContent(
+						JsonConvert.SerializeObject(dto),
+						Encoding.UTF8,
+						MediaTypeNames.Application.Json);
+
+					// Create http client
+					var client = ClientFactory.CreateClient(HttpClientName);
+
+					// Execute request
+					var response = await client.PutAsync(endpoint, request);
+
+					// Check status code
+					response.EnsureSuccessStatusCode();
+
+					// Read response content
+					var content = await response.Content.ReadAsStringAsync();
+
+					// Deserialize content to POCO
+					var apiWrapperRecordsDto = JsonConvert.DeserializeObject<ApiWrapper<T>>(content);
+
+					// Unwrap response
+					if (apiWrapperRecordsDto is { Data: { } })
+					{
+						return;
+					}
+
+					throw new Exception($"Academies API error unwrap response. Endpoint '{endpoint}' returned a non-success code ({response.StatusCode})");
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, ex.Message);
+					throw;
+				}
 			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, ex.Message);
-				throw;
-			}
+
+			return DoWork();
 		}
 
 		/// <summary>
@@ -136,57 +196,64 @@ namespace Service.TRAMS.Base
 		/// <param name="endpoint"></param>
 		/// <param name="dto"></param>
 		/// <returns></returns>
-		public async Task<TResult> Put<T, TResult>(string endpoint, T dto, bool treatNoContentAsError = false)
+		public Task<TResult> Put<T, TResult>(string endpoint, T dto, bool treatNoContentAsError = false)
 		{
-			try
+			Guard.Against.NullOrWhiteSpace(endpoint);
+			Guard.Against.Null(dto);
+
+			async Task<TResult> DoWork()
 			{
-				Guard.Against.Null(dto);
-
-				// Create a request
-				var request = new StringContent(
-					JsonConvert.SerializeObject(dto),
-					Encoding.UTF8,
-					MediaTypeNames.Application.Json);
-
-				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
-
-				// Execute request
-				var response = await client.PutAsync(endpoint, request);
-
-				// Check status code
-				response.EnsureSuccessStatusCode();
-
-				if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+				try
 				{
-					if (treatNoContentAsError)
+
+					// Create a request
+					var request = new StringContent(
+						JsonConvert.SerializeObject(dto),
+						Encoding.UTF8,
+						MediaTypeNames.Application.Json);
+
+					// Create http client
+					var client = ClientFactory.CreateClient(HttpClientName);
+
+					// Execute request
+					var response = await client.PutAsync(endpoint, request);
+
+					// Check status code
+					response.EnsureSuccessStatusCode();
+
+					if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
 					{
-						throw new ArgumentNullException(nameof(response.Content),
-							$"A PUT to endpoint '{endpoint}' resulted in a NoContent response. Exception thrown because {nameof(treatNoContentAsError)} is 'true'");
+						if (treatNoContentAsError)
+						{
+							throw new ArgumentNullException(nameof(response.Content),
+								$"A PUT to endpoint '{endpoint}' resulted in a NoContent response. Exception thrown because {nameof(treatNoContentAsError)} is 'true'");
+						}
+
+						return default;
 					}
 
-					return default;
+					// Read response content
+					var content = await response.Content.ReadAsStringAsync();
+
+					// Deserialize content to POCO
+					var resultDto = JsonConvert.DeserializeObject<ApiWrapper<TResult>>(content);
+
+					// Unwrap response
+					if (resultDto is { Data: { } })
+					{
+						return resultDto.Data;
+					}
+
+					throw new Exception($"Academies API error unwrap response. Endpoint '{endpoint}' returned a non-success code ({response.StatusCode})");
 				}
-
-				// Read response content
-				var content = await response.Content.ReadAsStringAsync();
-
-				// Deserialize content to POCO
-				var resultDto = JsonConvert.DeserializeObject<ApiWrapper<TResult>>(content);
-
-				// Unwrap response
-				if (resultDto is { Data: { } })
+				catch (Exception ex)
 				{
-					return resultDto.Data;
+					_logger.LogError(ex, ex.Message);
+					throw;
 				}
+			}
 
-				throw new Exception($"Academies API error unwrap response. Endpoint '{endpoint}' returned a non-success code ({response.StatusCode})");
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, ex.Message);
-				throw;
-			}
+			return DoWork();
 		}
 
 		/// <summary>
@@ -196,32 +263,38 @@ namespace Service.TRAMS.Base
 		/// <param name="endpoint"></param>
 		/// <param name="dto"></param>
 		/// <returns>Task</returns>
-		public async Task Post<T>(string endpoint, T dto)
+		public Task Post<T>(string endpoint, T dto)
 		{
+			Guard.Against.NullOrWhiteSpace(endpoint);
 			Guard.Against.Null(dto);
 
-			try
+			async Task DoWork()
 			{
-				// Create a request
-				var request = new StringContent(
-					JsonConvert.SerializeObject(dto),
-					Encoding.UTF8,
-					MediaTypeNames.Application.Json);
+				try
+				{
+					// Create a request
+					var request = new StringContent(
+						JsonConvert.SerializeObject(dto),
+						Encoding.UTF8,
+						MediaTypeNames.Application.Json);
 
-				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+					// Create http client
+					var client = ClientFactory.CreateClient(HttpClientName);
 
-				// Execute request
-				var response = await client.PostAsync(endpoint, request);
+					// Execute request
+					var response = await client.PostAsync(endpoint, request);
 
-				// Check status code
-				response.EnsureSuccessStatusCode();
+					// Check status code
+					response.EnsureSuccessStatusCode();
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, ex.Message);
+					throw;
+				}
 			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, ex.Message);
-				throw;
-			}
+
+			return DoWork();
 		}
 
 		/// <summary>
@@ -234,57 +307,63 @@ namespace Service.TRAMS.Base
 		/// <param name="dto"></param>
 		/// <param name="treatNoContentAsError"></param>
 		/// <returns>Task of TResult</returns>
-		public async Task<TResult> Post<T, TResult>(string endpoint, T dto, bool treatNoContentAsError = false)
+		public Task<TResult> Post<T, TResult>(string endpoint, T dto, bool treatNoContentAsError = false)
 		{
+			Guard.Against.NullOrWhiteSpace(endpoint);
 			Guard.Against.Null(dto);
 
-			try
+			async Task<TResult> DoWork()
 			{
-				// Create a request
-				var request = new StringContent(
-					JsonConvert.SerializeObject(dto),
-					Encoding.UTF8,
-					MediaTypeNames.Application.Json);
-
-				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
-
-				// Execute request
-				var response = await client.PostAsync(endpoint, request);
-
-				// Check status code
-				response.EnsureSuccessStatusCode();
-
-				if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+				try
 				{
-					if (treatNoContentAsError)
+					// Create a request
+					var request = new StringContent(
+						JsonConvert.SerializeObject(dto),
+						Encoding.UTF8,
+						MediaTypeNames.Application.Json);
+
+					// Create http client
+					var client = ClientFactory.CreateClient(HttpClientName);
+
+					// Execute request
+					var response = await client.PostAsync(endpoint, request);
+
+					// Check status code
+					response.EnsureSuccessStatusCode();
+
+					if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
 					{
-						throw new ArgumentNullException(nameof(response.Content),
-							$"A POST to endpoint '{endpoint}' resulted in a NoContent response. Exception thrown because {nameof(treatNoContentAsError)} is 'true'");
+						if (treatNoContentAsError)
+						{
+							throw new ArgumentNullException(nameof(response.Content),
+								$"A POST to endpoint '{endpoint}' resulted in a NoContent response. Exception thrown because {nameof(treatNoContentAsError)} is 'true'");
+						}
+
+						return default;
 					}
 
-					return default;
+					// Read response content
+					var content = await response.Content.ReadAsStringAsync();
+
+					// Deserialize content to POJO
+					var resultDto = JsonConvert.DeserializeObject<ApiWrapper<TResult>>(content);
+
+					// Unwrap response
+					if (resultDto is { Data: { } })
+					{
+						return resultDto.Data;
+					}
+
+					throw new Exception("Academies API error unwrap response");
 				}
-
-				// Read response content
-				var content = await response.Content.ReadAsStringAsync();
-
-				// Deserialize content to POJO
-				var resultDto = JsonConvert.DeserializeObject<ApiWrapper<TResult>>(content);
-
-				// Unwrap response
-				if (resultDto is { Data: { } })
+				catch (Exception ex)
 				{
-					return resultDto.Data;
+					_logger.LogError(ex, ex.Message);
+					throw;
 				}
+			}
 
-				throw new Exception("Academies API error unwrap response");
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, ex.Message);
-				throw;
-			}
+			return DoWork();
 		}
 	}
 }

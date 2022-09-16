@@ -26,7 +26,7 @@ namespace Service.TRAMS.Cases
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"/{EndpointsVersion}/{EndpointPrefix}/owners/{caseCaseWorkerSearch.CaseWorkerName}?status={caseCaseWorkerSearch.StatusUrn}&page={caseCaseWorkerSearch.Page}");
+					$"/{EndpointsVersion}/{EndpointPrefix}/owner/{caseCaseWorkerSearch.CaseWorkerName}?status={caseCaseWorkerSearch.StatusUrn}&page={caseCaseWorkerSearch.Page}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient(HttpClientName);

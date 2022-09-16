@@ -1,6 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -15,10 +16,16 @@ namespace Service.TRAMS.Teams
 			_logger = Guard.Against.Null(logger);
 		}
 
-		public async Task<ConcernsCaseworkTeamDto> GetTeam(string ownerId)
+		public Task<ConcernsCaseworkTeamDto> GetTeam(string ownerId)
 		{
 			Guard.Against.NullOrWhiteSpace(ownerId);
-			return await Get<ConcernsCaseworkTeamDto>($"/{EndpointsVersion}/concerns-team-casework/owners/{ownerId}", false);
+
+			async Task<ConcernsCaseworkTeamDto> DoWork()
+			{
+				return await Get<ConcernsCaseworkTeamDto>($"/{EndpointsVersion}/concerns-team-casework/owners/{ownerId}", false);
+			}
+
+			return DoWork();
 		}
 
 		public Task PutTeam(ConcernsCaseworkTeamDto team)
@@ -29,7 +36,7 @@ namespace Service.TRAMS.Teams
 
 		public async Task<string[]> GetTeamOwners()
 		{
-			return await Get<string[]>($"/{EndpointsVersion}/concerns-team-casework/owners", true);
+			return await Get<string[]>($"/{EndpointsVersion}/concerns-team-casework/owners", false) ?? Array.Empty<string>();
 		}
 	}
 }
