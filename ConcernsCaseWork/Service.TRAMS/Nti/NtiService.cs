@@ -18,7 +18,7 @@ namespace Service.TRAMS.Nti
 		private const string Url = @"/v2/case-actions/notice-to-improve";
 
 		public NtiService(IHttpClientFactory httpClientFactory, ILogger<NtiService> logger)
-			: base(httpClientFactory)
+			: base(httpClientFactory, logger)
 		{
 			_logger = logger;
 		}

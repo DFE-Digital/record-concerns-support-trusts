@@ -70,7 +70,7 @@ describe("The correct items are visible on the details page", () => {
         cy.request({
             method : 'GET',
             failOnStatusCode: false,
-            url: api+"v2/concerns-records/case/urn/"+caseid,
+            url: api+"/v2/concerns-records/case/urn/"+caseid,
             headers: {
                 ApiKey: apiKey,
                 "Content-type" : "application/json"

@@ -7,24 +7,28 @@
 @using ConcernsCaseWork.Enums;
 
 @{
-    ViewData["Title"] = "Case management";
-    var nonce = HttpContext.GetNonce();
+	ViewData["Title"] = "Case management";
+	var nonce = HttpContext.GetNonce();
 
-    var srmaModels = Model.CaseActions?.Where(ca => ca is SRMAModel).Select(srma => srma as SRMAModel).ToList();
-    var openSRMAs = srmaModels.Where(srma => !srma.ClosedAt.HasValue).ToList();
-    var closedSRMAs = srmaModels.Except(openSRMAs).ToList();
+	var srmaModels = Model.CaseActions?.Where(ca => ca is SRMAModel).Select(srma => srma as SRMAModel).ToList();
+	var openSRMAs = srmaModels.Where(srma => !srma.ClosedAt.HasValue).ToList();
+	var closedSRMAs = srmaModels.Except(openSRMAs).ToList();
 
-    var financialPlanModels = Model.CaseActions?.Where(ca => ca is FinancialPlanModel).Select(fp => fp as FinancialPlanModel).ToList();
-    var openFinancialPlanModels = financialPlanModels.Where(fp => !fp.ClosedAt.HasValue).ToList();
-    var closedFinancialPlanModels = financialPlanModels.Except(openFinancialPlanModels).ToList();
+	var financialPlanModels = Model.CaseActions?.Where(ca => ca is FinancialPlanModel).Select(fp => fp as FinancialPlanModel).ToList();
+	var openFinancialPlanModels = financialPlanModels.Where(fp => !fp.ClosedAt.HasValue).ToList();
+	var closedFinancialPlanModels = financialPlanModels.Except(openFinancialPlanModels).ToList();
 
-    var ntiUnderConsiderations = Model.CaseActions?.Where(ca => ca is NtiUnderConsiderationModel).Select(nti => nti as NtiUnderConsiderationModel).ToList();
-    var openNtiUCs = ntiUnderConsiderations.Where(nti => nti.ClosedAt == null).ToList();
-    var closedNtiUCs = ntiUnderConsiderations.Except(openNtiUCs).ToList();
+	var ntiUnderConsiderations = Model.CaseActions?.Where(ca => ca is NtiUnderConsiderationModel).Select(nti => nti as NtiUnderConsiderationModel).ToList();
+	var openNtiUCs = ntiUnderConsiderations.Where(nti => nti.ClosedAt == null).ToList();
+	var closedNtiUCs = ntiUnderConsiderations.Except(openNtiUCs).ToList();
 
-    var ntiWarningLetters = Model.CaseActions?.Where(ca => ca is NtiWarningLetterModel).Select(nti => nti as NtiWarningLetterModel).ToList();
-    var openNtiWLs = ntiWarningLetters.Where(nti => nti.ClosedAt == null).ToList();
-    var closedNtiWLs = ntiWarningLetters.Except(openNtiWLs).ToList();
+	var ntiWarningLetters = Model.CaseActions?.Where(ca => ca is NtiWarningLetterModel).Select(nti => nti as NtiWarningLetterModel).ToList();
+	var openNtiWLs = ntiWarningLetters.Where(nti => nti.ClosedAt == null).ToList();
+	var closedNtiWLs = ntiWarningLetters.Except(openNtiWLs).ToList();
+
+	var noticesToImprove = Model.CaseActions?.Where(ca => ca is NtiModel).Select(nti => nti as NtiModel).ToList();
+	var openNtis = noticesToImprove.Where(nti => nti.ClosedAt == null).ToList();
+	var closedNtis = noticesToImprove.Except(openNtis).ToList();
 }
 
 <div class="govuk-width-container">
@@ -284,7 +288,7 @@
                     Add to case
                 </a>
 
-                @if (openSRMAs.Count > 0 || openFinancialPlanModels.Count > 0 || openNtiUCs.Count > 0 || openNtiWLs.Count > 0)
+                @if (openSRMAs.Count > 0 || openFinancialPlanModels.Count > 0 || openNtiUCs.Count > 0 || openNtiWLs.Count > 0 || openNtis.Count > 0)
                 {
                     <table id="open-case-actions" class="govuk-table">
                         <thead class="govuk-table__head">
@@ -335,7 +339,7 @@
                                             }
                                             else
                                             {
-	                                            <span>In progress</span>
+                                                <span>In progress</span>
                                             }
                                         }
                                     </td>
@@ -376,11 +380,28 @@
                                     </td>
                                 </tr>
                             }
+
+                            @foreach (NtiModel nti in openNtis)
+                            {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">
+                                        <a href="@Request.Path/action/nti/@nti.Id" class="govuk-link govuk-link-no-visited-state">
+                                            <span>NTI</span>
+                                        </a>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        @nti.Status?.Name
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__header__right">
+                                        @DateExtension.ToDayMonthYear(nti.CreatedAt)
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 }
 
-                @if (closedSRMAs.Count > 0 || closedFinancialPlanModels.Count > 0 || closedNtiUCs.Count > 0 || closedNtiWLs.Count > 0)
+                @if (closedSRMAs.Count > 0 || closedFinancialPlanModels.Count > 0 || closedNtiUCs.Count > 0 || closedNtiWLs.Count > 0 || closedNtis.Count > 0)
                 {
                     <table id="close-case-actions" class="govuk-table">
                         <thead class="govuk-table__head">
@@ -458,6 +479,23 @@
                                     <td class="govuk-table__cell">
                                         <a href="@Request.Path/action/ntiwarningletter/@nti.Id" class="govuk-link govuk-link-no-visited-state">
                                             NTI: Warning letter
+                                        </a>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        @nti.ClosedStatus?.Name
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__header__right">
+                                        @DateExtension.ToDayMonthYear(nti.ClosedAt.Value)
+                                    </td>
+                                </tr>
+                            }
+
+                            @foreach (NtiModel nti in closedNtis)
+                            {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">
+                                        <a href="@Request.Path/action/nti/@nti.Id" class="govuk-link govuk-link-no-visited-state">
+                                            NTI
                                         </a>
                                     </td>
                                     <td class="govuk-table__cell">

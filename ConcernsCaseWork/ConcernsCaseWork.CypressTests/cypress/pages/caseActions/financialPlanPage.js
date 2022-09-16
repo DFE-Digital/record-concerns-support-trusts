@@ -23,7 +23,6 @@ class FinancialPlanPage {
         return     cy.get('[data-prevent-double-click="true"]', { timeout: 30000 }).contains('Add to case');
     }
 
-
     //Current Status
     getStatusRadio() {
         return     cy.get('[id*="status"]', { timeout: 30000 });
@@ -64,7 +63,7 @@ class FinancialPlanPage {
     }
 
     getUpdateBtn() {
-        return    cy.get('[id="add-srma-button"]', { timeout: 30000 });
+        return    cy.get('[id="add-financial-plan-button"]', { timeout: 30000 });
     }
     
 

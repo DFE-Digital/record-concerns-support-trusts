@@ -11,16 +11,20 @@ namespace ConcernsCaseWork.Services.Nti
 	public class NtiModelService : INtiModelService
 	{
 		private readonly INtiCachedService _ntiCachedService;
+		private readonly INtiStatusesCachedService _ntiStatusesCachedService;
 
-		public NtiModelService(INtiCachedService ntiCachedService)
+		public NtiModelService(INtiCachedService ntiCachedService, INtiStatusesCachedService ntiStatusesCachedService)
 		{
 			_ntiCachedService = ntiCachedService;
+			_ntiStatusesCachedService = ntiStatusesCachedService;
 		}
 
 		public async Task<NtiModel> CreateNtiAsync(NtiModel ntiModel)
 		{
 			var created = await _ntiCachedService.CreateNtiAsync(NtiMappers.ToDBModel(ntiModel));
-			return NtiMappers.ToServiceModel(created);
+			var statuses = await _ntiStatusesCachedService.GetAllStatusesAsync();
+
+			return NtiMappers.ToServiceModel(created, statuses);
 		}
 
 		public async Task<NtiModel> GetNtiAsync(string continuationId)
@@ -31,19 +35,25 @@ namespace ConcernsCaseWork.Services.Nti
 			}
 
 			var dto = await _ntiCachedService.GetNtiAsync(continuationId);
-			return NtiMappers.ToServiceModel(dto);
+			var statuses = await _ntiStatusesCachedService.GetAllStatusesAsync();
+
+			return NtiMappers.ToServiceModel(dto, statuses);
 		}
 
 		public async Task<NtiModel> GetNtiByIdAsync(long ntiId)
 		{
 			var dto = await _ntiCachedService.GetNtiAsync(ntiId);
-			return NtiMappers.ToServiceModel(dto);
+			var statuses = await _ntiStatusesCachedService.GetAllStatusesAsync();
+
+			return NtiMappers.ToServiceModel(dto, statuses);
 		}
 
 		public async Task<ICollection<NtiModel>> GetNtisForCaseAsync(long caseUrn)
 		{
 			var ntiDtos = await _ntiCachedService.GetNtisForCaseAsync(caseUrn);
-			return ntiDtos.Select(dto => NtiMappers.ToServiceModel(dto)).ToArray();
+			var statuses = await _ntiStatusesCachedService.GetAllStatusesAsync();
+
+			return ntiDtos.Select(dto => NtiMappers.ToServiceModel(dto, statuses)).ToArray();
 		}
 
 		public async Task<NtiModel> PatchNtiAsync(NtiModel patchNti)
@@ -51,8 +61,9 @@ namespace ConcernsCaseWork.Services.Nti
 			patchNti.UpdatedAt = DateTime.Now;
 			var dto = NtiMappers.ToDBModel(patchNti);
 			var patchedDto = await _ntiCachedService.PatchNtiAsync(dto);
+			var statuses = await _ntiStatusesCachedService.GetAllStatusesAsync();
 
-			return NtiMappers.ToServiceModel(patchedDto);
+			return NtiMappers.ToServiceModel(patchedDto, statuses);
 		}
 
 		public async Task StoreNtiAsync(NtiModel ntiModel, string continuationId)

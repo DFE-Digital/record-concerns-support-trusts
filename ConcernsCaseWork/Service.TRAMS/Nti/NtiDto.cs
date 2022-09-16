@@ -9,7 +9,7 @@ namespace Service.TRAMS.Nti
 	{
 		public long Id { get; set; }
 		public long CaseUrn { get; set; }
-		public DateTime? DateLetterSent { get; set; }
+		public DateTime? DateStarted { get; set; }
 		public string Notes { get; set; }
 		public int? StatusId { get; set; }
 
@@ -22,5 +22,8 @@ namespace Service.TRAMS.Nti
 		public DateTime? UpdatedAt { get; set; }
 		public DateTime? ClosedAt { get; set; }
 		public int? ClosedStatusId { get; set; }
+		public string SumissionDecisionId { get; set; }
+		public DateTime? DateNTILifted { get; set; }
+		public DateTime? DateNTIClosed { get; set; }
 	}
 }

@@ -15,7 +15,7 @@ namespace Service.TRAMS.CaseActions
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly ILogger<SRMAProvider> _logger;
 		private const string Url = @"/v2/case-actions/srma";
-		public SRMAProvider(IHttpClientFactory httpClientFactory, ILogger<SRMAProvider> logger) : base(httpClientFactory)
+		public SRMAProvider(IHttpClientFactory httpClientFactory, ILogger<SRMAProvider> logger) : base(httpClientFactory, logger)
 		{
 			_httpClientFactory = httpClientFactory;
 			_logger = logger;

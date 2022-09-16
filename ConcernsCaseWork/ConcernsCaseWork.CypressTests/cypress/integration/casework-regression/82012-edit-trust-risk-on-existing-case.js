@@ -7,9 +7,6 @@ describe("User edits the trust risk on existing case", () => {
 		cy.storeSessionData();
 	});
 
-	const searchTerm =
-		"Accrington St Christopher's Church Of England High School";
-
 	it("User clicks on Create Case and should see Search Trusts", () => {
 		cy.get('[href="/case"]').click();
 		cy.get("#search").should("be.visible");

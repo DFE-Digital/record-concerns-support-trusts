@@ -32,7 +32,7 @@ import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
 
 
 const concernsRgx = new RegExp(/(Compliance|Financial|Force majeure|Governance|Irregularity)/, 'i');
-const trustRgx = new RegExp(/(School|Academy|Accrington|South|North|East|West)/, 'i');
+const trustRgx = new RegExp(/(School|Academy|Accrington|South|North|East|West|([A-Z])\w+)/, 'i');
 const ragRgx = new RegExp(/(amber|green|red|redPlus|Red Plus)/, 'i');
 const dotRgx = new RegExp(/(Deteriorating|Unchanged|Improving)/, 'i');
 
@@ -431,21 +431,12 @@ Cypress.Commands.add('createCase', () =>{
                 cy.get("#search__option--0").click();
 
                cy.get(".govuk-summary-list__value").then(($el) =>{
-                    expect($el.text()).to.match(/(school|england|academy|trust|West|East|North|South)/i)
+                    expect($el.text()).to.match(/(school|england|academy|trust|West|East|North|South|([A-Z])\w+)/i)
                 });
 
                 cy.selectConcernType();
-
-               // cy.log("selecting Risk To Trust ").then(() => {
-               //     cy.selectRiskToTrust().then(() => {
-               //         cy.selectMoR();
-               //     });
-               // });
-
                 cy.selectRiskToTrust();
-
                // cy.selectMoR();
-
                 cy.enterConcernDetails();
 });
 
@@ -481,7 +472,6 @@ Cypress.Commands.add('closeSRMA', function (){
             cy.get('[class="govuk-link"]').eq(0).click();
             cy.get('[id*="status"]').eq(0).click();
             cy.get('[id="add-srma-button"]').click();
-
             cy.get('[class="govuk-link"]').eq(2).click();
     
             let rand = Math.floor(Math.random()*2)
@@ -507,7 +497,6 @@ Cypress.Commands.add('closeSRMA', function (){
 		//User sets SRMA status 
 		cy.get('[id*="status"]').eq(0).click();
 		cy.get('label.govuk-label.govuk-radios__label').eq(0);
-
 		cy.get('[id="dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
 		cy.get('[id="dtr-month"]').type(Math.floor(Math.random() *3) + 10);
 		cy.get('[id="dtr-year"]').type("2022");
@@ -518,9 +507,7 @@ Cypress.Commands.add('closeSRMA', function (){
     Cypress.Commands.add('selectMoR', function (){
 
         let rand = Math.floor(Math.random()*1)
-
         cy.get('[id="means-of-referral-urn"]').eq(Math.floor(Math.random() * 1)).click();
-
         cy.get('button[data-prevent-double-click="true"]').click();
 
     });

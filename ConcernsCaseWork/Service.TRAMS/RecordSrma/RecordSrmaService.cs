@@ -14,7 +14,7 @@ namespace Service.TRAMS.RecordSrma
 	{
 		private readonly ILogger<RecordSrmaService> _logger;
 		
-		public RecordSrmaService(IHttpClientFactory clientFactory, ILogger<RecordSrmaService> logger) : base(clientFactory)
+		public RecordSrmaService(IHttpClientFactory clientFactory, ILogger<RecordSrmaService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}
