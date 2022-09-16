@@ -46,7 +46,7 @@ namespace Service.Redis.Tests.Cases
 			var mockLogger = new Mock<ILogger<CaseHistoryCachedService>>();
 			var mockSequence = new Mock<ISequenceCachedService>();
 			
-			var caseStateModel = new UserState
+			var caseStateModel = new UserState("testing")
 			{
 				TrustUkPrn = "999999",
 				CasesDetails = { { 1, new CaseWrapper() } }
@@ -76,7 +76,7 @@ namespace Service.Redis.Tests.Cases
 			var mockLogger = new Mock<ILogger<CaseHistoryCachedService>>();
 			var mockSequence = new Mock<ISequenceCachedService>();
 			
-			var caseStateModel = new UserState
+			var caseStateModel = new UserState("testing")
 			{
 				TrustUkPrn = "999999",
 				CasesDetails = { { 1, new CaseWrapper() } }
@@ -106,7 +106,7 @@ namespace Service.Redis.Tests.Cases
 			var mockLogger = new Mock<ILogger<CaseHistoryCachedService>>();
 			var mockSequence = new Mock<ISequenceCachedService>();
 			
-			var caseStateModel = new UserState
+			var caseStateModel = new UserState("testing")
 			{
 				TrustUkPrn = "999999",
 				CasesDetails = { { 1, new CaseWrapper{ CasesHistoryDto = CaseFactory.BuildListCasesHistoryDto() } } },

@@ -35,7 +35,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers
 		{
 			var ntiUnderConsiderations = await _ntiUnderConsiderationModelService.GetNtiUnderConsiderationsForCase(caseUrn);
 			var ntiWarningLetters = await _ntiWarningLetterModelService.GetNtiWarningLettersForCase(caseUrn);
-			var ntis = await _ntiModelService.GetNtisForCase(caseUrn);
+			var ntis = await _ntiModelService.GetNtisForCaseAsync(caseUrn);
 
 			var hasOpenNTIAction = base.HasOpenCaseAction(ntiUnderConsiderations) 
 				|| base.HasOpenCaseAction(ntiWarningLetters)

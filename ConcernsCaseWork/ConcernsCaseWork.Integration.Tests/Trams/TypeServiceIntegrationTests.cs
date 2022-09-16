@@ -16,8 +16,10 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		private IConfigurationRoot _configuration;
 		private WebAppFactory _factory;
 
+		/// <summary>
 		/// Variables for caseworker and trustukprn, creates cases on Academies API.
 		/// Future work can be to delete the records from the SQLServer.
+		/// </summary>
 		
 		[OneTimeSetUp]
 		public void OneTimeSetup()
@@ -36,7 +38,8 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		public async Task WhenGetTypes_ReturnsListTypeDto()
 		{
 			// arrange
-			var typeService = _factory.Services.GetRequiredService<ITypeService>();
+			using var serviceScope = _factory.Services.CreateScope();
+			var typeService = serviceScope.ServiceProvider.GetRequiredService<ITypeService>();
 
 			//act 
 			var typesDto = await typeService.GetTypes();

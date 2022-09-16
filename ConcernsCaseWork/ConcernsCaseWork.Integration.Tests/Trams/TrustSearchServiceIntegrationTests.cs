@@ -11,8 +11,10 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 	[TestFixture]
 	public class TrustSearchServiceIntegrationTests
 	{
+		/// <summary>
 		/// Testing the class requires a running Redis,
 		/// startup is configured to use Redis with session storage.
+		/// </summary>
 		private IConfigurationRoot _configuration;
 		private WebAppFactory _factory;
 		
@@ -33,7 +35,8 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		public async Task WhenGetTrustsCachedWithSearchByGroupName_ReturnsTrustsFromTrams()
 		{
 			// arrange
-			var trustService = _factory.Services.GetRequiredService<ITrustSearchService>();
+			using var serviceScope = _factory.Services.CreateScope();
+			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustSearchService>();
 			const string searchParameter = "Northwood";
 			
 			// act
@@ -48,7 +51,8 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		public async Task WhenGetTrustsCachedWithSearchByGroupNameAndUkPrn_ReturnsTrustsFromTrams()
 		{
 			// arrange
-			var trustService = _factory.Services.GetRequiredService<ITrustSearchService>();
+			using var serviceScope = _factory.Services.CreateScope();
+			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustSearchService>();
 			const string searchParameter = "Northwood";
 			
 			// act
@@ -63,7 +67,8 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		public async Task WhenGetTrustsCachedWithSearchByGroupNameAndUkPrnAndCompaniesHouseNumber_ReturnsTrustsFromTrams()
 		{
 			// arrange
-			var trustService = _factory.Services.GetRequiredService<ITrustSearchService>();
+			using var serviceScope = _factory.Services.CreateScope();
+			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustSearchService>();
 			const string searchParameter = "Northwood";
 			
 			// act

@@ -67,9 +67,9 @@ namespace ConcernsCaseWork.Mappers
 				patchFinancialPlanModel?.ClosedAt ?? financialPlanDto.ClosedAt,
 				financialPlanDto.CreatedBy,
 				selectedStatusId,
-				patchFinancialPlanModel.DatePlanRequested,
-				patchFinancialPlanModel.DateViablePlanReceived,
-				patchFinancialPlanModel.Notes);
+				patchFinancialPlanModel?.DatePlanRequested ?? financialPlanDto.DatePlanRequested,
+				patchFinancialPlanModel?.DateViablePlanReceived ?? financialPlanDto.DateViablePlanReceived,
+				patchFinancialPlanModel?.Notes);
 
 			return updatedFinancialPlanDto;
 		}

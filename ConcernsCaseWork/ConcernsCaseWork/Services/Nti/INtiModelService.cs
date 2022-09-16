@@ -6,6 +6,13 @@ namespace ConcernsCaseWork.Services.Nti
 {
 	public interface INtiModelService
 	{
-		public Task<ICollection<NtiModel>> GetNtisForCase(long caseUrn);
+		Task<ICollection<NtiModel>> GetNtisForCaseAsync(long caseUrn);
+		Task<NtiModel> CreateNtiAsync(NtiModel ntiModel);
+		Task<NtiModel> GetNtiByIdAsync(long ntiId);
+		Task<NtiModel> PatchNtiAsync(NtiModel patchNti);
+		Task<NtiModel> GetNtiAsync(string continuationId);
+		Task StoreNtiAsync(NtiModel ntiModel, string continuationId);
+
+
 	}
 }

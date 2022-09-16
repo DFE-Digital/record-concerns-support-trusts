@@ -3,7 +3,7 @@ class AddToCasePage {
     constructor() {
         this.actionOptions = ["DfE support", "Financial forecast", "Financial plan",
                             "Financial returns", "Financial support", "Forced termination",
-                            "Notice To Improve (NTI)", "Recovery plan", "School Resource Management Adviser (SRMA)"];
+                            "Notice To Improve (NTI)", "Recovery plan", "School Resource Management Adviser (SRMA)", "NTI: Under consideration", "NTI: Warning letter"];
 
     }
 
@@ -25,12 +25,10 @@ class AddToCasePage {
         return     cy.get('[data-prevent-double-click="true"]', { timeout: 30000 }).contains('Add to case');
     }
 
-
     //current status
 
-
     //Option accepts the following args: DfESupport | FinancialForecast | FinancialPlan | FinancialReturns |
-    //FinancialSupport| ForcedTermination | Nti| RecoveryPlan | Srma | Tff |
+    //FinancialSupport| ForcedTermination | NtiUnderConsideration| RecoveryPlan | Srma | Tff |
     getCaseActionRadio(option) {
         return     cy.get('[value="'+option+'"]');
     }    
@@ -40,14 +38,9 @@ class AddToCasePage {
 
     addToCase(option) {
 
-                //cy.get('[class="govuk-heading-l"]').should('contain.text', 'Add to case');
-                this.getHeadingText().should('contain.text', 'Add to case');
-
-                this.getSubHeadingText().should('contain.text', 'What action are you taking?');
-
+            this.getHeadingText().should('contain.text', 'Add to case');
+            this.getSubHeadingText().should('contain.text', 'What action are you taking?');
             this.getCaseActionRadio(option).click();
-
-            //this.getCaseActionRadio(option).siblings().should('contain.text', textToVerify);
         }
         
     }

@@ -18,13 +18,17 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 	[TestFixture]
 	public class RecordServiceIntegrationTests
 	{
+		/// <summary>
 		/// Testing the class requires a running Redis,
 		/// startup is configured to use Redis with session storage.
+		/// </summary>
 		private IConfigurationRoot _configuration;
 		private WebAppFactory _factory;
 
+		/// <summary>
 		/// Variables for caseworker and trustukprn, creates cases on Academies API.
 		/// Future work can be to delete the records from the SQLServer.
+		/// </summary>
 		
 		private const string CaseWorker = "case.service.integration";
 
@@ -45,14 +49,15 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		public async Task WhenCreateAndGetRecordsByCaseUrn_ReturnsListRecordDto()
 		{
 			// arrange
+			using var serviceScope = _factory.Services.CreateScope();
 			var startTime = DateTime.UtcNow;
-			var recordService = _factory.Services.GetRequiredService<IRecordService>();
-			var caseUrn = await FetchRandomCaseUrn();
-			var typeUrn = await FetchRandomTypeUrn();
-			var ratingUrn = await FetchRandomRatingUrn();
-			var meansOfReferralUrn = await FetchRandomMeansOfReferralUrn();
+			var recordService = serviceScope.ServiceProvider.GetRequiredService<IRecordService>();
+			var caseUrn = await FetchRandomCaseUrn(serviceScope);
+			var typeUrn = await FetchRandomTypeUrn(serviceScope);
+			var ratingUrn = await FetchRandomRatingUrn(serviceScope);
+			var meansOfReferralUrn = await FetchRandomMeansOfReferralUrn(serviceScope);
 			var createRecordDto = RecordFactory.BuildCreateRecordDto(caseUrn, typeUrn, ratingUrn, meansOfReferralUrn);
-			await PostRecord(createRecordDto);
+			await PostRecord(serviceScope, createRecordDto);
 
 			//act 
 			var recordsDto = await recordService.GetRecordsByCaseUrn(caseUrn);
@@ -80,13 +85,14 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		public async Task WhenPatchRecordByUrn_UpdatesRecord()
 		{
 			// arrange 
-			var recordService = _factory.Services.GetRequiredService<IRecordService>();
-			var caseUrn = await FetchRandomCaseUrn();
-			var typeUrn = await FetchRandomTypeUrn();
-			var ratingUrn = await FetchRandomRatingUrn();
-			var updatedRatingUrn = await FetchRandomRatingUrn();
+			using var serviceScope = _factory.Services.CreateScope();
+			var recordService = serviceScope.ServiceProvider.GetRequiredService<IRecordService>();
+			var caseUrn = await FetchRandomCaseUrn(serviceScope);
+			var typeUrn = await FetchRandomTypeUrn(serviceScope);
+			var ratingUrn = await FetchRandomRatingUrn(serviceScope);
+			var updatedRatingUrn = await FetchRandomRatingUrn(serviceScope);
 			var createRecordDto = RecordFactory.BuildCreateRecordDto(caseUrn, typeUrn, ratingUrn);
-			var postRecordDto = await PostRecord(createRecordDto);
+			var postRecordDto = await PostRecord(serviceScope, createRecordDto);
 
 			// Update record properties
 			var timeNow = DateTimeOffset.Now;
@@ -124,16 +130,16 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			Assert.That(updatedRecordDto.StatusUrn, Is.EqualTo(postRecordDto.StatusUrn));
 		}
 
-		private async Task<RecordDto> PostRecord(CreateRecordDto createRecordDto)
+		private async Task<RecordDto> PostRecord(IServiceScope serviceScope, CreateRecordDto createRecordDto)
 		{
-			var recordService = _factory.Services.GetRequiredService<IRecordService>();
+			var recordService = serviceScope.ServiceProvider.GetRequiredService<IRecordService>();
 			return await recordService.PostRecordByCaseUrn(createRecordDto);
 		}
 
-		private async Task<string> FetchRandomTrustUkprn()
+		private async Task<string> FetchRandomTrustUkprn(IServiceScope serviceScope)
 		{
 			const string searchParameter = "Senior";
-			var trustService = _factory.Services.GetRequiredService<ITrustService>();
+			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustService>();
 			var apiWrapperTrusts = await trustService.GetTrustsByPagination(
 				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
 
@@ -146,19 +152,19 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			return apiWrapperTrusts.Data[index].UkPrn;
 		}
 		
-		private async Task<long> FetchRandomCaseUrn()
+		private async Task<long> FetchRandomCaseUrn(IServiceScope serviceScope)
 		{
-			var caseService = _factory.Services.GetRequiredService<ICaseService>();
-			var trustUkprn = await FetchRandomTrustUkprn();
+			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();
+			var trustUkprn = await FetchRandomTrustUkprn(serviceScope);
 			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustUkprn);
 			var caseDto = await caseService.PostCase(createCaseDto);
 
 			return caseDto.Urn;
 		}
 
-		private async Task<long> FetchRandomTypeUrn()
+		private async Task<long> FetchRandomTypeUrn(IServiceScope serviceScope)
 		{
-			var typeService = _factory.Services.GetRequiredService<ITypeService>();
+			var typeService = serviceScope.ServiceProvider.GetRequiredService<ITypeService>();
 			var types = await typeService.GetTypes();
 
 			var random = new Random();
@@ -167,9 +173,9 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			return types[index].Urn;
 		}
 
-		private async Task<long> FetchRandomRatingUrn()
+		private async Task<long> FetchRandomRatingUrn(IServiceScope serviceScope)
 		{
-			var ratingService = _factory.Services.GetRequiredService<IRatingService>();
+			var ratingService = serviceScope.ServiceProvider.GetRequiredService<IRatingService>();
 			var ratings = await ratingService.GetRatings();
 
 			var random = new Random();
@@ -178,9 +184,9 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			return ratings[index].Urn;
 		}
 		
-		private async Task<long> FetchRandomMeansOfReferralUrn()
+		private async Task<long> FetchRandomMeansOfReferralUrn(IServiceScope serviceScope)
 		{
-			var meansOfReferralService = _factory.Services.GetRequiredService<IMeansOfReferralService>();
+			var meansOfReferralService = serviceScope.ServiceProvider.GetRequiredService<IMeansOfReferralService>();
 			var meansOfReferrals = await meansOfReferralService.GetMeansOfReferrals();
 
 			var random = new Random();

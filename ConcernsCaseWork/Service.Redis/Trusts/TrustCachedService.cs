@@ -13,7 +13,6 @@ namespace Service.Redis.Trusts
 		private readonly ITrustService _trustService;
 
 		private const string TrustsKey = "Concerns.Trusts";
-		private readonly SemaphoreSlim _semaphoreTrusts = new SemaphoreSlim(1, 1);
 		
 		public TrustCachedService(ICacheProvider cacheProvider, ITrustService trustService, ILogger<TrustCachedService> logger) 
 			: base(cacheProvider)
@@ -41,8 +40,6 @@ namespace Service.Redis.Trusts
 			// Fetch from Academies API
 			trustDetailsDto = await _trustService.GetTrustByUkPrn(ukPrn);
 
-			await _semaphoreTrusts.WaitAsync();
-
 			trustsCached = await GetData<IDictionary<string, TrustDetailsDto>>(TrustsKey);
 
 			// Store in cache for 24 hours (default)
@@ -56,8 +53,6 @@ namespace Service.Redis.Trusts
 			}
 
 			await StoreData(TrustsKey, trustsCached);
-			
-			_semaphoreTrusts.Release();
 			
 			return trustDetailsDto;
 		}
