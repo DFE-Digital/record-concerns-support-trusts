@@ -19,7 +19,7 @@ namespace Service.TRAMS.NtiWarningLetter
 		private const string Url = @"/v2/case-actions/nti-warning-letter";
 
 		public NtiWarningLetterService(IHttpClientFactory httpClientFactory, 
-			ILogger<NtiWarningLetterService> logger) : base(httpClientFactory)
+			ILogger<NtiWarningLetterService> logger) : base(httpClientFactory, logger)
 		{
 			_httpClientFactory = httpClientFactory;
 			_logger = logger;

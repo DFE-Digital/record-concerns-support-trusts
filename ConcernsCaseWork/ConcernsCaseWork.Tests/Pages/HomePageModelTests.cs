@@ -46,8 +46,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			var defaultUsers = new[] { "user1", "user2" };
 			var roleClaimWrapper = new RoleClaimWrapper { Roles = roles, Users = defaultUsers };
 
-			mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
-				.ReturnsAsync(roleClaimWrapper);
+			//mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
+			//	.ReturnsAsync(roleClaimWrapper);
 			mockCaseModelService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
 				.ReturnsAsync(homeModels);
 
@@ -149,8 +149,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			var defaultUsers = new[] { "user1", "user2" };
 			var roleClaimWrapper = new RoleClaimWrapper { Roles = roles, Users = defaultUsers };
 
-			mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
-				.ReturnsAsync(roleClaimWrapper);
+			//mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
+			//	.ReturnsAsync(roleClaimWrapper);
 			mockCaseModelService.Setup(model => model.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()))
 				.ReturnsAsync(emptyList);
 			mockCaseModelService.Setup(model => model.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))

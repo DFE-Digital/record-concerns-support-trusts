@@ -17,7 +17,7 @@ namespace Service.TRAMS.RecordRatingHistory
 	{
 		private readonly ILogger<RecordRatingHistoryService> _logger;
 		
-		public RecordRatingHistoryService(IHttpClientFactory clientFactory, ILogger<RecordRatingHistoryService> logger) : base(clientFactory)
+		public RecordRatingHistoryService(IHttpClientFactory clientFactory, ILogger<RecordRatingHistoryService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}

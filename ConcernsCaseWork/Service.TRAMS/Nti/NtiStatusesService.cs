@@ -16,7 +16,7 @@ namespace Service.TRAMS.Nti
 		private readonly ILogger<NtiStatusesService> _logger;
 
 		public NtiStatusesService(IHttpClientFactory httpClientFactory, 
-			ILogger<NtiStatusesService> logger) : base(httpClientFactory)
+			ILogger<NtiStatusesService> logger) : base(httpClientFactory, logger)
 		{
 			_logger = logger;
 		}
