@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using Service.Redis.NtiUnderConsideration;
+using ConcernsCaseWork.Exceptions;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -24,7 +25,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		private readonly ILogger<AddPageModel> _logger;
 		
 
-		public int NotesMaxLength => 2000;
+		public const int NotesMaxLength = 2000;
 		public IEnumerable<RadioItem> NTIReasonsToConsider;
 
 		public long CaseUrn { get; private set; }
@@ -72,10 +73,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 				return Redirect($"/case/{CaseUrn}/management");
 			}
+			catch(InvalidUserInputException ex)
+			{
+				TempData["NTI-UC.Message"] = ex.Message;
+				return RedirectToPage();
+			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Case::NTI-UC::AddPageModel::OnPostAsync::Exception - {Message}", ex.Message);
-
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
@@ -117,7 +122,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			{
 				if (notes.Length > NotesMaxLength)
 				{
-					throw new Exception($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
+					throw new InvalidUserInputException($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
 				}
 				else
 				{
