@@ -1,26 +1,14 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers;
-using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
+using ConcernsCasework.Service.Cases;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.FinancialPlan;
-using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.FinancialPlan;
-using ConcernsCasework.Service.Cases;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
+namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelpersTests
 {
 	[Parallelizable(ParallelScope.All)]
 	public class SrmaCreateHelperTests

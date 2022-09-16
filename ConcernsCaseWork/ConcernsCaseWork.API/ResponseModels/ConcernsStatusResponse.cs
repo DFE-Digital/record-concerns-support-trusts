@@ -1,5 +1,3 @@
-using System;
-
 namespace ConcernsCaseWork.API.ResponseModels
 {
     public class ConcernsStatusResponse

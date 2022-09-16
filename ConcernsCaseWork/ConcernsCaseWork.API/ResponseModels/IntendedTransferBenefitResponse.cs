@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace ConcernsCaseWork.API.ResponseModels
 {
     public class IntendedTransferBenefitResponse

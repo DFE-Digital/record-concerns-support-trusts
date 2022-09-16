@@ -1,5 +1,4 @@
-﻿using Concerns.Data.Models;
-using System;
+﻿using ConcernsCaseWork.Data.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.API.RequestModels.CaseActions.SRMA

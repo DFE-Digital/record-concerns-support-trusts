@@ -1,8 +1,7 @@
-﻿using Concerns.Data.Gateways;
-using ConcernsCaseWork.API.Factories.CaseActionFactories;
+﻿using ConcernsCaseWork.API.Factories.CaseActionFactories;
 using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter;
-using System.Threading.Tasks;
+using ConcernsCaseWork.Data.Gateways;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.NTI.WarningLetter
 {

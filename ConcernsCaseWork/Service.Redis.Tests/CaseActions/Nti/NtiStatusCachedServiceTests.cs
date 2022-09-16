@@ -1,21 +1,14 @@
-﻿using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Base;
-using Service.Redis.Cases;
-using Service.Redis.Models;
 using Service.Redis.Nti;
-using Service.TRAMS.Cases;
-using Service.TRAMS.Nti;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Service.Redis.Tests.Cases
+namespace Service.Redis.Tests.CaseActions.Nti
 {
 	[Parallelizable(ParallelScope.All)]
 	public class NtiStatusCachedServiceTests

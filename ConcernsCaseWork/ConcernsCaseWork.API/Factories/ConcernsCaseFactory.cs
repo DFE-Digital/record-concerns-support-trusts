@@ -1,5 +1,5 @@
-using Concerns.Data.Models;
 using ConcernsCaseWork.API.RequestModels;
+using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Factories
 {

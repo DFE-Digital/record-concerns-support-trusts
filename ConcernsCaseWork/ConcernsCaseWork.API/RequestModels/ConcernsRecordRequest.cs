@@ -1,5 +1,3 @@
-using System;
-
 namespace ConcernsCaseWork.API.RequestModels
 {
     public class ConcernsRecordRequest

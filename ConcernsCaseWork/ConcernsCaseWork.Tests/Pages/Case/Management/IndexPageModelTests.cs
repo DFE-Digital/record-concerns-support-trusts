@@ -19,6 +19,7 @@ using Service.Redis.NtiUnderConsideration;
 using Service.Redis.NtiWarningLetter;
 using Service.Redis.Status;
 using ConcernsCasework.Service.Status;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
 using System.Linq;
 using System.Threading.Tasks;
 

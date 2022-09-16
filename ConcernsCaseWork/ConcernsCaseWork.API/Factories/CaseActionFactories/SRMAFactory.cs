@@ -1,7 +1,7 @@
-﻿using Concerns.Data.Enums;
-using Concerns.Data.Models;
-using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
+﻿using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
+using ConcernsCaseWork.Data.Enums;
+using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Factories.CaseActionFactories
 {
@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.API.Factories.CaseActionFactories
                 EndDateOfVisit = createSRMARequest.DateVisitEnd,
                 DateAccepted = createSRMARequest.DateAccepted,
                 StatusId = (int)createSRMARequest.Status,
-                ReasonId = (int?)(createSRMARequest.Reason == SRMAReasonOfferedEnum.Unknown ? null : createSRMARequest.Reason),
+                ReasonId = (int?)(createSRMARequest.Reason == SRMAReasonOffered.Unknown ? null : createSRMARequest.Reason),
                 Notes = createSRMARequest.Notes
             };
         }
@@ -37,11 +37,11 @@ namespace ConcernsCaseWork.API.Factories.CaseActionFactories
                 DateVisitStart = model.StartDateOfVisit,
                 DateVisitEnd = model.EndDateOfVisit,
                 DateAccepted = model.DateAccepted,
-                Status = (SRMAStatusEnum)model.StatusId,
-                Reason = (SRMAReasonOfferedEnum?)model.ReasonId,
+                Status = (Data.Enums.SRMAStatus)model.StatusId,
+                Reason = (SRMAReasonOffered?)model.ReasonId,
                 Notes = model.Notes,
                 Urn = model.Urn,
-                CloseStatus = (SRMAStatusEnum)(model.CloseStatusId ?? 0),
+                CloseStatus = (Data.Enums.SRMAStatus)(model.CloseStatusId ?? 0),
                 UpdatedAt = model.UpdatedAt,
                 ClosedAt = model.ClosedAt,
                 CreatedBy = model.CreatedBy

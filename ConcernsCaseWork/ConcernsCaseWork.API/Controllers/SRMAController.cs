@@ -1,15 +1,15 @@
-﻿using Concerns.Data.Enums;
-using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
+﻿using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.UseCases;
+using ConcernsCaseWork.Data.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 
 namespace ConcernsCaseWork.API.Controllers
 {
-    [ApiController]
     [ApiVersion("2.0")]
+    [ApiController]
     [Route("v{version:apiVersion}/case-actions/srma")]
     public class SRMAController : Controller
     {
@@ -34,6 +34,7 @@ namespace ConcernsCaseWork.API.Controllers
         }
 
         [HttpPost]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<SRMAResponse>> Create(CreateSRMARequest request)
         {
             var createdSRMA = _createSRMAUseCase.Execute(request);
@@ -43,6 +44,7 @@ namespace ConcernsCaseWork.API.Controllers
         }
 
         [HttpGet]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<SRMAResponse>> GetSRMAById(int srmaId)
         {
             var srma = _getSRMAByIdUseCase.Execute(srmaId);
@@ -53,6 +55,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet]
         [Route("case/{caseUrn}")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<ICollection<SRMAResponse>>> GetSRMAsByCase(int caseUrn)
         {
             var srmas = _getSRMAsByCaseIdUseCase.Execute(caseUrn);
@@ -63,7 +66,8 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPatch]
         [Route("{srmaId}/update-status")]
-        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateStatus(int srmaId, SRMAStatusEnum status)
+        [MapToApiVersion("2.0")]
+        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateStatus(int srmaId, SRMAStatus status)
         {
             var patched = _patchSRMAUseCase.Execute(new PatchSRMARequest
             {
@@ -82,7 +86,8 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPatch]
         [Route("{srmaId}/update-reason")]
-        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateReason(int srmaId, SRMAReasonOfferedEnum reason)
+        [MapToApiVersion("2.0")]
+        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateReason(int srmaId, SRMAReasonOffered reason)
         {
             var patched = _patchSRMAUseCase.Execute(new PatchSRMARequest
             {
@@ -101,6 +106,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPatch]
         [Route("{srmaId}/update-offered-date")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateOfferedDate(int srmaId, string offeredDate)
         {
             try
@@ -137,6 +143,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPatch]
         [Route("{srmaId}/update-notes")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateNotes(int srmaId, string notes)
         {
             var patched = _patchSRMAUseCase.Execute(new PatchSRMARequest
@@ -156,6 +163,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPatch]
         [Route("{srmaId}/update-visit-dates")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateVisitDates(int srmaId, string startDate, string endDate)
         {
             try
@@ -184,6 +192,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPatch]
         [Route("{srmaId}/update-date-accepted")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateDateAccepted(int srmaId, string acceptedDate)
         {
             try
@@ -211,6 +220,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPatch]
         [Route("{srmaId}/update-date-report-sent")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateDateReportSent(int srmaId, string dateReportSent)
         {
             try
@@ -239,6 +249,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPatch]
         [Route("{srmaId}/update-closed-date")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateDateClosed(int srmaId, string dateClosed)
         {
             try

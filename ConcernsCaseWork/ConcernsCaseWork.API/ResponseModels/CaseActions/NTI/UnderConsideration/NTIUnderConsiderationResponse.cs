@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.UnderConsideration
+﻿namespace ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.UnderConsideration
 {
     public class NTIUnderConsiderationResponse
 	{

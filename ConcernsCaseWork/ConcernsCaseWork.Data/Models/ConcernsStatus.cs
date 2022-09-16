@@ -1,4 +1,4 @@
-namespace Concerns.Data.Models
+namespace ConcernsCaseWork.Data.Models
 {
     public class ConcernsStatus
     {

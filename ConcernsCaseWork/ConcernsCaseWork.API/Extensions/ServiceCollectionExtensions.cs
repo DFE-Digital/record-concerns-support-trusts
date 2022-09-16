@@ -1,6 +1,7 @@
 ﻿using Concerns.Data;
-using Concerns.Data.Gateways;
 using ConcernsCaseWork.API.UseCases;
+using ConcernsCaseWork.Data;
+using ConcernsCaseWork.Data.Gateways;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Mime;
 
@@ -32,7 +33,6 @@ namespace ConcernsCaseWork.API.Extensions
 					}
 				}
 			}
-
 			return services;
 		}
 

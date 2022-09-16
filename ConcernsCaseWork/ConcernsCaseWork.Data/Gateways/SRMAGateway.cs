@@ -1,8 +1,8 @@
-﻿using Concerns.Data.Models;
+﻿using ConcernsCaseWork.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Concerns.Data.Gateways
+namespace ConcernsCaseWork.Data.Gateways
 {
     public class SRMAGateway : ISRMAGateway
     {

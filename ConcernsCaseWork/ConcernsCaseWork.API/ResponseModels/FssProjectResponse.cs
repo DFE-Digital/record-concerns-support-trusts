@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ConcernsCaseWork.API.ResponseModels
+﻿namespace ConcernsCaseWork.API.ResponseModels
 {
     public class FssProjectResponse
     {

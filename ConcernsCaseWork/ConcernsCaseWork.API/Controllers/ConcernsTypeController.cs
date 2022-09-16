@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Controllers
 {
-    [ApiController]
     [ApiVersion("2.0")]
+    [ApiController]
     [Route("v{version:apiVersion}/concerns-types")]
     public class ConcernsTypeController: ControllerBase
     {
@@ -22,6 +22,7 @@ namespace ConcernsCaseWork.API.Controllers
         }
         
         [HttpGet]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiResponseV2<ConcernsTypeResponse>> Index()
         {
             _logger.LogInformation($"Attempting to get Concerns Types");

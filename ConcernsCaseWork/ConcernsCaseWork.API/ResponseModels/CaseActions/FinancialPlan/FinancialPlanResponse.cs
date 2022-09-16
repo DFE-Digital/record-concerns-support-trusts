@@ -1,5 +1,4 @@
-﻿using Concerns.Data.Models;
-using System;
+﻿using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan
 {

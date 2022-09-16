@@ -1,7 +1,7 @@
-﻿using Concerns.Data.Models;
+﻿using ConcernsCaseWork.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Concerns.Data.Gateways
+namespace ConcernsCaseWork.Data.Gateways
 {
     public class ConcernsMeansOfReferralGateway : IConcernsMeansOfReferralGateway
     {

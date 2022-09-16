@@ -15,6 +15,7 @@ using Service.Redis.NtiUnderConsideration;
 using Service.Redis.Status;
 using ConcernsCasework.Service.NtiUnderConsideration;
 using ConcernsCasework.Service.Status;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
 using System.Linq;

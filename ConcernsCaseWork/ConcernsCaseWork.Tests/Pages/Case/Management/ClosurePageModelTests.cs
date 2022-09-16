@@ -19,6 +19,7 @@ using Moq;
 using NUnit.Framework;
 using Service.Redis.Status;
 using ConcernsCasework.Service.Status;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,7 @@
 ﻿@page "/case/{caseUrn:long}/management/action/srma/{srmaId:long}/reason"
-@model ConcernsCaseWork.Pages.Case.Management.Action.SRMA.EditSRMAReasonOfferedPageModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NetEscapades.AspNetCore.SecurityHeaders
+@model EditSRMAReasonOfferedPageModel
 
 @{
 	ViewData["Title"] = "SRMA Reason Offered";

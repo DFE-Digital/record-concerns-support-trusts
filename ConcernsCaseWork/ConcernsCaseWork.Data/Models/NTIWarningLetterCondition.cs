@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Concerns.Data.Models
+namespace ConcernsCaseWork.Data.Models
 {
-    [Table("NTIWarningLetterCondition")]
+    [Table("NTIWarningLetterCondition", Schema = "sdd")]
     public class NTIWarningLetterCondition
     {
         [Key]

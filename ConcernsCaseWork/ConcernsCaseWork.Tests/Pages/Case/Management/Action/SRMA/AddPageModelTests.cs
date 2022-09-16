@@ -1,7 +1,4 @@
-﻿using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Case.Management.Action;
-using ConcernsCaseWork.Pages.Case.Management.Action.Srma;
+﻿using ConcernsCaseWork.Pages.Case.Management.Action.SRMA;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
@@ -13,12 +10,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using ConcernsCasework.Service.Cases;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
+namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 {
 	[Parallelizable(ParallelScope.All)]
 	public class AddPageModelTests

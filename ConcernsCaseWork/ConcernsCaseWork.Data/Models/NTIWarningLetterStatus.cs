@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Concerns.Data.Models
+namespace ConcernsCaseWork.Data.Models
 {
-    [Table("NTIWarningLetterStatus")]
+    [Table("NTIWarningLetterStatus", Schema = "sdd")]
     public class NTIWarningLetterStatus
     {
         [Key]
@@ -13,5 +13,6 @@ namespace Concerns.Data.Models
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public bool IsClosingState { get; set; }
+        public string PastTenseName { get; set; }
     }
 }

@@ -1,15 +1,15 @@
-﻿using Concerns.Data.Models;
-using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.WarningLetter;
+﻿using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.API.UseCases;
+using ConcernsCaseWork.Data.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Controllers
 {
+    [ApiVersion("2.0")]
+    [Route("v{version:apiVersion}/case-actions/nti-warning-letter")]
     [ApiController]
-	[ApiVersion("2.0")]
-	[Route("v{version:apiVersion}/case-actions/nti-warning-letter")]
     public class NTIWarningLetterController : Controller
     {
         private readonly ILogger<NTIWarningLetterController> _logger;
@@ -46,6 +46,7 @@ namespace ConcernsCaseWork.API.Controllers
         }
 
         [HttpPost]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<NTIWarningLetterResponse>> Create(CreateNTIWarningLetterRequest request)
         {
             var createdWarningLetter = _createNtiWarningLetterUseCase.Execute(request);
@@ -56,6 +57,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet]
         [Route("{warningLetterId}")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<NTIWarningLetterResponse>> GetNTIWarningLetterById(long warningLetterId)
         {
             var warningLetter = _getNtiWarningLetterByIdUseCase.Execute(warningLetterId);
@@ -66,6 +68,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet]
         [Route("case/{caseUrn}")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<List<NTIWarningLetterResponse>>> GetNtiWarningLetterByCaseUrn(int caseUrn)
         {
             var warningLetters = _getNtiWarningLetterByCaseUrnUseCase.Execute(caseUrn);
@@ -75,6 +78,7 @@ namespace ConcernsCaseWork.API.Controllers
         }
 
         [HttpPatch]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<NTIWarningLetterResponse>> Patch(PatchNTIWarningLetterRequest request)
         {
             var createdWarningLetter = _patchNTIWarningLetterUseCase.Execute(request);
@@ -85,6 +89,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet]
         [Route("all-statuses")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<List<NTIWarningLetterStatus>>> GetAllStatuses()
         {
             var statuses = _getAllStatuses.Execute(null);
@@ -95,6 +100,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet]
         [Route("all-reasons")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<List<NTIWarningLetterReason>>> GetAllReasons()
         {
             var reasons = _getAllReasons.Execute(null);
@@ -105,6 +111,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet]
         [Route("all-conditions")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<List<NTIWarningLetterCondition>>> GetAllConditions()
         {
             var conditions = _getAllConditions.Execute(null);
@@ -115,6 +122,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet]
         [Route("all-condition-types")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<List<NTIWarningLetterConditionType>>> GetAllConditionTypes()
         {
             var conditionTypes = _getAllConditionTypes.Execute(null);

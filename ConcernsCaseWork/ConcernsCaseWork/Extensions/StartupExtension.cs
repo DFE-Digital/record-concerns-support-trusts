@@ -61,6 +61,8 @@ using ConcernsCasework.Service.MeansOfReferral;
 using ConcernsCasework.Service.Nti;
 using Service.Redis.Nti;
 using ConcernsCaseWork.Services.Nti;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
+using Service.TRAMS.Nti;
 
 namespace ConcernsCaseWork.Extensions
 {

@@ -1,7 +1,4 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ConcernsCaseWork.API.ResponseModels
 {

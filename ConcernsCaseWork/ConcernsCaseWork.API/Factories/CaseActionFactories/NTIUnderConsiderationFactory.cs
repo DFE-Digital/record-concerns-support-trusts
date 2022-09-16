@@ -1,7 +1,6 @@
-﻿using Concerns.Data.Models;
-using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.UnderConsideration;
+﻿using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.UnderConsideration;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.UnderConsideration;
-using System.Linq;
+using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.Factories.CaseActionFactories
 {

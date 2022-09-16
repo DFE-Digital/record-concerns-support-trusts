@@ -1,7 +1,7 @@
-using Concerns.Data.Models;
+using ConcernsCaseWork.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Concerns.Data.Gateways
+namespace ConcernsCaseWork.Data.Gateways
 {
     public class ConcernsCaseGateway : IConcernsCaseGateway
     {
@@ -68,7 +68,7 @@ namespace Concerns.Data.Gateways
             query = query.Skip((page - 1) * count)
                 .Take(count)
                 .AsNoTracking();
-
+            
             return query.ToList();
         }
 

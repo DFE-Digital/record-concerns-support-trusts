@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Concerns.Data.Models
+namespace ConcernsCaseWork.Data.Models
 {
-    [Table("NTIUnderConsiderationCase")]
+    [Table("NTIUnderConsiderationCase", Schema = "sdd")]
     public class NTIUnderConsideration
     {
         [Key]

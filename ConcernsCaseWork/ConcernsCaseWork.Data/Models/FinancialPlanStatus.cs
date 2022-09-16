@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Concerns.Data.Models
+namespace ConcernsCaseWork.Data.Models
 {
-    [Table("FinancialPlanStatus")]
+    [Table("FinancialPlanStatus", Schema = "sdd")]
     public class FinancialPlanStatus
     {
         [Key]

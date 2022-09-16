@@ -7,8 +7,8 @@ using System.Text.Json;
 
 namespace ConcernsCaseWork.API.Controllers
 {
-    [ApiController]
     [ApiVersion("2.0")]
+    [ApiController]
     [Route("v{version:apiVersion}/concerns-cases")]
     public class ConcernsCaseController: ControllerBase
     { 
@@ -36,6 +36,7 @@ namespace ConcernsCaseWork.API.Controllers
         }
         
         [HttpPost]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>> Create(ConcernCaseRequest request)
         {
             var validator = new ConcernsCaseRequestValidator();
@@ -52,6 +53,7 @@ namespace ConcernsCaseWork.API.Controllers
         
         [HttpGet]
         [Route("urn/{urn}")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>> GetByUrn(int urn)
         {
             _logger.LogInformation($"Attempting to get Concerns Case by Urn {urn}");
@@ -72,6 +74,7 @@ namespace ConcernsCaseWork.API.Controllers
         
         [HttpGet]
         [Route("ukprn/{trustUkprn}")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiResponseV2<ConcernsCaseResponse>> GetByTrustUkprn(string trustUkprn, int page = 1, int count = 50)
         {
             _logger.LogInformation($"Attempting to get Concerns Cases by Trust Ukprn {trustUkprn}, page {page}, count {count}");
@@ -86,6 +89,7 @@ namespace ConcernsCaseWork.API.Controllers
         }
         
         [HttpPatch("{urn}")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>> Update(int urn, ConcernCaseRequest request)
         {
             _logger.LogInformation($"Attempting to update Concerns Case {urn}");
@@ -112,6 +116,7 @@ namespace ConcernsCaseWork.API.Controllers
         
         [HttpGet]
         [Route("owner/{ownerId}")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiResponseV2<ConcernsCaseResponse>> GetByOwnerId(string ownerId, int? status = null, int page = 1, int count = 50)
         {
             _logger.LogInformation($"Attempting to get Concerns Cases by Owner Id {ownerId}, page {page}, count {count}");

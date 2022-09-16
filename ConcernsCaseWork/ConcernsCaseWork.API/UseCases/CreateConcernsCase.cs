@@ -1,7 +1,7 @@
-using Concerns.Data.Gateways;
 using ConcernsCaseWork.API.Factories;
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.Data.Gateways;
 
 namespace ConcernsCaseWork.API.UseCases
 {

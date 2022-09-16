@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Controllers
 {
-    [ApiController]
     [ApiVersion("2.0")]
+    [ApiController]
     [Route("v{version:apiVersion}/concerns-ratings")]
     public class ConcernsRatingController: ControllerBase
     {
@@ -21,6 +21,7 @@ namespace ConcernsCaseWork.API.Controllers
         }
         
         [HttpGet]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiResponseV2<ConcernsRatingResponse>> Index()
         {
             _logger.LogInformation($"Attempting to get Concerns Ratings");

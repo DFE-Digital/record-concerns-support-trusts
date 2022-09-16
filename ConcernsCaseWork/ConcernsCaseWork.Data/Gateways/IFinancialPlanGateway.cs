@@ -1,6 +1,6 @@
-﻿using Concerns.Data.Models;
+﻿using ConcernsCaseWork.Data.Models;
 
-namespace Concerns.Data.Gateways
+namespace ConcernsCaseWork.Data.Gateways
 {
     public interface IFinancialPlanGateway
     {

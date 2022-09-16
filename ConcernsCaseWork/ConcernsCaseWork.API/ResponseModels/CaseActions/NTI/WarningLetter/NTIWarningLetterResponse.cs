@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter
+﻿namespace ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter
 {
     public class NTIWarningLetterResponse
 	{

@@ -1,15 +1,15 @@
-﻿using Concerns.Data.Models;
-using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.UnderConsideration;
+﻿using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.UnderConsideration;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.UnderConsideration;
 using ConcernsCaseWork.API.UseCases;
+using ConcernsCaseWork.Data.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Controllers
 {
-    [ApiController]
     [ApiVersion("2.0")]
     [Route("v{version:apiVersion}/case-actions/nti-under-consideration")]
+    [ApiController]
     public class NTIUnderConsiderationController : Controller
     {
         private readonly ILogger<NTIUnderConsiderationController> _logger;
@@ -39,7 +39,9 @@ namespace ConcernsCaseWork.API.Controllers
             _getAllReasons = getAllReasons;
         }
 
-		[HttpPost]
+  
+        [HttpPost]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<NTIUnderConsiderationResponse>> Create(CreateNTIUnderConsiderationRequest request)
         {
             var createdConsideration = _createNtiUnderConsiderationUseCase.Execute(request);
@@ -50,6 +52,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet]
         [Route("{underConsiderationId}")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<NTIUnderConsiderationResponse>> GetNTIUnderConsiderationById(long underConsiderationId)
         {
             var consideration = _getNtiUnderConsiderationByIdUseCase.Execute(underConsiderationId);
@@ -60,6 +63,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet]
         [Route("case/{caseUrn}")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<List<NTIUnderConsiderationResponse>>> GetNtiUnderConsiderationByCaseUrn(int caseUrn)
         {
             var considerations = _getNtiUnderConsiderationByCaseUrnUseCase.Execute(caseUrn);
@@ -70,6 +74,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet]
         [Route("all-statuses")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<List<NTIUnderConsiderationStatus>>> GetAllStatuses()
         {
             var statuses = _getAllStatuses.Execute(null);
@@ -80,6 +85,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet]
         [Route("all-reasons")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<List<NTIUnderConsiderationReason>>> GetAllReasons()
         {
             var reasons = _getAllReasons.Execute(null);
@@ -89,6 +95,7 @@ namespace ConcernsCaseWork.API.Controllers
         }
 
         [HttpPatch]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<NTIUnderConsiderationResponse>> Patch(PatchNTIUnderConsiderationRequest request)
         {
             var createdConsideration = _patchNTIUnderConsiderationUseCase.Execute(request);

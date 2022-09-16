@@ -1,15 +1,15 @@
-﻿using Concerns.Data.Models;
-using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
+﻿using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.API.UseCases;
+using ConcernsCaseWork.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Controllers
 {
-    [ApiController]
     [ApiVersion("2.0")]
     [Route("v{version:apiVersion}/case-actions/financial-plan")]
+    [ApiController]
     public class FinancialPlanController : Controller
     {
         private readonly ILogger<FinancialPlanController> _logger;
@@ -35,6 +35,7 @@ namespace ConcernsCaseWork.API.Controllers
         }
 
         [HttpPost]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<FinancialPlanResponse>> Create(CreateFinancialPlanRequest request)
         {
             var createdFP = _createFinancialPlanUseCase.Execute(request);
@@ -45,6 +46,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet]
         [Route("{financialPlanId}")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<FinancialPlanResponse>> GetFinancialPlanById(long financialPlanId)
         {
             var fp = _getFinancialPlanByIdUseCase.Execute(financialPlanId);
@@ -55,6 +57,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet]
         [Route("case/{caseUrn}")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<List<FinancialPlanResponse>>> GetFinancialPlansByCaseId(int caseUrn)
         {
             var fps = _getFinancialPlansByCaseUseCase.Execute(caseUrn);
@@ -65,6 +68,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpGet]
         [Route("all-statuses")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<List<FinancialPlanStatus>>> GetAllStatuses()
         {
             var statuses = _getAllStatuses.Execute(null);
@@ -75,6 +79,7 @@ namespace ConcernsCaseWork.API.Controllers
         
         [HttpGet]
         [Route("closure-statuses")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<List<FinancialPlanStatus>>> GetClosureStatuses()
         {
             var statuses = _getAllStatuses.Execute(null).Where(s => s.IsClosedStatus).ToList();
@@ -85,6 +90,7 @@ namespace ConcernsCaseWork.API.Controllers
         
         [HttpGet]
         [Route("open-statuses")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<List<FinancialPlanStatus>>> GetOpenStatuses()
         {
             var statuses = _getAllStatuses.Execute(null).Where(s => !s.IsClosedStatus).ToList();
@@ -94,6 +100,7 @@ namespace ConcernsCaseWork.API.Controllers
         }
 
         [HttpPatch]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<FinancialPlanResponse>> Patch(PatchFinancialPlanRequest request)
         {
             var createdFP = _patchFinancialPlanUseCase.Execute(request);

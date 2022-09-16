@@ -1,7 +1,6 @@
-﻿using Concerns.Data.Gateways;
-using ConcernsCaseWork.API.Factories.CaseActionFactories;
+﻿using ConcernsCaseWork.API.Factories.CaseActionFactories;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.FinancialPlan;
-using System.Threading.Tasks;
+using ConcernsCaseWork.Data.Gateways;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.FinancialPlan
 {

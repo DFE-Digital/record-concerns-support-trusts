@@ -1,4 +1,5 @@
-﻿@if (BackPageModel.CanRender(Context.Request.Path.Value)) {
+﻿@using NetEscapades.AspNetCore.SecurityHeaders
+@if (BackPageModel.CanRender(Context.Request.Path.Value)) {
 	var nonce = Context.GetNonce();
 	var cssClass = BackPageModel.IsExtraWidthContainer ? "govuk-extra-width-container" : "govuk-width-container";
 	<div class="@cssClass">

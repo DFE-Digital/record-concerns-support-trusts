@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace ConcernsCaseWork.API.ResponseModels
 {
     public class ApiResponseV2<TResponse> where TResponse : class

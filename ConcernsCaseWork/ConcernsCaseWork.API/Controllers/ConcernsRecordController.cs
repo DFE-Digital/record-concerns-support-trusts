@@ -6,8 +6,8 @@ using System.Text.Json;
 
 namespace ConcernsCaseWork.API.Controllers
 {
-    [ApiController]
     [ApiVersion("2.0")]
+    [ApiController]
     [Route("v{version:apiVersion}/concerns-records")]
     
     public class ConcernsRecordController : ControllerBase
@@ -30,6 +30,7 @@ namespace ConcernsCaseWork.API.Controllers
         }
         
         [HttpPost]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<ConcernsRecordResponse>> Create(ConcernsRecordRequest request)
         {
             var createdConcernsRecord = _createConcernsRecord.Execute(request);
@@ -39,6 +40,7 @@ namespace ConcernsCaseWork.API.Controllers
         }
         
         [HttpPatch("{urn}")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<ConcernsRecordResponse>> Update(int urn, ConcernsRecordRequest request)
         {
             _logger.LogInformation($"Attempting to update Concerns Record {urn}");
@@ -57,6 +59,7 @@ namespace ConcernsCaseWork.API.Controllers
         }
         
         [HttpGet("case/urn/{urn}")]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiResponseV2<ConcernsRecordResponse>> GetByCaseUrn(int urn, int page = 1, int count = 50)
         {
             _logger.LogInformation($"Attempting to get Concerns Case {urn}");

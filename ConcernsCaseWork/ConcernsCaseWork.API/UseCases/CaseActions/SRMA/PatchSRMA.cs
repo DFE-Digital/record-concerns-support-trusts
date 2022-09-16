@@ -1,9 +1,7 @@
-﻿using Concerns.Data.Gateways;
-using ConcernsCaseWork.API.Factories.CaseActionFactories;
+﻿using ConcernsCaseWork.API.Factories.CaseActionFactories;
 using ConcernsCaseWork.API.RequestModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
-using System;
-using System.Threading.Tasks;
+using ConcernsCaseWork.Data.Gateways;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.SRMA
 {

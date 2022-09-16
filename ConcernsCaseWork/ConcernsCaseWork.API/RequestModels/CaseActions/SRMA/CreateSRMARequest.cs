@@ -1,5 +1,4 @@
-﻿using Concerns.Data.Enums;
-using System;
+﻿using ConcernsCaseWork.Data.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.API.RequestModels.CaseActions.SRMA
@@ -16,8 +15,8 @@ namespace ConcernsCaseWork.API.RequestModels.CaseActions.SRMA
 		public DateTime? DateReportSentToTrust { get; set; }
 		public DateTime? DateVisitStart { get; set; }
 		public DateTime? DateVisitEnd { get; set; }
-		public SRMAStatusEnum Status { get; set; }
+		public SRMAStatus Status { get; set; }
 		public string Notes { get; set; }
-		public SRMAReasonOfferedEnum? Reason { get; set; }
+		public SRMAReasonOffered? Reason { get; set; }
 	}
 }

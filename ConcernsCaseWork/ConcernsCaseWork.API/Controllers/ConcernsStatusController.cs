@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Controllers
 {
-    [ApiController]
     [ApiVersion("2.0")]
+    [ApiController]
     [Route("v{version:apiVersion}/concerns-statuses")]
     public class ConcernsStatusController: ControllerBase
     {
@@ -19,8 +19,10 @@ namespace ConcernsCaseWork.API.Controllers
             _logger = logger;
             _indexConcernsStatuses = indexConcernsStatuses;
         }
-        
+
+
         [HttpGet]
+        [MapToApiVersion("2.0")]
         public ActionResult<ApiResponseV2<ConcernsStatusResponse>> Index()
         {
             _logger.LogInformation($"Attempting to get Concerns Statuses");
