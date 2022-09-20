@@ -19,7 +19,7 @@ namespace Service.TRAMS.NtiWarningLetter
 		private const string Url = @"/v2/case-actions/nti-warning-letter";
 
 		public NtiWarningLetterService(IHttpClientFactory httpClientFactory, 
-			ILogger<NtiWarningLetterService> logger) : base(httpClientFactory)
+			ILogger<NtiWarningLetterService> logger) : base(httpClientFactory, logger)
 		{
 			_httpClientFactory = httpClientFactory;
 			_logger = logger;
@@ -95,9 +95,28 @@ namespace Service.TRAMS.NtiWarningLetter
 			}
 		}
 
-		public Task<NtiWarningLetterDto> PatchNtiWarningLetterAsync(NtiWarningLetterDto ntiWarningLetter)
+		public async Task<NtiWarningLetterDto> PatchNtiWarningLetterAsync(NtiWarningLetterDto ntiWarningLetter)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}");
+
+				request.Content = new StringContent(JsonConvert.SerializeObject(ntiWarningLetter),
+					Encoding.UTF8, MediaTypeNames.Application.Json);
+
+				var response = await client.SendAsync(request);
+				var content = await response.Content.ReadAsStringAsync();
+
+				response.EnsureSuccessStatusCode();
+
+				return JsonConvert.DeserializeObject<ApiWrapper<NtiWarningLetterDto>>(content).Data;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, $"Error occured while trying to patch NTI");
+				throw;
+			}
 		}
 	}
 }

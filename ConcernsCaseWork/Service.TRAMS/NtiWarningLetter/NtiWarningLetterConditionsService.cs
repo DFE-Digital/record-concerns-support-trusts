@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
+using Service.TRAMS.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Service.TRAMS.NtiWarningLetter
 		private readonly ILogger<NtiWarningLetterConditionsService> _logger;
 
 		public NtiWarningLetterConditionsService(IHttpClientFactory httpClientFactory,
-			ILogger<NtiWarningLetterConditionsService> logger) : base(httpClientFactory)
+			ILogger<NtiWarningLetterConditionsService> logger) : base(httpClientFactory, logger)
 		{
 			_logger = logger;
 		}
@@ -24,7 +25,7 @@ namespace Service.TRAMS.NtiWarningLetter
 		{
 			try
 			{
-				_logger.LogInformation("NtiWarningLetterConditionsService::GetAllConditionsAsync");
+				_logger.LogInformation($"{nameof(NtiWarningLetterConditionsService)}::{LoggingHelpers.EchoCallerName()}");
 
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/case-actions/nti-warning-letter/all-conditions");
@@ -48,7 +49,7 @@ namespace Service.TRAMS.NtiWarningLetter
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("NtiWarningLetterConditionsService::GetAllConditionsAsync::Exception message::{Message}", ex.Message);
+				_logger.LogError(ex, $"{nameof(NtiWarningLetterConditionsService)}::{LoggingHelpers.EchoCallerName()}");
 				throw;
 			}
 		}

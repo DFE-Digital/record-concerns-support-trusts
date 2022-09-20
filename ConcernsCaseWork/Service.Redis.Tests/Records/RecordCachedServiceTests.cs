@@ -70,7 +70,7 @@ namespace Service.Redis.Tests.Records
 			mockRecordService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordDto>()))
 				.ReturnsAsync(newRecordDto);
 			
-			var userState = new UserState();
+			var userState = new UserState("testing");
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
 				ReturnsAsync(userState);
@@ -114,7 +114,7 @@ namespace Service.Redis.Tests.Records
 			mockRecordService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordDto>()))
 				.ReturnsAsync(newRecordDto);
 
-			var userState = new UserState
+			var userState = new UserState("testing")
 			{
 				CasesDetails = { { newRecordDto.CaseUrn, new CaseWrapper() } }
 			};
@@ -161,7 +161,7 @@ namespace Service.Redis.Tests.Records
 			mockRecordService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordDto>()))
 				.ReturnsAsync(newRecordDto);
 			
-			var userState = new UserState { TrustUkPrn = "trust-ukprn", CasesDetails = { { 1, new CaseWrapper { CaseDto = CaseFactory.BuildCaseDto(), } } } };
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CasesDetails = { { 1, new CaseWrapper { CaseDto = CaseFactory.BuildCaseDto(), } } } };
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
 				ReturnsAsync(userState);
@@ -228,7 +228,7 @@ namespace Service.Redis.Tests.Records
 				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
 			
 			// act
-			var actualRecordsDto = await recordRecordCachedService.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>());
+			var actualRecordsDto = await recordRecordCachedService.GetRecordsByCaseUrn("a.caseworker", 1);
 
 			// assert
 			Assert.That(actualRecordsDto, Is.Not.Null);
@@ -247,7 +247,7 @@ namespace Service.Redis.Tests.Records
 			var mockRecordService = new Mock<IRecordService>();
 			var mockLogger = new Mock<ILogger<RecordCachedService>>();
 
-			var userState = new UserState
+			var userState = new UserState("testing")
 			{
 				TrustUkPrn = "trust-ukprn",
 				CasesDetails =
@@ -294,7 +294,7 @@ namespace Service.Redis.Tests.Records
 			var mockLogger = new Mock<ILogger<RecordCachedService>>();
 
 			var recordsDto = RecordFactory.BuildListRecordDto();
-			var userState = new UserState
+			var userState = new UserState("testing")
 			{
 				TrustUkPrn = "trust-ukprn",
 				CasesDetails =
@@ -335,7 +335,7 @@ namespace Service.Redis.Tests.Records
 			var mockRecordService = new Mock<IRecordService>();
 			var mockLogger = new Mock<ILogger<RecordCachedService>>();
 			
-			var userState = new UserState
+			var userState = new UserState("testing")
 			{
 				TrustUkPrn = "trust-ukprn",
 				CasesDetails =
@@ -375,7 +375,7 @@ namespace Service.Redis.Tests.Records
 			var mockLogger = new Mock<ILogger<RecordCachedService>>();
 
 			var recordsDto = RecordFactory.BuildListRecordDto();
-			var userState = new UserState
+			var userState = new UserState("testing")
 			{
 				TrustUkPrn = "trust-ukprn",
 				CasesDetails =
@@ -424,7 +424,7 @@ namespace Service.Redis.Tests.Records
 			var mockLogger = new Mock<ILogger<RecordCachedService>>();
 
 			var recordDto = RecordFactory.BuildRecordDto();
-			var userState = new UserState
+			var userState = new UserState("testing")
 			{
 				TrustUkPrn = "trust-ukprn",
 				CasesDetails =
@@ -468,7 +468,7 @@ namespace Service.Redis.Tests.Records
 			var mockLogger = new Mock<ILogger<RecordCachedService>>();
 
 			var recordDto = RecordFactory.BuildRecordDto();
-			var userState = new UserState
+			var userState = new UserState("testing")
 			{
 				TrustUkPrn = "trust-ukprn",
 				CasesDetails =
@@ -526,7 +526,7 @@ namespace Service.Redis.Tests.Records
 			var mockLogger = new Mock<ILogger<RecordCachedService>>();
 
 			var recordDto = RecordFactory.BuildRecordDto();
-			var userState = new UserState
+			var userState = new UserState("tester.one")
 			{
 				TrustUkPrn = "trust-ukprn",
 				CasesDetails =

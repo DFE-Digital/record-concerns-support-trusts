@@ -174,5 +174,14 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(caseHistoryModel.CaseUrn, Is.EqualTo(caseHistoryDto.CaseUrn));
 			Assert.That(caseHistoryModel.CreatedAt, Is.EqualTo(caseHistoryDto.CreatedAt));
 		}
+
+
+		[Test]
+		public void Assert_MappingConfiguration_Is_Valid()
+		{
+			// Auto mapper includes functionality to check that config is valid for you.
+			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());			
+			config.AssertConfigurationIsValid();
+		}
 	}
 }

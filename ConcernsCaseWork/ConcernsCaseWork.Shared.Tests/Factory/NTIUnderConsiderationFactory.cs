@@ -1,5 +1,4 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Models.CaseActions;
 using System;
 using System.Collections.Generic;
@@ -10,21 +9,40 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 	{
 		private readonly static Fixture Fixture = new Fixture();
 
-		public static List<NtiUnderConsiderationModel> BuildListNTIUnderConsiderationModel(DateTime? closedAt = null)
+		public static List<NtiUnderConsiderationModel> BuildListNTIUnderConsiderationModel()
 		{
 			return new List<NtiUnderConsiderationModel>
 			{
-				BuildNTIUnderConsiderationModel(closedAt)
+				BuildNTIUnderConsiderationModel(),
+				BuildClosedNTIUnderConsiderationModel()
+			};
+		}
+		
+		public static List<NtiUnderConsiderationModel> BuildClosedListNTIUnderConsiderationModel()
+		{
+			return new List<NtiUnderConsiderationModel>
+			{
+				BuildClosedNTIUnderConsiderationModel(),
+				BuildClosedNTIUnderConsiderationModel()
 			};
 		}
 
-		public static NtiUnderConsiderationModel BuildNTIUnderConsiderationModel(DateTime? closedAt = null)
+		public static NtiUnderConsiderationModel BuildNTIUnderConsiderationModel()
 		{
 			var ntiUnderConsideration = new NtiUnderConsiderationModel();
 			ntiUnderConsideration.Id = Fixture.Create<long>();
 			ntiUnderConsideration.CaseUrn = Fixture.Create<long>();
 			ntiUnderConsideration.Notes = Fixture.Create<string>();
-			ntiUnderConsideration.ClosedAt = closedAt;
+
+			return ntiUnderConsideration;
+		}
+		public static NtiUnderConsiderationModel BuildClosedNTIUnderConsiderationModel()
+		{
+			var ntiUnderConsideration = BuildNTIUnderConsiderationModel();
+			
+			ntiUnderConsideration.ClosedAt = Fixture.Create<DateTime>();
+			ntiUnderConsideration.ClosedStatusId = Fixture.Create<int>();
+			ntiUnderConsideration.ClosedStatusName = Fixture.Create<string>();
 
 			return ntiUnderConsideration;
 		}

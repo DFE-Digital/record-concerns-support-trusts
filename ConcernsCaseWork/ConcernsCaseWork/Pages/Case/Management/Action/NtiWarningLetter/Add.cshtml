@@ -1,9 +1,9 @@
-﻿@page "/case/{urn:long}/management/action/NtiWarningLetter/add"
+﻿@page "/case/{urn:long}/management/action/NtiWarningLetter/{warningLetterId:long}/edit"
 @model ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter.AddPageModel
 
 @{
     ViewData["Title"] = "Add Nti Warning letter";
-    ViewData["CancelBackLink"] = @$"/case/{Model.CaseUrn}/management/action";
+    ViewData["CancelBackLink"] = Model.CancelLinkUrl;
     var nonce = HttpContext.GetNonce();
 }
 
@@ -183,7 +183,7 @@
                             month: document.getElementById('dtr-month'),
                             year: document.getElementById('dtr-year')
                           }
-                        }, null]);
+                        }]);
 
                         function noDateOrCompleteDate(year, month, day) {
                             var missingValuesCount = 0;

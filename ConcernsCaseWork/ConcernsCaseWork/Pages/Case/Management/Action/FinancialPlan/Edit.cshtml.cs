@@ -1,33 +1,23 @@
-﻿using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Helpers;
-using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Base;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.FinancialPlan;
-using Service.Redis.Models;
 using Service.Redis.FinancialPlan;
+using Service.TRAMS.FinancialPlan;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class EditPageModel : AbstractPageModel
+	public class EditPageModel : FinancialPlanBasePageModel
 	{
 		private readonly ILogger<EditPageModel> _logger;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
 		private readonly IFinancialPlanStatusCachedService _financialPlanStatusCachedService;
-
-		public FinancialPlanModel FinancialPlanModel { get; set; }
-		public int NotesMaxLength => 2000;
-		public IEnumerable<RadioItem> FinancialPlanStatuses => getStatuses();
-		public FinancialPlanEditMode EditMode { get; private set; }
 
 		public EditPageModel(
 			IFinancialPlanModelService financialPlanModelService, IFinancialPlanStatusCachedService financialPlanStatusService, ILogger<EditPageModel> logger)
@@ -41,88 +31,76 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		{
 			_logger.LogInformation("Case::Action::FinancialPlan::EditPageModel::OnGetAsync");
 
-			long caseUrn = 0;
-			long financialPlanId = 0;
-			var editModeEnum = FinancialPlanEditMode.Unknown;
-
 			try
 			{
-				(caseUrn, financialPlanId, editModeEnum) = GetRouteData();
-
-				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, User.Identity.Name);
-
-				EditMode = editModeEnum;
-
-				return Page();
+				var caseUrn = GetRequestedCaseUrn();
+				var financialPlanId = GetRequestedFinancialPlanId();
+				var loggedInUser = GetLoggedInUserName();
+				
+				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, loggedInUser);
+				
+				FinancialPlanStatuses = await GetStatusOptionsAsync(FinancialPlanModel.Status?.Name);
+			}
+			catch (InvalidOperationException ex)
+			{
+				TempData["FinancialPlan.Message"] = ex.Message;
+				FinancialPlanStatuses = await GetStatusOptionsAsync();
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Case::FinancialPlan::EditPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
 			}
+			
+			return Page();
 		}
 
 		public async Task<IActionResult> OnPostAsync()
 		{
-			long caseUrn = 0;
-			long financialPlanId = 0;
-			var editModeEnum = FinancialPlanEditMode.Unknown;
-
+			_logger.LogInformation("Case::Action::FinancialPlan::EditPageModel::OnPostAsync");
+			
 			try
 			{
-				(caseUrn, financialPlanId, editModeEnum) = GetRouteData();
-				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, User.Identity.Name);
+				var caseUrn = GetRequestedCaseUrn();
+				var financialPlanId = GetRequestedFinancialPlanId();
+				var loggedInUserName = GetLoggedInUserName();
+				
+				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, loggedInUserName);
 
-				ValidateFinancialPlan();
+				if (FinancialPlanModel is null)
+				{
+					throw new InvalidOperationException($"FinancialPlanModel with Id {financialPlanId} could not be found");
+				}
+				
+				var planRequestedDate = GetRequestedPlanRequestedDate() ?? FinancialPlanModel.DatePlanRequested;
+				var viablePlanReceivedDate = GetRequestedViablePlanReceivedDate() ?? FinancialPlanModel.DateViablePlanReceived;
+				var notes = GetRequestedNotes() ?? FinancialPlanModel.Notes;
+				var statusName = GetRequestedStatus() ?? FinancialPlanModel.Status?.Name;
+				var selectedStatus = await GetOptionalStatusByNameAsync(statusName);
 
-				// Store form data
-				var statusString = Request.Form["status"].ToString();
-				var dateRequestedDay = Request.Form["dtr-day-plan-requested"].ToString();
-				var dateRequestedMonth = Request.Form["dtr-month-plan-requested"].ToString();
-				var dateRequestedYear = Request.Form["dtr-year-plan-requested"].ToString();
-				var dateViablePlanDay = Request.Form["dtr-day-viable-plan"].ToString();
-				var dateViablePlanMonth = Request.Form["dtr-month-viable-plan"].ToString();
-				var dateViablePlanYear = Request.Form["dtr-year-viable-plan"].ToString();
-				var notes = Request.Form["financial-plan-notes"].ToString();
-				var currentUser = User.Identity.Name;
-
-				// Check if date, month or year values have been entered
-				var requested_dtString = CreateDateString(dateRequestedDay, dateRequestedMonth, dateRequestedYear);
-				var viablePlanReceviced_dtString = CreateDateString(dateViablePlanDay, dateViablePlanMonth, dateViablePlanYear);
-
-				// Check if dates entered are valid
-				var financialPlanDates = ParseFinancialPlanDates(requested_dtString, viablePlanReceviced_dtString);
-
-				// Fetch statuses from cache and compare them to the selected status
-				var statuses = await _financialPlanStatusCachedService.GetFinancialPlanStatuses();
-				var selecetedStatus = statuses.FirstOrDefault(s => s.Name.Equals(statusString));
-				var selecetedStatusId = selecetedStatus != null ? selecetedStatus.Id : (long?)null;
-
-				var patchFinancialPlanModel = new PatchFinancialPlanModel()
+				var patchFinancialPlanModel = new PatchFinancialPlanModel
 				{
 					Id = financialPlanId,
 					CaseUrn = caseUrn,
-					StatusId = selecetedStatusId,
-					DatePlanRequested = financialPlanDates.planRequestedDate,
-					DateViablePlanReceived = financialPlanDates.viablePlanReceivedDate,
+					StatusId = selectedStatus.Id,
+					DatePlanRequested = planRequestedDate,
+					DateViablePlanReceived = viablePlanReceivedDate,
 					Notes = notes
 				};
 
-				if(editModeEnum == FinancialPlanEditMode.Close)
-				{
-					// todo: closed date is currently set to server date across the system. This should ideally be converted to UTC
-					patchFinancialPlanModel.ClosedAt = DateTime.Now;
-				}
-
-				await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel, currentUser);
+				await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel, loggedInUserName);
 
 				return Redirect($"/case/{caseUrn}/management");
 			}
 			catch (InvalidOperationException ex)
 			{
 				TempData["FinancialPlan.Message"] = ex.Message;
+				
+				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(GetRequestedCaseUrn(), GetRequestedFinancialPlanId(), GetLoggedInUserName());
+				
+				var currentStatusName = FinancialPlanModel.Status?.Name;
+				FinancialPlanStatuses = await GetStatusOptionsAsync(currentStatusName);
 			}
 			catch (Exception ex)
 			{
@@ -133,105 +111,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 			return Page();
 		}
-
-		private IEnumerable<RadioItem> getStatuses()
-		{
-			var statuses = (FinancialPlanStatus[])Enum.GetValues(typeof(FinancialPlanStatus));
-
-			return statuses.Where(f => f != FinancialPlanStatus.Unknown)
-						   .Select(f => new RadioItem
-						   {
-							   Id = f.ToString(),
-							   Text = EnumHelper.GetEnumDescription(f)
-						   });
-		}
-
-		private (long, long, FinancialPlanEditMode) GetRouteData()
-		{
-			var caseUrnValue = RouteData.Values["urn"];
-			var financialPlanIdValue = RouteData.Values["finanicialplanid"];
-			var editMode = RouteData.Values["editMode"];
-
-			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
-			{
-				throw new Exception("CaseUrn is null or invalid to parse");
-			}
-
-			if (!long.TryParse(financialPlanIdValue.ToString(), out long financialPlanId) || financialPlanId == 0)
-			{
-				throw new Exception("FinancialId is 0 or invalid to parse");
-			}
-
-			if(!Enum.TryParse<FinancialPlanEditMode>(Convert.ToString(editMode), ignoreCase:true, out var editModeEnum))
-			{
-				throw new InvalidOperationException("Edit more could not be resolved");
-			}
-
-			return (caseUrn, financialPlanId, editModeEnum);
-		}
-
-		private void ValidateFinancialPlan()
-		{
-			var dateRequestedDay = Request.Form["dtr-day-plan-requested"].ToString();
-			var dateRequestedMonth = Request.Form["dtr-month-plan-requested"].ToString();
-			var dateRequestedYear = Request.Form["dtr-year-plan-requested"].ToString();
-			var dateViablePlanDay = Request.Form["dtr-day-viable-plan"].ToString();
-			var dateViablePlanMonth = Request.Form["dtr-month-viable-plan"].ToString();
-			var dateViablePlanYear = Request.Form["dtr-year-viable-plan"].ToString();
-			var financial_plan_notes = Request.Form["financial-plan-notes"].ToString();
-
-			var requested_dtString = CreateDateString(dateRequestedDay, dateRequestedMonth, dateRequestedYear);
-			var viablePlanReceviced_dtString = CreateDateString(dateViablePlanDay, dateViablePlanMonth, dateViablePlanYear);
-
-			if (!string.IsNullOrEmpty(requested_dtString))
-			{
-				if (!DateTimeHelper.TryParseExact(requested_dtString, out DateTime requestedDate))
-				{
-					throw new InvalidOperationException($"Plan requested {requested_dtString} is an invalid date");
-				}
-			}
-
-			if (!string.IsNullOrEmpty(viablePlanReceviced_dtString))
-			{
-				if (!DateTimeHelper.TryParseExact(viablePlanReceviced_dtString, out DateTime viablePlanReceivedDate))
-				{
-					throw new InvalidOperationException($"Viable Plan {viablePlanReceviced_dtString} is an invalid date");
-				}
-			}
-
-			if (!string.IsNullOrEmpty(financial_plan_notes))
-			{
-				var notes = financial_plan_notes.ToString();
-				if (notes.Length > NotesMaxLength)
-				{
-					throw new InvalidOperationException($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
-				}
-			}
-		}
-
-		private string CreateDateString(string day, string month, string year)
-		{
-			var dtString = (string.IsNullOrEmpty(day) && string.IsNullOrEmpty(month) && string.IsNullOrEmpty(year)) ? String.Empty : $"{day}-{month}-{year}";
-
-			return dtString;
-		}
-
-		private (DateTime? planRequestedDate, DateTime? viablePlanReceivedDate) ParseFinancialPlanDates(string planRequestedString, string viablePlanReceivedString)
-		{
-			DateTime? planRequested_date = null;
-			DateTime? viablePlanReceived_date = null;
-
-			if (DateTimeHelper.TryParseExact(planRequestedString, out var requestedDate))
-			{
-				planRequested_date = requestedDate;
-			}
-
-			if (DateTimeHelper.TryParseExact(viablePlanReceivedString, out var receivedDate))
-			{
-				viablePlanReceived_date = receivedDate;
-			}
-
-			return (planRequested_date, viablePlanReceived_date);
-		}
+		
+		protected override async Task<IList<FinancialPlanStatusDto>> GetAvailableStatusesAsync()
+			=> await _financialPlanStatusCachedService.GetOpenFinancialPlansStatusesAsync();
+		
 	}
 }

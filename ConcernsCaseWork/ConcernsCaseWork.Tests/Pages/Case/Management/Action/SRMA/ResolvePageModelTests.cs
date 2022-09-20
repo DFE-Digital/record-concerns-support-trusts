@@ -147,7 +147,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.ConfirmText, Is.EqualTo("Confirm SRMA was canceled"));
+			Assert.That(pageModel.ConfirmText, Is.EqualTo("Confirm SRMA was cancelled"));
 		}
 
 		[Test]

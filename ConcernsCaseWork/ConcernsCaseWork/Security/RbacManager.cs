@@ -1,8 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Extensions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Security;
+using Service.Redis.Teams;
 using Service.Redis.Users;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Security
@@ -12,49 +16,23 @@ namespace ConcernsCaseWork.Security
 	/// </summary>
 	public sealed class RbacManager : IRbacManager
 	{
-		private readonly IUserRoleCachedService _userRoleCachedService;
 		private readonly ILogger<RbacManager> _logger;
+		private readonly ITeamsCachedService _teamsService;
 
-		private readonly string[] _defaultUsers;
 
-		public RbacManager(IConfiguration configuration, IUserRoleCachedService userRoleCachedService, ILogger<RbacManager> logger)
+		public RbacManager(ILogger<RbacManager> logger, ITeamsCachedService teamsService)
 		{
-			_userRoleCachedService = userRoleCachedService;
-			_logger = logger;
-			
-			// set hardcoded users from configuration
-			// update / remove when AD integration
-			_defaultUsers = configuration["app:username"].Split(',');
+			_logger = Guard.Against.Null(logger);
+			_teamsService = Guard.Against.Null(teamsService);
 		}
 
-		public IList<string> GetDefaultUsers()
+		public async Task<IList<string>> GetSystemUsers(params string[] excludes)
 		{
-			return UserRoleMap.GetDefaultUsersExcludeE2E(_defaultUsers);
-		}
-		
-		public async Task<IDictionary<string, RoleClaimWrapper>> GetUsersRoles()
-		{
-			_logger.LogInformation("RbacManager::GetUsersRoles");
-			
-			var usersRoleClaim = await _userRoleCachedService.GetUsersRoleClaim(_defaultUsers);
-			
-			return new SortedDictionary<string, RoleClaimWrapper>(usersRoleClaim);
-		}
+			// TODO: Integrate the known users from the DB with Azure graph to build up a set of users where we can identify those who aren't in the graph and may have left.
 
-		public async Task<RoleClaimWrapper> GetUserRoleClaimWrapper(string user)
-		{
-			_logger.LogInformation("RbacManager::GetUserRoleClaimWrapper {User}", user);
-
-			var roleClaimWrapper = await _userRoleCachedService.GetRoleClaimWrapper(_defaultUsers, user);
-			
-			return roleClaimWrapper;
-		}
-
-		public async Task UpdateUserRoles(string user, IList<RoleEnum> roles, IList<string> users)
-		{
-			_logger.LogInformation("RbacManager::UpdateUserRoles {User}", user);
-			
-			await _userRoleCachedService.UpdateUserRoles(user, roles, users);
+			_logger.LogMethodEntered();
+			var users = await _teamsService.GetTeamOwners();
+			return users.Except(excludes).ToArray();
 		}
 	}
 }

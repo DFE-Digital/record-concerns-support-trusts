@@ -53,7 +53,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 				switch (resoultion)
 				{
 					case ResolutionCanceled:
-						ConfirmText = "Confirm SRMA was canceled";
+						ConfirmText = "Confirm SRMA was cancelled";
 						break;
 					case ResolutionDeclined:
 						ConfirmText = "Confirm SRMA was declined by trust";

@@ -5,6 +5,9 @@ namespace Service.TRAMS.FinancialPlan
 {
 	public sealed class FinancialPlanStatusDto
 	{
+		[JsonProperty("id")]
+		public long Id { get; }
+		
 		[JsonProperty("name")]
 		public string Name { get; }
 		
@@ -14,10 +17,14 @@ namespace Service.TRAMS.FinancialPlan
 		[JsonProperty("updatedAt")]
 		public DateTimeOffset UpdatedAt { get; }
 		
-		[JsonProperty("id")]
-		public long Id { get; }
+		[JsonProperty("description")]
+		public string Description { get; }
 		
-		public FinancialPlanStatusDto(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, long id) => 
-			(Name, CreatedAt, UpdatedAt, Id) = (name, createdAt, updatedAt, id);
+		[JsonProperty("isClosedStatus")]
+		public bool IsClosedStatus { get; }
+		
+		public FinancialPlanStatusDto(string name, string description, long id, bool isClosedStatus, DateTime createdAt, DateTime updatedAt) 
+			=> (Name, Description, Id, IsClosedStatus, CreatedAt, UpdatedAt) 
+				= (name, description, id, isClosedStatus, createdAt, updatedAt);
 	}
 }

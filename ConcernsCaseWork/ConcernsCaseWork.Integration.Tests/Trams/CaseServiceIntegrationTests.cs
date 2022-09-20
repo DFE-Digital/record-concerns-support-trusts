@@ -13,13 +13,17 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 	[TestFixture]
 	public class CaseServiceIntegrationTests
 	{
+		/// <summary>
 		/// Testing the class requires a running Redis,
 		/// startup is configured to use Redis with session storage.
+		/// </summary>
 		private IConfigurationRoot _configuration;
 		private WebAppFactory _factory;
 
+		/// <summary>
 		/// Variables for caseworker and trustukprn, creates cases on Academies API.
 		/// Future work can be to delete the records from the SQLServer.
+		/// </summary>
 		private const string CaseWorker = "case.service.integration";
 		
 		[OneTimeSetUp]
@@ -39,14 +43,15 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		public async Task WhenGetCasesByCaseworkerAndStatus_ReturnsListCaseDto()
 		{
 			// arrange
-			var caseService = _factory.Services.GetRequiredService<ICaseService>();
-			var trustSummaryDto = await FetchRandomTrust("Senior");
-			
+			using var serviceScope = _factory.Services.CreateScope();
+			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();
+			var trustSummaryDto = await FetchRandomTrust(serviceScope, "Senior");
+
 			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustSummaryDto.UkPrn);
-			var caseDto = await PostCase(createCaseDto);
-			
+			var caseDto = await PostCase(serviceScope, createCaseDto);
+
 			// act
-			var casesDto = await caseService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch(createCaseDto.CreatedBy, createCaseDto.StatusUrn));
+			var casesDto = await caseService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch( createCaseDto.CreatedBy, createCaseDto.StatusUrn));
 
 			// assert
 			Assert.That(caseDto, Is.Not.Null);
@@ -57,12 +62,13 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		public async Task WhenGetCaseByUrn_ReturnsCaseDto()
 		{
 			// arrange
-			var caseService = _factory.Services.GetRequiredService<ICaseService>();
-			var trustSummaryDto = await FetchRandomTrust("Senior");
+			using var serviceScope = _factory.Services.CreateScope();
+			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();
+			var trustSummaryDto = await FetchRandomTrust(serviceScope, "Senior");
 
 			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustSummaryDto.UkPrn);
-			var postCaseDto = await PostCase(createCaseDto);
-			
+			var postCaseDto = await PostCase(serviceScope, createCaseDto);
+
 			// act
 			var caseDto = await caseService.GetCaseByUrn(postCaseDto.Urn);
 
@@ -75,12 +81,13 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		public async Task WhenGetCasesByTrustUkPrn_ReturnsApiWrapperCaseDto()
 		{
 			// arrange
-			var caseService = _factory.Services.GetRequiredService<ICaseService>();
-			var trustSummaryDto = await FetchRandomTrust("Senior");
+			using var serviceScope = _factory.Services.CreateScope();
+			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();
+			var trustSummaryDto = await FetchRandomTrust(serviceScope, "Senior");
 
 			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustSummaryDto.UkPrn);
-			var postCaseDto = await PostCase(createCaseDto);
-			
+			var postCaseDto = await PostCase(serviceScope, createCaseDto);
+
 			// act
 			var apiWrapperCaseDto = await caseService.GetCasesByTrustUkPrn(new CaseTrustSearch(postCaseDto.TrustUkPrn));
 
@@ -95,14 +102,15 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		public async Task WhenPatchCaseByUrn_UpdatesCache()
 		{
 			// arrange
-			var caseService = _factory.Services.GetRequiredService<ICaseService>();
-			
-			
-			var trustSummaryDto = await FetchRandomTrust("Senior");
+			using var serviceScope = _factory.Services.CreateScope();
+			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();
+
+
+			var trustSummaryDto = await FetchRandomTrust(serviceScope, "Senior");
 
 			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustSummaryDto.UkPrn);
-			var postCaseDto = await PostCase(createCaseDto);
-			
+			var postCaseDto = await PostCase(serviceScope, createCaseDto);
+
 			// Update case properties
 			var timeNow = DateTimeOffset.Now;
 			var toUpdateCaseDto = new CaseDto(
@@ -125,10 +133,10 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 				postCaseDto.Urn,
 				postCaseDto.StatusUrn,
 				postCaseDto.RatingUrn);
-			
+
 			// act
 			var updatedCaseDto = await caseService.PatchCaseByUrn(toUpdateCaseDto);
-			
+
 			// assert
 			Assert.That(updatedCaseDto, Is.Not.Null);
 			Assert.That(updatedCaseDto.Description, Is.EqualTo("some updated description"));
@@ -152,15 +160,15 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			Assert.That(updatedCaseDto.TrustUkPrn, Is.EqualTo(postCaseDto.TrustUkPrn));
 		}
 		
-		private async Task<CaseDto> PostCase(CreateCaseDto createCaseDto)
+		private async Task<CaseDto> PostCase(IServiceScope serviceScope, CreateCaseDto createCaseDto)
 		{
-			var caseService = _factory.Services.GetRequiredService<ICaseService>();
+			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();
 			return await caseService.PostCase(createCaseDto);
 		}
 
-		private async Task<TrustSearchDto> FetchRandomTrust(string searchParameter)
+		private async Task<TrustSearchDto> FetchRandomTrust(IServiceScope serviceScope, string searchParameter)
 		{
-			var trustService = _factory.Services.GetRequiredService<ITrustService>();
+			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustService>();
 			var apiWrapperTrusts= await trustService.GetTrustsByPagination(
 				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
 			

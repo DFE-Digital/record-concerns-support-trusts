@@ -54,9 +54,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			DateTime closedAt = DateTime.Now;
 
-			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.AMSDIntervention, closedAt);
+			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.SchoolsFinancialSupportAndOversight, closedAt);
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
-			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel(closedAt);
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildClosedListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
@@ -163,7 +163,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			DateTime closedAt = DateTime.Now;
 
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
-			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel(closedAt);
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
@@ -236,7 +236,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			DateTime closedAt = DateTime.Now;
 
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
-			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel(closedAt);
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
@@ -635,15 +635,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
-			var openRecordModel = RecordFactory.BuildRecordModel();
-			var recordsList = new List<RecordModel>() { openRecordModel };
+			var recordsList = new List<RecordModel>();
 			var liveStatusDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
 
 			DateTime closedAt = DateTime.Now;
 
 			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
-			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.AMSDIntervention, closedAt);
+			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.SchoolsFinancialSupportAndOversight, closedAt);
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
@@ -689,7 +688,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				Times.Once);
 
 			Assert.That(pageModel.TempData["OpenActions.Message"], Is.Not.Null);
-			Assert.IsTrue((pageModel.TempData["OpenActions.Message"] as List<string>).Contains("Resolve NTI Under Consideration"));
+			Assert.IsTrue((pageModel.TempData["OpenActions.Message"] as List<string>).Contains("Close NTI Under Consideration"));
+			Assert.AreEqual(1, (pageModel.TempData["OpenActions.Message"] as List<string>).Count);
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
@@ -719,8 +719,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			var closedAt = DateTime.Now;
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
-			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.AMSDIntervention, closedAt);
-			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel(closedAt);
+			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.SchoolsFinancialSupportAndOversight, closedAt);
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
@@ -799,8 +799,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2);
 
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
-			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.AMSDIntervention, closedAt);
-			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel(closedAt);
+			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.SchoolsFinancialSupportAndOversight, closedAt);
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsList);
@@ -875,8 +875,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			var closedAt = DateTime.Now;
 			var financialPlans = FinancialPlanFactory.BuildListFinancialPlanModel(closedAt);
-			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.AMSDIntervention, closedAt);
-			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel(closedAt);
+			var openSRMAModels = SrmaFactory.BuildListSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.SchoolsFinancialSupportAndOversight, closedAt);
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(2, closedAt);
 
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))

@@ -13,7 +13,7 @@ namespace Service.TRAMS.Cases
 	{
 		private readonly ILogger<CaseService> _logger;
 
-		public CaseService(IHttpClientFactory clientFactory, ILogger<CaseService> logger) : base(clientFactory)
+		public CaseService(IHttpClientFactory clientFactory, ILogger<CaseService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}

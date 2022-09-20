@@ -12,7 +12,7 @@ namespace Service.TRAMS.Types
 	{
 		private readonly ILogger<TypeService> _logger;
 		
-		public TypeService(IHttpClientFactory clientFactory, ILogger<TypeService> logger) : base(clientFactory)
+		public TypeService(IHttpClientFactory clientFactory, ILogger<TypeService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}

@@ -50,23 +50,41 @@
 
                 @* Status *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Current status</th>
-                    <td class="govuk-table__cell">
-                        @{
-                            RenderValue(Model.NtiWarningLetterModel.Status.Name);
-                        }
-                    </td>
+                    @if (Model.NtiWarningLetterModel.ClosedAt == null)
+                    {
+                        <th scope="row" class="govuk-table-case-details__header">Current status</th>
+                        <td class="govuk-table__cell">
+                            @{
+                                RenderValue(Model.NtiWarningLetterModel.Status?.Name);
+                            }
+                        </td>
+                    }
+                    else
+                    {
+                        <th scope="row" class="govuk-table-case-details__header">Status</th>
+                        <td class="govuk-table__cell">
+                            @{
+                                RenderValue(Model.NtiWarningLetterModel.ClosedStatus?.Name);
+                            }
+                        </td>
+                    }
                 </tr>
 
-                @* Date sent *@
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Date sent</th>
-                    <td class="govuk-table__cell">
-                        @{
-                            RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiWarningLetterModel.SentDate.Value));
-                        }
-                    </td>
-                </tr>
+
+				@* Date sent *@
+	            <tr class="govuk-table__row">
+		            <th scope="row" class="govuk-table-case-details__header">Date sent</th>
+		            <td class="govuk-table__cell">
+			            @if(@Model.NtiWarningLetterModel.SentDate.HasValue)
+			            {
+				            RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiWarningLetterModel.SentDate.Value));
+			            }
+			            else
+			            {
+				            RenderEmptyLabel();
+			            }
+		            </td>
+	            </tr>
 
                 @* Reasons *@
                 <tr class="govuk-table__row">
@@ -81,7 +99,6 @@
                                         <span>@reason.Name</span>
                                     </div>
                                 }
-
                             }
                             else
                             {

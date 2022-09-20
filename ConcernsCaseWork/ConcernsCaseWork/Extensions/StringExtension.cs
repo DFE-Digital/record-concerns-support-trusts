@@ -76,5 +76,7 @@ namespace ConcernsCaseWork.Extensions
 		{
 			return (T) Enum.Parse(typeof(T), value, true);
 		}
+		
+		public static string GetValueOrNullIfWhitespace(this string value) => string.IsNullOrWhiteSpace(value) ? null : value;
 	}
 }

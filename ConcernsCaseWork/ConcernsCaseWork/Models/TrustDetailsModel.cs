@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.Models
 		{
 			get
 			{
-				var county = IfdData.GroupContactAddress.County;
+				var county = IfdData?.GroupContactAddress?.County;
 				var trustName = GiasData.GroupName;
 				return string.IsNullOrEmpty(county) ? trustName : $"{trustName} ({county})";
 			}

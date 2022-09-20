@@ -11,9 +11,7 @@ using System.Threading.Tasks;
 using ConcernsCaseWork.Services.Records;
 using Service.Redis.Status;
 using System.Linq;
-using Service.Redis.Cases;
 using System.Collections.Generic;
-using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 
@@ -145,8 +143,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			var recordsModels = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
 			var liveStatus = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
 			var numberOfOpenConcerns = recordsModels.Count(r => r.StatusUrn.CompareTo(liveStatus.Urn) == 0);
-
-
+			
 			var srmaModels = (await _srmaModelService.GetSRMAsForCase(caseUrn)).ToList();
 			var financialPlanModels = (await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name)).ToList();
 			var ntiUnderConsiderationModels = (await _ntiUnderConsiderationModelService.GetNtiUnderConsiderationsForCase(caseUrn)).ToList();
@@ -175,7 +172,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			if (hasOpenNTIUnderConsiderations)
 			{
-				errorMessages.Add("Resolve NTI Under Consideration");
+				errorMessages.Add("Close NTI Under Consideration");
 			}
 
 			if (hasOpenNTIWarningLetters)

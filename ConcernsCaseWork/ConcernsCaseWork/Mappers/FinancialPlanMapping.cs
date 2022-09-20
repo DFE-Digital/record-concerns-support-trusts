@@ -1,19 +1,16 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
 using Service.TRAMS.FinancialPlan;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Mappers
 {
 	public static class FinancialPlanMapping
 	{
-
 		public static FinancialPlanModel MapDtoToModel(FinancialPlanDto financialPlanDto, IList<FinancialPlanStatusDto> statuses)
 		{
 			var selectedStatus = statuses.FirstOrDefault(s => s.Id.CompareTo(financialPlanDto.StatusId) == 0);
-			var selectedStatusId = selectedStatus != null ? selectedStatus.Id : (long?)null;
+			var selectedStatusId = selectedStatus?.Id;
 
 			var financialPlanModel = new FinancialPlanModel(
 				financialPlanDto.Id,
@@ -53,16 +50,15 @@ namespace ConcernsCaseWork.Mappers
 				return financialPlanModel;
 			}
 			));
-
-
+			
 			return financialPlanModels;
 		}
 	
 		public static FinancialPlanDto MapPatchFinancialPlanModelToDto(PatchFinancialPlanModel patchFinancialPlanModel,
-			FinancialPlanDto financialPlanDto, IList<FinancialPlanStatusDto> statuses)
+			FinancialPlanDto financialPlanDto, IEnumerable<FinancialPlanStatusDto> statuses)
 		{
 			var selectedStatus = statuses.FirstOrDefault(s => s.Id.CompareTo(patchFinancialPlanModel.StatusId) == 0);
-			var selectedStatusId = selectedStatus != null ? selectedStatus.Id : (long?)null;
+			var selectedStatusId = selectedStatus?.Id;
 
 			var updatedFinancialPlanDto = new FinancialPlanDto(
 				financialPlanDto.Id,
@@ -71,12 +67,11 @@ namespace ConcernsCaseWork.Mappers
 				patchFinancialPlanModel?.ClosedAt ?? financialPlanDto.ClosedAt,
 				financialPlanDto.CreatedBy,
 				selectedStatusId,
-				patchFinancialPlanModel.DatePlanRequested,
-				patchFinancialPlanModel.DateViablePlanReceived,
-				patchFinancialPlanModel.Notes);
+				patchFinancialPlanModel?.DatePlanRequested ?? financialPlanDto.DatePlanRequested,
+				patchFinancialPlanModel?.DateViablePlanReceived ?? financialPlanDto.DateViablePlanReceived,
+				patchFinancialPlanModel?.Notes);
 
 			return updatedFinancialPlanDto;
 		}
-	
 	}
 }
