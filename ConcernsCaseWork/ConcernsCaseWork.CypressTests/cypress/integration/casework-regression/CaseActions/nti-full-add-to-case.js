@@ -188,7 +188,7 @@ describe("User can add case actions to an existing case", () => {
 		CaseManagementPage.getOpenActionsTable().should(($status) => {
 			expect($status).to.be.visible
         })
-		CaseManagementPage.getOpenActionLink("nti").click();
+		CaseManagementPage.getOpenActionLink("nti").eq(0).click();
 
 		ntiAddPage.getHeadingText().should(($heading) => {
 			expect($heading.text()).to.contain("NTI");
@@ -299,7 +299,7 @@ describe("User can add case actions to an existing case", () => {
 		utils.getGovErrorSummaryList().should('not.exist');
 
 		//Ensures the case action is not prsent in the Open table
-		CaseManagementPage.getOpenActionsTable().should('not.exist');
+		//CaseManagementPage.getOpenActionsTable().should('not.exist');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'NTI');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'Cancelled');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', utils.getFormattedDate());
@@ -349,7 +349,7 @@ describe("User can add case actions to an existing case", () => {
 		utils.getGovErrorSummaryList().should('not.exist');
 
 //LIFT
-		CaseManagementPage.getOpenActionLink("nti").click();
+		CaseManagementPage.getOpenActionLink("nti").eq(0).click();
 		ntiAddPage.getLiftNtiBtn().click();
 		CaseActionsBasePage.getHeadingText().should('contain.text', 'Lift NTI');
 		ntiAddPage.getSubHeadingText().should('contain.text', 'Finalise notes');
@@ -360,7 +360,7 @@ describe("User can add case actions to an existing case", () => {
 		utils.getGovErrorSummaryList().should('not.exist');
 
 		//Ensures the case action is not prsent in the Open table
-		CaseManagementPage.getOpenActionsTable().should('not.exist');
+		//CaseManagementPage.getOpenActionsTable().should('not.exist');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'NTI');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'Lifted');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', utils.getFormattedDate());
@@ -409,13 +409,25 @@ describe("User can add case actions to an existing case", () => {
 		utils.getGovErrorSummaryList().should('not.exist');
 
 		//Close
-		CaseManagementPage.getOpenActionLink("nti").click();
+		CaseManagementPage.getOpenActionLink("nti").eq(0).click();
 		ntiAddPage.getCloseNtiBtn().click();
 		CaseActionsBasePage.getHeadingText().should('contain.text', 'Close NTI');
 		CaseManagementPage.getTrustHeadingText().should('contain.text', 'Date NTI closed');
 		ntiAddPage.getSubHeadingText().should('contain.text', 'Finalise notes');
 
-		CaseActionsBasePage.setDate();
+		//CaseActionsBasePage.setDate();
+
+		cy.log("setDate ").then(() => {
+			cy.log(CaseActionsBasePage.setDate() ).then((returnedVal) => { 
+				cy.wrap(returnedVal.trim()).as("returnedDate").then(() =>{
+					returnedDate = returnedVal;
+					cy.log("logging the result "+returnedDate)
+				});
+				cy.log(self.returnedDate);
+				returnedDate  = returnedVal;
+				cy.log("logging returnedVal "+returnedDate)
+				});
+			});
 		//notes edit
 		cy.log("setNotes ").then(() => {
 			cy.log(ntiAddPage.setNotes() ).then((returnedVal) => { 
@@ -429,11 +441,10 @@ describe("User can add case actions to an existing case", () => {
 		utils.getGovErrorSummaryList().should('not.exist');
 
 		//Ensures the case action is not present in the Open table
-		CaseManagementPage.getOpenActionsTable().should('not.exist');
+		//CaseManagementPage.getOpenActionsTable().should('not.exist');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'NTI');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'Closed');
-		//CaseManagementPage.getClosedActionsTable().should('contain.text', utils.getFormattedDate()); \\ Need to replace with Closed date
-
+		CaseManagementPage.getClosedActionsTable().should('contain.text', returnedDate);
 	});
 
 	after(function () {
