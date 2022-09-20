@@ -66,7 +66,7 @@ namespace ConcernsCaseWork.API.Controllers
             var records = _getConcernsRecordsByCaseUrn.Execute(urn);
 
             _logger.LogInformation($"Returning Records for Case urn: {urn}");
-            var pagingResponse = PagingResponseFactory.Create(page, count, records.Count, Request);
+            var pagingResponse = PagingResponseFactory.Create(page, count, records?.Count ?? 0, Request);
             var response = new ApiResponseV2<ConcernsRecordResponse>(records, pagingResponse);
             return Ok(response);
         }

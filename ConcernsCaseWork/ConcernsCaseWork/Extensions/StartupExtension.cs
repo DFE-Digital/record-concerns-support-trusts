@@ -53,6 +53,8 @@ using ConcernsCasework.Service.NtiUnderConsideration;
 using ConcernsCasework.Service.NtiWarningLetter;
 using ConcernsCasework.Service.MeansOfReferral;
 using ConcernsCasework.Service.Nti;
+using ConcernsCasework.Service.RecordAcademy;
+using ConcernsCasework.Service.RecordWhistleblower;
 using ConcernsCasework.Service.Teams;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 
@@ -156,9 +158,11 @@ namespace ConcernsCaseWork.Extensions
 			// Trams api services
 			services.AddScoped<ICaseService, CaseService>();
 			services.AddScoped<IRatingService, RatingService>();
+			services.AddScoped<IRecordAcademyService, RecordAcademyService>();
 			services.AddScoped<IRecordRatingHistoryService, RecordRatingHistoryService>();
 			services.AddScoped<IRecordService, RecordService>();
 			services.AddScoped<IRecordSrmaService, RecordSrmaService>();
+			services.AddScoped<IRecordWhistleblowerService, RecordWhistleblowerService>();
 			services.AddScoped<IStatusService, StatusService>();
 			services.AddScoped<ITrustService, TrustService>();
 			services.AddScoped<ITrustSearchService, TrustSearchService>();

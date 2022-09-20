@@ -36,34 +36,40 @@ namespace ConcernsCaseWork.API.Extensions
 
 		public static IServiceCollection AddDependencies(this IServiceCollection services)
 		{
-			// services.AddScoped<ISearchTrusts, SearchTrusts>();
-			services.AddScoped<ICreateConcernsCase, CreateConcernsCase>();
-			services.AddScoped<IConcernsCaseGateway, ConcernsCaseGateway>();
-			services.AddScoped<IGetConcernsCaseByUrn, GetConcernsCaseByUrn>();
-			services.AddScoped<IGetConcernsCaseByTrustUkprn, GetConcernsCaseByTrustUkprn>();
-			services.AddScoped<IIndexConcernsStatuses, IndexConcernsStatuses>();
-			services.AddScoped<IConcernsStatusGateway, ConcernsStatusGateway>();
-			services.AddScoped<IConcernsRecordGateway, ConcernsRecordGateway>();
-			services.AddScoped<ICreateConcernsRecord, CreateConcernsRecord>();
-			services.AddScoped<IConcernsTypeGateway, ConcernsTypeGateway>();
-			services.AddScoped<IConcernsRatingGateway, ConcernsRatingsGateway>();
-			services.AddScoped<IIndexConcernsRatings, IndexConcernsRatings>();
-			services.AddScoped<IUpdateConcernsCase, UpdateConcernsCase>();
-			services.AddScoped<IIndexConcernsTypes, IndexConcernsTypes>();
-			services.AddScoped<IUpdateConcernsRecord, UpdateConcernsRecord>();
+            services.AddScoped<ICreateConcernsCase, CreateConcernsCase>();
+            services.AddScoped<IConcernsCaseGateway, ConcernsCaseGateway>();
+            services.AddScoped<IGetConcernsCaseByUrn, GetConcernsCaseByUrn>();
+            services.AddScoped<IGetConcernsCaseByTrustUkprn, GetConcernsCaseByTrustUkprn>();
+            services.AddScoped<IIndexConcernsStatuses, IndexConcernsStatuses>();
+            services.AddScoped<IConcernsStatusGateway, ConcernsStatusGateway>();
+            services.AddScoped<IConcernsRecordGateway, ConcernsRecordGateway>();
+            services.AddScoped<ICreateConcernsRecord, CreateConcernsRecord>();
+            services.AddScoped<IConcernsTypeGateway, ConcernsTypeGateway>();
+            services.AddScoped<IConcernsRatingGateway, ConcernsRatingsGateway>();
+            services.AddScoped<IIndexConcernsRatings, IndexConcernsRatings>();
+            services.AddScoped<IUpdateConcernsCase, UpdateConcernsCase>();
+            services.AddScoped<IIndexConcernsTypes, IndexConcernsTypes>();
+            services.AddScoped<IUpdateConcernsRecord, UpdateConcernsRecord>();
+            
+            services.AddScoped<IIndexConcernsMeansOfReferrals, IndexConcernsMeansOfReferrals>();
+            services.AddScoped<IConcernsMeansOfReferralGateway, ConcernsMeansOfReferralGateway>();
+            
+            services.AddScoped<IUpdateConcernsRecord, UpdateConcernsRecord>();
 
-			services.AddScoped<IIndexConcernsMeansOfReferrals, IndexConcernsMeansOfReferrals>();
-			services.AddScoped<IConcernsMeansOfReferralGateway, ConcernsMeansOfReferralGateway>();
+            services.AddScoped<IGetConcernsRecordsByCaseUrn, GetConcernsRecordsByCaseUrn>();
+            services.AddScoped<IGetConcernsCasesByOwnerId, GetConcernsCasesByOwnerId>();
 
-			services.AddScoped<IUpdateConcernsRecord, UpdateConcernsRecord>();
+            services.AddScoped<ISRMAGateway, SRMAGateway>();
+            services.AddScoped<IFinancialPlanGateway, FinancialPlanGateway>();
+            services.AddScoped<INTIUnderConsiderationGateway, NTIUnderConsiderationGateway>();
+            services.AddScoped<INTIWarningLetterGateway, NTIWarningLetterGateway>();
+            services.AddScoped<INoticeToImproveGateway, NoticeToImproveGateway>();
 
-			services.AddScoped<IGetConcernsRecordsByCaseUrn, GetConcernsRecordsByCaseUrn>();
-			services.AddScoped<IGetConcernsCasesByOwnerId, GetConcernsCasesByOwnerId>();
 
-			services.AddScoped<ISRMAGateway, SRMAGateway>();
-			services.AddScoped<IFinancialPlanGateway, FinancialPlanGateway>();
-			services.AddScoped<INTIUnderConsiderationGateway, NTIUnderConsiderationGateway>();
-			services.AddScoped<INTIWarningLetterGateway, NTIWarningLetterGateway>();
+            services.AddScoped<IGetConcernsCaseworkTeam, GetConcernsCaseworkTeam>();
+            services.AddScoped<IGetConcernsCaseworkTeamOwners, GetConcernsCaseworkTeamOwners>();
+            services.AddScoped<IUpdateConcernsCaseworkTeam, UpdateConcernsCaseworkTeam>();
+            services.AddScoped<IConcernsTeamCaseworkGateway, ConcernsTeamCaseworkGateway>();
 
 			return services;
 		}
@@ -81,7 +87,7 @@ namespace ConcernsCaseWork.API.Extensions
 
 		public static IServiceCollection AddApi(this IServiceCollection services, IConfiguration configuration)
 		{
-			var concernsApiEndpoint = configuration["concernsCaseWorkApi:ApiEndpoint"];
+			var concernsApiEndpoint = configuration["ConcernsCaseworkApi:ApiEndpoint"];
 
 			if (string.IsNullOrEmpty(concernsApiEndpoint))
 				throw new Exception("AddConcernsApi::missing configuration");

@@ -58,13 +58,11 @@ public partial class ConcernsDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasSequence<int>("AcademyTransferProjectUrns").HasMin(10000000).StartsAt(10000000);
-
         modelBuilder.HasSequence<int>("ConcernsGlobalSequence").HasMin(1).StartsAt(1);
 
         modelBuilder.Entity<ConcernsCase>(entity =>
         {
-            entity.ToTable("ConcernsCase", "sdd");
+            entity.ToTable("ConcernsCase", "concerns");
 
             entity.HasKey(e => e.Id)
                 .HasName("PK__CCase__C5B214360AF620234");
@@ -76,7 +74,7 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<ConcernsStatus>(entity =>
         {
-            entity.ToTable("ConcernsStatus", "sdd");
+            entity.ToTable("ConcernsStatus", "concerns");
 
             entity.HasKey(e => e.Id)
                 .HasName("PK__CStatus__C5B214360AF620234");
@@ -111,7 +109,7 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<ConcernsRecord>(entity =>
         {
-            entity.ToTable("ConcernsRecord", "sdd");
+            entity.ToTable("ConcernsRecord", "concerns");
 
             entity.HasKey(e => e.Id)
                 .HasName("PK__CRecord");
@@ -142,7 +140,7 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<ConcernsType>(entity =>
         {
-            entity.ToTable("ConcernsType", "sdd");
+            entity.ToTable("ConcernsType", "concerns");
 
             entity.HasKey(e => e.Id)
                 .HasName("PK__CType");
@@ -259,7 +257,7 @@ public partial class ConcernsDbContext : DbContext
         });
         modelBuilder.Entity<ConcernsMeansOfReferral>(entity =>
         {
-            entity.ToTable("ConcernsMeansOfReferral", "sdd");
+            entity.ToTable("ConcernsMeansOfReferral", "concerns");
 
             entity.HasKey(e => e.Id)
                 .HasName("PK__CMeansOfReferral");
@@ -288,7 +286,7 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<ConcernsRating>(entity =>
         {
-            entity.ToTable("ConcernsRating", "sdd");
+            entity.ToTable("ConcernsRating", "concerns");
 
             entity.HasKey(e => e.Id)
                 .HasName("PK__CRating");
@@ -336,7 +334,7 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<SRMAStatus>(entity =>
         {
-            entity.ToTable("SRMAStatus", "sdd");
+            entity.ToTable("SRMAStatus", "concerns");
 
             entity.HasData(
                 Enum.GetValues(typeof(Enums.SRMAStatus)).Cast<Enums.SRMAStatus>()
@@ -352,7 +350,7 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<SRMAReason>(entity =>
         {
-            entity.ToTable("SRMAReason", "sdd");
+            entity.ToTable("SRMAReason", "concerns");
 
             entity.HasData(
                 Enum.GetValues(typeof(Enums.SRMAReasonOffered)).Cast<Enums.SRMAReasonOffered>()
@@ -370,7 +368,7 @@ public partial class ConcernsDbContext : DbContext
         modelBuilder.Entity<FinancialPlanStatus>(entity =>
         {
             var createdAt = new DateTime(2022, 06, 15);
-            entity.ToTable("FinancialPlanStatus", "sdd");
+            entity.ToTable("FinancialPlanStatus", "concerns");
 
             entity.HasData(
                  new FinancialPlanStatus[]
@@ -384,7 +382,7 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<NTIUnderConsiderationStatus>(entity =>
         {
-            entity.ToTable("NTIUnderConsiderationStatus", "sdd");
+            entity.ToTable("NTIUnderConsiderationStatus", "concerns");
 
             var createdAt = new DateTime(2022, 07, 12);
 
@@ -399,7 +397,7 @@ public partial class ConcernsDbContext : DbContext
 
         modelBuilder.Entity<NTIUnderConsiderationReason>(entity =>
         {
-            entity.ToTable("NTIUnderConsiderationReason", "sdd");
+            entity.ToTable("NTIUnderConsiderationReason", "concerns");
 
             var createdAt = new DateTime(2022, 07, 12);
 

@@ -14,7 +14,7 @@ namespace ConcernsCasework.Service.Base
 	{
 		private readonly ILogger<AbstractService> _logger;
 		internal IHttpClientFactory ClientFactory { get; }
-		internal static string HttpClientName { get; set; } = "Default";
+		internal string HttpClientName { get; init; } = "Default";
 		internal string EndpointsVersion { get; } = "v2";
 		internal string EndpointPrefix { get; } = "concerns-cases";
 

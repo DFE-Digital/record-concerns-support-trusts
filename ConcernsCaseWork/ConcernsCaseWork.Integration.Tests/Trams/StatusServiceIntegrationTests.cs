@@ -1,9 +1,9 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
+using ConcernsCasework.Service.Status;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using ConcernsCasework.Service.Status;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Integration.Tests.Trams

@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ConcernsCasework.Service.Base;
 
-public class TramsAbstractService : AbstractService
+public abstract class TramsAbstractService : AbstractService
 {
 	protected TramsAbstractService(IHttpClientFactory clientFactory, ILogger<TramsAbstractService> logger) : base(clientFactory, logger)
 	{
