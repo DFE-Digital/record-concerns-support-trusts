@@ -250,7 +250,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				{
 					{ "rating", new StringValues("123:red") }
 				});
-			
+
+			mockRatingModelService.Setup(x => x.GetRatingModelByUrn(123)).ReturnsAsync(new RatingModel() { Urn = 123 });
+
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
 			var pageResponseInstance = pageResponse as RedirectToPageResult;
@@ -263,6 +265,47 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			mockUserStateCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()), Times.Once);
 		}
 		
+		[Test]
+		public async Task WhenOnPostAsync_And_RatingUrn_Invalid_Raise_Exception()
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<RatingPageModel>>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			
+			var expected = CaseFactory.BuildCreateCaseModel();
+			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+			
+			mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
+			
+			var pageModel = SetupRatingPageModel(mockTrustModelService.Object, 
+				mockUserStateCachedService.Object, 
+				mockRatingModelService.Object,
+				mockLogger.Object, true);
+			
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "rating", new StringValues("123:red") }
+				});
+			
+			// act
+			_ = await pageModel.OnPostAsync();
+			
+			// assert
+			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
+
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Error,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("The given ratingUrn '123' does not match any known rating in the system")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+		}
+
 		[Test]
 		public async Task WhenOnPostAsync_MissingFormData_ReloadPage()
 		{

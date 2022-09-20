@@ -67,11 +67,10 @@ namespace ConcernsCaseWork.Services.Ratings
 		{
 			_logger.LogInformation("RatingModelService::GetRatingModelByUrn");
 			
-			var ratingsDto = await GetRatings();
-			
-			var ratingModel = ratingsDto.Select(RatingMapping.MapDtoToModel).FirstOrDefault(r => r.Urn == urn);
-			
-			return ratingModel;
+			var ratingDtos = await GetRatings();
+
+			var rating = ratingDtos.First(x => x.Urn == urn);
+			return RatingMapping.MapDtoToModel(rating);
 		}
 	}
 }

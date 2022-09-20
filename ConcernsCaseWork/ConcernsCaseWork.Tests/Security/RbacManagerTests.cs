@@ -21,24 +21,26 @@ namespace ConcernsCaseWork.Tests.Security
 		public async Task WhenGetSystemUsers_Return_Users()
 		{
 			// arrange
-			var mockUserRoleCachedService = new Mock<IUserRoleCachedService>();
 			var mockLogger = new Mock<ILogger<RbacManager>>();
 			var mockTeamsService = new Mock<ITeamsCachedService>();
 			
 			var rbacManager = new RbacManager(mockLogger.Object, mockTeamsService.Object);
+
+			mockTeamsService.Setup(x => x.GetTeamOwners()).ReturnsAsync(new[] { "user.one" });
 			
 			// act
-			var defaultUsers = await rbacManager.GetSystemUsers();
+			var users = await rbacManager.GetSystemUsers();
 
 			// assert
-			Assert.That(defaultUsers, Is.Not.Null);
+			Assert.IsNotNull(users);
+			Assert.AreEqual(1, users.Count);
+			Assert.AreEqual("user.one", users[0]);
 		}
 
 		[Test]
 		public async Task WhenGetSystemUsers_Return_Users_Except_For_Exclusions()
 		{
 			// arrange
-			var mockUserRoleCachedService = new Mock<IUserRoleCachedService>();
 			var mockLogger = new Mock<ILogger<RbacManager>>();
 			var mockTeamsService = new Mock<ITeamsCachedService>();
 

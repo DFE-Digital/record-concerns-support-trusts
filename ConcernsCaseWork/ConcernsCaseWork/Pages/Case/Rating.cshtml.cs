@@ -67,9 +67,17 @@ namespace ConcernsCaseWork.Pages.Case
 				var ragRatingUrn = splitRagRating[0];
 				var ragRatingName = splitRagRating[1];
 				
+				// validate that the links from case to other data is valid. This really should be in a domain layer or at least the trams service.
+				var rating = await _ratingModelService.GetRatingModelByUrn(long.Parse(ragRatingUrn));
+
+				if (rating == null)
+				{
+					throw new InvalidOperationException($"The given ratingUrn '{ragRatingUrn}' does not match any known rating in the system");
+				}
+
 				// Redis state
 				var userState = await GetUserState();
-				
+
 				// Update cache model
 				userState.CreateCaseModel.RatingUrn = long.Parse(ragRatingUrn);
 				userState.CreateCaseModel.RagRatingName = ragRatingName;
