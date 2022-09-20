@@ -1,7 +1,5 @@
 ﻿using AutoFixture;
-using Service.TRAMS.Nti;
-using Service.TRAMS.Status;
-using System;
+using ConcernsCasework.Service.Nti;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory

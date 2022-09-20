@@ -10,7 +10,7 @@ namespace ConcernsCasework.Service.RecordWhistleblower
 	{
 		private readonly ILogger<RecordWhistleblowerService> _logger;
 		
-		public RecordWhistleblowerService(IHttpClientFactory clientFactory, ILogger<RecordWhistleblowerService> logger) : base(clientFactory)
+		public RecordWhistleblowerService(IHttpClientFactory clientFactory, ILogger<RecordWhistleblowerService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}

@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Service.TRAMS.Nti
+namespace ConcernsCasework.Service.Nti
 {
 	public class NtiDto
 	{

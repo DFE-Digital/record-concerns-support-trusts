@@ -105,7 +105,7 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 		public void WhenBuildRequestUri_ReturnsRequestUrl(string groupName, string ukprn, string companiesHouseNumber, string expectedRequestUri)
 		{
 			// arrange
-			var trustService = new TrustService(null, null);
+			var trustService = new TrustService(Mock.Of<IHttpClientFactory>(), Mock.Of<ILogger<TrustService>>());
 			var trustSearch = TrustFactory.BuildTrustSearch(groupName, ukprn, companiesHouseNumber);
 
 			// act

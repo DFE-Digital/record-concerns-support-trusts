@@ -1,7 +1,7 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCasework.Service.Teams;
 using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
-using Service.TRAMS.Teams;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Teams

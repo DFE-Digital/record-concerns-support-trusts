@@ -1,4 +1,5 @@
 ﻿using ConcernsCasework.Service.Base;
+using ConcernsCasework.Service.Helpers;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -9,7 +10,7 @@ namespace ConcernsCasework.Service.NtiWarningLetter
 		private readonly ILogger<NtiWarningLetterStatusesService> _logger;
 
 		public NtiWarningLetterStatusesService(IHttpClientFactory clientFactory,
-			ILogger<NtiWarningLetterStatusesService> logger) : base(clientFactory)
+			ILogger<NtiWarningLetterStatusesService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}
@@ -18,7 +19,7 @@ namespace ConcernsCasework.Service.NtiWarningLetter
 		{
 			try
 			{
-				_logger.LogInformation("NtiWarningLetterStatusesService::GetAllStatusesAsync");
+				_logger.LogInformation($"{nameof(NtiWarningLetterStatusesService)}::{LoggingHelpers.EchoCallerName()}");
 
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/case-actions/nti-warning-letter/all-statuses");
@@ -42,7 +43,7 @@ namespace ConcernsCasework.Service.NtiWarningLetter
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("NtiWarningLetterStatusesService::GetAllStatusesAsync::Exception message::{Message}", ex.Message);
+				_logger.LogError(ex, $"{nameof(NtiWarningLetterStatusesService)}::{LoggingHelpers.EchoCallerName()}");
 				throw;
 			}
 		}

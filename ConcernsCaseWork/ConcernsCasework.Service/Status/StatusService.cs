@@ -8,7 +8,7 @@ namespace ConcernsCasework.Service.Status
 	{
 		private readonly ILogger<StatusService> _logger;
 		
-		public StatusService(IHttpClientFactory clientFactory, ILogger<StatusService> logger) : base(clientFactory)
+		public StatusService(IHttpClientFactory clientFactory, ILogger<StatusService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}

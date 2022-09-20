@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Services.Ratings;
+﻿using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;

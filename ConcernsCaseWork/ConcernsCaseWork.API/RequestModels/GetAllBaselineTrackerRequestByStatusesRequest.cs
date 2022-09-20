@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ConcernsCaseWork.API.RequestModels
+﻿namespace ConcernsCaseWork.API.RequestModels
 {
     public class GetAllBaselineTrackerRequestByStatusesRequest
     {

@@ -2,18 +2,14 @@
 using ConcernsCaseWork.Pages.Case.Management.Action.SRMA;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using ConcernsCasework.Service.Cases;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA

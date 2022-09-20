@@ -10,7 +10,7 @@ namespace ConcernsCasework.Service.Cases
 	{
 		private readonly ILogger<CaseHistoryService> _logger;
 		
-		public CaseHistoryService(IHttpClientFactory clientFactory, ILogger<CaseHistoryService> logger) : base(clientFactory)
+		public CaseHistoryService(IHttpClientFactory clientFactory, ILogger<CaseHistoryService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}

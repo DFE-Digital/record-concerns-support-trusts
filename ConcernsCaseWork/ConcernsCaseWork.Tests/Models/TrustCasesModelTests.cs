@@ -4,7 +4,6 @@ using NUnit.Framework;
 using ConcernsCasework.Service.Status;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Models
 {

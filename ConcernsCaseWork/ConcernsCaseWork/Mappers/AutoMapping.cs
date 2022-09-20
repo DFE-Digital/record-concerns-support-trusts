@@ -3,7 +3,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Teams;
 using ConcernsCasework.Service.Cases;
 using ConcernsCasework.Service.MeansOfReferral;
-using Service.TRAMS.Teams;
+using ConcernsCasework.Service.Teams;
 using ConcernsCasework.Service.Trusts;
 
 namespace ConcernsCaseWork.Mappers

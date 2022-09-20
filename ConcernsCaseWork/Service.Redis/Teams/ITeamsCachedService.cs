@@ -1,5 +1,4 @@
-﻿using Service.Redis.Base;
-using Service.TRAMS.Teams;
+﻿using ConcernsCasework.Service.Teams;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Teams

@@ -1,18 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCasework.Service.Base;
+using ConcernsCasework.Service.Helpers;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Service.TRAMS.Base;
-using Service.TRAMS.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Service.TRAMS.Nti
+namespace ConcernsCasework.Service.Nti
 {
-	public class NtiService : AbstractService, INtiService
+	public class NtiService : ConcernsAbstractService, INtiService
 	{
 		private readonly ILogger<NtiService> _logger;
 		private const string Url = @"/v2/case-actions/notice-to-improve";

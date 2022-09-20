@@ -8,7 +8,7 @@ namespace ConcernsCasework.Service.Ratings
 	{
 		private readonly ILogger<RatingService> _logger;
 		
-		public RatingService(IHttpClientFactory clientFactory, ILogger<RatingService> logger) : base(clientFactory)
+		public RatingService(IHttpClientFactory clientFactory, ILogger<RatingService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}

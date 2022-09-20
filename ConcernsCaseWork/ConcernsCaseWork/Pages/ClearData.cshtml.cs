@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Base;
 using Service.Redis.Ratings;
 using Service.Redis.Status;
 using Service.Redis.Trusts;

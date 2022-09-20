@@ -2,7 +2,6 @@
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
 using ConcernsCaseWork.Services.Nti;
-using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +12,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.NtiWarningLetter;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti

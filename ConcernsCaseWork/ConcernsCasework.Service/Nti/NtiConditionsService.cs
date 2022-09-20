@@ -1,17 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCasework.Service.Base;
+using ConcernsCasework.Service.Helpers;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Service.TRAMS.Base;
-using Service.TRAMS.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Service.TRAMS.Nti
+namespace ConcernsCasework.Service.Nti
 {
-	public class NtiConditionsService : AbstractService, INtiConditionsService
+	public class NtiConditionsService : ConcernsAbstractService, INtiConditionsService
 	{
 		private readonly ILogger<NtiConditionsService> _logger;
 

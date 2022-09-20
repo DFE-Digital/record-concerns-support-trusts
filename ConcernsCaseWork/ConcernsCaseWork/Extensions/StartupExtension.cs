@@ -39,11 +39,9 @@ using ConcernsCasework.Service.Cases;
 using ConcernsCasework.Service.Configuration;
 using ConcernsCasework.Service.FinancialPlan;
 using ConcernsCasework.Service.Ratings;
-using ConcernsCasework.Service.RecordAcademy;
 using ConcernsCasework.Service.RecordRatingHistory;
 using ConcernsCasework.Service.Records;
 using ConcernsCasework.Service.RecordSrma;
-using ConcernsCasework.Service.RecordWhistleblower;
 using ConcernsCasework.Service.Status;
 using ConcernsCasework.Service.Trusts;
 using ConcernsCasework.Service.Types;
@@ -51,18 +49,12 @@ using StackExchange.Redis;
 using System;
 using System.Net.Mime;
 using ConcernsCasework.Service.CaseActions;
-using Service.Redis.NtiUnderConsideration;
 using ConcernsCasework.Service.NtiUnderConsideration;
-using ConcernsCaseWork.Services.NtiWarningLetter;
-using Service.Redis.MeansOfReferral;
 using ConcernsCasework.Service.NtiWarningLetter;
-using Service.Redis.NtiWarningLetter;
 using ConcernsCasework.Service.MeansOfReferral;
 using ConcernsCasework.Service.Nti;
-using Service.Redis.Nti;
-using ConcernsCaseWork.Services.Nti;
+using ConcernsCasework.Service.Teams;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
-using Service.TRAMS.Nti;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -164,11 +156,9 @@ namespace ConcernsCaseWork.Extensions
 			// Trams api services
 			services.AddScoped<ICaseService, CaseService>();
 			services.AddScoped<IRatingService, RatingService>();
-			services.AddScoped<IRecordAcademyService, RecordAcademyService>();
 			services.AddScoped<IRecordRatingHistoryService, RecordRatingHistoryService>();
 			services.AddScoped<IRecordService, RecordService>();
 			services.AddScoped<IRecordSrmaService, RecordSrmaService>();
-			services.AddScoped<IRecordWhistleblowerService, RecordWhistleblowerService>();
 			services.AddScoped<IStatusService, StatusService>();
 			services.AddScoped<ITrustService, TrustService>();
 			services.AddScoped<ITrustSearchService, TrustSearchService>();

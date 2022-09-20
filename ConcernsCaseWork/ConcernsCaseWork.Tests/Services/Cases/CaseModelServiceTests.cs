@@ -6,7 +6,6 @@ using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Base;
 using Service.Redis.Cases;
 using Service.Redis.Models;
 using Service.Redis.Ratings;

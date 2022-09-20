@@ -8,7 +8,7 @@ namespace ConcernsCasework.Service.FinancialPlan
 	{
 		private readonly ILogger<FinancialPlanStatusService> _logger;
 
-		public FinancialPlanStatusService(IHttpClientFactory clientFactory, ILogger<FinancialPlanStatusService> logger) : base(clientFactory)
+		public FinancialPlanStatusService(IHttpClientFactory clientFactory, ILogger<FinancialPlanStatusService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}

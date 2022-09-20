@@ -3,7 +3,6 @@ using Service.Redis.Base;
 using ConcernsCasework.Service.Nti;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Nti

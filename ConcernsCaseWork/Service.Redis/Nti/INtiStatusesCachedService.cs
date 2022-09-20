@@ -1,7 +1,5 @@
-﻿using Service.TRAMS.Nti;
-using System;
+﻿using ConcernsCasework.Service.Nti;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Nti

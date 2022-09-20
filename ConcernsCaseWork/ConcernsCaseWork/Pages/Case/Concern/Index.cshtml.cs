@@ -10,7 +10,6 @@ using ConcernsCaseWork.Services.MeansOfReferral;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Base;
 using Service.Redis.Models;
 using ConcernsCasework.Service.Cases;
 using System;

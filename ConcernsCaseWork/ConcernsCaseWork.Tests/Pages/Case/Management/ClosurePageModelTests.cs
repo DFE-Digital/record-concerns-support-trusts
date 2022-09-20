@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
@@ -22,7 +21,6 @@ using ConcernsCasework.Service.Status;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management

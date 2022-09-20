@@ -12,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.Redis.Users;
 using System;

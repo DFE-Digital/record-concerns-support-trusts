@@ -6,8 +6,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Enums;
-using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 {

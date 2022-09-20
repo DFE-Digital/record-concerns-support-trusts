@@ -92,9 +92,7 @@ namespace ConcernsCaseWork.Service.Tests.RecordWhistleblower
 		public async Task WhenPostRecordWhistleblowerByRecordUrn_ReturnsRecordWhistleblowerDto()
 		{
 			// arrange
-			var requestDto = RecordWhistleblowerFactory.BuildCreateRecordWhistleblowerDto();
-			var expectedRecordWhistleblower = RecordWhistleblowerFactory.BuildRecordWhistleblowerDto(requestDto);
-			
+			var expectedRecordWhistleblower = RecordWhistleblowerFactory.BuildCreateRecordWhistleblowerDto();
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			var tramsApiEndpoint = configuration["trams:api_endpoint"];
 			
@@ -116,11 +114,10 @@ namespace ConcernsCaseWork.Service.Tests.RecordWhistleblower
 			var recordWhistleblowerService = new RecordWhistleblowerService(httpClientFactory.Object, logger.Object);
 			
 			// act
-			var actualRecordWhistleblower = await recordWhistleblowerService.PostRecordWhistleblowerByRecordUrn(requestDto);
+			var actualRecordWhistleblower = await recordWhistleblowerService.PostRecordWhistleblowerByRecordUrn(expectedRecordWhistleblower);
 
 			// assert
 			Assert.That(actualRecordWhistleblower.Name, Is.EqualTo(expectedRecordWhistleblower.Name));
-			Assert.That(actualRecordWhistleblower.Urn, Is.EqualTo(expectedRecordWhistleblower.Urn));
 			Assert.That(actualRecordWhistleblower.Details, Is.EqualTo(expectedRecordWhistleblower.Details));
 			Assert.That(actualRecordWhistleblower.RecordUrn, Is.EqualTo(expectedRecordWhistleblower.RecordUrn));
 			Assert.That(actualRecordWhistleblower.Reason, Is.EqualTo(expectedRecordWhistleblower.Reason));

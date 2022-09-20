@@ -1,17 +1,13 @@
-﻿using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.Pages.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Enums;
-using Service.TRAMS.Helpers;
-using Service.TRAMS.Nti;
+using ConcernsCasework.Service.Helpers;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 {

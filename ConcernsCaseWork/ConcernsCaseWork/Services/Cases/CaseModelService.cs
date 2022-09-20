@@ -419,8 +419,7 @@ namespace ConcernsCaseWork.Services.Cases
 					var createRecordDto = new CreateRecordDto(
 						currentDate, 
 						currentDate, 
-						currentDate, 
-						currentDate, 
+						currentDate,
 						recordModel.Type, 
 						recordModel.SubType, 
 						recordModel.TypeDisplay, 

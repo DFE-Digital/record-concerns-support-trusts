@@ -16,7 +16,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.NtiUnderConsideration;
-using Service.Redis.NtiWarningLetter;
 using Service.Redis.Status;
 using ConcernsCasework.Service.Status;
 using ConcernsCaseWork.Services.NtiUnderConsideration;

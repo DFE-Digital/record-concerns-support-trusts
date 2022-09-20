@@ -9,7 +9,7 @@ namespace ConcernsCasework.Service.NtiWarningLetter
 		private readonly ILogger<NtiWarningLetterReasonsService> _logger;
 
 		public NtiWarningLetterReasonsService(IHttpClientFactory clientFactory,
-			ILogger<NtiWarningLetterReasonsService> logger) : base(clientFactory)
+			ILogger<NtiWarningLetterReasonsService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}

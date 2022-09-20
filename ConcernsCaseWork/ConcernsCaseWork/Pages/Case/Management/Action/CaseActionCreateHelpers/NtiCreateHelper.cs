@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Nti;
+﻿using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCasework.Service.Cases;
 using ConcernsCaseWork.Services.NtiUnderConsideration;

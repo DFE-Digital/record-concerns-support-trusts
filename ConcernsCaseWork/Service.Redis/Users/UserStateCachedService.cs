@@ -1,7 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using Service.Redis.Base;
 using Service.Redis.Models;
-using System;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Users

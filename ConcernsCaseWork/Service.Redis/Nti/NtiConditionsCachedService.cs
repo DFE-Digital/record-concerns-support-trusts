@@ -1,9 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCasework.Service.Nti;
+using Microsoft.Extensions.Logging;
 using Service.Redis.Base;
-using Service.TRAMS.Nti;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.Redis.Nti

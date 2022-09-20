@@ -24,12 +24,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new RecordWhistleblowerDto(Fixture.Create<string>(), Fixture.Create<string>(),
 				Fixture.Create<string>(), 1, 1);
 		}
-		
-		public static RecordWhistleblowerDto BuildRecordWhistleblowerDto(CreateRecordWhistleblowerDto createRecordWhistleblowerDto)
-		{
-			return new RecordWhistleblowerDto(createRecordWhistleblowerDto.Name, createRecordWhistleblowerDto.Details,
-				createRecordWhistleblowerDto.Reason, createRecordWhistleblowerDto.RecordUrn, Fixture.Create<int>());
-		}
 
 		public static CreateRecordWhistleblowerDto BuildCreateRecordWhistleblowerDto()
 		{

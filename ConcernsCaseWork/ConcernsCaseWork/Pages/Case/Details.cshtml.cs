@@ -5,7 +5,6 @@ using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.Redis.Users;
 using System;

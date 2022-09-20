@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.Redis.Users;
 using ConcernsCasework.Service.Trusts;

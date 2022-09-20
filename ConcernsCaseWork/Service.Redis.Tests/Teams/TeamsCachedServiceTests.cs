@@ -1,14 +1,13 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
+using ConcernsCasework.Service.Teams;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using Service.Redis.Base;
 using Service.Redis.Teams;
-using Service.TRAMS.Teams;
 using System;
 using System.Threading.Tasks;
 

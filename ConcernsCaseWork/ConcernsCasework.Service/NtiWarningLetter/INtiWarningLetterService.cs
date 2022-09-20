@@ -6,7 +6,5 @@
 		Task<ICollection<NtiWarningLetterDto>> GetNtiWarningLettersForCaseAsync(long caseUrn);
 		Task<NtiWarningLetterDto> GetNtiWarningLetterAsync(long ntiWarningLetterId);
 		Task<NtiWarningLetterDto> PatchNtiWarningLetterAsync(NtiWarningLetterDto ntiWarningLetter);	
-
-		
 	}
 }

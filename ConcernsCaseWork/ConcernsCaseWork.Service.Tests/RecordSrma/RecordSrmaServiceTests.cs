@@ -6,7 +6,6 @@ using Moq;
 using Moq.Protected;
 using System.Net;
 using System.Text.Json;
-using NUnit.Framework;
 
 namespace ConcernsCaseWork.Service.Tests.RecordSrma
 {

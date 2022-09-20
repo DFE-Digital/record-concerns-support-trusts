@@ -10,7 +10,7 @@ namespace ConcernsCasework.Service.RecordAcademy
 	{
 		private readonly ILogger<RecordAcademyService> _logger;
 		
-		public RecordAcademyService(IHttpClientFactory clientFactory, ILogger<RecordAcademyService> logger) : base(clientFactory)
+		public RecordAcademyService(IHttpClientFactory clientFactory, ILogger<RecordAcademyService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}

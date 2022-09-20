@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Data.Gateways;
+using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.NTI.UnderConsideration
 {

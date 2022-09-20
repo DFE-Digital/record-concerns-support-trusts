@@ -9,7 +9,7 @@ namespace ConcernsCasework.Service.Trusts
 	{
 		private readonly ILogger<TrustService> _logger;
 		
-		public TrustService(IHttpClientFactory clientFactory, ILogger<TrustService> logger) : base(clientFactory)
+		public TrustService(IHttpClientFactory clientFactory, ILogger<TrustService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}

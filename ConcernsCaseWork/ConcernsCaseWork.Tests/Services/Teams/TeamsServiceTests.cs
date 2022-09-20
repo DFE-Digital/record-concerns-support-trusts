@@ -3,12 +3,12 @@ using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
 using AutoMapper;
 using ConcernsCaseWork.Mappers;
+using ConcernsCasework.Service.Teams;
 using ConcernsCaseWork.Services.Teams;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Service.Redis.Teams;
-using Service.TRAMS.Teams;
 using System;
 using System.Threading.Tasks;
 
@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 
 			await sut.UpdateCaseworkTeam(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel(testFixture.CurrentUserName, Array.Empty<string>()));
 
-			testFixture.MockCachedTeamsService.Verify(x => x.PutTeam(It.IsAny<Service.TRAMS.Teams.ConcernsCaseworkTeamDto>()), Times.Once);
+			testFixture.MockCachedTeamsService.Verify(x => x.PutTeam(It.IsAny<ConcernsCaseworkTeamDto>()), Times.Once);
 		}
 
 		[Test]
@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 
 			await sut.UpdateCaseworkTeam(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel(testFixture.CurrentUserName, new[] { "Fred.Flintstone" }));
 
-			testFixture.MockCachedTeamsService.Verify(x => x.PutTeam(It.Is<Service.TRAMS.Teams.ConcernsCaseworkTeamDto>(s => s.OwnerId == testFixture.CurrentUserName && s.TeamMembers[0] == "Fred.Flintstone")), Times.Once);
+			testFixture.MockCachedTeamsService.Verify(x => x.PutTeam(It.Is<ConcernsCaseworkTeamDto>(s => s.OwnerId == testFixture.CurrentUserName && s.TeamMembers[0] == "Fred.Flintstone")), Times.Once);
 		}
 
 		[Test]

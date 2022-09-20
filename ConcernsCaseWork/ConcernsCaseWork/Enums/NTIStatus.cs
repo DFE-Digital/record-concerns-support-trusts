@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace ConcernsCaseWork.Enums
+﻿namespace ConcernsCaseWork.Enums
 {
 	public enum NTIStatus
 	{
