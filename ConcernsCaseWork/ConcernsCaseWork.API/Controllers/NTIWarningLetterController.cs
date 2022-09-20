@@ -2,7 +2,7 @@
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.CaseActions.NTI.WarningLetter;
 using ConcernsCaseWork.API.UseCases;
-using ConcernsCaseWork.Data.Enums;
+using ConcernsCaseWork.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConcernsCaseWork.API.Controllers

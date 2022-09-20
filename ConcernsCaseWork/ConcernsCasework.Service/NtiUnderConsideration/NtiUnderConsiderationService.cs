@@ -48,6 +48,7 @@ namespace ConcernsCasework.Service.NtiUnderConsideration
 				var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}/case/{caseUrn}");
 
 				var response = await client.SendAsync(request);
+				response.EnsureSuccessStatusCode();
 				var content = await response.Content.ReadAsStringAsync();
 
 				return JsonConvert.DeserializeObject<ApiWrapper<List<NtiUnderConsiderationDto>>>(content).Data;
