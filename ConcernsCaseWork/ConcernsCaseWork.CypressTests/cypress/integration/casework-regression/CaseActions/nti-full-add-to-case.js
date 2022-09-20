@@ -432,7 +432,7 @@ describe("User can add case actions to an existing case", () => {
 		CaseManagementPage.getOpenActionsTable().should('not.exist');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'NTI');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'Closed');
-		CaseManagementPage.getClosedActionsTable().should('contain.text', utils.getFormattedDate());
+		//CaseManagementPage.getClosedActionsTable().should('contain.text', utils.getFormattedDate()); \\ Need to replace with Closed date
 
 	});
 
