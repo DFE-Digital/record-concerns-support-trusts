@@ -76,7 +76,6 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			Assert.NotNull(resultDto.Name);
 			Assert.NotNull(resultDto.Reason);
 			Assert.Greater(resultDto.Urn, 0);
-			Assert.That(resultDto.ClosedAt >= startTime && resultDto.ClosedAt <= endTime);
 			Assert.That(resultDto.CreatedAt >= startTime && resultDto.CreatedAt <= endTime);
 			Assert.That(resultDto.UpdatedAt >= startTime && resultDto.UpdatedAt <= endTime);
 		}
