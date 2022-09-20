@@ -46,7 +46,7 @@
                     </a>
                 </div>
 
-                <form role="form" method="post" id="add-nta-wl-form" novalidate>
+                <form role="form" method="post" id="add-nti-form" novalidate>
                     @* Status *@
                     <div class="govuk-form-group govuk-!-margin-top-9">
                         <fieldset class="govuk-fieldset">
@@ -173,8 +173,8 @@
 
                 <script type="application/javascript" nonce="@nonce">
                     $(function () {
-                        let validator = formValidator($("#add-nta-wl-form")[0]);
-
+                        let validator = formValidator($("#add-nti-form")[0]);
+                        addNTINotesValidator(validator);
                         validator.addValidator('dtr-day', [{
                           method: function(field, params) {
                               return noDateOrCompleteDate(params.year.value, params.month.value, params.day.value);
