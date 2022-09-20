@@ -208,7 +208,6 @@ namespace ConcernsCaseWork.Extensions
 
 			// AD Integration
 			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
-			services.AddScoped<IUserRoleCachedService, UserRoleCachedService>();
 			services.AddScoped<IRbacManager, RbacManager>();
 
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
