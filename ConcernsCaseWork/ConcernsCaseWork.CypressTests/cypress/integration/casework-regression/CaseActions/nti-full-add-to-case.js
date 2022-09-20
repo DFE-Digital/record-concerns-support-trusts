@@ -13,7 +13,6 @@ describe("User can add case actions to an existing case", () => {
 		cy.storeSessionData();
 	});
 
-	let term = "";
 	let stText = "null";
 	let condText = "null";
 	let reasText = "null";
@@ -304,7 +303,6 @@ describe("User can add case actions to an existing case", () => {
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'NTI');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'Cancelled');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', utils.getFormattedDate());
-		//CaseManagementPage.getClosedActionsTable().should('contain.text', this.reasText.trim());\
 	});
 
 	it("User can Lift an existing NTI Notice to improve record", function () {
@@ -347,8 +345,6 @@ describe("User can add case actions to an existing case", () => {
 				});
 			//date set
 		CaseActionsBasePage.setDate();
-
-		//ntiAddPage.getUpdateConditionsBtn().click();
 		ntiAddPage.getWLAddCaseActionBtn().click();
 		utils.getGovErrorSummaryList().should('not.exist');
 
@@ -371,14 +367,6 @@ describe("User can add case actions to an existing case", () => {
 
 	});
 
-
-
-
-
-	////////////////////////////////
-
-
-
 	it("User can Close an existing NTI Notice to improve record", function () {
 
 			cy.reload();
@@ -390,12 +378,12 @@ describe("User can add case actions to an existing case", () => {
 			cy.log(utils.checkForGovErrorSummaryList() );
 			if (utils.checkForGovErrorSummaryList() > 0 ) { 
 				cy.log("Case Action already exists");
-						cy.visit(Cypress.env('url'), { timeout: 30000 });
-						cy.checkForExistingCase(true);
-						CaseManagementPage.getAddToCaseBtn().click();
-						AddToCasePage.addToCase('Nti');
-						AddToCasePage.getCaseActionRadio('Nti').siblings().should('contain.text', AddToCasePage.actionOptions[6].trim());
-						AddToCasePage.getAddToCaseBtn().click();
+				cy.visit(Cypress.env('url'), { timeout: 30000 });
+				cy.checkForExistingCase(true);
+				CaseManagementPage.getAddToCaseBtn().click();
+				AddToCasePage.addToCase('Nti');
+				AddToCasePage.getCaseActionRadio('Nti').siblings().should('contain.text', AddToCasePage.actionOptions[6].trim());
+				AddToCasePage.getAddToCaseBtn().click();
 			}else {
 				cy.log("No Case Action exists");	
 				cy.log(utils.checkForGovErrorSummaryList() );

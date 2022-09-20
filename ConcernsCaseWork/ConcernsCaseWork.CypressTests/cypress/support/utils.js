@@ -25,7 +25,6 @@ class Utils {
     //
     checkForGovErrorSummaryList() {
 
-       // let $elem = Cypress.$('[id="errorSummary"]');
        let $elem = Cypress.$('[class="govuk-list govuk-error-summary__list"]')
         cy.log(($elem).length)
         
@@ -35,7 +34,7 @@ class Utils {
     getFormattedDate() {
 
         let date = new Date();
-
+        
         return date.toLocaleDateString("es-CL");
     }  
 }
