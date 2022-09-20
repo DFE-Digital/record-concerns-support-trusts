@@ -3,7 +3,7 @@ class AddToCasePage {
     constructor() {
         this.actionOptions = ["DfE support", "Financial forecast", "Financial plan",
                             "Financial returns", "Financial support", "Forced termination",
-                            "Notice To Improve (NTI)", "Recovery plan", "School Resource Management Adviser (SRMA)", "NTI: Under consideration", "NTI: Warning letter"];
+                            "NTI: Notice to improve", "Recovery plan", "School Resource Management Adviser (SRMA)", "NTI: Under consideration", "NTI: Warning letter"];
 
     }
 
@@ -39,7 +39,7 @@ class AddToCasePage {
     addToCase(option) {
 
             this.getHeadingText().should('contain.text', 'Add to case');
-            this.getSubHeadingText().should('contain.text', 'What action are you taking?');
+            
             this.getCaseActionRadio(option).click();
         }
         
