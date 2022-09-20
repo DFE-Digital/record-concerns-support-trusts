@@ -101,8 +101,30 @@ class NTIAddPage {
         return     cy.get('[id="cancel-link-event"]', { timeout: 30000 });
     }
 
+    getCancelNtiBtn() {
+        return     cy.get('[id="cancel-nti-button"]', { timeout: 30000 });
+    }
+
+    getLiftNtiBtn() {
+        return cy.get('[role="button"][href*="/lift"]');
+    } 
+
+    getCloseNtiBtn() {
+        return cy.get('[role="button"][href*="/close"]');
+    } 
+
+    getSubmissionDecisionBox() {
+        return cy.get('[id="submission-decision-id"]');
+    } 
+
+    getLiftNoticeToImproveBtn() {
+        return cy.get('[id="lift-nti-button"]');
+    } 
 
     
+
+    
+
 
 
     //Methods

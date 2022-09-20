@@ -1,7 +1,6 @@
 class Endpoints {
 
     constructor() {
-        //this.something = 
     }
    // getCurrentCase()
     //URI's
