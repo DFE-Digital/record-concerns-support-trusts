@@ -46,7 +46,6 @@ using Service.TRAMS.Ratings;
 using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
 using Service.TRAMS.RecordSrma;
-using Service.TRAMS.RecordWhistleblower;
 using Service.TRAMS.Status;
 using Service.TRAMS.Teams;
 using Service.TRAMS.Trusts;
@@ -147,7 +146,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IRecordRatingHistoryService, RecordRatingHistoryService>();
 			services.AddScoped<IRecordService, RecordService>();
 			services.AddScoped<IRecordSrmaService, RecordSrmaService>();
-			services.AddScoped<IRecordWhistleblowerService, RecordWhistleblowerService>();
 			services.AddScoped<IStatusService, StatusService>();
 			services.AddScoped<ITrustService, TrustService>();
 			services.AddScoped<ITrustSearchService, TrustSearchService>();
