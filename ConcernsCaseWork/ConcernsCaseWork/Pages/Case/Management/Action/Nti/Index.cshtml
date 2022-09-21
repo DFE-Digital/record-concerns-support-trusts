@@ -79,7 +79,14 @@
                     <th scope="row" class="govuk-table-case-details__header">Date NTI Issued</th>
                     <td class="govuk-table__cell">
                         @{
-                            RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.DateStarted.Value));
+							if (Model.NtiModel.DateStarted.HasValue)
+							{
+								RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.DateStarted.Value));
+				            }
+				            else
+				            {
+                                RenderEmptyLabel();
+				            }
                         }
                     </td>
                 </tr>
