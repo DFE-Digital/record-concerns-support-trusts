@@ -1,5 +1,7 @@
 ﻿using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
@@ -199,6 +201,12 @@ namespace ConcernsCaseWork.Extensions
             services.AddScoped<INtiReasonsCachedService, NtiReasonsCachedService>();
             services.AddScoped<INtiConditionsCachedService, NtiConditionsCachedService>();
 			services.AddScoped<ITeamsCachedService, TeamsCachedService>();
+			services.AddScoped<ICaseActionValidationStrategy, FinancialPanValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, SRMAValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, NTIUnderConsiderationValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, NTIWarningLetterValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, NTIValidator>();
+			services.AddScoped<ICaseActionValidator, CaseActionValidator>();
 
 			// Redis Sequence
 			// TODO. This class looks very temporary. What's it for and how are we going to replace it.
