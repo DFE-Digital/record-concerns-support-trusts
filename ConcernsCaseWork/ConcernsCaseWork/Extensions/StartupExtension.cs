@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.API.Extensions;
-using ConcernsCaseWork.Helpers;
+﻿using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Cases;
@@ -133,7 +132,20 @@ namespace ConcernsCaseWork.Extensions
 		/// <exception cref="Exception"></exception>
 		public static void AddConcernsApi(this IServiceCollection services, IConfiguration configuration)
 		{
-			services.AddConcernsApiProject(configuration);
+			var concernsApiEndpoint = configuration["concernsCaseWorkApi:apiEndpoint"];
+			var concernsApiKey = configuration["concernsCaseWorkApi:apiKey"];
+
+			if (string.IsNullOrEmpty(concernsApiEndpoint) || string.IsNullOrEmpty(concernsApiKey))
+				throw new Exception("AddConcernsApi::missing configuration");
+
+			Log.Information("Starting Concerns API Endpoint - {ConcernsApiEndpoint}", concernsApiEndpoint);
+
+			services.AddHttpClient("ConcernsClient", client =>
+			{
+				client.BaseAddress = new Uri(concernsApiEndpoint);
+				client.DefaultRequestHeaders.Add("ConcernsApiKey", concernsApiKey);
+				client.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
+			});
 		}
 
 		public static void AddInternalServices(this IServiceCollection services)

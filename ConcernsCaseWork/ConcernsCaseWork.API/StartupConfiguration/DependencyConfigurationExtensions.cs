@@ -1,22 +1,10 @@
 ﻿using ConcernsCaseWork.API.UseCases;
-using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Gateways;
-using System.Net.Mime;
 
-namespace ConcernsCaseWork.API.Extensions
+namespace ConcernsCaseWork.API.StartupConfiguration
 {
-	public static class ServiceCollectionExtensions
+	public static class DependencyConfigurationExtensions
 	{
-		public static IServiceCollection AddConcernsApiProject(this IServiceCollection services, IConfiguration configuration)
-		{
-			services.AddDependencies();
-			services.AddDatabase(configuration);
-			services.AddApi(configuration);
-			services.AddUseCases();
-
-			return services;
-		}
-		
 		public static IServiceCollection AddUseCases(this IServiceCollection services)
 		{
 			var allTypes = typeof(IUseCase<,>).Assembly.GetTypes();
@@ -71,49 +59,6 @@ namespace ConcernsCaseWork.API.Extensions
             services.AddScoped<IUpdateConcernsCaseworkTeam, UpdateConcernsCaseworkTeam>();
             services.AddScoped<IConcernsTeamCaseworkGateway, ConcernsTeamCaseworkGateway>();
 
-			return services;
-		}
-
-		public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
-		{
-			var connectionString = configuration.GetConnectionString("DefaultConnection");
-			services.AddDbContext<ConcernsDbContext>(options =>
-				options.UseConcernsSqlServer(connectionString)
-				);
-			
-
-			return services;
-		}
-
-		public static IServiceCollection AddApi(this IServiceCollection services, IConfiguration configuration)
-		{
-			var concernsApiEndpoint = configuration["ConcernsCaseworkApi:ApiEndpoint"];
-
-			if (string.IsNullOrEmpty(concernsApiEndpoint))
-				throw new Exception("AddConcernsApi::missing configuration");
-
-			services.AddHttpClient("ConcernsClient", client =>
-			{
-				client.BaseAddress = new Uri(concernsApiEndpoint);
-				client.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
-			});
-			
-			services.AddControllers();
-			services.AddApiVersioning(config => 
-			{
-				config.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
-				config.AssumeDefaultVersionWhenUnspecified = true;
-				config.ReportApiVersions = true;
-			});
-			services.AddVersionedApiExplorer(setup =>
-			{
-				setup.GroupNameFormat = "'v'VVV";
-				setup.SubstituteApiVersionInUrl = true;
-			});
-            
-			services.AddSwaggerGen();
-			services.ConfigureOptions<SwaggerOptions>();
-			
 			return services;
 		}
 	}

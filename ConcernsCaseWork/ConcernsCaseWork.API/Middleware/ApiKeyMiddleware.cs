@@ -1,4 +1,3 @@
-using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.UseCases;
 
 namespace ConcernsCaseWork.API.Middleware
@@ -6,12 +5,12 @@ namespace ConcernsCaseWork.API.Middleware
     public class ApiKeyMiddleware
     {
         private readonly RequestDelegate _next;
-        private const string APIKEYNAME = "ApiKey";
+        private const string APIKEYNAME = "ConcernsApiKey";
         public ApiKeyMiddleware(RequestDelegate next)
         {
             _next = next;
         }
-        public async Task InvokeAsync(HttpContext context, IUseCase<string, ApiUser> apiKeyService)
+        public async Task InvokeAsync(HttpContext context, IUseCase<string, bool> apiKeyValidationService)
         {
             if (!context.Request.Headers.TryGetValue(APIKEYNAME, out var extractedApiKey))
             {
@@ -20,9 +19,9 @@ namespace ConcernsCaseWork.API.Middleware
                 return;
             }
  
-            var user = apiKeyService.Execute(extractedApiKey);
+            var isKeyValid = apiKeyValidationService.Execute(extractedApiKey);
             
-            if (user == null)
+            if (!isKeyValid)
             {
                 context.Response.StatusCode = 401;
                 await context.Response.WriteAsync("Unauthorized client.");
