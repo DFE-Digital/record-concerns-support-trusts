@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Logging;
 using Microsoft.AspNetCore.Http;
+using Serilog.Context;
 using System;
 using System.Threading.Tasks;
 
@@ -57,7 +58,11 @@ namespace ConcernsCaseWork.Middleware
 
 			correlationContext.SetContext(incomingCorrelationId, previousRequestId, httpContext.TraceIdentifier);
 
-			return _next(httpContext);
+			using (LogContext.PushProperty("CorrelationId", correlationContext.CorrelationId))
+			using (LogContext.PushProperty("ApplicationId", ApplicationContext.ApplicationName))
+			{
+				return _next(httpContext);
+			}
 		}
 	}
 }
