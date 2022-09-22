@@ -358,6 +358,7 @@
                                         </a>
                                     </td>
                                     <td class="govuk-table__cell">
+                                        <span>In progress</span>
                                     </td>
                                     <td class="govuk-table__cell govuk-table__header__right">
                                         @DateExtension.ToDayMonthYear(nti.CreatedAt)
@@ -374,6 +375,16 @@
                                         </a>
                                     </td>
                                     <td class="govuk-table__cell">
+                                        @{
+                                            if (nti.Status != null)
+                                            {
+                                                <span>nti.Status.Name</span>
+                                            }
+                                            else
+                                            {
+                                                <span>In progress</span>
+                                            }
+                                        }
                                     </td>
                                     <td class="govuk-table__cell govuk-table__header__right">
                                         @DateExtension.ToDayMonthYear(nti.CreatedAt)
@@ -390,7 +401,16 @@
                                         </a>
                                     </td>
                                     <td class="govuk-table__cell">
-                                        @nti.Status?.Name
+                                        @{
+                                            if (nti.Status != null)
+                                            {
+                                                <span>nti.Status.Name</span>
+                                            }
+                                            else
+                                            {
+                                                <span>In progress</span>
+                                            }
+                                        }
                                     </td>
                                     <td class="govuk-table__cell govuk-table__header__right">
                                         @DateExtension.ToDayMonthYear(nti.CreatedAt)
@@ -482,7 +502,7 @@
                                         </a>
                                     </td>
                                     <td class="govuk-table__cell">
-                                        @nti.ClosedStatus?.Name
+                                        @nti.ClosedStatus?.PastTenseName
                                     </td>
                                     <td class="govuk-table__cell govuk-table__header__right">
                                         @DateExtension.ToDayMonthYear(nti.ClosedAt.Value)

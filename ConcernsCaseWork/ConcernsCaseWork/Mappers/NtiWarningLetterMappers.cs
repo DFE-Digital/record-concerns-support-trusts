@@ -66,7 +66,8 @@ namespace ConcernsCaseWork.Mappers
 			return new NtiWarningLetterStatusModel
 			{
 				Id = ntiStatusDto.Id,
-				Name = ntiStatusDto.Name
+				Name = ntiStatusDto.Name,
+				PastTenseName = ntiStatusDto.PastTenseName
 			};
 		}
 

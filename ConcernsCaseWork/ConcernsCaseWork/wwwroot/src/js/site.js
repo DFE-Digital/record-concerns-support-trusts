@@ -173,6 +173,14 @@ window.addFinancialPlanNotesValidator = function (validator) {
 		message: 'Notes must be 2000 characters or less'
 	}]);
 }
+window.addNTINotesValidator = function (validator) {
+	validator.addValidator('nti-notes', [{
+		method: function (field) {
+			return field.value.trim().length <= 2000;
+		},
+		message: 'Notes must be 2000 characters or less'
+	}]);
+}
 
 
 // Auto resizer textBox

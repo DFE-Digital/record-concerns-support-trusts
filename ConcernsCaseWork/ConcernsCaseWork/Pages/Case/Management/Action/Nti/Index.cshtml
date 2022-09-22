@@ -56,7 +56,14 @@
                         <th scope="row" class="govuk-table-case-details__header">Current status</th>
                         <td class="govuk-table__cell">
                             @{
-                                RenderValue(Model.NtiModel.Status.Name);
+								if (Model.NtiModel.Status != null)
+								{
+									RenderValue(Model.NtiModel.Status.Name);
+								}
+								else
+								{
+									RenderEmptyLabel();
+								}
                             }
                         </td>
                     }
@@ -65,7 +72,14 @@
                         <th scope="row" class="govuk-table-case-details__header">Status</th>
                         <td class="govuk-table__cell">
                             @{
-                                RenderValue(Model.NtiModel.ClosedStatus.Name);
+								if (Model.NtiModel.ClosedStatus != null)
+								{
+									RenderValue(Model.NtiModel.ClosedStatus.Name);
+								}
+								else
+								{
+									RenderEmptyLabel();
+								}
                             }
                         </td>
                     }
