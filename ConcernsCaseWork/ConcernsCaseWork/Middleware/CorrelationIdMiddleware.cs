@@ -1,5 +1,7 @@
-﻿using ConcernsCaseWork.Logging;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Logging;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Serilog.Context;
 using System;
 using System.Threading.Tasks;
@@ -16,10 +18,12 @@ namespace ConcernsCaseWork.Middleware
 		private const string _causationIdHeaderKey = "x-causation-id";
 
 		private readonly RequestDelegate _next;
+		private readonly ILogger<CorrelationIdMiddleware> _logger;
 
-		public CorrelationIdMiddleware(RequestDelegate next)
+		public CorrelationIdMiddleware(RequestDelegate next, ILogger<CorrelationIdMiddleware> logger)
 		{
 			_next = next;
+			_logger = Guard.Against.Null(logger);
 		}
 
 		// ReSharper disable once UnusedMember.Global
@@ -61,6 +65,7 @@ namespace ConcernsCaseWork.Middleware
 			using (LogContext.PushProperty("CorrelationId", correlationContext.CorrelationId))
 			using (LogContext.PushProperty("ApplicationId", ApplicationContext.ApplicationName))
 			{
+				_logger.LogInformation("Test message. CorrelationId {correlationId}", correlationContext.CausationId );
 				return _next(httpContext);
 			}
 		}
