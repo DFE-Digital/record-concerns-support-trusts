@@ -15,7 +15,6 @@ namespace ConcernsCaseWork.Middleware
 	public class CorrelationIdMiddleware
 	{
 		private const string _correlationIdHeaderKey = "x-correlation-id";
-		private const string _causationIdHeaderKey = "x-causation-id";
 
 		private readonly RequestDelegate _next;
 		private readonly ILogger<CorrelationIdMiddleware> _logger;
@@ -30,42 +29,26 @@ namespace ConcernsCaseWork.Middleware
 		// Invoked by asp.net
 		public Task Invoke(HttpContext httpContext, ICorrelationContext correlationContext)
 		{
-
-			string incomingCorrelationId;
-			string previousRequestId;
+			string thisCorrelationId;
 
 			// correlation id. An ID that spans many requests
 			if (httpContext.Request.Headers.ContainsKey(_correlationIdHeaderKey) && !string.IsNullOrWhiteSpace(httpContext.Request.Headers[_correlationIdHeaderKey]))
 			{
-				incomingCorrelationId = httpContext.Request.Headers[_correlationIdHeaderKey];
+				thisCorrelationId = httpContext.Request.Headers[_correlationIdHeaderKey];
 			}
 			else
 			{
-				// guid is easily generated in tools like postman. Not sure a .net trace Id is so easy, so use a guid.
-				incomingCorrelationId = Guid.NewGuid().ToString();
+				thisCorrelationId = Guid.NewGuid().ToString();
 			}
+			
+			httpContext.Request.Headers[_correlationIdHeaderKey] = thisCorrelationId;
 
-			// causationId. An id of the request that caused this request.
-			if (httpContext.Request.Headers.ContainsKey(_causationIdHeaderKey) && !string.IsNullOrWhiteSpace(httpContext.Request.Headers[_causationIdHeaderKey]))
-			{
-				previousRequestId = httpContext.Request.Headers[_causationIdHeaderKey];
-			}
-			else
-			{
-				// when no causationId because this is the first request of a chain, use the correlationId
-				previousRequestId = incomingCorrelationId;
-			}
-
-			// And for any n
-			httpContext.Request.Headers[_correlationIdHeaderKey] = incomingCorrelationId;
-			httpContext.Request.Headers[_causationIdHeaderKey] = httpContext.TraceIdentifier;
-
-			correlationContext.SetContext(incomingCorrelationId, previousRequestId, httpContext.TraceIdentifier);
-
-			using (LogContext.PushProperty("CorrelationId", correlationContext.CorrelationId))
+			correlationContext.SetContext(thisCorrelationId);
+			
 			using (LogContext.PushProperty("ApplicationId", ApplicationContext.ApplicationName))
+			using (LogContext.PushProperty("CorrelationId", correlationContext.CorrelationId))
 			{
-				_logger.LogInformation("Test message. CorrelationId {correlationId}", correlationContext.CausationId );
+				httpContext.Response.Headers[_correlationIdHeaderKey] = thisCorrelationId;
 				return _next(httpContext);
 			}
 		}
