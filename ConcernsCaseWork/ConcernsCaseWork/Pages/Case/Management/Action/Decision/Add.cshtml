@@ -1,0 +1,62 @@
+﻿@page "/case/{urn:long}/management/action/decision/add"
+@model ConcernsCaseWork.Pages.Case.Management.Action.Decision.AddPageModel
+
+@{
+    ViewData["Title"] = "Add Decision";
+    var nonce = HttpContext.GetNonce();
+}
+
+@section BeforeMain {
+    <div class="govuk-width-container">
+        <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
+            Back to case
+        </a>
+    </div>
+}
+
+<div class="govuk-width-container">
+    <partial name="_BannerError" />
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+                <partial name="_Error" />
+            }
+            else
+            {
+                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+                @if (!string.IsNullOrEmpty((string)TempData.Peek("Decision.Message")))
+                {
+                    <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
+                        <h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
+                        <div class="govuk-error-summary__body">
+                            <ul class="govuk-list govuk-error-summary__list">
+                                <li>
+                                    <a href="#">@TempData["Decision.Message"]</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                }
+
+                <h1 class="govuk-heading-l">
+                    <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
+                    Decision
+                </h1>
+
+
+                <script type="application/javascript" nonce="@nonce">
+                    $(function () {
+                        let validator = formValidator($("#add-decision-form")[0]);
+                        autoResizer();
+                    });
+                </script>
+            }
+
+        </div>
+    </div>
+</div>
+
