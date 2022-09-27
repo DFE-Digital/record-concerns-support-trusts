@@ -47,6 +47,169 @@
                     Decision
                 </h1>
 
+                <form role="form" method="post" id="add-decision-form" novalidate>
+                    @* CRM Enquiry Number *@
+                    <div class="govuk-form-group govuk-!-margin-top-9">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">Is this decision linked to a CRM case?</h2>
+                            </legend>
+
+                            <div id="crm-enquiry-hint" class="govuk-hint">
+                                If yes, paste the CRM enquiry number below. If no, leave the field blank
+                            </div>
+
+                            <input class="govuk-input govuk-input--width-30" id="crm-enquiry-number" name="crm-enquiry-number" type="text">
+                        </fieldset>
+                    </div>
+
+                    @* Retrospective Approval *@
+                    <div class="govuk-form-group govuk-!-margin-top-9">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">Is this a request that requires retrospective approval</h2>
+                            </legend>
+                            <div id="retrospective-approval-hint" class="govuk-hint">
+                                Retrospective approval is needed when a trust or academy makes a change or action before asking SFSO or RG.
+                            </div>
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                @{
+
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="retrospective-approval" name="retrospective-approval" type="radio" value="1">
+                                        <label class="govuk-label govuk-radios__label" for="retrospective-approval">
+                                            <span>
+                                                Yes
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="retrospective-approval-1" name="retrospective-approval" type="radio" value="0">
+                                        <label class="govuk-label govuk-radios__label" for="retrospective-approval-1">
+                                            <span>
+                                                No
+                                            </span>
+                                        </label>
+                                    </div>
+                                }
+
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    @* Submission required *@
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">Is a submission required?</h2>
+                            </legend>
+                            <div id="submission-required-hint" class="govuk-hint">
+                                Find more information on submissions and templates at <a href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Submissions%20templates%20and%20guidance.aspx" target="_blank">SFSO Knowledge: Submissions</a>
+                            </div>
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="submission-required" name="submission-required" type="radio" data-aria-controls="conditional-submission-required">
+                                    <label class="govuk-label govuk-radios__label" for="submission-required">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-submission-required">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label" for="submission-required-link">
+                                            If yes, paste in a link to the submission document on Sharepoint.
+                                        </label>
+                                        <input class="govuk-input govuk-input--width-30" id="submission-required-link" name="submission-required-link" type="text">
+                                    </div>
+
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="submission-required-1" name="submission-required" type="radio" value="0">
+                                    <label class="govuk-label govuk-radios__label" for="submission-required-1">
+                                        <span>
+                                            No
+                                        </span>
+                                    </label>
+                                </div>
+
+
+                            </div>
+
+                        </fieldset>
+                    </div>
+
+
+                    @* date request received *@
+                    <div class="govuk-form-group govuk-!-margin-top-9">
+                        <fieldset class="govuk-fieldset">
+                            <h2 class="govuk-heading-m">When did ESFA (Education and Skills Funding Agency) receive the request? </h2>
+                            <div class="govuk-date-input" id="dtr-request-received">
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="dtr-day-request-received">
+                                            Day
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-request-received"
+                                               name="dtr-day-request-received" type="text" maxlength="2" inputmode="numeric" />
+                                    </div>
+                                </div>
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="dtr-month-request-received">
+                                            Month
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-request-received"
+                                               name="dtr-month-request-received" type="text" maxlength="2" inputmode="numeric" />
+                                    </div>
+                                </div>
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="dtr-year-request-received">
+                                            Year
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-request-received"
+                                               name="dtr-year-request-received" type="text" maxlength="4" inputmode="numeric" />
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    @* total amount requested *@
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">Is a submission required?</h2>
+                            </legend>
+                            <div id="total-amount-request-hint" class="govuk-hint">
+                                If no amount was requested, enter £0.
+                            </div>
+                            <div class="govuk-input__wrapper">
+                                <div class="govuk-input__prefix" aria-hidden="true">£</div>
+                                <input class="govuk-input govuk-input--width-5" id="total-amount-request" name="total-amount-request" type="text">
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    @* Notes *@
+                    <div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
+                        <div class="govuk-form-group">
+                            <h2 class="govuk-heading-m">Supporting notes</h2>
+                            <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-decision-notes" name="case-decision-notes" rows="3" aria-describedby="case-decision-notes-info"></textarea>
+                        </div>
+                        <div id="case-decision-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+                            You can enter up to @Model.NotesMaxLength characters
+                        </div>
+                    </div>
+
+
+                    <div class="govuk-button-group">
+                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-decision-button" name="action">
+                            Continue
+                        </button>
+                    </div>
+                </form>
+
 
                 <script type="application/javascript" nonce="@nonce">
                     $(function () {
