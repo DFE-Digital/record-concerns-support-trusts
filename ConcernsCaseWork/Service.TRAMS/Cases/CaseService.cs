@@ -30,7 +30,7 @@ namespace Service.TRAMS.Cases
 					$"/{EndpointsVersion}/{EndpointPrefix}/owner/{caseCaseWorkerSearch.CaseWorkerName}?status={caseCaseWorkerSearch.StatusUrn}&page={caseCaseWorkerSearch.Page}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -64,7 +64,7 @@ namespace Service.TRAMS.Cases
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/{EndpointPrefix}/urn/{urn}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -104,7 +104,7 @@ namespace Service.TRAMS.Cases
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/{EndpointPrefix}/ukprn/{caseTrustSearch.TrustUkPrn}?page={caseTrustSearch.Page}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -138,7 +138,7 @@ namespace Service.TRAMS.Cases
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/cases?page={pageSearch.Page}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -175,7 +175,7 @@ namespace Service.TRAMS.Cases
 					MediaTypeNames.Application.Json);
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.PostAsync($"/{EndpointsVersion}/{EndpointPrefix}", request);
@@ -218,7 +218,7 @@ namespace Service.TRAMS.Cases
 					MediaTypeNames.Application.Json);
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.PatchAsync($"/{EndpointsVersion}/{EndpointPrefix}/{caseDto.Urn}", request);

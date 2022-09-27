@@ -31,7 +31,7 @@ namespace Service.TRAMS.FinancialPlan
 					$"/{EndpointsVersion}/case-actions/financial-plan/case/{caseUrn}");
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -72,7 +72,7 @@ namespace Service.TRAMS.FinancialPlan
 					$"/{EndpointsVersion}/case-actions/financial-plan/{financialPlanId}");
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -115,7 +115,7 @@ namespace Service.TRAMS.FinancialPlan
 					MediaTypeNames.Application.Json);
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 
 				// Execute request
 				var response = await client.PostAsync(
@@ -159,7 +159,7 @@ namespace Service.TRAMS.FinancialPlan
 					MediaTypeNames.Application.Json);
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 
 				// Execute request
 				var response = await client.PatchAsync(

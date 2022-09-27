@@ -29,7 +29,7 @@ namespace Service.TRAMS.Nti
 			{
 				_logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Post, $"{Url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(newNti),
@@ -53,7 +53,7 @@ namespace Service.TRAMS.Nti
 			{
 				_logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}/case/{caseUrn}");
 
 				var response = await client.SendAsync(request);
@@ -76,7 +76,7 @@ namespace Service.TRAMS.Nti
 
 				var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}/{ntiId}");
 
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 
 				var response = await client.SendAsync(request);
 
@@ -99,7 +99,7 @@ namespace Service.TRAMS.Nti
 			{
 				_logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(nti),

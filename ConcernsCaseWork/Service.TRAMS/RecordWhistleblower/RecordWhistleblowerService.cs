@@ -31,7 +31,7 @@ namespace Service.TRAMS.RecordWhistleblower
 					$"/{EndpointsVersion}/record-whistleblower/record/urn/{recordUrn}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -68,7 +68,7 @@ namespace Service.TRAMS.RecordWhistleblower
 					MediaTypeNames.Application.Json);
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.PostAsync(
@@ -106,7 +106,7 @@ namespace Service.TRAMS.RecordWhistleblower
 					MediaTypeNames.Application.Json);
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.PatchAsync(

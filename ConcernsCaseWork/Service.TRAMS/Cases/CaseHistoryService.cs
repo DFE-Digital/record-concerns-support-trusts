@@ -32,7 +32,7 @@ namespace Service.TRAMS.Cases
 					MediaTypeNames.Application.Json);
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.PostAsync($"/{EndpointsVersion}/concerns-cases-history", request);
@@ -72,7 +72,7 @@ namespace Service.TRAMS.Cases
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/concerns-cases-history/case/urn/{caseSearch.CaseUrn}?page={caseSearch.Page}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.SendAsync(request);

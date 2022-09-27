@@ -31,7 +31,7 @@ namespace Service.TRAMS.Records
 					$"/{EndpointsVersion}/concerns-records/case/urn/{caseUrn}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -74,7 +74,7 @@ namespace Service.TRAMS.Records
 					MediaTypeNames.Application.Json);
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.PostAsync(
@@ -118,7 +118,7 @@ namespace Service.TRAMS.Records
 					MediaTypeNames.Application.Json);
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.PatchAsync(

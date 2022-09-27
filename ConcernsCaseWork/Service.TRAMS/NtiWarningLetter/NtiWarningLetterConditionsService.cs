@@ -31,7 +31,7 @@ namespace Service.TRAMS.NtiWarningLetter
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/case-actions/nti-warning-letter/all-conditions");
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 
 				// Execute request
 				var response = await client.SendAsync(request);

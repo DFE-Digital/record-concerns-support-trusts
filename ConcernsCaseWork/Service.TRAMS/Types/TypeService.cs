@@ -28,7 +28,7 @@ namespace Service.TRAMS.Types
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/concerns-types");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.SendAsync(request);

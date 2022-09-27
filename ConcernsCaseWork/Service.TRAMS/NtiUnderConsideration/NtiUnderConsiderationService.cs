@@ -74,7 +74,7 @@ namespace Service.TRAMS.NtiUnderConsideration
 				$"{Url}/{underConsiderationId}");
 
 			// Create http client
-			var client = ClientFactory.CreateClient(HttpClientName);
+			var client = CreateHttpClient();
 
 			// Execute request
 			var response = await client.SendAsync(request);

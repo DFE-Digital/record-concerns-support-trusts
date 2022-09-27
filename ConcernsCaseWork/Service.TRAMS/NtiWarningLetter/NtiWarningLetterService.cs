@@ -17,7 +17,7 @@ namespace Service.TRAMS.NtiWarningLetter
 	{
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly ILogger<NtiWarningLetterService> _logger;
-		private const string Url = @"/v2/case-actions/nti-warning-letter";
+		private const string _url = @"/v2/case-actions/nti-warning-letter";
 
 		public NtiWarningLetterService(IHttpClientFactory httpClientFactory, ILogger<NtiWarningLetterService> logger, ICorrelationContext correlationContext) : base(httpClientFactory, logger, correlationContext)
 		{
@@ -30,7 +30,7 @@ namespace Service.TRAMS.NtiWarningLetter
 			try
 			{
 				var client = _httpClientFactory.CreateClient(HttpClientName);
-				var request = new HttpRequestMessage(HttpMethod.Post, $"{Url}");
+				var request = new HttpRequestMessage(HttpMethod.Post, $"{_url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(newNtiWarningLetter),
 					Encoding.UTF8, MediaTypeNames.Application.Json);
@@ -50,10 +50,10 @@ namespace Service.TRAMS.NtiWarningLetter
 		public async Task<NtiWarningLetterDto> GetNtiWarningLetterAsync(long ntiWarningLetterId)
 		{
 			// Create a request
-			var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}/{ntiWarningLetterId}");
+			var request = new HttpRequestMessage(HttpMethod.Get, $"{_url}/{ntiWarningLetterId}");
 
 			// Create http client
-			var client = ClientFactory.CreateClient(HttpClientName);
+			var client = CreateHttpClient();
 
 			// Execute request
 			var response = await client.SendAsync(request);
@@ -81,7 +81,7 @@ namespace Service.TRAMS.NtiWarningLetter
 			try
 			{
 				var client = _httpClientFactory.CreateClient(HttpClientName);
-				var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}/case/{caseUrn}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"{_url}/case/{caseUrn}");
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();
@@ -100,7 +100,7 @@ namespace Service.TRAMS.NtiWarningLetter
 			try
 			{
 				var client = _httpClientFactory.CreateClient(HttpClientName);
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}");
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(ntiWarningLetter),
 					Encoding.UTF8, MediaTypeNames.Application.Json);
