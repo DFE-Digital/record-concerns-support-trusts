@@ -118,7 +118,7 @@ namespace Service.TRAMS.Tests.RecordSrma
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordSrmaService>>();
-			var recordSrmaService = new RecordSrmaService(httpClientFactory.Object, logger.Object);
+			var recordSrmaService = new RecordSrmaService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordSrma = await recordSrmaService.PostRecordSrmaByRecordUrn(expectedRecordSrma);

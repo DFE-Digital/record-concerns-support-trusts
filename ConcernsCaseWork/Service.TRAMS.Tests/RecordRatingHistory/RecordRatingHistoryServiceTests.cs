@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Shared.Tests.Factory;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -41,7 +42,7 @@ namespace Service.TRAMS.Tests.RecordRatingHistory
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordRatingHistoryService>>();
-			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object);
+			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordsRatingHistory = await recordRatingHistoryService.GetRecordsRatingHistoryByCaseUrn(1);
@@ -82,7 +83,7 @@ namespace Service.TRAMS.Tests.RecordRatingHistory
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordRatingHistoryService>>();
-			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object);
+			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordsRatingHistory = await recordRatingHistoryService.GetRecordsRatingHistoryByCaseUrn(1);
@@ -115,7 +116,7 @@ namespace Service.TRAMS.Tests.RecordRatingHistory
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordRatingHistoryService>>();
-			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object);
+			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordsRatingHistory = await recordRatingHistoryService.GetRecordsRatingHistoryByRecordUrn(1);
@@ -156,7 +157,7 @@ namespace Service.TRAMS.Tests.RecordRatingHistory
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordRatingHistoryService>>();
-			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object);
+			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordsRatingHistory = await recordRatingHistoryService.GetRecordsRatingHistoryByRecordUrn(1);
@@ -189,7 +190,7 @@ namespace Service.TRAMS.Tests.RecordRatingHistory
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordRatingHistoryService>>();
-			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object);
+			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordsRatingHistory = await recordRatingHistoryService.PostRecordRatingHistory(expectedRecordRatingHistory);
@@ -222,7 +223,7 @@ namespace Service.TRAMS.Tests.RecordRatingHistory
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordRatingHistoryService>>();
-			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object);
+			var recordRatingHistoryService = new RecordRatingHistoryService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordsRatingHistory = await recordRatingHistoryService.PostRecordRatingHistory(RecordRatingHistoryFactory.BuildRecordRatingHistoryDto());

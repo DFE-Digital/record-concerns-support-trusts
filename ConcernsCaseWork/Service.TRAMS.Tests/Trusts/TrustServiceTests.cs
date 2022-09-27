@@ -97,7 +97,7 @@ namespace Service.TRAMS.Tests.Trusts
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<TrustService>>();
-			var trustService = new TrustService(httpClientFactory.Object, logger.Object);
+			var trustService = new TrustService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act | assert
 			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch()));

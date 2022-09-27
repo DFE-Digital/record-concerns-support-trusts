@@ -123,7 +123,7 @@ namespace Service.TRAMS.Tests.Records
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => recordService.GetRecordsByCaseUrn(1));

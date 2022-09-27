@@ -82,7 +82,7 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object);
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
 			var response = sut.GetSRMAById(654).Result;

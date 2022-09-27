@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Shared.Tests.Factory;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -41,7 +42,7 @@ namespace Service.TRAMS.Tests.RecordAcademy
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordAcademyService>>();
-			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object);
+			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordsAcademy = await recordSrmaService.GetRecordsAcademyByRecordUrn(1);
@@ -82,7 +83,7 @@ namespace Service.TRAMS.Tests.RecordAcademy
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordAcademyService>>();
-			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object);
+			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordsAcademy = await recordSrmaService.GetRecordsAcademyByRecordUrn(1);
@@ -115,7 +116,7 @@ namespace Service.TRAMS.Tests.RecordAcademy
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordAcademyService>>();
-			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object);
+			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordAcademy = await recordSrmaService.PostRecordAcademyByRecordUrn(RecordAcademyFactory.BuildCreateRecordAcademyDto());
@@ -147,7 +148,7 @@ namespace Service.TRAMS.Tests.RecordAcademy
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordAcademyService>>();
-			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object);
+			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordAcademy = await recordSrmaService.PostRecordAcademyByRecordUrn(RecordAcademyFactory.BuildCreateRecordAcademyDto());
@@ -179,7 +180,7 @@ namespace Service.TRAMS.Tests.RecordAcademy
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordAcademyService>>();
-			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object);
+			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordAcademy = await recordSrmaService.PatchRecordAcademyByUrn(expectedRecordAcademy);
@@ -211,7 +212,7 @@ namespace Service.TRAMS.Tests.RecordAcademy
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordAcademyService>>();
-			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object);
+			var recordSrmaService = new RecordAcademyService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordAcademy = await recordSrmaService.PatchRecordAcademyByUrn(RecordAcademyFactory.BuildRecordAcademyDto());

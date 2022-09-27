@@ -42,7 +42,7 @@ namespace Service.TRAMS.Tests.RecordWhistleblower
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordWhistleblowerService>>();
-			var recordWhistleblowerService = new RecordWhistleblowerService(httpClientFactory.Object, logger.Object);
+			var recordWhistleblowerService = new RecordWhistleblowerService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordsWhistleblower = await recordWhistleblowerService.GetRecordsWhistleblowerByRecordUrn(1);
@@ -184,7 +184,7 @@ namespace Service.TRAMS.Tests.RecordWhistleblower
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordWhistleblowerService>>();
-			var recordWhistleblowerService = new RecordWhistleblowerService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<ICorrelationContext>());
+			var recordWhistleblowerService = new RecordWhistleblowerService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordWhistleblower = await recordWhistleblowerService.PatchRecordWhistleblowerByUrn(expectedRecordWhistleblower);
