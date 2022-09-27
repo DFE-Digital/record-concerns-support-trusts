@@ -33,7 +33,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 		{
 			const long expectedUrn = 2;
 			var builder = new TestBuilder();
-			var sut = builder.BuildSut();
+			var sut = builder
+				.WithCaseUrnRouteValue(expectedUrn)
+				.BuildSut();
 
 			await sut.OnGetAsync();
 			
