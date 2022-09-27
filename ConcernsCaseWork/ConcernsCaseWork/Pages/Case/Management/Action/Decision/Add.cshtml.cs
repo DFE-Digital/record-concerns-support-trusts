@@ -1,6 +1,7 @@
 ﻿
 using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
@@ -26,7 +27,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class AddPageModel : AbstractPageModel
 	{
-
 		private readonly ILogger<AddPageModel> _logger;
 
 		public AddPageModel(ILogger<AddPageModel> logger)
@@ -38,33 +38,40 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation($"{nameof(AddPageModel)}::{LoggingHelpers.EchoCallerName()}");
+			_logger.LogMethodEntered();
 
 			try
 			{
-				CaseUrn = GetRouteCaseUrn();
+				SetPagePropertiesFromRouteValues();
 
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"{nameof(AddPageModel)}::{LoggingHelpers.EchoCallerName()}");
+				_logger.LogErrorMsg(ex);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
 			}
 		}
 
+		private long SetPagePropertiesFromRouteValues()
+		{
+			return CaseUrn = GetRouteCaseUrn();
+		}
+
 
 		public async Task<IActionResult> OnPostAsync()
 		{
+			_logger.LogMethodEntered();
+
 			try
 			{
 		
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"{nameof(AddPageModel)}::{LoggingHelpers.EchoCallerName()}");
+				_logger.LogErrorMsg(ex);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
@@ -74,6 +81,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		private CaseUrn GetRouteCaseUrn()
 		{
+			_logger.LogMethodEntered();
 			var caseUrnValueObj = RouteData.Values["urn"];
 			if (caseUrnValueObj == null || !long.TryParse(caseUrnValueObj.ToString(), out long caseUrnValue))
 			{
