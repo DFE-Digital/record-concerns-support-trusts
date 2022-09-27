@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Shared.Tests.Factory;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -43,7 +44,7 @@ namespace Service.TRAMS.Tests.Status
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<StatusService>>();
-			var statusService = new StatusService(httpClientFactory.Object, logger.Object);
+			var statusService = new StatusService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var statuses = await statusService.GetStatuses();
@@ -87,7 +88,7 @@ namespace Service.TRAMS.Tests.Status
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<StatusService>>();
-			var statusService = new StatusService(httpClientFactory.Object, logger.Object);
+			var statusService = new StatusService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act | assert
 			Assert.ThrowsAsync<Exception>(() => statusService.GetStatuses());
@@ -114,7 +115,7 @@ namespace Service.TRAMS.Tests.Status
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<StatusService>>();
-			var statusService = new StatusService(httpClientFactory.Object, logger.Object);
+			var statusService = new StatusService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act | assert
 			Assert.ThrowsAsync<HttpRequestException>(() => statusService.GetStatuses());

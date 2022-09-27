@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
@@ -17,7 +18,7 @@ namespace Service.TRAMS.RecordRatingHistory
 	{
 		private readonly ILogger<RecordRatingHistoryService> _logger;
 		
-		public RecordRatingHistoryService(IHttpClientFactory clientFactory, ILogger<RecordRatingHistoryService> logger) : base(clientFactory, logger)
+		public RecordRatingHistoryService(IHttpClientFactory clientFactory, ILogger<RecordRatingHistoryService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
@@ -12,7 +13,7 @@ namespace Service.TRAMS.FinancialPlan
 	{
 		private readonly ILogger<FinancialPlanStatusService> _logger;
 
-		public FinancialPlanStatusService(IHttpClientFactory clientFactory, ILogger<FinancialPlanStatusService> logger) : base(clientFactory, logger)
+		public FinancialPlanStatusService(IHttpClientFactory clientFactory, ILogger<FinancialPlanStatusService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}

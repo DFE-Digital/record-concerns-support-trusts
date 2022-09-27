@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using Service.TRAMS.Helpers;
@@ -15,8 +16,7 @@ namespace Service.TRAMS.Nti
 	{
 		private readonly ILogger<NtiReasonsService> _logger;
 
-		public NtiReasonsService(IHttpClientFactory httpClientFactory, 
-			ILogger<NtiReasonsService> logger) : base(httpClientFactory, logger)
+		public NtiReasonsService(IHttpClientFactory httpClientFactory, ILogger<NtiReasonsService> logger, ICorrelationContext correlationContext) : base(httpClientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}

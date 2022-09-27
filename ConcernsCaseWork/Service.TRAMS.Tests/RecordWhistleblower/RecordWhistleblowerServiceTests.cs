@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Shared.Tests.Factory;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -84,7 +85,7 @@ namespace Service.TRAMS.Tests.RecordWhistleblower
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordWhistleblowerService>>();
-			var recordWhistleblowerService = new RecordWhistleblowerService(httpClientFactory.Object, logger.Object);
+			var recordWhistleblowerService = new RecordWhistleblowerService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordsWhistleblower = await recordWhistleblowerService.GetRecordsWhistleblowerByRecordUrn(1);
@@ -117,7 +118,7 @@ namespace Service.TRAMS.Tests.RecordWhistleblower
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordWhistleblowerService>>();
-			var recordWhistleblowerService = new RecordWhistleblowerService(httpClientFactory.Object, logger.Object);
+			var recordWhistleblowerService = new RecordWhistleblowerService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordWhistleblower = await recordWhistleblowerService.PostRecordWhistleblowerByRecordUrn(expectedRecordWhistleblower);
@@ -151,7 +152,7 @@ namespace Service.TRAMS.Tests.RecordWhistleblower
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordWhistleblowerService>>();
-			var recordWhistleblowerService = new RecordWhistleblowerService(httpClientFactory.Object, logger.Object);
+			var recordWhistleblowerService = new RecordWhistleblowerService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordWhistleblower = await recordWhistleblowerService.PostRecordWhistleblowerByRecordUrn(RecordWhistleblowerFactory.BuildCreateRecordWhistleblowerDto());
@@ -183,7 +184,7 @@ namespace Service.TRAMS.Tests.RecordWhistleblower
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordWhistleblowerService>>();
-			var recordWhistleblowerService = new RecordWhistleblowerService(httpClientFactory.Object, logger.Object);
+			var recordWhistleblowerService = new RecordWhistleblowerService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordWhistleblower = await recordWhistleblowerService.PatchRecordWhistleblowerByUrn(expectedRecordWhistleblower);
@@ -217,7 +218,7 @@ namespace Service.TRAMS.Tests.RecordWhistleblower
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordWhistleblowerService>>();
-			var recordWhistleblowerService = new RecordWhistleblowerService(httpClientFactory.Object, logger.Object);
+			var recordWhistleblowerService = new RecordWhistleblowerService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordWhistleblower = await recordWhistleblowerService.PatchRecordWhistleblowerByUrn(RecordWhistleblowerFactory.BuildRecordWhistleblowerDto());

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
@@ -15,7 +16,7 @@ namespace Service.TRAMS.CaseActions
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly ILogger<SRMAProvider> _logger;
 		private const string Url = @"/v2/case-actions/srma";
-		public SRMAProvider(IHttpClientFactory httpClientFactory, ILogger<SRMAProvider> logger) : base(httpClientFactory, logger)
+		public SRMAProvider(IHttpClientFactory httpClientFactory, ILogger<SRMAProvider> logger, ICorrelationContext correlationContext) : base(httpClientFactory, logger, correlationContext)
 		{
 			_httpClientFactory = httpClientFactory;
 			_logger = logger;

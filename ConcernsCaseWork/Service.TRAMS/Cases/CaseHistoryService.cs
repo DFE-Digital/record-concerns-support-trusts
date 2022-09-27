@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
@@ -13,7 +14,7 @@ namespace Service.TRAMS.Cases
 	{
 		private readonly ILogger<CaseHistoryService> _logger;
 		
-		public CaseHistoryService(IHttpClientFactory clientFactory, ILogger<CaseHistoryService> logger) : base(clientFactory, logger)
+		public CaseHistoryService(IHttpClientFactory clientFactory, ILogger<CaseHistoryService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}

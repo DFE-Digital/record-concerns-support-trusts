@@ -14,8 +14,6 @@ namespace ConcernsCaseWork.Middleware
 	/// </summary>
 	public class CorrelationIdMiddleware
 	{
-		private const string _correlationIdHeaderKey = "x-correlation-id";
-
 		private readonly RequestDelegate _next;
 		private readonly ILogger<CorrelationIdMiddleware> _logger;
 
@@ -32,23 +30,23 @@ namespace ConcernsCaseWork.Middleware
 			string thisCorrelationId;
 
 			// correlation id. An ID that spans many requests
-			if (httpContext.Request.Headers.ContainsKey(_correlationIdHeaderKey) && !string.IsNullOrWhiteSpace(httpContext.Request.Headers[_correlationIdHeaderKey]))
+			if (httpContext.Request.Headers.ContainsKey(correlationContext.HeaderKey) && !string.IsNullOrWhiteSpace(httpContext.Request.Headers[correlationContext.HeaderKey]))
 			{
-				thisCorrelationId = httpContext.Request.Headers[_correlationIdHeaderKey];
+				thisCorrelationId = httpContext.Request.Headers[correlationContext.HeaderKey];
 			}
 			else
 			{
 				thisCorrelationId = Guid.NewGuid().ToString();
 			}
 			
-			httpContext.Request.Headers[_correlationIdHeaderKey] = thisCorrelationId;
+			httpContext.Request.Headers[correlationContext.HeaderKey] = thisCorrelationId;
 
 			correlationContext.SetContext(thisCorrelationId);
 			
 			using (LogContext.PushProperty("ApplicationId", ApplicationContext.ApplicationName))
 			using (LogContext.PushProperty("CorrelationId", correlationContext.CorrelationId))
 			{
-				httpContext.Response.Headers[_correlationIdHeaderKey] = thisCorrelationId;
+				httpContext.Response.Headers[correlationContext.HeaderKey] = thisCorrelationId;
 				return _next(httpContext);
 			}
 		}

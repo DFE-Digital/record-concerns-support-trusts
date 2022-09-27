@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
@@ -14,7 +15,7 @@ namespace Service.TRAMS.RecordAcademy
 	{
 		private readonly ILogger<RecordAcademyService> _logger;
 		
-		public RecordAcademyService(IHttpClientFactory clientFactory, ILogger<RecordAcademyService> logger) : base(clientFactory, logger)
+		public RecordAcademyService(IHttpClientFactory clientFactory, ILogger<RecordAcademyService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using Service.TRAMS.Helpers;
@@ -17,8 +18,7 @@ namespace Service.TRAMS.Nti
 		private readonly ILogger<NtiService> _logger;
 		private const string Url = @"/v2/case-actions/notice-to-improve";
 
-		public NtiService(IHttpClientFactory httpClientFactory, ILogger<NtiService> logger)
-			: base(httpClientFactory, logger)
+		public NtiService(IHttpClientFactory httpClientFactory, ILogger<NtiService> logger, ICorrelationContext correlationContext) : base(httpClientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}

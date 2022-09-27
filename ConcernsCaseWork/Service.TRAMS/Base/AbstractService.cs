@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Logging;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -15,16 +16,18 @@ namespace Service.TRAMS.Base
 	/// </summary>
 	public abstract class AbstractService
 	{
+		private readonly ICorrelationContext _correlationContext;
 		internal readonly IHttpClientFactory ClientFactory;
 		private readonly ILogger<AbstractService> _logger;
 		internal const string HttpClientName = "TramsClient";
 		internal const string EndpointsVersion = "v2";
 		internal const string EndpointPrefix = "concerns-cases";
 
-		protected AbstractService(IHttpClientFactory clientFactory, ILogger<AbstractService> logger)
+		protected AbstractService(IHttpClientFactory clientFactory, ILogger<AbstractService> logger, ICorrelationContext correlationContext)
 		{
 			ClientFactory = Guard.Against.Null(clientFactory);
 			_logger = Guard.Against.Null(logger);
+			_correlationContext = Guard.Against.Null(correlationContext);
 		}
 
 		public Task<T> Get<T>(string endpoint, bool treatNoContentAsError = false) where T : class 
@@ -37,6 +40,12 @@ namespace Service.TRAMS.Base
 				{
 					// Create a request
 					var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+
+					var headerAdded = request.Headers.TryAddWithoutValidation(_correlationContext.HeaderKey, _correlationContext.CorrelationId);
+					if (!headerAdded)
+					{
+						_logger.LogWarning("Warning. Unable to add correlationId to request headers");
+					}
 
 					// Create http client
 					var client = ClientFactory.CreateClient(HttpClientName);

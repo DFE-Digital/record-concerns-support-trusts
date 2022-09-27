@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
@@ -12,7 +13,7 @@ namespace Service.TRAMS.MeansOfReferral
 	{
 		private readonly ILogger<MeansOfReferralService> _logger;
 		
-		public MeansOfReferralService(IHttpClientFactory clientFactory, ILogger<MeansOfReferralService> logger) : base(clientFactory, logger)
+		public MeansOfReferralService(IHttpClientFactory clientFactory, ILogger<MeansOfReferralService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}

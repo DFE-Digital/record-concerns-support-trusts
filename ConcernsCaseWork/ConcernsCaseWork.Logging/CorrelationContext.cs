@@ -9,4 +9,7 @@ public record CorrelationContext() : ICorrelationContext
 	{
 		this.CorrelationId = Guard.Against.NullOrWhiteSpace(correlationId);
 	}
+
+	public string HeaderKey { get => "x-correlation-id"; }
+
 }

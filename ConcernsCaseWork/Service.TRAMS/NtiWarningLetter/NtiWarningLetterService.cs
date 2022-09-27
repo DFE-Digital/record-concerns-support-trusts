@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
@@ -18,8 +19,7 @@ namespace Service.TRAMS.NtiWarningLetter
 		private readonly ILogger<NtiWarningLetterService> _logger;
 		private const string Url = @"/v2/case-actions/nti-warning-letter";
 
-		public NtiWarningLetterService(IHttpClientFactory httpClientFactory, 
-			ILogger<NtiWarningLetterService> logger) : base(httpClientFactory, logger)
+		public NtiWarningLetterService(IHttpClientFactory httpClientFactory, ILogger<NtiWarningLetterService> logger, ICorrelationContext correlationContext) : base(httpClientFactory, logger, correlationContext)
 		{
 			_httpClientFactory = httpClientFactory;
 			_logger = logger;

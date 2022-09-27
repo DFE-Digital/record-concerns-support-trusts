@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
@@ -14,7 +15,7 @@ namespace Service.TRAMS.RecordWhistleblower
 	{
 		private readonly ILogger<RecordWhistleblowerService> _logger;
 		
-		public RecordWhistleblowerService(IHttpClientFactory clientFactory, ILogger<RecordWhistleblowerService> logger) : base(clientFactory, logger)
+		public RecordWhistleblowerService(IHttpClientFactory clientFactory, ILogger<RecordWhistleblowerService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}

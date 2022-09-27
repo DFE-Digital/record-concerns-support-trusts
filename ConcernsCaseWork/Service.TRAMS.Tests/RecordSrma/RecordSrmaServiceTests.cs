@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Shared.Tests.Factory;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -41,7 +42,7 @@ namespace Service.TRAMS.Tests.RecordSrma
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordSrmaService>>();
-			var recordSrmaService = new RecordSrmaService(httpClientFactory.Object, logger.Object);
+			var recordSrmaService = new RecordSrmaService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordsSrma = await recordSrmaService.GetRecordsSrmaByRecordUrn(1);
@@ -84,7 +85,7 @@ namespace Service.TRAMS.Tests.RecordSrma
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordSrmaService>>();
-			var recordSrmaService = new RecordSrmaService(httpClientFactory.Object, logger.Object);
+			var recordSrmaService = new RecordSrmaService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordsWhistleblower = await recordSrmaService.GetRecordsSrmaByRecordUrn(1);
@@ -151,7 +152,7 @@ namespace Service.TRAMS.Tests.RecordSrma
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordSrmaService>>();
-			var recordSrmaService = new RecordSrmaService(httpClientFactory.Object, logger.Object);
+			var recordSrmaService = new RecordSrmaService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordSrma = await recordSrmaService.PostRecordSrmaByRecordUrn(RecordSrmaFactory.BuildCreateRecordSrmaDto());
@@ -183,7 +184,7 @@ namespace Service.TRAMS.Tests.RecordSrma
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordSrmaService>>();
-			var recordSrmaService = new RecordSrmaService(httpClientFactory.Object, logger.Object);
+			var recordSrmaService = new RecordSrmaService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordSrma = await recordSrmaService.PatchRecordSrmaByUrn(expectedRecordSrma);
@@ -217,7 +218,7 @@ namespace Service.TRAMS.Tests.RecordSrma
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordSrmaService>>();
-			var recordSrmaService = new RecordSrmaService(httpClientFactory.Object, logger.Object);
+			var recordSrmaService = new RecordSrmaService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecordSrma = await recordSrmaService.PatchRecordSrmaByUrn(RecordSrmaFactory.BuildRecordSrmaDto());

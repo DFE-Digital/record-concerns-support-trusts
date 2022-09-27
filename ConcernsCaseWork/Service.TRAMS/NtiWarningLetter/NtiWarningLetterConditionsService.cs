@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using Service.TRAMS.Helpers;
@@ -15,8 +16,7 @@ namespace Service.TRAMS.NtiWarningLetter
 	{
 		private readonly ILogger<NtiWarningLetterConditionsService> _logger;
 
-		public NtiWarningLetterConditionsService(IHttpClientFactory httpClientFactory,
-			ILogger<NtiWarningLetterConditionsService> logger) : base(httpClientFactory, logger)
+		public NtiWarningLetterConditionsService(IHttpClientFactory httpClientFactory, ILogger<NtiWarningLetterConditionsService> logger, ICorrelationContext correlationContext) : base(httpClientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}

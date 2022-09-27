@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
@@ -14,7 +15,7 @@ namespace Service.TRAMS.RecordSrma
 	{
 		private readonly ILogger<RecordSrmaService> _logger;
 		
-		public RecordSrmaService(IHttpClientFactory clientFactory, ILogger<RecordSrmaService> logger) : base(clientFactory, logger)
+		public RecordSrmaService(IHttpClientFactory clientFactory, ILogger<RecordSrmaService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}
