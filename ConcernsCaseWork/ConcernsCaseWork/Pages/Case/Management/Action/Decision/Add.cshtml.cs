@@ -1,4 +1,5 @@
 ﻿
+using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
@@ -33,12 +34,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			_logger = logger;
 		}
 
+		public long CaseUrn { get; set; }
+
 		public async Task<IActionResult> OnGetAsync()
 		{
 			_logger.LogInformation($"{nameof(AddPageModel)}::{LoggingHelpers.EchoCallerName()}");
 
 			try
 			{
+				CaseUrn = GetRouteCaseUrn();
+
 				return Page();
 			}
 			catch (Exception ex)
@@ -65,6 +70,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			}
 
 			return Page();
+		}
+
+		private CaseUrn GetRouteCaseUrn()
+		{
+			var caseUrnValueObj = RouteData.Values["urn"];
+			if (caseUrnValueObj == null || !long.TryParse(caseUrnValueObj.ToString(), out long caseUrnValue))
+			{
+				throw new Exception("CaseUrn is null or invalid to parse");
+			}
+
+			// TODO: Explain this to Elijah
+			return (CaseUrn)caseUrnValue;
 		}
 	}
 }
