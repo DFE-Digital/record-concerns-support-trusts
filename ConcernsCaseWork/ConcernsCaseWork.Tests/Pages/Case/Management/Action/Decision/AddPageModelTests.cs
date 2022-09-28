@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 	public class AddPageModelTests
 	{
 		[Test]
-		public async Task WhenOnGetAsync_ReturnPage()
+		public void AddPageModel_Is_AbstractPageModel()
 		{
 			var builder = new TestBuilder();
 			var sut = builder.BuildSut();
@@ -55,6 +55,35 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			await sut.OnGetAsync(caseUrn);
 
 			Assert.AreEqual(AddPageModel.ErrorOnGetPage, sut.TempData["Error.Message"]);
+		}
+
+		[Test]
+		public async Task OnPostAsync_Returns_Page()
+		{
+			const long expectedUrn = 2;
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrnRouteValue(expectedUrn)
+				.BuildSut();
+
+			await sut.OnPostAsync(expectedUrn);
+
+			Assert.AreEqual(expectedUrn, sut.CaseUrn);
+		}
+
+		[Test]
+		[TestCase(0)]
+		[TestCase(-1)]
+		public async Task OnPostAsync_When_InvalidCaseUrnRouteValue_Then_Throws_Exception(long caseUrn)
+		{
+			var builder = new TestBuilder()
+				.WithCaseUrnRouteValue(caseUrn);
+
+			var sut = builder.BuildSut();
+
+			await sut.OnPostAsync(caseUrn);
+
+			Assert.AreEqual(AddPageModel.ErrorOnPostPage, sut.TempData["Error.Message"]);
 		}
 
 		private class TestBuilder
@@ -99,7 +128,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				return result;
 			}
 			
-
 			public Fixture Fixture { get; set; }
 		}
 	}

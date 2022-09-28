@@ -41,12 +41,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			}
 		}
 
-		public async Task<IActionResult> OnPostAsync()
+		public async Task<IActionResult> OnPostAsync(long urn)
 		{
 			_logger.LogMethodEntered();
 
 			try
 			{
+				CaseUrn = (CaseUrn)urn;
 
 			}
 			catch (Exception ex)
