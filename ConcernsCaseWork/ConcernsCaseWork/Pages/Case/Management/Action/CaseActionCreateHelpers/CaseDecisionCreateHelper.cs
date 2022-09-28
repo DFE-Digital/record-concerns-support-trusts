@@ -1,18 +1,10 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Services.FinancialPlan;
-using Service.TRAMS.Cases;
-using System;
-using System.Collections.Generic;
+﻿using Service.TRAMS.Cases;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers
 {
 	public class CaseDecisionCreateHelper : CaseActionCreateHelper
 	{
-
-		public CaseDecisionCreateHelper()
-		{
-		}
 
 		public override bool CanHandle(CaseActionEnum caseActionEnum)
 		{
