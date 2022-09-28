@@ -136,9 +136,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(trustDetailsModel.Establishments.Count, Is.EqualTo(1));
 			Assert.That(trustDetailsModel.GiasData, Is.Not.Null);
 			Assert.That(trustDetailsModel.IfdData, Is.Not.Null);
-			Assert.That(trustDetailsModel.TotalPupils, Is.Not.Null);
-			Assert.That(trustDetailsModel.PupilCapacityPercentage, Is.Not.Null);
-			Assert.That(trustDetailsModel.TotalPupilCapacity, Is.Not.Null);
+			Assert.That(trustDetailsModel.TotalPupils, Is.EqualTo(0.0d));
+			Assert.That(trustDetailsModel.PupilCapacityPercentage, Is.EqualTo(0.0d));
+			Assert.That(trustDetailsModel.TotalPupilCapacity, Is.EqualTo(0.0d));
 			
 			// Verify ILogger
 			mockLogger.Verify(

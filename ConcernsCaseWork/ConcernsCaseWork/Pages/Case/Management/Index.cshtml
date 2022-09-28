@@ -96,10 +96,10 @@
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table-case-details__header">Risk to trust</th>
                             <td class="govuk-table__cell govuk-label-wrapper">
-                                @for (var index = 0; index < Model.CaseModel.RatingModel.RagRating.Item2.Count; ++index)
+                                @for (var index = 0; index < Model.CaseModel?.RatingModel?.RagRating?.Item2?.Count; ++index)
                                 {
-                                    <span class="govuk-tag ragtag @Model.CaseModel.RatingModel.RagRatingCss.ElementAt(index)">
-                                        @Model.CaseModel.RatingModel.RagRating.Item2.ElementAt(index)
+                                    <span class="govuk-tag ragtag @Model.CaseModel?.RatingModel?.RagRatingCss?.ElementAt(index)">
+                                        @Model.CaseModel?.RatingModel?.RagRating?.Item2?.ElementAt(index)
                                     </span>
                                 }
                             </td>
