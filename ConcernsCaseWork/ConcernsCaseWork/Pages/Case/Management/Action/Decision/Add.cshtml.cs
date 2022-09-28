@@ -1,25 +1,12 @@
 ﻿
 using ConcernsCaseWork.CoreTypes;
-using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Helpers;
-using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
-using Service.Redis.NtiUnderConsideration;
-using Service.Redis.NtiWarningLetter;
-using ConcernsCaseWork.Services.NtiWarningLetter;
-using Service.Redis.Nti;
-using ConcernsCaseWork.Services.Nti;
-using Service.TRAMS.Helpers;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 {
@@ -60,7 +47,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			try
 			{
-		
+
 			}
 			catch (Exception ex)
 			{

@@ -6,7 +6,7 @@ public class CaseUrnTests
 	public void CanCreateCaseUrn()
 	{
 		var sut = new CaseUrn(1);
-		Assert.That(sut.Value, Is.EqualTo(1));
+		Assert.That((long)sut, Is.EqualTo(1));
 	}
 
 	[Test]
@@ -20,14 +20,13 @@ public class CaseUrnTests
 	{
 		long urnValue = 5;
 		var sut = (CaseUrn)urnValue;
-		Assert.That(sut.Value, Is.EqualTo(urnValue));
+		Assert.That((long)sut, Is.EqualTo(urnValue));
 	}
 
 	[Test]
 	public void Can_Implicitly_Convert_CaseUrn_To_Long()
 	{
-		var sut = new CaseUrn(5);
-		long result = (long)sut;
-		Assert.That(result, Is.EqualTo(sut.Value));
+		long result = new CaseUrn(5);
+		Assert.That(result, Is.EqualTo(5));
 	}
 }

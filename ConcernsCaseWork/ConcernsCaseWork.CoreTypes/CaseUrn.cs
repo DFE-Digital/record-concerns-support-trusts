@@ -9,7 +9,7 @@ public record struct CaseUrn
 		Value = Guard.Against.NegativeOrZero(caseUrnValue);
 	}
 
-	public long Value { get; }
+	private long Value { get; }
 
 	public static explicit operator CaseUrn(long caseUrnValue) => new(caseUrnValue);
 	public static implicit operator long(CaseUrn caseUrn) => caseUrn.Value;
