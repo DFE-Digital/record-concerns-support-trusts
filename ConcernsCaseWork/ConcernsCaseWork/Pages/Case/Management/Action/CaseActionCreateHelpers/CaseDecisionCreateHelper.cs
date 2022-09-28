@@ -5,7 +5,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers
 {
 	public class CaseDecisionCreateHelper : CaseActionCreateHelper
 	{
-
 		public override bool CanHandle(CaseActionEnum caseActionEnum)
 		{
 			return caseActionEnum == CaseActionEnum.Decision;
