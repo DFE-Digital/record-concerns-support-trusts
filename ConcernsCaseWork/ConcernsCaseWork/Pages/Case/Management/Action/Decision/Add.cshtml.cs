@@ -36,14 +36,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		public long CaseUrn { get; set; }
 
-		public async Task<IActionResult> OnGetAsync()
+		public async Task<IActionResult> OnGetAsync(long urn)
 		{
 			_logger.LogMethodEntered();
 
 			try
 			{
-				SetPagePropertiesFromRouteValues();
-
+				CaseUrn = (CaseUrn)urn;
 				return Page();
 			}
 			catch (Exception ex)
@@ -54,12 +53,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				return Page();
 			}
 		}
-
-		private long SetPagePropertiesFromRouteValues()
-		{
-			return CaseUrn = GetRouteCaseUrn();
-		}
-
 
 		public async Task<IActionResult> OnPostAsync()
 		{
@@ -77,19 +70,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			}
 
 			return Page();
-		}
-
-		private CaseUrn GetRouteCaseUrn()
-		{
-			_logger.LogMethodEntered();
-			var caseUrnValueObj = RouteData.Values["urn"];
-			if (caseUrnValueObj == null || !long.TryParse(caseUrnValueObj.ToString(), out long caseUrnValue))
-			{
-				throw new Exception("CaseUrn is null or invalid to parse");
-			}
-
-			// TODO: Explain this to Elijah
-			return (CaseUrn)caseUrnValue;
 		}
 	}
 }

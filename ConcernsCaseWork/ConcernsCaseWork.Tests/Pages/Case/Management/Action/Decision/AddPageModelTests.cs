@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				.WithCaseUrnRouteValue(expectedUrn)
 				.BuildSut();
 
-			await sut.OnGetAsync();
+			await sut.OnGetAsync(expectedUrn);
 			
 			Assert.AreEqual(expectedUrn, sut.CaseUrn);
 		}
@@ -45,16 +45,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 		[Test]
 		[TestCase(0)]
 		[TestCase(-1)]
-		[TestCase(null)]
-		[TestCase("")]
-		public async Task OnGetAsync_When_InvalidCaseUrnRouteValue_Then_Throws_Exception(object caseUrn)
+		public async Task OnGetAsync_When_InvalidCaseUrnRouteValue_Then_Throws_Exception(long caseUrn)
 		{
 			var builder = new TestBuilder()
 				.WithCaseUrnRouteValue(caseUrn);
 
 			var sut = builder.BuildSut();
 
-			await sut.OnGetAsync();
+			await sut.OnGetAsync(caseUrn);
 
 			Assert.AreEqual(AddPageModel.ErrorOnGetPage, sut.TempData["Error.Message"]);
 		}

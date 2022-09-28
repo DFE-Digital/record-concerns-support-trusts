@@ -1,8 +1,4 @@
-﻿using ConcernsCaseWork.CoreTypes;
-using NUnit.Framework;
-using System;
-
-namespace ConcernsCaseWork.Tests.CoreTypes;
+﻿namespace ConcernsCaseWork.CoreTypes.Tests;
 
 public class CaseUrnTests
 {
@@ -10,7 +6,7 @@ public class CaseUrnTests
 	public void CanCreateCaseUrn()
 	{
 		var sut = new CaseUrn(1);
-		Assert.AreEqual(1, sut.Value);
+		Assert.That(sut.Value, Is.EqualTo(1));
 	}
 
 	[Test]
@@ -24,7 +20,7 @@ public class CaseUrnTests
 	{
 		long urnValue = 5;
 		var sut = (CaseUrn)urnValue;
-		Assert.AreEqual(urnValue, sut.Value);
+		Assert.That(sut.Value, Is.EqualTo(urnValue));
 	}
 
 	[Test]
@@ -32,6 +28,6 @@ public class CaseUrnTests
 	{
 		var sut = new CaseUrn(5);
 		long result = (long)sut;
-		Assert.AreEqual(sut.Value, result);
+		Assert.That(result, Is.EqualTo(sut.Value));
 	}
 }

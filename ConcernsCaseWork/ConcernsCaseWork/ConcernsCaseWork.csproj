@@ -22,6 +22,7 @@
   </ItemGroup>
 	
   <ItemGroup>
+    <ProjectReference Include="..\ConcernsCaseWork.CoreTypes\ConcernsCaseWork.CoreTypes.csproj" />
     <ProjectReference Include="..\ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj" />
     <ProjectReference Include="..\Service.Redis\Service.Redis.csproj" />
     <ProjectReference Include="..\Service.TRAMS\Service.TRAMS.csproj" />
