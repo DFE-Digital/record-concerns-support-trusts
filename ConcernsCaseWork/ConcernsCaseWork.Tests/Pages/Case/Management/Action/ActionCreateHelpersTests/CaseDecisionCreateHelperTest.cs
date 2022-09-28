@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers;
+using Moq;
 using NUnit.Framework;
 using Service.TRAMS.Cases;
 using System;
@@ -29,6 +30,18 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 			var sut = builder.BuildSut();
 
 			var result = sut.CanHandle(action);
+
+			Assert.That(result, Is.EqualTo(expectedResult));
+		}
+
+		[Test]
+		public void CaseDecisionCreateHelper_NewCaseActionAllowed_Returns_True()
+		{
+			var builder = new TestBuilder();
+			var sut = builder.BuildSut();
+			var expectedResult = true;
+
+			var result = sut.NewCaseActionAllowed(It.IsAny<long>(), It.IsAny<string>()).Result;
 
 			Assert.That(result, Is.EqualTo(expectedResult));
 		}
