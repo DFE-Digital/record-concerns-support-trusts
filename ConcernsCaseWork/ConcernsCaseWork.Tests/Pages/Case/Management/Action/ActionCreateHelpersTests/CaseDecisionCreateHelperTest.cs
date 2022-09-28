@@ -23,12 +23,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 		[Test]
 		public void CaseDecisionCreateHelper_CanHandle_ResponseCorrectly([Values]CaseActionEnum action)
 		{
+			var expectedResult = action == CaseActionEnum.Decision;
+
 			var builder = new TestBuilder();
 			var sut = builder.BuildSut();
 
 			var result = sut.CanHandle(action);
 
-			Assert.That(result, Is.EqualTo(true));
+			Assert.That(result, Is.EqualTo(expectedResult));
 		}
 
 
