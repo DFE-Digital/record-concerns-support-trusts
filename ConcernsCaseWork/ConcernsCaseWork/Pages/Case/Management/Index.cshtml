@@ -288,8 +288,7 @@
                     Add to case
                 </a>
 
-                @if (openSRMAs.Count > 0 || openFinancialPlanModels.Count > 0 || openNtiUCs.Count > 0 || openNtiWLs.Count > 0 || openNtis.Count > 0)
-                {
+
                     <table id="open-case-actions" class="govuk-table">
                         <thead class="govuk-table__head">
                             <tr class="govuk-table__row tr__large">
@@ -305,6 +304,16 @@
                         </thead>
 
                         <tbody class="govuk-table__body">
+	        
+	                        @if (!Model.HasOpenActions)
+	                        {
+	                            <tr class="govuk-table__row">
+	                                <td class="govuk-table__cell" colspan="3">
+	                                    There are no open actions or decisions added to this case.
+	                                </td>
+	                            </tr>
+	                        }
+                        
                             @foreach (SRMAModel srma in openSRMAs)
                             {
                                 <tr class="govuk-table__row">
@@ -419,11 +428,8 @@
                             }
                         </tbody>
                     </table>
-                }
 
-                @if (closedSRMAs.Count > 0 || closedFinancialPlanModels.Count > 0 || closedNtiUCs.Count > 0 || closedNtiWLs.Count > 0 || closedNtis.Count > 0)
-                {
-                    <table id="close-case-actions" class="govuk-table">
+            <table id="close-case-actions" class="govuk-table">
                         <thead class="govuk-table__head">
                             <tr class="govuk-table__row tr__large">
                                 <th class="govuk-table__header govuk-table__cell__cases" scope="col">
@@ -441,6 +447,16 @@
                         </thead>
 
                         <tbody class="govuk-table__body">
+                        
+                            @if (!Model.HasClosedActions)
+                            {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell" colspan="3">
+                                        There are no closed actions or decisions added to this case.
+                                    </td>
+                                </tr>
+                            }
+                        
                             @foreach (SRMAModel srma in closedSRMAs)
                             {
                                 <tr class="govuk-table__row">
@@ -547,8 +563,6 @@
                             }
                         </tbody>
                     </table>
-                }
-
 
                 <partial name="_CaseHistory" model="@Model.CasesHistoryModel" />
 
