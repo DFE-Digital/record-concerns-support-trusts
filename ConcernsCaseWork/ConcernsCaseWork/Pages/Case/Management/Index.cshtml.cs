@@ -45,6 +45,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public IList<TrustCasesModel> TrustCasesModel { get; private set; }
 		public IList<CaseHistoryModel> CasesHistoryModel { get; private set; }
 		public bool IsEditableCase { get; private set; }
+		public bool HasOpenActions { get { return CaseActions.Any(a => !a.ClosedAt.HasValue); } }
+		public bool HasClosedActions { get { return CaseActions.Any(a => a.ClosedAt.HasValue); } }
 		public List<CaseActionModel> CaseActions { get; private set; }
 		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
 
@@ -108,7 +110,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				var trustCasesTask = _caseModelService.GetCasesByTrustUkprn(CaseModel.TrustUkPrn);
 				var caseActionsTask = PopulateCaseActions(caseUrn);
-
+				
 				Task.WaitAll(caseHistoryTask, trustDetailsTask, trustCasesTask, caseActionsTask);
 
 				CasesHistoryModel = caseHistoryTask.Result;
@@ -173,6 +175,5 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			return false;
 		}
-
 	}
 }
