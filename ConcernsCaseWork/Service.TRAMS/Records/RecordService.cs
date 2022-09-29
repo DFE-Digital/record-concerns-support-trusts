@@ -104,11 +104,11 @@ namespace Service.TRAMS.Records
 			}
 		}
 
-		public async Task<RecordDto> PatchRecordByUrn(RecordDto recordDto)
+		public async Task<RecordDto> PatchRecordById(RecordDto recordDto)
 		{
 			try
 			{
-				_logger.LogInformation("RecordService::PatchRecordByUrn");
+				_logger.LogInformation("RecordService::PatchRecordById");
 				
 				// Create a request
 				var request = new StringContent(
@@ -121,7 +121,7 @@ namespace Service.TRAMS.Records
 				
 				// Execute request
 				var response = await client.PatchAsync(
-					$"/{EndpointsVersion}/concerns-records/{recordDto.Urn}", request);
+					$"/{EndpointsVersion}/concerns-records/{recordDto.Id}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();

@@ -55,11 +55,11 @@ namespace Service.TRAMS.Tests.MeansOfReferral
 
 			foreach (var actualMoR in meansOfReferral)
 			{
-				foreach (var expectedMoR in expectedMeansOfReferral.Where(expectedMoR => actualMoR.Urn.CompareTo(expectedMoR.Urn) == 0))
+				foreach (var expectedMoR in expectedMeansOfReferral.Where(expectedMoR => actualMoR.Id.CompareTo(expectedMoR.Id) == 0))
 				{
 					Assert.That(actualMoR.Name, Is.EqualTo(expectedMoR.Name));
 					Assert.That(actualMoR.Description, Is.EqualTo(expectedMoR.Description));
-					Assert.That(actualMoR.Urn, Is.EqualTo(expectedMoR.Urn));
+					Assert.That(actualMoR.Id, Is.EqualTo(expectedMoR.Id));
 				}
 			}
 		}

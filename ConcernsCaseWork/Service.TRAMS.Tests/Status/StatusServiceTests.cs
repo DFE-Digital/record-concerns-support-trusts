@@ -54,10 +54,10 @@ namespace Service.TRAMS.Tests.Status
 
 			foreach (var actualStatus in statuses)
 			{
-				foreach (var expectedStatus in expectedStatuses.Where(s => actualStatus.Urn.CompareTo(s.Urn) == 0))
+				foreach (var expectedStatus in expectedStatuses.Where(s => actualStatus.Id.CompareTo(s.Id) == 0))
 				{
 					Assert.That(actualStatus.Name, Is.EqualTo(expectedStatus.Name));
-					Assert.That(actualStatus.Urn, Is.EqualTo(expectedStatus.Urn));
+					Assert.That(actualStatus.Id, Is.EqualTo(expectedStatus.Id));
 					Assert.That(actualStatus.CreatedAt, Is.EqualTo(expectedStatus.CreatedAt));
 					Assert.That(actualStatus.UpdatedAt, Is.EqualTo(expectedStatus.UpdatedAt));
 				}

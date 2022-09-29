@@ -5,8 +5,8 @@ namespace Service.TRAMS.Cases
 	public sealed class CaseCaseWorkerSearch : PageSearch
 	{
 		public string CaseWorkerName { get; }
-		public long StatusUrn { get; }
+		public long StatusId { get; }
 
-		public CaseCaseWorkerSearch(string caseWorkerName, long statusUrn) => (CaseWorkerName, StatusUrn) = (caseWorkerName, statusUrn);
+		public CaseCaseWorkerSearch(string caseWorkerName, long statusId) => (CaseWorkerName, StatusId) = (caseWorkerName, statusId);
 	}
 }

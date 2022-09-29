@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Services.Records
 	{
 		Task<IList<RecordModel>> GetRecordsModelByCaseUrn(string caseworker, long caseUrn);
 
-		Task<RecordModel> GetRecordModelByUrn(string caseworker, long caseUrn, long urn);
+		Task<RecordModel> GetRecordModelById(string caseworker, long caseUrn, long id);
 
 		Task PatchRecordStatus(PatchRecordModel patchRecordModel);
 		

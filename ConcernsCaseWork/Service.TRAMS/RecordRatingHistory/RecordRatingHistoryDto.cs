@@ -12,11 +12,11 @@ namespace Service.TRAMS.RecordRatingHistory
 		[JsonProperty("recordUrn")]
 		public long RecordUrn { get; }
 		
-		[JsonProperty("ratingUrn")]
-		public long RatingUrn { get; }
+		[JsonProperty("ratingId")]
+		public long RatingId { get; }
 		
 		[JsonConstructor]
-		public RecordRatingHistoryDto(DateTimeOffset createdAt, long recordUrn, long ratingUrn) => 
-			(CreatedAt, RecordUrn, RatingUrn) = (createdAt, recordUrn, ratingUrn);
+		public RecordRatingHistoryDto(DateTimeOffset createdAt, long recordUrn, long ratingId) => 
+			(CreatedAt, RecordUrn, RatingId) = (createdAt, recordUrn, ratingId);
 	}
 }

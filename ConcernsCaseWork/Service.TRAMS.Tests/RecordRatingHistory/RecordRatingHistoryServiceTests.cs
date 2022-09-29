@@ -55,7 +55,7 @@ namespace Service.TRAMS.Tests.RecordRatingHistory
 				foreach (var expectedRecord in expectedRecordsRatingHistory.Where(r => r.RecordUrn.CompareTo(actualRecord.RecordUrn) == 0))
 				{
 					Assert.That(actualRecord.CreatedAt, Is.EqualTo(expectedRecord.CreatedAt));
-					Assert.That(actualRecord.RatingUrn, Is.EqualTo(expectedRecord.RatingUrn));
+					Assert.That(actualRecord.RatingId, Is.EqualTo(expectedRecord.RatingId));
 					Assert.That(actualRecord.RecordUrn, Is.EqualTo(expectedRecord.RecordUrn));
 				}
 			}
@@ -129,7 +129,7 @@ namespace Service.TRAMS.Tests.RecordRatingHistory
 				foreach (var expectedRecord in expectedRecordsRatingHistory.Where(r => r.RecordUrn.CompareTo(actualRecord.RecordUrn) == 0))
 				{
 					Assert.That(actualRecord.CreatedAt, Is.EqualTo(expectedRecord.CreatedAt));
-					Assert.That(actualRecord.RatingUrn, Is.EqualTo(expectedRecord.RatingUrn));
+					Assert.That(actualRecord.RatingId, Is.EqualTo(expectedRecord.RatingId));
 					Assert.That(actualRecord.RecordUrn, Is.EqualTo(expectedRecord.RecordUrn));
 				}
 			}
@@ -197,7 +197,7 @@ namespace Service.TRAMS.Tests.RecordRatingHistory
 			// assert
 			Assert.That(actualRecordsRatingHistory, Is.Not.Null);
 			Assert.That(actualRecordsRatingHistory.CreatedAt, Is.EqualTo(expectedRecordRatingHistory.CreatedAt));
-			Assert.That(actualRecordsRatingHistory.RatingUrn, Is.EqualTo(expectedRecordRatingHistory.RatingUrn));
+			Assert.That(actualRecordsRatingHistory.RatingId, Is.EqualTo(expectedRecordRatingHistory.RatingId));
 			Assert.That(actualRecordsRatingHistory.RecordUrn, Is.EqualTo(expectedRecordRatingHistory.RecordUrn));
 		}
 		

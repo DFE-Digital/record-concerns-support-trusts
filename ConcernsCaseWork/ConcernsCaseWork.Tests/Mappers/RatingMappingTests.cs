@@ -66,7 +66,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(ratingModel, Is.Not.Null);
 			Assert.That(ratingModel.Checked, Is.Not.Null);
 			Assert.That(ratingModel.Name, Is.Not.Null);
-			Assert.That(ratingModel.Urn, Is.Not.Null);
+			Assert.That(ratingModel.Id, Is.Not.Null);
 			Assert.That(ratingModel.RagRating, Is.Not.Null);
 			Assert.That(ratingModel.RagRatingCss, Is.Not.Null);
 		}
@@ -86,7 +86,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(ratingModel, Is.Not.Null);
 			Assert.That(ratingModel.Checked, Is.Not.Null);
 			Assert.That(ratingModel.Name, Is.Not.Null);
-			Assert.That(ratingModel.Urn, Is.Not.Null);
+			Assert.That(ratingModel.Id, Is.Not.Null);
 			Assert.That(ratingModel.RagRating, Is.Not.Null);
 			Assert.That(ratingModel.RagRatingCss, Is.Not.Null);
 		}

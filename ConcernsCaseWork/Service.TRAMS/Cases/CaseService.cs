@@ -22,11 +22,11 @@ namespace Service.TRAMS.Cases
 		{
 			try
 			{
-				_logger.LogInformation("CaseService::GetCasesByCaseworkerAndStatus {Caseworker} {StatusUrn}", caseCaseWorkerSearch.CaseWorkerName, caseCaseWorkerSearch.StatusUrn);
+				_logger.LogInformation("CaseService::GetCasesByCaseworkerAndStatus {Caseworker} {StatusId}", caseCaseWorkerSearch.CaseWorkerName, caseCaseWorkerSearch.StatusId);
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"/{EndpointsVersion}/{EndpointPrefix}/owner/{caseCaseWorkerSearch.CaseWorkerName}?status={caseCaseWorkerSearch.StatusUrn}&page={caseCaseWorkerSearch.Page}");
+					$"/{EndpointsVersion}/{EndpointPrefix}/owner/{caseCaseWorkerSearch.CaseWorkerName}?status={caseCaseWorkerSearch.StatusId}&page={caseCaseWorkerSearch.Page}");
 				
 				// Create http client
 				var client = ClientFactory.CreateClient(HttpClientName);

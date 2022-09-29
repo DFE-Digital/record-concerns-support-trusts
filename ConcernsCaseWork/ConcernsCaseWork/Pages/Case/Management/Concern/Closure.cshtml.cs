@@ -85,12 +85,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				var currentDate = DateTimeOffset.Now;
 				var patchRecordModel = new PatchRecordModel()
 				{
-					Urn = recordUrn,
+					Id = recordUrn,
 					CaseUrn = caseUrn,
 					CreatedBy = User.Identity.Name,
 					UpdatedAt = currentDate,
 					ClosedAt = currentDate,
-					StatusUrn = closedStatus.Urn
+					StatusId = closedStatus.Id
 				};
 
 				await _recordModelService.PatchRecordStatus(patchRecordModel);
@@ -135,10 +135,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 					throw new Exception("Case urn or record urn cannot be 0");
 				
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
-				var recordModel = await _recordModelService.GetRecordModelByUrn(User.Identity.Name, caseUrn, recordUrn);
-				RatingsModel = await _ratingModelService.GetSelectedRatingsModelByUrn(recordModel.RatingUrn);
+				var recordModel = await _recordModelService.GetRecordModelById(User.Identity.Name, caseUrn, recordUrn);
+				RatingsModel = await _ratingModelService.GetSelectedRatingsModelById(recordModel.RatingId);
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
-				TypeModel = await _typeModelService.GetSelectedTypeModelByUrn(recordModel.TypeUrn);
+				TypeModel = await _typeModelService.GetSelectedTypeModelById(recordModel.TypeId);
 				CaseModel.PreviousUrl = url;
 
 				return Page();

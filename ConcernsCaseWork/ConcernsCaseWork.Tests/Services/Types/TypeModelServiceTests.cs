@@ -61,7 +61,7 @@ namespace ConcernsCaseWork.Tests.Services.Types
 			var typeModelService = new TypeModelService(mockTypeCachedService.Object, mockLogger.Object);
 			
 			// act
-			var actualTypeModel = await typeModelService.GetSelectedTypeModelByUrn(expectedTypeDto.Urn);
+			var actualTypeModel = await typeModelService.GetSelectedTypeModelById(expectedTypeDto.Id);
 			
 			// assert
 			Assert.That(actualTypeModel, Is.Not.Null);
@@ -87,7 +87,7 @@ namespace ConcernsCaseWork.Tests.Services.Types
 			var typeModelService = new TypeModelService(mockTypeCachedService.Object, mockLogger.Object);
 			
 			// act
-			var actualTypeModel = await typeModelService.GetTypeModelByUrn(expectedTypeDto.Urn);
+			var actualTypeModel = await typeModelService.GetTypeModelByUrn(expectedTypeDto.Id);
 			
 			// assert
 			Assert.That(actualTypeModel, Is.Not.Null);

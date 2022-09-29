@@ -59,11 +59,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 					
 					for (var index = 0; index < expectedRecordsModel.Count; ++index)
 					{
-						Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(actualRecordsModel.ElementAt(index).Urn));
+						Assert.That(expectedRecordsModel.ElementAt(index).Id, Is.EqualTo(actualRecordsModel.ElementAt(index).Id));
 						Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).CaseUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).RatingId, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingId));
+						Assert.That(expectedRecordsModel.ElementAt(index).StatusId, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusId));
+						Assert.That(expectedRecordsModel.ElementAt(index).TypeId, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeId));
 						
 						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
 						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
@@ -71,7 +71,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 						Assert.NotNull(actualRecordRatingModel);
 						Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
 						Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
-						Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+						Assert.That(expectedRecordRatingModel.Id, Is.EqualTo(actualRecordRatingModel.Id));
 						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
 						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
 						

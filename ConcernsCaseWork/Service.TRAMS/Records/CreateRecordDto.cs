@@ -29,23 +29,23 @@ namespace Service.TRAMS.Records
 		[JsonProperty("caseUrn")]
 		public long CaseUrn { get; }
 		
-		[JsonProperty("typeUrn")]
-		public long TypeUrn { get; }
+		[JsonProperty("typeId")]
+		public long TypeId { get; }
 
-		[JsonProperty("ratingUrn")]
-		public long RatingUrn { get; }
+		[JsonProperty("ratingId")]
+		public long RatingId { get; }
 		
-		[JsonProperty("statusUrn")]
-		public long StatusUrn { get; }
+		[JsonProperty("statusId")]
+		public long StatusId { get; }
 		
 		[JsonProperty("meansOfReferralUrn")]
 		public long MeansOfReferralUrn { get; }
 		
 		[JsonConstructor]
 		public CreateRecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
-			string name, string description, string reason, long caseUrn, long typeUrn, 
-			long ratingUrn, long statusUrn, long meansOfReferralUrn) => 
-			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, StatusUrn, MeansOfReferralUrn) = 
-			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, statusUrn, meansOfReferralUrn);
+			string name, string description, string reason, long caseUrn, long typeId, 
+			long ratingId, long statusId, long meansOfReferralUrn) => 
+			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeId, RatingId, StatusId, MeansOfReferralUrn) = 
+			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeId, ratingId, statusId, meansOfReferralUrn);
 	}
 }

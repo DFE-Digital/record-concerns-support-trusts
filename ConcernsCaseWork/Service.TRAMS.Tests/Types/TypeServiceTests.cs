@@ -54,11 +54,11 @@ namespace Service.TRAMS.Tests.Types
 
 			foreach (var actualType in types)
 			{
-				foreach (var expectedType in expectedTypes.Where(expectedType => actualType.Urn.CompareTo(expectedType.Urn) == 0))
+				foreach (var expectedType in expectedTypes.Where(expectedType => actualType.Id.CompareTo(expectedType.Id) == 0))
 				{
 					Assert.That(actualType.Name, Is.EqualTo(expectedType.Name));
 					Assert.That(actualType.Description, Is.EqualTo(expectedType.Description));
-					Assert.That(actualType.Urn, Is.EqualTo(expectedType.Urn));
+					Assert.That(actualType.Id, Is.EqualTo(expectedType.Id));
 					Assert.That(actualType.CreatedAt, Is.EqualTo(expectedType.CreatedAt));
 					Assert.That(actualType.UpdatedAt, Is.EqualTo(expectedType.UpdatedAt));
 				}

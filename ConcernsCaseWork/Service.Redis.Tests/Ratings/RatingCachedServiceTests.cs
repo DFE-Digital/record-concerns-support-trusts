@@ -103,7 +103,7 @@ namespace Service.Redis.Tests.Ratings
 			Assert.That(ratingDto, Is.Not.Null);
 			Assert.That(expectedRating, Is.Not.Null);
 			Assert.That(ratingDto.Name, Is.EqualTo(expectedRating.Name));
-			Assert.That(ratingDto.Urn, Is.EqualTo(expectedRating.Urn));
+			Assert.That(ratingDto.Id, Is.EqualTo(expectedRating.Id));
 			Assert.That(ratingDto.CreatedAt, Is.EqualTo(expectedRating.CreatedAt));
 			Assert.That(ratingDto.UpdatedAt, Is.EqualTo(expectedRating.UpdatedAt));
 			

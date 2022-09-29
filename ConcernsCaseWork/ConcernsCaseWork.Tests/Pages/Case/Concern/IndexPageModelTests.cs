@@ -222,7 +222,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 					{ "type", new StringValues("type") },
 					{ "sub-type", new StringValues("999:subType") },
 					{ "rating", new StringValues("ragRating:123") },
-					{ "means-of-referral-urn", new StringValues("1") }
+					{ "means-of-referral-id", new StringValues("1") }
 				});
 			
 			// act
@@ -263,7 +263,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 					{ "type", new StringValues("Force Majeure") },
 					{ "sub-type", new StringValues("123:subType") },
 					{ "rating", new StringValues("123:ragRating") },
-					{ "means-of-referral-urn", new StringValues("1") }
+					{ "means-of-referral-id", new StringValues("1") }
 				});
 			
 			// act

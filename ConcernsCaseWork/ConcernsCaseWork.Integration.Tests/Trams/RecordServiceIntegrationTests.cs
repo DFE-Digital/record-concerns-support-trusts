@@ -53,10 +53,10 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			var startTime = DateTime.UtcNow;
 			var recordService = serviceScope.ServiceProvider.GetRequiredService<IRecordService>();
 			var caseUrn = await FetchRandomCaseUrn(serviceScope);
-			var typeUrn = await FetchRandomTypeUrn(serviceScope);
-			var ratingUrn = await FetchRandomRatingUrn(serviceScope);
-			var meansOfReferralUrn = await FetchRandomMeansOfReferralUrn(serviceScope);
-			var createRecordDto = RecordFactory.BuildCreateRecordDto(caseUrn, typeUrn, ratingUrn, meansOfReferralUrn);
+			var typeId = await FetchRandomTypeId(serviceScope);
+			var ratingId = await FetchRandomRatingId(serviceScope);
+			var meansOfReferralUrn = await FetchRandomMeansOfReferralId(serviceScope);
+			var createRecordDto = RecordFactory.BuildCreateRecordDto(caseUrn, typeId, ratingId, meansOfReferralUrn);
 			await PostRecord(serviceScope, createRecordDto);
 
 			//act 
@@ -70,12 +70,12 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			
 			var resultDto = recordsDto.ToList().Single();
 			Assert.AreEqual(caseUrn, resultDto.CaseUrn);
-			Assert.AreEqual(typeUrn, resultDto.TypeUrn);
-			Assert.AreEqual(ratingUrn, resultDto.RatingUrn);
+			Assert.AreEqual(typeId, resultDto.TypeId);
+			Assert.AreEqual(ratingId, resultDto.RatingId);
 			Assert.NotNull(resultDto.Description);
 			Assert.NotNull(resultDto.Name);
 			Assert.NotNull(resultDto.Reason);
-			Assert.Greater(resultDto.Urn, 0);
+			Assert.Greater(resultDto.Id, 0);
 			Assert.That(resultDto.ClosedAt >= startTime && resultDto.ClosedAt <= endTime);
 			Assert.That(resultDto.CreatedAt >= startTime && resultDto.CreatedAt <= endTime);
 			Assert.That(resultDto.UpdatedAt >= startTime && resultDto.UpdatedAt <= endTime);
@@ -88,10 +88,10 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			using var serviceScope = _factory.Services.CreateScope();
 			var recordService = serviceScope.ServiceProvider.GetRequiredService<IRecordService>();
 			var caseUrn = await FetchRandomCaseUrn(serviceScope);
-			var typeUrn = await FetchRandomTypeUrn(serviceScope);
-			var ratingUrn = await FetchRandomRatingUrn(serviceScope);
-			var updatedRatingUrn = await FetchRandomRatingUrn(serviceScope);
-			var createRecordDto = RecordFactory.BuildCreateRecordDto(caseUrn, typeUrn, ratingUrn);
+			var typeId = await FetchRandomTypeId(serviceScope);
+			var ratingId = await FetchRandomRatingId(serviceScope);
+			var updatedRatingUrn = await FetchRandomRatingId(serviceScope);
+			var createRecordDto = RecordFactory.BuildCreateRecordDto(caseUrn, typeId, ratingId);
 			var postRecordDto = await PostRecord(serviceScope, createRecordDto);
 
 			// Update record properties
@@ -105,14 +105,14 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 				"some updated description",
 				"some updated reason",
 				postRecordDto.CaseUrn,
-				postRecordDto.TypeUrn,
+				postRecordDto.TypeId,
 				updatedRatingUrn,
-				postRecordDto.Urn,
-				postRecordDto.StatusUrn
+				postRecordDto.Id,
+				postRecordDto.StatusId
 				);
 
 			// act 
-			var updatedRecordDto = await recordService.PatchRecordByUrn(toUpdateRecordDto);
+			var updatedRecordDto = await recordService.PatchRecordById(toUpdateRecordDto);
 
 			// assert
 			Assert.That(updatedRecordDto, Is.Not.Null);
@@ -124,10 +124,10 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			Assert.That(updatedRecordDto.Description, Is.EqualTo("some updated description"));
 			Assert.That(updatedRecordDto.Reason, Is.EqualTo("some updated reason"));
 			Assert.That(updatedRecordDto.CaseUrn, Is.EqualTo(postRecordDto.CaseUrn));
-			Assert.That(updatedRecordDto.TypeUrn, Is.EqualTo(postRecordDto.TypeUrn));
-			Assert.That(updatedRecordDto.RatingUrn, Is.EqualTo(updatedRatingUrn));
-			Assert.That(updatedRecordDto.Urn, Is.EqualTo(postRecordDto.Urn));
-			Assert.That(updatedRecordDto.StatusUrn, Is.EqualTo(postRecordDto.StatusUrn));
+			Assert.That(updatedRecordDto.TypeId, Is.EqualTo(postRecordDto.TypeId));
+			Assert.That(updatedRecordDto.RatingId, Is.EqualTo(updatedRatingUrn));
+			Assert.That(updatedRecordDto.Id, Is.EqualTo(postRecordDto.Id));
+			Assert.That(updatedRecordDto.StatusId, Is.EqualTo(postRecordDto.StatusId));
 		}
 
 		private async Task<RecordDto> PostRecord(IServiceScope serviceScope, CreateRecordDto createRecordDto)
@@ -162,7 +162,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			return caseDto.Urn;
 		}
 
-		private async Task<long> FetchRandomTypeUrn(IServiceScope serviceScope)
+		private async Task<long> FetchRandomTypeId(IServiceScope serviceScope)
 		{
 			var typeService = serviceScope.ServiceProvider.GetRequiredService<ITypeService>();
 			var types = await typeService.GetTypes();
@@ -170,10 +170,10 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			var random = new Random();
 			var index = random.Next(types.Count);
 
-			return types[index].Urn;
+			return types[index].Id;
 		}
 
-		private async Task<long> FetchRandomRatingUrn(IServiceScope serviceScope)
+		private async Task<long> FetchRandomRatingId(IServiceScope serviceScope)
 		{
 			var ratingService = serviceScope.ServiceProvider.GetRequiredService<IRatingService>();
 			var ratings = await ratingService.GetRatings();
@@ -181,10 +181,10 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			var random = new Random();
 			var index = random.Next(ratings.Count);
 
-			return ratings[index].Urn;
+			return ratings[index].Id;
 		}
 		
-		private async Task<long> FetchRandomMeansOfReferralUrn(IServiceScope serviceScope)
+		private async Task<long> FetchRandomMeansOfReferralId(IServiceScope serviceScope)
 		{
 			var meansOfReferralService = serviceScope.ServiceProvider.GetRequiredService<IMeansOfReferralService>();
 			var meansOfReferrals = await meansOfReferralService.GetMeansOfReferrals();
@@ -192,7 +192,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			var random = new Random();
 			var index = random.Next(meansOfReferrals.Count);
 
-			return meansOfReferrals[index].Urn;
+			return meansOfReferrals[index].Id;
 		}
 	}
 }

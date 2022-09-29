@@ -34,7 +34,7 @@ namespace Service.Redis.Cases
 			_logger.LogInformation("CaseHistoryCachedService::PostCaseHistory");
 			
 			// TODO Enable only when Academies API is live
-			// var postCaseHistory = await _caseHistoryService.PostCaseHistory(createCaseHistoryDto);
+			 //var postCaseHistory = await _caseHistoryService.PostCaseHistory(createCaseHistoryDto);
 			// if (postCaseHistory is null) throw new ApplicationException("Error::CaseHistoryCachedService::PostCaseHistory");
 
 			// TODO Remove when Academies API is live

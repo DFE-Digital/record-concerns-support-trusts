@@ -43,12 +43,12 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(newRecordDto.Description));
 			Assert.That(actualRecord.Reason, Is.EqualTo(newRecordDto.Reason));
-			Assert.That(actualRecord.StatusUrn, Is.EqualTo(newRecordDto.StatusUrn));
+			Assert.That(actualRecord.StatusId, Is.EqualTo(newRecordDto.StatusId));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(newRecordDto.CaseUrn));
 			Assert.That(actualRecord.ClosedAt, Is.EqualTo(newRecordDto.ClosedAt));
-			Assert.That(actualRecord.RatingUrn, Is.EqualTo(newRecordDto.RatingUrn));
+			Assert.That(actualRecord.RatingId, Is.EqualTo(newRecordDto.RatingId));
 			Assert.That(actualRecord.ReviewAt, Is.EqualTo(newRecordDto.ReviewAt));
-			Assert.That(actualRecord.TypeUrn, Is.EqualTo(newRecordDto.TypeUrn));
+			Assert.That(actualRecord.TypeId, Is.EqualTo(newRecordDto.TypeId));
 			Assert.That(actualRecord.UpdatedAt, Is.EqualTo(newRecordDto.UpdatedAt));
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
@@ -87,12 +87,12 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(newRecordDto.Description));
 			Assert.That(actualRecord.Reason, Is.EqualTo(newRecordDto.Reason));
-			Assert.That(actualRecord.StatusUrn, Is.EqualTo(newRecordDto.StatusUrn));
+			Assert.That(actualRecord.StatusId, Is.EqualTo(newRecordDto.StatusId));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(newRecordDto.CaseUrn));
 			Assert.That(actualRecord.ClosedAt, Is.EqualTo(newRecordDto.ClosedAt));
-			Assert.That(actualRecord.RatingUrn, Is.EqualTo(newRecordDto.RatingUrn));
+			Assert.That(actualRecord.RatingId, Is.EqualTo(newRecordDto.RatingId));
 			Assert.That(actualRecord.ReviewAt, Is.EqualTo(newRecordDto.ReviewAt));
-			Assert.That(actualRecord.TypeUrn, Is.EqualTo(newRecordDto.TypeUrn));
+			Assert.That(actualRecord.TypeId, Is.EqualTo(newRecordDto.TypeId));
 			Assert.That(actualRecord.UpdatedAt, Is.EqualTo(newRecordDto.UpdatedAt));
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
@@ -134,12 +134,12 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(newRecordDto.Description));
 			Assert.That(actualRecord.Reason, Is.EqualTo(newRecordDto.Reason));
-			Assert.That(actualRecord.StatusUrn, Is.EqualTo(newRecordDto.StatusUrn));
+			Assert.That(actualRecord.StatusId, Is.EqualTo(newRecordDto.StatusId));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(newRecordDto.CaseUrn));
 			Assert.That(actualRecord.ClosedAt, Is.EqualTo(newRecordDto.ClosedAt));
-			Assert.That(actualRecord.RatingUrn, Is.EqualTo(newRecordDto.RatingUrn));
+			Assert.That(actualRecord.RatingId, Is.EqualTo(newRecordDto.RatingId));
 			Assert.That(actualRecord.ReviewAt, Is.EqualTo(newRecordDto.ReviewAt));
-			Assert.That(actualRecord.TypeUrn, Is.EqualTo(newRecordDto.TypeUrn));
+			Assert.That(actualRecord.TypeId, Is.EqualTo(newRecordDto.TypeId));
 			Assert.That(actualRecord.UpdatedAt, Is.EqualTo(newRecordDto.UpdatedAt));
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
@@ -179,12 +179,12 @@ namespace Service.Redis.Tests.Records
 			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
 			Assert.That(actualRecord.Description, Is.EqualTo(newRecordDto.Description));
 			Assert.That(actualRecord.Reason, Is.EqualTo(newRecordDto.Reason));
-			Assert.That(actualRecord.StatusUrn, Is.EqualTo(newRecordDto.StatusUrn));
+			Assert.That(actualRecord.StatusId, Is.EqualTo(newRecordDto.StatusId));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(newRecordDto.CaseUrn));
 			Assert.That(actualRecord.ClosedAt, Is.EqualTo(newRecordDto.ClosedAt));
-			Assert.That(actualRecord.RatingUrn, Is.EqualTo(newRecordDto.RatingUrn));
+			Assert.That(actualRecord.RatingId, Is.EqualTo(newRecordDto.RatingId));
 			Assert.That(actualRecord.ReviewAt, Is.EqualTo(newRecordDto.ReviewAt));
-			Assert.That(actualRecord.TypeUrn, Is.EqualTo(newRecordDto.TypeUrn));
+			Assert.That(actualRecord.TypeId, Is.EqualTo(newRecordDto.TypeId));
 			Assert.That(actualRecord.UpdatedAt, Is.EqualTo(newRecordDto.UpdatedAt));
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
@@ -442,7 +442,7 @@ namespace Service.Redis.Tests.Records
 				}
 			};
 
-			mockRecordService.Setup(r => r.PatchRecordByUrn(It.IsAny<RecordDto>())).ReturnsAsync(recordDto);
+			mockRecordService.Setup(r => r.PatchRecordById(It.IsAny<RecordDto>())).ReturnsAsync(recordDto);
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
 				ReturnsAsync(userState);
@@ -451,12 +451,12 @@ namespace Service.Redis.Tests.Records
 				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
 			
 			// act
-			await recordRecordCachedService.PatchRecordByUrn(RecordFactory.BuildRecordDto(), "testing");
+			await recordRecordCachedService.PatchRecordById(RecordFactory.BuildRecordDto(), "testing");
 
 			// assert
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
-			mockRecordService.Verify(c => c.PatchRecordByUrn(It.IsAny<RecordDto>()), Times.Once);
+			mockRecordService.Verify(c => c.PatchRecordById(It.IsAny<RecordDto>()), Times.Once);
 		}
 		
 		[Test]
@@ -486,7 +486,7 @@ namespace Service.Redis.Tests.Records
 				}
 			}; 
 			
-			mockRecordService.Setup(r => r.PatchRecordByUrn(It.IsAny<RecordDto>())).ReturnsAsync(recordDto);
+			mockRecordService.Setup(r => r.PatchRecordById(It.IsAny<RecordDto>())).ReturnsAsync(recordDto);
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
 				ReturnsAsync(userState);
@@ -495,7 +495,7 @@ namespace Service.Redis.Tests.Records
 				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
 			
 			// act
-			await recordRecordCachedService.PatchRecordByUrn(RecordFactory.BuildRecordDto(), "testing");
+			await recordRecordCachedService.PatchRecordById(RecordFactory.BuildRecordDto(), "testing");
 			var cachedUserState = await mockCacheProvider.Object.GetFromCache<UserState>(It.IsAny<string>());
 			
 			// assert
@@ -514,7 +514,7 @@ namespace Service.Redis.Tests.Records
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Exactly(2));
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
-			mockRecordService.Verify(c => c.PatchRecordByUrn(It.IsAny<RecordDto>()), Times.Once);
+			mockRecordService.Verify(c => c.PatchRecordById(It.IsAny<RecordDto>()), Times.Once);
 		}		
 		
 		[Test]
@@ -544,7 +544,7 @@ namespace Service.Redis.Tests.Records
 				}
 			}; 
 			
-			mockRecordService.Setup(r => r.PatchRecordByUrn(It.IsAny<RecordDto>())).ReturnsAsync(recordDto);
+			mockRecordService.Setup(r => r.PatchRecordById(It.IsAny<RecordDto>())).ReturnsAsync(recordDto);
 			
 			mockCacheProvider.Setup(c => c.GetFromCache<UserState>(It.IsAny<string>())).
 				ReturnsAsync(userState);
@@ -553,7 +553,7 @@ namespace Service.Redis.Tests.Records
 				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
 			
 			// act
-			await recordRecordCachedService.PatchRecordByUrn(recordDto, "testing");
+			await recordRecordCachedService.PatchRecordById(recordDto, "testing");
 			var cachedUserState = await mockCacheProvider.Object.GetFromCache<UserState>(It.IsAny<string>());
 			
 			// assert
@@ -572,7 +572,7 @@ namespace Service.Redis.Tests.Records
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Exactly(2));
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
-			mockRecordService.Verify(c => c.PatchRecordByUrn(It.IsAny<RecordDto>()), Times.Once);
+			mockRecordService.Verify(c => c.PatchRecordById(It.IsAny<RecordDto>()), Times.Once);
 		}
 		
 		[Test]
@@ -584,18 +584,18 @@ namespace Service.Redis.Tests.Records
 			var mockLogger = new Mock<ILogger<RecordCachedService>>();
 			
 			var recordDto = RecordFactory.BuildRecordDto();
-			mockRecordService.Setup(r => r.PatchRecordByUrn(It.IsAny<RecordDto>())).ReturnsAsync(recordDto);
+			mockRecordService.Setup(r => r.PatchRecordById(It.IsAny<RecordDto>())).ReturnsAsync(recordDto);
 			
 			var recordRecordCachedService = new RecordCachedService(
 				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
 			
 			// act
-			await recordRecordCachedService.PatchRecordByUrn(RecordFactory.BuildRecordDto(), "testing");
+			await recordRecordCachedService.PatchRecordById(RecordFactory.BuildRecordDto(), "testing");
 
 			// assert
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
-			mockRecordService.Verify(c => c.PatchRecordByUrn(It.IsAny<RecordDto>()), Times.Once);
+			mockRecordService.Verify(c => c.PatchRecordById(It.IsAny<RecordDto>()), Times.Once);
 		}
 		
 		[Test]
@@ -606,18 +606,18 @@ namespace Service.Redis.Tests.Records
 			var mockRecordService = new Mock<IRecordService>();
 			var mockLogger = new Mock<ILogger<RecordCachedService>>();
 			
-			mockRecordService.Setup(r => r.PatchRecordByUrn(It.IsAny<RecordDto>())).Throws<ApplicationException>();
+			mockRecordService.Setup(r => r.PatchRecordById(It.IsAny<RecordDto>())).Throws<ApplicationException>();
 			
 			var recordRecordCachedService = new RecordCachedService(
 				mockCacheProvider.Object, mockRecordService.Object, mockLogger.Object);
 			
 			// act
-			Assert.ThrowsAsync<ApplicationException>(() => recordRecordCachedService.PatchRecordByUrn(RecordFactory.BuildRecordDto(), "testing"));
+			Assert.ThrowsAsync<ApplicationException>(() => recordRecordCachedService.PatchRecordById(RecordFactory.BuildRecordDto(), "testing"));
 
 			// assert
 			mockCacheProvider.Verify(c => c.GetFromCache<UserState>(It.IsAny<string>()), Times.Never);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<UserState>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
-			mockRecordService.Verify(c => c.PatchRecordByUrn(It.IsAny<RecordDto>()), Times.Once);
+			mockRecordService.Verify(c => c.PatchRecordById(It.IsAny<RecordDto>()), Times.Once);
 		}
 	}
 }

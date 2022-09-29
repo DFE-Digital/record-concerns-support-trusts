@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.Services.Ratings
 	{
 		Task<IList<RatingDto>> GetRatings();
 		Task<IList<RatingModel>> GetRatingsModel();
-		Task<RatingModel> GetRatingModelByUrn(long urn);
-		Task<IList<RatingModel>> GetSelectedRatingsModelByUrn(long urn);
+		Task<RatingModel> GetRatingModelById(long id);
+		Task<IList<RatingModel>> GetSelectedRatingsModelById(long id);
 	}
 }

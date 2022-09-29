@@ -82,15 +82,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 					throw new Exception("Missing form values");
 
 				var splitRagRating = riskRating.Split(":");
-				var ratingUrn = splitRagRating[0];
+				var ratingId = splitRagRating[0];
 
 				// Create patch record model
 				var patchRecordModel = new PatchRecordModel
 				{
 					UpdatedAt = DateTimeOffset.Now,
-					Urn = recordUrn,
+					Id = recordUrn,
 					CaseUrn = caseUrn,
-					RatingUrn = long.Parse(ratingUrn),
+					RatingId = long.Parse(ratingId),
 					CreatedBy = User.Identity.Name
 				};
 
@@ -117,10 +117,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 					throw new Exception("Case urn cannot be 0");
 				
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
-				var recordModel = await _recordModelService.GetRecordModelByUrn(User.Identity.Name, caseUrn, recordUrn);
-				RatingsModel = await _ratingModelService.GetSelectedRatingsModelByUrn(recordModel.RatingUrn);
+				var recordModel = await _recordModelService.GetRecordModelById(User.Identity.Name, caseUrn, recordUrn);
+				RatingsModel = await _ratingModelService.GetSelectedRatingsModelById(recordModel.RatingId);
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
-				TypeModel = await _typeModelService.GetSelectedTypeModelByUrn(recordModel.TypeUrn);
+				TypeModel = await _typeModelService.GetSelectedTypeModelById(recordModel.TypeId);
 				CaseModel.PreviousUrl = url;
 
 				return Page();

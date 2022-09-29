@@ -8,7 +8,7 @@ namespace Service.Redis.Models
 	{
 		public long CaseUrn { get; set; }
 		
-		public long TypeUrn { get; set; }
+		public long TypeId { get; set; }
 
 		public string Type { get; set; } = string.Empty;
 
@@ -23,7 +23,7 @@ namespace Service.Redis.Models
 			}
 		}
 
-		public long RatingUrn { get; set; }
+		public long RatingId { get; set; }
 
 		public string RatingName { get; set; }
 
@@ -31,6 +31,6 @@ namespace Service.Redis.Models
 
 		public IList<string> RagRatingCss { get; set; }
 		
-		public long MeansOfReferralUrn { get; set; }
+		public long MeansOfReferralId { get; set; }
 	}
 }

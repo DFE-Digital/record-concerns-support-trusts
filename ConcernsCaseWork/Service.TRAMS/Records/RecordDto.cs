@@ -6,6 +6,9 @@ namespace Service.TRAMS.Records
 	[Serializable]
 	public sealed class RecordDto
 	{
+		[JsonProperty("id")]
+		public long Id { get; }
+		
 		[JsonProperty("createdAt")]
 		public DateTimeOffset CreatedAt { get; }
 
@@ -30,23 +33,20 @@ namespace Service.TRAMS.Records
 		[JsonProperty("caseUrn")]
 		public long CaseUrn { get; }
 		
-		[JsonProperty("typeUrn")]
-		public long TypeUrn { get; }
+		[JsonProperty("typeId")]
+		public long TypeId { get; }
 
-		[JsonProperty("ratingUrn")]
-		public long RatingUrn { get; }
-		
-		[JsonProperty("urn")]
-		public long Urn { get; set; }
-		
-		[JsonProperty("statusUrn")]
-		public long StatusUrn { get; }
+		[JsonProperty("ratingId")]
+		public long RatingId { get; }
+
+		[JsonProperty("statusId")]
+		public long StatusId { get; }
 		
 		[JsonConstructor]
 		public RecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
-			string name, string description, string reason, long caseUrn, long typeUrn, 
-			long ratingUrn, long urn, long statusUrn) => 
-			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, Urn, StatusUrn) = 
-			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, urn, statusUrn);
+			string name, string description, string reason, long caseUrn, long typeId, 
+			long ratingId, long id, long statusId) => 
+			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeId, RatingId, Id, StatusId) = 
+			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeId, ratingId, id, statusId);
 	}
 }
