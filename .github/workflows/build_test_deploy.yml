@@ -49,6 +49,8 @@ jobs:
           dotnet user-secrets set "trams:api_key" "${{ secrets.TRAMS_API_KEY }}"
           dotnet user-secrets set "app:username" "${{ secrets.APP_USERNAME }}"
           dotnet user-secrets set "app:password" "${{ secrets.APP_PASSWORD }}"
+          dotnet user-secrets set "app:password" "${{ secrets.APP_PASSWORD }}"
+          dotnet user-secrets set "AzureAd:ClientSecret" "${{ secrets.AZURE_AD_CLIENT_SECRET }}"
       - name: Test
         run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity diagnostic
   
@@ -167,6 +169,7 @@ jobs:
           TF_VAR_app_username: ${{ secrets.APP_USERNAME }}
           TF_VAR_app_password: ${{ secrets.APP_PASSWORD }}
           TF_VAR_logit_sink_url: ${{ secrets.LOGIT_SINK_URL }}
+          TF_VAR_azure_ad_client_secret: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
 
   cypress-tests:
     needs: deploy-image
