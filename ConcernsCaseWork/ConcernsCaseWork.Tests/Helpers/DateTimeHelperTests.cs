@@ -18,16 +18,15 @@ namespace ConcernsCaseWork.Tests.Helpers
 			Assert.That(result, Is.EqualTo(expectedResult));
 		}
 
+		[TestCase("07/04/2022")]
+		public void WhenParseExact_ReturnsExpected(string dateString)
+		{
+			// act
+			DateTime expectedResult = DateTime.Parse(dateString);
+			var result = DateTimeHelper.ParseExact(dateString);
 
-		//[TestCase("07/04/2022")]
-		//public void WhenParseExact_ReturnsExpected(string dateString)
-		//{
-		//	// act
-		//	DateTime expectedResult = DateTime.Parse(dateString);
-		//	var result = DateTimeHelper.ParseExact(dateString);
-
-		//	//assert
-		//	Assert.That(result, Is.EqualTo(expectedResult));
-		//}
+			//assert
+			Assert.That(result, Is.EqualTo(expectedResult));
+		}
 	}
 }
