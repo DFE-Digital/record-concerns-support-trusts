@@ -29,8 +29,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(createCaseHistoryDto.Action, Is.Not.Null);
 			Assert.That(createCaseHistoryDto.Description, Is.Not.Null);
 			Assert.That(createCaseHistoryDto.Title, Is.Not.Null);
-			Assert.That(createCaseHistoryDto.CaseUrn, Is.Not.Null);
-			Assert.That(createCaseHistoryDto.CreatedAt, Is.Not.Null);
+			Assert.That(createCaseHistoryDto.CaseUrn, Is.Not.Zero);
+			Assert.That(createCaseHistoryDto.CreatedAt.Date.Day, Is.EqualTo(DateTime.Now.Day));
 		}
 
 		[Test]

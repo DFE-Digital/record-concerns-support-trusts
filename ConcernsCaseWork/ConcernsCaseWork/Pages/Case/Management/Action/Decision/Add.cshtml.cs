@@ -1,23 +1,12 @@
 ﻿
-using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Helpers;
-using ConcernsCaseWork.Models;
+using ConcernsCaseWork.CoreTypes;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
-using Service.Redis.NtiUnderConsideration;
-using Service.Redis.NtiWarningLetter;
-using ConcernsCaseWork.Services.NtiWarningLetter;
-using Service.Redis.Nti;
-using ConcernsCaseWork.Services.Nti;
-using Service.TRAMS.Helpers;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 {
@@ -25,7 +14,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class AddPageModel : AbstractPageModel
 	{
-
 		private readonly ILogger<AddPageModel> _logger;
 
 		public int NotesMaxLength => 2000;
@@ -35,33 +23,38 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			_logger = logger;
 		}
 
-		public async Task<IActionResult> OnGetAsync()
+		public long CaseUrn { get; set; }
+
+		public async Task<IActionResult> OnGetAsync(long urn)
 		{
-			_logger.LogInformation($"{nameof(AddPageModel)}::{LoggingHelpers.EchoCallerName()}");
+			_logger.LogMethodEntered();
 
 			try
 			{
+				CaseUrn = (CaseUrn)urn;
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"{nameof(AddPageModel)}::{LoggingHelpers.EchoCallerName()}");
+				_logger.LogErrorMsg(ex);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
 			}
 		}
 
-
-		public async Task<IActionResult> OnPostAsync()
+		public async Task<IActionResult> OnPostAsync(long urn)
 		{
+			_logger.LogMethodEntered();
+
 			try
 			{
-		
+				CaseUrn = (CaseUrn)urn;
+
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"{nameof(AddPageModel)}::{LoggingHelpers.EchoCallerName()}");
+				_logger.LogErrorMsg(ex);
 
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
