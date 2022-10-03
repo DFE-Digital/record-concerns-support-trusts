@@ -140,6 +140,7 @@
                 $(function () {
 
                     let validator = formValidator($("#lift-nti-form")[0]);
+                    addNTINotesValidator(validator);
 
                     validator.addValidator('dtr-day', [{
                         method: function(field, params) {
