@@ -113,6 +113,9 @@
                 $(function () {
                     let validator = formValidator($("#close-nti-form")[0]);
 
+                    addNTINotesValidator(validator);
+                    
+
                     validator.addValidator('dtr-day', [{
                          method: function(field, params) {
                              return noDateOrCompleteDate(params.year.value, params.month.value, params.day.value);
