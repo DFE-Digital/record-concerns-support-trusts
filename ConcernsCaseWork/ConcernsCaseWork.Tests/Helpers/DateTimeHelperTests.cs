@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.Tests.Helpers
 		}
 
 		[TestCase("07/04/2022", 2022, 4, 7)]
-		[TestCase("15/12/2021", 2022, 12, 15)]
+		[TestCase("15/12/2021", 2021, 12, 15)]
 		public void WhenParseExact_ReturnsExpected(string dateString, int expectedYear, int expectedMonth, int expectedDay)
 		{
 			// arrange
