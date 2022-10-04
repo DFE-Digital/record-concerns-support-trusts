@@ -61,7 +61,7 @@ describe("Users can log into the application", () => {
 		LoginPage.getPassword({ timeout: 50000 }).type(Cypress.env('password'));
 
 		LoginPage.getSubmitButton().click();
-		HomePage.getHeadingText({ timeout: 40000 }).should('be.visible');
+		HomePage.getTeamCaseworkBtn({ timeout: 40000 }).should('be.visible');
 
 	});
 
