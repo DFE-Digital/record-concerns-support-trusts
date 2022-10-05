@@ -12,7 +12,6 @@ namespace ConcernsCaseWork.Tests.Models
 	{
 		[Test]
 		[TestCase("05/10/2022", false)]
-		//[TestCase(new DateTime(2022, 10, 5), false)]
 		[TestCase(null, true)]
 		public void WhenBuildNTIWarningLetter_IsClosed_ReturnsValidLogic(DateTime? closedAt, bool expectedResulted)
 		{
