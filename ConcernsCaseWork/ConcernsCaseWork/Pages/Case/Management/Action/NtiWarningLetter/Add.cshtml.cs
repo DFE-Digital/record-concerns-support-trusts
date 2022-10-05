@@ -89,7 +89,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 					}
 				}
 
-				if (WarningLetter != null && WarningLetter.ClosedAt.HasValue)
+				if (WarningLetter != null && !WarningLetter.CanBeEdited())
 				{
 					throw new Exception("Cannot edit NTI:WL that has already been closed");
 				}
