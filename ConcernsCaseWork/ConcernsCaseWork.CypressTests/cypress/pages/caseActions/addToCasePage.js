@@ -3,7 +3,7 @@ class AddToCasePage {
     constructor() {
         this.actionOptions = ["DfE support", "Financial forecast", "Financial plan",
                             "Financial returns", "Financial support", "Forced termination",
-                            "NTI: Notice to improve", "Recovery plan", "School Resource Management Adviser (SRMA)", "NTI: Under consideration", "NTI: Warning letter"];
+                            "NTI: Notice to improve", "Recovery plan", "School Resource Management Adviser (SRMA)", "NTI: Under consideration", "NTI: Warning letter", "Decision"];
 
     }
 

@@ -31,10 +31,13 @@ describe("User can add case actions to an existing case", () => {
 	});
 
 	it("User can click to add NTI warning letter Case Action to a case", function () {
-		AddToCasePage.getAddToCaseBtn().click();
+		AddToCasePage.getAddToCaseBtn().click().then(() => {
 		cy.log(utils.checkForGovErrorSummaryList() );
+		cy.wait(2000).then(() => {
 
-		if (utils.checkForGovErrorSummaryList() > 0 ) { 
+			cy.log(utils.checkForGovErrorSummaryList() );
+	
+			if (utils.checkForGovErrorSummaryList() > 0 ) { 
 			cy.log("Case Action already exists");
 					cy.visit(Cypress.env('url'), { timeout: 30000 });
 					cy.checkForExistingCase(true);
@@ -47,6 +50,8 @@ describe("User can add case actions to an existing case", () => {
 			cy.log(utils.checkForGovErrorSummaryList() );
 		}
 	});
+});
+});
 
 	it("User is taken to the correct Case Action page", function () {
 		ntiAddPage.getHeadingText().then(term => {
@@ -144,7 +149,11 @@ describe("User can add case actions to an existing case", () => {
 		AddToCasePage.addToCase('NtiWarningLetter');
 		AddToCasePage.getAddToCaseBtn().click().then(() =>{
 
-			if (utils.checkForGovErrorSummaryList() > 0 ) { 
+			cy.wait(2000).then(() => {
+
+				cy.log(utils.checkForGovErrorSummaryList() );
+		
+				if (utils.checkForGovErrorSummaryList() > 0 ) { 
 				cy.log("Case Action already exists").then(() =>{
 					utils.validateGovErorrList("There is already an open NTI action linked to this case. Please resolve that before opening another one");
 				});	
@@ -154,6 +163,7 @@ describe("User can add case actions to an existing case", () => {
 			}
 			CaseActionsBasePage.getCancelBtn().click();
 		});	
+	  });	
 	});
 
 
@@ -282,9 +292,30 @@ describe("User can add case actions to an existing case", () => {
 				expect($nti.text()).to.contain("NTI");
 			})
 
-			CaseManagementPage.getClosedActionsTable().children().should(($status) => {
-				expect($status.text().trim()).to.contain(stText.trim());
-			})
+			//CaseManagementPage.getClosedActionsTable().children().should(($status) => {
+			//	expect($status.text().trim()).to.contain(stText.trim());
+			//})
+
+			switch (stText) {
+				case "Cancel warning letter":
+					CaseManagementPage.getClosedActionsTable().children().should(($status) => {
+						expect($status.text().trim()).to.contain('Cancelled');
+					})
+					break;
+				case "Conditions met":
+					CaseManagementPage.getClosedActionsTable().children().should(($status) => {
+						expect($status.text().trim()).to.contain('Conditions met');
+					})
+					break;
+				case "Escalate to Notice To Improve":
+					CaseManagementPage.getClosedActionsTable().children().should(($status) => {
+						expect($status.text().trim()).to.contain('Escalated to Notice To Improve');
+					})
+					break;
+				default:
+					cy.log("Could not do the thing");
+			}
+
 
 	});
 

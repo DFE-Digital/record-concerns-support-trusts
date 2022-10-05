@@ -299,7 +299,6 @@ describe("User can add case actions to an existing case", () => {
 		utils.getGovErrorSummaryList().should('not.exist');
 
 		//Ensures the case action is not prsent in the Open table
-		//CaseManagementPage.getOpenActionsTable().should('not.exist');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'NTI');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'Cancelled');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', utils.getFormattedDate());
@@ -360,7 +359,6 @@ describe("User can add case actions to an existing case", () => {
 		utils.getGovErrorSummaryList().should('not.exist');
 
 		//Ensures the case action is not prsent in the Open table
-		//CaseManagementPage.getOpenActionsTable().should('not.exist');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'NTI');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'Lifted');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', utils.getFormattedDate());
@@ -415,7 +413,6 @@ describe("User can add case actions to an existing case", () => {
 		CaseManagementPage.getTrustHeadingText().should('contain.text', 'Date NTI closed');
 		ntiAddPage.getSubHeadingText().should('contain.text', 'Finalise notes');
 
-		//CaseActionsBasePage.setDate();
 
 		cy.log("setDate ").then(() => {
 			cy.log(CaseActionsBasePage.setDate() ).then((returnedVal) => { 
@@ -441,10 +438,9 @@ describe("User can add case actions to an existing case", () => {
 		utils.getGovErrorSummaryList().should('not.exist');
 
 		//Ensures the case action is not present in the Open table
-		//CaseManagementPage.getOpenActionsTable().should('not.exist');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'NTI');
 		CaseManagementPage.getClosedActionsTable().should('contain.text', 'Closed');
-		CaseManagementPage.getClosedActionsTable().should('contain.text', returnedDate);
+		CaseManagementPage.getClosedActionsTable().should('contain.text', utils.getFormattedDate());
 	});
 
 	after(function () {
