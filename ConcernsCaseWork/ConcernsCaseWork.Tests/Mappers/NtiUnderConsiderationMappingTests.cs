@@ -1,8 +1,10 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using AutoFixture;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using NUnit.Framework;
 using Service.TRAMS.NtiUnderConsideration;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Mappers
@@ -10,6 +12,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 	[Parallelizable(ParallelScope.All)]
 	public class NtiUnderConsiderationMappingTests
 	{
+		private readonly Fixture _fixture = new();
+		
 		[Test]
 		public void WhenMapDtoToServiceModel_ReturnsCorrectModel()
 		{
@@ -93,6 +97,45 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(dbModel.Reasons.Count, Is.EqualTo(serviceModel.NtiReasonsForConsidering.Count));
 			Assert.That(dbModel.Reasons.ElementAt(0).Id, Is.EqualTo(serviceModel.NtiReasonsForConsidering.ElementAt(0).Id));
 			Assert.That(dbModel.Reasons.ElementAt(1).Id, Is.EqualTo(serviceModel.NtiReasonsForConsidering.ElementAt(1).Id));
+		}
+
+		[Test]
+		public void WhenMapDbModelToActionSummary_ReturnsCorrectModel()
+		{
+			//arrange
+			var statuses = _fixture.Create<List<NtiUnderConsiderationStatusDto>>();
+
+			var testData = new
+			{
+				Id = _fixture.Create<int>(),
+				CaseUrn = _fixture.Create<int>(),
+				CreatedAt = _fixture.Create<DateTime>(),
+				ClosedAt = _fixture.Create<DateTime>(),
+				ClosedStatus = statuses.First()
+			};
+
+			var serviceModel = new NtiUnderConsiderationModel
+			{
+				Id = testData.Id,
+				CaseUrn = testData.CaseUrn,
+				CreatedAt = testData.CreatedAt,
+				ClosedAt = testData.ClosedAt,
+				ClosedStatusId = testData.ClosedStatus.Id,
+				ClosedStatusName = testData.ClosedStatus.Name
+			};
+
+			// act
+			var actionSummary = serviceModel.ToActionSummary(statuses);
+
+			// assert
+			Assert.Multiple(() =>
+			{
+				Assert.That(actionSummary.Name, Is.EqualTo("NTI Under Consideration"));
+				Assert.That(actionSummary.ClosedDate, Is.EqualTo(testData.ClosedAt.GetFormattedDate()));
+				Assert.That(actionSummary.OpenedDate, Is.EqualTo(testData.CreatedAt.GetFormattedDate()));
+				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/ntiunderconsideration/{testData.Id}"));
+				Assert.That(actionSummary.StatusName, Is.EqualTo(testData.ClosedStatus.Name));
+			});
 		}
 	}
 }
