@@ -12,7 +12,7 @@ namespace ConcernsCaseWork.Tests
 	/// A collection of useful helper methods to make writing tests easier.
 	/// If adding a new helper, ideally make it stateless.
 	/// </summary>
-	public class TestHelpers
+	public static class TestHelpers
 	{
 		public static void VerifyMethodEntryLogged<T>(Mock<ILogger<T>> mockLogger, string methodName, int times = 1)
 		{
@@ -25,5 +25,8 @@ namespace ConcernsCaseWork.Tests
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Exactly(times));
 		}
+
+		public static string GetFormattedDate(this DateTime dateTime) => $"{PadTwoDigitDate(dateTime.Day)}-{PadTwoDigitDate(dateTime.Month)}-{PadTwoDigitDate(dateTime.Year)}";
+		private static string PadTwoDigitDate(int value) => value.ToString().PadLeft(2, '0');
 	}
 }
