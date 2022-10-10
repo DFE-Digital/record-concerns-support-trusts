@@ -231,7 +231,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		}
 		
 		[Test]
-		public async Task WhenOnPost_WithNoSelectedCaseType_ReturnsError()
+		public async Task WhenOnPost_WithNoSelectedCaseType_ReturnsPage()
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<ChooseCaseTypePageModel>>();
@@ -250,6 +250,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				.ReturnsAsync(userState);
 
 			var sut = SetupPageModel(mockLogger, mockUserStateCasesCachedService, mockClaimsPrincipalHelper);
+			sut.ModelState.AddModelError("missingCaseType", "Case Type is missing");
 
 			// act
 			var result = await sut.OnPostAsync();
@@ -257,15 +258,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			// assert
 			Assert.Multiple(() =>
 			{
-				Assert.That(sut.TrustName, Is.Null);
-				Assert.That(sut.CaseType, Is.Null);			
-				Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
-				Assert.That(result, Is.TypeOf<RedirectToPageResult>());
-				Assert.That((result as RedirectToPageResult)?.PageName, Is.EqualTo("choosecasetype"));
+				Assert.That(sut.TrustName, Is.EqualTo("some trust name"));
+				Assert.That(sut.CaseType, Is.Null);
+				Assert.That(sut.TempData["Error.Message"], Is.Null);
+				Assert.That(result, Is.TypeOf<PageResult>());
 			});
 			
 			mockLogger.VerifyLogInformationWasCalled("OnPost");
-			mockLogger.VerifyLogErrorWasCalled("Value cannot be null. (Parameter 'CaseType')");
+			mockLogger.VerifyLogErrorWasNotCalled();
 		}
 		
 		[Test]

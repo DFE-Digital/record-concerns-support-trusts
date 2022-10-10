@@ -1,11 +1,17 @@
 ﻿@{
 	var nonce = Context.GetNonce();
-	var label = ViewData["BackButtonLabel"] ?? "Back";
-	
+	var label = ViewData["BackButtonLabel"] ?? "Back";    
+	var link = Convert.ToString(ViewData["BackButtonLink"]);
+}
+@if (string.IsNullOrWhiteSpace(link))
+{
 	<a id="back-link-event" class="govuk-back-link" href="#">@label</a>
 	<script nonce="@nonce">
 		$("#back-link-event").click(function() {
 			history.back();
 		});
 	</script>
+}
+else {
+	<a id="back-link-event" class="govuk-back-link" href="@link">@label</a>
 }

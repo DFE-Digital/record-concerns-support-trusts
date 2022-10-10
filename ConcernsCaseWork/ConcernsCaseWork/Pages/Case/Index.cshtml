@@ -3,11 +3,11 @@
 
 @{
 	ViewData["Title"] = "New Case";
+	ViewData["BackButtonLink"] = "/";
 	var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
-	
 	<partial name="_BannerError"/>
 	
 	<div class="moj-search govuk-grid-row">
