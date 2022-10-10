@@ -15,72 +15,52 @@
 	else
 	{
 		<form role="form" method="post" id="choose-case-type-form" novalidate>
-			<div class="govuk-grid-row">
-            	<div class="govuk-grid-column">
-            		<partial name="_ValidationErrors"/>
-            	</div>
-            </div>
-			<div class="govuk-grid-row">
-				<div class="govuk-grid-column">
-					<h1 class="govuk-heading-m">Create case</h1>
+			<partial name="_ValidationErrors"/>
+			<h1 class="govuk-heading-m">Create case</h1>
+			<dl class="govuk-summary-list">
+				<div class="govuk-summary-list__row">
+					<dt class="govuk-summary-list__key">Trust</dt>
+					<dd class="govuk-summary-list__value">
+						@Model.TrustName
+					</dd>
 				</div>
-			</div>
-			<div class="govuk-grid-row">
-				<div class="govuk-grid-column-two-thirds">
-					<table class="govuk-table">
-						<caption class="govuk-table__caption govuk-table__caption--m"></caption>
-						<tbody class="govuk-table__body">
-						<tr class="govuk-table__row"><td class="govuk-table__cell" colspan="2"></td></tr>
-						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table-case-details__header">Trust</th>
-							<td class="govuk-table__cell">@Model.TrustName</td>
-						</tr>
-						</tbody>
-					</table>
+			</dl>
+
+			<h2 class="govuk-heading-m">What are you recording?</h2>
+			
+			<div class="govuk-radios" data-module="govuk-radios">
+				<div class="govuk-radios__item">
+					<input asp-for="CaseType" class="govuk-radios__input" id="concerncase-option" type="radio" value="1">
+					<label asp-for="CaseType" class="govuk-label govuk-radios__label" for="concerncase-option">
+						A concern or multiple concerns
+					</label>
+					<div class="govuk-hint govuk-radios__hint">
+						This includes narrative, actions or decisions related to any new concern(s)
+					</div>
 				</div>
-			</div>
-			<div class="govuk-grid-row">
-				<div class="govuk-grid-column">
-					<h2 class="govuk-heading-m">What are you recording?</h2>
-					<div class="govuk-radios" data-module="govuk-radios">
-						<div class="govuk-radios__item">
-							<input asp-for="CaseType" class="govuk-radios__input" id="concerncase-option" type="radio" value="1">
-							<label asp-for="CaseType" class="govuk-label govuk-radios__label" for="concerncase-option">
-								A concern or multiple concerns
-							</label>
-							<div class="govuk-hint govuk-radios__hint">
-								This includes narrative, actions or decisions related to any new concern(s)
-							</div>
-						</div>
-						<div class="govuk-radios__item">
-							<input asp-for="CaseType" class="govuk-radios__input" id="non-concerncase-option" type="radio" value="2" disabled="disabled">
-							<label class="govuk-label govuk-radios__label" for="non-concerncase-option">
-								Non-concern related action(s) or decision(s)
-							</label>
-							<div class="govuk-hint govuk-radios__hint">
-								For example, a proactive School Resource Management Adviser (SRMA)
-							</div>
-						</div>
+				<div class="govuk-radios__item">
+					<input asp-for="CaseType" class="govuk-radios__input" id="non-concerncase-option" type="radio" value="2" disabled="disabled">
+					<label class="govuk-label govuk-radios__label" for="non-concerncase-option">
+						Non-concern related action(s) or decision(s)
+					</label>
+					<div class="govuk-hint govuk-radios__hint">
+						For example, a proactive School Resource Management Adviser (SRMA)
 					</div>
 				</div>
 			</div>
 
-			<div class="govuk-grid-row">
-
-				<div class="govuk-grid-column">
-					<div class="govuk-button-group">
-						<button data-prevent-double-click="true"
-						        class="govuk-button govuk-!-margin-top-6"
-						        data-module="govuk-button"
-						        role="button"
-						        id="continue"
-						        name="action"
-						        value="continue">
-							Continue
-						</button>
-					</div>
-				</div>
+			<div class="govuk-button-group">
+				<button data-prevent-double-click="true"
+				        class="govuk-button govuk-!-margin-top-6"
+				        data-module="govuk-button"
+				        role="button"
+				        id="continue"
+				        name="action"
+				        value="continue">
+					Continue
+				</button>
 			</div>
+
 		</form>
 	}
 </div>
