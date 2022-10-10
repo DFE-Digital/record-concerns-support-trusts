@@ -171,7 +171,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockUserStateCachedService.Object, mockLogger.Object, true);
 			
 			// act
-			var response = await pageModel.OnGetSelectedTrust("selectedTrust");
+			var response = await pageModel.OnGetSelectedTrust("selectedTrust", "trust name");
 			
 			// assert
 			Assert.IsInstanceOf(typeof(ObjectResult), response);
@@ -205,7 +205,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockUserStateCachedService.Object, mockLogger.Object, true);
 			
 			// act
-			var response = await pageModel.OnGetSelectedTrust(selectedTrust);
+			var response = await pageModel.OnGetSelectedTrust(selectedTrust, "");
 			
 			// assert
 			Assert.That(response, Is.TypeOf<ObjectResult>());

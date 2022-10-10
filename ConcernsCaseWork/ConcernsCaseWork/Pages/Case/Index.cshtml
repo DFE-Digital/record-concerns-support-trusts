@@ -79,13 +79,15 @@
 							  confirmOnBlur: false,
 							  minLength: 3,
 							  onConfirm: (selected) => {
-									const trustUkprn = trusts.find(item => item.displayName === selected).ukPrn;
+									let selectedTrust = trusts.find(item => item.displayName === selected);
+									let trustUkprn = selectedTrust.ukPrn;
+									let trustName = selectedTrust.groupName;
 									input.attr("aria-valuetext", trustUkprn);
 									input.val(selected);
 
 									// Ajax Post Trust
 									$.get("case?handler=SelectedTrust",
-										{ trustUkPrn: trustUkprn })
+										{ trustUkPrn: trustUkprn, trustName: trustName })
 									.done(function (result) {
 										window.location.replace(result.redirectUrl);
 									})

@@ -12,6 +12,7 @@ namespace Service.Redis.Models
 			UserName = userName;
 		}
 		public string TrustUkPrn { get; set; }
+		public string TrustName { get; set; }
 		public CreateCaseModel CreateCaseModel { get; set; } = new CreateCaseModel();
 		public IDictionary<long, CaseWrapper> CasesDetails { get; } = new ConcurrentDictionary<long, CaseWrapper>();
 		public string UserName { get; private set; }

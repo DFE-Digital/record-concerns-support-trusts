@@ -57,7 +57,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 		}
 		
-		public async Task<ActionResult> OnGetSelectedTrust(string trustUkPrn)
+		public async Task<ActionResult> OnGetSelectedTrust(string trustUkPrn, string trustName)
 		{
 			try
 			{
@@ -70,11 +70,11 @@ namespace ConcernsCaseWork.Pages.Case
 				// Store CaseState into cache.
 				var userState = await _userStateCache.GetData(GetUserName()) ?? new UserState(GetUserName());
 				userState.TrustUkPrn = trustUkPrn;
-				userState.CreateCaseModel = new CreateCaseModel();
+				userState.TrustName = trustName;
 				
 				await _userStateCache.StoreData(GetUserName(), userState);
 
-				return new JsonResult(new { redirectUrl = Url.Page("Concern/Index") });
+				return new JsonResult(new { redirectUrl = Url.Page("choosecasetype") });
 			}
 			catch (Exception ex)
 			{
