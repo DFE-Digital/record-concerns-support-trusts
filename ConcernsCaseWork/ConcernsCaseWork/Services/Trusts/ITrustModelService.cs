@@ -9,5 +9,6 @@ namespace ConcernsCaseWork.Services.Trusts
 	{
 		Task<IList<TrustSearchModel>> GetTrustsBySearchCriteria(TrustSearch trustSearch);
 		Task<TrustDetailsModel> GetTrustByUkPrn(string ukPrn);
+		Task<TrustAddressModel> GetTrustAddressByUkPrn(string ukPrn);
 	}
 }

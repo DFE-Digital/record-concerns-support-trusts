@@ -21,7 +21,9 @@
 				<div class="govuk-summary-list__row">
 					<dt class="govuk-summary-list__key">Trust</dt>
 					<dd class="govuk-summary-list__value">
-						@Model.TrustName
+						@Model.TrustAddress.TrustName @Model.TrustAddress.County
+						<br/>
+						@Model.TrustAddress.DisplayAddress
 					</dd>
 				</div>
 			</dl>

@@ -1,12 +1,12 @@
 using Ardalis.GuardClauses;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Models;
-using Service.Redis.Users;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -18,20 +18,20 @@ namespace ConcernsCaseWork.Pages.Case
 	public class ChooseCaseTypePageModel : AbstractPageModel
 	{
 		private readonly ILogger<ChooseCaseTypePageModel> _logger;
-		private readonly IUserStateCachedService _userStateCache;
+		private readonly ICreateCaseService _createCaseService;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		
 		[BindProperty(SupportsGet = true)]
-		public string TrustName { get; set; }
+		public TrustAddressModel TrustAddress { get; set; }
 		
 		[BindProperty]
 		[Required(ErrorMessage = "Case Type is required")]
-		public string CaseType { get; set; }
+		public int CaseType { get; set; }
 
-		public ChooseCaseTypePageModel(ILogger<ChooseCaseTypePageModel> logger, IUserStateCachedService userStateCachedService, IClaimsPrincipalHelper claimsPrincipalHelper)
+		public ChooseCaseTypePageModel(ILogger<ChooseCaseTypePageModel> logger, ICreateCaseService createCaseService, IClaimsPrincipalHelper claimsPrincipalHelper)
 		{
 			_logger = Guard.Against.Null(logger);
-			_userStateCache = Guard.Against.Null(userStateCachedService);
+			_createCaseService = Guard.Against.Null(createCaseService);
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 		}
 
@@ -65,17 +65,9 @@ namespace ConcernsCaseWork.Pages.Case
 					return Page();
 				}
 				
-				if (CaseType == "2")
-				{
-					throw new NotImplementedException();
-				}
-				
 				var userName = GetUserName();
-				var userState = await _userStateCache.GetData(userName) ?? new UserState(userName);
-
-				userState.CreateCaseModel = new CreateCaseModel();
-
-				await _userStateCache.StoreData(GetUserName(), userState);
+				
+				await _createCaseService.SetCaseTypeInNewCaseWizard(userName, CaseType);
 				
 				return RedirectToPage("Concern/Index");
 			}
@@ -90,10 +82,10 @@ namespace ConcernsCaseWork.Pages.Case
 		private async Task InitPage()
 		{
 			var userName = GetUserName();
-			var userState = await _userStateCache.GetData(userName);
+			var trustAddress = await _createCaseService.GetSelectedTrustAddress(userName);
 
-			TrustName = userState?.TrustName 
-			            ?? throw new NullReferenceException($"Could not retrieve trust name from cache for user '{userName}'");
+			TrustAddress = trustAddress 
+			               ?? throw new NullReferenceException($"Could not retrieve trust from cache for user '{userName}'");
 		}
 
 		private string GetUserName()

@@ -1,5 +1,7 @@
 ﻿using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
+using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
 using Microsoft.AspNetCore.Mvc;
@@ -9,8 +11,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Models;
-using Service.Redis.Users;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -21,12 +21,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 	public class ChooseCaseTypeTests
 	{
 		[Test]
-		public void Constructor_WithNullClaimsPrincipalHelper_ThrowsException()
+		public void Constructor_WithNullClaimsService_ThrowsException()
 		{
 			var exception = Assert.Throws<ArgumentNullException>(() =>
 				_ = new ChooseCaseTypePageModel(
 					Mock.Of<ILogger<ChooseCaseTypePageModel>>(), 
-					Mock.Of<IUserStateCachedService>(), 
+					Mock.Of<ICreateCaseService>(), 
 					null));
 			
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'claimsPrincipalHelper')"));
@@ -38,14 +38,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var exception = Assert.Throws<ArgumentNullException>(() =>
 				_ = new ChooseCaseTypePageModel(
 					null, 
-					Mock.Of<IUserStateCachedService>(), 
+					Mock.Of<ICreateCaseService>(), 
 					Mock.Of<IClaimsPrincipalHelper>()));
 			
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'logger')"));
 		}
 				
 		[Test]
-		public void Constructor_WithNullUserStateService_ThrowsException()
+		public void Constructor_WithNullCreateCaseService_ThrowsException()
 		{
 			var exception = Assert.Throws<ArgumentNullException>(() =>
 				_ = new ChooseCaseTypePageModel(
@@ -53,7 +53,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 					null, 
 					Mock.Of<IClaimsPrincipalHelper>()));
 			
-			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'userStateCachedService')"));
+			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'createCaseService')"));
 		}
 		
 		[Test]
@@ -61,21 +61,21 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<ChooseCaseTypePageModel>>();
-			var mockUserStateCasesCachedService = new Mock<IUserStateCachedService>();
+			var mockCreateCaseService = new Mock<ICreateCaseService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			
 			var userName = "some user name";
-			var userState = new UserState(userName) { TrustName = "some trust name" };
+			var trustAddress = new TrustAddressModel("Some trust name", "a county", "Full display address, town, postcode");
 			
 			mockClaimsPrincipalHelper
 				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
 				.Returns(userName);
 			
-			mockUserStateCasesCachedService
-				.Setup(t => t.GetData(userName))
-				.ReturnsAsync(userState);
+			mockCreateCaseService
+				.Setup(t => t.GetSelectedTrustAddress(userName))
+				.ReturnsAsync(trustAddress);
 			
-			var sut = SetupPageModel(mockLogger, mockUserStateCasesCachedService, mockClaimsPrincipalHelper);
+			var sut = SetupPageModel(mockLogger, mockCreateCaseService, mockClaimsPrincipalHelper);
 			
 			// act
 			var result = await sut.OnGetAsync();
@@ -83,8 +83,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			// assert
 			Assert.Multiple(() =>
 			{
-				Assert.That(sut.TrustName, Is.EqualTo(userState.TrustName));
-				Assert.That(sut.CaseType, Is.Null);
+				Assert.That(sut.TrustAddress, Is.Not.Null);
+				Assert.That(sut.TrustAddress.TrustName, Is.EqualTo(trustAddress.TrustName));
+				Assert.That(sut.TrustAddress.County, Is.EqualTo(trustAddress.County));
+				Assert.That(sut.TrustAddress.DisplayAddress, Is.EqualTo(trustAddress.DisplayAddress));
+				Assert.That(sut.CaseType, Is.EqualTo(0));
 				Assert.That(result, Is.TypeOf<PageResult>());
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo(null));
 			});
@@ -98,21 +101,16 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<ChooseCaseTypePageModel>>();
-			var mockUserStateCasesCachedService = new Mock<IUserStateCachedService>();
+			var mockCreateCaseService = new Mock<ICreateCaseService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			
 			var userName = "some user name";
-			var userState = new UserState(userName) { TrustName = null };
 			
 			mockClaimsPrincipalHelper
 				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
 				.Returns(userName);
-			
-			mockUserStateCasesCachedService
-				.Setup(t => t.GetData(userName))
-				.ReturnsAsync(userState);
-			
-			var sut = SetupPageModel(mockLogger, mockUserStateCasesCachedService, mockClaimsPrincipalHelper);
+
+			var sut = SetupPageModel(mockLogger, mockCreateCaseService, mockClaimsPrincipalHelper);
 			
 			// act / assert
 			var result = await sut.OnGetAsync();
@@ -120,13 +118,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.Multiple(() =>
 			{
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
-				Assert.That(sut.TrustName, Is.Null);
-				Assert.That(sut.CaseType, Is.Null);
+				Assert.That(sut.TrustAddress, Is.Null);
+				Assert.That(sut.CaseType, Is.EqualTo(0));
 				Assert.That(result, Is.TypeOf<PageResult>());
 			});
 			
 			mockLogger.VerifyLogInformationWasCalled("OnGet");
-			mockLogger.VerifyLogErrorWasCalled($"Could not retrieve trust name from cache for user '{userName}'");
+			mockLogger.VerifyLogErrorWasCalled($"Could not retrieve trust from cache for user '{userName}'");
 		}
 		
 		[Test]
@@ -134,7 +132,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<ChooseCaseTypePageModel>>();
-			var mockUserStateCasesCachedService = new Mock<IUserStateCachedService>();
+			var mockCreateCaseService = new Mock<ICreateCaseService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			
 			var userName = "some user name";
@@ -143,7 +141,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
 				.Returns(userName);
 
-			var sut = SetupPageModel(mockLogger, mockUserStateCasesCachedService, mockClaimsPrincipalHelper);
+			var sut = SetupPageModel(mockLogger, mockCreateCaseService, mockClaimsPrincipalHelper);
 			
 			// act
 			var result = await sut.OnGetAsync();
@@ -152,13 +150,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.Multiple(() =>
 			{
 				Assert.That(result, Is.TypeOf<PageResult>());
-				Assert.That(sut.TrustName, Is.Null);
-				Assert.That(sut.CaseType, Is.Null);
+				Assert.That(sut.TrustAddress, Is.Null);
+				Assert.That(sut.CaseType, Is.EqualTo(0));
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 			});
 			
 			mockLogger.VerifyLogInformationWasCalled("OnGet");
-			mockLogger.VerifyLogErrorWasCalled($"Could not retrieve trust name from cache for user '{userName}'");
+			mockLogger.VerifyLogErrorWasCalled($"Could not retrieve trust from cache for user '{userName}'");
 		}
 		
 		[Test]
@@ -166,14 +164,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<ChooseCaseTypePageModel>>();
-			var mockUserStateCasesCachedService = new Mock<IUserStateCachedService>();
+			var mockCreateCaseService = new Mock<ICreateCaseService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			
 			mockClaimsPrincipalHelper
 				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
 				.Throws(new NullReferenceException("Some error message"));
 
-			var sut = SetupPageModel(mockLogger, mockUserStateCasesCachedService, mockClaimsPrincipalHelper);
+			var sut = SetupPageModel(mockLogger, mockCreateCaseService, mockClaimsPrincipalHelper);
 			
 			// act
 			var result = await sut.OnGetAsync();
@@ -182,8 +180,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.Multiple(() =>
 			{
 				Assert.That(result, Is.TypeOf<PageResult>());
-				Assert.That(sut.TrustName, Is.Null);
-				Assert.That(sut.CaseType, Is.Null);
+				Assert.That(sut.TrustAddress, Is.Null);
+				Assert.That(sut.CaseType, Is.EqualTo(0));
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 			});
 			
@@ -196,22 +194,22 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<ChooseCaseTypePageModel>>();
-			var mockUserStateCasesCachedService = new Mock<IUserStateCachedService>();
+			var mockCreateCaseService = new Mock<ICreateCaseService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			
 			var userName = "some user name";
-			var userState = new UserState(userName) { TrustName = "some trust name" };
+			var trustAddress = new TrustAddressModel("Some trust name", "a county", "Full display address, town, postcode");
 			
 			mockClaimsPrincipalHelper
 				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
 				.Returns(userName);
 			
-			mockUserStateCasesCachedService
-				.Setup(t => t.GetData(userName))
-				.ReturnsAsync(userState);
+			mockCreateCaseService
+				.Setup(t => t.GetSelectedTrustAddress(userName))
+				.ReturnsAsync(trustAddress);
 
-			var sut = SetupPageModel(mockLogger, mockUserStateCasesCachedService, mockClaimsPrincipalHelper);
-			sut.CaseType = "1";
+			var sut = SetupPageModel(mockLogger, mockCreateCaseService, mockClaimsPrincipalHelper);
+			sut.CaseType = 1;
 
 			// act
 			var result = await sut.OnPostAsync();
@@ -219,8 +217,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			// assert
 			Assert.Multiple(() =>
 			{
-				Assert.That(sut.TrustName, Is.Null);
-				Assert.That(sut.CaseType, Is.EqualTo("1"));
+				Assert.That(sut.TrustAddress, Is.Null);
+				Assert.That(sut.CaseType, Is.EqualTo(1));
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo(null));
 				Assert.That(result, Is.TypeOf<RedirectToPageResult>());
 				Assert.That((result as RedirectToPageResult)?.PageName, Is.EqualTo("Concern/Index"));
@@ -235,21 +233,21 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<ChooseCaseTypePageModel>>();
-			var mockUserStateCasesCachedService = new Mock<IUserStateCachedService>();
+			var mockCreateCaseService = new Mock<ICreateCaseService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			
 			var userName = "some user name";
-			var userState = new UserState(userName) { TrustName = "some trust name" };
+			var trustAddress = new TrustAddressModel("Some trust name", "a county", "Full display address, town, postcode");
 			
 			mockClaimsPrincipalHelper
 				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
 				.Returns(userName);
 			
-			mockUserStateCasesCachedService
-				.Setup(t => t.GetData(userName))
-				.ReturnsAsync(userState);
+			mockCreateCaseService
+				.Setup(t => t.GetSelectedTrustAddress(userName))
+				.ReturnsAsync(trustAddress);
 
-			var sut = SetupPageModel(mockLogger, mockUserStateCasesCachedService, mockClaimsPrincipalHelper);
+			var sut = SetupPageModel(mockLogger, mockCreateCaseService, mockClaimsPrincipalHelper);
 			sut.ModelState.AddModelError("missingCaseType", "Case Type is missing");
 
 			// act
@@ -258,8 +256,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			// assert
 			Assert.Multiple(() =>
 			{
-				Assert.That(sut.TrustName, Is.EqualTo("some trust name"));
-				Assert.That(sut.CaseType, Is.Null);
+				Assert.That(sut.TrustAddress, Is.Not.Null);
+				Assert.That(sut.TrustAddress.TrustName, Is.EqualTo(trustAddress.TrustName));
+				Assert.That(sut.TrustAddress.County, Is.EqualTo(trustAddress.County));
+				Assert.That(sut.TrustAddress.DisplayAddress, Is.EqualTo(trustAddress.DisplayAddress));
+				Assert.That(sut.CaseType, Is.EqualTo(0));
 				Assert.That(sut.TempData["Error.Message"], Is.Null);
 				Assert.That(result, Is.TypeOf<PageResult>());
 			});
@@ -273,15 +274,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<ChooseCaseTypePageModel>>();
-			var mockUserStateCasesCachedService = new Mock<IUserStateCachedService>();
+			var mockCreateCaseService = new Mock<ICreateCaseService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			
 			mockClaimsPrincipalHelper
 				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
 				.Throws(new NullReferenceException("Some error message"));
 
-			var sut = SetupPageModel(mockLogger, mockUserStateCasesCachedService, mockClaimsPrincipalHelper);
-			sut.CaseType = "1";
+			var sut = SetupPageModel(mockLogger, mockCreateCaseService, mockClaimsPrincipalHelper);
+			sut.CaseType = 1;
 
 			// act
 			var result = await sut.OnPostAsync();
@@ -289,8 +290,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			// assert
 			Assert.Multiple(() =>
 			{
-				Assert.That(sut.TrustName, Is.Null);
-				Assert.That(sut.CaseType, Is.EqualTo("1"));			
+				Assert.That(sut.TrustAddress, Is.Null);
+				Assert.That(sut.CaseType, Is.EqualTo(1));			
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 				Assert.That(result, Is.TypeOf<RedirectToPageResult>());
 				Assert.That((result as RedirectToPageResult)?.PageName, Is.EqualTo("choosecasetype"));
@@ -302,7 +303,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		
 		private static ChooseCaseTypePageModel SetupPageModel(
 			Mock<ILogger<ChooseCaseTypePageModel>> mockLogger,
-			Mock<IUserStateCachedService> mockService,
+			Mock<ICreateCaseService> mockService,
 			Mock<IClaimsPrincipalHelper> mockClaimsHelper)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(true);

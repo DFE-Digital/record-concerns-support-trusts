@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Teams;
+using ConcernsCaseWork.Services.Cases;
+using Service.Redis.Models;
 using Service.TRAMS.Cases;
 using Service.TRAMS.MeansOfReferral;
 using Service.TRAMS.Teams;
@@ -24,11 +26,12 @@ namespace ConcernsCaseWork.Mappers
 			CreateMap<EstablishmentTypeDto, EstablishmentTypeModel>();
 			CreateMap<CensusDto, CensusModel>();
 			CreateMap<IfdDataDto, IfdDataModel>();
-			
+
 			// Case
 			CreateMap<CaseHistoryDto, CaseHistoryModel>();
 			CreateMap<MeansOfReferralModel, MeansOfReferralDto>();
 			CreateMap<MeansOfReferralDto, MeansOfReferralModel>();
+			CreateMap<CreateCaseWizardModelDto, CreateCaseWizardModel>().ReverseMap();
 
 			// Teams
 			CreateMap<ConcernsCaseworkTeamDto, ConcernsTeamCaseworkModel>().ReverseMap();

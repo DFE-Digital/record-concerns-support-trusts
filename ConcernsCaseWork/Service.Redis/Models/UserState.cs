@@ -13,8 +13,15 @@ namespace Service.Redis.Models
 		}
 		public string TrustUkPrn { get; set; }
 		public string TrustName { get; set; }
+		public CreateCaseWizardModelDto CreateCaseWizardModel { get; set; }
 		public CreateCaseModel CreateCaseModel { get; set; } = new CreateCaseModel();
 		public IDictionary<long, CaseWrapper> CasesDetails { get; } = new ConcurrentDictionary<long, CaseWrapper>();
 		public string UserName { get; private set; }
+	}
+
+	public class CreateCaseWizardModelDto
+	{
+		public string TrustUkPrn { get; set; }
+		public int CaseType { get; set; }
 	}
 }

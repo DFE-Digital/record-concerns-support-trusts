@@ -3,6 +3,7 @@ using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Validators;
+using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
@@ -10,7 +11,6 @@ using ConcernsCaseWork.Services.MeansOfReferral;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Base;
 using Service.Redis.Models;
 using Service.TRAMS.Cases;
 using System;
@@ -31,6 +31,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private readonly ITypeModelService _typeModelService;
 		private readonly IUserStateCachedService _cachedService;
 		private readonly IMeansOfReferralModelService _meansOfReferralService;
+		private readonly ICreateCaseService _createCaseService;
 		
 		public TypeModel TypeModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
@@ -43,6 +44,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			ITypeModelService typeModelService,
 			IRatingModelService ratingModelService,
 			IMeansOfReferralModelService meansOfReferralService,
+			ICreateCaseService createCaseService,
 			ILogger<IndexPageModel> logger)
 		{
 			_ratingModelService = ratingModelService;
@@ -50,15 +52,25 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			_typeModelService = typeModelService;
 			_cachedService = cachedService;
 			_meansOfReferralService = meansOfReferralService;
+			_createCaseService = createCaseService;
 			_logger = logger;
 		}
 		
-		public async Task OnGetAsync()
+		public async Task<IActionResult> OnGetAsync()
 		{
 			_logger.LogInformation("Case::Concern::IndexPageModel::OnGetAsync");
 				
-			// Fetch UI data
-			await LoadPage();
+			try
+			{
+				await LoadPage();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::Concern::IndexPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				
+				TempData["Error.Message"] = ErrorOnGetPage;
+			}
+			return Page();
 		}
 		
 		public async Task<IActionResult> OnPostAsync()
@@ -135,7 +147,18 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 			
-			return await LoadPage();
+			try
+			{
+				return await LoadPage();		
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("Case::Concern::IndexPageModel::OnPostAsync::Exception - {Message}", ex.Message);
+					
+				TempData["Error.Message"] = ErrorOnPostPage;
+			}
+			
+			return Page();
 		}
 
 		public async Task<ActionResult> OnGetCancel()
@@ -159,29 +182,21 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 
 		private async Task<ActionResult> LoadPage()
 		{
-			try
-			{
-				var userState = await GetUserState();
-				var trustUkPrn = userState.TrustUkPrn;
+			var userState = await GetUserState();
+			var userName = User.Identity?.Name;
 			
-				if (string.IsNullOrEmpty(trustUkPrn))
-					throw new Exception("Cache TrustUkprn is null");
-			
-				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
-				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-				RatingsModel = await _ratingModelService.GetRatingsModel();
-				TypeModel = await _typeModelService.GetTypeModel();
-				MeansOfReferralModel = await _meansOfReferralService.GetMeansOfReferrals();
-			
-				return Page();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::Concern::IndexPageModel::LoadPage::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
-			}
+			var trustUkPrn = await _createCaseService.GetSelectedTrustUkPrn(userName);
+		
+			if (string.IsNullOrEmpty(trustUkPrn))
+				throw new Exception("Cache TrustUkprn is null");
+		
+			CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
+			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
+			RatingsModel = await _ratingModelService.GetRatingsModel();
+			TypeModel = await _typeModelService.GetTypeModel();
+			MeansOfReferralModel = await _meansOfReferralService.GetMeansOfReferrals();
+		
+			return Page();
 		}
 		
 		private async Task<UserState> GetUserState()
