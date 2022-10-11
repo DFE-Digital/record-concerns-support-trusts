@@ -24,6 +24,6 @@ namespace ConcernsCaseWork.Pages.Base
 
 		protected string GetFormValue(string propertyName) => Request.Form[propertyName].ToString().GetValueOrNullIfWhitespace();
 		
-		protected string GetRouteValue(string propertyName) => RouteData.Values[propertyName].ToString().GetValueOrNullIfWhitespace();
+		protected string GetRouteValue(string propertyName) => RouteData.Values[propertyName]?.ToString().GetValueOrNullIfWhitespace();
 	}
 }

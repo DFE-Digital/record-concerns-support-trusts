@@ -11,23 +11,42 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 	{
 		private readonly static Fixture Fixture = new Fixture();
 
-		public static FinancialPlanModel BuildFinancialPlanModel(DateTime? closedAt = null)
+		public static FinancialPlanModel BuildClosedFinancialPlanModel(DateTime closedAt)
 		{
-			return new FinancialPlanModel(
+			var model = new FinancialPlanModel(
 				Fixture.Create<long>(),
 				Fixture.Create<long>(),
 				Fixture.Create<DateTime>(),
 				Fixture.Create<DateTime>(),
 				Fixture.Create<DateTime>(),
 				Fixture.Create<string>(),
-				Fixture.Create<FinancialPlanStatusModel>(),
+				new FinancialPlanStatusModel(Fixture.Create<string>(), Fixture.Create<long>(), true),
 				closedAt
 			);
+
+			return model;
+		} 
+		
+		public static FinancialPlanModel BuildOpenFinancialPlanModel()
+		{
+			var model = new FinancialPlanModel(
+				Fixture.Create<long>(),
+				Fixture.Create<long>(),
+				Fixture.Create<DateTime>(),
+				Fixture.Create<DateTime>(),
+				Fixture.Create<DateTime>(),
+				Fixture.Create<string>(),
+				new FinancialPlanStatusModel(Fixture.Create<string>(), Fixture.Create<long>(), false),
+				null
+			);
+			return model;
 		} 
 
 		public static List<FinancialPlanModel> BuildListFinancialPlanModel(DateTime? closedAt = null)
 		{
-			return new List<FinancialPlanModel>() { BuildFinancialPlanModel(closedAt) };
+			return closedAt.HasValue 
+				? new List<FinancialPlanModel>() { BuildClosedFinancialPlanModel((DateTime)closedAt) } 
+				: new List<FinancialPlanModel>() { BuildOpenFinancialPlanModel() };
 		}
 
 		public static List<FinancialPlanModel> BuildListFinancialPlanModel(params FinancialPlanModel[] financialPlanModels)

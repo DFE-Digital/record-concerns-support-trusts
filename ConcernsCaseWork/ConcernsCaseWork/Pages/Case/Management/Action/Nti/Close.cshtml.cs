@@ -109,7 +109,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			var date = DateTimeHelper.TryParseExact(dtString, out DateTime parsed) ? parsed : (DateTime?)null;
 
 			nti.Notes = notes;
-			nti.ClosedAt = date;
+			nti.ClosedAt = DateTime.Now;
 			nti.DateNTIClosed = date;
 			nti.ClosedStatusId = (int)NTIStatus.Closed;
 

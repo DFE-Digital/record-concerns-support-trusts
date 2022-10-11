@@ -25,7 +25,8 @@ class Utils {
     //
     checkForGovErrorSummaryList() {
 
-       let $elem = Cypress.$('[class="govuk-list govuk-error-summary__list"]')
+       //let $elem = Cypress.$('[class="govuk-list govuk-error-summary__list"]')
+       let $elem = Cypress.$('[class="govuk-error-summary__body"]')
         cy.log(($elem).length)
         
         return ($elem.length);
