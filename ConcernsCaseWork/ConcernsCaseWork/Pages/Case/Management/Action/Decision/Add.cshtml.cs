@@ -16,6 +16,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 	{
 		private readonly ILogger<AddPageModel> _logger;
 
+		public int NotesMaxLength => 2000;
+
 		public AddPageModel(ILogger<AddPageModel> logger)
 		{
 			_logger = logger;
