@@ -25,7 +25,7 @@ namespace Service.TRAMS.Teams
 
 			// Create a request
 			var request = new HttpRequestMessage(HttpMethod.Get,
-				$"/{EndpointsVersion}/concerns-team-casework/owner/{ownerId}");
+				$"/{EndpointsVersion}/concerns-team-casework/owners/{ownerId}");
 
 			// Create http client
 			var client = ClientFactory.CreateClient(HttpClientName);
@@ -70,7 +70,7 @@ namespace Service.TRAMS.Teams
 			var client = ClientFactory.CreateClient(HttpClientName);
 
 			// Execute request
-			var uri = $"/{EndpointsVersion}/concerns-team-casework/owner/{team.OwnerId}";
+			var uri = $"/{EndpointsVersion}/concerns-team-casework/owners/{team.OwnerId}";
 			var response = await client.PutAsync(uri, request);
 
 			// Check status code
