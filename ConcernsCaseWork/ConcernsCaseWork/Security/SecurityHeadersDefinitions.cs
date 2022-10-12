@@ -30,10 +30,12 @@ namespace ConcernsCaseWork.Security
 					builder.AddBlockAllMixedContent();
 					builder.AddImgSrc().Self().From("data:");
 					builder.AddFormAction().Self();
-					builder.AddFontSrc().Self();
-					builder.AddStyleSrc().Self();
+					builder.AddFontSrc().Self().From("https://*.hotjar.com");
+					builder.AddStyleSrc().Self().UnsafeInline();
 					builder.AddBaseUri().Self();
-					builder.AddScriptSrc().From("https://www.googletagmanager.com").UnsafeInline().WithNonce();
+					builder.AddScriptSrc().Self().From("https://www.googletagmanager.com").WithNonce();
+					builder.AddScriptSrc().Self().From("https://*.hotjar.com").WithNonce();
+
 					builder.AddFrameAncestors().None();
 				})
 				.RemoveServerHeader()
