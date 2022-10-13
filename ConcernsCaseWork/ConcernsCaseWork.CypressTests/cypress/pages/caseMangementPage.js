@@ -54,11 +54,15 @@ class CaseManagementPage {
     }
 
     getLiveSRMALink() {
-        return cy.get('a[href*="/action/srma/"]');
+        return cy.get('a[id="open-case-actions"][href*="/action/srma/"]');
     }    
 
     getOpenActionLink(action) {
-        return cy.get('a[href*="/action/'+action+'/"]');
+        return cy.get('[id="open-case-actions"] [href*="/action/'+action+'/"]');
+    } 
+
+    getClosedActionLink(action) {
+        return cy.get('[id="closed-case-actions"] [href*="/action/'+action+'/"]');
     } 
 
     geBackToCaseworkBtn() {
@@ -109,7 +113,7 @@ class CaseManagementPage {
         cy.log(($elem).length)
         return ($elem.length);
     }
-
+  
     getCaseIDText() {
 
         this.getHeadingText().invoke('text').then((text) => {

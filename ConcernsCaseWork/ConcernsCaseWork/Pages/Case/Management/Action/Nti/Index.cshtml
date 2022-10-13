@@ -1,19 +1,18 @@
 ﻿@page "/case/{urn:long}/management/action/nti/{ntiId:long}"
 @model ConcernsCaseWork.Pages.Case.Management.Action.Nti.IndexPageModel
+@using ConcernsCaseWork.Enums;
 
 @using ConcernsCaseWork.Extensions
 
 @{
     ViewData["Title"] = "NTI";
-    var nonce = HttpContext.GetNonce();
+	ViewData["BackButtonLabel"] = "Back to case";
 }
 
 @section BeforeMain {
-<div class="govuk-width-container">
-    <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
-        Back to case
-    </a>
-</div>
+	<div class="govuk-width-container">
+		<partial name="_BackLink"/>
+	</div>
 }
 
 <div class="govuk-width-container">
@@ -55,7 +54,14 @@
                         <th scope="row" class="govuk-table-case-details__header">Current status</th>
                         <td class="govuk-table__cell">
                             @{
-                                RenderValue(Model.NtiModel.Status.Name);
+								if (Model.NtiModel.Status != null)
+								{
+									RenderValue(Model.NtiModel.Status.Name);
+								}
+								else
+								{
+									RenderEmptyLabel();
+								}
                             }
                         </td>
                     }
@@ -64,22 +70,94 @@
                         <th scope="row" class="govuk-table-case-details__header">Status</th>
                         <td class="govuk-table__cell">
                             @{
-                                RenderValue(Model.NtiModel.ClosedStatus.Name);
+								if (Model.NtiModel.ClosedStatus != null)
+								{
+									RenderValue(Model.NtiModel.ClosedStatus.Name);
+								}
+								else
+								{
+									RenderEmptyLabel();
+								}
                             }
                         </td>
                     }
 
                 </tr>
 
-                @* Date started *@
+
+
+                @* Date NTI Issued *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Date started</th>
+                    <th scope="row" class="govuk-table-case-details__header">Date NTI Issued</th>
                     <td class="govuk-table__cell">
                         @{
-                            RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.DateStarted.Value));
+							if (Model.NtiModel.DateStarted.HasValue)
+							{
+								RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.DateStarted.Value));
+				            }
+				            else
+				            {
+                                RenderEmptyLabel();
+				            }
                         }
                     </td>
                 </tr>
+
+                @* Date Closed *@
+                @if (Model.NtiModel.ClosedAt.HasValue)
+					{
+                        <tr class="govuk-table__row">
+                            @{
+                                switch (Model.NtiModel.ClosedStatus.Id)
+                                {
+                                    case (int)NTIStatus.Cancelled:
+                                        <th scope="row" class="govuk-table-case-details__header">Date NTI cancelled</th>
+                                        <td class="govuk-table__cell">
+                                            @{
+                                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.ClosedAt.Value));
+                                            }
+                                        </td>
+                                        break;
+                                    case (int)NTIStatus.Lifted:
+                                        <th scope="row" class="govuk-table-case-details__header">Date NTI Lifted</th>
+                                        <td class="govuk-table__cell">
+                                            @{
+
+                                                if (Model.NtiModel.DateNTILifted.HasValue)
+                                                {
+                                                    RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.DateNTILifted.Value));
+                                                }
+                                                else
+                                                {
+                                                    RenderEmptyLabel();
+                                                }
+                                            }
+                                        </td>
+                                        break;
+                                    case (int)NTIStatus.Closed:
+                                        <th scope="row" class="govuk-table-case-details__header">Date NTI Closed</th>
+                                        <td class="govuk-table__cell">
+                                            @{
+
+                                                if (Model.NtiModel.DateNTIClosed.HasValue)
+                                                {
+                                                    RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.DateNTIClosed.Value));
+                                                }
+                                                else
+                                                {
+                                                    RenderEmptyLabel();
+                                                }
+                                            }
+                                        </td>
+                                        break;
+                                    default:
+                                        throw new Exception($"{nameof(IndexPageModel)}::Uknown status found - {Model.NtiModel.ClosedStatus.Name}");
+                                        break;
+                                }
+                            }
+
+                        </tr>
+                    }
 
                 @* Reasons *@
                 <tr class="govuk-table__row">

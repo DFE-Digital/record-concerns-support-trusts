@@ -12,7 +12,7 @@ namespace Service.TRAMS.MeansOfReferral
 	{
 		private readonly ILogger<MeansOfReferralService> _logger;
 		
-		public MeansOfReferralService(IHttpClientFactory clientFactory, ILogger<MeansOfReferralService> logger) : base(clientFactory)
+		public MeansOfReferralService(IHttpClientFactory clientFactory, ILogger<MeansOfReferralService> logger) : base(clientFactory, logger)
 		{
 			_logger = logger;
 		}

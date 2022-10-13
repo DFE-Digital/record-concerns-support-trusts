@@ -1,11 +1,8 @@
 ﻿using Ardalis.GuardClauses;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
 using System.Net.Http;
-using System.Net.Mime;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.Teams
@@ -14,80 +11,32 @@ namespace Service.TRAMS.Teams
 	{
 		private readonly ILogger<TeamsService> _logger;
 
-		public TeamsService(IHttpClientFactory clientFactory, ILogger<TeamsService> logger) : base(clientFactory)
+		public TeamsService(IHttpClientFactory clientFactory, ILogger<TeamsService> logger) : base(clientFactory, logger)
 		{
 			_logger = Guard.Against.Null(logger);
 		}
 
-		public async Task<ConcernsCaseworkTeamDto> GetTeam(string ownerId)
+		public Task<ConcernsCaseworkTeamDto> GetTeam(string ownerId)
 		{
 			Guard.Against.NullOrWhiteSpace(ownerId);
 
-			// Create a request
-			var request = new HttpRequestMessage(HttpMethod.Get,
-				$"/{EndpointsVersion}/concerns-team-casework/owners/{ownerId}");
-
-			// Create http client
-			var client = ClientFactory.CreateClient(HttpClientName);
-
-			// Execute request
-			var response = await client.SendAsync(request);
-
-			// Check status code
-			response.EnsureSuccessStatusCode();
-
-			if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+			async Task<ConcernsCaseworkTeamDto> DoWork()
 			{
-				return null;
+				return await Get<ConcernsCaseworkTeamDto>($"/{EndpointsVersion}/concerns-team-casework/owners/{ownerId}", false);
 			}
 
-			// Read response content
-			var content = await response.Content.ReadAsStringAsync();
-
-			// Deserialize content to POCO
-			var apiWrapperRecordsDto = JsonConvert.DeserializeObject<ApiWrapper<ConcernsCaseworkTeamDto>>(content);
-
-			// Unwrap response
-			if (apiWrapperRecordsDto is { Data: { } })
-			{
-				return apiWrapperRecordsDto.Data;
-			}
-
-			throw new Exception("Academies API error unwrap response");
+			return DoWork();
 		}
 
-		public async Task PutTeam(ConcernsCaseworkTeamDto team)
+		public Task PutTeam(ConcernsCaseworkTeamDto team)
 		{
 			Guard.Against.Null(team);
+			return Put($"/{EndpointsVersion}/concerns-team-casework/owners/{team.OwnerId}", team);
+		}
 
-			// Create a request
-			var request = new StringContent(
-				JsonConvert.SerializeObject(team),
-				Encoding.UTF8,
-				MediaTypeNames.Application.Json);
-
-			// Create http client
-			var client = ClientFactory.CreateClient(HttpClientName);
-
-			// Execute request
-			var uri = $"/{EndpointsVersion}/concerns-team-casework/owners/{team.OwnerId}";
-			var response = await client.PutAsync(uri, request);
-
-			// Check status code
-			response.EnsureSuccessStatusCode();
-
-			// Read response content
-			var content = await response.Content.ReadAsStringAsync();
-
-			// Deserialize content to POCO
-			var apiWrapperRecordsDto = JsonConvert.DeserializeObject<ApiWrapper<ConcernsCaseworkTeamDto>>(content);
-
-			// Unwrap response
-			if (apiWrapperRecordsDto is { Data: { } })
-			{
-				return;
-			}
-			throw new Exception("Academies API error unwrap response");
+		public async Task<string[]> GetTeamOwners()
+		{
+			return await Get<string[]>($"/{EndpointsVersion}/concerns-team-casework/owners", false) ?? Array.Empty<string>();
 		}
 	}
 }

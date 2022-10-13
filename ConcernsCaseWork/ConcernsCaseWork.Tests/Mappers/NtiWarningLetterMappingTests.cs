@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using AutoFixture;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
@@ -14,6 +15,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 	[Parallelizable(ParallelScope.All)]
 	public class NtiWarningLetterMappingTests
 	{
+		private readonly Fixture _fixture = new();
+		
 		[Test]
 		public void WhenMapDtoToServiceModel_ReturnsCorrectModel()
 		{
@@ -150,6 +153,42 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(model, Is.Not.Null);
 			Assert.That(model.Id, Is.EqualTo(dto.Id));
 			Assert.That(model.Name, Is.EqualTo(dto.Name));
+		}
+		
+		[Test]
+		public void WhenMapDbModelToActionSummary_ReturnsCorrectModel()
+		{
+			//arrange
+			var testData = new
+			{
+				Id = _fixture.Create<int>(),
+				CaseUrn = _fixture.Create<int>(),
+				CreatedAt = _fixture.Create<DateTime>(),
+				ClosedAt = _fixture.Create<DateTime>(),
+				Status = _fixture.Create<NtiWarningLetterStatusDto>()
+			};
+
+			var serviceModel = new NtiWarningLetterModel
+			{
+				Id = testData.Id,
+				CaseUrn = testData.CaseUrn,
+				CreatedAt = testData.CreatedAt,
+				ClosedAt = testData.ClosedAt,
+				ClosedStatus = new NtiWarningLetterStatusModel { Id = testData.Status.Id, PastTenseName = testData.Status.Name },
+			};
+			
+			// act
+			var actionSummary = serviceModel.ToActionSummary();
+			
+			// assert
+			Assert.Multiple(() =>
+			{
+				Assert.That(actionSummary.Name, Is.EqualTo("NTI Warning Letter"));
+				Assert.That(actionSummary.ClosedDate, Is.EqualTo(testData.ClosedAt.GetFormattedDate()));
+				Assert.That(actionSummary.OpenedDate, Is.EqualTo(testData.CreatedAt.GetFormattedDate()));
+				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/ntiwarningletter/{testData.Id}"));
+				Assert.That(actionSummary.StatusName, Is.EqualTo(testData.Status.Name));
+			});
 		}
 	}
 }

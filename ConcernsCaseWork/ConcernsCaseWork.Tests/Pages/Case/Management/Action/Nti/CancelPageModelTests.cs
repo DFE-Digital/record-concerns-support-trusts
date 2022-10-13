@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 	}
 
 	[Parallelizable(ParallelScope.All)]
-	public class ClosePageModelTests
+	public class CancelPageModelTests
 	{
 		[Test]
 		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()

@@ -1,11 +1,9 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using AutoFixture;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
 using Service.TRAMS.Nti;
-using Service.TRAMS.NtiUnderConsideration;
-using Service.TRAMS.NtiWarningLetter;
-using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,26 +13,26 @@ namespace ConcernsCaseWork.Tests.Mappers
 	[Parallelizable(ParallelScope.All)]
 	public class NtiMappingTests
 	{
+		private readonly static Fixture _fixture = new();
+
 		[Test]
 		public void WhenMapDtoToServiceModel_ReturnsCorrectModel()
 		{
 			//arrange
-			var now = DateTime.Now;
-
 			var testData = new
 			{
 				Id = 1L,
 				CaseUrn = 123,
 				CreatedAt = DateTime.Now.AddDays(-5),
-				ClosedAt = now,
+				ClosedAt = DateTime.Now,
 				Notes = "Test notes",
 				Reasons = new KeyValuePair<int, string>[] { new KeyValuePair<int, string>(1, "Reason1") },
 				DateStarted = DateTime.Now.AddDays(-1),
 				Status = new KeyValuePair<int, string>(1, "Status 1"),
 				UpdatedAt = DateTime.Now.AddDays(-1),
 				SumissionDecisionId = "1000001",
-				DateNTIClosed = now,
-				DateNTILifted = now
+				DateNTIClosed = DateTime.Now.AddDays(-3),
+				DateNTILifted = DateTime.Now.AddDays(-4)
 
 			};
 
@@ -77,22 +75,20 @@ namespace ConcernsCaseWork.Tests.Mappers
 		public void WhenMapDtoToDbModel_ReturnsCorrectModel()
 		{
 			//arrange
-			var now = DateTime.Now;
-
 			var testData = new
 			{
 				Id = 1L,
 				CaseUrn = 123L,
 				CreatedAt = DateTime.Now.AddDays(-5),
-				ClosedAt = now,
+				ClosedAt = DateTime.Now,
 				Notes = "Test notes",
 				Reasons = new KeyValuePair<int, string>[] { new KeyValuePair<int, string>(1, "Reason1") },
 				DateStarted = DateTime.Now.AddDays(-1),
 				Status = new KeyValuePair<int, string>(1, "Status 1"),
 				UpdatedAt = DateTime.Now.AddDays(-1),
 				SumissionDecisionId = "1000001",
-				DateNTIClosed = now,
-				DateNTILifted = now
+				DateNTIClosed = DateTime.Now.AddDays(-3),
+				DateNTILifted = DateTime.Now.AddDays(-4)
 			};
 
 			var serviceModel = new NtiModel
@@ -165,6 +161,42 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(model, Is.Not.Null);
 			Assert.That(model.Id, Is.EqualTo(dto.Id));
 			Assert.That(model.Name, Is.EqualTo(dto.Name));
+		}
+		
+		[Test]
+		public void WhenMapDbModelToActionSummary_ReturnsCorrectModel()
+		{
+			//arrange
+			var testData = new
+			{
+				Id = _fixture.Create<int>(),
+				CaseUrn = _fixture.Create<int>(),
+				CreatedAt = _fixture.Create<DateTime>(),
+				ClosedAt = _fixture.Create<DateTime>(),
+				ClosedStatus = new KeyValuePair<int, string>(_fixture.Create<int>(), _fixture.Create<string>())
+			};
+
+			var serviceModel = new NtiModel
+			{
+				Id = testData.Id,
+				CaseUrn = testData.CaseUrn,
+				CreatedAt = testData.CreatedAt,
+				ClosedAt = testData.ClosedAt,
+				ClosedStatus = new NtiStatusModel { Id = testData.ClosedStatus.Key, Name = testData.ClosedStatus.Value },
+			};
+
+			// act
+			var actionSummary = serviceModel.ToActionSummary();
+			
+			// assert
+			Assert.Multiple(() =>
+			{
+				Assert.That(actionSummary.Name, Is.EqualTo("NTI"));
+				Assert.That(actionSummary.ClosedDate, Is.EqualTo(testData.ClosedAt.GetFormattedDate()));
+				Assert.That(actionSummary.OpenedDate, Is.EqualTo(testData.CreatedAt.GetFormattedDate()));
+				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/nti/{testData.Id}"));
+				Assert.That(actionSummary.StatusName, Is.EqualTo(testData.ClosedStatus.Value));
+			});
 		}
 	}
 }

@@ -12,5 +12,10 @@ namespace ConcernsCaseWork.Models.CaseActions
 		public DateTime? SentDate { get; set; }
 		public int? ClosedStatusId { get; set; }
 		public NtiWarningLetterStatusModel ClosedStatus { get; set; }
+
+		public bool CanBeEdited()
+		{
+			return !this.ClosedAt.HasValue;
+		}
 	}
 }

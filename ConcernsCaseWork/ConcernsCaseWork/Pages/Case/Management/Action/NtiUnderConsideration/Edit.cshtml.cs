@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using Service.Redis.NtiUnderConsideration;
+using ConcernsCaseWork.Exceptions;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -23,7 +24,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		private readonly INtiUnderConsiderationReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<EditPageModel> _logger;
 		
-		public int NotesMaxLength => 2000;
+		public const int NotesMaxLength = 2000;
 		public IEnumerable<RadioItem> NTIReasonsToConsiderForUI;
 
 		public long CaseUrn { get; private set; }
@@ -78,6 +79,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				var updated = await _ntiModelService.PatchNtiUnderConsideration(freshFromDb);
 
 				return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{updated.Id}");
+			}
+			catch (InvalidUserInputException ex)
+			{
+				TempData["NTI-UC.Message"] = ex.Message;
+				return RedirectToPage();
 			}
 			catch (Exception ex)
 			{
@@ -141,7 +147,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			{
 				if (notes.Length > NotesMaxLength)
 				{
-					throw new Exception($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
+					throw new InvalidUserInputException($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
 				}
 				else
 				{

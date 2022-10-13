@@ -6,5 +6,6 @@ namespace Service.TRAMS.Teams
 	{
 		public Task<ConcernsCaseworkTeamDto> GetTeam(string ownerId);
 		public Task PutTeam(ConcernsCaseworkTeamDto team);
+		public Task<string[]> GetTeamOwners();
 	}
 }

@@ -15,6 +15,7 @@ using ConcernsCaseWork.Models.CaseActions;
 using Service.Redis.NtiUnderConsideration;
 using Service.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
+using ConcernsCaseWork.Mappers;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 {
@@ -25,6 +26,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		private readonly INtiWarningLetterStatusesCachedService _ntiWarningLetterStatusesCachedService;
 		private readonly INtiWarningLetterReasonsCachedService _ntiWarningLetterReasonsCachedService;
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
+		private readonly INtiWarningLetterConditionsCachedService _ntiWarningLetterConditionsCachedService;
 		private readonly ILogger<AddPageModel> _logger;
 
 		public string ActionForAddConditionsButton = "add-conditions";
@@ -51,11 +53,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		public AddPageModel(INtiWarningLetterStatusesCachedService ntiWarningLetterStatusesCachedService,
 			INtiWarningLetterReasonsCachedService ntiWarningLetterReasonsCachedService,
 			INtiWarningLetterModelService ntiWarningLetterModelService,
+			INtiWarningLetterConditionsCachedService ntiWarningLetterConditionsCachedService,
 			ILogger<AddPageModel> logger)
 		{
 			_ntiWarningLetterStatusesCachedService = ntiWarningLetterStatusesCachedService;
 			_ntiWarningLetterReasonsCachedService = ntiWarningLetterReasonsCachedService;
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
+			_ntiWarningLetterConditionsCachedService = ntiWarningLetterConditionsCachedService;
 			_logger = logger;
 		}
 
@@ -83,6 +87,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 					{
 						await LoadWarningLetterFromDB();
 					}
+				}
+
+				if (WarningLetter != null && !WarningLetter.CanBeEdited())
+				{
+					throw new Exception("Cannot edit NTI:WL that has already been closed");
 				}
 
 				Statuses = await GetStatuses();
@@ -186,7 +195,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			}
 			else
 			{
+				// creating a new nti
 				nti = PopulateNtiFromRequest();
+				await SetDefaults(nti);
 			}
 
 			if (WarningLetterId != null)
@@ -195,6 +206,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			}
 
 			return nti;
+		}
+
+		private async Task<NtiWarningLetterModel> SetDefaults(NtiWarningLetterModel ntiWarningLetterModel)
+		{
+			var conditions = await _ntiWarningLetterConditionsCachedService.GetAllConditionsAsync();
+			var financialReturnsCondition = NtiWarningLetterMappers.ToServiceModel(conditions.Single(c => c.Id == (int)NtiWarningLetterCondition.FinancialReturns));
+			ntiWarningLetterModel.Conditions.Add(financialReturnsCondition);
+
+			return ntiWarningLetterModel;
 		}
 
 		private void ExtractCaseUrnFromRoute()
@@ -280,7 +300,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				CaseUrn = CaseUrn,
 				Reasons = reasons.Select(r => new NtiWarningLetterReasonModel { Id = int.Parse(r) }).ToArray(),
 				Status = int.TryParse(status, out int statusId) ? new NtiWarningLetterStatusModel { Id = statusId } : null,
-				Conditions = Array.Empty<NtiWarningLetterConditionModel>(),
+				Conditions = new List<NtiWarningLetterConditionModel>(),
 				Notes = notes,
 				SentDate = sentDate,
 				CreatedAt = DateTime.Now.Date,
