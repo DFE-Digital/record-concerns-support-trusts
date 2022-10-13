@@ -14,6 +14,7 @@ using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using ConcernsCaseWork.Services.Decision;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 {
@@ -88,6 +89,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 		private class TestBuilder
 		{
+			private readonly Mock<IDecisionModelService> _mockDecisionModelService;
 			private readonly Mock<ILogger<AddPageModel>> _mockLogger;
 			private readonly bool _isAuthenticated;
 			private object _caseUrnValue;
@@ -100,6 +102,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				_isAuthenticated = true;
 				
 				_caseUrnValue = 5;
+				_mockDecisionModelService = Fixture.Freeze<Mock<IDecisionModelService>>();
 				_mockLogger = Fixture.Freeze<Mock<ILogger<AddPageModel>>>();
 			}
 
@@ -114,7 +117,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			{
 				(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(_isAuthenticated);
 
-				var result = new AddPageModel(_mockLogger.Object)
+				var result = new AddPageModel(_mockDecisionModelService.Object, _mockLogger.Object)
 				{
 					PageContext = pageContext,
 					TempData = tempData,

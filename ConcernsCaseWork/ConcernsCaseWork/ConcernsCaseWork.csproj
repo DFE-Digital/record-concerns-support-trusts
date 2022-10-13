@@ -31,6 +31,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\assets" />
     <Folder Include="wwwroot\dist" />
+    <Folder Include="Services\Decision\" />
   </ItemGroup>
 	
   <ItemGroup>
@@ -225,4 +226,7 @@
     </Compile>
   </ItemGroup>
 	
+  <ItemGroup>
+    <None Remove="Services\Decision\" />
+  </ItemGroup>
 </Project>

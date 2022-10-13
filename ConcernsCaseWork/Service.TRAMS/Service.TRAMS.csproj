@@ -14,4 +14,10 @@
       <ProjectReference Include="..\ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Decision\" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Decision\" />
+    </ItemGroup>
 </Project>
