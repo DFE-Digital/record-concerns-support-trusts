@@ -233,13 +233,13 @@ cd ConcernsCaseWork/ConcernsCaseWork.CypressTests/
 Followed by:
 
 ```
-npm run cy:open -- --env apiKey='APIKEY',api=,username='USERNAME',password='PASSWORD',url="BASE_URL_OF_APP"
+npm run cy:open -- --env apiKey='APIKEY',api='TRAMS_BASE_URL',username='USERNAME',password='PASSWORD',url="BASE_URL_OF_APP"
 ```
 
 To execute the tests in headless mode, run the following (the output will log to the console):
 
 ```
-npm run cy:run -- --env apiKey='APIKEY',api=,username='USERNAME',password='PASSWORD',url="BASE_URL_OF_APP"
+npm run cy:run -- --env apiKey='APIKEY',api='TRAMS_BASE_URL',username='USERNAME',password='PASSWORD',url="BASE_URL_OF_APP"
 ```
 
 ### Useful tips
