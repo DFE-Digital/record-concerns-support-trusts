@@ -14,7 +14,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Pages.Case.CreateConcernsCase;
+namespace ConcernsCaseWork.Pages.Case.CreateCase;
 
 [Authorize]
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
