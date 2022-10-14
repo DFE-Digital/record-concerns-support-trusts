@@ -1,9 +1,9 @@
 ﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Validators;
-using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
@@ -31,20 +31,21 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private readonly ITypeModelService _typeModelService;
 		private readonly IUserStateCachedService _cachedService;
 		private readonly IMeansOfReferralModelService _meansOfReferralService;
-		private readonly ICreateCaseService _createCaseService;
+		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		
 		public TypeModel TypeModel { get; private set; }
 		public IList<RatingModel> RatingsModel { get; private set; }
-		public TrustDetailsModel TrustDetailsModel { get; private set; }
+		
+		public TrustAddressModel TrustAddress { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
 		public IList<MeansOfReferralModel> MeansOfReferralModel { get; private set; }
 
-		public IndexPageModel(ITrustModelService trustModelService, 
+		public IndexPageModel(ITrustModelService trustModelService,
 			IUserStateCachedService cachedService,
 			ITypeModelService typeModelService,
 			IRatingModelService ratingModelService,
 			IMeansOfReferralModelService meansOfReferralService,
-			ICreateCaseService createCaseService,
+			IClaimsPrincipalHelper claimsPrincipalHelper,
 			ILogger<IndexPageModel> logger)
 		{
 			_ratingModelService = ratingModelService;
@@ -52,13 +53,13 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			_typeModelService = typeModelService;
 			_cachedService = cachedService;
 			_meansOfReferralService = meansOfReferralService;
-			_createCaseService = createCaseService;
+			_claimsPrincipalHelper = claimsPrincipalHelper;
 			_logger = logger;
 		}
 		
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Concern::IndexPageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 				
 			try
 			{
@@ -66,7 +67,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Concern::IndexPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogErrorMsg(ex);
 				
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
@@ -77,8 +78,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		{
 			try
 			{
-				_logger.LogInformation("Case::Concern::IndexPageModel::OnPostAsync");
-
+				_logger.LogMethodEntered();
+				
 				if (!ConcernTypeValidator.IsValid(Request.Form) || string.IsNullOrWhiteSpace(Request.Form["means-of-referral-urn"].ToString()))
 					throw new Exception("Missing form values");
 				
@@ -112,12 +113,13 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 						ReviewAt = currentDate,
 						UpdatedAt = currentDate,
 						ClosedAt = currentDate,
-						CreatedBy = User.Identity.Name,
+						CreatedBy = GetUserName(),
 						DeEscalation = currentDate,
 						RagRatingName = ragRatingName,
 						RagRating = RatingMapping.FetchRag(ragRatingName),
 						RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
-						DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString()
+						DirectionOfTravel = DirectionOfTravelEnum.Deteriorating.ToString(),
+						TrustUkPrn = userState.TrustUkPrn
 					};
 				}
 				
@@ -136,13 +138,13 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				userState.CreateCaseModel.CreateRecordsModel.Add(createRecordModel);
 				
 				// Store case model in cache for the details page
-				await _cachedService.StoreData(User.Identity?.Name, userState);
+				await _cachedService.StoreData(GetUserName(), userState);
 				
 				return RedirectToPage("add");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Concern::IndexPageModel::OnPostAsync::Exception - {Message}", ex.Message);
+				_logger.LogErrorMsg(ex);
 				
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
@@ -163,6 +165,8 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 
 		public async Task<ActionResult> OnGetCancel()
 		{
+			_logger.LogMethodEntered();
+			
 			try
 			{
 				var userState = await GetUserState();
@@ -173,7 +177,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::Concern::IndexPageModel::OnGetCancel::Exception - {Message}", ex.Message);
+				_logger.LogErrorMsg(ex);
 					
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
@@ -183,15 +187,15 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		private async Task<ActionResult> LoadPage()
 		{
 			var userState = await GetUserState();
-			var userName = User.Identity?.Name;
-			
-			var trustUkPrn = await _createCaseService.GetSelectedTrustUkPrn(userName);
+
+			var trustUkPrn = userState.TrustUkPrn;
 		
 			if (string.IsNullOrEmpty(trustUkPrn))
 				throw new Exception("Cache TrustUkprn is null");
 		
 			CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
-			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
+			TrustAddress = await _trustModelService.GetTrustAddressByUkPrn(trustUkPrn);
+			CreateRecordsModel = new List<CreateRecordModel>();
 			RatingsModel = await _ratingModelService.GetRatingsModel();
 			TypeModel = await _typeModelService.GetTypeModel();
 			MeansOfReferralModel = await _meansOfReferralService.GetMeansOfReferrals();
@@ -207,5 +211,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			
 			return userState;
 		}
+		
+		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 	}
 }

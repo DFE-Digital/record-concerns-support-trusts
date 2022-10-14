@@ -142,7 +142,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IActionsModelService, ActionsModelService>();
 			services.AddScoped<ITeamsModelService, TeamsModelService>();
 			services.AddScoped<IClaimsPrincipalHelper, ClaimsPrincipalHelper>();
-			services.AddScoped<ICreateCaseService, CreateCaseService>();
 
 			// Trams api services
 			services.AddScoped<ICaseService, CaseService>();

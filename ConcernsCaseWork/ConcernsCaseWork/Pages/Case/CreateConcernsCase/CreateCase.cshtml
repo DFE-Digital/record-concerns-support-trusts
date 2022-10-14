@@ -1,0 +1,24 @@
+@page "/case/create/{handler?}"
+@model ConcernsCaseWork.Pages.Case.CreateConcernsCase.CreateCasePageModel
+
+@{
+	ViewData["Title"] = "New Case";
+	ViewData["BackButtonLink"] = "/";
+	var currentStep = TempData?[nameof(Model.CurrentStep)]?.ToString() ?? "0";
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError"/>
+
+	@if (currentStep != "2" )
+	{
+		<partial name="_SelectTrust"/>
+	}
+	@if (currentStep == "2")
+	{
+		<partial name="_SelectCaseType"/>
+	}
+
+</div>
+
+

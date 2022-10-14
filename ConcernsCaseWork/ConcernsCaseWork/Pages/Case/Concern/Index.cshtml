@@ -20,7 +20,14 @@
 	{
 		<!-- Trust summary and records -->
 		<dl class="govuk-summary-list">
-			<partial name="_TrustSummary" model="Model.TrustDetailsModel"/>
+			<div class="govuk-summary-list__row">
+            	<dt class="govuk-summary-list__key">Trust</dt>
+            	<dd class="govuk-summary-list__value">
+	                @Model.TrustAddress.TrustName @Model.TrustAddress.County
+            		<br/>
+            		@Model.TrustAddress.DisplayAddress
+            	</dd>
+            </div>
 			<partial name="_RecordsSummary" model="Model.CreateRecordsModel"/>
 		</dl>
 		

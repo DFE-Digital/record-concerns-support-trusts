@@ -1,5 +1,4 @@
-@page "/case/choosecasetype"
-@model ConcernsCaseWork.Pages.Case.ChooseCaseTypePageModel
+@model ConcernsCaseWork.Pages.Case.CreateConcernsCase.CreateCasePageModel
 @{
 	ViewData["Title"] = "Create case";
 	ViewData["BackButtonLink"] = "/case";
@@ -29,7 +28,7 @@
 			</dl>
 
 			<h2 class="govuk-heading-m">What are you recording?</h2>
-			
+
 			<div class="govuk-radios" data-module="govuk-radios">
 				<div class="govuk-radios__item">
 					<input asp-for="CaseType" class="govuk-radios__input" id="concerncase-option" type="radio" value="1">
@@ -65,4 +64,4 @@
 
 		</form>
 	}
-</div>
+		</div>

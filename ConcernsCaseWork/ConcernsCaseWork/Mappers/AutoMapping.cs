@@ -31,7 +31,6 @@ namespace ConcernsCaseWork.Mappers
 			CreateMap<CaseHistoryDto, CaseHistoryModel>();
 			CreateMap<MeansOfReferralModel, MeansOfReferralDto>();
 			CreateMap<MeansOfReferralDto, MeansOfReferralModel>();
-			CreateMap<CreateCaseWizardModelDto, CreateCaseWizardModel>().ReverseMap();
 
 			// Teams
 			CreateMap<ConcernsCaseworkTeamDto, ConcernsTeamCaseworkModel>().ReverseMap();
