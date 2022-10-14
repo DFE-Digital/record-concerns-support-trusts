@@ -29,10 +29,8 @@ public class CreateNonConcernsCasePageModel : WizardPageModel
 
 	public override int LastStep { get; set; } = 3;
 
-	[BindProperty(SupportsGet = true)]
 	public TrustAddressModel TrustAddress { get; set; }
-		
-	[BindProperty]
+
 	[TempData]
 	public int CaseType { get; set; }
 
