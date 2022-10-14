@@ -18,16 +18,17 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase;
 
 [Authorize]
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-public class CreateCasePageModel : WizardPageModel
+public class CreateNonConcernsCasePageModel : AbstractPageModel
 {
 	private readonly ITrustModelService _trustModelService;
 	private readonly IUserStateCachedService _cachedService;
-	private readonly ILogger<CreateCasePageModel> _logger;
+	private readonly ILogger<CreateNonConcernsCasePageModel> _logger;
 	private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 
 	private const int SearchQueryMinLength = 3;
 	
-	public override int LastStep { get; set; } = 3;
+	[TempData]
+	public int CurrentStep { get; set; }
 
 	[BindProperty(SupportsGet = true)]
 	public TrustAddressModel TrustAddress { get; set; }
@@ -36,9 +37,21 @@ public class CreateCasePageModel : WizardPageModel
 	[TempData]
 	public int CaseType { get; set; }
 
-	public CreateCasePageModel(ITrustModelService trustModelService,
+	private void NextStep()
+	{
+		if (CurrentStep >= 3)
+		{
+			CurrentStep = 0;
+		}
+		else
+		{
+			CurrentStep++;
+		}
+	}
+
+	public CreateNonConcernsCasePageModel(ITrustModelService trustModelService,
 		IUserStateCachedService cachedService,
-		ILogger<CreateCasePageModel> logger,
+		ILogger<CreateNonConcernsCasePageModel> logger,
 		IClaimsPrincipalHelper claimsPrincipalHelper)
 	{
 		_trustModelService = Guard.Against.Null(trustModelService);
@@ -46,7 +59,10 @@ public class CreateCasePageModel : WizardPageModel
 		_logger = Guard.Against.Null(logger);
 		_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
 
-		ResetStepsIfLastStepReached();
+		if (CurrentStep >= 3)
+		{
+			CurrentStep = 0;
+		}
 	}
 
 	public async Task OnGet()
@@ -198,7 +214,7 @@ public class CreateCasePageModel : WizardPageModel
 		}
 		
 	#endregion
-
+	
 	private async Task SetTrustAddress()
 	{
 		var userState = await _cachedService.GetData(User.Identity?.Name);
