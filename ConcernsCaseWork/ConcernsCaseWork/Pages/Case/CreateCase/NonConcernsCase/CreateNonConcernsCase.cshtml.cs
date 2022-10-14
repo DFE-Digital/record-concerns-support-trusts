@@ -14,21 +14,20 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Pages.Case.CreateCase;
+namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase;
 
 [Authorize]
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-public class CreateNonConcernsCasePageModel : AbstractPageModel
+public class CreateNonConcernsCasePageModel : WizardPageModel
 {
 	private readonly ITrustModelService _trustModelService;
 	private readonly IUserStateCachedService _cachedService;
 	private readonly ILogger<CreateNonConcernsCasePageModel> _logger;
 	private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 
-	private const int SearchQueryMinLength = 3;
-	
-	[TempData]
-	public int CurrentStep { get; set; }
+	private const int _searchQueryMinLength = 3;
+
+	public override int LastStep { get; set; } = 3;
 
 	[BindProperty(SupportsGet = true)]
 	public TrustAddressModel TrustAddress { get; set; }
@@ -36,18 +35,6 @@ public class CreateNonConcernsCasePageModel : AbstractPageModel
 	[BindProperty]
 	[TempData]
 	public int CaseType { get; set; }
-
-	private void NextStep()
-	{
-		if (CurrentStep >= 3)
-		{
-			CurrentStep = 0;
-		}
-		else
-		{
-			CurrentStep++;
-		}
-	}
 
 	public CreateNonConcernsCasePageModel(ITrustModelService trustModelService,
 		IUserStateCachedService cachedService,
@@ -126,7 +113,7 @@ public class CreateNonConcernsCasePageModel : AbstractPageModel
 		try
 		{
 			// Double check search query.
-			if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < SearchQueryMinLength)
+			if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < _searchQueryMinLength)
 				return new JsonResult(Array.Empty<TrustSearchModel>());
 
 			var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);
@@ -151,7 +138,7 @@ public class CreateNonConcernsCasePageModel : AbstractPageModel
 			_logger.LogMethodEntered();
 
 			// Double check selected trust.
-			if (string.IsNullOrEmpty(trustUkPrn) || trustUkPrn.Contains("-") || trustUkPrn.Length < SearchQueryMinLength)
+			if (string.IsNullOrEmpty(trustUkPrn) || trustUkPrn.Contains("-") || trustUkPrn.Length < _searchQueryMinLength)
 				throw new Exception($"Selected trust is incorrect - {trustUkPrn}");
 
 			var userState = await _cachedService.GetData(User.Identity?.Name);
@@ -179,8 +166,6 @@ public class CreateNonConcernsCasePageModel : AbstractPageModel
 			_logger.LogMethodEntered();
 
 			await SetTrustAddress();
-			
-			NextStep();
 		}
 
 		public async Task<ActionResult> OnPostChooseCaseTypeAsync()
@@ -212,12 +197,13 @@ public class CreateNonConcernsCasePageModel : AbstractPageModel
 				return Page();
 			}
 		}
+
+		private async Task SetTrustAddress()
+		{
+			var userState = await _cachedService.GetData(User.Identity?.Name);
+			TrustAddress = await _trustModelService.GetTrustAddressByUkPrn(userState.TrustUkPrn);
+		}
 		
 	#endregion
 	
-	private async Task SetTrustAddress()
-	{
-		var userState = await _cachedService.GetData(User.Identity?.Name);
-		TrustAddress = await _trustModelService.GetTrustAddressByUkPrn(userState.TrustUkPrn);
-	}
 }

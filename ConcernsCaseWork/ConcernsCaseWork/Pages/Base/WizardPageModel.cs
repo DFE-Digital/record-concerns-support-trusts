@@ -9,7 +9,6 @@ public abstract class WizardPageModel : AbstractPageModel
 	
 	public abstract int LastStep { get; set; }
 	
-		
 	protected void NextStep()
 	{
 		if (IsLastStep())
@@ -30,6 +29,7 @@ public abstract class WizardPageModel : AbstractPageModel
 		}
 	}
 
+	protected void ResetSteps() => CurrentStep = 0;
+	
 	private bool IsLastStep() => CurrentStep >= LastStep;
-	private void ResetSteps() => CurrentStep = 0;
 }
