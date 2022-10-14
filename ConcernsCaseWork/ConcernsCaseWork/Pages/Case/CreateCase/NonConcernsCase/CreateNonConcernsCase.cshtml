@@ -1,22 +1,21 @@
-@page "/case/create/nonconcerns/{handler?}"
-@model CreateCasePageModel
+@page "/case/create/nonconcerns"
+@model CreateNonConcernsCasePageModel
 
 @{
-	ViewData["Title"] = "New Case";
+	ViewData["Title"] = "Add to Case";
 	ViewData["BackButtonLink"] = "/";
-	var currentStep = TempData?[nameof(Model.CurrentStep)]?.ToString() ?? "0";
 }
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
 
-	@if (currentStep != "2" )
+	@if (Model.SelectedActionOrDecision == CreateNonConcernsCasePageModel.Options.None )
 	{
-		<partial name=""/>
+		<partial name="_SelectActionOrDecision"/>
 	}
-	@if (currentStep == "2")
+	@if (Model.SelectedActionOrDecision == CreateNonConcernsCasePageModel.Options.Action )
 	{
-		<partial name=""/>
+		<partial name="_SelectAction"/>
 	}
 
 </div>

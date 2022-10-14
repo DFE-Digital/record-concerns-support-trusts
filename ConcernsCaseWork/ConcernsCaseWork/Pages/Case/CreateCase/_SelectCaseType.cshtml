@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model CreateCasePageModel
 @{
 	ViewData["Title"] = "Create case";
@@ -31,7 +32,7 @@
 
 			<div class="govuk-radios" data-module="govuk-radios">
 				<div class="govuk-radios__item">
-					<input asp-for="CaseType" class="govuk-radios__input" id="concerncase-option" type="radio" value="1">
+					<input asp-for="CaseType" class="govuk-radios__input" id="concerncase-option" type="radio" value="@CreateCasePageModel.CaseTypes.Concern">
 					<label asp-for="CaseType" class="govuk-label govuk-radios__label" for="concerncase-option">
 						A concern or multiple concerns
 					</label>
@@ -40,9 +41,9 @@
 					</div>
 				</div>
 				<div class="govuk-radios__item">
-					<input asp-for="CaseType" class="govuk-radios__input" id="non-concerncase-option" type="radio" value="2" disabled="disabled">
+					<input asp-for="CaseType" class="govuk-radios__input" id="non-concerncase-option" type="radio" value="@CreateCasePageModel.CaseTypes.NonConcern">
 					<label class="govuk-label govuk-radios__label" for="non-concerncase-option">
-						Non-concern related action(s) or decision(s) (NOT YET IMPLEMENTED)
+						Non-concern related action(s) or decision(s)
 					</label>
 					<div class="govuk-hint govuk-radios__hint">
 						For example, a proactive School Resource Management Adviser (SRMA)

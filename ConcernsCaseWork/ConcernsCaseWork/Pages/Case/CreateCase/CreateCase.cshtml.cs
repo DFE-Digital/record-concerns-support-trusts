@@ -33,8 +33,7 @@ public class CreateCasePageModel : WizardPageModel
 	public TrustAddressModel TrustAddress { get; set; }
 		
 	[BindProperty]
-	[TempData]
-	public int CaseType { get; set; }
+	public CaseTypes CaseType { get; set; }
 
 	public CreateCasePageModel(ITrustModelService trustModelService,
 		IUserStateCachedService cachedService,
@@ -61,7 +60,7 @@ public class CreateCasePageModel : WizardPageModel
 				case 1:
 					break;
 				case 2:
-					await OnGetChooseCaseTypeAsync();
+					await GetChooseCaseType();
 					break;
 			}
 		}
@@ -73,7 +72,7 @@ public class CreateCasePageModel : WizardPageModel
 		}
 	}
 	
-	public async Task<ActionResult> OnPostAsync()
+	public async Task<ActionResult> OnPost()
 	{
 		_logger.LogMethodEntered();
 			
@@ -85,7 +84,7 @@ public class CreateCasePageModel : WizardPageModel
 				case 1:
 				case 2:
 				case 3:
-					return await OnPostChooseCaseTypeAsync();
+					return await PostChooseCaseType();
 				case 4:
 					break;
 			}
@@ -158,7 +157,7 @@ public class CreateCasePageModel : WizardPageModel
 	
 	#region Step2 Choose Case Type
 			
-		public async Task OnGetChooseCaseTypeAsync()
+		public async Task GetChooseCaseType()
 		{
 			_logger.LogMethodEntered();
 
@@ -167,7 +166,7 @@ public class CreateCasePageModel : WizardPageModel
 			NextStep();
 		}
 
-		public async Task<ActionResult> OnPostChooseCaseTypeAsync()
+		public async Task<ActionResult> PostChooseCaseType()
 		{
 			_logger.LogMethodEntered();
 			
@@ -186,8 +185,13 @@ public class CreateCasePageModel : WizardPageModel
 				await _cachedService.StoreData(User.Identity?.Name, userState);
 			
 				NextStep();
-				
-				return RedirectToPage("/case/Concern/Index");
+
+				return CaseType switch
+				{
+					CaseTypes.Concern => Redirect("/case/Concern/Index"),
+					CaseTypes.NonConcern => Redirect("/case/create/nonconcerns"),
+					_ => throw new ArgumentOutOfRangeException()
+				};
 			}
 			catch (Exception ex)
 			{
@@ -203,5 +207,11 @@ public class CreateCasePageModel : WizardPageModel
 	{
 		var userState = await _cachedService.GetData(User.Identity?.Name);
 		TrustAddress = await _trustModelService.GetTrustAddressByUkPrn(userState.TrustUkPrn);
+	}
+	
+	public enum CaseTypes
+	{
+		Concern,
+		NonConcern
 	}
 }
