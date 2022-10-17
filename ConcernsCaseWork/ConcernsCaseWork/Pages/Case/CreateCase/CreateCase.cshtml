@@ -4,17 +4,16 @@
 @{
 	ViewData["Title"] = "New Case";
 	ViewData["BackButtonLink"] = "/";
-	var currentStep = TempData?[nameof(Model.CurrentStep)]?.ToString() ?? "0";
 }
 
 <div class="govuk-width-container">
 	<partial name="_BannerError"/>
 
-	@if (currentStep != "2" )
+	@if (Model.CreateCaseStep == CreateCasePageModel.CreateCaseSteps.SearchForTrust)
 	{
 		<partial name="_SelectTrust"/>
 	}
-	@if (currentStep == "2")
+	@if (Model.CreateCaseStep == CreateCasePageModel.CreateCaseSteps.SelectCaseType)
 	{
 		<partial name="_SelectCaseType"/>
 	}

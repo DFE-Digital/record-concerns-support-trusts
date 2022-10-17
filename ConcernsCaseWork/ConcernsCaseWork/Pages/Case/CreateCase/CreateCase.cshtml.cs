@@ -11,6 +11,7 @@ using Service.Redis.Models;
 using Service.Redis.Users;
 using Service.TRAMS.Trusts;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -18,22 +19,23 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase;
 
 [Authorize]
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-public class CreateCasePageModel : WizardPageModel
+public class CreateCasePageModel : AbstractPageModel
 {
 	private readonly ITrustModelService _trustModelService;
 	private readonly IUserStateCachedService _cachedService;
 	private readonly ILogger<CreateCasePageModel> _logger;
 	private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 
-	private const int SearchQueryMinLength = 3;
-	
-	public override int LastStep { get; set; } = 3;
+	private const int _searchQueryMinLength = 3;
 
 	[BindProperty(SupportsGet = true)]
 	public TrustAddressModel TrustAddress { get; set; }
 		
 	[BindProperty]
 	public CaseTypes CaseType { get; set; }
+
+	[TempData]
+	public CreateCaseSteps CreateCaseStep { get; set; } = CreateCaseSteps.SearchForTrust;
 
 	public CreateCasePageModel(ITrustModelService trustModelService,
 		IUserStateCachedService cachedService,
@@ -44,8 +46,6 @@ public class CreateCasePageModel : WizardPageModel
 		_cachedService = Guard.Against.Null(cachedService);
 		_logger = Guard.Against.Null(logger);
 		_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
-
-		ResetStepsIfLastStepReached();
 	}
 
 	public async Task OnGet()
@@ -54,14 +54,9 @@ public class CreateCasePageModel : WizardPageModel
 		
 		try
 		{
-			switch (CurrentStep)
+			if (CreateCaseStep == CreateCaseSteps.SelectCaseType)
 			{
-				case 0:
-				case 1:
-					break;
-				case 2:
-					await GetChooseCaseType();
-					break;
+				await SetTrustAddress();
 			}
 		}
 		catch (Exception ex)
@@ -78,140 +73,134 @@ public class CreateCasePageModel : WizardPageModel
 			
 		try
 		{
-			switch (CurrentStep)        
+			if (CreateCaseStep != CreateCaseSteps.SelectCaseType)
 			{
-				case 0:
-				case 1:
-				case 2:
-				case 3:
-					return await PostChooseCaseType();
-				case 4:
-					break;
+				throw new Exception();
 			}
 
-			return Page();
+			if (!ModelState.IsValid)
+			{
+				await SetTrustAddress();
+				return Page();
+			}
+
+			await ResetUserState();
+			ResetCurrentStep();
+			
+			return CaseType switch
+			{
+				CaseTypes.Concern => Redirect("/case/Concern/Index"),
+				CaseTypes.NonConcern => Redirect("/case/create/nonconcerns"),
+				_ => throw new ArgumentOutOfRangeException()
+			};
 		}
 		catch (Exception ex)
 		{
 			_logger.LogErrorMsg(ex);
-			TempData["Error.Message"] = ErrorOnPostPage;
 			
-			return RedirectToPage("choosecasetype");
+			TempData["Error.Message"] = ErrorOnPostPage;
+		}
+		
+		return Page();
+		
+		async Task ResetUserState()
+		{
+			var userState = await _cachedService.GetData(User.Identity?.Name);
+			userState.CreateCaseModel = new CreateCaseModel();
+			await _cachedService.StoreData(User.Identity?.Name, userState);
+		}
+		
+		void ResetCurrentStep()
+		{
+			CreateCaseStep = CreateCaseSteps.SearchForTrust;
 		}
 	}
 	
-	#region Step1 Get Trusts
-	
+	// This is an AJAX call
 	public async Task<ActionResult> OnGetTrustsSearchResult(string searchQuery)
 	{
 		_logger.LogMethodEntered();
 		
 		try
 		{
-			// Double check search query.
-			if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < SearchQueryMinLength)
+			if (!SearchQueryIsValid()) 
 				return new JsonResult(Array.Empty<TrustSearchModel>());
 
-			var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);
-			var trustSearchResponse = await _trustModelService.GetTrustsBySearchCriteria(trustSearch);
-			
-			NextStep();
+			var trustSearchResponse = await BuildTrustResponse();
 			
 			return new JsonResult(trustSearchResponse);
 		}
 		catch (Exception ex)
 		{
-			_logger.LogErrorMsg(ex);
+			return HandleExceptionForAjaxCall(ex);
+		}
+		
+		bool SearchQueryIsValid() => !(string.IsNullOrEmpty(searchQuery) || searchQuery.Length < _searchQueryMinLength);
 
-			return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+		async Task<IList<TrustSearchModel>> BuildTrustResponse()
+		{
+			var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);
+			return await _trustModelService.GetTrustsBySearchCriteria(trustSearch);
 		}
 	}
 
+	// This is an AJAX call
 	public async Task<ActionResult> OnGetSelectedTrust(string trustUkPrn)
 	{
+		_logger.LogMethodEntered();
+		
 		try
 		{
-			_logger.LogMethodEntered();
-
-			// Double check selected trust.
-			if (string.IsNullOrEmpty(trustUkPrn) || trustUkPrn.Contains("-") || trustUkPrn.Length < SearchQueryMinLength)
+			if (!TrustUkPrnIsValid())
 				throw new Exception($"Selected trust is incorrect - {trustUkPrn}");
 
-			var userState = await _cachedService.GetData(User.Identity?.Name);
-			userState.TrustUkPrn = trustUkPrn;
-			await _cachedService.StoreData(User.Identity?.Name, userState);
+			await CacheTrustUkPrn();
 			
-			NextStep();
-			
-			return new JsonResult(new { redirectUrl = "/case/create" });
+			SetNextStep();
+
+			return ReloadPageForNextStep();
 		}
 		catch (Exception ex)
 		{
-			_logger.LogErrorMsg(ex);
-			
-			return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-		}
-	}
-	
-	#endregion
-	
-	#region Step2 Choose Case Type
-			
-		public async Task GetChooseCaseType()
-		{
-			_logger.LogMethodEntered();
-
-			await SetTrustAddress();
-			
-			NextStep();
-		}
-
-		public async Task<ActionResult> PostChooseCaseType()
-		{
-			_logger.LogMethodEntered();
-			
-			try
-			{
-				if (!ModelState.IsValid)
-				{
-					await SetTrustAddress();
-					return Page();
-				}
-				
-				// reset user state
-				var userState = await _cachedService.GetData(User.Identity?.Name);
-				userState.CreateCaseModel = new CreateCaseModel();
-				
-				await _cachedService.StoreData(User.Identity?.Name, userState);
-			
-				NextStep();
-
-				return CaseType switch
-				{
-					CaseTypes.Concern => Redirect("/case/Concern/Index"),
-					CaseTypes.NonConcern => Redirect("/case/create/nonconcerns"),
-					_ => throw new ArgumentOutOfRangeException()
-				};
-			}
-			catch (Exception ex)
-			{
-				_logger.LogErrorMsg(ex);
-				TempData["Error.Message"] = ErrorOnPostPage;
-				return Page();
-			}
+			return HandleExceptionForAjaxCall(ex);
 		}
 		
-	#endregion
+		bool TrustUkPrnIsValid() => !(string.IsNullOrEmpty(trustUkPrn) || trustUkPrn.Contains('-') || trustUkPrn.Length < _searchQueryMinLength);
+
+		async Task CacheTrustUkPrn()
+		{
+			var userState = await _cachedService.GetData(User.Identity?.Name);
+			userState.TrustUkPrn = trustUkPrn;
+			await _cachedService.StoreData(User.Identity?.Name, userState);
+		}
+		
+		void SetNextStep() => CreateCaseStep = CreateCaseSteps.SelectCaseType;
+		
+		JsonResult ReloadPageForNextStep() => new (new { redirectUrl = "/case/create" });
+	}
 
 	private async Task SetTrustAddress()
 	{
 		var userState = await _cachedService.GetData(User.Identity?.Name);
 		TrustAddress = await _trustModelService.GetTrustAddressByUkPrn(userState.TrustUkPrn);
 	}
+
+	private ObjectResult HandleExceptionForAjaxCall(Exception ex)
+	{
+		_logger.LogErrorMsg(ex);
+			
+		return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+	}
 	
 	public enum CaseTypes
 	{
 		Concern,
 		NonConcern
+	}
+	
+	public enum CreateCaseSteps
+	{
+		SearchForTrust,
+		SelectCaseType
 	}
 }
