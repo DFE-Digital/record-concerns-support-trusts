@@ -25,7 +25,6 @@ public class CreateCasePageModel : AbstractPageModel
 	private readonly IUserStateCachedService _cachedService;
 	private readonly ILogger<CreateCasePageModel> _logger;
 	private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
-
 	private const int _searchQueryMinLength = 3;
 
 	[BindProperty(SupportsGet = true)]
