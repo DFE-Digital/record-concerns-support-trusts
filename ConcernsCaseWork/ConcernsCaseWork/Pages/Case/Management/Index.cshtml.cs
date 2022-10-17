@@ -50,8 +50,10 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public List<CaseActionModel> CaseActions { get; private set; }
 		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
 
+		public bool IsConcernsCase { get; set; }
 
-		public IndexPageModel(ICaseModelService caseModelService, 
+
+		public IndexPageModel(ICaseModelService caseModelService,
 			ITrustModelService trustModelService,
 			ICaseHistoryModelService caseHistoryModelService,
 			IRecordModelService recordModelService,
@@ -64,7 +66,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			INtiWarningLetterModelService ntiWarningLetterModelService,
 			INtiModelService ntiModelService,
 			ILogger<IndexPageModel> logger
-			)
+		)
 		{
 			_caseHistoryModelService = caseHistoryModelService;
 			_trustModelService = trustModelService;
@@ -96,27 +98,28 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				// Check if case is editable
 				IsEditableCase = await IsCaseEditable();
-				
+
 				// Map Case Rating
 				CaseModel.RatingModel = await _ratingModelService.GetRatingModelByUrn(CaseModel.RatingUrn);
-				
+
 				// Get Case concerns
 				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
-				
+
 				// Map Case concerns
 				CaseModel.RecordsModel = recordsModel;
+				SetIsConcernsCase();
 
 				var caseHistoryTask = _caseHistoryModelService.GetCasesHistory(User.Identity.Name, caseUrn);
 				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				var trustCasesTask = _caseModelService.GetCasesByTrustUkprn(CaseModel.TrustUkPrn);
 				var caseActionsTask = PopulateCaseActions(caseUrn);
-				
+
 				Task.WaitAll(caseHistoryTask, trustDetailsTask, trustCasesTask, caseActionsTask);
 
 				CasesHistoryModel = caseHistoryTask.Result;
 				TrustDetailsModel = trustDetailsTask.Result;
 				TrustCasesModel = trustCasesTask.Result;
-				
+
 				NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
 			}
 			catch (Exception ex)
@@ -129,7 +132,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		private async Task PopulateAdditionalCaseInformation()
 		{
-			if(CaseActions?.Any(ca => ca is NtiUnderConsiderationModel) == true)
+			if (CaseActions?.Any(ca => ca is NtiUnderConsiderationModel) == true)
 			{
 				NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
 			}
@@ -174,6 +177,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			}
 
 			return false;
+		}
+
+		private void SetIsConcernsCase()
+		{
+			IsConcernsCase = CaseModel.RecordsModel.Any();
 		}
 	}
 }
