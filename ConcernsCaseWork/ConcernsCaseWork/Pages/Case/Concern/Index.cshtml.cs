@@ -205,7 +205,7 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 		
 		private async Task<UserState> GetUserState()
 		{
-			var userState = await _cachedService.GetData(User.Identity.Name);
+			var userState = await _cachedService.GetData(GetUserName());
 			if (userState is null)
 				throw new Exception("Cache CaseStateData is null");
 			
