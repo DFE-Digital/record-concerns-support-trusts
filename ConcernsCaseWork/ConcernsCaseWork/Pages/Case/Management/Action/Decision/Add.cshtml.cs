@@ -27,6 +27,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		[BindProperty]
 		public CreateDecisionDto CreateDecisionDto { get; set; }
 
+		[BindProperty]
+		public Dictionary<DecisionType, DecisionTypeFlag> DecisionTypeFlags { get; set; }
+
 		public int NotesMaxLength => 2000;
 
 		public AddPageModel(IDecisionService decisionService, ILogger<AddPageModel> logger)
@@ -85,7 +88,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			return Page();
 		}
 
-		
+
 
 		private void PopulateCreateDecisionDtoFromRequest()
 		{
@@ -102,6 +105,33 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			CreateDecisionDto.ReceivedRequestDate = parsedDate;
 			CreateDecisionDto.CreatedAt = DateTimeOffset.Now;
 			CreateDecisionDto.UpdatedAt = DateTimeOffset.Now;
+		}
+
+		public Dictionary<DecisionType, DecisionTypeFlag> FromDto(CreateDecisionDto createDecisionDto)
+		{
+			// http://www.hanselman.com/blog/aspnet-wire-format-for-model-binding-to-arrays-lists-collections-dictionaries
+			var enumValues = Enum.GetValues(typeof(DecisionType));
+				
+			var result = new Dictionary<DecisionType, DecisionTypeFlag>(enumValues.Length);
+			foreach(int i in enumValues)
+			{
+				result[(DecisionType)i] = new DecisionTypeFlag { Key = (DecisionType)i, IsSelected = createDecisionDto.DecisionTypes.Contains(i) };
+			}				
+
+			return result;
+		}
+
+		// update the dto with the result of a call to this, so createDecisionDto.DecisionTypes = ToDecisionTypesArray([page property]), 
+		public DecisionType[] ToDecisionTypesArray(Dictionary<DecisionType, DecisionTypeFlag> selectedValues)
+		{
+			// should be using enum not int
+			return selectedValues.Values.Where(x => x.IsSelected).Select(x => x.Key).ToArray();
+		}
+
+		public class DecisionTypeFlag
+		{
+			public DecisionType Key { get; set; }
+			public bool IsSelected { get; set; }
 		}
 	}
 }

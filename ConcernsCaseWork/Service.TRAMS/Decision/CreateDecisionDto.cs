@@ -10,6 +10,7 @@ namespace Service.TRAMS.Decision
 		[Range(1, int.MaxValue, ErrorMessage = "The ConcernsCaseUrn must be greater than zero")]
 		public int ConcernsCaseUrn { get; set; }
 
+		// TODO: Shouldn't this be an array (not an enumerable) of enum values?
 		public IEnumerable<int> DecisionTypes { get; set; }
 
 		[Range(typeof(decimal), "0", "79228162514264337593543950335", ErrorMessage = "The total amount requested must be zero or greater")]
