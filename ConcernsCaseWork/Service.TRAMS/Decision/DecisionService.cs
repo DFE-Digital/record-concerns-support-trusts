@@ -21,7 +21,7 @@ namespace Service.TRAMS.Decision
 			_logger = logger;
 		}
 
-		public async Task<DecisionDto> PostDecision(DecisionDto createDecisionDto)
+		public async Task PostDecision(CreateDecisionDto createDecisionDto)
 		{
 			try
 			{
@@ -38,24 +38,10 @@ namespace Service.TRAMS.Decision
 
 				// Execute request
 				var response = await client.PostAsync(
-					$"/{EndpointsVersion}/concerns-cases/{createDecisionDto.CaseUrn}/decisions", request);
+					$"/{EndpointsVersion}/concerns-cases/{createDecisionDto.ConcernsCaseUrn}/decisions", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
-
-				// Read response content
-				var content = await response.Content.ReadAsStringAsync();
-
-				// Deserialize content to POCO
-				var apiWrapperDecisionDto = JsonConvert.DeserializeObject<ApiWrapper<DecisionDto>>(content);
-
-				// Unwrap response
-				if (apiWrapperDecisionDto is { Data: { } })
-				{
-					return apiWrapperDecisionDto.Data;
-				}
-
-				throw new Exception("Academies API error unwrap response");
 			}
 			catch (Exception ex)
 			{

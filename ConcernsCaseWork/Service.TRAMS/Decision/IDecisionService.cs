@@ -5,7 +5,7 @@ namespace Service.TRAMS.Decision
 {
 	public interface IDecisionService
 	{
-		Task<DecisionDto> PostDecision(DecisionDto createDecisionDto);
+		Task PostDecision(CreateDecisionDto createDecisionDto);
 	}
 }
 

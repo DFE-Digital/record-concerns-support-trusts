@@ -14,7 +14,12 @@ using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
-using ConcernsCaseWork.Services.Decision;
+using Service.TRAMS.Decision;
+using ConcernsCaseWork.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 {
@@ -72,6 +77,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			Assert.AreEqual(expectedUrn, sut.CaseUrn);
 		}
 
+
 		[Test]
 		[TestCase(0)]
 		[TestCase(-1)]
@@ -87,9 +93,34 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			Assert.AreEqual(AddPageModel.ErrorOnPostPage, sut.TempData["Error.Message"]);
 		}
 
+		[Test]
+		public async Task OnPostAsync_When_InvalidNotesField_Then_Throws_Exception()
+		{
+			long caseUrn = 233433;
+
+			var builder = new TestBuilder()
+				.WithCaseUrnRouteValue(caseUrn);
+
+			var sut = builder.BuildSut();
+
+
+			string overMaximumLengthString = new string(builder.Fixture.CreateMany<char>(2001).ToArray());
+
+
+			sut.HttpContext.Request.Form = new FormCollection(
+			new Dictionary<string, StringValues>
+			{
+				{ "CreateDecisionDto.SupportingNotes", new StringValues(overMaximumLengthString) }
+			});
+
+			await sut.OnPostAsync(caseUrn);
+
+			Assert.AreEqual(AddPageModel.ErrorOnPostPage, sut.TempData["Error.Message"]);
+		}
+
 		private class TestBuilder
 		{
-			private readonly Mock<IDecisionModelService> _mockDecisionModelService;
+			private readonly Mock<IDecisionService> _mockDecisionService;
 			private readonly Mock<ILogger<AddPageModel>> _mockLogger;
 			private readonly bool _isAuthenticated;
 			private object _caseUrnValue;
@@ -102,7 +133,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				_isAuthenticated = true;
 				
 				_caseUrnValue = 5;
-				_mockDecisionModelService = Fixture.Freeze<Mock<IDecisionModelService>>();
+				_mockDecisionService = Fixture.Freeze<Mock<IDecisionService>>();
 				_mockLogger = Fixture.Freeze<Mock<ILogger<AddPageModel>>>();
 			}
 
@@ -117,12 +148,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			{
 				(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(_isAuthenticated);
 
-				var result = new AddPageModel(_mockDecisionModelService.Object, _mockLogger.Object)
+				var result = new AddPageModel(_mockDecisionService.Object, _mockLogger.Object)
 				{
 					PageContext = pageContext,
 					TempData = tempData,
 					Url = new UrlHelper(actionContext),
-					MetadataProvider = pageContext.ViewData.ModelMetadata
+					MetadataProvider = pageContext.ViewData.ModelMetadata,
+					CreateDecisionDto = new CreateDecisionDto()
 				};
 
 				var routeData = result.RouteData.Values;

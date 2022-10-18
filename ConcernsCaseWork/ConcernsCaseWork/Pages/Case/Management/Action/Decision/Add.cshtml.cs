@@ -1,13 +1,15 @@
 ﻿
 using ConcernsCaseWork.CoreTypes;
+using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Services.Decision;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
+using Service.TRAMS.Decision;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,14 +21,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class AddPageModel : AbstractPageModel
 	{
-		private readonly IDecisionModelService _decisionModelService;
+		private readonly IDecisionService _decisionService;
 		private readonly ILogger<AddPageModel> _logger;
+
+		[BindProperty]
+		public CreateDecisionDto CreateDecisionDto { get; set; }
 
 		public int NotesMaxLength => 2000;
 
-		public AddPageModel(IDecisionModelService decisionModelService, ILogger<AddPageModel> logger)
+		public AddPageModel(IDecisionService decisionService, ILogger<AddPageModel> logger)
 		{
-			_decisionModelService = decisionModelService;
+			_decisionService = decisionService;
 			_logger = logger;
 		}
 
@@ -58,11 +63,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			{
 				CaseUrn = (CaseUrn)urn;
 
-				//var decisionModel = PopulateDecisionFromRequest();
+				if (!ModelState.IsValid)
+				{
+					TempData["Decision.Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+					return Page();
+				}
 
+				PopulateCreateDecisionDtoFromRequest();
+				await _decisionService.PostDecision(CreateDecisionDto);
 
-
-				//var x = await _decisionModelService.CreateDecision(decisionModel);
+				return Redirect($"/case/{CaseUrn}/management");
 
 			}
 			catch (Exception ex)
@@ -75,54 +85,23 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			return Page();
 		}
 
-		/*
+		
 
-	private DecisionModel PopulateDecisionFromRequest()
-	{
-		var crmEnquiryNumber = Request.Form["crm-enquiry-number"];
-		var retrospectiveApproval = Request.Form["retrospective-approval"];
-		var submissionRequired = Request.Form["submission-required"];
-		var submissionRequiredLink = Request.Form["submission-required-link"];
-
-		var dtr_day = Request.Form["dtr-day-request-received"];
-		var dtr_month = Request.Form["dtr-month-request-received"];
-		var dtr_year = Request.Form["dtr-year-request-received"];
-
-		var total_amount_requested = Request.Form["total-amount-request"];
-		var notes = Request.Form["case-decision-notes"].ToString();
-
-		var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-		var dateStarted = DateTimeHelper.TryParseExact(dtString, out DateTime parsedDate) ? parsedDate : (DateTime?)null;
-
-		if (!string.IsNullOrEmpty(notes))
+		private void PopulateCreateDecisionDtoFromRequest()
 		{
-			if (notes.Length > NotesMaxLength)
-			{
-				throw new Exception($"Notes provided exceed maximum allowed length ({NotesMaxLength} characters).");
-			}
+			var dtr_day = Request.Form["dtr-day-request-received"];
+			var dtr_month = Request.Form["dtr-month-request-received"];
+			var dtr_year = Request.Form["dtr-year-request-received"];
+			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
+			var dateStarted = DateTimeHelper.TryParseExact(dtString, out DateTime parsedDate) ? parsedDate : (DateTime?)null;
+
+			var decisionTypesString = Request.Form["type"].ToString();
+			var decisionTypes = !string.IsNullOrEmpty(decisionTypesString) ? decisionTypesString.Split(',').Select(t => { return Int32.Parse(t); }) : Array.Empty<int>();
+
+			CreateDecisionDto.DecisionTypes = decisionTypes;
+			CreateDecisionDto.ReceivedRequestDate = parsedDate;
+			CreateDecisionDto.CreatedAt = DateTimeOffset.Now;
+			CreateDecisionDto.UpdatedAt = DateTimeOffset.Now;
 		}
-
-
-
-		var decisionModel = new DecisionModel
-		{
-			CaseUrn = CaseUrn,
-			CRMEnquiryNumber = crmEnquiryNumber,
-			RetrospectiveApproval = true,
-			SubmissionRequired = true,
-			SubmissionDocumentLink = submissionRequiredLink,
-			DateEFSAReceivedRequest = parsedDate,
-			TotalAmountRequested = 3,
-			Notes = notes,
-			DecisionTypes = new List<int>() { 1, 2, 3 },
-			CreatedAt = DateTime.Now
-		};
-
-
-		return decisionModel;
-	}
-		*/
-
-
 	}
 }
