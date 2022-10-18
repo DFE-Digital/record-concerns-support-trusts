@@ -37,31 +37,24 @@ public class CreateCaseService : ICreateCaseService
 
 	public async Task<long> CreateNonConcernsCase(string userName)
 	{
+		_logger.LogMethodEntered();
 		try
 		{
-			var model = await GetCachedNonConcernsCaseModel(userName);
-			
-			if (model.TrustUkPrn is null)
-            {
-            	throw new Exception();
-            }
+			var trustUkPrn = await GetSelectedTrustUkPrn(userName);
 			
 			var statusDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
 			var ratingDto = await _ratingCachedService.GetDefaultRating();
 
-			var now = DateTime.Now;
-			model.CreatedAt = now;
-			model.UpdatedAt = now;
-			model.ClosedAt = DateTime.MinValue;
-			model.StatusUrn = statusDto.Urn; 
+			var createdAndUpdatedDate = DateTime.Now;
 
-			var dto = new CreateCaseDto(model.CreatedAt, 
-				model.UpdatedAt, 
+			var dto = new CreateCaseDto(
+				createdAndUpdatedDate, 
+				createdAndUpdatedDate, 
 				DateTime.MinValue, 
-				model.ClosedAt, 
-				model.CreatedBy, 
+				DateTime.MinValue, 
+				userName, 
 				null, 
-				model.TrustUkPrn, 
+				trustUkPrn, 
 				null, 
 				DateTimeOffset.MinValue, 
 				null, 
@@ -70,48 +63,27 @@ public class CreateCaseService : ICreateCaseService
 				null, 
 				null, 
 				null, 
-				model.StatusUrn,
+				statusDto.Urn,
 				ratingDto.Urn);
 			
 			var newCase = await _caseCachedService.PostCase(dto);
-
-			await FinaliseCreatingCase(userName);
-		
 			return newCase.Urn;
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError("CaseModelService::PostCase exception {Message}", ex.Message);
+			_logger.LogErrorMsg(ex);
 
 			throw;
 		}
 	}
 	
-	private async Task<CreateNonConcernsCaseModel> GetCachedNonConcernsCaseModel(string userName)
-	{
-		_logger.LogMethodEntered();
-		
-		try
-		{
-			var userState = await _userStateCachedService.GetData(userName) ?? new UserState(userName);
-			userState.CreateNonConcernsCaseModel.TrustUkPrn = userState.TrustUkPrn;
-			userState.CreateNonConcernsCaseModel.CreatedBy = userName;
-			await _userStateCachedService.StoreData(userName, userState);
-			return userState.CreateNonConcernsCaseModel;
-		}
-		catch (Exception ex)
-		{
-			_logger.LogErrorMsg(ex);
-			
-			throw;
-		}
-	}
-
-	private async Task FinaliseCreatingCase(string userName)
+	private async Task<string> GetSelectedTrustUkPrn(string userName)
 	{
 		var userState = await _userStateCachedService.GetData(userName) ?? new UserState(userName);
-		userState.CreateNonConcernsCaseModel = new CreateNonConcernsCaseModel();
-		userState.CreateCaseModel = new CreateCaseModel();
-		await _userStateCachedService.StoreData(userName, userState);
+			
+		if (string.IsNullOrEmpty(userState.TrustUkPrn))
+			throw new Exception("Cached TrustUkPrn is not set");
+		
+		return userState.TrustUkPrn;
 	}
 }
