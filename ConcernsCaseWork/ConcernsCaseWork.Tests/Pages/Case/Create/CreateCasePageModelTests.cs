@@ -16,6 +16,7 @@ using Service.Redis.Users;
 using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -508,8 +509,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 				
 		[Test]
 		[TestCase("abc")]
-		[TestCase(null)]
-		public async Task WhenOnGetTrustsSearchResult_WithErrorThrownBySearchService_ReturnsErrorMessage(string searchString)
+		[TestCase("123")]
+		public async Task WhenOnGetTrustsSearchResult_WithErrorThrownBySearchService_ReturnsErrorStatusCode(string searchString)
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<CreateCasePageModel>>();
@@ -533,22 +534,122 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 				Assert.That(sut.CreateCaseStep, Is.EqualTo(CreateCasePageModel.CreateCaseSteps.SearchForTrust));
 				Assert.That(sut.CaseType, Is.EqualTo(CreateCasePageModel.CaseTypes.NotSelected));
 				Assert.That(sut.TempData["Error.Message"], Is.Null);
+				Assert.That(result, Is.TypeOf<ObjectResult>());
+				
+				Assert.That(result, Is.Not.Null);
+				Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo((int)HttpStatusCode.InternalServerError));
+			});
+			
+			mockLogger.VerifyLogInformationWasCalled("OnGetTrustsSearchResult");
+			mockLogger.VerifyLogErrorWasCalled("some error message");
+			mockLogger.VerifyNoOtherCalls();
+		}
+		
+		[Test]
+		[TestCase("abcdef")]
+		[TestCase("1234")]
+		public async Task WhenOnGetSelectedTrust_WithValidTrustUkPrn_CachesTrustAndRedirectsToNextStep(string trustUkPrn)
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<CreateCasePageModel>>();
+			var mockTrustService = new Mock<ITrustModelService>();
+			var mockUserService = new Mock<IUserStateCachedService>();
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+
+			var userName = "some name of a user";
+			
+			mockUserService
+				.Setup(s => s.GetData(userName))
+				.ReturnsAsync(new UserState(userName){TrustUkPrn = trustUkPrn});
+			
+			mockUserService
+				.Setup(s => s.StoreData(It.IsAny<string>(), It.IsAny<UserState>()))
+				.Verifiable();
+			
+			mockClaimsPrincipalHelper
+				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
+				.Returns(userName);
+
+			var sut = SetupPageModelForTrustStep(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
+
+			// act
+			var result = await sut.OnGetSelectedTrust(trustUkPrn);
+			
+			// assert
+			Assert.Multiple(() =>
+			{
+				Assert.That(sut.TrustAddress, Is.Null);
+				Assert.That(sut.CreateCaseStep, Is.EqualTo(CreateCasePageModel.CreateCaseSteps.SelectCaseType));
+				Assert.That(sut.CaseType, Is.EqualTo(CreateCasePageModel.CaseTypes.NotSelected));
+				Assert.That(sut.TempData["Error.Message"], Is.Null);
+				
 				Assert.That(result, Is.TypeOf<JsonResult>());
 				
 				var jsonResult = result as JsonResult;
 				Assert.That(jsonResult?.Value, Is.Not.Null);
-				Assert.That(jsonResult.Value, Is.TypeOf<List<TrustSearchModel>>());
+				Assert.That(jsonResult.Value?.ToString(), Is.EqualTo("{ redirectUrl = /case/create }"));
 				
-				var searchModelResult = jsonResult.Value as List<TrustSearchModel>;
-				Assert.That(searchModelResult, Is.Not.Null);
-				Assert.That(searchModelResult, Has.Count.EqualTo(0));
 			});
 			
-			mockLogger.VerifyLogInformationWasCalled("OnGetTrustsSearchResult");
+			mockUserService.Verify(s => s.StoreData(userName, It.Is<UserState>(us => us.TrustUkPrn == trustUkPrn)));
+			mockLogger.VerifyLogInformationWasCalled("OnGetSelectedTrust");
 			mockLogger.VerifyLogErrorWasNotCalled();
 			mockLogger.VerifyNoOtherCalls();
 		}
+		
+		[Test]
+		[TestCase(null)]
+		[TestCase("")]
+		[TestCase("12")]
+		[TestCase("1")]
+		[TestCase("contains-hyphen")]
+		public async Task WhenOnGetSelectedTrust_WithInvalidTrustUkPrn_CachesTrustAndRedirectsToNextStep(string trustUkPrn)
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<CreateCasePageModel>>();
+			var mockTrustService = new Mock<ITrustModelService>();
+			var mockUserService = new Mock<IUserStateCachedService>();
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
+			var userName = "some name of a user";
+			
+			mockUserService
+				.Setup(s => s.GetData(userName))
+				.ReturnsAsync(new UserState(userName){TrustUkPrn = trustUkPrn});
+			
+			mockUserService
+				.Setup(s => s.StoreData(It.IsAny<string>(), It.IsAny<UserState>()))
+				.Verifiable();
+			
+			mockClaimsPrincipalHelper
+				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
+				.Returns(userName);
+
+			var sut = SetupPageModelForTrustStep(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
+
+			// act
+			var result = await sut.OnGetSelectedTrust(trustUkPrn);
+			
+			// assert
+			Assert.Multiple(() =>
+			{
+				Assert.That(sut.TrustAddress, Is.Null);
+				Assert.That(sut.CreateCaseStep, Is.EqualTo(CreateCasePageModel.CreateCaseSteps.SearchForTrust));
+				Assert.That(sut.CaseType, Is.EqualTo(CreateCasePageModel.CaseTypes.NotSelected));
+				Assert.That(sut.TempData["Error.Message"], Is.Null);
+				Assert.That(result, Is.TypeOf<ObjectResult>());
+				
+				Assert.That(result, Is.Not.Null);
+				Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo((int)HttpStatusCode.InternalServerError));
+			});
+			
+			mockUserService.Verify(s => s.StoreData(userName, It.Is<UserState>(us => us.TrustUkPrn == trustUkPrn)), 
+				Times.Never);
+			mockLogger.VerifyLogInformationWasCalled("OnGetSelectedTrust");
+			mockLogger.VerifyLogErrorWasCalled($"Selected trust is incorrect - {trustUkPrn}");
+			mockLogger.VerifyNoOtherCalls();
+		}
+		
 		private static CreateCasePageModel SetupPageModel(
 			IMock<ILogger<CreateCasePageModel>> mockLogger,
 			IMock<ITrustModelService> mockTrustService,
