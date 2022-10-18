@@ -20,7 +20,7 @@ namespace Service.TRAMS.Decision
 
 		public DateTimeOffset? ReceivedRequestDate { get; set; }
 
-		[StringLength(MaxUrlLength, ErrorMessage = "Notes must be 2048 characters or less")]
+		[StringLength(MaxUrlLength, ErrorMessage = "Submission document link must be 2048 or less")]
 		public string SubmissionDocumentLink { get; set; }
 		public bool? SubmissionRequired { get; set; }
 		public bool? RetrospectiveApproval { get; set; }

@@ -65,7 +65,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 				if (!ModelState.IsValid)
 				{
-					TempData["Decision.Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+					TempData["Decision.Message"] = string.Join(",\r\n", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToArray());
 					return Page();
 				}
 
