@@ -498,3 +498,11 @@ terraform.rc
 *.mp4
 *.mp4
 ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/videos/casework-regression/create-case-route.js.mp4
+
+# Environment variables
+.env
+.env.*
+.env.local
+.env.*.local
+!.env.development.local.example
+!.env.database.example
