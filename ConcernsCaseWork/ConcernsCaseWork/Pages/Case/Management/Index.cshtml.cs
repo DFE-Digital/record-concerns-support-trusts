@@ -1,12 +1,9 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCasework.Service.NtiUnderConsideration;
-using ConcernsCasework.Service.Status;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.Nti;
-using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
@@ -16,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Service.Redis.NtiUnderConsideration;
 using Service.Redis.Status;
+using Service.TRAMS.NtiUnderConsideration;
+using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +45,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public IList<TrustCasesModel> TrustCasesModel { get; private set; }
 		public IList<CaseHistoryModel> CasesHistoryModel { get; private set; }
 		public bool IsEditableCase { get; private set; }
+		public bool HasOpenActions { get { return CaseActions.Any(a => !a.ClosedAt.HasValue); } }
+		public bool HasClosedActions { get { return CaseActions.Any(a => a.ClosedAt.HasValue); } }
 		public List<CaseActionModel> CaseActions { get; private set; }
 		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
 
@@ -109,7 +110,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				var trustCasesTask = _caseModelService.GetCasesByTrustUkprn(CaseModel.TrustUkPrn);
 				var caseActionsTask = PopulateCaseActions(caseUrn);
-
+				
 				Task.WaitAll(caseHistoryTask, trustDetailsTask, trustCasesTask, caseActionsTask);
 
 				CasesHistoryModel = caseHistoryTask.Result;
@@ -174,6 +175,5 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			return false;
 		}
-
 	}
 }

@@ -25,6 +25,7 @@
   </ItemGroup>
 	
   <ItemGroup>
+    <ProjectReference Include="..\ConcernsCaseWork.CoreTypes\ConcernsCaseWork.CoreTypes.csproj" />
     <ProjectReference Include="..\ConcernsCasework.Service\ConcernsCasework.Service.csproj" />
     <ProjectReference Include="..\ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj" />
     <ProjectReference Include="..\Service.Redis\Service.Redis.csproj" />

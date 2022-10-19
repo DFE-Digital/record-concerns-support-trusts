@@ -1,13 +1,6 @@
-﻿@using NetEscapades.AspNetCore.SecurityHeaders
-@if (BackPageModel.CanRender(Context.Request.Path.Value)) {
-	var nonce = Context.GetNonce();
+﻿@if (BackPageModel.CanRender(Context.Request.Path.Value)) {
 	var cssClass = BackPageModel.IsExtraWidthContainer ? "govuk-extra-width-container" : "govuk-width-container";
 	<div class="@cssClass">
-		<a id="back-link-event" class="govuk-back-link" href="#">Back</a>
-		<script nonce="@nonce">
-			$("#back-link-event").click(function() {
-				history.back();
-			});
-		</script>
+		<partial name="_BackLink" />
 	</div>
 }

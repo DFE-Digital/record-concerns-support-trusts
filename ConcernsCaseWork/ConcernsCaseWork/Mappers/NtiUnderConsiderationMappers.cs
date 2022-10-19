@@ -1,5 +1,7 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCasework.Service.NtiUnderConsideration;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models.CaseActions;
+using Service.TRAMS.NtiUnderConsideration;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ConcernsCaseWork.Mappers
@@ -57,7 +59,15 @@ namespace ConcernsCaseWork.Mappers
 			};
 		}
 
-
+		public static ActionSummary ToActionSummary(this NtiUnderConsiderationModel model, IEnumerable<NtiUnderConsiderationStatusDto> statuses)
+			=> new()
+			{
+				ClosedDate = model.ClosedAt.ToDayMonthYear(),
+				Name = "NTI Under Consideration",
+				OpenedDate = model.CreatedAt.ToDayMonthYear(),
+				RelativeUrl = $"/case/{model.CaseUrn}/management/action/ntiunderconsideration/{model.Id}",
+				StatusName = statuses.SingleOrDefault(s => s.Id == model.ClosedStatusId)?.Name ?? string.Empty
+			};
 
 	}
 }

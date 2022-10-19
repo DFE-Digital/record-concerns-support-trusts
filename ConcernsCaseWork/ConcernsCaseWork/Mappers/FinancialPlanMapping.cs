@@ -1,5 +1,6 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCasework.Service.FinancialPlan;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models.CaseActions;
+using Service.TRAMS.FinancialPlan;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -66,12 +67,22 @@ namespace ConcernsCaseWork.Mappers
 				financialPlanDto.CreatedAt,
 				patchFinancialPlanModel?.ClosedAt ?? financialPlanDto.ClosedAt,
 				financialPlanDto.CreatedBy,
-				selectedStatusId,
+				selectedStatusId ?? financialPlanDto.StatusId,
 				patchFinancialPlanModel?.DatePlanRequested ?? financialPlanDto.DatePlanRequested,
 				patchFinancialPlanModel?.DateViablePlanReceived ?? financialPlanDto.DateViablePlanReceived,
-				patchFinancialPlanModel?.Notes);
+				patchFinancialPlanModel?.Notes ?? financialPlanDto.Notes);
 
 			return updatedFinancialPlanDto;
 		}
+		
+		public static ActionSummary ToActionSummary(this FinancialPlanModel model)
+			=> new()
+			{
+				ClosedDate = model.ClosedAt.ToDayMonthYear(),
+				Name = "Financial Plan",
+				OpenedDate = model.CreatedAt.ToDayMonthYear(),
+				RelativeUrl = $"/case/{model.CaseUrn}/management/action/financialplan/{model.Id}/closed",
+				StatusName = model.Status.Name
+			};
 	}
 }

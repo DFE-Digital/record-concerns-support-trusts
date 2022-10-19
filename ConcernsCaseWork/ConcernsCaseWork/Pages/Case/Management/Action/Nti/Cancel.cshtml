@@ -69,6 +69,11 @@
 
             <script type="application/javascript" nonce="@nonce">
                 $(function () {
+
+                    let validator = formValidator($("#cancel-nti-form")[0]);
+                    
+                    addNTINotesValidator(validator);
+
                     autoResizer();
                 });
             </script>

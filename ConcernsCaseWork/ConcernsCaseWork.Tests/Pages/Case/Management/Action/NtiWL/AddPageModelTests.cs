@@ -72,6 +72,34 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 		}
 
 		[Test]
+		public async Task WhenOnGetAsync_When_NTI_WL_Is_Already_Closed_ThrowsException_ReturnPage()
+		{
+			// arrange
+			var mockNtiWLModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNtiWLReasonsService = new Mock<INtiWarningLetterReasonsCachedService>();
+			var mockNtiWLStatusesService = new Mock<INtiWarningLetterStatusesCachedService>();
+			var mockLogger = new Mock<ILogger<AddPageModel>>();
+
+			var ntiModel = NTIWarningLetterFactory.BuildNTIWarningLetterModel(DateTime.Now);
+
+			mockNtiWLModelService.Setup(n => n.GetNtiWarningLetterId(It.IsAny<long>()))
+				.ReturnsAsync(ntiModel);
+
+			var pageModel = SetupAddPageModel(mockNtiWLModelService, mockNtiWLReasonsService, mockNtiWLStatusesService, mockLogger);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1); 
+			routeData.Add("warningLetterId", 1);
+
+
+			// act
+			await pageModel.OnGetAsync();
+
+			// assert
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+		}
+
+		[Test]
 		public async Task WhenOnPostAsync_MissingRouteData_ThrowsException_ReturnsPage()
 		{
 			// arrange

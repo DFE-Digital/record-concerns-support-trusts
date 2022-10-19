@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.Mappers
 {
 	public static class CaseHistoryMapping
 	{
-		private static readonly IDictionary<CaseHistoryEnum, CaseHistoryMapper> CaseHistoryMap = new Dictionary<CaseHistoryEnum, CaseHistoryMapper>()
+		private static readonly IDictionary<CaseHistoryEnum, CaseHistoryMapper> _caseHistoryMap = new Dictionary<CaseHistoryEnum, CaseHistoryMapper>()
 		{
 			{ CaseHistoryEnum.Case, new CaseHistoryMapper { Title = "Case", Description = "Case created" } },
 			{ CaseHistoryEnum.Concern, new CaseHistoryMapper { Title = "Concern", Description = "Concern created" } },
@@ -23,7 +23,7 @@ namespace ConcernsCaseWork.Mappers
 
 		public static CreateCaseHistoryDto BuildCaseHistoryDto(CaseHistoryEnum caseHistoryEnum, long caseUrn)
 		{
-			if (CaseHistoryMap.TryGetValue(caseHistoryEnum, out CaseHistoryMapper caseHistoryMapper))
+			if (_caseHistoryMap.TryGetValue(caseHistoryEnum, out CaseHistoryMapper caseHistoryMapper))
 			{
 				return new CreateCaseHistoryDto(DateTimeOffset.Now, caseUrn, caseHistoryEnum.ToString(), caseHistoryMapper.Title, caseHistoryMapper.Description);
 			}

@@ -87,6 +87,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 					}
 				}
 
+				if (WarningLetter != null && !WarningLetter.CanBeEdited())
+				{
+					throw new Exception("Cannot edit NTI:WL that has already been closed");
+				}
+
 				Statuses = await GetStatuses();
 				Reasons = await GetReasons();
 			
