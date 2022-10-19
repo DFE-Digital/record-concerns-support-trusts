@@ -3,6 +3,7 @@ using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Security;
+using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.MeansOfReferral;
@@ -138,6 +139,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<INtiWarningLetterModelService, NtiWarningLetterModelService>();
 			services.AddScoped<IMeansOfReferralModelService, MeansOfReferralModelService>();
 			services.AddScoped<INtiModelService, NtiModelService>();
+			services.AddScoped<IActionsModelService, ActionsModelService>();
 			services.AddScoped<ITeamsModelService, TeamsModelService>();
 			services.AddScoped<IClaimsPrincipalHelper, ClaimsPrincipalHelper>();
 
