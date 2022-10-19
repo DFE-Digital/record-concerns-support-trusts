@@ -28,7 +28,37 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		public CreateDecisionDto CreateDecisionDto { get; set; }
 
 		[BindProperty]
-		public Dictionary<DecisionType, DecisionTypeFlag> DecisionTypeFlags { get; set; }
+		public bool DecisionTypeNoticeToImprove { get; set; }
+
+		[BindProperty]
+		public bool DecisionTypeSection128 { get; set; }
+
+		[BindProperty]
+		public bool DecisionTypeQualifiedFloatingCharge { get; set; }
+
+		[BindProperty]
+		public bool DecisionTypeNonRepayableFinancialSupport { get; set; }
+
+		[BindProperty]
+		public bool DecisionTypeRepayableFinancialSupport { get; set; }
+
+		[BindProperty]
+		public bool DecisionTypeShortTermCashAdvance { get; set; }
+
+		[BindProperty]
+		public bool DecisionTypeWriteOffRecoverableFunding { get; set; }
+
+		[BindProperty]
+		public bool DecisionTypeOtherFinancialSupport { get; set; }
+
+		[BindProperty]
+		public bool DecisionTypeEstimatesFundingOrPupilNumberAdjustment { get; set; }
+
+		[BindProperty]
+		public bool DecisionTypeEsfaApproval { get; set; }
+
+		[BindProperty]
+		public bool DecisionTypeFreedomOfInformationExemptions { get; set; }
 
 		public int NotesMaxLength => 2000;
 
@@ -47,6 +77,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			try
 			{
 				CaseUrn = (CaseUrn)urn;
+
+				// if editing, pass the current dto state, if new pass null
+				DecisionTypeArrayToDecisionTypeProperties(null);
 				return Page();
 			}
 			catch (Exception ex)
@@ -88,8 +121,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			return Page();
 		}
 
-
-
 		private void PopulateCreateDecisionDtoFromRequest()
 		{
 			var dtr_day = Request.Form["dtr-day-request-received"];
@@ -97,41 +128,51 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			var dtr_year = Request.Form["dtr-year-request-received"];
 			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
 			var dateStarted = DateTimeHelper.TryParseExact(dtString, out DateTime parsedDate) ? parsedDate : (DateTime?)null;
-
-			var decisionTypesString = Request.Form["type"].ToString();
-			var decisionTypes = !string.IsNullOrEmpty(decisionTypesString) ? decisionTypesString.Split(',').Select(t => { return Int32.Parse(t); }) : Array.Empty<int>();
-
-			CreateDecisionDto.DecisionTypes = decisionTypes;
+						
+			// I don't think this should be using ints.
+			CreateDecisionDto.DecisionTypes = DecisionTypePropertiesToDecisionTypeArray().Cast<int>();
 			CreateDecisionDto.ReceivedRequestDate = parsedDate;
 			CreateDecisionDto.CreatedAt = DateTimeOffset.Now;
 			CreateDecisionDto.UpdatedAt = DateTimeOffset.Now;
 		}
 
-		public Dictionary<DecisionType, DecisionTypeFlag> FromDto(CreateDecisionDto createDecisionDto)
-		{
-			// http://www.hanselman.com/blog/aspnet-wire-format-for-model-binding-to-arrays-lists-collections-dictionaries
-			var enumValues = Enum.GetValues(typeof(DecisionType));
-				
-			var result = new Dictionary<DecisionType, DecisionTypeFlag>(enumValues.Length);
-			foreach(int i in enumValues)
+		public void DecisionTypeArrayToDecisionTypeProperties(DecisionType[] decisionTypes)
+		{	
+			if (decisionTypes == null)
 			{
-				result[(DecisionType)i] = new DecisionTypeFlag { Key = (DecisionType)i, IsSelected = createDecisionDto.DecisionTypes.Contains(i) };
-			}				
+				return;
+			}
 
-			return result;
+			DecisionTypeNoticeToImprove = decisionTypes.Contains(DecisionType.NoticeToImprove);
+			DecisionTypeSection128 = decisionTypes.Contains(DecisionType.Section128);
+			DecisionTypeQualifiedFloatingCharge = decisionTypes.Contains(DecisionType.QualifiedFloatingCharge);
+			DecisionTypeNonRepayableFinancialSupport = decisionTypes.Contains(DecisionType.NonRepayableFinancialSupport);
+			DecisionTypeRepayableFinancialSupport = decisionTypes.Contains(DecisionType.RepayableFinancialSupport);
+			DecisionTypeShortTermCashAdvance = decisionTypes.Contains(DecisionType.ShortTermCashAdvance);
+			DecisionTypeWriteOffRecoverableFunding = decisionTypes.Contains(DecisionType.WriteOffRecoverableFunding);
+			DecisionTypeOtherFinancialSupport = decisionTypes.Contains(DecisionType.OtherFinancialSupport);
+			DecisionTypeEstimatesFundingOrPupilNumberAdjustment = decisionTypes.Contains(DecisionType.EstimatesFundingOrPupilNumberAdjustment);
+			DecisionTypeEsfaApproval = decisionTypes.Contains(DecisionType.EsfaApproval);
+			DecisionTypeFreedomOfInformationExemptions = decisionTypes.Contains(DecisionType.FreedomOfInformationExemptions);
 		}
 
 		// update the dto with the result of a call to this, so createDecisionDto.DecisionTypes = ToDecisionTypesArray([page property]), 
-		public DecisionType[] ToDecisionTypesArray(Dictionary<DecisionType, DecisionTypeFlag> selectedValues)
-		{
-			// should be using enum not int
-			return selectedValues.Values.Where(x => x.IsSelected).Select(x => x.Key).ToArray();
-		}
-
-		public class DecisionTypeFlag
-		{
-			public DecisionType Key { get; set; }
-			public bool IsSelected { get; set; }
+		public DecisionType[] DecisionTypePropertiesToDecisionTypeArray()
+		{			 
+			return new DecisionType[]
+			{
+				DecisionTypeNoticeToImprove ? DecisionType.NoticeToImprove : 0,
+				DecisionTypeSection128 ? DecisionType.Section128 : 0,
+				DecisionTypeQualifiedFloatingCharge ? DecisionType.QualifiedFloatingCharge : 0,
+				DecisionTypeNonRepayableFinancialSupport ? DecisionType.NonRepayableFinancialSupport : 0,
+				DecisionTypeRepayableFinancialSupport ? DecisionType.RepayableFinancialSupport : 0,
+				DecisionTypeShortTermCashAdvance ? DecisionType.ShortTermCashAdvance : 0,
+				DecisionTypeWriteOffRecoverableFunding ? DecisionType.WriteOffRecoverableFunding : 0,
+				DecisionTypeOtherFinancialSupport ? DecisionType.OtherFinancialSupport : 0,
+				DecisionTypeEstimatesFundingOrPupilNumberAdjustment ? DecisionType.EstimatesFundingOrPupilNumberAdjustment : 0,
+				DecisionTypeEsfaApproval ? DecisionType.EsfaApproval : 0,
+				DecisionTypeFreedomOfInformationExemptions ? DecisionType.FreedomOfInformationExemptions : 0,
+			}.Where(x => x > 0).ToArray();
 		}
 	}
 }

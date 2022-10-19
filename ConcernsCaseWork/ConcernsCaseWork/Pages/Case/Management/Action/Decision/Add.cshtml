@@ -83,23 +83,23 @@
                             <div class="govuk-radios" data-module="govuk-radios">
                                 @{
 
-                                    <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="retrospective-approval" name="CreateDecisionDto.RetrospectiveApproval" type="radio" value="true">
-                                        <label class="govuk-label govuk-radios__label" for="retrospective-approval">
-                                            <span>
-                                                Yes
-                                            </span>
-                                        </label>
-                                    </div>
+                                        <div class="govuk-radios__item">
+                                            <input class="govuk-radios__input" id="retrospective-approval" name="CreateDecisionDto.RetrospectiveApproval" type="radio" value="true">
+                                            <label class="govuk-label govuk-radios__label" for="retrospective-approval">
+                                                <span>
+                                                    Yes
+                                                </span>
+                                            </label>
+                                        </div>
 
-                                    <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="retrospective-approval-1" name="CreateDecisionDto.RetrospectiveApproval" type="radio" value="false">
-                                        <label class="govuk-label govuk-radios__label" for="retrospective-approval-1">
-                                            <span>
-                                                No
-                                            </span>
-                                        </label>
-                                    </div>
+                                        <div class="govuk-radios__item">
+                                            <input class="govuk-radios__input" id="retrospective-approval-1" name="CreateDecisionDto.RetrospectiveApproval" type="radio" value="false">
+                                            <label class="govuk-label govuk-radios__label" for="retrospective-approval-1">
+                                                <span>
+                                                    No
+                                                </span>
+                                            </label>
+                                        </div>
                                 }
 
                             </div>
@@ -189,7 +189,10 @@
                                 <h2 class="govuk-heading-m">What type of decision is it?</h2>
                             </legend>
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.NoticeToImprove" name="type" type="checkbox" value="@((int)DecisionType.NoticeToImprove)">
+                                @{
+                                    int decisionTypeInt = (int)DecisionType.NoticeToImprove;
+                                }
+                                <input class="govuk-checkboxes__input" id="@DecisionType.NoticeToImprove" name="DecisionTypeNoticeToImprove" type="checkbox" value="true">
                                 <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.NoticeToImprove">
                                     @EnumHelper.GetEnumDescription(DecisionType.NoticeToImprove)
 
@@ -201,7 +204,8 @@
                             </div>
 
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.Section128" name="type" type="checkbox" value="@((int)DecisionType.Section128)">
+                                @{ decisionTypeInt = (int)DecisionType.Section128; }
+                                <input class="govuk-checkboxes__input" id="@DecisionType.Section128" name="DecisionTypeSection128" type="checkbox" value="true">
                                 <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.Section128">
                                     @EnumHelper.GetEnumDescription(DecisionType.Section128)
                                     <div id="@DecisionType.Section128-hint" class="govuk-hint">
