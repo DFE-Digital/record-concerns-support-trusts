@@ -1,5 +1,9 @@
-﻿using ConcernsCaseWork.API.StartupConfiguration;
+﻿using ConcernsCaseWork.API.Factories.Concerns.Decisions;
+using ConcernsCaseWork.API.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.API.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.API.StartupConfiguration;
 using ConcernsCaseWork.API.UseCases;
+using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Gateways;
 using System.Net.Mime;
@@ -66,12 +70,18 @@ namespace ConcernsCaseWork.API.Extensions
 			services.AddScoped<INTIUnderConsiderationGateway, NTIUnderConsiderationGateway>();
 			services.AddScoped<INTIWarningLetterGateway, NTIWarningLetterGateway>();
 			services.AddScoped<INoticeToImproveGateway, NoticeToImproveGateway>();
-
-
+			
 			services.AddScoped<IGetConcernsCaseworkTeam, GetConcernsCaseworkTeam>();
 			services.AddScoped<IGetConcernsCaseworkTeamOwners, GetConcernsCaseworkTeamOwners>();
 			services.AddScoped<IUpdateConcernsCaseworkTeam, UpdateConcernsCaseworkTeam>();
 			services.AddScoped<IConcernsTeamCaseworkGateway, ConcernsTeamCaseworkGateway>();
+
+			// concerns factories
+			services.AddScoped<IUseCaseAsync<CreateDecisionRequest, CreateDecisionResponse>, CreateDecision>();
+			services.AddScoped<IUseCaseAsync<GetDecisionRequest, GetDecisionResponse>, GetDecision>();
+			services.AddScoped<ICreateDecisionResponseFactory, CreateDecisionResponseFactory>();
+			services.AddScoped<IDecisionFactory, DecisionFactory>();
+			services.AddScoped<IGetDecisionResponseFactory, GetDecisionResponseFactory>();
 
 			return services;
 		}

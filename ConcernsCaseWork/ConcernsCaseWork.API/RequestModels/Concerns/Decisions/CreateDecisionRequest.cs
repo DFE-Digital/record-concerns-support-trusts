@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.Data.Enums.Concerns;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+﻿using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using System.ComponentModel.DataAnnotations;
 using DecisionType = ConcernsCaseWork.Data.Enums.Concerns.DecisionType;
 

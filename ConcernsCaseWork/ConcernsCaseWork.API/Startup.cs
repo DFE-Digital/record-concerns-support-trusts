@@ -1,6 +1,5 @@
 using ConcernsCaseWork.API.Extensions;
 using ConcernsCaseWork.API.Middleware;
-using ConcernsCaseWork.API.StartupConfiguration;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 namespace ConcernsCaseWork.API
