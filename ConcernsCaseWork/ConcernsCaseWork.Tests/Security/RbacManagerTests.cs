@@ -1,9 +1,9 @@
-﻿using ConcernsCaseWork.Security;
+﻿using ConcernsCaseWork.Redis.Teams;
+using ConcernsCaseWork.Redis.Users;
+using ConcernsCaseWork.Security;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Teams;
-using Service.Redis.Users;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Security

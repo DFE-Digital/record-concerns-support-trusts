@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.Redis.Models;
-using ConcernsCasework.Service.Records;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Service.Records;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

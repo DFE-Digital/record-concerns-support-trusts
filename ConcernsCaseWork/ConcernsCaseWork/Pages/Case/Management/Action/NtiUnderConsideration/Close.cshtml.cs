@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
-using Service.Redis.NtiUnderConsideration;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {

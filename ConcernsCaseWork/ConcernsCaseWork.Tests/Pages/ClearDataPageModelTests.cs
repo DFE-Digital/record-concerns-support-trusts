@@ -1,4 +1,12 @@
 ﻿using ConcernsCaseWork.Pages;
+using ConcernsCaseWork.Redis.NtiUnderConsideration;
+using ConcernsCaseWork.Redis.NtiWarningLetter;
+using ConcernsCaseWork.Redis.Ratings;
+using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Redis.Teams;
+using ConcernsCaseWork.Redis.Trusts;
+using ConcernsCaseWork.Redis.Types;
+using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,14 +15,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.NtiUnderConsideration;
-using Service.Redis.NtiWarningLetter;
-using Service.Redis.Ratings;
-using Service.Redis.Status;
-using Service.Redis.Teams;
-using Service.Redis.Trusts;
-using Service.Redis.Types;
-using Service.Redis.Users;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages

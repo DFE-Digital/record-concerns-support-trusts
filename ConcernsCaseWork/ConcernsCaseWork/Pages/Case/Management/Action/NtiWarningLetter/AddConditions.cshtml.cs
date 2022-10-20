@@ -2,12 +2,12 @@
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.NtiWarningLetter;
-using ConcernsCasework.Service.NtiWarningLetter;
+using ConcernsCaseWork.Service.NtiWarningLetter;
 using System;
 using System.Collections.Generic;
 using System.Linq;

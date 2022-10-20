@@ -1,4 +1,6 @@
 ﻿using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
+using ConcernsCaseWork.Redis.FinancialPlan;
+using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
@@ -10,9 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.FinancialPlan;
-using Service.Redis.Models;
-using ConcernsCasework.Service.FinancialPlan;
+using ConcernsCaseWork.Service.FinancialPlan;
 using System;
 using System.Collections.Generic;
 using System.Linq;

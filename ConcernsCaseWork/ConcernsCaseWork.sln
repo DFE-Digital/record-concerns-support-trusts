@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork", "Concern
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Tests", "ConcernsCaseWork.Tests\ConcernsCaseWork.Tests.csproj", "{1F53107D-4787-448F-806B-E5EA57D0BF90}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Redis", "Service.Redis\Service.Redis.csproj", "{E340BEC0-5744-459A-99B7-B0339D38F647}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Redis", "ConcernsCaseWork.Redis\ConcernsCaseWork.Redis.csproj", "{E340BEC0-5744-459A-99B7-B0339D38F647}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Redis.Tests", "Service.Redis.Tests\Service.Redis.Tests.csproj", "{C40689B1-9551-4364-91CB-FA8CD55F11BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Redis.Tests", "ConcernsCaseWork.Redis.Tests\ConcernsCaseWork.Redis.Tests.csproj", "{C40689B1-9551-4364-91CB-FA8CD55F11BA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Integration.Tests", "ConcernsCaseWork.Integration.Tests\ConcernsCaseWork.Integration.Tests.csproj", "{770CC7CC-FCA7-4A12-B677-35FE458B8B54}"
 EndProject
@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.Data", "Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.API", "ConcernsCaseWork.API\ConcernsCaseWork.API.csproj", "{2D4DBBC4-0B85-43D6-AFBC-03A3D3A1DB40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCasework.Service", "ConcernsCasework.Service\ConcernsCasework.Service.csproj", "{BC0E438D-D677-41F9-BE15-C7B79161CCE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.Service", "ConcernsCaseWork.Service\ConcernsCaseWork.Service.csproj", "{BC0E438D-D677-41F9-BE15-C7B79161CCE2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.Service.Tests", "ConcernsCaseWork.Service.Tests\ConcernsCaseWork.Service.Tests.csproj", "{E7F30872-499F-4E41-969F-8853E8CDC51C}"
 EndProject

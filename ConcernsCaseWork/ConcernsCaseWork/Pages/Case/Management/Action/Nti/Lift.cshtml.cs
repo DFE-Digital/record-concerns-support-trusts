@@ -8,7 +8,7 @@ using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Helpers;
-using ConcernsCasework.Service.Helpers;
+using ConcernsCaseWork.Service.Helpers;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 {

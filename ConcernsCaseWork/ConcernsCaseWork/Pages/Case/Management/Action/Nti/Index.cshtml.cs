@@ -8,9 +8,9 @@ using ConcernsCaseWork.Models.CaseActions;
 using System.Linq;
 using System.Collections.Generic;
 using ConcernsCaseWork.Mappers;
-using ConcernsCasework.Service.Nti;
+using ConcernsCaseWork.Redis.Nti;
+using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Services.Nti;
-using Service.Redis.Nti;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 {

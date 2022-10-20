@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.Idioms;
-using ConcernsCasework.Service.Teams;
+using ConcernsCaseWork.Service.Teams;
 
 namespace ConcernsCaseWork.Service.Tests.Teams
 {

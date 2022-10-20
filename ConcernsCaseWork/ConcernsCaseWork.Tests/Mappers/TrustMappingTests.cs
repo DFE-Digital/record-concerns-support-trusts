@@ -1,7 +1,7 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
-using ConcernsCasework.Service.Trusts;
+using ConcernsCaseWork.Service.Trusts;
 
 namespace ConcernsCaseWork.Tests.Mappers
 {

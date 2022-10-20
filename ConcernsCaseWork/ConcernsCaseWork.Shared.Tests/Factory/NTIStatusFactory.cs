@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using ConcernsCasework.Service.Nti;
+using ConcernsCaseWork.Service.Nti;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory

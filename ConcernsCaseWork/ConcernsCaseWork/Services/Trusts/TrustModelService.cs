@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Redis.Trusts;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Trusts;
-using ConcernsCasework.Service.Trusts;
+using ConcernsCaseWork.Service.Trusts;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

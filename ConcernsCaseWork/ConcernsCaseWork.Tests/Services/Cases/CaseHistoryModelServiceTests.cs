@@ -2,13 +2,13 @@
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Redis.Cases;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Cases;
-using ConcernsCasework.Service.Cases;
+using ConcernsCaseWork.Service.Cases;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

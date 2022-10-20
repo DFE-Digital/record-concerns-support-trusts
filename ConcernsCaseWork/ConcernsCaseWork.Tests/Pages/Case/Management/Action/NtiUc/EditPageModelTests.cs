@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration;
+using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
 using System.Linq;

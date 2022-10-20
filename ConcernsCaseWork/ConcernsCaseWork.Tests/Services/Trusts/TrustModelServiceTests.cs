@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.Shared;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Trusts;
-using ConcernsCasework.Service.Trusts;
+using ConcernsCaseWork.Service.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Mappers;
 using NUnit.Framework;
-using ConcernsCasework.Service.Cases;
+using ConcernsCaseWork.Service.Cases;
 using System;
 
 namespace ConcernsCaseWork.Tests.Mappers

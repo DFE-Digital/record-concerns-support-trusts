@@ -3,6 +3,8 @@ using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Validators;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
@@ -10,13 +12,11 @@ using ConcernsCaseWork.Services.MeansOfReferral;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Models;
-using ConcernsCasework.Service.Cases;
+using ConcernsCaseWork.Service.Cases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Service.Redis.Users;
 
 namespace ConcernsCaseWork.Pages.Case.Concern
 {

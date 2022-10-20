@@ -2,7 +2,7 @@
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using NUnit.Framework;
-using ConcernsCasework.Service.NtiWarningLetter;
+using ConcernsCaseWork.Service.NtiWarningLetter;
 using System;
 using System.Collections.Generic;
 using System.Linq;

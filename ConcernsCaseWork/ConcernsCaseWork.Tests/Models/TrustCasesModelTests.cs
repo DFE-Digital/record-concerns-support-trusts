@@ -1,7 +1,7 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
-using ConcernsCasework.Service.Status;
+using ConcernsCaseWork.Service.Status;
 using System;
 using System.Collections.Generic;
 

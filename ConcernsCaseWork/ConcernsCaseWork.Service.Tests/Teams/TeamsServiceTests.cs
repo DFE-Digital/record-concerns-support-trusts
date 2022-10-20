@@ -1,8 +1,8 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
-using ConcernsCasework.Service.Base;
-using ConcernsCasework.Service.Teams;
+using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

@@ -1,10 +1,10 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
-using ConcernsCasework.Service.Cases;
-using ConcernsCasework.Service.MeansOfReferral;
-using ConcernsCasework.Service.Ratings;
-using ConcernsCasework.Service.Records;
-using ConcernsCasework.Service.Trusts;
-using ConcernsCasework.Service.Types;
+using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Service.MeansOfReferral;
+using ConcernsCaseWork.Service.Ratings;
+using ConcernsCaseWork.Service.Records;
+using ConcernsCaseWork.Service.Trusts;
+using ConcernsCaseWork.Service.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

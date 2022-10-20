@@ -1,5 +1,5 @@
-﻿using ConcernsCasework.Service.Base;
-using ConcernsCasework.Service.NtiUnderConsideration;
+﻿using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

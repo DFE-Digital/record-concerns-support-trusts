@@ -3,12 +3,12 @@ using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
 using AutoMapper;
 using ConcernsCaseWork.Mappers;
-using ConcernsCasework.Service.Teams;
+using ConcernsCaseWork.Redis.Teams;
+using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.Services.Teams;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Teams;
 using System;
 using System.Threading.Tasks;
 

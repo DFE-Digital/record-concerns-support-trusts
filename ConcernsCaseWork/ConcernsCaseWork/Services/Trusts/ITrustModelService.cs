@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using ConcernsCasework.Service.Trusts;
+using ConcernsCaseWork.Service.Trusts;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

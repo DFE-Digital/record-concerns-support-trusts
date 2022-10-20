@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
-using Service.Redis.Models;
-using ConcernsCasework.Service.FinancialPlan;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Service.FinancialPlan;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

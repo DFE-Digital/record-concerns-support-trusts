@@ -1,7 +1,7 @@
 ﻿using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCasework.Service.CaseActions;
+using ConcernsCaseWork.Service.CaseActions;
 using System;
 
 namespace ConcernsCaseWork.Mappers

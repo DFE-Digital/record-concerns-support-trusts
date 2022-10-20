@@ -4,7 +4,7 @@ using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ConcernsCasework.Service.Status;
+using ConcernsCaseWork.Service.Status;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

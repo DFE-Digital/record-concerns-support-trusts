@@ -27,9 +27,9 @@
   <ItemGroup>
 	  <ProjectReference Include="..\ConcernsCaseWork.API\ConcernsCaseWork.API.csproj" />
 	  <ProjectReference Include="..\ConcernsCaseWork.CoreTypes\ConcernsCaseWork.CoreTypes.csproj" />
-	  <ProjectReference Include="..\ConcernsCasework.Service\ConcernsCasework.Service.csproj" />
+	  <ProjectReference Include="..\ConcernsCaseWork.Service\ConcernsCaseWork.Service.csproj" />
 	  <ProjectReference Include="..\ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj" />
-	  <ProjectReference Include="..\Service.Redis\Service.Redis.csproj" />
+	  <ProjectReference Include="..\ConcernsCaseWork.Redis\ConcernsCaseWork.Redis.csproj" />
   </ItemGroup>
 
   <ItemGroup>

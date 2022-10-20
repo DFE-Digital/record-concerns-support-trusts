@@ -2,7 +2,7 @@
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using NUnit.Framework;
-using ConcernsCasework.Service.NtiUnderConsideration;
+using ConcernsCaseWork.Service.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
 using System.Linq;

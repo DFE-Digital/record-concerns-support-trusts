@@ -1,5 +1,7 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -12,8 +14,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Models;
-using Service.Redis.Users;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

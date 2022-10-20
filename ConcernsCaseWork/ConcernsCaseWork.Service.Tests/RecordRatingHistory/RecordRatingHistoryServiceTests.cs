@@ -1,4 +1,4 @@
-﻿using ConcernsCasework.Service.RecordRatingHistory;
+﻿using ConcernsCaseWork.Service.RecordRatingHistory;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

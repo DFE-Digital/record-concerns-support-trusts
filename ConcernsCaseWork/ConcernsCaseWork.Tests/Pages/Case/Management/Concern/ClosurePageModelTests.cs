@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management.Concern;
+using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
@@ -13,8 +14,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Status;
-using ConcernsCasework.Service.Status;
+using ConcernsCaseWork.Service.Status;
 using System;
 using System.Threading.Tasks;
 

@@ -1,7 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Redis.Teams;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Teams;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

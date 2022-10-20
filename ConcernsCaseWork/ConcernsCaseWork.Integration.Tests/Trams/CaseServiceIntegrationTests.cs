@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
-using ConcernsCasework.Service.Cases;
-using ConcernsCasework.Service.Trusts;
+using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

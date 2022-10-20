@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
@@ -8,8 +9,7 @@ using ConcernsCaseWork.Services.Types;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Status;
-using ConcernsCasework.Service.Status;
+using ConcernsCaseWork.Service.Status;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Models;
-using ConcernsCasework.Service.Trusts;
+using ConcernsCaseWork.Service.Trusts;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory

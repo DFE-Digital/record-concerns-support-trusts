@@ -11,9 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Redis.NtiWarningLetter;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 {

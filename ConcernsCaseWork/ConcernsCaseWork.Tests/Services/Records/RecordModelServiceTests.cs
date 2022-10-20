@@ -1,13 +1,13 @@
-﻿using ConcernsCaseWork.Services.Ratings;
+﻿using ConcernsCaseWork.Redis.Records;
+using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Records;
-using Service.Redis.Status;
-using ConcernsCasework.Service.Records;
+using ConcernsCaseWork.Service.Records;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

@@ -1,13 +1,13 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCasework.Service.Helpers;
+using ConcernsCaseWork.Redis.NtiUnderConsideration;
+using ConcernsCaseWork.Service.Helpers;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using Microsoft.Extensions.Logging;
-using Service.Redis.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
 using System.Linq;

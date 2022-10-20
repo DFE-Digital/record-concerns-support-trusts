@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.Redis.Nti;
+using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Services.Nti;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti

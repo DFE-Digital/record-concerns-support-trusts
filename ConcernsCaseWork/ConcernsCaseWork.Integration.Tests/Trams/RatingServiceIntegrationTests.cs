@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
-using ConcernsCasework.Service.Ratings;
+using ConcernsCaseWork.Service.Ratings;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

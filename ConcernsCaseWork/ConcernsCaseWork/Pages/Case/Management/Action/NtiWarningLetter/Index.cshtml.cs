@@ -6,11 +6,11 @@ using System;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using System.Linq;
-using Service.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using System.Collections.Generic;
-using ConcernsCasework.Service.NtiWarningLetter;
+using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Redis.NtiWarningLetter;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 {

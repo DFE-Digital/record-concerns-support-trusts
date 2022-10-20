@@ -1,22 +1,21 @@
 ﻿using ConcernsCaseWork.API.Factories.Concerns.Decisions;
 using ConcernsCaseWork.API.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.ResponseModels.Concerns.Decisions;
-using ConcernsCaseWork.API.StartupConfiguration;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Gateways;
 using System.Net.Mime;
 
-namespace ConcernsCaseWork.API.Extensions
+namespace ConcernsCaseWork.API.StartupConfiguration
 {
 	public static class DependencyConfigurationExtensions
 	{
 		public static IServiceCollection AddConcernsApiProject(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddDependencies();
-			services.AddDatabase(configuration);
-			services.AddApi(configuration);
+			AddDatabase(services, configuration);
+			AddApi(services, configuration);
 			services.AddUseCases();
 
 			return services;

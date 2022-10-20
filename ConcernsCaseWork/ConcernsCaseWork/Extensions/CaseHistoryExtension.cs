@@ -1,4 +1,4 @@
-﻿using ConcernsCasework.Service.Cases;
+﻿using ConcernsCaseWork.Service.Cases;
 
 namespace ConcernsCaseWork.Extensions
 {

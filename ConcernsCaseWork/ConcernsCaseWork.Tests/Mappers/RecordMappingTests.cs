@@ -1,8 +1,8 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
-using ConcernsCasework.Service.Records;
-using ConcernsCasework.Service.Status;
+using ConcernsCaseWork.Service.Records;
+using ConcernsCaseWork.Service.Status;
 using System;
 using System.Collections.Generic;
 using System.Linq;

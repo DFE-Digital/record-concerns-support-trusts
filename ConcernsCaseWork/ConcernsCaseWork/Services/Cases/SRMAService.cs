@@ -1,12 +1,11 @@
 ﻿using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.Redis.CaseActions;
+using ConcernsCaseWork.Redis.CaseActions;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
-using Trams = ConcernsCasework.Service.CaseActions;
 
 namespace ConcernsCaseWork.Services.Cases
 {
@@ -63,12 +62,12 @@ namespace ConcernsCaseWork.Services.Cases
 
 		public async Task SetReason(long srmaId, SRMAReasonOffered reason)
 		{
-			await _cachedSrmaProvider.SetReason(srmaId, (Trams.SRMAReasonOffered)reason);	
+			await _cachedSrmaProvider.SetReason(srmaId, (ConcernsCaseWork.Service.CaseActions.SRMAReasonOffered)reason);	
 		}
 
 		public async Task SetStatus(long srmaId, SRMAStatus status)
 		{
-			await _cachedSrmaProvider.SetStatus(srmaId, (Trams.SRMAStatus)status);
+			await _cachedSrmaProvider.SetStatus(srmaId, (ConcernsCaseWork.Service.CaseActions.SRMAStatus)status);
 		}
 
 		public async Task SetVisitDates(long srmaId, DateTime startDate, DateTime? endDate)

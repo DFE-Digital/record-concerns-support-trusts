@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
+using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Nti;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

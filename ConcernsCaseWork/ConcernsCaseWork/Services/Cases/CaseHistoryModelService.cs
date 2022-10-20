@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Redis.Cases;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Cases;
-using ConcernsCasework.Service.Cases;
+using ConcernsCaseWork.Service.Cases;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

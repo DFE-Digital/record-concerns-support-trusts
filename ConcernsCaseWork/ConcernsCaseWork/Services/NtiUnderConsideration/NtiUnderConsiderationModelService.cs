@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.Redis.NtiUnderConsideration;
+using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
