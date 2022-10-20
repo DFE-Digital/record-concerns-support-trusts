@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models.CaseActions;
 using Service.TRAMS.NtiWarningLetter;
 using System;
 using System.Collections.Generic;
@@ -66,7 +67,8 @@ namespace ConcernsCaseWork.Mappers
 			return new NtiWarningLetterStatusModel
 			{
 				Id = ntiStatusDto.Id,
-				Name = ntiStatusDto.Name
+				Name = ntiStatusDto.Name,
+				PastTenseName = ntiStatusDto.PastTenseName
 			};
 		}
 
@@ -78,5 +80,15 @@ namespace ConcernsCaseWork.Mappers
 				Name = ntiWarningLetterReasonDto.Name
 			};
 		}
+		
+		public static ActionSummary ToActionSummary(this NtiWarningLetterModel model)
+			=> new()
+			{
+				ClosedDate = model.ClosedAt.ToDayMonthYear(),
+				Name = "NTI Warning Letter", 
+				OpenedDate = model.CreatedAt.ToDayMonthYear(),
+				RelativeUrl = $"/case/{model.CaseUrn}/management/action/ntiwarningletter/{model.Id}",
+				StatusName = model.ClosedStatus.PastTenseName
+			};
 	}
 }

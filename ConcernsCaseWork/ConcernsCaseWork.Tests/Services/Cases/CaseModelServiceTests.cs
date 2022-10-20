@@ -1044,7 +1044,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var actualCaseUrn = await caseModelService.PostCase(createCaseModel);
 
 			// assert
-			Assert.That(actualCaseUrn, Is.Not.Null);
+			Assert.That(actualCaseUrn, Is.Not.Zero);
 			Assert.That(actualCaseUrn, Is.EqualTo(caseDto.Urn));
 		}
 		

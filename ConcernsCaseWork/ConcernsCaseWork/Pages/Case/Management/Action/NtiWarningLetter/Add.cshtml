@@ -46,7 +46,7 @@
                     </a>
                 </div>
 
-                <form role="form" method="post" id="add-nta-wl-form" novalidate>
+                <form role="form" method="post" id="add-nti-wl-form" novalidate>
                     @* Status *@
                     <div class="govuk-form-group govuk-!-margin-top-9">
                         <fieldset class="govuk-fieldset">
@@ -145,7 +145,7 @@
                                 <h2 class="govuk-heading-m">What are the conditions of the warning letter?</h2>
                             </legend>
                             <button class="govuk-button govuk-button--secondary" data-module="govuk-button" name="action" value="@Model.ActionForAddConditionsButton">
-                                Add conditions
+                                Edit conditions
                             </button>
                         </fieldset>
                     </div>
@@ -171,7 +171,8 @@
 
                 <script type="application/javascript" nonce="@nonce">
                     $(function () {
-                        let validator = formValidator($("#add-nta-wl-form")[0]);
+                        let validator = formValidator($("#add-nti-wl-form")[0]);
+                        addNTINotesValidator(validator);
 
                         validator.addValidator('dtr-day', [{
                           method: function(field, params) {

@@ -261,7 +261,7 @@ namespace Service.TRAMS.Tests.Records
 			Assert.That(actualRecord, Is.Not.Null);
 			Assert.That(actualRecord.Name, Is.EqualTo(expectedRecord.Name));
 			Assert.That(actualRecord.Urn, Is.EqualTo(expectedRecord.Urn));
-			Assert.That(actualRecord.CreatedAt, Is.Not.Null);
+			Assert.That(actualRecord.CreatedAt, Is.Not.EqualTo(default(DateTimeOffset)));
 			Assert.That(actualRecord.Description, Is.EqualTo(expectedRecord.Description));
 			Assert.That(actualRecord.Reason, Is.EqualTo(expectedRecord.Reason));
 			Assert.That(actualRecord.StatusUrn, Is.EqualTo(expectedRecord.StatusUrn));

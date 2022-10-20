@@ -64,15 +64,14 @@ namespace ConcernsCaseWork.Tests.Mappers
 			
 			// assert
 			Assert.That(ratingModel, Is.Not.Null);
-			Assert.That(ratingModel.Checked, Is.Not.Null);
 			Assert.That(ratingModel.Name, Is.Not.Null);
-			Assert.That(ratingModel.Urn, Is.Not.Null);
+			Assert.That(ratingModel.Urn, Is.Not.Zero);
 			Assert.That(ratingModel.RagRating, Is.Not.Null);
 			Assert.That(ratingModel.RagRatingCss, Is.Not.Null);
 		}
 
 		[Test]
-		public void WhenMapDtoToModel_When_Urn_IsUknown_ReturnsFirstRatingModel()
+		public void WhenMapDtoToModel_When_Urn_Is_Unknown_ReturnsFirstRatingModel()
 		{
 			// arrange
 			var uknownUrn = 0;
@@ -84,9 +83,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 
 			// assert
 			Assert.That(ratingModel, Is.Not.Null);
-			Assert.That(ratingModel.Checked, Is.Not.Null);
 			Assert.That(ratingModel.Name, Is.Not.Null);
-			Assert.That(ratingModel.Urn, Is.Not.Null);
+			Assert.That(ratingModel.Urn, Is.Not.Zero);
 			Assert.That(ratingModel.RagRating, Is.Not.Null);
 			Assert.That(ratingModel.RagRatingCss, Is.Not.Null);
 		}

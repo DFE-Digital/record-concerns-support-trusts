@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Models.CaseActions;
 using Service.TRAMS.CaseActions;
 using System;
 
@@ -44,5 +46,15 @@ namespace ConcernsCaseWork.Mappers
 
 			};
 		}
+		
+		public static ActionSummary ToActionSummary(this SRMAModel srmaModel)
+			 => new()
+				{
+					ClosedDate = srmaModel.ClosedAt.ToDayMonthYear(),
+					Name = "SRMA",
+					OpenedDate = srmaModel.CreatedAt.ToDayMonthYear(), 
+					RelativeUrl = $"/case/{srmaModel.CaseUrn}/management/action/srma/{srmaModel.Id}/closed",
+					StatusName = EnumHelper.GetEnumDescription(srmaModel.Status)
+				};
 	}
 }
