@@ -141,25 +141,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 		}
 
 		[Test]
-		public async Task OnPostAsync_When_InvalidNotesField_Then_Throws_Exception()
-		{
-			long caseUrn = 233433;
-			var expectedKey = "CreateDecisionDto.SupportingNotes";
-			const string expectedMessage = "Notes must be 2000 characters or less";
-
-			var builder = new TestBuilder()
-				.WithCaseUrnRouteValue(caseUrn);
-
-			var sut = builder.BuildSut();
-
-			sut.ModelState.AddModelError(expectedKey, expectedMessage);
-
-			await sut.OnPostAsync(caseUrn);
-
-			Assert.That(sut.TempData["Decision.Message"], Is.EqualTo(expectedMessage));
-		}
-
-		[Test]
 		public async Task OnPostAsync_When_Validation_Failures_Concatenates_Error_Messages()
 		{
 			long caseUrn = 233433;
@@ -176,7 +157,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			await sut.OnPostAsync(caseUrn);
 
-			Assert.That(sut.TempData["Decision.Message"], Is.EqualTo($"{expectedMessage1},\r\n{expectedMessage2}"));
+			var decisionsValidationErrors = sut.TempData["Decision.Message"] as IEnumerable<string>;
+
+			Assert.IsTrue(decisionsValidationErrors.Contains(expectedMessage1));
+			Assert.IsTrue(decisionsValidationErrors.Contains(expectedMessage2));
 		}
 
 		private class TestBuilder
