@@ -98,7 +98,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			await sut.OnPostAsync(expectedUrn);
 
-			Assert.Equals(sut.CreateDecisionDto.DecisionTypes.Length, expectedDecisionTypesLength);
+			Assert.AreEqual(sut.CreateDecisionDto.DecisionTypes.Length, expectedDecisionTypesLength);
 		}
 
 
