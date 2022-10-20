@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Extensions;
 using ConcernsCaseWork.API.Middleware;
 using ConcernsCaseWork.API.StartupConfiguration;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -15,16 +16,12 @@ namespace ConcernsCaseWork.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-	        services.AddDependencies();
-	        services.AddUseCases();
-	        services.AddDatabase(Configuration);
-	        services.AddApi(Configuration);
-	        services.AddSwagger(Configuration);
+	        services.AddConcernsApiProject(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
-	        app.UseSwagger(provider);
+	        app.UseConcernsCaseworkSwagger(provider);
 	        
             if (env.IsDevelopment())
             {
@@ -41,7 +38,7 @@ namespace ConcernsCaseWork.API
             
             app.UseAuthorization();
             
-            app.UseEndpoints();
+            app.UseConcernsCaseworkEndpoints();
         }
     }
 }

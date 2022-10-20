@@ -1,3 +1,5 @@
+using ConcernsCaseWork.API.Extensions;
+using ConcernsCaseWork.API.Middleware;
 using ConcernsCaseWork.Constraints;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Middleware;
@@ -5,6 +7,7 @@ using ConcernsCaseWork.Security;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -87,8 +90,10 @@ namespace ConcernsCaseWork
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
 		{
+			app.UseConcernsCaseworkSwagger(provider);
+			
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
@@ -99,6 +104,8 @@ namespace ConcernsCaseWork
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
 			}
+			
+			app.UseMiddleware<ExceptionHandlerMiddleware>();
 			
 			// Security headers
 			app.UseSecurityHeaders(
@@ -121,6 +128,8 @@ namespace ConcernsCaseWork
 			app.UseAuthorization();
 			app.UseMiddleware<CorrelationIdMiddleware>();
 
+			app.UseConcernsCaseworkEndpoints();
+			
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapRazorPages();
