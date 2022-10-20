@@ -21,6 +21,7 @@ using Microsoft.Extensions.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Sentry;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 {
@@ -76,6 +77,51 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			await sut.OnPostAsync(expectedUrn);
 
 			Assert.AreEqual(expectedUrn, sut.CaseUrn);
+		}
+
+
+		[Test]
+		public async Task OnPostAsync_When_DecisionTypesIsPopulated_Then_PopulateCreateDecisionTypesProperty_Returns_Page()
+		{
+			const long expectedUrn = 2;
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrnRouteValue(expectedUrn)
+				.BuildSut();
+
+			sut.DecisionTypeNoticeToImprove = true;
+			sut.DecisionTypeOtherFinancialSupport = true;
+			sut.DecisionTypeQualifiedFloatingCharge = true;
+
+			const int expectedDecisionTypesLength = 3;
+
+
+			await sut.OnPostAsync(expectedUrn);
+
+			Assert.Equals(sut.CreateDecisionDto.DecisionTypes.Length, expectedDecisionTypesLength);
+		}
+
+
+		[Test]
+		public async Task OnPostAsync_When_DateFieldsArePopulated_Then_PopulateCreateDecisionDateProperty_Returns_Page()
+		{
+			const long expectedUrn = 2;
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrnRouteValue(expectedUrn)
+				.BuildSut();
+
+			sut.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "dtr-day-request-received", new StringValues("19") },
+					{ "dtr-month-request-received", new StringValues("10") },
+					{ "dtr-year-request-received", new StringValues("2022") }
+				});
+
+			await sut.OnPostAsync(expectedUrn);
+
+			Assert.IsNotNull(sut.CreateDecisionDto.ReceivedRequestDate);
 		}
 
 
@@ -150,6 +196,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				_caseUrnValue = 5;
 				_mockDecisionService = Fixture.Freeze<Mock<IDecisionService>>();
 				_mockLogger = Fixture.Freeze<Mock<ILogger<AddPageModel>>>();
+
 			}
 
 			public TestBuilder WithCaseUrnRouteValue(object urnValue)
@@ -174,6 +221,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 				var routeData = result.RouteData.Values;
 				routeData.Add("urn", _caseUrnValue);
+				result.HttpContext.Request.Form = new FormCollection(new Dictionary<string, StringValues>());
 
 				return result;
 			}

@@ -1,7 +1,7 @@
 ﻿@page "/case/{urn:long}/management/action/decision/add"
 @model ConcernsCaseWork.Pages.Case.Management.Action.Decision.AddPageModel
-@using ConcernsCaseWork.Enums;
 @using ConcernsCaseWork.Helpers;
+@using Service.TRAMS.Decision;
 
 @{
 	ViewData["Title"] = "Add Decision";
@@ -189,9 +189,6 @@
                                 <h2 class="govuk-heading-m">What type of decision is it?</h2>
                             </legend>
                             <div class="govuk-checkboxes__item">
-                                @{
-                                    int decisionTypeInt = (int)DecisionType.NoticeToImprove;
-                                }
                                 <input class="govuk-checkboxes__input" id="@DecisionType.NoticeToImprove" name="DecisionTypeNoticeToImprove" type="checkbox" value="true">
                                 <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.NoticeToImprove">
                                     @EnumHelper.GetEnumDescription(DecisionType.NoticeToImprove)
@@ -204,7 +201,6 @@
                             </div>
 
                             <div class="govuk-checkboxes__item">
-                                @{ decisionTypeInt = (int)DecisionType.Section128; }
                                 <input class="govuk-checkboxes__input" id="@DecisionType.Section128" name="DecisionTypeSection128" type="checkbox" value="true">
                                 <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.Section128">
                                     @EnumHelper.GetEnumDescription(DecisionType.Section128)
@@ -215,7 +211,7 @@
                             </div>
 
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.QualifiedFloatingCharge" name="type" type="checkbox" value="@((int)DecisionType.QualifiedFloatingCharge)">
+                                <input class="govuk-checkboxes__input" id="@DecisionType.QualifiedFloatingCharge" name="DecisionTypeQualifiedFloatingCharge" type="checkbox" value="true">
                                 <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.QualifiedFloatingCharge">
                                     @EnumHelper.GetEnumDescription(DecisionType.QualifiedFloatingCharge)
                                     <div id="@DecisionType.QualifiedFloatingCharge-hint" class="govuk-hint">
@@ -225,7 +221,7 @@
                             </div>
 
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.NonRepayableFinancialSupport" name="type" type="checkbox" value="@((int)DecisionType.NonRepayableFinancialSupport)">
+                                <input class="govuk-checkboxes__input" id="@DecisionType.NonRepayableFinancialSupport" name="DecisionTypeNonRepayableFinancialSupport" type="checkbox" value="true">
                                 <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.NonRepayableFinancialSupport">
                                     @EnumHelper.GetEnumDescription(DecisionType.NonRepayableFinancialSupport)
                                     <div id="@DecisionType.NonRepayableFinancialSupport-hint" class="govuk-hint">
@@ -235,7 +231,7 @@
                             </div>
 
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.RepayableFinancialSupport" name="type" type="checkbox" value="@((int)DecisionType.RepayableFinancialSupport)">
+                                <input class="govuk-checkboxes__input" id="@DecisionType.RepayableFinancialSupport" name="DecisionTypeRepayableFinancialSupport" type="checkbox" value="true">
                                 <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.RepayableFinancialSupport">
                                     @EnumHelper.GetEnumDescription(DecisionType.RepayableFinancialSupport)
                                     <div id="@DecisionType.RepayableFinancialSupport-hint" class="govuk-hint">
@@ -245,7 +241,7 @@
                             </div>
 
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.ShortTermCashAdvance" name="type" type="checkbox" value="@((int)DecisionType.ShortTermCashAdvance)">
+                                <input class="govuk-checkboxes__input" id="@DecisionType.ShortTermCashAdvance" name="DecisionTypeShortTermCashAdvance" type="checkbox" value="true">
                                 <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.ShortTermCashAdvance">
                                     @EnumHelper.GetEnumDescription(DecisionType.ShortTermCashAdvance)
                                     <div id="@DecisionType.ShortTermCashAdvance-hint" class="govuk-hint">
@@ -255,7 +251,7 @@
                             </div>
 
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.WriteOffRecoverableFunding" name="type" type="checkbox" value="@((int)DecisionType.WriteOffRecoverableFunding)">
+                                <input class="govuk-checkboxes__input" id="@DecisionType.WriteOffRecoverableFunding" name="DecisionTypeWriteOffRecoverableFunding" type="checkbox" value="true">
                                 <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.WriteOffRecoverableFunding">
                                     @EnumHelper.GetEnumDescription(DecisionType.WriteOffRecoverableFunding)
                                     <div id="@DecisionType.WriteOffRecoverableFunding-hint" class="govuk-hint">
@@ -265,7 +261,7 @@
                             </div>
 
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.OtherFinancialSupport" name="type" type="checkbox" value="@((int)DecisionType.OtherFinancialSupport)">
+                                <input class="govuk-checkboxes__input" id="@DecisionType.OtherFinancialSupport" name="DecisionTypeOtherFinancialSupport" type="checkbox" value="true"">
                                 <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.OtherFinancialSupport">
                                     @EnumHelper.GetEnumDescription(DecisionType.OtherFinancialSupport)
                                     <div id="@DecisionType.OtherFinancialSupport-hint" class="govuk-hint">
@@ -275,7 +271,7 @@
                             </div>
 
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.EstimatesFundingOrPupilNumberAdjustment" name="type" type="checkbox" value="@((int)DecisionType.EstimatesFundingOrPupilNumberAdjustment)">
+                                <input class="govuk-checkboxes__input" id="@DecisionType.EstimatesFundingOrPupilNumberAdjustment" name="DecisionTypeEstimatesFundingOrPupilNumberAdjustment" type="checkbox" value="true"">
                                 <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.EstimatesFundingOrPupilNumberAdjustment">
                                     @EnumHelper.GetEnumDescription(DecisionType.EstimatesFundingOrPupilNumberAdjustment)
                                     <div id="@DecisionType.EstimatesFundingOrPupilNumberAdjustment-hint" class="govuk-hint">
@@ -285,7 +281,7 @@
                             </div>
 
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.EsfaApproval" name="type" type="checkbox" value="@((int)DecisionType.EsfaApproval)">
+                                <input class="govuk-checkboxes__input" id="@DecisionType.EsfaApproval" name="DecisionTypeEsfaApproval" type="checkbox" value="true">
                                 <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.EsfaApproval">
                                     @EnumHelper.GetEnumDescription(DecisionType.EsfaApproval)
                                     <div id="@DecisionType.EsfaApproval-hint" class="govuk-hint">
@@ -295,7 +291,7 @@
                             </div>
 
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.FreedomOfInformationExemptions" name="type" type="checkbox" value="@((int)DecisionType.FreedomOfInformationExemptions)">
+                                <input class="govuk-checkboxes__input" id="@DecisionType.FreedomOfInformationExemptions" name="DecisionTypeFreedomOfInformationExemptions" type="checkbox" value="true">
                                 <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.FreedomOfInformationExemptions">
                                     @EnumHelper.GetEnumDescription(DecisionType.FreedomOfInformationExemptions)
                                     <div id="@DecisionType.FreedomOfInformationExemptions-hint" class="govuk-hint">
@@ -361,6 +357,34 @@
 
                             $totalAmountRequestedObj.val(formattedCurrency)
                         });
+
+
+
+                        validator.addValidator('dtr-day-request-received', [{
+                          method: function(field, params) {
+                              return noDateOrCompleteDate(params.year.value, params.month.value, params.day.value);
+                          },
+                          message: 'Please enter a complete date (DD MM YYYY)',
+                          params: {
+                            day: document.getElementById('dtr-day-request-received'),
+                            month: document.getElementById('dtr-month-request-received'),
+                            year: document.getElementById('dtr-year-request-received')
+                          }
+                        }]);
+
+                        function noDateOrCompleteDate(year, month, day) {
+                            var missingValuesCount = 0;
+                            if(year.length == 0) {
+                                missingValuesCount++;
+                            }
+                            if(month.length == 0) {
+                                missingValuesCount++;
+                            }
+                            if(day.length == 0) {
+                                missingValuesCount++;
+                            }
+                            return missingValuesCount == 0 || missingValuesCount == 3; @* the date should be either empty or valid *@
+                        }
 
 
                         autoResizer();

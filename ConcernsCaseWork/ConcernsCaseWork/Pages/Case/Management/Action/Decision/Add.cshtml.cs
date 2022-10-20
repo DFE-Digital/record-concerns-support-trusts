@@ -129,14 +129,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
 			var dateStarted = DateTimeHelper.TryParseExact(dtString, out DateTime parsedDate) ? parsedDate : (DateTime?)null;
 						
-			// I don't think this should be using ints.
-			CreateDecisionDto.DecisionTypes = DecisionTypePropertiesToDecisionTypeArray().Cast<int>();
+			CreateDecisionDto.DecisionTypes = DecisionTypePropertiesToDecisionTypeArray();
 			CreateDecisionDto.ReceivedRequestDate = parsedDate;
 			CreateDecisionDto.CreatedAt = DateTimeOffset.Now;
 			CreateDecisionDto.UpdatedAt = DateTimeOffset.Now;
 		}
 
-		public void DecisionTypeArrayToDecisionTypeProperties(DecisionType[] decisionTypes)
+		private void DecisionTypeArrayToDecisionTypeProperties(DecisionType[] decisionTypes)
 		{	
 			if (decisionTypes == null)
 			{
@@ -157,7 +156,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		}
 
 		// update the dto with the result of a call to this, so createDecisionDto.DecisionTypes = ToDecisionTypesArray([page property]), 
-		public DecisionType[] DecisionTypePropertiesToDecisionTypeArray()
+		private DecisionType[] DecisionTypePropertiesToDecisionTypeArray()
 		{			 
 			return new DecisionType[]
 			{

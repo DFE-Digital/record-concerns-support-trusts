@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace ConcernsCaseWork.Enums
+namespace Service.TRAMS.Decision
 {
 	public enum DecisionType
 	{
