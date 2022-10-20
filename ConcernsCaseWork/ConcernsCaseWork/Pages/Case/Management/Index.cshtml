@@ -96,10 +96,10 @@
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table-case-details__header">Risk to trust</th>
                             <td class="govuk-table__cell govuk-label-wrapper">
-                                @for (var index = 0; index < Model.CaseModel.RatingModel.RagRating.Item2.Count; ++index)
+                                @for (var index = 0; index < Model.CaseModel?.RatingModel?.RagRating?.Item2?.Count; ++index)
                                 {
-                                    <span class="govuk-tag ragtag @Model.CaseModel.RatingModel.RagRatingCss.ElementAt(index)">
-                                        @Model.CaseModel.RatingModel.RagRating.Item2.ElementAt(index)
+                                    <span class="govuk-tag ragtag @Model.CaseModel?.RatingModel?.RagRatingCss?.ElementAt(index)">
+                                        @Model.CaseModel?.RatingModel?.RagRating?.Item2?.ElementAt(index)
                                     </span>
                                 }
                             </td>
@@ -194,7 +194,9 @@
                     </tbody>
                 </table>
 
-                <!--Accordions-->
+            <h2 class="govuk-heading-m">Concern details</h2>
+	
+            <!--Accordions-->	
             <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
 
                     <div class="govuk-accordion__section">
@@ -288,23 +290,32 @@
                     Add to case
                 </a>
 
-                @if (openSRMAs.Count > 0 || openFinancialPlanModels.Count > 0 || openNtiUCs.Count > 0 || openNtiWLs.Count > 0 || openNtis.Count > 0)
-                {
+
                     <table id="open-case-actions" class="govuk-table">
                         <thead class="govuk-table__head">
                             <tr class="govuk-table__row tr__large">
                                 <th class="govuk-table__header govuk-table__cell__cases" scope="col">
-                                    Open actions
+                                    Active actions and decisions
                                 </th>
                                 <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col">
                                 </th>
                                 <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__right" scope="col">
-                                    Date Opened
+                                    Date opened
                                 </th>
                             </tr>
                         </thead>
 
                         <tbody class="govuk-table__body">
+	        
+	                        @if (!Model.HasOpenActions)
+	                        {
+	                            <tr class="govuk-table__row">
+	                                <td class="govuk-table__cell" colspan="3">
+	                                    There are no open actions or decisions added to this case.
+	                                </td>
+	                            </tr>
+	                        }
+                        
                             @foreach (SRMAModel srma in openSRMAs)
                             {
                                 <tr class="govuk-table__row">
@@ -358,6 +369,7 @@
                                         </a>
                                     </td>
                                     <td class="govuk-table__cell">
+                                        <span>In progress</span>
                                     </td>
                                     <td class="govuk-table__cell govuk-table__header__right">
                                         @DateExtension.ToDayMonthYear(nti.CreatedAt)
@@ -374,6 +386,16 @@
                                         </a>
                                     </td>
                                     <td class="govuk-table__cell">
+                                        @{
+                                            if (nti.Status != null)
+                                            {
+                                                <span>@nti.Status.Name</span>
+                                            }
+                                            else
+                                            {
+                                                <span>In progress</span>
+                                            }
+                                        }
                                     </td>
                                     <td class="govuk-table__cell govuk-table__header__right">
                                         @DateExtension.ToDayMonthYear(nti.CreatedAt)
@@ -390,7 +412,16 @@
                                         </a>
                                     </td>
                                     <td class="govuk-table__cell">
-                                        @nti.Status?.Name
+                                        @{
+                                            if (nti.Status != null)
+                                            {
+                                                <span>@nti.Status.Name</span>
+                                            }
+                                            else
+                                            {
+                                                <span>In progress</span>
+                                            }
+                                        }
                                     </td>
                                     <td class="govuk-table__cell govuk-table__header__right">
                                         @DateExtension.ToDayMonthYear(nti.CreatedAt)
@@ -399,25 +430,35 @@
                             }
                         </tbody>
                     </table>
-                }
 
-                @if (closedSRMAs.Count > 0 || closedFinancialPlanModels.Count > 0 || closedNtiUCs.Count > 0 || closedNtiWLs.Count > 0 || closedNtis.Count > 0)
-                {
-                    <table id="close-case-actions" class="govuk-table">
+            <table id="close-case-actions" class="govuk-table">
                         <thead class="govuk-table__head">
                             <tr class="govuk-table__row tr__large">
                                 <th class="govuk-table__header govuk-table__cell__cases" scope="col">
-                                    Closed actions
+                                    Closed actions and decisions
                                 </th>
                                 <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col">
                                 </th>
                                 <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__right" scope="col">
-                                    Date Closed
+                                    Date opened
+                                </th>
+                                <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__right" scope="col">
+                                    Date closed
                                 </th>
                             </tr>
                         </thead>
 
                         <tbody class="govuk-table__body">
+                        
+                            @if (!Model.HasClosedActions)
+                            {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell" colspan="4">
+                                        There are no closed actions or decisions added to this case.
+                                    </td>
+                                </tr>
+                            }
+                        
                             @foreach (SRMAModel srma in closedSRMAs)
                             {
                                 <tr class="govuk-table__row">
@@ -426,8 +467,12 @@
                                             SRMA
                                         </a>
                                     </td>
-                                    <td class="govuk-table__cell">
-                                        @EnumHelper.GetEnumDescription(srma.Status)
+	                                <td class="govuk-table__cell">
+		                                @EnumHelper.GetEnumDescription(srma.Status)
+	                                </td>
+	                                
+                                    <td class="govuk-table__cell govuk-table__header__right">
+                                        @DateExtension.ToDayMonthYear(srma.CreatedAt)
                                     </td>
                                     <td class="govuk-table__cell govuk-table__header__right">
                                         @DateExtension.ToDayMonthYear(srma.ClosedAt.Value)
@@ -447,9 +492,12 @@
                                             Financial Plan
                                         </a>
                                     </td>
-                                    <td class="govuk-table__cell">
-                                        @EnumHelper.GetEnumDescription(statusEnum)
-                                    </td>
+	                                <td class="govuk-table__cell">
+		                                @EnumHelper.GetEnumDescription(statusEnum)
+	                                </td>
+                                    <td class="govuk-table__cell govuk-table__header__right">
+                                        @DateExtension.ToDayMonthYear(financialPlanModel.CreatedAt)
+                                    </td>    
                                     <td class="govuk-table__cell govuk-table__header__right">
                                         @DateExtension.ToDayMonthYear(financialPlanModel.ClosedAt.Value)
                                     </td>
@@ -464,8 +512,11 @@
                                             NTI: Under consideration
                                         </a>
                                     </td>
-                                    <td class="govuk-table__cell">
-                                        @(Model.NtiStatuses.SingleOrDefault(s => s.Id == nti.ClosedStatusId)?.Name ?? string.Empty)
+	                                <td class="govuk-table__cell">
+		                                @(Model.NtiStatuses.SingleOrDefault(s => s.Id == nti.ClosedStatusId)?.Name ?? string.Empty)
+	                                </td>
+                                    <td class="govuk-table__cell govuk-table__header__right">
+                                        @DateExtension.ToDayMonthYear(nti.CreatedAt)
                                     </td>
                                     <td class="govuk-table__cell govuk-table__header__right">
                                         @DateExtension.ToDayMonthYear(nti.ClosedAt.Value)
@@ -481,8 +532,11 @@
                                             NTI: Warning letter
                                         </a>
                                     </td>
-                                    <td class="govuk-table__cell">
-                                        @nti.ClosedStatus?.Name
+	                                <td class="govuk-table__cell">
+		                                @nti.ClosedStatus?.PastTenseName
+	                                </td>
+                                    <td class="govuk-table__cell govuk-table__header__right">
+                                        @DateExtension.ToDayMonthYear(nti.CreatedAt)
                                     </td>
                                     <td class="govuk-table__cell govuk-table__header__right">
                                         @DateExtension.ToDayMonthYear(nti.ClosedAt.Value)
@@ -502,17 +556,15 @@
                                         @nti.ClosedStatus?.Name
                                     </td>
                                     <td class="govuk-table__cell govuk-table__header__right">
+                                        @DateExtension.ToDayMonthYear(nti.CreatedAt)
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__header__right">
                                         @DateExtension.ToDayMonthYear(nti.ClosedAt.Value)
                                     </td>
                                 </tr>
                             }
                         </tbody>
                     </table>
-                }
-
-
-
-
 
                 <partial name="_CaseHistory" model="@Model.CasesHistoryModel" />
 
