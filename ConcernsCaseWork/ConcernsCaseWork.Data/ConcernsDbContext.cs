@@ -59,7 +59,7 @@ namespace ConcernsCaseWork.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasSequence<int>("ConcernsGlobalSequence").HasMin(1).StartsAt(1);
+            modelBuilder.HasSequence<int>("GlobalSequence", "concerns").HasMin(1).StartsAt(1);
 
             modelBuilder.Entity<ConcernsCase>(entity =>
             {
@@ -69,7 +69,7 @@ namespace ConcernsCaseWork.Data
                     .HasName("PK__CCase__C5B214360AF620234");
 
                 entity.Property(e => e.Urn)
-                    .HasDefaultValueSql("NEXT VALUE FOR ConcernsGlobalSequence");
+                    .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
 
                 entity.HasMany(x => x.Decisions)
                     .WithOne();
@@ -83,7 +83,7 @@ namespace ConcernsCaseWork.Data
                     .HasName("PK__CStatus__C5B214360AF620234");
 
                 entity.Property(e => e.Urn)
-                    .HasDefaultValueSql("NEXT VALUE FOR ConcernsGlobalSequence");
+                    .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
 
                 entity.HasData(
                     new ConcernsStatus
@@ -118,7 +118,7 @@ namespace ConcernsCaseWork.Data
                     .HasName("PK__CRecord");
 
                 entity.Property(e => e.Urn)
-                    .HasDefaultValueSql("NEXT VALUE FOR ConcernsGlobalSequence");
+                    .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
 
                 entity.HasOne(r => r.ConcernsCase)
                     .WithMany(c => c.ConcernsRecords)
@@ -149,7 +149,7 @@ namespace ConcernsCaseWork.Data
                     .HasName("PK__CType");
 
                 entity.Property(e => e.Urn)
-                    .HasDefaultValueSql("NEXT VALUE FOR ConcernsGlobalSequence");
+                    .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
 
                 entity.HasData(
                     new ConcernsType
@@ -266,7 +266,7 @@ namespace ConcernsCaseWork.Data
                     .HasName("PK__CMeansOfReferral");
 
                 entity.Property(e => e.Urn)
-                    .HasDefaultValueSql("NEXT VALUE FOR ConcernsGlobalSequence");
+                    .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
 
                 entity.HasData(
                     new ConcernsMeansOfReferral()
@@ -295,7 +295,7 @@ namespace ConcernsCaseWork.Data
                     .HasName("PK__CRating");
 
                 entity.Property(e => e.Urn)
-                    .HasDefaultValueSql("NEXT VALUE FOR ConcernsGlobalSequence");
+                    .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
 
                 entity.HasData(
                     new ConcernsRating
