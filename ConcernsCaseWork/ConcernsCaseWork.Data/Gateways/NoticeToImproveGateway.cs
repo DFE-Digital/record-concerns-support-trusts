@@ -9,9 +9,9 @@ namespace ConcernsCaseWork.Data.Gateways
         private readonly ConcernsDbContext _concernsDbContext;
         private readonly ILogger<NoticeToImproveGateway> _logger;
 
-        public NoticeToImproveGateway(ConcernsDbContext concernsDbContext, ILogger<NoticeToImproveGateway> logger)
+        public NoticeToImproveGateway(ConcernsDbContext tramsDbContext, ILogger<NoticeToImproveGateway> logger)
 		{
-            _concernsDbContext = concernsDbContext;
+            _concernsDbContext = tramsDbContext;
             _logger = logger;
         }
 

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConcernsCaseWork.Data.Models
 {
-    [Table("SRMAStatus", Schema = "concerns")]
+    [Table("SRMAStatus", Schema = "sdd")]
     public class SRMAStatus
     {
         [Key]

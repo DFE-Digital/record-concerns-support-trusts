@@ -7,9 +7,9 @@ namespace ConcernsCaseWork.Data.Gateways
     {
         private readonly ConcernsDbContext _concernsDbContext;
 
-        public ConcernsMeansOfReferralGateway(ConcernsDbContext concernsDbContext)
+        public ConcernsMeansOfReferralGateway(ConcernsDbContext tramsDbContext)
         {
-            _concernsDbContext = concernsDbContext;
+            _concernsDbContext = tramsDbContext;
         }
 
         public IList<ConcernsMeansOfReferral> GetMeansOfReferrals()

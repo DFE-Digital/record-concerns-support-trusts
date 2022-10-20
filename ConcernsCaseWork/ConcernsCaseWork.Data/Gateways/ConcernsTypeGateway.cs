@@ -6,9 +6,9 @@ namespace ConcernsCaseWork.Data.Gateways
     {
         private readonly ConcernsDbContext _concernsDbContext;
 
-        public ConcernsTypeGateway(ConcernsDbContext concernsDbContext)
+        public ConcernsTypeGateway(ConcernsDbContext tramsDbContext)
         {
-            _concernsDbContext = concernsDbContext;
+            _concernsDbContext = tramsDbContext;
         }
 
         public ConcernsType GetConcernsTypeByUrn(int urn)

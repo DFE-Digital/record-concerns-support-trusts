@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.TRAMS.NtiUnderConsideration;
+using ConcernsCasework.Service.NtiUnderConsideration;
 using System.Collections.Generic;
 using System.Linq;
 

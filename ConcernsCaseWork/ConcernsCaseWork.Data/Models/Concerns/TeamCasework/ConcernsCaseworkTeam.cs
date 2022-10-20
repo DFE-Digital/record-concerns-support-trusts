@@ -2,7 +2,7 @@
 
 namespace ConcernsCaseWork.Data.Models.Concerns.TeamCasework
 {
-    [Table("ConcernsCaseworkTeam", Schema = "concerns")]
+    [Table("ConcernsCaseworkTeam", Schema = "sdd")]
     public class ConcernsCaseworkTeam
     {
         public string Id { get; set; }

@@ -4,14 +4,15 @@ using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Data.Gateways
 {
+    [Obsolete("This is planned to be moved into the Concerns Casework API. If it is accessed by other APIs, please let the Concerns team know.")]
     public class SRMAGateway : ISRMAGateway
     {
         private readonly ConcernsDbContext _concernsDbContext;
         private readonly ILogger<SRMAGateway> _logger;
 
-        public SRMAGateway(ConcernsDbContext concernsDbContext, ILogger<SRMAGateway> logger)
+        public SRMAGateway(ConcernsDbContext tramsDbContext, ILogger<SRMAGateway> logger)
         {
-            _concernsDbContext = concernsDbContext;
+            _concernsDbContext = tramsDbContext;
             _logger = logger;
         }
 

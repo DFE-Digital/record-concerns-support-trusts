@@ -9,9 +9,9 @@ namespace ConcernsCaseWork.Data.Gateways
         private readonly ConcernsDbContext _concernsDbContext;
         private readonly ILogger<NTIUnderConsiderationGateway> _logger;
 
-        public NTIUnderConsiderationGateway(ConcernsDbContext concernsDbContext, ILogger<NTIUnderConsiderationGateway> logger)
+        public NTIUnderConsiderationGateway(ConcernsDbContext tramsDbContext, ILogger<NTIUnderConsiderationGateway> logger)
 		{
-            _concernsDbContext = concernsDbContext;
+            _concernsDbContext = tramsDbContext;
             _logger = logger;
         }
 

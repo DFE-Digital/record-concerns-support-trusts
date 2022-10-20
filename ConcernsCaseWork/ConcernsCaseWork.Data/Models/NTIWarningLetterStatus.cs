@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConcernsCaseWork.Data.Models
 {
-    [Table("NTIWarningLetterStatus", Schema = "concerns")]
+    [Table("NTIWarningLetterStatus", Schema = "sdd")]
     public class NTIWarningLetterStatus
     {
         [Key]

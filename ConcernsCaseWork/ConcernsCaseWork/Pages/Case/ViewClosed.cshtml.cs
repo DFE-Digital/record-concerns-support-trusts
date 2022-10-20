@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCasework.Service.Helpers;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Records;
@@ -8,7 +9,6 @@ using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.TRAMS.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

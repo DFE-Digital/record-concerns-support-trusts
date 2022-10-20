@@ -1,9 +1,9 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCasework.Service.Nti;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
-using Service.TRAMS.Nti;
 using System;
 using System.Collections.Generic;
 using System.Linq;

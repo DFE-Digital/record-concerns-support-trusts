@@ -2,6 +2,7 @@
 {
 	public enum CaseActionEnum
 	{
+		Decision,
 		DfESupport,
 		FinancialForecast,
 		FinancialPlan,

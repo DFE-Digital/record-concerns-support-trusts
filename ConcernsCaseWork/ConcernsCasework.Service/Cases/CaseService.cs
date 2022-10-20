@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ConcernsCasework.Service.Cases
 {
-	public sealed class CaseService : ConcernsAbstractService, ICaseService
+	public sealed class CaseService : AbstractService, ICaseService
 	{
 		private readonly ILogger<CaseService> _logger;
 

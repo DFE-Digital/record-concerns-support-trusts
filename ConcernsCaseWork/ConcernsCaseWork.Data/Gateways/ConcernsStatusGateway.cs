@@ -6,9 +6,9 @@ namespace ConcernsCaseWork.Data.Gateways
     {
         private readonly ConcernsDbContext _concernsDbContext;
         
-        public ConcernsStatusGateway(ConcernsDbContext concernsDbContext)
+        public ConcernsStatusGateway(ConcernsDbContext tramsDbContext)
         {
-            _concernsDbContext = concernsDbContext;
+            _concernsDbContext = tramsDbContext;
         }
         
         public IList<ConcernsStatus> GetStatuses()

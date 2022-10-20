@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Data.Models.Concerns.TeamCasework;
-using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions;
 
 namespace ConcernsCaseWork.Data.Gateways
 {
@@ -7,9 +7,9 @@ namespace ConcernsCaseWork.Data.Gateways
     {
         private readonly ConcernsDbContext _concernsDbContext;
 
-        public ConcernsTeamCaseworkGateway(ConcernsDbContext concernsDbContext)
+        public ConcernsTeamCaseworkGateway(ConcernsDbContext tramsDbContext)
         {
-            _concernsDbContext = concernsDbContext ?? throw new ArgumentNullException(nameof(concernsDbContext));
+            _concernsDbContext = tramsDbContext ?? throw new ArgumentNullException(nameof(tramsDbContext));
         }
 
         public async Task AddCaseworkTeam(ConcernsCaseworkTeam team, CancellationToken cancellationToken)

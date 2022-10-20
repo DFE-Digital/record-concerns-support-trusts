@@ -1,3 +1,5 @@
+using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+
 namespace ConcernsCaseWork.Data.Models
 {
     public class ConcernsCase
@@ -23,5 +25,13 @@ namespace ConcernsCaseWork.Data.Models
         public int StatusUrn { get; set; }
         public int RatingUrn { get; set; }
         public virtual ICollection<ConcernsRecord> ConcernsRecords { get; set; }
+
+        public virtual ICollection<Decision> Decisions { get; private set; } = new List<Decision>();
+
+        public void AddDecision(Decision decision)
+        {
+            _ = decision ?? throw new ArgumentNullException(nameof(decision));
+            Decisions.Add(decision);
+        }
     }
 }

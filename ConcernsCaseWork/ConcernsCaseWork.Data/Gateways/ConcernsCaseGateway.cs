@@ -26,6 +26,8 @@ namespace ConcernsCaseWork.Data.Gateways
                 .Where(c => c.TrustUkprn == trustUkPrn)
                 .Skip((page - 1) * count)
                 .Take(count)
+                .Include(x => x.Decisions)
+                .ThenInclude(x => x.DecisionTypes)
                 .AsNoTracking()
                 .ToList();
         }
@@ -33,6 +35,8 @@ namespace ConcernsCaseWork.Data.Gateways
         public ConcernsCase GetConcernsCaseByUrn(int urn)
         {
             var concernsCase = _concernsDbContext.ConcernsCase
+                .Include(x => x.Decisions)
+                .ThenInclude(x => x.DecisionTypes)
                 .AsNoTracking()
                 .FirstOrDefault(c => c.Urn == urn);
             
@@ -48,6 +52,8 @@ namespace ConcernsCaseWork.Data.Gateways
                 .ThenInclude(record => record.ConcernsType)
                 .Include(c => c.ConcernsRecords)
                 .ThenInclude(record => record.ConcernsMeansOfReferral)
+                .Include(x => x.Decisions)
+                .ThenInclude(x => x.DecisionTypes)
                 .AsNoTracking()
                 .FirstOrDefault(c => c.Urn == urn);
             
@@ -58,6 +64,8 @@ namespace ConcernsCaseWork.Data.Gateways
         {
 
             var query = _concernsDbContext.ConcernsCase
+                .Include(x => x.Decisions)
+                .ThenInclude(x => x.DecisionTypes)
                 .Where(c => c.CreatedBy == ownerId);
 
             if (statusUrn != null)

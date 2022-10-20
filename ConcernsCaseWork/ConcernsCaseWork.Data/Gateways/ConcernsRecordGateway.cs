@@ -6,9 +6,9 @@ namespace ConcernsCaseWork.Data.Gateways
     {
         private readonly ConcernsDbContext _concernsDbContext;
 
-        public ConcernsRecordGateway(ConcernsDbContext concernsDbContext)
+        public ConcernsRecordGateway(ConcernsDbContext tramsDbContext)
         {
-            _concernsDbContext = concernsDbContext;
+            _concernsDbContext = tramsDbContext;
         }
 
         public ConcernsRecord SaveConcernsCase(ConcernsRecord concernsRecord)

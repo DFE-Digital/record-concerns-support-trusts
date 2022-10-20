@@ -1,4 +1,5 @@
-﻿@{
+﻿@using NetEscapades.AspNetCore.SecurityHeaders
+@{
 	var nonce = Context.GetNonce();
 	var label = ViewData["BackButtonLabel"] ?? "Back";
 	

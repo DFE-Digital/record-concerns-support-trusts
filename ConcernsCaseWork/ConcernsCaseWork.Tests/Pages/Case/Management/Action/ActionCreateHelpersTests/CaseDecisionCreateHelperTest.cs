@@ -1,9 +1,8 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers;
+using ConcernsCasework.Service.Cases;
 using Moq;
 using NUnit.Framework;
-using Service.TRAMS.Cases;
-using System;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelpersTests
 {
