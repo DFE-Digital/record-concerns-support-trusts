@@ -96,14 +96,16 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 
 		public static IServiceCollection AddApi(this IServiceCollection services, IConfiguration configuration)
 		{
-			var concernsApiEndpoint = configuration["ConcernsCaseworkApi:ApiEndpoint"];
+			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiKey = configuration["ConcernsCasework:ApiKey"];
 
-			if (string.IsNullOrEmpty(concernsApiEndpoint))
+			if (string.IsNullOrEmpty(concernsApiEndpoint) || string.IsNullOrEmpty(concernsApiKey))
 				throw new Exception("AddConcernsApi::missing configuration");
 
 			services.AddHttpClient("ConcernsClient", client =>
 			{
 				client.BaseAddress = new Uri(concernsApiEndpoint);
+				client.DefaultRequestHeaders.Add("ApiKey", concernsApiKey);
 				client.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
 			});
 
