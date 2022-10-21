@@ -1,13 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+﻿using Ardalis.GuardClauses;
+using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
 using Service.TRAMS.Helpers;
-using Service.TRAMS.Nti;
-using Service.TRAMS.Records;
 using System;
 using System.Net.Http;
-using System.Net.Mime;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.TRAMS.Decision
@@ -18,40 +14,21 @@ namespace Service.TRAMS.Decision
 
 		public DecisionService(IHttpClientFactory clientFactory, ILogger<DecisionService> logger) : base(clientFactory, logger)
 		{
-			_logger = logger;
+			_logger = Guard.Against.Null(logger);
 		}
 
-		public async Task PostDecision(CreateDecisionDto createDecisionDto)
-		{
-			try
-			{
-				_logger.LogInformation($"{nameof(DecisionService)}::{LoggingHelpers.EchoCallerName()}");
+		public async Task<CreateDecisionResponseDto> PostDecision(CreateDecisionDto createDecisionDto)
+		{	
+			_logger.LogInformation($"{nameof(DecisionService)}::{LoggingHelpers.EchoCallerName()}");
+			
+			_ = Guard.Against.Null(createDecisionDto);
 
-				// Create a request
-				var request = new StringContent(
-					JsonConvert.SerializeObject(createDecisionDto),
-					Encoding.UTF8,
-					MediaTypeNames.Application.Json);
-
-				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
-
-				// Execute request
-				var response = await client.PostAsync(
-					$"/{EndpointsVersion}/concerns-cases/{createDecisionDto.ConcernsCaseUrn}/decisions", request);
-
-				// Check status code
-				response.EnsureSuccessStatusCode();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, $"{nameof(DecisionService)}::{LoggingHelpers.EchoCallerName()}");
-
-				throw;
-			}
-
+			// post the new decision
+			var postResponse = await Post<CreateDecisionDto, CreateDecisionResponseDto>($"/{EndpointsVersion}/concerns-cases/{createDecisionDto.ConcernsCaseUrn}/decisions", createDecisionDto);
+			
+			_logger.LogInformation($"Decision created. caseUrn: {postResponse.ConcernsCaseUrn}, DecisionId:{postResponse.DecisionId}");
+			return postResponse;
 		}
-
 	}
 }
 

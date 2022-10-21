@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Service.TRAMS.Decision
 {
 	public interface IDecisionService
 	{
-		Task PostDecision(CreateDecisionDto createDecisionDto);
+		Task<CreateDecisionResponseDto> PostDecision(CreateDecisionDto createDecisionDto);
 	}
 }
 
