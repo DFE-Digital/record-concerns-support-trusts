@@ -61,7 +61,7 @@ dotnet user-secrets list
 Set a secret:
 dotnet user-secrets set "trams:api_endpoint" "secret_here"
 dotnet user-secrets set "trams:api_key" "secret_here"
-dotnet user-secrets set "app:username" "secret_here" --> Store a list comma separated users e.g.  dotnet user-secrets set "app:username" "Concerns.casework,e2e.cypress.test,ben.memmott,richard.machen,elijah.aremu,paul.simmons,james.cheetham,menol.razeek,christian.gleadall,philip.pybus,emma.wadsworth,israt.choudhury,chanel.diep,anthon.thomas,jane.dickinson,magdalena.bober,case.worker1,case.worker2,emma.whitcroft,chris.dexter,samantha.harbison,mara.ashraf"
+dotnet user-secrets set "app:username" "secret_here" --> Store a list comma separated users e.g.  dotnet user-secrets set "app:username" "Concerns.casework,e2e.cypress.test,ben.memmott,richard.machen,elijah.aremu,paul.simmons,james.cheetham,christian.gleadall,philip.pybus,emma.wadsworth,israt.choudhury,chanel.diep,magdalena.bober,case.worker1,case.worker2,emma.whitcroft,chris.dexter,samantha.harbison,mara.ashraf,jane.dickinson,fahad.darwish,mike.stock,michael3.marshall,rebecca.green,nicky.shue,mark.holt,ben.hodgkins,maureen.sammon,shad-carine.ohayon,judy.cheung,lee3.turner,kirsty.boxall,deaglan.lloyd,sham.choudhury,ayesha.rahman,mohammed.hoque,alastair.dawson,sue.randall,linsey.chambers,ralph.day,john.russell,joe.peffers,jenny.cheetham,julia.paton,laura.bridge,forrest.mcdonald,alison.oliver,josephine.holloway,reshma.chetty,teresa.phillipson,molly.quinn"
 dotnet user-secrets set "app:password" "secret_here"
 dotnet user-secrets set "VCAP_SERVICES" "{'redis': [{'credentials': {'host': '127.0.0.1','password': 'password','port': '6379','tls_enabled': 'false'}}]}"
 
@@ -233,13 +233,13 @@ cd ConcernsCaseWork/ConcernsCaseWork.CypressTests/
 Followed by:
 
 ```
-npm run cy:open -- --env username='USERNAME',password='PASSWORD',url="BASE_URL_OF_APP"
+npm run cy:open -- --env apiKey='APIKEY',api='TRAMS_BASE_URL',username='USERNAME',password='PASSWORD',url="BASE_URL_OF_APP"
 ```
 
 To execute the tests in headless mode, run the following (the output will log to the console):
 
 ```
-npm run cy:run -- --env username='USERNAME',password='PASSWORD',url="BASE_URL_OF_APP"
+npm run cy:run -- --env apiKey='APIKEY',api='TRAMS_BASE_URL',username='USERNAME',password='PASSWORD',url="BASE_URL_OF_APP"
 ```
 
 ### Useful tips

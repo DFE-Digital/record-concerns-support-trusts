@@ -6,15 +6,13 @@
 
 @{
     ViewData["Title"] = "NTI";
-    var nonce = HttpContext.GetNonce();
+	ViewData["BackButtonLabel"] = "Back to case";
 }
 
 @section BeforeMain {
-<div class="govuk-width-container">
-    <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
-        Back to case
-    </a>
-</div>
+	<div class="govuk-width-container">
+		<partial name="_BackLink"/>
+	</div>
 }
 
 <div class="govuk-width-container">

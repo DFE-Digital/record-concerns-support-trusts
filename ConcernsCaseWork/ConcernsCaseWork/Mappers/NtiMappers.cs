@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models.CaseActions;
 using Service.TRAMS.Nti;
 using System;
 using System.Collections.Generic;
@@ -85,5 +86,15 @@ namespace ConcernsCaseWork.Mappers
 				Name = ntiReasonDto.Name
 			};
 		}
+		
+		public static ActionSummary ToActionSummary(this NtiModel model)
+			=> new()
+			{
+				ClosedDate = model.ClosedAt.ToDayMonthYear(), 
+				Name = "NTI",
+				OpenedDate = model.CreatedAt.ToDayMonthYear(),
+				RelativeUrl = $"/case/{model.CaseUrn}/management/action/nti/{model.Id}",
+				StatusName = model.ClosedStatus.Name
+			};
 	}
 }

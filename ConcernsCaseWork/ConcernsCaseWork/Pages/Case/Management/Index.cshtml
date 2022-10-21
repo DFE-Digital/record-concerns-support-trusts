@@ -194,7 +194,9 @@
                     </tbody>
                 </table>
 
-                <!--Accordions-->
+            <h2 class="govuk-heading-m">Concern details</h2>
+	
+            <!--Accordions-->	
             <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
 
                     <div class="govuk-accordion__section">
@@ -293,12 +295,12 @@
                         <thead class="govuk-table__head">
                             <tr class="govuk-table__row tr__large">
                                 <th class="govuk-table__header govuk-table__cell__cases" scope="col">
-                                    Open actions
+                                    Active actions and decisions
                                 </th>
                                 <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col">
                                 </th>
                                 <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__right" scope="col">
-                                    Date Opened
+                                    Date opened
                                 </th>
                             </tr>
                         </thead>
@@ -433,15 +435,15 @@
                         <thead class="govuk-table__head">
                             <tr class="govuk-table__row tr__large">
                                 <th class="govuk-table__header govuk-table__cell__cases" scope="col">
-                                    Closed actions
+                                    Closed actions and decisions
                                 </th>
                                 <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col">
                                 </th>
                                 <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__right" scope="col">
-                                    Date Opened
+                                    Date opened
                                 </th>
                                 <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__right" scope="col">
-                                    Date Closed
+                                    Date closed
                                 </th>
                             </tr>
                         </thead>
@@ -451,7 +453,7 @@
                             @if (!Model.HasClosedActions)
                             {
                                 <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell" colspan="3">
+                                    <td class="govuk-table__cell" colspan="4">
                                         There are no closed actions or decisions added to this case.
                                     </td>
                                 </tr>
