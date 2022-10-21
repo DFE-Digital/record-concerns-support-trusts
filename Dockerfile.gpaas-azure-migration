@@ -6,9 +6,8 @@ WORKDIR /build
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yq && apt-get upgrade -yq && apt-get install -yq curl git nano
-RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - &&\
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - &&\
 apt-get install -y nodejs
-#RUN npm install -g npm
 
 COPY ./ConcernsCaseWork/ConcernsCaseWork/ ./ConcernsCaseWork/
 COPY ./ConcernsCaseWork/ConcernsCaseWork.API/ ./ConcernsCaseWork.API/
@@ -18,6 +17,9 @@ COPY ./ConcernsCaseWork/ConcernsCaseWork.Logging/ ./ConcernsCaseWork.Logging/
 COPY ./ConcernsCaseWork/ConcernsCaseWork.Service/ ./ConcernsCaseWork.Service/
 COPY ./ConcernsCaseWork/ConcernsCaseWork.Redis ./ConcernsCaseWork.Redis
 COPY ./ConcernsCaseWork/ConcernsCaseWork.sln ./ConcernsCaseWork.sln
+
+RUN npm install --prefix ./ConcernsCaseWork/wwwroot
+RUN npm run build --prefix ./ConcernsCaseWork/wwwroot
 
 RUN dotnet restore ConcernsCaseWork
 RUN dotnet build ConcernsCaseWork
