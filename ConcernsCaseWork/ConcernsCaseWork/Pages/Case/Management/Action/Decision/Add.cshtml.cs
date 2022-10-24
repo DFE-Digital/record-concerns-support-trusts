@@ -1,6 +1,7 @@
 ﻿
 using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Exceptions;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
@@ -111,7 +112,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				return Redirect($"/case/{CaseUrn}/management");
 
 			}
-			catch (InvalidOperationException ex)
+			catch (InvalidUserInputException ex)
 			{
 
 				TempData["Decision.Message"] = new List<string>() { ex.Message };
@@ -136,7 +137,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			if (dtString != "--" && !isValidDate)
 			{
-				throw new InvalidOperationException($"{dtString} is an invalid date");
+				throw new InvalidUserInputException($"{dtString} is an invalid date");
 			}
 
 			CreateDecisionDto.DecisionTypes = DecisionTypePropertiesToDecisionTypeArray();
