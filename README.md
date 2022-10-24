@@ -64,8 +64,9 @@ dotnet user-secrets set "trams:api_key" "secret_here"
 dotnet user-secrets set "app:username" "secret_here" --> Store a list comma separated users e.g.  dotnet user-secrets set "app:username" "Concerns.casework,e2e.cypress.test,ben.memmott,richard.machen,elijah.aremu,paul.simmons,james.cheetham,christian.gleadall,philip.pybus,emma.wadsworth,israt.choudhury,chanel.diep,magdalena.bober,case.worker1,case.worker2,emma.whitcroft,chris.dexter,samantha.harbison,mara.ashraf,jane.dickinson,fahad.darwish,mike.stock,judy.cheung,shad-carine.ohayon,deaglan.lloyd,joe.peffers,ayesha.rahman,mohammed.hoque,carl.richmond,sue.randall,jenny.cheetham,simon.ellis,terry.jones,forrest.mcdonald,sham.choudhury,tracey.eason,john.russell,rebecca.green,tracey.carter,riffat.jabeen,natasha.walters,ben.hodgkins,teresa.phillipson,michael3.marshall,julia.paton,kirsty.boxall,simon.wadsworth,reshma.chetty,alison.oliver,josephine.holloway,lee3.turner,alastair.dawson,molly.quinn,laura.bridge,mark.holt,nicky.shue,ralph.day,maureen.sammon"
 dotnet user-secrets set "app:password" "secret_here"
 dotnet user-secrets set "VCAP_SERVICES" "{'redis': [{'credentials': {'host': '127.0.0.1','password': 'password','port': '6379','tls_enabled': 'false'}}]}"
-dotnet user-secrets set "ConcernsCaseworkApi:ApiEndpoint" "https://localhost:3001"
-dotnet user-secrets set "ConcernsCaseworkApi:ApiKey" "secret_here" 
+dotnet user-secrets set "ConcernsCasework:ApiEndpoint" "https://localhost"
+dotnet user-secrets set "ConcernsCasework:ApiKey" "secret_here" (must be in the "ConcernsCaseworkApi:ApiKeys" list of comma-separated values)
+dotnet user-secrets set "ConcernsCaseworkApi:ApiKeys" "secret_here" (a comma-separated list of values)
 
 Remove a secret:
 dotnet user-secrets remove "app:username"
