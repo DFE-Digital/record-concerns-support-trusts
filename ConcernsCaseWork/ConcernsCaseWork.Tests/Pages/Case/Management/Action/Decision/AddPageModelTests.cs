@@ -163,6 +163,38 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			Assert.IsTrue(decisionsValidationErrors.Contains(expectedMessage2));
 		}
 
+		[Test]
+		public async Task OnPostAsync_When_InvalidDate_Error_Message()
+		{
+			long caseUrn = 233433;
+			var invalidDay = "32";
+			var invalidMonth = "13";
+			var invalidYear = "7";
+
+			var expectedErrorMessage = $"{invalidDay}-{invalidMonth}-{invalidYear} is an invalid date";
+
+			var builder = new TestBuilder()
+				.WithCaseUrnRouteValue(caseUrn);
+
+			var sut = builder.BuildSut();
+
+			sut.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "dtr-day-request-received", new StringValues(invalidDay) },
+					{ "dtr-month-request-received", new StringValues(invalidMonth) },
+					{ "dtr-year-request-received", new StringValues(invalidYear) }
+				});
+
+
+			await sut.OnPostAsync(caseUrn);
+
+			var decisionsValidationErrors = sut.TempData["Decision.Message"] as IEnumerable<string>;
+
+			Assert.IsTrue(decisionsValidationErrors.Contains(expectedErrorMessage));
+		}
+
+
 		private class TestBuilder
 		{
 			private readonly Mock<IDecisionService> _mockDecisionService;

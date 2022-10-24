@@ -1,6 +1,7 @@
 ﻿
 using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Exceptions;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
@@ -101,7 +102,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 				if (!ModelState.IsValid)
 				{
-					TempData["Decision.Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToArray();
+					TempData["Decision.Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
 					return Page();
 				}
 
@@ -110,6 +111,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 				return Redirect($"/case/{CaseUrn}/management");
 
+			}
+			catch (InvalidUserInputException ex)
+			{
+
+				TempData["Decision.Message"] = new List<string>() { ex.Message };
 			}
 			catch (Exception ex)
 			{
@@ -127,8 +133,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			var dtr_month = Request.Form["dtr-month-request-received"];
 			var dtr_year = Request.Form["dtr-year-request-received"];
 			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-			var dateStarted = DateTimeHelper.TryParseExact(dtString, out DateTime parsedDate) ? parsedDate : (DateTime?)null;
-						
+			var isValidDate = DateTimeHelper.TryParseExact(dtString, out DateTime parsedDate);
+
+			if (dtString != "--" && !isValidDate)
+			{
+				throw new InvalidUserInputException($"{dtString} is an invalid date");
+			}
+
 			CreateDecisionDto.DecisionTypes = DecisionTypePropertiesToDecisionTypeArray();
 			CreateDecisionDto.ReceivedRequestDate = parsedDate;
 			CreateDecisionDto.CreatedAt = DateTimeOffset.Now;
