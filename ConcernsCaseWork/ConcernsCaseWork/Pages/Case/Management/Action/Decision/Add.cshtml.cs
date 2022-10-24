@@ -135,7 +135,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			if (dtString != "--" && !isValidDate)
 			{
-				throw new InvalidOperationException($"{dtString} is an invaid Date");
+				throw new InvalidOperationException($"{dtString} is an invaid date");
 			}
 						
 			CreateDecisionDto.DecisionTypes = DecisionTypePropertiesToDecisionTypeArray();

@@ -171,7 +171,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			var invalidMonth = "13";
 			var invalidYear = "7";
 
-			var expectedErrorMessage = $"{invalidDay}-{invalidMonth}-{invalidYear} is an invaid Date";
+			var expectedErrorMessage = $"{invalidDay}-{invalidMonth}-{invalidYear} is an invaid date";
 
 			var builder = new TestBuilder()
 				.WithCaseUrnRouteValue(caseUrn);
