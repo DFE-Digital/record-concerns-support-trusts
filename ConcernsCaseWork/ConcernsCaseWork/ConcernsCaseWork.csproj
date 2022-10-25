@@ -223,8 +223,6 @@
     <Compile Update="Pages\Case\Concern\Index.cshtml.cs">
       <DependentUpon>Index.cshtml</DependentUpon>
     </Compile>
-    <Compile Remove="Services\Cases\CreateCaseService.cs" />
-    <Compile Remove="Services\Cases\ICreateCaseService.cs" />
   </ItemGroup>
 	
 </Project>
