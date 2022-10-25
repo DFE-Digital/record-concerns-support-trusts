@@ -38,7 +38,5 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          build-args: |
-            RAILS_ENV=development
           push: true
           tags: ${{ steps.prepare-tags.outputs.tags }}
