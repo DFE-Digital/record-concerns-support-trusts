@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Actions;
@@ -52,7 +53,7 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			try
 			{
-				_logger.LogInformation("{ClassName}::{EchoCallerName}", nameof(ViewClosedPageModel), LoggingHelpers.EchoCallerName());
+				_logger.LogMethodEntered();
 
 				var caseUrn = GetRequestedCaseUrn();
 				var userName = GetUserName();
@@ -61,6 +62,7 @@ namespace ConcernsCaseWork.Pages.Case
 
 				if (await IsCaseOpen())
 				{
+					_logger.LogInformation("Redirecting to /case/{CaseUrn}/management as this case is open", CaseModel.Urn);
 					return Redirect($"/case/{CaseModel.Urn}/management");
 				}
 				
