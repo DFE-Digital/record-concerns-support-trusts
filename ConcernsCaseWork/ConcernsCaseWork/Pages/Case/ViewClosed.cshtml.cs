@@ -8,7 +8,9 @@ using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Service.Redis.Status;
 using Service.TRAMS.Helpers;
+using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +26,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ITrustModelService _trustModelService;
 		private readonly ICaseModelService _caseModelService;
 		private readonly IActionsModelService _actionsModelService;
+		private readonly IStatusCachedService _statusCachedService;
 		private readonly ILogger<ViewClosedPageModel> _logger;
 		
 		public CaseModel CaseModel { get; private set; }
@@ -34,16 +37,18 @@ namespace ConcernsCaseWork.Pages.Case
 			ITrustModelService trustModelService,
 			IRecordModelService recordModelService,
 			IActionsModelService actionsModelService,
+			IStatusCachedService statusCachedService,
 			ILogger<ViewClosedPageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_trustModelService = trustModelService;
 			_recordModelService = recordModelService;
 			_actionsModelService = actionsModelService;
+			_statusCachedService = statusCachedService;
 			_logger = logger;
 		}
 		
-		public async Task OnGetAsync()
+		public async Task<IActionResult> OnGetAsync()
 		{
 			try
 			{
@@ -53,6 +58,12 @@ namespace ConcernsCaseWork.Pages.Case
 				var userName = GetUserName();
 
 				CaseModel = await _caseModelService.GetCaseByUrn(userName, caseUrn);
+
+				if (await IsCaseOpen())
+				{
+					return Redirect($"/case/{CaseModel.Urn}/management");
+				}
+				
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				
 				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(userName, caseUrn);
@@ -67,6 +78,8 @@ namespace ConcernsCaseWork.Pages.Case
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
+
+			return Page();
 		}
 		
 		private long GetRequestedCaseUrn()
@@ -83,5 +96,16 @@ namespace ConcernsCaseWork.Pages.Case
 
 		private string GetUserName() => User.Identity?.Name;
 
+		private async Task<bool> IsCaseOpen()
+		{
+			var closedStatus = await _statusCachedService.GetStatusByName(StatusEnum.Close.ToString());
+
+			if (CaseModel.StatusUrn.CompareTo(closedStatus.Urn) != 0)
+			{
+				return true;
+			}
+
+			return false;
+		}
 	}
 }
