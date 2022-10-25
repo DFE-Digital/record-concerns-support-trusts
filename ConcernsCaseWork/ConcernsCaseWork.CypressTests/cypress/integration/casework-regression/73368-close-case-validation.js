@@ -4,7 +4,7 @@ import HomePage from "/cypress/pages/homePage";
 
 describe("Users can see warning messages on the case closure page", () => {
 	before(() => {
-		LoginPage.login();
+		cy.login();
 	});
 
 	afterEach(() => {
