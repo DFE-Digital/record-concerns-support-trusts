@@ -40,6 +40,7 @@ using Service.Redis.Users;
 using Service.TRAMS.CaseActions;
 using Service.TRAMS.Cases;
 using Service.TRAMS.Configuration;
+using Service.TRAMS.Decision;
 using Service.TRAMS.FinancialPlan;
 using Service.TRAMS.MeansOfReferral;
 using Service.TRAMS.Nti;
@@ -142,6 +143,12 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IActionsModelService, ActionsModelService>();
 			services.AddScoped<ITeamsModelService, TeamsModelService>();
 			services.AddScoped<IClaimsPrincipalHelper, ClaimsPrincipalHelper>();
+			services.AddScoped<ICaseActionValidationStrategy, FinancialPanValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, SRMAValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, NTIUnderConsiderationValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, NTIWarningLetterValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, NTIValidator>();
+			services.AddScoped<ICaseActionValidator, CaseActionValidator>();
 			services.AddScoped<ICreateCaseService, CreateCaseService>();
 
 			// Trams api services
@@ -171,6 +178,7 @@ namespace ConcernsCaseWork.Extensions
             services.AddScoped<INtiReasonsService, NtiReasonsService>();
             services.AddScoped<INtiConditionsService, NtiConditionsService>();
 			services.AddScoped<ITeamsService, TeamsService>();
+			services.AddScoped<IDecisionService, DecisionService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
@@ -198,12 +206,7 @@ namespace ConcernsCaseWork.Extensions
             services.AddScoped<INtiReasonsCachedService, NtiReasonsCachedService>();
             services.AddScoped<INtiConditionsCachedService, NtiConditionsCachedService>();
 			services.AddScoped<ITeamsCachedService, TeamsCachedService>();
-			services.AddScoped<ICaseActionValidationStrategy, FinancialPanValidator>();
-			services.AddScoped<ICaseActionValidationStrategy, SRMAValidator>();
-			services.AddScoped<ICaseActionValidationStrategy, NTIUnderConsiderationValidator>();
-			services.AddScoped<ICaseActionValidationStrategy, NTIWarningLetterValidator>();
-			services.AddScoped<ICaseActionValidationStrategy, NTIValidator>();
-			services.AddScoped<ICaseActionValidator, CaseActionValidator>();
+	
 
 			// Redis Sequence
 			// TODO. This class looks very temporary. What's it for and how are we going to replace it.
