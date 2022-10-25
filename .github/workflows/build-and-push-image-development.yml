@@ -33,6 +33,14 @@ jobs:
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=deploy-version::${VERSION}
 
+      - name: Setup node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+
+      - name: Build Frontend
+        run: make build-frontend
+
       - name: Push image
         uses: docker/build-push-action@v3
         with:
