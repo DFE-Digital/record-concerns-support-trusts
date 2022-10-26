@@ -37,8 +37,3 @@ describe("Home page tests", () => {
 		cy.get('[href="/case/closed"').should('be.visible')
 	});
 });
-
-	after(function () {
-		cy.clearLocalStorage();
-		cy.clearCookies();
-	});
