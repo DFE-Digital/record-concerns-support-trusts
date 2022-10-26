@@ -54,7 +54,7 @@ describe("The correct items are visible on the details page", () => {
 	it('GET Means of Referral by Case ID', function () {
 
 
-		cy.log("setStatusSelect ").then(() => {
+		cy.log("Get CaseID Text").then(() => {
 			cy.log(CaseManagementPage.getCaseIDText() ).then((returnedVal) => { 
 				cy.wrap(returnedVal.trim()).as("stText").then(() =>{
 					caseid  = returnedVal;

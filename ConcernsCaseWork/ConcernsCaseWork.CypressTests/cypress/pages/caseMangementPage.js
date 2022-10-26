@@ -68,14 +68,19 @@ class CaseManagementPage {
     geBackToCaseworkBtn() {
         return cy.get('[class="buttons-topOfPage"]');
     } 
+
+    getCaseID() {
+        return cy.get('[name=caseID]');
+    }
+
+    getBackBtn() {
+        return cy.get('[id="back-link-event"]');
+    }
  
     //methods
 
-    closeAllOpenConcerns() {
-        
+    closeAllOpenConcerns() { 
         const elem = '.govuk-table-case-details__cell_no_border [href*="edit_rating"]';
-
-
     if (Cypress.$(elem).length > 0) { //Cypress.$ needed to handle element missing exception
     
         this.getConcernEditBtn().its('length').then(($elLen) => {
