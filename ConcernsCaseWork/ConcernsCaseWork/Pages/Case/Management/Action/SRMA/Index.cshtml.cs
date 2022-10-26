@@ -28,6 +28,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 		public SRMAModel SRMAModel { get; set; }
 		public string DeclineCompleteButtonLabel { get; private set; }
+		
+		[BindProperty(Name = "Urn", SupportsGet = true)]
+		public long CaseUrn { get; set; }
 
 		public IndexPageModel(ISRMAService srmaService, ILogger<IndexPageModel> logger)
 		{
