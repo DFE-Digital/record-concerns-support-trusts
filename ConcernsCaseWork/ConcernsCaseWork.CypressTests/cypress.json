@@ -1,5 +1,4 @@
 {
-    "baseUrl": "https://localhost:44387",
     "defaultCommandTimeout": 10000,
     "pageLoadTimeout": 10000,
     "watchForFileChanges": false,

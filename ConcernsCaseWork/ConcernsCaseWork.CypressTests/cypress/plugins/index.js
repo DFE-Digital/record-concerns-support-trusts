@@ -26,7 +26,11 @@ module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
   on('task', {
-    azureLogin: azureLogin
+    azureLogin({ url, username, password }) {
+      const cookie = azureLogin(url, username, password);
+
+      return cookie;
+    }
   })
 
   on('task', {
@@ -38,6 +42,9 @@ module.exports = (on, config) => {
     },
   })
 
+  // Global cache for storing data across tests
+  // Created when you run either cypress run or cypress open
+  // Usage: For storing the auth cookie so we don't need to log in on every test
   on('task', {
      setGlobalCacheItem({ name, value }) {
       cache[name] = value;

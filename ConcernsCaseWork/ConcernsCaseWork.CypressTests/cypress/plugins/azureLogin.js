@@ -2,14 +2,14 @@ const puppeteer = require('puppeteer')
 
 // Use puppeteer to log in to azure AD
 // Currently cypress has a problem loading the login page
-module.exports.azureLogin = async function azureLogin() {
+module.exports.azureLogin = async function azureLogin(url, username, password) {
     const browser = await puppeteer.launch({
         headless: false,
     });
 
     const page = await browser.newPage();
 
-    await page.goto('https://localhost:44387');
+    await page.goto(url);
 
     await page.waitForSelector(".moj-header__logo");
 

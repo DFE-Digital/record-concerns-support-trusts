@@ -19,8 +19,8 @@ export class AuthenticationComponent {
         })
     }
 
-    cacheAndSetCookie(username) {
-        cy.task('azureLogin', {})
+    cacheAndSetCookie(username, password) {
+        cy.task('azureLogin', {url: Cypress.env('url'), username: username, password: password})
             .then((cookie) => {
                 this.globalCache.setItem(username, cookie);
                 this.setCookie(cookie);
