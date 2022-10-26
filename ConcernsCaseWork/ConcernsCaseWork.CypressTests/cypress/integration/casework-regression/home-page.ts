@@ -3,6 +3,11 @@ describe("Home page tests", () => {
 		cy.login();
 	});
 
+	after(function () {
+		cy.clearLocalStorage();
+		cy.clearCookies();
+	});
+
 	afterEach(() => {
 		cy.storeSessionData();
 	});
