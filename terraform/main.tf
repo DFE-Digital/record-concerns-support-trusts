@@ -24,6 +24,7 @@
 	"TRAMS:API_KEY"          	= var.app_trams_api_key
 	"APP:USERNAME"				= var.app_username
 	"APP:PASSWORD"				= var.app_password
+  "AzureAd:ClientSecret" = var.azure_ad_client_secret
   }
 }
 
