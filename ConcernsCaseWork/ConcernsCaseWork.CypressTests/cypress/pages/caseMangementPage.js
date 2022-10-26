@@ -116,7 +116,7 @@ class CaseManagementPage {
   
     getCaseIDText() {
 
-        this.getHeadingText().invoke('text').then((text) => {
+        return this.getHeadingText().invoke('text').then((text) => {
             var splitText = text.split('\n')[2]
             console.log("splitText "+splitText)
             return splitText.trim();
