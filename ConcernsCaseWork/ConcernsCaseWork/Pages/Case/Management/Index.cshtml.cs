@@ -81,7 +81,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_logger = logger;
 		}
 
-		public async Task OnGetAsync()
+		public async Task<IActionResult> OnGetAsync()
 		{
 			try
 			{
@@ -93,6 +93,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				// Get Case
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+
+				if (await IsCaseClosed())
+				{
+					return Redirect($"/case/{CaseModel.Urn}/closed");
+				}
 
 				// Check if case is editable
 				IsEditableCase = await IsCaseEditable();
@@ -125,6 +130,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
+
+			return Page();
 		}
 
 		private async Task PopulateAdditionalCaseInformation()
