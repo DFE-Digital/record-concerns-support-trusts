@@ -41,14 +41,12 @@ Cypress.Commands.add("login", () => {
     cy.clearCookies();
     cy.clearLocalStorage();
 
-    cy.task("log", "Logging in");
-
     const username = Cypress.env('username');
     const password = Cypress.env('password');
 
     new AuthenticationComponent().login(username, password);
 
-    cy.visit("/");
+    cy.visit(Cypress.env("url"));
 })
 
 //example: /case/5880/management"
