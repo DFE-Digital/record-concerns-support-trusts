@@ -39,6 +39,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				
 				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, loggedInUserName);
 				
+				if (FinancialPlanModel.IsClosed)
+				{
+					return Redirect($"/case/{caseUrn}/management/action/financialplan/{financialPlanId}/closed");
+				}
+				
 				var currentStatusName = FinancialPlanModel.Status?.Name;
 				FinancialPlanStatuses = await GetStatusOptionsAsync(currentStatusName);
 

@@ -38,6 +38,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				var loggedInUser = GetLoggedInUserName();
 				
 				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, loggedInUser);
+
+				if (FinancialPlanModel.IsClosed)
+				{
+					return Redirect($"/case/{caseUrn}/management/action/financialplan/{financialPlanId}/closed");
+				}
 				
 				FinancialPlanStatuses = await GetStatusOptionsAsync(FinancialPlanModel.Status?.Name);
 			}
