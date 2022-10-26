@@ -30,6 +30,7 @@ import CaseManagementPage from "/cypress/pages/caseMangementPage";
 import caseMangementPage from "/cypress/pages/caseMangementPage";
 import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
 import { AuthenticationComponent } from "../auth/authenticationComponent";
+import { LogTask } from '../support/constants';
 
 const concernsRgx = new RegExp(/(Compliance|Financial|Force majeure|Governance|Irregularity)/, 'i');
 const trustRgx = new RegExp(/(School|Academy|Accrington|South|North|East|West|([A-Z])\w+)/, 'i');
@@ -74,6 +75,8 @@ Cypress.Commands.add('storeSessionData', () => {
 })
 
 Cypress.Commands.add('enterConcernDetails', () => {
+    cy.task(LogTask, "Enter concern details");
+
     let date = new Date();
     cy.get("#issue").type("Data entered at " + date);
     cy.get("#current-status").type("Data entered at " + date);
@@ -84,6 +87,7 @@ Cypress.Commands.add('enterConcernDetails', () => {
 })
 
 Cypress.Commands.add('selectRiskToTrust', () => {
+    cy.task(LogTask, "Select risk to trust");
     // cy.get('[href="/case/rating"]').click();
     cy.get(".ragtag").should("be.visible");
     //Randomly select a RAG status
@@ -99,6 +103,8 @@ Cypress.Commands.add('selectRiskToTrust', () => {
 })
 
 Cypress.Commands.add('editRiskToTrust', (cta, rag) => {
+    cy.task(LogTask, "Editing risk to trust");
+
     selectRagRating(rag);
     clickApplyOrCancel(cta);
 })
@@ -167,6 +173,8 @@ Cypress.Commands.add('selectConcern', (expectedNumberOfRagStatus, ragStatus) => 
 
 //TODO: make this more dynamic
 Cypress.Commands.add('selectConcernType', () => {
+    cy.task(LogTask, "Select concern type");
+
     cy.get(".govuk-radios__item [value=Financial]").click();
     cy.get("[id=sub-type-3]").click();
     cy.get("[id=rating-3]").click();
@@ -177,6 +185,9 @@ Cypress.Commands.add('selectConcernType', () => {
 
 
 Cypress.Commands.add('validateCreateCaseDetailsComponent', () => {
+
+    cy.task(LogTask, "Validating case details");
+
     //Trust Address
     cy.get(".govuk-summary-list__value").then(($address) => {
         expect($address).to.be.visible
@@ -220,6 +231,8 @@ Cypress.Commands.add('validateCreateCaseDetailsComponent', () => {
 })
 
 Cypress.Commands.add('validateCreateCaseInitialDetails', () => {
+    cy.task(LogTask, "Validating case initial details");
+
     const lstring =
         'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwx';
 
@@ -297,6 +310,8 @@ Cypress.Commands.add('validateCreateCaseInitialDetails', () => {
 //TODO:
 //Break these out into 2 or 3 separate commands per component (not page)
 Cypress.Commands.add('validateCaseManagPage', () => {
+
+    cy.task(LogTask, "Validating case management page");
 
     cy.get('[class="buttons-topOfPage"] [class="govuk-button govuk-button--secondary"]')
         .should(($backcasw) => {
@@ -379,6 +394,9 @@ Cypress.Commands.add('closeAllOpenConcerns', () => {
 })
 
 Cypress.Commands.add('randomSelectTrust', () => {
+
+    cy.task(LogTask, "Select random trust");
+
     let searchTerm =
         ["10058372", "10060045", "10060278", "10058372", "10059732", "10060186",
             "10080822", "10081341", "10058833", "10058354",
@@ -397,11 +415,11 @@ Cypress.Commands.add('randomSelectTrust', () => {
     cy.get("#search").type(searchTerm[num] + "{enter}");
 
     return cy.wrap(searchTerm[num]).as('term');
-
-
 });
 
 Cypress.Commands.add('checkForExistingCase', function (forceCreate) {
+    cy.task(LogTask, "Checking for an existing case");
+    
     let caseExists = false
     const elem = '.govuk-link[href^="case"]';
 
