@@ -19,11 +19,8 @@ namespace Service.TRAMS.Base
 		private readonly ICorrelationContext _correlationContext;
 		private readonly IHttpClientFactory _clientFactory;
 		private readonly ILogger<AbstractService> _logger;
-		//protected const string HttpClientName = "TramsClient";
-		//protected const string EndpointsVersion = "v2";
-		//protected const string EndpointPrefix = "concerns-cases";
 
-		internal string HttpClientName { get; init; } = "Default";
+		internal string HttpClientName { get; init; } = "TramsClient"; // was "Default";
 		internal string EndpointsVersion { get; } = "v2";
 		internal string EndpointPrefix { get; } = "concerns-cases";
 
