@@ -59,6 +59,11 @@ variable app_password {
   description = "Application variable for the password for the service"
 }
 
+variable azure_ad_client_secret {
+  type = string
+  description = "Azure Active Directory client secret for this service"
+}
+
 ## ========================================================================== ##
 #  Logging				                                                   #
 ## ========================================================================== ##
