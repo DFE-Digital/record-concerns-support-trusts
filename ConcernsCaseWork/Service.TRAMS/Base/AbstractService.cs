@@ -19,9 +19,9 @@ namespace Service.TRAMS.Base
 		private readonly ICorrelationContext _correlationContext;
 		private readonly IHttpClientFactory _clientFactory;
 		private readonly ILogger<AbstractService> _logger;
-		internal const string HttpClientName = "TramsClient";
-		internal const string EndpointsVersion = "v2";
-		internal const string EndpointPrefix = "concerns-cases";
+		protected const string _httpClientName = "TramsClient";
+		protected const string _endpointsVersion = "v2";
+		protected const string _endpointPrefix = "concerns-cases";
 
 		protected AbstractService(IHttpClientFactory clientFactory, ILogger<AbstractService> logger, ICorrelationContext correlationContext)
 		{
@@ -30,7 +30,7 @@ namespace Service.TRAMS.Base
 			_correlationContext = Guard.Against.Null(correlationContext);
 		}
 
-		public Task<T> Get<T>(string endpoint, bool treatNoContentAsError = false) where T : class 
+		public Task<T> Get<T>(string endpoint, bool treatNoContentAsError = false) where T : class
 		{
 			Guard.Against.NullOrWhiteSpace(endpoint);
 
@@ -40,7 +40,7 @@ namespace Service.TRAMS.Base
 				{
 					// Create a request
 					var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
-					
+
 					// Create http client
 					var client = CreateHttpClient();
 
@@ -87,7 +87,7 @@ namespace Service.TRAMS.Base
 
 		protected HttpClient CreateHttpClient()
 		{
-			var client = _clientFactory.CreateClient(HttpClientName);
+			var client = _clientFactory.CreateClient(_httpClientName);
 
 			var headerAdded = client.DefaultRequestHeaders.TryAddWithoutValidation(_correlationContext.HeaderKey, _correlationContext.CorrelationId);
 			if (!headerAdded)
@@ -98,7 +98,7 @@ namespace Service.TRAMS.Base
 			return client;
 		}
 
-		public Task<ApiListWrapper<T>> GetByPagination<T>(string endpoint, bool treatNoContentAsError = false) where T : class 
+		public Task<ApiListWrapper<T>> GetByPagination<T>(string endpoint, bool treatNoContentAsError = false) where T : class
 		{
 			Guard.Against.NullOrWhiteSpace(endpoint);
 

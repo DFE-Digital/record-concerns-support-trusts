@@ -25,7 +25,7 @@ namespace Service.TRAMS.Types
 				_logger.LogInformation("TypeService::GetTypes");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/concerns-types");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{_endpointsVersion}/concerns-types");
 				
 				// Create http client
 				var client = CreateHttpClient();

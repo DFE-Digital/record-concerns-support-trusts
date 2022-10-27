@@ -27,7 +27,7 @@ namespace Service.TRAMS.NtiWarningLetter
 				_logger.LogInformation("NtiWarningLetterReasonsService::GetAllReasonsAsync");
 
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/case-actions/nti-warning-letter/all-reasons");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{_endpointsVersion}/case-actions/nti-warning-letter/all-reasons");
 
 				// Create http client
 				var client = CreateHttpClient();

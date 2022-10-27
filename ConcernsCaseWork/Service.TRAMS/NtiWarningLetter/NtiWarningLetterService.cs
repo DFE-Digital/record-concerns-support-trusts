@@ -29,7 +29,7 @@ namespace Service.TRAMS.NtiWarningLetter
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = _httpClientFactory.CreateClient(_httpClientName);
 				var request = new HttpRequestMessage(HttpMethod.Post, $"{_url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(newNtiWarningLetter),
@@ -80,7 +80,7 @@ namespace Service.TRAMS.NtiWarningLetter
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = _httpClientFactory.CreateClient(_httpClientName);
 				var request = new HttpRequestMessage(HttpMethod.Get, $"{_url}/case/{caseUrn}");
 
 				var response = await client.SendAsync(request);
@@ -99,7 +99,7 @@ namespace Service.TRAMS.NtiWarningLetter
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = _httpClientFactory.CreateClient(_httpClientName);
 				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(ntiWarningLetter),

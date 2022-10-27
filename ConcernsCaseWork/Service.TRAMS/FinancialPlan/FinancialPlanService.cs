@@ -28,7 +28,7 @@ namespace Service.TRAMS.FinancialPlan
 
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get,
-					$"/{EndpointsVersion}/case-actions/financial-plan/case/{caseUrn}");
+					$"/{_endpointsVersion}/case-actions/financial-plan/case/{caseUrn}");
 
 				// Create http client
 				var client = CreateHttpClient();
@@ -69,7 +69,7 @@ namespace Service.TRAMS.FinancialPlan
 
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get,
-					$"/{EndpointsVersion}/case-actions/financial-plan/{financialPlanId}");
+					$"/{_endpointsVersion}/case-actions/financial-plan/{financialPlanId}");
 
 				// Create http client
 				var client = CreateHttpClient();
@@ -119,7 +119,7 @@ namespace Service.TRAMS.FinancialPlan
 
 				// Execute request
 				var response = await client.PostAsync(
-					$"/{EndpointsVersion}/case-actions/financial-plan", request);
+					$"/{_endpointsVersion}/case-actions/financial-plan", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -163,7 +163,7 @@ namespace Service.TRAMS.FinancialPlan
 
 				// Execute request
 				var response = await client.PatchAsync(
-					$"/{EndpointsVersion}/case-actions/financial-plan", request);
+					$"/{_endpointsVersion}/case-actions/financial-plan", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();

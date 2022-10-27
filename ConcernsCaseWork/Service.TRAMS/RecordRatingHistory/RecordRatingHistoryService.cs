@@ -31,7 +31,7 @@ namespace Service.TRAMS.RecordRatingHistory
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"/{EndpointsVersion}/record-rating-history/case/urn/{caseUrn}");
+					$"/{_endpointsVersion}/record-rating-history/case/urn/{caseUrn}");
 				
 				// Create http client
 				var client = CreateHttpClient();
@@ -66,7 +66,7 @@ namespace Service.TRAMS.RecordRatingHistory
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"/{EndpointsVersion}/record-rating-history/record/urn/{recordUrn}");
+					$"/{_endpointsVersion}/record-rating-history/record/urn/{recordUrn}");
 				
 				// Create http client
 				var client = CreateHttpClient();
@@ -109,7 +109,7 @@ namespace Service.TRAMS.RecordRatingHistory
 				var client = CreateHttpClient();
 				
 				// Execute request
-				var response = await client.PostAsync($"/{EndpointsVersion}/record-rating-history", request);
+				var response = await client.PostAsync($"/{_endpointsVersion}/record-rating-history", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();

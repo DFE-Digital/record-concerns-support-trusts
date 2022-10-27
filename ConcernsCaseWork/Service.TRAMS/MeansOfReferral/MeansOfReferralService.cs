@@ -25,7 +25,7 @@ namespace Service.TRAMS.MeansOfReferral
 				_logger.LogInformation("{ClassName}::{MethodName}", nameof(MeansOfReferralService), nameof(GetMeansOfReferrals));
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/concerns-meansofreferral");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{_endpointsVersion}/concerns-meansofreferral");
 				
 				// Create http client
 				var client = CreateHttpClient();

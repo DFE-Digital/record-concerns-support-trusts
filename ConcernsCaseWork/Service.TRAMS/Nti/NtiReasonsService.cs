@@ -28,7 +28,7 @@ namespace Service.TRAMS.Nti
 				_logger.LogInformation($"{nameof(NtiReasonsService)}::{LoggingHelpers.EchoCallerName()}");
 
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/case-actions/notice-to-improve/all-reasons");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{_endpointsVersion}/case-actions/notice-to-improve/all-reasons");
 
 				// Create http client
 				var client = CreateHttpClient();

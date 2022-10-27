@@ -28,7 +28,7 @@ namespace Service.TRAMS.NtiWarningLetter
 				_logger.LogInformation($"{nameof(NtiWarningLetterStatusesService)}::{LoggingHelpers.EchoCallerName()}");
 
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/case-actions/nti-warning-letter/all-statuses");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{_endpointsVersion}/case-actions/nti-warning-letter/all-statuses");
 
 				// Create http client
 				var client = CreateHttpClient();

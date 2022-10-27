@@ -28,7 +28,7 @@ namespace Service.TRAMS.Nti
 				_logger.LogInformation($"{nameof(NtiStatusesService)}::{LoggingHelpers.EchoCallerName()}");
 
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/case-actions/notice-to-improve/all-statuses");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{_endpointsVersion}/case-actions/notice-to-improve/all-statuses");
 
 				// Create http client
 				var client = CreateHttpClient();

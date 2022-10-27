@@ -25,7 +25,7 @@ namespace Service.TRAMS.Trusts
 				_logger.LogInformation("TrustService::GetTrustsByPagination");
 
 				// Create a request
-				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/trusts?{BuildRequestUri(trustSearch)}");
+				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{_endpointsVersion}/trusts?{BuildRequestUri(trustSearch)}");
 				
 				// Create http client
 				var client = CreateHttpClient();
@@ -59,7 +59,7 @@ namespace Service.TRAMS.Trusts
 				_logger.LogInformation("TrustService::GetTrustByUkPrn");
 
 				// Create a request
-				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/trust/{ukPrn}");
+				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{_endpointsVersion}/trust/{ukPrn}");
 				
 				// Create http client
 				var client = CreateHttpClient();

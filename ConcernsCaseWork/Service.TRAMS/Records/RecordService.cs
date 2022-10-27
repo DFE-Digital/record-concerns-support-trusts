@@ -28,7 +28,7 @@ namespace Service.TRAMS.Records
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"/{EndpointsVersion}/concerns-records/case/urn/{caseUrn}");
+					$"/{_endpointsVersion}/concerns-records/case/urn/{caseUrn}");
 				
 				// Create http client
 				var client = CreateHttpClient();
@@ -78,7 +78,7 @@ namespace Service.TRAMS.Records
 				
 				// Execute request
 				var response = await client.PostAsync(
-					$"/{EndpointsVersion}/concerns-records", request);
+					$"/{_endpointsVersion}/concerns-records", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -122,7 +122,7 @@ namespace Service.TRAMS.Records
 				
 				// Execute request
 				var response = await client.PatchAsync(
-					$"/{EndpointsVersion}/concerns-records/{recordDto.Urn}", request);
+					$"/{_endpointsVersion}/concerns-records/{recordDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
