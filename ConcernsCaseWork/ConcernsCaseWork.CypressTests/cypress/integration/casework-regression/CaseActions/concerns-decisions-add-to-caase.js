@@ -19,34 +19,41 @@ describe("User can add case actions to an existing case", () => {
 	let returnedDate = "null";
 	let notesText = "null";
 
-	it("User enters the case page", () => {
+	
+	it("Valiation - When the wrong date is entered", function () {
 		cy.checkForExistingCase();
-	});
-
-	it("User has option to select an Concerns Decision Case Action", () => {
 		cy.reload();
 		CaseManagementPage.getAddToCaseBtn().click();
 		AddToCasePage.addToCase('Decision');
 		AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
-	});
-
-	it("User can click to add Concerns Decision Case Action to a case", function () {
 		AddToCasePage.getAddToCaseBtn().click();
-		cy.log(utils.checkForGovErrorSummaryList() );
+		cy.log(utils.checkForGovErrorSummaryList());
 
-		if (utils.checkForGovErrorSummaryList() > 0 ) { 
+		if (utils.checkForGovErrorSummaryList() > 0) {
 			cy.log("Case Action already exists");
-					cy.visit(Cypress.env('url'), { timeout: 30000 });
-					cy.checkForExistingCase(true);
-					CaseManagementPage.getAddToCaseBtn().click();
-					AddToCasePage.addToCase('Decision');
-					AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
-					AddToCasePage.getAddToCaseBtn().click();
-		}else {
-			cy.log("No Case Action exists");	
-			cy.log(utils.checkForGovErrorSummaryList() );
+			cy.visit(Cypress.env('url'), { timeout: 30000 });
+			cy.checkForExistingCase(true);
+			CaseManagementPage.getAddToCaseBtn().click();
+			AddToCasePage.addToCase('Decision');
+			AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
+			AddToCasePage.getAddToCaseBtn().click();
+		} else {
+			cy.log("No Case Action exists");
+			cy.log(utils.checkForGovErrorSummaryList());
 		}
+
+		AddToCasePage.getDayDateField().click().type("23");
+		AddToCasePage.getMonthDateField().click().type("25");
+		AddToCasePage.getYearDateField().click().type("2022");
+		AddToCasePage.getDecisionButton().click();
+
+		cy.get('#decision-error-list').should(
+			"contain.text",
+			"23-25-2022 is an invalid date"
+		);
+
 	});
+
 
 	after(function () {
 		cy.clearLocalStorage();

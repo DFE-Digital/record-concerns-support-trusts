@@ -32,7 +32,26 @@ class AddToCasePage {
     getCaseActionRadio(option) {
         return     cy.get('[value="'+option+'"]');
     }    
+   
+    getDayDateField() {
+        return      cy.get('#dtr-day-request-received');
+    }    
 
+    getMonthDateField() {
+        return      cy.get('#dtr-month-request-received');
+    }  
+
+    getYearDateField() {
+        return      cy.get('#dtr-year-request-received');
+    }  
+    
+    
+    getDecisionButton() {
+        return      cy.get('#add-decision-button');
+    }   
+   
+	
+		
 
     //Methods
 
