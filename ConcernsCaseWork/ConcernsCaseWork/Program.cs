@@ -15,10 +15,6 @@ namespace ConcernsCaseWork
                 .Enrich.FromLogContext()
                 .WriteTo.Console(new RenderedCompactJsonFormatter())
 				.WriteTo.Sentry();
-                
-	        #if DEBUG
-				logConfig.WriteTo.Debug(new RenderedCompactJsonFormatter());
-            #endif
 
 	        Log.Logger = logConfig.CreateLogger();
 
