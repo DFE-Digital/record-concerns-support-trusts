@@ -3,8 +3,10 @@ import CaseManagementPage from "/cypress/pages/caseMangementPage";
 import utils from "/cypress/support/utils"
 import ntiAddPage from "/cypress/pages/caseActions/ntiAddPage";
 import CaseActionsBasePage from "/cypress/pages/caseActions/caseActionsBasePage";
+import homePage from "/cypress/pages/homePage";
+import closedCasePage from "/cypress/pages/closedCasePage.js";
 
-describe("User can add case actions to an existing case", () => {
+describe("User can see case actions displayed in closed cases", () => {
 	before(() => {
 		cy.login();
 	});
@@ -14,10 +16,8 @@ describe("User can add case actions to an existing case", () => {
 	});
 
 	let stText = "null";
-	let condText = "null";
-	let reasText = "null";
-	let returnedDate = "null";
-	let notesText = "null";
+	let caseid = "null;"
+
 
 	it("User enters the case page", () => {
 		cy.checkForExistingCase();
@@ -49,9 +49,9 @@ describe("User can add case actions to an existing case", () => {
 			cy.log("No Case Action exists");	
 			cy.log(utils.checkForGovErrorSummaryList() );
 		}
+		});
 	});
-  });
-});
+	});
 
 	it("User is taken to the correct Case Action page", function () {
 		ntiAddPage.getHeadingText().then(term => {
@@ -132,144 +132,14 @@ describe("User can add case actions to an existing case", () => {
         })
 	});
 
-	it("No status displayed in the Open Acions table", function () {
-		CaseManagementPage.getOpenActionsTable().children().should(($nti) => {
-            expect($nti).to.be.visible
-			expect($nti.text()).to.contain("NTI: Warning letter");
-        })
-		CaseManagementPage.getOpenActionsTable().should(($status) => {
-			expect($status).to.be.visible
-			expect($status.text().trim()).to.not.contain(this.stText);
-        })
-	});
-
-	it("User is shown validation when adding the same case action", function () {
-
-		CaseManagementPage.getAddToCaseBtn().click();
-		AddToCasePage.addToCase('NtiWarningLetter');
-		AddToCasePage.getAddToCaseBtn().click().then(() =>{
-
-			cy.wait(2000).then(() => {
-
-				cy.log(utils.checkForGovErrorSummaryList() );
-		
-				if (utils.checkForGovErrorSummaryList() > 0 ) { 
-				cy.log("Case Action already exists").then(() =>{
-					utils.validateGovErorrList("There is already an open NTI action linked to this case. Please resolve that before opening another one");
-				});	
-			}else {
-				cy.log("No Case Action exists");	
-				cy.log(utils.getGovErrorSummaryList() );
-			}
-			CaseActionsBasePage.getCancelBtn().click();
-		});	
-	  });	
-	});
-
-
-	it("User can click on a link to view a live NTI warning letter record", function () {
-
-		CaseManagementPage.getOpenActionsTable().children().should(($nti) => {
-            expect($nti).to.be.visible
-			expect($nti.text()).to.contain("NTI: Warning letter");
-        })
-		CaseManagementPage.getOpenActionsTable().should(($status) => {
-			expect($status).to.be.visible
-        })
-		CaseManagementPage.getOpenActionLink("ntiwarningletter").click();
-
-		ntiAddPage.getHeadingText().should(($heading) => {
-			expect($heading.text()).to.contain("NTI: Warning letter");
-        })
-	});
-
-	it("User can edit an existing NTI warning letter record", function () {
-
-		ntiAddPage.getEditWLInformationBtn().click();
-	//status set
-		cy.log("setStatusSelect ").then(() => {
-			cy.log(CaseActionsBasePage.setStatusSelect("random") ).then((returnedVal) => { 
-				cy.wrap(returnedVal.trim()).as("stText").then(() =>{
-					stText  = returnedVal;
-					cy.log("logging the result "+stText)
-				});
-				cy.log(self.stText);
-				cy.log("logging returnedVal "+returnedVal)
-				});
-			});
-
-		//date set	
-			cy.log("setDate ").then(() => {
-				cy.log(CaseActionsBasePage.setDate() ).then((returnedVal) => { 
-						cy.wrap(returnedVal.trim()).as("returnedDate").then(() =>{
-						returnedDate = returnedVal;
-						cy.log("logging returnedDate "+returnedDate);
-					});
-				});
-			});
-
-			ntiAddPage.getAddConditionsBtn().click();
-
-			ntiAddPage.getHeadingText().should(($heading) => {
-				expect($heading.text()).to.contain("What are the conditions of the NTI: Warning letter?");
-			})
-
-			cy.log("setConditionSelect ").then(() => {
-				cy.log("EXECUTED TEST ")
-				cy.log(ntiAddPage.setConditionSelect("1") ).then((returnedVal) => { 
-					cy.wrap(returnedVal.trim()).as("condText").then(() =>{
-						condText  = returnedVal;
-						cy.log("logging condText "+condText)
-					});
-					cy.log(self.condText);
-					cy.log("logging returnedVal "+returnedVal)
-					});
-				});
-
-				ntiAddPage.getUpdateConditionsBtn().scrollIntoView().click();
-
-				ntiAddPage.setReasonSelect("1"); //Deselcts		
-				cy.log("setReasonSelect ").then(() => {
-					cy.log("EXECUTED TEST ")
-					cy.log(ntiAddPage.setReasonSelect("0") ).then((returnedVal) => { 
-						cy.wrap(returnedVal.trim()).as("reasText").then(() =>{
-							reasText  = returnedVal;
-							cy.log("logging reasText "+reasText)
-						});
-						cy.log(self.reasText);
-						cy.log("logging returnedVal "+returnedVal)
-						});
-					});
-						//notes edit
-					cy.log("setNotes ").then(() => {
-						cy.log(ntiAddPage.setNotes() ).then((returnedVal) => { 
-							cy.wrap(returnedVal.trim()).as("notesText").then(() =>{
-								notesText  = returnedVal;
-							});
-						});
-					});
-
-		ntiAddPage.getWLAddCaseActionBtn().click();
-		utils.getGovErrorSummaryList().should('not.exist');
-		CaseManagementPage.getOpenActionLink("ntiwarningletter").click();
-		ntiAddPage.getNtiTableRow().should(($row) => {
-				expect($row).to.have.length(5);
-				expect($row.eq(0).text().trim()).to.contain(this.stText.trim()).and.to.match(/Current status/i);
-				expect($row.eq(1).text().trim()).to.contain(this.returnedDate.trim()).and.to.match(/(Date sent)/i);
-				expect($row.eq(2).text().trim()).to.contain(this.reasText.trim()).and.to.match(/(Reasons)/i);
-				expect($row.eq(3).text().trim()).to.contain(this.condText.trim()).and.to.match(/(Conditions)/i);
-				expect($row.eq(4).text().trim()).to.contain(this.notesText).and.to.match(/(Notes)/i);
-		});
-
-	});
-
 	it("User can close an nti wl as No Further Action", () => {
 
+		CaseManagementPage.getOpenActionLink("ntiwarningletter").click();
+
 		ntiAddPage.getCloseNtiLink().click();
-		ntiAddPage.setCloseStatus("random");
 
 		cy.log("setCloseStatus ").then(() => {
-			cy.log(ntiAddPage.setCloseStatus("random") ).then((returnedVal) => { 
+			cy.log(ntiAddPage.setCloseStatus(0) ).then((returnedVal) => { 
 				cy.wrap(returnedVal.trim()).as("stText").then(() =>{
 					stText  = returnedVal;
 					cy.log("logging the result "+stText)
@@ -306,6 +176,67 @@ describe("User can add case actions to an existing case", () => {
 				default:
 					cy.log("Could not do the thing");
 			}
+	});
+
+
+//////////////////////////////////////////
+
+
+	it("User can close an open concern", function () {
+		cy.closeAllOpenConcerns();
+
+		cy.log("Get CaseID Text").then(() => {
+			cy.log(CaseManagementPage.getCaseIDText() ).then((returnedVal) => { 
+				cy.wrap(returnedVal.trim()).as("caseid").then(() =>{
+					caseid  = returnedVal;
+					cy.log("logging the result "+caseid)
+				});
+				cy.log(self.stText);
+				cy.log("logging caseid out "+caseid)
+				});
+			});
+	});
+
+	it("User can close an open case", function () {
+		cy.get('[href*="/case/' + this.caseid + '/management/closure"]').click();
+
+			cy.wait(2000).then(() => {
+	
+				cy.log(utils.checkForGovErrorSummaryList() );
+		
+				if (utils.checkForGovErrorSummaryList() > 0 ) { 
+				cy.log("Cannot close case due to case action present");
+						cy.visit(Cypress.env('url'), { timeout: 30000 });
+						cy.checkForExistingCase(true);
+						CaseManagementPage.getAddToCaseBtn().click();
+						AddToCasePage.addToCase('NtiWarningLetter');
+						AddToCasePage.getCaseActionRadio('NtiWarningLetter').siblings().should('contain.text', AddToCasePage.actionOptions[10]);
+						AddToCasePage.getAddToCaseBtn().click();
+
+						cy.get('[href*="/case/' + this.caseid + '/management/closure"]').click();					
+
+			}else {
+				cy.log("No Case Action exists");	
+			}
+		});
+		cy.get("#case-outcomes").type("SAMPLE CLOSURE TEXT");
+		cy.get(".govuk-button").click();
+	});
+
+	it("User can navigate to the closed case page", function () {
+
+			cy.visit(Cypress.env('url'), { timeout: 50000 })
+	});
+
+	it("User can see Case Action on the closed case page", function () {
+		homePage.getClosedCasesBtn().click().then(()=>{
+
+		closedCasePage.getClosedCase(this.caseid).click();
+	});
+		CaseManagementPage.getClosedActionsTable().children().should(($nti) => {
+			expect($nti).to.be.visible
+			expect($nti.text()).to.contain("NTI");
+		})
 	});
 
 	after(function () {
