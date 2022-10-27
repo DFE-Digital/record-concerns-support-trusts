@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 	public class AddPageModelTests
 	{
 		[Test]
-		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
+		public void WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
 		{
 			// arrange
 			var mockSrmaService = new Mock<ISRMAService>();
@@ -33,14 +33,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
 
 			// act
-			await pageModel.OnGetAsync();
+			pageModel.OnGet();
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 		}
 
 		[Test]
-		public async Task WhenOnGetAsync_ReturnsPageModel()
+		public void WhenOnGetAsync_ReturnsPageModel()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -53,7 +53,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			routeData.Add("urn", 1);
 
 			// act
-			await pageModel.OnGetAsync();
+			pageModel.OnGet();
 
 			// assert
 			mockLogger.Verify(
