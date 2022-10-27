@@ -25,7 +25,7 @@ namespace Service.TRAMS.Decision
 			_ = Guard.Against.Null(createDecisionDto);
 
 			// post the new decision
-			var postResponse = await Post<CreateDecisionDto, CreateDecisionResponseDto>($"/{_endpointsVersion}/concerns-cases/{createDecisionDto.ConcernsCaseUrn}/decisions", createDecisionDto);
+			var postResponse = await Post<CreateDecisionDto, CreateDecisionResponseDto>($"/{EndpointsVersion}/concerns-cases/{createDecisionDto.ConcernsCaseUrn}/decisions", createDecisionDto);
 
 			_logger.LogInformation($"Decision created. caseUrn: {postResponse.ConcernsCaseUrn}, DecisionId:{postResponse.DecisionId}");
 			return postResponse;

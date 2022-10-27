@@ -27,7 +27,7 @@ namespace Service.TRAMS.NtiUnderConsideration
 				_logger.LogInformation("NtiReasonsService::GetAllReasons");
 
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{_endpointsVersion}/case-actions/nti-under-consideration/all-reasons");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/case-actions/nti-under-consideration/all-reasons");
 
 				// Create http client
 				var client = CreateHttpClient();

@@ -23,7 +23,7 @@ namespace Service.TRAMS.Teams
 
 			async Task<ConcernsCaseworkTeamDto> DoWork()
 			{
-				return await Get<ConcernsCaseworkTeamDto>($"/{_endpointsVersion}/concerns-team-casework/owners/{ownerId}", false);
+				return await Get<ConcernsCaseworkTeamDto>($"/{EndpointsVersion}/concerns-team-casework/owners/{ownerId}", false);
 			}
 
 			return DoWork();
@@ -32,12 +32,12 @@ namespace Service.TRAMS.Teams
 		public Task PutTeam(ConcernsCaseworkTeamDto team)
 		{
 			Guard.Against.Null(team);
-			return Put($"/{_endpointsVersion}/concerns-team-casework/owners/{team.OwnerId}", team);
+			return Put($"/{EndpointsVersion}/concerns-team-casework/owners/{team.OwnerId}", team);
 		}
 
 		public async Task<string[]> GetTeamOwners()
 		{
-			return await Get<string[]>($"/{_endpointsVersion}/concerns-team-casework/owners", false) ?? Array.Empty<string>();
+			return await Get<string[]>($"/{EndpointsVersion}/concerns-team-casework/owners", false) ?? Array.Empty<string>();
 		}
 	}
 }

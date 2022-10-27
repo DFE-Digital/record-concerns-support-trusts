@@ -25,7 +25,7 @@ namespace Service.TRAMS.Status
 				_logger.LogInformation("StatusService::GetStatuses");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{_endpointsVersion}/concerns-statuses");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/concerns-statuses");
 				
 				// Create http client
 				var client = CreateHttpClient();

@@ -24,7 +24,7 @@ namespace Service.TRAMS.FinancialPlan
 			{
 				_logger.LogInformation("FinancialPlanStatusService::GetAllFinancialPlansStatusesAsync");
 
-				return await HttpClientWrapper<FinancialPlanStatusDto>.GetData($"/{_endpointsVersion}/case-actions/financial-plan/all-statuses", CreateHttpClient());
+				return await HttpClientWrapper<FinancialPlanStatusDto>.GetData($"/{EndpointsVersion}/case-actions/financial-plan/all-statuses", CreateHttpClient());
 			}
 			catch (Exception ex)
 			{
@@ -40,7 +40,7 @@ namespace Service.TRAMS.FinancialPlan
 			{
 				_logger.LogInformation("FinancialPlanStatusService::GetClosureFinancialPlansStatusesAsync");
 
-				return await HttpClientWrapper<FinancialPlanStatusDto>.GetData($"/{_endpointsVersion}/case-actions/financial-plan/closure-statuses", CreateHttpClient());
+				return await HttpClientWrapper<FinancialPlanStatusDto>.GetData($"/{EndpointsVersion}/case-actions/financial-plan/closure-statuses", CreateHttpClient());
 			}
 			catch (Exception ex)
 			{
@@ -56,7 +56,7 @@ namespace Service.TRAMS.FinancialPlan
 			{
 				_logger.LogInformation("FinancialPlanStatusService::GetOpenFinancialPlansStatusesAsync");
 
-				return await HttpClientWrapper<FinancialPlanStatusDto>.GetData($"/{_endpointsVersion}/case-actions/financial-plan/open-statuses", CreateHttpClient());
+				return await HttpClientWrapper<FinancialPlanStatusDto>.GetData($"/{EndpointsVersion}/case-actions/financial-plan/open-statuses", CreateHttpClient());
 			}
 			catch (Exception ex)
 			{

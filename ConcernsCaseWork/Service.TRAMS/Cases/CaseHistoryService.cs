@@ -35,7 +35,7 @@ namespace Service.TRAMS.Cases
 				var client = CreateHttpClient();
 				
 				// Execute request
-				var response = await client.PostAsync($"/{_endpointsVersion}/concerns-cases-history", request);
+				var response = await client.PostAsync($"/{EndpointsVersion}/concerns-cases-history", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -69,7 +69,7 @@ namespace Service.TRAMS.Cases
 				_logger.LogInformation("CaseHistoryService::GetCasesHistory");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{_endpointsVersion}/concerns-cases-history/case/urn/{caseSearch.CaseUrn}?page={caseSearch.Page}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/concerns-cases-history/case/urn/{caseSearch.CaseUrn}?page={caseSearch.Page}");
 				
 				// Create http client
 				var client = CreateHttpClient();

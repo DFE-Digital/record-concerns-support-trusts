@@ -25,7 +25,7 @@ namespace Service.TRAMS.Ratings
 				_logger.LogInformation("RatingService::GetRatings");
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{_endpointsVersion}/concerns-ratings");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/concerns-ratings");
 				
 				// Create http client
 				var client = CreateHttpClient();

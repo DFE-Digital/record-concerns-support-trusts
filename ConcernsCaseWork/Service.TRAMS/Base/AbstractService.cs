@@ -19,9 +19,13 @@ namespace Service.TRAMS.Base
 		private readonly ICorrelationContext _correlationContext;
 		private readonly IHttpClientFactory _clientFactory;
 		private readonly ILogger<AbstractService> _logger;
-		protected const string _httpClientName = "TramsClient";
-		protected const string _endpointsVersion = "v2";
-		protected const string _endpointPrefix = "concerns-cases";
+		//protected const string HttpClientName = "TramsClient";
+		//protected const string EndpointsVersion = "v2";
+		//protected const string EndpointPrefix = "concerns-cases";
+
+		internal string HttpClientName { get; init; } = "Default";
+		internal string EndpointsVersion { get; } = "v2";
+		internal string EndpointPrefix { get; } = "concerns-cases";
 
 		protected AbstractService(IHttpClientFactory clientFactory, ILogger<AbstractService> logger, ICorrelationContext correlationContext)
 		{
@@ -87,7 +91,7 @@ namespace Service.TRAMS.Base
 
 		protected HttpClient CreateHttpClient()
 		{
-			var client = _clientFactory.CreateClient(_httpClientName);
+			var client = _clientFactory.CreateClient(HttpClientName);
 
 			var headerAdded = client.DefaultRequestHeaders.TryAddWithoutValidation(_correlationContext.HeaderKey, _correlationContext.CorrelationId);
 			if (!headerAdded)

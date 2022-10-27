@@ -27,7 +27,7 @@ namespace Service.TRAMS.Cases
 				
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, 
-					$"/{_endpointsVersion}/{_endpointPrefix}/owner/{caseCaseWorkerSearch.CaseWorkerName}?status={caseCaseWorkerSearch.StatusUrn}&page={caseCaseWorkerSearch.Page}");
+					$"/{EndpointsVersion}/{EndpointPrefix}/owner/{caseCaseWorkerSearch.CaseWorkerName}?status={caseCaseWorkerSearch.StatusUrn}&page={caseCaseWorkerSearch.Page}");
 				
 				// Create http client
 				var client = CreateHttpClient();
@@ -61,7 +61,7 @@ namespace Service.TRAMS.Cases
 				_logger.LogInformation("CaseService::GetCasesByUrn {Urn}", urn);
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{_endpointsVersion}/{_endpointPrefix}/urn/{urn}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/{EndpointPrefix}/urn/{urn}");
 				
 				// Create http client
 				var client = CreateHttpClient();
@@ -101,7 +101,7 @@ namespace Service.TRAMS.Cases
 				_logger.LogInformation("CaseService::GetCasesByTrustUkPrn {TrustUkPrn} - {Page}", caseTrustSearch.TrustUkPrn, caseTrustSearch.Page);
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{_endpointsVersion}/{_endpointPrefix}/ukprn/{caseTrustSearch.TrustUkPrn}?page={caseTrustSearch.Page}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/{EndpointPrefix}/ukprn/{caseTrustSearch.TrustUkPrn}?page={caseTrustSearch.Page}");
 				
 				// Create http client
 				var client = CreateHttpClient();
@@ -135,7 +135,7 @@ namespace Service.TRAMS.Cases
 				_logger.LogInformation("CaseService::GetCases {Page}", pageSearch.Page);
 				
 				// Create a request
-				var request = new HttpRequestMessage(HttpMethod.Get, $"/{_endpointsVersion}/cases?page={pageSearch.Page}");
+				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/cases?page={pageSearch.Page}");
 				
 				// Create http client
 				var client = CreateHttpClient();
@@ -178,7 +178,7 @@ namespace Service.TRAMS.Cases
 				var client = CreateHttpClient();
 				
 				// Execute request
-				var response = await client.PostAsync($"/{_endpointsVersion}/{_endpointPrefix}", request);
+				var response = await client.PostAsync($"/{EndpointsVersion}/{EndpointPrefix}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
@@ -221,7 +221,7 @@ namespace Service.TRAMS.Cases
 				var client = CreateHttpClient();
 				
 				// Execute request
-				var response = await client.PatchAsync($"/{_endpointsVersion}/{_endpointPrefix}/{caseDto.Urn}", request);
+				var response = await client.PatchAsync($"/{EndpointsVersion}/{EndpointPrefix}/{caseDto.Urn}", request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
