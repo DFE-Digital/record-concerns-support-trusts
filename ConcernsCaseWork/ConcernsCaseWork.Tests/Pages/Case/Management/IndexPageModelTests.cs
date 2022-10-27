@@ -230,6 +230,73 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		}
 		
 		[Test]
+		public async Task WhenOnGetAsync_WhenCaseIsClosed_RedirectsToClosedCasePage()
+		{
+			// arrange
+			var mockCaseModelService = new Mock<ICaseModelService>();
+			var mockTrustModelService = new Mock<ITrustModelService>();
+			var mockRecordModelService = new Mock<IRecordModelService>();
+			var mockRatingModelService = new Mock<IRatingModelService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
+			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
+			var mockSrmaService = new Mock<ISRMAService>();
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
+			var mockNtiUCStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
+			var mockNtiWLModelService = new Mock<INtiWarningLetterModelService>();
+			var mockNtiModelService = new Mock<INtiModelService>();
+			var closedStatusUrn = 3;
+
+			var caseModel = CaseFactory.BuildCaseModel(statusUrn:closedStatusUrn);
+			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
+			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
+			var casesHistoryModel = CaseFactory.BuildListCasesHistoryModel();
+			var recordsModel = RecordFactory.BuildListRecordModel();
+			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), closedStatusUrn);
+			var financialPlansModel = FinancialPlanFactory.BuildListFinancialPlanModel();
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
+			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(3);
+			var ntiModels = NTIFactory.BuildListNTIModel();
+			
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
+			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
+				.ReturnsAsync(trustCasesModel);
+			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+				.ReturnsAsync(trustDetailsModel);
+			mockCaseHistoryModelService.Setup(c => c.GetCasesHistory(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(casesHistoryModel);
+			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(recordsModel);
+			mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Close.ToString()))
+				.ReturnsAsync(closedStatusModel);
+			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
+				.ReturnsAsync(financialPlansModel);
+			mockNtiUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
+				.ReturnsAsync(ntiUnderConsiderationModels);
+			mockNtiWLModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
+				.ReturnsAsync(ntiWarningLetterModels);
+			mockNtiModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModels);
+			
+			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
+					mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, 
+					mockSrmaService.Object, mockFinancialPlanModelService.Object, mockNtiUnderConsiderationModelService.Object, mockNtiUCStatusesCachedService.Object,
+					 mockLogger.Object, mockNtiWLModelService.Object, mockNtiModelService.Object);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+			
+			// act
+			var result = await pageModel.OnGetAsync();
+			
+			// assert
+			Assert.That(result, Is.TypeOf<RedirectResult>());
+			Assert.That(((RedirectResult)result).Url, Is.EqualTo($"/case/{caseModel.Urn}/closed"));
+		}
+		
+		[Test]
 		public async Task WhenOnGetAsync_WithNoCaseActions_SetsHasOpenActionsAndHasClosedActionsToFalse()
 		{
 			// arrange
