@@ -6,15 +6,13 @@
 
 @{
     ViewData["Title"] = "NTI";
-    var nonce = HttpContext.GetNonce();
+	ViewData["BackButtonLabel"] = "Back to case";
 }
 
 @section BeforeMain {
-<div class="govuk-width-container">
-    <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
-        Back to case
-    </a>
-</div>
+	<div class="govuk-width-container">
+		<partial name="_BackLink"/>
+	</div>
 }
 
 <div class="govuk-width-container">
@@ -56,7 +54,14 @@
                         <th scope="row" class="govuk-table-case-details__header">Current status</th>
                         <td class="govuk-table__cell">
                             @{
-                                RenderValue(Model.NtiModel.Status.Name);
+								if (Model.NtiModel.Status != null)
+								{
+									RenderValue(Model.NtiModel.Status.Name);
+								}
+								else
+								{
+									RenderEmptyLabel();
+								}
                             }
                         </td>
                     }
@@ -65,7 +70,14 @@
                         <th scope="row" class="govuk-table-case-details__header">Status</th>
                         <td class="govuk-table__cell">
                             @{
-                                RenderValue(Model.NtiModel.ClosedStatus.Name);
+								if (Model.NtiModel.ClosedStatus != null)
+								{
+									RenderValue(Model.NtiModel.ClosedStatus.Name);
+								}
+								else
+								{
+									RenderEmptyLabel();
+								}
                             }
                         </td>
                     }
@@ -79,7 +91,14 @@
                     <th scope="row" class="govuk-table-case-details__header">Date NTI Issued</th>
                     <td class="govuk-table__cell">
                         @{
-                            RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.DateStarted.Value));
+							if (Model.NtiModel.DateStarted.HasValue)
+							{
+								RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.DateStarted.Value));
+				            }
+				            else
+				            {
+                                RenderEmptyLabel();
+				            }
                         }
                     </td>
                 </tr>

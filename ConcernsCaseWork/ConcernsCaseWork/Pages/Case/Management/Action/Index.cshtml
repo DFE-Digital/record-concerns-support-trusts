@@ -48,7 +48,17 @@
                     <div class="govuk-radios" data-module="govuk-radios">
 
                         <!--Case Action radios-->
-                    <div class="govuk-radios__item">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="action" name="action" type="radio" value="@CaseActionEnum.Decision">
+                            <label class="govuk-label govuk-radios__label" for="action">
+                                <span>
+                                    Decision
+                                </span>
+                            </label>
+                        </div>
+
+
+                        <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="action" name="action" type="radio" value="@CaseActionEnum.DfESupport" disabled="disabled">
                             <label class="govuk-label govuk-radios__label" for="action">
                                 <span>

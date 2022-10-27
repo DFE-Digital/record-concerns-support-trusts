@@ -125,7 +125,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 			{
 				new SrmaCreateHelper(_srmaService),
 				new FinancialPlanCreateHelper(_financialPlanModelService),
-				new NtiCreateHelper(_ntiUnderConsiderationModelService, _ntiWarningLetterModelService, _ntiModelService)
+				new NtiCreateHelper(_ntiUnderConsiderationModelService, _ntiWarningLetterModelService, _ntiModelService),
+				new CaseDecisionCreateHelper()
 			};
 		}
 

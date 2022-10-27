@@ -11,7 +11,8 @@
     <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.8" />
+    <PackageReference Include="Microsoft.Configuration.ConfigurationBuilders.UserSecrets" Version="2.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.17.0" />
     <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" Version="0.17.0" />
@@ -22,6 +23,7 @@
   </ItemGroup>
 	
   <ItemGroup>
+    <ProjectReference Include="..\ConcernsCaseWork.CoreTypes\ConcernsCaseWork.CoreTypes.csproj" />
     <ProjectReference Include="..\ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj" />
     <ProjectReference Include="..\Service.Redis\Service.Redis.csproj" />
     <ProjectReference Include="..\Service.TRAMS\Service.TRAMS.csproj" />
