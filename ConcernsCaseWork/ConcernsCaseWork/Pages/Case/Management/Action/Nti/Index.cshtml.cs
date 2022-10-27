@@ -50,7 +50,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		public async Task OnGetAsync()
 		{
-			long caseUrn = 0;
 			long ntiId = 0;
 
 			try
@@ -58,7 +57,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				_logger.LogInformation("Case::Action::NTI::IndexPageModel::OnGetAsync");
 
 				
-				(caseUrn, ntiId) = GetRouteData();
+				(_, ntiId) = GetRouteData();
 
 				NtiModel = await GetNTIModel(ntiId);
 

@@ -88,6 +88,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 					}
 				}
 
+				if (Nti.IsClosed)
+				{
+					return Redirect($"/case/{CaseUrn}/management/action/nti/{NtiId}");
+				}
+
 				Statuses = await GetStatuses();
 				Reasons = await GetReasons();
 			

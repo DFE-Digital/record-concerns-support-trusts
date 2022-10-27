@@ -42,10 +42,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			try
 			{
 				long ntiId = 0;
+				long caseUrn = 0;
 
-				(_, ntiId) = GetRouteData();
+				(caseUrn, ntiId) = GetRouteData();
 
 				NtiModel = await _ntiModelService.GetNtiByIdAsync(ntiId);
+					
+				if (NtiModel.IsClosed)
+				{
+					return Redirect($"/case/{caseUrn}/management/action/nti/{ntiId}");
+				}
 
 				return Page();
 			}
