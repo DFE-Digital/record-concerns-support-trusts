@@ -23,7 +23,7 @@
 </thead>
 
 <tbody class="govuk-table__body">
-    @if (activeCases.Count() == 0)
+    @if (!activeCases.Any())
     {
         <tr class="govuk-table__row tr__large">
             <td class="govuk-table__cell__cases govuk-oneline-row">
