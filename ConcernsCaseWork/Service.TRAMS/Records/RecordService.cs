@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
@@ -14,7 +15,7 @@ namespace Service.TRAMS.Records
 	{
 		private readonly ILogger<RecordService> _logger;
 		
-		public RecordService(IHttpClientFactory clientFactory, ILogger<RecordService> logger) : base(clientFactory, logger)
+		public RecordService(IHttpClientFactory clientFactory, ILogger<RecordService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}
@@ -30,7 +31,7 @@ namespace Service.TRAMS.Records
 					$"/{EndpointsVersion}/concerns-records/case/urn/{caseUrn}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -73,7 +74,7 @@ namespace Service.TRAMS.Records
 					MediaTypeNames.Application.Json);
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.PostAsync(
@@ -117,7 +118,7 @@ namespace Service.TRAMS.Records
 					MediaTypeNames.Application.Json);
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.PatchAsync(

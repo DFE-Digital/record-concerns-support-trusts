@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using Service.TRAMS.Base;
+using ConcernsCaseWork.Logging;
 
 namespace Service.TRAMS.Tests.CaseActions
 {
@@ -51,7 +52,7 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var httpClientFactory = CreateMockFactory(srmas.ToList());
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object);
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
 			var response = sut.GetSRMAsForCase(123).Result;
@@ -81,7 +82,7 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object);
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
 			var response = sut.GetSRMAById(654).Result;
@@ -109,7 +110,7 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object);
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
 			var response = sut.SaveSRMA(expectedSRMADto).Result;
@@ -139,7 +140,7 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object);
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
 			var response = sut.SetDateAccepted(654, dateAccepted).Result;
@@ -170,7 +171,7 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object);
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
 			var response = sut.SetDateClosed(654, dateClosed).Result;
@@ -201,7 +202,7 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object);
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
 			var response = sut.SetDateReportSent(654, dateReportSent).Result;
@@ -231,7 +232,7 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object);
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
 			var response = sut.SetNotes(654, notes).Result;
@@ -260,7 +261,7 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object);
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
 			var response = sut.SetOfferedDate(654, offeredDate).Result;
@@ -291,7 +292,7 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object);
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
 			var response = sut.SetVisitDates(654, visitStartDate, visistEndDate).Result;
@@ -320,7 +321,7 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object);
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
 			var response = sut.SetStatus(654, status).Result;
@@ -347,7 +348,7 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object);
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
 			var response = sut.SetReason(654, reason).Result;

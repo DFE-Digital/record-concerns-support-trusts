@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Shared.Tests.Factory;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -43,7 +44,7 @@ namespace Service.TRAMS.Tests.Records
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecords = await recordService.GetRecordsByCaseUrn(1);
@@ -93,7 +94,7 @@ namespace Service.TRAMS.Tests.Records
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => recordService.GetRecordsByCaseUrn(1));
@@ -122,7 +123,7 @@ namespace Service.TRAMS.Tests.Records
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => recordService.GetRecordsByCaseUrn(1));
@@ -152,7 +153,7 @@ namespace Service.TRAMS.Tests.Records
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecord = await recordService.PostRecordByCaseUrn(expectedRecord);
@@ -193,7 +194,7 @@ namespace Service.TRAMS.Tests.Records
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => recordService.PostRecordByCaseUrn(RecordFactory.BuildCreateRecordDto()));
@@ -222,7 +223,7 @@ namespace Service.TRAMS.Tests.Records
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => recordService.PostRecordByCaseUrn(RecordFactory.BuildCreateRecordDto()));
@@ -252,7 +253,7 @@ namespace Service.TRAMS.Tests.Records
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualRecord = await recordService.PatchRecordByUrn(expectedRecord);
@@ -294,7 +295,7 @@ namespace Service.TRAMS.Tests.Records
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => recordService.PatchRecordByUrn(RecordFactory.BuildRecordDto()));
@@ -323,7 +324,7 @@ namespace Service.TRAMS.Tests.Records
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RecordService>>();
-			var recordService = new RecordService(httpClientFactory.Object, logger.Object);
+			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => recordService.PatchRecordByUrn(RecordFactory.BuildRecordDto()));

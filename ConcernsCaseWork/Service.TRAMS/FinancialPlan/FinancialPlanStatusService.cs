@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
@@ -12,7 +13,7 @@ namespace Service.TRAMS.FinancialPlan
 	{
 		private readonly ILogger<FinancialPlanStatusService> _logger;
 
-		public FinancialPlanStatusService(IHttpClientFactory clientFactory, ILogger<FinancialPlanStatusService> logger) : base(clientFactory, logger)
+		public FinancialPlanStatusService(IHttpClientFactory clientFactory, ILogger<FinancialPlanStatusService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}
@@ -23,7 +24,7 @@ namespace Service.TRAMS.FinancialPlan
 			{
 				_logger.LogInformation("FinancialPlanStatusService::GetAllFinancialPlansStatusesAsync");
 
-				return await HttpClientWrapper<FinancialPlanStatusDto>.GetData($"/{EndpointsVersion}/case-actions/financial-plan/all-statuses", ClientFactory);
+				return await HttpClientWrapper<FinancialPlanStatusDto>.GetData($"/{EndpointsVersion}/case-actions/financial-plan/all-statuses", CreateHttpClient());
 			}
 			catch (Exception ex)
 			{
@@ -39,7 +40,7 @@ namespace Service.TRAMS.FinancialPlan
 			{
 				_logger.LogInformation("FinancialPlanStatusService::GetClosureFinancialPlansStatusesAsync");
 
-				return await HttpClientWrapper<FinancialPlanStatusDto>.GetData($"/{EndpointsVersion}/case-actions/financial-plan/closure-statuses", ClientFactory);
+				return await HttpClientWrapper<FinancialPlanStatusDto>.GetData($"/{EndpointsVersion}/case-actions/financial-plan/closure-statuses", CreateHttpClient());
 			}
 			catch (Exception ex)
 			{
@@ -55,7 +56,7 @@ namespace Service.TRAMS.FinancialPlan
 			{
 				_logger.LogInformation("FinancialPlanStatusService::GetOpenFinancialPlansStatusesAsync");
 
-				return await HttpClientWrapper<FinancialPlanStatusDto>.GetData($"/{EndpointsVersion}/case-actions/financial-plan/open-statuses", ClientFactory);
+				return await HttpClientWrapper<FinancialPlanStatusDto>.GetData($"/{EndpointsVersion}/case-actions/financial-plan/open-statuses", CreateHttpClient());
 			}
 			catch (Exception ex)
 			{
@@ -67,12 +68,10 @@ namespace Service.TRAMS.FinancialPlan
 
 		private static class HttpClientWrapper<T> 
 		{
-			public static async Task<IList<T>> GetData(string relativeUrl, IHttpClientFactory clientFactory)
+			public static async Task<IList<T>> GetData(string relativeUrl, HttpClient httpClient)
 			{
 				var request = new HttpRequestMessage(HttpMethod.Get, relativeUrl);
-				var client = clientFactory.CreateClient(HttpClientName);
-				
-				var response = await client.SendAsync(request);
+				var response = await httpClient.SendAsync(request);
 
 				response.EnsureSuccessStatusCode();
 

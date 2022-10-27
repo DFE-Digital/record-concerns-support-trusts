@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Shared.Tests.Factory;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -44,7 +45,7 @@ namespace Service.TRAMS.Tests.Cases
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
-			var caseHistoryService = new CaseHistoryService(httpClientFactory.Object, logger.Object);
+			var caseHistoryService = new CaseHistoryService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualCaseHistory = await caseHistoryService.PostCaseHistory(CaseFactory.BuildCreateCaseHistoryDto());
@@ -80,7 +81,7 @@ namespace Service.TRAMS.Tests.Cases
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<CaseHistoryService>>();
-			var caseHistoryService = new CaseHistoryService(httpClientFactory.Object, logger.Object);
+			var caseHistoryService = new CaseHistoryService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			Assert.ThrowsAsync<HttpRequestException>(() => caseHistoryService.PostCaseHistory(CaseFactory.BuildCreateCaseHistoryDto()));
@@ -110,7 +111,7 @@ namespace Service.TRAMS.Tests.Cases
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<CaseHistoryService>>();
-			var caseHistoryService = new CaseHistoryService(httpClientFactory.Object, logger.Object);
+			var caseHistoryService = new CaseHistoryService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			Assert.ThrowsAsync<Exception>(() => caseHistoryService.PostCaseHistory(CaseFactory.BuildCreateCaseHistoryDto()));
@@ -141,7 +142,7 @@ namespace Service.TRAMS.Tests.Cases
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
-			var caseHistoryService = new CaseHistoryService(httpClientFactory.Object, logger.Object);
+			var caseHistoryService = new CaseHistoryService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var actualListWrapperCasesHistory = await caseHistoryService.GetCasesHistory(CaseFactory.BuildCaseSearch());
@@ -187,7 +188,7 @@ namespace Service.TRAMS.Tests.Cases
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<CaseHistoryService>>();
-			var caseHistoryService = new CaseHistoryService(httpClientFactory.Object, logger.Object);
+			var caseHistoryService = new CaseHistoryService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			Assert.ThrowsAsync<HttpRequestException>(() => caseHistoryService.GetCasesHistory(CaseFactory.BuildCaseSearch()));

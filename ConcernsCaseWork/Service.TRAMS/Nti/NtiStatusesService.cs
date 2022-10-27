@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using Service.TRAMS.Helpers;
@@ -15,8 +16,7 @@ namespace Service.TRAMS.Nti
 	{
 		private readonly ILogger<NtiStatusesService> _logger;
 
-		public NtiStatusesService(IHttpClientFactory httpClientFactory, 
-			ILogger<NtiStatusesService> logger) : base(httpClientFactory, logger)
+		public NtiStatusesService(IHttpClientFactory httpClientFactory, ILogger<NtiStatusesService> logger, ICorrelationContext correlationContext) : base(httpClientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}
@@ -31,7 +31,7 @@ namespace Service.TRAMS.Nti
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/case-actions/notice-to-improve/all-statuses");
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 
 				// Execute request
 				var response = await client.SendAsync(request);

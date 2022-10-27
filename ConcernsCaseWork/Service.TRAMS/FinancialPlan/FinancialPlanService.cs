@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
@@ -14,7 +15,7 @@ namespace Service.TRAMS.FinancialPlan
 	{
 		private readonly ILogger<FinancialPlanService> _logger;
 
-		public FinancialPlanService(IHttpClientFactory clientFactory, ILogger<FinancialPlanService> logger) : base(clientFactory, logger)
+		public FinancialPlanService(IHttpClientFactory clientFactory, ILogger<FinancialPlanService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}
@@ -30,7 +31,7 @@ namespace Service.TRAMS.FinancialPlan
 					$"/{EndpointsVersion}/case-actions/financial-plan/case/{caseUrn}");
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -71,7 +72,7 @@ namespace Service.TRAMS.FinancialPlan
 					$"/{EndpointsVersion}/case-actions/financial-plan/{financialPlanId}");
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -114,7 +115,7 @@ namespace Service.TRAMS.FinancialPlan
 					MediaTypeNames.Application.Json);
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 
 				// Execute request
 				var response = await client.PostAsync(
@@ -158,7 +159,7 @@ namespace Service.TRAMS.FinancialPlan
 					MediaTypeNames.Application.Json);
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 
 				// Execute request
 				var response = await client.PatchAsync(

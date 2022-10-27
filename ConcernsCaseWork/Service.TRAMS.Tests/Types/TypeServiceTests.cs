@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Shared.Tests.Factory;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -43,7 +44,7 @@ namespace Service.TRAMS.Tests.Types
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<TypeService>>();
-			var typeService = new TypeService(httpClientFactory.Object, logger.Object);
+			var typeService = new TypeService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var types = await typeService.GetTypes();
@@ -86,7 +87,7 @@ namespace Service.TRAMS.Tests.Types
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<TypeService>>();
-			var typeService = new TypeService(httpClientFactory.Object, logger.Object);
+			var typeService = new TypeService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => typeService.GetTypes());
@@ -116,7 +117,7 @@ namespace Service.TRAMS.Tests.Types
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<TypeService>>();
-			var typeService = new TypeService(httpClientFactory.Object, logger.Object);
+			var typeService = new TypeService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => typeService.GetTypes());

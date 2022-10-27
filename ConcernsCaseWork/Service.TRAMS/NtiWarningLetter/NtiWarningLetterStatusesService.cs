@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using Service.TRAMS.Helpers;
@@ -15,8 +16,7 @@ namespace Service.TRAMS.NtiWarningLetter
 	{
 		private readonly ILogger<NtiWarningLetterStatusesService> _logger;
 
-		public NtiWarningLetterStatusesService(IHttpClientFactory clientFactory,
-			ILogger<NtiWarningLetterStatusesService> logger) : base(clientFactory, logger)
+		public NtiWarningLetterStatusesService(IHttpClientFactory clientFactory, ILogger<NtiWarningLetterStatusesService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}
@@ -31,7 +31,7 @@ namespace Service.TRAMS.NtiWarningLetter
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/case-actions/nti-warning-letter/all-statuses");
 
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 
 				// Execute request
 				var response = await client.SendAsync(request);

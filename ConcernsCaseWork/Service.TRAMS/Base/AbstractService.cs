@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Logging;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -15,19 +16,22 @@ namespace Service.TRAMS.Base
 	/// </summary>
 	public abstract class AbstractService
 	{
-		internal readonly IHttpClientFactory ClientFactory;
+		private readonly ICorrelationContext _correlationContext;
+		private readonly IHttpClientFactory _clientFactory;
 		private readonly ILogger<AbstractService> _logger;
-		internal const string HttpClientName = "TramsClient";
-		internal const string EndpointsVersion = "v2";
-		internal const string EndpointPrefix = "concerns-cases";
 
-		protected AbstractService(IHttpClientFactory clientFactory, ILogger<AbstractService> logger)
+		internal string HttpClientName { get; init; } = "TramsClient"; // was "Default";
+		internal string EndpointsVersion { get; } = "v2";
+		internal string EndpointPrefix { get; } = "concerns-cases";
+
+		protected AbstractService(IHttpClientFactory clientFactory, ILogger<AbstractService> logger, ICorrelationContext correlationContext)
 		{
-			ClientFactory = Guard.Against.Null(clientFactory);
+			_clientFactory = Guard.Against.Null(clientFactory);
 			_logger = Guard.Against.Null(logger);
+			_correlationContext = Guard.Against.Null(correlationContext);
 		}
 
-		public Task<T> Get<T>(string endpoint, bool treatNoContentAsError = false) where T : class 
+		public Task<T> Get<T>(string endpoint, bool treatNoContentAsError = false) where T : class
 		{
 			Guard.Against.NullOrWhiteSpace(endpoint);
 
@@ -39,7 +43,7 @@ namespace Service.TRAMS.Base
 					var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
 
 					// Create http client
-					var client = ClientFactory.CreateClient(HttpClientName);
+					var client = CreateHttpClient();
 
 					// Execute request
 					var response = await client.SendAsync(request);
@@ -82,7 +86,20 @@ namespace Service.TRAMS.Base
 			return DoWork();
 		}
 
-		public Task<ApiListWrapper<T>> GetByPagination<T>(string endpoint, bool treatNoContentAsError = false) where T : class 
+		protected HttpClient CreateHttpClient()
+		{
+			var client = _clientFactory.CreateClient(HttpClientName);
+
+			var headerAdded = client.DefaultRequestHeaders.TryAddWithoutValidation(_correlationContext.HeaderKey, _correlationContext.CorrelationId);
+			if (!headerAdded)
+			{
+				_logger.LogWarning("Warning. Unable to add correlationId to request headers");
+			}
+
+			return client;
+		}
+
+		public Task<ApiListWrapper<T>> GetByPagination<T>(string endpoint, bool treatNoContentAsError = false) where T : class
 		{
 			Guard.Against.NullOrWhiteSpace(endpoint);
 
@@ -94,7 +111,7 @@ namespace Service.TRAMS.Base
 					var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
 
 					// Create http client
-					var client = ClientFactory.CreateClient(HttpClientName);
+					var client = CreateHttpClient();
 
 					// Execute request
 					var response = await client.SendAsync(request);
@@ -155,7 +172,7 @@ namespace Service.TRAMS.Base
 						MediaTypeNames.Application.Json);
 
 					// Create http client
-					var client = ClientFactory.CreateClient(HttpClientName);
+					var client = CreateHttpClient();
 
 					// Execute request
 					var response = await client.PutAsync(endpoint, request);
@@ -213,7 +230,7 @@ namespace Service.TRAMS.Base
 						MediaTypeNames.Application.Json);
 
 					// Create http client
-					var client = ClientFactory.CreateClient(HttpClientName);
+					var client = CreateHttpClient();
 
 					// Execute request
 					var response = await client.PutAsync(endpoint, request);
@@ -279,7 +296,7 @@ namespace Service.TRAMS.Base
 						MediaTypeNames.Application.Json);
 
 					// Create http client
-					var client = ClientFactory.CreateClient(HttpClientName);
+					var client = CreateHttpClient();
 
 					// Execute request
 					var response = await client.PostAsync(endpoint, request);
@@ -323,7 +340,7 @@ namespace Service.TRAMS.Base
 						MediaTypeNames.Application.Json);
 
 					// Create http client
-					var client = ClientFactory.CreateClient(HttpClientName);
+					var client = CreateHttpClient();
 
 					// Execute request
 					var response = await client.PostAsync(endpoint, request);

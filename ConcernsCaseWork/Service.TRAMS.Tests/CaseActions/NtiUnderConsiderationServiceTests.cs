@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Service.TRAMS.Base;
 using Service.TRAMS.NtiUnderConsideration;
+using ConcernsCaseWork.Logging;
 
 namespace Service.TRAMS.Tests.CaseActions
 {
@@ -46,7 +47,7 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var httpClientFactory = CreateMockFactory(ntis);
 
-			var sut = new NtiUnderConsiderationService(httpClientFactory.Object, logger.Object);
+			var sut = new NtiUnderConsiderationService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
 			var response = sut.GetNtisForCase(123).Result;
@@ -73,7 +74,7 @@ namespace Service.TRAMS.Tests.CaseActions
 
 			var logger = new Mock<ILogger<NtiUnderConsiderationService>>();
 
-			var sut = new NtiUnderConsiderationService(httpClientFactory.Object, logger.Object);
+			var sut = new NtiUnderConsiderationService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
 			var response = sut.CreateNti(expectedNtiDto).Result;

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConcernsCaseWork.Logging;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Service.TRAMS.Base;
 using System;
@@ -17,7 +18,7 @@ namespace Service.TRAMS.RecordRatingHistory
 	{
 		private readonly ILogger<RecordRatingHistoryService> _logger;
 		
-		public RecordRatingHistoryService(IHttpClientFactory clientFactory, ILogger<RecordRatingHistoryService> logger) : base(clientFactory, logger)
+		public RecordRatingHistoryService(IHttpClientFactory clientFactory, ILogger<RecordRatingHistoryService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}
@@ -33,7 +34,7 @@ namespace Service.TRAMS.RecordRatingHistory
 					$"/{EndpointsVersion}/record-rating-history/case/urn/{caseUrn}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -68,7 +69,7 @@ namespace Service.TRAMS.RecordRatingHistory
 					$"/{EndpointsVersion}/record-rating-history/record/urn/{recordUrn}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -105,7 +106,7 @@ namespace Service.TRAMS.RecordRatingHistory
 					MediaTypeNames.Application.Json);
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				
 				// Execute request
 				var response = await client.PostAsync($"/{EndpointsVersion}/record-rating-history", request);

@@ -1,5 +1,7 @@
 ﻿using AutoFixture;
+using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -39,7 +41,7 @@ namespace Service.TRAMS.Tests.Decision
 		}
 
 		[Test]
-		public void DecisionService_IsAm_AbstractService()
+		public void DecisionService_IsAn_AbstractService()
 		{
 			Fixture fixture = CreateMockedFixture();
 
@@ -50,8 +52,9 @@ namespace Service.TRAMS.Tests.Decision
 		private Fixture CreateMockedFixture()
 		{
 			var fixture = new Fixture();
-			fixture.Register(() => Mock.Of<IHttpClientFactory>());
-			fixture.Register(() => Mock.Of<ILogger<DecisionService>>());
+			fixture.Customize(new AutoMoqCustomization());
+			//fixture.Register(() => Mock.Of<IHttpClientFactory>());
+			//fixture.Register(() => Mock.Of<ILogger<DecisionService>>());
 			return fixture;
 		}
 
@@ -60,7 +63,7 @@ namespace Service.TRAMS.Tests.Decision
 		{
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
-			
+
 			Fixture fixture = CreateMockedFixture();
 			fixture.Register(() => Mock.Get(httpClientFactory));
 			fixture.Register(() => Mock.Get(mockMessageHandler));
@@ -84,7 +87,7 @@ namespace Service.TRAMS.Tests.Decision
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>());
+			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>());
 			var result = await sut.PostDecision(expectedInputDto);
 
 			Assert.That(result, Is.Not.Null);
