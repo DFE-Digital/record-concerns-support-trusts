@@ -46,16 +46,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				
 				var currentStatusName = FinancialPlanModel.Status?.Name;
 				FinancialPlanStatuses = await GetStatusOptionsAsync(currentStatusName);
-
-				return Page();
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Case::FinancialPlan::ClosePageModel::OnGetAsync::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
 			}
+			
+			return Page();
 		}
 
 		public async Task<IActionResult> OnPostAsync()
