@@ -89,7 +89,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 					}
 				}
 				
-				if (WarningLetter.IsClosed)
+				if (WarningLetter is { IsClosed: true })
 				{
 					return Redirect($"/case/{CaseUrn}/management/action/ntiwarningletter/{WarningLetterId}");
 				}

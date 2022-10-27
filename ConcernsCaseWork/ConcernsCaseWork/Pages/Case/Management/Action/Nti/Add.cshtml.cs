@@ -88,7 +88,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 					}
 				}
 
-				if (Nti.IsClosed)
+				if (Nti is {IsClosed : true})
 				{
 					return Redirect($"/case/{CaseUrn}/management/action/nti/{NtiId}");
 				}
