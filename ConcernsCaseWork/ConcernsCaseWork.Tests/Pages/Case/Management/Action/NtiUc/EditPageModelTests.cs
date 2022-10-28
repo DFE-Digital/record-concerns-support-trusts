@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.MockHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,6 +14,7 @@ using Moq;
 using NUnit.Framework;
 using Service.Redis.FinancialPlan;
 using Service.Redis.NtiUnderConsideration;
+using Service.TRAMS.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,17 +46,70 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		public async Task WhenOnGetAsync_ReturnsPageModel()
 		{
 			// arrange
+			var ntiUcId = 834;
+			var caseUrn = 234;
+			
+			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
+			Mock<INtiUnderConsiderationReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
+			Mock<ILogger<EditPageModel>> mockLogger = new Mock<ILogger<EditPageModel>>();
+
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsCachedService, mockLogger);
+			
+			var ntiUcModel = new NtiUnderConsiderationModel();
+			
+			mockNtiModelService
+				.Setup(fp => fp.GetNtiUnderConsideration(ntiUcId))
+				.ReturnsAsync(ntiUcModel);
+
+			mockNtiReasonsCachedService.Setup(s => s.GetAllReasons()).ReturnsAsync(new List<NtiUnderConsiderationReasonDto>());
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+			routeData.Add("ntiucid", ntiUcId);
+
+			// act
+			await pageModel.OnGetAsync();
+
+			// assert
+			mockLogger.VerifyLogErrorWasNotCalled();
+			
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Information,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::NTI-UC::EditPageModel::OnGetAsync")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+		}
+		
+		[Test]
+		public async Task WhenOnGetAsync_WhenNtiUcIsClosed_RedirectsToIndexPage()
+		{
+			// arrange
+			var ntiUcId = 834;
+			var caseUrn = 234;
+			
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
 			Mock<INtiUnderConsiderationReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<EditPageModel>> mockLogger = new Mock<ILogger<EditPageModel>>();
 
 			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsCachedService, mockLogger);
 
+			var ntiUcModel = new NtiUnderConsiderationModel(){ ClosedAt = DateTime.Now };
+			
+			mockNtiModelService
+				.Setup(fp => fp.GetNtiUnderConsideration(ntiUcId))
+				.ReturnsAsync(ntiUcModel);
+
+			mockNtiReasonsCachedService.Setup(s => s.GetAllReasons()).ReturnsAsync(new List<NtiUnderConsiderationReasonDto>());
+
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
+			routeData.Add("urn", caseUrn);
+			routeData.Add("ntiucid", ntiUcId);
 
 			// act
-			await pageModel.OnGetAsync();
+			var response = await pageModel.OnGetAsync();
 
 			// assert
 			mockLogger.Verify(
@@ -65,6 +120,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
+			
+			Assert.Multiple(() =>
+			{
+				Assert.That(response, Is.InstanceOf<RedirectResult>());
+				Assert.That(((RedirectResult)response).Url, Is.EqualTo($"/case/{caseUrn}/management/action/ntiunderconsideration/{ntiUcId}"));
+				Assert.That(pageModel.TempData["Error.Message"], Is.Null);
+			});
 		}
 
 		[Test]

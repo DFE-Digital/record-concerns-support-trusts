@@ -6,8 +6,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Enums;
-using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 {
@@ -28,14 +26,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 		public async Task OnGetAsync()
 		{
-			long caseUrn = 0;
-			long srmaId = 0;
-
 			try
 			{
 				_logger.LogInformation("Case::Action::SRMA::ClosedPageModel::OnGetAsync");
 
-				(caseUrn, srmaId) = GetRouteData();
+				(_, long srmaId) = GetRouteData();
 
 				// TODO - get SRMA by case ID and SRMA ID
 				SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
