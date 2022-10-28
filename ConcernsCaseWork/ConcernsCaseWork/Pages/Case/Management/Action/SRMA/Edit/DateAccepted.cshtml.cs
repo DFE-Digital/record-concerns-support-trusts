@@ -37,6 +37,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				(caseUrn, srmaId) = GetRouteData();
 
 				SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
+				
+				if (SRMAModel.IsClosed)
+				{
+					return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}/closed");
+				}
 			}
 			catch (Exception ex)
 			{
