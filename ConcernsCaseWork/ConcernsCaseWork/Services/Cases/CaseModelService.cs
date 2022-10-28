@@ -20,7 +20,6 @@ namespace ConcernsCaseWork.Services.Cases
 {
 	public sealed class CaseModelService : ICaseModelService
 	{
-		private readonly ICaseHistoryCachedService _caseHistoryCachedService;
 		private readonly IRatingCachedService _ratingCachedService;
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly IRecordCachedService _recordCachedService;
@@ -37,10 +36,8 @@ namespace ConcernsCaseWork.Services.Cases
 			ITypeCachedService typeCachedService,
 			IStatusCachedService statusCachedService,
 			ICaseSearchService caseSearchService,
-			ICaseHistoryCachedService caseHistoryCachedService,
 			ILogger<CaseModelService> logger)
 		{
-			_caseHistoryCachedService = caseHistoryCachedService;
 			_statusCachedService = statusCachedService;
 			_ratingCachedService = ratingCachedService;
 			_recordCachedService = recordCachedService;
@@ -213,12 +210,6 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.MapClosure(patchCaseModel, caseDto, statusDto);
 				
 				await _caseCachedService.PatchCaseByUrn(caseDto);
-				
-				// Create case history event
-				var caseHistoryEnum = patchCaseModel.StatusName.Equals(StatusEnum.Monitoring.ToString(), StringComparison.OrdinalIgnoreCase)
-					? CaseHistoryEnum.ClosedForMonitoring
-					: CaseHistoryEnum.Closed;
-				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(caseHistoryEnum, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -238,9 +229,6 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.MapRating(patchCaseModel, caseDto);
 				
 				await _caseCachedService.PatchCaseByUrn(caseDto);
-
-				// Create case history event
-				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.RiskRating, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -279,9 +267,6 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.MapDirectionOfTravel(patchCaseModel, caseDto);
 
 				await _caseCachedService.PatchCaseByUrn(caseDto);
-				
-				// Create case history event
-				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.DirectionOfTravel, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -301,9 +286,6 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.MapIssue(patchCaseModel, caseDto);
 
 				await _caseCachedService.PatchCaseByUrn(caseDto);
-				
-				// Create case history event
-				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Issue, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -323,9 +305,6 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.MapCaseAim(patchCaseModel, caseDto);
 
 				await _caseCachedService.PatchCaseByUrn(caseDto);
-				
-				// Create case history event
-				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.CaseAim, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -345,9 +324,6 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.MapCurrentStatus(patchCaseModel, caseDto);
 
 				await _caseCachedService.PatchCaseByUrn(caseDto);
-				
-				// Create case history event
-				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.CurrentStatus, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -367,9 +343,6 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.MapDeEscalationPoint(patchCaseModel, caseDto);
 
 				await _caseCachedService.PatchCaseByUrn(caseDto);
-				
-				// Create case history event
-				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.DeEscalationPoint, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -389,9 +362,6 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.MapNextSteps(patchCaseModel, caseDto);
 
 				await _caseCachedService.PatchCaseByUrn(caseDto);
-				
-				// Create case history event
-				await _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.NextSteps, patchCaseModel.Urn), patchCaseModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -434,14 +404,6 @@ namespace ConcernsCaseWork.Services.Cases
 				});
 
 				await Task.WhenAll(recordTasks);
-				
-				// Create concern history event
-				var concernEventTask = _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Concern, newCase.Urn), newCase.CreatedBy);
-
-				// Create case history event
-				var caseEventTask = _caseHistoryCachedService.PostCaseHistory(CaseHistoryMapping.BuildCaseHistoryDto(CaseHistoryEnum.Case, newCase.Urn), newCase.CreatedBy);
-
-				Task.WaitAll(concernEventTask, caseEventTask);
 				
 				return newCase.Urn;
 			}
