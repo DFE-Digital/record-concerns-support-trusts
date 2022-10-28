@@ -47,7 +47,6 @@ using Service.TRAMS.Nti;
 using Service.TRAMS.NtiUnderConsideration;
 using Service.TRAMS.NtiWarningLetter;
 using Service.TRAMS.Ratings;
-using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
 using Service.TRAMS.Teams;
@@ -152,7 +151,6 @@ namespace ConcernsCaseWork.Extensions
 			// Trams api services
 			services.AddScoped<ICaseService, CaseService>();
 			services.AddScoped<IRatingService, RatingService>();
-			services.AddScoped<IRecordRatingHistoryService, RecordRatingHistoryService>();
 			services.AddScoped<IRecordService, RecordService>();
 			services.AddScoped<IStatusService, StatusService>();
 			services.AddScoped<ITrustService, TrustService>();
