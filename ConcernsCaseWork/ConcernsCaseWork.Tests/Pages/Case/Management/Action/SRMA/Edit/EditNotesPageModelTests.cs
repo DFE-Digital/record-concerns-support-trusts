@@ -48,6 +48,34 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA.Edit
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.SRMAModel, Is.Not.Null);
 		}
+		
+		[Test]
+		public async Task WhenOnGetAsync_AndSrmaIsClosed_RedirectsToClosedPage()
+		{
+			// arrange 
+			var mockSRMAModelService = new Mock<ISRMAService>();
+			var mockLogger = new Mock<ILogger<EditNotesPageModel>>();
+
+			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed, closedAt:DateTime.Now);
+
+			mockSRMAModelService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+				.ReturnsAsync(srmaModel);
+
+			var pageModel = SetupEditNotesPageModel(mockSRMAModelService.Object, mockLogger.Object);
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("caseUrn", srmaModel.CaseUrn); 
+			routeData.Add("srmaId", srmaModel.Id); 
+
+			// act
+			var pageResponse = await pageModel.OnGetAsync();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
+			var page = pageResponse as RedirectResult;
+
+			Assert.That(page?.Url, Is.EqualTo($"/case/{srmaModel.CaseUrn}/management/action/srma/{srmaModel.Id}/closed"));
+			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
+		}
 
 		[Test]
 		public async Task WhenOnGetAsync_MissingRouteData_ThrowsException_ReturnsPage()

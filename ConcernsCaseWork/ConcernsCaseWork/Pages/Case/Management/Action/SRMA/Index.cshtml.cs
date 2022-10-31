@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Enums;
+using JetBrains.Annotations;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
@@ -38,39 +39,41 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			_logger = logger;
 		}
 
-		public async Task OnGetAsync()
+		[ItemCanBeNull]
+		public async Task<IActionResult> OnGetAsync()
 		{
-			long caseUrn = 0;
-			long srmaId = 0;
-
 			try
 			{
 				_logger.LogInformation("Case::Action::SRMA::IndexPageModel::OnGetAsync");
 
-				(caseUrn, srmaId) = GetRouteData();
+				(long caseUrn, long srmaId) = GetRouteData();
 
 				await SetPageData(caseUrn, srmaId);
+				
+				if (SRMAModel.IsClosed)
+				{
+					return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}/closed");
+				}
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Case::Action::SRMA::IndexPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
+
+			return Page();
 		}
 
-		public async Task<IActionResult> OnPostAsync()
+		public IActionResult OnPost()
 		{
 			return RedirectToPage("index");
 		}
 
 		public async Task<ActionResult> OnGetDeclineComplete()
 		{
-			long caseUrn = 0;
-			long srmaId = 0;
-
 			try
 			{
-				(caseUrn, srmaId) = GetRouteData();
+				(long caseUrn, long srmaId) = GetRouteData();
 
 				await SetPageData(caseUrn, srmaId);
 				var srmaIndexPage = $"/case/{caseUrn}/management/action/srma/{srmaId}";
@@ -111,12 +114,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 		public async Task<ActionResult> OnGetCancel()
 		{
-			long caseUrn = 0;
-			long srmaId = 0;
-
 			try
 			{
-				(caseUrn, srmaId) = GetRouteData();
+				(long caseUrn, long srmaId) = GetRouteData();
 				await SetPageData(caseUrn, srmaId);
 
 				if (SRMAModel.Reason.Equals(SRMAReasonOffered.Unknown))
@@ -159,7 +159,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			{
 				throw new Exception("Could not load this SRMA");
 			}
-
+			
 			switch (SRMAModel.Status)
 			{
 				case SRMAStatus.Deployed:

@@ -1,6 +1,4 @@
 ﻿using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Helpers;
-using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 
@@ -38,19 +35,20 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			long caseUrn = 0;
-			long srmaId = 0;
-			string resoultion = "";
-
 			try
 			{
 				_logger.LogInformation("Case::Action::SRMA::ResolvePageModel::OnGetAsync");
-				(caseUrn, srmaId, resoultion) = GetRouteData();
+				(long caseUrn, long srmaId, string resolution) = GetRouteData();
 
 				// TODO - get SRMA by case ID and SRMA ID
 				SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
+				
+				if (SRMAModel.IsClosed)
+				{
+					return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}");
+				}
 
-				switch (resoultion)
+				switch (resolution)
 				{
 					case ResolutionCanceled:
 						ConfirmText = "Confirm SRMA was cancelled";
@@ -63,7 +61,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 						break;
 					default:
 						throw new Exception("resolution value is null or invalid to parse");
-						break;
 				}
 			}
 			catch (Exception ex)
@@ -78,17 +75,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 
 		public async Task<IActionResult> OnPostAsync()
 		{
-			long caseUrn = 0;
-			long srmaId = 0;
-			string resoultion = "";
-
 			try
 			{
-				(caseUrn, srmaId, resoultion) = GetRouteData();
+				(long caseUrn, long srmaId, string resolution) = GetRouteData();
 
 				SRMAStatus resolvedStatus;
 
-				switch (resoultion)
+				switch (resolution)
 				{
 					case ResolutionComplete:
 						resolvedStatus = SRMAStatus.Complete;
@@ -101,7 +94,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 						break;
 					default:
 						throw new Exception("resolution value is null or invalid to parse");
-						break;
 				}
 
 				var srmaNotes = Request.Form["srma-notes"].ToString();
@@ -131,7 +123,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 				throw new Exception("srmaId is null or invalid to parse");
 
 			var validResolutions = new List<string>() { ResolutionComplete, ResolutionDeclined, ResolutionCanceled };
-			var resolutionValue = RouteData.Values["resolution"].ToString();
+			var resolutionValue = RouteData.Values["resolution"]?.ToString();
 
 			if (string.IsNullOrEmpty(resolutionValue) || !validResolutions.Contains(resolutionValue) )
 			{

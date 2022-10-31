@@ -78,6 +78,49 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			mockNtiModelService.Verify(n => n.GetNtiByIdAsync(It.IsAny<long>()), Times.Once);
 		}
+		
+		[Test]
+		public async Task WhenOnGetAsync_WhenNtiIsClosed_RedirectsToClosedPage()
+		{
+			// arrange
+			var caseUrn = 3;
+			var ntiId = 9;
+			
+			var mockNtiModelService = new Mock<INtiModelService>();
+			var mockLogger = new Mock<ILogger<CancelPageModel>>();
+
+			var ntiModel = NTIFactory.BuildClosedNTIModel();
+			mockNtiModelService.Setup(n => n.GetNtiByIdAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModel);
+
+			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn); 
+			routeData.Add("ntiId", ntiId);
+
+			// act
+			var response = await pageModel.OnGetAsync();
+
+			// assert
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Information,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("CancelPageModel::OnGetAsync")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+
+			mockNtiModelService.Verify(n => n.GetNtiByIdAsync(It.IsAny<long>()), Times.Once);
+			
+			Assert.Multiple(() =>
+			{
+				Assert.That(response, Is.InstanceOf<RedirectResult>());
+				Assert.That(((RedirectResult)response).Url, Is.EqualTo($"/case/{caseUrn}/management/action/nti/{ntiId}"));
+				Assert.That(pageModel.TempData["Error.Message"], Is.Null);
+			});
+		}
 
 		[Test]
 		public async Task WhenOnPostAsync_MissingRouteData_ThrowsException_ReturnsPage()

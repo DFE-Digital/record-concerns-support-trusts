@@ -55,18 +55,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		{
 			_logger.LogInformation("Case::Action::NTI::AddConditionsPageModel::OnGetAsync");
 
-
-			if (ContinuationId == null)
+			if (string.IsNullOrEmpty(ContinuationId))
 			{
 				throw new InvalidOperationException("Continuation Id not found");
 			}
-
+			
 			try
 			{
 				ExtractCaseUrnFromRoute();
 				ExtractIdFromRoute();
 
 				var model = await GetUpToDateModel();
+				
 				SelectedConditions = model.Conditions;
 
 				AllConditions = await _ntiConditionsCachedService.GetAllConditionsAsync();

@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			_logger = logger;
 		}
 
-		public async Task OnGetAsync()
+		public async Task<IActionResult> OnGetAsync()
 		{
 			long caseUrn = 0;
 			long financialPlanId = 0;
@@ -41,13 +41,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				{
 					throw new Exception("Could not load this Financial Plan");
 				}
-
+				
+				if (FinancialPlanModel.IsClosed)
+				{
+					return Redirect($"/case/{caseUrn}/management/action/financialplan/{financialPlanId}/closed");
+				}
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Case::Action::FinancialPlan::IndexPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
+
+			return Page();
 		}
 
 		private (long caseUrn, long financialPlanId) GetRouteData()
