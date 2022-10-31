@@ -2,7 +2,7 @@
 
 on:
   push:
-    branches: [ main, production ]
+    branches: [ production ]
     
 env:
   REGISTRY: ghcr.io
