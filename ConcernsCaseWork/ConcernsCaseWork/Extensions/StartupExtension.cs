@@ -47,7 +47,6 @@ using Service.TRAMS.Nti;
 using Service.TRAMS.NtiUnderConsideration;
 using Service.TRAMS.NtiWarningLetter;
 using Service.TRAMS.Ratings;
-using Service.TRAMS.RecordRatingHistory;
 using Service.TRAMS.Records;
 using Service.TRAMS.Status;
 using Service.TRAMS.Teams;
@@ -130,7 +129,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICaseModelService, CaseModelService>();
 			services.AddScoped<ITrustModelService, TrustModelService>();
 			services.AddScoped<ITypeModelService, TypeModelService>();
-			services.AddScoped<ICaseHistoryModelService, CaseHistoryModelService>();
 			services.AddScoped<IRatingModelService, RatingModelService>();
 			services.AddScoped<IRecordModelService, RecordModelService>();
 			services.AddScoped<IFinancialPlanModelService, FinancialPlanModelService>();
@@ -153,14 +151,12 @@ namespace ConcernsCaseWork.Extensions
 			// Trams api services
 			services.AddScoped<ICaseService, CaseService>();
 			services.AddScoped<IRatingService, RatingService>();
-			services.AddScoped<IRecordRatingHistoryService, RecordRatingHistoryService>();
 			services.AddScoped<IRecordService, RecordService>();
 			services.AddScoped<IStatusService, StatusService>();
 			services.AddScoped<ITrustService, TrustService>();
 			services.AddScoped<ITrustSearchService, TrustSearchService>();
 			services.AddScoped<ITypeService, TypeService>();
 			services.AddScoped<ICaseSearchService, CaseSearchService>();
-			services.AddScoped<ICaseHistoryService, CaseHistoryService>();
 			services.AddScoped<IFinancialPlanService, FinancialPlanService>();
 			services.AddScoped<SRMAProvider, SRMAProvider>();
 			services.AddScoped<IFinancialPlanStatusService, FinancialPlanStatusService>();
@@ -188,7 +184,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ITrustCachedService, TrustCachedService>();
 			services.AddScoped<ICaseCachedService, CaseCachedService>();
 			services.AddScoped<IRecordCachedService, RecordCachedService>();
-			services.AddScoped<ICaseHistoryCachedService, CaseHistoryCachedService>();
 			services.AddScoped<IFinancialPlanCachedService, FinancialPlanCachedService>();
 			services.AddScoped<IFinancialPlanStatusCachedService, FinancialPlanStatusCachedService>();
 			services.AddScoped<CachedSRMAProvider, CachedSRMAProvider>();
