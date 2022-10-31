@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Helpers;
+using ConcernsCaseWork.Logging;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -12,8 +13,7 @@ namespace ConcernsCaseWork.Service.Nti
 		private readonly ILogger<NtiService> _logger;
 		private const string Url = @"/v2/case-actions/notice-to-improve";
 
-		public NtiService(IHttpClientFactory httpClientFactory, ILogger<NtiService> logger)
-			: base(httpClientFactory, logger)
+		public NtiService(IHttpClientFactory httpClientFactory, ILogger<NtiService> logger, ICorrelationContext correlationContext) : base(httpClientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}
@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Service.Nti
 			{
 				_logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Post, $"{Url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(newNti),
@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.Service.Nti
 			{
 				_logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}/case/{caseUrn}");
 
 				var response = await client.SendAsync(request);
@@ -71,7 +71,7 @@ namespace ConcernsCaseWork.Service.Nti
 
 				var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}/{ntiId}");
 
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 
 				var response = await client.SendAsync(request);
 
@@ -94,7 +94,7 @@ namespace ConcernsCaseWork.Service.Nti
 			{
 				_logger.LogInformation($"{nameof(NtiService)}::{LoggingHelpers.EchoCallerName()}");
 
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(nti),

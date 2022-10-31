@@ -6,6 +6,7 @@ using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Decisions;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
@@ -27,7 +28,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class IndexPageModel : AbstractPageModel
 	{
-		private readonly ICaseHistoryModelService _caseHistoryModelService;
 		private readonly ITrustModelService _trustModelService;
 		private readonly ICaseModelService _caseModelService;
 		private readonly IRecordModelService _recordModelService;
@@ -39,12 +39,12 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly INtiModelService _ntiModelService;
+		private readonly IDecisionModelService _decisionModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<TrustCasesModel> TrustCasesModel { get; private set; }
-		public IList<CaseHistoryModel> CasesHistoryModel { get; private set; }
 		public bool IsEditableCase { get; private set; }
 		public bool HasOpenActions { get { return CaseActions.Any(a => !a.ClosedAt.HasValue); } }
 		public bool HasClosedActions { get { return CaseActions.Any(a => a.ClosedAt.HasValue); } }
@@ -54,7 +54,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		public IndexPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
-			ICaseHistoryModelService caseHistoryModelService,
 			IRecordModelService recordModelService,
 			IRatingModelService ratingModelService,
 			IStatusCachedService statusCachedService,
@@ -64,10 +63,10 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			INtiUnderConsiderationStatusesCachedService ntiUCStatusesCachedService,
 			INtiWarningLetterModelService ntiWarningLetterModelService,
 			INtiModelService ntiModelService,
-			ILogger<IndexPageModel> logger
+			ILogger<IndexPageModel> logger,
+			IDecisionModelService decisionModelService
 			)
 		{
-			_caseHistoryModelService = caseHistoryModelService;
 			_trustModelService = trustModelService;
 			_caseModelService = caseModelService;
 			_recordModelService = recordModelService;
@@ -80,9 +79,10 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_ntiModelService = ntiModelService;
 			_logger = logger;
+			_decisionModelService = decisionModelService;
 		}
 
-		public async Task OnGetAsync()
+		public async Task<IActionResult> OnGetAsync()
 		{
 			try
 			{
@@ -94,6 +94,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				// Get Case
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+
+				if (await IsCaseClosed())
+				{
+					return Redirect($"/case/{CaseModel.Urn}/closed");
+				}
 
 				// Check if case is editable
 				IsEditableCase = await IsCaseEditable();
@@ -107,14 +112,12 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				// Map Case concerns
 				CaseModel.RecordsModel = recordsModel;
 
-				var caseHistoryTask = _caseHistoryModelService.GetCasesHistory(User.Identity.Name, caseUrn);
 				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				var trustCasesTask = _caseModelService.GetCasesByTrustUkprn(CaseModel.TrustUkPrn);
 				var caseActionsTask = PopulateCaseActions(caseUrn);
 				
-				Task.WaitAll(caseHistoryTask, trustDetailsTask, trustCasesTask, caseActionsTask);
+				Task.WaitAll(trustDetailsTask, trustCasesTask, caseActionsTask);
 
-				CasesHistoryModel = caseHistoryTask.Result;
 				TrustDetailsModel = trustDetailsTask.Result;
 				TrustCasesModel = trustCasesTask.Result;
 				
@@ -126,14 +129,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
-		}
 
-		private async Task PopulateAdditionalCaseInformation()
-		{
-			if(CaseActions?.Any(ca => ca is NtiUnderConsiderationModel) == true)
-			{
-				NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
-			}
+			return Page();
 		}
 
 		private async Task PopulateCaseActions(long caseUrn)
@@ -144,6 +141,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			CaseActions.AddRange(await _ntiUnderConsiderationModelService.GetNtiUnderConsiderationsForCase(caseUrn));
 			CaseActions.AddRange(await _ntiWarningLetterModelService.GetNtiWarningLettersForCase(caseUrn));
 			CaseActions.AddRange(await _ntiModelService.GetNtisForCaseAsync(caseUrn));
+			CaseActions.AddRange(await _decisionModelService.GetDecisionsByUrn(caseUrn));
 		}
 
 		private bool UserHasEditCasePrivileges()

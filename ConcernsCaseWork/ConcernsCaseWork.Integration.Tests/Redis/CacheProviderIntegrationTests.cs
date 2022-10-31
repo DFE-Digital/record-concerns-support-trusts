@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.Integration.Tests.Redis
 		[OneTimeSetUp]
 		public void OneTimeSetup()
 		{
-			_configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().ConfigurationJsonFile().Build();
+			_configuration = new ConfigurationBuilder().ConfigurationJsonFile().ConfigurationUserSecretsBuilder().Build();
 			_factory = new WebAppFactory(_configuration);
 		}
 		

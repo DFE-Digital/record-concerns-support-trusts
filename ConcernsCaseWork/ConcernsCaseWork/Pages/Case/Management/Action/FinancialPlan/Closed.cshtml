@@ -9,6 +9,7 @@
 @{
 	ViewData["Title"] = "Financial Plan";
 	ViewData["BackButtonLabel"] = "Back to case";
+	ViewData["BackButtonLink"] = $"/case/{@RouteData.Values["urn"]}/management";
 }
 
 @section BeforeMain {

@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.MeansOfReferral;
 using ConcernsCaseWork.Service.Types;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -38,7 +39,7 @@ namespace ConcernsCaseWork.Service.Tests.MeansOfReferral
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<MeansOfReferralService>>();
-			var service = new MeansOfReferralService(httpClientFactory.Object, logger.Object);
+			var service = new MeansOfReferralService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
 			var meansOfReferral = await service.GetMeansOfReferrals();
@@ -79,7 +80,7 @@ namespace ConcernsCaseWork.Service.Tests.MeansOfReferral
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<MeansOfReferralService>>();
-			var typeService = new MeansOfReferralService(httpClientFactory.Object, logger.Object);
+			var typeService = new MeansOfReferralService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => typeService.GetMeansOfReferrals());
@@ -109,7 +110,7 @@ namespace ConcernsCaseWork.Service.Tests.MeansOfReferral
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<MeansOfReferralService>>();
-			var typeService = new MeansOfReferralService(httpClientFactory.Object, logger.Object);
+			var typeService = new MeansOfReferralService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => typeService.GetMeansOfReferrals());

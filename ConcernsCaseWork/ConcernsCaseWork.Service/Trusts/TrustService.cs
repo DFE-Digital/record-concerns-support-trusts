@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.Logging;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Web;
@@ -9,7 +10,7 @@ namespace ConcernsCaseWork.Service.Trusts
 	{
 		private readonly ILogger<TrustService> _logger;
 		
-		public TrustService(IHttpClientFactory clientFactory, ILogger<TrustService> logger) : base(clientFactory, logger)
+		public TrustService(IHttpClientFactory clientFactory, ILogger<TrustService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
 		{
 			_logger = logger;
 		}
@@ -24,7 +25,7 @@ namespace ConcernsCaseWork.Service.Trusts
 				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/trusts?{BuildRequestUri(trustSearch)}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 					
 				// Execute request
 				var response = await client.SendAsync(request);
@@ -58,7 +59,7 @@ namespace ConcernsCaseWork.Service.Trusts
 				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/trust/{ukPrn}");
 				
 				// Create http client
-				var client = ClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 					
 				// Execute request
 				var response = await client.SendAsync(request);

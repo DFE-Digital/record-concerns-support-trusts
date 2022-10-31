@@ -27,15 +27,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 
 		public async Task<ActionResult> OnGetAsync()
 		{
-			long srmaId = 0;
-
 			try
 			{
 				_logger.LogInformation("Case::EditDateOfferedPageModel::OnGetAsync");
 
-				(_, srmaId) = GetRouteData();
+				(long caseUrn, long srmaId) = GetRouteData();
 
 				SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
+				
+				if (SRMAModel.IsClosed)
+				{
+					return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}/closed");
+				}
 			}
 			catch (Exception ex)
 			{

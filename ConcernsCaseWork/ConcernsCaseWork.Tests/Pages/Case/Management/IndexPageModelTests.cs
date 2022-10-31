@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Extensions;
+﻿using AutoFixture;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
@@ -6,6 +7,7 @@ using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Decisions;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
@@ -14,6 +16,7 @@ using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -21,6 +24,11 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using Service.Redis.NtiUnderConsideration;
+using Service.Redis.Status;
+using Service.TRAMS.Decision;
+using Service.TRAMS.NtiUnderConsideration;
+using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,28 +36,50 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management
 {
-	[Parallelizable(ParallelScope.All)]
+	[Parallelizable(ParallelScope.Fixtures)]
+	[TestFixture]
 	public class IndexPageModelTests
 	{
+		private Mock<ICaseModelService> _mockCaseModelService = null;
+		private Mock<ITrustModelService> _mockTrustModelService = null;
+		private Mock<IRecordModelService> _mockRecordModelService = null;
+		private Mock<IRatingModelService> _mockRatingModelService = null;
+		private Mock<IStatusCachedService> _mockStatusCachedService = null;
+		private Mock<ILogger<IndexPageModel>> _mockLogger = null;
+		private Mock<ISRMAService> _mockSrmaService = null;
+		private Mock<IFinancialPlanModelService> _mockFinancialPlanModelService = null;
+		private Mock<INtiUnderConsiderationStatusesCachedService> _mockNtiStatusesCachedService = null;
+		private Mock<INtiUnderConsiderationModelService> _mockNtiUnderConsiderationModelService = null;
+		private Mock<INtiWarningLetterModelService> _mockNtiWLModelService = null;
+		private Mock<INtiModelService> _mockNtiModelService = null;
+		private Mock<IDecisionModelService> _mockDecisionService = null;
+
+		private readonly static Fixture _fixture = new();
+
+		[SetUp]
+		public void SetUp()
+		{
+			_mockCaseModelService = new Mock<ICaseModelService>();
+			_mockTrustModelService = new Mock<ITrustModelService>();
+			_mockRecordModelService = new Mock<IRecordModelService>();
+			_mockRatingModelService = new Mock<IRatingModelService>();
+			_mockStatusCachedService = new Mock<IStatusCachedService>();
+			_mockLogger = new Mock<ILogger<IndexPageModel>>();
+			_mockSrmaService = new Mock<ISRMAService>();
+			_mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			_mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
+			_mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
+			_mockNtiWLModelService = new Mock<INtiWarningLetterModelService>();
+			_mockNtiModelService = new Mock<INtiModelService>();
+			_mockDecisionService = new Mock<IDecisionModelService>();
+
+		}
+
 		[Test]
 		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
 		{
 			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockLogger = new Mock<ILogger<IndexPageModel>>();
-			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
-
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, 
-				mockSrmaService.Object, mockFinancialPlanModelService.Object, mockNtiModelService.Object, mockNtiStatusesCachedService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel();
 
 			// act
 			await pageModel.OnGetAsync();
@@ -57,13 +87,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 			
-			mockCaseModelService.Verify(c => 
+			_mockCaseModelService.Verify(c => 
 				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-			mockCaseHistoryModelService.Verify(c => 
-				c.GetCasesHistory(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-			mockTrustModelService.Verify(c => 
+			_mockTrustModelService.Verify(c => 
 				c.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
-			mockCaseModelService.Verify(c => 
+			_mockCaseModelService.Verify(c => 
 				c.GetCasesByTrustUkprn(It.IsAny<string>()), Times.Never);
 		}
 		
@@ -71,57 +99,39 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		public async Task WhenOnGetAsync_ReturnsPageModel()
 		{
 			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockLogger = new Mock<ILogger<IndexPageModel>>();
-			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiUCStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
-			var mockNtiWLModelService = new Mock<INtiWarningLetterModelService>();
-			var mockNtiModelService = new Mock<INtiModelService>();
-
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
-			var casesHistoryModel = CaseFactory.BuildListCasesHistoryModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
 			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
 			var financialPlansModel = FinancialPlanFactory.BuildListFinancialPlanModel();
 			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(3);
 			var ntiModels = NTIFactory.BuildListNTIModel();
+
+			SetupDefaultModels();
 			
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
+			_mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
 				.ReturnsAsync(trustCasesModel);
-			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			mockCaseHistoryModelService.Setup(c => c.GetCasesHistory(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(casesHistoryModel);
-			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
-			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(closedStatusModel);
-			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
+			_mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
 				.ReturnsAsync(financialPlansModel);
-			mockNtiUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
+			_mockNtiUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
 				.ReturnsAsync(ntiUnderConsiderationModels);
-			mockNtiWLModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
+			_mockNtiWLModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
 				.ReturnsAsync(ntiWarningLetterModels);
-			mockNtiModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+			_mockNtiModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
 				.ReturnsAsync(ntiModels);
 
 			
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-					mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, 
-					mockSrmaService.Object, mockFinancialPlanModelService.Object, mockNtiUnderConsiderationModelService.Object, mockNtiUCStatusesCachedService.Object,
-					 mockLogger.Object, mockNtiWLModelService.Object, mockNtiModelService.Object);
+			var pageModel = SetupIndexPageModel();
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -180,18 +190,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(expectedFirstTrustCaseModel.Created, Is.EqualTo(actualFirstTrustCaseModel.Created));
 			Assert.That(expectedFirstTrustCaseModel.RatingModel, Is.EqualTo(actualFirstTrustCaseModel.RatingModel));
 
-			Assert.That(pageModel.CasesHistoryModel, Is.Not.Null);
-			Assert.That(pageModel.CasesHistoryModel.Count, Is.EqualTo(1));
-
-			var actualFirstCaseHistoryModel = casesHistoryModel.First();
-			var expectedFirstCaseHistoryModel = pageModel.CasesHistoryModel.First();
-			Assert.That(expectedFirstCaseHistoryModel.CaseUrn, Is.EqualTo(actualFirstCaseHistoryModel.CaseUrn));
-			Assert.That(expectedFirstCaseHistoryModel.Action, Is.EqualTo(actualFirstCaseHistoryModel.Action));
-			Assert.That(expectedFirstCaseHistoryModel.Description, Is.EqualTo(actualFirstCaseHistoryModel.Description));
-			Assert.That(expectedFirstCaseHistoryModel.Title, Is.EqualTo(actualFirstCaseHistoryModel.Title));
-			Assert.That(expectedFirstCaseHistoryModel.Urn, Is.EqualTo(actualFirstCaseHistoryModel.Urn));
-			Assert.That(expectedFirstCaseHistoryModel.CreatedAt, Is.EqualTo(actualFirstCaseHistoryModel.CreatedAt));
-
 			var expectedRecordsModel = pageModel.CaseModel.RecordsModel;
 
 			for (var index = 0; index < expectedRecordsModel.Count; ++index)
@@ -229,56 +227,111 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
 			}
 		}
+
+		[Test]
+		public async Task WhenOnGetAsync_WhenActiveDecisionsExist_ActiveDecisionsAreShownOnPage()
+		{
+			// arrange
+			var urn = 3;
+
+			SetupDefaultModels();
+
+			var decisions = _fixture.CreateMany<DecisionModel>().ToList();
+
+			_mockDecisionService.Setup(m => m.GetDecisionsByUrn(It.IsAny<long>())).ReturnsAsync(decisions);
+
+			var pageModel = SetupIndexPageModel();
+			pageModel.RouteData.Values.Add("urn", urn);
+
+			// act
+			var page = await pageModel.OnGetAsync();
+
+			// assert
+			PageLoadedWithoutError(pageModel);
+
+			var result = pageModel.CaseActions.Where(c => c is DecisionModel).ToList();
+
+			decisions.Should().BeEquivalentTo(decisions);
+		}
+
+		[Test]
+		public async Task WhenOnGetAsync_WhenCaseIsClosed_RedirectsToClosedCasePage()
+		{
+			// arrange
+			var closedStatusUrn = 3;
+
+			var caseModel = CaseFactory.BuildCaseModel(statusUrn:closedStatusUrn);
+			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
+			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
+			var recordsModel = RecordFactory.BuildListRecordModel();
+			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), closedStatusUrn);
+			var financialPlansModel = FinancialPlanFactory.BuildListFinancialPlanModel();
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
+			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(3);
+			var ntiModels = NTIFactory.BuildListNTIModel();
+			
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
+			_mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
+				.ReturnsAsync(trustCasesModel);
+			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+				.ReturnsAsync(trustDetailsModel);
+			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(recordsModel);
+			_mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Close.ToString()))
+				.ReturnsAsync(closedStatusModel);
+			_mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
+				.ReturnsAsync(financialPlansModel);
+			_mockNtiUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
+				.ReturnsAsync(ntiUnderConsiderationModels);
+			_mockNtiWLModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
+				.ReturnsAsync(ntiWarningLetterModels);
+			_mockNtiModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModels);
+			
+			var pageModel = SetupIndexPageModel();
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+			
+			// act
+			var result = await pageModel.OnGetAsync();
+			
+			// assert
+			Assert.That(result, Is.TypeOf<RedirectResult>());
+			Assert.That(((RedirectResult)result).Url, Is.EqualTo($"/case/{caseModel.Urn}/closed"));
+		}
 		
 		[Test]
 		public async Task WhenOnGetAsync_WithNoCaseActions_SetsHasOpenActionsAndHasClosedActionsToFalse()
 		{
 			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockLogger = new Mock<ILogger<IndexPageModel>>();
-			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiUCStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
-			var mockNtiWLModelService = new Mock<INtiWarningLetterModelService>();
-			var mockNtiModelService = new Mock<INtiModelService>();
-
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
 			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
+			_mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
 				.ReturnsAsync(trustCasesModel);
-			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			mockCaseHistoryModelService.Setup(c => c.GetCasesHistory(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(new List<CaseHistoryModel>());
-			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
-			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(closedStatusModel);
-			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
+			_mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
 				.ReturnsAsync(new List<FinancialPlanModel>());
-			mockNtiUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
+			_mockNtiUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
 				.ReturnsAsync(new List<NtiUnderConsiderationModel>());
-			mockNtiWLModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
+			_mockNtiWLModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
 				.ReturnsAsync(new List<NtiWarningLetterModel>());
-			mockNtiModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+			_mockNtiModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
 				.ReturnsAsync(new List<NtiModel>());
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-					mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, 
-					mockSrmaService.Object, mockFinancialPlanModelService.Object, mockNtiUnderConsiderationModelService.Object, mockNtiUCStatusesCachedService.Object,
-					 mockLogger.Object, mockNtiWLModelService.Object, mockNtiModelService.Object);
+			var pageModel = SetupIndexPageModel();
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -299,20 +352,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		public async Task WhenOnGetAsync_WithOnlyOpenCaseActions_SetsHasOpenActionsToTrueAndHasClosedActionsToFalse()
 		{
 			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockLogger = new Mock<ILogger<IndexPageModel>>();
-			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiUCStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
-			var mockNtiWLModelService = new Mock<INtiWarningLetterModelService>();
-			var mockNtiModelService = new Mock<INtiModelService>();
-
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
@@ -320,31 +359,26 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(3);
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
+			_mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
 				.ReturnsAsync(trustCasesModel);
-			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			mockCaseHistoryModelService.Setup(c => c.GetCasesHistory(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(new List<CaseHistoryModel>());
-			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
-			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(closedStatusModel);
-			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
+			_mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
 				.ReturnsAsync(new List<FinancialPlanModel>());
-			mockNtiUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
+			_mockNtiUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
 				.ReturnsAsync(new List<NtiUnderConsiderationModel>());
-			mockNtiWLModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
+			_mockNtiWLModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
 				.ReturnsAsync(ntiWarningLetterModels);
-			mockNtiModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+			_mockNtiModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
 				.ReturnsAsync(new List<NtiModel>());
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-					mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, 
-					mockSrmaService.Object, mockFinancialPlanModelService.Object, mockNtiUnderConsiderationModelService.Object, mockNtiUCStatusesCachedService.Object,
-					 mockLogger.Object, mockNtiWLModelService.Object, mockNtiModelService.Object);
+			var pageModel = SetupIndexPageModel();
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -365,20 +399,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		public async Task WhenOnGetAsync_WithOnlyClosedCaseActions_SetsHasOpenActionsToFalseAndHasClosedActionsToTrue()
 		{
 			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockLogger = new Mock<ILogger<IndexPageModel>>();
-			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiUCStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
-			var mockNtiWLModelService = new Mock<INtiWarningLetterModelService>();
-			var mockNtiModelService = new Mock<INtiModelService>();
-
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
@@ -386,31 +406,26 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(3, DateTime.Now);
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
+			_mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
 				.ReturnsAsync(trustCasesModel);
-			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			mockCaseHistoryModelService.Setup(c => c.GetCasesHistory(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(new List<CaseHistoryModel>());
-			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
-			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(closedStatusModel);
-			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
+			_mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
 				.ReturnsAsync(new List<FinancialPlanModel>());
-			mockNtiUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
+			_mockNtiUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
 				.ReturnsAsync(new List<NtiUnderConsiderationModel>());
-			mockNtiWLModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
+			_mockNtiWLModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
 				.ReturnsAsync(ntiWarningLetterModels);
-			mockNtiModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+			_mockNtiModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
 				.ReturnsAsync(new List<NtiModel>());
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-					mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, 
-					mockSrmaService.Object, mockFinancialPlanModelService.Object, mockNtiUnderConsiderationModelService.Object, mockNtiUCStatusesCachedService.Object,
-					 mockLogger.Object, mockNtiWLModelService.Object, mockNtiModelService.Object);
+			var pageModel = SetupIndexPageModel();
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -431,20 +446,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		public async Task WhenOnGetAsync_WithOpenAndClosedCaseActions_SetsHasOpenActionsAndHasClosedActionsToTrue()
 		{
 			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockLogger = new Mock<ILogger<IndexPageModel>>();
-			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiUCStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
-			var mockNtiWLModelService = new Mock<INtiWarningLetterModelService>();
-			var mockNtiModelService = new Mock<INtiModelService>();
-
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
@@ -453,31 +454,26 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(3);			
 			var closedNtiModels = NTIFactory.BuildClosedListNTIModel();
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
+			_mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
 				.ReturnsAsync(trustCasesModel);
-			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			mockCaseHistoryModelService.Setup(c => c.GetCasesHistory(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(new List<CaseHistoryModel>());
-			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
-			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(closedStatusModel);
-			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
+			_mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
 				.ReturnsAsync(new List<FinancialPlanModel>());
-			mockNtiUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
+			_mockNtiUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
 				.ReturnsAsync(new List<NtiUnderConsiderationModel>());
-			mockNtiWLModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
+			_mockNtiWLModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
 				.ReturnsAsync(ntiWarningLetterModels);
-			mockNtiModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+			_mockNtiModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
 				.ReturnsAsync(closedNtiModels);
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-					mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, 
-					mockSrmaService.Object, mockFinancialPlanModelService.Object, mockNtiUnderConsiderationModelService.Object, mockNtiUCStatusesCachedService.Object,
-					 mockLogger.Object, mockNtiWLModelService.Object, mockNtiModelService.Object);
+			var pageModel = SetupIndexPageModel();
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -498,38 +494,21 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		public async Task WhenUserHasEditCasePrivileges_ShowEditActions_Return_False()
 		{
 			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockLogger = new Mock<ILogger<IndexPageModel>>();
-			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
-
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
-			var casesHistoryModel = CaseFactory.BuildListCasesHistoryModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
+			_mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
 				.ReturnsAsync(trustCasesModel);
-			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			mockCaseHistoryModelService.Setup(c => c.GetCasesHistory(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(casesHistoryModel);
-			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, 
-				mockSrmaService.Object, mockFinancialPlanModelService.Object, mockNtiModelService.Object, mockNtiStatusesCachedService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel();
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -546,42 +525,24 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		public async Task WhenUserHasEditCasePrivileges_ShowEditActions_Return_True()
 		{
 			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockLogger = new Mock<ILogger<IndexPageModel>>();
-			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
-
-
 			var caseModel = CaseFactory.BuildCaseModel("Tester");
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
-			var casesHistoryModel = CaseFactory.BuildListCasesHistoryModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
 			var closeStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
+			_mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
 				.ReturnsAsync(trustCasesModel);
-			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			mockCaseHistoryModelService.Setup(c => c.GetCasesHistory(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(casesHistoryModel);
-			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
-			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(closeStatusModel);
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, 
-				mockSrmaService.Object, mockFinancialPlanModelService.Object, mockNtiModelService.Object, mockNtiStatusesCachedService.Object, mockLogger.Object, isAuthenticated:true);
+			var pageModel = SetupIndexPageModel(isAuthenticated:true);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -598,41 +559,24 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		public async Task WhenCaseIsClosed_ShowEditActions_Return_False()
 		{
 			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockRecordModelService = new Mock<IRecordModelService>();
-			var mockRatingModelService = new Mock<IRatingModelService>();
-			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockLogger = new Mock<ILogger<IndexPageModel>>();
-			var mockCaseHistoryModelService = new Mock<ICaseHistoryModelService>();
-			var mockSrmaService = new Mock<ISRMAService>();
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			var mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
-
 			var caseModel = CaseFactory.BuildCaseModel("Tester", 3);
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
-			var casesHistoryModel = CaseFactory.BuildListCasesHistoryModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
 			var closeStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
+			_mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
 				.ReturnsAsync(trustCasesModel);
-			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
+			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			mockCaseHistoryModelService.Setup(c => c.GetCasesHistory(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(casesHistoryModel);
-			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
-			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(closeStatusModel);
 
-			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
-				mockCaseHistoryModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockStatusCachedService.Object, 
-				mockSrmaService.Object, mockFinancialPlanModelService.Object, mockNtiModelService.Object, mockNtiStatusesCachedService.Object, mockLogger.Object, isAuthenticated:true);
+			var pageModel = SetupIndexPageModel(isAuthenticated:true);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -645,29 +589,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.False(showEditActions);
 		}
 
-
-		private static IndexPageModel SetupIndexPageModel(
-			ICaseModelService mockCaseModelService, 
-			ITrustModelService mockTrustModelService,
-			ICaseHistoryModelService mockCaseHistoryModelService,
-			IRecordModelService mockRecordModelService,
-			IRatingModelService mockRatingModelService,
-			IStatusCachedService mockStatusCachedService,
-			ISRMAService mockSrmaService, 
-			IFinancialPlanModelService mockFinancialPlanModelService,
-			INtiUnderConsiderationModelService mockNtiUnderConsiderationModelService,
-			INtiUnderConsiderationStatusesCachedService mockNtiStatusesCachedService,
-			ILogger<IndexPageModel> mockLogger,
-			INtiWarningLetterModelService mockNtiWarningLetterModelService = null,
-			INtiModelService mockNtiModelService = null,
+		private IndexPageModel SetupIndexPageModel(
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new IndexPageModel(mockCaseModelService, mockTrustModelService, mockCaseHistoryModelService, mockRecordModelService, mockRatingModelService, 
-				mockStatusCachedService, mockSrmaService, mockFinancialPlanModelService, mockNtiUnderConsiderationModelService, mockNtiStatusesCachedService, 
-				mockNtiWarningLetterModelService ?? CreateMock<INtiWarningLetterModelService>(), mockNtiModelService ?? CreateMock<INtiModelService>(),
-				mockLogger)
+			return new IndexPageModel(_mockCaseModelService.Object, _mockTrustModelService.Object, _mockRecordModelService.Object, _mockRatingModelService.Object, 
+				_mockStatusCachedService.Object, _mockSrmaService.Object, _mockFinancialPlanModelService.Object, _mockNtiUnderConsiderationModelService.Object, _mockNtiStatusesCachedService.Object,
+				_mockNtiWLModelService.Object, _mockNtiModelService.Object,
+				_mockLogger.Object, _mockDecisionService.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
@@ -676,10 +606,36 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			};
 		}
 
-		private static T CreateMock<T>() where T : class
+		private void SetupDefaultModels()
 		{
-			var moq = new Mock<T>();
-			return moq.Object;
+			var urn = 3;
+			var caseModel = CaseFactory.BuildCaseModel("Tester", urn);
+			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 1);
+			var financialPlansModel = FinancialPlanFactory.BuildListFinancialPlanModel();
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
+			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(3);
+			var ntiModels = NTIFactory.BuildListNTIModel();
+
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
+			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+				.ReturnsAsync(closedStatusModel);
+			_mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
+				.ReturnsAsync(financialPlansModel);
+			_mockNtiUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
+				.ReturnsAsync(ntiUnderConsiderationModels);
+			_mockNtiWLModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
+				.ReturnsAsync(ntiWarningLetterModels);
+			_mockNtiModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModels);
+			_mockNtiStatusesCachedService.Setup(s => s.GetAllStatuses())
+				.ReturnsAsync(new List<NtiUnderConsiderationStatusDto>());
+			_mockDecisionService.Setup(m => m.GetDecisionsByUrn(It.IsAny<long>())).ReturnsAsync(new List<DecisionModel>());
+		}
+
+		private void PageLoadedWithoutError(IndexPageModel pageModel)
+		{
+			pageModel.TempData["Error.Message"].Should().BeNull();
 		}
 	}
 }

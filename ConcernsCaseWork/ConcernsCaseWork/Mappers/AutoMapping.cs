@@ -26,7 +26,6 @@ namespace ConcernsCaseWork.Mappers
 			CreateMap<IfdDataDto, IfdDataModel>();
 			
 			// Case
-			CreateMap<CaseHistoryDto, CaseHistoryModel>();
 			CreateMap<MeansOfReferralModel, MeansOfReferralDto>();
 			CreateMap<MeansOfReferralDto, MeansOfReferralModel>();
 

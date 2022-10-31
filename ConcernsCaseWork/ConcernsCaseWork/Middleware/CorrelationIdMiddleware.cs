@@ -1,5 +1,8 @@
-﻿using ConcernsCaseWork.Logging;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Logging;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using Serilog.Context;
 using System;
 using System.Threading.Tasks;
 
@@ -11,53 +14,41 @@ namespace ConcernsCaseWork.Middleware
 	/// </summary>
 	public class CorrelationIdMiddleware
 	{
-		private const string _correlationIdHeaderKey = "x-correlation-id";
-		private const string _causationIdHeaderKey = "x-causation-id";
-
 		private readonly RequestDelegate _next;
+		private readonly ILogger<CorrelationIdMiddleware> _logger;
 
-		public CorrelationIdMiddleware(RequestDelegate next)
+		public CorrelationIdMiddleware(RequestDelegate next, ILogger<CorrelationIdMiddleware> logger)
 		{
 			_next = next;
+			_logger = Guard.Against.Null(logger);
 		}
 
 		// ReSharper disable once UnusedMember.Global
 		// Invoked by asp.net
 		public Task Invoke(HttpContext httpContext, ICorrelationContext correlationContext)
 		{
-
-			string incomingCorrelationId;
-			string previousRequestId;
+			string thisCorrelationId;
 
 			// correlation id. An ID that spans many requests
-			if (httpContext.Request.Headers.ContainsKey(_correlationIdHeaderKey) && !string.IsNullOrWhiteSpace(httpContext.Request.Headers[_correlationIdHeaderKey]))
+			if (httpContext.Request.Headers.ContainsKey(correlationContext.HeaderKey) && !string.IsNullOrWhiteSpace(httpContext.Request.Headers[correlationContext.HeaderKey]))
 			{
-				incomingCorrelationId = httpContext.Request.Headers[_correlationIdHeaderKey];
+				thisCorrelationId = httpContext.Request.Headers[correlationContext.HeaderKey];
 			}
 			else
 			{
-				// guid is easily generated in tools like postman. Not sure a .net trace Id is so easy, so use a guid.
-				incomingCorrelationId = Guid.NewGuid().ToString();
+				thisCorrelationId = Guid.NewGuid().ToString();
 			}
+			
+			httpContext.Request.Headers[correlationContext.HeaderKey] = thisCorrelationId;
 
-			// causationId. An id of the request that caused this request.
-			if (httpContext.Request.Headers.ContainsKey(_causationIdHeaderKey) && !string.IsNullOrWhiteSpace(httpContext.Request.Headers[_causationIdHeaderKey]))
+			correlationContext.SetContext(thisCorrelationId);
+			
+			using (LogContext.PushProperty("ApplicationId", ApplicationContext.ApplicationName))
+			using (LogContext.PushProperty("CorrelationId", correlationContext.CorrelationId))
 			{
-				previousRequestId = httpContext.Request.Headers[_causationIdHeaderKey];
+				httpContext.Response.Headers[correlationContext.HeaderKey] = thisCorrelationId;
+				return _next(httpContext);
 			}
-			else
-			{
-				// when no causationId because this is the first request of a chain, use the correlationId
-				previousRequestId = incomingCorrelationId;
-			}
-
-			// And for any n
-			httpContext.Request.Headers[_correlationIdHeaderKey] = incomingCorrelationId;
-			httpContext.Request.Headers[_causationIdHeaderKey] = httpContext.TraceIdentifier;
-
-			correlationContext.SetContext(incomingCorrelationId, previousRequestId, httpContext.TraceIdentifier);
-
-			return _next(httpContext);
 		}
 	}
 }

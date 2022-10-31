@@ -3,6 +3,7 @@ using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Teams;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -54,7 +55,7 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>());
+			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>());
 			var result = await sut.GetTeam("user.one");
 
 			Assert.AreEqual(expectedDto.OwnerId, result.OwnerId);
@@ -79,7 +80,7 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>());
+			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>());
 			var result = await sut.GetTeam("user.one");
 
 			Assert.IsNull(result);
@@ -106,7 +107,7 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>());
+			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>());
 			var result = await sut.GetTeamOwners();
 
 			Assert.IsNotNull(result);
@@ -133,7 +134,7 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>());
+			var sut = new TeamsService(httpClientFactory.Object, Mock.Of<ILogger<TeamsService>>(), Mock.Of<ICorrelationContext>());
 			var result = await sut.GetTeamOwners();
 
 			Assert.IsNotNull(result);

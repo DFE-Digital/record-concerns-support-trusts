@@ -19,12 +19,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 	public class EditSRMAStatusPageModel : AbstractPageModel
 	{
 		private readonly ISRMAService srmaService;
-		private readonly ILogger<EditCurrentStatusPageModel> _logger;
+		private readonly ILogger<EditSRMAStatusPageModel> _logger;
 
 		public SRMAModel SRMA { get; set; }
 		public IEnumerable<RadioItem> SRMAStatuses { get; private set; }
 
-		public EditSRMAStatusPageModel(ISRMAService srmaService, ILogger<EditCurrentStatusPageModel> logger)
+		public EditSRMAStatusPageModel(ISRMAService srmaService, ILogger<EditSRMAStatusPageModel> logger)
 		{
 			this.srmaService = srmaService;
 			_logger = logger;
@@ -37,13 +37,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 				_logger.LogInformation("Case::EditSRMAStatusPageModel::OnGetAsync");
 
 				var validationResponse = ValidateInputsForGet();
-				if (validationResponse.validationErrors.Count() > 0)
+				if (validationResponse.validationErrors.Any())
 				{
 					TempData["SRMA.Message"] = validationResponse.validationErrors;
 				}
 				else
 				{
 					SRMA = await srmaService.GetSRMAById(validationResponse.srmaId);
+					
+					if (SRMA.IsClosed)
+					{
+						return Redirect($"/case/{validationResponse.caseId}/management/action/srma/{validationResponse.srmaId}/closed");
+					}
+					
 					SRMAStatuses = getStatuses();
 				}
 			}
@@ -64,7 +70,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 
 				var validationResponse = ValidateInputsForPost();
 
-				if (validationResponse.validationErrors.Count() > 0)
+				if (validationResponse.validationErrors.Any())
 				{
 					TempData["SRMA.Message"] = validationResponse.validationErrors;
 					return Page();

@@ -48,6 +48,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 				
 				var ntiUcId = ExtractNtiUcIdFromRoute();
 				NtiModel = await _ntiModelService.GetNtiUnderConsideration(ntiUcId);
+				
+				if (NtiModel.IsClosed)
+				{
+					return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{ntiUcId}");
+				}
 
 				NTIReasonsToConsiderForUI = await GetReasonsForUI(NtiModel);
 

@@ -72,9 +72,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 		}
 
 		[Test]
-		public async Task WhenOnGetAsync_When_NTI_WL_Is_Already_Closed_ThrowsException_ReturnPage()
+		public async Task WhenOnGetAsync_When_NTI_WL_Is_Already_Closed_RedirectsToIndexPage()
 		{
 			// arrange
+			var caseUrn = 9823;
+			var warningLetterId = 4849;
+			
 			var mockNtiWLModelService = new Mock<INtiWarningLetterModelService>();
 			var mockNtiWLReasonsService = new Mock<INtiWarningLetterReasonsCachedService>();
 			var mockNtiWLStatusesService = new Mock<INtiWarningLetterStatusesCachedService>();
@@ -88,15 +91,20 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			var pageModel = SetupAddPageModel(mockNtiWLModelService, mockNtiWLReasonsService, mockNtiWLStatusesService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1); 
-			routeData.Add("warningLetterId", 1);
+			routeData.Add("urn", caseUrn); 
+			routeData.Add("warningLetterId", warningLetterId);
 
 
 			// act
-			await pageModel.OnGetAsync();
+			var response = await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.Multiple(() =>
+			{
+				Assert.That(response, Is.InstanceOf<RedirectResult>());
+				Assert.That(((RedirectResult)response).Url, Is.EqualTo($"/case/{caseUrn}/management/action/ntiwarningletter/{warningLetterId}"));
+				Assert.That(pageModel.TempData["Error.Message"], Is.Null);
+			});
 		}
 
 		[Test]

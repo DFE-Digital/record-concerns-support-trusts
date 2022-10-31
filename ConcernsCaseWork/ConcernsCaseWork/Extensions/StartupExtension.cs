@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.API.Extensions;
+using ConcernsCaseWork.API.Extensions;
 using ConcernsCaseWork.API.StartupConfiguration;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
@@ -24,6 +24,7 @@ using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Decisions;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.MeansOfReferral;
 using ConcernsCaseWork.Services.Nti;
@@ -47,6 +48,39 @@ using ConcernsCaseWork.Service.Records;
 using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Service.Types;
+using Service.Redis.Base;
+using Service.Redis.CaseActions;
+using Service.Redis.Cases;
+using Service.Redis.Configuration;
+using Service.Redis.FinancialPlan;
+using Service.Redis.MeansOfReferral;
+using Service.Redis.Nti;
+using Service.Redis.NtiUnderConsideration;
+using Service.Redis.NtiWarningLetter;
+using Service.Redis.Ratings;
+using Service.Redis.Records;
+using Service.Redis.Security;
+using Service.Redis.Sequence;
+using Service.Redis.Status;
+using Service.Redis.Teams;
+using Service.Redis.Trusts;
+using Service.Redis.Types;
+using Service.Redis.Users;
+using Service.TRAMS.CaseActions;
+using Service.TRAMS.Cases;
+using Service.TRAMS.Configuration;
+using Service.TRAMS.Decision;
+using Service.TRAMS.FinancialPlan;
+using Service.TRAMS.MeansOfReferral;
+using Service.TRAMS.Nti;
+using Service.TRAMS.NtiUnderConsideration;
+using Service.TRAMS.NtiWarningLetter;
+using Service.TRAMS.Ratings;
+using Service.TRAMS.Records;
+using Service.TRAMS.Status;
+using Service.TRAMS.Teams;
+using Service.TRAMS.Trusts;
+using Service.TRAMS.Types;
 using StackExchange.Redis;
 using System;
 using System.Net.Mime;
@@ -142,7 +176,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICaseModelService, CaseModelService>();
 			services.AddScoped<ITrustModelService, TrustModelService>();
 			services.AddScoped<ITypeModelService, TypeModelService>();
-			services.AddScoped<ICaseHistoryModelService, CaseHistoryModelService>();
 			services.AddScoped<IRatingModelService, RatingModelService>();
 			services.AddScoped<IRecordModelService, RecordModelService>();
 			services.AddScoped<IFinancialPlanModelService, FinancialPlanModelService>();
@@ -155,18 +188,23 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IActionsModelService, ActionsModelService>();
 			services.AddScoped<ITeamsModelService, TeamsModelService>();
 			services.AddScoped<IClaimsPrincipalHelper, ClaimsPrincipalHelper>();
+			services.AddScoped<ICaseActionValidationStrategy, FinancialPanValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, SRMAValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, NTIUnderConsiderationValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, NTIWarningLetterValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, NTIValidator>();
+			services.AddScoped<ICaseActionValidator, CaseActionValidator>();
+			services.AddScoped<IDecisionModelService, DecisionModelService>();
 
 			// Trams api services
 			services.AddScoped<ICaseService, CaseService>();
 			services.AddScoped<IRatingService, RatingService>();
-			services.AddScoped<IRecordRatingHistoryService, RecordRatingHistoryService>();
 			services.AddScoped<IRecordService, RecordService>();
 			services.AddScoped<IStatusService, StatusService>();
 			services.AddScoped<ITrustService, TrustService>();
 			services.AddScoped<ITrustSearchService, TrustSearchService>();
 			services.AddScoped<ITypeService, TypeService>();
 			services.AddScoped<ICaseSearchService, CaseSearchService>();
-			services.AddScoped<ICaseHistoryService, CaseHistoryService>();
 			services.AddScoped<IFinancialPlanService, FinancialPlanService>();
 			services.AddScoped<SRMAProvider, SRMAProvider>();
 			services.AddScoped<IFinancialPlanStatusService, FinancialPlanStatusService>();
@@ -183,6 +221,7 @@ namespace ConcernsCaseWork.Extensions
             services.AddScoped<INtiReasonsService, NtiReasonsService>();
             services.AddScoped<INtiConditionsService, NtiConditionsService>();
 			services.AddScoped<ITeamsService, TeamsService>();
+			services.AddScoped<IDecisionService, DecisionService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
@@ -193,7 +232,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ITrustCachedService, TrustCachedService>();
 			services.AddScoped<ICaseCachedService, CaseCachedService>();
 			services.AddScoped<IRecordCachedService, RecordCachedService>();
-			services.AddScoped<ICaseHistoryCachedService, CaseHistoryCachedService>();
 			services.AddScoped<IFinancialPlanCachedService, FinancialPlanCachedService>();
 			services.AddScoped<IFinancialPlanStatusCachedService, FinancialPlanStatusCachedService>();
 			services.AddScoped<CachedSRMAProvider, CachedSRMAProvider>();
@@ -210,12 +248,7 @@ namespace ConcernsCaseWork.Extensions
             services.AddScoped<INtiReasonsCachedService, NtiReasonsCachedService>();
             services.AddScoped<INtiConditionsCachedService, NtiConditionsCachedService>();
 			services.AddScoped<ITeamsCachedService, TeamsCachedService>();
-			services.AddScoped<ICaseActionValidationStrategy, FinancialPanValidator>();
-			services.AddScoped<ICaseActionValidationStrategy, SRMAValidator>();
-			services.AddScoped<ICaseActionValidationStrategy, NTIUnderConsiderationValidator>();
-			services.AddScoped<ICaseActionValidationStrategy, NTIWarningLetterValidator>();
-			services.AddScoped<ICaseActionValidationStrategy, NTIValidator>();
-			services.AddScoped<ICaseActionValidator, CaseActionValidator>();
+	
 
 			// Redis Sequence
 			// TODO. This class looks very temporary. What's it for and how are we going to replace it.

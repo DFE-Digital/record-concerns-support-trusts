@@ -31,6 +31,10 @@
 	var noticesToImprove = Model.CaseActions?.Where(ca => ca is NtiModel).Select(nti => nti as NtiModel).ToList();
 	var openNtis = noticesToImprove.Where(nti => nti.ClosedAt == null).ToList();
 	var closedNtis = noticesToImprove.Except(openNtis).ToList();
+
+	var decisions = Model.CaseActions?.Where(ca => ca is DecisionModel).Select(d => d as DecisionModel).ToList();
+	var openDecisions = decisions.Where(d => d.ClosedAt == null);
+	var closedDecisions = decisions.Except(openDecisions).ToList();
 }
 
 <div class="govuk-width-container">
@@ -421,7 +425,7 @@
                                             }
                                             else
                                             {
-                                                <span>In progress</span>
+												<span>In progress</span>
                                             }
                                         }
                                     </td>
@@ -430,6 +434,23 @@
                                     </td>
                                 </tr>
                             }
+
+							@foreach (DecisionModel decision in openDecisions)
+							{
+								<tr class="govuk-table__row">
+									<td class="govuk-table__cell">
+									<a href="@Request.Path/action/decision/@decision.Id" class="govuk-link govuk-link-no-visited-state">
+											<span>Decision: @decision.Title</span>
+										</a>
+									</td>
+									<td class="govuk-table__cell">
+										<span>In progress</span>
+									</td>
+									<td class="govuk-table__cell govuk-table__header__right">
+										@DateExtension.ToDayMonthYear(decision.CreatedAt)
+									</td>
+								</tr>
+							}
                         </tbody>
                     </table>
 
@@ -567,8 +588,6 @@
                             }
                         </tbody>
                     </table>
-
-                <partial name="_CaseHistory" model="@Model.CasesHistoryModel" />
 
             </div>
             <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="trust-overview">

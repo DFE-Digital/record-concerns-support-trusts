@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.Logging;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -12,7 +13,7 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 		private readonly ILogger<NtiUnderConsiderationService> _logger;
 		private const string Url = @"/v2/case-actions/nti-under-consideration";
 
-		public NtiUnderConsiderationService(IHttpClientFactory httpClientFactory, ILogger<NtiUnderConsiderationService> logger) : base(httpClientFactory, logger)
+		public NtiUnderConsiderationService(IHttpClientFactory httpClientFactory, ILogger<NtiUnderConsiderationService> logger, ICorrelationContext correlationContext) : base(httpClientFactory, logger, correlationContext)
 		{
 			_httpClientFactory = httpClientFactory;
 			_logger = logger;
@@ -68,7 +69,7 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 				$"{Url}/{underConsiderationId}");
 
 			// Create http client
-			var client = ClientFactory.CreateClient(HttpClientName);
+			var client = CreateHttpClient();
 
 			// Execute request
 			var response = await client.SendAsync(request);

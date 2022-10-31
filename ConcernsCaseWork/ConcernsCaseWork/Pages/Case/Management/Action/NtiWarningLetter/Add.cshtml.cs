@@ -86,10 +86,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 						await LoadWarningLetterFromDB();
 					}
 				}
-
-				if (WarningLetter != null && !WarningLetter.CanBeEdited())
+				
+				if (WarningLetter is { IsClosed: true })
 				{
-					throw new Exception("Cannot edit NTI:WL that has already been closed");
+					return Redirect($"/case/{CaseUrn}/management/action/ntiwarningletter/{WarningLetterId}");
 				}
 
 				Statuses = await GetStatuses();

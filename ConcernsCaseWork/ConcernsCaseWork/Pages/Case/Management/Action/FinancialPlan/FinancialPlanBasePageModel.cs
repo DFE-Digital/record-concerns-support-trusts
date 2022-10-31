@@ -18,6 +18,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		public FinancialPlanModel FinancialPlanModel { get; set; }
 		public IEnumerable<RadioItem> FinancialPlanStatuses { get; set; } = new List<RadioItem>();
 		
+		protected abstract Task<IList<FinancialPlanStatusDto>> GetAvailableStatusesAsync();
+		
+		protected virtual async Task<FinancialPlanStatusModel> GetOptionalStatusByNameAsync(string statusName)
+		{
+			var status = (await GetAvailableStatusesAsync())
+				.FirstOrDefault(s => s.Name.Equals(statusName));
+			
+			return status is null ? null : FinancialPlanStatusMapping.MapDtoToModel(status);
+		}
+				
 		protected async Task<IEnumerable<RadioItem>> GetStatusOptionsAsync(string selectedStatusName = null)
 			=> (await GetAvailableStatusesAsync())
 				.Select(s => new RadioItem
@@ -26,14 +36,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					Text = s.Description,
 					IsChecked = selectedStatusName == s.Name
 				});
-
-		protected virtual async Task<FinancialPlanStatusModel> GetOptionalStatusByNameAsync(string statusName)
-		{
-			var status = (await GetAvailableStatusesAsync())
-				.FirstOrDefault(s => s.Name.Equals(statusName));
-			
-			return status is null ? null : FinancialPlanStatusMapping.MapDtoToModel(status);
-		}
 		
 		protected async Task<FinancialPlanStatusModel> GetRequiredStatusByNameAsync(string statusName)
 		{
@@ -109,7 +111,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		
 		protected string CreateDateString(string day, string month, string year)
 			=> (string.IsNullOrEmpty(day) && string.IsNullOrEmpty(month) && string.IsNullOrEmpty(year)) ? String.Empty : $"{day}-{month}-{year}";
-
-		protected abstract Task<IList<FinancialPlanStatusDto>> GetAvailableStatusesAsync();
+		
+		protected string GetUrlForClosedPlan(long caseUrn, long financialPlanId) => $"/case/{caseUrn}/management/action/financialplan/{financialPlanId}/closed";
 	}
 }
