@@ -18,12 +18,10 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 		public void MapDtoToModel_ReturnsCorrectModel()
 		{
 			var apiDecision = _fixture.Create<GetDecisionResponseDto>();
-			apiDecision.Title = DecisionType.RepayableFinancialSupport;
 
 			var result = DecisionMapping.MapDtoToModel(apiDecision);
 
 			AssertDecisionModel(result, apiDecision);
-			result.Title.Should().Be("Repayable financial support");
 		}
 
 		[Test]
@@ -49,6 +47,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			model.CaseUrn.Should().Be(decision.ConcernsCaseUrn);
 			model.CreatedAt.Should().Be(decision.CreatedAt.Date);
 			model.ClosedAt.Should().Be(decision.ClosedAt?.Date);
+			model.Title.Should().Be(decision.Title);
 		}
 	}
 }

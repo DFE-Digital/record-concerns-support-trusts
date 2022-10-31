@@ -17,7 +17,7 @@ namespace ConcernsCaseWork.Services.Decisions
 				ClosedAt = decision.ClosedAt?.Date,
 				CaseUrn = decision.ConcernsCaseUrn,
 				Id = decision.DecisionId,
-				Title = EnumHelper.GetEnumDescription(decision.Title)
+				Title = decision.Title
 			};
 
 			return result;

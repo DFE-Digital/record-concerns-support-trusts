@@ -15,7 +15,7 @@ namespace Service.TRAMS.Decision
 		public DateTimeOffset CreatedAt { get; set; }
 		public DateTimeOffset UpdatedAt { get; set; }
 
-		public DecisionType Title { get; set; }
+		public string Title { get; set; }
 
 		public DecisionStatus DecisionStatus { get; set; }
 
