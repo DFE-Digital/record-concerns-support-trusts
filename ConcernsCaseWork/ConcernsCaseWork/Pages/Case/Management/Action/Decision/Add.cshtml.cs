@@ -1,16 +1,13 @@
 ﻿
 using ConcernsCaseWork.CoreTypes;
-using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Exceptions;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
-using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Service.Decision;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
-using Service.TRAMS.Decision;
 using System;
 using System.Collections.Generic;
 using System.Linq;

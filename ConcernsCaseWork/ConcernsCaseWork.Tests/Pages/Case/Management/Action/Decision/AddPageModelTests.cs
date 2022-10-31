@@ -11,14 +11,11 @@ using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Service.TRAMS.Decision;
-using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Service.Decision;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Sentry;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 {

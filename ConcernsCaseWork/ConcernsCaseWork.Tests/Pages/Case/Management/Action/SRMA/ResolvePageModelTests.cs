@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Pages.Case.Management.Action.SRMA;
-using ConcernsCaseWork.Pages.Case.Management.Action.Srma;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;

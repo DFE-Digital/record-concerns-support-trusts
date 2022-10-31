@@ -1,6 +1,6 @@
 ﻿using Ardalis.GuardClauses;
-using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Service.Base;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.Teams

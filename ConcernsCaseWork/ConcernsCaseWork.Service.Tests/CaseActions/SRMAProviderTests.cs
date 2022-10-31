@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Service.Base;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.CaseActions;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
@@ -7,7 +8,6 @@ using Moq;
 using Moq.Protected;
 using System.Net;
 using System.Text.Json;
-using ConcernsCaseWork.Logging;
 
 namespace ConcernsCaseWork.Service.Tests.CaseActions
 {

@@ -1,6 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Case.Management.Action.SRMA;
-using AutoFixture;
-using ConcernsCaseWork.Pages.Case.Management.Action.Srma;
+﻿using AutoFixture;
+using ConcernsCaseWork.Pages.Case.Management.Action.SRMA;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;

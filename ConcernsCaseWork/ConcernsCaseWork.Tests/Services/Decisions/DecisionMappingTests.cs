@@ -1,10 +1,9 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Services.Decisions;
 using FluentAssertions;
 using NUnit.Framework;
-using Service.TRAMS.Decision;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Services.Decisions

@@ -1,9 +1,9 @@
-﻿using ConcernsCaseWork.Service.Base;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using ConcernsCaseWork.Logging;
 using Moq;
 using Moq.Protected;
 using System.Net;

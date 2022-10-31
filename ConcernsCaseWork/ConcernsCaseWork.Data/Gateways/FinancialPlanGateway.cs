@@ -7,11 +7,11 @@ namespace ConcernsCaseWork.Data.Gateways
     public class FinancialPlanGateway : IFinancialPlanGateway
     {
         private readonly ConcernsDbContext _concernsDbContext;
-        private readonly ILogger<SRMAGateway> _logger;
+        private readonly ILogger<FinancialPlanGateway> _logger;
 
-        public FinancialPlanGateway(ConcernsDbContext tramsDbContext, ILogger<SRMAGateway> logger)
+        public FinancialPlanGateway(ConcernsDbContext concernsDbContext, ILogger<FinancialPlanGateway> logger)
         {
-            _concernsDbContext = tramsDbContext;
+            _concernsDbContext = concernsDbContext;
             _logger = logger;
         }
 

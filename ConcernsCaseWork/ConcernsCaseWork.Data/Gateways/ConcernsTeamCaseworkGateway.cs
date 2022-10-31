@@ -7,9 +7,9 @@ namespace ConcernsCaseWork.Data.Gateways
     {
         private readonly ConcernsDbContext _concernsDbContext;
 
-        public ConcernsTeamCaseworkGateway(ConcernsDbContext tramsDbContext)
+        public ConcernsTeamCaseworkGateway(ConcernsDbContext concernsDbContext)
         {
-            _concernsDbContext = tramsDbContext ?? throw new ArgumentNullException(nameof(tramsDbContext));
+            _concernsDbContext = concernsDbContext ?? throw new ArgumentNullException(nameof(concernsDbContext));
         }
 
         public async Task AddCaseworkTeam(ConcernsCaseworkTeam team, CancellationToken cancellationToken)

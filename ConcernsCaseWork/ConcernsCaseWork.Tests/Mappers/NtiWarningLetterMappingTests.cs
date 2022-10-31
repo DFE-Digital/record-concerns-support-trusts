@@ -1,8 +1,8 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
-using NUnit.Framework;
 using ConcernsCaseWork.Service.NtiWarningLetter;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -9,9 +9,9 @@ namespace ConcernsCaseWork.Data.Gateways
         private readonly ConcernsDbContext _concernsDbContext;
         private readonly ILogger<SRMAGateway> _logger;
 
-        public SRMAGateway(ConcernsDbContext tramsDbContext, ILogger<SRMAGateway> logger)
+        public SRMAGateway(ConcernsDbContext concernsDbContext, ILogger<SRMAGateway> logger)
         {
-            _concernsDbContext = tramsDbContext;
+            _concernsDbContext = concernsDbContext;
             _logger = logger;
         }
 

@@ -9,9 +9,9 @@ namespace ConcernsCaseWork.Data.Gateways
         private readonly ConcernsDbContext _concernsDbContext;
         private readonly ILogger<NTIWarningLetterGateway> _logger;
 
-        public NTIWarningLetterGateway(ConcernsDbContext tramsDbContext, ILogger<NTIWarningLetterGateway> logger)
+        public NTIWarningLetterGateway(ConcernsDbContext concernsDbContext, ILogger<NTIWarningLetterGateway> logger)
 		{
-            _concernsDbContext = tramsDbContext;
+            _concernsDbContext = concernsDbContext;
             _logger = logger;
         }
 

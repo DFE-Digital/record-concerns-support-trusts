@@ -14,15 +14,16 @@ namespace ConcernsCaseWork.Service.Base
 	public abstract class AbstractService
 	{
 		private readonly ICorrelationContext _correlationContext;
+		private readonly IHttpClientFactory _clientFactory;
 		private readonly ILogger<AbstractService> _logger;
-		internal IHttpClientFactory ClientFactory { get; }
-		internal string HttpClientName { get; init; } = "Default";
+
+		internal string HttpClientName { get; init; } = "TramsClient"; // was "Default";
 		internal string EndpointsVersion { get; } = "v2";
 		internal string EndpointPrefix { get; } = "concerns-cases";
 
 		protected AbstractService(IHttpClientFactory clientFactory, ILogger<AbstractService> logger, ICorrelationContext correlationContext)
 		{
-			ClientFactory = Guard.Against.Null(clientFactory);
+			_clientFactory = Guard.Against.Null(clientFactory);
 			_logger = Guard.Against.Null(logger);
 			_correlationContext = Guard.Against.Null(correlationContext);
 		}

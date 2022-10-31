@@ -13,6 +13,9 @@ namespace ConcernsCaseWork.Service.Records
 		[JsonProperty("reviewAt")]
 		public DateTimeOffset ReviewAt { get; }
 		
+		[JsonProperty("closedAt")]
+		public DateTimeOffset ClosedAt { get; }
+		
 		[JsonProperty("name")]
 		public string Name { get; }
 		
@@ -38,10 +41,10 @@ namespace ConcernsCaseWork.Service.Records
 		public long MeansOfReferralUrn { get; }
 		
 		[JsonConstructor]
-		public CreateRecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt,  
+		public CreateRecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
 			string name, string description, string reason, long caseUrn, long typeUrn, 
 			long ratingUrn, long statusUrn, long meansOfReferralUrn) => 
-			(CreatedAt, UpdatedAt, ReviewAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, StatusUrn, MeansOfReferralUrn) = 
-			(createdAt, updatedAt, reviewAt, name, description, reason, caseUrn, typeUrn, ratingUrn, statusUrn, meansOfReferralUrn);
+			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeUrn, RatingUrn, StatusUrn, MeansOfReferralUrn) = 
+			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeUrn, ratingUrn, statusUrn, meansOfReferralUrn);
 	}
 }

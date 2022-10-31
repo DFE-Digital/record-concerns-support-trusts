@@ -1,10 +1,10 @@
 ﻿using ConcernsCaseWork.Mappers;
-using ConcernsCaseWork.Shared.Tests.Factory;
-using NUnit.Framework;
 using ConcernsCaseWork.Service.Ratings;
 using ConcernsCaseWork.Service.Records;
 using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Service.Types;
+using ConcernsCaseWork.Shared.Tests.Factory;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 

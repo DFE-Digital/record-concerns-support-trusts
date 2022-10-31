@@ -1,9 +1,9 @@
 ﻿@page "/case/{urn:long}/management/action/decision/add"
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Pages.Case.Management.Action.Decision.AddPageModel
+@using ConcernsCaseWork.Service.Decision;
+@using Microsoft.AspNetCore.Mvc.TagHelpers;
+@using NetEscapades.AspNetCore.SecurityHeaders;
 @using ConcernsCaseWork.Helpers;
-@using Service.TRAMS.Decision;
 
 @{
     ViewData["Title"] = "Add Decision";

@@ -33,6 +33,9 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DecisionId"), 1L, 1);
 
+                    b.Property<DateTimeOffset?>("ClosedAt")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<int>("ConcernsCaseId")
                         .HasColumnType("int");
 

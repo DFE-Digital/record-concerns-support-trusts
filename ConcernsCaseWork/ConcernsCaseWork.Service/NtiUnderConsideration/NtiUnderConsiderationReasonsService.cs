@@ -1,5 +1,5 @@
-﻿using ConcernsCaseWork.Service.Base;
-using ConcernsCaseWork.Logging;
+﻿using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Service.Base;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 

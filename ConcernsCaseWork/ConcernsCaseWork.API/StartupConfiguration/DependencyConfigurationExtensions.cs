@@ -78,9 +78,11 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			// concerns factories
 			services.AddScoped<IUseCaseAsync<CreateDecisionRequest, CreateDecisionResponse>, CreateDecision>();
 			services.AddScoped<IUseCaseAsync<GetDecisionRequest, GetDecisionResponse>, GetDecision>();
+			services.AddScoped<IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]>, GetDecisions>();
 			services.AddScoped<ICreateDecisionResponseFactory, CreateDecisionResponseFactory>();
 			services.AddScoped<IDecisionFactory, DecisionFactory>();
 			services.AddScoped<IGetDecisionResponseFactory, GetDecisionResponseFactory>();
+			services.AddScoped<IGetDecisionsSummariesFactory, GetDecisionsSummariesFactory>();
 
 			return services;
 		}

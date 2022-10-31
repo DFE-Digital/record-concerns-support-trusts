@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
+using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;

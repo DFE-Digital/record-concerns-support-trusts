@@ -3,11 +3,11 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Records;
 using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Service.Records;
+using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Types;
 using Microsoft.Extensions.Logging;
-using ConcernsCaseWork.Service.Records;
-using ConcernsCaseWork.Service.Status;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -118,7 +118,8 @@ namespace ConcernsCaseWork.Services.Records
 			var createRecordDto = new CreateRecordDto(
 				currentDate, 
 				currentDate, 
-				currentDate,
+				currentDate, 
+				currentDate, 
 				createRecordModel.Type, 
 				createRecordModel.SubType, 
 				createRecordModel.TypeDisplay, 

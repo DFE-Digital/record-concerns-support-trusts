@@ -7,10 +7,10 @@ using ConcernsCaseWork.Redis.Records;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Redis.Types;
-using Microsoft.Extensions.Logging;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Records;
 using ConcernsCaseWork.Service.Status;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -389,7 +389,8 @@ namespace ConcernsCaseWork.Services.Cases
 					var createRecordDto = new CreateRecordDto(
 						currentDate, 
 						currentDate, 
-						currentDate,
+						currentDate, 
+						currentDate, 
 						recordModel.Type, 
 						recordModel.SubType, 
 						recordModel.TypeDisplay, 
