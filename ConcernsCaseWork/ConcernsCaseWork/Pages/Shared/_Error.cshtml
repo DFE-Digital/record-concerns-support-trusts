@@ -1,4 +1,5 @@
-﻿@{
+﻿@using NetEscapades.AspNetCore.SecurityHeaders
+@{
     var nonce = Context.GetNonce();
     <div class="govuk-heading-l moj-banner__message">
         <p class="govuk-body">@TempData["Error.Message"]</p>

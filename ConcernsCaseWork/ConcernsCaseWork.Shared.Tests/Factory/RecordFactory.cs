@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Models;
-using Service.Redis.Models;
-using Service.TRAMS.Records;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Service.Records;
 using System;
 using System.Collections.Generic;
 

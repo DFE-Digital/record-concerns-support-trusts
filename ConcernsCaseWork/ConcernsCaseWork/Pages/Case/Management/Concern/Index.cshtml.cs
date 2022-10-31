@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Validators;
+using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.MeansOfReferral;
 using ConcernsCaseWork.Services.Ratings;
@@ -11,7 +12,6 @@ using ConcernsCaseWork.Services.Types;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

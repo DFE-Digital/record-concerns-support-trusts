@@ -1,10 +1,10 @@
 ﻿using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Redis.Ratings;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Ratings;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

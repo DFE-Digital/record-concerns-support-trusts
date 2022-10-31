@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Services.FinancialPlan;
-using Service.Redis.FinancialPlan;
-using Service.TRAMS.FinancialPlan;
+using ConcernsCaseWork.Service.FinancialPlan;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {

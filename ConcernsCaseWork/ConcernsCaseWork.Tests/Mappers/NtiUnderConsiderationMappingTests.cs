@@ -1,8 +1,8 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Service.NtiUnderConsideration;
 using NUnit.Framework;
-using Service.TRAMS.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
 using System.Linq;

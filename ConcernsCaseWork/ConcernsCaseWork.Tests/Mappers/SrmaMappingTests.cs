@@ -2,8 +2,8 @@ using AutoFixture;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Service.CaseActions;
 using NUnit.Framework;
-using Service.TRAMS.CaseActions;
 using System;
 
 namespace ConcernsCaseWork.Tests.Mappers;

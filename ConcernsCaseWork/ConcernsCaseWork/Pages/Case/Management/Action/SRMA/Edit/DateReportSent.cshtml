@@ -1,5 +1,7 @@
 ﻿@page "/case/{caseUrn:long}/management/action/srma/{srmaId:long}/datereportsent"
-@model ConcernsCaseWork.Pages.Case.Management.Action.SRMA.EditDateReportSentPageModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NetEscapades.AspNetCore.SecurityHeaders
+@model EditDateReportSentPageModel
 
 @{
     ViewData["Title"] = "SRMA Report Sent";

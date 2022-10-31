@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace ConcernsCaseWork.Models.CaseActions
+﻿namespace ConcernsCaseWork.Models.CaseActions
 {
 	public class DecisionModel : CaseActionModel
 	{

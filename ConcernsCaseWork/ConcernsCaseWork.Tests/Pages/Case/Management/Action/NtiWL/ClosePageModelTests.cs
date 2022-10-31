@@ -1,4 +1,6 @@
 ﻿using ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter;
+using ConcernsCaseWork.Redis.NtiWarningLetter;
+using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
@@ -11,8 +13,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.NtiWarningLetter;
-using Service.TRAMS.NtiWarningLetter;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

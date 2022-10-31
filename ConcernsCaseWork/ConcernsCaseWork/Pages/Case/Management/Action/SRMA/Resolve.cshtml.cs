@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
@@ -7,9 +8,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
 
-namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
+namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

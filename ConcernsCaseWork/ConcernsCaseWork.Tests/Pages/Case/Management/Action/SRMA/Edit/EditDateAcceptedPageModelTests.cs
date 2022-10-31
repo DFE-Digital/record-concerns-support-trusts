@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Pages.Case.Management.Action.SRMA;
+using ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;

@@ -1,5 +1,5 @@
 ﻿@model IList<ConcernsCaseWork.Models.TrustCasesModel>
-@using Service.TRAMS.Status;
+@using ConcernsCaseWork.Service.Status;
 
 @{
     var activeCases = Model?.Where(c => c.Status != StatusEnum.Close) ?? Enumerable.Empty<ConcernsCaseWork.Models.TrustCasesModel>();

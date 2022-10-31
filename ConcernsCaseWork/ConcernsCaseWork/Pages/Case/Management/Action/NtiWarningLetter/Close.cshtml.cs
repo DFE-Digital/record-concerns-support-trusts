@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
-using Service.Redis.NtiWarningLetter;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 {

@@ -1,11 +1,8 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.Service.NtiWarningLetter;
 using NUnit.Framework;
-using Service.TRAMS.NtiUnderConsideration;
-using Service.TRAMS.NtiWarningLetter;
-using Service.TRAMS.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

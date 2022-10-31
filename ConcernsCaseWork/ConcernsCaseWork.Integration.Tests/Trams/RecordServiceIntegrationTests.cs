@@ -1,14 +1,14 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
+using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Service.MeansOfReferral;
+using ConcernsCaseWork.Service.Ratings;
+using ConcernsCaseWork.Service.Records;
+using ConcernsCaseWork.Service.Trusts;
+using ConcernsCaseWork.Service.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using Service.TRAMS.Cases;
-using Service.TRAMS.MeansOfReferral;
-using Service.TRAMS.Ratings;
-using Service.TRAMS.Records;
-using Service.TRAMS.Trusts;
-using Service.TRAMS.Types;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -76,7 +76,6 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			Assert.NotNull(resultDto.Name);
 			Assert.NotNull(resultDto.Reason);
 			Assert.Greater(resultDto.Urn, 0);
-			Assert.That(resultDto.ClosedAt >= startTime && resultDto.ClosedAt <= endTime);
 			Assert.That(resultDto.CreatedAt >= startTime && resultDto.CreatedAt <= endTime);
 			Assert.That(resultDto.UpdatedAt >= startTime && resultDto.UpdatedAt <= endTime);
 		}
