@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Service.TRAMS.Base;
 using Service.TRAMS.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -29,6 +30,18 @@ namespace Service.TRAMS.Decision
 
 			_logger.LogInformation($"Decision created. caseUrn: {postResponse.ConcernsCaseUrn}, DecisionId:{postResponse.DecisionId}");
 			return postResponse;
+		}
+
+		public async Task<List<GetDecisionResponseDto>> GetDecisionsByCaseUrn(long urn)
+		{
+			_logger.LogInformation($"{nameof(DecisionService)}::{LoggingHelpers.EchoCallerName()}");
+			_logger.LogInformation($"Getting decisions for case urn {urn}");
+
+			var result = await Get<List<GetDecisionResponseDto>>($"/{EndpointsVersion}/concerns-cases/{urn}/decisions");
+
+			_logger.LogInformation($"Retrieved {result.Count} decisions for case urn {urn}");
+
+			return result;
 		}
 	}
 }

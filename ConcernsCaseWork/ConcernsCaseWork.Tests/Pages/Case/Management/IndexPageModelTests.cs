@@ -1,8 +1,10 @@
-﻿using ConcernsCaseWork.Extensions;
+﻿using AutoFixture;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Decisions;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiWarningLetter;
@@ -10,6 +12,7 @@ using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -19,6 +22,8 @@ using Moq;
 using NUnit.Framework;
 using Service.Redis.NtiUnderConsideration;
 using Service.Redis.Status;
+using Service.TRAMS.Decision;
+using Service.TRAMS.NtiUnderConsideration;
 using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
@@ -44,6 +49,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		private Mock<INtiUnderConsiderationModelService> _mockNtiUnderConsiderationModelService = null;
 		private Mock<INtiWarningLetterModelService> _mockNtiWLModelService = null;
 		private Mock<INtiModelService> _mockNtiModelService = null;
+		private Mock<IDecisionModelService> _mockDecisionService = null;
+
+		private readonly static Fixture _fixture = new();
 
 		[SetUp]
 		public void SetUp()
@@ -61,6 +69,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			_mockNtiUnderConsiderationModelService = new Mock<INtiUnderConsiderationModelService>();
 			_mockNtiWLModelService = new Mock<INtiWarningLetterModelService>();
 			_mockNtiModelService = new Mock<INtiModelService>();
+			_mockDecisionService = new Mock<IDecisionModelService>();
 
 		}
 
@@ -100,6 +109,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(3);
 			var ntiModels = NTIFactory.BuildListNTIModel();
+
+			SetupDefaultModels();
 			
 			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
@@ -231,7 +242,33 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
 			}
 		}
-		
+
+		[Test]
+		public async Task WhenOnGetAsync_WhenActiveDecisionsExist_ActiveDecisionsAreShownOnPage()
+		{
+			// arrange
+			var urn = 3;
+
+			SetupDefaultModels();
+
+			var decisions = _fixture.CreateMany<DecisionModel>().ToList();
+
+			_mockDecisionService.Setup(m => m.GetDecisionsByUrn(It.IsAny<long>())).ReturnsAsync(decisions);
+
+			var pageModel = SetupIndexPageModel();
+			pageModel.RouteData.Values.Add("urn", urn);
+
+			// act
+			var page = await pageModel.OnGetAsync();
+
+			// assert
+			PageLoadedWithoutError(pageModel);
+
+			var result = pageModel.CaseActions.Where(c => c is DecisionModel).ToList();
+
+			decisions.Should().BeEquivalentTo(decisions);
+		}
+
 		[Test]
 		public async Task WhenOnGetAsync_WhenCaseIsClosed_RedirectsToClosedCasePage()
 		{
@@ -595,13 +632,45 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			return new IndexPageModel(_mockCaseModelService.Object, _mockTrustModelService.Object, _mockCaseHistoryModelService.Object, _mockRecordModelService.Object, _mockRatingModelService.Object, 
 				_mockStatusCachedService.Object, _mockSrmaService.Object, _mockFinancialPlanModelService.Object, _mockNtiUnderConsiderationModelService.Object, _mockNtiStatusesCachedService.Object,
 				_mockNtiWLModelService.Object, _mockNtiModelService.Object,
-				_mockLogger.Object)
+				_mockLogger.Object, _mockDecisionService.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
 				Url = new UrlHelper(actionContext),
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
+		}
+
+		private void SetupDefaultModels()
+		{
+			var urn = 3;
+			var caseModel = CaseFactory.BuildCaseModel("Tester", urn);
+			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 1);
+			var financialPlansModel = FinancialPlanFactory.BuildListFinancialPlanModel();
+			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
+			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(3);
+			var ntiModels = NTIFactory.BuildListNTIModel();
+
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(caseModel);
+			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
+				.ReturnsAsync(closedStatusModel);
+			_mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelByCaseUrn(It.IsAny<long>(), It.IsAny<string>()))
+				.ReturnsAsync(financialPlansModel);
+			_mockNtiUnderConsiderationModelService.Setup(uc => uc.GetNtiUnderConsiderationsForCase(It.IsAny<long>()))
+				.ReturnsAsync(ntiUnderConsiderationModels);
+			_mockNtiWLModelService.Setup(wl => wl.GetNtiWarningLettersForCase(It.IsAny<long>()))
+				.ReturnsAsync(ntiWarningLetterModels);
+			_mockNtiModelService.Setup(nti => nti.GetNtisForCaseAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModels);
+			_mockNtiStatusesCachedService.Setup(s => s.GetAllStatuses())
+				.ReturnsAsync(new List<NtiUnderConsiderationStatusDto>());
+			_mockDecisionService.Setup(m => m.GetDecisionsByUrn(It.IsAny<long>())).ReturnsAsync(new List<DecisionModel>());
+		}
+
+		private void PageLoadedWithoutError(IndexPageModel pageModel)
+		{
+			pageModel.TempData["Error.Message"].Should().BeNull();
 		}
 	}
 }
