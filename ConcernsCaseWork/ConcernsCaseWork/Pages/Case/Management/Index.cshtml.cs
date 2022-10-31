@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Decisions;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiWarningLetter;
@@ -37,6 +38,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly INtiModelService _ntiModelService;
+		private readonly IDecisionModelService _decisionModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
@@ -60,7 +62,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			INtiUnderConsiderationStatusesCachedService ntiUCStatusesCachedService,
 			INtiWarningLetterModelService ntiWarningLetterModelService,
 			INtiModelService ntiModelService,
-			ILogger<IndexPageModel> logger
+			ILogger<IndexPageModel> logger,
+			IDecisionModelService decisionModelService
 			)
 		{
 			_trustModelService = trustModelService;
@@ -75,6 +78,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_ntiModelService = ntiModelService;
 			_logger = logger;
+			_decisionModelService = decisionModelService;
 		}
 
 		public async Task<IActionResult> OnGetAsync()
@@ -128,14 +132,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			return Page();
 		}
 
-		private async Task PopulateAdditionalCaseInformation()
-		{
-			if(CaseActions?.Any(ca => ca is NtiUnderConsiderationModel) == true)
-			{
-				NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
-			}
-		}
-
 		private async Task PopulateCaseActions(long caseUrn)
 		{
 			CaseActions = CaseActions ?? new List<CaseActionModel>();
@@ -144,6 +140,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			CaseActions.AddRange(await _ntiUnderConsiderationModelService.GetNtiUnderConsiderationsForCase(caseUrn));
 			CaseActions.AddRange(await _ntiWarningLetterModelService.GetNtiWarningLettersForCase(caseUrn));
 			CaseActions.AddRange(await _ntiModelService.GetNtisForCaseAsync(caseUrn));
+			CaseActions.AddRange(await _decisionModelService.GetDecisionsByUrn(caseUrn));
 		}
 
 		private bool UserHasEditCasePrivileges()

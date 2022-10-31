@@ -3,6 +3,7 @@ using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -11,6 +12,7 @@ using NUnit.Framework;
 using Service.TRAMS.Base;
 using Service.TRAMS.Decision;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -32,7 +34,7 @@ namespace Service.TRAMS.Tests.Decision
 		[Test]
 		public void DecisionService_Implements_IDecisionService()
 		{
-		Fixture fixture = CreateMockedFixture();
+			Fixture fixture = CreateMockedFixture();
 			fixture.Register(() => Mock.Of<IHttpClientFactory>());
 			fixture.Register(() => Mock.Of<ILogger<DecisionService>>());
 
@@ -53,39 +55,20 @@ namespace Service.TRAMS.Tests.Decision
 		{
 			var fixture = new Fixture();
 			fixture.Customize(new AutoMoqCustomization());
-			//fixture.Register(() => Mock.Of<IHttpClientFactory>());
-			//fixture.Register(() => Mock.Of<ILogger<DecisionService>>());
 			return fixture;
 		}
 
 		[Test]
 		public async Task DecisionService_PostDecision_When_Success_Returns_Response()
 		{
-			var httpClientFactory = new Mock<IHttpClientFactory>();
-			var mockMessageHandler = new Mock<HttpMessageHandler>();
-
 			Fixture fixture = CreateMockedFixture();
-			fixture.Register(() => Mock.Get(httpClientFactory));
-			fixture.Register(() => Mock.Get(mockMessageHandler));
 
 			var expectedInputDto = fixture.Create<CreateDecisionDto>();
 			var expectedResponseDto = fixture.Create<CreateDecisionResponseDto>();
 			var responseWrapper = new ApiWrapper<CreateDecisionResponseDto>(expectedResponseDto);
 
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var tramsApiEndpoint = configuration["trams:api_endpoint"];
-
-			mockMessageHandler.Protected()
-				.Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-				.ReturnsAsync(new HttpResponseMessage
-				{
-					StatusCode = HttpStatusCode.OK,
-					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(responseWrapper))
-				});
-
-			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
-			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{expectedInputDto.ConcernsCaseUrn}/decisions", responseWrapper);
+			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
 
 			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>());
 			var result = await sut.PostDecision(expectedInputDto);
@@ -93,6 +76,56 @@ namespace Service.TRAMS.Tests.Decision
 			Assert.That(result, Is.Not.Null);
 			Assert.That(result.ConcernsCaseUrn, Is.EqualTo(expectedResponseDto.ConcernsCaseUrn));
 			Assert.That(result.DecisionId, Is.EqualTo(expectedResponseDto.DecisionId));
+		}
+
+		[Test]
+		public async Task DecisionService_GetDecisionsByUrn_WhenSuccess_ReturnsDecisionsByUrn()
+		{
+			var urn = 3;
+
+			Fixture fixture = CreateMockedFixture();
+			var expectedResponseDto = fixture.Create<List<GetDecisionResponseDto>>();
+			var responseWrapper = new ApiWrapper<List<GetDecisionResponseDto>>(expectedResponseDto);
+
+			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{urn}/decisions", responseWrapper);
+			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
+
+			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>());
+			var result = await sut.GetDecisionsByCaseUrn(urn);
+
+			result.Should().BeEquivalentTo(expectedResponseDto);
+		}
+
+		private Mock<IHttpClientFactory> CreateHttpClientFactory(Mock<HttpMessageHandler> mockMessageHandler)
+		{
+			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
+			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+
+			var result = new Mock<IHttpClientFactory>();
+
+			var httpClient = new HttpClient(mockMessageHandler.Object);
+			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			result.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
+
+			return result;
+		}
+
+		private Mock<HttpMessageHandler> SetupMessageHandler<T>(string url, T responseWrapper)
+		{
+			var result = new Mock<HttpMessageHandler>();
+
+			result.Protected()
+				.Setup<Task<HttpResponseMessage>>(
+						"SendAsync",
+					ItExpr.Is<HttpRequestMessage>(m => m.RequestUri.ToString().Contains(url)),
+					ItExpr.IsAny<CancellationToken>())
+				.ReturnsAsync(new HttpResponseMessage
+				{
+					StatusCode = HttpStatusCode.OK,
+					Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(responseWrapper))
+				});
+
+			return result;
 		}
 	}
 }
