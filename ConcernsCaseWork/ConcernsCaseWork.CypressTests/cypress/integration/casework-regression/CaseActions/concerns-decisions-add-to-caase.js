@@ -54,6 +54,41 @@ describe("User can add case actions to an existing case", () => {
 
 	});
 
+	it(" Concern Decision - Checking if View live initial record is visible", function () {
+		cy.checkForExistingCase();
+		cy.reload();
+		CaseManagementPage.getAddToCaseBtn().click();
+		AddToCasePage.addToCase('Decision');
+		AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
+		AddToCasePage.getAddToCaseBtn().click();
+		cy.log(utils.checkForGovErrorSummaryList());
+
+		if (utils.checkForGovErrorSummaryList() > 0) {
+			cy.log("Case Action already exists");
+			cy.visit(Cypress.env('url'), { timeout: 30000 });
+			cy.checkForExistingCase(true);
+			CaseManagementPage.getAddToCaseBtn().click();
+			AddToCasePage.addToCase('Decision');
+			AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
+			AddToCasePage.getAddToCaseBtn().click();
+		} else {
+			cy.log("No Case Action exists");
+			cy.log(utils.checkForGovErrorSummaryList());
+		}
+
+		AddToCasePage.getDayDateField().click().type("12");
+		AddToCasePage.getMonthDateField().click().type("05");
+		AddToCasePage.getYearDateField().click().type("2022");
+		AddToCasePage.getNoticeToImproveBtn().click();
+		AddToCasePage.getDecisionButton().click();
+		cy.get('#open-case-actions').should(
+			"contain.text",
+			"NoticeToImprove"
+		);
+	
+
+	});
+
 
 	after(function () {
 		cy.clearLocalStorage();
