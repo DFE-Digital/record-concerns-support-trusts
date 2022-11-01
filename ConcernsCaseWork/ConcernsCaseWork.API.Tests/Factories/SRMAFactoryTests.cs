@@ -85,7 +85,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Status = SRMAStatus.TrustConsidering,
                 Reason = SRMAReasonOffered.SchoolsFinancialSupportAndOversight,
                 Notes = "notes notes notes",
-                Urn = 963L,
                 CloseStatusId = (int?)null,
                 UpdatedAt = dtNow,
                 ClosedAt = (DateTime?)null,
@@ -104,7 +103,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 .With(r => r.ReasonId = (int)details.Reason)
                 .With(r => r.Notes = details.Notes)
                 .With(r => r.CreatedAt = details.CreatedAt)
-                .With(r => r.Urn = details.Urn)
                 .With(r => r.CloseStatusId = details.CloseStatusId)
                 .With(r => r.UpdatedAt = details.UpdatedAt)
                 .With(r => r.ClosedAt = details.ClosedAt)
@@ -124,7 +122,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Reason = details.Reason,
                 Notes = details.Notes,
                 CreatedAt = details.CreatedAt,
-                Urn = details.Urn,
                 CloseStatus = (SRMAStatus)(details.CloseStatusId ?? 0),
                 UpdatedAt = details.UpdatedAt,
                 ClosedAt = details.ClosedAt,

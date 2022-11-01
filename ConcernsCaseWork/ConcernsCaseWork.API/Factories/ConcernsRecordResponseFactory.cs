@@ -16,12 +16,12 @@ namespace ConcernsCaseWork.API.Factories
                 Name = concernsRecord.Name,
                 Description = concernsRecord.Description,
                 Reason = concernsRecord.Reason,
-                Urn = concernsRecord.Urn,
-                StatusUrn = concernsRecord.StatusUrn,
-                TypeUrn = concernsRecord.ConcernsType.Urn,
+                Id = concernsRecord.Id,
+                StatusId = concernsRecord.StatusId,
+                TypeId = concernsRecord.ConcernsType.Id,
                 CaseUrn = concernsRecord.ConcernsCase.Urn,
-                RatingUrn = concernsRecord.ConcernsRating.Urn,
-                MeansOfReferralUrn = concernsRecord.ConcernsMeansOfReferral?.Urn
+                RatingId = concernsRecord.ConcernsRating.Id,
+                MeansOfReferralId = concernsRecord.ConcernsMeansOfReferral?.Id
             };
         }
     }

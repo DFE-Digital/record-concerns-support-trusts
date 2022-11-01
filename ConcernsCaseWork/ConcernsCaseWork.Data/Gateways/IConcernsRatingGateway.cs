@@ -5,6 +5,6 @@ namespace ConcernsCaseWork.Data.Gateways
     public interface IConcernsRatingGateway
     {
         IList<ConcernsRating> GetRatings();
-        ConcernsRating GetRatingByUrn(int urn);
+        ConcernsRating GetRatingById(int urn);
     }
 }

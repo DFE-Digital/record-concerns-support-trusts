@@ -51,8 +51,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 .With(c => c.DeEscalationPoint = "Point of de-escalation")
                 .With(c => c.NextSteps = "Here are the next steps")
                 .With(c => c.DirectionOfTravel = "Up")
-                .With(c => c.StatusUrn = 1)
-                .With(c => c.RatingUrn = 123)
+                .With(c => c.StatusId = 1)
+                .With(c => c.RatingId = 123)
                 .Build();
             
 
@@ -254,8 +254,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 DeEscalationPoint = _randomGenerator.NextString(3, 10),
                 NextSteps = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                StatusUrn = 2,
-                RatingUrn =  1
+                StatusId = 2,
+                RatingId =  1
             };
             
             var currentConcernsCase =  _dbContext.ConcernsCase.Add(concernsCase);
@@ -263,7 +263,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var urn = currentConcernsCase.Entity.Urn;
 
             var updateRequest = Builder<ConcernCaseRequest>.CreateNew()
-                .With(cr => cr.RatingUrn = 123).Build();
+                .With(cr => cr.RatingId = 123).Build();
 
             var expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
             expectedConcernsCase.Urn = urn;
@@ -304,7 +304,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 DeEscalationPoint = _randomGenerator.NextString(3, 10),
                 NextSteps = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                StatusUrn = 2,
+                StatusId = 2,
             };
             
             _dbContext.ConcernsCase.Add(concernsCase);
@@ -317,9 +317,9 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
             var createRequest = Builder<ConcernsRecordRequest>.CreateNew()
                 .With(c => c.CaseUrn = linkedCase.Urn)
-                .With(c => c.TypeUrn = linkedType.Urn)
-                .With(c => c.RatingUrn = linkedRating.Urn)
-                .With(c => c.MeansOfReferralUrn = meansOfReferral.Urn)
+                .With(c => c.TypeId = linkedType.Id)
+                .With(c => c.RatingId = linkedRating.Id)
+                .With(c => c.MeansOfReferralId = meansOfReferral.Id)
                 .Build();
             
             var httpRequestMessage = new HttpRequestMessage
@@ -337,8 +337,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
             response.StatusCode.Should().Be(201);
             var result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsRecordResponse>>();
             
-            var createdRecord = _dbContext.ConcernsRecord.FirstOrDefault(c => c.Urn == result.Data.Urn);
-            expected.Data.Urn = createdRecord.Urn;
+            var createdRecord = _dbContext.ConcernsRecord.FirstOrDefault(c => c.Id == result.Data.Id);
+            expected.Data.Id = createdRecord.Id;
             
             result.Should().BeEquivalentTo(expected);
         }
@@ -364,7 +364,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 DeEscalationPoint = _randomGenerator.NextString(3, 10),
                 NextSteps = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                StatusUrn = 2
+                StatusId = 2
             };
 
             var concernsType = _dbContext.ConcernsTypes.FirstOrDefault(t => t.Id == 1);
@@ -383,7 +383,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 Name = _randomGenerator.NextString(3, 10),
                 Description = _randomGenerator.NextString(3, 10),
                 Reason = _randomGenerator.NextString(3, 10),
-                StatusUrn = 1,
+                StatusId = 1,
                 ConcernsCase = currentConcernsCase.Entity,
                 ConcernsType = concernsType,
                 ConcernsRating = concernsRating,
@@ -392,16 +392,16 @@ namespace ConcernsCaseWork.API.Tests.Integration
             
             var currentConcernsRecord =  _dbContext.ConcernsRecord.Add(concernsRecord);
             _dbContext.SaveChanges();
-            var currentRecordUrn = currentConcernsRecord.Entity.Urn;
+            var currentRecordUrn = currentConcernsRecord.Entity.Id;
 
             var updateRequest = Builder<ConcernsRecordRequest>.CreateNew()
                 .With(r => r.CaseUrn = concernsCase.Urn)
-                .With(r => r.TypeUrn = concernsType.Urn)
-                .With(r => r.RatingUrn = concernsRating.Urn)
-                .With(r => r.MeansOfReferralUrn = concernsMeansOfReferral.Urn).Build();
+                .With(r => r.TypeId = concernsType.Id)
+                .With(r => r.RatingId = concernsRating.Id)
+                .With(r => r.MeansOfReferralId = concernsMeansOfReferral.Id).Build();
 
             var expectedConcernsRecord = ConcernsRecordFactory.Create(updateRequest, concernsCase, concernsType, concernsRating, concernsMeansOfReferral);
-            expectedConcernsRecord.Urn = currentRecordUrn;
+            expectedConcernsRecord.Id = currentRecordUrn;
             var expectedContent = ConcernsRecordResponseFactory.Create(expectedConcernsRecord);
 
             var httpRequestMessage = new HttpRequestMessage
@@ -442,7 +442,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 DeEscalationPoint = _randomGenerator.NextString(3, 10),
                 NextSteps = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                StatusUrn = 2
+                StatusId = 2
             };
 
             var currentConcernsCase =  _dbContext.ConcernsCase.Add(concernsCase);
@@ -468,7 +468,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 Name = _randomGenerator.NextString(3, 10),
                 Description = _randomGenerator.NextString(3, 10),
                 Reason = _randomGenerator.NextString(3, 10),
-                StatusUrn = 1,
+                StatusId = 1,
                 ConcernsCase = currentConcernsCase.Entity,
                 ConcernsType = concernsType,
                 ConcernsRating = concernsRating,
@@ -477,17 +477,17 @@ namespace ConcernsCaseWork.API.Tests.Integration
             
             var currentConcernsRecord =  _dbContext.ConcernsRecord.Add(concernsRecord);
             _dbContext.SaveChanges();
-            var currentRecordUrn = currentConcernsRecord.Entity.Urn;
+            var currentRecordUrn = currentConcernsRecord.Entity.Id;
 
             var updateRequest = Builder<ConcernsRecordRequest>.CreateNew()
                 .With(r => r.CaseUrn = concernsCase.Urn)
-                .With(r => r.TypeUrn = concernsType.Urn)
-                .With(r => r.RatingUrn = concernsRating.Urn)
-                .With(r => r.MeansOfReferralUrn = updateMeansOfReferral?.Urn)
+                .With(r => r.TypeId = concernsType.Id)
+                .With(r => r.RatingId = concernsRating.Id)
+                .With(r => r.MeansOfReferralId = updateMeansOfReferral?.Id)
                 .Build();
             
             var expectedConcernsRecord = ConcernsRecordFactory.Create(updateRequest, concernsCase, concernsType, concernsRating, updateMeansOfReferral ?? currentMeansOfReferral);
-            expectedConcernsRecord.Urn = currentRecordUrn;
+            expectedConcernsRecord.Id = currentRecordUrn;
             var expectedContent = ConcernsRecordResponseFactory.Create(expectedConcernsRecord);
 
             var httpRequestMessage = new HttpRequestMessage
@@ -524,7 +524,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 DeEscalationPoint = _randomGenerator.NextString(3, 10),
                 NextSteps = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                StatusUrn = 2
+                StatusId = 2
             };
             
             var currentConcernsCase =  _dbContext.ConcernsCase.Add(concernsCase).Entity;
@@ -544,10 +544,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 Description = _randomGenerator.NextString(3, 10),
                 Reason = _randomGenerator.NextString(3, 10),
                 CaseUrn = currentConcernsCase.Urn,
-                TypeUrn = concernsType!.Urn,
-                RatingUrn = concernsRating!.Urn,
-                StatusUrn = 1,
-                MeansOfReferralUrn = concernsMeansOfReferral!.Urn
+                TypeId = concernsType!.Id,
+                RatingId = concernsRating!.Id,
+                StatusId = 1,
+                MeansOfReferralId = concernsMeansOfReferral!.Id
             };
             
             var recordCreateRequest2 = new ConcernsRecordRequest
@@ -560,10 +560,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 Description = _randomGenerator.NextString(3, 10),
                 Reason = _randomGenerator.NextString(3, 10),
                 CaseUrn = currentConcernsCase.Urn,
-                TypeUrn = concernsType.Urn,
-                RatingUrn = concernsRating.Urn,
-                StatusUrn = 1,
-                MeansOfReferralUrn = concernsMeansOfReferral.Urn
+                TypeId = concernsType.Id,
+                RatingId = concernsRating.Id,
+                StatusId = 1,
+                MeansOfReferralId = concernsMeansOfReferral.Id
             };
 
             var httpCreateRequestMessage1 = new HttpRequestMessage
@@ -590,10 +590,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
             
             var createdRecord1 = ConcernsRecordFactory
                 .Create(recordCreateRequest1, currentConcernsCase, concernsType, concernsRating, concernsMeansOfReferral);
-            createdRecord1.Urn = content1.Data.Urn;
+            createdRecord1.Id = content1.Data.Id;
             var createdRecord2 = ConcernsRecordFactory
                 .Create(recordCreateRequest2, currentConcernsCase, concernsType, concernsRating, concernsMeansOfReferral);
-            createdRecord2.Urn = content2.Data.Urn;
+            createdRecord2.Id = content2.Data.Id;
             var createdRecords = new List<ConcernsRecord> {createdRecord1, createdRecord2};
             var expected = createdRecords
                 .Select(ConcernsRecordResponseFactory.Create).ToList();
@@ -639,7 +639,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     DeEscalationPoint = _randomGenerator.NextString(3, 10),
                     NextSteps = _randomGenerator.NextString(3, 10),
                     DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                    StatusUrn = 2,
+                    StatusId = 2,
                 };
                 var currentCase = _dbContext.ConcernsCase.Add(concernsCase);
                 _dbContext.SaveChanges();
@@ -667,7 +667,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     DeEscalationPoint = _randomGenerator.NextString(3, 10),
                     NextSteps = _randomGenerator.NextString(3, 10),
                     DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                    StatusUrn = 3,
+                    StatusId = 3,
                 };
                 _dbContext.ConcernsCase.Add(concernsCase);
                 _dbContext.SaveChanges();
@@ -713,7 +713,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     DeEscalationPoint = _randomGenerator.NextString(3, 10),
                     NextSteps = _randomGenerator.NextString(3, 10),
                     DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                    StatusUrn = 2,
+                    StatusId = 2,
                 };
 
                 _dbContext.ConcernsCase.Add(concernsCase);
@@ -737,11 +737,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
             						
             content.Data.First().Name.Should().Be("Internal");
             content.Data.First().Description.Should().Be("ESFA activity, TFFT or other departmental activity");
-            content.Data.First().Urn.Should().BeGreaterThan(0);
+            content.Data.First().Id.Should().BeGreaterThan(0);
 			
             content.Data.Last().Name.Should().Be("External");
             content.Data.Last().Description.Should().Be("CIU casework, whistleblowing, self reported, RSCs or other government bodies");
-            content.Data.Last().Urn.Should().BeGreaterThan(0);
+            content.Data.Last().Id.Should().BeGreaterThan(0);
         }
         
         public void Dispose()

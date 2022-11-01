@@ -15,7 +15,7 @@ namespace ConcernsCaseWork.API.UseCases
 
         public ConcernsCaseResponse Execute(int urn)
         {
-           var concernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(urn);
+           var concernsCase = _concernsCaseGateway.GetConcernsCaseById(urn);
            return concernsCase == null ? null : ConcernsCaseResponseFactory.Create(concernsCase);
         }
     }

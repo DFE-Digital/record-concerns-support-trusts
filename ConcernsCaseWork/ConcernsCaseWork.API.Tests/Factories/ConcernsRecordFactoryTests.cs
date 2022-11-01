@@ -29,9 +29,9 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Description = "Test concerns record desc",
                 Reason = "Test concern",
                 CaseUrn = 1,
-                TypeUrn = 2,
-                RatingUrn = 3,
-                StatusUrn = 1
+                TypeId = 2,
+                RatingId = 3,
+                StatusId = 1
             };
 
             var expected = new ConcernsRecord
@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 ConcernsCase = concernsCase,
                 ConcernsType = concernsType,
                 ConcernsRating = concernsRating,
-                StatusUrn = recordRequest.StatusUrn,
+                StatusId = recordRequest.StatusId,
                 ConcernsMeansOfReferral = concernsMeansOfReferral
             };
 

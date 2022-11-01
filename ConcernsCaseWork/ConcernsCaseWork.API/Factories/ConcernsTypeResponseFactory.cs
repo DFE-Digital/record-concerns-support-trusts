@@ -13,7 +13,7 @@ namespace ConcernsCaseWork.API.Factories
                 Description = concernsType.Description,
                 CreatedAt = concernsType.CreatedAt,
                 UpdatedAt = concernsType.UpdatedAt,
-                Urn = concernsType.Urn
+                Id = concernsType.Id
             };
         }
     }

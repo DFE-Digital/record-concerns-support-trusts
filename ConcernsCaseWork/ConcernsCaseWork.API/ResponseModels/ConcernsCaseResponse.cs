@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.API.ResponseModels
         public string NextSteps { get; set; }
         public string DirectionOfTravel { get; set; }
         public int Urn { get; set; }
-        public int StatusUrn { get; set; }
-        public int RatingUrn { get; set; }
+        public int StatusId { get; set; }
+        public int RatingId { get; set; }
     }
 }

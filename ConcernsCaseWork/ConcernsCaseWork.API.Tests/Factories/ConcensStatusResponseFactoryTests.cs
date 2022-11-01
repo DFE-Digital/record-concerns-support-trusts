@@ -18,8 +18,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Id = 456,
                 Name = "Test concerns status",
                 CreatedAt = new DateTime(2021, 10,07),
-                UpdatedAt = new DateTime(2021, 10,07),
-                Urn = 789
+                UpdatedAt = new DateTime(2021, 10,07)
             };
 
             var expected = new ConcernsStatusResponse
@@ -27,7 +26,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Name = concernsStatus.Name,
                 CreatedAt = concernsStatus.CreatedAt,
                 UpdatedAt = concernsStatus.UpdatedAt,
-                Urn = concernsStatus.Urn
+                Id = concernsStatus.Id
             };
 
             var result = ConcernsStatusResponseFactory.Create(concernsStatus);

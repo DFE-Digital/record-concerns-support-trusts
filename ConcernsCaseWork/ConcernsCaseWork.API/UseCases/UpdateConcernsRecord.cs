@@ -32,16 +32,16 @@ namespace ConcernsCaseWork.API.UseCases
         {
             var currentConcernsRecord = _concernsRecordGateway.GetConcernsRecordByUrn(urn);
             
-            var concernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(request.CaseUrn) ??
+            var concernsCase = _concernsCaseGateway.GetConcernsCaseById(request.CaseUrn) ??
                                 currentConcernsRecord.ConcernsCase;
             
-            var concernsType = _concernsTypeGateway.GetConcernsTypeByUrn(request.TypeUrn) ??
+            var concernsType = _concernsTypeGateway.GetConcernsTypeById(request.TypeId) ??
                                 currentConcernsRecord.ConcernsType;
             
-            var concernsRating = _concernsRatingGateway.GetRatingByUrn(request.RatingUrn) ?? 
+            var concernsRating = _concernsRatingGateway.GetRatingById(request.RatingId) ?? 
                                  currentConcernsRecord.ConcernsRating;
 
-            if (!TryGetConcernsMeansOfReferralByUrn(request.MeansOfReferralUrn, out var concernsMeansOfReferral))
+            if (!TryGetConcernsMeansOfReferralByUrn(request.MeansOfReferralId, out var concernsMeansOfReferral))
             {
                 TryGetConcernsMeansOfReferralById(currentConcernsRecord.MeansOfReferralId, out concernsMeansOfReferral);
             }
@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.API.UseCases
                 return false;
             }
 
-            meansOfReferral = _concernsMeansOfReferralGateway.GetMeansOfReferralByUrn((int)urn);
+            meansOfReferral = _concernsMeansOfReferralGateway.GetMeansOfReferralById((int)urn);
 
             return meansOfReferral != null;
         }

@@ -95,11 +95,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 						
 			Assert.That("Internal", Is.EqualTo(expectedMeansOfReferralModels.First().Name));
 			Assert.That("Some description 1", Is.EqualTo(expectedMeansOfReferralModels.First().Description));
-			Assert.That(1, Is.EqualTo(expectedMeansOfReferralModels.First().Urn));
+			Assert.That(1, Is.EqualTo(expectedMeansOfReferralModels.First().Id));
 			
 			Assert.That("External", Is.EqualTo(expectedMeansOfReferralModels.Last().Name));
 			Assert.That("Some description 2", Is.EqualTo(expectedMeansOfReferralModels.Last().Description));
-			Assert.That(2, Is.EqualTo(expectedMeansOfReferralModels.Last().Urn));
+			Assert.That(2, Is.EqualTo(expectedMeansOfReferralModels.Last().Id));
 			
 			// Verify ILogger
 			mockLogger.Verify(

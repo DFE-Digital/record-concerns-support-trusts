@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.API.Factories
                 ConcernsCase = concernsCase,
                 ConcernsType = concernsType,
                 ConcernsRating = concernsRating,
-                StatusUrn = concernsRecordRequest.StatusUrn,
+                StatusId = concernsRecordRequest.StatusId,
                 ConcernsMeansOfReferral = concernsMeansOfReferral
             };
         }
@@ -47,7 +47,7 @@ namespace ConcernsCaseWork.API.Factories
             original.ConcernsCase = concernsCase;
             original.ConcernsType = concernsType;
             original.ConcernsRating = concernsRating;
-            original.StatusUrn = concernsRecordRequest.StatusUrn;
+            original.StatusId = concernsRecordRequest.StatusId;
 
             if (concernsMeansOfReferral != null)
             {

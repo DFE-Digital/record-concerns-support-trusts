@@ -7,7 +7,7 @@ namespace ConcernsCaseWork.API.Validators
     {
         public ConcernsCaseRequestValidator()
         {
-            RuleFor(x => x.RatingUrn).GreaterThanOrEqualTo(1)
+            RuleFor(x => x.RatingId).GreaterThanOrEqualTo(1)
                 .WithMessage("Ratings Urn can not be 0");
         }
     }

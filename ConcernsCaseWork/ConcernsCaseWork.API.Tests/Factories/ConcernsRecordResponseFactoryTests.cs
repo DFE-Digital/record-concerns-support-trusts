@@ -31,8 +31,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 CaseId = 2,
                 TypeId = 3,
                 RatingId = 5,
-                Urn = 4,
-                StatusUrn = 23,
+                StatusId = 23,
                 ConcernsCase = concernCase,
                 ConcernsType = concernType,
                 ConcernsRating = concernRating,
@@ -41,6 +40,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
 
             var expected = new ConcernsRecordResponse
             {
+	            Id = concernsRecord.Id,
                 CreatedAt = concernsRecord.CreatedAt,
                 UpdatedAt = concernsRecord.UpdatedAt,
                 ReviewAt = concernsRecord.ReviewAt,
@@ -48,12 +48,11 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Name = concernsRecord.Name,
                 Description = concernsRecord.Description,
                 Reason = concernsRecord.Reason,
-                Urn = concernsRecord.Urn,
-                StatusUrn = concernsRecord.StatusUrn,
-                TypeUrn = concernType.Urn,
-                CaseUrn = concernCase.Urn,
-                RatingUrn = concernRating.Urn,
-                MeansOfReferralUrn = concernMeansOfReferral.Urn
+                StatusId = concernsRecord.StatusId,
+                TypeId = concernType.Id,
+                CaseUrn = concernCase.Id,
+                RatingId = concernRating.Id,
+                MeansOfReferralId = concernMeansOfReferral.Id
             };
 
             var result = ConcernsRecordResponseFactory.Create(concernsRecord);

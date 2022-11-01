@@ -253,13 +253,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		public async Task WhenOnGetAsync_WhenCaseIsClosed_RedirectsToClosedCasePage()
 		{
 			// arrange
-			var closedStatusUrn = 3;
+			var closedStatusId = 3;
 
-			var caseModel = CaseFactory.BuildCaseModel(statusUrn:closedStatusUrn);
+			var caseModel = CaseFactory.BuildCaseModel(statusId:closedStatusId);
 			var trustCasesModel = CaseFactory.BuildListTrustCasesModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
-			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), closedStatusUrn);
+			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), closedStatusId);
 			var financialPlansModel = FinancialPlanFactory.BuildListFinancialPlanModel();
 			var ntiUnderConsiderationModels = NTIUnderConsiderationFactory.BuildListNTIUnderConsiderationModel();
 			var ntiWarningLetterModels = NTIWarningLetterFactory.BuildListNTIWarningLetterModels(3);

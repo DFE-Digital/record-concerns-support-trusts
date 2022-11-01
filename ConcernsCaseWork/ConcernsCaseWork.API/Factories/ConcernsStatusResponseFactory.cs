@@ -12,7 +12,7 @@ namespace ConcernsCaseWork.API.Factories
                 Name = concernsStatus.Name,
                 CreatedAt = concernsStatus.CreatedAt,
                 UpdatedAt = concernsStatus.UpdatedAt,
-                Urn = concernsStatus.Urn
+                Id = concernsStatus.Id
             };
         }
     }

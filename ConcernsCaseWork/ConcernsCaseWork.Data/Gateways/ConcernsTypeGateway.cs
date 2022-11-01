@@ -11,9 +11,9 @@ namespace ConcernsCaseWork.Data.Gateways
             _concernsDbContext = concernsDbContext;
         }
 
-        public ConcernsType GetConcernsTypeByUrn(int urn)
+        public ConcernsType GetConcernsTypeById(int id)
         {
-            return _concernsDbContext.ConcernsTypes.FirstOrDefault(t => t.Urn == urn);
+            return _concernsDbContext.ConcernsTypes.FirstOrDefault(t => t.Id == id);
         }
 
         public IList<ConcernsType> GetTypes()

@@ -112,7 +112,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			mockActionsModelService.Setup(a => a.GetClosedActionsSummary(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(closedActions);
 			mockStatusCachedService.Setup(a => a.GetStatusByName(StatusEnum.Close.ToString()))
-				.ReturnsAsync(new StatusDto("Closed", DateTimeOffset.Now, DateTimeOffset.Now, caseModel.StatusUrn));
+				.ReturnsAsync(new StatusDto("Closed", DateTimeOffset.Now, DateTimeOffset.Now, caseModel.StatusId));
 
 			var pageModel = SetupViewClosedPageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockActionsModelService.Object,
 				mockStatusCachedService.Object, mockLogger.Object);

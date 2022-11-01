@@ -31,10 +31,10 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             var expected = ConcernsRecordResponseFactory.Create(createdConcernsRecord);
             
             concernsRecordGateway.Setup(g => g.SaveConcernsCase(It.IsAny<ConcernsRecord>())).Returns(createdConcernsRecord);
-            concernsCaseGateway.Setup(g => g.GetConcernsCaseByUrn(It.IsAny<int>())).Returns(concernsCase);
-            concernsTypeGateway.Setup(g => g.GetConcernsTypeByUrn(It.IsAny<int>())).Returns(concernsType);
-            concernsRatingGateway.Setup(g => g.GetRatingByUrn(It.IsAny<int>())).Returns(concernsRating);
-            concernsMeansOfReferralGateway.Setup(g => g.GetMeansOfReferralByUrn(concernsMeansOfReferral.Urn)).Returns(concernsMeansOfReferral);
+            concernsCaseGateway.Setup(g => g.GetConcernsCaseById(It.IsAny<int>())).Returns(concernsCase);
+            concernsTypeGateway.Setup(g => g.GetConcernsTypeById(It.IsAny<int>())).Returns(concernsType);
+            concernsRatingGateway.Setup(g => g.GetRatingById(It.IsAny<int>())).Returns(concernsRating);
+            concernsMeansOfReferralGateway.Setup(g => g.GetMeansOfReferralById(concernsMeansOfReferral.Id)).Returns(concernsMeansOfReferral);
 
             var useCase = new CreateConcernsRecord(
                 concernsRecordGateway.Object, 

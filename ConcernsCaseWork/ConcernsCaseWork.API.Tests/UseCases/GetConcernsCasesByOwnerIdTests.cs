@@ -41,24 +41,24 @@ namespace ConcernsCaseWork.API.Tests.UseCases
         public void Execute_ShouldReturnListOfConcernsCaseResponsesFilteredByStatusWhenSupplied()
         {
             var ownerId = "564372";
-            var statusUrn = 123;
+            var statusId = 123;
             var gateway = new Mock<IConcernsCaseGateway>();
             
             var cases = Builder<ConcernsCase>.CreateListOfSize(5)
                 .All()
                 .With(c => c.CreatedBy = ownerId)
-                .With(c => c.StatusUrn = statusUrn)
+                .With(c => c.StatusId = statusId)
                 .Build();
 
             gateway.Setup(g =>
-                    g.GetConcernsCasesByOwnerId(It.IsAny<string>(), statusUrn, 1, 50))
+                    g.GetConcernsCasesByOwnerId(It.IsAny<string>(), statusId, 1, 50))
                 .Returns(cases);
 
             var expected = cases.Select(ConcernsCaseResponseFactory.Create).ToList();
 
             var usecase = new GetConcernsCasesByOwnerId(gateway.Object);
 
-            var result = usecase.Execute(ownerId, statusUrn, 1, 50);
+            var result = usecase.Execute(ownerId, statusId, 1, 50);
             result.Should().BeEquivalentTo(expected);
         }
         
@@ -66,18 +66,18 @@ namespace ConcernsCaseWork.API.Tests.UseCases
         public void Execute_ShouldReturnEmptyListWhenNoConcernsCasesArefound()
         {
             var ownerId = "96784";
-            var statusUrn = 567;
+            var statusId = 567;
             var gateway = new Mock<IConcernsCaseGateway>();
             
 
             gateway.Setup(g =>
-                    g.GetConcernsCasesByOwnerId(It.IsAny<string>(), statusUrn, 1, 50))
+                    g.GetConcernsCasesByOwnerId(It.IsAny<string>(), statusId, 1, 50))
                 .Returns(new List<ConcernsCase>());
             
 
             var usecase = new GetConcernsCasesByOwnerId(gateway.Object);
 
-            var result = usecase.Execute(ownerId, statusUrn, 1, 50);
+            var result = usecase.Execute(ownerId, statusId, 1, 50);
             result.Should().BeEquivalentTo(new List<ConcernsCaseResponse>());
         }
     }

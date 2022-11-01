@@ -55,8 +55,8 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			var caseUrn = await FetchRandomCaseUrn(serviceScope);
 			var typeId = await FetchRandomTypeId(serviceScope);
 			var ratingId = await FetchRandomRatingId(serviceScope);
-			var meansOfReferralUrn = await FetchRandomMeansOfReferralId(serviceScope);
-			var createRecordDto = RecordFactory.BuildCreateRecordDto(caseUrn, typeId, ratingId, meansOfReferralUrn);
+			var meansOfReferralId = await FetchRandomMeansOfReferralId(serviceScope);
+			var createRecordDto = RecordFactory.BuildCreateRecordDto(caseUrn, typeId, ratingId, meansOfReferralId);
 			await PostRecord(serviceScope, createRecordDto);
 
 			//act 

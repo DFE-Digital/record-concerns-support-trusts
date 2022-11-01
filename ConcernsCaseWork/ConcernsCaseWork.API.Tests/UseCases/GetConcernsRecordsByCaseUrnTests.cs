@@ -35,7 +35,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             concernsCase.ConcernsRecords = concernsRecords;
             
             var gateway = new Mock<IConcernsCaseGateway>();
-            gateway.Setup(g => g.GetConcernsCaseIncludingRecordsByUrn(caseUrn))
+            gateway.Setup(g => g.GetConcernsCaseIncludingRecordsById(caseUrn))
                 .Returns(concernsCase);
 
             var useCase = new GetConcernsRecordsByCaseUrn(gateway.Object);
