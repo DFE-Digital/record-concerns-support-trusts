@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+using AutoFixture;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
@@ -138,7 +138,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(pageModel.CaseModel, Is.Not.Null);
 			Assert.That(pageModel.CaseModel.Description, Is.EqualTo(caseModel.Description));
 			Assert.That(pageModel.CaseModel.Issue, Is.EqualTo(caseModel.Issue));
-			Assert.That(pageModel.CaseModel.StatusUrn, Is.EqualTo(caseModel.StatusUrn));
+			Assert.That(pageModel.CaseModel.StatusId, Is.EqualTo(caseModel.StatusId));
 			Assert.That(pageModel.CaseModel.Urn, Is.EqualTo(caseModel.Urn));
 			Assert.That(pageModel.CaseModel.ClosedAt, Is.EqualTo(caseModel.ClosedAt));
 			Assert.That(pageModel.CaseModel.CreatedAt, Is.EqualTo(caseModel.CreatedAt));
@@ -189,11 +189,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			for (var index = 0; index < expectedRecordsModel.Count; ++index)
 			{
-				Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(recordsModel.ElementAt(index).Urn));
+				Assert.That(expectedRecordsModel.ElementAt(index).Id, Is.EqualTo(recordsModel.ElementAt(index).Id));
 				Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(recordsModel.ElementAt(index).CaseUrn));
-				Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(recordsModel.ElementAt(index).RatingUrn));
-				Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(recordsModel.ElementAt(index).StatusUrn));
-				Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(recordsModel.ElementAt(index).TypeUrn));
+				Assert.That(expectedRecordsModel.ElementAt(index).RatingId, Is.EqualTo(recordsModel.ElementAt(index).RatingId));
+				Assert.That(expectedRecordsModel.ElementAt(index).StatusId, Is.EqualTo(recordsModel.ElementAt(index).StatusId));
+				Assert.That(expectedRecordsModel.ElementAt(index).TypeId, Is.EqualTo(recordsModel.ElementAt(index).TypeId));
 				
 				var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
 				var actualRecordRatingModel = recordsModel.ElementAt(index).RatingModel;
@@ -201,7 +201,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				Assert.NotNull(actualRecordRatingModel);
 				Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
 				Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
-				Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+				Assert.That(expectedRecordRatingModel.Id, Is.EqualTo(actualRecordRatingModel.Id));
 				Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
 				Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
 				

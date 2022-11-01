@@ -75,7 +75,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var statusDto = await _statusCachedService.GetStatusByName(statusEnum.ToString());
 
 				// Get from Academies API all cases by caseworker and status
-				var casesDto = await _caseCachedService.GetCasesByCaseworkerAndStatus(caseworker, statusDto.Urn);
+				var casesDto = await _caseCachedService.GetCasesByCaseworkerAndStatus(caseworker, statusDto.Id);
 
 				// Return if cases are empty
 				if (!casesDto.Any()) return Array.Empty<HomeModel>();
@@ -104,7 +104,7 @@ namespace ConcernsCaseWork.Services.Cases
 					var recordsModel = RecordMapping.MapDtoToModel(recordsDto, typesDto, ratingsDto, statusesDto);
 					
 					// Case rating
-					var caseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, caseDto.RatingUrn);
+					var caseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, caseDto.RatingId);
 					var trustName = TrustMapping.FetchTrustName(trustDetailsDto);
 					
 					return new HomeModel(
@@ -174,7 +174,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var monitoringStatus = await _statusCachedService.GetStatusByName(StatusEnum.Monitoring.ToString());
 
 				// Filter cases that are for monitoring
-				casesDto = casesDto.Where(c => c.StatusUrn.CompareTo(monitoringStatus.Urn) != 0).ToList();
+				casesDto = casesDto.Where(c => c.StatusId.CompareTo(monitoringStatus.Id) != 0).ToList();
 				
 				// Fetch records by case urn
 				var recordsTasks = casesDto.Select(c => _recordCachedService.GetRecordsByCaseUrn(c.CreatedBy, c.Urn)).ToList();
@@ -245,10 +245,10 @@ namespace ConcernsCaseWork.Services.Cases
 				// Fetch Records
 				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(patchRecordModel.CreatedBy, patchRecordModel.CaseUrn);
 
-				var recordDto = recordsDto.FirstOrDefault(r => r.Urn.CompareTo(patchRecordModel.Urn) == 0);
+				var recordDto = recordsDto.FirstOrDefault(r => r.Id.CompareTo(patchRecordModel.Id) == 0);
 				recordDto = RecordMapping.MapRating(patchRecordModel, recordDto);
 
-				await _recordCachedService.PatchRecordByUrn(recordDto, patchRecordModel.CreatedBy);
+				await _recordCachedService.PatchRecordById(recordDto, patchRecordModel.CreatedBy);
 			}
 			catch (Exception ex)
 			{
@@ -379,7 +379,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var statusDto = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
 
 				// Create a case
-				createCaseModel.StatusUrn = statusDto.Urn;
+				createCaseModel.StatusId = statusDto.Id;
 				var newCase = await _caseCachedService.PostCase(CaseMapping.Map(createCaseModel));
 
 				// Create records
@@ -395,10 +395,10 @@ namespace ConcernsCaseWork.Services.Cases
 						recordModel.SubType, 
 						recordModel.TypeDisplay, 
 						newCase.Urn, 
-						recordModel.TypeUrn, 
-						recordModel.RatingUrn, 
-						statusDto.Urn,
-						recordModel.MeansOfReferralUrn);
+						recordModel.TypeId, 
+						recordModel.RatingId, 
+						statusDto.Id,
+						recordModel.MeansOfReferralId);
 					
 					return _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
 				});

@@ -21,10 +21,10 @@ namespace ConcernsCaseWork.Mappers
 				recordDto.Description, 
 				recordDto.Reason, 
 				recordDto.CaseUrn, 
-				recordDto.TypeUrn, 
-				patchRecordModel.RatingUrn, 
-				recordDto.Urn, 
-				recordDto.StatusUrn);
+				recordDto.TypeId, 
+				patchRecordModel.RatingId, 
+				recordDto.Id, 
+				recordDto.StatusId);
 		}
 		
 		public static RecordDto MapClosure(PatchRecordModel patchRecordModel, RecordDto recordDto, StatusDto statusDto)
@@ -35,8 +35,8 @@ namespace ConcernsCaseWork.Mappers
 				patchRecordModel.ClosedAt ?? recordDto.ClosedAt, 
 				recordDto.Name, recordDto.Description, 
 				recordDto.Reason, recordDto.CaseUrn, 
-				recordDto.TypeUrn, recordDto.RatingUrn,
-				recordDto.Urn, statusDto.Urn);
+				recordDto.TypeId, recordDto.RatingId,
+				recordDto.Id, statusDto.Id);
 		}
 
 		public static IList<RecordModel> MapDtoToModel(IList<RecordDto> recordsDto, 
@@ -51,13 +51,13 @@ namespace ConcernsCaseWork.Mappers
 			{
 				var recordModel = new RecordModel(
 					recordDto.CaseUrn,
-					recordDto.TypeUrn,
-					TypeMapping.MapDtoToModel(typesDto, recordDto.TypeUrn),
-					recordDto.RatingUrn,
-					RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingUrn),
-					recordDto.Urn,
-					recordDto.StatusUrn,
-					StatusMapping.MapDtoToModel(statusesDto, recordDto.StatusUrn));
+					recordDto.TypeId,
+					TypeMapping.MapDtoToModel(typesDto, recordDto.TypeId),
+					recordDto.RatingId,
+					RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingId),
+					recordDto.Id,
+					recordDto.StatusId,
+					StatusMapping.MapDtoToModel(statusesDto, recordDto.StatusId));
 
 				return recordModel;
 			}));
@@ -74,16 +74,16 @@ namespace ConcernsCaseWork.Mappers
 		
 			createRecordsModel.AddRange(recordsDto.Select(recordDto =>
 			{
-				var typeModel = TypeMapping.MapDtoToModel(typesDto, recordDto.TypeUrn);
-				var ratingModel = RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingUrn);
+				var typeModel = TypeMapping.MapDtoToModel(typesDto, recordDto.TypeId);
+				var ratingModel = RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingId);
 				
 				var createRecordModel = new CreateRecordModel
 				{
 					CaseUrn = recordDto.CaseUrn,
-					TypeUrn = recordDto.TypeUrn,
+					TypeId = recordDto.TypeId,
 					Type = typeModel.Type,
 					SubType = typeModel.SubType,
-					RatingUrn = recordDto.RatingUrn,
+					RatingId = recordDto.RatingId,
 					RatingName = ratingModel.Name,
 					RagRating = ratingModel.RagRating,
 					RagRatingCss = ratingModel.RagRatingCss

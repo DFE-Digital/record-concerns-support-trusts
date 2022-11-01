@@ -8,6 +8,6 @@ namespace ConcernsCaseWork.Redis.Records
 	{
 		Task<IList<RecordDto>> GetRecordsByCaseUrn(string caseworker, long caseUrn);
 		Task<RecordDto> PostRecordByCaseUrn(CreateRecordDto createRecordDto, string caseworker);
-		Task PatchRecordByUrn(RecordDto recordDto, string caseworker);
+		Task PatchRecordById(RecordDto recordDto, string caseworker);
 	}
 }

@@ -49,10 +49,10 @@ namespace ConcernsCaseWork.Service.Tests.Ratings
 
 			foreach (var actualRating in ratings)
 			{
-				foreach (var expectedRating in expectedRatings.Data.Where(expectedType => actualRating.Urn.CompareTo(expectedType.Urn) == 0))
+				foreach (var expectedRating in expectedRatings.Data.Where(expectedType => actualRating.Id.CompareTo(expectedType.Id) == 0))
 				{
 					Assert.That(actualRating.Name, Is.EqualTo(expectedRating.Name));
-					Assert.That(actualRating.Urn, Is.EqualTo(expectedRating.Urn));
+					Assert.That(actualRating.Id, Is.EqualTo(expectedRating.Id));
 					Assert.That(actualRating.CreatedAt, Is.EqualTo(expectedRating.CreatedAt));
 					Assert.That(actualRating.UpdatedAt, Is.EqualTo(expectedRating.UpdatedAt));
 				}

@@ -43,13 +43,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockRecordModelService.Setup(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
+			mockRecordModelService.Setup(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
 				.ReturnsAsync(recordModel);
-			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()))
+			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelById(It.IsAny<long>()))
 				.ReturnsAsync(ratingsModel);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			mockTypeModelService.Setup(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()))
+			mockTypeModelService.Setup(t => t.GetSelectedTypeModelById(It.IsAny<long>()))
 				.ReturnsAsync(typeModel);
 
 			var pageModel = SetupClosurePageModel(
@@ -88,10 +88,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 				Times.Once);
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
-			mockRecordModelService.Verify(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Once);
-			mockRatingModelService.Verify(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()), Times.Once);
+			mockRecordModelService.Verify(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Once);
+			mockRatingModelService.Verify(r => r.GetSelectedRatingsModelById(It.IsAny<long>()), Times.Once);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
-			mockTypeModelService.Verify(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()), Times.Once);
+			mockTypeModelService.Verify(t => t.GetSelectedTypeModelById(It.IsAny<long>()), Times.Once);
 		}
 
 		[Test]
@@ -138,10 +138,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 				Times.Once);
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-			mockRecordModelService.Verify(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
-			mockRatingModelService.Verify(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()), Times.Never);
+			mockRecordModelService.Verify(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
+			mockRatingModelService.Verify(r => r.GetSelectedRatingsModelById(It.IsAny<long>()), Times.Never);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
-			mockTypeModelService.Verify(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()), Times.Never);
+			mockTypeModelService.Verify(t => t.GetSelectedTypeModelById(It.IsAny<long>()), Times.Never);
 		}
 
 		[Test]
@@ -190,10 +190,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 				Times.Once);
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-			mockRecordModelService.Verify(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
-			mockRatingModelService.Verify(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()), Times.Never);
+			mockRecordModelService.Verify(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
+			mockRatingModelService.Verify(r => r.GetSelectedRatingsModelById(It.IsAny<long>()), Times.Never);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
-			mockTypeModelService.Verify(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()), Times.Never);
+			mockTypeModelService.Verify(t => t.GetSelectedTypeModelById(It.IsAny<long>()), Times.Never);
 		}
 		
 		[Test]
@@ -218,13 +218,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockRecordModelService.Setup(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
+			mockRecordModelService.Setup(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
 				.ReturnsAsync(recordModel);
-			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()))
+			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelById(It.IsAny<long>()))
 				.ReturnsAsync(ratingsModel);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			mockTypeModelService.Setup(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()))
+			mockTypeModelService.Setup(t => t.GetSelectedTypeModelById(It.IsAny<long>()))
 				.ReturnsAsync(typeModel);
 			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(statusDto);
@@ -314,13 +314,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockRecordModelService.Setup(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
+			mockRecordModelService.Setup(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
 				.ReturnsAsync(recordModel);
-			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()))
+			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelById(It.IsAny<long>()))
 				.ReturnsAsync(ratingsModel);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			mockTypeModelService.Setup(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()))
+			mockTypeModelService.Setup(t => t.GetSelectedTypeModelById(It.IsAny<long>()))
 				.ReturnsAsync(typeModel);
 
 			var pageModel = SetupClosurePageModel(

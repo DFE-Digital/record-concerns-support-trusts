@@ -104,7 +104,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				IsEditableCase = await IsCaseEditable();
 				
 				// Map Case Rating
-				CaseModel.RatingModel = await _ratingModelService.GetRatingModelByUrn(CaseModel.RatingUrn);
+				CaseModel.RatingModel = await _ratingModelService.GetRatingModelById(CaseModel.RatingId);
 				
 				// Get Case concerns
 				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
@@ -154,7 +154,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		{
 			var closedStatus = await _statusCachedService.GetStatusByName(StatusEnum.Close.ToString());
 
-			if (CaseModel.StatusUrn.CompareTo(closedStatus.Urn) == 0)
+			if (CaseModel.StatusId.CompareTo(closedStatus.Id) == 0)
 			{
 				return true;
 			}

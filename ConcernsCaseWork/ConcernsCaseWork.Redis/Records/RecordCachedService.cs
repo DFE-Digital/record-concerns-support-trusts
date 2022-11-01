@@ -58,7 +58,7 @@ namespace ConcernsCaseWork.Redis.Records
 
 					if (recordsDto.Any())
 					{
-						caseWrapper.Records = recordsDto.ToDictionary(recordDto => recordDto.Urn, recordDto => new RecordWrapper { RecordDto = recordDto });
+						caseWrapper.Records = recordsDto.ToDictionary(recordDto => recordDto.Id, recordDto => new RecordWrapper { RecordDto = recordDto });
 					}
 
 					await StoreData(caseworker, userState);
@@ -83,19 +83,19 @@ namespace ConcernsCaseWork.Redis.Records
 
 			// Add new record to the records cache
 			caseWrapper.Records ??= new ConcurrentDictionary<long, RecordWrapper>();
-			caseWrapper.Records.Add(newRecordDto.Urn, new RecordWrapper { RecordDto = newRecordDto });
+			caseWrapper.Records.Add(newRecordDto.Id, new RecordWrapper { RecordDto = newRecordDto });
 
 			await StoreData(caseworker, userState);
 
 			return newRecordDto;
 		}
 
-		public async Task PatchRecordByUrn(RecordDto recordDto, string caseworker)
+		public async Task PatchRecordById(RecordDto recordDto, string caseworker)
 		{
-			_logger.LogInformation("RecordCachedService::PatchRecordByUrn {Caseworker} - {CaseUrn}", caseworker, recordDto.CaseUrn);
+			_logger.LogInformation("RecordCachedService::PatchRecordById {Caseworker} - {CaseUrn}", caseworker, recordDto.CaseUrn);
 
 			// Patch record on Academies API
-			var patchRecordDto = await _recordService.PatchRecordByUrn(recordDto);
+			var patchRecordDto = await _recordService.PatchRecordById(recordDto);
 
 			// Store in cache for 24 hours (default)
 			var userState = await GetData<UserState>(caseworker);
@@ -104,13 +104,13 @@ namespace ConcernsCaseWork.Redis.Records
 			// If case urn doesn't exist on the cache return
 			if (!userState.CasesDetails.TryGetValue(patchRecordDto.CaseUrn, out var caseWrapper)) return;
 
-			if (caseWrapper.Records.TryGetValue(patchRecordDto.Urn, out var recordWrapper))
+			if (caseWrapper.Records.TryGetValue(patchRecordDto.Id, out var recordWrapper))
 			{
 				recordWrapper.RecordDto = patchRecordDto;
 			}
 			else
 			{
-				caseWrapper.Records.Add(patchRecordDto.Urn, new RecordWrapper { RecordDto = patchRecordDto });
+				caseWrapper.Records.Add(patchRecordDto.Id, new RecordWrapper { RecordDto = patchRecordDto });
 			}
 
 			await StoreData(caseworker, userState);

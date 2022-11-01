@@ -198,11 +198,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				CaseAim = Fixture.Create<string>(),
 				DeEscalationPoint = Fixture.Create<string>(),
 				DirectionOfTravel = Fixture.Create<string>(),
-				StatusUrn = 1
+				StatusId = 1
 			};
 		}
 		
-		public static CaseModel BuildCaseModel(string createdBy = "created-user", long statusUrn = 1)
+		public static CaseModel BuildCaseModel(string createdBy = "created-user", long statusId = 1)
 		{
 			var dateTimeNow = DateTimeOffset.Now;
 			return new CaseModel
@@ -224,7 +224,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				DeEscalationPoint = Fixture.Create<string>(),
 				DirectionOfTravel = Fixture.Create<string>(),
 				Urn = 1,
-				StatusUrn = statusUrn,
+				StatusId = statusId,
 				StatusName = Fixture.Create<string>()
 			};
 		}
@@ -236,7 +236,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Urn = 1,
 				CreatedBy = Fixture.Create<string>(),
 				UpdatedAt = Fixture.Create<DateTimeOffset>(),
-				RatingUrn = 1,
+				RatingId = 1,
 				DirectionOfTravel = Fixture.Create<string>(),
 				Issue = Fixture.Create<string>(),
 				CurrentStatus = Fixture.Create<string>(),
