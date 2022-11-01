@@ -93,12 +93,12 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 		private Mock<IHttpClientFactory> CreateHttpClientFactory(Mock<HttpMessageHandler> mockMessageHandler)
 		{
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
 
 			var result = new Mock<IHttpClientFactory>();
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			result.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			return result;

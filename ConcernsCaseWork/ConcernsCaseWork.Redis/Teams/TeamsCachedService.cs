@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.Redis.Teams
 	public class TeamsCachedService : CachedService, ITeamsCachedService
 	{
 		private readonly ILogger<TeamsCachedService> _logger;
-		private readonly ITeamsService _tramsTeamsService;
+		private readonly ITeamsService _teamsService;
 
 		private const string _cacheKeyPrefix = "Concerns.Teams";
 		private const int _cacheExpiryTimeHours = 8;
@@ -17,7 +17,7 @@ namespace ConcernsCaseWork.Redis.Teams
 		public TeamsCachedService(ILogger<TeamsCachedService> logger, ITeamsService teamsService, ICacheProvider cacheProvider)
 			: base(Guard.Against.Null(cacheProvider))
 		{
-			_tramsTeamsService = Guard.Against.Null(teamsService);
+			_teamsService = Guard.Against.Null(teamsService);
 			_logger = Guard.Against.Null(logger);
 		}
 
@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Redis.Teams
 					_logger.LogDebug($"Team not found in cache..calling Academies API to get team for ownerId: {ownerId}");
 
 					// response can be null if no team has been created so allow that without caching it.
-					teamDto = await _tramsTeamsService.GetTeam(ownerId);
+					teamDto = await _teamsService.GetTeam(ownerId);
 					await UpdateCacheIfNotNullDto(cacheKey, teamDto);
 				}
 
@@ -71,7 +71,7 @@ namespace ConcernsCaseWork.Redis.Teams
 			{
 				// Make sure old cached data is removed, then call academies API and cache new data after update.
 				await ClearData(team.OwnerId);
-				await _tramsTeamsService.PutTeam(team);
+				await _teamsService.PutTeam(team);
 				await UpdateCacheIfNotNullDto(GetCacheKey(team.OwnerId), team);
 			}
 
@@ -81,7 +81,7 @@ namespace ConcernsCaseWork.Redis.Teams
 		public Task<string[]> GetTeamOwners()
 		{
 			// Not cached..
-			return _tramsTeamsService.GetTeamOwners();
+			return _teamsService.GetTeamOwners();
 		}
 
 		private string GetCacheKey(string ownerId) => $"{_cacheKeyPrefix}.{ownerId}";

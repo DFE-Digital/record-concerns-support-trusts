@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Service.Tests.Types
 			var expectedTypes = TypeFactory.BuildListTypeDto();
 			var apiListWrapperTypes = new ApiListWrapper<TypeDto>(expectedTypes, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -34,7 +34,7 @@ namespace ConcernsCaseWork.Service.Tests.Types
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<TypeService>>();
@@ -65,7 +65,7 @@ namespace ConcernsCaseWork.Service.Tests.Types
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -77,7 +77,7 @@ namespace ConcernsCaseWork.Service.Tests.Types
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<TypeService>>();
@@ -94,7 +94,7 @@ namespace ConcernsCaseWork.Service.Tests.Types
 			var apiListWrapperTypes = new ApiListWrapper<TypeDto>(null, null);
 			
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -107,7 +107,7 @@ namespace ConcernsCaseWork.Service.Tests.Types
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<TypeService>>();

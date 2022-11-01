@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.Service.Tests.MeansOfReferral
 			var expectedMeansOfReferral = TypeFactory.BuildListTypeDto();
 			var apiListWrapperMeansOfReferral = new ApiListWrapper<TypeDto>(expectedMeansOfReferral, null);
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
 
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -35,7 +35,7 @@ namespace ConcernsCaseWork.Service.Tests.MeansOfReferral
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<MeansOfReferralService>>();
@@ -64,7 +64,7 @@ namespace ConcernsCaseWork.Service.Tests.MeansOfReferral
 		{
 			// arrange
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -76,7 +76,7 @@ namespace ConcernsCaseWork.Service.Tests.MeansOfReferral
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<MeansOfReferralService>>();
@@ -93,7 +93,7 @@ namespace ConcernsCaseWork.Service.Tests.MeansOfReferral
 			var apiListWrapperMeansOfReferral = new ApiListWrapper<TypeDto>(null, null);
 			
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -106,7 +106,7 @@ namespace ConcernsCaseWork.Service.Tests.MeansOfReferral
 				});
 
 			var httpClient = new HttpClient(mockMessageHandler.Object);
-			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
+			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<MeansOfReferralService>>();
