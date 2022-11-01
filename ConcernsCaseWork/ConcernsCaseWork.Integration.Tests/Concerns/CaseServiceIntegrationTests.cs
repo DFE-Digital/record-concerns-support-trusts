@@ -8,7 +8,7 @@ using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Integration.Tests.Trams
+namespace ConcernsCaseWork.Integration.Tests.Concerns
 {
 	[TestFixture]
 	public class CaseServiceIntegrationTests

@@ -29,7 +29,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
         public ConcernsIntegrationTests(ConcernsDataApiFactory fixture)
         {
             _client = fixture.CreateClient();
-            _client.DefaultRequestHeaders.Add("ApiKey", "testing-api-key");
+            _client.DefaultRequestHeaders.Add("ConcernsApiKey", "app-key");
             _dbContext = fixture.Services.GetRequiredService<ConcernsDbContext>();
             _fixture = new Fixture();
             _randomGenerator = new RandomGenerator();
@@ -60,11 +60,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-cases"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                },
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases"),
                 Content =  JsonContent.Create(createRequest)
             };
 
@@ -93,11 +89,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-cases/urn/{concernsCase.Urn}"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                }
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases/urn/{concernsCase.Urn}")
             };
             
             var expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(concernsCase);
@@ -124,11 +116,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-cases/ukprn/{ukprn}"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                }
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases/ukprn/{ukprn}")
             };
             
             var expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(concernsCase);
@@ -155,11 +143,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-cases/ukprn/{ukprn}"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                }
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases/ukprn/{ukprn}")
             };
             var expectedPaging = new PagingResponse {Page = 1, RecordCount = expectedData.Count};
 
@@ -188,11 +172,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-cases/ukprn/{ukprn}/?count={count}"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                }
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases/ukprn/{ukprn}/?count={count}")
             };
             var response = await _client.SendAsync(httpRequestMessage);
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsCaseResponse>>();
@@ -212,11 +192,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-cases/ukprn/{ukprn}/?count={count}"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                }
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases/ukprn/{ukprn}/?count={count}")
             };
             var response = await _client.SendAsync(httpRequestMessage);
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsCaseResponse>>();
@@ -231,11 +207,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-statuses/"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                }
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-statuses/")
             };
             var response = await _client.SendAsync(httpRequestMessage);
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsStatusResponse>>();
@@ -251,11 +223,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-types/"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                }
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-types/")
             };
             var response = await _client.SendAsync(httpRequestMessage);
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsTypeResponse>>();
@@ -304,11 +272,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Patch,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-cases/{urn}"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                },
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases/{urn}"),
                 Content =  JsonContent.Create(updateRequest)
             };
             var response = await _client.SendAsync(httpRequestMessage);
@@ -349,25 +313,23 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var linkedCase = _dbContext.ConcernsCase.First();
             var linkedType = _dbContext.ConcernsTypes.First();
             var linkedRating = _dbContext.ConcernsRatings.First();
+            var meansOfReferral = _dbContext.ConcernsMeansOfReferrals.First();
 
             var createRequest = Builder<ConcernsRecordRequest>.CreateNew()
                 .With(c => c.CaseUrn = linkedCase.Urn)
                 .With(c => c.TypeUrn = linkedType.Urn)
                 .With(c => c.RatingUrn = linkedRating.Urn)
+                .With(c => c.MeansOfReferralUrn = meansOfReferral.Urn)
                 .Build();
             
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-records"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                },
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records"),
                 Content =  JsonContent.Create(createRequest)
             };
             
-            var expectedRecordToBeCreated = ConcernsRecordFactory.Create(createRequest, linkedCase, linkedType, linkedRating, null);
+            var expectedRecordToBeCreated = ConcernsRecordFactory.Create(createRequest, linkedCase, linkedType, linkedRating, meansOfReferral);
             var expectedConcernsRecordResponse = ConcernsRecordResponseFactory.Create(expectedRecordToBeCreated);
             var expected = new ApiSingleResponseV2<ConcernsRecordResponse>(expectedConcernsRecordResponse);
             
@@ -445,11 +407,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Patch,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-records/{currentRecordUrn}"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                },
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/{currentRecordUrn}"),
                 Content =  JsonContent.Create(updateRequest)
             };
             var response = await _client.SendAsync(httpRequestMessage);
@@ -535,11 +493,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Patch,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-records/{currentRecordUrn}"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                },
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/{currentRecordUrn}"),
                 Content =  JsonContent.Create(updateRequest)
             };
             var response = await _client.SendAsync(httpRequestMessage);
@@ -615,11 +569,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpCreateRequestMessage1 = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-records/"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                },
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/"),
                 Content =  JsonContent.Create(recordCreateRequest1)
             };
             
@@ -630,11 +580,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpCreateRequestMessage2 = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-records/"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                },
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/"),
                 Content =  JsonContent.Create(recordCreateRequest2)
             };
             
@@ -655,11 +601,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-records/case/urn/{currentConcernsCase.Urn}"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                }
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/case/urn/{currentConcernsCase.Urn}")
             };
             
             var response = await _client.SendAsync(httpRequestMessage);
@@ -737,11 +679,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-cases/owner/{ownerId}?status=2"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                }
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases/owner/{ownerId}?status=2")
             };
             
             var response = await _client.SendAsync(httpRequestMessage);
@@ -789,11 +727,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://trams-api.com/v2/concerns-meansofreferral/"),
-                Headers =
-                {
-                    {"ApiKey", "testing-api-key"}
-                }
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-meansofreferral/")
             };
             var response = await _client.SendAsync(httpRequestMessage);
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsMeansOfReferralResponse>>();
@@ -803,11 +737,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
             						
             content.Data.First().Name.Should().Be("Internal");
             content.Data.First().Description.Should().Be("ESFA activity, TFFT or other departmental activity");
-            content.Data.First().Urn.Should().BeGreaterThan(1);
+            content.Data.First().Urn.Should().BeGreaterThan(0);
 			
             content.Data.Last().Name.Should().Be("External");
             content.Data.Last().Description.Should().Be("CIU casework, whistleblowing, self reported, RSCs or other government bodies");
-            content.Data.Last().Urn.Should().BeGreaterThan(1);
+            content.Data.Last().Urn.Should().BeGreaterThan(0);
         }
         
         public void Dispose()

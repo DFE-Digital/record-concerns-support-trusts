@@ -1,15 +1,15 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
-using ConcernsCaseWork.Service.Status;
+using ConcernsCaseWork.Service.Ratings;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Integration.Tests.Trams
+namespace ConcernsCaseWork.Integration.Tests.Concerns
 {
 	[TestFixture]
-	public class StatusServiceIntegrationTests
+	public class RatingServiceIntegrationTests
 	{
 		/// <summary>
 		/// Testing the class requires a running Redis,
@@ -17,6 +17,11 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		/// </summary>
 		private IConfigurationRoot _configuration;
 		private WebAppFactory _factory;
+
+		/// <summary>
+		/// Variables for caseworker and trustukprn, creates cases on Academies API.
+		/// Future work can be to delete the records from the SQLServer.
+		/// </summary>
 		
 		[OneTimeSetUp]
 		public void OneTimeSetup()
@@ -32,18 +37,18 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		}
 
 		[Test]
-		public async Task WhenGetStatuses_ReturnsStatuses()
+		public async Task WhenGetRatings_ReturnsListRatingDto()
 		{
 			// arrange
 			using var serviceScope = _factory.Services.CreateScope();
-			var statusService = serviceScope.ServiceProvider.GetRequiredService<IStatusService>();
-			
-			// act
-			var statusesDto = await statusService.GetStatuses();
+			var ratingService = serviceScope.ServiceProvider.GetRequiredService<IRatingService>();
+
+			//act 
+			var ratingsDto = await ratingService.GetRatings();
 
 			// assert
-			Assert.That(statusesDto, Is.Not.Null);
-			Assert.That(statusesDto.Count, Is.EqualTo(3));
+			Assert.That(ratingsDto, Is.Not.Null);
+			Assert.That(ratingsDto.Count, Is.EqualTo(5));
 		}
 	}
 }

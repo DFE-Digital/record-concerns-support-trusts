@@ -1,20 +1,18 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
-using ConcernsCaseWork.Service.Ratings;
+using ConcernsCaseWork.Service.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Integration.Tests.Trams
+namespace ConcernsCaseWork.Integration.Tests.Concerns
 {
 	[TestFixture]
-	public class RatingServiceIntegrationTests
+	public class TypeServiceIntegrationTests
 	{
-		/// <summary>
 		/// Testing the class requires a running Redis,
 		/// startup is configured to use Redis with session storage.
-		/// </summary>
 		private IConfigurationRoot _configuration;
 		private WebAppFactory _factory;
 
@@ -37,18 +35,18 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		}
 
 		[Test]
-		public async Task WhenGetRatings_ReturnsListRatingDto()
+		public async Task WhenGetTypes_ReturnsListTypeDto()
 		{
 			// arrange
 			using var serviceScope = _factory.Services.CreateScope();
-			var ratingService = serviceScope.ServiceProvider.GetRequiredService<IRatingService>();
+			var typeService = serviceScope.ServiceProvider.GetRequiredService<ITypeService>();
 
 			//act 
-			var ratingsDto = await ratingService.GetRatings();
+			var typesDto = await typeService.GetTypes();
 
 			// assert
-			Assert.That(ratingsDto, Is.Not.Null);
-			Assert.That(ratingsDto.Count, Is.EqualTo(5));
+			Assert.That(typesDto, Is.Not.Null);
+			Assert.That(typesDto.Count, Is.EqualTo(13));
 		}
 	}
 }

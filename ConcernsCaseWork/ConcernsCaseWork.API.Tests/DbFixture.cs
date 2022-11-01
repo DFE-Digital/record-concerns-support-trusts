@@ -10,33 +10,29 @@ namespace ConcernsCaseWork.API.Tests
 {
     public class DbFixture : IDisposable
     {
-        private readonly ConcernsDbContext _concernsDbContext;
-        private readonly IDbContextTransaction _concernsTransaction;
+	    private readonly IDbContextTransaction _concernsTransaction;
         public readonly string ConnString;
         
         
         public DbFixture()
         {
-            var projectDir = Directory.GetCurrentDirectory();
-            var configPath = Path.Combine(projectDir, "integration_settings.json");
+	        var configPath = Path.Combine(
+		        Directory.GetCurrentDirectory(), "appsettings.tests.json");
 
             var config = new ConfigurationBuilder()
                 .AddJsonFile(configPath)
-                .AddUserSecrets(typeof(DbFixture).Assembly)
-                .AddEnvironmentVariables()
                 .Build();
 
             ConnString = config.GetConnectionString("DefaultConnection");
 
-            var tramsContextBuilder = new DbContextOptionsBuilder<ConcernsDbContext>();
+            var contextBuilder = new DbContextOptionsBuilder<ConcernsDbContext>();
 
-            tramsContextBuilder.UseSqlServer(ConnString);
-            _concernsDbContext = new ConcernsDbContext(tramsContextBuilder.Options);
+            contextBuilder.UseSqlServer(ConnString);
+            ConcernsDbContext concernsDbContext = new(contextBuilder.Options);
             
-            _concernsDbContext.Database.EnsureCreated();
-            _concernsDbContext.Database.Migrate();
+            concernsDbContext.Database.EnsureCreated();
             
-            _concernsTransaction = _concernsDbContext.Database.BeginTransaction();
+            _concernsTransaction = concernsDbContext.Database.BeginTransaction();
         }
 
         public void Dispose()

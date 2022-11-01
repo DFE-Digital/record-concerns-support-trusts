@@ -13,7 +13,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Integration.Tests.Trams
+namespace ConcernsCaseWork.Integration.Tests.Concerns
 {
 	[TestFixture]
 	public class RecordServiceIntegrationTests

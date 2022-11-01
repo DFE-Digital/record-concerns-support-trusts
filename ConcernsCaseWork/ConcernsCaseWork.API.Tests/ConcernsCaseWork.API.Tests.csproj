@@ -9,10 +9,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="integration_settings.json" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
         <PackageReference Include="AutoFixture.Idioms" Version="4.17.0" />
         <PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
@@ -41,8 +37,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="integration_settings.json">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Content Include="appsettings.tests.json">
+          <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+          <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
     </ItemGroup>
 
