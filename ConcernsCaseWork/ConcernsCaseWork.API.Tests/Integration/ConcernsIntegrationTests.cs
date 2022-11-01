@@ -392,7 +392,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             
             var currentConcernsRecord =  _dbContext.ConcernsRecord.Add(concernsRecord);
             _dbContext.SaveChanges();
-            var currentRecordUrn = currentConcernsRecord.Entity.Id;
+            var currentRecordId = currentConcernsRecord.Entity.Id;
 
             var updateRequest = Builder<ConcernsRecordRequest>.CreateNew()
                 .With(r => r.CaseUrn = concernsCase.Urn)
@@ -401,13 +401,13 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 .With(r => r.MeansOfReferralId = concernsMeansOfReferral.Id).Build();
 
             var expectedConcernsRecord = ConcernsRecordFactory.Create(updateRequest, concernsCase, concernsType, concernsRating, concernsMeansOfReferral);
-            expectedConcernsRecord.Id = currentRecordUrn;
+            expectedConcernsRecord.Id = currentRecordId;
             var expectedContent = ConcernsRecordResponseFactory.Create(expectedConcernsRecord);
 
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Patch,
-                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/{currentRecordUrn}"),
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/{currentRecordId}"),
                 Content =  JsonContent.Create(updateRequest)
             };
             var response = await _client.SendAsync(httpRequestMessage);
@@ -477,7 +477,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             
             var currentConcernsRecord =  _dbContext.ConcernsRecord.Add(concernsRecord);
             _dbContext.SaveChanges();
-            var currentRecordUrn = currentConcernsRecord.Entity.Id;
+            var currentRecordId = currentConcernsRecord.Entity.Id;
 
             var updateRequest = Builder<ConcernsRecordRequest>.CreateNew()
                 .With(r => r.CaseUrn = concernsCase.Urn)
@@ -487,13 +487,13 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 .Build();
             
             var expectedConcernsRecord = ConcernsRecordFactory.Create(updateRequest, concernsCase, concernsType, concernsRating, updateMeansOfReferral ?? currentMeansOfReferral);
-            expectedConcernsRecord.Id = currentRecordUrn;
+            expectedConcernsRecord.Id = currentRecordId;
             var expectedContent = ConcernsRecordResponseFactory.Create(expectedConcernsRecord);
 
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Patch,
-                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/{currentRecordUrn}"),
+                RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/{currentRecordId}"),
                 Content =  JsonContent.Create(updateRequest)
             };
             var response = await _client.SendAsync(httpRequestMessage);

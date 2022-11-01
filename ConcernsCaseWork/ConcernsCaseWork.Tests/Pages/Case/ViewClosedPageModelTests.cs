@@ -183,7 +183,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				Assert.NotNull(expectedRecordStatusModel);
 				Assert.NotNull(actualRecordTypeModel);
 				Assert.That(expectedRecordStatusModel.Name, Is.EqualTo(actualRecordStatusModel.Name));
-				Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
+				Assert.That(expectedRecordStatusModel.Id, Is.EqualTo(actualRecordStatusModel.Id));
 			}
 			
 			Assert.That(pageModel.CaseActions, Is.EquivalentTo(closedActions.ToList()));

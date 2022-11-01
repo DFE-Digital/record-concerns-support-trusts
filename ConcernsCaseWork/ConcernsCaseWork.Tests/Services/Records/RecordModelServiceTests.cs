@@ -114,7 +114,7 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			Assert.NotNull(firstStatusModel);
 			Assert.NotNull(recordModel.StatusModel);
 			Assert.That(recordModel.StatusModel.Name, Is.EqualTo(firstStatusModel.Name));
-			Assert.That(recordModel.StatusModel.Urn, Is.EqualTo(firstStatusModel.Id));
+			Assert.That(recordModel.StatusModel.Id, Is.EqualTo(firstStatusModel.Id));
 		}
 
 		[Test]
@@ -132,7 +132,7 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			var typesDto = TypeFactory.BuildListTypeDto();
 			var ratingsDto = RatingFactory.BuildListRatingDto();
 			var statusesDto = StatusFactory.BuildListStatusDto();
-			var uknownRecordUrn = 0;
+			var uknownRecordId = 0;
 
 			mockRecordCacheService.Setup(r => r.GetRecordsByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsDto);
@@ -150,7 +150,7 @@ namespace ConcernsCaseWork.Tests.Services.Records
 				mockLogger.Object);
 
 			// act
-			var recordModel = await recordModelService.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), uknownRecordUrn);
+			var recordModel = await recordModelService.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), uknownRecordId);
 
 			// assert
 			Assert.That(recordModel, Is.Not.Null);
@@ -177,7 +177,7 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			Assert.NotNull(firstStatusModel);
 			Assert.NotNull(recordModel.StatusModel);
 			Assert.That(recordModel.StatusModel.Name, Is.EqualTo(firstStatusModel.Name));
-			Assert.That(recordModel.StatusModel.Urn, Is.EqualTo(firstStatusModel.Id));
+			Assert.That(recordModel.StatusModel.Id, Is.EqualTo(firstStatusModel.Id));
 		}
 
 

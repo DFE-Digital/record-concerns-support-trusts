@@ -141,7 +141,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
-			routeData.Add("recordUrn", 1);
+			routeData.Add("recordId", 1);
 			
 			// act
 			var pageResponse = await pageModel.OnPostEditRiskRating("https://returnto/thispage");
@@ -180,7 +180,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
-			routeData.Add("recordUrn", 1);
+			routeData.Add("recordId", 1);
 			
 			// act
 			var pageResponse = await pageModel.OnPostEditRiskRating("https://returnto/thispage");

@@ -64,7 +64,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
-			routeData.Add("recordUrn", 1);
+			routeData.Add("recordId", 1);
 
 			// act
 			await pageModel.OnGet();
@@ -95,7 +95,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 		}
 
 		[Test]
-		public async Task WhenOnGetAsync_CaseUrn_RecordUrnIsNullOrEmpty_Returns_Page()
+		public async Task WhenOnGetAsync_CaseUrn_RecordIdIsNullOrEmpty_Returns_Page()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -145,7 +145,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 		}
 
 		[Test]
-		public async Task WhenOnGetAsync_RecordUrnIsNullOrEmpty_Returns_Page()
+		public async Task WhenOnGetAsync_RecordIdIsNullOrEmpty_Returns_Page()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -240,7 +240,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseModel.Urn);
-			routeData.Add("recordUrn", 1);
+			routeData.Add("recordId", 1);
 
 			// act
 			var pageResponse = await pageModel.OnGetCloseConcern();
@@ -257,7 +257,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 		}
 
 		[Test]
-		public async Task WhenOnGetCloseConcern_CaseUrn_RecordUrnIsNullOrEmpty_Return_Page()
+		public async Task WhenOnGetCloseConcern_CaseUrn_RecordIdIsNullOrEmpty_Return_Page()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -334,7 +334,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseModel.Urn);
-			routeData.Add("recordUrn", 1);
+			routeData.Add("recordId", 1);
 
 			// act
 			var pageResponse = pageModel.OnGetCancel();
@@ -348,7 +348,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 		}
 
 		[Test]
-		public void WhenOnGetCancel_CaseUrn_RecordUrnIsNullOrEmpty_Return_Page()
+		public void WhenOnGetCancel_CaseUrn_RecordIdIsNullOrEmpty_Return_Page()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();

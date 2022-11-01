@@ -61,7 +61,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1); 
-			routeData.Add("recordUrn", 1);
+			routeData.Add("recordId", 1);
 			
 			// act
 			var pageResponse = await pageModel.OnGet();
@@ -121,7 +121,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 		}
 
 		[Test]
-		public async Task WhenOnGet_Missing_RecordUrn_RouteData_ThrowsException_ReturnsPage()
+		public async Task WhenOnGet_Missing_RecordId_RouteData_ThrowsException_ReturnsPage()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -233,7 +233,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
-			routeData.Add("recordUrn", 1);
+			routeData.Add("recordId", 1);
 			
 			// act
 			var pageResponse = await pageModel.OnPostEditRiskRating("https://returnto/thispage");
@@ -277,7 +277,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
-			routeData.Add("recordUrn", 1);
+			routeData.Add("recordId", 1);
 			
 			// act
 			var pageResponse = await pageModel.OnPostEditRiskRating("https://returnto/thispage");

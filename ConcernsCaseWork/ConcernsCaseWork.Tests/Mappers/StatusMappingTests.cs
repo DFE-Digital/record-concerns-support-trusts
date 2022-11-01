@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 
 			// assert
 			Assert.That(statusModel, Is.Not.Null);
-			Assert.That(statusModel.Urn, Is.EqualTo(statusDto.Id));
+			Assert.That(statusModel.Id, Is.EqualTo(statusDto.Id));
 			Assert.That(statusModel.Name, Is.EqualTo(statusDto.Name));
 		}
 
@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 
 			// assert
 			Assert.That(statusModel, Is.Not.Null);
-			Assert.That(statusModel.Urn, Is.EqualTo(firstStatusDto.Id));
+			Assert.That(statusModel.Id, Is.EqualTo(firstStatusDto.Id));
 			Assert.That(statusModel.Name, Is.EqualTo(firstStatusDto.Name));
 		}
 
