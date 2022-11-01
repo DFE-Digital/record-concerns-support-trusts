@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.CoreTypes.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.Logging", "ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj", "{3C8776EC-ABEA-42DE-86AA-21081ABE3445}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.API.Tests", "ConcernsCaseWork.API.Tests\ConcernsCaseWork.API.Tests.csproj", "{3C77991E-A62D-4C2B-B546-963401F8CDFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{3C8776EC-ABEA-42DE-86AA-21081ABE3445}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C8776EC-ABEA-42DE-86AA-21081ABE3445}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C8776EC-ABEA-42DE-86AA-21081ABE3445}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C77991E-A62D-4C2B-B546-963401F8CDFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C77991E-A62D-4C2B-B546-963401F8CDFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C77991E-A62D-4C2B-B546-963401F8CDFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C77991E-A62D-4C2B-B546-963401F8CDFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
