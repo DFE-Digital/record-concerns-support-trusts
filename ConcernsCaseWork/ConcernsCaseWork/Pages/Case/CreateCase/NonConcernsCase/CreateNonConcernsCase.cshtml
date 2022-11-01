@@ -1,0 +1,37 @@
+@page "/case/create/nonconcerns"
+@model CreateNonConcernsCasePageModel
+
+@{
+	ViewData["Title"] = "Add to Case";
+	if (Model.SelectedActionOrDecision == CreateNonConcernsCasePageModel.Options.None)
+	{
+		ViewData["BackButtonLabel"] = "Back to case overview";
+		ViewData["BackButtonLink"] = "/";
+	}
+	else
+	{
+		ViewData["BackButtonLink"] = "/case/create/nonconcerns";
+	}
+}
+
+@section BeforeMain {
+	<div class="govuk-width-container">
+		<partial name="_BackLink"/>
+	</div>
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError"/>
+
+	@if (Model.SelectedActionOrDecision == CreateNonConcernsCasePageModel.Options.None )
+	{
+		<partial name="_SelectActionOrDecision"/>
+	}
+	@if (Model.SelectedActionOrDecision == CreateNonConcernsCasePageModel.Options.Action )
+	{
+		<partial name="_SelectAction"/>
+	}
+
+</div>
+
+

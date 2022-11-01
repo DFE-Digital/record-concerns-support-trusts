@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Trusts;
 using Microsoft.Extensions.Logging;
 using ConcernsCaseWork.Service.Trusts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,6 +55,27 @@ namespace ConcernsCaseWork.Services.Trusts
 			var trustDetailsModel = _mapper.Map<TrustDetailsModel>(trustDetailsDto);
 
 			return trustDetailsModel;
+		}
+		
+		public async Task<TrustAddressModel> GetTrustAddressByUkPrn(string ukPrn)
+		{
+			_logger.LogMethodEntered();
+			
+			var trustDetailsDto = await _trustCachedService.GetTrustByUkPrn(ukPrn);
+			if (trustDetailsDto is null)
+			{
+				throw new Exception();
+			}
+			
+			var trustDetailsModel = _mapper.Map<TrustDetailsModel>(trustDetailsDto);
+
+			var trustDetailsAddress = new TrustAddressModel(
+				trustDetailsModel.GiasData.GroupName,
+				trustDetailsModel.IfdData?.GroupContactAddress?.County,
+				trustDetailsModel.DisplayAddress
+			);
+
+			return trustDetailsAddress;
 		}
 	}
 }

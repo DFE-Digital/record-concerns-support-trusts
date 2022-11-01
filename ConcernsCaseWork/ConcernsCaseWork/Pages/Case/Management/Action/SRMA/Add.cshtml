@@ -5,6 +5,7 @@
 
 @{
     ViewData["Title"] = "Add srma";
+	ViewData["CancelBackLink"] = $"/case/{@Model.CaseUrn}/management";
     var nonce = HttpContext.GetNonce();
 }
 

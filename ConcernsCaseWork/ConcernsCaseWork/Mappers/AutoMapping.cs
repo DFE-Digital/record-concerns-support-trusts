@@ -23,7 +23,7 @@ namespace ConcernsCaseWork.Mappers
 			CreateMap<EstablishmentTypeDto, EstablishmentTypeModel>();
 			CreateMap<CensusDto, CensusModel>();
 			CreateMap<IfdDataDto, IfdDataModel>();
-			
+
 			// Case
 			CreateMap<MeansOfReferralModel, MeansOfReferralDto>();
 			CreateMap<MeansOfReferralDto, MeansOfReferralModel>();
