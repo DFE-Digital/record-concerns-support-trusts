@@ -45,7 +45,7 @@ describe("User can add case actions to an existing case", () => {
 		AddToCasePage.getDecisionButton().click();
 		cy.get('#open-case-actions').should(
 			"contain.text",
-			"NoticeToImprove"
+			"Decision: Notice to Improve"
 		);
 	
 
