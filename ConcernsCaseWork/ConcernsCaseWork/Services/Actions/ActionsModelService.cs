@@ -1,6 +1,8 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Pages.Shared;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Decisions;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiWarningLetter;
@@ -22,6 +24,7 @@ namespace ConcernsCaseWork.Services.Actions
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly INtiModelService _ntiModelService;
 		private readonly INtiUnderConsiderationStatusesCachedService _ntiUcStatusesCachedService;
+		private readonly IDecisionModelService _decisionModelService;
 		private readonly ILogger<ActionsModelService> _logger;
 
 		public ActionsModelService(
@@ -30,7 +33,9 @@ namespace ConcernsCaseWork.Services.Actions
 			INtiUnderConsiderationModelService ntiUnderConsiderationModelService,
 			INtiWarningLetterModelService ntiWarningLetterModelService,
 			INtiModelService ntiModelService,
-			ILogger<ActionsModelService> logger, INtiUnderConsiderationStatusesCachedService ntiUcStatusesCachedService)
+			ILogger<ActionsModelService> logger, 
+			INtiUnderConsiderationStatusesCachedService ntiUcStatusesCachedService,
+			IDecisionModelService decisionModelService)
 		{
 			_srmaService = srmaService;
 			_financialPlanModelService = financialPlanModelService;
@@ -39,19 +44,23 @@ namespace ConcernsCaseWork.Services.Actions
 			_ntiModelService = ntiModelService;
 			_logger = logger;
 			_ntiUcStatusesCachedService = ntiUcStatusesCachedService;
+			_decisionModelService = decisionModelService;
 		}
 
-		public async Task<IList<ActionSummary>> GetClosedActionsSummary(string userName, long caseUrn)
+		public async Task<IList<ActionSummary>> GetActionsSummary(string userName, long caseUrn)
 		{
 			var caseActions = new List<ActionSummary>();
 				
 			try
 			{
-				caseActions.AddRange(await GetClosedSrmas(caseUrn));
-				caseActions.AddRange(await GetClosedFinancialPlans(caseUrn, userName));
-				caseActions.AddRange(await GetClosedNtisUnderConsideration(caseUrn));
-				caseActions.AddRange(await GetClosedNtiWarningLettersForCase(caseUrn));
-				caseActions.AddRange(await GetClosedNtisForCase(caseUrn));
+				caseActions.AddRange(await GetSrmas(caseUrn));
+				caseActions.AddRange(await GetFinancialPlans(caseUrn, userName));
+				caseActions.AddRange(await GetNtisUnderConsideration(caseUrn));
+				caseActions.AddRange(await GetNtiWarningLettersForCase(caseUrn));
+				caseActions.AddRange(await GetNtisForCase(caseUrn));
+				caseActions.AddRange(await _decisionModelService.GetDecisionsByUrn(caseUrn));
+
+				return caseActions;
 			}
 			catch (Exception ex)
 			{
@@ -62,33 +71,29 @@ namespace ConcernsCaseWork.Services.Actions
 			return caseActions;
 		}
 
-		private async Task<IEnumerable<ActionSummary>> GetClosedSrmas(long caseUrn)
+		private async Task<IEnumerable<ActionSummary>> GetSrmas(long caseUrn)
 			=> (await _srmaService.GetSRMAsForCase(caseUrn))
-				.Where(a => a.ClosedAt.HasValue)
 				.Select(a => a.ToActionSummary());
 		
-		private async Task<IEnumerable<ActionSummary>> GetClosedFinancialPlans(long caseUrn, string userName)
+		private async Task<IEnumerable<ActionSummary>> GetFinancialPlans(long caseUrn, string userName)
 			=> (await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, userName))
-				.Where(a => a.ClosedAt.HasValue)
+
 				.Select(a => a.ToActionSummary());
 
-		private async Task<IEnumerable<ActionSummary>> GetClosedNtisUnderConsideration(long caseUrn)
+		private async Task<IEnumerable<ActionSummary>> GetNtisUnderConsideration(long caseUrn)
 		{
 			var statuses = await _ntiUcStatusesCachedService.GetAllStatuses();
 			
 			return (await _ntiUnderConsiderationModelService.GetNtiUnderConsiderationsForCase(caseUrn))
-				.Where(a => a.ClosedAt.HasValue)
 				.Select(a => a.ToActionSummary(statuses));
 		}
 
-		private async Task<IEnumerable<ActionSummary>> GetClosedNtiWarningLettersForCase(long caseUrn)
+		private async Task<IEnumerable<ActionSummary>> GetNtiWarningLettersForCase(long caseUrn)
 			=> (await _ntiWarningLetterModelService.GetNtiWarningLettersForCase(caseUrn))
-				.Where(a => a.ClosedAt.HasValue)
 				.Select(a => a.ToActionSummary());
 								
-		private async Task<IEnumerable<ActionSummary>> GetClosedNtisForCase(long caseUrn)
+		private async Task<IEnumerable<ActionSummary>> GetNtisForCase(long caseUrn)
 			=> (await _ntiModelService.GetNtisForCaseAsync(caseUrn))
-				.Where(a => a.ClosedAt.HasValue)
 				.Select(a => a.ToActionSummary());
 	}
 }

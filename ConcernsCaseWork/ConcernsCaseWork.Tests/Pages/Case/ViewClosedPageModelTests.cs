@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 			mockTrustModelService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 			mockRecordModelService.Verify(c => c.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-			mockActionsModelService.Verify(c => c.GetClosedActionsSummary(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			mockActionsModelService.Verify(c => c.GetActionsSummary(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 
 		[Test]
@@ -109,7 +109,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				.ReturnsAsync(trustDetailsModel);
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
-			mockActionsModelService.Setup(a => a.GetClosedActionsSummary(It.IsAny<string>(), It.IsAny<long>()))
+			mockActionsModelService.Setup(a => a.GetActionsSummary(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(closedActions);
 			mockStatusCachedService.Setup(a => a.GetStatusByName(StatusEnum.Close.ToString()))
 				.ReturnsAsync(new StatusDto("Closed", DateTimeOffset.Now, DateTimeOffset.Now, caseModel.StatusUrn));
@@ -192,7 +192,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 			mockTrustModelService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
 			mockRecordModelService.Verify(c => c.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
-			mockActionsModelService.Verify(c => c.GetClosedActionsSummary(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
+			mockActionsModelService.Verify(c => c.GetActionsSummary(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 		}
 		
 		
@@ -218,7 +218,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				.ReturnsAsync(trustDetailsModel);
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
-			mockActionsModelService.Setup(a => a.GetClosedActionsSummary(It.IsAny<string>(), It.IsAny<long>()))
+			mockActionsModelService.Setup(a => a.GetActionsSummary(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(closedActions);
 			mockStatusCachedService.Setup(a => a.GetStatusByName(StatusEnum.Close.ToString()))
 				.ReturnsAsync(new StatusDto("Open", DateTimeOffset.Now, DateTimeOffset.Now, 99999));
@@ -239,7 +239,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 			mockTrustModelService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 			mockRecordModelService.Verify(c => c.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-			mockActionsModelService.Verify(c => c.GetClosedActionsSummary(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			mockActionsModelService.Verify(c => c.GetActionsSummary(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 
 		private static ViewClosedPageModel SetupViewClosedPageModel(

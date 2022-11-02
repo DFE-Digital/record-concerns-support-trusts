@@ -80,15 +80,26 @@ namespace ConcernsCaseWork.Mappers
 				Name = ntiWarningLetterReasonDto.Name
 			};
 		}
-		
+
 		public static ActionSummary ToActionSummary(this NtiWarningLetterModel model)
-			=> new()
+		{
+			var status = (model.Status != null) ? model.Status.Name : "In progress";
+
+			if (model.ClosedAt.HasValue)
 			{
-				ClosedDate = model.ClosedAt.ToDayMonthYear(),
-				Name = "NTI Warning Letter", 
+				status = model.ClosedStatus.PastTenseName;
+			}
+
+			var result = new ActionSummary()
+			{
+				ClosedDate = model.ClosedAt?.ToDayMonthYear(),
+				Name = "NTI Warning Letter",
 				OpenedDate = model.CreatedAt.ToDayMonthYear(),
 				RelativeUrl = $"/case/{model.CaseUrn}/management/action/ntiwarningletter/{model.Id}",
-				StatusName = model.ClosedStatus.PastTenseName
+				StatusName = status
 			};
+
+			return result;
+		}
 	}
 }

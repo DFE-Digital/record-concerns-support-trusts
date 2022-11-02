@@ -71,7 +71,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(userName, caseUrn);
 				CaseModel.RecordsModel = recordsModel;
 
-				CaseActions = (await _actionsModelService.GetClosedActionsSummary(userName, caseUrn)).ToList();
+				CaseActions = (await _actionsModelService.GetActionsSummary(userName, caseUrn)).Where(a => a.ClosedAt.HasValue).ToList();
 			}
 			catch (Exception ex)
 			{

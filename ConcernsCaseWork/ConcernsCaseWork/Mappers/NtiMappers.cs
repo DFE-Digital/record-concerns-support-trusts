@@ -86,15 +86,27 @@ namespace ConcernsCaseWork.Mappers
 				Name = ntiReasonDto.Name
 			};
 		}
-		
+
 		public static ActionSummary ToActionSummary(this NtiModel model)
-			=> new()
+		{
+			var status = (model.Status != null) ? model.Status.Name : "In progress";
+
+			if (model.ClosedAt.HasValue)
 			{
-				ClosedDate = model.ClosedAt.ToDayMonthYear(), 
+				status = model.ClosedStatus.Name;
+			}
+
+
+			var result = new ActionSummary()
+			{
+				ClosedDate = model.ClosedAt.ToDayMonthYear(),
 				Name = "NTI",
 				OpenedDate = model.CreatedAt.ToDayMonthYear(),
 				RelativeUrl = $"/case/{model.CaseUrn}/management/action/nti/{model.Id}",
-				StatusName = model.ClosedStatus.Name
+				StatusName = status
 			};
+
+			return result;
+		}
 	}
 }

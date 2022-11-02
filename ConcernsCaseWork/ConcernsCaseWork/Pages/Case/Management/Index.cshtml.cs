@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Decisions;
 using ConcernsCaseWork.Services.FinancialPlan;
@@ -32,23 +33,19 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly IRecordModelService _recordModelService;
 		private readonly IRatingModelService _ratingModelService;
 		private readonly IStatusCachedService _statusCachedService;
-		private readonly ISRMAService _srmaService;
-		private readonly IFinancialPlanModelService _financialPlanModelService;
-		private readonly INtiUnderConsiderationModelService _ntiUnderConsiderationModelService;
 		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
-		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
-		private readonly INtiModelService _ntiModelService;
-		private readonly IDecisionModelService _decisionModelService;
+		private readonly IActionsModelService _actionsModelService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<TrustCasesModel> TrustCasesModel { get; private set; }
 		public bool IsEditableCase { get; private set; }
-		public bool HasOpenActions { get { return CaseActions.Any(a => !a.ClosedAt.HasValue); } }
-		public bool HasClosedActions { get { return CaseActions.Any(a => a.ClosedAt.HasValue); } }
-		public List<CaseActionModel> CaseActions { get; private set; }
+		public List<ActionSummary> CaseActions { get; private set; }
 		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
+
+		public List<ActionSummary> OpenCaseActions { get; set; }
+		public List<ActionSummary> ClosedCaseActions { get; set; }
 
 
 		public IndexPageModel(ICaseModelService caseModelService, 
@@ -56,14 +53,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			IRecordModelService recordModelService,
 			IRatingModelService ratingModelService,
 			IStatusCachedService statusCachedService,
-			ISRMAService srmaService,
-			IFinancialPlanModelService financialPlanModelService,
-			INtiUnderConsiderationModelService ntiUnderConsiderationModelService,
 			INtiUnderConsiderationStatusesCachedService ntiUCStatusesCachedService,
-			INtiWarningLetterModelService ntiWarningLetterModelService,
-			INtiModelService ntiModelService,
 			ILogger<IndexPageModel> logger,
-			IDecisionModelService decisionModelService
+			IActionsModelService actionsModelService
 			)
 		{
 			_trustModelService = trustModelService;
@@ -71,14 +63,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_recordModelService = recordModelService;
 			_ratingModelService = ratingModelService;
 			_statusCachedService = statusCachedService;
-			_srmaService = srmaService;
-			_financialPlanModelService = financialPlanModelService;
-			_ntiUnderConsiderationModelService = ntiUnderConsiderationModelService;
 			_ntiStatusesCachedService = ntiUCStatusesCachedService;
-			_ntiWarningLetterModelService = ntiWarningLetterModelService;
-			_ntiModelService = ntiModelService;
 			_logger = logger;
-			_decisionModelService = decisionModelService;
+			_actionsModelService = actionsModelService;
 		}
 
 		public async Task<IActionResult> OnGetAsync()
@@ -134,13 +121,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		private async Task PopulateCaseActions(long caseUrn)
 		{
-			CaseActions = CaseActions ?? new List<CaseActionModel>();
-			CaseActions.AddRange(await _srmaService.GetSRMAsForCase(caseUrn));
-			CaseActions.AddRange(await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name));
-			CaseActions.AddRange(await _ntiUnderConsiderationModelService.GetNtiUnderConsiderationsForCase(caseUrn));
-			CaseActions.AddRange(await _ntiWarningLetterModelService.GetNtiWarningLettersForCase(caseUrn));
-			CaseActions.AddRange(await _ntiModelService.GetNtisForCaseAsync(caseUrn));
-			CaseActions.AddRange(await _decisionModelService.GetDecisionsByUrn(caseUrn));
+			CaseActions = CaseActions ?? new List<ActionSummary>();
+			CaseActions.AddRange(await _actionsModelService.GetActionsSummary(User.Identity.Name, caseUrn));
+
+			OpenCaseActions = CaseActions.Where(a => a.ClosedDate == null).ToList();
+			ClosedCaseActions = CaseActions.Except(OpenCaseActions).ToList();
 		}
 
 		private bool UserHasEditCasePrivileges()

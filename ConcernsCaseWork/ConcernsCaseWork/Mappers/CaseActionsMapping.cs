@@ -46,15 +46,24 @@ namespace ConcernsCaseWork.Mappers
 
 			};
 		}
-		
+
 		public static ActionSummary ToActionSummary(this SRMAModel srmaModel)
-			 => new()
-				{
-					ClosedDate = srmaModel.ClosedAt.ToDayMonthYear(),
-					Name = "SRMA",
-					OpenedDate = srmaModel.CreatedAt.ToDayMonthYear(), 
-					RelativeUrl = $"/case/{srmaModel.CaseUrn}/management/action/srma/{srmaModel.Id}/closed",
-					StatusName = EnumHelper.GetEnumDescription(srmaModel.Status)
-				};
+		{
+			var relativeUrl = $"/case/{srmaModel.CaseUrn}/management/action/srma/{srmaModel.Id}";
+
+			if (srmaModel.IsClosed)
+				relativeUrl += "/closed";
+
+			var result = new ActionSummary()
+			{
+				ClosedDate = srmaModel.ClosedAt.ToDayMonthYear(),
+				Name = "SRMA",
+				OpenedDate = srmaModel.CreatedAt.ToDayMonthYear(),
+				RelativeUrl = $"/case/{srmaModel.CaseUrn}/management/action/srma/{srmaModel.Id}",
+				StatusName = EnumHelper.GetEnumDescription(srmaModel.Status)
+			};
+
+			return result;
+		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
+using FluentAssertions;
 using NUnit.Framework;
 using Service.TRAMS.NtiUnderConsideration;
 using System;
@@ -13,7 +14,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 	public class NtiUnderConsiderationMappingTests
 	{
 		private readonly Fixture _fixture = new();
-		
+
 		[Test]
 		public void WhenMapDtoToServiceModel_ReturnsCorrectModel()
 		{
@@ -74,7 +75,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 					new NtiReasonForConsideringModel { Id = 21, Name = "Test reason 2"  }
 				}
 			};
-			
+
 			// act
 			var dbModel = NtiUnderConsiderationMappers.ToDBModel(serviceModel);
 
@@ -87,12 +88,12 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(dbModel.ClosedStatusId, Is.EqualTo(serviceModel.ClosedStatusId));
 			Assert.That(dbModel.ClosedStatusName, Is.EqualTo(serviceModel.ClosedStatusName));
 			Assert.That(dbModel.Notes, Is.EqualTo(serviceModel.Notes));
-			
+
 			Assert.That(dbModel.UnderConsiderationReasonsMapping, Is.Not.Null);
 			Assert.That(dbModel.UnderConsiderationReasonsMapping.Count, Is.EqualTo(serviceModel.NtiReasonsForConsidering.Count));
 			Assert.That(dbModel.UnderConsiderationReasonsMapping.ElementAt(0), Is.EqualTo(serviceModel.NtiReasonsForConsidering.ElementAt(0).Id));
 			Assert.That(dbModel.UnderConsiderationReasonsMapping.ElementAt(1), Is.EqualTo(serviceModel.NtiReasonsForConsidering.ElementAt(1).Id));
-			
+
 			Assert.That(dbModel.Reasons, Is.Not.Null);
 			Assert.That(dbModel.Reasons.Count, Is.EqualTo(serviceModel.NtiReasonsForConsidering.Count));
 			Assert.That(dbModel.Reasons.ElementAt(0).Id, Is.EqualTo(serviceModel.NtiReasonsForConsidering.ElementAt(0).Id));
@@ -136,6 +137,31 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/ntiunderconsideration/{testData.Id}"));
 				Assert.That(actionSummary.StatusName, Is.EqualTo(testData.ClosedStatus.Name));
 			});
+		}
+
+		[TestCaseSource(nameof(GetStatusTestCases))]
+		public void WhenMapDbModelToActionSummary_ReturnsCorrectActionStatus(
+			DateTime? closedAt,
+			List<NtiUnderConsiderationStatusDto> statuses,
+			string expectedResult)
+		{
+			var model = _fixture.Create<NtiUnderConsiderationModel>();
+			model.ClosedStatusId = 1;
+			model.ClosedAt = closedAt;
+
+			var actualResult = model.ToActionSummary(statuses);
+
+			actualResult.StatusName.Should().Be(expectedResult);
+		}
+
+		private static IEnumerable<TestCaseData> GetStatusTestCases()
+		{
+			yield return new TestCaseData(new DateTime(), new List<NtiUnderConsiderationStatusDto>(), "");
+			yield return new TestCaseData(new DateTime(), new List<NtiUnderConsiderationStatusDto>()
+			{
+				new NtiUnderConsiderationStatusDto() { Id = 1, Name="Test" },
+			}, "Test");
+			yield return new TestCaseData(null, new List<NtiUnderConsiderationStatusDto>(), "In progress");
 		}
 	}
 }

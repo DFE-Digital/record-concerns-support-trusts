@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Helpers;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Service.TRAMS.Decision;
@@ -9,21 +10,23 @@ namespace ConcernsCaseWork.Services.Decisions
 {
 	public class DecisionMapping
 	{
-		public static DecisionModel MapDtoToModel(GetDecisionResponseDto decision)
+		public static ActionSummary MapDtoToModel(GetDecisionResponseDto decision)
 		{
-			var result = new DecisionModel()
+			var result = new ActionSummary()
 			{
-				CreatedAt = decision.CreatedAt.Date,
-				ClosedAt = decision.ClosedAt?.Date,
+				OpenedDate = decision.CreatedAt.ToDayMonthYear(),
+				ClosedDate = decision.ClosedAt?.ToDayMonthYear(),
 				CaseUrn = decision.ConcernsCaseUrn,
 				Id = decision.DecisionId,
-				Title = decision.Title
+				Name = $"Decision: {decision.Title}",
+				StatusName = EnumHelper.GetEnumDescription(decision.Status),
+				RelativeUrl = $"/case/{decision.ConcernsCaseUrn}/management/action/decision/{decision.DecisionId}"
 			};
 
 			return result;
 		}
 
-		public static List<DecisionModel> MapDtoToModel(List<GetDecisionResponseDto> decisions)
+		public static List<ActionSummary> MapDtoToModel(List<GetDecisionResponseDto> decisions)
 		{
 			return decisions.Select(d => MapDtoToModel(d)).ToList();
 		}

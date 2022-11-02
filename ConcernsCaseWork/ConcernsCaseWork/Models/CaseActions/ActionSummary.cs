@@ -1,11 +1,11 @@
 namespace ConcernsCaseWork.Models.CaseActions
 {
-	public record ActionSummary
+	public class ActionSummary : CaseActionModel
 	{
-		public string RelativeUrl { get; init; }
-		public string StatusName { get; init; }
-		public string Name { get; init; }
-		public string OpenedDate { get; init; }
-		public string ClosedDate { get; init; }
+		public string RelativeUrl { get; set; }
+		public string StatusName { get; set; }
+		public string Name { get; set; }
+		public string OpenedDate { get; set; }
+		public string ClosedDate { get; set; }
 	}
 }
