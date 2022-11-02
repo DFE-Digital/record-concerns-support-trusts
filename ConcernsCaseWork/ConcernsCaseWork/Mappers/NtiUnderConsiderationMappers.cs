@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.Mappers
 			};
 		}
 
-		public static ActionSummary ToActionSummary(this NtiUnderConsiderationModel model, IEnumerable<NtiUnderConsiderationStatusDto> statuses)
+		public static ActionSummaryModel ToActionSummary(this NtiUnderConsiderationModel model, IEnumerable<NtiUnderConsiderationStatusDto> statuses)
 		{
 			var statusName = "In progress";
 
@@ -69,7 +69,7 @@ namespace ConcernsCaseWork.Mappers
 				statusName = statuses.SingleOrDefault(s => s.Id == model.ClosedStatusId)?.Name ?? string.Empty;
 			}
 
-			var result = new ActionSummary
+			var result = new ActionSummaryModel
 			{
 				ClosedDate = model.ClosedAt?.ToDayMonthYear(),
 				Name = "NTI Under Consideration",

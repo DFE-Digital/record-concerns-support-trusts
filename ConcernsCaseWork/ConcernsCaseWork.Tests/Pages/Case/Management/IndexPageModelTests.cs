@@ -89,14 +89,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			SetupDefaultModels();
 
 			var openActions = _fixture
-				.Build<ActionSummary>()
+				.Build<ActionSummaryModel>()
 				.Without(a => a.ClosedDate)
 				.CreateMany()
 				.ToList();
 
-			var closedActions = _fixture.CreateMany<ActionSummary>().ToList();
+			var closedActions = _fixture.CreateMany<ActionSummaryModel>().ToList();
 
-			var allCases = new List<ActionSummary>();
+			var allCases = new List<ActionSummaryModel>();
 			allCases.AddRange(openActions);
 			allCases.AddRange(closedActions);
 
@@ -295,7 +295,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			_mockNtiStatusesCachedService.Setup(s => s.GetAllStatuses())
 				.ReturnsAsync(new List<NtiUnderConsiderationStatusDto>());
 			_actionsModelService.Setup(m => m.GetActionsSummary(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(new List<ActionSummary>());
+				.ReturnsAsync(new List<ActionSummaryModel>());
 		}
 
 		private void PageLoadedWithoutError(IndexPageModel pageModel)

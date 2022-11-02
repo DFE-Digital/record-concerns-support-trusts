@@ -41,11 +41,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<TrustCasesModel> TrustCasesModel { get; private set; }
 		public bool IsEditableCase { get; private set; }
-		public List<ActionSummary> CaseActions { get; private set; }
+		public List<ActionSummaryModel> CaseActions { get; private set; }
 		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
 
-		public List<ActionSummary> OpenCaseActions { get; set; }
-		public List<ActionSummary> ClosedCaseActions { get; set; }
+		public List<ActionSummaryModel> OpenCaseActions { get; set; }
+		public List<ActionSummaryModel> ClosedCaseActions { get; set; }
 
 
 		public IndexPageModel(ICaseModelService caseModelService, 
@@ -121,7 +121,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		private async Task PopulateCaseActions(long caseUrn)
 		{
-			CaseActions = CaseActions ?? new List<ActionSummary>();
+			CaseActions = CaseActions ?? new List<ActionSummaryModel>();
 			CaseActions.AddRange(await _actionsModelService.GetActionsSummary(User.Identity.Name, caseUrn));
 
 			OpenCaseActions = CaseActions.Where(a => a.ClosedDate == null).ToList();

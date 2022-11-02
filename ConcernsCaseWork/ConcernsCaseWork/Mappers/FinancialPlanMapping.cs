@@ -80,7 +80,7 @@ namespace ConcernsCaseWork.Mappers
 			return updatedFinancialPlanDto;
 		}
 
-		public static ActionSummary ToActionSummary(this FinancialPlanModel model)
+		public static ActionSummaryModel ToActionSummary(this FinancialPlanModel model)
 		{
 			var relativeUrl = $"/case/{model.CaseUrn}/management/action/financialplan/{model.Id}";
 
@@ -95,7 +95,7 @@ namespace ConcernsCaseWork.Mappers
 				status = EnumHelper.GetEnumDescription(financialStatusEnum);
 			}
 
-			var result = new ActionSummary()
+			var result = new ActionSummaryModel()
 			{
 				ClosedDate = model.ClosedAt.ToDayMonthYear(),
 				Name = "Financial Plan",

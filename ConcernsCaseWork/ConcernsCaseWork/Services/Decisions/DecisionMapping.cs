@@ -10,9 +10,9 @@ namespace ConcernsCaseWork.Services.Decisions
 {
 	public class DecisionMapping
 	{
-		public static ActionSummary ToActionSummary(GetDecisionResponseDto decision)
+		public static ActionSummaryModel ToActionSummary(GetDecisionResponseDto decision)
 		{
-			var result = new ActionSummary()
+			var result = new ActionSummaryModel()
 			{
 				OpenedDate = decision.CreatedAt.ToDayMonthYear(),
 				ClosedDate = decision.ClosedAt?.ToDayMonthYear(),

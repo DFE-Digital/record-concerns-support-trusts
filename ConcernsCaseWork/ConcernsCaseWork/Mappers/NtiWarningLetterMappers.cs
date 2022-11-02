@@ -81,7 +81,7 @@ namespace ConcernsCaseWork.Mappers
 			};
 		}
 
-		public static ActionSummary ToActionSummary(this NtiWarningLetterModel model)
+		public static ActionSummaryModel ToActionSummary(this NtiWarningLetterModel model)
 		{
 			var status = (model.Status != null) ? model.Status.Name : "In progress";
 
@@ -90,7 +90,7 @@ namespace ConcernsCaseWork.Mappers
 				status = model.ClosedStatus.PastTenseName;
 			}
 
-			var result = new ActionSummary()
+			var result = new ActionSummaryModel()
 			{
 				ClosedDate = model.ClosedAt?.ToDayMonthYear(),
 				Name = "NTI Warning Letter",

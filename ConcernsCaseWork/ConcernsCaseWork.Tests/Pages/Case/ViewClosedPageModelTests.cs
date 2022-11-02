@@ -107,15 +107,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
 
-			var allActions = new List<ActionSummary>();
+			var allActions = new List<ActionSummaryModel>();
 
 			var openActions = _fixture
-				.Build<ActionSummary>()
+				.Build<ActionSummaryModel>()
 				.Without(a => a.ClosedDate)
 				.CreateMany().ToList();
 			allActions.AddRange(openActions);
 
-			var closedActions = _fixture.CreateMany<ActionSummary>().ToList();
+			var closedActions = _fixture.CreateMany<ActionSummaryModel>().ToList();
 			allActions.AddRange(closedActions);
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))

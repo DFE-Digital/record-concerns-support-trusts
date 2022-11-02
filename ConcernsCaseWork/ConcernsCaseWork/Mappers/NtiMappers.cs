@@ -87,7 +87,7 @@ namespace ConcernsCaseWork.Mappers
 			};
 		}
 
-		public static ActionSummary ToActionSummary(this NtiModel model)
+		public static ActionSummaryModel ToActionSummary(this NtiModel model)
 		{
 			var status = (model.Status != null) ? model.Status.Name : "In progress";
 
@@ -97,7 +97,7 @@ namespace ConcernsCaseWork.Mappers
 			}
 
 
-			var result = new ActionSummary()
+			var result = new ActionSummaryModel()
 			{
 				ClosedDate = model.ClosedAt.ToDayMonthYear(),
 				Name = "NTI",

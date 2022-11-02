@@ -15,7 +15,7 @@ namespace ConcernsCaseWork.Services.Decisions
 			_decisionService = decisionService;
 		}
 
-		public async Task<List<ActionSummary>> GetDecisionsByUrn(long urn)
+		public async Task<List<ActionSummaryModel>> GetDecisionsByUrn(long urn)
 		{
 			var decisions = await _decisionService.GetDecisionsByCaseUrn(urn);
 

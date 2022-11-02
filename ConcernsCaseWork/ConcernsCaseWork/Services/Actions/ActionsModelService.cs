@@ -47,9 +47,9 @@ namespace ConcernsCaseWork.Services.Actions
 			_decisionModelService = decisionModelService;
 		}
 
-		public async Task<IList<ActionSummary>> GetActionsSummary(string userName, long caseUrn)
+		public async Task<IList<ActionSummaryModel>> GetActionsSummary(string userName, long caseUrn)
 		{
-			var caseActions = new List<ActionSummary>();
+			var caseActions = new List<ActionSummaryModel>();
 				
 			try
 			{
@@ -71,16 +71,16 @@ namespace ConcernsCaseWork.Services.Actions
 			return caseActions;
 		}
 
-		private async Task<IEnumerable<ActionSummary>> GetSrmas(long caseUrn)
+		private async Task<IEnumerable<ActionSummaryModel>> GetSrmas(long caseUrn)
 			=> (await _srmaService.GetSRMAsForCase(caseUrn))
 				.Select(a => a.ToActionSummary());
 		
-		private async Task<IEnumerable<ActionSummary>> GetFinancialPlans(long caseUrn, string userName)
+		private async Task<IEnumerable<ActionSummaryModel>> GetFinancialPlans(long caseUrn, string userName)
 			=> (await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, userName))
 
 				.Select(a => a.ToActionSummary());
 
-		private async Task<IEnumerable<ActionSummary>> GetNtisUnderConsideration(long caseUrn)
+		private async Task<IEnumerable<ActionSummaryModel>> GetNtisUnderConsideration(long caseUrn)
 		{
 			var statuses = await _ntiUcStatusesCachedService.GetAllStatuses();
 			
@@ -88,11 +88,11 @@ namespace ConcernsCaseWork.Services.Actions
 				.Select(a => a.ToActionSummary(statuses));
 		}
 
-		private async Task<IEnumerable<ActionSummary>> GetNtiWarningLettersForCase(long caseUrn)
+		private async Task<IEnumerable<ActionSummaryModel>> GetNtiWarningLettersForCase(long caseUrn)
 			=> (await _ntiWarningLetterModelService.GetNtiWarningLettersForCase(caseUrn))
 				.Select(a => a.ToActionSummary());
 								
-		private async Task<IEnumerable<ActionSummary>> GetNtisForCase(long caseUrn)
+		private async Task<IEnumerable<ActionSummaryModel>> GetNtisForCase(long caseUrn)
 			=> (await _ntiModelService.GetNtisForCaseAsync(caseUrn))
 				.Select(a => a.ToActionSummary());
 	}

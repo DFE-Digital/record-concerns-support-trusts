@@ -1,6 +1,6 @@
 namespace ConcernsCaseWork.Models.CaseActions
 {
-	public class ActionSummary
+	public record ActionSummaryModel
 	{
 		public string RelativeUrl { get; set; }
 		public string StatusName { get; set; }
