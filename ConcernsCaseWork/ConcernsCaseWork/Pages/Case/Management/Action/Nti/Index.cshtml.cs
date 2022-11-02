@@ -5,17 +5,12 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Services.Cases;
 using System.Linq;
-using Service.Redis.NtiUnderConsideration;
-using Service.Redis.NtiWarningLetter;
-using ConcernsCaseWork.Services.NtiWarningLetter;
 using System.Collections.Generic;
-using Service.TRAMS.NtiWarningLetter;
 using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Redis.Nti;
+using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Services.Nti;
-using Service.Redis.Nti;
-using Service.TRAMS.Nti;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 {
@@ -50,7 +45,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 		public async Task OnGetAsync()
 		{
-			long caseUrn = 0;
 			long ntiId = 0;
 
 			try
@@ -58,7 +52,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				_logger.LogInformation("Case::Action::NTI::IndexPageModel::OnGetAsync");
 
 				
-				(caseUrn, ntiId) = GetRouteData();
+				(_, ntiId) = GetRouteData();
 
 				NtiModel = await GetNTIModel(ntiId);
 

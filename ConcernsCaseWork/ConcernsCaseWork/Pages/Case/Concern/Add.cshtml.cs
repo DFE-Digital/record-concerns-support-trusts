@@ -1,12 +1,11 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Base;
-using Service.Redis.Models;
-using Service.Redis.Users;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

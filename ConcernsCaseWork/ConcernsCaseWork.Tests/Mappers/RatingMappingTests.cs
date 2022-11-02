@@ -1,7 +1,7 @@
 ﻿using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Service.Ratings;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
-using Service.TRAMS.Ratings;
 using System.Collections.Generic;
 using System.Linq;
 

@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
@@ -10,9 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ConcernsCaseWork.Models.CaseActions;
 
-namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
+namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 		private readonly ISRMAService _srmaModelService;
 
 		public int NotesMaxLength => 500;
-		public IEnumerable<RadioItem> SRMAStatuses => getStatuses();
+		public IEnumerable<RadioItem> SRMAStatuses => GetStatuses();
 
 		public AddPageModel(
 			ISRMAService srmaModelService, ILogger<AddPageModel> logger)
@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			_logger = logger;
 		}
 
-		public async Task<IActionResult> OnGetAsync()
+		public IActionResult OnGet()
 		{
 			_logger.LogInformation("Case::Action::SRMA::AddPageModel::OnGetAsync");
 
@@ -76,7 +76,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Srma
 			return Page();
 		}
 
-		private IEnumerable<RadioItem> getStatuses()
+		private IEnumerable<RadioItem> GetStatuses()
 		{
 			var statuses = (SRMAStatus[])Enum.GetValues(typeof(SRMAStatus));
 			return statuses.Where(s => s != SRMAStatus.Unknown && s != SRMAStatus.Declined && s != SRMAStatus.Canceled && s != SRMAStatus.Complete)

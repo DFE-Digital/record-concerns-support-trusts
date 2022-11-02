@@ -1,18 +1,15 @@
-﻿using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.Pages.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Services.Nti;
-using Service.TRAMS.Helpers;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Service.Helpers;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 {
@@ -42,10 +39,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			try
 			{
 				long ntiId = 0;
+				long caseUrn = 0;
 
-				(_, ntiId) = GetRouteData();
+				(caseUrn, ntiId) = GetRouteData();
 
 				Nti = await _ntiModelService.GetNtiByIdAsync(ntiId);
+				
+				if (Nti.IsClosed)
+				{
+					return Redirect($"/case/{caseUrn}/management/action/nti/{ntiId}");
+				}
 
 				return Page();
 			}

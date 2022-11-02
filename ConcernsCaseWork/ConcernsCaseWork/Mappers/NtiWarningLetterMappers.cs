@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.TRAMS.NtiWarningLetter;
+using ConcernsCaseWork.Service.NtiWarningLetter;
 using System;
 using System.Collections.Generic;
 using System.Linq;

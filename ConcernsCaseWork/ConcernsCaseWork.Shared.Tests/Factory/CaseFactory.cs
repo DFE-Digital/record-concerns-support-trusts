@@ -1,9 +1,9 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Models;
-using Service.Redis.Models;
-using Service.TRAMS.Base;
-using Service.TRAMS.Cases;
-using Service.TRAMS.Status;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Service.Status;
 using System;
 using System.Collections.Generic;
 
@@ -280,50 +280,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		public static CaseSearch BuildCaseSearch(long caseUrn = 1)
 		{
 			return new CaseSearch(caseUrn);
-		}
-
-		public static IList<CaseHistoryDto> BuildListCasesHistoryDto()
-		{
-			return new List<CaseHistoryDto>
-			{
-				BuildCaseHistoryDto()
-			};
-		}
-
-		public static IList<CaseHistoryModel> BuildListCasesHistoryModel()
-		{
-			return new List<CaseHistoryModel>
-			{
-				new CaseHistoryModel {
-					CreatedAt = Fixture.Create<DateTimeOffset>(),
-					Urn = Fixture.Create<long>(),
-					CaseUrn = Fixture.Create<long>(),
-					Action = Fixture.Create<string>(),
-					Description = Fixture.Create<string>(),
-					Title = Fixture.Create<string>()
-				}
-			};
-		}
-		
-		public static CaseHistoryDto BuildCaseHistoryDto()
-		{
-			return new CaseHistoryDto(
-				Fixture.Create<DateTimeOffset>(),
-				Fixture.Create<long>(),
-				Fixture.Create<string>(),
-				Fixture.Create<string>(),
-				Fixture.Create<string>(),
-				Fixture.Create<long>());
-		}
-
-		public static CreateCaseHistoryDto BuildCreateCaseHistoryDto(long caseUrn = 1)
-		{
-			return new CreateCaseHistoryDto(
-				Fixture.Create<DateTimeOffset>(),
-				caseUrn,
-				Fixture.Create<string>(),
-				Fixture.Create<string>(),
-				Fixture.Create<string>());
 		}
 	}
 }

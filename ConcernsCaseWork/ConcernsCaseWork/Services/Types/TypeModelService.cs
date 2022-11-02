@@ -1,8 +1,8 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Redis.Types;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Types;
-using Service.TRAMS.Types;
+using ConcernsCaseWork.Service.Types;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

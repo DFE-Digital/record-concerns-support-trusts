@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.TRAMS.Ratings;
+using ConcernsCaseWork.Service.Ratings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

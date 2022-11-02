@@ -1,9 +1,8 @@
 ﻿using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.TRAMS.Nti;
+using ConcernsCaseWork.Service.Nti;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace ConcernsCaseWork.Mappers

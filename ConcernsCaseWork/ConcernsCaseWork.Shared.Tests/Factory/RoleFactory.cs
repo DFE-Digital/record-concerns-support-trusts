@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using Service.Redis.Security;
+using ConcernsCaseWork.Redis.Security;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory

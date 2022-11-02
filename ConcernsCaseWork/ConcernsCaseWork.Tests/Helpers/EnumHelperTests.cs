@@ -1,7 +1,6 @@
 ﻿using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Helpers;
 using NUnit.Framework;
-using System;
 
 namespace ConcernsCaseWork.Tests.Helpers
 {
