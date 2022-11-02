@@ -133,5 +133,6 @@ public class SrmaMappingTests
 		var result = srma.ToActionSummary();
 
 		result.RelativeUrl.Should().Be($"/case/{srma.CaseUrn}/management/action/srma/{srma.Id}");
+		result.ClosedDate.Should().BeNull();
 	}
 }

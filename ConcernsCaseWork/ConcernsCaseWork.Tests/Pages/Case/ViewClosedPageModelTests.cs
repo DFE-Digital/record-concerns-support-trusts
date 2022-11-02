@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Extensions;
+﻿using AutoFixture;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
@@ -16,6 +18,7 @@ using NUnit.Framework;
 using Service.Redis.Status;
 using Service.TRAMS.Status;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,6 +27,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 	[Parallelizable(ParallelScope.All)]
 	public class ViewClosedPageModelTests
 	{
+		private readonly static Fixture _fixture = new();
+
 		[Test]
 		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsExceptionAndCallsLogger()
 		{
@@ -101,7 +106,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
-			var closedActions = ActionsSummaryFactory.BuildListOfActionSummaries();
+
+			var allActions = new List<ActionSummary>();
+
+			var openActions = _fixture
+				.Build<ActionSummary>()
+				.Without(a => a.ClosedDate)
+				.CreateMany().ToList();
+			allActions.AddRange(openActions);
+
+			var closedActions = _fixture.CreateMany<ActionSummary>().ToList();
+			allActions.AddRange(closedActions);
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
@@ -110,7 +125,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
 			mockActionsModelService.Setup(a => a.GetActionsSummary(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(closedActions);
+				.ReturnsAsync(allActions);
 			mockStatusCachedService.Setup(a => a.GetStatusByName(StatusEnum.Close.ToString()))
 				.ReturnsAsync(new StatusDto("Closed", DateTimeOffset.Now, DateTimeOffset.Now, caseModel.StatusUrn));
 
