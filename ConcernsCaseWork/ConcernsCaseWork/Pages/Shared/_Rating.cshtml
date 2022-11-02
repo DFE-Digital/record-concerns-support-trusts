@@ -8,7 +8,7 @@
 	{
 		<div class="govuk-radios__item">
 			@{ var idStr = id == 0 ? "rating" : "rating-" + id; }
-			<input class="govuk-radios__input" id="@idStr" name="rating" type="radio" value="@rating.Urn:@rating.Name" checked="@rating.Checked">
+			<input class="govuk-radios__input" id="@idStr" name="rating" type="radio" value="@rating.Id:@rating.Name" checked="@rating.Checked">
 			<label class="govuk-label govuk-radios__label" for="@idStr">
 				<div class="govuk-label-wrapper">
 					@for (var index = 0; index < rating.RagRating.Item2.Count; ++index)

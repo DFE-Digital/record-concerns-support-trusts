@@ -23,14 +23,14 @@ namespace ConcernsCaseWork.Redis.Cases
 			_logger = logger;
 		}
 
-		public async Task<IList<CaseDto>> GetCasesByCaseworkerAndStatus(string caseworker, long statusUrn)
+		public async Task<IList<CaseDto>> GetCasesByCaseworkerAndStatus(string caseworker, long statusId)
 		{
-			_logger.LogInformation("CaseCachedService::GetCasesByCaseworkerAndStatus {Caseworker} - {StatusUrn}", caseworker, statusUrn);
+			_logger.LogInformation("CaseCachedService::GetCasesByCaseworkerAndStatus {Caseworker} - {StatusId}", caseworker, statusId);
 
 			var userState = await GetData<UserState>(caseworker);
 			if (userState != null)
 			{
-				var cachedCases = userState.CasesDetails.Values.Where(caseWrapper => caseWrapper.CaseDto.StatusUrn.CompareTo(statusUrn) == 0)
+				var cachedCases = userState.CasesDetails.Values.Where(caseWrapper => caseWrapper.CaseDto.StatusId.CompareTo(statusId) == 0)
 					.Select(caseWrapper => caseWrapper.CaseDto).ToList();
 
 				if (cachedCases.Any())
@@ -39,7 +39,7 @@ namespace ConcernsCaseWork.Redis.Cases
 				}
 			}
 
-			IList<CaseDto> casesDto = await _caseSearchService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch(caseworker, statusUrn));
+			IList<CaseDto> casesDto = await _caseSearchService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch(caseworker, statusId));
 			if (!casesDto.Any())
 			{
 				return casesDto;

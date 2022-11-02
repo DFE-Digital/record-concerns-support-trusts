@@ -140,7 +140,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			var closedState = await _statusCachedService.GetStatusByName(StatusEnum.Close.ToString());
 			var caseDto = await _caseModelService.GetCaseByUrn(userName, urn);
 
-			return closedState != null && caseDto?.StatusUrn == closedState?.Urn;
+			return closedState != null && caseDto?.StatusId == closedState?.Id;
 		}
 
 
@@ -151,7 +151,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			var recordsModels = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
 			var liveStatus = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
-			var numberOfOpenConcerns = recordsModels.Count(r => r.StatusUrn.CompareTo(liveStatus.Urn) == 0);
+			var numberOfOpenConcerns = recordsModels.Count(r => r.StatusId.CompareTo(liveStatus.Id) == 0);
 			
 			var srmaModelsTask = _srmaModelService.GetSRMAsForCase(caseUrn);
 			var financialPlanModelsTask = _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name);

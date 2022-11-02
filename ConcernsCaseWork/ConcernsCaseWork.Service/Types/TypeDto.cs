@@ -22,11 +22,11 @@ namespace ConcernsCaseWork.Service.Types
 		[JsonProperty("updated_at")]
 		public DateTimeOffset UpdatedAt { get; }
 		
-		[JsonProperty("urn")]
-		public long Urn { get; }
+		[JsonProperty("id")]
+		public long Id { get; }
 		
 		[JsonConstructor]
-		public TypeDto(string name, string description, DateTimeOffset createdAt, DateTimeOffset updatedAt, long urn) => 
-			(Name, Description, CreatedAt, UpdatedAt, Urn) = (name, description, createdAt, updatedAt, urn);
+		public TypeDto(string name, string description, DateTimeOffset createdAt, DateTimeOffset updatedAt, long id) => 
+			(Name, Description, CreatedAt, UpdatedAt, Id) = (name, description, createdAt, updatedAt, id);
 	}
 }

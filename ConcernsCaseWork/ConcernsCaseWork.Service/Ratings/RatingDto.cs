@@ -16,10 +16,10 @@ namespace ConcernsCaseWork.Service.Ratings
 		[JsonProperty("updatedAt")]
 		public DateTimeOffset UpdatedAt { get; }
 		
-		[JsonProperty("urn")]
-		public long Urn { get; }
+		[JsonProperty("id")]
+		public long Id { get; }
 		
-		public RatingDto(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, long urn) => 
-			(Name, CreatedAt, UpdatedAt, Urn) = (name, createdAt, updatedAt, urn);
+		public RatingDto(string name, DateTimeOffset createdAt, DateTimeOffset updatedAt, long id) => 
+			(Name, CreatedAt, UpdatedAt, Id) = (name, createdAt, updatedAt, id);
 	}
 }

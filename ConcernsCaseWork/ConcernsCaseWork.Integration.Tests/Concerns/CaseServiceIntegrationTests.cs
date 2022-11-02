@@ -51,7 +51,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			var caseDto = await PostCase(serviceScope, createCaseDto);
 
 			// act
-			var casesDto = await caseService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch( createCaseDto.CreatedBy, createCaseDto.StatusUrn));
+			var casesDto = await caseService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch( createCaseDto.CreatedBy, createCaseDto.StatusId));
 
 			// assert
 			Assert.That(caseDto, Is.Not.Null);
@@ -131,8 +131,8 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 				postCaseDto.DeEscalationPoint,
 				DirectionOfTravelEnum.Improving.ToString(),
 				postCaseDto.Urn,
-				postCaseDto.StatusUrn,
-				postCaseDto.RatingUrn);
+				postCaseDto.StatusId,
+				postCaseDto.RatingId);
 
 			// act
 			var updatedCaseDto = await caseService.PatchCaseByUrn(toUpdateCaseDto);
@@ -151,8 +151,8 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			Assert.That(updatedCaseDto.DeEscalation, Is.EqualTo(postCaseDto.DeEscalation));
 			Assert.That(updatedCaseDto.NextSteps, Is.EqualTo(postCaseDto.NextSteps));
 			Assert.That(updatedCaseDto.ReviewAt, Is.EqualTo(timeNow));
-			Assert.That(updatedCaseDto.StatusUrn, Is.EqualTo(postCaseDto.StatusUrn));
-			Assert.That(updatedCaseDto.RatingUrn, Is.EqualTo(postCaseDto.RatingUrn));
+			Assert.That(updatedCaseDto.StatusId, Is.EqualTo(postCaseDto.StatusId));
+			Assert.That(updatedCaseDto.RatingId, Is.EqualTo(postCaseDto.RatingId));
 			Assert.That(updatedCaseDto.UpdatedAt, Is.EqualTo(timeNow));
 			Assert.That(updatedCaseDto.DeEscalationPoint, Is.EqualTo(postCaseDto.DeEscalationPoint));
 			Assert.That(updatedCaseDto.DirectionOfTravel, Is.EqualTo(DirectionOfTravelEnum.Improving.ToString()));

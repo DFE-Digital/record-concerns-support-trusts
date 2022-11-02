@@ -57,23 +57,23 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			};
 		}
 		
-		public static RecordDto BuildRecordDto(long caseUrn = 1, long typeUrn = 1)
+		public static RecordDto BuildRecordDto(long caseUrn = 1, long typeId = 1)
 		{
 			var currentDate = DateTimeOffset.Now;
 			return new RecordDto(currentDate, currentDate, currentDate, currentDate,
-				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, typeUrn, 1,
+				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, typeId, 1,
 				1, 1);
 		}
 		
-		public static CreateRecordDto BuildCreateRecordDto(long caseUrn = 1, long typeUrn = 1, long ratingUrn = 1, long meansOfReferralUrn = 1)
+		public static CreateRecordDto BuildCreateRecordDto(long caseUrn = 1, long typeId = 1, long ratingId = 1, long meansOfReferralUrn = 1)
 		{
 			var currentDate = DateTimeOffset.Now;
 			return new CreateRecordDto(currentDate, currentDate, currentDate, currentDate,
-				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, typeUrn, ratingUrn,
+				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, typeId, ratingId,
 				1, meansOfReferralUrn);
 		}
 		
-		public static RecordModel BuildRecordModel(long statusUrn = 1)
+		public static RecordModel BuildRecordModel(long statusId = 1)
 		{
 			return new RecordModel(
 				Fixture.Create<long>(), 
@@ -82,7 +82,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<long>(),
 				Fixture.Create<RatingModel>(),
 				Fixture.Create<long>(),
-				statusUrn,
+				statusId,
 				Fixture.Create<StatusModel>(),
 				Fixture.Create<MeansOfReferralModel>()
 			);
@@ -98,11 +98,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new PatchRecordModel
 			{
 				UpdatedAt = Fixture.Create<DateTimeOffset>(),
-				Urn = 1,
+				Id = 1,
 				CaseUrn = 1,
-				RatingUrn = 1,
+				RatingId = 1,
 				CreatedBy = Fixture.Create<string>(),
-				StatusUrn = 1
+				StatusId = 1
 			};
 		}
 
@@ -114,11 +114,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Type = Fixture.Create<string>(),
 				RagRating = Fixture.Create<Tuple<int, IList<string>>>(),
 				RatingName = Fixture.Create<string>(),
-				RatingUrn = Fixture.Create<long>(),
+				RatingId = Fixture.Create<long>(),
 				SubType = Fixture.Create<string>(),
-				TypeUrn = Fixture.Create<long>(),
+				TypeId = Fixture.Create<long>(),
 				RagRatingCss = Fixture.Create<IList<string>>(),
-				MeansOfReferralUrn = Fixture.Create<long>()
+				MeansOfReferralId = Fixture.Create<long>()
 			};
 		}
 		

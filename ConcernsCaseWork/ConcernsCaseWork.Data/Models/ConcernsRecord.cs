@@ -13,12 +13,12 @@ namespace ConcernsCaseWork.Data.Models
         public int CaseId { get; set; }
         public int TypeId { get; set; }
         public int RatingId { get; set; }
-        public int Urn { get; set; }
-        public int StatusUrn { get; set; }
+        public int StatusId { get; set; }
         public int? MeansOfReferralId { get; set; }
         public virtual ConcernsCase ConcernsCase { get; set; }
         public virtual ConcernsType ConcernsType { get; set; }
         public virtual ConcernsRating ConcernsRating { get; set; }
         public virtual ConcernsMeansOfReferral ConcernsMeansOfReferral { get; set; }
+        public virtual ConcernsStatus Status { get; set; }
     }
 }

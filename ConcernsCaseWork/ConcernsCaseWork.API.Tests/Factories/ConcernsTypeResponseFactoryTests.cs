@@ -19,17 +19,16 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Name = "test concerns type",
                 Description = "a test concerns type",
                 CreatedAt = new DateTime(2021, 04,07),
-                UpdatedAt = new DateTime(2021, 04,07),
-                Urn = 123,
+                UpdatedAt = new DateTime(2021, 04,07)
             };
 
             var expected = new ConcernsTypeResponse
             {
+	            Id = concernType.Id,
                 Name = concernType.Name,
                 Description = concernType.Description,
                 CreatedAt = concernType.CreatedAt,
-                UpdatedAt = concernType.UpdatedAt,
-                Urn = concernType.Urn
+                UpdatedAt = concernType.UpdatedAt
             };
 
             var result = ConcernsTypeResponseFactory.Create(concernType);

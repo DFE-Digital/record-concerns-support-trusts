@@ -25,8 +25,8 @@ namespace ConcernsCaseWork.API.Factories
                 DeEscalationPoint = request.DeEscalationPoint,
                 NextSteps = request.NextSteps,
                 DirectionOfTravel = request.DirectionOfTravel,
-                StatusUrn = request.StatusUrn,
-                RatingUrn = request.RatingUrn,
+                StatusId = request.StatusId,
+                RatingId = request.RatingId,
             };
         }
         
@@ -55,8 +55,8 @@ namespace ConcernsCaseWork.API.Factories
             original.DeEscalationPoint = toMerge.DeEscalationPoint ?? original.DeEscalationPoint;
             original.NextSteps = toMerge.NextSteps ?? original.NextSteps;
             original.DirectionOfTravel = toMerge.DirectionOfTravel ?? original.DirectionOfTravel;
-            original.StatusUrn = toMerge.StatusUrn;
-            original.RatingUrn = toMerge.RatingUrn;
+            original.StatusId = toMerge.StatusId;
+            original.RatingId = toMerge.RatingId;
 
 
             return original;

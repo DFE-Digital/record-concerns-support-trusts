@@ -14,11 +14,11 @@ namespace ConcernsCaseWork.API.Tests.Validators
             var validator = new ConcernsCaseRequestValidator();
             
             var request = Builder<ConcernCaseRequest>.CreateNew()
-                .With(c => c.RatingUrn = 0)
+                .With(c => c.RatingId = 0)
                 .Build();
             
             var result = validator.TestValidate(request);
-            result.ShouldHaveValidationErrorFor(c => c.RatingUrn)
+            result.ShouldHaveValidationErrorFor(c => c.RatingId)
                 .WithErrorCode("GreaterThanOrEqualValidator");
         }
     }

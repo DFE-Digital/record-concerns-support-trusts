@@ -15,7 +15,6 @@ namespace ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA
 		public SRMAStatus Status { get; set; }
 		public string Notes { get; set; }
 		public SRMAReasonOffered? Reason { get; set; }
-		public long? Urn { get; set; }
 		public SRMAStatus CloseStatus { get; set; }
 		public DateTime? UpdatedAt { get; set; }
 		public DateTime? ClosedAt { get; set; }

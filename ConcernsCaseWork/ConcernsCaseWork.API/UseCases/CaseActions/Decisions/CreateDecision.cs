@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions
                 throw new ArgumentException("Request is not valid", nameof(request));
             }
 
-            var concernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(request.ConcernsCaseUrn) ?? throw new InvalidOperationException($"The concerns case for urn {request.ConcernsCaseUrn}, was not found");
+            var concernsCase = _concernsCaseGateway.GetConcernsCaseById(request.ConcernsCaseUrn) ?? throw new InvalidOperationException($"The concerns case for urn {request.ConcernsCaseUrn}, was not found");
 
             var decision = _factory.CreateDecision(concernsCase.Id, request);
             concernsCase.AddDecision(decision);

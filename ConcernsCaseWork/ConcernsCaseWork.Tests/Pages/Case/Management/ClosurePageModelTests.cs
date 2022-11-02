@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
@@ -112,7 +112,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			Assert.That(caseModel.Description, Is.EqualTo(expectedCaseModel.Description));
 			Assert.That(caseModel.Issue, Is.EqualTo(expectedCaseModel.Issue));
-			Assert.That(caseModel.StatusUrn, Is.EqualTo(expectedCaseModel.StatusUrn));
+			Assert.That(caseModel.StatusId, Is.EqualTo(expectedCaseModel.StatusId));
 			Assert.That(caseModel.Urn, Is.EqualTo(expectedCaseModel.Urn));
 			Assert.That(caseModel.ClosedAt, Is.EqualTo(expectedCaseModel.ClosedAt));
 			Assert.That(caseModel.CreatedAt, Is.EqualTo(expectedCaseModel.CreatedAt));

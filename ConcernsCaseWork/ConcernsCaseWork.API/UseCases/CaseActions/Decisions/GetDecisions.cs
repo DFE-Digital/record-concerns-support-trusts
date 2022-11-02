@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions
             async Task<DecisionSummaryResponse[]> DoWork()
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                var concernsCase = _gateway.GetConcernsCaseByUrn(request.ConcernsCaseUrn);
+                var concernsCase = _gateway.GetConcernsCaseById(request.ConcernsCaseUrn);
 
                 if (concernsCase == null)
                 {

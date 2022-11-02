@@ -70,7 +70,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var userState = await GetUserState();
 				
 				// Update cache model
-				userState.CreateCaseModel.RatingUrn = long.Parse(ragRatingUrn);
+				userState.CreateCaseModel.RatingId = long.Parse(ragRatingUrn);
 				userState.CreateCaseModel.RagRatingName = ragRatingName;
 				userState.CreateCaseModel.RagRating = RatingMapping.FetchRag(ragRatingName);
 				userState.CreateCaseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRatingName);

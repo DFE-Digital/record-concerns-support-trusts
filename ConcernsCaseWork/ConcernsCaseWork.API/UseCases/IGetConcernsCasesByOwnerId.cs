@@ -4,6 +4,6 @@ namespace ConcernsCaseWork.API.UseCases
 {
     public interface IGetConcernsCasesByOwnerId
     {
-        IList<ConcernsCaseResponse> Execute(string ownerId, int? statusUrn, int page, int count);
+        IList<ConcernsCaseResponse> Execute(string ownerId, int? statusId, int page, int count);
     }
 }

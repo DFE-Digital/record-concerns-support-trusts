@@ -23,7 +23,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             var createConcernsCase = new Mock<ICreateConcernsCase>();
             var createConcernsCaseRequest = Builder<ConcernCaseRequest>
                 .CreateNew()
-                .With(cr => cr.RatingUrn = 123)
+                .With(cr => cr.RatingId = 123)
                 .Build();
 
             var concernsCaseResponse = Builder<ConcernsCaseResponse>
@@ -139,7 +139,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             var updateConcernsCase = new Mock<IUpdateConcernsCase>();
             var urn = 456;
             var updateRequest = Builder<ConcernCaseRequest>.CreateNew()
-                .With(cr => cr.RatingUrn = 123)
+                .With(cr => cr.RatingId = 123)
                 .Build();
             
             var concernsCaseResponse = Builder<ConcernsCaseResponse>
@@ -170,7 +170,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             var updateConcernsCase = new Mock<IUpdateConcernsCase>();
             var urn = 7;
             var updateRequest = Builder<ConcernCaseRequest>.CreateNew()
-                .With(cr => cr.RatingUrn = 123)
+                .With(cr => cr.RatingId = 123)
                 .Build();
             
 
@@ -198,10 +198,10 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         {
             var getConcernsCaseByOwnerId = new Mock<IGetConcernsCasesByOwnerId>();
             var ownerId = "567";
-            var statusUrn = 567;
+            var statusId = 567;
             var response = Builder<ConcernsCaseResponse>.CreateListOfSize(4).Build();
 
-            getConcernsCaseByOwnerId.Setup(a => a.Execute(ownerId, statusUrn, 1, 50))
+            getConcernsCaseByOwnerId.Setup(a => a.Execute(ownerId, statusId, 1, 50))
                 .Returns(response);
 
             var controller = new ConcernsCaseController(
@@ -212,7 +212,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null,
                 getConcernsCaseByOwnerId.Object
             );
-            var result = controller.GetByOwnerId(ownerId, statusUrn, 1, 50);
+            var result = controller.GetByOwnerId(ownerId, statusId, 1, 50);
             
             var expectedPagingResponse = new PagingResponse
             {

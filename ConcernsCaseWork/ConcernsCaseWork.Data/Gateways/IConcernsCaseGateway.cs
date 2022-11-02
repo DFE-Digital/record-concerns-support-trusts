@@ -6,9 +6,9 @@ namespace ConcernsCaseWork.Data.Gateways
     {
         ConcernsCase SaveConcernsCase(ConcernsCase concernsCase);
         IList<ConcernsCase> GetConcernsCaseByTrustUkprn(string trustUkprn, int page, int count);
-        ConcernsCase GetConcernsCaseByUrn(int urn);
+        ConcernsCase GetConcernsCaseById(int id);
         ConcernsCase Update(ConcernsCase concernsCase);
-        ConcernsCase GetConcernsCaseIncludingRecordsByUrn(int urn);
-        IList<ConcernsCase> GetConcernsCasesByOwnerId(string ownerId, int? statusUrn, int page, int count);
+        ConcernsCase GetConcernsCaseIncludingRecordsById(int id);
+        IList<ConcernsCase> GetConcernsCasesByOwnerId(string ownerId, int? statusId, int page, int count);
     }
 }

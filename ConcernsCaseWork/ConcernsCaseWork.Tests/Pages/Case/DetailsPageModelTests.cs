@@ -66,7 +66,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			Assert.That(createCaseModel, Is.Not.Null);
 			Assert.That(createCaseModel.Issue, Is.EqualTo(expectedCreateCaseModel.Issue));
-			Assert.That(createCaseModel.StatusUrn, Is.EqualTo(expectedCreateCaseModel.StatusUrn));
+			Assert.That(createCaseModel.StatusId, Is.EqualTo(expectedCreateCaseModel.StatusId));
 			Assert.That(createCaseModel.CaseAim, Is.EqualTo(expectedCreateCaseModel.CaseAim));
 			Assert.That(createCaseModel.ClosedAt, Is.EqualTo(expectedCreateCaseModel.ClosedAt));
 			Assert.That(createCaseModel.CreatedAt, Is.EqualTo(expectedCreateCaseModel.CreatedAt));

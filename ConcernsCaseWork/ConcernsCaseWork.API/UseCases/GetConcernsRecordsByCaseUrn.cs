@@ -15,7 +15,7 @@ namespace ConcernsCaseWork.API.UseCases
         }
         public IList<ConcernsRecordResponse> Execute(int caseUrn)
         {
-            var concernsCase = _concernsCaseGateway.GetConcernsCaseIncludingRecordsByUrn(caseUrn);
+            var concernsCase = _concernsCaseGateway.GetConcernsCaseIncludingRecordsById(caseUrn);
             return concernsCase?.ConcernsRecords
                 .Select(ConcernsRecordResponseFactory.Create).ToList();
         }
