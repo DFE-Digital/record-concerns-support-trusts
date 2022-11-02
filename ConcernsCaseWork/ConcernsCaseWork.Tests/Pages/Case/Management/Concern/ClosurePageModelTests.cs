@@ -43,13 +43,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockRecordModelService.Setup(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
+			mockRecordModelService.Setup(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
 				.ReturnsAsync(recordModel);
-			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()))
+			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelById(It.IsAny<long>()))
 				.ReturnsAsync(ratingsModel);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			mockTypeModelService.Setup(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()))
+			mockTypeModelService.Setup(t => t.GetSelectedTypeModelById(It.IsAny<long>()))
 				.ReturnsAsync(typeModel);
 
 			var pageModel = SetupClosurePageModel(
@@ -64,7 +64,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
-			routeData.Add("recordUrn", 1);
+			routeData.Add("recordId", 1);
 
 			// act
 			await pageModel.OnGet();
@@ -88,14 +88,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 				Times.Once);
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
-			mockRecordModelService.Verify(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Once);
-			mockRatingModelService.Verify(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()), Times.Once);
+			mockRecordModelService.Verify(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Once);
+			mockRatingModelService.Verify(r => r.GetSelectedRatingsModelById(It.IsAny<long>()), Times.Once);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
-			mockTypeModelService.Verify(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()), Times.Once);
+			mockTypeModelService.Verify(t => t.GetSelectedTypeModelById(It.IsAny<long>()), Times.Once);
 		}
 
 		[Test]
-		public async Task WhenOnGetAsync_CaseUrn_RecordUrnIsNullOrEmpty_Returns_Page()
+		public async Task WhenOnGetAsync_CaseUrn_RecordIdIsNullOrEmpty_Returns_Page()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -138,14 +138,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 				Times.Once);
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-			mockRecordModelService.Verify(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
-			mockRatingModelService.Verify(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()), Times.Never);
+			mockRecordModelService.Verify(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
+			mockRatingModelService.Verify(r => r.GetSelectedRatingsModelById(It.IsAny<long>()), Times.Never);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
-			mockTypeModelService.Verify(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()), Times.Never);
+			mockTypeModelService.Verify(t => t.GetSelectedTypeModelById(It.IsAny<long>()), Times.Never);
 		}
 
 		[Test]
-		public async Task WhenOnGetAsync_RecordUrnIsNullOrEmpty_Returns_Page()
+		public async Task WhenOnGetAsync_RecordIdIsNullOrEmpty_Returns_Page()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -190,10 +190,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 				Times.Once);
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-			mockRecordModelService.Verify(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
-			mockRatingModelService.Verify(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()), Times.Never);
+			mockRecordModelService.Verify(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
+			mockRatingModelService.Verify(r => r.GetSelectedRatingsModelById(It.IsAny<long>()), Times.Never);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
-			mockTypeModelService.Verify(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()), Times.Never);
+			mockTypeModelService.Verify(t => t.GetSelectedTypeModelById(It.IsAny<long>()), Times.Never);
 		}
 		
 		[Test]
@@ -218,13 +218,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockRecordModelService.Setup(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
+			mockRecordModelService.Setup(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
 				.ReturnsAsync(recordModel);
-			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()))
+			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelById(It.IsAny<long>()))
 				.ReturnsAsync(ratingsModel);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			mockTypeModelService.Setup(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()))
+			mockTypeModelService.Setup(t => t.GetSelectedTypeModelById(It.IsAny<long>()))
 				.ReturnsAsync(typeModel);
 			mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(statusDto);
@@ -240,7 +240,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseModel.Urn);
-			routeData.Add("recordUrn", 1);
+			routeData.Add("recordId", 1);
 
 			// act
 			var pageResponse = await pageModel.OnGetCloseConcern();
@@ -257,7 +257,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 		}
 
 		[Test]
-		public async Task WhenOnGetCloseConcern_CaseUrn_RecordUrnIsNullOrEmpty_Return_Page()
+		public async Task WhenOnGetCloseConcern_CaseUrn_RecordIdIsNullOrEmpty_Return_Page()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();
@@ -314,13 +314,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockRecordModelService.Setup(r => r.GetRecordModelByUrn(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
+			mockRecordModelService.Setup(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
 				.ReturnsAsync(recordModel);
-			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelByUrn(It.IsAny<long>()))
+			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelById(It.IsAny<long>()))
 				.ReturnsAsync(ratingsModel);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			mockTypeModelService.Setup(t => t.GetSelectedTypeModelByUrn(It.IsAny<long>()))
+			mockTypeModelService.Setup(t => t.GetSelectedTypeModelById(It.IsAny<long>()))
 				.ReturnsAsync(typeModel);
 
 			var pageModel = SetupClosurePageModel(
@@ -334,7 +334,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseModel.Urn);
-			routeData.Add("recordUrn", 1);
+			routeData.Add("recordId", 1);
 
 			// act
 			var pageResponse = pageModel.OnGetCancel();
@@ -348,7 +348,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 		}
 
 		[Test]
-		public void WhenOnGetCancel_CaseUrn_RecordUrnIsNullOrEmpty_Return_Page()
+		public void WhenOnGetCancel_CaseUrn_RecordIdIsNullOrEmpty_Return_Page()
 		{
 			// arrange
 			var mockCaseModelService = new Mock<ICaseModelService>();

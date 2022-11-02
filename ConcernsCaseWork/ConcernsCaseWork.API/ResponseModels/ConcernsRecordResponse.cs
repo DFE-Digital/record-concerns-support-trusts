@@ -9,11 +9,11 @@ namespace ConcernsCaseWork.API.ResponseModels
         public string Name { get; set; }
         public string Description { get; set; }
         public string Reason { get; set; }
-        public int RatingUrn { get; set; }
-        public int Urn { get; set; }
-        public int StatusUrn { get; set; }
-        public int TypeUrn { get; set; }
+        public int RatingId { get; set; }
+        public int Id { get; set; }
+        public int StatusId { get; set; }
+        public int TypeId { get; set; }
         public int CaseUrn { get; set; }
-        public int? MeansOfReferralUrn { get; set; }
+        public int? MeansOfReferralId { get; set; }
     }
 }

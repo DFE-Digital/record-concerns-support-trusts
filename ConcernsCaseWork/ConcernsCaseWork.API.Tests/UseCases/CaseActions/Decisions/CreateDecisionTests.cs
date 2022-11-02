@@ -70,7 +70,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             var fixture = CreateFixture();
 
             var mockGateway = new Mock<IConcernsCaseGateway>();
-            mockGateway.Setup(x => x.GetConcernsCaseByUrn(It.IsAny<int>()))
+            mockGateway.Setup(x => x.GetConcernsCaseById(It.IsAny<int>()))
                 .Returns(default(ConcernsCase));
 
             var request = fixture.Create<CreateDecisionRequest>();
@@ -93,7 +93,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             var fakeNewDecision = CreateRandomDecision(fixture, request);
 
             var mockGateway = new Mock<IConcernsCaseGateway>();
-            mockGateway.Setup(x => x.GetConcernsCaseByUrn(request.ConcernsCaseUrn))
+            mockGateway.Setup(x => x.GetConcernsCaseById(request.ConcernsCaseUrn))
                 .Returns(fakeConcernsCase);
 
 

@@ -102,7 +102,7 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			var closedStatus = await _statusCachedService.GetStatusByName(StatusEnum.Close.ToString());
 
-			if (CaseModel.StatusUrn.CompareTo(closedStatus.Urn) != 0)
+			if (CaseModel.StatusId.CompareTo(closedStatus.Id) != 0)
 			{
 				return true;
 			}

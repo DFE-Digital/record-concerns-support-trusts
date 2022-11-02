@@ -32,8 +32,8 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 NextSteps = "next steps",
                 DirectionOfTravel = "Direction",
                 Urn = 109,
-                StatusUrn = 123,
-                RatingUrn = 345
+                StatusId = 123,
+                RatingId = 345
             };
 
             var expected = new ConcernsCaseResponse
@@ -55,8 +55,8 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 NextSteps = concernsCase.NextSteps,
                 DirectionOfTravel = concernsCase.DirectionOfTravel,
                 Urn = concernsCase.Urn,
-                StatusUrn = concernsCase.StatusUrn,
-                RatingUrn = concernsCase.RatingUrn
+                StatusId = concernsCase.StatusId,
+                RatingId = concernsCase.RatingId
             };
 
             var result = ConcernsCaseResponseFactory.Create(concernsCase);

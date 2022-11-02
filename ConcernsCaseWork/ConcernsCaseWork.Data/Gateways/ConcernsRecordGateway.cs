@@ -26,9 +26,9 @@ namespace ConcernsCaseWork.Data.Gateways
             return entity.Entity;
         }
 
-        public ConcernsRecord GetConcernsRecordByUrn(int urn)
+        public ConcernsRecord GetConcernsRecordByUrn(int id)
         {
-            return _concernsDbContext.ConcernsRecord.FirstOrDefault(r => r.Urn == urn);
+            return _concernsDbContext.ConcernsRecord.FirstOrDefault(r => r.Id == id);
         }
     }
 }

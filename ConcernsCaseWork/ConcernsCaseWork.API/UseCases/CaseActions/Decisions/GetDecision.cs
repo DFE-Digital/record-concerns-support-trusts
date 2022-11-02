@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
 
-            var concernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(request.ConcernsCaseUrn);
+            var concernsCase = _concernsCaseGateway.GetConcernsCaseById(request.ConcernsCaseUrn);
             var decision = concernsCase?.Decisions.FirstOrDefault(x => x.DecisionId == request.DecisionId);
             
             return decision != null ? _responseFactory.Create(concernsCase.Urn, decision) : null;

@@ -36,9 +36,9 @@ namespace ConcernsCaseWork.Redis.Models
 		
 		public string DirectionOfTravel { get; set; }
 		
-		public long StatusUrn { get; set; }
+		public long StatusId { get; set; }
 		
-		public long RatingUrn { get; set; }
+		public long RatingId { get; set; }
 		
 		public string RagRatingName { get; set; }
 		

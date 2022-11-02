@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.Data.Gateways
                 .ToList();
         }
 
-        public ConcernsCase GetConcernsCaseByUrn(int urn)
+        public ConcernsCase GetConcernsCaseById(int urn)
         {
             var concernsCase = _concernsDbContext.ConcernsCase
                 .Include(x => x.Decisions)
@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Data.Gateways
             return concernsCase;
         }
         
-        public ConcernsCase GetConcernsCaseIncludingRecordsByUrn(int urn)
+        public ConcernsCase GetConcernsCaseIncludingRecordsById(int urn)
         {
             var concernsCase = _concernsDbContext.ConcernsCase
                 .Include(c => c.ConcernsRecords)
@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.Data.Gateways
             return concernsCase;
         }
 
-        public IList<ConcernsCase> GetConcernsCasesByOwnerId(string ownerId, int? statusUrn, int page, int count)
+        public IList<ConcernsCase> GetConcernsCasesByOwnerId(string ownerId, int? statusId, int page, int count)
         {
 
             var query = _concernsDbContext.ConcernsCase
@@ -68,9 +68,9 @@ namespace ConcernsCaseWork.Data.Gateways
                 .ThenInclude(x => x.DecisionTypes)
                 .Where(c => c.CreatedBy == ownerId);
 
-            if (statusUrn != null)
+            if (statusId != null)
             {
-                query = query.Where(c => c.StatusUrn == statusUrn);
+                query = query.Where(c => c.StatusId == statusId);
             }
 
             query = query.Skip((page - 1) * count)

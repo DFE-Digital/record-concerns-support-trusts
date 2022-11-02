@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Mappers
 			return new RatingModel
 			{
 				Name = ratingDto.Name,
-				Urn = ratingDto.Urn,
+				Id = ratingDto.Id,
 				RagRating = FetchRag(ratingDto.Name),
 				RagRatingCss = FetchRagCss(ratingDto.Name)
 			};
@@ -62,20 +62,20 @@ namespace ConcernsCaseWork.Mappers
 				return new RatingModel
 				{
 					Name = ratingDto.Name,
-					Urn = ratingDto.Urn,
+					Id = ratingDto.Id,
 					RagRating = FetchRag(ratingDto.Name),
 					RagRatingCss = FetchRagCss(ratingDto.Name)
 				};
 			}).ToList();
 		}
 
-		public static RatingModel MapDtoToModel(IList<RatingDto> ratingsDto, long urn)
+		public static RatingModel MapDtoToModel(IList<RatingDto> ratingsDto, long id)
 		{
-			var selectedRatingDto = ratingsDto.FirstOrDefault(t => t.Urn.CompareTo(urn) == 0) ?? ratingsDto.First();
+			var selectedRatingDto = ratingsDto.FirstOrDefault(t => t.Id.CompareTo(id) == 0) ?? ratingsDto.First();
 			return new RatingModel
 			{
 				Name = selectedRatingDto.Name,
-				Urn = selectedRatingDto.Urn,
+				Id = selectedRatingDto.Id,
 				RagRating = FetchRag(selectedRatingDto.Name),
 				RagRatingCss = FetchRagCss(selectedRatingDto.Name)
 			};

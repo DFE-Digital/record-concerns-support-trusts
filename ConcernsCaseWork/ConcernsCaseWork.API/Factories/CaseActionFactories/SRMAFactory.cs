@@ -40,7 +40,6 @@ namespace ConcernsCaseWork.API.Factories.CaseActionFactories
                 Status = (Data.Enums.SRMAStatus)model.StatusId,
                 Reason = (SRMAReasonOffered?)model.ReasonId,
                 Notes = model.Notes,
-                Urn = model.Urn,
                 CloseStatus = (Data.Enums.SRMAStatus)(model.CloseStatusId ?? 0),
                 UpdatedAt = model.UpdatedAt,
                 ClosedAt = model.ClosedAt,

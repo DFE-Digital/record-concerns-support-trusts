@@ -25,4 +25,12 @@
       <ProjectReference Include="..\ConcernsCaseWork\ConcernsCaseWork.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="appsettings.tests.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

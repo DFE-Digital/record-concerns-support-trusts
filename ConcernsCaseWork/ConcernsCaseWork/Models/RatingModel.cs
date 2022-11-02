@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Models
 	{
 		public string Name { get; set; }
 		
-		public long Urn { get; set; }
+		public long Id { get; set; }
 
 		public bool Checked { get; set; }
 		

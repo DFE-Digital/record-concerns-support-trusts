@@ -29,8 +29,8 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 .With(c => c.DeEscalationPoint = "Point of de-escalation")
                 .With(c => c.NextSteps = "Here are the next steps")
                 .With(c => c.DirectionOfTravel = "Up")
-                .With(c => c.StatusUrn = 3)
-                .With(c => c.RatingUrn = 3)
+                .With(c => c.StatusId = 3)
+                .With(c => c.RatingId = 3)
                 .Build();
 
             var expected = new ConcernsCase
@@ -51,8 +51,8 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 DeEscalationPoint = request.DeEscalationPoint,
                 NextSteps = request.NextSteps,
                 DirectionOfTravel = request.DirectionOfTravel,
-                StatusUrn = request.StatusUrn,
-                RatingUrn = request.RatingUrn
+                StatusId = request.StatusId,
+                RatingId = request.RatingId
             };
 
             var result = ConcernsCaseFactory.Create(request);

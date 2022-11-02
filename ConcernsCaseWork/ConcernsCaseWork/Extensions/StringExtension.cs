@@ -39,29 +39,29 @@ namespace ConcernsCaseWork.Extensions
 			return Uri.TryCreate(value, UriKind.Absolute, out Uri _) ? value : $"http://{value}";
 		}
 
-		public static (string typeUrn, string type, string subType) SplitType(this string type, string subType)
+		public static (string typeId, string type, string subType) SplitType(this string type, string subType)
 		{
 			// When the type is Force majeure, the type urn is included on the form type property
 			var splitType = type.Split(":");
 			var splitSubType = subType.Split(":");
 			string subTypeName = string.Empty;
-			string typeUrn = string.Empty;
+			string typeId = string.Empty;
 			string typeName;
 
 			if (splitType.Length > 1)
 			{
 				// Get type urn from type
-				typeUrn = splitType[0];
+				typeId = splitType[0];
 				typeName = splitType[1];
 				
-				return (typeUrn, typeName, subTypeName);
+				return (typeId, typeName, subTypeName);
 			}
 
 			typeName = splitType[0];
 			
 			if (splitSubType.Length > 1)
 			{
-				typeUrn = splitSubType[0];
+				typeId = splitSubType[0];
 				subTypeName = splitSubType[1];
 			}
 			else
@@ -69,7 +69,7 @@ namespace ConcernsCaseWork.Extensions
 				subTypeName = splitSubType[0];
 			}
 			
-			return (typeUrn, typeName, subTypeName);
+			return (typeId, typeName, subTypeName);
 		}
 		
 		public static T ToEnum<T>(this string value)

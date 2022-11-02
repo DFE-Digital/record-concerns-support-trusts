@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             var fixture = CreateFixture(mockLogger.Object, mockGateWay.Object);
             var expectedRequest = fixture.Create<GetDecisionsRequest>();
 
-            mockGateWay.Setup(x => x.GetConcernsCaseByUrn(It.IsAny<int>())).Returns(default(ConcernsCase));
+            mockGateWay.Setup(x => x.GetConcernsCaseById(It.IsAny<int>())).Returns(default(ConcernsCase));
 
             var sut = fixture.Create<GetDecisions>();
             var result = await sut.Execute(expectedRequest, CancellationToken.None);
@@ -82,7 +82,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             var expectedRequest = fixture.Create<GetDecisionsRequest>();
             var expectedConcernsCase = fixture.Create<ConcernsCase>();
 
-            mockGateWay.Setup(x => x.GetConcernsCaseByUrn(It.IsAny<int>())).Returns(expectedConcernsCase);
+            mockGateWay.Setup(x => x.GetConcernsCaseById(It.IsAny<int>())).Returns(expectedConcernsCase);
 
             var sut = fixture.Create<GetDecisions>();
             var result = await sut.Execute(expectedRequest, CancellationToken.None);
@@ -110,7 +110,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
                 new DecisionSummaryResponse() { ConcernsCaseUrn = expectedConcernsCase.Urn }
             };
 
-            mockGateWay.Setup(x => x.GetConcernsCaseByUrn(It.IsAny<int>()))
+            mockGateWay.Setup(x => x.GetConcernsCaseById(It.IsAny<int>()))
                 .Returns(expectedConcernsCase);
 
             mockFactory.Setup(x => x.Create(expectedConcernsCase.Urn, It.IsAny<IEnumerable<Decision>>()))

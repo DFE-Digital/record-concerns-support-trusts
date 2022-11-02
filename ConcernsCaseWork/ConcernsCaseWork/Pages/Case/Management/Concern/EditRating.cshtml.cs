@@ -48,12 +48,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 		public async Task<ActionResult> OnGet()
 		{
 			long caseUrn = 0;
-			long recordUrn = 0;
+			long recordId = 0;
 			
 			try
 			{
 				_logger.LogInformation("Case::EditRiskRatingPageModel::OnGet");
-				(caseUrn, recordUrn) = GetRouteData();
+				(caseUrn, recordId) = GetRouteData();
 			}
 			catch (Exception ex)
 			{
@@ -62,19 +62,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 			
-			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn, recordUrn);
+			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn, recordId);
 		}
 		
 		public async Task<ActionResult> OnPostEditRiskRating(string url)
 		{
 			long caseUrn = 0;
-			long recordUrn = 0;
+			long recordId = 0;
 
 			try
 			{
 				_logger.LogInformation("Case::EditRiskRatingPageModel::OnPostEditRiskRating");
 				
-				(caseUrn, recordUrn) = GetRouteData();
+				(caseUrn, recordId) = GetRouteData();
 				
 				var riskRating = Request.Form["rating"].ToString();
 
@@ -82,15 +82,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 					throw new Exception("Missing form values");
 
 				var splitRagRating = riskRating.Split(":");
-				var ratingUrn = splitRagRating[0];
+				var ratingId = splitRagRating[0];
 
 				// Create patch record model
 				var patchRecordModel = new PatchRecordModel
 				{
 					UpdatedAt = DateTimeOffset.Now,
-					Urn = recordUrn,
+					Id = recordId,
 					CaseUrn = caseUrn,
-					RatingUrn = long.Parse(ratingUrn),
+					RatingId = long.Parse(ratingId),
 					CreatedBy = User.Identity.Name
 				};
 
@@ -106,21 +106,21 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
-			return await LoadPage(url, caseUrn, recordUrn);
+			return await LoadPage(url, caseUrn, recordId);
 		}
 		
-		private async Task<ActionResult> LoadPage(string url, long caseUrn, long recordUrn)
+		private async Task<ActionResult> LoadPage(string url, long caseUrn, long recordId)
 		{
 			try
 			{
-				if (caseUrn == 0 || recordUrn == 0)
+				if (caseUrn == 0 || recordId == 0)
 					throw new Exception("Case urn cannot be 0");
 				
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
-				var recordModel = await _recordModelService.GetRecordModelByUrn(User.Identity.Name, caseUrn, recordUrn);
-				RatingsModel = await _ratingModelService.GetSelectedRatingsModelByUrn(recordModel.RatingUrn);
+				var recordModel = await _recordModelService.GetRecordModelById(User.Identity.Name, caseUrn, recordId);
+				RatingsModel = await _ratingModelService.GetSelectedRatingsModelById(recordModel.RatingId);
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
-				TypeModel = await _typeModelService.GetSelectedTypeModelByUrn(recordModel.TypeUrn);
+				TypeModel = await _typeModelService.GetSelectedTypeModelById(recordModel.TypeId);
 				CaseModel.PreviousUrl = url;
 
 				return Page();
@@ -134,17 +134,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 			}
 		} 
 
-		private (long caseUrn, long recordUrn) GetRouteData()
+		private (long caseUrn, long recordId) GetRouteData()
 		{
 			var caseUrnValue = RouteData.Values["urn"];
 			if (caseUrnValue == null || !long.TryParse(caseUrnValue.ToString(), out long caseUrn) || caseUrn == 0)
 				throw new Exception("CaseUrn is null or invalid to parse");
 			
-			var recordUrnValue = RouteData.Values["recordUrn"];
-			if (recordUrnValue == null || !long.TryParse(recordUrnValue.ToString(), out long recordUrn) || recordUrn == 0)
-				throw new Exception("RecordUrn is null or invalid to parse");
+			var recordIdValue = RouteData.Values["recordId"];
+			if (recordIdValue == null || !long.TryParse(recordIdValue.ToString(), out long recordId) || recordId == 0)
+				throw new Exception("RecordId is null or invalid to parse");
 
-			return (caseUrn, recordUrn);
+			return (caseUrn, recordId);
 		}
 	}
 }

@@ -82,9 +82,6 @@ namespace ConcernsCaseWork.Data
                 entity.HasKey(e => e.Id)
                     .HasName("PK__CStatus__C5B214360AF620234");
 
-                entity.Property(e => e.Urn)
-                    .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
-
                 entity.HasData(
                     new ConcernsStatus
                     {
@@ -117,9 +114,6 @@ namespace ConcernsCaseWork.Data
                 entity.HasKey(e => e.Id)
                     .HasName("PK__CRecord");
 
-                entity.Property(e => e.Urn)
-                    .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
-
                 entity.HasOne(r => r.ConcernsCase)
                     .WithMany(c => c.ConcernsRecords)
                     .HasForeignKey(r => r.CaseId)
@@ -147,9 +141,6 @@ namespace ConcernsCaseWork.Data
 
                 entity.HasKey(e => e.Id)
                     .HasName("PK__CType");
-
-                entity.Property(e => e.Urn)
-                    .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
 
                 entity.HasData(
                     new ConcernsType
@@ -265,9 +256,6 @@ namespace ConcernsCaseWork.Data
                 entity.HasKey(e => e.Id)
                     .HasName("PK__CMeansOfReferral");
 
-                entity.Property(e => e.Urn)
-                    .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
-
                 entity.HasData(
                     new ConcernsMeansOfReferral()
                     {
@@ -293,9 +281,6 @@ namespace ConcernsCaseWork.Data
 
                 entity.HasKey(e => e.Id)
                     .HasName("PK__CRating");
-
-                entity.Property(e => e.Urn)
-                    .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
 
                 entity.HasData(
                     new ConcernsRating

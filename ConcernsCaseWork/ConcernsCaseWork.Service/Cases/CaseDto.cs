@@ -59,23 +59,23 @@ namespace ConcernsCaseWork.Service.Cases
 		[JsonProperty("urn")]
 		public long Urn { get; }
 		
-		[JsonProperty("statusUrn")]
-		public long StatusUrn { get; }
+		[JsonProperty("statusId")]
+		public long StatusId { get; }
 		
-		[JsonProperty("ratingUrn")]
-		public long RatingUrn { get; set; }
+		[JsonProperty("ratingId")]
+		public long RatingId { get; set; }
 
 		[JsonConstructor]
 		public CaseDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
 			DateTimeOffset closedAt, string createdBy, string description, string crmEnquiry, string trustUkPrn, 
 			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
 			string nextSteps, string caseAim, string deEscalationPoint, string directionOfTravel, 
-			long urn, long statusUrn, long ratingUrn) => 
+			long urn, long statusId, long ratingId) => 
 			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, CaseAim, DeEscalationPoint, 
-				DirectionOfTravel, Urn, StatusUrn, RatingUrn) = 
+				DirectionOfTravel, Urn, StatusId, RatingId) = 
 			(createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn,
 				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, caseAim, deEscalationPoint, 
-				directionOfTravel, urn, statusUrn, ratingUrn);
+				directionOfTravel, urn, statusId, ratingId);
 	}
 }

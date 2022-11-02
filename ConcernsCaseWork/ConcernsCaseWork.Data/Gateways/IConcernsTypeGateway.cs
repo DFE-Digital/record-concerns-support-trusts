@@ -4,7 +4,7 @@ namespace ConcernsCaseWork.Data.Gateways
 {
     public interface IConcernsTypeGateway
     {
-        ConcernsType GetConcernsTypeByUrn(int urn);
+        ConcernsType GetConcernsTypeById(int urn);
         IList<ConcernsType> GetTypes();
     }
 }

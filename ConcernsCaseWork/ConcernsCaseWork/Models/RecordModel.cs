@@ -5,35 +5,35 @@
 	/// </summary>
 	public sealed class RecordModel
 	{
-		public long Urn { get; }
+		public long Id { get; }
 		
 		public long CaseUrn { get; }
 		
-		public long TypeUrn { get; }
+		public long TypeId { get; }
 		
 		public MeansOfReferralModel MeansOfReferralModel { get; }
 		
 		public TypeModel TypeModel { get; }
 
-		public long RatingUrn { get; }
+		public long RatingId { get; }
 		
 		public RatingModel RatingModel { get; }
 		
-		public long StatusUrn { get; }
+		public long StatusId { get; }
 		
 		public StatusModel StatusModel { get; }
 		
 		public RecordModel(
 			long caseUrn, 
-			long typeUrn, 
+			long typeId, 
 			TypeModel typeModel, 
-			long ratingUrn, 
+			long ratingId, 
 			RatingModel ratingModel, 
-			long urn, 
-			long statusUrn, 
+			long id, 
+			long statusId, 
 			StatusModel statusModel, 
 			MeansOfReferralModel meansOfReferralModel = null) => 
-				(CaseUrn, TypeUrn, TypeModel, RatingUrn, RatingModel, Urn, StatusUrn, StatusModel, MeansOfReferralModel) = 
-				(caseUrn, typeUrn, typeModel, ratingUrn, ratingModel, urn, statusUrn, statusModel, meansOfReferralModel);
+				(CaseUrn, TypeId, TypeModel, RatingId, RatingModel, Id, StatusId, StatusModel, MeansOfReferralModel) = 
+				(caseUrn, typeId, typeModel, ratingId, ratingModel, id, statusId, statusModel, meansOfReferralModel);
 	}
 }

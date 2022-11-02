@@ -16,9 +16,9 @@ namespace ConcernsCaseWork.Data.Gateways
             return _concernsDbContext.ConcernsRatings.ToList();
         }
 
-        public ConcernsRating GetRatingByUrn(int urn)
+        public ConcernsRating GetRatingById(int id)
         {
-            return _concernsDbContext.ConcernsRatings.FirstOrDefault(r => r.Urn == urn);
+            return _concernsDbContext.ConcernsRatings.FirstOrDefault(r => r.Id == id);
         }
     }
 }

@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 				{
 					Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
 					Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
-					Assert.That(caseDto.StatusUrn, Is.EqualTo(expectedCase.StatusUrn));
+					Assert.That(caseDto.StatusId, Is.EqualTo(expectedCase.StatusId));
 					Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
 					Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
 					Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
@@ -191,7 +191,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 				{
 					Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
 					Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
-					Assert.That(caseDto.StatusUrn, Is.EqualTo(expectedCase.StatusUrn));
+					Assert.That(caseDto.StatusId, Is.EqualTo(expectedCase.StatusId));
 					Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
 					Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
 					Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));
@@ -340,7 +340,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 				{
 					Assert.That(caseDto.Description, Is.EqualTo(expectedCase.Description));
 					Assert.That(caseDto.Issue, Is.EqualTo(expectedCase.Issue));
-					Assert.That(caseDto.StatusUrn, Is.EqualTo(expectedCase.StatusUrn));
+					Assert.That(caseDto.StatusId, Is.EqualTo(expectedCase.StatusId));
 					Assert.That(caseDto.Urn, Is.EqualTo(expectedCase.Urn));
 					Assert.That(caseDto.ClosedAt, Is.EqualTo(expectedCase.ClosedAt));
 					Assert.That(caseDto.CreatedAt, Is.EqualTo(expectedCase.CreatedAt));

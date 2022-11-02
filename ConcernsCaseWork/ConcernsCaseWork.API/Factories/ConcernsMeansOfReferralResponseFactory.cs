@@ -13,7 +13,7 @@ namespace ConcernsCaseWork.API.Factories
                 Description = concernsMeansOfReferral.Description,
                 CreatedAt = concernsMeansOfReferral.CreatedAt,
                 UpdatedAt = concernsMeansOfReferral.UpdatedAt,
-                Urn = concernsMeansOfReferral.Urn
+                Id = concernsMeansOfReferral.Id
             };
         }
     }

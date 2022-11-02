@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases
 
             var concernsToUpdate = ConcernsCaseFactory.Update(concernsCase, updateRequest);
             
-            gateway.Setup(g => g.GetConcernsCaseByUrn(urn)).Returns(concernsCase);
+            gateway.Setup(g => g.GetConcernsCaseById(urn)).Returns(concernsCase);
             gateway.Setup(g => g.Update(It.IsAny<ConcernsCase>())).Returns(concernsToUpdate);
 
             var expected = ConcernsCaseResponseFactory.Create(concernsToUpdate);
