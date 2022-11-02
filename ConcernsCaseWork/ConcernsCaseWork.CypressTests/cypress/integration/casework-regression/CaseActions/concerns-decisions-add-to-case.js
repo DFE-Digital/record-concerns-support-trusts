@@ -50,8 +50,6 @@ describe("User can add case actions to an existing case", () => {
 	
 
 	});
-
-
 	after(function () {
 		cy.clearLocalStorage();
 		cy.clearCookies();
