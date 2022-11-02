@@ -52,7 +52,9 @@ namespace ConcernsCaseWork.Mappers
 			var relativeUrl = $"/case/{srmaModel.CaseUrn}/management/action/srma/{srmaModel.Id}";
 
 			if (srmaModel.IsClosed)
+			{
 				relativeUrl += "/closed";
+			}
 
 			var result = new ActionSummaryModel()
 			{

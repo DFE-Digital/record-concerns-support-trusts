@@ -85,7 +85,9 @@ namespace ConcernsCaseWork.Mappers
 			var relativeUrl = $"/case/{model.CaseUrn}/management/action/financialplan/{model.Id}";
 
 			if (model.IsClosed)
+			{
 				relativeUrl += "/closed";
+			}
 
 			var status = "In progress";
 
