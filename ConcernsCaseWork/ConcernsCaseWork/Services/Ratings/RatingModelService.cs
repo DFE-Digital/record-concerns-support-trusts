@@ -1,8 +1,8 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Redis.Ratings;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Ratings;
-using Service.TRAMS.Ratings;
+using ConcernsCaseWork.Service.Ratings;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,7 @@
 ﻿@page "/case/{caseUrn:long}/management/action/srma/{srmaId:long}/dateaccepted"
-@model ConcernsCaseWork.Pages.Case.Management.Action.SRMA.EditDateAcceptedPageModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NetEscapades.AspNetCore.SecurityHeaders
+@model EditDateAcceptedPageModel
 
 @{
     ViewData["Title"] = "SRMA Date Of Visit";

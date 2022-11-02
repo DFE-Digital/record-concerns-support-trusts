@@ -23,8 +23,6 @@
     <ItemGroup>
       <ProjectReference Include="..\ConcernsCaseWork.Shared.Tests\ConcernsCaseWork.Shared.Tests.csproj" />
       <ProjectReference Include="..\ConcernsCaseWork\ConcernsCaseWork.csproj" />
-      <ProjectReference Include="..\Service.Redis\Service.Redis.csproj" />
-      <ProjectReference Include="..\Service.TRAMS\Service.TRAMS.csproj" />
     </ItemGroup>
 
 </Project>

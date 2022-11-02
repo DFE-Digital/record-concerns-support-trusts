@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Redis.MeansOfReferral;
 using Microsoft.Extensions.Logging;
-using Service.Redis.MeansOfReferral;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

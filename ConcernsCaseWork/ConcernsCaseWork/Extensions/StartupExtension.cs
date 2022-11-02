@@ -1,7 +1,25 @@
-﻿using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.API.StartupConfiguration;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Validators;
+using ConcernsCaseWork.Redis.Base;
+using ConcernsCaseWork.Redis.CaseActions;
+using ConcernsCaseWork.Redis.Cases;
+using ConcernsCaseWork.Redis.Configuration;
+using ConcernsCaseWork.Redis.FinancialPlan;
+using ConcernsCaseWork.Redis.MeansOfReferral;
+using ConcernsCaseWork.Redis.Nti;
+using ConcernsCaseWork.Redis.NtiUnderConsideration;
+using ConcernsCaseWork.Redis.NtiWarningLetter;
+using ConcernsCaseWork.Redis.Ratings;
+using ConcernsCaseWork.Redis.Records;
+using ConcernsCaseWork.Redis.Security;
+using ConcernsCaseWork.Redis.Sequence;
+using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Redis.Teams;
+using ConcernsCaseWork.Redis.Trusts;
+using ConcernsCaseWork.Redis.Types;
+using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
@@ -20,42 +38,25 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using Serilog;
-using Service.Redis.Base;
-using Service.Redis.CaseActions;
-using Service.Redis.Cases;
-using Service.Redis.Configuration;
-using Service.Redis.FinancialPlan;
-using Service.Redis.MeansOfReferral;
-using Service.Redis.Nti;
-using Service.Redis.NtiUnderConsideration;
-using Service.Redis.NtiWarningLetter;
-using Service.Redis.Ratings;
-using Service.Redis.Records;
-using Service.Redis.Security;
-using Service.Redis.Sequence;
-using Service.Redis.Status;
-using Service.Redis.Teams;
-using Service.Redis.Trusts;
-using Service.Redis.Types;
-using Service.Redis.Users;
-using Service.TRAMS.CaseActions;
-using Service.TRAMS.Cases;
-using Service.TRAMS.Configuration;
-using Service.TRAMS.Decision;
-using Service.TRAMS.FinancialPlan;
-using Service.TRAMS.MeansOfReferral;
-using Service.TRAMS.Nti;
-using Service.TRAMS.NtiUnderConsideration;
-using Service.TRAMS.NtiWarningLetter;
-using Service.TRAMS.Ratings;
-using Service.TRAMS.Records;
-using Service.TRAMS.Status;
-using Service.TRAMS.Teams;
-using Service.TRAMS.Trusts;
-using Service.TRAMS.Types;
+using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Service.Configuration;
+using ConcernsCaseWork.Service.FinancialPlan;
+using ConcernsCaseWork.Service.Ratings;
+using ConcernsCaseWork.Service.Records;
+using ConcernsCaseWork.Service.Status;
+using ConcernsCaseWork.Service.Trusts;
+using ConcernsCaseWork.Service.Types;
 using StackExchange.Redis;
 using System;
 using System.Net.Mime;
+using ConcernsCaseWork.Service.CaseActions;
+using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Service.NtiUnderConsideration;
+using ConcernsCaseWork.Service.NtiWarningLetter;
+using ConcernsCaseWork.Service.MeansOfReferral;
+using ConcernsCaseWork.Service.Nti;
+using ConcernsCaseWork.Service.Teams;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -122,6 +123,17 @@ namespace ConcernsCaseWork.Extensions
 				client.DefaultRequestHeaders.Add("ApiKey", tramsApiKey);
 				client.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
 			});
+		}
+		
+		/// <summary>
+		/// HttpFactory for Concerns API
+		/// </summary>
+		/// <param name="services"></param>
+		/// <param name="configuration"></param>
+		/// <exception cref="Exception"></exception>
+		public static void AddConcernsApi(this IServiceCollection services, IConfiguration configuration)
+		{
+			services.AddConcernsApiProject(configuration);
 		}
 
 		public static void AddInternalServices(this IServiceCollection services)

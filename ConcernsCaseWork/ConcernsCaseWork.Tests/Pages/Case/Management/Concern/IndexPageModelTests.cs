@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Pages.Case.Management.Concern;
+using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.MeansOfReferral;
 using ConcernsCaseWork.Services.Ratings;
@@ -15,7 +16,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

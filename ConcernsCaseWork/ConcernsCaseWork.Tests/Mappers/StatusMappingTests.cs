@@ -1,7 +1,6 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
-using Service.TRAMS.Trusts;
 using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Mappers

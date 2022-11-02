@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Redis.MeansOfReferral;
 using ConcernsCaseWork.Services.MeansOfReferral;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.MeansOfReferral;
 using System.Linq;
 using System.Threading.Tasks;
 

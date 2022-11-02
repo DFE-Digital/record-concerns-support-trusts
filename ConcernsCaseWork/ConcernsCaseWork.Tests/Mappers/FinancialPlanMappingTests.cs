@@ -1,13 +1,13 @@
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using NUnit.Framework;
-using Service.TRAMS.FinancialPlan;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoFixture;
 using FluentAssertions;
 using NUnit.Framework.Interfaces;
+using ConcernsCaseWork.Service.FinancialPlan;
 
 namespace ConcernsCaseWork.Tests.Mappers
 {

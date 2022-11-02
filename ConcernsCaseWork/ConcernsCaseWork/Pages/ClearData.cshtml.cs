@@ -2,17 +2,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Base;
-using Service.Redis.Ratings;
-using Service.Redis.Status;
-using Service.Redis.Trusts;
-using Service.Redis.Types;
-using Service.Redis.NtiWarningLetter;
 using System.Threading.Tasks;
-using Service.Redis.NtiUnderConsideration;
-using Service.Redis.Teams;
 using Ardalis.GuardClauses;
-using Service.Redis.Users;
+using ConcernsCaseWork.Redis.NtiUnderConsideration;
+using ConcernsCaseWork.Redis.NtiWarningLetter;
+using ConcernsCaseWork.Redis.Ratings;
+using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Redis.Teams;
+using ConcernsCaseWork.Redis.Trusts;
+using ConcernsCaseWork.Redis.Types;
+using ConcernsCaseWork.Redis.Users;
 
 namespace ConcernsCaseWork.Pages
 {
