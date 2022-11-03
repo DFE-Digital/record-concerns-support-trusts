@@ -39,19 +39,19 @@ namespace ConcernsCaseWork.API.Controllers
             return new ObjectResult(response) {StatusCode = StatusCodes.Status201Created};
         }
         
-        [HttpPatch("{urn}")]
+        [HttpPatch("{id}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<ConcernsRecordResponse>> Update(int urn, ConcernsRecordRequest request)
+        public ActionResult<ApiSingleResponseV2<ConcernsRecordResponse>> Update(int id, ConcernsRecordRequest request)
         {
-            _logger.LogInformation($"Attempting to update Concerns Record {urn}");
-            var updatedAcademyConcernsRecord = _updateConcernsRecord.Execute(urn, request);
+            _logger.LogInformation($"Attempting to update Concerns Record {id}");
+            var updatedAcademyConcernsRecord = _updateConcernsRecord.Execute(id, request);
             if (updatedAcademyConcernsRecord == null)
             {
-                _logger.LogInformation($"Updating Concerns Record failed: No Concerns Record matching Urn {urn} was found");
+                _logger.LogInformation($"Updating Concerns Record failed: No Concerns Record matching Id {id} was found");
                 return NotFound();
             }
 
-            _logger.LogInformation($"Successfully Updated Concerns Record {urn}");
+            _logger.LogInformation($"Successfully Updated Concerns Record {id}");
             _logger.LogDebug(JsonSerializer.Serialize(updatedAcademyConcernsRecord));
 			
             var response = new ApiSingleResponseV2<ConcernsRecordResponse>(updatedAcademyConcernsRecord);

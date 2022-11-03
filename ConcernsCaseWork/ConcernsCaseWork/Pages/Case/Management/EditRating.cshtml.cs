@@ -66,7 +66,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 					throw new Exception("Missing form values");
 
 				var splitRagRating = riskRating.Split(":");
-				var ratingUrn = splitRagRating[0];
+				var ratingId = splitRagRating[0];
 
 				// Create patch case model
 				var patchCaseModel = new PatchCaseModel
@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 					Urn = caseUrn,
 					CreatedBy = User.Identity.Name,
 					UpdatedAt = DateTimeOffset.Now,
-					RatingUrn = long.Parse(ratingUrn)
+					RatingId = long.Parse(ratingId)
 				};
 					
 				await _caseModelService.PatchCaseRating(patchCaseModel);
@@ -100,7 +100,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 					throw new Exception("Case urn cannot be 0");
 				
 				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
-				RatingsModel = await _ratingModelService.GetSelectedRatingsModelByUrn(CaseModel.RatingUrn);
+				RatingsModel = await _ratingModelService.GetSelectedRatingsModelById(CaseModel.RatingId);
 				CaseModel.PreviousUrl = url;
 
 				return Page();

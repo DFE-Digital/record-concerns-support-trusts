@@ -28,10 +28,10 @@ namespace ConcernsCaseWork.API.UseCases
         }
         public ConcernsRecordResponse Execute(ConcernsRecordRequest request)
         {
-            var concernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(request.CaseUrn);
-            var concernsType = _concernsTypeGateway.GetConcernsTypeByUrn(request.TypeUrn);
-            var concernsRatings = _concernsRatingGateway.GetRatingByUrn(request.RatingUrn);
-            var concernsMeansOfReferral = request.MeansOfReferralUrn != null ? _concernsMeansOfReferralGateway.GetMeansOfReferralByUrn((int)request.MeansOfReferralUrn) : null;
+            var concernsCase = _concernsCaseGateway.GetConcernsCaseById(request.CaseUrn);
+            var concernsType = _concernsTypeGateway.GetConcernsTypeById(request.TypeId);
+            var concernsRatings = _concernsRatingGateway.GetRatingById(request.RatingId);
+            var concernsMeansOfReferral = request.MeansOfReferralId != null ? _concernsMeansOfReferralGateway.GetMeansOfReferralById((int)request.MeansOfReferralId) : null;
             var concernsRecordToCreate = ConcernsRecordFactory.Create(request, concernsCase, concernsType, concernsRatings, concernsMeansOfReferral);
             var savedConcernsRecord = _concernsRecordGateway.SaveConcernsCase(concernsRecordToCreate);
             return ConcernsRecordResponseFactory.Create(savedConcernsRecord);

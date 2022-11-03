@@ -18,9 +18,9 @@ namespace ConcernsCaseWork.Redis.Tests.Models
 			Assert.That(createRecordModel.Type, Is.Not.Null);
 			Assert.That(createRecordModel.RagRating, Is.Not.Null);
 			Assert.That(createRecordModel.RatingName, Is.Not.Null);
-			Assert.That(createRecordModel.RatingUrn, Is.Not.Zero);
+			Assert.That(createRecordModel.RatingId, Is.Not.Zero);
 			Assert.That(createRecordModel.SubType, Is.Not.Zero);
-			Assert.That(createRecordModel.TypeUrn, Is.Not.Zero);
+			Assert.That(createRecordModel.TypeId, Is.Not.Zero);
 			Assert.That(createRecordModel.RagRatingCss, Is.Not.Null);
 		}
 

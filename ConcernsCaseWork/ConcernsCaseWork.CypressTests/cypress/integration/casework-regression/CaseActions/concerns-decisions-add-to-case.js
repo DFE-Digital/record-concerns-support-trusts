@@ -21,26 +21,7 @@ describe("User can add case actions to an existing case", () => {
 
 	
 	it("Checking that Concerns decision is visible then adding concerns decision case action to a case,  Validation of wrong date when entered", function () {
-		cy.checkForExistingCase();
-		cy.reload();
-		CaseManagementPage.getAddToCaseBtn().click();
-		AddToCasePage.addToCase('Decision');
-		AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
-		AddToCasePage.getAddToCaseBtn().click();
-		cy.log(utils.checkForGovErrorSummaryList());
-
-		if (utils.checkForGovErrorSummaryList() > 0) {
-			cy.log("Case Action already exists");
-			cy.visit(Cypress.env('url'), { timeout: 30000 });
-			cy.checkForExistingCase(true);
-			CaseManagementPage.getAddToCaseBtn().click();
-			AddToCasePage.addToCase('Decision');
-			AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
-			AddToCasePage.getAddToCaseBtn().click();
-		} else {
-			cy.log("No Case Action exists");
-			cy.log(utils.checkForGovErrorSummaryList());
-		}
+	cy.addConcernsDecisionsAddToCase();
 
 		AddToCasePage.getDayDateField().click().type("23");
 		AddToCasePage.getMonthDateField().click().type("25");
@@ -54,7 +35,21 @@ describe("User can add case actions to an existing case", () => {
 
 	});
 
+	it(" Concern Decision - Checking if View live initial record is visible", function () {
+		cy.addConcernsDecisionsAddToCase();
 
+		AddToCasePage.getDayDateField().click().type("12");
+		AddToCasePage.getMonthDateField().click().type("05");
+		AddToCasePage.getYearDateField().click().type("2022");
+		AddToCasePage.getNoticeToImproveBtn().click();
+		AddToCasePage.getDecisionButton().click();
+		cy.get('#open-case-actions').should(
+			"contain.text",
+			"Decision: Notice to Improve"
+		);
+	
+
+	});
 	after(function () {
 		cy.clearLocalStorage();
 		cy.clearCookies();

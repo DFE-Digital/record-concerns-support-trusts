@@ -38,11 +38,11 @@ namespace ConcernsCaseWork.Tests.Services.MeansOfReferral
 			
 			Assert.AreEqual("Internal", result.First().Name);
 			Assert.AreEqual("Some description 1", result.First().Description);
-			Assert.AreEqual(1, result.First().Urn);
+			Assert.AreEqual(1, result.First().Id);
 			
 			Assert.AreEqual("External", result.Last().Name);
 			Assert.AreEqual("Some description 2", result.Last().Description);
-			Assert.AreEqual(2, result.Last().Urn);
+			Assert.AreEqual(2, result.Last().Id);
 		}
 	}
 }

@@ -260,7 +260,7 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<string>("NextSteps")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RatingUrn")
+                    b.Property<int>("RatingId")
                         .HasColumnType("int");
 
                     b.Property<string>("ReasonAtReview")
@@ -269,7 +269,7 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<DateTime>("ReviewAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("StatusUrn")
+                    b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.Property<string>("TrustUkprn")
@@ -285,6 +285,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id")
                         .HasName("PK__CCase__C5B214360AF620234");
+
+                    b.HasIndex("RatingId");
+
+                    b.HasIndex("StatusId");
 
                     b.ToTable("ConcernsCase", "concerns");
                 });
@@ -309,11 +313,6 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Urn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
-
                     b.HasKey("Id")
                         .HasName("PK__CMeansOfReferral");
 
@@ -326,8 +325,7 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2022, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "ESFA activity, TFFT or other departmental activity",
                             Name = "Internal",
-                            UpdatedAt = new DateTime(2022, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2022, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -335,8 +333,7 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2022, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "CIU casework, whistleblowing, self reported, RSCs or other government bodies",
                             Name = "External",
-                            UpdatedAt = new DateTime(2022, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2022, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -357,11 +354,6 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Urn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
-
                     b.HasKey("Id")
                         .HasName("PK__CRating");
 
@@ -373,40 +365,35 @@ namespace ConcernsCaseWork.Data.Migrations
                             Id = 1,
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Red-Plus",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 2,
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Red",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 3,
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Red-Amber",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 4,
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Amber-Green",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 5,
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "n/a",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -445,7 +432,7 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<DateTime>("ReviewAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("StatusUrn")
+                    b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.Property<int>("TypeId")
@@ -453,11 +440,6 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Urn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
 
                     b.HasKey("Id")
                         .HasName("PK__CRecord");
@@ -467,6 +449,8 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasIndex("MeansOfReferralId");
 
                     b.HasIndex("RatingId");
+
+                    b.HasIndex("StatusId");
 
                     b.HasIndex("TypeId");
 
@@ -490,11 +474,6 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Urn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
-
                     b.HasKey("Id")
                         .HasName("PK__CStatus__C5B214360AF620234");
 
@@ -506,24 +485,21 @@ namespace ConcernsCaseWork.Data.Migrations
                             Id = 1,
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Live",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 2,
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Monitoring",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 3,
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Close",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -547,11 +523,6 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Urn")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
-
                     b.HasKey("Id")
                         .HasName("PK__CType");
 
@@ -564,8 +535,7 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Financial reporting",
                             Name = "Compliance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -573,8 +543,7 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Financial returns",
                             Name = "Compliance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -582,8 +551,7 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Deficit",
                             Name = "Financial",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -591,8 +559,7 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Projected deficit / Low future surplus",
                             Name = "Financial",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -600,8 +567,7 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Cash flow shortfall",
                             Name = "Financial",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -609,16 +575,14 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Clawback",
                             Name = "Financial",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 7,
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Force majeure",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -626,8 +590,7 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Governance",
                             Name = "Governance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -635,8 +598,7 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Closure",
                             Name = "Governance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -644,8 +606,7 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Executive Pay",
                             Name = "Governance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -653,8 +614,7 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Safeguarding",
                             Name = "Governance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -662,8 +622,7 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Allegations and self reported concerns",
                             Name = "Irregularity",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -671,8 +630,7 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Related party transactions - in year",
                             Name = "Irregularity",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Urn = 0
+                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -2180,9 +2138,6 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("Urn")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ReasonId");
@@ -2206,9 +2161,6 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<long?>("Urn")
-                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -2254,9 +2206,6 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<long?>("Urn")
-                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -2333,6 +2282,25 @@ namespace ConcernsCaseWork.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.ConcernsCase", b =>
+                {
+                    b.HasOne("ConcernsCaseWork.Data.Models.ConcernsRating", "Rating")
+                        .WithMany()
+                        .HasForeignKey("RatingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConcernsCaseWork.Data.Models.ConcernsStatus", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rating");
+
+                    b.Navigation("Status");
+                });
+
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.ConcernsRecord", b =>
                 {
                     b.HasOne("ConcernsCaseWork.Data.Models.ConcernsCase", "ConcernsCase")
@@ -2354,6 +2322,12 @@ namespace ConcernsCaseWork.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("FK__ConcernsRecord_ConcernsRating");
 
+                    b.HasOne("ConcernsCaseWork.Data.Models.ConcernsStatus", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ConcernsCaseWork.Data.Models.ConcernsType", "ConcernsType")
                         .WithMany("FkConcernsRecord")
                         .HasForeignKey("TypeId")
@@ -2368,6 +2342,8 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Navigation("ConcernsRating");
 
                     b.Navigation("ConcernsType");
+
+                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.FinancialPlanCase", b =>

@@ -18,8 +18,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Name = "test means of referral",
                 Description = "some description of the means of referral",
                 CreatedAt = new DateTime(2022, 07,27),
-                UpdatedAt = new DateTime(2022, 07,28),
-                Urn = 123,
+                UpdatedAt = new DateTime(2022, 07,28)
             };
 
             var expected = new ConcernsMeansOfReferralResponse
@@ -28,7 +27,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Description = concernMeansOfReferral.Description,
                 CreatedAt = concernMeansOfReferral.CreatedAt,
                 UpdatedAt = concernMeansOfReferral.UpdatedAt,
-                Urn = concernMeansOfReferral.Urn
+                Id = concernMeansOfReferral.Id
             };
 
             var result = ConcernsMeansOfReferralResponseFactory.Create(concernMeansOfReferral);

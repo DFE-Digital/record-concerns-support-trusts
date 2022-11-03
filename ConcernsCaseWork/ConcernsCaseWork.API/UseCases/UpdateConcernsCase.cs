@@ -17,7 +17,7 @@ namespace ConcernsCaseWork.API.UseCases
         
         public ConcernsCaseResponse Execute(int urn, ConcernCaseRequest request)
         {
-            var currentConcernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(urn);
+            var currentConcernsCase = _concernsCaseGateway.GetConcernsCaseById(urn);
             var concernsCaseToUpdate = ConcernsCaseFactory.Update(currentConcernsCase, request);
             var updatedConcernsCase = _concernsCaseGateway.Update(concernsCaseToUpdate);
             return ConcernsCaseResponseFactory.Create(updatedConcernsCase);

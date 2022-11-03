@@ -49,19 +49,19 @@ namespace ConcernsCaseWork.Service.Tests.Records
 			
 			foreach (var actualRecord in actualRecords)
 			{
-				foreach (var expectedRecord in expectedRecords.Where(r => r.Urn.CompareTo(actualRecord.Urn) == 0))
+				foreach (var expectedRecord in expectedRecords.Where(r => r.Id.CompareTo(actualRecord.Id) == 0))
 				{
 					Assert.That(actualRecord.Name, Is.EqualTo(expectedRecord.Name));
-					Assert.That(actualRecord.Urn, Is.EqualTo(expectedRecord.Urn));
+					Assert.That(actualRecord.Id, Is.EqualTo(expectedRecord.Id));
 					Assert.That(actualRecord.CreatedAt, Is.EqualTo(expectedRecord.CreatedAt));
 					Assert.That(actualRecord.Description, Is.EqualTo(expectedRecord.Description));
 					Assert.That(actualRecord.Reason, Is.EqualTo(expectedRecord.Reason));
-					Assert.That(actualRecord.StatusUrn, Is.EqualTo(expectedRecord.StatusUrn));
+					Assert.That(actualRecord.StatusId, Is.EqualTo(expectedRecord.StatusId));
 					Assert.That(actualRecord.CaseUrn, Is.EqualTo(expectedRecord.CaseUrn));
 					Assert.That(actualRecord.ClosedAt, Is.EqualTo(expectedRecord.ClosedAt));
-					Assert.That(actualRecord.RatingUrn, Is.EqualTo(expectedRecord.RatingUrn));
+					Assert.That(actualRecord.RatingId, Is.EqualTo(expectedRecord.RatingId));
 					Assert.That(actualRecord.ReviewAt, Is.EqualTo(expectedRecord.ReviewAt));
-					Assert.That(actualRecord.TypeUrn, Is.EqualTo(expectedRecord.TypeUrn));
+					Assert.That(actualRecord.TypeId, Is.EqualTo(expectedRecord.TypeId));
 					Assert.That(actualRecord.UpdatedAt, Is.EqualTo(expectedRecord.UpdatedAt));
 				}
 			}
@@ -158,12 +158,12 @@ namespace ConcernsCaseWork.Service.Tests.Records
 			Assert.That(actualRecord.CreatedAt, Is.EqualTo(expectedRecord.CreatedAt));
 			Assert.That(actualRecord.Description, Is.EqualTo(expectedRecord.Description));
 			Assert.That(actualRecord.Reason, Is.EqualTo(expectedRecord.Reason));
-			Assert.That(actualRecord.StatusUrn, Is.EqualTo(expectedRecord.StatusUrn));
+			Assert.That(actualRecord.StatusId, Is.EqualTo(expectedRecord.StatusId));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(expectedRecord.CaseUrn));
 			Assert.That(actualRecord.ClosedAt, Is.EqualTo(expectedRecord.ClosedAt));
-			Assert.That(actualRecord.RatingUrn, Is.EqualTo(expectedRecord.RatingUrn));
+			Assert.That(actualRecord.RatingId, Is.EqualTo(expectedRecord.RatingId));
 			Assert.That(actualRecord.ReviewAt, Is.EqualTo(expectedRecord.ReviewAt));
-			Assert.That(actualRecord.TypeUrn, Is.EqualTo(expectedRecord.TypeUrn));
+			Assert.That(actualRecord.TypeId, Is.EqualTo(expectedRecord.TypeId));
 			Assert.That(actualRecord.UpdatedAt, Is.EqualTo(expectedRecord.UpdatedAt));
 		}
 
@@ -250,21 +250,21 @@ namespace ConcernsCaseWork.Service.Tests.Records
 			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act
-			var actualRecord = await recordService.PatchRecordByUrn(expectedRecord);
+			var actualRecord = await recordService.PatchRecordById(expectedRecord);
 
 			// assert
 			Assert.That(actualRecord, Is.Not.Null);
 			Assert.That(actualRecord.Name, Is.EqualTo(expectedRecord.Name));
-			Assert.That(actualRecord.Urn, Is.EqualTo(expectedRecord.Urn));
+			Assert.That(actualRecord.Id, Is.EqualTo(expectedRecord.Id));
 			Assert.That(actualRecord.CreatedAt, Is.Not.EqualTo(default(DateTimeOffset)));
 			Assert.That(actualRecord.Description, Is.EqualTo(expectedRecord.Description));
 			Assert.That(actualRecord.Reason, Is.EqualTo(expectedRecord.Reason));
-			Assert.That(actualRecord.StatusUrn, Is.EqualTo(expectedRecord.StatusUrn));
+			Assert.That(actualRecord.StatusId, Is.EqualTo(expectedRecord.StatusId));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(expectedRecord.CaseUrn));
 			Assert.That(actualRecord.ClosedAt, Is.EqualTo(expectedRecord.ClosedAt));
-			Assert.That(actualRecord.RatingUrn, Is.EqualTo(expectedRecord.RatingUrn));
+			Assert.That(actualRecord.RatingId, Is.EqualTo(expectedRecord.RatingId));
 			Assert.That(actualRecord.ReviewAt, Is.EqualTo(expectedRecord.ReviewAt));
-			Assert.That(actualRecord.TypeUrn, Is.EqualTo(expectedRecord.TypeUrn));
+			Assert.That(actualRecord.TypeId, Is.EqualTo(expectedRecord.TypeId));
 			Assert.That(actualRecord.UpdatedAt, Is.EqualTo(expectedRecord.UpdatedAt));
 		}
 
@@ -292,7 +292,7 @@ namespace ConcernsCaseWork.Service.Tests.Records
 			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act / assert
-			Assert.ThrowsAsync<HttpRequestException>(() => recordService.PatchRecordByUrn(RecordFactory.BuildRecordDto()));
+			Assert.ThrowsAsync<HttpRequestException>(() => recordService.PatchRecordById(RecordFactory.BuildRecordDto()));
 		}
 		
 		[Test]
@@ -321,7 +321,7 @@ namespace ConcernsCaseWork.Service.Tests.Records
 			var recordService = new RecordService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 			
 			// act / assert
-			Assert.ThrowsAsync<Exception>(() => recordService.PatchRecordByUrn(RecordFactory.BuildRecordDto()));
+			Assert.ThrowsAsync<Exception>(() => recordService.PatchRecordById(RecordFactory.BuildRecordDto()));
 		}
 	}
 }

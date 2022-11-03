@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Integration.Tests.Pages
 		
 		[Test]
 		[Category("Smoke")]
-		[Ignore("Smoke test fails because config invalid for prod. But Azure AD will likely change the requirement of this test entirely")]
+		[Ignore("Not valid test for authentication with Azure AD")]
 		public async Task WhenSignInIsWithCorrectCredentials_ReturnHomePage()
 		{
 			// arrange
@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Integration.Tests.Pages
 		
 		[Test]
 		[Category("Smoke")]
-		[Ignore("Smoke test fails because config invalid for prod. But Azure AD will likely change the requirement of this test entirely")]
+		[Ignore("Not valid test for authentication with Azure AD")]
 		public async Task WhenSignInIsWithInCorrectCredentials_ReturnLoginPage()
 		{
 			// arrange

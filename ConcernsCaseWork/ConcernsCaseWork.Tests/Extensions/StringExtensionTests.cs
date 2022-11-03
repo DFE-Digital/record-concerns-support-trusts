@@ -72,24 +72,5 @@ namespace ConcernsCaseWork.Tests.Extensions
 			Assert.That(actualType, Is.EqualTo(expectedType));
 			Assert.That(actualSubType, Is.EqualTo(expectedSubType));
 		}
-
-		[Test]
-		public void WhenToEnum_Returns_IsValid()
-		{
-			// arrange
-			var roles = new[] { "admin", "leader", "User" };
-				
-			// act
-			var rolesEnum = roles.Select(r => r.ToEnum<RoleEnum>()).ToList();
-			
-			// assert
-			Assert.That(rolesEnum, Is.Not.Null);
-			Assert.That(rolesEnum.Count, Is.EqualTo(3));
-
-			for (var index = 0; index < rolesEnum.Count; ++index)
-			{
-				Assert.That(rolesEnum.ElementAt(index).ToString(), Is.EqualTo(roles.ElementAt(index).ToTitle()));
-			}
-		}
 	}
 }

@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoFixture;
+using FluentAssertions;
+using NUnit.Framework.Interfaces;
 using ConcernsCaseWork.Service.FinancialPlan;
 
 namespace ConcernsCaseWork.Tests.Mappers
@@ -125,7 +127,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Assert.That(serviceModel.Single().CreatedAt, Is.EqualTo(testData.CreatedAt));
 			});
 		}
-		
+
 		[Test]
 		public void WhenMapNullDtoListToDbModelList_ReturnsEmptyModelList()
 		{
@@ -141,7 +143,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(serviceModel, Is.Not.Null);
 			Assert.That(serviceModel, Is.Empty);
 		}
-				
+
 		[Test]
 		public void WhenMapEmptyDtoListToDbModelList_ReturnsEmptyModelList()
 		{
@@ -301,7 +303,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				CreatedBy = _fixture.Create<string>(),
 				Notes = _fixture.Create<string>(),
 				DatePlanRequested = _fixture.Create<DateTime>(),
-				Status = _fixture.Create<FinancialPlanStatusModel>(),
+				Status = new FinancialPlanStatusModel("AwaitingPlan", 1, true),
 				DatePlanReceived = _fixture.Create<DateTime>()
 			};
 
@@ -314,7 +316,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 				testData.Notes,
 				testData.Status,
 				testData.ClosedAt
-			) { UpdatedAt = testData.UpdatedAt };
+			)
+			{ UpdatedAt = testData.UpdatedAt };
 
 			// act
 			var actionSummary = serviceModel.ToActionSummary();
@@ -326,8 +329,21 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Assert.That(actionSummary.ClosedDate, Is.EqualTo(testData.ClosedAt.GetFormattedDate()));
 				Assert.That(actionSummary.OpenedDate, Is.EqualTo(testData.CreatedAt.GetFormattedDate()));
 				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/financialplan/{testData.Id}/closed"));
-				Assert.That(actionSummary.StatusName, Is.EqualTo(testData.Status.Name));
+				Assert.That(actionSummary.StatusName, Is.EqualTo("Awaiting plan"));
 			});
+		}
+
+		[Test]
+		public void WhenMapDbModelToActionSummary_WhenActionSummaryIsOpen_ReturnsCorrectModel()
+		{
+			var financialPlan = _fixture.Create<FinancialPlanModel>();
+			financialPlan.ClosedAt = null;
+			financialPlan.Status = null;
+
+			var result = financialPlan.ToActionSummary();
+			result.RelativeUrl.Should().Be($"/case/{financialPlan.CaseUrn}/management/action/financialplan/{financialPlan.Id}");
+			result.StatusName.Should().Be("In progress");
+			result.ClosedDate.Should().BeNull();
 		}
 	}
 }

@@ -34,6 +34,7 @@ namespace ConcernsCaseWork.Integration.Tests.Pages
 
 		[Test]
 		[Category("Smoke")]
+		[Ignore("Not valid test for authentication with Azure AD")]
 		public async Task WhenLogout_ReturnLogoutPage()
 		{
 			// act

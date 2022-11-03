@@ -45,6 +45,10 @@ class AddToCasePage {
         return      cy.get('#dtr-year-request-received');
     }  
     
+    getNoticeToImproveBtn() {
+
+        return      cy.get('#NoticeToImprove');
+    }
     
     getDecisionButton() {
         return      cy.get('#add-decision-button');

@@ -11,7 +11,7 @@
 
 		public string Title { get; set; }
 
-		public DecisionStatus DecisionStatus { get; set; }
+		public DecisionStatus Status { get; set; }
 
 		public DateTimeOffset? ClosedAt { get; set; }
 	}

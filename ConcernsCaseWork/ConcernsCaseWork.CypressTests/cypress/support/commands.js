@@ -29,6 +29,7 @@ import HomePage from "/cypress/pages/homePage";
 import CaseManagementPage from "/cypress/pages/caseMangementPage";
 import caseMangementPage from "/cypress/pages/caseMangementPage";
 import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
+import utils from "/cypress/support/utils";
 
 
 const concernsRgx = new RegExp(/(Compliance|Financial|Force majeure|Governance|Irregularity)/, 'i');
@@ -37,10 +38,12 @@ const ragRgx = new RegExp(/(amber|green|red|redPlus|Red Plus)/, 'i');
 const dotRgx = new RegExp(/(Deteriorating|Unchanged|Improving)/, 'i');
 
 Cypress.Commands.add("login",()=> {
-    cy.visit(Cypress.env('url')+"/login", { timeout: 40000 })
-    cy.get('#username', { timeout: 40000 }).should('be.visible')
-	cy.get("#username").type(Cypress.env('username'));
-	cy.get("#password").type(Cypress.env('password')+"{enter}");
+    cy.visit(Cypress.env('url'), { timeout: 40000 });
+
+    // cy.visit(Cypress.env('url')+"/login", { timeout: 40000 })
+    // cy.get('#username', { timeout: 40000 }).should('be.visible')
+	// cy.get("#username").type(Cypress.env('username'));
+	// cy.get("#password").type(Cypress.env('password')+"{enter}");
     cy.get('[id=your-casework]', { timeout: 40000 }).should('be.visible')
 	cy.saveLocalStorage();
 })
@@ -77,6 +80,32 @@ Cypress.Commands.add('enterConcernDetails',()=>{
     cy.get("#next-steps").type("Data entered at " + date);
     cy.get("#case-details-form  button").click();
 })
+
+
+Cypress.Commands.add('addConcernsDecisionsAddToCase',()=>{
+    cy.visit(Cypress.env('url')+"/home");
+    cy.checkForExistingCase();
+    cy.reload();
+    CaseManagementPage.getAddToCaseBtn().click();
+    AddToCasePage.addToCase('Decision');
+    AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
+    AddToCasePage.getAddToCaseBtn().click();
+    cy.log(utils.checkForGovErrorSummaryList());
+
+    if (utils.checkForGovErrorSummaryList() > 0) {
+        cy.log("Case Action already exists");
+        cy.visit(Cypress.env('url'), { timeout: 30000 });
+        cy.checkForExistingCase(true);
+        CaseManagementPage.getAddToCaseBtn().click();
+        AddToCasePage.addToCase('Decision');
+        AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
+        AddToCasePage.getAddToCaseBtn().click();
+    } else {
+        cy.log("No Case Action exists");
+        cy.log(utils.checkForGovErrorSummaryList());
+    }
+})
+
 
 Cypress.Commands.add('selectRiskToTrust',()=>{
    // cy.get('[href="/case/rating"]').click();

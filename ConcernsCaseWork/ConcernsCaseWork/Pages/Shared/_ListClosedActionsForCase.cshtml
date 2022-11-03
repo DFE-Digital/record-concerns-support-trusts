@@ -1,5 +1,5 @@
 ﻿@using ConcernsCaseWork.Models.CaseActions
-@model IList<ConcernsCaseWork.Models.CaseActions.ActionSummary>
+@model IList<ConcernsCaseWork.Models.CaseActions.ActionSummaryModel>
 
 <table id="close-case-actions" class="govuk-table">
     <thead class="govuk-table__head">
@@ -28,7 +28,7 @@
             </tr>
         }
     
-        @foreach (ActionSummary actionSummary in Model)
+        @foreach (ActionSummaryModel actionSummary in Model)
         {
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">

@@ -9,6 +9,6 @@ namespace ConcernsCaseWork.Models
 		
 		public string Description { get; set; }
 		
-		public long Urn { get; set; }
+		public long Id { get; set; }
 	}
 }

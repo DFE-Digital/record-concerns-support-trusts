@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			// cases
 			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
-			var casesDtoLive = casesDto.Where(c => c.StatusUrn.CompareTo(1) == 0).ToList();
+			var casesDtoLive = casesDto.Where(c => c.StatusId.CompareTo(1) == 0).ToList();
 			
 			// records
 			var recordsDtoLiveCases = casesDtoLive.SelectMany(c => RecordFactory.BuildListRecordDtoByCaseUrn(c.Urn)).ToList();
@@ -102,12 +102,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.TrustNameTitle, Is.EqualTo(TrustMapping.FetchTrustName(trustDto).ToTitle()));
 					
 					// Case rating
-					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn);
+					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingId);
 					Assert.NotNull(expected.RatingModel);
 					Assert.NotNull(actualCaseRatingModel);
 					Assert.That(expected.RatingModel.Checked, Is.EqualTo(actualCaseRatingModel.Checked));
 					Assert.That(expected.RatingModel.Name, Is.EqualTo(actualCaseRatingModel.Name));
-					Assert.That(expected.RatingModel.Urn, Is.EqualTo(actualCaseRatingModel.Urn));
+					Assert.That(expected.RatingModel.Id, Is.EqualTo(actualCaseRatingModel.Id));
 					Assert.That(expected.RatingModel.RagRating, Is.EqualTo(actualCaseRatingModel.RagRating));
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
@@ -121,11 +121,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					
 					for (var index = 0; index < expectedRecordsModel.Count; ++index)
 					{
-						Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(actualRecordsModel.ElementAt(index).Urn));
+						Assert.That(expectedRecordsModel.ElementAt(index).Id, Is.EqualTo(actualRecordsModel.ElementAt(index).Id));
 						Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).CaseUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).RatingId, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingId));
+						Assert.That(expectedRecordsModel.ElementAt(index).StatusId, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusId));
+						Assert.That(expectedRecordsModel.ElementAt(index).TypeId, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeId));
 						
 						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
 						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
@@ -133,7 +133,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(actualRecordRatingModel);
 						Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
 						Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
-						Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+						Assert.That(expectedRecordRatingModel.Id, Is.EqualTo(actualRecordRatingModel.Id));
 						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
 						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
 						
@@ -151,7 +151,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(expectedRecordStatusModel);
 						Assert.NotNull(actualRecordTypeModel);
 						Assert.That(expectedRecordStatusModel.Name, Is.EqualTo(actualRecordStatusModel.Name));
-						Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
+						Assert.That(expectedRecordStatusModel.Id, Is.EqualTo(actualRecordStatusModel.Id));
 					}
 				}
 			}
@@ -174,7 +174,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			// cases
 			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
-			var casesDtoLive = casesDto.Where(c => c.StatusUrn.CompareTo(1) == 0).ToList();
+			var casesDtoLive = casesDto.Where(c => c.StatusId.CompareTo(1) == 0).ToList();
 			
 			// records
 			var recordsDtoLiveCases = casesDtoLive.SelectMany(c => RecordFactory.BuildListRecordDtoByCaseUrn(c.Urn)).ToList();
@@ -243,7 +243,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			// cases
 			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
-			var casesDtoLive = casesDto.Where(c => c.StatusUrn.CompareTo(1) == 0).ToList();
+			var casesDtoLive = casesDto.Where(c => c.StatusId.CompareTo(1) == 0).ToList();
 			
 			// records
 			var recordsDtoLiveCases = casesDtoLive.SelectMany(c => RecordFactory.BuildListRecordDtoByCaseUrn(c.Urn)).ToList();
@@ -298,7 +298,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			// cases
 			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
-			var casesDtoLive = casesDto.Where(c => c.StatusUrn.CompareTo(1) == 0).ToList();
+			var casesDtoLive = casesDto.Where(c => c.StatusId.CompareTo(1) == 0).ToList();
 			
 			// records
 			var recordsDtoLiveCases = casesDtoLive.SelectMany(c => RecordFactory.BuildListRecordDtoByCaseUrn(c.Urn)).ToList();
@@ -355,12 +355,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.TrustNameTitle, Is.EqualTo(TrustMapping.FetchTrustName(trustDto).ToTitle()));
 					
 					// Case rating
-					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn);
+					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingId);
 					Assert.NotNull(expected.RatingModel);
 					Assert.NotNull(actualCaseRatingModel);
 					Assert.That(expected.RatingModel.Checked, Is.EqualTo(actualCaseRatingModel.Checked));
 					Assert.That(expected.RatingModel.Name, Is.EqualTo(actualCaseRatingModel.Name));
-					Assert.That(expected.RatingModel.Urn, Is.EqualTo(actualCaseRatingModel.Urn));
+					Assert.That(expected.RatingModel.Id, Is.EqualTo(actualCaseRatingModel.Id));
 					Assert.That(expected.RatingModel.RagRating, Is.EqualTo(actualCaseRatingModel.RagRating));
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
@@ -374,11 +374,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					
 					for (var index = 0; index < expectedRecordsModel.Count; ++index)
 					{
-						Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(actualRecordsModel.ElementAt(index).Urn));
+						Assert.That(expectedRecordsModel.ElementAt(index).Id, Is.EqualTo(actualRecordsModel.ElementAt(index).Id));
 						Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).CaseUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).RatingId, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingId));
+						Assert.That(expectedRecordsModel.ElementAt(index).StatusId, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusId));
+						Assert.That(expectedRecordsModel.ElementAt(index).TypeId, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeId));
 						
 						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
 						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
@@ -386,7 +386,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(actualRecordRatingModel);
 						Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
 						Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
-						Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+						Assert.That(expectedRecordRatingModel.Id, Is.EqualTo(actualRecordRatingModel.Id));
 						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
 						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
 						
@@ -404,7 +404,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(expectedRecordStatusModel);
 						Assert.NotNull(actualRecordTypeModel);
 						Assert.That(expectedRecordStatusModel.Name, Is.EqualTo(actualRecordStatusModel.Name));
-						Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
+						Assert.That(expectedRecordStatusModel.Id, Is.EqualTo(actualRecordStatusModel.Id));
 					}
 				}
 			}
@@ -427,7 +427,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			// cases
 			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
-			var casesDtoMonitoring = casesDto.Where(c => c.StatusUrn.CompareTo(2) == 0).ToList();
+			var casesDtoMonitoring = casesDto.Where(c => c.StatusId.CompareTo(2) == 0).ToList();
 			
 			// records
 			var recordsDtoMonitoringCases = casesDtoMonitoring.SelectMany(c => RecordFactory.BuildListRecordDtoByCaseUrn(c.Urn)).ToList();
@@ -484,12 +484,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.TrustNameTitle, Is.EqualTo(TrustMapping.FetchTrustName(trustDto).ToTitle()));
 					
 					// Case rating
-					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn);
+					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingId);
 					Assert.NotNull(expected.RatingModel);
 					Assert.NotNull(actualCaseRatingModel);
 					Assert.That(expected.RatingModel.Checked, Is.EqualTo(actualCaseRatingModel.Checked));
 					Assert.That(expected.RatingModel.Name, Is.EqualTo(actualCaseRatingModel.Name));
-					Assert.That(expected.RatingModel.Urn, Is.EqualTo(actualCaseRatingModel.Urn));
+					Assert.That(expected.RatingModel.Id, Is.EqualTo(actualCaseRatingModel.Id));
 					Assert.That(expected.RatingModel.RagRating, Is.EqualTo(actualCaseRatingModel.RagRating));
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
@@ -503,11 +503,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					
 					for (var index = 0; index < expectedRecordsModel.Count; ++index)
 					{
-						Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(actualRecordsModel.ElementAt(index).Urn));
+						Assert.That(expectedRecordsModel.ElementAt(index).Id, Is.EqualTo(actualRecordsModel.ElementAt(index).Id));
 						Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).CaseUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).RatingId, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingId));
+						Assert.That(expectedRecordsModel.ElementAt(index).StatusId, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusId));
+						Assert.That(expectedRecordsModel.ElementAt(index).TypeId, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeId));
 						
 						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
 						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
@@ -515,7 +515,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(actualRecordRatingModel);
 						Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
 						Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
-						Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+						Assert.That(expectedRecordRatingModel.Id, Is.EqualTo(actualRecordRatingModel.Id));
 						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
 						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
 						
@@ -533,7 +533,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(expectedRecordStatusModel);
 						Assert.NotNull(actualRecordTypeModel);
 						Assert.That(expectedRecordStatusModel.Name, Is.EqualTo(actualRecordStatusModel.Name));
-						Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
+						Assert.That(expectedRecordStatusModel.Id, Is.EqualTo(actualRecordStatusModel.Id));
 					}
 				}
 			}
@@ -556,7 +556,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			
 			// cases
 			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
-			var casesDtoClosed = casesDto.Where(c => c.StatusUrn.CompareTo(3) == 0).ToList();
+			var casesDtoClosed = casesDto.Where(c => c.StatusId.CompareTo(3) == 0).ToList();
 			
 			// records
 			var recordsDtoClosedCases = casesDtoClosed.SelectMany(c => RecordFactory.BuildListRecordDtoByCaseUrn(c.Urn)).ToList();
@@ -613,12 +613,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.TrustNameTitle, Is.EqualTo(TrustMapping.FetchTrustName(trustDto).ToTitle()));
 					
 					// Case rating
-					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn);
+					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingId);
 					Assert.NotNull(expected.RatingModel);
 					Assert.NotNull(actualCaseRatingModel);
 					Assert.That(expected.RatingModel.Checked, Is.EqualTo(actualCaseRatingModel.Checked));
 					Assert.That(expected.RatingModel.Name, Is.EqualTo(actualCaseRatingModel.Name));
-					Assert.That(expected.RatingModel.Urn, Is.EqualTo(actualCaseRatingModel.Urn));
+					Assert.That(expected.RatingModel.Id, Is.EqualTo(actualCaseRatingModel.Id));
 					Assert.That(expected.RatingModel.RagRating, Is.EqualTo(actualCaseRatingModel.RagRating));
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
@@ -632,11 +632,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					
 					for (var index = 0; index < expectedRecordsModel.Count; ++index)
 					{
-						Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(actualRecordsModel.ElementAt(index).Urn));
+						Assert.That(expectedRecordsModel.ElementAt(index).Id, Is.EqualTo(actualRecordsModel.ElementAt(index).Id));
 						Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).CaseUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).RatingId, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingId));
+						Assert.That(expectedRecordsModel.ElementAt(index).StatusId, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusId));
+						Assert.That(expectedRecordsModel.ElementAt(index).TypeId, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeId));
 						
 						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
 						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
@@ -644,7 +644,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(actualRecordRatingModel);
 						Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
 						Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
-						Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+						Assert.That(expectedRecordRatingModel.Id, Is.EqualTo(actualRecordRatingModel.Id));
 						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
 						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
 						
@@ -662,7 +662,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(expectedRecordStatusModel);
 						Assert.NotNull(actualRecordTypeModel);
 						Assert.That(expectedRecordStatusModel.Name, Is.EqualTo(actualRecordStatusModel.Name));
-						Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
+						Assert.That(expectedRecordStatusModel.Id, Is.EqualTo(actualRecordStatusModel.Id));
 					}
 				}
 			}
@@ -1096,8 +1096,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			Assert.That(actualCaseModel.DeEscalationPoint, Is.EqualTo(caseDto.DeEscalationPoint));
 			Assert.That(actualCaseModel.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
 			Assert.That(actualCaseModel.Urn, Is.EqualTo(1));
-			Assert.That(actualCaseModel.StatusUrn, Is.EqualTo(1));
-			Assert.That(actualCaseModel.RatingUrn, Is.EqualTo(caseDto.RatingUrn));
+			Assert.That(actualCaseModel.StatusId, Is.EqualTo(1));
+			Assert.That(actualCaseModel.RatingId, Is.EqualTo(caseDto.RatingId));
 			Assert.IsNull(actualCaseModel.RatingModel);
 		}
 		
@@ -1181,7 +1181,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PatchCaseRating(CaseFactory.BuildPatchCaseModel()));
 
 			// assert
-			mockRecordCachedService.Verify(r => r.PatchRecordByUrn(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Never);
+			mockRecordCachedService.Verify(r => r.PatchRecordById(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Never);
 			mockCaseCachedService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Never);
 		}
 
@@ -1211,7 +1211,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			await caseModelService.PatchRecordRating(RecordFactory.BuildPatchRecordModel());
 
 			// assert
-			mockRecordCachedService.Verify(r => r.PatchRecordByUrn(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Once);
+			mockRecordCachedService.Verify(r => r.PatchRecordById(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Once);
 		}
 
 		[Test]
@@ -1296,7 +1296,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PatchClosure(CaseFactory.BuildPatchCaseModel()));
 
 			// assert
-			mockRecordCachedService.Verify(r => r.PatchRecordByUrn(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Never);
+			mockRecordCachedService.Verify(r => r.PatchRecordById(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Never);
 			mockCaseCachedService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Never);
 		}
 		

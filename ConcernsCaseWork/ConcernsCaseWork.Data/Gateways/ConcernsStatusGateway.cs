@@ -16,9 +16,9 @@ namespace ConcernsCaseWork.Data.Gateways
             return _concernsDbContext.ConcernsStatus.ToList();
         }
 
-        public ConcernsStatus GetStatusByUrn(int urn)
+        public ConcernsStatus GetStatusByUrn(int id)
         {
-            return _concernsDbContext.ConcernsStatus.FirstOrDefault(s => s.Urn == urn);
+            return _concernsDbContext.ConcernsStatus.FirstOrDefault(s => s.Id == id);
         }
     }
 }

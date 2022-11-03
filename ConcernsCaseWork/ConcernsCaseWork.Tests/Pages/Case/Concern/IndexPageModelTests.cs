@@ -86,11 +86,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 						
 			Assert.That("Internal", Is.EqualTo(expectedMeansOfReferralModels.First().Name));
 			Assert.That("Some description 1", Is.EqualTo(expectedMeansOfReferralModels.First().Description));
-			Assert.That(1, Is.EqualTo(expectedMeansOfReferralModels.First().Urn));
+			Assert.That(1, Is.EqualTo(expectedMeansOfReferralModels.First().Id));
 			
 			Assert.That("External", Is.EqualTo(expectedMeansOfReferralModels.Last().Name));
 			Assert.That("Some description 2", Is.EqualTo(expectedMeansOfReferralModels.Last().Description));
-			Assert.That(2, Is.EqualTo(expectedMeansOfReferralModels.Last().Urn));
+			Assert.That(2, Is.EqualTo(expectedMeansOfReferralModels.Last().Id));
 			
 			// Verify ILogger
 			mockLogger.VerifyLogInformationWasCalled("OnGetAsync");
@@ -198,7 +198,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 					{ "type", new StringValues("type") },
 					{ "sub-type", new StringValues("999:subType") },
 					{ "rating", new StringValues("ragRating:123") },
-					{ "means-of-referral-urn", new StringValues("1") }
+					{ "means-of-referral-id", new StringValues("1") }
 				});
 			
 			// act
@@ -239,7 +239,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 					{ "type", new StringValues("Force Majeure") },
 					{ "sub-type", new StringValues("123:subType") },
 					{ "rating", new StringValues("123:ragRating") },
-					{ "means-of-referral-urn", new StringValues("1") }
+					{ "means-of-referral-id", new StringValues("1") }
 				});
 			
 			// act

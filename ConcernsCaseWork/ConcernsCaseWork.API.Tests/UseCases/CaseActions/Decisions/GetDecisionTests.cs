@@ -85,7 +85,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
 
             var mockGateWay = new Mock<IConcernsCaseGateway>();
             mockGateWay
-                .Setup(x => x.GetConcernsCaseByUrn(fakeRequest.ConcernsCaseUrn))
+                .Setup(x => x.GetConcernsCaseById(fakeRequest.ConcernsCaseUrn))
                 .Returns(fakeConcernsCase);
 
             var fakeResponse = fixture.Build<GetDecisionResponse>()

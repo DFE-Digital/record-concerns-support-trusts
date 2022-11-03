@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.Data.Gateways
             return _concernsDbContext
                 .ConcernsMeansOfReferrals
                 .AsNoTracking()
-                .SingleOrDefault(m => m.Urn == urn);
+                .SingleOrDefault(m => m.Id == urn);
         }
         
         public ConcernsMeansOfReferral GetMeansOfReferralById(int id)
