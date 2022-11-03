@@ -1,5 +1,5 @@
 ﻿using Ardalis.GuardClauses;
-using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
@@ -63,14 +63,22 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				// Rating
 				var splitRagRating = ragRating.Split(":");
-				var ragRatingUrn = splitRagRating[0];
+				var ragRatingId = splitRagRating[0];
 				var ragRatingName = splitRagRating[1];
 				
+				// validate that the links from case to other data is valid. This really should be in a domain layer or at least the trams service.
+				var rating = await _ratingModelService.GetRatingModelById(long.Parse(ragRatingId));
+
+				if (rating == null)
+				{
+					throw new InvalidOperationException($"The given ratingUrn '{ragRatingId}' does not match any known rating in the system");
+				}
+
 				// Redis state
 				var userState = await GetUserState();
-				
+
 				// Update cache model
-				userState.CreateCaseModel.RatingId = long.Parse(ragRatingUrn);
+				userState.CreateCaseModel.RatingId = long.Parse(ragRatingId);
 				userState.CreateCaseModel.RagRatingName = ragRatingName;
 				userState.CreateCaseModel.RagRating = RatingMapping.FetchRag(ragRatingName);
 				userState.CreateCaseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRatingName);

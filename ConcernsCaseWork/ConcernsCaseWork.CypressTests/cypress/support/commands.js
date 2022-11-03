@@ -38,10 +38,12 @@ const ragRgx = new RegExp(/(amber|green|red|redPlus|Red Plus)/, 'i');
 const dotRgx = new RegExp(/(Deteriorating|Unchanged|Improving)/, 'i');
 
 Cypress.Commands.add("login",()=> {
-    cy.visit(Cypress.env('url')+"/login", { timeout: 40000 })
-    cy.get('#username', { timeout: 40000 }).should('be.visible')
-	cy.get("#username").type(Cypress.env('username'));
-	cy.get("#password").type(Cypress.env('password')+"{enter}");
+    cy.visit(Cypress.env('url'), { timeout: 40000 });
+
+    // cy.visit(Cypress.env('url')+"/login", { timeout: 40000 })
+    // cy.get('#username', { timeout: 40000 }).should('be.visible')
+	// cy.get("#username").type(Cypress.env('username'));
+	// cy.get("#password").type(Cypress.env('password')+"{enter}");
     cy.get('[id=your-casework]', { timeout: 40000 }).should('be.visible')
 	cy.saveLocalStorage();
 })
@@ -535,4 +537,32 @@ Cypress.Commands.add('closeSRMA', function (){
         cy.get('[id="means-of-referral-urn"]').eq(Math.floor(Math.random() * 1)).click();
         cy.get('button[data-prevent-double-click="true"]').click();
 
+    });
+
+    Cypress.Commands.add('setupAuthHeaders', function(username, roles) {
+        cy.log('adding auth interceptor for username ' + username);
+        cy.intercept(`${Cypress.env('url')}**`, request => {
+            request.headers['Authorization'] = Cypress.env('clientSecret');
+            if (username !== undefined) {
+                request.headers[`AuthorizationUserName`] = username;
+            }
+            else {
+                // default a username if nothing passed?
+                request.headers[`AuthorizationUserName`] = 'test.user';
+            }
+    
+            if (roles !== undefined && Array.isArray(roles)) {
+                var rolesHeaderValue = roles.length == 1
+                    ? roles[0]
+                    : roles.join(',');
+                request.headers['AuthorizationRoles'] = rolesHeaderValue;
+            }
+            else if (roles !== undefined && !Array.isArray(roles)) {
+                request.headers['AuthorizationRoles'] = roles;
+            }
+            else {
+                // Could just default to caseworker if nothing passed?
+                request.headers['AuthorizationRoles'] = 'concerns-casework.caseworker';
+            }
+        })
     });

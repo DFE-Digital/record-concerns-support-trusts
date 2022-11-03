@@ -1,6 +1,6 @@
 using AutoFixture;
+using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Teams;
 using ConcernsCaseWork.Pages;
@@ -42,12 +42,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockUserStateCache = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
-			var roles = RoleFactory.BuildListRoleEnum();
-			var defaultUsers = new[] { "user1", "user2" };
-			var roleClaimWrapper = new RoleClaimWrapper { Roles = roles, Users = defaultUsers };
-
-			//mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
-			//	.ReturnsAsync(roleClaimWrapper);
 			mockCaseModelService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
 				.ReturnsAsync(homeModels);
 
@@ -145,12 +139,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			var emptyList = new List<HomeModel>();
 
-			var roles = RoleFactory.BuildListUserRoleEnum();
-			var defaultUsers = new[] { "user1", "user2" };
-			var roleClaimWrapper = new RoleClaimWrapper { Roles = roles, Users = defaultUsers };
-
-			//mockRbacManager.Setup(r => r.GetUserRoleClaimWrapper(It.IsAny<string>()))
-			//	.ReturnsAsync(roleClaimWrapper);
 			mockCaseModelService.Setup(model => model.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()))
 				.ReturnsAsync(emptyList);
 			mockCaseModelService.Setup(model => model.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
