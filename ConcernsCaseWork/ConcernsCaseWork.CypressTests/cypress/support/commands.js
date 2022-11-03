@@ -30,7 +30,7 @@ import CaseManagementPage from "/cypress/pages/caseMangementPage";
 import caseMangementPage from "/cypress/pages/caseMangementPage";
 import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
 import { AuthenticationComponent } from "../auth/authenticationComponent";
-import { LogTask } from '../support/constants';
+import { LogTask } from './constants';
 
 const concernsRgx = new RegExp(/(Compliance|Financial|Force majeure|Governance|Irregularity)/, 'i');
 const trustRgx = new RegExp(/(School|Academy|Accrington|South|North|East|West|([A-Z])\w+)/, 'i');
