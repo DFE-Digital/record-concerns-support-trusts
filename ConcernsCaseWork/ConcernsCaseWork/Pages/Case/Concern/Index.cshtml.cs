@@ -3,6 +3,8 @@ using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Validators;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
@@ -10,14 +12,11 @@ using ConcernsCaseWork.Services.MeansOfReferral;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Base;
-using Service.Redis.Models;
-using Service.TRAMS.Cases;
+using ConcernsCaseWork.Service.Cases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Service.Redis.Users;
 
 namespace ConcernsCaseWork.Pages.Case.Concern
 {
@@ -67,10 +66,10 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			{
 				_logger.LogInformation("Case::Concern::IndexPageModel::OnPostAsync");
 
-				if (!ConcernTypeValidator.IsValid(Request.Form) || string.IsNullOrWhiteSpace(Request.Form["means-of-referral-urn"].ToString()))
+				if (!ConcernTypeValidator.IsValid(Request.Form) || string.IsNullOrWhiteSpace(Request.Form["means-of-referral-id"].ToString()))
 					throw new Exception("Missing form values");
 				
-				string typeUrn;
+				string typeId;
 				
 				// Form
 				var type = Request.Form["type"].ToString();
@@ -78,14 +77,14 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				var ragRating = Request.Form["rating"].ToString();
 				
 				// Type
-				(typeUrn, type, subType) = type.SplitType(subType);
+				(typeId, type, subType) = type.SplitType(subType);
 
 				// Rating
 				var splitRagRating = ragRating.Split(":");
 				var ragRatingUrn = splitRagRating[0];
 				var ragRatingName = splitRagRating[1];
 				
-				var meansOfReferral = Request.Form["means-of-referral-urn"].ToString();
+				var meansOfReferral = Request.Form["means-of-referral-id"].ToString();
 				
 				// Redis state
 				var userState = await GetUserState();
@@ -111,14 +110,14 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 				
 				var createRecordModel = new CreateRecordModel
 				{
-					TypeUrn = long.Parse(typeUrn),
+					TypeId = long.Parse(typeId),
 					Type = type,
 					SubType = subType,
-					RatingUrn = long.Parse(ragRatingUrn),
+					RatingId = long.Parse(ragRatingUrn),
 					RatingName = ragRatingName,
 					RagRating = RatingMapping.FetchRag(ragRatingName),
 					RagRatingCss = RatingMapping.FetchRagCss(ragRatingName),
-					MeansOfReferralUrn = long.Parse(meansOfReferral)
+					MeansOfReferralId = long.Parse(meansOfReferral)
 				};
 				
 				userState.CreateCaseModel.CreateRecordsModel.Add(createRecordModel);

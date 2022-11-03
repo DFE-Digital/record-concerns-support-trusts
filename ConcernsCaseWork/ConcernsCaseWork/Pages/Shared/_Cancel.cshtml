@@ -1,4 +1,5 @@
-﻿@{
+﻿@using NetEscapades.AspNetCore.SecurityHeaders
+@{
     var nonce = Context.GetNonce();
     var buttonLbl = Convert.ToString(ViewData["CancelButtonLabel"]);
     buttonLbl = string.IsNullOrWhiteSpace(buttonLbl) ? "Cancel" : buttonLbl;

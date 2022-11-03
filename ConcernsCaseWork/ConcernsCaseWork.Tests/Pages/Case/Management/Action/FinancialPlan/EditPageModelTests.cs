@@ -1,5 +1,7 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
+using ConcernsCaseWork.Redis.FinancialPlan;
+using ConcernsCaseWork.Service.FinancialPlan;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
@@ -11,8 +13,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.FinancialPlan;
-using Service.TRAMS.FinancialPlan;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,6 +79,54 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			Assert.IsTrue(validStatuses.Select(s => s.Name).Contains(testStatus2.Id));
 			
 			Assert.IsNull(pageModel.TempData["Error.Message"]);
+		}
+		
+		[Test]
+		public async Task WhenOnGetAsync_WhenFinancialPlanIsClosed_RedirectsToClosedPage()
+		{
+			// arrange
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
+			var mockLogger = new Mock<ILogger<EditPageModel>>();
+			
+			var validStatuses = GetListValidStatuses();
+			
+			var caseUrn = 4;
+			var financialPlanId = 6;			
+			var financialPlan = SetupFinancialPlanModel(financialPlanId, caseUrn, null);
+			financialPlan.ClosedAt = DateTime.Now;
+                        
+			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+				.ReturnsAsync(financialPlan);
+			
+			mockFinancialPlanStatusService.Setup(fp => fp.GetOpenFinancialPlansStatusesAsync())
+				.ReturnsAsync(validStatuses);
+			
+			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+			routeData.Add("financialplanid", financialPlanId);
+
+			// act
+			var response = await pageModel.OnGetAsync();
+
+			// assert
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Information,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::FinancialPlan::EditPageModel::OnGetAsync")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+			
+			Assert.Multiple(() =>
+			{
+				Assert.That(response, Is.InstanceOf<RedirectResult>());
+				Assert.That(((RedirectResult)response).Url, Is.EqualTo($"/case/{caseUrn}/management/action/financialplan/{financialPlanId}/closed"));
+				Assert.That(pageModel.TempData["Error.Message"], Is.Null);
+			});
 		}
 		
 		[Test]

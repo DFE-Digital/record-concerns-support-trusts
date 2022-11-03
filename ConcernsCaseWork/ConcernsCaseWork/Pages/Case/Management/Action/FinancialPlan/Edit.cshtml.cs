@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Services.FinancialPlan;
-using Service.Redis.FinancialPlan;
-using Service.TRAMS.FinancialPlan;
+using ConcernsCaseWork.Service.FinancialPlan;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
@@ -38,6 +38,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				var loggedInUser = GetLoggedInUserName();
 				
 				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, loggedInUser);
+
+				if (FinancialPlanModel.IsClosed)
+				{
+					return Redirect($"/case/{caseUrn}/management/action/financialplan/{financialPlanId}/closed");
+				}
 				
 				FinancialPlanStatuses = await GetStatusOptionsAsync(FinancialPlanModel.Status?.Name);
 			}

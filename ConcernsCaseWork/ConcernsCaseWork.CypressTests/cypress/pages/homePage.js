@@ -20,6 +20,14 @@ class HomePage {
     getTeamCaseworkHeading() {
         return cy.get('[class="govuk-table__caption govuk-table__caption--m"]');
     }
+
+    getClosedCasesBtn() {
+        return cy.get('[href="/case/closed"]');
+    }
+
+    getClosedCasesTable() {
+        return cy.get('.govuk-table__body tr');
+    }
     
 
     //methods

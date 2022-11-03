@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Services.Cases
+namespace ConcernsCaseWork.Services.NtiUnderConsideration
 {
 	public interface INtiUnderConsiderationModelService
 	{

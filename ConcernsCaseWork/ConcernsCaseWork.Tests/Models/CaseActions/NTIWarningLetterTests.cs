@@ -1,11 +1,8 @@
-﻿using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Models.CaseActions;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace ConcernsCaseWork.Tests.Models
+namespace ConcernsCaseWork.Tests.Models.CaseActions
 {
 	[Parallelizable(ParallelScope.All)]
 	public class NTIWarningLetterTests

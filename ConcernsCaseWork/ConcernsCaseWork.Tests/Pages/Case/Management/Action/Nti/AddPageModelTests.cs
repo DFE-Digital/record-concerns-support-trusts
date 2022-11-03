@@ -1,20 +1,16 @@
 ﻿using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
-using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Redis.Nti;
+using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Nti;
-using Service.TRAMS.Nti;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -47,6 +43,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 		{
 			// arrange
 			var caseUrn = 191L;
+			var ntiId = 835;
 
 			var mockNtiModelService = new Mock<INtiModelService>();
 			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
@@ -60,11 +57,16 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			mockNtiReasonsService.Setup(svc => svc.GetAllReasonsAsync()).ReturnsAsync(new NtiReasonDto[] {
 				new NtiReasonDto { Id = 1, Name = "Reason 1" }
 			});
+			
+			var ntiModel = NTIFactory.BuildNTIModel();
+			mockNtiModelService.Setup(n => n.GetNtiByIdAsync(ntiId))
+				.ReturnsAsync(ntiModel);
 
 			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseUrn);
+			routeData.Add("ntiid", ntiId);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -84,6 +86,57 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			Assert.That(pageModel.Statuses.Single().Text, Is.EqualTo("Status 1"));
 			Assert.That(pageModel.Reasons.Single().Text, Is.EqualTo("Reason 1"));
 			Assert.That(pageModel.CancelLinkUrl, Is.Not.Null);
+		}
+
+		[Test]
+		public async Task WhenOnGetAsync_AndNtiIsClosed_RedirectsToClosedPage()
+		{
+			// arrange
+			var caseUrn = 191L;
+			var ntiId = 835;
+
+			var mockNtiModelService = new Mock<INtiModelService>();
+			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
+			var mockNtiStatusesService = new Mock<INtiStatusesCachedService>();
+			var mockLogger = new Mock<ILogger<AddPageModel>>();
+
+			mockNtiStatusesService.Setup(svc => svc.GetAllStatusesAsync()).ReturnsAsync(new NtiStatusDto[] {
+				new NtiStatusDto { Id = 1, Name = "Status 1" }
+			});
+
+			mockNtiReasonsService.Setup(svc => svc.GetAllReasonsAsync()).ReturnsAsync(new NtiReasonDto[] {
+				new NtiReasonDto { Id = 1, Name = "Reason 1" }
+			});
+			
+			var ntiModel = NTIFactory.BuildClosedNTIModel();
+			mockNtiModelService.Setup(n => n.GetNtiByIdAsync(ntiId))
+				.ReturnsAsync(ntiModel);
+
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockLogger);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+			routeData.Add("ntiid", ntiId);
+
+			// act
+			var response = await pageModel.OnGetAsync();
+
+			// assert
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Information,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::NTI::AddPageModel::OnGetAsync")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+			
+			Assert.Multiple(() =>
+			{
+				Assert.That(response, Is.InstanceOf<RedirectResult>());
+				Assert.That(((RedirectResult)response).Url, Is.EqualTo($"/case/{caseUrn}/management/action/nti/{ntiId}"));
+				Assert.That(pageModel.TempData["Error.Message"], Is.Null);
+			});
 		}
 
 		[Test]

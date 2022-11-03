@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Models
 
 		public sealed class TypeValueModel
 		{
-			public long Urn { get; set; }
+			public long Id { get; set; }
 			public string SubType { get; set; }
 		}
 	}

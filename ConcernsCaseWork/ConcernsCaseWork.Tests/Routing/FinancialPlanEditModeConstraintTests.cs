@@ -1,9 +1,6 @@
 ﻿using ConcernsCaseWork.Constraints;
 using Microsoft.AspNetCore.Routing;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ConcernsCaseWork.Tests.Routing
 {

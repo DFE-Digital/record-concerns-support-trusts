@@ -4,19 +4,20 @@ using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.TRAMS.Status;
+using ConcernsCaseWork.Service.Status;
 using System;
 using ConcernsCaseWork.Services.Trusts;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Services.Records;
-using Service.Redis.Status;
 using System.Linq;
 using System.Collections.Generic;
 using ConcernsCaseWork.Services.FinancialPlan;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Pages.Validators;
+using ConcernsCaseWork.Redis.Status;
 
 namespace ConcernsCaseWork.Pages.Case.Management
 {
@@ -139,7 +140,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			var closedState = await _statusCachedService.GetStatusByName(StatusEnum.Close.ToString());
 			var caseDto = await _caseModelService.GetCaseByUrn(userName, urn);
 
-			return closedState != null && caseDto?.StatusUrn == closedState?.Urn;
+			return closedState != null && caseDto?.StatusId == closedState?.Id;
 		}
 
 
@@ -150,7 +151,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			var recordsModels = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
 			var liveStatus = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
-			var numberOfOpenConcerns = recordsModels.Count(r => r.StatusUrn.CompareTo(liveStatus.Urn) == 0);
+			var numberOfOpenConcerns = recordsModels.Count(r => r.StatusId.CompareTo(liveStatus.Id) == 0);
 			
 			var srmaModelsTask = _srmaModelService.GetSRMAsForCase(caseUrn);
 			var financialPlanModelsTask = _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name);

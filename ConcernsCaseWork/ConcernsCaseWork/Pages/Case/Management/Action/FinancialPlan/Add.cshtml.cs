@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Redis.FinancialPlan;
+using ConcernsCaseWork.Redis.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -6,9 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Services.FinancialPlan;
-using Service.Redis.Models;
-using Service.Redis.FinancialPlan;
-using Service.TRAMS.FinancialPlan;
+using ConcernsCaseWork.Service.FinancialPlan;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {

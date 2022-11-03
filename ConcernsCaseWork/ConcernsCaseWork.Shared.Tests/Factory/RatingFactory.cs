@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.TRAMS.Ratings;
+using ConcernsCaseWork.Service.Ratings;
 using System;
 using System.Collections.Generic;
 
@@ -40,7 +40,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			{
 				Name = "Red-Plus",
 				Checked = true,
-				Urn = 1,
+				Id = 1,
 				RagRating = new Tuple<int, IList<string>>(1, new List<string>() { "red" }),
 				RagRatingCss = new List<string>() { "red" }
 			};

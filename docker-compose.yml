@@ -1,0 +1,49 @@
+version: "3.8"
+services:
+  webapi:
+    build:
+      context: .
+      dockerfile: Dockerfile.gpaas-azure-migration
+    command: /bin/bash -c "./docker-entrypoint.sh dotnet ConcernsCaseWork.dll"
+    ports:
+      - 80:80/tcp
+    depends_on:
+      - db
+      - sqlcmd
+      - redis
+    env_file:
+       - .env.development.local
+    networks:
+      - dev
+
+  db:
+    container_name: amsd-casework-sql-server
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    env_file: .env.database
+    ports:
+      - 1433:1433
+    networks:
+      - dev
+
+  sqlcmd:
+    image: mcr.microsoft.com/mssql-tools:latest
+    env_file: .env.database
+    command: /etc/docker-entrypoint.sh
+    depends_on:
+      - db
+    stdin_open: true
+    volumes:
+      - ./script/sqlcmd-docker-entrypoint.sh:/etc/docker-entrypoint.sh
+    networks:
+      - dev
+
+  redis:
+    image: redis:6
+    command: redis-server --requirepass password
+    ports:
+      - 6379:6379
+    networks:
+      - dev
+
+networks:
+  dev:

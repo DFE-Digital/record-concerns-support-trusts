@@ -16,7 +16,7 @@
 			// Include type urn at type level
 			var hasSingleSubType = value.Any() && value.Count == 1;
 			var firstSubType = value.First();
-			var typeValue = hasSingleSubType ? firstSubType.Urn + ":" + key : key;
+			var typeValue = hasSingleSubType ? firstSubType.Id + ":" + key : key;
 			var strIdType = typeIndex == 1 ? "type" : "type-" + typeIndex;
 			
 			<div class="govuk-radios__item">
@@ -36,7 +36,7 @@
 						{
 							<div class="govuk-radios__item">
 								<input class="govuk-radios__input" id="sub-type-@subTypeIndex" name="sub-type" type="radio" 
-								       value="@subtype.Urn:@subtype.SubType" checked="@subType.Equals(subtype.SubType)">
+								       value="@subtype.Id:@subtype.SubType" checked="@subType.Equals(subtype.SubType)">
 								<label class="govuk-label govuk-radios__label" for="sub-type-@subTypeIndex">
 									@key: @subtype.SubType
 								</label>

@@ -1,8 +1,8 @@
 ﻿using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Service.Records;
+using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
-using Service.TRAMS.Records;
-using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,14 +27,14 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(recordDto.Description, Is.EqualTo(record.Description));
 			Assert.That(recordDto.Name, Is.EqualTo(record.Name));
 			Assert.That(recordDto.Reason, Is.EqualTo(record.Reason));
-			Assert.That(recordDto.StatusUrn, Is.EqualTo(record.StatusUrn));
-			Assert.That(recordDto.Urn, Is.EqualTo(record.Urn));
+			Assert.That(recordDto.StatusId, Is.EqualTo(record.StatusId));
+			Assert.That(recordDto.Id, Is.EqualTo(record.Id));
 			Assert.That(recordDto.CaseUrn, Is.EqualTo(record.CaseUrn));
 			Assert.That(recordDto.ClosedAt, Is.EqualTo(record.ClosedAt));
 			Assert.That(recordDto.CreatedAt, Is.EqualTo(record.CreatedAt));
-			Assert.That(recordDto.RatingUrn, Is.EqualTo(patchRecordModel.RatingUrn));
+			Assert.That(recordDto.RatingId, Is.EqualTo(patchRecordModel.RatingId));
 			Assert.That(recordDto.ReviewAt, Is.EqualTo(record.ReviewAt));
-			Assert.That(recordDto.TypeUrn, Is.EqualTo(record.TypeUrn));
+			Assert.That(recordDto.TypeId, Is.EqualTo(record.TypeId));
 			Assert.That(recordDto.UpdatedAt, Is.EqualTo(patchRecordModel.UpdatedAt));
 		}
 
@@ -54,14 +54,14 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(recordDto.Description, Is.EqualTo(record.Description));
 			Assert.That(recordDto.Name, Is.EqualTo(record.Name));
 			Assert.That(recordDto.Reason, Is.EqualTo(record.Reason));
-			Assert.That(recordDto.StatusUrn, Is.EqualTo(record.StatusUrn));
-			Assert.That(recordDto.Urn, Is.EqualTo(record.Urn));
+			Assert.That(recordDto.StatusId, Is.EqualTo(record.StatusId));
+			Assert.That(recordDto.Id, Is.EqualTo(record.Id));
 			Assert.That(recordDto.CaseUrn, Is.EqualTo(record.CaseUrn));
 			Assert.That(recordDto.ClosedAt, Is.EqualTo(record.ClosedAt));
 			Assert.That(recordDto.CreatedAt, Is.EqualTo(record.CreatedAt));
-			Assert.That(recordDto.RatingUrn, Is.EqualTo(record.RatingUrn));
+			Assert.That(recordDto.RatingId, Is.EqualTo(record.RatingId));
 			Assert.That(recordDto.ReviewAt, Is.EqualTo(record.ReviewAt));
-			Assert.That(recordDto.TypeUrn, Is.EqualTo(record.TypeUrn));
+			Assert.That(recordDto.TypeId, Is.EqualTo(record.TypeId));
 			Assert.That(recordDto.UpdatedAt, Is.EqualTo(patchRecordModel.UpdatedAt));
 		}
 
@@ -82,14 +82,14 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(recordDto.Description, Is.EqualTo(record.Description));
 			Assert.That(recordDto.Name, Is.EqualTo(record.Name));
 			Assert.That(recordDto.Reason, Is.EqualTo(record.Reason));
-			Assert.That(recordDto.StatusUrn, Is.EqualTo(statusDto.Urn));
-			Assert.That(recordDto.Urn, Is.EqualTo(record.Urn));
+			Assert.That(recordDto.StatusId, Is.EqualTo(statusDto.Id));
+			Assert.That(recordDto.Id, Is.EqualTo(record.Id));
 			Assert.That(recordDto.CaseUrn, Is.EqualTo(record.CaseUrn));
 			Assert.That(recordDto.ClosedAt, Is.EqualTo(patchRecordModel.ClosedAt));
 			Assert.That(recordDto.CreatedAt, Is.EqualTo(record.CreatedAt));
-			Assert.That(recordDto.RatingUrn, Is.EqualTo(record.RatingUrn));
+			Assert.That(recordDto.RatingId, Is.EqualTo(record.RatingId));
 			Assert.That(recordDto.ReviewAt, Is.EqualTo(record.ReviewAt));
-			Assert.That(recordDto.TypeUrn, Is.EqualTo(record.TypeUrn));
+			Assert.That(recordDto.TypeId, Is.EqualTo(record.TypeId));
 			Assert.That(recordDto.UpdatedAt, Is.EqualTo(patchRecordModel.UpdatedAt));
 		}
 
@@ -111,16 +111,16 @@ namespace ConcernsCaseWork.Tests.Mappers
 			for (var index = 0; index < createRecordsDto.Count; ++index)
 			{
 				var recordDto = recordsDto.ElementAt(index);
-				var typeModel = TypeMapping.MapDtoToModel(typesDto, recordDto.TypeUrn);
-				var ratingModel = RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingUrn);
+				var typeModel = TypeMapping.MapDtoToModel(typesDto, recordDto.TypeId);
+				var ratingModel = RatingMapping.MapDtoToModel(ratingsDto, recordDto.RatingId);
 				
 				Assert.That(createRecordsDto.ElementAt(index).Type, Is.EqualTo(typeModel.Type));
 				Assert.That(createRecordsDto.ElementAt(index).CaseUrn, Is.EqualTo(recordDto.CaseUrn));
 				Assert.That(createRecordsDto.ElementAt(index).RagRating, Is.EqualTo(ratingModel.RagRating));
 				Assert.That(createRecordsDto.ElementAt(index).RatingName, Is.EqualTo(ratingModel.Name));
-				Assert.That(createRecordsDto.ElementAt(index).RatingUrn, Is.EqualTo(recordDto.RatingUrn));
+				Assert.That(createRecordsDto.ElementAt(index).RatingId, Is.EqualTo(recordDto.RatingId));
 				Assert.That(createRecordsDto.ElementAt(index).SubType, Is.EqualTo(typeModel.SubType));
-				Assert.That(createRecordsDto.ElementAt(index).TypeUrn, Is.EqualTo(recordDto.TypeUrn));
+				Assert.That(createRecordsDto.ElementAt(index).TypeId, Is.EqualTo(recordDto.TypeId));
 				Assert.That(createRecordsDto.ElementAt(index).TypeDisplay, Is.EqualTo(typeModel.TypeDisplay));
 				Assert.That(createRecordsDto.ElementAt(index).RagRatingCss, Is.EqualTo(ratingModel.RagRatingCss));
 			}

@@ -1,11 +1,19 @@
-﻿@{
+﻿@using NetEscapades.AspNetCore.SecurityHeaders
+@{
 	var nonce = Context.GetNonce();
 	var label = ViewData["BackButtonLabel"] ?? "Back";
-	
+
+	var backLink = Convert.ToString(ViewData["BackButtonLink"]);
+}
+@if (string.IsNullOrWhiteSpace(backLink))
+{
 	<a id="back-link-event" class="govuk-back-link" href="#">@label</a>
 	<script nonce="@nonce">
-		$("#back-link-event").click(function() {
-			history.back();
-		});
-	</script>
+        $("#back-link-event").click(function() {
+        history.back();
+        });
+    </script>
+}
+else {
+	<a id="back-link-event" class="govuk-back-link" href="@backLink">@label</a>
 }
