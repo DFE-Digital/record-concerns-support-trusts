@@ -2,7 +2,6 @@
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
 using ConcernsCaseWork.Services.Nti;
-using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.NtiWarningLetter;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -77,6 +75,49 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 				Times.Once);
 
 			mockNtiModelService.Verify(n => n.GetNtiByIdAsync(It.IsAny<long>()), Times.Once);
+		}
+		
+		[Test]
+		public async Task WhenOnGetAsync_WhenNtiIsClosed_RedirectsToClosedPage()
+		{
+			// arrange
+			var caseUrn = 3;
+			var ntiId = 9;
+			
+			var mockNtiModelService = new Mock<INtiModelService>();
+			var mockLogger = new Mock<ILogger<CancelPageModel>>();
+
+			var ntiModel = NTIFactory.BuildClosedNTIModel();
+			mockNtiModelService.Setup(n => n.GetNtiByIdAsync(It.IsAny<long>()))
+				.ReturnsAsync(ntiModel);
+
+			var pageModel = SetupCancelPageModel(mockNtiModelService, mockLogger);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn); 
+			routeData.Add("ntiId", ntiId);
+
+			// act
+			var response = await pageModel.OnGetAsync();
+
+			// assert
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Information,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("CancelPageModel::OnGetAsync")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+
+			mockNtiModelService.Verify(n => n.GetNtiByIdAsync(It.IsAny<long>()), Times.Once);
+			
+			Assert.Multiple(() =>
+			{
+				Assert.That(response, Is.InstanceOf<RedirectResult>());
+				Assert.That(((RedirectResult)response).Url, Is.EqualTo($"/case/{caseUrn}/management/action/nti/{ntiId}"));
+				Assert.That(pageModel.TempData["Error.Message"], Is.Null);
+			});
 		}
 
 		[Test]

@@ -1,5 +1,7 @@
 ﻿@page "/case/{urn:long}/management/action/srma/{srmaId:long}/resolve/{resolution}"
-@model ConcernsCaseWork.Pages.Case.Management.Action.Srma.ResolvePageModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NetEscapades.AspNetCore.SecurityHeaders
+@model ResolvePageModel
 
 @{
 	ViewData["Title"] = "Resolve srma";

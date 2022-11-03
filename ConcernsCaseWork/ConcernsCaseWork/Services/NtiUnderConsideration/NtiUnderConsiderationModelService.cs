@@ -1,12 +1,12 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.Redis.NtiUnderConsideration;
+using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Services.Cases
+namespace ConcernsCaseWork.Services.NtiUnderConsideration
 {
 	public class NtiUnderConsiderationModelService : INtiUnderConsiderationModelService
 	{

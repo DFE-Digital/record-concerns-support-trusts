@@ -6,10 +6,12 @@ WORKDIR /build
 ENV DEBIAN_FRONTEND=noninteractive
 
 COPY ./ConcernsCaseWork/ConcernsCaseWork/ ./ConcernsCaseWork/
+COPY ./ConcernsCaseWork/ConcernsCaseWork.API/ ./ConcernsCaseWork.API/
 COPY ./ConcernsCaseWork/ConcernsCaseWork.CoreTypes/ ./ConcernsCaseWork.CoreTypes/
-COPY ./ConcernsCaseWork/ConcernsCaseWork.Logging ./ConcernsCaseWork.Logging
-COPY ./ConcernsCaseWork/Service.Redis ./Service.Redis
-COPY ./ConcernsCaseWork/Service.TRAMS ./Service.TRAMS
+COPY ./ConcernsCaseWork/ConcernsCaseWork.Data/ ./ConcernsCaseWork.Data/
+COPY ./ConcernsCaseWork/ConcernsCaseWork.Logging/ ./ConcernsCaseWork.Logging/
+COPY ./ConcernsCaseWork/ConcernsCaseWork.Service/ ./ConcernsCaseWork.Service/
+COPY ./ConcernsCaseWork/ConcernsCaseWork.Redis ./ConcernsCaseWork.Redis
 COPY ./ConcernsCaseWork/ConcernsCaseWork.sln ./ConcernsCaseWork.sln
 
 RUN dotnet restore ConcernsCaseWork
@@ -19,8 +21,7 @@ RUN dotnet new tool-manifest
 RUN dotnet tool install dotnet-ef
 
 RUN mkdir -p /app/SQL
-# When migrations are available, this command can be uncommented
-# RUN dotnet ef migrations script --output /app/SQL/DbMigrationScript.sql --idempotent -p /build/ConcernsCasework.Data
+RUN dotnet ef migrations script --output /app/SQL/DbMigrationScript.sql --idempotent -p /build/ConcernsCaseWork.Data
 RUN touch /app/SQL/DbMigrationScript.sql
 
 RUN dotnet publish ConcernsCaseWork -c Release -o /app

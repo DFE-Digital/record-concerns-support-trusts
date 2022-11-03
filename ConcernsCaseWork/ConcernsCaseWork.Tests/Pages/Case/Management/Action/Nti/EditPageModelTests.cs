@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
-using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Http;
@@ -12,9 +12,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.FinancialPlan;
-using Service.Redis.Nti;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -45,6 +42,41 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			mockNtiModelService.Verify(
 					m => m.GetNtiByIdAsync(ntiId),
 					Times.Once());
+		}
+		
+		[Test]
+		public async Task WhenOnGetAsync_WithClosedNti_RedirectsToClosedPage()
+		{
+			// arrange
+			var ntiId = 123L;
+			var caseUrn = 1;
+			var mockNtiModelService = new Mock<INtiModelService>();
+			var mockNtiReasonsService = new Mock<INtiReasonsCachedService>();
+			var mockNtiStatusesService = new Mock<INtiStatusesCachedService>();
+			var mockLogger = new Mock<ILogger<AddPageModel>>();
+
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockLogger);
+			var nti = NTIFactory.BuildClosedNTIModel();
+
+			mockNtiModelService.Setup(s => s.GetNtiByIdAsync(ntiId)).ReturnsAsync(nti);
+
+			pageModel.RouteData.Values["urn"] = caseUrn;
+			pageModel.RouteData.Values["NtiId"] = ntiId;
+
+			// act
+			var response = await pageModel.OnGetAsync();
+
+			// assert
+			mockNtiModelService.Verify(
+				m => m.GetNtiByIdAsync(ntiId),
+				Times.Once());
+			
+			Assert.Multiple(() =>
+			{
+				Assert.That(response, Is.InstanceOf<RedirectResult>());
+				Assert.That(((RedirectResult)response).Url, Is.EqualTo($"/case/{caseUrn}/management/action/nti/{ntiId}"));
+				Assert.That(pageModel.TempData["Error.Message"], Is.Null);
+			});
 		}
 
 		[Test]

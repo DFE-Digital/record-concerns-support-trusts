@@ -80,7 +80,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
 			Assert.That(pageModel.CaseModel.Description, Is.EqualTo(caseModel.Description));
 			Assert.That(pageModel.CaseModel.Issue, Is.EqualTo(caseModel.Issue));
-			Assert.That(pageModel.CaseModel.StatusUrn, Is.EqualTo(caseModel.StatusUrn));
+			Assert.That(pageModel.CaseModel.StatusId, Is.EqualTo(caseModel.StatusId));
 			Assert.That(pageModel.CaseModel.Urn, Is.EqualTo(caseModel.Urn));
 			Assert.That(pageModel.CaseModel.CaseAim, Is.EqualTo(caseModel.CaseAim));
 			Assert.That(pageModel.CaseModel.ClosedAt, Is.EqualTo(caseModel.ClosedAt));

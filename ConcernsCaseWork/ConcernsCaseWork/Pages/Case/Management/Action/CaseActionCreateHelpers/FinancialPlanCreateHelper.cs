@@ -1,8 +1,6 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Services.FinancialPlan;
-using Service.TRAMS.Cases;
+﻿using ConcernsCaseWork.Services.FinancialPlan;
+using ConcernsCaseWork.Service.Cases;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers

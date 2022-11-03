@@ -2,6 +2,9 @@
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Service.Helpers;
+using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Records;
@@ -9,9 +12,6 @@ using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Status;
-using Service.TRAMS.Helpers;
-using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
-		public List<ActionSummary> CaseActions { get; private set; }
+		public List<ActionSummaryModel> CaseActions { get; private set; }
 		
 		public ViewClosedPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,
@@ -71,7 +71,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(userName, caseUrn);
 				CaseModel.RecordsModel = recordsModel;
 
-				CaseActions = (await _actionsModelService.GetClosedActionsSummary(userName, caseUrn)).ToList();
+				CaseActions = (await _actionsModelService.GetActionsSummary(userName, caseUrn)).Where(a => a.ClosedDate != null).ToList();
 			}
 			catch (Exception ex)
 			{
@@ -102,7 +102,7 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			var closedStatus = await _statusCachedService.GetStatusByName(StatusEnum.Close.ToString());
 
-			if (CaseModel.StatusUrn.CompareTo(closedStatus.Urn) != 0)
+			if (CaseModel.StatusId.CompareTo(closedStatus.Id) != 0)
 			{
 				return true;
 			}

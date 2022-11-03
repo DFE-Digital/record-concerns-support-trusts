@@ -1,8 +1,8 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Redis.Ratings;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Ratings;
-using Service.TRAMS.Ratings;
+using ConcernsCaseWork.Service.Ratings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +45,7 @@ namespace ConcernsCaseWork.Services.Ratings
 			return ratingsModel;
 		}
 
-		public async Task<IList<RatingModel>> GetSelectedRatingsModelByUrn(long urn)
+		public async Task<IList<RatingModel>> GetSelectedRatingsModelById(long urn)
 		{
 			_logger.LogInformation("RatingModelService::GetSelectedRatingsModelByUrn");
 
@@ -53,7 +53,7 @@ namespace ConcernsCaseWork.Services.Ratings
 			
 			ratings = ratings.Select(r =>
 			{
-				if (r.Urn.CompareTo(urn) == 0)
+				if (r.Id.CompareTo(urn) == 0)
 				{
 					r.Checked = true;
 				}
@@ -63,13 +63,13 @@ namespace ConcernsCaseWork.Services.Ratings
 			return ratings;
 		}
 
-		public async Task<RatingModel> GetRatingModelByUrn(long urn)
+		public async Task<RatingModel> GetRatingModelById(long urn)
 		{
 			_logger.LogInformation("RatingModelService::GetRatingModelByUrn");
 			
 			var ratingsDto = await GetRatings();
 			
-			var ratingModel = ratingsDto.Select(RatingMapping.MapDtoToModel).FirstOrDefault(r => r.Urn == urn);
+			var ratingModel = ratingsDto.Select(RatingMapping.MapDtoToModel).FirstOrDefault(r => r.Id == urn);
 			
 			return ratingModel;
 		}

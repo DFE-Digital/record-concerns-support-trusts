@@ -17,7 +17,7 @@ namespace ConcernsCaseWork.Models
 		
 		public long Urn { get; set; }
 		
-		public long RatingUrn { get; set; }
+		public long RatingId { get; set; }
 		
 		public string ReasonAtReview { get; set; }
 		

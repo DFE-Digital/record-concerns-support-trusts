@@ -1,9 +1,11 @@
 ﻿@page "/case/{urn:long}/management/action/ntiunderconsideration/{ntiUnderConsiderationId:long}/{handler?}"
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration.IndexPageModel
 
 @{
     ViewData["Title"] = "NTI Under Consideration";
 	ViewData["BackButtonLabel"] = "Back to case";
+	ViewData["BackButtonLink"] = $"/case/{@RouteData.Values["urn"]}/management";
 }
 
 @section BeforeMain {

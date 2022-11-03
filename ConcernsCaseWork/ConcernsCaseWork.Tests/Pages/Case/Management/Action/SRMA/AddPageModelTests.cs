@@ -1,9 +1,8 @@
-﻿using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Pages.Case.Management.Action;
-using ConcernsCaseWork.Pages.Case.Management.Action.Srma;
+﻿using AutoFixture;
+using ConcernsCaseWork.Pages.Case.Management.Action.SRMA;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.MockHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,18 +12,24 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.TRAMS.Cases;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
+namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 {
 	[Parallelizable(ParallelScope.All)]
 	public class AddPageModelTests
-	{
+	{		
+		private readonly IFixture _fixture;
+		
+		public AddPageModelTests()
+		{
+			_fixture = new Fixture();
+		}
+		
 		[Test]
-		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
+		public void WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
 		{
 			// arrange
 			var mockSrmaService = new Mock<ISRMAService>();
@@ -33,29 +38,31 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
 
 			// act
-			await pageModel.OnGetAsync();
+			pageModel.OnGet();
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 		}
 
 		[Test]
-		public async Task WhenOnGetAsync_ReturnsPageModel()
+		public void WhenOnGetAsync_ReturnsPageModel()
 		{
 			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
+			var caseUrn = _fixture.Create<long>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
 			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
+			routeData.Add("urn", caseUrn);
 
 			// act
-			await pageModel.OnGetAsync();
+			pageModel.OnGet();
 
 			// assert
+			mockLogger.VerifyLogErrorWasNotCalled();
+			
 			mockLogger.Verify(
 				m => m.Log(
 					LogLevel.Information,
@@ -118,13 +125,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 		public async Task WhenOnPostAsync_Invalid_SRMA_Status_FormData_ThrowsException_ReturnsPage()
 		{
 			// arrange
+			var caseUrn = _fixture.Create<long>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
 			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
+			routeData.Add("urn", caseUrn);
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
@@ -145,13 +153,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 		public async Task WhenOnPostAsync_Invalid_Date_FormData_ThrowsException_ReturnsPage()
 		{
 			// arrange
+			var caseUrn = _fixture.Create<long>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
 			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
+			routeData.Add("urn", caseUrn);
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
@@ -175,6 +184,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 		public async Task WhenOnPostAsync_Invalid_NotesLength_FormData_ThrowsException_ReturnsPage()
 		{
 			// arrange
+			var caseUrn = _fixture.Create<long>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
@@ -183,7 +193,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			var exceededNotesLength = "Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data";
 
 			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", 1);
+			routeData.Add("urn", caseUrn);
 
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
@@ -208,11 +218,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 		public async Task WhenOnPostAsync_FormData_IsValid_SRMA_Is_Created_ReturnsToManagementPage()
 		{
 			// arrange
+			var caseUrn = _fixture.Create<long>();
 			var mockSrmaService = new Mock<ISRMAService>();
 			var mockLogger = new Mock<ILogger<AddPageModel>>();
 
 			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
-			var caseUrn = 1;
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseUrn);

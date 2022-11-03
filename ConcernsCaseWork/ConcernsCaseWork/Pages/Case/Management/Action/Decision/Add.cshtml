@@ -1,13 +1,15 @@
 ﻿@page "/case/{urn:long}/management/action/decision/add"
 @model ConcernsCaseWork.Pages.Case.Management.Action.Decision.AddPageModel
+@using ConcernsCaseWork.Service.Decision;
+@using Microsoft.AspNetCore.Mvc.TagHelpers;
+@using NetEscapades.AspNetCore.SecurityHeaders;
 @using ConcernsCaseWork.Helpers;
-@using Service.TRAMS.Decision;
 
 @{
-	ViewData["Title"] = "Add Decision";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Add Decision";
+    var nonce = HttpContext.GetNonce();
 
-	var decisionsValidationErrors = TempData["Decision.Message"] as IEnumerable<string>;
+    var decisionsValidationErrors = TempData["Decision.Message"] as IEnumerable<string>;
 }
 
 @section BeforeMain {
@@ -18,11 +20,11 @@
     </div>
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+    <div class="govuk-width-container">
+        <partial name="_BannerError" />
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
 
             @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
             {
@@ -37,7 +39,7 @@
                     <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
                         <h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
                         <div class="govuk-error-summary__body">
-                            <ul class="govuk-list govuk-error-summary__list">
+                            <ul id="decision-error-list" class="govuk-list govuk-error-summary__list">
                                 @foreach (var msg in decisionsValidationErrors)
                                 {
                                     <li class="govuk-error-message">@msg</li>
@@ -83,23 +85,23 @@
                             <div class="govuk-radios" data-module="govuk-radios">
                                 @{
 
-                                        <div class="govuk-radios__item">
-                                            <input class="govuk-radios__input" id="retrospective-approval" name="CreateDecisionDto.RetrospectiveApproval" type="radio" value="true">
-                                            <label class="govuk-label govuk-radios__label" for="retrospective-approval">
-                                                <span>
-                                                    Yes
-                                                </span>
-                                            </label>
-                                        </div>
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="retrospective-approval" name="CreateDecisionDto.RetrospectiveApproval" type="radio" value="true">
+                                        <label class="govuk-label govuk-radios__label" for="retrospective-approval">
+                                            <span>
+                                                Yes
+                                            </span>
+                                        </label>
+                                    </div>
 
-                                        <div class="govuk-radios__item">
-                                            <input class="govuk-radios__input" id="retrospective-approval-1" name="CreateDecisionDto.RetrospectiveApproval" type="radio" value="false">
-                                            <label class="govuk-label govuk-radios__label" for="retrospective-approval-1">
-                                                <span>
-                                                    No
-                                                </span>
-                                            </label>
-                                        </div>
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="retrospective-approval-1" name="CreateDecisionDto.RetrospectiveApproval" type="radio" value="false">
+                                        <label class="govuk-label govuk-radios__label" for="retrospective-approval-1">
+                                            <span>
+                                                No
+                                            </span>
+                                        </label>
+                                    </div>
                                 }
 
                             </div>
@@ -157,7 +159,7 @@
                                             Day
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-request-received"
-                                               name="dtr-day-request-received" type="text" maxlength="2" inputmode="numeric" />
+                                           name="dtr-day-request-received" type="text" maxlength="2" inputmode="numeric" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -166,7 +168,7 @@
                                             Month
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-request-received"
-                                               name="dtr-month-request-received" type="text" maxlength="2" inputmode="numeric" />
+                                           name="dtr-month-request-received" type="text" maxlength="2" inputmode="numeric" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -175,7 +177,7 @@
                                             Year
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-request-received"
-                                               name="dtr-year-request-received" type="text" maxlength="4" inputmode="numeric" />
+                                           name="dtr-year-request-received" type="text" maxlength="4" inputmode="numeric" />
                                     </div>
                                 </div>
                             </div>
@@ -261,7 +263,7 @@
                             </div>
 
                             <div class="govuk-checkboxes__item">
-	                            <input class="govuk-checkboxes__input" id="@DecisionType.OtherFinancialSupport" name="DecisionTypeOtherFinancialSupport" type="checkbox" value="true"/>
+                                <input class="govuk-checkboxes__input" id="@DecisionType.OtherFinancialSupport" name="DecisionTypeOtherFinancialSupport" type="checkbox" value="true" />
                                 <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.OtherFinancialSupport">
                                     @EnumHelper.GetEnumDescription(DecisionType.OtherFinancialSupport)
                                     <div id="@DecisionType.OtherFinancialSupport-hint" class="govuk-hint">
@@ -271,7 +273,7 @@
                             </div>
 
                             <div class="govuk-checkboxes__item">
-	                            <input class="govuk-checkboxes__input" id="@DecisionType.EstimatesFundingOrPupilNumberAdjustment" name="DecisionTypeEstimatesFundingOrPupilNumberAdjustment" type="checkbox" value="true"/>
+                                <input class="govuk-checkboxes__input" id="@DecisionType.EstimatesFundingOrPupilNumberAdjustment" name="DecisionTypeEstimatesFundingOrPupilNumberAdjustment" type="checkbox" value="true" />
                                 <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.EstimatesFundingOrPupilNumberAdjustment">
                                     @EnumHelper.GetEnumDescription(DecisionType.EstimatesFundingOrPupilNumberAdjustment)
                                     <div id="@DecisionType.EstimatesFundingOrPupilNumberAdjustment-hint" class="govuk-hint">

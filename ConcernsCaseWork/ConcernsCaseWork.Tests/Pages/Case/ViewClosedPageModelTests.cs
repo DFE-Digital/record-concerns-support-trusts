@@ -1,5 +1,9 @@
-﻿using ConcernsCaseWork.Extensions;
+﻿using AutoFixture;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case;
+using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Records;
@@ -13,9 +17,8 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Status;
-using Service.TRAMS.Status;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,6 +27,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 	[Parallelizable(ParallelScope.All)]
 	public class ViewClosedPageModelTests
 	{
+		private readonly static Fixture _fixture = new();
+
 		[Test]
 		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsExceptionAndCallsLogger()
 		{
@@ -50,7 +55,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 			mockTrustModelService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 			mockRecordModelService.Verify(c => c.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-			mockActionsModelService.Verify(c => c.GetClosedActionsSummary(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			mockActionsModelService.Verify(c => c.GetActionsSummary(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 
 		[Test]
@@ -101,7 +106,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
-			var closedActions = ActionsSummaryFactory.BuildListOfActionSummaries();
+
+			var allActions = new List<ActionSummaryModel>();
+
+			var openActions = _fixture
+				.Build<ActionSummaryModel>()
+				.Without(a => a.ClosedDate)
+				.CreateMany().ToList();
+			allActions.AddRange(openActions);
+
+			var closedActions = _fixture.CreateMany<ActionSummaryModel>().ToList();
+			allActions.AddRange(closedActions);
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
@@ -109,10 +124,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				.ReturnsAsync(trustDetailsModel);
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
-			mockActionsModelService.Setup(a => a.GetClosedActionsSummary(It.IsAny<string>(), It.IsAny<long>()))
-				.ReturnsAsync(closedActions);
+			mockActionsModelService.Setup(a => a.GetActionsSummary(It.IsAny<string>(), It.IsAny<long>()))
+				.ReturnsAsync(allActions);
 			mockStatusCachedService.Setup(a => a.GetStatusByName(StatusEnum.Close.ToString()))
-				.ReturnsAsync(new StatusDto("Closed", DateTimeOffset.Now, DateTimeOffset.Now, caseModel.StatusUrn));
+				.ReturnsAsync(new StatusDto("Closed", DateTimeOffset.Now, DateTimeOffset.Now, caseModel.StatusId));
 
 			var pageModel = SetupViewClosedPageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockActionsModelService.Object,
 				mockStatusCachedService.Object, mockLogger.Object);
@@ -129,7 +144,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.That(pageModel.CaseModel, Is.Not.Null);
 			Assert.That(pageModel.CaseModel.Description, Is.EqualTo(caseModel.Description));
 			Assert.That(pageModel.CaseModel.Issue, Is.EqualTo(caseModel.Issue));
-			Assert.That(pageModel.CaseModel.StatusUrn, Is.EqualTo(caseModel.StatusUrn));
+			Assert.That(pageModel.CaseModel.StatusId, Is.EqualTo(caseModel.StatusId));
 			Assert.That(pageModel.CaseModel.Urn, Is.EqualTo(caseModel.Urn));
 			Assert.That(pageModel.CaseModel.ClosedAt, Is.EqualTo(caseModel.ClosedAt));
 			Assert.That(pageModel.CaseModel.CreatedAt, Is.EqualTo(caseModel.CreatedAt));
@@ -154,19 +169,18 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var expectedRecordsModel = pageModel.CaseModel.RecordsModel;
 			for (var index = 0; index < expectedRecordsModel.Count; ++index)
 			{
-				Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(recordsModel.ElementAt(index).Urn));
+				Assert.That(expectedRecordsModel.ElementAt(index).Id, Is.EqualTo(recordsModel.ElementAt(index).Id));
 				Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(recordsModel.ElementAt(index).CaseUrn));
-				Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(recordsModel.ElementAt(index).RatingUrn));
-				Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(recordsModel.ElementAt(index).StatusUrn));
-				Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(recordsModel.ElementAt(index).TypeUrn));
-
+				Assert.That(expectedRecordsModel.ElementAt(index).RatingId, Is.EqualTo(recordsModel.ElementAt(index).RatingId));
+				Assert.That(expectedRecordsModel.ElementAt(index).StatusId, Is.EqualTo(recordsModel.ElementAt(index).StatusId));
+				Assert.That(expectedRecordsModel.ElementAt(index).TypeId, Is.EqualTo(recordsModel.ElementAt(index).TypeId));
 				var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
 				var actualRecordRatingModel = recordsModel.ElementAt(index).RatingModel;
 				Assert.NotNull(expectedRecordRatingModel);
 				Assert.NotNull(actualRecordRatingModel);
 				Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
 				Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
-				Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+				Assert.That(expectedRecordRatingModel.Id, Is.EqualTo(actualRecordRatingModel.Id));
 				Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
 				Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
 
@@ -184,7 +198,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				Assert.NotNull(expectedRecordStatusModel);
 				Assert.NotNull(actualRecordTypeModel);
 				Assert.That(expectedRecordStatusModel.Name, Is.EqualTo(actualRecordStatusModel.Name));
-				Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
+				Assert.That(expectedRecordStatusModel.Id, Is.EqualTo(actualRecordStatusModel.Id));
 			}
 			
 			Assert.That(pageModel.CaseActions, Is.EquivalentTo(closedActions.ToList()));
@@ -192,7 +206,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 			mockTrustModelService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
 			mockRecordModelService.Verify(c => c.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
-			mockActionsModelService.Verify(c => c.GetClosedActionsSummary(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
+			mockActionsModelService.Verify(c => c.GetActionsSummary(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 		}
 		
 		
@@ -218,7 +232,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 				.ReturnsAsync(trustDetailsModel);
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
-			mockActionsModelService.Setup(a => a.GetClosedActionsSummary(It.IsAny<string>(), It.IsAny<long>()))
+			mockActionsModelService.Setup(a => a.GetActionsSummary(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(closedActions);
 			mockStatusCachedService.Setup(a => a.GetStatusByName(StatusEnum.Close.ToString()))
 				.ReturnsAsync(new StatusDto("Open", DateTimeOffset.Now, DateTimeOffset.Now, 99999));
@@ -239,7 +253,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
 			mockTrustModelService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 			mockRecordModelService.Verify(c => c.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-			mockActionsModelService.Verify(c => c.GetClosedActionsSummary(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			mockActionsModelService.Verify(c => c.GetActionsSummary(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
 		}
 
 		private static ViewClosedPageModel SetupViewClosedPageModel(

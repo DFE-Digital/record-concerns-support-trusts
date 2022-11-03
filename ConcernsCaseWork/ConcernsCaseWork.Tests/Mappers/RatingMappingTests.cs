@@ -1,7 +1,7 @@
 ﻿using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Service.Ratings;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
-using Service.TRAMS.Ratings;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -65,7 +65,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// assert
 			Assert.That(ratingModel, Is.Not.Null);
 			Assert.That(ratingModel.Name, Is.Not.Null);
-			Assert.That(ratingModel.Urn, Is.Not.Zero);
+			Assert.That(ratingModel.Id, Is.Not.Zero);
 			Assert.That(ratingModel.RagRating, Is.Not.Null);
 			Assert.That(ratingModel.RagRatingCss, Is.Not.Null);
 		}
@@ -84,7 +84,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			// assert
 			Assert.That(ratingModel, Is.Not.Null);
 			Assert.That(ratingModel.Name, Is.Not.Null);
-			Assert.That(ratingModel.Urn, Is.Not.Zero);
+			Assert.That(ratingModel.Id, Is.Not.Zero);
 			Assert.That(ratingModel.RagRating, Is.Not.Null);
 			Assert.That(ratingModel.RagRatingCss, Is.Not.Null);
 		}

@@ -1,4 +1,8 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
+using ConcernsCaseWork.Redis.Base;
+using ConcernsCaseWork.Redis.Configuration;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Redis.Security;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
@@ -6,10 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using Service.Redis.Base;
-using Service.Redis.Configuration;
-using Service.Redis.Models;
-using Service.Redis.Security;
 using StackExchange.Redis;
 using System;
 using System.Threading.Tasks;
@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.Integration.Tests.Redis
 		[OneTimeSetUp]
 		public void OneTimeSetup()
 		{
-			_configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().ConfigurationJsonFile().Build();
+			_configuration = new ConfigurationBuilder().ConfigurationJsonFile().ConfigurationUserSecretsBuilder().Build();
 			_factory = new WebAppFactory(_configuration);
 		}
 		
