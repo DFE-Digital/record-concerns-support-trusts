@@ -1,0 +1,16 @@
+environment                 = "development"
+project_name                = "myproject"
+azure_location              = "uksouth"
+enable_container_registry   = true
+image_name                  = "myimage"
+enable_mssql_database       = true
+enable_redis_cache          = true
+mssql_server_admin_password = "S3crEt"
+mssql_database_name         = "mydatabase"
+container_command           = ["/bin/bash", "-c", "echo hello && sleep 86400"]
+container_environment_variables = {
+  "ASPNETCORE_ENVIRONMENT" = "production"
+}
+key_vault_access_users = [
+  "someone_example.com#EXT#@tenantname.onmicrosoft.com",
+]

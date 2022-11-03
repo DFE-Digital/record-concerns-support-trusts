@@ -1,5 +1,5 @@
 ﻿@model IList<ConcernsCaseWork.Models.TrustCasesModel>
-@using Service.TRAMS.Status;
+@using ConcernsCaseWork.Service.Status;
 
 @{
     var closedCases = Model?.Where(c => c.Status == StatusEnum.Close) ?? Enumerable.Empty<ConcernsCaseWork.Models.TrustCasesModel>();
@@ -20,7 +20,7 @@
 </thead>
 
 <tbody class="govuk-table__body">
-    @if (closedCases.Count() == 0)
+    @if (!closedCases.Any())
     {
         <tr class="govuk-table__row tr__large">
             <td class="govuk-table__cell__cases govuk-oneline-row">
@@ -34,7 +34,7 @@
         {
             <tr class="govuk-table__row tr__large">
                 <td class="govuk-table__cell">
-                    <a class="govuk-link" href="/case/@trustCase.CaseUrn/management">@trustCase.CaseUrn</a>
+                    <a class="govuk-link" href="/case/@trustCase.CaseUrn/closed">@trustCase.CaseUrn</a>
                 </td>
                 <td class="govuk-table__cell">
                     @foreach (var record in trustCase.RecordsModel)

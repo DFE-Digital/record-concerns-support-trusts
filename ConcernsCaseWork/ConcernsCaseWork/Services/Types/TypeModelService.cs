@@ -1,8 +1,8 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Redis.Types;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Types;
-using Service.TRAMS.Types;
+using ConcernsCaseWork.Service.Types;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,25 +37,25 @@ namespace ConcernsCaseWork.Services.Types
 			{
 				if (typesDictionary.ContainsKey(typeDto.Name) && typesDictionary.TryGetValue(typeDto.Name, out var subTypes))
 				{
-					subTypes.Add(new TypeModel.TypeValueModel{ Urn = typeDto.Urn, SubType = typeDto.Description });
+					subTypes.Add(new TypeModel.TypeValueModel{ Id = typeDto.Id, SubType = typeDto.Description });
 				}
 				else
 				{
-					typesDictionary.Add(typeDto.Name, new List<TypeModel.TypeValueModel> { new TypeModel.TypeValueModel{ Urn = typeDto.Urn, SubType = typeDto.Description } });
+					typesDictionary.Add(typeDto.Name, new List<TypeModel.TypeValueModel> { new TypeModel.TypeValueModel{ Id = typeDto.Id, SubType = typeDto.Description } });
 				}
 			}
 
 			return new TypeModel { TypesDictionary = typesDictionary };
 		}
 
-		public async Task<TypeModel> GetSelectedTypeModelByUrn(long urn)
+		public async Task<TypeModel> GetSelectedTypeModelById(long id)
 		{
 			_logger.LogInformation("TypeModelService::GetSelectedTypeModelByUrn");
 
 			var typesDto = await GetTypes();
 			var typeModel = await GetTypeModel();
 
-			var selectedTypeDto = typesDto.FirstOrDefault(t => t.Urn.CompareTo(urn) == 0) ?? typesDto.First();
+			var selectedTypeDto = typesDto.FirstOrDefault(t => t.Id.CompareTo(id) == 0) ?? typesDto.First();
 			typeModel.Type = selectedTypeDto.Name ?? string.Empty;
 			typeModel.SubType = selectedTypeDto.Description ?? string.Empty;
 

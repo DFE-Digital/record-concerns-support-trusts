@@ -1,15 +1,9 @@
-﻿using ConcernsCaseWork.Security;
-using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.Extensions.Configuration;
+﻿using ConcernsCaseWork.Redis.Teams;
+using ConcernsCaseWork.Redis.Users;
+using ConcernsCaseWork.Security;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Security;
-using Service.Redis.Teams;
-using Service.Redis.Users;
-using Service.TRAMS.Teams;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Security

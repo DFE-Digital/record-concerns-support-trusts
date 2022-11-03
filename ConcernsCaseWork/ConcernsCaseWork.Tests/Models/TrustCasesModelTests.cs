@@ -1,10 +1,9 @@
 ﻿using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using NUnit.Framework;
-using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Models
 {

@@ -1,5 +1,7 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -12,9 +14,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Base;
-using Service.Redis.Models;
-using Service.Redis.Users;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -67,7 +66,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			Assert.That(createCaseModel, Is.Not.Null);
 			Assert.That(createCaseModel.Issue, Is.EqualTo(expectedCreateCaseModel.Issue));
-			Assert.That(createCaseModel.StatusUrn, Is.EqualTo(expectedCreateCaseModel.StatusUrn));
+			Assert.That(createCaseModel.StatusId, Is.EqualTo(expectedCreateCaseModel.StatusId));
 			Assert.That(createCaseModel.CaseAim, Is.EqualTo(expectedCreateCaseModel.CaseAim));
 			Assert.That(createCaseModel.ClosedAt, Is.EqualTo(expectedCreateCaseModel.ClosedAt));
 			Assert.That(createCaseModel.CreatedAt, Is.EqualTo(expectedCreateCaseModel.CreatedAt));

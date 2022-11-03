@@ -1,3 +1,5 @@
+using ConcernsCaseWork.API.Extensions;
+using ConcernsCaseWork.API.Middleware;
 using ConcernsCaseWork.Constraints;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Middleware;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,8 +33,6 @@ namespace ConcernsCaseWork
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddMvc();
-
 			services.AddRazorPages(options =>
 			{
 				options.Conventions.AddPageRoute("/home", "");
@@ -71,8 +72,9 @@ namespace ConcernsCaseWork
 			// Redis
 			services.AddRedis(Configuration);
 
-			// TRAMS API
+			// APIs
 			services.AddTramsApi(Configuration);
+			services.AddConcernsApi(Configuration);
 
 			// AutoMapper
 			services.AddAutoMapper(typeof(Startup));
@@ -111,8 +113,10 @@ namespace ConcernsCaseWork
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
 		{
+			app.UseConcernsCaseworkSwagger(provider);
+			
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
@@ -123,7 +127,9 @@ namespace ConcernsCaseWork
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
 			}
-
+			
+			app.UseMiddleware<ExceptionHandlerMiddleware>();
+			
 			// Security headers
 			app.UseSecurityHeaders(
 				SecurityHeadersDefinitions.GetHeaderPolicyCollection(env.IsDevelopment()));
@@ -156,6 +162,8 @@ namespace ConcernsCaseWork
 			app.UseAuthorization();
 			app.UseMiddleware<CorrelationIdMiddleware>();
 
+			app.UseConcernsCaseworkEndpoints();
+			
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapRazorPages();

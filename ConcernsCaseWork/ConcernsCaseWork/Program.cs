@@ -10,12 +10,13 @@ namespace ConcernsCaseWork
     {
         public static void Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
+            var logConfig = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
                 .WriteTo.Console(new RenderedCompactJsonFormatter())
-				.WriteTo.Sentry()
-                .CreateLogger();
+				.WriteTo.Sentry();
+
+	        Log.Logger = logConfig.CreateLogger();
 
             Log.Information("Starting web host");
             CreateHostBuilder(args).Build().Run();

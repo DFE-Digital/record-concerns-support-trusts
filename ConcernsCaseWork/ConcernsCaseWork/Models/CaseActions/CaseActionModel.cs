@@ -9,5 +9,10 @@ namespace ConcernsCaseWork.Models.CaseActions
 		public DateTime CreatedAt { get; set; }
 		public DateTime UpdatedAt { get; set; }
 		public DateTime? ClosedAt { get; set; }
+
+		public bool IsOpen { get => !IsClosed; }
+
+		public bool IsClosed { get => ClosedAt.HasValue; }
+
 	}
 }

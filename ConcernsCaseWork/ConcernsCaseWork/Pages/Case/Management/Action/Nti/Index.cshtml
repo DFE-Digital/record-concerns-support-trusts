@@ -3,10 +3,12 @@
 @using ConcernsCaseWork.Enums;
 
 @using ConcernsCaseWork.Extensions
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewData["Title"] = "NTI";
 	ViewData["BackButtonLabel"] = "Back to case";
+	ViewData["BackButtonLink"] = $"/case/{@RouteData.Values["urn"]}/management";
 }
 
 @section BeforeMain {

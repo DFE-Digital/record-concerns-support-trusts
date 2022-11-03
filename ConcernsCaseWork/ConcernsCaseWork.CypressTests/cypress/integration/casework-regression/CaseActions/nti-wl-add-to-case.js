@@ -50,7 +50,7 @@ describe("User can add case actions to an existing case", () => {
 			cy.log(utils.checkForGovErrorSummaryList() );
 		}
 	});
-});
+  });
 });
 
 	it("User is taken to the correct Case Action page", function () {
@@ -228,7 +228,6 @@ describe("User can add case actions to an existing case", () => {
 
 				ntiAddPage.getUpdateConditionsBtn().scrollIntoView().click();
 
-
 				ntiAddPage.setReasonSelect("1"); //Deselcts		
 				cy.log("setReasonSelect ").then(() => {
 					cy.log("EXECUTED TEST ")
@@ -250,12 +249,8 @@ describe("User can add case actions to an existing case", () => {
 						});
 					});
 
-
 		ntiAddPage.getWLAddCaseActionBtn().click();
 		utils.getGovErrorSummaryList().should('not.exist');
-
-
-
 		CaseManagementPage.getOpenActionLink("ntiwarningletter").click();
 		ntiAddPage.getNtiTableRow().should(($row) => {
 				expect($row).to.have.length(5);
@@ -292,10 +287,6 @@ describe("User can add case actions to an existing case", () => {
 				expect($nti.text()).to.contain("NTI");
 			})
 
-			//CaseManagementPage.getClosedActionsTable().children().should(($status) => {
-			//	expect($status.text().trim()).to.contain(stText.trim());
-			//})
-
 			switch (stText) {
 				case "Cancel warning letter":
 					CaseManagementPage.getClosedActionsTable().children().should(($status) => {
@@ -315,8 +306,6 @@ describe("User can add case actions to an existing case", () => {
 				default:
 					cy.log("Could not do the thing");
 			}
-
-
 	});
 
 	after(function () {

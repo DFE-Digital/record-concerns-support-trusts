@@ -1,10 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Extensions;
-using Microsoft.Extensions.Configuration;
+using ConcernsCaseWork.Redis.Teams;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Security;
-using Service.Redis.Teams;
-using Service.Redis.Users;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

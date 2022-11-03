@@ -1,9 +1,10 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using FluentAssertions;
 using NUnit.Framework;
-using Service.TRAMS.Nti;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -197,6 +198,26 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/nti/{testData.Id}"));
 				Assert.That(actionSummary.StatusName, Is.EqualTo(testData.ClosedStatus.Value));
 			});
+		}
+
+		[TestCaseSource(nameof(GetStatusTestCases))]
+		public void WhenMapDbModelToActionSummary_WhenActionIsOpen_ReturnsCorrectStatus(
+			NtiStatusModel? status,
+			string expectedResult)
+		{
+			var model = _fixture.Create<NtiModel>();
+			model.ClosedAt = null;
+			model.Status = status;
+
+			var result = model.ToActionSummary();
+
+			result.StatusName.Should().Be(expectedResult);
+		}
+
+		private static IEnumerable<TestCaseData> GetStatusTestCases()
+		{
+			yield return new TestCaseData(null, "In progress");
+			 yield return new TestCaseData(new NtiStatusModel() { Name = "Test" }, "Test");
 		}
 	}
 }

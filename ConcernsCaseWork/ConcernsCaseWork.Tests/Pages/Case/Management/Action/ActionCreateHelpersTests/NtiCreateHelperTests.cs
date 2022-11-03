@@ -1,28 +1,16 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers;
-using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
-using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.FinancialPlan;
+using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Services.Nti;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiWarningLetter;
-using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.FinancialPlan;
-using Service.TRAMS.Cases;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
+namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelpersTests
 {
 	[Parallelizable(ParallelScope.All)]
 	public class NtiCreateHelperTests

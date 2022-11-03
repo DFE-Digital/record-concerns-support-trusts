@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Pages.Case.Management.Concern;
+using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.MeansOfReferral;
 using ConcernsCaseWork.Services.Ratings;
@@ -15,7 +16,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -138,7 +138,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 					{ "type", new StringValues("governance") },
 					{ "sub-type", new StringValues("123:governance") },
 					{ "rating", new StringValues("123:red") },
-					{ "means-of-referral-urn", new StringValues("1") }
+					{ "means-of-referral-id", new StringValues("1") }
 				});
 			
 			var routeData = pageModel.RouteData.Values;
