@@ -1,11 +1,11 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Models;
-using AutoFixture;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Service.NtiUnderConsideration;
+using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
@@ -20,7 +20,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -101,7 +100,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			_mockCaseModelService.Setup(m => m.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(caseModel);
 
 			var rating = _fixture.Create<RatingModel>();
-			_mockRatingModelService.Setup(m => m.GetRatingModelByUrn(It.IsAny<long>())).ReturnsAsync(rating);
+			_mockRatingModelService.Setup(m => m.GetRatingModelById(It.IsAny<long>())).ReturnsAsync(rating);
 
 			var records = _fixture.CreateMany<RecordModel>().ToList();
 			_mockRecordModelService.Setup(m => m.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(records);
@@ -136,7 +135,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var closedStatusUrn = 3;
 			SetupDefaultModels();
 
-			var caseModel = CaseFactory.BuildCaseModel(statusUrn: closedStatusUrn);
+			var caseModel = CaseFactory.BuildCaseModel(statusId: closedStatusUrn);
 			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), closedStatusUrn);
 
 			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
