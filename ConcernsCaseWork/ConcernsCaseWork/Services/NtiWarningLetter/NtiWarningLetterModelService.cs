@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.Redis.NtiWarningLetter;
+using ConcernsCaseWork.Redis.NtiWarningLetter;
 using System;
 using System.Collections.Generic;
 using System.Linq;

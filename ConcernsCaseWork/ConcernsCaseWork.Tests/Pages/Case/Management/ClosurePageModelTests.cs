@@ -1,11 +1,14 @@
-﻿using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Pages.Validators;
+using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.Nti;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
@@ -19,11 +22,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Status;
-using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management
@@ -112,7 +112,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			Assert.That(caseModel.Description, Is.EqualTo(expectedCaseModel.Description));
 			Assert.That(caseModel.Issue, Is.EqualTo(expectedCaseModel.Issue));
-			Assert.That(caseModel.StatusUrn, Is.EqualTo(expectedCaseModel.StatusUrn));
+			Assert.That(caseModel.StatusId, Is.EqualTo(expectedCaseModel.StatusId));
 			Assert.That(caseModel.Urn, Is.EqualTo(expectedCaseModel.Urn));
 			Assert.That(caseModel.ClosedAt, Is.EqualTo(expectedCaseModel.ClosedAt));
 			Assert.That(caseModel.CreatedAt, Is.EqualTo(expectedCaseModel.CreatedAt));

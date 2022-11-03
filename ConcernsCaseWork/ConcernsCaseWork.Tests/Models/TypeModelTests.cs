@@ -39,10 +39,10 @@ namespace ConcernsCaseWork.Tests.Models
 				TypesDictionary = new Dictionary<string, IList<TypeModel.TypeValueModel>>
 				{
 					{
-						"typeUrn", 
+						"typeId", 
 						new List<TypeModel.TypeValueModel>
 						{
-							new TypeModel.TypeValueModel{ Urn = 1, SubType = "governance" }	
+							new TypeModel.TypeValueModel{ Id = 1, SubType = "governance" }	
 						}
 					}
 				}
@@ -55,10 +55,10 @@ namespace ConcernsCaseWork.Tests.Models
 			Assert.That(typeModel.TypeDisplay, Is.EqualTo("governance: governance"));
 			Assert.That(typeModel.TypesDictionary, Is.Not.Null);
 			Assert.That(typeModel.TypesDictionary.Count, Is.EqualTo(1));
-			Assert.That(typeModel.TypesDictionary.First().Key, Is.EqualTo("typeUrn"));
+			Assert.That(typeModel.TypesDictionary.First().Key, Is.EqualTo("typeId"));
 			Assert.That(typeModel.TypesDictionary.First().Value, Is.Not.Null);
 			Assert.That(typeModel.TypesDictionary.First().Value.First(), Is.Not.Null);
-			Assert.That(typeModel.TypesDictionary.First().Value.First().Urn, Is.EqualTo(1));
+			Assert.That(typeModel.TypesDictionary.First().Value.First().Id, Is.EqualTo(1));
 			Assert.That(typeModel.TypesDictionary.First().Value.First().SubType, Is.EqualTo("governance"));
 		}
 	}

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {

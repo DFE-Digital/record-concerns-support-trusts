@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Validators;
+using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.MeansOfReferral;
 using ConcernsCaseWork.Services.Ratings;
@@ -11,7 +12,6 @@ using ConcernsCaseWork.Services.Types;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -93,7 +93,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
 					throw new Exception("CaseUrn is null or invalid to parse");
 				
-				string typeUrn;
+				string typeId;
 				
 				// Form
 				var type = Request.Form["type"].ToString();
@@ -101,22 +101,22 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				var ragRating = Request.Form["rating"].ToString();
 				
 				// Type
-				(typeUrn, type, subType) = type.SplitType(subType);
+				(typeId, type, subType) = type.SplitType(subType);
 
 				// Rating
 				var splitRagRating = ragRating.Split(":");
 				var ragRatingUrn = splitRagRating[0];
 
-				var meansOfReferral = Request.Form["means-of-referral-urn"].ToString();
+				var meansOfReferral = Request.Form["means-of-referral-id"].ToString();
 				
 				var createRecordModel = new CreateRecordModel
 				{
 					CaseUrn = caseUrn,
-					TypeUrn = long.Parse(typeUrn),
+					TypeId = long.Parse(typeId),
 					Type = type,
 					SubType = subType,
-					RatingUrn = long.Parse(ragRatingUrn),
-					MeansOfReferralUrn = long.Parse(meansOfReferral)
+					RatingId = long.Parse(ragRatingUrn),
+					MeansOfReferralId = long.Parse(meansOfReferral)
 				};
 				
 				// Post record

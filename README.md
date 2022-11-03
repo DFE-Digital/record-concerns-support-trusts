@@ -65,6 +65,12 @@ dotnet user-secrets set "app:username" "secret_here" --> Store a list comma sepa
 dotnet user-secrets set "app:password" "secret_here"
 dotnet user-secrets set "VCAP_SERVICES" "{'redis': [{'credentials': {'host': '127.0.0.1','password': 'password','port': '6379','tls_enabled': 'false'}}]}"
 
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost;Database=sip;Integrated Security=true"
+dotnet user-secrets set "ConcernsCaseworkApi:ApiKeys" "app-key"
+dotnet user-secrets set "ConcernsCasework:ApiKey" "app-key"
+dotnet user-secrets set "ConcernsCasework:ApiEndpoint" "https://localhost"
+
+
 Remove a secret:
 dotnet user-secrets remove "app:username"
 
@@ -79,7 +85,17 @@ dotnet user-secrets clear
 npm run build
 ```
 
-### Docker SQLServer
+### Concerns CaseWork SQL Server Database
+***
+The API uses Entity Framework to manage the database.
+To create the database, or to apply the latest migrations:
+
+In a console window: 
+1. Navigate to ```ConcernsCaseWork.Data``` project root
+1. Run migrations ```dotnet ef database update --connection "enter connection string to database here" ```
+
+
+### TRAMS Docker SQLServer
 ***
 ```
 Based on the GitHub username configured to access TRAMS API repository, a few steps are required to
@@ -102,24 +118,29 @@ download the docker image from Container registry.
 		> Password: Get from Docker inspect 
 ```
 
-### Docker Application Image
-***
-```
-Testing docker image locally,
-1. Check Docker running
-2. Build image from command line
-	2.1 docker build . -t amsd-casework
-3. Verify image produced
-	3.1 docker images
-4. Run docker image
-	4.1 docker run -e -p 8080:80
-5. Browse localhost:8080
-```
+## Concerns Casework Docker images
+There are 4 docker images configured in amsd-casework:
+- webapi - UI and API
+- sqlcmd - creates initial database and then exits
+- sql-server - contains Concerns Casework database
+- redis - redis cache
+
+To update the config files, run the following:
+```cp .env.database.example .env.database```
+```cp .env.development.local.example .env.development.local```
+
+Update config values in .env.database and .env.development.local as necessary
+
+Then run the following to build and start the docker containers:
+```docker-compose -f docker-compose.yml up --build```
+
+Note that you may need to update the line feed character type to LF if running on Windows, on files in the /scripts folder. 
+Try this if the webapi container exits with error.
 
 ## Login
 ***
 ```
-Request login credentials within the team.
+Active Directory.
 ```
 
 ## Create razor pages
@@ -163,14 +184,6 @@ Include header 'ApiKey' with the service key provided by TRAMS team.
 ```
 [GitHub Repository](https://github.com/DFE-Digital/trams-data-api)
 
-## PaaS Account
-***
-```
-The section is well-described in the playbook, link to oficial documentation
-Note: Don't enable SSO in your account if you are using the account credentials to login to PaaS.
-```
-[Gov PaaS](https://docs.cloud.service.gov.uk/get_started.html?_ga=2.255108360.1068852604.1627038231-1095670286.1624019946#get-started)
-
 ### Redis
 ***
 ```
@@ -181,43 +194,6 @@ Volatile-lru:
 evict keys by trying to remove the least recently used (LRU) keys first, 
 but only among keys that have an expire set, in order to make space for the new data added
 ```
-
-### Useful Cloud Foundry Commands
-***
-```
-cf help
-cf spaces
-cf login -a api.london.cloud.service.gov.uk
-cf logout
-cf target -o dfe -s amsd-casework-dev --> switch spaces
-cf logs --recent amsd-casework-dev --> see logs
-cf service amsd-casework-tf-state --> AWS S3 terraform state
-cf stop amsd-casework-dev
-cf delete -r amsd-casework-dev
-cf env amsd-casework-dev --> see environment variables of the target space
-cf set-space-role USERNAME ORGNAME SPACE ROLE --> Grant roles to user
-cf env <APP_NAME> --> See environment variables
-
-cf install-plugin conduit
-cf conduit amsd-casework-redis-dev --> Run Redis locally
-cf conduit amsd-casework-redis-dev -- redis-cli
-```
-[Redis-CLI](https://redis.io/download)
-
-## Terraform AWS S3 storage
-***
-After some research two options are available, AWS S3 (no versioning) and Azure (with versioniong)
-Until Concerns as an Azure account we will use AWS S3 bucket to store terraform state.
-
-### Cloud Foundry Commands
-***
-```
-cf target -o dfe -s amsd-casework-dev
-cf create-service aws-s3-bucket default amsd-casework-tf-state
-cf create-service-key amsd-casework-tf-state amsd-casework-tf-state-key -c '{"allow_external_access": true}'
-cf service-key amsd-casework-tf-state amsd-casework-tf-state-key
-```
-[Gov PaaS](https://docs.cloud.service.gov.uk/deploying_services/s3/#amazon-s3)
 
 ## Cypress testing
 

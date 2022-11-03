@@ -9,6 +9,6 @@ public static class ActionsSummaryFactory
 {
 	private readonly static Fixture _fixture = new();
 	
-	public static IList<ActionSummary> BuildListOfActionSummaries()
-		=> _fixture.CreateMany<ActionSummary>().ToList();
+	public static IList<ActionSummaryModel> BuildListOfActionSummaries()
+		=> _fixture.CreateMany<ActionSummaryModel>().ToList();
 }

@@ -1,4 +1,4 @@
-﻿using Service.TRAMS.Cases;
+﻿using ConcernsCaseWork.Service.Cases;
 using System;
 using System.Collections.Generic;
 
@@ -49,11 +49,11 @@ namespace ConcernsCaseWork.Models
 
 		public long Urn { get; set; }
 
-		public long RatingUrn { get; set; }
+		public long RatingId { get; set; }
 		
 		public RatingModel RatingModel { get; set; }
 		
-		public long StatusUrn { get; set; }
+		public long StatusId { get; set; }
 		
 		public string StatusName { get; set; } = string.Empty;
 

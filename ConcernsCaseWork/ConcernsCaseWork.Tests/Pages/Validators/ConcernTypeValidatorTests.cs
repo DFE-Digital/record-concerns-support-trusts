@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 					{ "sub-type", new StringValues("subtype") },
 					{ "rating", new StringValues("rating") },
 					{ "trust-ukprn", new StringValues("trustukprn") },
-					{ "means-of-referral-urn", new StringValues("1") }
+					{ "means-of-referral-id", new StringValues("1") }
 				});
 			
 			// act
@@ -41,7 +41,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 					{ "sub-type", new StringValues("123:subtype") },
 					{ "rating", new StringValues("rating") },
 					{ "trust-ukprn", new StringValues("trustukprn") },
-					{ "means-of-referral-urn", new StringValues("2") }
+					{ "means-of-referral-id", new StringValues("2") }
 				});
 			
 			// act
@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 					{ "sub-type", new StringValues("") },
 					{ "rating", new StringValues("") },
 					{ "trust-ukprn", new StringValues("") },
-					{ "means-of-referral-urn", new StringValues("2") }
+					{ "means-of-referral-id", new StringValues("2") }
 				});
 			
 			// act
