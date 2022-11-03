@@ -14,7 +14,7 @@ export class AuthenticationComponent {
                 this.setCookie(value);
             }
             else {
-                this.cacheAndSetCookie(username);
+                this.cacheAndSetCookie(username, password);
             }
         })
     }
