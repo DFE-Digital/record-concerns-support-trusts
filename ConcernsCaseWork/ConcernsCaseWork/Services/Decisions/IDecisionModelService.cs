@@ -6,6 +6,6 @@ namespace ConcernsCaseWork.Services.Decisions
 {
 	public interface IDecisionModelService
 	{
-		public Task<List<DecisionModel>> GetDecisionsByUrn(long urn);
+		public Task<List<ActionSummaryModel>> GetDecisionsByUrn(long urn);
 	}
 }

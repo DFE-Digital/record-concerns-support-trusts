@@ -1,29 +1,24 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.Decision;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ConcernsCaseWork.Services.Decisions
 {
 	public class DecisionMapping
 	{
-		public static DecisionModel MapDtoToModel(GetDecisionResponseDto decision)
+		public static ActionSummaryModel ToActionSummary(GetDecisionResponseDto decision)
 		{
-			var result = new DecisionModel()
+			var result = new ActionSummaryModel()
 			{
-				CreatedAt = decision.CreatedAt.Date,
-				ClosedAt = decision.ClosedAt?.Date,
-				CaseUrn = decision.ConcernsCaseUrn,
-				Id = decision.DecisionId,
-				Title = decision.Title
+				OpenedDate = decision.CreatedAt.ToDayMonthYear(),
+				ClosedDate = decision.ClosedAt?.ToDayMonthYear(),
+				Name = $"Decision: {decision.Title}",
+				StatusName = EnumHelper.GetEnumDescription(decision.Status),
+				RelativeUrl = $"/case/{decision.ConcernsCaseUrn}/management/action/decision/{decision.DecisionId}"
 			};
 
 			return result;
-		}
-
-		public static List<DecisionModel> MapDtoToModel(List<GetDecisionResponseDto> decisions)
-		{
-			return decisions.Select(d => MapDtoToModel(d)).ToList();
 		}
 	}
 }

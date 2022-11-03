@@ -2,8 +2,9 @@ using AutoFixture;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Service.CaseActions;
+using FluentAssertions;
 using NUnit.Framework;
+using ConcernsCaseWork.Service.CaseActions;
 using System;
 
 namespace ConcernsCaseWork.Tests.Mappers;
@@ -91,19 +92,19 @@ public class SrmaMappingTests
 		};
 
 		var serviceModel = new SRMAModel(
-			testData.Id, 
-			testData.CaseUrn, 
-			testData.DateOffered, 
-			testData.DateAccepted, 
-			testData.DateReportSentToTrust, 
-			testData.DateVisitStart, 
-			testData.DateVisitEnd, 
-			testData.Status, 
-			testData.Notes, 
-			testData.SRMAReasonOffered, 
+			testData.Id,
+			testData.CaseUrn,
+			testData.DateOffered,
+			testData.DateAccepted,
+			testData.DateReportSentToTrust,
+			testData.DateVisitStart,
+			testData.DateVisitEnd,
+			testData.Status,
+			testData.Notes,
+			testData.SRMAReasonOffered,
 			testData.CreatedAt)
 		{
-			UpdatedAt = testData.UpdatedAt, 
+			UpdatedAt = testData.UpdatedAt,
 			ClosedAt = testData.ClosedAt,
 			Status = testData.Status
 		};
@@ -120,5 +121,17 @@ public class SrmaMappingTests
 			Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/srma/{testData.Id}/closed"));
 			Assert.That(actionSummary.StatusName, Is.EqualTo(EnumHelper.GetEnumDescription(testData.Status)));
 		});
+	}
+
+	[Test]
+	public void WhenMapDbModelToActionSummary_WhenActionIsOpen_ReturnsCorrectModel()
+	{
+		var srma = _fixture.Create<SRMAModel>();
+		srma.ClosedAt = null;
+
+		var result = srma.ToActionSummary();
+
+		result.RelativeUrl.Should().Be($"/case/{srma.CaseUrn}/management/action/srma/{srma.Id}");
+		result.ClosedDate.Should().BeNull();
 	}
 }

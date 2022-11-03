@@ -1,10 +1,9 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Services.Decisions;
 using FluentAssertions;
 using NUnit.Framework;
-using System.Linq;
+using System;
 
 namespace ConcernsCaseWork.Tests.Services.Decisions
 {
@@ -14,39 +13,20 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 		private readonly static Fixture _fixture = new();
 
 		[Test]
-		public void MapDtoToModel_ReturnsCorrectModel()
+		public void ToActionSummary_ReturnsCorrectModel()
 		{
 			var apiDecision = _fixture.Create<GetDecisionResponseDto>();
+			apiDecision.Status = DecisionStatus.InProgress;
+			apiDecision.CreatedAt = new DateTimeOffset(2023, 1, 4, 0, 0, 0, new TimeSpan());
+			apiDecision.ClosedAt = new DateTimeOffset(2023, 2, 24, 0, 0, 0, new TimeSpan());
 
-			var result = DecisionMapping.MapDtoToModel(apiDecision);
+			var result = DecisionMapping.ToActionSummary(apiDecision);
 
-			AssertDecisionModel(result, apiDecision);
-		}
-
-		[Test]
-		public void MapDtoModelList_ReturnsCorrectModel()
-		{
-			var apiDecisions = _fixture.CreateMany<GetDecisionResponseDto>().ToList();
-
-			var result = DecisionMapping.MapDtoToModel(apiDecisions);
-
-			result.Should().HaveCount(apiDecisions.Count);
-
-			for (var idx = 0; idx < apiDecisions.Count; idx++)
-			{
-				var decision = apiDecisions[idx];
-				var model = result[idx];
-
-				AssertDecisionModel(model, decision);
-			}
-		}
-
-		private void AssertDecisionModel(DecisionModel model, GetDecisionResponseDto decision)
-		{
-			model.CaseUrn.Should().Be(decision.ConcernsCaseUrn);
-			model.CreatedAt.Should().Be(decision.CreatedAt.Date);
-			model.ClosedAt.Should().Be(decision.ClosedAt?.Date);
-			model.Title.Should().Be(decision.Title);
+			result.StatusName.Should().Be("In progress");
+			result.OpenedDate.Should().Be("04-01-2023");
+			result.ClosedDate.Should().Be("24-02-2023");
+			result.Name.Should().Be($"Decision: {apiDecision.Title}");
+			result.RelativeUrl.Should().Be($"/case/{apiDecision.ConcernsCaseUrn}/management/action/decision/{apiDecision.DecisionId}");
 		}
 	}
 }

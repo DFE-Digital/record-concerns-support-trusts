@@ -11,30 +11,6 @@
 @{
 	ViewData["Title"] = "Case management";
 	var nonce = HttpContext.GetNonce();
-
-	var srmaModels = Model.CaseActions?.Where(ca => ca is SRMAModel).Select(srma => srma as SRMAModel).ToList();
-	var openSRMAs = srmaModels.Where(srma => !srma.ClosedAt.HasValue).ToList();
-	var closedSRMAs = srmaModels.Except(openSRMAs).ToList();
-
-	var financialPlanModels = Model.CaseActions?.Where(ca => ca is FinancialPlanModel).Select(fp => fp as FinancialPlanModel).ToList();
-	var openFinancialPlanModels = financialPlanModels.Where(fp => !fp.ClosedAt.HasValue).ToList();
-	var closedFinancialPlanModels = financialPlanModels.Except(openFinancialPlanModels).ToList();
-
-	var ntiUnderConsiderations = Model.CaseActions?.Where(ca => ca is NtiUnderConsiderationModel).Select(nti => nti as NtiUnderConsiderationModel).ToList();
-	var openNtiUCs = ntiUnderConsiderations.Where(nti => nti.ClosedAt == null).ToList();
-	var closedNtiUCs = ntiUnderConsiderations.Except(openNtiUCs).ToList();
-
-	var ntiWarningLetters = Model.CaseActions?.Where(ca => ca is NtiWarningLetterModel).Select(nti => nti as NtiWarningLetterModel).ToList();
-	var openNtiWLs = ntiWarningLetters.Where(nti => nti.ClosedAt == null).ToList();
-	var closedNtiWLs = ntiWarningLetters.Except(openNtiWLs).ToList();
-
-	var noticesToImprove = Model.CaseActions?.Where(ca => ca is NtiModel).Select(nti => nti as NtiModel).ToList();
-	var openNtis = noticesToImprove.Where(nti => nti.ClosedAt == null).ToList();
-	var closedNtis = noticesToImprove.Except(openNtis).ToList();
-
-	var decisions = Model.CaseActions?.Where(ca => ca is DecisionModel).Select(d => d as DecisionModel).ToList();
-	var openDecisions = decisions.Where(d => d.ClosedAt == null);
-	var closedDecisions = decisions.Except(openDecisions).ToList();
 }
 
 <div class="govuk-width-container">
@@ -296,7 +272,6 @@
                     Add to case
                 </a>
 
-
                     <table id="open-case-actions" class="govuk-table">
                         <thead class="govuk-table__head">
                             <tr class="govuk-table__row tr__large">
@@ -313,7 +288,7 @@
 
                         <tbody class="govuk-table__body">
 	        
-	                        @if (!Model.HasOpenActions)
+	                        @if (!Model.OpenCaseActions.Any())
 	                        {
 	                            <tr class="govuk-table__row">
 	                                <td class="govuk-table__cell" colspan="3">
@@ -321,273 +296,27 @@
 	                                </td>
 	                            </tr>
 	                        }
-                        
-                            @foreach (SRMAModel srma in openSRMAs)
-                            {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <a href="@Request.Path/action/srma/@srma.Id" class="govuk-link govuk-link-no-visited-state">
-                                            SRMA
-                                        </a>
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        @EnumHelper.GetEnumDescription(srma.Status)
-                                    </td>
-                                    <td class="govuk-table__cell govuk-table__header__right">
-                                        @DateExtension.ToDayMonthYear(srma.CreatedAt)
-                                    </td>
-                                </tr>
-                            }
 
-                            @foreach (FinancialPlanModel fp in openFinancialPlanModels)
-                            {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <a href="@Request.Path/action/financialplan/@fp.Id" class="govuk-link govuk-link-no-visited-state">
-                                            <span>Financial Plan</span>
-                                        </a>
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        @{
-                                            if (fp.Status != null)
-                                            {
-                                                var financialStatusEnum = (FinancialPlanStatus)Enum.Parse(typeof(FinancialPlanStatus), fp.Status.Name);
-                                                <span>@EnumHelper.GetEnumDescription(financialStatusEnum)</span>
-                                            }
-                                            else
-                                            {
-                                                <span>In progress</span>
-                                            }
-                                        }
-                                    </td>
-                                    <td class="govuk-table__cell govuk-table__header__right">
-                                        @DateExtension.ToDayMonthYear(fp.CreatedAt)
-                                    </td>
-                                </tr>
-                            }
-
-                            @foreach (NtiUnderConsiderationModel nti in openNtiUCs)
-                            {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <a href="@Request.Path/action/ntiunderconsideration/@nti.Id" class="govuk-link govuk-link-no-visited-state">
-                                            <span>NTI: Under consideration</span>
-                                        </a>
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        <span>In progress</span>
-                                    </td>
-                                    <td class="govuk-table__cell govuk-table__header__right">
-                                        @DateExtension.ToDayMonthYear(nti.CreatedAt)
-                                    </td>
-                                </tr>
-                            }
-
-                            @foreach (NtiWarningLetterModel nti in openNtiWLs)
-                            {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <a href="@Request.Path/action/ntiwarningletter/@nti.Id" class="govuk-link govuk-link-no-visited-state">
-                                            <span>NTI: Warning letter</span>
-                                        </a>
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        @{
-                                            if (nti.Status != null)
-                                            {
-                                                <span>@nti.Status.Name</span>
-                                            }
-                                            else
-                                            {
-                                                <span>In progress</span>
-                                            }
-                                        }
-                                    </td>
-                                    <td class="govuk-table__cell govuk-table__header__right">
-                                        @DateExtension.ToDayMonthYear(nti.CreatedAt)
-                                    </td>
-                                </tr>
-                            }
-
-                            @foreach (NtiModel nti in openNtis)
-                            {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <a href="@Request.Path/action/nti/@nti.Id" class="govuk-link govuk-link-no-visited-state">
-                                            <span>NTI</span>
-                                        </a>
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        @{
-                                            if (nti.Status != null)
-                                            {
-                                                <span>@nti.Status.Name</span>
-                                            }
-                                            else
-                                            {
-												<span>In progress</span>
-                                            }
-                                        }
-                                    </td>
-                                    <td class="govuk-table__cell govuk-table__header__right">
-                                        @DateExtension.ToDayMonthYear(nti.CreatedAt)
-                                    </td>
-                                </tr>
-                            }
-
-							@foreach (DecisionModel decision in openDecisions)
+							@foreach (ActionSummaryModel action in Model.OpenCaseActions)
 							{
 								<tr class="govuk-table__row">
 									<td class="govuk-table__cell">
-									<a href="@Request.Path/action/decision/@decision.Id" class="govuk-link govuk-link-no-visited-state">
-											<span>Decision: @decision.Title</span>
+									<a href="@action.RelativeUrl" class="govuk-link govuk-link-no-visited-state">
+										<span>@action.Name</span>
 										</a>
 									</td>
 									<td class="govuk-table__cell">
-										<span>In progress</span>
+										<span>@action.StatusName</span>
 									</td>
 									<td class="govuk-table__cell govuk-table__header__right">
-										@DateExtension.ToDayMonthYear(decision.CreatedAt)
+										@action.OpenedDate
 									</td>
 								</tr>
 							}
                         </tbody>
                     </table>
 
-            <table id="close-case-actions" class="govuk-table">
-                        <thead class="govuk-table__head">
-                            <tr class="govuk-table__row tr__large">
-                                <th class="govuk-table__header govuk-table__cell__cases" scope="col">
-                                    Closed actions and decisions
-                                </th>
-                                <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col">
-                                </th>
-                                <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__right" scope="col">
-                                    Date opened
-                                </th>
-                                <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__right" scope="col">
-                                    Date closed
-                                </th>
-                            </tr>
-                        </thead>
-
-                        <tbody class="govuk-table__body">
-                        
-                            @if (!Model.HasClosedActions)
-                            {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell" colspan="4">
-                                        There are no closed actions or decisions added to this case.
-                                    </td>
-                                </tr>
-                            }
-                        
-                            @foreach (SRMAModel srma in closedSRMAs)
-                            {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <a href="@Request.Path/action/srma/@srma.Id/closed" class="govuk-link govuk-link-no-visited-state">
-                                            SRMA
-                                        </a>
-                                    </td>
-	                                <td class="govuk-table__cell">
-		                                @EnumHelper.GetEnumDescription(srma.Status)
-	                                </td>
-	                                
-                                    <td class="govuk-table__cell govuk-table__header__right">
-                                        @DateExtension.ToDayMonthYear(srma.CreatedAt)
-                                    </td>
-                                    <td class="govuk-table__cell govuk-table__header__right">
-                                        @DateExtension.ToDayMonthYear(srma.ClosedAt.Value)
-                                    </td>
-                                </tr>
-                            }
-
-                            @foreach (FinancialPlanModel financialPlanModel in closedFinancialPlanModels)
-                            {
-
-                                var statusName = financialPlanModel.Status.Name;
-                                var statusEnum = (FinancialPlanStatus)@Enum.Parse(typeof(FinancialPlanStatus), statusName);
-
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <a href="@Request.Path/action/financialplan/@financialPlanModel.Id/closed" class="govuk-link govuk-link-no-visited-state">
-                                            Financial Plan
-                                        </a>
-                                    </td>
-	                                <td class="govuk-table__cell">
-		                                @EnumHelper.GetEnumDescription(statusEnum)
-	                                </td>
-                                    <td class="govuk-table__cell govuk-table__header__right">
-                                        @DateExtension.ToDayMonthYear(financialPlanModel.CreatedAt)
-                                    </td>    
-                                    <td class="govuk-table__cell govuk-table__header__right">
-                                        @DateExtension.ToDayMonthYear(financialPlanModel.ClosedAt.Value)
-                                    </td>
-                                </tr>
-                            }
-
-                            @foreach (NtiUnderConsiderationModel nti in closedNtiUCs)
-                            {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <a href="@Request.Path/action/ntiunderconsideration/@nti.Id" class="govuk-link govuk-link-no-visited-state">
-                                            NTI: Under consideration
-                                        </a>
-                                    </td>
-	                                <td class="govuk-table__cell">
-		                                @(Model.NtiStatuses.SingleOrDefault(s => s.Id == nti.ClosedStatusId)?.Name ?? string.Empty)
-	                                </td>
-                                    <td class="govuk-table__cell govuk-table__header__right">
-                                        @DateExtension.ToDayMonthYear(nti.CreatedAt)
-                                    </td>
-                                    <td class="govuk-table__cell govuk-table__header__right">
-                                        @DateExtension.ToDayMonthYear(nti.ClosedAt.Value)
-                                    </td>
-                                </tr>
-                            }
-
-                            @foreach (NtiWarningLetterModel nti in closedNtiWLs)
-                            {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <a href="@Request.Path/action/ntiwarningletter/@nti.Id" class="govuk-link govuk-link-no-visited-state">
-                                            NTI: Warning letter
-                                        </a>
-                                    </td>
-	                                <td class="govuk-table__cell">
-		                                @nti.ClosedStatus?.PastTenseName
-	                                </td>
-                                    <td class="govuk-table__cell govuk-table__header__right">
-                                        @DateExtension.ToDayMonthYear(nti.CreatedAt)
-                                    </td>
-                                    <td class="govuk-table__cell govuk-table__header__right">
-                                        @DateExtension.ToDayMonthYear(nti.ClosedAt.Value)
-                                    </td>
-                                </tr>
-                            }
-
-                            @foreach (NtiModel nti in closedNtis)
-                            {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <a href="@Request.Path/action/nti/@nti.Id" class="govuk-link govuk-link-no-visited-state">
-                                            NTI
-                                        </a>
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        @nti.ClosedStatus?.Name
-                                    </td>
-                                    <td class="govuk-table__cell govuk-table__header__right">
-                                        @DateExtension.ToDayMonthYear(nti.CreatedAt)
-                                    </td>
-                                    <td class="govuk-table__cell govuk-table__header__right">
-                                        @DateExtension.ToDayMonthYear(nti.ClosedAt.Value)
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+				<partial name="Shared/_ListClosedActionsForCase" model="Model.ClosedCaseActions" />
 
             </div>
             <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="trust-overview">

@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.Decision;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Decisions
@@ -14,11 +15,12 @@ namespace ConcernsCaseWork.Services.Decisions
 			_decisionService = decisionService;
 		}
 
-		public async Task<List<DecisionModel>> GetDecisionsByUrn(long urn)
+		public async Task<List<ActionSummaryModel>> GetDecisionsByUrn(long urn)
 		{
 			var decisions = await _decisionService.GetDecisionsByCaseUrn(urn);
 
-			return DecisionMapping.MapDtoToModel(decisions);
+
+			return decisions.Select(d => DecisionMapping.ToActionSummary(d)).ToList();
 		}
 	}
 }

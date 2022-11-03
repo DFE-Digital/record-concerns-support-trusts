@@ -1,6 +1,8 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Shared.Tests.Factory;
+using FluentAssertions;
 using ConcernsCaseWork.Service.NtiWarningLetter;
 using NUnit.Framework;
 using System;
@@ -13,7 +15,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 	public class NtiWarningLetterMappingTests
 	{
 		private readonly Fixture _fixture = new();
-		
+
 		[Test]
 		public void WhenMapDtoToServiceModel_ReturnsCorrectModel()
 		{
@@ -33,9 +35,9 @@ namespace ConcernsCaseWork.Tests.Mappers
 			};
 
 			var statuses = new List<NtiWarningLetterStatusDto>();
-			statuses.Add(new NtiWarningLetterStatusDto {Id = 1, Name = "Status 1" });
-			statuses.Add(new NtiWarningLetterStatusDto {Id = 2, Name = "Status 2" });
-			statuses.Add(new NtiWarningLetterStatusDto {Id = 3, Name = "Status 3" });
+			statuses.Add(new NtiWarningLetterStatusDto { Id = 1, Name = "Status 1" });
+			statuses.Add(new NtiWarningLetterStatusDto { Id = 2, Name = "Status 2" });
+			statuses.Add(new NtiWarningLetterStatusDto { Id = 3, Name = "Status 3" });
 
 			var ntiDto = new NtiWarningLetterDto
 			{
@@ -151,7 +153,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(model.Id, Is.EqualTo(dto.Id));
 			Assert.That(model.Name, Is.EqualTo(dto.Name));
 		}
-		
+
 		[Test]
 		public void WhenMapDbModelToActionSummary_ReturnsCorrectModel()
 		{
@@ -173,10 +175,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 				ClosedAt = testData.ClosedAt,
 				ClosedStatus = new NtiWarningLetterStatusModel { Id = testData.Status.Id, PastTenseName = testData.Status.Name },
 			};
-			
+
 			// act
 			var actionSummary = serviceModel.ToActionSummary();
-			
+
 			// assert
 			Assert.Multiple(() =>
 			{
@@ -186,6 +188,26 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/ntiwarningletter/{testData.Id}"));
 				Assert.That(actionSummary.StatusName, Is.EqualTo(testData.Status.Name));
 			});
+		}
+
+		[TestCaseSource(nameof(GetStatusTestCases))]
+		public void WhenMapDbModelToActionSummary_WhenActionIsOpen_ReturnsCorrectStatus(
+			NtiWarningLetterStatusModel? status, 
+			string expectedResult)
+		{
+			var model = _fixture.Create<NtiWarningLetterModel>();
+			model.ClosedAt = null;
+			model.Status = status;
+
+			var result = model.ToActionSummary();
+
+			result.StatusName.Should().Be(expectedResult);
+		}
+
+		private static IEnumerable<TestCaseData> GetStatusTestCases()
+		{
+			yield return new TestCaseData(null, "In progress");
+			yield return new TestCaseData(new NtiWarningLetterStatusModel() { Name = "Test"}, "Test");
 		}
 	}
 }
