@@ -5,9 +5,9 @@ This API services all requests for data specific to Concerns Casework.
 
 ### Secret storage
 ***
-
+Note that these secrets are 
 In a console window:
-1. Navigate to ```ConcernsCaseWork.API``` project root
+1. Navigate to ```ConcernsCaseWork``` project root
 1. Run 	```dotnet user-secrets init``` to initialise secrets in this directory
 1. Run the following to create API key secret:
 ```dotnet user-secrets set "ConcernsCaseworkApi:ApiKeys" "comma-separated list of accepted api keys" ```
@@ -25,7 +25,7 @@ In a console window:
 
 ## Accessing the API
 
-This API will launch a swagger page by default, which lists all available endpoints. 
+This API has a swagger page accessible at <url>/swagger, which lists all available endpoints. 
 
 Authorisation is handled by an api key sent in the HTTP request header ```'ConcernsApiKey'```. 
 
