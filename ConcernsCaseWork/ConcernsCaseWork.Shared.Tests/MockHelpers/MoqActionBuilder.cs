@@ -14,8 +14,11 @@ public static class MoqActionBuilder
 	public static Mock<ILogger<T>> VerifyLogErrorWasNotCalled<T>(this Mock<ILogger<T>> logger, string expectedMessage = "")
 		=> VerifyLogError(logger, expectedMessage, Times.Never());
 	
+	public static Mock<ILogger<T>> VerifyLogInformationWasCalled<T>(this Mock<ILogger<T>> logger, Times times, string expectedMessage = "")
+		=> VerifyLogInformation(logger, expectedMessage, times);
+		
 	public static Mock<ILogger<T>> VerifyLogInformationWasCalled<T>(this Mock<ILogger<T>> logger, string expectedMessage = "")
-		=> VerifyLogInformation(logger, expectedMessage, Times.Once());
+		=> VerifyLogInformation(logger,  expectedMessage, Times.Once());
 
 	private static Mock<ILogger<T>> VerifyLogError<T>(this Mock<ILogger<T>> logger, string expectedMessage, Times timesCalled)
 		=> VerifyLog(logger, expectedMessage, timesCalled, LogLevel.Error);

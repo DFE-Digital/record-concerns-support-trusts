@@ -1,13 +1,14 @@
 using Ardalis.GuardClauses;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Redis.Cases;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Redis.Ratings;
+using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Redis.Users;
+using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Service.Status;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Cases;
-using Service.Redis.Models;
-using Service.Redis.Ratings;
-using Service.Redis.Status;
-using Service.Redis.Users;
-using Service.TRAMS.Cases;
-using Service.TRAMS.Status;
 using System;
 using System.Threading.Tasks;
 
@@ -20,14 +21,17 @@ public class CreateCaseService : ICreateCaseService
 	private readonly IStatusCachedService _statusCachedService;
 	private readonly ICaseCachedService _caseCachedService;
 	private readonly IRatingCachedService _ratingCachedService;
+	private readonly ISRMAService _srmaService;
 
 	public CreateCaseService(
 		ILogger<CreateCaseService> logger, 
 		IUserStateCachedService userStateCachedService, 
 		IStatusCachedService statusCachedService, 
 		ICaseCachedService caseCachedService, 
-		IRatingCachedService ratingCachedService)
+		IRatingCachedService ratingCachedService,
+		ISRMAService srmaService)
 	{
+		_srmaService = Guard.Against.Null(srmaService);
 		_ratingCachedService = Guard.Against.Null(ratingCachedService);
 		_statusCachedService = Guard.Against.Null(statusCachedService);
 		_userStateCachedService = Guard.Against.Null(userStateCachedService);
@@ -38,6 +42,7 @@ public class CreateCaseService : ICreateCaseService
 	public async Task<long> CreateNonConcernsCase(string userName)
 	{
 		_logger.LogMethodEntered();
+		
 		try
 		{
 			var trustUkPrn = await GetSelectedTrustUkPrn(userName);
@@ -68,6 +73,28 @@ public class CreateCaseService : ICreateCaseService
 			
 			var newCase = await _caseCachedService.PostCase(dto);
 			return newCase.Urn;
+		}
+		catch (Exception ex)
+		{
+			_logger.LogErrorMsg(ex);
+
+			throw;
+		}
+	}
+	
+	public async Task<long> CreateNonConcernsCase(string userName, SRMAModel srmaModel)
+	{
+		_logger.LogMethodEntered();
+		
+		try
+		{
+			var caseUrn = await CreateNonConcernsCase(userName);
+			
+			srmaModel.CaseUrn = caseUrn;
+			
+			await _srmaService.SaveSRMA(srmaModel);
+			
+			return caseUrn;
 		}
 		catch (Exception ex)
 		{

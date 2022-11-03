@@ -2,11 +2,11 @@ using Ardalis.GuardClauses;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases.Create;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Users;
 using System;
 using System.Threading.Tasks;
 
@@ -33,23 +33,39 @@ public class CreateNonConcernsCasePageModel : AbstractPageModel
 		IClaimsPrincipalHelper claimsPrincipalHelper,
 		ICreateCaseService createCaseService)
 	{
-		_createCaseService = createCaseService;
+		_createCaseService = Guard.Against.Null(createCaseService);
 		_cachedService = Guard.Against.Null(cachedService);
 		_logger = Guard.Against.Null(logger);
 		_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
+	}
+	
+	public ActionResult OnGet()
+	{
+		_logger.LogMethodEntered();
+
+		try
+		{
+			return Page();
+		}
+		catch (Exception ex)
+		{
+			_logger.LogErrorMsg(ex);
+			TempData["Error.Message"] = ErrorOnPostPage;
+			
+			return Page();
+		}
 	}
 	
 	public async Task<ActionResult> OnPost()
 	{
 		_logger.LogMethodEntered();
 
-		long caseUrn = 0;
 		try
 		{
 			if (SelectedActionOrDecision == Options.Decision)
 			{
 				var userName = GetUserName();
-				caseUrn = await _createCaseService.CreateNonConcernsCase(userName);
+				var caseUrn = await _createCaseService.CreateNonConcernsCase(userName);
 				
 				return Redirect($"/case/{caseUrn}/management/action/decision/add");
 			}
@@ -60,10 +76,7 @@ public class CreateNonConcernsCasePageModel : AbstractPageModel
 					throw new NotImplementedException();
 				
 				case Actions.SRMA:
-					var userName = GetUserName();
-					caseUrn = await _createCaseService.CreateNonConcernsCase(userName);
-					
-					return Redirect($"/case/{caseUrn}/management/action/srma/add");
+					return Redirect("/case/create/nonconcerns/srma");
 				
 				case Actions.None:
 					break;
