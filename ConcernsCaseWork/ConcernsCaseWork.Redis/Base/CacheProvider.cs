@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Redis.Base
 			}
 
 			var user = JsonConvert.SerializeObject(value);
-			await _cache.SetStringAsync(key, user , options);
+			await _cache.SetStringAsync(key, user, options);
 		}
 
 		public async Task ClearCache(string key)

@@ -57,6 +57,8 @@ using ConcernsCaseWork.Service.MeansOfReferral;
 using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
+using Microsoft.AspNetCore.Authorization;
+using ConcernsCaseWork.Authorization;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -214,7 +216,6 @@ namespace ConcernsCaseWork.Extensions
             services.AddScoped<INtiReasonsCachedService, NtiReasonsCachedService>();
             services.AddScoped<INtiConditionsCachedService, NtiConditionsCachedService>();
 			services.AddScoped<ITeamsCachedService, TeamsCachedService>();
-	
 
 			// Redis Sequence
 			// TODO. This class looks very temporary. What's it for and how are we going to replace it.
@@ -222,7 +223,15 @@ namespace ConcernsCaseWork.Extensions
 
 			// AD Integration
 			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
-			services.AddScoped<IUserRoleCachedService, UserRoleCachedService>();
+			services.AddScoped<IRbacManager, RbacManager>();
+
+			services.AddScoped<ICorrelationContext, CorrelationContext>();
+
+			// Authorization to allow cypress tests to access the app
+			//services.AddScoped(sp => sp.GetService<IHttpContextAccessor>().HttpContext.Session);
+			services.AddHttpContextAccessor();
+			services.AddScoped<IAuthorizationHandler, HeaderRequirementHandler>();
+			services.AddScoped<IAuthorizationHandler, ClaimsRequirementHandler>();
 			services.AddScoped<IRbacManager, RbacManager>();
 
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
