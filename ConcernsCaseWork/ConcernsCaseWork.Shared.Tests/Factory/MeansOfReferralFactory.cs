@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.TRAMS.MeansOfReferral;
+using ConcernsCaseWork.Service.MeansOfReferral;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Shared.Tests.Factory
@@ -19,8 +19,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			return new List<MeansOfReferralModel>
 			{
-				new MeansOfReferralModel{Name = "Internal", Description = "Some description 1", Urn = 1},
-				new MeansOfReferralModel{Name = "External", Description = "Some description 2", Urn = 2},
+				new MeansOfReferralModel{Name = "Internal", Description = "Some description 1", Id = 1},
+				new MeansOfReferralModel{Name = "External", Description = "Some description 2", Id = 2},
 			};
 		}
 	}

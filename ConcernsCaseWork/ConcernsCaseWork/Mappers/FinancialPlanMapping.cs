@@ -1,6 +1,9 @@
-﻿using ConcernsCaseWork.Extensions;
+﻿using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
-using Service.TRAMS.FinancialPlan;
+using System;
+using ConcernsCaseWork.Service.FinancialPlan;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -74,15 +77,35 @@ namespace ConcernsCaseWork.Mappers
 
 			return updatedFinancialPlanDto;
 		}
-		
-		public static ActionSummary ToActionSummary(this FinancialPlanModel model)
-			=> new()
+
+		public static ActionSummaryModel ToActionSummary(this FinancialPlanModel model)
+		{
+			var relativeUrl = $"/case/{model.CaseUrn}/management/action/financialplan/{model.Id}";
+
+			if (model.IsClosed)
+			{
+				relativeUrl += "/closed";
+			}
+
+			var status = "In progress";
+
+			if (model.Status != null)
+			{
+				var financialStatusEnum = (FinancialPlanStatus)Enum.Parse(typeof(FinancialPlanStatus), model.Status.Name);
+				status = EnumHelper.GetEnumDescription(financialStatusEnum);
+			}
+
+			var result = new ActionSummaryModel()
 			{
 				ClosedDate = model.ClosedAt.ToDayMonthYear(),
 				Name = "Financial Plan",
 				OpenedDate = model.CreatedAt.ToDayMonthYear(),
-				RelativeUrl = $"/case/{model.CaseUrn}/management/action/financialplan/{model.Id}/closed",
-				StatusName = model.Status.Name
+				RelativeUrl = relativeUrl,
+				StatusName = status
 			};
+
+			return result;
+		}
+
 	}
 }

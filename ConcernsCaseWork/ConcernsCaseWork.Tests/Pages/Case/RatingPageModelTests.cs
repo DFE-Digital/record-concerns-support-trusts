@@ -1,6 +1,8 @@
 ﻿using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -13,9 +15,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Base;
-using Service.Redis.Models;
-using Service.Redis.Users;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -251,7 +250,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 					{ "rating", new StringValues("123:red") }
 				});
 
-			mockRatingModelService.Setup(x => x.GetRatingModelByUrn(123)).ReturnsAsync(new RatingModel() { Urn = 123 });
+			mockRatingModelService.Setup(x => x.GetRatingModelById(123)).ReturnsAsync(new RatingModel() { Id = 123 });
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();

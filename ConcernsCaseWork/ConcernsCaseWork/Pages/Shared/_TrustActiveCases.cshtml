@@ -1,5 +1,5 @@
 ﻿@model IList<ConcernsCaseWork.Models.TrustCasesModel>
-@using Service.TRAMS.Status;
+@using ConcernsCaseWork.Service.Status;
 
 @{
     var activeCases = Model?.Where(c => c.Status != StatusEnum.Close) ?? Enumerable.Empty<ConcernsCaseWork.Models.TrustCasesModel>();
@@ -23,7 +23,7 @@
 </thead>
 
 <tbody class="govuk-table__body">
-    @if (activeCases.Count() == 0)
+    @if (!activeCases.Any())
     {
         <tr class="govuk-table__row tr__large">
             <td class="govuk-table__cell__cases govuk-oneline-row">

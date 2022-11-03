@@ -1,10 +1,10 @@
 ﻿using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Redis.Ratings;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Ratings;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,7 +45,7 @@ namespace ConcernsCaseWork.Tests.Services.Ratings
 				
 				Assert.That(actualRatingModel.Checked, Is.EqualTo(expectedRatingModel.Checked));
 				Assert.That(actualRatingModel.Name, Is.EqualTo(expectedRatingModel.Name));
-				Assert.That(actualRatingModel.Urn, Is.EqualTo(expectedRatingModel.Urn));
+				Assert.That(actualRatingModel.Id, Is.EqualTo(expectedRatingModel.Id));
 				Assert.That(actualRatingModel.RagRating.Item1, Is.EqualTo(expectedRatingModel.RagRating.Item1));
 				Assert.That(actualRatingModel.RagRating.Item2.Count, Is.EqualTo(expectedRatingModel.RagRating.Item2.Count));
 				Assert.That(actualRatingModel.RagRatingCss.Count, Is.EqualTo(expectedRatingModel.RagRatingCss.Count));
@@ -69,7 +69,7 @@ namespace ConcernsCaseWork.Tests.Services.Ratings
 			
 			// act
 			var recordModelService = new RatingModelService(mockRatingCacheService.Object, mockLogger.Object);
-			var ratingsModel = await recordModelService.GetSelectedRatingsModelByUrn(ratingDto.Urn);
+			var ratingsModel = await recordModelService.GetSelectedRatingsModelById(ratingDto.Id);
 
 			// assert
 			Assert.That(ratingsModel, Is.Not.Null);
@@ -84,9 +84,9 @@ namespace ConcernsCaseWork.Tests.Services.Ratings
 				var actualRatingModel = ratingsModel.ElementAt(index);
 				var expectedRatingModel = ratingsModelSorted.ElementAt(index);
 				
-				Assert.That(actualRatingModel.Checked, Is.EqualTo(expectedRatingModel.Urn.CompareTo(ratingDto.Urn) == 0 || expectedRatingModel.Checked));
+				Assert.That(actualRatingModel.Checked, Is.EqualTo(expectedRatingModel.Id.CompareTo(ratingDto.Id) == 0 || expectedRatingModel.Checked));
 				Assert.That(actualRatingModel.Name, Is.EqualTo(expectedRatingModel.Name));
-				Assert.That(actualRatingModel.Urn, Is.EqualTo(expectedRatingModel.Urn));
+				Assert.That(actualRatingModel.Id, Is.EqualTo(expectedRatingModel.Id));
 				Assert.That(actualRatingModel.RagRating.Item1, Is.EqualTo(expectedRatingModel.RagRating.Item1));
 				Assert.That(actualRatingModel.RagRating.Item2.Count, Is.EqualTo(expectedRatingModel.RagRating.Item2.Count));
 				Assert.That(actualRatingModel.RagRatingCss.Count, Is.EqualTo(expectedRatingModel.RagRatingCss.Count));
@@ -110,7 +110,7 @@ namespace ConcernsCaseWork.Tests.Services.Ratings
 			
 			// act
 			var recordModelService = new RatingModelService(mockRatingCacheService.Object, mockLogger.Object);
-			var ratingModel = await recordModelService.GetRatingModelByUrn(ratingDto.Urn);
+			var ratingModel = await recordModelService.GetRatingModelById(ratingDto.Id);
 
 			// assert
 			Assert.That(ratingModel, Is.Not.Null);
@@ -123,7 +123,7 @@ namespace ConcernsCaseWork.Tests.Services.Ratings
 				
 			Assert.That(ratingModel.Checked, Is.EqualTo(expectedRatingModel.Checked));
 			Assert.That(ratingModel.Name, Is.EqualTo(expectedRatingModel.Name));
-			Assert.That(ratingModel.Urn, Is.EqualTo(expectedRatingModel.Urn));
+			Assert.That(ratingModel.Id, Is.EqualTo(expectedRatingModel.Id));
 			Assert.That(ratingModel.RagRating.Item1, Is.EqualTo(expectedRatingModel.RagRating.Item1));
 			Assert.That(ratingModel.RagRating.Item2.Count, Is.EqualTo(expectedRatingModel.RagRating.Item2.Count));
 			Assert.That(ratingModel.RagRatingCss.Count, Is.EqualTo(expectedRatingModel.RagRatingCss.Count));

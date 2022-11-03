@@ -1,10 +1,10 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
+using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using Service.TRAMS.Trusts;
 using System.Linq;
 using System.Threading.Tasks;
 

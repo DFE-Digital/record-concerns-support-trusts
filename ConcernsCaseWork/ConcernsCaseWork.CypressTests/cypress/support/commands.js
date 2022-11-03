@@ -31,6 +31,8 @@ import caseMangementPage from "/cypress/pages/caseMangementPage";
 import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
 import { AuthenticationComponent } from "../auth/authenticationComponent";
 import { LogTask } from './constants';
+import utils from "/cypress/support/utils";
+
 
 const concernsRgx = new RegExp(/(Compliance|Financial|Force majeure|Governance|Irregularity)/, 'i');
 const trustRgx = new RegExp(/(School|Academy|Accrington|South|North|East|West|([A-Z])\w+)/, 'i');
@@ -84,9 +86,35 @@ Cypress.Commands.add('enterConcernDetails', () => {
     cy.get("#case-details-form  button").click();
 })
 
-Cypress.Commands.add('selectRiskToTrust', () => {
+
+Cypress.Commands.add('addConcernsDecisionsAddToCase',()=>{
+    cy.visit(Cypress.env('url')+"/home");
+    cy.checkForExistingCase();
+    cy.reload();
+    CaseManagementPage.getAddToCaseBtn().click();
+    AddToCasePage.addToCase('Decision');
+    AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
+    AddToCasePage.getAddToCaseBtn().click();
+    cy.log(utils.checkForGovErrorSummaryList());
+
+    if (utils.checkForGovErrorSummaryList() > 0) {
+        cy.log("Case Action already exists");
+        cy.visit(Cypress.env('url'), { timeout: 30000 });
+        cy.checkForExistingCase(true);
+        CaseManagementPage.getAddToCaseBtn().click();
+        AddToCasePage.addToCase('Decision');
+        AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
+        AddToCasePage.getAddToCaseBtn().click();
+    } else {
+        cy.log("No Case Action exists");
+        cy.log(utils.checkForGovErrorSummaryList());
+    }
+})
+
+
+Cypress.Commands.add('selectRiskToTrust',()=>{
     cy.task(LogTask, "Select risk to trust");
-    // cy.get('[href="/case/rating"]').click();
+   // cy.get('[href="/case/rating"]').click();
     cy.get(".ragtag").should("be.visible");
     //Randomly select a RAG status
     cy.get(".govuk-radios .ragtag:nth-of-type(1)")
@@ -529,32 +557,4 @@ Cypress.Commands.add('selectMoR', function () {
     cy.get('[id="means-of-referral-urn"]').eq(Math.floor(Math.random() * 1)).click();
     cy.get('button[data-prevent-double-click="true"]').click();
 
-});
-
-Cypress.Commands.add('setupAuthHeaders', function (username, roles) {
-    cy.log('adding auth interceptor for username ' + username);
-    cy.intercept(`${Cypress.env('url')}**`, request => {
-        request.headers['Authorization'] = Cypress.env('clientSecret');
-        if (username !== undefined) {
-            request.headers[`AuthorizationUserName`] = username;
-        }
-        else {
-            // default a username if nothing passed?
-            request.headers[`AuthorizationUserName`] = 'test.user';
-        }
-
-        if (roles !== undefined && Array.isArray(roles)) {
-            var rolesHeaderValue = roles.length == 1
-                ? roles[0]
-                : roles.join(',');
-            request.headers['AuthorizationRoles'] = rolesHeaderValue;
-        }
-        else if (roles !== undefined && !Array.isArray(roles)) {
-            request.headers['AuthorizationRoles'] = roles;
-        }
-        else {
-            // Could just default to caseworker if nothing passed?
-            request.headers['AuthorizationRoles'] = 'concerns-casework.caseworker';
-        }
-    })
-});
+    });

@@ -1,5 +1,7 @@
 ﻿@page "/case/{caseUrn:long}/management/action/srma/{srmaId:long}/notes"
-@model ConcernsCaseWork.Pages.Case.Management.Action.SRMA.EditNotesPageModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NetEscapades.AspNetCore.SecurityHeaders
+@model EditNotesPageModel
 
 @{
     ViewData["Title"] = "SRMA Notes";

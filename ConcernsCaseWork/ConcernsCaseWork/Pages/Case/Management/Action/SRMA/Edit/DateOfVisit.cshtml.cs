@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
+namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -27,16 +27,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 		public async Task<ActionResult> OnGetAsync()
 		{
-			long caseUrn = 0;
-			long srmaId = 0;
-
 			try
 			{
 				_logger.LogInformation("Case::Action::SRMA::EditDateOfVisitPageModel::OnGetAsync");
 
-				(caseUrn, srmaId) = GetRouteData();
+				(long caseUrn, long srmaId) = GetRouteData();
 
 				SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
+				
+				if (SRMAModel.IsClosed)
+				{
+					return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}/closed");
+				}
 			}
 			catch (Exception ex)
 			{

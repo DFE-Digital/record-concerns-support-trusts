@@ -1,22 +1,21 @@
 ﻿using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Redis.Cases;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Redis.Ratings;
+using ConcernsCaseWork.Redis.Records;
+using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Redis.Trusts;
+using ConcernsCaseWork.Redis.Types;
+using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Service.Records;
+using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.Base;
-using Service.Redis.Cases;
-using Service.Redis.Models;
-using Service.Redis.Ratings;
-using Service.Redis.Records;
-using Service.Redis.Status;
-using Service.Redis.Trusts;
-using Service.Redis.Types;
-using Service.TRAMS.Cases;
-using Service.TRAMS.Records;
-using Service.TRAMS.Status;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,13 +38,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			const string trustUkPrn = "trust-ukprn";
 			
 			// cases
 			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
-			var casesDtoLive = casesDto.Where(c => c.StatusUrn.CompareTo(1) == 0).ToList();
+			var casesDtoLive = casesDto.Where(c => c.StatusId.CompareTo(1) == 0).ToList();
 			
 			// records
 			var recordsDtoLiveCases = casesDtoLive.SelectMany(c => RecordFactory.BuildListRecordDtoByCaseUrn(c.Urn)).ToList();
@@ -77,8 +75,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			var liveCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(new[] {"userA", "userB"}, StatusEnum.Live);
 
@@ -105,12 +102,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.TrustNameTitle, Is.EqualTo(TrustMapping.FetchTrustName(trustDto).ToTitle()));
 					
 					// Case rating
-					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn);
+					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingId);
 					Assert.NotNull(expected.RatingModel);
 					Assert.NotNull(actualCaseRatingModel);
 					Assert.That(expected.RatingModel.Checked, Is.EqualTo(actualCaseRatingModel.Checked));
 					Assert.That(expected.RatingModel.Name, Is.EqualTo(actualCaseRatingModel.Name));
-					Assert.That(expected.RatingModel.Urn, Is.EqualTo(actualCaseRatingModel.Urn));
+					Assert.That(expected.RatingModel.Id, Is.EqualTo(actualCaseRatingModel.Id));
 					Assert.That(expected.RatingModel.RagRating, Is.EqualTo(actualCaseRatingModel.RagRating));
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
@@ -124,11 +121,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					
 					for (var index = 0; index < expectedRecordsModel.Count; ++index)
 					{
-						Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(actualRecordsModel.ElementAt(index).Urn));
+						Assert.That(expectedRecordsModel.ElementAt(index).Id, Is.EqualTo(actualRecordsModel.ElementAt(index).Id));
 						Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).CaseUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).RatingId, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingId));
+						Assert.That(expectedRecordsModel.ElementAt(index).StatusId, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusId));
+						Assert.That(expectedRecordsModel.ElementAt(index).TypeId, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeId));
 						
 						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
 						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
@@ -136,7 +133,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(actualRecordRatingModel);
 						Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
 						Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
-						Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+						Assert.That(expectedRecordRatingModel.Id, Is.EqualTo(actualRecordRatingModel.Id));
 						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
 						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
 						
@@ -154,7 +151,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(expectedRecordStatusModel);
 						Assert.NotNull(actualRecordTypeModel);
 						Assert.That(expectedRecordStatusModel.Name, Is.EqualTo(actualRecordStatusModel.Name));
-						Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
+						Assert.That(expectedRecordStatusModel.Id, Is.EqualTo(actualRecordStatusModel.Id));
 					}
 				}
 			}
@@ -172,13 +169,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			const string trustUkPrn = "trust-ukprn";
 			
 			// cases
 			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
-			var casesDtoLive = casesDto.Where(c => c.StatusUrn.CompareTo(1) == 0).ToList();
+			var casesDtoLive = casesDto.Where(c => c.StatusId.CompareTo(1) == 0).ToList();
 			
 			// records
 			var recordsDtoLiveCases = casesDtoLive.SelectMany(c => RecordFactory.BuildListRecordDtoByCaseUrn(c.Urn)).ToList();
@@ -210,8 +206,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			var liveCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(new[] {"userA", "userB"}, StatusEnum.Live);
 
@@ -243,13 +238,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			const string trustUkPrn = "trust-ukprn";
 			
 			// cases
 			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
-			var casesDtoLive = casesDto.Where(c => c.StatusUrn.CompareTo(1) == 0).ToList();
+			var casesDtoLive = casesDto.Where(c => c.StatusId.CompareTo(1) == 0).ToList();
 			
 			// records
 			var recordsDtoLiveCases = casesDtoLive.SelectMany(c => RecordFactory.BuildListRecordDtoByCaseUrn(c.Urn)).ToList();
@@ -278,8 +272,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			var liveCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), StatusEnum.Live);
 		
@@ -300,13 +293,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			const string trustUkPrn = "trust-ukprn";
 			
 			// cases
 			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
-			var casesDtoLive = casesDto.Where(c => c.StatusUrn.CompareTo(1) == 0).ToList();
+			var casesDtoLive = casesDto.Where(c => c.StatusId.CompareTo(1) == 0).ToList();
 			
 			// records
 			var recordsDtoLiveCases = casesDtoLive.SelectMany(c => RecordFactory.BuildListRecordDtoByCaseUrn(c.Urn)).ToList();
@@ -337,8 +329,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			var monitoringCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), StatusEnum.Live);
 
@@ -364,12 +355,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.TrustNameTitle, Is.EqualTo(TrustMapping.FetchTrustName(trustDto).ToTitle()));
 					
 					// Case rating
-					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn);
+					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingId);
 					Assert.NotNull(expected.RatingModel);
 					Assert.NotNull(actualCaseRatingModel);
 					Assert.That(expected.RatingModel.Checked, Is.EqualTo(actualCaseRatingModel.Checked));
 					Assert.That(expected.RatingModel.Name, Is.EqualTo(actualCaseRatingModel.Name));
-					Assert.That(expected.RatingModel.Urn, Is.EqualTo(actualCaseRatingModel.Urn));
+					Assert.That(expected.RatingModel.Id, Is.EqualTo(actualCaseRatingModel.Id));
 					Assert.That(expected.RatingModel.RagRating, Is.EqualTo(actualCaseRatingModel.RagRating));
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
@@ -383,11 +374,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					
 					for (var index = 0; index < expectedRecordsModel.Count; ++index)
 					{
-						Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(actualRecordsModel.ElementAt(index).Urn));
+						Assert.That(expectedRecordsModel.ElementAt(index).Id, Is.EqualTo(actualRecordsModel.ElementAt(index).Id));
 						Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).CaseUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).RatingId, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingId));
+						Assert.That(expectedRecordsModel.ElementAt(index).StatusId, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusId));
+						Assert.That(expectedRecordsModel.ElementAt(index).TypeId, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeId));
 						
 						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
 						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
@@ -395,7 +386,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(actualRecordRatingModel);
 						Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
 						Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
-						Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+						Assert.That(expectedRecordRatingModel.Id, Is.EqualTo(actualRecordRatingModel.Id));
 						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
 						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
 						
@@ -413,7 +404,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(expectedRecordStatusModel);
 						Assert.NotNull(actualRecordTypeModel);
 						Assert.That(expectedRecordStatusModel.Name, Is.EqualTo(actualRecordStatusModel.Name));
-						Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
+						Assert.That(expectedRecordStatusModel.Id, Is.EqualTo(actualRecordStatusModel.Id));
 					}
 				}
 			}
@@ -431,13 +422,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			const string trustUkPrn = "trust-ukprn";
 			
 			// cases
 			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
-			var casesDtoMonitoring = casesDto.Where(c => c.StatusUrn.CompareTo(2) == 0).ToList();
+			var casesDtoMonitoring = casesDto.Where(c => c.StatusId.CompareTo(2) == 0).ToList();
 			
 			// records
 			var recordsDtoMonitoringCases = casesDtoMonitoring.SelectMany(c => RecordFactory.BuildListRecordDtoByCaseUrn(c.Urn)).ToList();
@@ -468,8 +458,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			var monitoringCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), StatusEnum.Monitoring);
 
@@ -495,12 +484,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.TrustNameTitle, Is.EqualTo(TrustMapping.FetchTrustName(trustDto).ToTitle()));
 					
 					// Case rating
-					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn);
+					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingId);
 					Assert.NotNull(expected.RatingModel);
 					Assert.NotNull(actualCaseRatingModel);
 					Assert.That(expected.RatingModel.Checked, Is.EqualTo(actualCaseRatingModel.Checked));
 					Assert.That(expected.RatingModel.Name, Is.EqualTo(actualCaseRatingModel.Name));
-					Assert.That(expected.RatingModel.Urn, Is.EqualTo(actualCaseRatingModel.Urn));
+					Assert.That(expected.RatingModel.Id, Is.EqualTo(actualCaseRatingModel.Id));
 					Assert.That(expected.RatingModel.RagRating, Is.EqualTo(actualCaseRatingModel.RagRating));
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
@@ -514,11 +503,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					
 					for (var index = 0; index < expectedRecordsModel.Count; ++index)
 					{
-						Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(actualRecordsModel.ElementAt(index).Urn));
+						Assert.That(expectedRecordsModel.ElementAt(index).Id, Is.EqualTo(actualRecordsModel.ElementAt(index).Id));
 						Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).CaseUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).RatingId, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingId));
+						Assert.That(expectedRecordsModel.ElementAt(index).StatusId, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusId));
+						Assert.That(expectedRecordsModel.ElementAt(index).TypeId, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeId));
 						
 						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
 						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
@@ -526,7 +515,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(actualRecordRatingModel);
 						Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
 						Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
-						Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+						Assert.That(expectedRecordRatingModel.Id, Is.EqualTo(actualRecordRatingModel.Id));
 						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
 						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
 						
@@ -544,7 +533,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(expectedRecordStatusModel);
 						Assert.NotNull(actualRecordTypeModel);
 						Assert.That(expectedRecordStatusModel.Name, Is.EqualTo(actualRecordStatusModel.Name));
-						Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
+						Assert.That(expectedRecordStatusModel.Id, Is.EqualTo(actualRecordStatusModel.Id));
 					}
 				}
 			}
@@ -562,13 +551,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			const string trustUkPrn = "trust-ukprn";
 			
 			// cases
 			var casesDto = CaseFactory.BuildListCaseDto(trustUkPrn);
-			var casesDtoClosed = casesDto.Where(c => c.StatusUrn.CompareTo(3) == 0).ToList();
+			var casesDtoClosed = casesDto.Where(c => c.StatusId.CompareTo(3) == 0).ToList();
 			
 			// records
 			var recordsDtoClosedCases = casesDtoClosed.SelectMany(c => RecordFactory.BuildListRecordDtoByCaseUrn(c.Urn)).ToList();
@@ -599,8 +587,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			var monitoringCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), StatusEnum.Close);
 
@@ -626,12 +613,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					Assert.That(expected.TrustNameTitle, Is.EqualTo(TrustMapping.FetchTrustName(trustDto).ToTitle()));
 					
 					// Case rating
-					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingUrn);
+					var actualCaseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, actual.RatingId);
 					Assert.NotNull(expected.RatingModel);
 					Assert.NotNull(actualCaseRatingModel);
 					Assert.That(expected.RatingModel.Checked, Is.EqualTo(actualCaseRatingModel.Checked));
 					Assert.That(expected.RatingModel.Name, Is.EqualTo(actualCaseRatingModel.Name));
-					Assert.That(expected.RatingModel.Urn, Is.EqualTo(actualCaseRatingModel.Urn));
+					Assert.That(expected.RatingModel.Id, Is.EqualTo(actualCaseRatingModel.Id));
 					Assert.That(expected.RatingModel.RagRating, Is.EqualTo(actualCaseRatingModel.RagRating));
 					Assert.That(expected.RatingModel.RagRatingCss, Is.EqualTo(actualCaseRatingModel.RagRatingCss));
 
@@ -645,11 +632,11 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 					
 					for (var index = 0; index < expectedRecordsModel.Count; ++index)
 					{
-						Assert.That(expectedRecordsModel.ElementAt(index).Urn, Is.EqualTo(actualRecordsModel.ElementAt(index).Urn));
+						Assert.That(expectedRecordsModel.ElementAt(index).Id, Is.EqualTo(actualRecordsModel.ElementAt(index).Id));
 						Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).CaseUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).RatingUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).StatusUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).TypeUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeUrn));
+						Assert.That(expectedRecordsModel.ElementAt(index).RatingId, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingId));
+						Assert.That(expectedRecordsModel.ElementAt(index).StatusId, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusId));
+						Assert.That(expectedRecordsModel.ElementAt(index).TypeId, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeId));
 						
 						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
 						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
@@ -657,7 +644,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(actualRecordRatingModel);
 						Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
 						Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
-						Assert.That(expectedRecordRatingModel.Urn, Is.EqualTo(actualRecordRatingModel.Urn));
+						Assert.That(expectedRecordRatingModel.Id, Is.EqualTo(actualRecordRatingModel.Id));
 						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
 						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
 						
@@ -675,7 +662,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 						Assert.NotNull(expectedRecordStatusModel);
 						Assert.NotNull(actualRecordTypeModel);
 						Assert.That(expectedRecordStatusModel.Name, Is.EqualTo(actualRecordStatusModel.Name));
-						Assert.That(expectedRecordStatusModel.Urn, Is.EqualTo(actualRecordStatusModel.Urn));
+						Assert.That(expectedRecordStatusModel.Id, Is.EqualTo(actualRecordStatusModel.Id));
 					}
 				}
 			}
@@ -693,7 +680,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 			
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
@@ -708,8 +694,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			var activeCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>());
 
@@ -730,7 +715,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 			
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
@@ -745,8 +729,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			var activeCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>());
 
@@ -767,7 +750,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var recordsDto = RecordFactory.BuildListRecordDto();
@@ -794,8 +776,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			var closedCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), StatusEnum.Unknown);
 
@@ -817,7 +798,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var firstCaseDto = casesDto.First();
@@ -847,8 +827,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			var activeCasesModel = await caseModelService.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>());
 
@@ -869,7 +848,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 			
 			mockCaseSearchService.Setup(c => c.GetCasesByCaseTrustSearch(It.IsAny<CaseTrustSearch>()))
 				.ReturnsAsync(new List<CaseDto>());
@@ -878,8 +856,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			var actualTrustCasesModel = await caseModelService.GetCasesByTrustUkprn("testing");
 
@@ -901,7 +878,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var recordsDto = RecordFactory.BuildListRecordDto();
@@ -925,8 +901,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			var actualTrustCasesModel = await caseModelService.GetCasesByTrustUkprn("testing");
 
@@ -948,7 +923,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var casesDto = CaseFactory.BuildListCaseDto();
 			var ratingsDto = RatingFactory.BuildListRatingDto();
@@ -971,8 +945,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			var actualTrustCasesModel = await caseModelService.GetCasesByTrustUkprn("testing");
 
@@ -994,7 +967,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 			
 			mockCaseSearchService.Setup(c => c.GetCasesByCaseTrustSearch(It.IsAny<CaseTrustSearch>()))
 				.Throws<Exception>();
@@ -1003,8 +975,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			Assert.ThrowsAsync<Exception>(() => caseModelService.GetCasesByTrustUkprn("testing"));
 		}		
@@ -1021,7 +992,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
 			var recordDto = RecordFactory.BuildRecordDto();
@@ -1038,8 +1008,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			var actualCaseUrn = await caseModelService.PostCase(createCaseModel);
 
@@ -1060,7 +1029,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 			
 			var statusLiveDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
 			var statusMonitoringDto = StatusFactory.BuildStatusDto(StatusEnum.Monitoring.ToString(), 2);
@@ -1072,8 +1040,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			// assert
 			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PostCase(createCaseModel));
@@ -1091,7 +1058,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 			
 			var caseDto = CaseFactory.BuildCaseDto();
 
@@ -1106,8 +1072,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			var actualCaseModel = await caseModelService.GetCaseByUrn("testing", 1);
 
@@ -1131,8 +1096,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			Assert.That(actualCaseModel.DeEscalationPoint, Is.EqualTo(caseDto.DeEscalationPoint));
 			Assert.That(actualCaseModel.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
 			Assert.That(actualCaseModel.Urn, Is.EqualTo(1));
-			Assert.That(actualCaseModel.StatusUrn, Is.EqualTo(1));
-			Assert.That(actualCaseModel.RatingUrn, Is.EqualTo(caseDto.RatingUrn));
+			Assert.That(actualCaseModel.StatusId, Is.EqualTo(1));
+			Assert.That(actualCaseModel.RatingId, Is.EqualTo(caseDto.RatingId));
 			Assert.IsNull(actualCaseModel.RatingModel);
 		}
 		
@@ -1148,7 +1113,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
 
@@ -1161,8 +1125,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.GetCaseByUrn("testing", 1));
 		}
@@ -1179,7 +1142,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
 			
@@ -1189,8 +1151,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			await caseModelService.PatchCaseRating(CaseFactory.BuildPatchCaseModel());
 
@@ -1210,19 +1171,17 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 			
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PatchCaseRating(CaseFactory.BuildPatchCaseModel()));
 
 			// assert
-			mockRecordCachedService.Verify(r => r.PatchRecordByUrn(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Never);
+			mockRecordCachedService.Verify(r => r.PatchRecordById(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Never);
 			mockCaseCachedService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Never);
 		}
 
@@ -1238,7 +1197,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var recordsDto = RecordFactory.BuildListRecordDto();
 
@@ -1248,13 +1206,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object,
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,
-				mockStatusCachedService.Object, mockCaseSearchService.Object,
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			await caseModelService.PatchRecordRating(RecordFactory.BuildPatchRecordModel());
 
 			// assert
-			mockRecordCachedService.Verify(r => r.PatchRecordByUrn(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Once);
+			mockRecordCachedService.Verify(r => r.PatchRecordById(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Once);
 		}
 
 		[Test]
@@ -1269,14 +1226,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object,
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,
-				mockStatusCachedService.Object, mockCaseSearchService.Object,
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			Assert.ThrowsAsync<ArgumentNullException>(() => caseModelService.PatchRecordRating(RecordFactory.BuildPatchRecordModel()));
 
@@ -1297,7 +1252,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
 			var statusDto = StatusFactory.BuildStatusDto(StatusEnum.Live.ToString(), 1);
@@ -1305,19 +1259,16 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			mockStatusCachedService.Setup(t => t.GetStatusByName(It.IsAny<string>())).ReturnsAsync(statusDto);
 			mockCaseCachedService.Setup(cs => cs.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(caseDto);
 			mockCaseCachedService.Setup(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()));
-			mockCaseHistoryCachedService.Setup(c => c.PostCaseHistory(It.IsAny<CreateCaseHistoryDto>(), It.IsAny<string>()));
 			
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			await caseModelService.PatchClosure(CaseFactory.BuildPatchCaseModel());
 
 			// assert
-			mockCaseHistoryCachedService.Verify(c => c.PostCaseHistory(It.IsAny<CreateCaseHistoryDto>(), It.IsAny<string>()), Times.Once);
 			mockCaseCachedService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Once);
 			mockStatusCachedService.Verify(t => t.GetStatusByName(It.IsAny<string>()), Times.Once);
 			mockCaseCachedService.Verify(cs => cs.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
@@ -1335,19 +1286,17 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PatchClosure(CaseFactory.BuildPatchCaseModel()));
 
 			// assert
-			mockRecordCachedService.Verify(r => r.PatchRecordByUrn(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Never);
+			mockRecordCachedService.Verify(r => r.PatchRecordById(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Never);
 			mockCaseCachedService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Never);
 		}
 		
@@ -1363,7 +1312,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
 			
@@ -1373,8 +1321,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			await caseModelService.PatchDirectionOfTravel(CaseFactory.BuildPatchCaseModel());
 
@@ -1394,14 +1341,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PatchDirectionOfTravel(CaseFactory.BuildPatchCaseModel()));
 
@@ -1421,7 +1366,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
 			
@@ -1431,8 +1375,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			await caseModelService.PatchIssue(CaseFactory.BuildPatchCaseModel());
 
@@ -1452,14 +1395,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PatchIssue(CaseFactory.BuildPatchCaseModel()));
 
@@ -1479,7 +1420,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
 			
@@ -1489,8 +1429,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			await caseModelService.PatchCurrentStatus(CaseFactory.BuildPatchCaseModel());
 
@@ -1510,14 +1449,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PatchCurrentStatus(CaseFactory.BuildPatchCaseModel()));
 
@@ -1537,7 +1474,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
 			
@@ -1547,8 +1483,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			await caseModelService.PatchCaseAim(CaseFactory.BuildPatchCaseModel());
 
@@ -1568,14 +1503,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 			
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PatchCaseAim(CaseFactory.BuildPatchCaseModel()));
 
@@ -1595,7 +1528,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
 			
@@ -1605,8 +1537,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			await caseModelService.PatchDeEscalationPoint(CaseFactory.BuildPatchCaseModel());
 
@@ -1626,14 +1557,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 			
 			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PatchDeEscalationPoint(CaseFactory.BuildPatchCaseModel()));
 
@@ -1653,7 +1582,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			var caseDto = CaseFactory.BuildCaseDto();
 
@@ -1663,8 +1591,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			await caseModelService.PatchNextSteps(CaseFactory.BuildPatchCaseModel());
 
@@ -1684,14 +1611,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
 			var mockLogger = new Mock<ILogger<CaseModelService>>();
 			var mockCaseSearchService = new Mock<ICaseSearchService>();
-			var mockCaseHistoryCachedService = new Mock<ICaseHistoryCachedService>();
 
 			// act
 			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
 				mockTrustCachedService.Object, mockRecordCachedService.Object,
 				mockRatingCachedService.Object, mockTypeCachedService.Object,  
-				mockStatusCachedService.Object, mockCaseSearchService.Object, 
-				mockCaseHistoryCachedService.Object, mockLogger.Object);
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
 
 			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PatchNextSteps(CaseFactory.BuildPatchCaseModel()));
 

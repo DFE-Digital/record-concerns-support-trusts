@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
+namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -37,13 +37,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				_logger.LogInformation("Case::EditSRMAReasonOfferedPageModel::OnGetAsync");
 
 				var validationResponse = ValidateInputsForGet();
-				if (validationResponse.validationErrors.Count() > 0)
+				if (validationResponse.validationErrors.Any())
 				{
 					TempData["SRMA.Message"] = validationResponse.validationErrors;
 				}
 				else
 				{
 					SRMA = await srmaService.GetSRMAById(validationResponse.srmaId);
+					
+					if (SRMA.IsClosed)
+					{
+						return Redirect($"/case/{validationResponse.caseId}/management/action/srma/{validationResponse.srmaId}/closed");
+					}
+					
 					Reasons = GetReasons();
 				}
 			}

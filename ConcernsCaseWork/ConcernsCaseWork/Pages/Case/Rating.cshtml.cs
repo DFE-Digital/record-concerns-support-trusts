@@ -3,14 +3,13 @@ using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Base;
-using Service.Redis.Models;
-using Service.Redis.Users;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -64,22 +63,22 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				// Rating
 				var splitRagRating = ragRating.Split(":");
-				var ragRatingUrn = splitRagRating[0];
+				var ragRatingId = splitRagRating[0];
 				var ragRatingName = splitRagRating[1];
 				
 				// validate that the links from case to other data is valid. This really should be in a domain layer or at least the trams service.
-				var rating = await _ratingModelService.GetRatingModelByUrn(long.Parse(ragRatingUrn));
+				var rating = await _ratingModelService.GetRatingModelById(long.Parse(ragRatingId));
 
 				if (rating == null)
 				{
-					throw new InvalidOperationException($"The given ratingUrn '{ragRatingUrn}' does not match any known rating in the system");
+					throw new InvalidOperationException($"The given ratingUrn '{ragRatingId}' does not match any known rating in the system");
 				}
 
 				// Redis state
 				var userState = await GetUserState();
 
 				// Update cache model
-				userState.CreateCaseModel.RatingUrn = long.Parse(ragRatingUrn);
+				userState.CreateCaseModel.RatingId = long.Parse(ragRatingId);
 				userState.CreateCaseModel.RagRatingName = ragRatingName;
 				userState.CreateCaseModel.RagRating = RatingMapping.FetchRag(ragRatingName);
 				userState.CreateCaseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRatingName);

@@ -9,11 +9,11 @@ namespace ConcernsCaseWork.Models
 	{
 		public DateTimeOffset UpdatedAt { get; set; }
 		public DateTimeOffset? ClosedAt { get; set; }
-		public long Urn { get; set; }
+		public long Id { get; set; }
 		public long CaseUrn { get; set; }
-		public long RatingUrn { get; set; }
+		public long RatingId { get; set; }
 		public string CreatedBy { get; set; }
-		public long StatusUrn { get; set; }
+		public long StatusId { get; set; }
 
 	}
 }

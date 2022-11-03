@@ -1,7 +1,9 @@
-﻿using ConcernsCaseWork.Enums;
+﻿using AutoFixture;
+using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Pages.Case.Management.Action.SRMA;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.MockHelpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -15,16 +17,23 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 {
 	[Parallelizable(ParallelScope.All)]
-	public class ClosePageModelTests
+	public class IndexPageModelTests
 	{
+		private readonly IFixture _fixture;
+		
+		public IndexPageModelTests()
+		{
+			_fixture = new Fixture();
+		}
+		
 		[Test]
 		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
 		{
 			// arrange
 			var mockSrmaService = new Mock<ISRMAService>();
-			var mockLogger = new Mock<ILogger<ClosedPageModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-			var pageModel = SetupClosedPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -38,14 +47,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 		{
 			// arrange
 			var mockSrmaService = new Mock<ISRMAService>();
-			var mockLogger = new Mock<ILogger<ClosedPageModel>>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed);
 
 			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
-			var pageModel = SetupClosedPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -57,215 +66,268 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			// assert
 			Assert.IsNotNull(pageModel.SRMAModel);
 
+			mockLogger.VerifyLogErrorWasNotCalled();
+			
 			mockLogger.Verify(
 				m => m.Log(
 					LogLevel.Information,
 					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::SRMA::ClosedPageModel::OnGetAsync")),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::SRMA::IndexPageModel::OnGetAsync")),
+					null,
+					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+				Times.Once);
+		}
+		
+		[Test]
+		public async Task WhenOnGetAsync_AndSrmaIsClosed_RedirectsToClosedPage()
+		{
+			// arrange
+			var caseUrn = _fixture.Create<long>();
+			var srmaId = _fixture.Create<long>();
+			
+			var mockSrmaService = new Mock<ISRMAService>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
+
+			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed, closedAt: DateTime.Now);
+			
+			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+				.ReturnsAsync(srmaModel);
+
+			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+			routeData.Add("srmaId", srmaId);
+
+			// act
+			var response = await pageModel.OnGetAsync();
+
+			// assert
+			Assert.Multiple(() =>
+			{
+				Assert.That(response, Is.InstanceOf<RedirectResult>());
+				Assert.That(((RedirectResult)response).Url, Is.EqualTo($"/case/{caseUrn}/management/action/srma/{srmaId}/closed"));
+				Assert.That(pageModel.TempData["Error.Message"], Is.Null);
+			});
+
+			mockLogger.Verify(
+				m => m.Log(
+					LogLevel.Information,
+					It.IsAny<EventId>(),
+					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("Case::Action::SRMA::IndexPageModel::OnGetAsync")),
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 		}
 
-		//[Test]
-		//public async Task WhenOnPostAsync_RedirectToIndexPage()
-		//{
-		//	// arrange
-		//	var mockSrmaService = new Mock<ISRMAService>();
-		//	var mockLogger = new Mock<ILogger<IndexPageModel>>();
+		[Test]
+		public void WhenOnPostAsync_RedirectToIndexPage()
+		{
+			// arrange
+			var mockSrmaService = new Mock<ISRMAService>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-		//	var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
 
-		//	var routeData = pageModel.RouteData.Values;
-		//	routeData.Add("urn", 1);
-		//	routeData.Add("srmaId", 1);
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+			routeData.Add("srmaId", 1);
 
-		//	// act
-		//	var pageResponse = await pageModel.OnPostAsync();
-		//	var pageResponseInstance = pageResponse as RedirectToPageResult;
+			// act
+			var pageResponse = pageModel.OnPost();
+			var pageResponseInstance = pageResponse as RedirectToPageResult;
 
-		//	// assert
-		//	Assert.NotNull(pageResponseInstance);
-		//	Assert.That(pageResponseInstance.PageName, Is.EqualTo("index"));
-		//}
+			// assert
+			Assert.NotNull(pageResponseInstance);
+			Assert.That(pageResponseInstance.PageName, Is.EqualTo("index"));
+		}
 
-		//[Test]
-		//public async Task WhenOnGetDeclineComplete_SRMA_Status_IsDeployed_Valid_SRMA_RedirectToResolvePage()
-		//{
-		//	// arrange
-		//	var mockSrmaService = new Mock<ISRMAService>();
-		//	var mockLogger = new Mock<ILogger<IndexPageModel>>();
+		[Test]
+		public async Task WhenOnGetDeclineComplete_SRMA_Status_IsDeployed_Valid_SRMA_RedirectToResolvePage()
+		{
+			// arrange
+			var mockSrmaService = new Mock<ISRMAService>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-		//	var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed, SRMAReasonOffered.OfferLinked);
+			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed, SRMAReasonOffered.OfferLinked);
 
-		//	mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
-		//		.ReturnsAsync(srmaModel);
+			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+				.ReturnsAsync(srmaModel);
 
-		//	var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
 
-		//	var routeData = pageModel.RouteData.Values;
-		//	routeData.Add("urn", 1);
-		//	routeData.Add("srmaId", 1);
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+			routeData.Add("srmaId", 1);
 
-		//	// act
-		//	var pageResponse = await pageModel.OnGetDeclineComplete();
-		//	var pageResponseInstance = pageResponse as RedirectResult;
+			// act
+			var pageResponse = await pageModel.OnGetDeclineComplete();
+			var pageResponseInstance = pageResponse as RedirectResult;
 
-		//	// assert
-		//	Assert.NotNull(pageResponseInstance);
-		//	Assert.That(pageResponseInstance.Url, Is.EqualTo("resolve/complete"));
-		//}
+			// assert
+			Assert.NotNull(pageResponseInstance);
+			Assert.That(pageResponseInstance.Url, Is.EqualTo("resolve/complete"));
+		}
 
-		//[Test]
-		//public async Task WhenOnGetDeclineComplete_SRMA_Status_IsDeployed_Invalid_SRMA_RedirectToSRMAIndexPage()
-		//{
-		//	// arrange
-		//	var mockSrmaService = new Mock<ISRMAService>();
-		//	var mockLogger = new Mock<ILogger<IndexPageModel>>();
+		[Test]
+		public async Task WhenOnGetDeclineComplete_SRMA_Status_IsDeployed_Invalid_SRMA_RedirectToSRMAIndexPage()
+		{
+			// arrange
+			var caseUrn = _fixture.Create<long>();
+			var srmaId = _fixture.Create<long>();
+			
+			var mockSrmaService = new Mock<ISRMAService>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-		//	var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed, SRMAReasonOffered.Unknown);
+			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed, SRMAReasonOffered.Unknown);
 
-		//	mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
-		//		.ReturnsAsync(srmaModel);
+			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+				.ReturnsAsync(srmaModel);
 
-		//	var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
 
-		//	var routeData = pageModel.RouteData.Values;
-		//	routeData.Add("urn", 1);
-		//	routeData.Add("srmaId", 1);
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+			routeData.Add("srmaId", srmaId);
 
-		//	// act
-		//	var pageResponse = await pageModel.OnGetDeclineComplete();
-		//	var pageResponseInstance = pageResponse as RedirectResult;
+			// act
+			var pageResponse = await pageModel.OnGetDeclineComplete();
+			var pageResponseInstance = pageResponse as RedirectResult;
 
-		//	// assert
-		//	Assert.NotNull(pageResponseInstance);
-		//	Assert.That(pageResponseInstance.Url, Is.EqualTo($"/case/{1}/management/action/srma/{1}"));
-		//}
+			// assert
+			Assert.NotNull(pageResponseInstance);
+			Assert.That(pageResponseInstance.Url, Is.EqualTo($"/case/{caseUrn}/management/action/srma/{srmaId}"));
+		}
 
-		//[Test]
-		//public async Task WhenOnGetDeclineComplete_SRMA_Status_IsNotDeployed_Invalid_SRMA_RedirectToSRMAIndexPage()
-		//{
-		//	// arrange
-		//	var mockSrmaService = new Mock<ISRMAService>();
-		//	var mockLogger = new Mock<ILogger<IndexPageModel>>();
+		[Test]
+		public async Task WhenOnGetDeclineComplete_SRMA_Status_IsNotDeployed_Invalid_SRMA_RedirectToSRMAIndexPage()
+		{
+			// arrange
+			var caseUrn = _fixture.Create<long>();
+			var srmaId = _fixture.Create<long>();
+			
+			var mockSrmaService = new Mock<ISRMAService>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-		//	var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.TrustConsidering, SRMAReasonOffered.Unknown);
+			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.TrustConsidering, SRMAReasonOffered.Unknown);
 
-		//	mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
-		//		.ReturnsAsync(srmaModel);
+			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+				.ReturnsAsync(srmaModel);
 
-		//	var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
 
-		//	var routeData = pageModel.RouteData.Values;
-		//	routeData.Add("urn", 1);
-		//	routeData.Add("srmaId", 1);
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+			routeData.Add("srmaId", srmaId);
 
-		//	// act
-		//	var pageResponse = await pageModel.OnGetDeclineComplete();
-		//	var pageResponseInstance = pageResponse as RedirectResult;
+			// act
+			var pageResponse = await pageModel.OnGetDeclineComplete();
+			var pageResponseInstance = pageResponse as RedirectResult;
 
-		//	// assert
-		//	Assert.NotNull(pageResponseInstance);
-		//	Assert.That(pageResponseInstance.Url, Is.EqualTo($"/case/{1}/management/action/srma/{1}"));
-		//}
+			// assert
+			Assert.NotNull(pageResponseInstance);
+			Assert.That(pageResponseInstance.Url, Is.EqualTo($"/case/{caseUrn}/management/action/srma/{srmaId}"));
+		}
 
-		//[Test]
-		//public async Task WhenOnGetDeclineComplete_MissingCaseUrn_ThrowsException_ReturnPage()
-		//{
-		//	// arrange
-		//	var mockSrmaService = new Mock<ISRMAService>();
-		//	var mockLogger = new Mock<ILogger<IndexPageModel>>();
+		[Test]
+		public async Task WhenOnGetDeclineComplete_MissingCaseUrn_ThrowsException_ReturnPage()
+		{
+			// arrange
+			var mockSrmaService = new Mock<ISRMAService>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-		//	var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
 
-		//	// act
-		//	await pageModel.OnGetDeclineComplete();
+			// act
+			await pageModel.OnGetDeclineComplete();
 
-		//	// assert
-		//	Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
-		//}
+			// assert
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+		}
 
-		//[Test]
-		//public async Task WhenOnGetCancel_MissingSrmaId_ThrowsException_ReturnPage()
-		//{
-		//	// arrange
-		//	var mockSrmaService = new Mock<ISRMAService>();
-		//	var mockLogger = new Mock<ILogger<IndexPageModel>>();
+		[Test]
+		public async Task WhenOnGetCancel_MissingSrmaId_ThrowsException_ReturnPage()
+		{
+			// arrange
+			var mockSrmaService = new Mock<ISRMAService>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-		//	var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
-		//	var routeData = pageModel.RouteData.Values;
-		//	routeData.Add("urn", 1);
+			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
 
-		//	// act
-		//	await pageModel.OnGetCancel();
+			// act
+			await pageModel.OnGetCancel();
 
-		//	// assert
-		//	Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
-		//}
+			// assert
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+		}
 
-		//[Test]
-		//public async Task WhenOnGetCancel_Invalid_SRMA_RedirectToSRMAIndexPage()
-		//{
-		//	// arrange
-		//	var mockSrmaService = new Mock<ISRMAService>();
-		//	var mockLogger = new Mock<ILogger<IndexPageModel>>();
+		[Test]
+		public async Task WhenOnGetCancel_Invalid_SRMA_RedirectToSRMAIndexPage()
+		{
+			// arrange
+			var caseUrn = _fixture.Create<long>();
+			var srmaId = _fixture.Create<long>();
+			
+			var mockSrmaService = new Mock<ISRMAService>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-		//	var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.Unknown);
+			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.Unknown);
 
-		//	mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
-		//		.ReturnsAsync(srmaModel);
+			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+				.ReturnsAsync(srmaModel);
 
-		//	var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
 
-		//	var routeData = pageModel.RouteData.Values;
-		//	routeData.Add("urn", 1);
-		//	routeData.Add("srmaId", 1);
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+			routeData.Add("srmaId", srmaId);
 
-		//	// act
-		//	var pageResponse = await pageModel.OnGetCancel();
-		//	var pageResponseInstance = pageResponse as RedirectResult;
+			// act
+			var pageResponse = await pageModel.OnGetCancel();
+			var pageResponseInstance = pageResponse as RedirectResult;
 
-		//	// assert
-		//	Assert.NotNull(pageResponseInstance);
-		//	Assert.That(pageResponseInstance.Url, Is.EqualTo($"/case/{1}/management/action/srma/{1}"));
-		//}
+			// assert
+			Assert.NotNull(pageResponseInstance);
+			Assert.That(pageResponseInstance.Url, Is.EqualTo($"/case/{caseUrn}/management/action/srma/{srmaId}"));
+		}
 
-		//[Test]
-		//public async Task WhenOnGetCancel_Valid_SRMA_RedirectToSRMAIndexPage()
-		//{
-		//	// arrange
-		//	var mockSrmaService = new Mock<ISRMAService>();
-		//	var mockLogger = new Mock<ILogger<IndexPageModel>>();
+		[Test]
+		public async Task WhenOnGetCancel_Valid_SRMA_RedirectToSRMAIndexPage()
+		{
+			// arrange
+			var mockSrmaService = new Mock<ISRMAService>();
+			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
-		//	var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.RDDIntervention);
+			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.RegionsGroupIntervention);
 
-		//	mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
-		//		.ReturnsAsync(srmaModel);
+			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+				.ReturnsAsync(srmaModel);
 
-		//	var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
+			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
 
-		//	var routeData = pageModel.RouteData.Values;
-		//	routeData.Add("urn", 1);
-		//	routeData.Add("srmaId", 1);
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", 1);
+			routeData.Add("srmaId", 1);
 
-		//	// act
-		//	var pageResponse = await pageModel.OnGetCancel();
-		//	var pageResponseInstance = pageResponse as RedirectResult;
+			// act
+			var pageResponse = await pageModel.OnGetCancel();
+			var pageResponseInstance = pageResponse as RedirectResult;
 
-		//	// assert
-		//	Assert.NotNull(pageResponseInstance);
-		//	Assert.That(pageResponseInstance.Url, Is.EqualTo("resolve/cancel"));
-		//}
+			// assert
+			Assert.NotNull(pageResponseInstance);
+			Assert.That(pageResponseInstance.Url, Is.EqualTo("resolve/cancel"));
+		}
 
-		private static ClosedPageModel SetupClosedPageModel(
+		private static IndexPageModel SetupIndexPageModel(
 			ISRMAService mockSrmaService,
-			ILogger<ClosedPageModel> mockLogger,
+			ILogger<IndexPageModel> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new ClosedPageModel(mockSrmaService, mockLogger)
+			return new IndexPageModel(mockSrmaService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

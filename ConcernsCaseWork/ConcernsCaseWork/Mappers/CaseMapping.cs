@@ -1,10 +1,10 @@
 ﻿using ConcernsCaseWork.Models;
-using Service.Redis.Models;
-using Service.TRAMS.Cases;
-using Service.TRAMS.Ratings;
-using Service.TRAMS.Records;
-using Service.TRAMS.Status;
-using Service.TRAMS.Types;
+using ConcernsCaseWork.Redis.Models;
+using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Service.Ratings;
+using ConcernsCaseWork.Service.Records;
+using ConcernsCaseWork.Service.Status;
+using ConcernsCaseWork.Service.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,8 +31,8 @@ namespace ConcernsCaseWork.Mappers
 				createCaseModel.CaseAim,
 				createCaseModel.DeEscalationPoint,
 				createCaseModel.DirectionOfTravel,
-				createCaseModel.StatusUrn,
-				createCaseModel.RatingUrn);
+				createCaseModel.StatusId,
+				createCaseModel.RatingId);
 		}
 
 		public static CaseModel Map(CaseDto caseDto, string status = null)
@@ -56,9 +56,9 @@ namespace ConcernsCaseWork.Mappers
 				DeEscalationPoint = caseDto.DeEscalationPoint,
 				DirectionOfTravel = caseDto.DirectionOfTravel,
 				Urn = caseDto.Urn,
-				StatusUrn = caseDto.StatusUrn,
+				StatusId = caseDto.StatusId,
 				StatusName = status,
-				RatingUrn = caseDto.RatingUrn
+				RatingId = caseDto.RatingId
 			};
 		}
 
@@ -82,8 +82,8 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.DeEscalationPoint,
 				caseDto.DirectionOfTravel,
 				caseDto.Urn,
-				statusDto.Urn,
-				caseDto.RatingUrn);
+				statusDto.Id,
+				caseDto.RatingId);
 		}
 
 		public static CaseDto MapDirectionOfTravel(PatchCaseModel patchCaseModel, CaseDto caseDto)
@@ -106,8 +106,8 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.DeEscalationPoint,
 				patchCaseModel.DirectionOfTravel,
 				caseDto.Urn,
-				caseDto.StatusUrn,
-				caseDto.RatingUrn);
+				caseDto.StatusId,
+				caseDto.RatingId);
 		}
 
 		public static CaseDto MapIssue(PatchCaseModel patchCaseModel, CaseDto caseDto)
@@ -130,8 +130,8 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.DeEscalationPoint,
 				caseDto.DirectionOfTravel,
 				caseDto.Urn,
-				caseDto.StatusUrn,
-				caseDto.RatingUrn);
+				caseDto.StatusId,
+				caseDto.RatingId);
 		}
 
 		public static CaseDto MapCurrentStatus(PatchCaseModel patchCaseModel, CaseDto caseDto)
@@ -154,8 +154,8 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.DeEscalationPoint,
 				caseDto.DirectionOfTravel,
 				caseDto.Urn,
-				caseDto.StatusUrn,
-				caseDto.RatingUrn);
+				caseDto.StatusId,
+				caseDto.RatingId);
 		}
 
 		public static CaseDto MapCaseAim(PatchCaseModel patchCaseModel, CaseDto caseDto)
@@ -178,8 +178,8 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.DeEscalationPoint,
 				caseDto.DirectionOfTravel,
 				caseDto.Urn,
-				caseDto.StatusUrn,
-				caseDto.RatingUrn);
+				caseDto.StatusId,
+				caseDto.RatingId);
 		}
 
 		public static CaseDto MapDeEscalationPoint(PatchCaseModel patchCaseModel, CaseDto caseDto)
@@ -202,8 +202,8 @@ namespace ConcernsCaseWork.Mappers
 				patchCaseModel.DeEscalationPoint,
 				caseDto.DirectionOfTravel,
 				caseDto.Urn,
-				caseDto.StatusUrn,
-				caseDto.RatingUrn);
+				caseDto.StatusId,
+				caseDto.RatingId);
 		}
 
 		public static CaseDto MapNextSteps(PatchCaseModel patchCaseModel, CaseDto caseDto)
@@ -226,8 +226,8 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.DeEscalationPoint,
 				caseDto.DirectionOfTravel,
 				caseDto.Urn,
-				caseDto.StatusUrn,
-				caseDto.RatingUrn);
+				caseDto.StatusId,
+				caseDto.RatingId);
 		}
 
 		public static CaseDto MapRating(PatchCaseModel patchCaseModel, CaseDto caseDto)
@@ -250,8 +250,8 @@ namespace ConcernsCaseWork.Mappers
 				caseDto.DeEscalationPoint,
 				caseDto.DirectionOfTravel,
 				caseDto.Urn,
-				caseDto.StatusUrn,
-				patchCaseModel.RatingUrn);
+				caseDto.StatusId,
+				patchCaseModel.RatingId);
 		}
 
 
@@ -268,7 +268,7 @@ namespace ConcernsCaseWork.Mappers
 			trustCases.AddRange(
 				casesDto.Select(caseDto =>
 			{
-				var ratingModel = ratingsModel.FirstOrDefault(r => r.Urn.CompareTo(caseDto.RatingUrn) == 0);
+				var ratingModel = ratingsModel.FirstOrDefault(r => r.Id.CompareTo(caseDto.RatingId) == 0);
 				if (ratingModel is null) return null;
 
 				var caseRecordsModel = recordsModel.Where(r => r.CaseUrn.CompareTo(caseDto.Urn) == 0).ToList();
@@ -278,7 +278,7 @@ namespace ConcernsCaseWork.Mappers
 					caseRecordsModel,
 					ratingModel,
 					caseDto.CreatedAt, caseDto.ClosedAt,
-					ConvertStatusToEnum(caseDto.StatusUrn, statusesDto));
+					ConvertStatusToEnum(caseDto.StatusId, statusesDto));
 
 				return trustCase;
 			}).Where(trustCasesModel => trustCasesModel != null)
@@ -287,9 +287,9 @@ namespace ConcernsCaseWork.Mappers
 			return trustCases;
 		}
 
-		private static StatusEnum ConvertStatusToEnum(long caseStatusUrn, IList<StatusDto> statusesDto)
+		private static StatusEnum ConvertStatusToEnum(long caseStatusId, IList<StatusDto> statusesDto)
 		{
-			var caseStatusDto = statusesDto?.SingleOrDefault(s => s.Urn == caseStatusUrn);
+			var caseStatusDto = statusesDto?.SingleOrDefault(s => s.Id == caseStatusId);
 
 			StatusEnum returnValue = StatusEnum.Unknown;
 

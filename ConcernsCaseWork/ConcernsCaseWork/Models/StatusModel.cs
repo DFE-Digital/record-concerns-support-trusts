@@ -7,9 +7,9 @@
 	{
 		public string Name { get; }
 		
-		public long Urn { get; }
+		public long Id { get; }
 		
-		public StatusModel(string name, long urn) => 
-			(Name, Urn) = (name, urn);
+		public StatusModel(string name, long id) => 
+			(Name, Id) = (name, id);
 	}
 }

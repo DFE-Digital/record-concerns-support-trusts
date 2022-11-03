@@ -1,5 +1,5 @@
 ﻿using ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter;
-using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using Service.Redis.NtiWarningLetter;
 using System;
 using System.Threading.Tasks;
 

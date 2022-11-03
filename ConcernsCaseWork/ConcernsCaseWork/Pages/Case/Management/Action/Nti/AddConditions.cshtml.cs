@@ -2,13 +2,12 @@
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Redis.Nti;
+using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Services.Nti;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Nti;
-using Service.Redis.NtiWarningLetter;
-using Service.TRAMS.Nti;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,18 +54,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		{
 			_logger.LogInformation("Case::Action::NTI::AddConditionsPageModel::OnGetAsync");
 
-
-			if (ContinuationId == null)
+			if (string.IsNullOrEmpty(ContinuationId))
 			{
 				throw new InvalidOperationException("Continuation Id not found");
 			}
-
+			
 			try
 			{
 				ExtractCaseUrnFromRoute();
 				ExtractIdFromRoute();
 
 				var model = await GetUpToDateModel();
+				
 				SelectedConditions = model.Conditions;
 
 				AllConditions = await _ntiConditionsCachedService.GetAllConditionsAsync();

@@ -1,0 +1,10 @@
+﻿using ConcernsCaseWork.API.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+
+namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
+{
+    public interface IDecisionFactory
+    {
+        public Decision CreateDecision(int concernsCaseId, CreateDecisionRequest request);
+    }
+}

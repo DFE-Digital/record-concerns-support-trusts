@@ -12,21 +12,21 @@ namespace ConcernsCaseWork.Pages.Validators
 			
 			// Force majeure
 			var splitType = type.Split(":");
-			string typeUrn;
+			string typeId;
 			
 			if (splitType.Length > 1)
 			{
 				// Get type urn from type
-				typeUrn = splitType[0];
+				typeId = splitType[0];
 			}
 			else
 			{
 				// Get type urn from sub type
 				var splitSubtype = subType.Split(":");
-				typeUrn = splitSubtype[0];
+				typeId = splitSubtype[0];
 			}
 			
-			return !string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(ragRating) && !string.IsNullOrEmpty(typeUrn);
+			return !string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(ragRating) && !string.IsNullOrEmpty(typeId);
 		}
 
 		public static bool IsEditValid(IFormCollection formCollection)
@@ -36,21 +36,21 @@ namespace ConcernsCaseWork.Pages.Validators
 			
 			// Force majeure
 			var splitType = type.Split(":");
-			string typeUrn;
+			string typeId;
 			
 			if (splitType.Length > 1)
 			{
 				// Get type urn from type
-				typeUrn = splitType[0];
+				typeId = splitType[0];
 			}
 			else
 			{
 				// Get type urn from sub type
 				var splitSubtype = subType.Split(":");
-				typeUrn = splitSubtype[0];
+				typeId = splitSubtype[0];
 			}
 			
-			return !string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(typeUrn);
+			return !string.IsNullOrEmpty(type) && !string.IsNullOrEmpty(typeId);
 		}
 	}
 }

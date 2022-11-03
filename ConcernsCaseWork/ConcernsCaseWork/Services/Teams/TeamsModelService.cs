@@ -2,9 +2,9 @@
 using AutoMapper;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models.Teams;
+using ConcernsCaseWork.Redis.Teams;
+using ConcernsCaseWork.Service.Teams;
 using Microsoft.Extensions.Logging;
-using Service.Redis.Teams;
-using Service.TRAMS.Teams;
 using System;
 using System.Threading.Tasks;
 
