@@ -227,11 +227,7 @@ namespace ConcernsCaseWork.Extensions
 
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
 
-			// Authorization to allow cypress tests to access the app
-			//services.AddScoped(sp => sp.GetService<IHttpContextAccessor>().HttpContext.Session);
 			services.AddHttpContextAccessor();
-			services.AddScoped<IAuthorizationHandler, HeaderRequirementHandler>();
-			services.AddScoped<IAuthorizationHandler, ClaimsRequirementHandler>();
 			services.AddScoped<IRbacManager, RbacManager>();
 
 			services.AddScoped<ICorrelationContext, CorrelationContext>();

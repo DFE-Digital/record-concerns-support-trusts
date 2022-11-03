@@ -1,6 +1,5 @@
 describe("Home page tests", () => {
 	before(() => {
-		cy.setupAuthHeaders('chris.dexter',['concerns-casework.caseworker','concerns-casework.teamleader']);
 		cy.login();
 	});
 
