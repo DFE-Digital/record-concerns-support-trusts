@@ -89,7 +89,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			var caseUrn = await FetchRandomCaseUrn(serviceScope);
 			var typeId = await FetchRandomTypeId(serviceScope);
 			var ratingId = await FetchRandomRatingId(serviceScope);
-			var updatedRatingUrn = await FetchRandomRatingId(serviceScope);
+			var updatedRatingId = await FetchRandomRatingId(serviceScope);
 			var createRecordDto = RecordFactory.BuildCreateRecordDto(caseUrn, typeId, ratingId);
 			var postRecordDto = await PostRecord(serviceScope, createRecordDto);
 
@@ -105,7 +105,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 				"some updated reason",
 				postRecordDto.CaseUrn,
 				postRecordDto.TypeId,
-				updatedRatingUrn,
+				updatedRatingId,
 				postRecordDto.Id,
 				postRecordDto.StatusId
 				);
@@ -124,7 +124,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			Assert.That(updatedRecordDto.Reason, Is.EqualTo("some updated reason"));
 			Assert.That(updatedRecordDto.CaseUrn, Is.EqualTo(postRecordDto.CaseUrn));
 			Assert.That(updatedRecordDto.TypeId, Is.EqualTo(postRecordDto.TypeId));
-			Assert.That(updatedRecordDto.RatingId, Is.EqualTo(updatedRatingUrn));
+			Assert.That(updatedRecordDto.RatingId, Is.EqualTo(updatedRatingId));
 			Assert.That(updatedRecordDto.Id, Is.EqualTo(postRecordDto.Id));
 			Assert.That(updatedRecordDto.StatusId, Is.EqualTo(postRecordDto.StatusId));
 		}

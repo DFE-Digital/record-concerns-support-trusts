@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Shared.Tests.Factory;
 using FluentAssertions;
 using ConcernsCaseWork.Service.NtiWarningLetter;
 using NUnit.Framework;

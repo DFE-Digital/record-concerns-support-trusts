@@ -105,7 +105,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 
 				// Rating
 				var splitRagRating = ragRating.Split(":");
-				var ragRatingUrn = splitRagRating[0];
+				var ragRatingId = splitRagRating[0];
 
 				var meansOfReferral = Request.Form["means-of-referral-id"].ToString();
 				
@@ -115,7 +115,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 					TypeId = long.Parse(typeId),
 					Type = type,
 					SubType = subType,
-					RatingId = long.Parse(ragRatingUrn),
+					RatingId = long.Parse(ragRatingId),
 					MeansOfReferralId = long.Parse(meansOfReferral)
 				};
 				

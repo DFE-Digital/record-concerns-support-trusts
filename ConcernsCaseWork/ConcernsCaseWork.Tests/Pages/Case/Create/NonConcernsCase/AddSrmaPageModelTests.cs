@@ -1,6 +1,6 @@
 using AutoFixture;
+using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase;
@@ -16,8 +16,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;

@@ -72,8 +72,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 						trustUkPrn, null, 
 						DateTimeOffset.MinValue, null, null, null, null, null, null, 
 						expectedNewCaseUrn, 
-						statusDto.Urn, 
-						ratingDto.Urn));
+						statusDto.Id, 
+						ratingDto.Id));
 			
 			var createCaseService = new CreateCaseService(
 				mockLogger.Object,
@@ -101,9 +101,9 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
                       && c.CurrentStatus == null
                       && c.DeEscalation == DateTimeOffset.MinValue
                       && c.NextSteps == null
-                      && c.RatingUrn == ratingDto.Urn
+                      && c.RatingId == ratingDto.Id
                       && c.ReviewAt == DateTimeOffset.MinValue
-                      && c.StatusUrn == statusDto.Urn
+                      && c.StatusId == statusDto.Id
                       && c.UpdatedAt >= createdAndUpdatedDate
                       && c.DeEscalationPoint == null
                       && c.DirectionOfTravel == null
@@ -219,8 +219,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 						trustUkPrn, null, 
 						DateTimeOffset.MinValue, null, null, null, null, null, null, 
 						expectedNewCaseUrn, 
-						statusDto.Urn, 
-						ratingDto.Urn));
+						statusDto.Id, 
+						ratingDto.Id));
 
 			mockSrmaService.Setup(s => s.SaveSRMA(It.IsAny<SRMAModel>())).Throws(new Exception("some error happened"));
 			
@@ -296,8 +296,8 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 						trustUkPrn, null, 
 						DateTimeOffset.MinValue, null, null, null, null, null, null, 
 						expectedNewCaseUrn, 
-						statusDto.Urn, 
-						ratingDto.Urn));
+						statusDto.Id, 
+						ratingDto.Id));
 			
 			var createCaseService = new CreateCaseService(
 				mockLogger.Object,
@@ -333,9 +333,9 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 						&& c.CurrentStatus == null
 						&& c.DeEscalation == DateTimeOffset.MinValue
 						&& c.NextSteps == null
-						&& c.RatingUrn == ratingDto.Urn
+						&& c.RatingId == ratingDto.Id
 						&& c.ReviewAt == DateTimeOffset.MinValue
-						&& c.StatusUrn == statusDto.Urn
+						&& c.StatusId == statusDto.Id
 						&& c.UpdatedAt >= createdAndUpdatedDate
 						&& c.DeEscalationPoint == null
 						&& c.DirectionOfTravel == null

@@ -68,8 +68,8 @@ public class CreateCaseService : ICreateCaseService
 				null, 
 				null, 
 				null, 
-				statusDto.Urn,
-				ratingDto.Urn);
+				statusDto.Id,
+				ratingDto.Id);
 			
 			var newCase = await _caseCachedService.PostCase(dto);
 			return newCase.Urn;

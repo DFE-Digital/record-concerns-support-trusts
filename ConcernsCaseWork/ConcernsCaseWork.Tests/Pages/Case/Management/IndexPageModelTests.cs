@@ -132,11 +132,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		[Test]
 		public async Task WhenOnGetAsync_WhenCaseIsClosed_RedirectsToClosedCasePage()
 		{
-			var closedStatusUrn = 3;
+			var closedStatusId = 3;
 			SetupDefaultModels();
 
-			var caseModel = CaseFactory.BuildCaseModel(statusId: closedStatusUrn);
-			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), closedStatusUrn);
+			var caseModel = CaseFactory.BuildCaseModel(statusId: closedStatusId);
+			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), closedStatusId);
 
 			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
