@@ -554,7 +554,7 @@ Cypress.Commands.add('createSRMA', function () {
 Cypress.Commands.add('selectMoR', function () {
 
     let rand = Math.floor(Math.random() * 1)
-    cy.get('[id="means-of-referral-urn"]').eq(Math.floor(Math.random() * 1)).click();
+    cy.get('[id="means-of-referral-id"]').eq(Math.floor(Math.random() * 1)).click();
     cy.get('button[data-prevent-double-click="true"]').click();
 
     });
