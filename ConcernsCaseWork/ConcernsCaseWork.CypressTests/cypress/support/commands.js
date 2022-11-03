@@ -538,31 +538,3 @@ Cypress.Commands.add('closeSRMA', function (){
         cy.get('button[data-prevent-double-click="true"]').click();
 
     });
-
-    Cypress.Commands.add('setupAuthHeaders', function(username, roles) {
-        cy.log('adding auth interceptor for username ' + username);
-        cy.intercept(`${Cypress.env('url')}**`, request => {
-            request.headers['Authorization'] = Cypress.env('clientSecret');
-            if (username !== undefined) {
-                request.headers[`AuthorizationUserName`] = username;
-            }
-            else {
-                // default a username if nothing passed?
-                request.headers[`AuthorizationUserName`] = 'test.user';
-            }
-    
-            if (roles !== undefined && Array.isArray(roles)) {
-                var rolesHeaderValue = roles.length == 1
-                    ? roles[0]
-                    : roles.join(',');
-                request.headers['AuthorizationRoles'] = rolesHeaderValue;
-            }
-            else if (roles !== undefined && !Array.isArray(roles)) {
-                request.headers['AuthorizationRoles'] = roles;
-            }
-            else {
-                // Could just default to caseworker if nothing passed?
-                request.headers['AuthorizationRoles'] = 'concerns-casework.caseworker';
-            }
-        })
-    });
