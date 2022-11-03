@@ -250,7 +250,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 					{ "rating", new StringValues("123:red") }
 				});
 
-			mockRatingModelService.Setup(x => x.GetRatingModelByUrn(123)).ReturnsAsync(new RatingModel() { Urn = 123 });
+			mockRatingModelService.Setup(x => x.GetRatingModelById(123)).ReturnsAsync(new RatingModel() { Id = 123 });
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
