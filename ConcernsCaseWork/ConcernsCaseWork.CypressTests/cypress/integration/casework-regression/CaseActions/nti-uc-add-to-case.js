@@ -3,187 +3,133 @@ import CaseManagementPage from "/cypress/pages/caseMangementPage";
 import utils from "/cypress/support/utils"
 import ntiAddPage from "/cypress/pages/caseActions/ntiAddPage";
 import CaseActionsBasePage from "/cypress/pages/caseActions/caseActionsBasePage";
+import { LogTask } from "../../../support/constants";
 
 describe("User can add case actions to an existing case", () => {
-	before(() => {
-		cy.login();
-	});
+    before(() => {
+        cy.login();
+    });
 
-	afterEach(() => {
-		cy.storeSessionData();
-	});
+    afterEach(() => {
+        cy.storeSessionData();
+    });
 
-	let term = "";
-	let stText = "null";
+    let term = "";
 
-	it("User enters the case page", () => {
-		cy.checkForExistingCase();
-	});
+    it("Should add an NTI under consideration action to a case", () => {
 
-	it("User has option to select an NTI: Under consideration Case Action", () => {
-		cy.reload();
-		CaseManagementPage.getAddToCaseBtn().click();
-		AddToCasePage.addToCase('NtiUnderConsideration')
-		AddToCasePage.getCaseActionRadio('NtiUnderConsideration').siblings().should('contain.text', AddToCasePage.actionOptions[9]);
-	});
+        // Create a new case
+        cy.task(LogTask, "Creating a new case")
+        cy.checkForExistingCase(true);
+        CaseManagementPage.getAddToCaseBtn().click();
+        AddToCasePage.addToCase('NtiUnderConsideration');
+        AddToCasePage.getCaseActionRadio('NtiUnderConsideration').siblings().should('contain.text', AddToCasePage.actionOptions[9]);
+        AddToCasePage.getAddToCaseBtn().click();
 
-	it("User can click to add NTI Under Consideration Case Action to a case", function () {
-		AddToCasePage.getAddToCaseBtn().click();
-		cy.log(utils.checkForGovErrorSummaryList() );
+        cy.task(LogTask, "User is taken to the correct Case Action page");
+        ntiAddPage.getHeadingText().then(term => {
+            expect(term.text().trim()).to.match(/NTI: Under consideration/i);
+        });
 
-		if (utils.checkForGovErrorSummaryList() > 0 ) { 
-			cy.log("Case Action already exists");
-					cy.visit(Cypress.env('url'), { timeout: 30000 });
-					cy.checkForExistingCase(true);
-					CaseManagementPage.getAddToCaseBtn().click();
-					AddToCasePage.addToCase('NtiUnderConsideration');
-					AddToCasePage.getCaseActionRadio('NtiUnderConsideration').siblings().should('contain.text', AddToCasePage.actionOptions[9]);
-					AddToCasePage.getAddToCaseBtn().click();
-		}else {
-			cy.log("No Case Action exists");	
-			cy.log(utils.checkForGovErrorSummaryList() );
-		}
-	});
+        cy.task(LogTask, "User can add NTI Under Consideration to case");
 
-	it("User is taken to the correct Case Action page", function () {
-		ntiAddPage.getHeadingText().then(term => {
-			expect(term.text().trim()).to.match(/NTI: Under consideration/i);
-		});
-	});
+        ntiAddPage.setReasonSelect("0");
+        ntiAddPage.setReasonSelect("1");
+        ntiAddPage.setReasonSelect("2");
+        ntiAddPage.setReasonSelect("3");
+        ntiAddPage.setReasonSelect("4");
+        ntiAddPage.setReasonSelect("5");
+        ntiAddPage.setReasonSelect("6");
+        ntiAddPage.setReasonSelect("7");
 
-	it("User can add NTI Under Consideration to case", () => {
+        ntiAddPage.getUCAddCaseActionBtn().click();
+        utils.getGovErrorSummaryList().should('not.exist');
 
-		ntiAddPage.setReasonSelect("0");
-		ntiAddPage.setReasonSelect("1");
-		ntiAddPage.setReasonSelect("2");
-		ntiAddPage.setReasonSelect("3");
-		ntiAddPage.setReasonSelect("4");
-		ntiAddPage.setReasonSelect("5");
-		ntiAddPage.setReasonSelect("6");
-		ntiAddPage.setReasonSelect("7");
-
-		ntiAddPage.getUCAddCaseActionBtn().click();
-		utils.getGovErrorSummaryList().should('not.exist');
-
-		CaseManagementPage.getOpenActionsTable().children().should(($nti) => {
+        CaseManagementPage.getOpenActionsTable().children().should(($nti) => {
             expect($nti).to.be.visible
-			expect($nti.text()).to.contain("NTI");
-        })
-	});
+            expect($nti.text()).to.contain("NTI");
+        });
 
-	it("User can click on a link to view a live NTI Under Consideration record", function () {
-
-		CaseManagementPage.getOpenActionsTable().children().should(($nti) => {
+        cy.task(LogTask, "User can click on a link to view a live NTI Under Consideration record");
+        CaseManagementPage.getOpenActionsTable().children().should(($nti) => {
             expect($nti).to.be.visible
-			expect($nti.text()).to.contain("NTI");
+            expect($nti.text()).to.contain("NTI");
         })
-		CaseManagementPage.getOpenActionsTable().should(($status) => {
-			expect($status).to.be.visible
+        CaseManagementPage.getOpenActionsTable().should(($status) => {
+            expect($status).to.be.visible
         })
-		CaseManagementPage.getOpenActionLink("ntiunderconsideration").click();
-	});
+        CaseManagementPage.getOpenActionLink("ntiunderconsideration").click();
 
-	it("User can edit Reasons on an existing NTI Under Consideration record", function () {
+        cy.task(LogTask, "User can edit Reasons on an existing NTI Under Consideration record");
+        ntiAddPage.getEditInformationBtn().click();
 
-		ntiAddPage.getEditInformationBtn().click();
+        //Unchecks all the checked reasons
+        ntiAddPage.setReasonSelect("0")
+        ntiAddPage.setReasonSelect("1")
+        ntiAddPage.setReasonSelect("2")
+        ntiAddPage.setReasonSelect("3")
+        ntiAddPage.setReasonSelect("4")
+        ntiAddPage.setReasonSelect("5")
+        ntiAddPage.setReasonSelect("6")
+        ntiAddPage.setReasonSelect("7")
 
-		//Unchecks all the checked reasons
-		ntiAddPage.setReasonSelect("0")
-		ntiAddPage.setReasonSelect("1")
-		ntiAddPage.setReasonSelect("2")
-		ntiAddPage.setReasonSelect("3")
-		ntiAddPage.setReasonSelect("4")
-		ntiAddPage.setReasonSelect("5")
-		ntiAddPage.setReasonSelect("6")
-		ntiAddPage.setReasonSelect("7")
+        ntiAddPage.setReasonSelect("random").then(returnedVal =>
+        {
+            const stText = returnedVal.trim();
 
-		cy.log("setReasonSelect ").then(() => {
-			cy.log(ntiAddPage.setReasonSelect("random") ).then((returnedVal) => { 
-				cy.wrap(returnedVal.trim()).as("stText").then(() =>{
-					stText  = returnedVal;
-					cy.log("logging the result "+stText)
-				});
-				cy.log(self.stText);
-				stText  = returnedVal;
-				cy.log("logging returnedVal "+returnedVal)
-				});
-			});
+            ntiAddPage.getUCAddCaseActionBtn().click();
+            utils.getGovErrorSummaryList().should('not.exist');
+            ntiAddPage.getNtiTableRow().should(($row) => {
+                expect($row.eq(0).text().trim()).to.contain(stText).and.to.match(/Reason/i);
+            });
+    
+            cy.task(LogTask, "No status displayed in the Open Acions table");
+            CaseActionsBasePage.getBackToCaseLink().click();
+    
+            CaseManagementPage.getOpenActionsTable().children().should(($nti) => {
+                expect($nti).to.be.visible
+                expect($nti.text()).to.contain("NTI");
+            })
+    
+            CaseManagementPage.getOpenActionsTable().should(($status) => {
+                expect($status).to.be.visible
+                expect($status.text().trim()).to.not.contain(stText);
+            })
+        });
 
-			ntiAddPage.getUCAddCaseActionBtn().click();
-			utils.getGovErrorSummaryList().should('not.exist');
-			ntiAddPage.getNtiTableRow().should(($row) => {
-				expect($row.eq(0).text().trim()).to.contain(stText.trim()).and.to.match(/Reason/i);
-		});
-	});
+        cy.task(LogTask, "User can Edit NTI Notes");
+        CaseManagementPage.getOpenActionLink("ntiunderconsideration").click();
+        ntiAddPage.getEditInformationBtn().click();
 
-	
-	it("No status displayed in the Open Acions table", function () {
+        ntiAddPage.getUCAddCaseActionBtn().click();
+        ntiAddPage.getNtiTableRow().should(($row) => {
+            expect($row.eq(1).text().trim()).to.contain(term.trim()).and.to.match(/Notes/i);
+        });
 
-		//ntiAddPage.getEditInformationBtn().click();
-		CaseActionsBasePage.getBackToCaseLink().click();
+        cy.task(LogTask, "User can close an NTI UC as No Further Action");
+        ntiAddPage.getCloseNtiLink().click();
+        ntiAddPage.setCloseStatus("random");
 
-		CaseManagementPage.getOpenActionsTable().children().should(($nti) => {
-            expect($nti).to.be.visible
-			expect($nti.text()).to.contain("NTI");
-        })
+        ntiAddPage.setCloseStatus("random").then(returnedVal => {
+            const stText = returnedVal.trim();
 
-		CaseManagementPage.getOpenActionsTable().should(($status) => {
-			expect($status).to.be.visible
-			expect($status.text().trim()).to.not.contain(this.stText);
-        })
-	});
+            cy.log("Logging something " + stText);
 
-	it("User can Edit NTI Notes", function () {
+            ntiAddPage.getUCAddCaseActionBtn().click();
 
-		CaseManagementPage.getOpenActionLink("ntiunderconsideration").click();
-		ntiAddPage.getEditInformationBtn().click();
+            CaseManagementPage.getClosedActionsTable().children().should(($nti) => {
+                expect($nti).to.be.visible
+                expect($nti.text()).to.contain("NTI");
+            })
 
-		cy.log("setNotes ").then(() => {
-			cy.log(ntiAddPage.setNotes() ).then((returnedVal) => { 
-				cy.wrap(returnedVal.trim()).as("stText").then(() =>{
-					stText  = returnedVal;
-				});
-			});
-		});
-		ntiAddPage.getUCAddCaseActionBtn().click();
-		ntiAddPage.getNtiTableRow().should(($row) => {
-			expect($row.eq(1).text().trim()).to.contain(term.trim()).and.to.match(/Notes/i);
-		});
-	});
+            CaseManagementPage.getClosedActionsTable().children().should(($status) => {
+                expect($status.text().trim()).to.contain(stText.trim());
+            })
+        });
+    });
 
-	it("User can close an NTI UC as No Further Action", () => {
-
-		ntiAddPage.getCloseNtiLink().click();
-		ntiAddPage.setCloseStatus("random");
-
-		cy.log("setCloseStatus ").then(() => {
-			cy.log(ntiAddPage.setCloseStatus("random") ).then((returnedVal) => { 
-				cy.wrap(returnedVal.trim()).as("stText").then(() =>{
-					stText  = returnedVal;
-					cy.log("logging the result "+stText)
-				});
-				cy.log(self.stText);
-				stText  = returnedVal;
-				cy.log("logging returnedVal "+returnedVal)
-				});
-			});
-	
-		ntiAddPage.getUCAddCaseActionBtn().click();
-
-			CaseManagementPage.getClosedActionsTable().children().should(($nti) => {
-				expect($nti).to.be.visible
-				expect($nti.text()).to.contain("NTI");
-			})
-
-			CaseManagementPage.getClosedActionsTable().children().should(($status) => {
-				expect($status.text().trim()).to.contain(stText.trim());
-			})
-
-	});
-
-	after(function () {
-		cy.clearLocalStorage();
-		cy.clearCookies();
-	});
-
+    after(function () {
+        cy.clearLocalStorage();
+        cy.clearCookies();
+    });
 });
