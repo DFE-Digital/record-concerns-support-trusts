@@ -14,11 +14,6 @@ describe("User can add case actions to an existing case", () => {
 		cy.storeSessionData();
 	});
 
-	let stText = "null";
-	let returnedDate = "null";
-
-
-
 	it("Should add an NTI action to a case", () => {
 		cy.task(LogTask, "Case Action already exists");
 		cy.visit(Cypress.env('url'), { timeout: 30000 });
