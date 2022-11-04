@@ -167,7 +167,6 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
 
-
 				// Deserialize content to POJO
 				var apiWrapperFinancialPlanDto = JsonConvert.DeserializeObject<ApiWrapper<FinancialPlanDto>>(content);
 
@@ -178,7 +177,6 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 				}
 
 				throw new Exception("Academies API error unwrap response");
-
 			}
 			catch (Exception ex)
 			{

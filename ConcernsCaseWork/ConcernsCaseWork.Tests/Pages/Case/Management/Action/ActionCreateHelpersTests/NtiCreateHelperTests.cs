@@ -15,7 +15,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 	[Parallelizable(ParallelScope.All)]
 	public class NtiCreateHelperTests
 	{
-
 		[Test]
 		public async Task NtiCreateHelperTests_CanHandle_RespondsCorrectly()
 		{
@@ -174,5 +173,4 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 			return new NtiCreateHelper(mockNtiUnderConsiderationService.Object, mockNtiWarningLetterService.Object, mockNtiModelService.Object);
 		}
 	}
-
 }

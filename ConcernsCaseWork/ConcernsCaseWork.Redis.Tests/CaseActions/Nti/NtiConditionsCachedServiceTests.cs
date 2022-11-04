@@ -48,7 +48,6 @@ namespace ConcernsCaseWork.Redis.Tests.CaseActions.Nti
 			mockCacheProvider.Setup(p => p.GetFromCache<ICollection<NtiConditionDto>>(CacheKey))
 				.Returns(() => Task.FromResult(GetPopulatedCollection()));
 
-
 			var sut = new NtiConditionsCachedService(mockCacheProvider.Object,
 					mockNtiConditionsService.Object, mockLogger.Object);
 

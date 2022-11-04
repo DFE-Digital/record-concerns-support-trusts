@@ -25,7 +25,6 @@ namespace ConcernsCaseWork.API.Tests.UseCases
                 UnderConsiderationReasonsMapping = new List<NTIUnderConsiderationReasonMapping>() { new NTIUnderConsiderationReasonMapping() { NTIUnderConsiderationReasonId = 1 } }
             };
 
-
             var considerations = new List<NTIUnderConsideration>
             {
                 matchingConsideration,
@@ -43,12 +42,10 @@ namespace ConcernsCaseWork.API.Tests.UseCases
                 }
             };
 
-
             var expectedResult = NTIUnderConsiderationFactory.CreateResponse(matchingConsideration);
 
             var mockNTIUnderConsiderationGateway = new Mock<INTIUnderConsiderationGateway>();
             mockNTIUnderConsiderationGateway.Setup(g => g.GetNTIUnderConsiderationByCaseUrn(caseUrn)).Returns(Task.FromResult((ICollection<NTIUnderConsideration>)considerations.Where(s => s.CaseUrn == caseUrn).ToList()));
-
 
             var useCase = new GetNTIUnderConsiderationByCaseUrn(mockNTIUnderConsiderationGateway.Object);
 

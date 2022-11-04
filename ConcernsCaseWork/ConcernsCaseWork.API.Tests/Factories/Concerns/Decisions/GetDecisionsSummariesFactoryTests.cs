@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
         public void Create_When_Invalid_Urn_Throws_Exception(int invalidUrn)
         {
             var fixture = CreateFixture();
-            
+
             var expectedDecisions = CreateDecisions(fixture, fixture.Create<int>());
 
             var sut = new GetDecisionsSummariesFactory();
@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
         public void Create_Maps_Decisions_To_DecisionSummaries()
         {
             var fixture = CreateFixture();
-            
+
             var expectedDecisions = CreateDecisions(fixture, fixture.Create<int>());
 
             var sut = new GetDecisionsSummariesFactory();
@@ -57,6 +57,13 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
                     .Excluding(x => x.ConcernsCaseUrn)
                     .Excluding(x => x.Title)
                 );
+
+            var titles = result.Join(expectedDecisions, response => response.DecisionId, decision => decision.DecisionId,
+                (result, decision) => new
+                {
+                    resultTitle = result.Title, decisionTitle = decision.GetTitle(), decisionId = decision.DecisionId
+                }).ToArray();
+            titles.All(x => x.resultTitle == x.decisionTitle).Should().BeTrue();
         }
 
         [Fact]
@@ -64,16 +71,15 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
         {
             var fixture = CreateFixture();
 
-            var expectedDecisions = CreateDecisions(fixture, fixture.Create<int>(), false);
+            var expectedDecisions = CreateDecisions(fixture, fixture.Create<int>(), 0);
 
             var sut = new GetDecisionsSummariesFactory();
             var result = sut.Create(123, expectedDecisions);
 
-            expectedDecisions.Should().BeEquivalentTo(result, opt => 
+            expectedDecisions.Should().BeEquivalentTo(result, opt =>
             opt.IncludingAllDeclaredProperties()
                 .Excluding(x => x.ConcernsCaseUrn)
                 .Excluding(x => x.Title));
-            result[0].Title.Should().Be("Not Available");
         }
 
         private Fixture CreateFixture()
@@ -85,22 +91,23 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
             return fixture;
         }
 
-        private Decision[] CreateDecisions(Fixture fixture, int count, bool includeDecisionTypes = true)
+        private Decision[] CreateDecisions(Fixture fixture, int count, int numberOfDecisionTypes = 5)
         {
+            var x = fixture.CreateMany<DecisionType>();
+
             List<Decision> decisions = new List<Decision>();
             for (int i = 0; i < count; i++)
             {
                 var decision = Decision.CreateNew(
-                    concernsCaseId: fixture.Create<int>(),
                     crmCaseNumber: new string(fixture.CreateMany<char>(Decision.MaxCaseNumberLength).ToArray()),
                     retrospectiveApproval: fixture.Create<bool>(),
                     submissionRequired: fixture.Create<bool>(),
                     submissionDocumentLink: new string(fixture.CreateMany<char>(Decision.MaxUrlLength).ToArray()),
                     receivedRequestDate: DateTimeOffset.Now,
-                    decisionTypes: includeDecisionTypes ? new DecisionType[] { new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove)} : null,
+                    decisionTypes: numberOfDecisionTypes >0 ? fixture.CreateMany<DecisionType>(numberOfDecisionTypes).ToArray() : null,
                     totalAmountRequested: fixture.Create<decimal>(),
                     supportingNotes: new string(fixture.CreateMany<char>(Decision.MaxSupportingNotesLength).ToArray()),
-                    createdAt: DateTimeOffset.Now
+                    DateTimeOffset.Now
                 );
                 decision.DecisionId = fixture.Create<int>();
                 decisions.Add(decision);
@@ -108,6 +115,5 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
 
             return decisions.ToArray();
         }
-        
     }
 }

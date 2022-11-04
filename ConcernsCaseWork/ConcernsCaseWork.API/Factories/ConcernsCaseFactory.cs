@@ -58,7 +58,6 @@ namespace ConcernsCaseWork.API.Factories
             original.StatusId = toMerge.StatusId;
             original.RatingId = toMerge.RatingId;
 
-
             return original;
         }
     }

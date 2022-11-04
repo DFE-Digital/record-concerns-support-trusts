@@ -8,7 +8,6 @@
 		public bool IsClosingState { get; set; }
 		public string PastTenseName { get; set; }
 
-
 		public DateTimeOffset CreatedAt { get; set; }
 		public DateTimeOffset UpdatedAt { get; set; }
 	}

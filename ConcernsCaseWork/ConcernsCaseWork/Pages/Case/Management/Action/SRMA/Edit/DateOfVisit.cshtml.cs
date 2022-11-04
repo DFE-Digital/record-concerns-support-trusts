@@ -74,7 +74,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 				var end_dtString = string.IsNullOrEmpty(end_dtr_day) && string.IsNullOrEmpty(end_dtr_month) && string.IsNullOrEmpty(end_dtr_year) ? 
 					String.Empty : $"{end_dtr_day}-{end_dtr_month}-{end_dtr_year}";
 
-
 				ValidateDatesOfVisit(start_dtString, end_dtString);
 				var visitDates = ParseVisitDates(start_dtString, end_dtString);
 
@@ -109,7 +108,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 	
 		private void ValidateDatesOfVisit(string startDateString, string endDateString)
 		{
-
 			if (!DateTimeHelper.TryParseExact(startDateString, out DateTime start_dt))
 				throw new InvalidOperationException($"Start date {startDateString} is an invalid date");
 
@@ -121,7 +119,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 				if (end_dt < start_dt)
 					throw new InvalidOperationException($"Please ensure end date is same as or after start date.");
 			}
-
 		}
 	
 		private (DateTime startDate, DateTime? endDate) ParseVisitDates(string startDateString, string endDateString)
@@ -139,7 +136,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 			}
 
 			return (start_date, end_dt);
-			
 		}
 	}
 }

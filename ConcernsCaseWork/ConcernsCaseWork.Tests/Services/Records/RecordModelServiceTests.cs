@@ -180,7 +180,6 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			Assert.That(recordModel.StatusModel.Id, Is.EqualTo(firstStatusModel.Id));
 		}
 
-
 		[Test]
 		public void WhenGetRecordModelByUrn_EmptyRecords_ThrowsException()
 		{
@@ -316,13 +315,11 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			mockStatusCachedService.Setup(s => s.GetStatuses())
 				.ReturnsAsync(statusesDto);
 
-
 			await recordModelService.PatchRecordStatus(RecordFactory.BuildPatchRecordModel());
 
 			// assert
 			mockRecordCacheService.Verify(r => r.PatchRecordById(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Once);
 		}
-
 
 		[Test]
 		public void WhenPatchRecordStatus_ThrowsException()
@@ -346,6 +343,5 @@ namespace ConcernsCaseWork.Tests.Services.Records
 			// assert
 			mockRecordCacheService.Verify(r => r.PatchRecordById(It.IsAny<RecordDto>(), It.IsAny<string>()), Times.Never);
 		}
-
 	}
 }

@@ -52,7 +52,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			// assert
 			Assert.IsNotNull(pageModel.NtiWarningLetterModel);
 
-
 			mockLogger.Verify(
 				m => m.Log(
 					LogLevel.Information,
@@ -62,7 +61,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
 		}
-
 
 		[Test]
 		public async Task WhenOnGetAsync_MissingNTIUnderConsideration_ThrowsException_ReturnPage()

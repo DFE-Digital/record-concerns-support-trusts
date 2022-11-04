@@ -16,7 +16,6 @@ namespace ConcernsCaseWork.API.Tests.UseCases
 {
     public class PatchNTIUnderConsiderationTests
     {
-
         [Fact]
         public void ShouldPatchNTIUnderConsiderationAndReturnNTIUnderConsiderationResponse_WhenGivenPatchNTIUnderConsiderationRequest()
         {

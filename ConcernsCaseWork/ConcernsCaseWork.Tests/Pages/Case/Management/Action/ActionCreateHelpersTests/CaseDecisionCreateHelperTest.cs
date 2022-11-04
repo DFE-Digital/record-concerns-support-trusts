@@ -9,7 +9,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 	public class CaseDecisionCreateHelperTest
 	{
 
-
 		[Test]
 		public void CaseDecisionCreateHelper_Is_CaseActionCreateHelper()
 		{
@@ -18,7 +17,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 
 			Assert.IsInstanceOf<CaseActionCreateHelper>(sut);
 		}
-
 
 		[Test]
 		public void CaseDecisionCreateHelper_CanHandle_ResponseCorrectly([Values]CaseActionEnum action)
@@ -45,7 +43,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 			Assert.That(result, Is.EqualTo(expectedResult));
 		}
 
-
 		private class TestBuilder
 		{
 			public TestBuilder()
@@ -60,10 +57,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 				return result;
 			}
 
-
 			public Fixture Fixture { get; set; }
-
 		}
 	}
 }
-

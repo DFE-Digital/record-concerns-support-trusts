@@ -27,6 +27,5 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.NTI.UnderConsideration
 
             return NTIUnderConsiderationFactory.CreateResponse(createdNTIUnderConsideration);
         }
-
     }
 }

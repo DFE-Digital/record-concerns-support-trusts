@@ -3,7 +3,6 @@ using System.Globalization;
 
 namespace ConcernsCaseWork.Helpers
 {
-
 	public class DateTimeHelper
 	{
 		private static readonly string[] allowedFormats = new string[] { "dd-MM-yyyy", "dd/MM/yyyy", "d-M-yyyy", "d/M/yyyy" };
@@ -19,6 +18,5 @@ namespace ConcernsCaseWork.Helpers
 		{
 			return DateTime.ParseExact(value, allowedFormats, dateTimeFormatInfo, dateTimeStyle);
 		}
-
 	}
 }

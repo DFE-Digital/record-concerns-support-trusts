@@ -1,5 +1,6 @@
 using System.Linq;
 using AutoFixture;
+using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
 using ConcernsCaseWork.API.Controllers;
 using ConcernsCaseWork.API.RequestModels.Concerns.Decisions;
@@ -18,7 +19,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
 {
-    public class ConcernsCaseDecisionControllerTests
+public class ConcernsCaseDecisionControllerTests
     {
         private readonly Mock<ILogger<ConcernsCaseDecisionController>> _mockLogger = new Mock<ILogger<ConcernsCaseDecisionController>>();
 
@@ -27,10 +28,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         {
             // Arrange
             var fixture = new Fixture();
+            fixture.Customize(new AutoMoqCustomization());
             fixture.Register(() => Mock.Of<ILogger<ConcernsCaseDecisionController>>());
-            fixture.Register(() => Mock.Of<IUseCaseAsync<CreateDecisionRequest, CreateDecisionResponse>>());
-            fixture.Register(() => Mock.Of<IUseCaseAsync<GetDecisionRequest, GetDecisionResponse>>());
-            fixture.Register(() => Mock.Of<IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]>>());
 
             var assertion = fixture.Create<GuardClauseAssertion>();
 
@@ -54,7 +53,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             var expected = new ApiSingleResponseV2<CreateDecisionResponse>(createDecisionResponse);
             result.Result.Should().BeEquivalentTo(new ObjectResult(expected) { StatusCode = StatusCodes.Status201Created });
         }
-
 
         [Fact]
         public async Task CreateConcernsCaseDecision_ReturnsBadRequest_When_CreateDecisionRequest_IsInvalid()
@@ -86,8 +84,10 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             result.Result.Should().BeEquivalentTo(new BadRequestResult());
         }
 
-        [Fact]
-        public async Task CreateConcernsCaseDecision_ReturnsBadRequest_When_Urn_Is_Zero()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public async Task CreateConcernsCaseDecision_When_Invalid_Urn_Returns_BadRequest(int urn)
         {
             var testBuilder = new TestBuilder();
 
@@ -100,30 +100,34 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             testBuilder.CreateDecisionUseCase.Setup(a => a.Execute(createDecisionRequest, It.IsAny<CancellationToken>())).ReturnsAsync(createDecisionResponse);
 
             var sut = testBuilder.BuildSut();
-            var result = await sut.Create(0, createDecisionRequest, CancellationToken.None);
+            var result = await sut.Create(urn, createDecisionRequest, CancellationToken.None);
 
             result.Result.Should().BeEquivalentTo(new BadRequestResult());
         }
 
-        [Fact]
-        public async Task GetById_When_Invalid_Urn_Returns_BadRequest()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public async Task GetById_When_Invalid_Urn_Returns_BadRequest(int urn)
         {
             var testBuilder = new TestBuilder();
 
             var sut = testBuilder.BuildSut();
 
-            var result = await sut.GetById(0, 123, CancellationToken.None);
+            var result = await sut.GetById(urn, 123, CancellationToken.None);
             result.Result.Should().BeEquivalentTo(new BadRequestResult());
         }
 
-        [Fact]
-        public async Task GetById_When_Invalid_DecisionId_Returns_BadRequest()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public async Task GetById_When_Invalid_DecisionId_Returns_BadRequest(int decisionId)
         {
             var testBuilder = new TestBuilder();
 
             var sut = testBuilder.BuildSut();
 
-            var result = await sut.GetById(123, 0, CancellationToken.None);
+            var result = await sut.GetById(123, decisionId, CancellationToken.None);
             result.Result.Should().BeEquivalentTo(new BadRequestResult());
         }
 
@@ -197,7 +201,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         [Fact]
         public async Task GetDecisions_When_Decisions_Found_Returns_ApiSingleResponseV2_Of_DecisionSummaryArray()
         {
-
             var testBuilder = new TestBuilder();
             var expectedDtos = testBuilder.Fixture.CreateMany<DecisionSummaryResponse>(2).ToArray();
 
@@ -212,30 +215,101 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             var expectedOkResult = new OkObjectResult(new ApiSingleResponseV2<DecisionSummaryResponse[]>(expectedDtos));
             okResult.Should().BeEquivalentTo(expectedOkResult);
         }
-        
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public async Task UpdateDecision_When_Invalid_Urn_Returns_BadRequest(int urn)
+        {
+            var testBuilder = new TestBuilder();
+            var request = testBuilder.CreateValidUpdateDecisionRequest();
+
+            var sut = testBuilder.BuildSut();
+
+            var result = await sut.UpdateDecision(urn, 123, request, CancellationToken.None);
+            result.Result.Should().BeEquivalentTo(new BadRequestResult());
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public async Task UpdateDecision_When_Invalid_DecisionId_Returns_BadRequest(int decisionId)
+        {
+            var testBuilder = new TestBuilder();
+            var request = testBuilder.CreateValidUpdateDecisionRequest();
+
+            var sut = testBuilder.BuildSut();
+
+            var result = await sut.UpdateDecision(123, decisionId, request, CancellationToken.None);
+            result.Result.Should().BeEquivalentTo(new BadRequestResult());
+        }
+
+        [Fact]
+        public async Task UpdateDecision_When_Invalid_Request_Returns_BadRequest()
+        {
+            var testBuilder = new TestBuilder();
+            var request = testBuilder.CreateInvalidUpdateDecisionRequest();
+            var sut = testBuilder.BuildSut();
+
+            var result = await sut.UpdateDecision(123, 456, request, CancellationToken.None);
+            result.Result.Should().BeEquivalentTo(new BadRequestResult());
+        }
+
+        [Fact]
+        public async Task UpdateDecision_When_Valid_Arguments_Returns_OkResponse()
+        {
+            var testBuilder = new TestBuilder();
+            var request = testBuilder.CreateValidUpdateDecisionRequest();
+
+            var expectedResponse = testBuilder.Fixture.Create<UpdateDecisionResponse>();
+            testBuilder.UpdateDecisionUseCase.Setup(x =>
+                    x.Execute(It.IsAny<(int urn, int decisionId, UpdateDecisionRequest)>(),
+                        It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedResponse);
+
+            var sut = testBuilder.BuildSut();
+            var actionResult = await sut.UpdateDecision(123, 456, request, CancellationToken.None);
+
+            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+            var expectedOkResult = new OkObjectResult(new ApiSingleResponseV2<UpdateDecisionResponse>(expectedResponse));
+            okResult.Should().BeEquivalentTo(expectedOkResult);
+        }
 
         private class TestBuilder
         {
-            internal Mock<ILogger<ConcernsCaseDecisionController>> MockLogger;
-            internal Mock<IUseCaseAsync<CreateDecisionRequest, CreateDecisionResponse>> CreateDecisionUseCase;
-            internal Mock<IUseCaseAsync<GetDecisionRequest, GetDecisionResponse>> GetDecisionUseCase;
-            internal Mock<IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]>> GetDecisionsUseCase { get; set; }
-            internal Fixture Fixture;
+            internal readonly Fixture Fixture;
+            internal readonly Mock<ILogger<ConcernsCaseDecisionController>> MockLogger;
+            internal readonly Mock<IUseCaseAsync<CreateDecisionRequest, CreateDecisionResponse>> CreateDecisionUseCase;
+            internal readonly Mock<IUseCaseAsync<GetDecisionRequest, GetDecisionResponse>> GetDecisionUseCase;
+            internal readonly Mock<IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]>> GetDecisionsUseCase;
+            internal readonly Mock<IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest), UpdateDecisionResponse>> UpdateDecisionUseCase;
 
             public TestBuilder()
             {
                 Fixture = new Fixture();
-                MockLogger = new Mock<ILogger<ConcernsCaseDecisionController>>();
-                CreateDecisionUseCase = new Mock<IUseCaseAsync<CreateDecisionRequest, CreateDecisionResponse>>();
-                GetDecisionUseCase = new Mock<IUseCaseAsync<GetDecisionRequest, GetDecisionResponse>>();
-                GetDecisionsUseCase = new Mock<IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]>>();
-            }
+                Fixture.Customize(new AutoMoqCustomization());
 
+                MockLogger = new Mock<ILogger<ConcernsCaseDecisionController>>();
+                CreateDecisionUseCase = Fixture.Freeze<Mock<IUseCaseAsync<CreateDecisionRequest, CreateDecisionResponse>>>();
+                GetDecisionUseCase = Fixture.Freeze<Mock<IUseCaseAsync<GetDecisionRequest, GetDecisionResponse>>>();
+                GetDecisionsUseCase = Fixture.Freeze<Mock<IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]>>>();
+                UpdateDecisionUseCase = Fixture.Freeze<Mock<IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest), UpdateDecisionResponse>>>();
+            }
 
             internal ConcernsCaseDecisionController BuildSut()
             {
-                return new ConcernsCaseDecisionController(MockLogger.Object, CreateDecisionUseCase.Object, GetDecisionUseCase.Object, GetDecisionsUseCase.Object);
+                return new ConcernsCaseDecisionController(MockLogger.Object, CreateDecisionUseCase.Object, GetDecisionUseCase.Object, GetDecisionsUseCase.Object, UpdateDecisionUseCase.Object);
+            }
+
+            public UpdateDecisionRequest CreateValidUpdateDecisionRequest()
+            {
+                return Fixture.Create<UpdateDecisionRequest>();
+            }
+            public UpdateDecisionRequest CreateInvalidUpdateDecisionRequest()
+            {
+                return Fixture.Build<UpdateDecisionRequest>()
+                        .With(x => x.DecisionTypes, new DecisionType[] {0})
+                        .Create();
             }
         }
-    }
-}
+    }}

@@ -152,6 +152,5 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 			// assert
 			Assert.That(validationError, Is.EqualTo(string.Empty));
 		}
-
 	}
 }

@@ -9,7 +9,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-
 namespace ConcernsCaseWork.API.Tests.UseCases
 {
     public class GetFinancialPlanByIdTests
@@ -50,6 +49,5 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             result.Should().NotBeNull();
             result.Should().BeEquivalentTo(expectedResult);
         }
-
     }
 }

@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             var fixture = CreateFixture(mockLogger.Object, mockGateWay.Object);
             var expectedRequest = fixture.Create<GetDecisionsRequest>();
 
-            mockGateWay.Setup(x => x.GetConcernsCaseById(It.IsAny<int>())).Returns(default(ConcernsCase));
+            mockGateWay.Setup(x => x.GetConcernsCaseByUrn(It.IsAny<int>(), false)).Returns(default(ConcernsCase));
 
             var sut = fixture.Create<GetDecisions>();
             var result = await sut.Execute(expectedRequest, CancellationToken.None);
@@ -82,7 +82,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             var expectedRequest = fixture.Create<GetDecisionsRequest>();
             var expectedConcernsCase = fixture.Create<ConcernsCase>();
 
-            mockGateWay.Setup(x => x.GetConcernsCaseById(It.IsAny<int>())).Returns(expectedConcernsCase);
+            mockGateWay.Setup(x => x.GetConcernsCaseByUrn(It.IsAny<int>(), false)).Returns(expectedConcernsCase);
 
             var sut = fixture.Create<GetDecisions>();
             var result = await sut.Execute(expectedRequest, CancellationToken.None);
@@ -103,14 +103,14 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             var expectedConcernsCase = fixture.Create<ConcernsCase>();
             var expectedRequest = new GetDecisionsRequest(expectedConcernsCase.Urn);
 
-            expectedConcernsCase.AddDecision(fixture.Create<Decision>());
+            expectedConcernsCase.AddDecision(fixture.Create<Decision>(), DateTimeOffset.Now);
 
             var expectedResult = new[]
             {
                 new DecisionSummaryResponse() { ConcernsCaseUrn = expectedConcernsCase.Urn }
             };
 
-            mockGateWay.Setup(x => x.GetConcernsCaseById(It.IsAny<int>()))
+            mockGateWay.Setup(x => x.GetConcernsCaseByUrn(It.IsAny<int>(), false))
                 .Returns(expectedConcernsCase);
 
             mockFactory.Setup(x => x.Create(expectedConcernsCase.Urn, It.IsAny<IEnumerable<Decision>>()))
@@ -136,7 +136,6 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             fixture.Customize<Decision>(sb => sb.FromFactory(() =>
             {
                 var decision = Decision.CreateNew(
-                    concernsCaseId: fixture.Create<int>(),
                     crmCaseNumber: new string(fixture.CreateMany<char>(Decision.MaxCaseNumberLength).ToArray()),
                     retrospectiveApproval: fixture.Create<bool>(),
                     submissionRequired: fixture.Create<bool>(),
@@ -145,7 +144,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
                     decisionTypes: new DecisionType[] { new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove) },
                     totalAmountRequested: fixture.Create<decimal>(),
                     supportingNotes: new string(fixture.CreateMany<char>(Decision.MaxSupportingNotesLength).ToArray()),
-                    createdAt: DateTimeOffset.Now
+                    DateTimeOffset.Now
                 );
                 decision.DecisionId = fixture.Create<int>();
                 return decision;

@@ -9,4 +9,3 @@
 		Standard = 4
 	}
 }
-

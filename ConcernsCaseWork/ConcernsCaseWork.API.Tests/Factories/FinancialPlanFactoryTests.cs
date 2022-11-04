@@ -120,8 +120,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
             response.Should().BeEquivalentTo(expectedFinancialPlan);
         }
 
-
-
         [Fact]
         public void CreateCreateResponse_ExpectedFinancialPlanResponse_WhenFinancialPlanCaseProvided()
         {
@@ -177,7 +175,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
 
             response.Should().BeEquivalentTo(expectedFinancialPlanResponse);
         }
-
 
 
     }

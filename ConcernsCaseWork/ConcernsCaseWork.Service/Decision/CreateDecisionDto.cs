@@ -27,10 +27,8 @@ namespace ConcernsCaseWork.Service.Decision
 		public DateTimeOffset CreatedAt { get; set; }
 		public DateTimeOffset UpdatedAt { get; set; }
 
-
 		public const int MaxUrlLength = 2048;
 		public const int MaxSupportingNotesLength = 2000;
 		public const int MaxCaseNumberLength = 20;
 	}
 }
-

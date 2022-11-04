@@ -203,6 +203,5 @@ public class EditSrmaStatusPageModelTests
 			Url = new UrlHelper(actionContext),
 			MetadataProvider = pageContext.ViewData.ModelMetadata
 		};
-
 	}
 }

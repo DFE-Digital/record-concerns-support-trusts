@@ -8,5 +8,3 @@ namespace ConcernsCaseWork.Pages.Validators
 		string Validate(IEnumerable<CaseActionModel> caseActions);
 	}
 }
-
-

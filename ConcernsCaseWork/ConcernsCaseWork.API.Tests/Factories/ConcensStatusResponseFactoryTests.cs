@@ -12,7 +12,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
         [Fact]
         public void ReturnsConcernsStatusResponse_WhenGivenAnConcernsStatus()
         {
-
             var concernsStatus = new ConcernsStatus
             {
                 Id = 456,

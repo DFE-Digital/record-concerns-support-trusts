@@ -317,6 +317,5 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		{
 			WarningLetter = await _ntiWarningLetterModelService.GetNtiWarningLetterId(WarningLetterId.Value);
 		}
-
 	}
 }

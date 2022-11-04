@@ -43,7 +43,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 
-
 			return await LoadPage(Request.Headers["Referer"].ToString(), caseUrn);
 		}
 
@@ -83,7 +82,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 			return await LoadPage(url, caseUrn);
 		}
-
 
 		private async Task<ActionResult> LoadPage(string url, long caseUrn)
 		{

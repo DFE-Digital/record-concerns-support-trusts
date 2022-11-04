@@ -28,7 +28,6 @@ namespace ConcernsCaseWork.API.Tests.UseCases
                 WarningLetterConditionsMapping = conditionMappings
             };
 
-
             var warningLetters = new List<NTIWarningLetter>
             {
                 matchingWarningLetter,
@@ -38,7 +37,6 @@ namespace ConcernsCaseWork.API.Tests.UseCases
                     Notes = "Test warning letter 2",
                     WarningLetterReasonsMapping = reasonMappings,
                     WarningLetterConditionsMapping = conditionMappings
-
                 },
                 new NTIWarningLetter
                 {
@@ -49,12 +47,10 @@ namespace ConcernsCaseWork.API.Tests.UseCases
                 }
             };
 
-
             var expectedResult = NTIWarningLetterFactory.CreateResponse(matchingWarningLetter);
 
             var mockNTIWarningLetterGateway = new Mock<INTIWarningLetterGateway>();
             mockNTIWarningLetterGateway.Setup(g => g.GetNTIWarningLetterByCaseUrn(caseUrn)).Returns(Task.FromResult((ICollection<NTIWarningLetter>)warningLetters.Where(s => s.CaseUrn == caseUrn).ToList()));
-
 
             var useCase = new GetNTIWarningLetterByCaseUrn(mockNTIWarningLetterGateway.Object);
 

@@ -75,7 +75,6 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			Assert.AreEqual(expectedNtiDto.Notes, response.Notes);
 		}
 
-
 		private Mock<IHttpClientFactory> CreateMockFactory<T>(T content)
 		{
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();

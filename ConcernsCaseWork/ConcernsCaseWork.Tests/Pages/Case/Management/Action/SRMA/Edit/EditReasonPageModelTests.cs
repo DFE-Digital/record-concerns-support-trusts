@@ -193,6 +193,5 @@ public class EditSRMAReasonOfferedPageModelTests
 			Url = new UrlHelper(actionContext),
 			MetadataProvider = pageContext.ViewData.ModelMetadata
 		};
-
 	}
 }

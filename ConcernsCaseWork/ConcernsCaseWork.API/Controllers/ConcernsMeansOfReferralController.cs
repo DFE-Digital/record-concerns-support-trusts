@@ -9,7 +9,6 @@ namespace ConcernsCaseWork.API.Controllers
     [Route("v{version:apiVersion}/concerns-meansofreferral")]
     public class ConcernsMeansOfReferralController: ControllerBase
     {
-        
         private readonly ILogger<ConcernsMeansOfReferralController> _logger;
         private readonly IIndexConcernsMeansOfReferrals _indexConcernsMeansOfReferrals;
 

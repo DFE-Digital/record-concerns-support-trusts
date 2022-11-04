@@ -184,7 +184,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			mockNtiWLModelService.Verify(m => m.PatchNtiWarningLetter(
 				It.Is<NtiWarningLetterModel>(wl => wl.CaseUrn == caseUrn && wl.Id == warningLetterId)),
 				Times.Once());
-
 		}
 
 		private static AddPageModel SetupAddPageModel(Mock<INtiWarningLetterModelService> mockNtiWarningLetterModelService,
@@ -208,6 +207,5 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			};
 		}
 	}
-
 
 }

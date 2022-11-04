@@ -13,4 +13,3 @@
 		Safeguarding = 8
 	}
 }
-

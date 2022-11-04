@@ -96,7 +96,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockCaseActionValidator.Setup(v => v.Validate(It.IsAny<IEnumerable<CaseActionModel>>()))
 				.Returns(new List<string>());
 
-
 			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockCaseActionValidator.Object, mockLogger.Object, true);
 
 			var routeData = pageModel.RouteData.Values;

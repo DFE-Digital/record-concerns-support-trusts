@@ -108,6 +108,5 @@ namespace ConcernsCaseWork.API.ResponseModels
         public PlaceholderResponse  Concerns { get; set; }
 
 
-
     }
 }

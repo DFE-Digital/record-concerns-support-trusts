@@ -61,7 +61,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
 
             var result = ConcernsCaseResponseFactory.Create(concernsCase);
             result.Should().BeEquivalentTo(expected);
-
         }
     }
 }

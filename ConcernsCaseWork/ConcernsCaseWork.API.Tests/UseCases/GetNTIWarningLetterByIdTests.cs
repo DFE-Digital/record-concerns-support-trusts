@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-
 namespace ConcernsCaseWork.API.Tests.UseCases
 {
     public class GetNTIWarningLetterByIdTests
@@ -19,7 +18,6 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             var warningLetterId = 544;
             var reasonMappings = new List<NTIWarningLetterReasonMapping>() { new NTIWarningLetterReasonMapping() { NTIWarningLetterReasonId = 1 } };
             var conditionMappings = new List<NTIWarningLetterConditionMapping>() { new NTIWarningLetterConditionMapping() { NTIWarningLetterConditionId = 1 } };
-
 
             var warningLetter = new NTIWarningLetter
             {
@@ -40,6 +38,5 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             result.Should().NotBeNull();
             result.Should().BeEquivalentTo(expectedResult);
         }
-
     }
 }

@@ -32,10 +32,8 @@ namespace ConcernsCaseWork.Services.NtiWarningLetter
 			var dtos = await _ntiWarningLetterCachedService.GetNtiWarningLettersForCaseAsync(caseUrn);
 			var statuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
 
-
 			return dtos?.Select(dto => NtiWarningLetterMappers.ToServiceModel(dto, statuses)).ToArray();
 		}
-
 
 		public async Task<NtiWarningLetterModel> GetWarningLetter(string continuationId)
 		{

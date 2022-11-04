@@ -52,7 +52,6 @@ namespace ConcernsCaseWork.Redis.Cases
 
 			await StoreData(caseworker, userState);
 
-
 			return casesDto;
 		}
 

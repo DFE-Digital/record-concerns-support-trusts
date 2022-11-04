@@ -53,7 +53,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 				DateNTILifted = testData.DateNTILifted
 			};
 
-
 			var ntiStatuses = NTIStatusFactory.BuildListNTIStatusDto();
 
 			// act

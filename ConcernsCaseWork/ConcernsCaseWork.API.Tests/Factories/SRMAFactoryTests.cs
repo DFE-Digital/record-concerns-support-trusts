@@ -132,6 +132,5 @@ namespace ConcernsCaseWork.API.Tests.Factories
 
             response.Should().BeEquivalentTo(expectedCreateSRMAResponse);
         }
-
     }
 }

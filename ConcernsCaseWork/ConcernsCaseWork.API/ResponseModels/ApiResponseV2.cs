@@ -14,6 +14,5 @@ namespace ConcernsCaseWork.API.ResponseModels
         } 
         
         public ApiResponseV2(TResponse data) => Data = new List<TResponse>{ data };
-
     }
 }

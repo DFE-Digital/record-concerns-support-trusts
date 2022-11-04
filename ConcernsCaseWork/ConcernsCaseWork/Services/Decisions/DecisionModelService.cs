@@ -19,7 +19,6 @@ namespace ConcernsCaseWork.Services.Decisions
 		{
 			var decisions = await _decisionService.GetDecisionsByCaseUrn(urn);
 
-
 			return decisions.Select(d => DecisionMapping.ToActionSummary(d)).ToList();
 		}
 	}

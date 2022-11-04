@@ -104,7 +104,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 
-
 			mockLogger.Verify(
 				m => m.Log(
 					LogLevel.Information,
@@ -158,7 +157,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object
 				, mockNtiUnderConsiderationModelService.Object, mockLogger.Object);
-
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -278,6 +276,5 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			return moq.Object;
 		}
 	}
-
 
 }

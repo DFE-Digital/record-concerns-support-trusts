@@ -21,12 +21,12 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             var updateRequest = Builder<ConcernCaseRequest>.CreateNew().Build();
 
             var concernsToUpdate = ConcernsCaseFactory.Update(concernsCase, updateRequest);
-            
-            gateway.Setup(g => g.GetConcernsCaseById(urn)).Returns(concernsCase);
+
+            gateway.Setup(g => g.GetConcernsCaseByUrn(urn, false)).Returns(concernsCase);
             gateway.Setup(g => g.Update(It.IsAny<ConcernsCase>())).Returns(concernsToUpdate);
 
             var expected = ConcernsCaseResponseFactory.Create(concernsToUpdate);
-            
+
             var useCase = new UpdateConcernsCase(gateway.Object);
             var result = useCase.Execute(urn, updateRequest);
 

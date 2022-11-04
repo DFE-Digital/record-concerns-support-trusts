@@ -246,7 +246,6 @@ namespace ConcernsCaseWork.API.Controllers
             }
         }
 
-
         [HttpPatch]
         [Route("{srmaId}/update-closed-date")]
         [MapToApiVersion("2.0")]
