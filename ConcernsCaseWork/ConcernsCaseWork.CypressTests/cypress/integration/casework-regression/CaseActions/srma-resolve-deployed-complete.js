@@ -19,19 +19,18 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 	let returnedDateEnd
 
 
-	it("User enters the case page", () => {
+	it("Should validate SRMA Deployed complete", () => {
+		cy.task(LogTask, "Should validate SRMA Deployed complete");
 		cy.checkForExistingCase();
-	});
-
-	it("User has option to add an action item to case", () => {
+		cy.task(LogTask, "User has option to add an action item to case");
 		cy.reload();
 		CaseManagementPage.getAddToCaseBtn().click();
 		AddToCasePage.addToCase('Srma')
 		AddToCasePage.getCaseActionRadio('Srma').siblings().should('contain.text', AddToCasePage.actionOptions[8]);
 
-	});
+		cy.task(LogTask, "User clicking add to case is taken to the action page");
 
-	it("User clicking add to case is taken to the action page", function () {
+	
 
 				AddToCasePage.getAddToCaseBtn().click();
 				cy.log(utils.checkForGovErrorSummaryList() );
@@ -51,18 +50,18 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 					cy.log(utils.checkForGovErrorSummaryList() );
 				}
 
-	});
-
-	it("User can set SRMA status to  Trust Considering", function () {
+	
+				cy.task(LogTask, "User can set SRMA status to  Trust Considering");
+	
 
 		cy.get('[id*="status"]').eq(0).click();
 		cy.get('label.govuk-label.govuk-radios__label').eq(0).invoke('text').then(term => {
 			cy.wrap(term.trim()).as("stText");
 			cy.log(self.stText);
 		})	
-	});
+		cy.task(LogTask, "User can enter a valid date");
 
-	it("User can enter a valid date", function () {
+	
 		cy.get('[id="dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
 		cy.get('[id="dtr-month"]').type(Math.floor(Math.random() *3) + 10);
 		cy.get('[id="dtr-year"]').type("2022");
@@ -82,13 +81,13 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 		cy.log(this.day+"-"+this.month+"-"+this.year);	
 		concatDate = (this.day+"-"+this.month+"-"+this.year);
 		cy.log(concatDate);
-	});
-
-	it("User can successfully add SRMA to a case", () => {
+	
+		cy.task(LogTask, "User can successfully add SRMA to a case");
+	
 		cy.get('[id="add-srma-button"]').click();
-	});
+		cy.task(LogTask, "User can click on a link to view a live SRMA record");
 
-	it("User can click on a link to view a live SRMA record", function () {
+	
 
 		CaseManagementPage.getOpenActionsTable().children().should(($srma) => {
 			expect($srma).to.be.visible
@@ -100,10 +99,9 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 			expect($status.text().trim()).to.contain(this.stText);
 		})
 		CaseManagementPage.getOpenActionLink("srma").click();
-	});
-
-
-	it("User can set status to DEPLOYED", function () {
+	
+		cy.task(LogTask, "User can set status to DEPLOYED");
+	
 		cy.get('[class="govuk-link"]').eq(0).click();
 
 		cy.get('[id*="status"]').eq(2).click();
@@ -118,10 +116,10 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 				expect($row.eq(0).text().trim()).to.contain("Deployed").and.to.match(/Status/i);
 			});
 		});
-	});
 
+		cy.task(LogTask, "User on the SRMA page cannot COMPLETE without mandatory items set");
 
-		it("User on the SRMA page cannot COMPLETE without mandatory items set", function () {
+		
 			cy.get('[id="complete-decline-srma-button"]').click();
 	
 			//Tests that there is error validation to force entry of both dates
@@ -141,9 +139,9 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 				}
 	
 				cy.reload();
-		});
+				cy.task(LogTask, "User can Add SRMA Reason to remove validation");
 	
-		it("User can Add SRMA Reason to remove validation", function () {
+		
 
 			cy.get('[class="govuk-link"]').eq(2).click();
 	
@@ -163,7 +161,7 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 			cy.get('[id="complete-decline-srma-button"]').click();
 	
 			//Tests that there is error validation to force entry of both dates
-			const err = '[class="govuk-list govuk-error-summary__list"]';   
+			//const err = '[class="govuk-list govuk-error-summary__list"]';   
 			cy.log((err).length);
 	
 				if ((err).length > 0 ) { 
@@ -178,10 +176,10 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 				}
 	
 				cy.reload();
-		});
+		
 
-
-	it("User can Add SRMA Date accepted to remove validation", function () {
+				cy.task(LogTask, "User can Add SRMA Date accepted to remove validation");
+	
 
 			srmaEditPage.getTableAddEditLink().eq(3).click();
 			cy.log("date offered closure ").then(() => {
@@ -208,7 +206,7 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 			cy.get('[id="complete-decline-srma-button"]').click();
 	
 			//Tests that there is error validation to force entry of both dates
-			const err = '[class="govuk-list govuk-error-summary__list"]';   
+			//const err = '[class="govuk-list govuk-error-summary__list"]';   
 			cy.log((err).length);
 	
 				if ((err).length > 0 ) { 
@@ -223,9 +221,9 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 					cy.get('[class="govuk-tag ragtag ragtag__grey"]').eq(2).should('not.be.visible')
 				}
 				cy.reload();
-		});
-
-		it( "User can Add SRMA Date of visit to remove validation", function () {
+		
+				cy.task(LogTask, "User can Add SRMA Date of visit to remove validation");
+		
 
 			srmaEditPage.getTableAddEditLink().eq(4).click();
 
@@ -268,7 +266,7 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 
 			cy.get('[id="complete-decline-srma-button"]').click();
 
-			let err = '[class="govuk-list govuk-error-summary__list"]';   
+			//let err = '[class="govuk-list govuk-error-summary__list"]';   
 			cy.log((err).length);
 	
 				if ((err).length > 0 ) { 
@@ -283,9 +281,8 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 					cy.get('[class="govuk-tag ragtag ragtag__grey"]').eq(4).should('not.be.visible');
 				}
 				cy.reload();
-		});
-
-		it( "User can Add SRMA Date report sent to trust to remove validation", function () {
+				cy.task(LogTask, "User can Add SRMA Date report sent to trust to remove validation");
+		
 
 			cy.get('[id="complete-decline-srma-button"]').click();
 			cy.get('[class="govuk-link"]').eq(5).click();
@@ -320,7 +317,7 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 					expect($row.eq(5).text().trim()).to.contain(concatDate.trim()).and.to.match(/Date report sent to trust/i);
 				});
 
-				const err = '[class="govuk-list govuk-error-summary__list"]';   
+				//const err = '[class="govuk-list govuk-error-summary__list"]';   
 				cy.log((err).length);
 		
 					if ((err).length > 0 ) { 
@@ -331,15 +328,15 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 						//this code path is a fallback in case the data is altered mid test
 						cy.get('[class="govuk-tag ragtag ragtag__grey"]').eq(5).should('not.be.visible');
 					}
-			});
-
-		it("User is navigated to resolve page when status is Deployed, Closure reason Complete", () => {
+		
+					cy.task(LogTask, "User is navigated to resolve page when status is Deployed, Closure reason Complete");
+	
 
 			cy.get('[id="complete-decline-srma-button"]').click();
 			cy.get('[class="govuk-label govuk-checkboxes__label"]').should('contain.text', 'Confirm SRMA is complete');
 			cy.get('[id="add-srma-button"]').click();
 
-			const err = '[class="govuk-list govuk-error-summary__list"]';   
+			//const err = '[class="govuk-list govuk-error-summary__list"]';   
 					cy.log((err).length);
 			
 						if ((err).length > 0 ) { 
@@ -354,13 +351,15 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 			cy.reload(); //needed to handle validation bug
 			cy.get('[id="confirmChk"]').click();
 			cy.get('[id="add-srma-button"]').click();
-	});
 
-		it("User is navigated back to the case page after completion,", () => {
+			cy.task(LogTask, "User is navigated back to the case page after completion");
+
+		
 
 			cy.get('[class="govuk-caption-m"]').should('be.visible');
 			cy.get('[class="govuk-caption-m"]').should('contain.text', 'Case ID');
-		});
+		
+	});
 			
 	after(function () {
 		cy.clearLocalStorage();
