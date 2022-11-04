@@ -15,43 +15,27 @@ describe("User can add case actions to an existing case", () => {
 	});
 
 	let stText = "null";
-	let condText = "null";
-	let reasText = "null";
 	let returnedDate = "null";
-	let notesText = "null";
 
 
 
 	it("Should add an NTI action to a case", () => {
 		cy.task(LogTask, "Case Action already exists");
-				cy.visit(Cypress.env('url'), { timeout: 30000 });
-				cy.checkForExistingCase(true);
-				CaseManagementPage.getAddToCaseBtn().click();
-				AddToCasePage.addToCase('Nti');
-				AddToCasePage.getCaseActionRadio('Nti').siblings().should('contain.text', AddToCasePage.actionOptions[6].trim());
-				AddToCasePage.getAddToCaseBtn().click();
+		cy.visit(Cypress.env('url'), { timeout: 30000 });
+		cy.checkForExistingCase(true);
+		CaseManagementPage.getAddToCaseBtn().click();
+		AddToCasePage.addToCase('Nti');
+		AddToCasePage.getCaseActionRadio('Nti').siblings().should('contain.text', AddToCasePage.actionOptions[6].trim());
+		AddToCasePage.getAddToCaseBtn().click();
 		cy.task(LogTask, "User is taken to the correct Case Action page");
 		ntiAddPage.getHeadingText().then(term => {
 			expect(term.text().trim()).to.match(/NTI: Notice to improve/i);
 		});
 
-
-
 		cy.task(LogTask, "User is shown validation for partial date entry");
-
-
 		//status set
-		cy.log("setStatusSelect ").then(() => {
-			cy.log(CaseActionsBasePage.setStatusSelect("random")).then((returnedVal) => {
-				cy.wrap(returnedVal.trim()).as("stText").then(() => {
-					stText = returnedVal;
-					cy.log("logging the result " + stText)
-				});
-				cy.log(self.stText);
-				stText = returnedVal;
-				cy.log("logging returnedVal " + returnedVal)
-			});
-		});
+		CaseActionsBasePage.setStatusSelect("2");
+
 		//date set
 		CaseActionsBasePage.setDate();
 
@@ -62,18 +46,9 @@ describe("User can add case actions to an existing case", () => {
 		utils.validateGovErorrList('date');
 
 		cy.task(LogTask, "User can add NTI Notice to improve to case");
-		//status set
-		cy.log("setStatusSelect ").then(() => {
-			cy.log(CaseActionsBasePage.setStatusSelect("random")).then((returnedVal) => {
-				cy.wrap(returnedVal.trim()).as("stText").then(() => {
-					stText = returnedVal;
-					cy.log("logging the result " + stText)
-				});
-				cy.log(self.stText);
-				stText = returnedVal;
-				cy.log("logging returnedVal " + returnedVal)
-			});
-		});
+
+		CaseActionsBasePage.setStatusSelect("1")
+
 		//date set
 		CaseActionsBasePage.setDate();
 		//reasons set
@@ -98,18 +73,8 @@ describe("User can add case actions to an existing case", () => {
 		ntiAddPage.getHeadingText().should(($heading) => {
 			expect($heading.text()).to.contain("Conditions for NTI: Notice to improve");
 		})
-		cy.log("setConditionSelect ").then(() => {
-			cy.log("EXECUTED TEST ")
-			cy.log(ntiAddPage.setConditionSelect("0")).then((returnedVal) => {
-				cy.wrap(returnedVal.trim()).as("condText").then(() => {
-					condText = returnedVal;
-					cy.log("logging the result " + condText)
-				});
-				cy.log(self.condText);
-				condText = returnedVal;
-				cy.log("logging returnedVal " + returnedVal)
-			});
-		});
+
+		ntiAddPage.setConditionSelect("0")
 
 		ntiAddPage.setReasonSelect("1");
 
@@ -130,7 +95,7 @@ describe("User can add case actions to an existing case", () => {
 		CaseManagementPage.getOpenActionsTable().children().should(($nti) => {
 			expect($nti).to.be.visible
 			expect($nti.text()).to.contain("NTI");
-			expect($nti.text()).to.contain(stText.trim());
+			expect($nti.text()).to.contain("Issued NTI");
 
 		})
 
@@ -172,27 +137,11 @@ describe("User can add case actions to an existing case", () => {
 
 
 		ntiAddPage.getEditWLInformationBtn().eq(0).click();
-		//status set
-		cy.log("setStatusSelect ").then(() => {
-			cy.log(CaseActionsBasePage.setStatusSelect("random")).then((returnedVal) => {
-				cy.wrap(returnedVal.trim()).as("stText").then(() => {
-					stText = returnedVal;
-					cy.log("logging the result " + stText)
-				});
-				cy.log(self.stText);
-				cy.log("logging returnedVal " + returnedVal)
-			});
-		});
 
-		//date set	
-		cy.log("setDate ").then(() => {
-			cy.log(CaseActionsBasePage.setDate()).then((returnedVal) => {
-				cy.wrap(returnedVal.trim()).as("returnedDate").then(() => {
-					returnedDate = returnedVal;
-					cy.log("logging returnedDate " + returnedDate);
-				});
-			});
-		});
+		CaseActionsBasePage.setStatusSelect("1");
+		CaseActionsBasePage.getDateDay().clear().type("20");
+        CaseActionsBasePage.getDateMonth().clear().type("6");
+        CaseActionsBasePage.getDateYear().clear().type("2023");
 
 		ntiAddPage.getAddConditionsBtn().click();
 
@@ -200,42 +149,13 @@ describe("User can add case actions to an existing case", () => {
 			expect($heading.text()).to.contain("Conditions for NTI: Notice to improve");
 		})
 
-		cy.log("setConditionSelect ").then(() => {
-			cy.log("EXECUTED TEST ")
-			cy.log(ntiAddPage.setConditionSelect("1")).then((returnedVal) => {
-				cy.wrap(returnedVal.trim()).as("condText").then(() => {
-					condText = returnedVal;
-					cy.log("logging condText " + condText)
-				});
-				cy.log(self.condText);
-				cy.log("logging returnedVal " + returnedVal)
-			});
-		});
+		ntiAddPage.setConditionSelect("1");
+        ntiAddPage.setReasonSelect("1");
+        ntiAddPage.setReasonSelect("0");
 
 		ntiAddPage.getUpdateConditionsBtn().scrollIntoView().click();
 
-
-		ntiAddPage.setReasonSelect("1"); //Deselcts		
-		cy.log("setReasonSelect ").then(() => {
-			cy.log("EXECUTED TEST ")
-			cy.log(ntiAddPage.setReasonSelect("0")).then((returnedVal) => {
-				cy.wrap(returnedVal.trim()).as("reasText").then(() => {
-					reasText = returnedVal;
-					cy.log("logging reasText " + reasText)
-				});
-				cy.log(self.reasText);
-				cy.log("logging returnedVal " + returnedVal)
-			});
-		});
-		//notes edit
-		cy.log("setNotes ").then(() => {
-			cy.log(ntiAddPage.setNotes()).then((returnedVal) => {
-				cy.wrap(returnedVal.trim()).as("notesText").then(() => {
-					notesText = returnedVal;
-				});
-			});
-		});
-
+		ntiAddPage.getNotesBox().clear().type("Notes");
 
 		ntiAddPage.getWLAddCaseActionBtn().eq(0).click();
 		utils.getGovErrorSummaryList().should('not.exist');
@@ -243,11 +163,11 @@ describe("User can add case actions to an existing case", () => {
 		CaseManagementPage.getOpenActionLink("nti").eq(0).click();
 		ntiAddPage.getNtiTableRow().should(($row) => {
 			expect($row).to.have.length(5);
-			expect($row.eq(0).text().trim()).to.contain(this.stText.trim()).and.to.match(/Current status/i);
-			expect($row.eq(1).text().trim()).to.contain(this.returnedDate.trim()).and.to.match(/(Date NTI Issued)/i);
-			expect($row.eq(2).text().trim()).to.contain(this.reasText.trim()).and.to.match(/(Reasons)/i);
-			expect($row.eq(3).text().trim()).to.contain(this.condText.trim()).and.to.match(/(Conditions)/i);
-			expect($row.eq(4).text().trim()).to.contain(this.notesText).and.to.match(/(Cypress test run)/i);
+			expect($row.eq(0).text().trim()).to.contain("Issued NTI").and.to.match(/Current status/i);
+			expect($row.eq(1).text().trim()).to.contain("20-06-2023").and.to.match(/(Date NTI Issued)/i);
+			expect($row.eq(2).text().trim()).to.contain("Cash flow problems").and.to.match(/(Reasons)/i);
+			expect($row.eq(3).text().trim()).to.contain("Internal audit findings").and.to.match(/(Conditions)/i);
+			expect($row.eq(4).text().trim()).to.contain("Notes").and.to.match(/(Notes)/i);
 		});
 
 		cy.task(LogTask, "User can Cancel an existing NTI Notice to improve record");
@@ -259,13 +179,7 @@ describe("User can add case actions to an existing case", () => {
 		ntiAddPage.getSubHeadingText().should('contain.text', 'Finalise notes');
 
 		//notes edit
-		cy.log("setNotes ").then(() => {
-			cy.log(ntiAddPage.setNotes()).then((returnedVal) => {
-				cy.wrap(returnedVal.trim()).as("notesText").then(() => {
-					notesText = returnedVal;
-				});
-			});
-		});
+		ntiAddPage.setNotes()
 
 		ntiAddPage.getCancelNtiBtn().click();
 		utils.getGovErrorSummaryList().should('not.exist');
@@ -304,17 +218,8 @@ describe("User can add case actions to an existing case", () => {
 		});
 
 		//create New NTI
-		cy.log("setStatusSelect ").then(() => {
-			cy.log(CaseActionsBasePage.setStatusSelect("random")).then((returnedVal) => {
-				cy.wrap(returnedVal.trim()).as("stText").then(() => {
-					stText = returnedVal;
-					cy.log("logging the result " + stText)
-				});
-				cy.log(self.stText);
-				stText = returnedVal;
-				cy.log("logging returnedVal " + returnedVal)
-			});
-		});
+		CaseActionsBasePage.setStatusSelect("random")
+
 		//date set
 		CaseActionsBasePage.setDate();
 		ntiAddPage.getWLAddCaseActionBtn().click();
@@ -361,18 +266,9 @@ describe("User can add case actions to an existing case", () => {
 			}
 
 		});
-		//create New NTI
-		cy.log("setStatusSelect ").then(() => {
-			cy.log(CaseActionsBasePage.setStatusSelect("random")).then((returnedVal) => {
-				cy.wrap(returnedVal.trim()).as("stText").then(() => {
-					stText = returnedVal;
-					cy.log("logging the result " + stText)
-				});
-				cy.log(self.stText);
-				stText = returnedVal;
-				cy.log("logging returnedVal " + returnedVal)
-			});
-		});
+
+		CaseActionsBasePage.setStatusSelect("random");
+
 		//date set
 		CaseActionsBasePage.setDate();
 
@@ -386,26 +282,9 @@ describe("User can add case actions to an existing case", () => {
 		CaseManagementPage.getTrustHeadingText().should('contain.text', 'Date NTI closed');
 		ntiAddPage.getSubHeadingText().should('contain.text', 'Finalise notes');
 
+		CaseActionsBasePage.setDate()
 
-		cy.log("setDate ").then(() => {
-			cy.log(CaseActionsBasePage.setDate()).then((returnedVal) => {
-				cy.wrap(returnedVal.trim()).as("returnedDate").then(() => {
-					returnedDate = returnedVal;
-					cy.log("logging the result " + returnedDate)
-				});
-				cy.log(self.returnedDate);
-				returnedDate = returnedVal;
-				cy.log("logging returnedVal " + returnedDate)
-			});
-		});
-		//notes edit
-		cy.log("setNotes ").then(() => {
-			cy.log(ntiAddPage.setNotes()).then((returnedVal) => {
-				cy.wrap(returnedVal.trim()).as("notesText").then(() => {
-					notesText = returnedVal;
-				});
-			});
-		});
+		ntiAddPage.setNotes()
 
 		ntiAddPage.getWLAddCaseActionBtn().click();
 		utils.getGovErrorSummaryList().should('not.exist');
