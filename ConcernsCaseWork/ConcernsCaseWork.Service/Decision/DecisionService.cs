@@ -17,7 +17,7 @@ namespace ConcernsCaseWork.Service.Decision
 
 		public async Task<CreateDecisionResponseDto> PostDecision(CreateDecisionDto createDecisionDto)
 		{
-			_logger.LogInformation($"{nameof(DecisionService)}::{LoggingHelpers.EchoCallerName()}");
+			_logger.LogMethodEntered();
 
 			_ = Guard.Against.Null(createDecisionDto);
 
@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Service.Decision
 
 		public async Task<List<GetDecisionResponseDto>> GetDecisionsByCaseUrn(long urn)
 		{
-			_logger.LogInformation($"{nameof(DecisionService)}::{LoggingHelpers.EchoCallerName()}");
+			_logger.LogMethodEntered();
 			_logger.LogInformation($"Getting decisions for case urn {urn}");
 
 			var result = await Get<List<GetDecisionResponseDto>>($"/{EndpointsVersion}/concerns-cases/{urn}/decisions");
@@ -38,6 +38,12 @@ namespace ConcernsCaseWork.Service.Decision
 			_logger.LogInformation($"Retrieved {result.Count} decisions for case urn {urn}");
 
 			return result;
+		}
+
+		public Task<GetDecisionResponseDto> GetDecision(long urn, int decisionId)
+		{
+			_logger.LogMethodEntered();
+			throw new NotImplementedException();
 		}
 	}
 }
