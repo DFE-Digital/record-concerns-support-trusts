@@ -13,7 +13,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
         [Fact]
         public void ReturnsConcernsRecord_WhenGivenAnConcernsRecordRequest()
         {
-
             var concernsCase = Builder<ConcernsCase>.CreateNew().Build();
             var concernsType = Builder<ConcernsType>.CreateNew().Build();
             var concernsRating = Builder<ConcernsRating>.CreateNew().Build();

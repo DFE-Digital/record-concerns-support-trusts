@@ -9,7 +9,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
 {
-    public class GetDecisionResponseFactoryTests
+public class GetDecisionResponseFactoryTests
     {
         [Fact]
         public void Can_Construct_GetDecisionResponseFactory()
@@ -43,10 +43,13 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
             result.Should().BeEquivalentTo(decision,
                 opt => opt.IncludingAllDeclaredProperties()
                     .Excluding(x => x.DecisionTypes)
-                    .Excluding(x => x.Status));
+                    .Excluding(x => x.Status)
+                    .Excluding(x => x.ConcernsCaseId)
+                );
             result.DecisionTypes.Should().BeEquivalentTo(decision.DecisionTypes.Select(x => x.DecisionTypeId),
                 opt => opt.WithStrictOrdering());
             result.DecisionStatus.Should().Be(decision.Status);
+            result.Title.Should().Be(decision.GetTitle());
         }
 
         [Fact]
@@ -78,7 +81,6 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
             fixture.Customize<Decision>(sb => sb.FromFactory(() =>
             {
                 var decision = Decision.CreateNew(
-                    concernsCaseId: fixture.Create<int>(),
                     crmCaseNumber: new string(fixture.CreateMany<char>(Decision.MaxCaseNumberLength).ToArray()),
                     retrospectiveApproval: fixture.Create<bool>(),
                     submissionRequired: fixture.Create<bool>(),
@@ -87,7 +89,7 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
                     decisionTypes: new DecisionType[] { new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove) },
                     totalAmountRequested: fixture.Create<decimal>(),
                     supportingNotes: new string(fixture.CreateMany<char>(Decision.MaxSupportingNotesLength).ToArray()),
-                    createdAt: DateTimeOffset.Now
+                    DateTimeOffset.Now
                 );
                 decision.DecisionId = fixture.Create<int>();
                 return decision;
@@ -97,5 +99,4 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
             fixture.Behaviors.Add(new OmitOnRecursionBehavior());
             return fixture;
         }
-    }
-}
+    }}

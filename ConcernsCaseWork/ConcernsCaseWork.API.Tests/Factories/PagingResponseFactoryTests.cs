@@ -22,7 +22,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 Page = page,
                 RecordCount = recordCount,
                 NextPageUrl = null
-
             };
 
             var result = PagingResponseFactory.Create(page, count, recordCount, It.IsAny<HttpRequest>());

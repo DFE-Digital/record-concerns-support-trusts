@@ -11,5 +11,4 @@ public record CorrelationContext() : ICorrelationContext
 	}
 
 	public string HeaderKey { get => "x-correlation-id"; }
-
 }

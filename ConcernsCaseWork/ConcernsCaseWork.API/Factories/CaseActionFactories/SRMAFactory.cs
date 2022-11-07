@@ -46,7 +46,6 @@ namespace ConcernsCaseWork.API.Factories.CaseActionFactories
                 CreatedBy = model.CreatedBy
             };
         }
-
  
     }
 }

@@ -19,7 +19,7 @@ class CreateCaseConcernsPage {
     }
 
     getMorRadio() {
-        return 	cy.get('[id="means-of-referral-urn"]');
+        return 	cy.get('[id="means-of-referral-id"]');
     }
 
     getAddConcernBtn() {
@@ -27,7 +27,7 @@ class CreateCaseConcernsPage {
     }
 
     getMorRadio() {
-        return 	cy.get('[id="means-of-referral-urn"]');
+        return 	cy.get('[id="means-of-referral-id"]');
     }
     
     getConcernRadio() {

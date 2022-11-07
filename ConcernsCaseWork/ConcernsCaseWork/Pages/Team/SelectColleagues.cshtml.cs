@@ -34,7 +34,6 @@ namespace ConcernsCaseWork.Pages.Team
 
 		public async Task<ActionResult> OnGetAsync()
 		{
-
 			try
 			{
 				_logger.LogMethodEntered();
@@ -69,8 +68,6 @@ namespace ConcernsCaseWork.Pages.Team
 				return Page();
 			}
 		}
-
-
 
 		private async Task LoadPage()
 		{

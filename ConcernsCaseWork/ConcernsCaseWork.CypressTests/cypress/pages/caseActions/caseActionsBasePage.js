@@ -49,7 +49,7 @@ class CaseActionsBasePage {
     }
 
     getBackToCaseLink() {
-        return    cy.get('[id="back-to-case-link"]', { timeout: 30000 });
+        return    cy.get('[id="back-link-event"]', { timeout: 30000 });
     }
 
     //Dates

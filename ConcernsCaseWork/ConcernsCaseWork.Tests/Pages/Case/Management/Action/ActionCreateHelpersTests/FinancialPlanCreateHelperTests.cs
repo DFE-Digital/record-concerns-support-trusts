@@ -13,7 +13,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 	[Parallelizable(ParallelScope.All)]
 	public class FinancialPlanCreateHelperTests
 	{
-
 		[Test]
 		public async Task FinancialPlanCreateHelper_CanHandle_RespondsCorrectly()
 		{
@@ -67,10 +66,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 
 			mockFinancialPlanService.Setup(svc => svc.GetFinancialPlansModelByCaseUrn(888, string.Empty)).Returns(Task.FromResult(caseActions));
 
-
 			// act, assert
 			Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.NewCaseActionAllowed(888, string.Empty));
 		}
 	}
-
 }

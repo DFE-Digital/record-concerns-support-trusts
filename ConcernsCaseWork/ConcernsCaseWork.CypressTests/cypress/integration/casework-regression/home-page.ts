@@ -3,17 +3,24 @@ describe("Home page tests", () => {
 		cy.login();
 	});
 
+	after(function () {
+		cy.clearLocalStorage();
+		cy.clearCookies();
+	});
+
 	afterEach(() => {
 		cy.storeSessionData();
 	});
 
 	it("Create, Find and Closed Case buttons should be displayed", () => {
+
 		cy.get('.govuk-button[href="/case/closed"]').should("be.visible");
 		cy.get('.govuk-button[href="/trust"]').should("be.visible");
 		cy.get('.govuk-button[href="/case"]').should("be.visible");
 	});
 
    it('User clicks on Create Case and should see Search Trusts', () => {
+
 	   cy.get('[href="/case"]').click()
 	   cy.get('#search').should('be.visible')
    });
@@ -37,8 +44,3 @@ describe("Home page tests", () => {
 		cy.get('[href="/case/closed"').should('be.visible')
 	});
 });
-
-	after(function () {
-		cy.clearLocalStorage();
-		cy.clearCookies();
-	});

@@ -16,7 +16,6 @@ namespace ConcernsCaseWork.Security
 		private readonly ILogger<RbacManager> _logger;
 		private readonly ITeamsCachedService _teamsService;
 
-
 		public RbacManager(ILogger<RbacManager> logger, ITeamsCachedService teamsService)
 		{
 			_logger = Guard.Against.Null(logger);

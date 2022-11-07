@@ -50,7 +50,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public List<ActionSummaryModel> OpenCaseActions { get; set; }
 		public List<ActionSummaryModel> ClosedCaseActions { get; set; }
 
-
 		public IndexPageModel(ICaseModelService caseModelService,
 			ITrustModelService trustModelService,
 			IRecordModelService recordModelService,

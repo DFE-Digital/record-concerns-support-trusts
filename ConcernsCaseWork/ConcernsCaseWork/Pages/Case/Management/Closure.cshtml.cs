@@ -143,7 +143,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			return closedState != null && caseDto?.StatusId == closedState?.Id;
 		}
 
-
 		private async Task<List<string>> ValidateCloseConcern(long caseUrn)
 		{
 			List<string> errorMessages = new List<string>();

@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-
 namespace ConcernsCaseWork.API.Tests.UseCases
 {
     public class GetNoticeToImproveByIdTests
@@ -19,7 +18,6 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             var noticeToImproveId = 544;
             var reasonMappings = new List<NoticeToImproveReasonMapping>() { new NoticeToImproveReasonMapping() { NoticeToImproveReasonId = 1 } };
             var conditionMappings = new List<NoticeToImproveConditionMapping>() { new NoticeToImproveConditionMapping() { NoticeToImproveConditionId = 1 } };
-
 
             var noticeToImprove = new NoticeToImprove
             {
@@ -40,6 +38,5 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             result.Should().NotBeNull();
             result.Should().BeEquivalentTo(expectedResult);
         }
-
     }
 }

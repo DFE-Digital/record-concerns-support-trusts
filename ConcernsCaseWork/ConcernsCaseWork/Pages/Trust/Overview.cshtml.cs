@@ -23,7 +23,6 @@ namespace ConcernsCaseWork.Pages.Trust
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<TrustCasesModel> TrustCasesModel { get; private set; }
 
-
 		public OverviewPageModel(ITrustModelService trustModelService,
 			ICaseModelService caseModelService,
 			ITypeModelService typeModelService,

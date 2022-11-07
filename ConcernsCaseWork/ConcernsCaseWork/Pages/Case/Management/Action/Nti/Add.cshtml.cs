@@ -301,6 +301,5 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		{
 			Nti  = await _ntiModelService.GetNtiByIdAsync(NtiId.Value);
 		}
-
 	}
 }

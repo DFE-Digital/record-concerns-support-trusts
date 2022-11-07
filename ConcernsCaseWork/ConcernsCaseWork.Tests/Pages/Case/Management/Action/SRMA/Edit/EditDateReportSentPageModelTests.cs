@@ -233,7 +233,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA.Edit
 				Url = new UrlHelper(actionContext),
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
-
 		}
 	}
 }

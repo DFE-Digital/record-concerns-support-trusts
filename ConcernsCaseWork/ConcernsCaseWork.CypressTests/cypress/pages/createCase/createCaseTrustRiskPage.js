@@ -18,7 +18,7 @@ class CreateCaseTrustRiskPage {
     }
 
     getStatusRadio() {
-        return cy.get('[id="means-of-referral-urn"]');
+        return cy.get('[id="means-of-referral-id"]');
     }
 
     getStatusRadioLabel() {

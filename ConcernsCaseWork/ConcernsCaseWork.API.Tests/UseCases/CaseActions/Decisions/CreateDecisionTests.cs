@@ -18,7 +18,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
 {
-    public class CreateDecisionTests
+	    public class CreateDecisionTests
     {
         [Fact]
         public void CreateDecision_Implements_IUseCaseAsync()
@@ -52,7 +52,6 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
         [Fact]
         public async Task Execute_Throws_Exception_If_Request_IsInvalid()
         {
-
             var badRequestObject = new CreateDecisionRequest
             {
                 DecisionTypes = new Data.Enums.Concerns.DecisionType[] { 0 }
@@ -70,7 +69,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             var fixture = CreateFixture();
 
             var mockGateway = new Mock<IConcernsCaseGateway>();
-            mockGateway.Setup(x => x.GetConcernsCaseById(It.IsAny<int>()))
+            mockGateway.Setup(x => x.GetConcernsCaseByUrn(It.IsAny<int>(), false))
                 .Returns(default(ConcernsCase));
 
             var request = fixture.Create<CreateDecisionRequest>();
@@ -93,12 +92,11 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             var fakeNewDecision = CreateRandomDecision(fixture, request);
 
             var mockGateway = new Mock<IConcernsCaseGateway>();
-            mockGateway.Setup(x => x.GetConcernsCaseById(request.ConcernsCaseUrn))
+            mockGateway.Setup(x => x.GetConcernsCaseByUrn(request.ConcernsCaseUrn, false))
                 .Returns(fakeConcernsCase);
 
-
             var mockDecisionFactory = new Mock<IDecisionFactory>();
-            mockDecisionFactory.Setup(x => x.CreateDecision(fakeConcernsCase.Id, request))
+            mockDecisionFactory.Setup(x => x.CreateDecision(request))
                 .Returns(fakeNewDecision);
 
             var fakeResponse = new CreateDecisionResponse(fakeConcernsCase.Urn, fixture.Create<int>());
@@ -127,7 +125,6 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
         private Decision CreateRandomDecision(Fixture fixture, CreateDecisionRequest request)
         {
             return Decision.CreateNew(
-                concernsCaseId: fixture.Create<int>(),
                 crmCaseNumber: request.CrmCaseNumber,
                 retrospectiveApproval: request.RetrospectiveApproval,
                 submissionRequired: request.SubmissionRequired,
@@ -136,7 +133,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
                 decisionTypes: request.DecisionTypes.Select(x => new DecisionType(x)).ToArray(),
                 totalAmountRequested: request.TotalAmountRequested,
                 supportingNotes: request.SupportingNotes,
-                createdAt: fixture.Create<DateTimeOffset>());
+                fixture.Create<DateTimeOffset>());
         }
     }
 }

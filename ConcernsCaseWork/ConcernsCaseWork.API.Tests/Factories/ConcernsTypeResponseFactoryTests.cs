@@ -12,7 +12,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
         [Fact]
         public void ReturnsConcernsTypeResponse_WhenGivenAnConcernsType()
         {
-            
             var concernType = new ConcernsType
             {
                 Id = 2,

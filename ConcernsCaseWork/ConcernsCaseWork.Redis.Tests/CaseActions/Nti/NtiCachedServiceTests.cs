@@ -97,7 +97,6 @@ namespace ConcernsCaseWork.Redis.Tests.CaseActions.Nti
 			mockCacheProvider.Verify(c => c.SetCache(CreateCacheKeyForNti(ntiFromDB.Id), ntiFromDB, It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
 		}
 
-
 		[Test]
 		public async Task GetNtisForCase_WhenFoundInCache_ReturnFromCache()
 		{

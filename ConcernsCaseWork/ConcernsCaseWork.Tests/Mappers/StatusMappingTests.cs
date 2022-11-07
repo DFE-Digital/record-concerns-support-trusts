@@ -39,6 +39,5 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(statusModel.Id, Is.EqualTo(firstStatusDto.Id));
 			Assert.That(statusModel.Name, Is.EqualTo(firstStatusDto.Name));
 		}
-
 	}
 }

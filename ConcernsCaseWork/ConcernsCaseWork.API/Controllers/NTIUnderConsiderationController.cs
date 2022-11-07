@@ -20,7 +20,6 @@ namespace ConcernsCaseWork.API.Controllers
         private readonly IUseCase<object, List<NTIUnderConsiderationStatus>> _getAllStatuses;
         private readonly IUseCase<object, List<NTIUnderConsiderationReason>> _getAllReasons;
 
-
         public NTIUnderConsiderationController(ILogger<NTIUnderConsiderationController> logger,
             IUseCase<CreateNTIUnderConsiderationRequest, NTIUnderConsiderationResponse> createNtiUnderConsiderationUseCase,
             IUseCase<long, NTIUnderConsiderationResponse> getNtiUnderConsiderationByIdUseCase,

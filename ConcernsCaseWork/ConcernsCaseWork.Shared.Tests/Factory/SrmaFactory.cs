@@ -20,7 +20,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 
 		public static SRMAModel BuildSrmaModel(SRMAStatus status, SRMAReasonOffered reason = SRMAReasonOffered.Unknown, DateTime? closedAt = null)
 		{
-
 			var srma = new SRMAModel
 			{
 				Id = Fixture.Create<long>(),

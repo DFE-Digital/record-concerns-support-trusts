@@ -188,7 +188,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA.Edit
 
 			Assert.That(page, Is.Not.Null);
 			Assert.That(page.Url, Is.EqualTo($"/case/{srmaModel.CaseUrn}/management/action/srma/{srmaModel.Id}"));
-
 		}
 
 		[Test]
@@ -314,7 +313,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA.Edit
 				Url = new UrlHelper(actionContext),
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
-
 		}
 	}
 }

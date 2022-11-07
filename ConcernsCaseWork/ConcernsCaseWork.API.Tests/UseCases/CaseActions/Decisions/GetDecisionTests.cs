@@ -53,7 +53,6 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             fixture.Customize<Decision>(sb => sb.FromFactory(() =>
             {
                 var decision = Decision.CreateNew(
-                    concernsCaseId: fixture.Create<int>(),
                     crmCaseNumber: new string(fixture.CreateMany<char>(Decision.MaxCaseNumberLength).ToArray()),
                     retrospectiveApproval: fixture.Create<bool>(),
                     submissionRequired: fixture.Create<bool>(),
@@ -62,7 +61,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
                     decisionTypes: new DecisionType[] { new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove) },
                     totalAmountRequested: fixture.Create<decimal>(),
                     supportingNotes: new string(fixture.CreateMany<char>(Decision.MaxSupportingNotesLength).ToArray()),
-                    createdAt: DateTimeOffset.Now
+                    DateTimeOffset.Now
                 );
                 decision.DecisionId = fixture.Create<int>();
                 return decision;
@@ -85,12 +84,11 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
 
             var mockGateWay = new Mock<IConcernsCaseGateway>();
             mockGateWay
-                .Setup(x => x.GetConcernsCaseById(fakeRequest.ConcernsCaseUrn))
+                .Setup(x => x.GetConcernsCaseByUrn(fakeRequest.ConcernsCaseUrn, false))
                 .Returns(fakeConcernsCase);
 
             var fakeResponse = fixture.Build<GetDecisionResponse>()
                 .With(x => x.DecisionId, fakeRequest.DecisionId)
-                .With(x => x.ConcernsCaseId, fakeConcernsCase.Id)
                 .Create();
 
             var mockGetDecisionResponseFactory = new Mock<IGetDecisionResponseFactory>();
@@ -104,21 +102,17 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
 
             // assert
             response.Should().NotBeNull();
-            response.ConcernsCaseId.Should().Be(fakeConcernsCase.Id);
             response.DecisionId.Should().Be(fakeRequest.DecisionId);
         }
 
         private ConcernsCase CreateRandomConcernsCase(Fixture fixture, params Decision[] decisions)
         {
-            if (decisions is null)
-            {
-                decisions = Array.Empty<Decision>();
-            }
+            decisions ??= Array.Empty<Decision>();
 
             var newCase = fixture.Create<ConcernsCase>();
             foreach (var decision in decisions)
             {
-                newCase.AddDecision(decision);
+                newCase.AddDecision(decision, DateTimeOffset.Now);
             }
 
             return newCase;

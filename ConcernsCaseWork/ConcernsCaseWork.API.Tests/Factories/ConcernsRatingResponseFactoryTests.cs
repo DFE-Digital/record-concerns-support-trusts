@@ -12,7 +12,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
         [Fact]
         public void ReturnsConcernsRatingResponse_WhenGivenAnConcernsRating()
         {
-
             var concernsRating = new ConcernsRating
             {
                 Id = 5,

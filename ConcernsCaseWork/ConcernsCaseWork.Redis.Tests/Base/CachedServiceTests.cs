@@ -17,7 +17,6 @@ namespace ConcernsCaseWork.Redis.Tests.Base
 			}
 		}
 
-
 		[Test]
 		public async Task WhenStoreData_Return_Successful()
 		{
@@ -64,7 +63,6 @@ namespace ConcernsCaseWork.Redis.Tests.Base
 			// assert
 			mockCacheProvider.Verify(c => 
 				c.ClearCache(It.IsAny<string>()), Times.Once);
-
 		}
 	}
 }

@@ -1,7 +1,9 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.Data.Enums;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -20,7 +22,6 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
         private Decision CreateRandomDecision(Fixture fixture)
         {
             return Decision.CreateNew(
-                concernsCaseId: fixture.Create<int>(),
                 crmCaseNumber: fixture.Create<string>().Substring(0, 20),
                 retrospectiveApproval: fixture.Create<bool?>(),
                 submissionRequired: fixture.Create<bool?>(),
@@ -29,23 +30,27 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
                 decisionTypes: fixture.CreateMany<DecisionType>().ToArray(),
                 totalAmountRequested: fixture.Create<decimal>(),
                 supportingNotes: fixture.Create<string>(),
-                createdAt: fixture.Create<DateTimeOffset>());
+                DateTimeOffset.Now);
         }
 
         [Theory]
-        [InlineData(0, 10000, "caseNumber", "notes", "link", "concernsCaseId")]
-        [InlineData(110, -1000, "caseNumber", "notes", "link", "totalAmountRequested")]
-        [InlineData(110, 1000, "_maxString_", "notes", "link", "crmCaseNumber")]
-        [InlineData(110, 1000, "caseNumber", "_maxString_", "link", "supportingNotes")]
-        [InlineData(110, 1000, "caseNumber", "notes", "_maxString_", "submissionDocumentLink")]
-        public void CreateNew_With_Invalid_Arguments_Throws_Exception(int caseId, decimal amountRequested, string crmCaseNumber, string supportingNotes, string submissionDocumentLink, string expectedParamName)
+        [InlineData(-1000, "caseNumber", "notes", "link", "totalAmountRequested")]
+        [InlineData(1000, "_maxString_", "notes", "link", "crmCaseNumber")]
+        [InlineData(1000, "caseNumber", "_maxString_", "link", "supportingNotes")]
+        [InlineData(1000, "caseNumber", "notes", "_maxString_", "submissionDocumentLink")]
+        public void CreateNew_With_Invalid_Arguments_Throws_Exception(decimal amountRequested, string crmCaseNumber, string supportingNotes, string submissionDocumentLink, string expectedParamName)
         {
             var fixture = new Fixture();
-            crmCaseNumber = crmCaseNumber == "_maxString_" ? CreateFixedLengthString(fixture, Decision.MaxCaseNumberLength + 1): crmCaseNumber;
+            crmCaseNumber = crmCaseNumber == "_maxString_" ? CreateFixedLengthString(fixture, Decision.MaxCaseNumberLength + 1) : crmCaseNumber;
             supportingNotes = supportingNotes == "_maxString_" ? CreateFixedLengthString(fixture, Decision.MaxSupportingNotesLength + 1) : supportingNotes;
             submissionDocumentLink = submissionDocumentLink == "_maxString_" ? CreateFixedLengthString(fixture, Decision.MaxUrlLength + 1) : submissionDocumentLink;
 
-            Action act = () => Decision.CreateNew(caseId, crmCaseNumber, null, null, submissionDocumentLink, DateTimeOffset.UtcNow,
+            Action act = () => Decision.CreateNew(
+                crmCaseNumber,
+                null,
+                null,
+                submissionDocumentLink,
+                DateTimeOffset.UtcNow,
                 Array.Empty<DecisionType>(), amountRequested, supportingNotes, DateTimeOffset.Now);
 
             act.Should().Throw<ArgumentException>().And.ParamName.Should().Be(expectedParamName);
@@ -61,7 +66,6 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
         [InlineData(null, null, null)]
         public void CreateNew_Sets_Properties(string caseNumber, string notes, string link)
         {
-
             var fixture = new Fixture();
             var decisionId = fixture.Create<int>();
 
@@ -73,7 +77,6 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 
             var expectation = new
             {
-                ConcernsCaseId = fixture.Create<int>(),
                 CrmCaseNumber = caseNumber,
                 RetrospectiveApproval = true,
                 SubmissionRequired = true,
@@ -86,7 +89,6 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
             };
 
             var sut = Decision.CreateNew(
-                expectation.ConcernsCaseId,
                 expectation.CrmCaseNumber,
                 expectation.RetrospectiveApproval,
                 expectation.SubmissionRequired,
@@ -109,7 +111,79 @@ namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
         {
             var fixture = new Fixture();
             var sut = CreateRandomDecision(fixture);
-            sut.Status.Should().Be(ConcernsCaseWork.Data.Enums.Concerns.DecisionStatus.InProgress);
+            sut.Status.Should().Be(Data.Enums.Concerns.DecisionStatus.InProgress);
+        }
+
+        [Fact]
+        public void GetTitle_Maps_Multiple_Decision_Types_To_Text()
+        {
+            var fixture = new Fixture();
+            var sut = Decision.CreateNew(
+                "12345",
+                true,
+                true,
+                "https://somewhere/somelink.doc",
+                DateTimeOffset.UtcNow,
+                fixture.CreateMany<DecisionType>(5).ToArray(),
+                13.5m,
+                "some notes",
+                DateTimeOffset.UtcNow
+            );
+
+            sut.GetTitle().Should().Be("Multiple Decision Types");
+        }
+
+        [Fact]
+        public void GetTitle_Maps_Zero_Decision_Types_To_Text()
+        {
+            var sut = Decision.CreateNew(
+                "12345",
+                true,
+                true,
+                "https://somewhere/somelink.doc",
+                DateTimeOffset.UtcNow,
+                null,
+                13.5m,
+                "some notes",
+                DateTimeOffset.UtcNow
+            );
+
+            sut.GetTitle().Should().Be("No Decision Types");
+        }
+
+        [Theory]
+        [MemberData(nameof(TestData))]
+        public void GetTitle_When_One_DecisionType_Maps_To_DecisionType_Description(Data.Enums.Concerns.DecisionType decisionType)
+        {
+            var decisionTypes = new[]
+            {
+                new DecisionType(decisionType) { DecisionId = (int)decisionType },
+            };
+
+            var sut = Decision.CreateNew(
+                "12345",
+                true,
+                true,
+                "https://somewhere/somelink.doc",
+                DateTimeOffset.UtcNow,
+                decisionTypes,
+                13.5m,
+                "some notes",
+                DateTimeOffset.UtcNow
+            );
+
+            sut.GetTitle().Should().Be(decisionType.GetDescription());
+        }
+
+        public static IEnumerable<object[]> TestData
+        {
+            get
+            {
+                foreach (var enumValue in Enum.GetValues(typeof(Data.Enums.Concerns.DecisionType)))
+                {
+                    yield return new object[] { (Data.Enums.Concerns.DecisionType)enumValue };
+                }
+            }
         }
     }
 }

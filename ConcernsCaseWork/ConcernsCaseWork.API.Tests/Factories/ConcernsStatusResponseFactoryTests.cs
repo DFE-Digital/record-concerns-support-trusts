@@ -10,9 +10,8 @@ namespace ConcernsCaseWork.API.Tests.Factories
     public class ConcernsStatusResponseFactoryTests
     {
         [Fact]
-        public void ReturnsConcernsStatusResponse_WhenGivenAnConcernsStatus()
+        public void Returns_ConcernsStatusResponse_WhenGiven_ConcernsStatus()
         {
-
             var concernsStatus = new ConcernsStatus
             {
                 Id = 456,

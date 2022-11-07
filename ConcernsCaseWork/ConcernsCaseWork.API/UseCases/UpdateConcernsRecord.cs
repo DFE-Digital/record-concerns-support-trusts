@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.API.UseCases
         {
             var currentConcernsRecord = _concernsRecordGateway.GetConcernsRecordByUrn(urn);
             
-            var concernsCase = _concernsCaseGateway.GetConcernsCaseById(request.CaseUrn) ??
+            var concernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(request.CaseUrn) ??
                                 currentConcernsRecord.ConcernsCase;
             
             var concernsType = _concernsTypeGateway.GetConcernsTypeById(request.TypeId) ??

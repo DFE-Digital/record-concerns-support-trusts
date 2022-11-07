@@ -27,6 +27,5 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.NTI.WarningLetter
 
             return NTIWarningLetterFactory.CreateResponse(createdNTIWarningLetter);
         }
-
     }
 }

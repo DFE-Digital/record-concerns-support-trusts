@@ -80,7 +80,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				await _caseModelService.PatchCaseRating(patchCaseModel);
 					
 				return Redirect(url);
-
 			}
 			catch (Exception ex)
 			{

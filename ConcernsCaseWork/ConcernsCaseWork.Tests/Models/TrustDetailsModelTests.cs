@@ -29,6 +29,5 @@ namespace ConcernsCaseWork.Tests.Models
 			Assert.That(trustDetailsModel.TotalPupilCapacity, Is.EqualTo(expectedTotalSchoolCapacity));
 			Assert.That(trustDetailsModel.PupilCapacityPercentage, Is.EqualTo(expectedPupilCapacityPercentage));
 		}
-
 	}
 }

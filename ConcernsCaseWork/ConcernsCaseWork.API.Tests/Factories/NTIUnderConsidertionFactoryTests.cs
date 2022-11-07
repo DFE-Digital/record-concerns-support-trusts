@@ -13,7 +13,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
 {
     public class NTIUnderConsidertionFactoryTests
     {
-
         [Fact]
         public void CreateDBModel_ExpectedNTIUnderConsideration_WhenCreateNTIUnderConsiderationRequestProvided()
         {
@@ -31,7 +30,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 ClosedAt = dtCreated
             };
 
-
             var createNTIUnderConsideration = Builder<CreateNTIUnderConsiderationRequest>
                 .CreateNew()
                 .With(r => r.CaseUrn = details.CaseUrn)
@@ -43,7 +41,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 .With(r => r.ClosedStatusId = details.ClosedStatusId)
                 .With(r => r.ClosedAt = details.ClosedAt)
                 .Build();
-
 
             var expectedNTIUnderConsideration = new NTIUnderConsideration
             {
@@ -84,7 +81,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 ClosedAt = dtCreated
             };
 
-
             var patchNTIUnderConsideration = Builder<PatchNTIUnderConsiderationRequest>
                 .CreateNew()
                 .With(r => r.Id = details.Id)
@@ -97,7 +93,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 .With(r => r.ClosedStatusId = details.ClosedStatusId)
                 .With(r => r.ClosedAt = details.ClosedAt)
                 .Build();
-
 
             var expectedNTIUnderConsideration = new NTIUnderConsideration
             {
@@ -142,7 +137,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 ClosedAt = dtCreated
             };
 
-
             var ntiUnderConsideration = Builder<NTIUnderConsideration>
                 .CreateNew()
                 .With(r => r.Id = details.Id)
@@ -155,7 +149,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 .With(r => r.ClosedStatusId = details.ClosedStatusId)
                 .With(r => r.ClosedAt = details.ClosedAt)
                 .Build();
-
 
             var expectedNTIUnderConsiderationResponse = new NTIUnderConsiderationResponse
             {
@@ -173,6 +166,5 @@ namespace ConcernsCaseWork.API.Tests.Factories
             var response = NTIUnderConsiderationFactory.CreateResponse(ntiUnderConsideration);
             response.Should().BeEquivalentTo(expectedNTIUnderConsiderationResponse);
         }
-
     }
 }

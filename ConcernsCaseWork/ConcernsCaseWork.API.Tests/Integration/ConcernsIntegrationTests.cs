@@ -20,7 +20,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
     [Collection("Database")]
     public class ConcernsIntegrationTests : IClassFixture<ConcernsDataApiFactory>, IDisposable
     {
-        
         private readonly HttpClient _client;
         private readonly ConcernsDbContext _dbContext;
         private readonly Fixture _fixture;
@@ -58,7 +57,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 .With(c => c.RatingId = 2)
                 .Build();
             
-
 
             var httpRequestMessage = new HttpRequestMessage
             {
@@ -214,7 +212,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
             
             response.StatusCode.Should().Be(200);
             content.Data.Count().Should().Be(3);
-            
         }
         
         [Fact]
@@ -230,7 +227,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
             
             response.StatusCode.Should().Be(200);
             content.Data.Count().Should().Be(13);
-            
         }
         
         [Fact]
@@ -280,7 +276,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
             
             response.StatusCode.Should().Be(200);
             content.Data.Should().BeEquivalentTo(expectedContent);
-
         }
 
         [Fact]

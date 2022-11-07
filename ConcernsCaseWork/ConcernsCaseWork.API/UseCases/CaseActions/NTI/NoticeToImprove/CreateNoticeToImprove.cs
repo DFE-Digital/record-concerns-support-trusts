@@ -27,6 +27,5 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.NTI.NoticeToImprove
 
             return NoticeToImproveFactory.CreateResponse(createdNoticeToImprove);
         }
-
     }
 }

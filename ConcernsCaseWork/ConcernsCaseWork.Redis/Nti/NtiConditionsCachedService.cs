@@ -46,6 +46,5 @@ namespace ConcernsCaseWork.Redis.Nti
 
 			return conditions;
 		}
-
 	}
 }

@@ -8,7 +8,6 @@ namespace ConcernsCaseWork.Redis.Security
 		// TODO DI Integrate Azure AD
 		public ActiveDirectoryService()
 		{
-			
 		}
 
 		/// <summary>

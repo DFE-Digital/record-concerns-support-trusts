@@ -47,7 +47,6 @@ namespace ConcernsCaseWork.Service.Trusts
 					{
 						break;
 					}
-
 				} while (apiListWrapperTrusts?.Data != null && apiListWrapperTrusts.Data.Any() && apiListWrapperTrusts.Paging?.NextPageUrl != null);
 			}
 			finally

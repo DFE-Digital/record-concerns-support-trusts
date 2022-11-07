@@ -65,7 +65,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out caseUrn) || caseUrn == 0)
 					throw new Exception("CaseUrn is null or invalid to parse");
-			
 			}
 			catch (Exception ex)
 			{

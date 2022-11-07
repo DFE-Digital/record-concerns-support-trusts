@@ -143,7 +143,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(expectedCaseDto.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
 		}
 
-
 		[Test]
 		public void WhenMapDirectionOfTravel_Returns_CaseDto()
 		{

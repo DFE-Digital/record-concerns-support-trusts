@@ -108,6 +108,5 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 
 			return (caseUrn, srmaId);
 		}
-	
 	}
 }

@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.Data.Gateways
     public class ConcernsCaseGateway : IConcernsCaseGateway
     {
         private readonly ConcernsDbContext _concernsDbContext;
-        
+
         public ConcernsCaseGateway(ConcernsDbContext concernsDbContext)
         {
             _concernsDbContext = concernsDbContext;
@@ -32,17 +32,22 @@ namespace ConcernsCaseWork.Data.Gateways
                 .ToList();
         }
 
-        public ConcernsCase GetConcernsCaseById(int urn)
+        public ConcernsCase GetConcernsCaseByUrn(int urn, bool withChangeTracking = false)
         {
-            var concernsCase = _concernsDbContext.ConcernsCase
-                .Include(x => x.Decisions)
-                .ThenInclude(x => x.DecisionTypes)
-                .AsNoTracking()
-                .FirstOrDefault(c => c.Urn == urn);
-            
-            return concernsCase;
+	        var exp = _concernsDbContext.ConcernsCase
+		        .Include(x => x.Decisions)
+		        .ThenInclude(x => x.DecisionTypes);
+
+	        if (!withChangeTracking)
+	        {
+		        exp.AsNoTracking();
+	        }
+
+	        var concernsCase = exp.FirstOrDefault(c => c.Urn == urn);
+
+	        return concernsCase;
         }
-        
+
         public ConcernsCase GetConcernsCaseIncludingRecordsById(int urn)
         {
             var concernsCase = _concernsDbContext.ConcernsCase
@@ -56,13 +61,12 @@ namespace ConcernsCaseWork.Data.Gateways
                 .ThenInclude(x => x.DecisionTypes)
                 .AsNoTracking()
                 .FirstOrDefault(c => c.Urn == urn);
-            
+
             return concernsCase;
         }
 
         public IList<ConcernsCase> GetConcernsCasesByOwnerId(string ownerId, int? statusId, int page, int count)
         {
-
             var query = _concernsDbContext.ConcernsCase
                 .Include(x => x.Decisions)
                 .ThenInclude(x => x.DecisionTypes)
@@ -76,8 +80,14 @@ namespace ConcernsCaseWork.Data.Gateways
             query = query.Skip((page - 1) * count)
                 .Take(count)
                 .AsNoTracking();
-            
+
             return query.ToList();
+        }
+
+        public async Task<ConcernsCase> UpdateExistingAsync(ConcernsCase concernsCase)
+        {
+	        _concernsDbContext.SaveChanges();
+	        return concernsCase;
         }
 
         public ConcernsCase Update(ConcernsCase concernsCase)
