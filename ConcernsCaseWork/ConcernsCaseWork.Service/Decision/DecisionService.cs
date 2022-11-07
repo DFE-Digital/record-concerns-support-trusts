@@ -28,22 +28,24 @@ namespace ConcernsCaseWork.Service.Decision
 			return postResponse;
 		}
 
-		public async Task<List<GetDecisionResponseDto>> GetDecisionsByCaseUrn(long urn)
+		public async Task<List<DecisionSummaryResponseDto>> GetDecisionsByCaseUrn(long urn)
 		{
 			_logger.LogMethodEntered();
 			_logger.LogInformation($"Getting decisions for case urn {urn}");
 
-			var result = await Get<List<GetDecisionResponseDto>>($"/{EndpointsVersion}/concerns-cases/{urn}/decisions");
+			var result = await Get<List<DecisionSummaryResponseDto>>($"/{EndpointsVersion}/concerns-cases/{urn}/decisions");
 
 			_logger.LogInformation($"Retrieved {result.Count} decisions for case urn {urn}");
 
 			return result;
 		}
 
-		public Task<GetDecisionResponseDto> GetDecision(long urn, int decisionId)
+		public async Task<DecisionSummaryResponseDto> GetDecision(long urn, int decisionId)
 		{
 			_logger.LogMethodEntered();
-			throw new NotImplementedException();
+			var result = await Get<DecisionSummaryResponseDto>($"/{EndpointsVersion}/concerns-cases/{urn}/decisions/{decisionId}");
+			_logger.LogInformation($"Retrieved decision {decisionId} for case urn {urn}");
+			return result;
 		}
 	}
 }

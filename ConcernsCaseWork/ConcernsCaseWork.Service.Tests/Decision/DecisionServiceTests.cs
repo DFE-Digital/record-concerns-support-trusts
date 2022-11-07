@@ -78,8 +78,8 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 			var urn = 3;
 
 			Fixture fixture = CreateMockedFixture();
-			var expectedResponseDto = fixture.Create<List<GetDecisionResponseDto>>();
-			var responseWrapper = new ApiWrapper<List<GetDecisionResponseDto>>(expectedResponseDto);
+			var expectedResponseDto = fixture.Create<List<DecisionSummaryResponseDto>>();
+			var responseWrapper = new ApiWrapper<List<DecisionSummaryResponseDto>>(expectedResponseDto);
 
 			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{urn}/decisions", responseWrapper);
 			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
