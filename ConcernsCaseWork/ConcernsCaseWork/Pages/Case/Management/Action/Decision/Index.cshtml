@@ -1,0 +1,183 @@
+﻿@page "/case/{urn:long}/management/action/decision/{decisionId:long}/{handler?}"
+@model ConcernsCaseWork.Pages.Case.Management.Action.Decision.IndexPageModel
+
+@using ConcernsCaseWork.Helpers;
+@using ConcernsCaseWork.Extensions;
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+	ViewData["Title"] = "Decision";
+	ViewData["BackButtonLabel"] = "Back to case";
+	// ViewData["BackButtonLink"] = $"/case/{Model.CaseUrn}/management";
+
+	var errorClass = "govuk-error-message";
+	var srmaValidationErrors = TempData["Decision.Message"] as IEnumerable<string>;
+}
+
+@section BeforeMain {
+	<div class="govuk-width-container">
+		<partial name="_BackLink"/>
+	</div>
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError" />
+
+	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+	{
+		<partial name="_Error" />
+	}
+	else
+	{
+		<h1 class="govuk-heading-l">
+			<span class="govuk-caption-m">Case ID 123</span>
+			Decision
+		</h1>
+
+		<div class="govuk-hint" data-testid="decision-extra-info">
+			Review information before editing, returning back to case or continuing to record decision outcome.
+		</div>
+
+		<table class="govuk-table">
+			<caption class="govuk-table__caption govuk-table__caption--m"></caption>
+			<thead>
+				<tr>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+				</tr>
+			</thead>
+
+			<tbody class="govuk-table__body">
+
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header" data-testid="crm-enquiry-label">CRM enquiry number</th>
+					<td class="govuk-table__cell" data-testid="crm-enquiry-text">
+						@{
+							RenderValue(123456);
+						}
+					</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header" data-testid="retrospective-request-label">Retrospective request?</th>
+					<td class="govuk-table__cell" data-testid="retrospective-request-text">
+						@{
+							RenderValue("No");
+						}
+					</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header" data-testid="submission-required-label">Submission required?</th>
+					<td class="govuk-table__cell" data-testid="submission-required-text">
+						@{
+							RenderValue("No");
+						}
+					</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header" data-testid="submission-link-label">Submission link</th>
+					<td class="govuk-table__cell" data-testid="submission-link-text">
+						@{
+							RenderValue("www.gov.uk");
+						}
+					</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header" data-testid="date-esfa-received-label">Date ESFA received request</th>
+					<td class="govuk-table__cell" data-testid="date-esfa-received-text">
+						@{
+							RenderValue("20-04-2022");
+						}
+					</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header" data-testid="amount-requested-label">Total amount requested</th>
+					<td class="govuk-table__cell" data-testid="amount-requested-text">
+						@{
+							RenderValue("£150,000");
+						}
+					</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header" data-testid="decision-type-label">Type of decision</th>
+					<td class="govuk-table__cell" data-testid="decision-type-text">
+						<ul>
+							<li>
+								@{
+									RenderValue("Repayable finacial support");
+								}
+							</li>
+						</ul>
+
+					</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header" data-testid="supporting-notes-label">Supporting notes</th>
+					<td class="govuk-table__cell" data-testid="supporting-notes-text">
+						@{
+							RenderValue("These are some supporting notes!");
+						}
+					</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table-case-details__header" data-testid="edit-decision-label">Action</th>
+					<td class="govuk-table__cell" data-testid="edit-decision-text">
+						@{
+							RenderLink("Edit", "action", "http://gov.uk");
+						}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="govuk-button-group">
+			<button 
+				data-prevent-double-click="true" 
+				class="govuk-button govuk-!-margin-top-6" 
+				data-module="govuk-button" 
+				role="button"
+				data-testid="continue-record-decision-button">
+				Continue to record decision outcome
+			</button>
+		</div>
+
+	}
+</div>
+
+@functions {
+    private void RenderValue<T>(T value)
+    {
+        if (IsEmpty(value))
+        {
+            RenderEmptyLabel();
+        }
+        else
+        {
+			@value
+		}
+	}
+
+	private void RenderLink<T>(T value, string fieldName, string url)
+	{
+		var testid = $"{fieldName}-label";
+		<a class="govuk-link" href="@url">
+						@(IsEmpty(value) ? "Add" : "Edit")
+			<span class="govuk-visually-hidden" data-testid=testid>@fieldName</span>
+		</a>
+    }
+
+    private bool IsEmpty<T>(T value)
+    {
+        if (value is string)
+        {
+            return string.IsNullOrWhiteSpace(value as string);
+        }
+
+        return value == null || value.Equals(default(T));
+    }
+
+    private void RenderEmptyLabel()
+    {
+	<span class="govuk-tag ragtag ragtag__grey">Empty</span>
+    }
+}
