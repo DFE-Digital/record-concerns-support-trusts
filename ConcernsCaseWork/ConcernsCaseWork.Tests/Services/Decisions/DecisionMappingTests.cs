@@ -15,8 +15,8 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 		[Test]
 		public void ToActionSummary_ReturnsCorrectModel()
 		{
-			var apiDecision = _fixture.Create<GetDecisionResponseDto>();
-			apiDecision.Status = DecisionStatus.InProgress;
+			var apiDecision = _fixture.Create<DecisionSummaryResponseDto>();
+			apiDecision.DecisionStatus = DecisionStatus.InProgress;
 			apiDecision.CreatedAt = new DateTimeOffset(2023, 1, 4, 0, 0, 0, new TimeSpan());
 			apiDecision.ClosedAt = new DateTimeOffset(2023, 2, 24, 0, 0, 0, new TimeSpan());
 

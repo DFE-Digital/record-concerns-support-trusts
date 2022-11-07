@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
 using System.Runtime.CompilerServices;
 
-namespace ConcernsCaseWork.Extensions
+namespace ConcernsCaseWork.Logging
 {
 	public static class LoggerExtensions
 	{

@@ -17,6 +17,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ConcernsCaseWork.Data\ConcernsCaseWork.Data.csproj" />
+      <ProjectReference Include="..\ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj" />
     </ItemGroup>
 
 </Project>
