@@ -13,7 +13,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 	[Parallelizable(ParallelScope.All)]
 	public class SrmaCreateHelperTests
 	{
-
 		[Test]
 		public async Task SrmaCreateHelper_CanHandle_RespondsCorrectly()
 		{
@@ -71,5 +70,4 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 			Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.NewCaseActionAllowed(888, string.Empty));
 		}
 	}
-
 }

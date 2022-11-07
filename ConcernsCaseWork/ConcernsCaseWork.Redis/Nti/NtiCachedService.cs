@@ -31,7 +31,6 @@ namespace ConcernsCaseWork.Redis.Nti
 			return created;
 		}
 
-
 		public async Task<NtiDto> GetNtiAsync(long ntiId)
 		{
 			NtiDto nti = null;
@@ -178,4 +177,3 @@ namespace ConcernsCaseWork.Redis.Nti
 		}
 	}
 }
-

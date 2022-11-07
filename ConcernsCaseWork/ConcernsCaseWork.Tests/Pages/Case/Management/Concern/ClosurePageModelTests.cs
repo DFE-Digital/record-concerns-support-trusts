@@ -61,7 +61,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 				mockStatusCachedService.Object,
 				mockLogger.Object);
 
-
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
 			routeData.Add("recordId", 1);
@@ -114,7 +113,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 				mockTypeModelService.Object,
 				mockStatusCachedService.Object,
 				mockLogger.Object);
-
 
 			// act
 			await pageModel.OnGet();

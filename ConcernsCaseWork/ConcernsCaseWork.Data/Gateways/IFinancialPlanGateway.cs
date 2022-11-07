@@ -9,6 +9,5 @@ namespace ConcernsCaseWork.Data.Gateways
         Task<ICollection<FinancialPlanCase>> GetFinancialPlansByCaseUrn(int caseUrn);
         Task<FinancialPlanCase> PatchFinancialPlan(FinancialPlanCase updatedFinancialPlan);
         Task<List<FinancialPlanStatus>> GetAllStatuses();
-
     }
 }

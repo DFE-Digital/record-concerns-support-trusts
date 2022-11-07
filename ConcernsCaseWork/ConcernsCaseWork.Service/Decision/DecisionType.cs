@@ -38,4 +38,3 @@ namespace ConcernsCaseWork.Service.Decision
 		FreedomOfInformationExemptions = 11
 	}
 }
-

@@ -32,7 +32,6 @@ namespace ConcernsCaseWork.Redis.NtiWarningLetter
 			return created;
 		}
 
-
 		public async Task<NtiWarningLetterDto> GetNtiWarningLetterAsync(long ntiWarningLetterId)
 		{
 			NtiWarningLetterDto nti = null;

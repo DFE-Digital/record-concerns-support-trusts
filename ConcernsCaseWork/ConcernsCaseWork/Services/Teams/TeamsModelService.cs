@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Teams
 {
-
 	public class TeamsModelService : ITeamsModelService
 	{
 		private readonly ILogger<TeamsModelService> _logger;

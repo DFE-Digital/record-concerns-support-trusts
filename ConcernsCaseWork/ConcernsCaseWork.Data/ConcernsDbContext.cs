@@ -48,7 +48,6 @@ namespace ConcernsCaseWork.Data
         public virtual DbSet<ConcernsCaseworkTeam> ConcernsTeamCaseworkTeam { get; set; }
         public virtual DbSet<ConcernsCaseworkTeamMember> ConcernsTeamCaseworkTeamMember { get; set; }
 
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -352,7 +351,6 @@ namespace ConcernsCaseWork.Data
                     }));
             });
 
-
             modelBuilder.Entity<FinancialPlanStatus>(entity =>
             {
                 var createdAt = new DateTime(2022, 06, 15);
@@ -380,7 +378,6 @@ namespace ConcernsCaseWork.Data
                         new NTIUnderConsiderationStatus{ Id = 1, Name = "No further action being taken", CreatedAt = createdAt, UpdatedAt = createdAt },
                         new NTIUnderConsiderationStatus{ Id = 2, Name = "To be escalated", Description="Warning letter or NTI can be set up using \"Add to case\".", CreatedAt = createdAt, UpdatedAt = createdAt }
                     });
-
             });
 
             modelBuilder.Entity<NTIUnderConsiderationReason>(entity =>
@@ -467,8 +464,6 @@ namespace ConcernsCaseWork.Data
                     });
             });
 
-
-
             modelBuilder.Entity<NoticeToImproveStatus>(entity =>
             {
                 var createdAt = new DateTime(2022, 08, 17);
@@ -488,7 +483,6 @@ namespace ConcernsCaseWork.Data
                         new NoticeToImproveStatus{ Id = 10, Name = "Cancelled", CreatedAt = createdAt, UpdatedAt = createdAt, IsClosingState = true }
                     });
             });
-
 
             modelBuilder.Entity<NoticeToImproveReason>(entity =>
             {
@@ -618,7 +612,6 @@ namespace ConcernsCaseWork.Data
                 .WithMany(n => n.WarningLetterConditionsMapping)
                 .HasForeignKey(n => n.NTIWarningLetterConditionId);
 
-
             modelBuilder.Entity<NoticeToImproveConditionMapping>()
                 .HasOne(n => n.NoticeToImprove)
                 .WithMany(n => n.NoticeToImproveConditionsMapping)
@@ -638,7 +631,7 @@ namespace ConcernsCaseWork.Data
                 .HasOne(n => n.NoticeToImproveReason)
                 .WithMany(n => n.NoticeToImproveReasonsMapping)
                 .HasForeignKey(n => n.NoticeToImproveReasonId);
-            
+
             modelBuilder.Entity<ConcernsCaseworkTeam>(entity =>
             {
                 entity.HasKey(x => x.Id);
@@ -646,37 +639,37 @@ namespace ConcernsCaseWork.Data
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
             });
-            
+
             modelBuilder.Entity<Decision>(e =>
             {
-                e.ToTable("ConcernsDecision", "concerns");
-                e.HasKey(x => x.DecisionId);
-                e.Property(x => x.TotalAmountRequested).HasColumnType("money");
-                e.HasMany(x => x.DecisionTypes).WithOne();
+	            e.ToTable("ConcernsDecision", "sdd");
+	            e.HasKey(x => x.DecisionId);
+	            e.Property(x => x.TotalAmountRequested).HasColumnType("money");
+	            e.HasMany(x => x.DecisionTypes).WithOne();
             });
 
             modelBuilder.Entity<DecisionType>(e =>
             {
-                e.ToTable("ConcernsDecisionType", "concerns");
-                e.HasKey(x => new { x.DecisionId, x.DecisionTypeId });
+	            e.ToTable("ConcernsDecisionType", "sdd");
+	            e.HasKey(x => new { x.DecisionId, x.DecisionTypeId });
             });
 
             modelBuilder.Entity<DecisionTypeId>(e =>
             {
-                e.ToTable("ConcernsDecisionTypeId", "concerns");
-                e.HasKey(x => x.Id);
-                e.HasData(
-                    Enum.GetValues(typeof(Enums.Concerns.DecisionType)).Cast<Enums.Concerns.DecisionType>()
-                        .Select(enm => new DecisionTypeId(enm, enm.ToString())));
+	            e.ToTable("ConcernsDecisionTypeId", "sdd");
+	            e.HasKey(x => x.Id);
+	            e.HasData(
+		            Enum.GetValues(typeof(Enums.Concerns.DecisionType)).Cast<Enums.Concerns.DecisionType>()
+			            .Select(enm => new DecisionTypeId(enm, enm.ToString())));
             });
 
             modelBuilder.Entity<DecisionStatus>(e =>
             {
-                e.ToTable("ConcernsDecisionStates", "concerns");
-                e.HasKey(x => x.Id);
-                e.HasData(
-                    Enum.GetValues(typeof(Enums.Concerns.DecisionStatus)).Cast<Enums.Concerns.DecisionStatus>()
-                        .Select(enm => new DecisionStatus(enm) { Name = enm.ToString() }));
+	            e.ToTable("ConcernsDecisionStates", "sdd");
+	            e.HasKey(x => x.Id);
+	            e.HasData(
+		            Enum.GetValues(typeof(Enums.Concerns.DecisionStatus)).Cast<Enums.Concerns.DecisionStatus>()
+			            .Select(enm => new DecisionStatus(enm) { Name = enm.ToString() }));
             });
 
             OnModelCreatingPartial(modelBuilder);

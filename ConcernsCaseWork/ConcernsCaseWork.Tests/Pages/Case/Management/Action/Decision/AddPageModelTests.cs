@@ -206,7 +206,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				_caseUrnValue = 5;
 				_mockDecisionService = Fixture.Freeze<Mock<IDecisionService>>();
 				_mockLogger = Fixture.Freeze<Mock<ILogger<AddPageModel>>>();
-
 			}
 
 			public TestBuilder WithCaseUrnRouteValue(object urnValue)

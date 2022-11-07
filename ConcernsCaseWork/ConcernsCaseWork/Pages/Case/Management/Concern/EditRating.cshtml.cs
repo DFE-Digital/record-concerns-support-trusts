@@ -97,7 +97,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				await _caseModelService.PatchRecordRating(patchRecordModel);
 					
 				return Redirect(url);
-
 			}
 			catch (Exception ex)
 			{

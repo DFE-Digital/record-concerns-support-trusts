@@ -59,7 +59,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
 			}
-
 		}
 
 		private (long caseUrn, long ntiId) GetRouteData()

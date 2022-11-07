@@ -37,7 +37,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 				UpdatedAt = DateTime.Now.AddDays(-5)
 			};
 
-
 			// act
 			var serviceModel = NtiUnderConsiderationMappers.ToServiceModel(ntiDto);
 

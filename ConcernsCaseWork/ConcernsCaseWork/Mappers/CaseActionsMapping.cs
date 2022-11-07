@@ -43,7 +43,6 @@ namespace ConcernsCaseWork.Mappers
 				Notes = srmaModel.Notes,
 				Reason = (SRMAReasonOffered)srmaModel.Reason,
 				Status = (SRMAStatus)srmaModel.Status,
-
 			};
 		}
 

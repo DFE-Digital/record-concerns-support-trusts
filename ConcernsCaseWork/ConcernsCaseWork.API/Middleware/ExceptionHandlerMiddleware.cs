@@ -25,7 +25,6 @@ public class ExceptionHandlerMiddleware
 	}
 	private async Task HandleExceptionAsync(HttpContext context, Exception exception, ILogger<ExceptionHandlerMiddleware> logger)
 	{
-        
 		logger.LogError(exception.Message);
 		logger.LogError(exception.StackTrace);
 		context.Response.ContentType = "application/json";

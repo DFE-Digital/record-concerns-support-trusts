@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-
 namespace ConcernsCaseWork.API.Tests.UseCases
 {
     public class GetNTIUnderConsiderationByIdTests
@@ -36,6 +35,5 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             result.Should().NotBeNull();
             result.Should().BeEquivalentTo(expectedResult);
         }
-
     }
 }

@@ -69,7 +69,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<INTIUnderConsiderationGateway, NTIUnderConsiderationGateway>();
 			services.AddScoped<INTIWarningLetterGateway, NTIWarningLetterGateway>();
 			services.AddScoped<INoticeToImproveGateway, NoticeToImproveGateway>();
-			
+
 			services.AddScoped<IGetConcernsCaseworkTeam, GetConcernsCaseworkTeam>();
 			services.AddScoped<IGetConcernsCaseworkTeamOwners, GetConcernsCaseworkTeamOwners>();
 			services.AddScoped<IUpdateConcernsCaseworkTeam, UpdateConcernsCaseworkTeam>();
@@ -83,6 +83,8 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IDecisionFactory, DecisionFactory>();
 			services.AddScoped<IGetDecisionResponseFactory, GetDecisionResponseFactory>();
 			services.AddScoped<IGetDecisionsSummariesFactory, GetDecisionsSummariesFactory>();
+			services.AddScoped<IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest details), UpdateDecisionResponse>, UpdateDecision>();
+			services.AddScoped<IUpdateDecisionResponseFactory, UpdateDecisionResponseFactory>();
 
 			return services;
 		}
@@ -131,4 +133,3 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 		}
 	}
 }
-

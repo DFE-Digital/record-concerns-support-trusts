@@ -44,7 +44,6 @@ namespace ConcernsCaseWork.API.Factories.CaseActionFactories
                 UpdatedAt = patchNTIUnderConsiderationRequest.UpdatedAt,
                 ClosedAt = patchNTIUnderConsiderationRequest.ClosedAt,
                 ClosedStatusId = patchNTIUnderConsiderationRequest.ClosedStatusId
-              
             };
         }
 

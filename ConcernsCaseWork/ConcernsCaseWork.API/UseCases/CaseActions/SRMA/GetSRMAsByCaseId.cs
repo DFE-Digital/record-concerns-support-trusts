@@ -23,6 +23,5 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.SRMA
             var dbModels = await _gateway.GetSRMAsByCaseId(caseId);
             return dbModels.Select(dbm => SRMAFactory.CreateResponse(dbm)).ToList();
         }
-
     }
 }

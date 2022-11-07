@@ -40,7 +40,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var typeModel = TypeFactory.BuildTypeModel();
 			var ratingModelList = RatingFactory.BuildListRatingModel();
 
-
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 

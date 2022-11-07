@@ -95,7 +95,6 @@ namespace ConcernsCaseWork.Mappers
 				status = model.ClosedStatus.Name;
 			}
 
-
 			var result = new ActionSummaryModel()
 			{
 				ClosedDate = model.ClosedAt.ToDayMonthYear(),

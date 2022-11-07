@@ -43,7 +43,6 @@ namespace ConcernsCaseWork
 				options.Conventions.AddPageRoute("/case/management/action/Nti/add", "/case/{urn:long}/management/action/nti/add");
 				options.Conventions.AddPageRoute("/case/management/action/Nti/addConditions", "/case/{urn:long}/management/action/nti/conditions");
 
-
 				// TODO: 
 				// Consider adding: options.Conventions.AuthorizeFolder("/");
 			}).AddViewOptions(options =>
@@ -95,8 +94,6 @@ namespace ConcernsCaseWork
 			});
 
 			// Authentication
-
-
 
 			//services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 			//{

@@ -33,7 +33,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             
             recordGateway.Setup(g => g.GetConcernsRecordByUrn(recordId)).Returns(concernsRecord);
             recordGateway.Setup(g => g.Update(It.IsAny<ConcernsRecord>())).Returns(concernsRecordToUpdate);
-            caseGateway.Setup(g => g.GetConcernsCaseById(It.IsAny<int>())).Returns(concernsCase);
+            caseGateway.Setup(g => g.GetConcernsCaseByUrn(It.IsAny<int>(), false)).Returns(concernsCase);
             typeGateway.Setup(g => g.GetConcernsTypeById(It.IsAny<int>())).Returns(concernsType);
             ratingGateway.Setup(g => g.GetRatingById(It.IsAny<int>())).Returns(concernsRating);
             meansOfReferralGateway.Setup(g => g.GetMeansOfReferralById(It.IsAny<int>())).Returns(concernsMeansOfReferral);

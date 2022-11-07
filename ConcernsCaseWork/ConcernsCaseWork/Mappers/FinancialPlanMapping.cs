@@ -106,6 +106,5 @@ namespace ConcernsCaseWork.Mappers
 
 			return result;
 		}
-
 	}
 }

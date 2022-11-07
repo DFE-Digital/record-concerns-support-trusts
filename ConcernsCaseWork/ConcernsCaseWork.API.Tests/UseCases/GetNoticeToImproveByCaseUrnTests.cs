@@ -28,7 +28,6 @@ namespace ConcernsCaseWork.API.Tests.UseCases
                 NoticeToImproveConditionsMapping = conditionMappings
             };
 
-
             var noticesToImprove = new List<NoticeToImprove>
             {
                 matchingNoticeToImprove,
@@ -38,7 +37,6 @@ namespace ConcernsCaseWork.API.Tests.UseCases
                     Notes = "Test NTI 2",
                     NoticeToImproveReasonsMapping = reasonMappings,
                     NoticeToImproveConditionsMapping = conditionMappings
-
                 },
                 new NoticeToImprove
                 {
@@ -49,12 +47,10 @@ namespace ConcernsCaseWork.API.Tests.UseCases
                 }
             };
 
-
             var expectedResult = NoticeToImproveFactory.CreateResponse(matchingNoticeToImprove);
 
             var mockNoticeToImproveGateway = new Mock<INoticeToImproveGateway>();
             mockNoticeToImproveGateway.Setup(g => g.GetNoticeToImproveByCaseUrn(caseUrn)).Returns(Task.FromResult((ICollection<NoticeToImprove>)noticesToImprove.Where(s => s.CaseUrn == caseUrn).ToList()));
-
 
             var useCase = new GetNoticeToImproveByCaseUrn(mockNoticeToImproveGateway.Object);
 

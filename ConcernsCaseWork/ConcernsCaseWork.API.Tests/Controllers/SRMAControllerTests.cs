@@ -180,7 +180,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             updatedByDelegate.StatusId.Should().Be((int)targetStatus);
         }
 
-
         [Fact]
         public void UpdateReason_ReturnsUpdatedSRMA_WhenGivenNewSRMAReason()
         {
@@ -320,7 +319,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             updatedByDelegate.Should().NotBeNull();
             updatedByDelegate.DateAccepted.Should().Be(targetDateAccepted);
         }
-
 
         [Fact]
         public void UpdateDateDateReportSent_ReturnsUpdatedSRMA_WhenGivenNewDate()

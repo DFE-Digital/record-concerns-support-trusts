@@ -28,7 +28,6 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             var reasons = new List<int>() { 1, 3 };
             var conditions = new List<int>() { 1, 3 };
 
-
             var patchNoticeToImproveRequest = Builder<PatchNoticeToImproveRequest>
                 .CreateNew()
                 .With(r => r.Id = id)

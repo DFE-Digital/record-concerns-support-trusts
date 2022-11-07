@@ -9,6 +9,5 @@ namespace ConcernsCaseWork.Service.Nti
 
 		[JsonProperty("conditionType")]
 		public NtiConditionTypeDto Type { get; set; }
-
 	}
 }
