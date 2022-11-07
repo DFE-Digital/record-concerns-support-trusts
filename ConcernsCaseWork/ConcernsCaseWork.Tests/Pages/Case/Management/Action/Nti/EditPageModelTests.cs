@@ -144,7 +144,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			mockNtiModelService.Verify(
 				m => m.CreateNtiAsync(It.Is<NtiModel>(wl => wl.CaseUrn == caseUrn)),
 				Times.Once());
-
 		}
 
 		[Test]
@@ -204,6 +203,5 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			};
 		}
 	}
-
 
 }

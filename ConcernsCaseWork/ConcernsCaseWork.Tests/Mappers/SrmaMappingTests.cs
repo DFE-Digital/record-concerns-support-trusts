@@ -55,11 +55,14 @@ public class SrmaMappingTests
 		Assert.That(dto, Is.Not.Null);
 		Assert.Multiple(() =>
 		{
+			var actualReasonValue = dto.Reason != null ? (int)dto.Reason : 0;
+			var expectedReasonValue = (int)model.Reason;
+
 			Assert.That(dto.CaseUrn, Is.EqualTo(model.CaseUrn));
 			Assert.That(dto.Id, Is.EqualTo(model.Id));
 			Assert.That(dto.Status.ToString(), Is.EqualTo(model.Status.ToString()));
 			Assert.That(dto.Notes, Is.EqualTo(model.Notes));
-			Assert.That(dto.Reason!.Value.ToString(), Is.EqualTo(model.Reason.ToString()));
+			Assert.That(actualReasonValue, Is.EqualTo(expectedReasonValue));
 			Assert.That(dto.DateAccepted, Is.EqualTo(model.DateAccepted));
 			Assert.That(dto.DateOffered, Is.EqualTo(model.DateOffered));
 			Assert.That(dto.DateVisitEnd, Is.EqualTo(model.DateVisitEnd));

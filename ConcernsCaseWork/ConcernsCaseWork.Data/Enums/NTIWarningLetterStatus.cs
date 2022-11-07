@@ -10,4 +10,3 @@
 		EscalateToNoticeToImprove = 5
 	}
 }
-

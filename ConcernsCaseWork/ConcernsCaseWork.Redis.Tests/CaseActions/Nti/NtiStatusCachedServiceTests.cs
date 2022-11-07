@@ -27,7 +27,6 @@ namespace ConcernsCaseWork.Redis.Tests.CaseActions.Nti
 			mockCacheProvider.Setup(p => p.GetFromCache<ICollection<NtiStatusDto>>(CacheKey))
 				.Returns(() => Task.FromResult(GetEmptyCollection()));
 
-
 			var sut = new NtiStatusesCachedService(mockCacheProvider.Object,
 					mockNtiStatusesService.Object, mockLogger.Object);
 
@@ -48,7 +47,6 @@ namespace ConcernsCaseWork.Redis.Tests.CaseActions.Nti
 
 			mockCacheProvider.Setup(p => p.GetFromCache<ICollection<NtiStatusDto>>(CacheKey))
 				.Returns(() => Task.FromResult(GetPopulatedCollection()));
-
 
 			var sut = new NtiStatusesCachedService(mockCacheProvider.Object,
 					mockNtiStatusesService.Object, mockLogger.Object);

@@ -7,4 +7,3 @@
 		Task<List<GetDecisionResponseDto>> GetDecisionsByCaseUrn(long urn);
 	}
 }
-

@@ -13,7 +13,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
 {
     public class NTIWarningLetterFactoryTests
     {
-
         [Fact]
         public void CreateDBModel_ExpectedNTIWarningLetter_WhenCreateNTIWarningLetterRequestProvided()
         {
@@ -34,7 +33,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 ClosedAt = dtCreated
             };
 
-
             var createNTIWarningLetter = Builder<CreateNTIWarningLetterRequest>
                 .CreateNew()
                 .With(r => r.CaseUrn = details.CaseUrn)
@@ -49,7 +47,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 .With(r => r.ClosedStatusId = details.ClosedStatusId)
                 .With(r => r.ClosedAt = details.ClosedAt)
                 .Build();
-
 
             var expectedNTIWarningLetter = new NTIWarningLetter
             {
@@ -101,7 +98,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 ClosedAt = dtCreated
             };
 
-
             var patchNTIWarningLetter = Builder<PatchNTIWarningLetterRequest>
                 .CreateNew()
                 .With(r => r.Id = details.Id)
@@ -117,7 +113,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 .With(r => r.ClosedStatusId = details.ClosedStatusId)
                 .With(r => r.ClosedAt = details.ClosedAt)
                 .Build();
-
 
             var expectedNTIWarningLetter = new NTIWarningLetter
             {
@@ -149,7 +144,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
             response.Should().BeEquivalentTo(expectedNTIWarningLetter);
         }
 
-
        [Fact]
        public void CreateResponse_ExpectedNTIWarningLetterResponse_WhenNTIWarningLetterProvided()
        {
@@ -176,7 +170,6 @@ namespace ConcernsCaseWork.API.Tests.Factories
                ClosedStatusId = 1,
                ClosedAt = dtCreated
            };
-
 
            var ntiWarningLetter = Builder<NTIWarningLetter>
                .CreateNew()

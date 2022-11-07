@@ -59,7 +59,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
 			}
-
 		}
 
 		private (long caseUrn, long ntiId) GetRouteData()
@@ -74,9 +73,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 			return (caseUrn, ntiId);
 		}
-
-
-
 
 		public async Task<IActionResult> OnPostAsync()
 		{
@@ -107,7 +103,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 
 					dateLifted = parsedDate;
 				}
-
 
 				if (!string.IsNullOrEmpty(notes))
 				{

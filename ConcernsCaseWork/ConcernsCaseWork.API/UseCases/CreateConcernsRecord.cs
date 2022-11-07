@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.API.UseCases
         }
         public ConcernsRecordResponse Execute(ConcernsRecordRequest request)
         {
-            var concernsCase = _concernsCaseGateway.GetConcernsCaseById(request.CaseUrn);
+            var concernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(request.CaseUrn);
             var concernsType = _concernsTypeGateway.GetConcernsTypeById(request.TypeId);
             var concernsRatings = _concernsRatingGateway.GetRatingById(request.RatingId);
             var concernsMeansOfReferral = request.MeansOfReferralId != null ? _concernsMeansOfReferralGateway.GetMeansOfReferralById((int)request.MeansOfReferralId) : null;

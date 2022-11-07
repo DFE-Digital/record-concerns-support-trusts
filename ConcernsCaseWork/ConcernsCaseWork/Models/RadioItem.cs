@@ -17,6 +17,5 @@ namespace ConcernsCaseWork.Models
 			get { return id ?? Text?.Trim()?.ToLower()?.Replace(" ", "") ?? throw new ArgumentNullException("Text not set"); }
 			set { id = value; }
 		}
-
 	}
 }

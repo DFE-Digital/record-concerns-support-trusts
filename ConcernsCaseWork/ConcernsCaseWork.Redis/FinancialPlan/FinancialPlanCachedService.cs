@@ -72,7 +72,6 @@ namespace ConcernsCaseWork.Redis.FinancialPlan
 		{
 			_logger.LogInformation("FinancialPlanCachedService::GetFinancialPlansById {Caseworker} - {CaseUrn} - {FinancialPlanID}", caseworker, caseUrn, financialPlanId);
 
-
 			// Store in cache for 24 hours (default)
 			var userState = await GetData<UserState>(caseworker);
 
@@ -110,10 +109,8 @@ namespace ConcernsCaseWork.Redis.FinancialPlan
 					await StoreData(caseworker, userState);
 				}
 
-
 				return financialPlanDto;
 			}
-
 		}
 
 		public async Task PatchFinancialPlanById(FinancialPlanDto financialPlanDto, string caseworker)

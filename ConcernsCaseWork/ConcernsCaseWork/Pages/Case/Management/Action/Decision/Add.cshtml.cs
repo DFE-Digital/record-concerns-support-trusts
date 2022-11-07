@@ -107,11 +107,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				await _decisionService.PostDecision(CreateDecisionDto);
 
 				return Redirect($"/case/{CaseUrn}/management");
-
 			}
 			catch (InvalidUserInputException ex)
 			{
-
 				TempData["Decision.Message"] = new List<string>() { ex.Message };
 			}
 			catch (Exception ex)

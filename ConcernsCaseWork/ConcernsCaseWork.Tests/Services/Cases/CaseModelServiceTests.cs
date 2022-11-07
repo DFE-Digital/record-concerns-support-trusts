@@ -1239,7 +1239,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			mockCaseCachedService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Never);
 		}
 
-
 		[Test]
 		public async Task WhenPatchClosure_ReturnsTask()
 		{

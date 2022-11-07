@@ -254,7 +254,6 @@ namespace ConcernsCaseWork.Mappers
 				patchCaseModel.RatingId);
 		}
 
-
 		public static List<TrustCasesModel> MapTrustCases(IList<RecordDto> recordsDto, IList<RatingDto> ratingsDto, IList<TypeDto> typesDto,
 			IEnumerable<CaseDto> casesDto, IList<StatusDto> statusesDto)
 		{

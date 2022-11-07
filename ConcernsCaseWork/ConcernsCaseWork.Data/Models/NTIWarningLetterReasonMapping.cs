@@ -16,4 +16,3 @@ namespace ConcernsCaseWork.Data.Models
 		public virtual NTIWarningLetterReason NTIWarningLetterReason { get; set; }
 	}
 }
-

@@ -13,6 +13,5 @@ namespace ConcernsCaseWork.Services.Nti
 		Task<NtiModel> GetNtiAsync(string continuationId);
 		Task StoreNtiAsync(NtiModel ntiModel, string continuationId);
 
-
 	}
 }

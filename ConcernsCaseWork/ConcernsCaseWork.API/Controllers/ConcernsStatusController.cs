@@ -20,7 +20,6 @@ namespace ConcernsCaseWork.API.Controllers
             _indexConcernsStatuses = indexConcernsStatuses;
         }
 
-
         [HttpGet]
         [MapToApiVersion("2.0")]
         public ActionResult<ApiResponseV2<ConcernsStatusResponse>> Index()

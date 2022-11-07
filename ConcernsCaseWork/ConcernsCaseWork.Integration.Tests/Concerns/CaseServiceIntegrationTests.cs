@@ -105,7 +105,6 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			using var serviceScope = _factory.Services.CreateScope();
 			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();
 
-
 			var trustSummaryDto = await FetchRandomTrust(serviceScope, "Senior");
 
 			var createCaseDto = CaseFactory.BuildCreateCaseDto(CaseWorker, trustSummaryDto.UkPrn);

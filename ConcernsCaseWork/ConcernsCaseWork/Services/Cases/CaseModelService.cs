@@ -118,7 +118,6 @@ namespace ConcernsCaseWork.Services.Cases
 						caseRatingModel,
 						recordsModel
 					);
-					
 				}).ToList();
 				
 				return statusEnum switch

@@ -233,9 +233,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(warningLetterId))
                 .Returns(warningLetterResponse);
 
-
             OkObjectResult controllerResponse = controllerSUT.GetNTIWarningLetterById(warningLetterId).Result as OkObjectResult;
-
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<NTIWarningLetterResponse>;
 
@@ -285,4 +283,3 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         }
     }
 }
-

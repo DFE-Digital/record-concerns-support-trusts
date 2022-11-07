@@ -53,7 +53,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 				ClosedStatusId = testData.ClosedStatus.Key
 			};
 
-
 			// act
 			var serviceModel = NtiWarningLetterMappers.ToServiceModel(ntiDto, statuses);
 

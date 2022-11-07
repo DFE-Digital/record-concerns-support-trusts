@@ -219,7 +219,6 @@ namespace ConcernsCaseWork.Service.Base
 			{
 				try
 				{
-
 					// Create a request
 					var request = new StringContent(
 						JsonConvert.SerializeObject(dto),

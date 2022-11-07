@@ -14,6 +14,5 @@ namespace ConcernsCaseWork.Models
 		public long RatingId { get; set; }
 		public string CreatedBy { get; set; }
 		public long StatusId { get; set; }
-
 	}
 }

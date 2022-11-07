@@ -119,6 +119,5 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		
 		protected override async Task<IList<FinancialPlanStatusDto>> GetAvailableStatusesAsync()
 			=> await _financialPlanStatusCachedService.GetOpenFinancialPlansStatusesAsync();
-		
 	}
 }

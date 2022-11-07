@@ -47,7 +47,6 @@ namespace ConcernsCaseWork.Service.Cases
 					{
 						break;
 					}
-
 				} while (apiListWrapperCaseDto?.Data != null && apiListWrapperCaseDto.Data.Any() && apiListWrapperCaseDto.Paging?.NextPageUrl != null);
 			}
 			finally
@@ -87,7 +86,6 @@ namespace ConcernsCaseWork.Service.Cases
 					{
 						break;
 					}
-
 				} while (apiListWrapperCaseDto?.Data != null && apiListWrapperCaseDto.Data.Any() && apiListWrapperCaseDto.Paging?.NextPageUrl != null);
 			}
 			finally
@@ -127,7 +125,6 @@ namespace ConcernsCaseWork.Service.Cases
 					{
 						break;
 					}
-
 				} while (apiListWrapperCaseDto?.Data != null && apiListWrapperCaseDto.Data.Any() && apiListWrapperCaseDto.Paging?.NextPageUrl != null);
 			}
 			finally

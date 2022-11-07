@@ -60,6 +60,5 @@ namespace ConcernsCaseWork.API.Factories.CaseActionFactories
             };
         }
 
-
     }
 }
