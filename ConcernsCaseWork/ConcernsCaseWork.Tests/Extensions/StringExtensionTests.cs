@@ -1,7 +1,5 @@
 ﻿using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Redis.Security;
 using NUnit.Framework;
-using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Extensions
 {

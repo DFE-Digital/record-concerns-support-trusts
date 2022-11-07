@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Concern;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
@@ -7,7 +8,7 @@ using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using ConcernsCaseWork.Shared.Tests.Shared;
+using ConcernsCaseWork.Shared.Tests.MockHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -17,7 +18,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 {
 	[Parallelizable(ParallelScope.All)]
-	public class ConcernPageModelTests
+	public class IndexPageModelTests
 	{
 		[Test]
 		public async Task WhenOnGetAsync_ReturnsModel()
@@ -33,24 +33,25 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
+			var mockCachedService = new Mock<IUserStateCachedService>();
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			
-			var expected = TrustFactory.BuildTrustDetailsModel();
+			var expectedAddress = TrustFactory.BuildTrustAddressModel();
 			var expectedTypeModel = TypeFactory.BuildTypeModel();
 			var expectedRatingsModel = RatingFactory.BuildListRatingModel();
 			var expectedMeansOfReferralModels = MeansOfReferralFactory.BuildListMeansOfReferralModels();
 
-			mockTypeModelService.Setup(t => t.GetTypeModel()).ReturnsAsync(expectedTypeModel);
+			mockTypeModelService.Setup(t => t.GetTypeModel()).ReturnsAsync(expectedTypeModel);	
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(new UserState("testing") { TrustUkPrn = "trust-ukprn" });
-			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
+			mockTrustModelService.Setup(s => s.GetTrustAddressByUkPrn(It.IsAny<string>())).ReturnsAsync(expectedAddress);
 			mockRatingModelService.Setup(r => r.GetRatingsModel()).ReturnsAsync(expectedRatingsModel);
 			mockMeansOfReferralModelService.Setup(m => m.GetMeansOfReferrals()).ReturnsAsync(expectedMeansOfReferralModels);
 			
-			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
-				mockTypeModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
+				mockTypeModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
 			
 			// act
 			await pageModel.OnGetAsync();
@@ -59,37 +60,25 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			Assert.That(pageModel, Is.Not.Null);
 			Assert.That(pageModel.RatingsModel, Is.Not.Null);
 			Assert.That(pageModel.TypeModel, Is.Not.Null);
-			Assert.That(pageModel.TrustDetailsModel, Is.Not.Null);
+			Assert.That(pageModel.TrustAddress, Is.Not.Null);
 			Assert.That(pageModel.CreateRecordsModel, Is.Not.Null);
 			Assert.That(pageModel.MeansOfReferralModel, Is.Not.Null);
 			
-			var trustDetailsModel = pageModel.TrustDetailsModel;
+			var trustAddressModel = pageModel.TrustAddress;
 			var typesDictionary = pageModel.TypeModel.TypesDictionary;
 			var ratingsModel = pageModel.RatingsModel;
 			var createRecordsModel = pageModel.CreateRecordsModel;
 			var meansOfReferralModel = pageModel.MeansOfReferralModel;
 			
 			Assert.IsAssignableFrom<List<RatingModel>>(ratingsModel);
-			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsModel);
+			Assert.IsAssignableFrom<TrustAddressModel>(trustAddressModel);
 			Assert.IsAssignableFrom<List<CreateRecordModel>>(createRecordsModel);
 			Assert.IsAssignableFrom<Dictionary<string, IList<TypeModel.TypeValueModel>>>(typesDictionary);
 			Assert.IsAssignableFrom<List<MeansOfReferralModel>>(meansOfReferralModel);
 
 			Assert.That(typesDictionary, Is.Not.Null);
-			Assert.That(trustDetailsModel, Is.Not.Null);
-			Assert.That(trustDetailsModel.GiasData, Is.Not.Null);
-			Assert.That(trustDetailsModel.GiasData.GroupId, Is.EqualTo(expected.GiasData.GroupId));
-			Assert.That(trustDetailsModel.GiasData.GroupName, Is.EqualTo(expected.GiasData.GroupName));
-			Assert.That(trustDetailsModel.GiasData.UkPrn, Is.EqualTo(expected.GiasData.UkPrn));
-			Assert.That(trustDetailsModel.GiasData.CompaniesHouseNumber, Is.EqualTo(expected.GiasData.CompaniesHouseNumber));
-			Assert.That(trustDetailsModel.GiasData.GroupContactAddress, Is.Not.Null);
-			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.County, Is.EqualTo(expected.GiasData.GroupContactAddress.County));
-			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.Locality, Is.EqualTo(expected.GiasData.GroupContactAddress.Locality));
-			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.Postcode, Is.EqualTo(expected.GiasData.GroupContactAddress.Postcode));
-			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.Street, Is.EqualTo(expected.GiasData.GroupContactAddress.Street));
-			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.Town, Is.EqualTo(expected.GiasData.GroupContactAddress.Town));
-			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.AdditionalLine, Is.EqualTo(expected.GiasData.GroupContactAddress.AdditionalLine));
-			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.DisplayAddress, Is.EqualTo(SharedBuilder.BuildDisplayAddress(expected.GiasData.GroupContactAddress)));
+			Assert.That(trustAddressModel, Is.Not.Null);
+			Assert.That(trustAddressModel, Is.EqualTo(expectedAddress));
 			
 			Assert.That(meansOfReferralModel.Count, Is.EqualTo(2));
 						
@@ -102,16 +91,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			Assert.That(2, Is.EqualTo(expectedMeansOfReferralModels.Last().Id));
 			
 			// Verify ILogger
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
-			
-			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
+			mockLogger.VerifyLogInformationWasCalled("OnGetAsync");
+			mockLogger.VerifyLogErrorWasNotCalled();
+			mockLogger.VerifyNoOtherCalls();
 		}
 		
 		[Test]
@@ -120,33 +102,28 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
+			var mockCachedService = new Mock<IUserStateCachedService>();
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			
 			var expected = TrustFactory.BuildTrustDetailsModel();
 
 			mockTypeModelService.Setup(t => t.GetTypeModel()).ReturnsAsync(new TypeModel());
-			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync((UserState)null);
 			mockTrustModelService.Setup(s => s.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expected);
 			mockMeansOfReferralModelService.Setup(m => m.GetMeansOfReferrals()).ReturnsAsync(new List<MeansOfReferralModel>());
 			
-			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
-				mockTypeModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
+				mockTypeModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
 			
 			// act
 			await pageModel.OnGetAsync();
 			
 			// Verify ILogger
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Error,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
+			mockLogger.VerifyLogInformationWasCalled("OnGetAsync");
+			mockLogger.VerifyLogErrorWasCalled("Cache CaseStateData is null");
+			mockLogger.VerifyNoOtherCalls();
 			
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
@@ -161,38 +138,35 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
+			var mockCachedService = new Mock<IUserStateCachedService>();
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
 			var createCaseModel = CaseFactory.BuildCreateCaseModel();
 			createCaseModel.CreateRecordsModel = RecordFactory.BuildListCreateRecordModel();
+
 			var userState = new UserState("testing") { CreateCaseModel = createCaseModel };
 			
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
-
-			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
-				mockTypeModelService.Object, mockRatingModelService.Object,mockMeansOfReferralModelService.Object, mockLogger.Object, true);
+			
+			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
+				mockTypeModelService.Object, mockRatingModelService.Object,mockMeansOfReferralModelService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
 			
 			// act
 			await pageModel.OnGetAsync();
 			
 			// assert
 			Assert.That(pageModel, Is.Not.Null);
-			Assert.IsNull(pageModel.TrustDetailsModel);
+			Assert.IsNull(pageModel.TrustAddress);
 			Assert.IsNull(pageModel.CreateRecordsModel);
 			Assert.IsNotNull(pageModel.TempData["Error.Message"]);
 			
 			// Verify ILogger
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Error,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("IndexPageModel")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
+			mockLogger.VerifyLogInformationWasCalled("OnGetAsync");
+			mockLogger.VerifyLogErrorWasCalled();
+			mockLogger.VerifyNoOtherCalls();
 
 			mockCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockTrustModelService.Verify(s => s.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
@@ -204,16 +178,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
+			var mockCachedService = new Mock<IUserStateCachedService>();
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>()))
 				.ReturnsAsync((UserState)null);
-
-			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
-				mockTypeModelService.Object, mockRatingModelService.Object,mockMeansOfReferralModelService.Object, mockLogger.Object, true);
+			
+			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
+				mockTypeModelService.Object, mockRatingModelService.Object,mockMeansOfReferralModelService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
 			
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
@@ -232,7 +207,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var page = pageResponse as PageResult;
 			
 			Assert.That(page, Is.Not.Null);
-			
 			mockCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Exactly(2));
 			mockCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()), Times.Never);
 		}
@@ -247,6 +221,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			
 			var expected = CaseFactory.BuildCreateCaseModel();
 			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
@@ -254,7 +229,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 
 			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
-				mockTypeModelService.Object, mockRatingModelService.Object,mockMeansOfReferralModelService.Object, mockLogger.Object, true);
+				mockTypeModelService.Object, mockRatingModelService.Object,mockMeansOfReferralModelService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
 			
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
@@ -285,18 +260,19 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
+			var mockCachedService = new Mock<IUserStateCachedService>();
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			
 			var expected = CaseFactory.BuildCreateCaseModel();
 			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 
-			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
-				mockTypeModelService.Object, mockRatingModelService.Object,mockMeansOfReferralModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
+				mockTypeModelService.Object, mockRatingModelService.Object,mockMeansOfReferralModelService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
 			
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -319,10 +295,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
+			var mockCachedService = new Mock<IUserStateCachedService>();
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
 			var expected = CaseFactory.BuildCreateCaseModel();
 			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
@@ -330,7 +307,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 
 			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
-				mockTypeModelService.Object, mockRatingModelService.Object,mockMeansOfReferralModelService.Object, mockLogger.Object, true);
+				mockTypeModelService.Object, mockRatingModelService.Object,mockMeansOfReferralModelService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
 			
 			// act
 			var pageResponse = await pageModel.OnGetCancel();
@@ -352,16 +329,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
+			var mockCachedService = new Mock<IUserStateCachedService>();
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync((UserState)null);
 			mockCachedService.Setup(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()));
 			
 			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
-				mockTypeModelService.Object, mockRatingModelService.Object,mockMeansOfReferralModelService.Object, mockLogger.Object, true);
+				mockTypeModelService.Object, mockRatingModelService.Object,mockMeansOfReferralModelService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object, true);
 			
 			// act
 			var pageResponse = await pageModel.OnGetCancel();
@@ -381,18 +359,20 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			// arrange
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
-			var mockCachedService = new Mock<IUserStateCachedService>();
 			var mockTypeModelService = new Mock<ITypeModelService>();
 			var mockRatingModelService = new Mock<IRatingModelService>();
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
+			var mockCachedService = new Mock<IUserStateCachedService>();
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			
 			var expected = CaseFactory.BuildCreateCaseModel();
 			var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
 			mockCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
 
-			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object, 
-				mockTypeModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object, true);
+			var pageModel = SetupIndexPageModel(mockTrustModelService.Object, mockCachedService.Object,
+				mockTypeModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object, 
+				mockClaimsPrincipalHelper.Object, true);
 			
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
@@ -418,17 +398,20 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 		}
 		
 		private static IndexPageModel SetupIndexPageModel(
-			ITrustModelService mockTrustModelService, 
-			IUserStateCachedService mockUserStateCachedService, 
+			ITrustModelService mockTrustModelService,
+			IUserStateCachedService cachedService,
 			ITypeModelService mockTypeModelService, 
 			IRatingModelService mockRatingModelService, 
 			IMeansOfReferralModelService mockMeansOfReferralModelService, 
 			ILogger<IndexPageModel> mockLogger, 
+			IClaimsPrincipalHelper claimsPrincipalHelper,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 			
-			return new IndexPageModel(mockTrustModelService, mockUserStateCachedService, mockTypeModelService, mockRatingModelService, mockMeansOfReferralModelService, mockLogger)
+			return new IndexPageModel(mockTrustModelService, cachedService, mockTypeModelService, 
+				mockRatingModelService, mockMeansOfReferralModelService, claimsPrincipalHelper, 
+				mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

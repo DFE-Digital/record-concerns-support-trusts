@@ -265,7 +265,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 		}
 		
 		[Test]
-		public async Task WhenOnPostAsync_And_RatingUrn_Invalid_Raise_Exception()
+		public async Task WhenOnPostAsync_And_RatingId_Invalid_Raise_Exception()
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<RatingPageModel>>();

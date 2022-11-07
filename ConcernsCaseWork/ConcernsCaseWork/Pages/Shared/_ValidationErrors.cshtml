@@ -1,0 +1,19 @@
+@using Microsoft.AspNetCore.Mvc.ModelBinding
+@model ConcernsCaseWork.Pages.Base.AbstractPageModel
+
+@if (!Model.ModelState.IsValid)
+{
+	<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
+		<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
+		<div class="govuk-error-summary__body">
+			<ul class="govuk-list govuk-error-summary__list">
+				@foreach (var error in Model.ModelState
+					.Where(s => s.Value?.ValidationState == ModelValidationState.Invalid)
+					.Select(e => new { e.Key, Msg = string.Join("<br />", e.Value.Errors.Select(errs => errs?.ErrorMessage)) }))
+				{
+					<li><a href="#@error.Key">@error.Msg</a></li>			
+				}
+			</ul>
+		</div>
+	</div>
+}

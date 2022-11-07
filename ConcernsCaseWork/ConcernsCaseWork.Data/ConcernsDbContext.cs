@@ -642,7 +642,7 @@ namespace ConcernsCaseWork.Data
 
             modelBuilder.Entity<Decision>(e =>
             {
-	            e.ToTable("ConcernsDecision", "sdd");
+	            e.ToTable("ConcernsDecision", "concerns");
 	            e.HasKey(x => x.DecisionId);
 	            e.Property(x => x.TotalAmountRequested).HasColumnType("money");
 	            e.HasMany(x => x.DecisionTypes).WithOne();
@@ -650,13 +650,13 @@ namespace ConcernsCaseWork.Data
 
             modelBuilder.Entity<DecisionType>(e =>
             {
-	            e.ToTable("ConcernsDecisionType", "sdd");
+	            e.ToTable("ConcernsDecisionType", "concerns");
 	            e.HasKey(x => new { x.DecisionId, x.DecisionTypeId });
             });
 
             modelBuilder.Entity<DecisionTypeId>(e =>
             {
-	            e.ToTable("ConcernsDecisionTypeId", "sdd");
+	            e.ToTable("ConcernsDecisionTypeId", "concerns");
 	            e.HasKey(x => x.Id);
 	            e.HasData(
 		            Enum.GetValues(typeof(Enums.Concerns.DecisionType)).Cast<Enums.Concerns.DecisionType>()
@@ -665,7 +665,7 @@ namespace ConcernsCaseWork.Data
 
             modelBuilder.Entity<DecisionStatus>(e =>
             {
-	            e.ToTable("ConcernsDecisionStates", "sdd");
+	            e.ToTable("ConcernsDecisionStates", "concerns");
 	            e.HasKey(x => x.Id);
 	            e.HasData(
 		            Enum.GetValues(typeof(Enums.Concerns.DecisionStatus)).Cast<Enums.Concerns.DecisionStatus>()

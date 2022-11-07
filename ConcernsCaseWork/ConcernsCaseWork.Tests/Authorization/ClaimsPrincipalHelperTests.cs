@@ -4,11 +4,7 @@ using ConcernsCaseWork.Authorization;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Authorization
 {
