@@ -7,6 +7,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 {
 	public static class TrustFactory
 	{
+		private readonly static Fixture Fixture = new Fixture();
+		
 		public static IList<TrustSearchDto> BuildListTrustSummaryDto()
 		{
 			Fixture fixture = new Fixture();
@@ -57,6 +59,11 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new TrustDetailsModel(GiasDataFactory.BuildGiasDataModel(),
 				IfdDataFactory.BuildIfdDataModel(),
 				EstablishmentFactory.BuildListEstablishmentModel());
+		}
+		
+		public static TrustAddressModel BuildTrustAddressModel()
+		{
+			return Fixture.Create<TrustAddressModel>();
 		}
 	}
 }

@@ -1,0 +1,24 @@
+@page "/case/create/{handler?}"
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model CreateCasePageModel
+
+@{
+	ViewData["Title"] = "New Case";
+	ViewData["BackButtonLink"] = "/";
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError"/>
+
+	@if (Model.CreateCaseStep == CreateCasePageModel.CreateCaseSteps.SearchForTrust)
+	{
+		<partial name="_SelectTrust"/>
+	}
+	@if (Model.CreateCaseStep == CreateCasePageModel.CreateCaseSteps.SelectCaseType)
+	{
+		<partial name="_SelectCaseType"/>
+	}
+
+</div>
+
+

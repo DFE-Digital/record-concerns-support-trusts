@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoFixture;
 using FluentAssertions;
-using NUnit.Framework.Interfaces;
 using ConcernsCaseWork.Service.FinancialPlan;
 
 namespace ConcernsCaseWork.Tests.Mappers

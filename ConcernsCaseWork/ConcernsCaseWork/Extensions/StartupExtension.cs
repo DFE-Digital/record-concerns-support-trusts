@@ -24,6 +24,7 @@ using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Decisions;
+using ConcernsCaseWork.Services.Cases.Create;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.MeansOfReferral;
 using ConcernsCaseWork.Services.Nti;
@@ -163,6 +164,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICaseActionValidationStrategy, NTIValidator>();
 			services.AddScoped<ICaseActionValidator, CaseActionValidator>();
 			services.AddScoped<IDecisionModelService, DecisionModelService>();
+			services.AddScoped<ICreateCaseService, CreateCaseService>();
 
 			// Trams api services
 			services.AddScoped<ICaseService, CaseService>();

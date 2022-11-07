@@ -45,17 +45,19 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public List<ActionSummaryModel> CaseActions { get; private set; }
 		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
 
+		public bool IsConcernsCase { get; set; }
+
 		public List<ActionSummaryModel> OpenCaseActions { get; set; }
 		public List<ActionSummaryModel> ClosedCaseActions { get; set; }
 
-		public IndexPageModel(ICaseModelService caseModelService, 
+		public IndexPageModel(ICaseModelService caseModelService,
 			ITrustModelService trustModelService,
 			IRecordModelService recordModelService,
 			IRatingModelService ratingModelService,
 			IStatusCachedService statusCachedService,
 			INtiUnderConsiderationStatusesCachedService ntiUCStatusesCachedService,
 			ILogger<IndexPageModel> logger,
-			IActionsModelService actionsModelService
+		IActionsModelService actionsModelService
 			)
 		{
 			_trustModelService = trustModelService;
@@ -88,25 +90,25 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 				// Check if case is editable
 				IsEditableCase = await IsCaseEditable();
-				
+
 				// Map Case Rating
 				CaseModel.RatingModel = await _ratingModelService.GetRatingModelById(CaseModel.RatingId);
-				
 				// Get Case concerns
 				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
-				
+
 				// Map Case concerns
 				CaseModel.RecordsModel = recordsModel;
+				SetIsConcernsCase();
 
 				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				var trustCasesTask = _caseModelService.GetCasesByTrustUkprn(CaseModel.TrustUkPrn);
 				var caseActionsTask = PopulateCaseActions(caseUrn);
-				
+
 				Task.WaitAll(trustDetailsTask, trustCasesTask, caseActionsTask);
 
 				TrustDetailsModel = trustDetailsTask.Result;
 				TrustCasesModel = trustCasesTask.Result;
-				
+
 				NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
 			}
 			catch (Exception ex)
@@ -157,6 +159,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			}
 
 			return false;
+		}
+
+		private void SetIsConcernsCase()
+		{
+			IsConcernsCase = CaseModel.RecordsModel.Any();
 		}
 	}
 }

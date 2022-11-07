@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.API.Tests.Validators
     public class ConcernsCaseRequestValidatorTest
     {
         [Fact]
-        public void ShouldHaveError_WhenRatingUrnIs0()
+        public void ShouldHaveError_WhenRatingIdIs0()
         {
             var validator = new ConcernsCaseRequestValidator();
             

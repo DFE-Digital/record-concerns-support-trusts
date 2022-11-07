@@ -1,11 +1,11 @@
-﻿@page "/case/{urn:long}/management/action/srma/add"
+@page "/case/create/nonconcerns/srma"
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
-@model AddPageModel
+@model AddSrmaPageModel
 
 @{
     ViewData["Title"] = "Add srma";
-	ViewData["CancelBackLink"] = $"/case/{@Model.CaseUrn}/management";
+	ViewData["CancelBackLink"] = "/case/create/nonconcerns";
     var nonce = HttpContext.GetNonce();
 }
 
@@ -23,19 +23,7 @@
 			{
 				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-				@if (!string.IsNullOrEmpty((string)TempData.Peek("SRMA.Message")))
-				{
-					<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
-						<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
-						<div class="govuk-error-summary__body">
-							<ul class="govuk-list govuk-error-summary__list">
-								<li>
-									<a href="#">@TempData["SRMA.Message"]</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-				}
+				<partial name="_ValidationErrors"/>
 
 				<h1 class="govuk-heading-l">
 					<span class="govuk-caption-m">Add to case</span>
@@ -50,6 +38,7 @@
 							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
 								<h2 class="govuk-heading-m">What is the status of the SRMA?</h2>
 							</legend>
+							<span asp-validation-for="@Model.Status" class="govuk-error-message"></span>
 							<div class="govuk-radios" data-module="govuk-radios">
 								@{
 									int id = 0;
@@ -74,32 +63,33 @@
 					<div class="govuk-form-group govuk-!-margin-top-9">
 						<fieldset class="govuk-fieldset">
 							<h2 class="govuk-heading-m">Date SRMA offered to Trust?</h2>
+							<span asp-validation-for="@Model.OfferedDate" class="govuk-error-message"></span>
 							<div class="govuk-date-input" id="dtr">
 								<div class="govuk-date-input__item">
 									<div class="govuk-form-group">
-										<label class="govuk-label govuk-date-input__label" for="dtr-day">
+										<label class="govuk-label govuk-date-input__label" asp-for="OfferedDate.Day">
 											Day
 										</label>
-										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day"
-											   name="dtr-day" type="text" maxlength="2" inputmode="numeric" />
+										<input asp-for="OfferedDate.Day" class="govuk-input govuk-date-input__input govuk-input--width-2"
+											   type="text" maxlength="2" inputmode="numeric" />
 									</div>
 								</div>
 								<div class="govuk-date-input__item">
 									<div class="govuk-form-group">
-										<label class="govuk-label govuk-date-input__label" for="dtr-month">
+										<label class="govuk-label govuk-date-input__label" asp-for="OfferedDate.Month">
 											Month
 										</label>
-										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month"
-											   name="dtr-month" type="text" maxlength="2" inputmode="numeric" />
+										<input asp-for="OfferedDate.Month" class="govuk-input govuk-date-input__input govuk-input--width-2"
+											    type="text" maxlength="2" inputmode="numeric" />
 									</div>
 								</div>
 								<div class="govuk-date-input__item">
 									<div class="govuk-form-group">
-										<label class="govuk-label govuk-date-input__label" for="dtr-year">
+										<label class="govuk-label govuk-date-input__label" asp-for="OfferedDate.Year">
 											Year
 										</label>
-										<input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year"
-											   name="dtr-year" type="text" maxlength="4" inputmode="numeric" />
+										<input asp-for="OfferedDate.Year" class="govuk-input govuk-date-input__input govuk-input--width-4"
+											  type="text" maxlength="4" inputmode="numeric" />
 									</div>
 								</div>
 							</div>
@@ -110,7 +100,7 @@
 					<div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
 						<div class="govuk-form-group">
 							<h2 class="govuk-heading-m">Notes</h2>
-							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="srma-notes" name="srma-notes" rows="3" aria-describedby="srma-notes-info"></textarea>
+							<textarea asp-for="Notes" class="govuk-textarea govuk-js-character-count concern-auto-resize" rows="3" aria-describedby="srma-notes-info"></textarea>
 						</div>
 						<div id="srma-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
 							You can enter up to @Model.NotesMaxLength characters
@@ -128,50 +118,6 @@
 
 				<script type="application/javascript" nonce="@nonce">
 					$(function () {
-						let validator = formValidator($("#add-srma-form")[0]);
-						addSRMANotesValidator(validator);
-
-						validator.addValidator('status', [{
-							method: function(field) {
-								return ((typeof(field) != "undefined") && field.value.trim().length > 0);
-							},
-							message: 'Select status'
-						}]);
-
-						validator.addValidator('dtr-day', [{
-						  method: function(field, params) {
-							return (params.day.value.length !== 0 && params.month.value.length !== 0 && params.year.value !== 0);
-						  },
-						  message: 'Enter a valid date',
-						  params: {
-							day: document.getElementById('dtr-day'),
-							month: document.getElementById('dtr-month'),
-							year: document.getElementById('dtr-year')
-						  }
-						}, {
-						  method: function(field, params) {
-							if(!isValidDate(params)) {
-								return false;
-							}
-							var d = new Date(parseInt(params.year.value, 10), parseInt(params.month.value, 10) - 1, parseInt(params.day.value, 10) - 1);
-							return d instanceof Date && !isNaN(d);
-						  },
-						  message: 'Enter the date SRMA was offered to the trust',
-						  params: {
-							day: document.getElementById('dtr-day'),
-							month: document.getElementById('dtr-month'),
-							year: document.getElementById('dtr-year')
-						  }
-						}]);
-
-						function isValidDate(date) {
-							return !isNaN(date.year.value)
-								&& !isNaN(date.month.value)
-								&& !isNaN(date.day.value)
-								&& date.month.value >= 1 && date.month.value <= 12
-								&& date.day.value >= 1 && date.month.value <= 31;
-						}
-
 						autoResizer();
 					});
 				</script>

@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.Redis.Teams;
-using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Security;
 using Microsoft.Extensions.Logging;
 using Moq;
