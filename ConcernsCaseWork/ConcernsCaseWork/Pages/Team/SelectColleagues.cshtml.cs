@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Teams;

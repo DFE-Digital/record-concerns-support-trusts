@@ -7,15 +7,15 @@ namespace ConcernsCaseWork.Services.Decisions
 {
 	public class DecisionMapping
 	{
-		public static ActionSummaryModel ToActionSummary(GetDecisionResponseDto decision)
+		public static ActionSummaryModel ToActionSummary(DecisionSummaryResponseDto decisionSummary)
 		{
 			var result = new ActionSummaryModel()
 			{
-				OpenedDate = decision.CreatedAt.ToDayMonthYear(),
-				ClosedDate = decision.ClosedAt?.ToDayMonthYear(),
-				Name = $"Decision: {decision.Title}",
-				StatusName = EnumHelper.GetEnumDescription(decision.Status),
-				RelativeUrl = $"/case/{decision.ConcernsCaseUrn}/management/action/decision/{decision.DecisionId}"
+				OpenedDate = decisionSummary.CreatedAt.ToDayMonthYear(),
+				ClosedDate = decisionSummary.ClosedAt?.ToDayMonthYear(),
+				Name = $"Decision: {decisionSummary.Title}",
+				StatusName = EnumHelper.GetEnumDescription(decisionSummary.DecisionStatus),
+				RelativeUrl = $"/case/{decisionSummary.ConcernsCaseUrn}/management/action/decision/{decisionSummary.DecisionId}"
 			};
 
 			return result;

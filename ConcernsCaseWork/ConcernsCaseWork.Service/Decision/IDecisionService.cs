@@ -4,6 +4,8 @@
 	{
 		Task<CreateDecisionResponseDto> PostDecision(CreateDecisionDto createDecisionDto);
 
-		Task<List<GetDecisionResponseDto>> GetDecisionsByCaseUrn(long urn);
+		Task<List<DecisionSummaryResponseDto>> GetDecisionsByCaseUrn(long urn);
+
+		Task<DecisionSummaryResponseDto> GetDecision(long urn, int decisionId);
 	}
 }
