@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConcernsCaseWork.API.ResponseModels.Concerns.Decisions
+﻿namespace ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions
 {
 	public class UpdateDecisionResponse
 	{

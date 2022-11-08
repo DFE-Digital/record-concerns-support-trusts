@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ConcernsCaseWork.API.RequestModels.Concerns.Decisions
+namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 {
 	public class GetDecisionRequest
 	{

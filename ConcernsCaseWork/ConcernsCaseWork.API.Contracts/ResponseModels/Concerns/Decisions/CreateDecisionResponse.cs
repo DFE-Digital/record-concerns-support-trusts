@@ -1,4 +1,4 @@
-﻿namespace ConcernsCaseWork.API.ResponseModels.Concerns.Decisions
+﻿namespace ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions
 {
 	public class CreateDecisionResponse
 	{

@@ -1,11 +1,14 @@
-﻿using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+﻿using ConcernsCaseWork.API.Contracts.Enums;
 using System.ComponentModel.DataAnnotations;
-using DecisionType = ConcernsCaseWork.Data.Enums.Concerns.DecisionType;
 
-namespace ConcernsCaseWork.API.RequestModels.Concerns.Decisions
+namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 {
 	public class CreateDecisionRequest
 	{
+		private const int _maxUrlLength = 2048;
+		private const int _maxSupportingNotesLength = 2000;
+		private const int _maxCaseNumberLength = 20;
+
 		[Range(1, int.MaxValue, ErrorMessage = "The ConcernsCaseUrn must be greater than zero")]
 		public int ConcernsCaseUrn { get; set; } // TODO: Remove this and pass urn separately to the decision request.
 
@@ -14,19 +17,19 @@ namespace ConcernsCaseWork.API.RequestModels.Concerns.Decisions
 		[Range(typeof(decimal), "0", "79228162514264337593543950335", ErrorMessage = "The total amount requested must be zero or greater")]
 		public decimal TotalAmountRequested { get; set; }
 
-		[StringLength(Decision.MaxSupportingNotesLength)]
+		[StringLength(_maxSupportingNotesLength)]
 		public string SupportingNotes { get; set; }
 
 		public DateTimeOffset ReceivedRequestDate { get; set; }
 
-		[StringLength(Decision.MaxUrlLength)]
+		[StringLength(_maxUrlLength)]
 		public string SubmissionDocumentLink { get; set; }
 
 		public bool? SubmissionRequired { get; set; }
 
 		public bool? RetrospectiveApproval { get; set; }
 
-		[StringLength(Decision.MaxCaseNumberLength)]
+		[StringLength(_maxCaseNumberLength)]
 		public string CrmCaseNumber { get; set; }
 
 		public bool IsValid()
