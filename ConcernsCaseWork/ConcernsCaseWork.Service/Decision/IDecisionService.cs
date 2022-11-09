@@ -6,6 +6,6 @@
 
 		Task<List<DecisionSummaryResponseDto>> GetDecisionsByCaseUrn(long urn);
 
-		Task<DecisionSummaryResponseDto> GetDecision(long urn, int decisionId);
+		Task<GetDecisionResponse> GetDecision(long urn, int decisionId);
 	}
 }
