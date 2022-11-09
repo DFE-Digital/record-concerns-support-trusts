@@ -350,13 +350,18 @@
 
                         $totalAmountRequestedObj = $('#total-amount-request');
 
+                        $totalAmountRequestedObj.on('focusin keyup', function() {
+                            var onlyNumbersRegex = /[^\d\.]/g;
+                            var input = $totalAmountRequestedObj.val().replace(onlyNumbersRegex, "");
+                            $totalAmountRequestedObj.val(input)
+                        });
+
                         $totalAmountRequestedObj.focusout(function () {
 
                             var onlyNumbersRegex = /[^\d\.]/g;
                             var input = $totalAmountRequestedObj.val().replace(onlyNumbersRegex, "");
 
                             var formattedCurrency = currencyFormatter.format(input).replace('£', '');
-
                             $totalAmountRequestedObj.val(formattedCurrency)
                         });
 
