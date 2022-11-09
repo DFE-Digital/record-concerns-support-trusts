@@ -7,6 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 COPY ./ConcernsCaseWork/ConcernsCaseWork/ ./ConcernsCaseWork/
 COPY ./ConcernsCaseWork/ConcernsCaseWork.API/ ./ConcernsCaseWork.API/
+COPY ./ConcernsCaseWork/ConcernsCaseWork.API.Contracts/ ./ConcernsCaseWork.API.Contracts/
 COPY ./ConcernsCaseWork/ConcernsCaseWork.CoreTypes/ ./ConcernsCaseWork.CoreTypes/
 COPY ./ConcernsCaseWork/ConcernsCaseWork.Data/ ./ConcernsCaseWork.Data/
 COPY ./ConcernsCaseWork/ConcernsCaseWork.Logging/ ./ConcernsCaseWork.Logging/
