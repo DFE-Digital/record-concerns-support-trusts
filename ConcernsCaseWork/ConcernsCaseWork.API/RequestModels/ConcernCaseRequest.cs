@@ -17,9 +17,8 @@ namespace ConcernsCaseWork.API.RequestModels
         public string CaseAim { get; set; }
         public string DeEscalationPoint { get; set; }
         public string NextSteps { get; set; }
-        public string DirectionOfTravel { get; set; }
-        
         public string CaseHistory { get; set; }
+        public string DirectionOfTravel { get; set; }
         public int StatusId { get; set; }
         public int RatingId { get; set; }
     }
