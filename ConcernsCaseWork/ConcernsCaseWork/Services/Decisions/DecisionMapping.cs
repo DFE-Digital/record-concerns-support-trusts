@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Extensions;
+﻿using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.Decision;
@@ -8,7 +9,7 @@ namespace ConcernsCaseWork.Services.Decisions
 {
 	public class DecisionMapping
 	{
-		public static ActionSummaryModel ToActionSummary(DecisionSummaryResponseDto decisionSummary)
+		public static ActionSummaryModel ToActionSummary(DecisionSummaryResponse decisionSummary)
 		{
 			var result = new ActionSummaryModel()
 			{

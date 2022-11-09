@@ -1,8 +1,8 @@
 ﻿using AutoFixture;
 using AutoFixture.Idioms;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Factories.Concerns.Decisions;
-using ConcernsCaseWork.API.RequestModels.Concerns.Decisions;
-using ConcernsCaseWork.API.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.Data.Gateways;
@@ -54,7 +54,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
         {
             var badRequestObject = new CreateDecisionRequest
             {
-                DecisionTypes = new Data.Enums.Concerns.DecisionType[] { 0 }
+                DecisionTypes = new Contracts.Enums.DecisionType[] { 0 }
             };
 
             var sut = new CreateDecision(Mock.Of<IConcernsCaseGateway>(), Mock.Of<IDecisionFactory>(), Mock.Of<ICreateDecisionResponseFactory>());
@@ -130,7 +130,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
                 submissionRequired: request.SubmissionRequired,
                 submissionDocumentLink: request.SubmissionDocumentLink,
                 receivedRequestDate: request.ReceivedRequestDate,
-                decisionTypes: request.DecisionTypes.Select(x => new DecisionType(x)).ToArray(),
+                decisionTypes: request.DecisionTypes.Select(x => new DecisionType((Data.Enums.Concerns.DecisionType)x)).ToArray(),
                 totalAmountRequested: request.TotalAmountRequested,
                 supportingNotes: request.SupportingNotes,
                 fixture.Create<DateTimeOffset>());

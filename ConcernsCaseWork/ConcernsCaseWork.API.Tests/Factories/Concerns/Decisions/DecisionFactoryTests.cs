@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Factories.Concerns.Decisions;
-using ConcernsCaseWork.API.RequestModels.Concerns.Decisions;
 using FluentAssertions;
 using System.Linq;
 using Xunit;
@@ -23,8 +23,8 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
 				cfg => cfg.Excluding(x => x.DecisionTypes)
 					.Excluding(x => x.ConcernsCaseUrn));
 
-			decision.DecisionTypes.Select(x => x.DecisionTypeId)
-				.Should().Contain(input.DecisionTypes);
+			decision.DecisionTypes.Select(x => (int)x.DecisionTypeId)
+				.Should().Contain(input.DecisionTypes.Select(i => (int)i));
 		}
 
 		[Fact]
@@ -40,8 +40,8 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
 			decision.Should().BeEquivalentTo(input,
 				cfg => cfg.Excluding(x => x.DecisionTypes));
 
-			decision.DecisionTypes.Select(x => x.DecisionTypeId)
-				.Should().Contain(input.DecisionTypes);
+			decision.DecisionTypes.Select(x => (int)x.DecisionTypeId)
+				.Should().Contain(input.DecisionTypes.Select(i => (int)i));
 		}
 	}
 }
