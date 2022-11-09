@@ -1,6 +1,8 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Decision;
@@ -57,9 +59,9 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 		{
 			Fixture fixture = CreateMockedFixture();
 
-			var expectedInputDto = fixture.Create<CreateDecisionDto>();
-			var expectedResponseDto = fixture.Create<CreateDecisionResponseDto>();
-			var responseWrapper = new ApiWrapper<CreateDecisionResponseDto>(expectedResponseDto);
+			var expectedInputDto = fixture.Create<CreateDecisionRequest>();
+			var expectedResponseDto = fixture.Create<CreateDecisionResponse>();
+			var responseWrapper = new ApiWrapper<CreateDecisionResponse>(expectedResponseDto);
 
 			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{expectedInputDto.ConcernsCaseUrn}/decisions", responseWrapper);
 			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
@@ -78,8 +80,8 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 			var urn = 3;
 
 			Fixture fixture = CreateMockedFixture();
-			var expectedResponseDto = fixture.Create<List<DecisionSummaryResponseDto>>();
-			var responseWrapper = new ApiWrapper<List<DecisionSummaryResponseDto>>(expectedResponseDto);
+			var expectedResponseDto = fixture.Create<List<DecisionSummaryResponse>>();
+			var responseWrapper = new ApiWrapper<List<DecisionSummaryResponse>>(expectedResponseDto);
 
 			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{urn}/decisions", responseWrapper);
 			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);

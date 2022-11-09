@@ -1,6 +1,6 @@
-﻿using ConcernsCaseWork.API.Factories.Concerns.Decisions;
-using ConcernsCaseWork.API.RequestModels.Concerns.Decisions;
-using ConcernsCaseWork.API.ResponseModels.Concerns.Decisions;
+﻿using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Factories.Concerns.Decisions;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.Data;

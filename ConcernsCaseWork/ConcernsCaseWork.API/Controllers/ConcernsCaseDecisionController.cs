@@ -1,6 +1,6 @@
-using ConcernsCaseWork.API.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.UseCases;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
