@@ -1,7 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
-using ConcernsCaseWork.Service.Helpers;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.Decision
@@ -40,10 +39,10 @@ namespace ConcernsCaseWork.Service.Decision
 			return result;
 		}
 
-		public async Task<DecisionSummaryResponseDto> GetDecision(long urn, int decisionId)
+		public async Task<GetDecisionResponse> GetDecision(long urn, int decisionId)
 		{
 			_logger.LogMethodEntered();
-			var result = await Get<DecisionSummaryResponseDto>($"/{EndpointsVersion}/concerns-cases/{urn}/decisions/{decisionId}");
+			var result = await Get<GetDecisionResponse>($"/{EndpointsVersion}/concerns-cases/{urn}/decisions/{decisionId}");
 			_logger.LogInformation($"Retrieved decision {decisionId} for case urn {urn}");
 			return result;
 		}
