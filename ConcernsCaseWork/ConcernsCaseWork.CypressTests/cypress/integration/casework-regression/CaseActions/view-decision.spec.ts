@@ -4,8 +4,12 @@ describe("Viewing an existing decision", () => {
 
     const decisionPage: ViewDecisionPage = new ViewDecisionPage();
 
+    before(() => {
+        cy.login();
+    });
+
     it("Should display the decision information", () => {
-        cy.visit("/case/306/management/action/decision/6");
+        cy.visit("/");
 
         decisionPage
             .hasCrmEnquiry("123456")
