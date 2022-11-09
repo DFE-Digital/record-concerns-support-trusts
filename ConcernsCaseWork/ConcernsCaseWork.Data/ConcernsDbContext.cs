@@ -49,7 +49,11 @@ namespace ConcernsCaseWork.Data
         public virtual DbSet<ConcernsCaseworkTeamMember> ConcernsTeamCaseworkTeamMember { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
+        {    
+	        if (!optionsBuilder.IsConfigured)
+	        {
+		        optionsBuilder.UseConcernsSqlServer("Data Source=127.0.0.1;Initial Catalog=local_trams_test_db;persist security info=True;User id=sa; Password=StrongPassword905");
+	        }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
