@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.API.ResponseModels.Concerns.Decisions;
+﻿using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 
 namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 			{
 				ConcernsCaseUrn = concernsCaseUrn,
 				DecisionId = decision.DecisionId,
-				Status = decision.Status,
+				Status = (Contracts.Enums.DecisionStatus)decision.Status,
 				CreatedAt = decision.CreatedAt,
 				UpdatedAt = decision.UpdatedAt,
 				ClosedAt = decision.ClosedAt,

@@ -1,8 +1,6 @@
-﻿using AutoFixture;
-using AutoFixture.Idioms;
-using ConcernsCaseWork.API.RequestModels.Concerns.Decisions;
-using ConcernsCaseWork.API.ResponseModels.Concerns.Decisions;
-using FluentAssertions;
+﻿using AutoFixture.Idioms;
+using AutoFixture;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using FluentAssertions.Execution;
 using System;
 using System.Collections.Generic;
@@ -12,15 +10,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ConcernsCaseWork.API.Tests.ResponseModels.Concerns.Decisions
+namespace ConcernsCaseWork.API.Tests.RequestModels.Concerns.Decisions
 {
-    public class AllResponseModelTests
+    public class AllRequestModelTests
     {
         [Fact]
         public void All_Constructors_Guard_Against_Null()
         {
             // Arrange
-            var requestTypes = GetResponseTypes();
+            var requestTypes = GetRequestTypes();
             var fixture = new Fixture();
 
             foreach (var requestType in requestTypes)
@@ -39,7 +37,7 @@ namespace ConcernsCaseWork.API.Tests.ResponseModels.Concerns.Decisions
         public void Properties_Are_Initialized_By_Constructor()
         {
             // Arrange
-            var requestTypes = GetResponseTypes();
+            var requestTypes = GetRequestTypes();
             var fixture = new Fixture();
 
             foreach (var requestType in requestTypes)
@@ -57,7 +55,7 @@ namespace ConcernsCaseWork.API.Tests.ResponseModels.Concerns.Decisions
         public void Property_Setters_Work_As_Expected()
         {
             // Arrange
-            var requestTypes = GetResponseTypes();
+            var requestTypes = GetRequestTypes();
             var fixture = new Fixture();
 
             foreach (var requestType in requestTypes)
@@ -72,14 +70,14 @@ namespace ConcernsCaseWork.API.Tests.ResponseModels.Concerns.Decisions
             }
         }
 
-        private TypeInfo[] GetResponseTypes()
+        private TypeInfo[] GetRequestTypes()
         {
-            return typeof(CreateDecisionResponse).Assembly
+            return typeof(CreateDecisionRequest).Assembly
                 .DefinedTypes
                 .Where(x =>
                     x.IsClass &&
                     x.Namespace != null
-                    && x.Namespace.StartsWith(typeof(CreateDecisionResponse).Namespace))
+                    && x.Namespace.StartsWith(typeof(CreateDecisionRequest).Namespace))
                 .ToArray();
         }
     }
