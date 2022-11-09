@@ -9,6 +9,6 @@ namespace ConcernsCaseWork.API.RequestModels.CaseActions.SRMA
         public int SRMAId { get; set; }
 
         [Required]
-        public Func<SRMACase, SRMACase> Delegate { get; set; } 
+        public Func<SRMACase, SRMACase> Delegate { get; set; }
     }
 }

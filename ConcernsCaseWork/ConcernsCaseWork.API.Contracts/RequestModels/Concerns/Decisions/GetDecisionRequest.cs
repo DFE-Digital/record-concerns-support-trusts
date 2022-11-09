@@ -1,7 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ConcernsCaseWork.API.RequestModels.Concerns.Decisions
+namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 {
+	/// <summary>
+	/// This request is created within the API as the resource is accessed via restful URI.
+	/// Arguably should be moved to an internal location within the API, and probably will be at some point when time permits.
+	/// </summary>
 	public class GetDecisionRequest
 	{
 		[Range(1, int.MaxValue, ErrorMessage = "The ConcernsCaseUrn must be greater than zero")]
