@@ -50,6 +50,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 CaseAim = request.CaseAim,
                 DeEscalationPoint = request.DeEscalationPoint,
                 NextSteps = request.NextSteps,
+                CaseHistory = request.CaseHistory,
                 DirectionOfTravel = request.DirectionOfTravel,
                 StatusId = request.StatusId,
                 RatingId = request.RatingId

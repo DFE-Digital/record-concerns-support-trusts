@@ -46,6 +46,9 @@ namespace ConcernsCaseWork.Service.Cases
 		[JsonProperty("nextSteps")]
 		public string NextSteps { get; }
 		
+		[JsonProperty("caseHistory")]
+		public string CaseHistory { get; set; }
+		
 		/// <summary>
 		/// Deteriorating, unchanged, improved
 		/// </summary>
@@ -62,13 +65,13 @@ namespace ConcernsCaseWork.Service.Cases
 		public CreateCaseDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
 			DateTimeOffset closedAt, string createdBy, string crmEnquiry, string trustUkPrn, 
 			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
-			string nextSteps, string caseAim, string deEscalationPoint, string directionOfTravel, long statusId,
+			string nextSteps, string caseAim, string deEscalationPoint, string caseHistory, string directionOfTravel, long statusId,
 			long ratingId) => 
 			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, CreatedBy, CrmEnquiry, TrustUkPrn,
-				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, CaseAim, DeEscalationPoint, DirectionOfTravel, 
+				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, CaseAim, DeEscalationPoint, CaseHistory, DirectionOfTravel, 
 				StatusId, RatingId) = 
 			(createdAt, updatedAt, reviewAt, closedAt, createdBy, crmEnquiry, trustUkPrn,
-				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, caseAim, deEscalationPoint, directionOfTravel, 
+				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, caseAim, deEscalationPoint, caseHistory, directionOfTravel, 
 				statusId, ratingId);
 	}
 }
