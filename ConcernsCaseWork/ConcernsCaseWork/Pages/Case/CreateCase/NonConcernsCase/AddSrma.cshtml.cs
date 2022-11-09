@@ -38,7 +38,7 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 		public SRMAStatus Status { get; set; }
 		
 		[BindProperty]
-		[Required (ErrorMessage = "Enter a valid datexx")]
+		[Required (ErrorMessage = "Enter a valid date")]
 		public ConcernsDateValidatable OfferedDate { get; set; }
 
 		[MaxLength(_notesMaxLength)]

@@ -1,7 +1,5 @@
 ﻿using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
@@ -20,14 +18,17 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly ICaseModelService _caseModelService;
 		private readonly ILogger<EditCaseHistoryPageModel> _logger;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
+
+		[BindProperty(SupportsGet = true)]
+		public string ReferrerUrl => $"/case/{CaseUrn}/management";
 		
 		[BindProperty(SupportsGet = true, Name="Urn")]
-		[Required]
-		public long CaseUrn { get; set; }
+		[Required(ErrorMessage = "CaseUrn is null or invalid to parse")]
+		public long? CaseUrn { get; set; }
 		
 		[BindProperty]
+		[MaxLength(4000, ErrorMessage = "Case history must be 4000 characters or less")]
 		public string CaseHistory { get; set; }
-		public CaseModel CaseModel { get; private set; }
 		
 		public EditCaseHistoryPageModel(ICaseModelService caseModelService, IClaimsPrincipalHelper claimsPrincipalHelper, ILogger<EditCaseHistoryPageModel> logger)
 		{
@@ -38,31 +39,43 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		
 		public async Task<ActionResult> OnGetAsync()
 		{
+			_logger.LogMethodEntered();
+
 			try
 			{
-				_logger.LogInformation("Case::EditCaseHistoryPageModel::OnGetAsync");
-
+				if (!ModelState.IsValid)
+				{
+					return Page();
+				}
+				
+				var caseModel = await _caseModelService.GetCaseByUrn(GetUserName(), (long)CaseUrn);
+				CaseHistory = caseModel.CaseHistory;
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::EditCaseHistoryPageModel::OnGetAsync::Exception - {Message}", ex.Message);
-				
+				_logger.LogErrorMsg(ex);
+
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 			
-			return await LoadPage(Request.Headers["Referer"].ToString());
+			return Page();
 		}
 		
-		public async Task<ActionResult> OnPost(string url)
+		public async Task<ActionResult> OnPost()
 		{
+			_logger.LogMethodEntered();
+			
 			try
 			{
-				_logger.LogInformation("Case::EditCaseHistoryPageModel::OnPostEditCaseHistory");
-
+				if (!ModelState.IsValid)
+				{
+					return Page();
+				}
+				
 				var userName = GetUserName();
-				await _caseModelService.PatchCaseHistory(CaseUrn, userName, CaseHistory);
+				await _caseModelService.PatchCaseHistory((long)CaseUrn, userName, CaseHistory);
 					
-				return Redirect(url);
+				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{
@@ -71,26 +84,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 
-			return await LoadPage(url);
-		}
-		
-		private async Task<ActionResult> LoadPage(string url)
-		{
-			try
-			{
-				var userName = GetUserName();
-				CaseModel = await _caseModelService.GetCaseByUrn(userName, CaseUrn);
-				CaseModel.PreviousUrl = url;
-				
-				return Page();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::EditCaseHistoryPageModel::LoadPage::Exception - {Message}", ex.Message);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
-			}
+			return Page();
 		}
 		
 		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
