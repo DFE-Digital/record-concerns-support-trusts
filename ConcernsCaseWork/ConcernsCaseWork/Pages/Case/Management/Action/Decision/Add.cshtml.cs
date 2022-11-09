@@ -1,4 +1,6 @@
 ﻿
+using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Exceptions;
 using ConcernsCaseWork.Extensions;
@@ -24,7 +26,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		private readonly ILogger<AddPageModel> _logger;
 
 		[BindProperty]
-		public CreateDecisionDto CreateDecisionDto { get; set; }
+		public CreateDecisionRequest CreateDecisionDto { get; set; }
 
 		[BindProperty]
 		public bool DecisionTypeNoticeToImprove { get; set; }
@@ -138,12 +140,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			CreateDecisionDto.DecisionTypes = DecisionTypePropertiesToDecisionTypeArray();
 			CreateDecisionDto.ReceivedRequestDate = parsedDate;
-			CreateDecisionDto.CreatedAt = DateTimeOffset.Now;
-			CreateDecisionDto.UpdatedAt = DateTimeOffset.Now;
 		}
 
 		private void DecisionTypeArrayToDecisionTypeProperties(DecisionType[] decisionTypes)
-		{	
+		{
 			if (decisionTypes == null)
 			{
 				return;
@@ -162,9 +162,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			DecisionTypeFreedomOfInformationExemptions = decisionTypes.Contains(DecisionType.FreedomOfInformationExemptions);
 		}
 
-		// update the dto with the result of a call to this, so createDecisionDto.DecisionTypes = ToDecisionTypesArray([page property]), 
+		// update the dto with the result of a call to this, so createDecisionDto.DecisionTypes = ToDecisionTypesArray([page property]),
 		private DecisionType[] DecisionTypePropertiesToDecisionTypeArray()
-		{			 
+		{
 			return new DecisionType[]
 			{
 				DecisionTypeNoticeToImprove ? DecisionType.NoticeToImprove : 0,

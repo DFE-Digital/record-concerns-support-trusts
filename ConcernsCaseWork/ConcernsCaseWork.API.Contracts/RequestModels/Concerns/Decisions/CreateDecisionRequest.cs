@@ -17,12 +17,13 @@ namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 		[Range(typeof(decimal), "0", "79228162514264337593543950335", ErrorMessage = "The total amount requested must be zero or greater")]
 		public decimal TotalAmountRequested { get; set; }
 
-		[StringLength(_maxSupportingNotesLength)]
+		[StringLength(_maxSupportingNotesLength, ErrorMessage = "Notes must be 2000 characters or less")]
 		public string SupportingNotes { get; set; }
 
 		public DateTimeOffset ReceivedRequestDate { get; set; }
 
-		[StringLength(_maxUrlLength)]
+		[StringLength(_maxUrlLength,  ErrorMessage = "Submission document link must be 2048 or less", MinimumLength = 0)]
+		[Required(AllowEmptyStrings = true)]
 		public string SubmissionDocumentLink { get; set; }
 
 		public bool? SubmissionRequired { get; set; }

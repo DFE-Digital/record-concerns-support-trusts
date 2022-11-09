@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using System.Collections.Generic;
 using System.Linq;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 {
@@ -225,7 +226,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 					TempData = tempData,
 					Url = new UrlHelper(actionContext),
 					MetadataProvider = pageContext.ViewData.ModelMetadata,
-					CreateDecisionDto = new CreateDecisionDto()
+					CreateDecisionDto = new CreateDecisionRequest()
 				};
 
 				var routeData = result.RouteData.Values;

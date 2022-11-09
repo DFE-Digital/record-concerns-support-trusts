@@ -1,8 +1,13 @@
-﻿namespace ConcernsCaseWork.API.Contracts.Enums
+﻿using System.ComponentModel;
+
+namespace ConcernsCaseWork.API.Contracts.Enums
 {
     public enum DecisionStatus
     {
-        InProgress = 1,
-        Closed = 2,
+	    [Description("In progress")]
+	    InProgress = 1,
+
+	    [Description("Closed")]
+	    Closed = 2,
     }
 }
