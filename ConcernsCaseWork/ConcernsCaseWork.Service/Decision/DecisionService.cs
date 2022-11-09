@@ -16,14 +16,14 @@ namespace ConcernsCaseWork.Service.Decision
 			_logger = Guard.Against.Null(logger);
 		}
 
-		public async Task<CreateDecisionResponseDto> PostDecision(CreateDecisionRequest createDecisionDto)
+		public async Task<CreateDecisionResponse> PostDecision(CreateDecisionRequest createDecisionDto)
 		{
 			_logger.LogMethodEntered();
 
 			_ = Guard.Against.Null(createDecisionDto);
 
 			// post the new decision
-			var postResponse = await Post<CreateDecisionRequest, CreateDecisionResponseDto>($"/{EndpointsVersion}/concerns-cases/{createDecisionDto.ConcernsCaseUrn}/decisions", createDecisionDto);
+			var postResponse = await Post<CreateDecisionRequest, CreateDecisionResponse>($"/{EndpointsVersion}/concerns-cases/{createDecisionDto.ConcernsCaseUrn}/decisions", createDecisionDto);
 
 			_logger.LogInformation($"Decision created. caseUrn: {postResponse.ConcernsCaseUrn}, DecisionId:{postResponse.DecisionId}");
 			return postResponse;

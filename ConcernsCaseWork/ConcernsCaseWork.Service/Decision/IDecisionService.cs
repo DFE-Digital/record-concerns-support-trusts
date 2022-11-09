@@ -5,7 +5,7 @@ namespace ConcernsCaseWork.Service.Decision
 {
 	public interface IDecisionService
 	{
-		Task<CreateDecisionResponseDto> PostDecision(CreateDecisionRequest createDecisionDto);
+		Task<CreateDecisionResponse> PostDecision(CreateDecisionRequest createDecisionDto);
 
 		Task<List<DecisionSummaryResponse>> GetDecisionsByCaseUrn(long urn);
 
