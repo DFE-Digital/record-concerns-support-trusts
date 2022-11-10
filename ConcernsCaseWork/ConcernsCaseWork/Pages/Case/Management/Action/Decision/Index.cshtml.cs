@@ -27,6 +27,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		public async Task<IActionResult> OnGetAsync()
 		{
+			_logger.LogInformation("Case::Action::Decision::IndexPageModel::OnGetAsync");
+
 			ViewData[ViewDataConstants.Title] = "Decision";
 			ViewData[ViewDataConstants.BackButtonLabel] = "Back to case";
 
