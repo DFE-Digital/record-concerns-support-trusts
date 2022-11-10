@@ -64,6 +64,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		public int NotesMaxLength => 2000;
 
+		public long? DecisionId { get; set; }
+		public DecisionDto Decision { get; set; }
+
 		public AddPageModel(IDecisionService decisionService, ILogger<AddPageModel> logger)
 		{
 			_decisionService = decisionService;
@@ -72,16 +75,34 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		public long CaseUrn { get; set; }
 
-		public async Task<IActionResult> OnGetAsync(long urn)
+		public async Task<IActionResult> OnGetAsync(long urn, long? decisionId)
 		{
 			_logger.LogMethodEntered();
 
 			try
 			{
 				CaseUrn = (CaseUrn)urn;
+				DecisionId = decisionId;
+
+				if (DecisionId.HasValue)
+				{
+					//Decision = await _decisionService.GetDecision(CaseUrn, DecisionId.Value);
+
+					Decision = new DecisionDto()
+					{
+						ConcernsCaseUrn = CaseUrn,
+						CrmCaseNumber = "10001",
+						DecisionTypes = new List<DecisionType>() { DecisionType.NoticeToImprove, DecisionType.EsfaApproval, DecisionType.EstimatesFundingOrPupilNumberAdjustment }.ToArray(),
+						TotalAmountRequested = 4000,
+						SupportingNotes = "Test Notes",
+						ReceivedRequestDate = new DateTimeOffset(DateTime.Now),
+						SubmissionDocumentLink = "www.sharepoint.com",
+						SubmissionRequired = true
+					};
+				}
 
 				// if editing, pass the current dto state, if new pass null
-				DecisionTypeArrayToDecisionTypeProperties(null);
+				DecisionTypeArrayToDecisionTypeProperties(Decision?.DecisionTypes ?? null);
 				return Page();
 			}
 			catch (Exception ex)
@@ -93,13 +114,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			}
 		}
 
-		public async Task<IActionResult> OnPostAsync(long urn)
+		public async Task<IActionResult> OnPostAsync(long urn, long? decisionId)
 		{
 			_logger.LogMethodEntered();
 
 			try
 			{
 				CaseUrn = (CaseUrn)urn;
+				DecisionId = decisionId;
 
 				if (!ModelState.IsValid)
 				{
@@ -107,8 +129,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 					return Page();
 				}
 
-				PopulateCreateDecisionDtoFromRequest();
-				await _decisionService.PostDecision(CreateDecisionDto);
+				if (DecisionId.HasValue)
+				{
+					var updateDecisionRequest = PopulateUpdateDecisionRequestFromCreateDecisionDto();
+					await _decisionService.PutDecision(CaseUrn, DecisionId.Value, updateDecisionRequest);
+				}
+				else
+				{
+					PopulateCreateDecisionDtoFromRequest();
+					await _decisionService.PostDecision(CreateDecisionDto);
+				}
 
 				return Redirect($"/case/{CaseUrn}/management");
 			}
@@ -141,6 +171,25 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			CreateDecisionDto.DecisionTypes = DecisionTypePropertiesToDecisionTypeArray();
 			CreateDecisionDto.ReceivedRequestDate = parsedDate;
+		}
+
+		private UpdateDecisionRequest PopulateUpdateDecisionRequestFromCreateDecisionDto()
+		{
+			PopulateCreateDecisionDtoFromRequest();
+
+			var updateDecisionRequest = new UpdateDecisionRequest()
+			{
+				CrmCaseNumber = CreateDecisionDto.CrmCaseNumber,
+				DecisionTypes = CreateDecisionDto.DecisionTypes,
+				TotalAmountRequested = CreateDecisionDto.TotalAmountRequested,
+				SupportingNotes = CreateDecisionDto.SupportingNotes,
+				ReceivedRequestDate = CreateDecisionDto.ReceivedRequestDate,
+				SubmissionDocumentLink = CreateDecisionDto.SubmissionDocumentLink,
+				RetrospectiveApproval = CreateDecisionDto.RetrospectiveApproval,
+				SubmissionRequired = CreateDecisionDto.SubmissionRequired
+			};
+
+			return updateDecisionRequest;
 		}
 
 		private void DecisionTypeArrayToDecisionTypeProperties(DecisionType[] decisionTypes)

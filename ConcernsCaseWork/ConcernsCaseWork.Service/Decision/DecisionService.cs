@@ -48,5 +48,18 @@ namespace ConcernsCaseWork.Service.Decision
 			_logger.LogInformation($"Retrieved decision {decisionId} for case urn {urn}");
 			return result;
 		}
+
+		public async Task<UpdateDecisionResponse> PutDecision(long caseUrn, long decisionId, UpdateDecisionRequest updateDecisionRequest)
+		{
+			_logger.LogMethodEntered();
+
+			_ = Guard.Against.Null(updateDecisionRequest);
+
+			// put the decision
+			var putResponse = await Put<UpdateDecisionRequest, UpdateDecisionResponse>($"/{EndpointsVersion}/concerns-cases/{caseUrn}/decisions/{decisionId}", updateDecisionRequest);
+
+			_logger.LogInformation($"Decision updated. caseUrn: {putResponse.ConcernsCaseUrn}, DecisionId:{putResponse.DecisionId}");
+			return putResponse;
+		}
 	}
 }
