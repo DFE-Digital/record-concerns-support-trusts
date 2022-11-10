@@ -12,7 +12,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 		[Description("Schools Financial Support and Oversight (SFSO) action")]
 		AMSDIntervention = 2,
 
-		[Description("Region Group (RG) Intervention")]
+		[Description("Regions Group (RG) Intervention")]
 		RDDIntervention = 3
 	}
 }
