@@ -5,15 +5,6 @@
 @using ConcernsCaseWork.Extensions;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 
-@{
-	ViewData["Title"] = "Decision";
-	ViewData["BackButtonLabel"] = "Back to case";
-	// ViewData["BackButtonLink"] = $"/case/{Model.CaseUrn}/management";
-
-	var errorClass = "govuk-error-message";
-	var srmaValidationErrors = TempData["Decision.Message"] as IEnumerable<string>;
-}
-
 @section BeforeMain {
 	<div class="govuk-width-container">
 		<partial name="_BackLink"/>
@@ -54,7 +45,7 @@
 					<th scope="row" class="govuk-table-case-details__header" data-testid="crm-enquiry-label">CRM enquiry number</th>
 					<td class="govuk-table__cell" data-testid="crm-enquiry-text">
 						@{
-							RenderValue(123456);
+							RenderValue(Model.Decision.CrmEnquiryNumber);
 						}
 					</td>
 				</tr>
@@ -62,7 +53,7 @@
 					<th scope="row" class="govuk-table-case-details__header" data-testid="retrospective-request-label">Retrospective request?</th>
 					<td class="govuk-table__cell" data-testid="retrospective-request-text">
 						@{
-							RenderValue("No");
+							RenderValue(Model.Decision.RetrospectiveApproval);
 						}
 					</td>
 				</tr>
@@ -70,7 +61,7 @@
 					<th scope="row" class="govuk-table-case-details__header" data-testid="submission-required-label">Submission required?</th>
 					<td class="govuk-table__cell" data-testid="submission-required-text">
 						@{
-							RenderValue("No");
+							RenderValue(Model.Decision.SubmissionRequired);
 						}
 					</td>
 				</tr>
@@ -78,7 +69,7 @@
 					<th scope="row" class="govuk-table-case-details__header" data-testid="submission-link-label">Submission link</th>
 					<td class="govuk-table__cell" data-testid="submission-link-text">
 						@{
-							RenderValue("www.gov.uk");
+							RenderValue(Model.Decision.SubmissionLink);
 						}
 					</td>
 				</tr>
@@ -86,7 +77,7 @@
 					<th scope="row" class="govuk-table-case-details__header" data-testid="date-esfa-received-label">Date ESFA received request</th>
 					<td class="govuk-table__cell" data-testid="date-esfa-received-text">
 						@{
-							RenderValue("20-04-2022");
+							RenderValue(Model.Decision.EsfaReceivedRequestDate);
 						}
 					</td>
 				</tr>
@@ -94,20 +85,32 @@
 					<th scope="row" class="govuk-table-case-details__header" data-testid="amount-requested-label">Total amount requested</th>
 					<td class="govuk-table__cell" data-testid="amount-requested-text">
 						@{
-							RenderValue("£150,000");
+							RenderValue(Model.Decision.TotalAmountRequested);
 						}
 					</td>
 				</tr>
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-table-case-details__header" data-testid="decision-type-label">Type of decision</th>
 					<td class="govuk-table__cell" data-testid="decision-type-text">
-						<ul>
-							<li>
-								@{
-									RenderValue("Repayable finacial support");
-								}
-							</li>
-						</ul>
+						@{
+							if (Model.Decision.DecisionTypes.Any())
+							{
+								<ul>
+									@foreach (var decisionType in Model.Decision.DecisionTypes)
+									{
+										<li>
+											@{
+												RenderValue(decisionType);
+											}
+										</li>
+									}
+								</ul>
+							}
+							else {
+								RenderEmptyLabel();
+							}
+						}
+
 
 					</td>
 				</tr>
@@ -115,7 +118,7 @@
 					<th scope="row" class="govuk-table-case-details__header" data-testid="supporting-notes-label">Supporting notes</th>
 					<td class="govuk-table__cell" data-testid="supporting-notes-text">
 						@{
-							RenderValue("These are some supporting notes!");
+							RenderValue(Model.Decision.SupportingNotes);
 						}
 					</td>
 				</tr>
@@ -123,7 +126,7 @@
 					<th scope="row" class="govuk-table-case-details__header" data-testid="edit-decision-label">Action</th>
 					<td class="govuk-table__cell" data-testid="edit-decision-text">
 						@{
-							RenderLink("Edit", "action", "http://gov.uk");
+							RenderLink("Edit", "action", Model.Decision.EditLink);
 						}
 					</td>
 				</tr>
@@ -131,7 +134,8 @@
 		</table>
 
 		<div class="govuk-button-group">
-			<button 
+			<button
+				disabled=disabled
 				data-prevent-double-click="true" 
 				class="govuk-button govuk-!-margin-top-6" 
 				data-module="govuk-button" 
@@ -160,8 +164,9 @@
 	private void RenderLink<T>(T value, string fieldName, string url)
 	{
 		var testid = $"{fieldName}-label";
+
 		<a class="govuk-link" href="@url">
-						@(IsEmpty(value) ? "Add" : "Edit")
+			Edit
 			<span class="govuk-visually-hidden" data-testid=testid>@fieldName</span>
 		</a>
     }
@@ -178,6 +183,6 @@
 
     private void RenderEmptyLabel()
     {
-	<span class="govuk-tag ragtag ragtag__grey">Empty</span>
+		<span class="govuk-tag ragtag ragtag__grey">Empty</span>
     }
 }
