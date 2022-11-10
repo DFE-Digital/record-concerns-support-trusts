@@ -740,7 +740,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             content.Data.First().Id.Should().BeGreaterThan(0);
 			
             content.Data.Last().Name.Should().Be("External");
-            content.Data.Last().Description.Should().Be("CIU casework, whistleblowing, self reported, RSCs or other government bodies");
+            content.Data.Last().Description.Should().Be("CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies");
             content.Data.Last().Id.Should().BeGreaterThan(0);
         }
         
