@@ -73,5 +73,16 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.EditLink.Should().Be("/case/2/management/action/decision/10/edit");
 			result.BackLink.Should().Be("/case/2/management");
 		}
+
+		[Test]
+		public void ToDecisionModel_WhenNoPropertiesFilled_ReturnsCorrectModel()
+		{
+			var apiDecision = new GetDecisionResponse();
+			apiDecision.DecisionTypes = new DecisionType[] { };
+
+			var result = DecisionMapping.ToDecisionModel(apiDecision);
+
+			result.EsfaReceivedRequestDate.Should().BeNull();
+		}
 	}
 }
