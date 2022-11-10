@@ -5,12 +5,6 @@
 @using ConcernsCaseWork.Extensions;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 
-@{
-	ViewData["Title"] = "Decision";
-	ViewData["BackButtonLabel"] = "Back to case";
-	ViewData["BackButtonLink"] = Model.Decision.BackLink;
-}
-
 @section BeforeMain {
 	<div class="govuk-width-container">
 		<partial name="_BackLink"/>

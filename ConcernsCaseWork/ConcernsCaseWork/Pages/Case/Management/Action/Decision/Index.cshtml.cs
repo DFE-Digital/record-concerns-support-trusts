@@ -27,14 +27,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		public async Task<IActionResult> OnGetAsync()
 		{
+			ViewData[ViewDataConstants.Title] = "Decision";
+			ViewData[ViewDataConstants.BackButtonLabel] = "Back to case";
+
 			try
 			{
 				TryGetRouteValueInt64("urn", out var urn);
 				TryGetRouteValueInt64("decisionId", out var decisionId);
 
-				var decision = await _decisionService.GetDecision(urn, (int)decisionId);
+				var apiDecision = await _decisionService.GetDecision(urn, (int)decisionId);
 
-				Decision = DecisionMapping.ToDecisionModel(decision);
+				Decision = DecisionMapping.ToDecisionModel(apiDecision);
+
+				ViewData[ViewDataConstants.BackButtonLink] = Decision.BackLink;
 			}
 			catch (Exception ex)
 			{
