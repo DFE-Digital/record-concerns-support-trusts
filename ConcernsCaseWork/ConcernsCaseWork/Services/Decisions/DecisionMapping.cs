@@ -3,6 +3,7 @@ using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.Decision;
+using System;
 using System.Linq;
 
 namespace ConcernsCaseWork.Services.Decisions
@@ -33,7 +34,7 @@ namespace ConcernsCaseWork.Services.Decisions
 				RetrospectiveApproval = decisionResponse.RetrospectiveApproval != true ? "No" : "Yes",
 				SubmissionRequired = decisionResponse.SubmissionRequired != true ? "No" : "Yes",
 				SubmissionLink = decisionResponse.SubmissionDocumentLink,
-				EsfaReceivedRequestDate = decisionResponse.ReceivedRequestDate.ToDayMonthYear(),
+				EsfaReceivedRequestDate = GetEsfaReceivedRequestDate(decisionResponse),
 				TotalAmountRequested = decisionResponse.TotalAmountRequested.ToString("C"),
 				DecisionTypes = decisionResponse.DecisionTypes.Select(d => EnumHelper.GetEnumDescription(d)).ToList(),
 				SupportingNotes = decisionResponse.SupportingNotes,
@@ -42,6 +43,11 @@ namespace ConcernsCaseWork.Services.Decisions
 			};
 
 			return result;
+		}
+
+		private static string GetEsfaReceivedRequestDate(GetDecisionResponse decisionResponse)
+		{
+			return decisionResponse.ReceivedRequestDate != DateTimeOffset.MinValue ? decisionResponse.ReceivedRequestDate.ToDayMonthYear() : null;
 		}
 	}
 }
