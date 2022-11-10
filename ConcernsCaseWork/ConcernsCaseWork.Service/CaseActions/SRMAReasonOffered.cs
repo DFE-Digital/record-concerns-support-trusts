@@ -9,10 +9,10 @@ namespace ConcernsCaseWork.Service.CaseActions
 		[Description("Offer linked with grant funding or other offer of support")]
 		OfferLinked = 1,
 
-		[Description("Schools Financial Support and Oversight ")]
+		[Description("Schools Financial Support and Oversight (SFSO) action")]
 		AMSDIntervention = 2,
 
-		[Description("Regions Group Intervention")]
+		[Description("Regions Group (RG) Intervention")]
 		RDDIntervention = 3
 	}
 }

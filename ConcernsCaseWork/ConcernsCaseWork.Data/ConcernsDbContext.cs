@@ -268,9 +268,9 @@ namespace ConcernsCaseWork.Data
                     {
                         Id = 2,
                         Name = "External",
-                        Description = "CIU casework, whistleblowing, self reported, RSCs or other government bodies",
+                        Description = "CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies",
                         CreatedAt = new DateTime(2022, 7, 28),
-                        UpdatedAt = new DateTime(2022, 7, 28)
+                        UpdatedAt = new DateTime(2022, 11, 09)
                     });
             });
 
