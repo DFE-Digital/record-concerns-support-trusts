@@ -33,6 +33,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 		public async Task OnGetAsync_Returns_Page()
 		{
 			var apiDecision = _fixture.Create<GetDecisionResponse>();
+			apiDecision.ConcernsCaseUrn = 1;
 			_mockDecision.Setup(m => m.GetDecision(1, 2)).ReturnsAsync(apiDecision);
 
 			var pageModel = CreateCasePageModel();
@@ -46,6 +47,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			pageModel.Decision.ConcernsCaseUrn.Should().Be(apiDecision.ConcernsCaseUrn);
 			pageModel.Decision.DecisionId.Should().Be(apiDecision.DecisionId);
+
+			pageModel.ViewData[ViewDataConstants.BackButtonLink].Should().Be($"/case/1/management");
+			pageModel.ViewData[ViewDataConstants.BackButtonLabel].Should().Be("Back to case");
+			pageModel.ViewData[ViewDataConstants.Title].Should().Be("Decision");
 		}
 
 		[Test]
