@@ -30,6 +30,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			Assert.That(caseDto.DeEscalation, Is.EqualTo(expectedCaseDto.DeEscalation));
 			Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCaseDto.NextSteps));
 			Assert.That(caseDto.CaseAim, Is.EqualTo(expectedCaseDto.CaseAim));
+			Assert.That(caseDto.CaseHistory, Is.EqualTo(expectedCaseDto.CaseHistory));
 			Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(expectedCaseDto.DeEscalationPoint));
 			Assert.That(caseDto.ReviewAt, Is.EqualTo(expectedCaseDto.ReviewAt));
 			Assert.That(caseDto.UpdatedAt, Is.EqualTo(expectedCaseDto.UpdatedAt));
@@ -60,6 +61,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			Assert.That(createCaseDto.DeEscalation, Is.EqualTo(expectedCaseDto.DeEscalation));
 			Assert.That(createCaseDto.NextSteps, Is.EqualTo(expectedCaseDto.NextSteps));
 			Assert.That(createCaseDto.CaseAim, Is.EqualTo(expectedCaseDto.CaseAim));
+			Assert.That(createCaseDto.CaseHistory, Is.EqualTo(expectedCaseDto.CaseHistory));
 			Assert.That(createCaseDto.DeEscalationPoint, Is.EqualTo(expectedCaseDto.DeEscalationPoint));
 			Assert.That(createCaseDto.ReviewAt, Is.EqualTo(expectedCaseDto.ReviewAt));
 			Assert.That(createCaseDto.UpdatedAt, Is.EqualTo(expectedCaseDto.UpdatedAt));

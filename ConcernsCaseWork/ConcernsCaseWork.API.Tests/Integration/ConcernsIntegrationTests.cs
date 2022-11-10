@@ -51,6 +51,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 .With(c => c.CurrentStatus = "Case status")
                 .With(c => c.CaseAim = "Here is the aim")
                 .With(c => c.DeEscalationPoint = "Point of de-escalation")
+                .With(c => c.CaseHistory = "Case history")
                 .With(c => c.NextSteps = "Here are the next steps")
                 .With(c => c.DirectionOfTravel = "Up")
                 .With(c => c.StatusId = 1)
@@ -716,6 +717,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     DeEscalationPoint = _randomGenerator.NextString(3, 10),
                     NextSteps = _randomGenerator.NextString(3, 10),
                     DirectionOfTravel = _randomGenerator.NextString(3, 10),
+                    CaseHistory = _randomGenerator.NextString(3, 10),
                     StatusId = 2,
                     RatingId = 3
                 };

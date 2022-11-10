@@ -75,6 +75,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			Assert.That(createCaseModel.CurrentStatus, Is.EqualTo(expectedCreateCaseModel.CurrentStatus));
 			Assert.That(createCaseModel.DeEscalation, Is.EqualTo(expectedCreateCaseModel.DeEscalation));
 			Assert.That(createCaseModel.NextSteps, Is.EqualTo(expectedCreateCaseModel.NextSteps));
+			Assert.That(createCaseModel.CaseHistory, Is.EqualTo(expectedCreateCaseModel.CaseHistory));
 			Assert.That(createCaseModel.RagRating, Is.EqualTo(expectedCreateCaseModel.RagRating));
 			Assert.That(createCaseModel.ReviewAt, Is.EqualTo(expectedCreateCaseModel.ReviewAt));
 			Assert.That(createCaseModel.UpdatedAt, Is.EqualTo(expectedCreateCaseModel.UpdatedAt));
@@ -219,7 +220,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 					{ "current-status", new StringValues("current-status") },
 					{ "next-steps", new StringValues("next-steps") },
 					{ "case-aim", new StringValues("case-aim") },
-					{ "de-escalation-point", new StringValues("de-escalation-point") }
+					{ "de-escalation-point", new StringValues("de-escalation-point") },
+					{ "case-history", new StringValues("case-history") }
 				});
 			
 			// act
@@ -295,7 +297,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 					{ "current-status", new StringValues("") },
 					{ "next-steps", new StringValues("") },
 					{ "case-aim", new StringValues("") },
-					{ "de-escalation-point", new StringValues("") }
+					{ "de-escalation-point", new StringValues("") },
+					{ "case-history", new StringValues("case-history") }
 				});
 			
 			// act

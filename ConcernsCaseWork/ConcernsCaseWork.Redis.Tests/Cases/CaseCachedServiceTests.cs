@@ -271,6 +271,7 @@ namespace ConcernsCaseWork.Redis.Tests.Cases
 			Assert.That(caseDto.DeEscalation, Is.EqualTo(expectedCaseDto.DeEscalation));
 			Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCaseDto.NextSteps));
 			Assert.That(caseDto.CaseAim, Is.EqualTo(expectedCaseDto.CaseAim));
+			Assert.That(caseDto.CaseHistory, Is.EqualTo(expectedCaseDto.CaseHistory));
 			Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(expectedCaseDto.DeEscalationPoint));
 			Assert.That(caseDto.ReviewAt, Is.EqualTo(expectedCaseDto.ReviewAt));
 			Assert.That(caseDto.UpdatedAt, Is.EqualTo(expectedCaseDto.UpdatedAt));
@@ -318,6 +319,7 @@ namespace ConcernsCaseWork.Redis.Tests.Cases
 			Assert.That(caseDto.DeEscalation, Is.EqualTo(expectedCaseDto.DeEscalation));
 			Assert.That(caseDto.NextSteps, Is.EqualTo(expectedCaseDto.NextSteps));
 			Assert.That(caseDto.CaseAim, Is.EqualTo(expectedCaseDto.CaseAim));
+			Assert.That(caseDto.CaseHistory, Is.EqualTo(expectedCaseDto.CaseHistory));
 			Assert.That(caseDto.DeEscalationPoint, Is.EqualTo(expectedCaseDto.DeEscalationPoint));
 			Assert.That(caseDto.ReviewAt, Is.EqualTo(expectedCaseDto.ReviewAt));
 			Assert.That(caseDto.UpdatedAt, Is.EqualTo(expectedCaseDto.UpdatedAt));

@@ -203,6 +203,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				CurrentStatus = Fixture.Create<string>(), 
 				NextSteps = Fixture.Create<string>(),
 				CaseAim = Fixture.Create<string>(),
+				CaseHistory = Fixture.Create<string>(),
 				DeEscalationPoint = Fixture.Create<string>(),
 				DirectionOfTravel = Fixture.Create<string>(),
 				StatusId = 1
@@ -228,6 +229,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				CurrentStatus = Fixture.Create<string>(),
 				NextSteps = Fixture.Create<string>(),
 				CaseAim = Fixture.Create<string>(),
+				CaseHistory = Fixture.Create<string>(),
 				DeEscalationPoint = Fixture.Create<string>(),
 				DirectionOfTravel = Fixture.Create<string>(),
 				Urn = 1,
@@ -250,6 +252,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				CaseAim = Fixture.Create<string>(),
 				DeEscalationPoint = Fixture.Create<string>(),
 				NextSteps = Fixture.Create<string>(),
+				CaseHistory = Fixture.Create<string>(),
 				StatusName = Fixture.Create<string>()
 			};
 		}
