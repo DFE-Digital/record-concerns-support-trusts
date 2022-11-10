@@ -2,10 +2,10 @@ using System.Linq;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Controllers;
-using ConcernsCaseWork.API.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Enums.Concerns;
 using FluentAssertions;
@@ -60,7 +60,7 @@ public class ConcernsCaseDecisionControllerTests
             var testBuilder = new TestBuilder();
 
             var createDecisionRequest = testBuilder.Fixture.Build<CreateDecisionRequest>()
-                .With(x => x.DecisionTypes, () => new DecisionType[] { 0 })
+                .With(x => x.DecisionTypes, () => new Contracts.Enums.DecisionType[] { 0 })
                 .Create();
 
             var createDecisionResponse = testBuilder.Fixture.Create<CreateDecisionResponse>();
@@ -92,7 +92,7 @@ public class ConcernsCaseDecisionControllerTests
             var testBuilder = new TestBuilder();
 
             var createDecisionRequest = testBuilder.Fixture.Build<CreateDecisionRequest>()
-                .With(x => x.DecisionTypes, () => new DecisionType[] { DecisionType.EsfaApproval })
+                .With(x => x.DecisionTypes, () => new Contracts.Enums.DecisionType[] { Contracts.Enums.DecisionType.EsfaApproval })
                 .Create();
 
             var createDecisionResponse = testBuilder.Fixture.Create<CreateDecisionResponse>();
@@ -308,7 +308,7 @@ public class ConcernsCaseDecisionControllerTests
             public UpdateDecisionRequest CreateInvalidUpdateDecisionRequest()
             {
                 return Fixture.Build<UpdateDecisionRequest>()
-                        .With(x => x.DecisionTypes, new DecisionType[] {0})
+                        .With(x => x.DecisionTypes, new Contracts.Enums.DecisionType[] {0})
                         .Create();
             }
         }
