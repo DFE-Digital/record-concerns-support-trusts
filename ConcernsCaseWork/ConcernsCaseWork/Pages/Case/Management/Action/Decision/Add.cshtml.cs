@@ -8,6 +8,7 @@ using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Services.Decisions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -27,7 +28,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		private readonly ILogger<AddPageModel> _logger;
 
 		[BindProperty]
-		public CreateDecisionRequest CreateDecisionDto { get; set; }
+		public CreateDecisionRequest Decision { get; set; }
 
 		[BindProperty]
 		public bool DecisionTypeNoticeToImprove { get; set; }
@@ -65,7 +66,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		public int NotesMaxLength => 2000;
 
 		public long? DecisionId { get; set; }
-		public DecisionDto Decision { get; set; }
 
 		public AddPageModel(IDecisionService decisionService, ILogger<AddPageModel> logger)
 		{
@@ -75,7 +75,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		public long CaseUrn { get; set; }
 
-		public async Task<IActionResult> OnGetAsync(long urn, long? decisionId)
+		public async Task<IActionResult> OnGetAsync(long urn, long? decisionId = null)
 		{
 			_logger.LogMethodEntered();
 
@@ -84,25 +84,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				CaseUrn = (CaseUrn)urn;
 				DecisionId = decisionId;
 
+				Decision = new();
+				Decision.ConcernsCaseUrn = (int)CaseUrn;
+
 				if (DecisionId.HasValue)
 				{
-					//Decision = await _decisionService.GetDecision(CaseUrn, DecisionId.Value);
+					var apiDecision = await _decisionService.GetDecision(CaseUrn, (int)decisionId);
 
-					Decision = new DecisionDto()
-					{
-						ConcernsCaseUrn = CaseUrn,
-						CrmCaseNumber = "10001",
-						DecisionTypes = new List<DecisionType>() { DecisionType.NoticeToImprove, DecisionType.EsfaApproval, DecisionType.EstimatesFundingOrPupilNumberAdjustment }.ToArray(),
-						TotalAmountRequested = 4000,
-						SupportingNotes = "Test Notes",
-						ReceivedRequestDate = new DateTimeOffset(DateTime.Now),
-						SubmissionDocumentLink = "www.sharepoint.com",
-						SubmissionRequired = true
-					};
+					Decision = DecisionMapping.ToEditDecisionModel(apiDecision);
+					DecisionTypeArrayToDecisionTypeProperties(Decision.DecisionTypes);
 				}
 
-				// if editing, pass the current dto state, if new pass null
-				DecisionTypeArrayToDecisionTypeProperties(Decision?.DecisionTypes ?? null);
 				return Page();
 			}
 			catch (Exception ex)
@@ -114,7 +106,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			}
 		}
 
-		public async Task<IActionResult> OnPostAsync(long urn, long? decisionId)
+		public async Task<IActionResult> OnPostAsync(long urn, long? decisionId = null)
 		{
 			_logger.LogMethodEntered();
 
@@ -131,13 +123,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 				if (DecisionId.HasValue)
 				{
-					var updateDecisionRequest = PopulateUpdateDecisionRequestFromCreateDecisionDto();
-					await _decisionService.PutDecision(CaseUrn, DecisionId.Value, updateDecisionRequest);
+					//var updateDecisionRequest = PopulateUpdateDecisionRequestFromCreateDecisionDto();
+					//await _decisionService.PutDecision(CaseUrn, DecisionId.Value, updateDecisionRequest);
 				}
 				else
 				{
 					PopulateCreateDecisionDtoFromRequest();
-					await _decisionService.PostDecision(CreateDecisionDto);
+					await _decisionService.PostDecision(Decision);
 				}
 
 				return Redirect($"/case/{CaseUrn}/management");
@@ -169,36 +161,31 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				throw new InvalidUserInputException($"{dtString} is an invalid date");
 			}
 
-			CreateDecisionDto.DecisionTypes = DecisionTypePropertiesToDecisionTypeArray();
-			CreateDecisionDto.ReceivedRequestDate = parsedDate;
+			Decision.DecisionTypes = DecisionTypePropertiesToDecisionTypeArray();
+			Decision.ReceivedRequestDate = parsedDate;
 		}
 
-		private UpdateDecisionRequest PopulateUpdateDecisionRequestFromCreateDecisionDto()
-		{
-			PopulateCreateDecisionDtoFromRequest();
+		//private UpdateDecisionRequest PopulateUpdateDecisionRequestFromCreateDecisionDto()
+		//{
+		//	PopulateCreateDecisionDtoFromRequest();
 
-			var updateDecisionRequest = new UpdateDecisionRequest()
-			{
-				CrmCaseNumber = CreateDecisionDto.CrmCaseNumber,
-				DecisionTypes = CreateDecisionDto.DecisionTypes,
-				TotalAmountRequested = CreateDecisionDto.TotalAmountRequested,
-				SupportingNotes = CreateDecisionDto.SupportingNotes,
-				ReceivedRequestDate = CreateDecisionDto.ReceivedRequestDate,
-				SubmissionDocumentLink = CreateDecisionDto.SubmissionDocumentLink,
-				RetrospectiveApproval = CreateDecisionDto.RetrospectiveApproval,
-				SubmissionRequired = CreateDecisionDto.SubmissionRequired
-			};
+		//	var updateDecisionRequest = new UpdateDecisionRequest()
+		//	{
+		//		CrmCaseNumber = Decision.CrmCaseNumber,
+		//		DecisionTypes = Decision.DecisionTypes,
+		//		TotalAmountRequested = Decision.TotalAmountRequested,
+		//		SupportingNotes = Decision.SupportingNotes,
+		//		ReceivedRequestDate = Decision.ReceivedRequestDate,
+		//		SubmissionDocumentLink = Decision.SubmissionDocumentLink,
+		//		RetrospectiveApproval = Decision.RetrospectiveApproval,
+		//		SubmissionRequired = Decision.SubmissionRequired
+		//	};
 
-			return updateDecisionRequest;
-		}
+		//	return updateDecisionRequest;
+		//}
 
 		private void DecisionTypeArrayToDecisionTypeProperties(DecisionType[] decisionTypes)
 		{
-			if (decisionTypes == null)
-			{
-				return;
-			}
-
 			DecisionTypeNoticeToImprove = decisionTypes.Contains(DecisionType.NoticeToImprove);
 			DecisionTypeSection128 = decisionTypes.Contains(DecisionType.Section128);
 			DecisionTypeQualifiedFloatingCharge = decisionTypes.Contains(DecisionType.QualifiedFloatingCharge);
