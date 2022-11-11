@@ -216,7 +216,6 @@ namespace ConcernsCaseWork.Extensions
 			// TODO. This class looks very temporary. What's it for and how are we going to replace it.
 
 			// AD Integration
-			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
 			services.AddScoped<IRbacManager, RbacManager>();
 
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
