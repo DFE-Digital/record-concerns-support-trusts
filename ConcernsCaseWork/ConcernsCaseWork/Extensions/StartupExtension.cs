@@ -214,7 +214,6 @@ namespace ConcernsCaseWork.Extensions
 
 			// Redis Sequence
 			// TODO. This class looks very temporary. What's it for and how are we going to replace it.
-			services.AddScoped<ISequenceCachedService, SequenceCachedService>();
 
 			// AD Integration
 			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
