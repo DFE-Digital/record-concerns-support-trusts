@@ -55,7 +55,7 @@
 								<div class="govuk-date-input__item">
 									<div class="govuk-form-group">
 										<label class="govuk-label govuk-date-input__label" for="start-dtr-day">
-											Day
+											Start day
 										</label>
 
 										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="start-dtr-day"
@@ -65,7 +65,7 @@
 								<div class="govuk-date-input__item">
 									<div class="govuk-form-group">
 										<label class="govuk-label govuk-date-input__label" for="start-dtr-month">
-											Month
+											Start month
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="start-dtr-month"
 											   name="start-dtr-month" type="text" maxlength="2" inputmode="numeric" value="@(startDate.HasValue ? $"{startDate.Value.Month:00}" : "")" />
@@ -74,7 +74,7 @@
 								<div class="govuk-date-input__item">
 									<div class="govuk-form-group">
 										<label class="govuk-label govuk-date-input__label" for="start-dtr-year">
-											Year
+											Start year
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-4" id="start-dtr-year"
 											   name="start-dtr-year" type="text" maxlength="4" inputmode="numeric" value="@(startDate.HasValue ? $"{startDate.Value.Year:00}" : "")" />
@@ -93,7 +93,7 @@
 								<div class="govuk-date-input__item">
 									<div class="govuk-form-group">
 										<label class="govuk-label govuk-date-input__label" for="end-dtr-day">
-											Day
+											End day
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="end-dtr-day"
 											   name="end-dtr-day" type="text" maxlength="2" inputmode="numeric" value="@(endDate.HasValue ? $"{endDate.Value.Day:00}" : "")" />
@@ -102,7 +102,7 @@
 								<div class="govuk-date-input__item">
 									<div class="govuk-form-group">
 										<label class="govuk-label govuk-date-input__label" for="end-dtr-month">
-											Month
+											End month
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="end-dtr-month"
 											   name="end-dtr-month" type="text" maxlength="2" inputmode="numeric" value="@(endDate.HasValue ? $"{endDate.Value.Month:00}" : "")" />
@@ -111,7 +111,7 @@
 								<div class="govuk-date-input__item">
 									<div class="govuk-form-group">
 										<label class="govuk-label govuk-date-input__label" for="end-dtr-year">
-											Year
+											End year
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-4" id="end-dtr-year"
 											   name="end-dtr-year" type="text" maxlength="4" inputmode="numeric" value="@(endDate.HasValue ? $"{endDate.Value.Year:00}" : "")" />
