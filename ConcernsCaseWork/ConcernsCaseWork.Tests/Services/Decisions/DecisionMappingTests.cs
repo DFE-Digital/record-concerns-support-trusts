@@ -13,6 +13,9 @@ using System.Net.Security;
 using System.Linq;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using AutoMapper;
+using ConcernsCaseWork.Mappers;
 
 namespace ConcernsCaseWork.Tests.Services.Decisions
 {
@@ -42,7 +45,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 		[TestCase(false, "No")]
 		[TestCase(true, "Yes")]
 		public void ToDecisionModel_ReturnsCorrectModel(
-			bool? booleanFlag, 
+			bool? booleanFlag,
 			string booleanResolvedValue)
 		{
 			var apiDecision = _fixture.Create<GetDecisionResponse>();
@@ -53,9 +56,9 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			apiDecision.ReceivedRequestDate = new DateTimeOffset(2023, 1, 4, 0, 0, 0, new TimeSpan());
 			apiDecision.TotalAmountRequested = 150000;
 			apiDecision.DecisionTypes = new DecisionType[]
-			{ 
-				DecisionType.NoticeToImprove, 
-				DecisionType.RepayableFinancialSupport 
+			{
+				DecisionType.NoticeToImprove,
+				DecisionType.RepayableFinancialSupport
 			};
 
 			var result = DecisionMapping.ToDecisionModel(apiDecision);
@@ -83,6 +86,35 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			var result = DecisionMapping.ToDecisionModel(apiDecision);
 
 			result.EsfaReceivedRequestDate.Should().BeNull();
+		}
+
+		[Test]
+		public void ToEditDecision_ReturnsCorrectModel()
+		{
+			var apiDecision = _fixture.Create<GetDecisionResponse>();
+
+			var result = DecisionMapping.ToEditDecisionModel(apiDecision);
+
+			result.ConcernsCaseUrn.Should().Be(apiDecision.ConcernsCaseUrn);
+			result.CrmCaseNumber.Should().Be(apiDecision.CrmCaseNumber);
+			result.DecisionTypes.Should().BeEquivalentTo(apiDecision.DecisionTypes);
+			result.ReceivedRequestDate.Should().Be(apiDecision.ReceivedRequestDate);
+			result.RetrospectiveApproval.Should().Be(apiDecision.RetrospectiveApproval);
+			result.SubmissionDocumentLink.Should().Be(apiDecision.SubmissionDocumentLink);
+			result.SupportingNotes.Should().Be(apiDecision.SupportingNotes);
+			result.SubmissionRequired.Should().Be(apiDecision.SubmissionRequired);
+			result.TotalAmountRequested.Should().Be(apiDecision.TotalAmountRequested);
+		}
+
+		[Test]
+		public void ToEditDecision_When_NoPropertiesFilled_Returns_CorrectModel()
+		{
+			var apiDecision = new GetDecisionResponse();
+			apiDecision.DecisionTypes = new DecisionType[] { };
+
+			var result = DecisionMapping.ToEditDecisionModel(apiDecision);
+
+			result.ReceivedRequestDate.Should().Be(null);
 		}
 	}
 }

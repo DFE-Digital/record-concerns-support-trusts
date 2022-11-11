@@ -17,12 +17,17 @@ using Microsoft.Extensions.Primitives;
 using System.Collections.Generic;
 using System.Linq;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using FluentAssertions;
+using NUnit.Framework.Constraints;
+using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 {
-	[Parallelizable(ParallelScope.All)]
+	[Parallelizable(ParallelScope.Fixtures)]
 	public class AddPageModelTests
 	{
+		private readonly static Fixture _fixture = new();
+
 		[Test]
 		public void AddPageModel_Is_AbstractPageModel()
 		{
@@ -32,7 +37,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 		}
 
 		[Test]
-		public async Task OnGetAsync_Returns_Page()
+		public async Task OnGetAsync_When_NewDecision_Returns_Page()
 		{
 			const long expectedUrn = 2;
 			var builder = new TestBuilder();
@@ -41,8 +46,44 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				.BuildSut();
 
 			await sut.OnGetAsync(expectedUrn);
-			
-			Assert.AreEqual(expectedUrn, sut.CaseUrn);
+
+			sut.Decision.Should().BeEquivalentTo(new CreateDecisionRequest());
+
+			sut.CaseUrn.Should().Be(expectedUrn);
+		}
+
+		[Test]
+		public async Task OnGetAsync_When_ExistingDecision_Returns_Page()
+		{
+			const long expectedUrn = 2;
+			const long expectedDecisionId = 1;
+
+			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
+			getDecisionResponse.ConcernsCaseUrn = (int)expectedUrn;
+			getDecisionResponse.DecisionTypes = new API.Contracts.Enums.DecisionType[] {
+				API.Contracts.Enums.DecisionType.NoticeToImprove,
+				API.Contracts.Enums.DecisionType.OtherFinancialSupport
+			};
+
+			var decisionService = new Mock<IDecisionService>();
+			decisionService.Setup(m => m.GetDecision(2, 1)).ReturnsAsync(getDecisionResponse);
+
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrnRouteValue(expectedUrn)
+				.WithDecisionService(decisionService)
+				.BuildSut();
+
+			await sut.OnGetAsync(expectedUrn, expectedDecisionId);
+
+			sut.Decision.ConcernsCaseUrn.Should().Be((int)expectedUrn);
+			sut.Decision.CrmCaseNumber.Should().Be(getDecisionResponse.CrmCaseNumber);
+			sut.Decision.DecisionTypes.Should().BeEquivalentTo(getDecisionResponse.DecisionTypes);
+			sut.Decision.SupportingNotes.Should().Be(getDecisionResponse.SupportingNotes);
+
+			sut.DecisionTypeNoticeToImprove.Should().BeTrue();
+			sut.DecisionTypeOtherFinancialSupport.Should().BeTrue();
+			sut.DecisionTypeEsfaApproval.Should().BeFalse();
 		}
 
 		[Test]
@@ -93,7 +134,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			await sut.OnPostAsync(expectedUrn);
 
-			Assert.AreEqual(sut.CreateDecisionDto.DecisionTypes.Length, expectedDecisionTypesLength);
+			Assert.AreEqual(sut.Decision.DecisionTypes.Length, expectedDecisionTypesLength);
 		}
 
 
@@ -116,7 +157,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			await sut.OnPostAsync(expectedUrn);
 
-			Assert.IsNotNull(sut.CreateDecisionDto.ReceivedRequestDate);
+			Assert.IsNotNull(sut.Decision.ReceivedRequestDate);
 		}
 
 
@@ -192,7 +233,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 		private class TestBuilder
 		{
-			private readonly Mock<IDecisionService> _mockDecisionService;
+			private Mock<IDecisionService> _mockDecisionService;
 			private readonly Mock<ILogger<AddPageModel>> _mockLogger;
 			private readonly bool _isAuthenticated;
 			private object _caseUrnValue;
@@ -216,6 +257,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				return this;
 			}
 
+			public TestBuilder WithDecisionService(Mock<IDecisionService> decisionService) 
+			{
+				_mockDecisionService = decisionService;
+
+				return this;
+			}
+
 			public AddPageModel BuildSut()
 			{
 				(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(_isAuthenticated);
@@ -226,7 +274,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 					TempData = tempData,
 					Url = new UrlHelper(actionContext),
 					MetadataProvider = pageContext.ViewData.ModelMetadata,
-					CreateDecisionDto = new CreateDecisionRequest()
+					Decision = new CreateDecisionRequest()
 				};
 
 				var routeData = result.RouteData.Values;

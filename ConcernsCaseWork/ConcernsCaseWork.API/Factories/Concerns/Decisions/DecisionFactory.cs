@@ -15,7 +15,7 @@ namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 				.ToArray();
 
 			return Decision.CreateNew(request.CrmCaseNumber, request.RetrospectiveApproval,
-				request.SubmissionRequired, request.SubmissionDocumentLink, request.ReceivedRequestDate,
+				request.SubmissionRequired, request.SubmissionDocumentLink, (DateTimeOffset)request.ReceivedRequestDate,
 				decisionTypes, request.TotalAmountRequested, request.SupportingNotes, DateTimeOffset.Now);
 		}
 

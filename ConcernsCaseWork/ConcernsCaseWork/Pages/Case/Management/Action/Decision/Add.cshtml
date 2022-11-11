@@ -10,12 +10,6 @@
     var nonce = HttpContext.GetNonce();
 
     var decisionsValidationErrors = TempData["Decision.Message"] as IEnumerable<string>;
-
-    var decision = Model.Decision;
-
-    var isRetrospectiveApprovalRequired = decision?.RetrospectiveApproval ?? (bool?)null;
-    var isSubmissionRequired = decision?.SubmissionRequired ?? (bool?)null;
-    var totalAmountRequested = decision != null ? String.Format("{0:n}", decision.TotalAmountRequested) : "0.00";
 }
 
 @section BeforeMain {
@@ -62,7 +56,7 @@
 
                 <form role="form" method="post" id="add-decision-form" novalidate>
 
-                    <input type="hidden" name="CreateDecisionDto.ConcernsCaseUrn" value="@RouteData.Values["urn"]" />
+                    <input type="hidden" name="Decision.ConcernsCaseUrn" value="@RouteData.Values["urn"]" />
 
                     @* CRM Enquiry Number *@
                     <div class="govuk-form-group govuk-!-margin-top-9">
@@ -75,7 +69,7 @@
                                 If yes, paste the CRM enquiry number below. If no, leave the field blank
                             </div>
 
-                            <input class="govuk-input govuk-input--width-30" id="crm-enquiry-number" name="CreateDecisionDto.CrmCaseNumber" type="text" value="@decision?.CrmCaseNumber">
+							<input class="govuk-input govuk-input--width-30" id="crm-enquiry-number" name="Decision.CrmCaseNumber" type="text" value="@Model.Decision.CrmCaseNumber">
                         </fieldset>
                     </div>
 
@@ -93,13 +87,13 @@
 
                                     <div class="govuk-radios__item">
                                         @{
-                                            if (isRetrospectiveApprovalRequired.HasValue)
+                                            if (Model.Decision.RetrospectiveApproval.HasValue)
                                             {
-                                                <input class="govuk-radios__input" id="retrospective-approval" name="CreateDecisionDto.RetrospectiveApproval" type="radio" value="true" checked="@(isRetrospectiveApprovalRequired.Value)">
+                                                <input class="govuk-radios__input" id="retrospective-approval" name="Decision.RetrospectiveApproval" type="radio" value="true" checked="@(Model.Decision.RetrospectiveApproval.Value)">
                                             }
                                             else
                                             {
-                                                <input class="govuk-radios__input" id="retrospective-approval" name="CreateDecisionDto.RetrospectiveApproval" type="radio" value="true">
+                                                <input class="govuk-radios__input" id="retrospective-approval" name="Decision.RetrospectiveApproval" type="radio" value="true">
                                             }
                                         }
 
@@ -113,13 +107,13 @@
                                     <div class="govuk-radios__item">
 
                                         @{
-                                            if (isRetrospectiveApprovalRequired.HasValue)
+                                            if (Model.Decision.RetrospectiveApproval.HasValue)
                                             {
-                                                <input class="govuk-radios__input" id="retrospective-approval-1" name="CreateDecisionDto.RetrospectiveApproval" type="radio" value="false" checked="@(!isRetrospectiveApprovalRequired.Value)">
+												<input class="govuk-radios__input" id="retrospective-approval-1" name="Decision.RetrospectiveApproval" type="radio" value="false" checked="@(!Model.Decision.RetrospectiveApproval.Value)">
                                             }
                                             else
                                             {
-                                                <input class="govuk-radios__input" id="retrospective-approval-1" name="CreateDecisionDto.RetrospectiveApproval" type="radio" value="false">
+												<input class="govuk-radios__input" id="retrospective-approval-1" name="Decision.RetrospectiveApproval" type="radio" value="false">
                                             }
                                         }
 
@@ -148,13 +142,13 @@
                                 <div class="govuk-radios__item">
 
                                     @{
-                                        if (isSubmissionRequired.HasValue)
+                                        if (Model.Decision.SubmissionRequired.HasValue)
                                         {
-                                            <input class="govuk-radios__input" id="submission-required" name="CreateDecisionDto.SubmissionRequired" type="radio" data-aria-controls="conditional-submission-required" value="true" checked="@(isSubmissionRequired.Value)">
+                                            <input class="govuk-radios__input" id="submission-required" name="Decision.SubmissionRequired" type="radio" data-aria-controls="conditional-submission-required" value="true" checked="@(Model.Decision.SubmissionRequired.Value)">
                                         }
                                         else
                                         {
-                                            <input class="govuk-radios__input" id="submission-required" name="CreateDecisionDto.SubmissionRequired" type="radio" data-aria-controls="conditional-submission-required" value="true">
+                                            <input class="govuk-radios__input" id="submission-required" name="Decision.SubmissionRequired" type="radio" data-aria-controls="conditional-submission-required" value="true">
                                         }
                                     }
 
@@ -167,20 +161,20 @@
                                         <label class="govuk-label" for="submission-required-link">
                                             If yes, paste in a link to the submission document on Sharepoint.
                                         </label>
-                                        <input class="govuk-input govuk-input--width-30" id="submission-document-link" name="CreateDecisionDto.SubmissionDocumentLink" type="text" value="@decision?.SubmissionDocumentLink">
+										<input class="govuk-input govuk-input--width-30" id="submission-document-link" name="Decision.SubmissionDocumentLink" type="text" value="@Model.Decision.SubmissionDocumentLink">
                                     </div>
 
                                 </div>
                                 <div class="govuk-radios__item">
 
                                     @{
-                                        if (isSubmissionRequired.HasValue)
+										if (Model.Decision.SubmissionRequired.HasValue)
                                         {
-                                            <input class="govuk-radios__input" id="submission-required-1" name="CreateDecisionDto.SubmissionRequired" type="radio" value="false" checked="@(!isSubmissionRequired.Value)">
+                                            <input class="govuk-radios__input" id="submission-required-1" name="Decision.SubmissionRequired" type="radio" value="false" checked="@(!Model.Decision.SubmissionRequired.Value)">
                                         }
                                         else
                                         {
-                                            <input class="govuk-radios__input" id="submission-required-1" name="CreateDecisionDto.SubmissionRequired" type="radio" value="false">
+											<input class="govuk-radios__input" id="submission-required-1" name="Decision.SubmissionRequired" type="radio" value="false">
                                         }
                                     }
 
@@ -208,7 +202,7 @@
                                             Day
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-request-received"
-                                               name="dtr-day-request-received" type="text" maxlength="2" inputmode="numeric" value="@($"{decision?.ReceivedRequestDate?.Day:00}")" />
+                                               name="dtr-day-request-received" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.Decision.ReceivedRequestDate?.Day:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -217,7 +211,7 @@
                                             Month
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-request-received"
-                                               name="dtr-month-request-received" type="text" maxlength="2" inputmode="numeric" value="@($"{decision?.ReceivedRequestDate?.Month:00}")" />
+										   name="dtr-month-request-received" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.Decision.ReceivedRequestDate?.Month:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -226,7 +220,7 @@
                                             Year
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-request-received"
-                                               name="dtr-year-request-received" type="text" maxlength="4" inputmode="numeric" value="@($"{decision?.ReceivedRequestDate?.Year}")" />
+										   name="dtr-year-request-received" type="text" maxlength="4" inputmode="numeric" value="@($"{Model.Decision.ReceivedRequestDate?.Year}")" />
                                     </div>
                                 </div>
                             </div>
@@ -364,7 +358,7 @@
                             </div>
                             <div class="govuk-input__wrapper">
                                 <div class="govuk-input__prefix" aria-hidden="true">£</div>
-                                <input class="govuk-input govuk-input--width-6" id="total-amount-request" name="CreateDecisionDto.TotalAmountRequested" type="text" value="@totalAmountRequested">
+                                <input class="govuk-input govuk-input--width-6" id="total-amount-request" name="Decision.TotalAmountRequested" type="text" value="@Model.Decision.TotalAmountRequested">
                             </div>
                         </fieldset>
                     </div>
@@ -373,7 +367,7 @@
                     <div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
                         <div class="govuk-form-group">
                             <h2 class="govuk-heading-m">Supporting notes</h2>
-                            <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-decision-notes" name="CreateDecisionDto.SupportingNotes" rows="3" aria-describedby="case-decision-notes-info">@decision?.SupportingNotes</textarea>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-decision-notes" name="Decision.SupportingNotes" rows="3" aria-describedby="case-decision-notes-info">@Model.Decision.SupportingNotes</textarea>
                         </div>
                         <div id="case-decision-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
                             You can enter up to @Model.NotesMaxLength characters
