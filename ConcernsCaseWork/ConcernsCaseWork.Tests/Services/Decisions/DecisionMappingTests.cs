@@ -1,9 +1,18 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Services.Decisions;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Net.Security;
+using System.Linq;
+using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Models.CaseActions;
 
 namespace ConcernsCaseWork.Tests.Services.Decisions
 {
@@ -15,7 +24,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 		[Test]
 		public void ToActionSummary_ReturnsCorrectModel()
 		{
-			var apiDecision = _fixture.Create<DecisionSummaryResponseDto>();
+			var apiDecision = _fixture.Create<DecisionSummaryResponse>();
 			apiDecision.Status = DecisionStatus.InProgress;
 			apiDecision.CreatedAt = new DateTimeOffset(2023, 1, 4, 0, 0, 0, new TimeSpan());
 			apiDecision.ClosedAt = new DateTimeOffset(2023, 2, 24, 0, 0, 0, new TimeSpan());
@@ -27,6 +36,53 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.ClosedDate.Should().Be("24-02-2023");
 			result.Name.Should().Be($"Decision: {apiDecision.Title}");
 			result.RelativeUrl.Should().Be($"/case/{apiDecision.ConcernsCaseUrn}/management/action/decision/{apiDecision.DecisionId}");
+		}
+
+		[TestCase(null, "No")]
+		[TestCase(false, "No")]
+		[TestCase(true, "Yes")]
+		public void ToDecisionModel_ReturnsCorrectModel(
+			bool? booleanFlag, 
+			string booleanResolvedValue)
+		{
+			var apiDecision = _fixture.Create<GetDecisionResponse>();
+			apiDecision.ConcernsCaseUrn = 2;
+			apiDecision.DecisionId = 10;
+			apiDecision.RetrospectiveApproval = booleanFlag;
+			apiDecision.SubmissionRequired = booleanFlag;
+			apiDecision.ReceivedRequestDate = new DateTimeOffset(2023, 1, 4, 0, 0, 0, new TimeSpan());
+			apiDecision.TotalAmountRequested = 150000;
+			apiDecision.DecisionTypes = new DecisionType[]
+			{ 
+				DecisionType.NoticeToImprove, 
+				DecisionType.RepayableFinancialSupport 
+			};
+
+			var result = DecisionMapping.ToDecisionModel(apiDecision);
+
+			result.DecisionId.Should().Be(apiDecision.DecisionId);
+			result.ConcernsCaseUrn.Should().Be(apiDecision.ConcernsCaseUrn);
+			result.CrmEnquiryNumber.Should().Be(apiDecision.CrmCaseNumber);
+			result.RetrospectiveApproval.Should().Be(booleanResolvedValue);
+			result.SubmissionRequired.Should().Be(booleanResolvedValue);
+			result.SubmissionLink.Should().Be(apiDecision.SubmissionDocumentLink);
+			result.EsfaReceivedRequestDate.Should().Be("04-01-2023");
+			result.TotalAmountRequested.Should().Be("£150,000.00");
+			result.DecisionTypes.Should().BeEquivalentTo(new List<string>() { "Notice to Improve (NTI)", "Repayable financial support" });
+			result.SupportingNotes.Should().Be(apiDecision.SupportingNotes);
+			result.EditLink.Should().Be("/case/2/management/action/decision/10/edit");
+			result.BackLink.Should().Be("/case/2/management");
+		}
+
+		[Test]
+		public void ToDecisionModel_WhenNoPropertiesFilled_ReturnsCorrectModel()
+		{
+			var apiDecision = new GetDecisionResponse();
+			apiDecision.DecisionTypes = new DecisionType[] { };
+
+			var result = DecisionMapping.ToDecisionModel(apiDecision);
+
+			result.EsfaReceivedRequestDate.Should().BeNull();
 		}
 	}
 }

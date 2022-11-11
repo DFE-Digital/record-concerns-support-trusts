@@ -1,6 +1,6 @@
-﻿using ConcernsCaseWork.Data.Enums.Concerns;
+﻿using ConcernsCaseWork.API.Contracts.Enums;
 
-namespace ConcernsCaseWork.API.ResponseModels.Concerns.Decisions
+namespace ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions
 {
 	public class GetDecisionResponse
 	{
