@@ -85,44 +85,44 @@
                             <div class="govuk-radios" data-module="govuk-radios">
                                 @{
 
-                                    <div class="govuk-radios__item">
-                                        @{
+																					<div class="govuk-radios__item">
+																						@{
                                             if (Model.Decision.RetrospectiveApproval.HasValue)
                                             {
-                                                <input class="govuk-radios__input" id="retrospective-approval" name="Decision.RetrospectiveApproval" type="radio" value="true" checked="@(Model.Decision.RetrospectiveApproval.Value)">
+																																				<input class="govuk-radios__input" id="retrospective-approval" name="Decision.RetrospectiveApproval" type="radio" value="true" checked="@(Model.Decision.RetrospectiveApproval.Value)">
                                             }
                                             else
                                             {
-                                                <input class="govuk-radios__input" id="retrospective-approval" name="Decision.RetrospectiveApproval" type="radio" value="true">
+																																				<input class="govuk-radios__input" id="retrospective-approval" name="Decision.RetrospectiveApproval" type="radio" value="true">
                                             }
-                                        }
+																						}
 
-                                        <label class="govuk-label govuk-radios__label" for="retrospective-approval">
-                                            <span>
-                                                Yes
-                                            </span>
-                                        </label>
-                                    </div>
+																						<label class="govuk-label govuk-radios__label" for="retrospective-approval">
+																							<span>
+																								Yes
+																							</span>
+																						</label>
+																					</div>
 
-                                    <div class="govuk-radios__item">
+																					<div class="govuk-radios__item">
 
-                                        @{
+																						@{
                                             if (Model.Decision.RetrospectiveApproval.HasValue)
                                             {
-												<input class="govuk-radios__input" id="retrospective-approval-1" name="Decision.RetrospectiveApproval" type="radio" value="false" checked="@(!Model.Decision.RetrospectiveApproval.Value)">
+																																				<input class="govuk-radios__input" id="retrospective-approval-1" name="Decision.RetrospectiveApproval" type="radio" value="false" checked="@(!Model.Decision.RetrospectiveApproval.Value)">
                                             }
                                             else
                                             {
-												<input class="govuk-radios__input" id="retrospective-approval-1" name="Decision.RetrospectiveApproval" type="radio" value="false">
+																																				<input class="govuk-radios__input" id="retrospective-approval-1" name="Decision.RetrospectiveApproval" type="radio" value="false">
                                             }
-                                        }
+																						}
 
-                                        <label class="govuk-label govuk-radios__label" for="retrospective-approval-1">
-                                            <span>
-                                                No
-                                            </span>
-                                        </label>
-                                    </div>
+																						<label class="govuk-label govuk-radios__label" for="retrospective-approval-1">
+																							<span>
+																								No
+																							</span>
+																						</label>
+																					</div>
                                 }
 
                             </div>
@@ -144,11 +144,11 @@
                                     @{
                                         if (Model.Decision.SubmissionRequired.HasValue)
                                         {
-                                            <input class="govuk-radios__input" id="submission-required" name="Decision.SubmissionRequired" type="radio" data-aria-controls="conditional-submission-required" value="true" checked="@(Model.Decision.SubmissionRequired.Value)">
+																							<input class="govuk-radios__input" id="submission-required" name="Decision.SubmissionRequired" type="radio" data-aria-controls="conditional-submission-required" value="true" checked="@(Model.Decision.SubmissionRequired.Value)">
                                         }
                                         else
                                         {
-                                            <input class="govuk-radios__input" id="submission-required" name="Decision.SubmissionRequired" type="radio" data-aria-controls="conditional-submission-required" value="true">
+																							<input class="govuk-radios__input" id="submission-required" name="Decision.SubmissionRequired" type="radio" data-aria-controls="conditional-submission-required" value="true">
                                         }
                                     }
 
@@ -170,11 +170,11 @@
                                     @{
 										if (Model.Decision.SubmissionRequired.HasValue)
                                         {
-                                            <input class="govuk-radios__input" id="submission-required-1" name="Decision.SubmissionRequired" type="radio" value="false" checked="@(!Model.Decision.SubmissionRequired.Value)">
+																							<input class="govuk-radios__input" id="submission-required-1" name="Decision.SubmissionRequired" type="radio" value="false" checked="@(!Model.Decision.SubmissionRequired.Value)">
                                         }
                                         else
                                         {
-											<input class="govuk-radios__input" id="submission-required-1" name="Decision.SubmissionRequired" type="radio" value="false">
+																							<input class="govuk-radios__input" id="submission-required-1" name="Decision.SubmissionRequired" type="radio" value="false">
                                         }
                                     }
 
@@ -383,32 +383,40 @@
 
 
                 <script type="application/javascript" nonce="@nonce">
+
+					function formatCurrency(element) {
+
+						let currencyFormatter = new Intl.NumberFormat("en-GB", {
+							style: "currency",
+							currency: "GBP"
+						});
+
+						const formattedCurrency = currencyFormatter.format(element.val()).replace("£", "");
+						element.val(formattedCurrency);
+					}
+
+					function parseCurrency(element) {
+                        const onlyNumbersRegex = /[^\d\.]/g;
+						const formattedCurrency = element.val().replace(onlyNumbersRegex, "");
+                        element.val(formattedCurrency);
+					}
+
                     $(function () {
                         let validator = formValidator($("#add-decision-form")[0]);
 
-                        let currencyFormatter = new Intl.NumberFormat("en-GB", {
-                            style: "currency",
-                            currency: "GBP",
-                        });
+						$totalAmountRequestedObj = $('#total-amount-request');
 
-                        $totalAmountRequestedObj = $('#total-amount-request');
+						$(document).ready(function() {
+							formatCurrency($totalAmountRequestedObj);
+						});
 
                         $totalAmountRequestedObj.on('focusin keyup', function() {
-                            var onlyNumbersRegex = /[^\d\.]/g;
-                            var input = $totalAmountRequestedObj.val().replace(onlyNumbersRegex, "");
-                            $totalAmountRequestedObj.val(input)
+							parseCurrency($totalAmountRequestedObj);
                         });
 
                         $totalAmountRequestedObj.focusout(function () {
-
-                            var onlyNumbersRegex = /[^\d\.]/g;
-                            var input = $totalAmountRequestedObj.val().replace(onlyNumbersRegex, "");
-
-                            var formattedCurrency = currencyFormatter.format(input).replace('£', '');
-                            $totalAmountRequestedObj.val(formattedCurrency)
+							formatCurrency($totalAmountRequestedObj);
                         });
-
-
 
                         validator.addValidator('dtr-day-request-received', [{
                           method: function(field, params) {
