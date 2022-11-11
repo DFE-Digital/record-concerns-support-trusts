@@ -112,12 +112,24 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 		public void ToUpdateDecision_Returns_CorrectModel()
 		{
 			var createDecisionModel = _fixture.Create<CreateDecisionRequest>();
+			createDecisionModel.SubmissionRequired = true;
 
 			var result = DecisionMapping.ToUpdateDecision(createDecisionModel);
 
 			result.Should().BeEquivalentTo(createDecisionModel, options =>
 				options.Excluding(o => o.ConcernsCaseUrn)
 			);
+		}
+
+		[TestCase(null)]
+		[TestCase(false)]
+		public void ToUpdateDecision_When_SubmissionNotRequired_Returns_NoSubmissionLink(bool? submissionRequired) {
+			var createDecisionModel = _fixture.Create<CreateDecisionRequest>();
+			createDecisionModel.SubmissionRequired = submissionRequired;
+
+			var result = DecisionMapping.ToUpdateDecision(createDecisionModel);
+
+			result.SubmissionDocumentLink.Should().BeNull();
 		}
 	}
 }
