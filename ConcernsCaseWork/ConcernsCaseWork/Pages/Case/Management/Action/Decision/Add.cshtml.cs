@@ -1,9 +1,9 @@
 ﻿
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Exceptions;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Base;
@@ -85,14 +85,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				DecisionId = decisionId;
 
 				Decision = new();
-				Decision.ConcernsCaseUrn = (int)CaseUrn;
+				Decision.ConcernsCaseUrn = (int)urn;
 
 				if (DecisionId.HasValue)
 				{
-					var apiDecision = await _decisionService.GetDecision(CaseUrn, (int)decisionId);
-
-					Decision = DecisionMapping.ToEditDecisionModel(apiDecision);
-					DecisionTypeArrayToDecisionTypeProperties(Decision.DecisionTypes);
+					await PopulateDecisionModel(urn, (int)decisionId);
 				}
 
 				return Page();
@@ -101,7 +98,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			{
 				_logger.LogErrorMsg(ex);
 
-				TempData["Error.Message"] = ErrorOnGetPage;
+				TempData[ErrorConstants.ErrorMessageKey] = ErrorOnGetPage;
 				return Page();
 			}
 		}
@@ -121,18 +118,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 					return Page();
 				}
 
-				if (DecisionId.HasValue)
+				PopulateCreateDecisionDtoFromRequest();
+
+				if (decisionId.HasValue)
 				{
-					//var updateDecisionRequest = PopulateUpdateDecisionRequestFromCreateDecisionDto();
-					//await _decisionService.PutDecision(CaseUrn, DecisionId.Value, updateDecisionRequest);
-				}
-				else
-				{
-					PopulateCreateDecisionDtoFromRequest();
-					await _decisionService.PostDecision(Decision);
+					var updateDecisionRequest = DecisionMapping.ToUpdateDecision(Decision);
+					await _decisionService.PutDecision(urn, (long)decisionId, updateDecisionRequest);
+
+					return Redirect($"/case/{urn}/management/action/decision/{decisionId}");
 				}
 
-				return Redirect($"/case/{CaseUrn}/management");
+				await _decisionService.PostDecision(Decision);
+
+				return Redirect($"/case/{urn}/management");
 			}
 			catch (InvalidUserInputException ex)
 			{
@@ -142,7 +140,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			{
 				_logger.LogErrorMsg(ex);
 
-				TempData["Error.Message"] = ErrorOnPostPage;
+				SetErrorMessage(ErrorOnPostPage);
 			}
 
 			return Page();
@@ -165,24 +163,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			Decision.ReceivedRequestDate = parsedDate;
 		}
 
-		//private UpdateDecisionRequest PopulateUpdateDecisionRequestFromCreateDecisionDto()
-		//{
-		//	PopulateCreateDecisionDtoFromRequest();
+		private async Task PopulateDecisionModel(long caseUrn, int decisionId)
+		{
+			var apiDecision = await _decisionService.GetDecision(caseUrn, decisionId);
 
-		//	var updateDecisionRequest = new UpdateDecisionRequest()
-		//	{
-		//		CrmCaseNumber = Decision.CrmCaseNumber,
-		//		DecisionTypes = Decision.DecisionTypes,
-		//		TotalAmountRequested = Decision.TotalAmountRequested,
-		//		SupportingNotes = Decision.SupportingNotes,
-		//		ReceivedRequestDate = Decision.ReceivedRequestDate,
-		//		SubmissionDocumentLink = Decision.SubmissionDocumentLink,
-		//		RetrospectiveApproval = Decision.RetrospectiveApproval,
-		//		SubmissionRequired = Decision.SubmissionRequired
-		//	};
-
-		//	return updateDecisionRequest;
-		//}
+			Decision = DecisionMapping.ToEditDecisionModel(apiDecision);
+			DecisionTypeArrayToDecisionTypeProperties(Decision.DecisionTypes);
+		}
 
 		private void DecisionTypeArrayToDecisionTypeProperties(DecisionType[] decisionTypes)
 		{

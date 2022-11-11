@@ -20,6 +20,9 @@ using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using FluentAssertions;
 using NUnit.Framework.Constraints;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using System;
+using ConcernsCaseWork.Constants;
+using Azure;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 {
@@ -47,7 +50,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			await sut.OnGetAsync(expectedUrn);
 
-			sut.Decision.Should().BeEquivalentTo(new CreateDecisionRequest());
+			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
+
+			sut.Decision.Should().BeEquivalentTo(new CreateDecisionRequest(), options => 
+				options.Excluding(o => o.ConcernsCaseUrn));
+			sut.Decision.ConcernsCaseUrn.Should().Be((int)expectedUrn);
 
 			sut.CaseUrn.Should().Be(expectedUrn);
 		}
@@ -59,7 +66,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			const long expectedDecisionId = 1;
 
 			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
-			getDecisionResponse.ConcernsCaseUrn = (int)expectedUrn;
 			getDecisionResponse.DecisionTypes = new API.Contracts.Enums.DecisionType[] {
 				API.Contracts.Enums.DecisionType.NoticeToImprove,
 				API.Contracts.Enums.DecisionType.OtherFinancialSupport
@@ -76,7 +82,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			await sut.OnGetAsync(expectedUrn, expectedDecisionId);
 
-			sut.Decision.ConcernsCaseUrn.Should().Be((int)expectedUrn);
+			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
+
+			sut.Decision.ConcernsCaseUrn.Should().Be(getDecisionResponse.ConcernsCaseUrn);
 			sut.Decision.CrmCaseNumber.Should().Be(getDecisionResponse.CrmCaseNumber);
 			sut.Decision.DecisionTypes.Should().BeEquivalentTo(getDecisionResponse.DecisionTypes);
 			sut.Decision.SupportingNotes.Should().Be(getDecisionResponse.SupportingNotes);
@@ -84,6 +92,23 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			sut.DecisionTypeNoticeToImprove.Should().BeTrue();
 			sut.DecisionTypeOtherFinancialSupport.Should().BeTrue();
 			sut.DecisionTypeEsfaApproval.Should().BeFalse();
+		}
+
+		[Test]
+		public async Task OnGetAsync_When_ExistingDecisionDoesNotExist_Then_ThrowsException()
+		{
+			var decisionService = new Mock<IDecisionService>();
+			decisionService.Setup(m => m.GetDecision(2, 1)).Throws(new Exception("Failed"));
+
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrnRouteValue(1)
+				.WithDecisionService(decisionService)
+				.BuildSut();
+
+			await sut.OnGetAsync(1, 2);
+
+			sut.TempData[ErrorConstants.ErrorMessageKey].Should().Be(ErrorConstants.ErrorOnGetPage);
 		}
 
 		[Test]
@@ -102,7 +127,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 		}
 
 		[Test]
-		public async Task OnPostAsync_Returns_Page()
+		public async Task OnPostAsync_When_NewDecision_Returns_PageRedirectToCase()
 		{
 			const long expectedUrn = 2;
 			var builder = new TestBuilder();
@@ -110,9 +135,24 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				.WithCaseUrnRouteValue(expectedUrn)
 				.BuildSut();
 
-			await sut.OnPostAsync(expectedUrn);
+			var page = await sut.OnPostAsync(expectedUrn) as RedirectResult;
 
-			Assert.AreEqual(expectedUrn, sut.CaseUrn);
+			sut.CaseUrn.Should().Be(expectedUrn);
+			page.Url.Should().Be("/case/2/management");
+		}
+
+		[Test]
+		public async Task OnPostAsync_When_ExistingDecision_Returns_PageRedirectToDecision()
+		{
+			const long expectedUrn = 2;
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrnRouteValue(expectedUrn)
+				.BuildSut();
+
+			var page = await sut.OnPostAsync(expectedUrn, 1) as RedirectResult;
+
+			page.Url.Should().Be("/case/2/management/action/decision/1");
 		}
 
 

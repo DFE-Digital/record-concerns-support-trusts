@@ -26,7 +26,7 @@ namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 			var decisionTypes = request.DecisionTypes.Select(x => new DecisionType((ConcernsCaseWork.Data.Enums.Concerns.DecisionType)x)).Distinct().ToArray();
 
 			return Decision.CreateNew(request.CrmCaseNumber, request.RetrospectiveApproval,
-				request.SubmissionRequired, request.SubmissionDocumentLink, request.ReceivedRequestDate,
+				request.SubmissionRequired, request.SubmissionDocumentLink, (DateTimeOffset)request.ReceivedRequestDate,
 				decisionTypes, request.TotalAmountRequested, request.SupportingNotes, DateTimeOffset.Now);
 		}
 	}
