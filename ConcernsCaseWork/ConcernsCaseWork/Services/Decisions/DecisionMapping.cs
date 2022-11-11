@@ -75,7 +75,7 @@ namespace ConcernsCaseWork.Services.Decisions
 				TotalAmountRequested = createDecisionRequest.TotalAmountRequested,
 				SupportingNotes = createDecisionRequest.SupportingNotes,
 				ReceivedRequestDate = createDecisionRequest.ReceivedRequestDate,
-				SubmissionDocumentLink = createDecisionRequest.SubmissionDocumentLink,
+				SubmissionDocumentLink = createDecisionRequest.SubmissionRequired == true ? createDecisionRequest.SubmissionDocumentLink : null,
 				RetrospectiveApproval = createDecisionRequest.RetrospectiveApproval,
 				SubmissionRequired = createDecisionRequest.SubmissionRequired
 			};
