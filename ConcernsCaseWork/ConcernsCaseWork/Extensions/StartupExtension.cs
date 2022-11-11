@@ -11,7 +11,6 @@ using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Redis.Ratings;
 using ConcernsCaseWork.Redis.Security;
-using ConcernsCaseWork.Redis.Sequence;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Redis.Trusts;
