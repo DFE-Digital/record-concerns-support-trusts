@@ -52,7 +52,7 @@ describe("User can add case actions to an existing case", () => {
 
 	const decisionPage: ViewDecisionPage = new ViewDecisionPage();
 
-	it.only(" Concern Decision - Creating a Decision and validating data is visible ", function () {
+	it(" Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
 		cy.addConcernsDecisionsAddToCase();
 
 		AddToCasePage.getDayDateField().click().type("12");
@@ -67,10 +67,13 @@ describe("User can add case actions to an existing case", () => {
 		decisionPage
 			.hasCrmEnquiry("123456")
 			.hasRetrospectiveRequest("No")
-			.hasSubmissionRequired("No");
-
-
-
+			.hasSubmissionRequired("No")
+			.hasSubmissionLink("www.gov.uk")
+			.hasDateESFAReceivedRequest("20-04-2022")
+			.hasTotalAmountRequested("£150,000")
+			.hasTypeOfDecisiond("Repayable finacial support")
+			.hasSupportingNotes("These are some supporting notes!")
+			.hasActionEdit("Edit");
 	});
 	after(function () {
 		cy.clearLocalStorage();
