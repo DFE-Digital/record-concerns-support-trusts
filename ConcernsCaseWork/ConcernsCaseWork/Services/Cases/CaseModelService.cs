@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Redis.Cases;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Ratings;
 using ConcernsCaseWork.Redis.Records;
@@ -24,27 +23,28 @@ namespace ConcernsCaseWork.Services.Cases
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly IRecordCachedService _recordCachedService;
 		private readonly ITrustCachedService _trustCachedService;
-		private readonly ICaseCachedService _caseCachedService;
 		private readonly ITypeCachedService _typeCachedService;
 		private readonly ICaseSearchService _caseSearchService;
+		private readonly ICaseService _caseService;
 		private readonly ILogger<CaseModelService> _logger;
 
-		public CaseModelService(ICaseCachedService caseCachedService, 
+		public CaseModelService(
 			ITrustCachedService trustCachedService, 
 			IRecordCachedService recordCachedService, 
 			IRatingCachedService ratingCachedService,
 			ITypeCachedService typeCachedService,
 			IStatusCachedService statusCachedService,
 			ICaseSearchService caseSearchService,
+			ICaseService caseService,
 			ILogger<CaseModelService> logger)
 		{
 			_statusCachedService = statusCachedService;
 			_ratingCachedService = ratingCachedService;
 			_recordCachedService = recordCachedService;
 			_trustCachedService = trustCachedService;
-			_caseCachedService = caseCachedService;
 			_typeCachedService = typeCachedService;
 			_caseSearchService = caseSearchService;
+			_caseService = caseService;
 			_logger = logger;
 		}
 
@@ -75,8 +75,8 @@ namespace ConcernsCaseWork.Services.Cases
 				var statusDto = await _statusCachedService.GetStatusByName(statusEnum.ToString());
 
 				// Get from Academies API all cases by caseworker and status
-				var casesDto = await _caseCachedService.GetCasesByCaseworkerAndStatus(caseworker, statusDto.Id);
-
+				var casesDto = await _caseSearchService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch(caseworker, statusDto.Id));
+				
 				// Return if cases are empty
 				if (!casesDto.Any()) return Array.Empty<HomeModel>();
 				
@@ -140,7 +140,7 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(caseworker, urn);
+				var caseDto = await _caseService.GetCaseByUrn(urn);
 				var caseModel = CaseMapping.Map(caseDto);
 				
 				return caseModel;
@@ -204,11 +204,11 @@ namespace ConcernsCaseWork.Services.Cases
 			try
 			{
 				var statusDto = await _statusCachedService.GetStatusByName(patchCaseModel.StatusName);
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 				
 				caseDto = CaseMapping.MapClosure(patchCaseModel, caseDto, statusDto);
 				
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -223,11 +223,11 @@ namespace ConcernsCaseWork.Services.Cases
 			try
 			{
 				// Fetch Rating
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 
 				caseDto = CaseMapping.MapRating(patchCaseModel, caseDto);
 				
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -261,11 +261,11 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 				
 				caseDto = CaseMapping.MapDirectionOfTravel(patchCaseModel, caseDto);
 
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -279,12 +279,12 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 				
 				// Patch source dtos
 				caseDto = CaseMapping.MapIssue(patchCaseModel, caseDto);
 
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -298,12 +298,12 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 				
 				// Patch source dtos
 				caseDto = CaseMapping.MapCaseAim(patchCaseModel, caseDto);
 
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -317,12 +317,12 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 				
 				// Patch source dtos
 				caseDto = CaseMapping.MapCurrentStatus(patchCaseModel, caseDto);
 
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -336,12 +336,12 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 				
 				// Patch source dtos
 				caseDto = CaseMapping.MapDeEscalationPoint(patchCaseModel, caseDto);
 
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -355,12 +355,12 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 				
 				// Patch source dtos
 				caseDto = CaseMapping.MapNextSteps(patchCaseModel, caseDto);
 
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -379,7 +379,7 @@ namespace ConcernsCaseWork.Services.Cases
 
 				// Create a case
 				createCaseModel.StatusId = statusDto.Id;
-				var newCase = await _caseCachedService.PostCase(CaseMapping.Map(createCaseModel));
+				var newCase = await _caseService.PostCase(CaseMapping.Map(createCaseModel));
 
 				// Create records
 				var currentDate = DateTimeOffset.Now;
