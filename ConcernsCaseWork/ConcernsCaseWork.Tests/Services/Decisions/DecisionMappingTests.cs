@@ -1,21 +1,12 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
-using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Services.Decisions;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Net.Security;
-using System.Linq;
-using ConcernsCaseWork.Helpers;
-using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-using AutoMapper;
-using ConcernsCaseWork.Mappers;
 
 namespace ConcernsCaseWork.Tests.Services.Decisions
 {
@@ -115,6 +106,18 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			var result = DecisionMapping.ToEditDecisionModel(apiDecision);
 
 			result.ReceivedRequestDate.Should().Be(null);
+		}
+
+		[Test]
+		public void ToUpdateDecision_Returns_CorrectModel()
+		{
+			var createDecisionModel = _fixture.Create<CreateDecisionRequest>();
+
+			var result = DecisionMapping.ToUpdateDecision(createDecisionModel);
+
+			result.Should().BeEquivalentTo(createDecisionModel, options =>
+				options.Excluding(o => o.ConcernsCaseUrn)
+			);
 		}
 	}
 }

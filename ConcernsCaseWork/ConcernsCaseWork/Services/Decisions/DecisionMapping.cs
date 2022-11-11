@@ -66,6 +66,23 @@ namespace ConcernsCaseWork.Services.Decisions
 			return result;
 		}
 
+		public static UpdateDecisionRequest ToUpdateDecision(CreateDecisionRequest createDecisionRequest)
+		{
+			var updateDecisionRequest = new UpdateDecisionRequest()
+			{
+				CrmCaseNumber = createDecisionRequest.CrmCaseNumber,
+				DecisionTypes = createDecisionRequest.DecisionTypes,
+				TotalAmountRequested = createDecisionRequest.TotalAmountRequested,
+				SupportingNotes = createDecisionRequest.SupportingNotes,
+				ReceivedRequestDate = createDecisionRequest.ReceivedRequestDate,
+				SubmissionDocumentLink = createDecisionRequest.SubmissionDocumentLink,
+				RetrospectiveApproval = createDecisionRequest.RetrospectiveApproval,
+				SubmissionRequired = createDecisionRequest.SubmissionRequired
+			};
+
+			return updateDecisionRequest;
+		}
+
 		private static DateTimeOffset? GetEsfaReceivedRequestDate(GetDecisionResponse decisionResponse)
 		{
 			return decisionResponse.ReceivedRequestDate != DateTimeOffset.MinValue ? decisionResponse.ReceivedRequestDate : null;
