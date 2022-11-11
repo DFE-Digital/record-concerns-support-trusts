@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers
 			return caseActionEnum == CaseActionEnum.Decision;
 		}
 
-		public override async Task<bool> NewCaseActionAllowed(long caseUrn, string caseWorker)
+		public override async Task<bool> NewCaseActionAllowed(long caseUrn)
 		{
 			return true;
 		}

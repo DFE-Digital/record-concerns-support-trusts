@@ -1,5 +1,4 @@
 using ConcernsCaseWork.API.StartupConfiguration;
-using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Base;
@@ -11,7 +10,6 @@ using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Redis.Ratings;
-using ConcernsCaseWork.Redis.Records;
 using ConcernsCaseWork.Redis.Security;
 using ConcernsCaseWork.Redis.Sequence;
 using ConcernsCaseWork.Redis.Status;
@@ -199,8 +197,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IStatusCachedService, StatusCachedService>();
 			services.AddScoped<IRatingCachedService, RatingCachedService>();
 			services.AddScoped<ITrustCachedService, TrustCachedService>();
-			services.AddScoped<IRecordCachedService, RecordCachedService>();
-			services.AddScoped<IFinancialPlanCachedService, FinancialPlanCachedService>();
 			services.AddScoped<IFinancialPlanStatusCachedService, FinancialPlanStatusCachedService>();
 			services.AddScoped<CachedSRMAProvider, CachedSRMAProvider>();
 			services.AddScoped<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();

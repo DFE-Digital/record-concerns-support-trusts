@@ -81,7 +81,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 					throw new Exception("CaseUrn is null or invalid to parse");
 
 				// Get Case
-				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
 
 				if (await IsCaseClosed())
 				{
@@ -94,7 +94,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				// Map Case Rating
 				CaseModel.RatingModel = await _ratingModelService.GetRatingModelById(CaseModel.RatingId);
 				// Get Case concerns
-				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
+				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(caseUrn);
 
 				// Map Case concerns
 				CaseModel.RecordsModel = recordsModel;
@@ -124,7 +124,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private async Task PopulateCaseActions(long caseUrn)
 		{
 			CaseActions = CaseActions ?? new List<ActionSummaryModel>();
-			CaseActions.AddRange(await _actionsModelService.GetActionsSummary(User.Identity.Name, caseUrn));
+			CaseActions.AddRange(await _actionsModelService.GetActionsSummary(caseUrn));
 
 			OpenCaseActions = CaseActions.Where(a => a.ClosedDate == null).ToList();
 			ClosedCaseActions = CaseActions.Except(OpenCaseActions).ToList();

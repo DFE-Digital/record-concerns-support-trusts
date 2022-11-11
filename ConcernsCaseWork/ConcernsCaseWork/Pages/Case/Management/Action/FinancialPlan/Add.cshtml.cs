@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					Notes = notes
 				};
 
-				await _financialPlanModelService.PostFinancialPlanByCaseUrn(createFinancialPlanModel, currentUser);
+				await _financialPlanModelService.PostFinancialPlanByCaseUrn(createFinancialPlanModel);
 
 				return Redirect($"/case/{caseUrn}/management");
 			}

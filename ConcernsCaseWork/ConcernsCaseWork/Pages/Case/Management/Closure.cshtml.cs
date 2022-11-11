@@ -78,7 +78,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				}
 
 				// Fetch UI data
-				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 			}
 			catch (Exception ex)
@@ -101,7 +101,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 					throw new Exception("CaseUrn is null or invalid to parse");
 				}
 
-				if (!(await IsCaseAlreadyClosed(User.Identity.Name, caseUrn)))
+				if (!(await IsCaseAlreadyClosed(caseUrn)))
 				{
 					var caseOutcomes = Request.Form["case-outcomes"];
 					if (string.IsNullOrEmpty(caseOutcomes))
@@ -113,7 +113,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 					{
 						// Update patch case model
 						Urn = caseUrn,
-						CreatedBy = User.Identity.Name,
 						ClosedAt = DateTimeOffset.Now,
 						UpdatedAt = DateTimeOffset.Now,
 						StatusName = StatusEnum.Close.ToString(),
@@ -135,10 +134,10 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			return Redirect("closure");
 		}
 
-		private async Task<bool> IsCaseAlreadyClosed(string userName, long urn)
+		private async Task<bool> IsCaseAlreadyClosed(long urn)
 		{
 			var closedState = await _statusCachedService.GetStatusByName(StatusEnum.Close.ToString());
-			var caseDto = await _caseModelService.GetCaseByUrn(userName, urn);
+			var caseDto = await _caseModelService.GetCaseByUrn(urn);
 
 			return closedState != null && caseDto?.StatusId == closedState?.Id;
 		}
@@ -148,12 +147,12 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			List<string> errorMessages = new List<string>();
 			List<CaseActionModel> caseActionModels = new List<CaseActionModel>();
 
-			var recordsModels = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
+			var recordsModels = await _recordModelService.GetRecordsModelByCaseUrn(caseUrn);
 			var liveStatus = await _statusCachedService.GetStatusByName(StatusEnum.Live.ToString());
 			var numberOfOpenConcerns = recordsModels.Count(r => r.StatusId.CompareTo(liveStatus.Id) == 0);
 			
 			var srmaModelsTask = _srmaModelService.GetSRMAsForCase(caseUrn);
-			var financialPlanModelsTask = _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, User.Identity.Name);
+			var financialPlanModelsTask = _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn);
 			var ntiUnderConsiderationModelsTask = _ntiUnderConsiderationModelService.GetNtiUnderConsiderationsForCase(caseUrn);
 			var ntiWarningLetterModelsTask = _ntiWarningLetterModelService.GetNtiWarningLettersForCase(caseUrn);
 			var ntiModelModelsTask = _ntiModelService.GetNtisForCaseAsync(caseUrn);
@@ -172,7 +171,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				errorMessages.Add("Resolve Concerns");
 			}
 
-			if (await IsCaseAlreadyClosed(User.Identity.Name, caseUrn))
+			if (await IsCaseAlreadyClosed(caseUrn))
 			{
 				errorMessages.Add("This case is already closed.");
 			}

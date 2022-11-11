@@ -67,7 +67,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 
 			_mockCaseModelService.Verify(c =>
-				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+				c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
 			_mockTrustModelService.Verify(c =>
 				c.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 			_mockCaseModelService.Verify(c =>
@@ -94,16 +94,16 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			allCases.AddRange(openActions);
 			allCases.AddRange(closedActions);
 
-			_actionsModelService.Setup(m => m.GetActionsSummary(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(allCases);
+			_actionsModelService.Setup(m => m.GetActionsSummary(It.IsAny<long>())).ReturnsAsync(allCases);
 
 			var caseModel = _fixture.Create<CaseModel>();
-			_mockCaseModelService.Setup(m => m.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(caseModel);
+			_mockCaseModelService.Setup(m => m.GetCaseByUrn(It.IsAny<long>())).ReturnsAsync(caseModel);
 
 			var rating = _fixture.Create<RatingModel>();
 			_mockRatingModelService.Setup(m => m.GetRatingModelById(It.IsAny<long>())).ReturnsAsync(rating);
 
 			var records = _fixture.CreateMany<RecordModel>().ToList();
-			_mockRecordModelService.Setup(m => m.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(records);
+			_mockRecordModelService.Setup(m => m.GetRecordsModelByCaseUrn(It.IsAny<long>())).ReturnsAsync(records);
 
 			var trustDetails = _fixture.Create<TrustDetailsModel>();
 			_mockTrustModelService.Setup(m => m.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetails);
@@ -138,7 +138,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var caseModel = CaseFactory.BuildCaseModel(statusId: closedStatusId);
 			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), closedStatusId);
 
-			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 			_mockStatusCachedService.Setup(s => s.GetStatusByName(StatusEnum.Close.ToString()))
 				.ReturnsAsync(closedStatusModel);
@@ -165,13 +165,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
 
-			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 			_mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
 				.ReturnsAsync(trustCasesModel);
 			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
 
 			var pageModel = SetupIndexPageModel();
@@ -197,13 +197,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var recordsModel = RecordFactory.BuildListRecordModel();
 			var closeStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
 
-			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 			_mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
 				.ReturnsAsync(trustCasesModel);
 			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
 			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(closeStatusModel);
@@ -231,13 +231,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var recordsModel = RecordFactory.BuildListRecordModel();
 			var closeStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 3);
 
-			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 			_mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
 				.ReturnsAsync(trustCasesModel);
 			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
-			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
 			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(closeStatusModel);
@@ -282,13 +282,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var caseModel = CaseFactory.BuildCaseModel("Tester", urn);
 			var closedStatusModel = StatusFactory.BuildStatusDto(StatusEnum.Close.ToString(), 1);
 
-			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(closedStatusModel);
 			_mockNtiStatusesCachedService.Setup(s => s.GetAllStatuses())
 				.ReturnsAsync(new List<NtiUnderConsiderationStatusDto>());
-			_actionsModelService.Setup(m => m.GetActionsSummary(It.IsAny<string>(), It.IsAny<long>()))
+			_actionsModelService.Setup(m => m.GetActionsSummary(It.IsAny<long>()))
 				.ReturnsAsync(new List<ActionSummaryModel>());
 		}
 

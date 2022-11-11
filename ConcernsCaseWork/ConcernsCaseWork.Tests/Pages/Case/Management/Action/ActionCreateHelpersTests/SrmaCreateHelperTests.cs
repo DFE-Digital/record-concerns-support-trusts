@@ -45,7 +45,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 			mockSrmaService.Setup(svc => svc.GetSRMAsForCase(888)).Returns(Task.FromResult(caseActions));
 
 			// act
-			var actual = sut.NewCaseActionAllowed(888, string.Empty).Result;
+			var actual = sut.NewCaseActionAllowed(888).Result;
 
 			// assert
 			Assert.That(actual, Is.True);
@@ -67,7 +67,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 			mockSrmaService.Setup(svc => svc.GetSRMAsForCase(888)).Returns(Task.FromResult(caseActions));
 
 			// act, assert
-			Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.NewCaseActionAllowed(888, string.Empty));
+			Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.NewCaseActionAllowed(888));
 		}
 	}
 }

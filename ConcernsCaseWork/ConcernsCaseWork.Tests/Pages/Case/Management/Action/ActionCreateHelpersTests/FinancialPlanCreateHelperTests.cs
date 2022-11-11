@@ -42,10 +42,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 				new FinancialPlanModel (123, 888, DateTime.Now.AddDays(-11), null, null, string.Empty, null, DateTime.Now.AddDays(-10))
 			};
 
-			mockFinancialPlanService.Setup(svc => svc.GetFinancialPlansModelByCaseUrn(888, string.Empty)).Returns(Task.FromResult(caseActions));
+			mockFinancialPlanService.Setup(svc => svc.GetFinancialPlansModelByCaseUrn(888)).Returns(Task.FromResult(caseActions));
 
 			// act
-			var actual = sut.NewCaseActionAllowed(888, string.Empty).Result;
+			var actual = sut.NewCaseActionAllowed(888).Result;
 
 			// assert
 			Assert.That(actual, Is.True);
@@ -64,10 +64,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 				new FinancialPlanModel (123, 888, DateTime.Now.AddDays(-11), null, null, string.Empty, null, DateTime.Now.AddDays(-10))
 			};
 
-			mockFinancialPlanService.Setup(svc => svc.GetFinancialPlansModelByCaseUrn(888, string.Empty)).Returns(Task.FromResult(caseActions));
+			mockFinancialPlanService.Setup(svc => svc.GetFinancialPlansModelByCaseUrn(888)).Returns(Task.FromResult(caseActions));
 
 			// act, assert
-			Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.NewCaseActionAllowed(888, string.Empty));
+			Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.NewCaseActionAllowed(888));
 		}
 	}
 }

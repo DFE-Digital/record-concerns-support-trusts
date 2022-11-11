@@ -8,14 +8,14 @@ namespace ConcernsCaseWork.Services.Records
 {
 	public interface IRecordModelService
 	{
-		Task<IList<RecordModel>> GetRecordsModelByCaseUrn(string caseworker, long caseUrn);
+		Task<IList<RecordModel>> GetRecordsModelByCaseUrn(long caseUrn);
 
-		Task<RecordModel> GetRecordModelById(string caseworker, long caseUrn, long id);
+		Task<RecordModel> GetRecordModelById(long caseUrn, long id);
 
 		Task PatchRecordStatus(PatchRecordModel patchRecordModel);
 		
-		Task<IList<CreateRecordModel>> GetCreateRecordsModelByCaseUrn(string caseworker, long caseUrn);
+		Task<IList<CreateRecordModel>> GetCreateRecordsModelByCaseUrn(long caseUrn);
 		
-		Task<RecordDto> PostRecordByCaseUrn(CreateRecordModel createRecordModel, string caseworker);
+		Task<RecordDto> PostRecordByCaseUrn(CreateRecordModel createRecordModel);
 	}
 }

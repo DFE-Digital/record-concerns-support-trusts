@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Services.Cases
 	{
 		Task<IList<HomeModel>> GetCasesByCaseworkerAndStatus(IList<string> caseworkers, StatusEnum statusEnum);
 		Task<IList<HomeModel>> GetCasesByCaseworkerAndStatus(string caseworker, StatusEnum status);
-		Task<CaseModel> GetCaseByUrn(string caseworker, long urn);
+		Task<CaseModel> GetCaseByUrn(long urn);
 		Task<IList<TrustCasesModel>> GetCasesByTrustUkprn(string trustUkprn);
 		Task PatchClosure(PatchCaseModel patchCaseModel);
 		Task PatchCaseRating(PatchCaseModel patchCaseModel);

@@ -2,7 +2,6 @@
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Ratings;
-using ConcernsCaseWork.Redis.Records;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Redis.Types;
@@ -21,7 +20,7 @@ namespace ConcernsCaseWork.Services.Cases
 	{
 		private readonly IRatingCachedService _ratingCachedService;
 		private readonly IStatusCachedService _statusCachedService;
-		private readonly IRecordCachedService _recordCachedService;
+		private readonly IRecordService _recordService;
 		private readonly ITrustCachedService _trustCachedService;
 		private readonly ITypeCachedService _typeCachedService;
 		private readonly ICaseSearchService _caseSearchService;
@@ -30,7 +29,7 @@ namespace ConcernsCaseWork.Services.Cases
 
 		public CaseModelService(
 			ITrustCachedService trustCachedService, 
-			IRecordCachedService recordCachedService, 
+			IRecordService recordService, 
 			IRatingCachedService ratingCachedService,
 			ITypeCachedService typeCachedService,
 			IStatusCachedService statusCachedService,
@@ -40,7 +39,7 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			_statusCachedService = statusCachedService;
 			_ratingCachedService = ratingCachedService;
-			_recordCachedService = recordCachedService;
+			_recordService = recordService;
 			_trustCachedService = trustCachedService;
 			_typeCachedService = typeCachedService;
 			_caseSearchService = caseSearchService;
@@ -93,7 +92,7 @@ namespace ConcernsCaseWork.Services.Cases
 				var listHomeModel = casesDto.Select(caseDto =>
 				{
 					var trustDetailsTask = _trustCachedService.GetTrustByUkPrn(caseDto.TrustUkPrn);
-					var recordsTask = _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
+					var recordsTask = _recordService.GetRecordsByCaseUrn(caseDto.Urn);
 
 					Task.WaitAll(trustDetailsTask, recordsTask);
 
@@ -136,7 +135,7 @@ namespace ConcernsCaseWork.Services.Cases
 			return Array.Empty<HomeModel>();
 		}
 
-		public async Task<CaseModel> GetCaseByUrn(string caseworker, long urn)
+		public async Task<CaseModel> GetCaseByUrn(long urn)
 		{
 			try
 			{
@@ -176,7 +175,7 @@ namespace ConcernsCaseWork.Services.Cases
 				casesDto = casesDto.Where(c => c.StatusId.CompareTo(monitoringStatus.Id) != 0).ToList();
 				
 				// Fetch records by case urn
-				var recordsTasks = casesDto.Select(c => _recordCachedService.GetRecordsByCaseUrn(c.CreatedBy, c.Urn)).ToList();
+				var recordsTasks = casesDto.Select(c => _recordService.GetRecordsByCaseUrn(c.Urn)).ToList();
 				await Task.WhenAll(recordsTasks);
 			
 				// Get results from tasks
@@ -242,12 +241,12 @@ namespace ConcernsCaseWork.Services.Cases
 			try
 			{
 				// Fetch Records
-				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(patchRecordModel.CreatedBy, patchRecordModel.CaseUrn);
+				var recordsDto = await _recordService.GetRecordsByCaseUrn(patchRecordModel.CaseUrn);
 
 				var recordDto = recordsDto.FirstOrDefault(r => r.Id.CompareTo(patchRecordModel.Id) == 0);
 				recordDto = RecordMapping.MapRating(patchRecordModel, recordDto);
 
-				await _recordCachedService.PatchRecordById(recordDto, patchRecordModel.CreatedBy);
+				await _recordService.PatchRecordById(recordDto);
 			}
 			catch (Exception ex)
 			{
@@ -399,7 +398,7 @@ namespace ConcernsCaseWork.Services.Cases
 						statusDto.Id,
 						recordModel.MeansOfReferralId);
 					
-					return _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
+					return _recordService.PostRecordByCaseUrn(createRecordDto);
 				});
 
 				await Task.WhenAll(recordTasks);
