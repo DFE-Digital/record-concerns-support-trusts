@@ -28,6 +28,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 .With(c => c.CaseAim = "Here is the aim")
                 .With(c => c.DeEscalationPoint = "Point of de-escalation")
                 .With(c => c.NextSteps = "Here are the next steps")
+                .With(c => c.CaseHistory = "This is some case history")
                 .With(c => c.DirectionOfTravel = "Up")
                 .With(c => c.StatusId = 3)
                 .With(c => c.RatingId = 3)
@@ -50,6 +51,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 CaseAim = request.CaseAim,
                 DeEscalationPoint = request.DeEscalationPoint,
                 NextSteps = request.NextSteps,
+                CaseHistory = request.CaseHistory,
                 DirectionOfTravel = request.DirectionOfTravel,
                 StatusId = request.StatusId,
                 RatingId = request.RatingId

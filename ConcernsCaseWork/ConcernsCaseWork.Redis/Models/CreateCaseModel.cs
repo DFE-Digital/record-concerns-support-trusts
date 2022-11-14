@@ -35,6 +35,7 @@ namespace ConcernsCaseWork.Redis.Models
 		public string NextSteps { get; set; }
 		
 		public string DirectionOfTravel { get; set; }
+		public string CaseHistory { get; set; }
 		
 		public long StatusId { get; set; }
 		

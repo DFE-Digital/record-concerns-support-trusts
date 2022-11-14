@@ -56,6 +56,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var nextSteps = Request.Form["next-steps"];
 				var caseAim = Request.Form["case-aim"];
 				var deEscalationPoint = Request.Form["de-escalation-point"];
+				var caseHistory = Request.Form["case-history"];
 
 				if (string.IsNullOrEmpty(issue)) 
 					throw new Exception("Missing form values");
@@ -70,6 +71,7 @@ namespace ConcernsCaseWork.Pages.Case
 				createCaseModel.CaseAim = caseAim;
 				createCaseModel.DeEscalationPoint = deEscalationPoint;
 				createCaseModel.TrustUkPrn = userState.TrustUkPrn;
+				createCaseModel.CaseHistory = caseHistory;
 					
 				var caseUrn = await _caseModelService.PostCase(createCaseModel);
 				
