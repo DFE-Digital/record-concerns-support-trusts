@@ -66,6 +66,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			sut.Decision.ConcernsCaseUrn.Should().Be((int)expectedUrn);
 
 			sut.CaseUrn.Should().Be(expectedUrn);
+			sut.DecisionTypeCheckBoxes.Should().NotBeEmpty();
 		}
 
 		[Test]
@@ -228,6 +229,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			Assert.IsTrue(decisionsValidationErrors.Contains(expectedMessage1));
 			Assert.IsTrue(decisionsValidationErrors.Contains(expectedMessage2));
+			sut.DecisionTypeCheckBoxes.Should().NotBeEmpty();
+			sut.ViewData[ViewDataConstants.Title].Should().Be("Add decision");
 		}
 
 		[Test]
