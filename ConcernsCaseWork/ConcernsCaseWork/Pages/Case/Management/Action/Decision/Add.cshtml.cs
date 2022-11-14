@@ -87,7 +87,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 					return Page();
 				}
 
-				PopulateCreateDecisionDtoFromRequest();
+				Decision.ReceivedRequestDate = ParseDate();
+				Decision.DecisionTypes = Decision.DecisionTypes ?? new DecisionType[] { };
 
 				if (decisionId.HasValue)
 				{
@@ -134,20 +135,20 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			return result;
 		}
 
-		private void PopulateCreateDecisionDtoFromRequest()
+		private DateTime ParseDate()
 		{
 			var dtr_day = Request.Form["dtr-day-request-received"];
 			var dtr_month = Request.Form["dtr-month-request-received"];
 			var dtr_year = Request.Form["dtr-year-request-received"];
 			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-			var isValidDate = DateTimeHelper.TryParseExact(dtString, out DateTime parsedDate);
+			var isValidDate = DateTimeHelper.TryParseExact(dtString, out DateTime result);
 
 			if (dtString != "--" && !isValidDate)
 			{
 				throw new InvalidUserInputException($"{dtString} is an invalid date");
 			}
 
-			Decision.ReceivedRequestDate = parsedDate;
+			return result;
 		}
 
 		private List<DecisionTypeCheckBox> BuildDecisionTypeCheckBoxes()
@@ -217,8 +218,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 	public class DecisionTypeCheckBox
 	{
-		public string Hint { get; set; }
 		public DecisionType DecisionType { get; set; }
+		public string Hint { get; set; }
 	}
 
 }

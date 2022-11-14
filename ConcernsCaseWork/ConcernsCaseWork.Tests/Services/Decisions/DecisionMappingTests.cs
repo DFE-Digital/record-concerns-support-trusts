@@ -64,7 +64,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.TotalAmountRequested.Should().Be("£150,000.00");
 			result.DecisionTypes.Should().BeEquivalentTo(new List<string>() { "Notice to Improve (NTI)", "Repayable financial support" });
 			result.SupportingNotes.Should().Be(apiDecision.SupportingNotes);
-			result.EditLink.Should().Be("/case/2/management/action/decision/10/edit");
+			result.EditLink.Should().Be("/case/2/management/action/decision/addOrUpdate/10");
 			result.BackLink.Should().Be("/case/2/management");
 		}
 

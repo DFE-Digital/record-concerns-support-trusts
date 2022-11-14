@@ -24,6 +24,7 @@ using System;
 using ConcernsCaseWork.Constants;
 using Azure;
 using ConcernsCaseWork.API.Contracts.Enums;
+using System.Transactions;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 {
@@ -145,6 +146,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			sut.CaseUrn.Should().Be(expectedUrn);
 			page.Url.Should().Be("/case/2/management");
+			sut.Decision.DecisionTypes.Should().BeEmpty();
 		}
 
 		[Test]
@@ -156,9 +158,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				.WithCaseUrnRouteValue(expectedUrn)
 				.BuildSut();
 
+			sut.Decision.DecisionTypes = new DecisionType[] {
+				DecisionType.NonRepayableFinancialSupport
+			};
+
 			var page = await sut.OnPostAsync(expectedUrn, 1) as RedirectResult;
 
 			page.Url.Should().Be("/case/2/management/action/decision/1");
+			sut.Decision.DecisionTypes.Should().Contain(DecisionType.NonRepayableFinancialSupport);
 		}
 
 

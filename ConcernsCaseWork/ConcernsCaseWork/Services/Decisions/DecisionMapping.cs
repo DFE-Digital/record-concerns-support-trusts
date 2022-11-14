@@ -41,7 +41,7 @@ namespace ConcernsCaseWork.Services.Decisions
 				TotalAmountRequested = decisionResponse.TotalAmountRequested.ToString("C"),
 				DecisionTypes = decisionResponse.DecisionTypes.Select(d => EnumHelper.GetEnumDescription(d)).ToList(),
 				SupportingNotes = decisionResponse.SupportingNotes,
-				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/add/{decisionResponse.DecisionId}",
+				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/addOrUpdate/{decisionResponse.DecisionId}",
 				BackLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management"
 			};
 
