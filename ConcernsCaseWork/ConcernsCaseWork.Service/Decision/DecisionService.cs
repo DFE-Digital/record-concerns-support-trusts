@@ -53,10 +53,10 @@ namespace ConcernsCaseWork.Service.Decision
 		{
 			_logger.LogMethodEntered();
 
-			_ = Guard.Against.Null(updateDecisionRequest);
+			var endpoint = $"/{EndpointsVersion}/concerns-cases/{caseUrn}/decisions/{decisionId}";
 
 			// put the decision
-			var putResponse = await Put<UpdateDecisionRequest, UpdateDecisionResponse>($"/{EndpointsVersion}/concerns-cases/{caseUrn}/decisions/{decisionId}", updateDecisionRequest);
+			var putResponse = await Put<UpdateDecisionRequest, UpdateDecisionResponse>(endpoint, updateDecisionRequest);
 
 			_logger.LogInformation($"Decision updated. caseUrn: {putResponse.ConcernsCaseUrn}, DecisionId:{putResponse.DecisionId}");
 			return putResponse;

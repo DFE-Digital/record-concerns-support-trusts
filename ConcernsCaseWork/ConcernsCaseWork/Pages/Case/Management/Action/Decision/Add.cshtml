@@ -6,7 +6,6 @@
 @using ConcernsCaseWork.Helpers;
 
 @{
-	ViewData["Title"] = "Add Decision";
 	var nonce = HttpContext.GetNonce();
 
 	var decisionsValidationErrors = TempData["Decision.Message"] as IEnumerable<string>;
