@@ -3,79 +3,31 @@
 namespace ConcernsCaseWork.Service.Cases
 {
 	[Serializable]
-	public sealed class CaseDto
+	public sealed record CaseDto
 	{
-		[JsonProperty("createdAt")]
-		public DateTimeOffset CreatedAt { get; }
-
-		[JsonProperty("updatedAt")]
-		public DateTimeOffset UpdatedAt { get; }
-		
-		[JsonProperty("reviewAt")]
-		public DateTimeOffset ReviewAt { get; }
-		
-		[JsonProperty("closedAt")]
-		public DateTimeOffset ClosedAt { get; }
-		
-		[JsonProperty("createdBy")]
-		public string CreatedBy { get; }
-		
-		[JsonProperty("description")]
-		public string Description { get; }
-		
-		[JsonProperty("crmEnquiry")]
-		public string CrmEnquiry { get; }
-		
-		[JsonProperty("trustUkprn")]
-		public string TrustUkPrn { get; }
-		
-		[JsonProperty("reasonAtReview")]
-		public string ReasonAtReview { get; }
-
-		[JsonProperty("deEscalation")]
-		public DateTimeOffset DeEscalation { get; }
-		
-		[JsonProperty("issue")]
-		public string Issue { get; }
-
-		[JsonProperty("currentStatus")]
-		public string CurrentStatus { get; }
-
-		[JsonProperty("caseAim")]
-		public string CaseAim { get; }
-		
-		[JsonProperty("deEscalationPoint")]
-		public string DeEscalationPoint { get; }
-		
-		[JsonProperty("nextSteps")]
-		public string NextSteps { get; }
+		public DateTimeOffset CreatedAt { get; init; }
+		public DateTimeOffset UpdatedAt { get; init; }
+		public DateTimeOffset ReviewAt { get; init; }
+		public DateTimeOffset ClosedAt { get; init; }
+		public string CreatedBy { get; init; }
+		public string Description { get; init; }
+		public string CrmEnquiry { get; init; }
+		public string TrustUkPrn { get; init; }
+		public string ReasonAtReview { get; init; }
+		public DateTimeOffset DeEscalation { get; init; }
+		public string Issue { get; init; }
+		public string CurrentStatus { get; init; }
+		public string CaseAim { get; init; }
+		public string DeEscalationPoint { get; init; }
+		public string NextSteps { get; init; }
 		
 		/// <summary>
 		/// Deteriorating, unchanged, improved
 		/// </summary>
-		[JsonProperty("directionOfTravel")]
-		public string DirectionOfTravel { get; }
-		
-		[JsonProperty("urn")]
-		public long Urn { get; }
-		
-		[JsonProperty("statusId")]
-		public long StatusId { get; }
-		
-		[JsonProperty("ratingId")]
+		public string DirectionOfTravel { get; init; }
+		public long Urn { get; init; }
+		public long StatusId { get; init; }
 		public long RatingId { get; set; }
-
-		[JsonConstructor]
-		public CaseDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
-			DateTimeOffset closedAt, string createdBy, string description, string crmEnquiry, string trustUkPrn, 
-			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
-			string nextSteps, string caseAim, string deEscalationPoint, string directionOfTravel, 
-			long urn, long statusId, long ratingId) => 
-			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, CreatedBy, Description, CrmEnquiry, TrustUkPrn,
-				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, CaseAim, DeEscalationPoint, 
-				DirectionOfTravel, Urn, StatusId, RatingId) = 
-			(createdAt, updatedAt, reviewAt, closedAt, createdBy, description, crmEnquiry, trustUkPrn,
-				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, caseAim, deEscalationPoint, 
-				directionOfTravel, urn, statusId, ratingId);
+		public string CaseHistory { get; set; }
 	}
 }
