@@ -23,6 +23,7 @@ using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using System;
 using ConcernsCaseWork.Constants;
 using Azure;
+using ConcernsCaseWork.API.Contracts.Enums;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 {
@@ -50,9 +51,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			await sut.OnGetAsync(expectedUrn);
 
+			var expectedDecision = new CreateDecisionRequest()
+			{
+				DecisionTypes = new DecisionType[] { }
+			};
+
 			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
 
-			sut.Decision.Should().BeEquivalentTo(new CreateDecisionRequest(), options => 
+			sut.Decision.Should().BeEquivalentTo(expectedDecision, options => 
 				options.Excluding(o => o.ConcernsCaseUrn));
 			sut.Decision.ConcernsCaseUrn.Should().Be((int)expectedUrn);
 
@@ -88,10 +94,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			sut.Decision.CrmCaseNumber.Should().Be(getDecisionResponse.CrmCaseNumber);
 			sut.Decision.DecisionTypes.Should().BeEquivalentTo(getDecisionResponse.DecisionTypes);
 			sut.Decision.SupportingNotes.Should().Be(getDecisionResponse.SupportingNotes);
-
-			sut.DecisionTypeNoticeToImprove.Should().BeTrue();
-			sut.DecisionTypeOtherFinancialSupport.Should().BeTrue();
-			sut.DecisionTypeEsfaApproval.Should().BeFalse();
 		}
 
 		[Test]
@@ -153,28 +155,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			var page = await sut.OnPostAsync(expectedUrn, 1) as RedirectResult;
 
 			page.Url.Should().Be("/case/2/management/action/decision/1");
-		}
-
-
-		[Test]
-		public async Task OnPostAsync_When_DecisionTypesIsPopulated_Then_PopulateCreateDecisionTypesProperty_Returns_Page()
-		{
-			const long expectedUrn = 2;
-			var builder = new TestBuilder();
-			var sut = builder
-				.WithCaseUrnRouteValue(expectedUrn)
-				.BuildSut();
-
-			sut.DecisionTypeNoticeToImprove = true;
-			sut.DecisionTypeOtherFinancialSupport = true;
-			sut.DecisionTypeQualifiedFloatingCharge = true;
-
-			const int expectedDecisionTypesLength = 3;
-
-
-			await sut.OnPostAsync(expectedUrn);
-
-			Assert.AreEqual(sut.Decision.DecisionTypes.Length, expectedDecisionTypesLength);
 		}
 
 
