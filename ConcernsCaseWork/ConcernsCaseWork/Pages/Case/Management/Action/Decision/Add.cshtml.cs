@@ -30,50 +30,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		[BindProperty]
 		public CreateDecisionRequest Decision { get; set; }
 
-		[BindProperty]
-		public bool DecisionTypeNoticeToImprove { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeSection128 { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeQualifiedFloatingCharge { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeNonRepayableFinancialSupport { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeRepayableFinancialSupport { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeShortTermCashAdvance { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeWriteOffRecoverableFunding { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeOtherFinancialSupport { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeEstimatesFundingOrPupilNumberAdjustment { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeEsfaApproval { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeFreedomOfInformationExemptions { get; set; }
-
 		public int NotesMaxLength => 2000;
 
 		public long? DecisionId { get; set; }
+
+		public long CaseUrn { get; set; }
+
+		public List<DecisionTypeCheckBox> DecisionTypeCheckBoxes { get; set; }
 
 		public AddPageModel(IDecisionService decisionService, ILogger<AddPageModel> logger)
 		{
 			_decisionService = decisionService;
 			_logger = logger;
 		}
-
-		public long CaseUrn { get; set; }
 
 		public async Task<IActionResult> OnGetAsync(long urn, long? decisionId = null)
 		{
@@ -84,7 +53,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				CaseUrn = (CaseUrn)urn;
 				DecisionId = decisionId;
 
-				Decision = new();
+				Decision = new()
+				{
+					DecisionTypes = new DecisionType[] { }
+				};
+
+				DecisionTypeCheckBoxes = BuildDecisionTypeCheckBoxes();
+
 				Decision.ConcernsCaseUrn = (int)urn;
 
 				if (DecisionId.HasValue)
@@ -159,7 +134,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				throw new InvalidUserInputException($"{dtString} is an invalid date");
 			}
 
-			Decision.DecisionTypes = DecisionTypePropertiesToDecisionTypeArray();
 			Decision.ReceivedRequestDate = parsedDate;
 		}
 
@@ -167,42 +141,77 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		{
 			var apiDecision = await _decisionService.GetDecision(caseUrn, decisionId);
 
-			Decision = DecisionMapping.ToEditDecisionModel(apiDecision);
-			DecisionTypeArrayToDecisionTypeProperties(Decision.DecisionTypes);
-		}
+			Decision = DecisionMapping.ToEditDecisionModel(apiDecision);		}
 
-		private void DecisionTypeArrayToDecisionTypeProperties(DecisionType[] decisionTypes)
+		private List<DecisionTypeCheckBox> BuildDecisionTypeCheckBoxes()
 		{
-			DecisionTypeNoticeToImprove = decisionTypes.Contains(DecisionType.NoticeToImprove);
-			DecisionTypeSection128 = decisionTypes.Contains(DecisionType.Section128);
-			DecisionTypeQualifiedFloatingCharge = decisionTypes.Contains(DecisionType.QualifiedFloatingCharge);
-			DecisionTypeNonRepayableFinancialSupport = decisionTypes.Contains(DecisionType.NonRepayableFinancialSupport);
-			DecisionTypeRepayableFinancialSupport = decisionTypes.Contains(DecisionType.RepayableFinancialSupport);
-			DecisionTypeShortTermCashAdvance = decisionTypes.Contains(DecisionType.ShortTermCashAdvance);
-			DecisionTypeWriteOffRecoverableFunding = decisionTypes.Contains(DecisionType.WriteOffRecoverableFunding);
-			DecisionTypeOtherFinancialSupport = decisionTypes.Contains(DecisionType.OtherFinancialSupport);
-			DecisionTypeEstimatesFundingOrPupilNumberAdjustment = decisionTypes.Contains(DecisionType.EstimatesFundingOrPupilNumberAdjustment);
-			DecisionTypeEsfaApproval = decisionTypes.Contains(DecisionType.EsfaApproval);
-			DecisionTypeFreedomOfInformationExemptions = decisionTypes.Contains(DecisionType.FreedomOfInformationExemptions);
-		}
-
-		// update the dto with the result of a call to this, so createDecisionDto.DecisionTypes = ToDecisionTypesArray([page property]),
-		private DecisionType[] DecisionTypePropertiesToDecisionTypeArray()
-		{
-			return new DecisionType[]
+			var result = new List<DecisionTypeCheckBox>()
 			{
-				DecisionTypeNoticeToImprove ? DecisionType.NoticeToImprove : 0,
-				DecisionTypeSection128 ? DecisionType.Section128 : 0,
-				DecisionTypeQualifiedFloatingCharge ? DecisionType.QualifiedFloatingCharge : 0,
-				DecisionTypeNonRepayableFinancialSupport ? DecisionType.NonRepayableFinancialSupport : 0,
-				DecisionTypeRepayableFinancialSupport ? DecisionType.RepayableFinancialSupport : 0,
-				DecisionTypeShortTermCashAdvance ? DecisionType.ShortTermCashAdvance : 0,
-				DecisionTypeWriteOffRecoverableFunding ? DecisionType.WriteOffRecoverableFunding : 0,
-				DecisionTypeOtherFinancialSupport ? DecisionType.OtherFinancialSupport : 0,
-				DecisionTypeEstimatesFundingOrPupilNumberAdjustment ? DecisionType.EstimatesFundingOrPupilNumberAdjustment : 0,
-				DecisionTypeEsfaApproval ? DecisionType.EsfaApproval : 0,
-				DecisionTypeFreedomOfInformationExemptions ? DecisionType.FreedomOfInformationExemptions : 0,
-			}.Where(x => x > 0).ToArray();
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.NoticeToImprove,
+					Hint = "An NTI is an intervention tool. It's used to set out conditions that a trust must meet to act on area(s) of concern."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.Section128,
+					Hint = "A section 128 direction gives the Secretary of State the power to block an individual from taking part in the management of an independent school (including academies and free schools)."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.QualifiedFloatingCharge,
+					Hint = "A QFC helps us secure the repayment of funding we advance to an academy trust. This includes appointing an administrator, making sure the funding can be recovered and potentially disqualifying an unfit director."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.NonRepayableFinancialSupport,
+					Hint = "Non-repayable grants are paid in exceptional circumstances to support a trust or academy financially."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.RepayableFinancialSupport,
+					Hint = "Repayable funding are payments that trusts must repay in line with an agreed repayment plan, ideally within 3 years."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.ShortTermCashAdvance,
+					Hint = "A short-term cash advance or a general annual grant (GAG) advance is given to help an academy manage its cash flow. This should be repaid within the same academy financial year."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.WriteOffRecoverableFunding,
+					Hint = "A write-off can be considered if a trust cannot repay financial support previously received from us."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.OtherFinancialSupport,
+					Hint = "All other types of financial support for exceptional circumstances. This includes exceptional annual grant (EAG), popular growth funding, restructuring support and start-up support."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.EstimatesFundingOrPupilNumberAdjustment,
+					Hint = "Covers: a) agreements to move from lagged funding (based on pupil census data) to funding based on an estimate of the coming year’s pupil numbers, used when a school is growing; b) an adjustment to a trust's General Annual Grant (GAG) to funding based on estimated pupil numbers in line with actual pupil numbers, once these are confirmed (PNA). Also called an in-year adjustment."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.EsfaApproval,
+					Hint = "Some versions of the funding agreement require trusts to seek approval from ESFA to spend or write off funds, such as severance pay or agreeing off-payroll arrangements for staff. Trusts going ahead with these decisions or transactions would be in breach of their funding agreement. Also called transactions approval. This typically affects trusts under an NTI (Notice to Improve)."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.FreedomOfInformationExemptions,
+					Hint = "If information qualifies as an exemption to the Freedom of Information Act, we can decline to release information. Some exemptions require ministerial approval. You must contact the FOI team if you think you need to apply an exemption to your FOI response or if you have any concerns about releasing information as part of a response."
+				}
+			};
+
+			return result;
 		}
 	}
+
+	public class DecisionTypeCheckBox
+	{
+		public string Hint { get; set; }
+		public DecisionType DecisionType { get; set; }
+	}
+
 }
