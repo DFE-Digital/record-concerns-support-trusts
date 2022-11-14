@@ -1,4 +1,5 @@
 ﻿
+using ConcernsCaseWork.API.Contracts.Constants;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.Constants;
@@ -31,7 +32,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		[BindProperty]
 		public CreateDecisionRequest Decision { get; set; }
 
-		public int NotesMaxLength => 2000;
+		public int NotesMaxLength => DecisionConstants.MaxSupportingNotesLength;
 
 		public long? DecisionId { get; set; }
 
@@ -51,14 +52,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			try
 			{
-				ViewData[ViewDataConstants.Title] = decisionId.HasValue ? "Edit decision" : "Add decision";
-
-				CaseUrn = (CaseUrn)urn;
-				DecisionId = decisionId;
+				SetupPage(urn, decisionId);
 
 				Decision = await CreateDecisionModel(urn, decisionId);
-
-				DecisionTypeCheckBoxes = BuildDecisionTypeCheckBoxes();
 
 				return Page();
 			}
@@ -78,8 +74,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			try
 			{
-				CaseUrn = (CaseUrn)urn;
-				DecisionId = decisionId;
+				SetupPage(urn, decisionId);
 
 				if (!ModelState.IsValid)
 				{
@@ -88,7 +83,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				}
 
 				Decision.ReceivedRequestDate = ParseDate();
-				Decision.DecisionTypes = Decision.DecisionTypes ?? new DecisionType[] { };
 
 				if (decisionId.HasValue)
 				{
@@ -112,16 +106,22 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 				SetErrorMessage(ErrorOnPostPage);
 			}
-
 			return Page();
+		}
+
+		private void SetupPage(long caseUrn, long? decisionId)
+		{
+			ViewData[ViewDataConstants.Title] = decisionId.HasValue ? "Edit decision" : "Add decision";
+
+			CaseUrn = (CaseUrn)caseUrn;
+			DecisionId = decisionId;
+
+			DecisionTypeCheckBoxes = BuildDecisionTypeCheckBoxes();
 		}
 
 		private async Task<CreateDecisionRequest> CreateDecisionModel(long caseUrn, long? decisionId)
 		{
-			var result = new CreateDecisionRequest()
-			{
-				DecisionTypes = new DecisionType[] { }
-			};
+			var result = new CreateDecisionRequest();
 
 			result.ConcernsCaseUrn = (int)caseUrn;
 
