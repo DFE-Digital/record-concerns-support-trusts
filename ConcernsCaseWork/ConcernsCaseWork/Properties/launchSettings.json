@@ -25,11 +25,13 @@
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
       }
     },
-    "Docker": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "environmentVariables": {}
-    }
+	"Docker": {
+		"commandName": "Docker",
+		"launchBrowser": true,
+		"launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+		"DockerfileRunArguments": "--link redis:redis",
+		"publishAllPorts": true,
+		"useSSL": true
+	}
   }
 }
