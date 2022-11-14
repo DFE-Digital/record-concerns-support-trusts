@@ -51,6 +51,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			await sut.OnGetAsync(expectedUrn);
 
+			sut.ViewData[ViewDataConstants.Title].Should().Be("Add decision");
+
 			var expectedDecision = new CreateDecisionRequest()
 			{
 				DecisionTypes = new DecisionType[] { }
@@ -87,6 +89,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				.BuildSut();
 
 			await sut.OnGetAsync(expectedUrn, expectedDecisionId);
+
+			sut.ViewData[ViewDataConstants.Title].Should().Be("Edit decision");
 
 			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
 

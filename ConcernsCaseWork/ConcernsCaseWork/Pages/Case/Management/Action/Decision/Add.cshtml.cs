@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
 #nullable disable
 
@@ -50,22 +51,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			try
 			{
+				ViewData[ViewDataConstants.Title] = decisionId.HasValue ? "Edit decision" : "Add decision";
+
 				CaseUrn = (CaseUrn)urn;
 				DecisionId = decisionId;
 
-				Decision = new()
-				{
-					DecisionTypes = new DecisionType[] { }
-				};
+				Decision = await CreateDecisionModel(urn, decisionId);
 
 				DecisionTypeCheckBoxes = BuildDecisionTypeCheckBoxes();
-
-				Decision.ConcernsCaseUrn = (int)urn;
-
-				if (DecisionId.HasValue)
-				{
-					await PopulateDecisionModel(urn, (int)decisionId);
-				}
 
 				return Page();
 			}
@@ -73,7 +66,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			{
 				_logger.LogErrorMsg(ex);
 
-				TempData[ErrorConstants.ErrorMessageKey] = ErrorOnGetPage;
+				SetErrorMessage(ErrorOnGetPage);
+
 				return Page();
 			}
 		}
@@ -121,6 +115,25 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			return Page();
 		}
 
+		private async Task<CreateDecisionRequest> CreateDecisionModel(long caseUrn, long? decisionId)
+		{
+			var result = new CreateDecisionRequest()
+			{
+				DecisionTypes = new DecisionType[] { }
+			};
+
+			result.ConcernsCaseUrn = (int)caseUrn;
+
+			if (decisionId.HasValue)
+			{
+				var apiDecision = await _decisionService.GetDecision(caseUrn, (int)decisionId);
+
+				result = DecisionMapping.ToEditDecisionModel(apiDecision);
+			}
+
+			return result;
+		}
+
 		private void PopulateCreateDecisionDtoFromRequest()
 		{
 			var dtr_day = Request.Form["dtr-day-request-received"];
@@ -136,12 +149,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			Decision.ReceivedRequestDate = parsedDate;
 		}
-
-		private async Task PopulateDecisionModel(long caseUrn, int decisionId)
-		{
-			var apiDecision = await _decisionService.GetDecision(caseUrn, decisionId);
-
-			Decision = DecisionMapping.ToEditDecisionModel(apiDecision);		}
 
 		private List<DecisionTypeCheckBox> BuildDecisionTypeCheckBoxes()
 		{
