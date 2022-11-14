@@ -1,3 +1,4 @@
+import { last } from "cypress/types/lodash/index.js";
 import AddToCasePage from "../../../pages/caseActions/addToCasePage.js";
 import { ViewDecisionPage } from "../../../pages/caseActions/viewDecisionPage";
 
@@ -52,8 +53,18 @@ describe("User can add case actions to an existing case", () => {
 
 	const decisionPage: ViewDecisionPage = new ViewDecisionPage();
 
-	it(" Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
+	it.only(" Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
 		cy.addConcernsDecisionsAddToCase();
+		decisionPage
+			.withCrmEnquiry("444")
+			.withRetrospectiveRequest("No")
+			.withSubmissionRequired("No")
+			.withSubmissionLink("www.gov.uk")
+			.withDateESFAReceivedRequest("20-04-2022")
+			.withTotalAmountRequested("£140,000")
+			.withTypeOfDecision("Repayable support")
+			.withSupportingNotes("These are some supporting notes!")
+			.withActionEdit("Edit");
 
 		AddToCasePage.getDayDateField().click().type("12");
 		AddToCasePage.getMonthDateField().click().type("05");
@@ -63,15 +74,15 @@ describe("User can add case actions to an existing case", () => {
 		cy.get('#open-case-actions td').should(
 			"contain.text",
 			"Decision: Notice to Improve (NTI)"
-		).eq(0).click();
+		).eq(-3).click();
 		decisionPage
-			.hasCrmEnquiry("123456")
+			.hasCrmEnquiry("444")
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("No")
 			.hasSubmissionLink("www.gov.uk")
 			.hasDateESFAReceivedRequest("20-04-2022")
-			.hasTotalAmountRequested("£150,000")
-			.hasTypeOfDecisiond("Repayable finacial support")
+			.hasTotalAmountRequested("£140,000")
+			.hasTypeOfDecision("Repayable support")
 			.hasSupportingNotes("These are some supporting notes!")
 			.hasActionEdit("Edit");
 	});
