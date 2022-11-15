@@ -4,6 +4,7 @@ using ConcernsCaseWork.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConcernsCaseWork.Data.Migrations
 {
     [DbContext(typeof(ConcernsDbContext))]
-    partial class ConcernsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221108141556_Add Case History to Case")]
+    partial class AddCaseHistorytoCase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -334,7 +336,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 2,
                             CreatedAt = new DateTime(2022, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies",
+                            Description = "CIU casework, whistleblowing, self reported, RSCs or other government bodies",
                             Name = "External",
                             UpdatedAt = new DateTime(2022, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });

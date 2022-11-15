@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.CoreTypes;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.Status;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace ConcernsCaseWork.Services.Cases
 		Task PatchCurrentStatus(PatchCaseModel patchCaseModel);
 		Task PatchDeEscalationPoint(PatchCaseModel patchCaseModel);
 		Task PatchNextSteps(PatchCaseModel patchCaseModel);
+		Task PatchCaseHistory(long caseUrn, string userName, string caseHistory);
 		Task<long> PostCase(CreateCaseModel createCaseModel);
 	}
 }

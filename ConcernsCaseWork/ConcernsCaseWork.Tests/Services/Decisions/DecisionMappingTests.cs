@@ -1,18 +1,12 @@
 ﻿using AutoFixture;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
-using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Services.Decisions;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Net.Security;
-using System.Linq;
-using ConcernsCaseWork.Helpers;
-using ConcernsCaseWork.Models.CaseActions;
 
 namespace ConcernsCaseWork.Tests.Services.Decisions
 {
@@ -42,7 +36,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 		[TestCase(false, "No")]
 		[TestCase(true, "Yes")]
 		public void ToDecisionModel_ReturnsCorrectModel(
-			bool? booleanFlag, 
+			bool? booleanFlag,
 			string booleanResolvedValue)
 		{
 			var apiDecision = _fixture.Create<GetDecisionResponse>();
@@ -53,9 +47,9 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			apiDecision.ReceivedRequestDate = new DateTimeOffset(2023, 1, 4, 0, 0, 0, new TimeSpan());
 			apiDecision.TotalAmountRequested = 150000;
 			apiDecision.DecisionTypes = new DecisionType[]
-			{ 
-				DecisionType.NoticeToImprove, 
-				DecisionType.RepayableFinancialSupport 
+			{
+				DecisionType.NoticeToImprove,
+				DecisionType.RepayableFinancialSupport
 			};
 
 			var result = DecisionMapping.ToDecisionModel(apiDecision);
@@ -70,7 +64,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.TotalAmountRequested.Should().Be("£150,000.00");
 			result.DecisionTypes.Should().BeEquivalentTo(new List<string>() { "Notice to Improve (NTI)", "Repayable financial support" });
 			result.SupportingNotes.Should().Be(apiDecision.SupportingNotes);
-			result.EditLink.Should().Be("/case/2/management/action/decision/10/edit");
+			result.EditLink.Should().Be("/case/2/management/action/decision/addOrUpdate/10");
 			result.BackLink.Should().Be("/case/2/management");
 		}
 
@@ -83,6 +77,59 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			var result = DecisionMapping.ToDecisionModel(apiDecision);
 
 			result.EsfaReceivedRequestDate.Should().BeNull();
+		}
+
+		[Test]
+		public void ToEditDecision_ReturnsCorrectModel()
+		{
+			var apiDecision = _fixture.Create<GetDecisionResponse>();
+
+			var result = DecisionMapping.ToEditDecisionModel(apiDecision);
+
+			result.ConcernsCaseUrn.Should().Be(apiDecision.ConcernsCaseUrn);
+			result.CrmCaseNumber.Should().Be(apiDecision.CrmCaseNumber);
+			result.DecisionTypes.Should().BeEquivalentTo(apiDecision.DecisionTypes);
+			result.ReceivedRequestDate.Should().Be(apiDecision.ReceivedRequestDate);
+			result.RetrospectiveApproval.Should().Be(apiDecision.RetrospectiveApproval);
+			result.SubmissionDocumentLink.Should().Be(apiDecision.SubmissionDocumentLink);
+			result.SupportingNotes.Should().Be(apiDecision.SupportingNotes);
+			result.SubmissionRequired.Should().Be(apiDecision.SubmissionRequired);
+			result.TotalAmountRequested.Should().Be(apiDecision.TotalAmountRequested);
+		}
+
+		[Test]
+		public void ToEditDecision_When_NoPropertiesFilled_Returns_CorrectModel()
+		{
+			var apiDecision = new GetDecisionResponse();
+			apiDecision.DecisionTypes = new DecisionType[] { };
+
+			var result = DecisionMapping.ToEditDecisionModel(apiDecision);
+
+			result.ReceivedRequestDate.Should().Be(null);
+		}
+
+		[Test]
+		public void ToUpdateDecision_Returns_CorrectModel()
+		{
+			var createDecisionModel = _fixture.Create<CreateDecisionRequest>();
+			createDecisionModel.SubmissionRequired = true;
+
+			var result = DecisionMapping.ToUpdateDecision(createDecisionModel);
+
+			result.Should().BeEquivalentTo(createDecisionModel, options =>
+				options.Excluding(o => o.ConcernsCaseUrn)
+			);
+		}
+
+		[TestCase(null)]
+		[TestCase(false)]
+		public void ToUpdateDecision_When_SubmissionNotRequired_Returns_NoSubmissionLink(bool? submissionRequired) {
+			var createDecisionModel = _fixture.Create<CreateDecisionRequest>();
+			createDecisionModel.SubmissionRequired = submissionRequired;
+
+			var result = DecisionMapping.ToUpdateDecision(createDecisionModel);
+
+			result.SubmissionDocumentLink.Should().BeNull();
 		}
 	}
 }

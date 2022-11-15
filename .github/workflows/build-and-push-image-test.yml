@@ -14,7 +14,7 @@ jobs:
       version: ${{steps.release-version.outputs.version}}
     steps:
       - id: release-version
-        run: echo "::set-output name=version::release-1"
+        run: echo "::set-output name=version::release-2"
 
   build-and-push-image-test:
     name: Build and push image test
@@ -64,3 +64,21 @@ jobs:
           build-args: ASPNET_IMAGE_TAG=6.0.9-bullseye-slim-amd64
           push: true
           tags: ${{ steps.prepare-tags.outputs.tags }}
+      
+      - name: Azure login with ACA credentials
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.TEST_AZURE_ACA_CREDENTIALS }}
+
+      - name: Update Azure Container Apps Revision
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.40.0
+          inlineScript: |
+            az config set extension.use_dynamic_install=yes_without_prompt
+            az containerapp update \
+              --name ${{ secrets.TEST_ACA_CONTAINERAPP_NAME }} \
+              --resource-group ${{ secrets.TEST_ACA_RESOURCE_GROUP }} \
+              --image ${{ secrets.TEST_ACR_URL }}/amsd-app:${{ steps.prepare-tags.outputs.deploy-version }} \
+              --output none
+

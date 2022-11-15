@@ -129,7 +129,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
                 retrospectiveApproval: request.RetrospectiveApproval,
                 submissionRequired: request.SubmissionRequired,
                 submissionDocumentLink: request.SubmissionDocumentLink,
-                receivedRequestDate: request.ReceivedRequestDate,
+                receivedRequestDate: (DateTimeOffset)request.ReceivedRequestDate,
                 decisionTypes: request.DecisionTypes.Select(x => new DecisionType((Data.Enums.Concerns.DecisionType)x)).ToArray(),
                 totalAmountRequested: request.TotalAmountRequested,
                 supportingNotes: request.SupportingNotes,
