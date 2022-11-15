@@ -81,3 +81,4 @@ jobs:
               --resource-group ${{ secrets.TEST_ACA_RESOURCE_GROUP }} \
               --image ${{ secrets.TEST_ACR_URL }}/amsd-app:${{ steps.prepare-tags.outputs.deploy-version }} \
               --output none
+
