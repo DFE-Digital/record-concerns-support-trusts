@@ -1,14 +1,11 @@
 import { last } from "cypress/types/lodash/index.js";
 import AddToCasePage from "../../../pages/caseActions/addToCasePage.js";
-import { ViewDecisionPage } from "../../../pages/caseActions/DecisionPage";
+import { DecisionPage } from "../../../pages/caseActions/decisionPage"
+
 
 describe("User can add case actions to an existing case", () => {
 	before(() => {
 		cy.login();
-	});
-
-	afterEach(() => {
-		cy.storeSessionData();
 	});
 
 	let stText = "null";
@@ -33,7 +30,6 @@ describe("User can add case actions to an existing case", () => {
 
 	it(" Concern Decision - Checking if View live initial record is visible", function () {
 		cy.addConcernsDecisionsAddToCase();
-
 		AddToCasePage.getDayDateField().click().type("12");
 		AddToCasePage.getMonthDateField().click().type("05");
 		AddToCasePage.getYearDateField().click().type("2022");
@@ -45,11 +41,12 @@ describe("User can add case actions to an existing case", () => {
 		);
 	});
 
-	const decisionPage: ViewDecisionPage = new ViewDecisionPage();
+	const decisionPage: DecisionPage = new DecisionPage();
 
 	it(" Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
 		
 		cy.addConcernsDecisionsAddToCase();
+		
 		decisionPage
 			.withCrmEnquiry("444")
 			.withRetrospectiveRequest(false)

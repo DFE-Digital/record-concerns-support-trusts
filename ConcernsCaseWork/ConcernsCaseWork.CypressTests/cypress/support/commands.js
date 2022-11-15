@@ -58,20 +58,6 @@ Cypress.Commands.add("login", () => {
 
     cy.visit("/");
 })
-Cypress.Commands.add(
-    'shouldHaveTrimmedText',
-    {
-        prevSubject: true,
-    },
-    (subject, equalTo) => {
-        if (isNaN(equalTo)) {
-            expect(subject.text()).to.eq(equalTo);
-        } else {
-            expect(parseInt(subject.text())).to.eq(equalTo);
-        }
-        return subject;
-    },
-);
 //example: /case/5880/management"
 Cypress.Commands.add("visitPage", (slug) => {
     cy.visit(Cypress.env('url') + slug, { timeout: 30000 });

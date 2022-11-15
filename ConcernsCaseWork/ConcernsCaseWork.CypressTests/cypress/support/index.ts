@@ -20,7 +20,6 @@ import './utils'
 declare global {
     namespace Cypress {
         interface Chainable {
-            shouldHaveTrimmedText(id: string):  Chainable<Element>;
             getByTestId(id: string): Chainable<Element>;
             getById(id: string): Chainable<Element>;
             login(): Chainable<Element>;

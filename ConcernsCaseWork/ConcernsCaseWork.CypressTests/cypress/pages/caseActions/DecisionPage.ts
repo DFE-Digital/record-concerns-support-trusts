@@ -1,4 +1,4 @@
-export class ViewDecisionPage {
+export class DecisionPage {
 	public withCrmEnquiry(crmNumber: string): this {
 		cy.task("log", `With Crm enquiry ${crmNumber}`);
 
@@ -32,7 +32,7 @@ export class ViewDecisionPage {
 	}
 
 	public withSubmissionLink(submissionLink: string): this {
-		cy.task("log", `Has Submission link ${submissionLink}`);
+		cy.task("log", `With Submission link ${submissionLink}`);
 
 		cy.getById("submission-document-link").clear().type(submissionLink);
 
@@ -68,7 +68,7 @@ export class ViewDecisionPage {
 		return this;
 	}
     public withTypeOfDecisionID(typeOfDecisionID: string): this {
-		cy.task("log", `With Notice To Improve ${typeOfDecisionID}`);
+		cy.task("log", `With type of decision to pick ${typeOfDecisionID}`);
 
 		cy.getById(typeOfDecisionID).click();
 
