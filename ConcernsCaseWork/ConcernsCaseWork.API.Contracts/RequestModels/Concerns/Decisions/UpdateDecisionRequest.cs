@@ -18,7 +18,7 @@ namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 		public string SupportingNotes { get; set; }
 
 		// TODO: This should potentially be optional. Waiting for Ben to clarify.
-		public DateTimeOffset ReceivedRequestDate { get; set; }
+		public DateTimeOffset? ReceivedRequestDate { get; set; }
 
 		[StringLength(_maxUrlLength, ErrorMessage = "Submission document link must be 2048 or less", MinimumLength = 0)]
 		public string SubmissionDocumentLink { get; set; }

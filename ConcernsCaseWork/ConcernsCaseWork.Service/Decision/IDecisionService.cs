@@ -10,5 +10,7 @@ namespace ConcernsCaseWork.Service.Decision
 		Task<List<DecisionSummaryResponse>> GetDecisionsByCaseUrn(long urn);
 
 		Task<GetDecisionResponse> GetDecision(long urn, int decisionId);
+
+		Task<UpdateDecisionResponse> PutDecision(long caseUrn, long decisionId, UpdateDecisionRequest updateDecisionRequest);
 	}
 }

@@ -1,400 +1,365 @@
-﻿@page "/case/{urn:long}/management/action/decision/add"
-@model ConcernsCaseWork.Pages.Case.Management.Action.Decision.AddPageModel
-@using ConcernsCaseWork.API.Contracts.Enums
+﻿@page "/case/{urn:long}/management/action/decision/addOrUpdate/{decisionId:long?}"
+@model ConcernsCaseWork.Pages.Case.Management.Action.Decision.AddPageModel;
+@using ConcernsCaseWork.API.Contracts.Enums;
 @using Microsoft.AspNetCore.Mvc.TagHelpers;
 @using NetEscapades.AspNetCore.SecurityHeaders;
 @using ConcernsCaseWork.Helpers;
 
 @{
-    ViewData["Title"] = "Add Decision";
-    var nonce = HttpContext.GetNonce();
+	var nonce = HttpContext.GetNonce();
 
-    var decisionsValidationErrors = TempData["Decision.Message"] as IEnumerable<string>;
+	var decisionsValidationErrors = TempData["Decision.Message"] as IEnumerable<string>;
 }
 
 @section BeforeMain {
-    <div class="govuk-width-container">
-        <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
-            Back to case
-        </a>
-    </div>
+	<div class="govuk-width-container">
+		<a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
+			Back to case
+		</a>
+	</div>
 }
 
-    <div class="govuk-width-container">
-        <partial name="_BannerError" />
+	<div class="govuk-width-container">
+		<partial name="_BannerError" />
 
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
+		<div class="govuk-grid-row">
+			<div class="govuk-grid-column-two-thirds">
 
-            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-            {
-                <partial name="_Error" />
-            }
-            else
-            {
-                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+			{
+				<partial name="_Error" />
+			}
+			else
+			{
+				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-                @if (TempData["Decision.Message"] != null)
-                {
-                    <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
-                        <h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
-                        <div class="govuk-error-summary__body">
-                            <ul id="decision-error-list" class="govuk-list govuk-error-summary__list">
-                                @foreach (var msg in decisionsValidationErrors)
-                                {
-                                    <li class="govuk-error-message">@msg</li>
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                }
+				@if (TempData["Decision.Message"] != null)
+				{
+					<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
+						<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
+						<div class="govuk-error-summary__body">
+							<ul id="decision-error-list" class="govuk-list govuk-error-summary__list">
+								@foreach (var msg in decisionsValidationErrors)
+								{
+									<li class="govuk-error-message">@msg</li>
+								}
+							</ul>
+						</div>
+					</div>
+				}
 
-                <h1 class="govuk-heading-l">
-                    <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
-                    Decision
-                </h1>
+				<h1 class="govuk-heading-l">
+					<span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
+					Decision
+				</h1>
 
-                <form role="form" method="post" id="add-decision-form" novalidate>
+				<form role="form" method="post" id="add-decision-form" novalidate>
 
-                    <input type="hidden" name="CreateDecisionDto.ConcernsCaseUrn" value="@RouteData.Values["urn"]" />
+					<input type="hidden" name="Decision.ConcernsCaseUrn" value="@RouteData.Values["urn"]" />
 
-                    @* CRM Enquiry Number *@
-                    <div class="govuk-form-group govuk-!-margin-top-9">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">Is this decision linked to a CRM case?</h2>
-                            </legend>
+					@* CRM Enquiry Number *@
+					<div class="govuk-form-group govuk-!-margin-top-9">
+						<fieldset class="govuk-fieldset">
+							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+								<h2 class="govuk-heading-m">Is this decision linked to a CRM case?</h2>
+							</legend>
 
-                            <div id="crm-enquiry-hint" class="govuk-hint">
-                                If yes, paste the CRM enquiry number below. If no, leave the field blank
-                            </div>
+							<div id="crm-enquiry-hint" class="govuk-hint">
+								If yes, paste the CRM enquiry number below. If no, leave the field blank
+							</div>
 
-                            <input class="govuk-input govuk-input--width-30" id="crm-enquiry-number" name="CreateDecisionDto.CrmCaseNumber" type="text">
-                        </fieldset>
-                    </div>
+							<input class="govuk-input govuk-input--width-30" id="crm-enquiry-number" name="Decision.CrmCaseNumber" type="text" value="@Model.Decision.CrmCaseNumber">
+						</fieldset>
+					</div>
 
-                    @* Retrospective Approval *@
-                    <div class="govuk-form-group govuk-!-margin-top-9">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">Is this a request that requires retrospective approval</h2>
-                            </legend>
-                            <div id="retrospective-approval-hint" class="govuk-hint">
-                                Retrospective approval is needed when a trust or academy makes a change or action before asking SFSO or RG.
-                            </div>
-                            <div class="govuk-radios" data-module="govuk-radios">
-                                @{
+					@* Retrospective Approval *@
+					<div class="govuk-form-group govuk-!-margin-top-9">
+						<fieldset class="govuk-fieldset">
+							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+								<h2 class="govuk-heading-m">Is this a request that requires retrospective approval</h2>
+							</legend>
+							<div id="retrospective-approval-hint" class="govuk-hint">
+								Retrospective approval is needed when a trust or academy makes a change or action before asking SFSO or RG.
+							</div>
+							<div class="govuk-radios" data-module="govuk-radios">
+								@{
 
-                                    <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="retrospective-approval" name="CreateDecisionDto.RetrospectiveApproval" type="radio" value="true">
-                                        <label class="govuk-label govuk-radios__label" for="retrospective-approval">
-                                            <span>
-                                                Yes
-                                            </span>
-                                        </label>
-                                    </div>
+									<div class="govuk-radios__item">
+										@{
+											if (Model.Decision.RetrospectiveApproval.HasValue)
+											{
+												<input class="govuk-radios__input" id="retrospective-approval" name="Decision.RetrospectiveApproval" type="radio" value="true" checked="@(Model.Decision.RetrospectiveApproval.Value)">
+											}
+											else
+											{
+												<input class="govuk-radios__input" id="retrospective-approval" name="Decision.RetrospectiveApproval" type="radio" value="true">
+											}
+										}
 
-                                    <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="retrospective-approval-1" name="CreateDecisionDto.RetrospectiveApproval" type="radio" value="false">
-                                        <label class="govuk-label govuk-radios__label" for="retrospective-approval-1">
-                                            <span>
-                                                No
-                                            </span>
-                                        </label>
-                                    </div>
-                                }
+										<label class="govuk-label govuk-radios__label" for="retrospective-approval">
+											<span>
+												Yes
+											</span>
+										</label>
+									</div>
 
-                            </div>
-                        </fieldset>
-                    </div>
+									<div class="govuk-radios__item">
 
-                    @* Submission required *@
-                    <div class="govuk-form-group">
-                        <fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">Is a submission required?</h2>
-                            </legend>
-                            <div id="submission-required-hint" class="govuk-hint">
-                                Find more information on submissions and templates at <a href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Submissions%20templates%20and%20guidance.aspx" target="_blank">SFSO Knowledge: Submissions</a>
-                            </div>
-                            <div class="govuk-radios" data-module="govuk-radios">
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="submission-required" name="CreateDecisionDto.SubmissionRequired" type="radio" data-aria-controls="conditional-submission-required" value="true">
-                                    <label class="govuk-label govuk-radios__label" for="submission-required">
-                                        Yes
-                                    </label>
-                                </div>
-                                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-submission-required">
-                                    <div class="govuk-form-group">
-                                        <label class="govuk-label" for="submission-required-link">
-                                            If yes, paste in a link to the submission document on Sharepoint.
-                                        </label>
-                                        <input class="govuk-input govuk-input--width-30" id="submission-document-link" name="CreateDecisionDto.SubmissionDocumentLink" type="text">
-                                    </div>
+										@{
+											if (Model.Decision.RetrospectiveApproval.HasValue)
+											{
+												<input class="govuk-radios__input" id="retrospective-approval-1" name="Decision.RetrospectiveApproval" type="radio" value="false" checked="@(!Model.Decision.RetrospectiveApproval.Value)">
+											}
+											else
+											{
+												<input class="govuk-radios__input" id="retrospective-approval-1" name="Decision.RetrospectiveApproval" type="radio" value="false">
+											}
+										}
 
-                                </div>
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="submission-required-1" name="CreateDecisionDto.SubmissionRequired" type="radio" value="false">
-                                    <label class="govuk-label govuk-radios__label" for="submission-required-1">
-                                        <span>
-                                            No
-                                        </span>
-                                    </label>
-                                </div>
+										<label class="govuk-label govuk-radios__label" for="retrospective-approval-1">
+											<span>
+												No
+											</span>
+										</label>
+									</div>
+								}
 
+							</div>
+						</fieldset>
+					</div>
 
-                            </div>
+					@* Submission required *@
+					<div class="govuk-form-group">
+						<fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
+							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+								<h2 class="govuk-heading-m">Is a submission required?</h2>
+							</legend>
+							<div id="submission-required-hint" class="govuk-hint">
+								Find more information on submissions and templates at <a href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Submissions%20templates%20and%20guidance.aspx" target="_blank">SFSO Knowledge: Submissions</a>
+							</div>
+							<div class="govuk-radios" data-module="govuk-radios">
+								<div class="govuk-radios__item">
 
-                        </fieldset>
-                    </div>
+									@{
+										if (Model.Decision.SubmissionRequired.HasValue)
+										{
+											<input class="govuk-radios__input" id="submission-required" name="Decision.SubmissionRequired" type="radio" data-aria-controls="conditional-submission-required" value="true" checked="@(Model.Decision.SubmissionRequired.Value)">
+										}
+										else
+										{
+											<input class="govuk-radios__input" id="submission-required" name="Decision.SubmissionRequired" type="radio" data-aria-controls="conditional-submission-required" value="true">
+										}
+									}
 
-                    @* Date request received *@
-                    <div class="govuk-form-group govuk-!-margin-top-9">
-                        <fieldset class="govuk-fieldset">
-                            <h2 class="govuk-heading-m">When did ESFA (Education and Skills Funding Agency) receive the request? </h2>
-                            <div class="govuk-date-input" id="dtr-request-received">
-                                <div class="govuk-date-input__item">
-                                    <div class="govuk-form-group">
-                                        <label class="govuk-label govuk-date-input__label" for="dtr-day-request-received">
-                                            Day
-                                        </label>
-                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-request-received"
-                                           name="dtr-day-request-received" type="text" maxlength="2" inputmode="numeric" />
-                                    </div>
-                                </div>
-                                <div class="govuk-date-input__item">
-                                    <div class="govuk-form-group">
-                                        <label class="govuk-label govuk-date-input__label" for="dtr-month-request-received">
-                                            Month
-                                        </label>
-                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-request-received"
-                                           name="dtr-month-request-received" type="text" maxlength="2" inputmode="numeric" />
-                                    </div>
-                                </div>
-                                <div class="govuk-date-input__item">
-                                    <div class="govuk-form-group">
-                                        <label class="govuk-label govuk-date-input__label" for="dtr-year-request-received">
-                                            Year
-                                        </label>
-                                        <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-request-received"
-                                           name="dtr-year-request-received" type="text" maxlength="4" inputmode="numeric" />
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
+									<label class="govuk-label govuk-radios__label" for="submission-required">
+										Yes
+									</label>
+								</div>
+								<div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-submission-required">
+									<div class="govuk-form-group">
+										<label class="govuk-label" for="submission-required-link">
+											If yes, paste in a link to the submission document on Sharepoint.
+										</label>
+										<input class="govuk-input govuk-input--width-30" id="submission-document-link" name="Decision.SubmissionDocumentLink" type="text" value="@Model.Decision.SubmissionDocumentLink">
+									</div>
 
-                    @* Types *@
-                    <div class="govuk-form-group govuk-!-margin-top-6">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">What type of decision is it?</h2>
-                            </legend>
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.NoticeToImprove" name="DecisionTypeNoticeToImprove" type="checkbox" value="true">
-                                <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.NoticeToImprove">
-                                    @EnumHelper.GetEnumDescription(DecisionType.NoticeToImprove)
+								</div>
+								<div class="govuk-radios__item">
 
-                                    <div id="@DecisionType.NoticeToImprove-hint" class="govuk-hint">
-                                        An NTI is an intervention tool. It's used to set out conditions that a trust must meet to act on area(s) of concern.
-                                    </div>
-                                </label>
+									@{
+										if (Model.Decision.SubmissionRequired.HasValue)
+										{
+											<input class="govuk-radios__input" id="submission-required-1" name="Decision.SubmissionRequired" type="radio" value="false" checked="@(!Model.Decision.SubmissionRequired.Value)">
+										}
+										else
+										{
+											<input class="govuk-radios__input" id="submission-required-1" name="Decision.SubmissionRequired" type="radio" value="false">
+										}
+									}
 
-                            </div>
-
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.Section128" name="DecisionTypeSection128" type="checkbox" value="true">
-                                <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.Section128">
-                                    @EnumHelper.GetEnumDescription(DecisionType.Section128)
-                                    <div id="@DecisionType.Section128-hint" class="govuk-hint">
-                                        A section 128 direction gives the Secretary of State the power to block an individual from taking part in the management of an independent school (including academies and free schools).
-                                    </div>
-                                </label>
-                            </div>
-
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.QualifiedFloatingCharge" name="DecisionTypeQualifiedFloatingCharge" type="checkbox" value="true">
-                                <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.QualifiedFloatingCharge">
-                                    @EnumHelper.GetEnumDescription(DecisionType.QualifiedFloatingCharge)
-                                    <div id="@DecisionType.QualifiedFloatingCharge-hint" class="govuk-hint">
-                                        A QFC helps us secure the repayment of funding we advance to an academy trust. This includes appointing an administrator, making sure the funding can be recovered and potentially disqualifying an unfit director.
-                                    </div>
-                                </label>
-                            </div>
-
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.NonRepayableFinancialSupport" name="DecisionTypeNonRepayableFinancialSupport" type="checkbox" value="true">
-                                <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.NonRepayableFinancialSupport">
-                                    @EnumHelper.GetEnumDescription(DecisionType.NonRepayableFinancialSupport)
-                                    <div id="@DecisionType.NonRepayableFinancialSupport-hint" class="govuk-hint">
-                                        Non-repayable grants are paid in exceptional circumstances to support a trust or academy financially.
-                                    </div>
-                                </label>
-                            </div>
-
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.RepayableFinancialSupport" name="DecisionTypeRepayableFinancialSupport" type="checkbox" value="true">
-                                <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.RepayableFinancialSupport">
-                                    @EnumHelper.GetEnumDescription(DecisionType.RepayableFinancialSupport)
-                                    <div id="@DecisionType.RepayableFinancialSupport-hint" class="govuk-hint">
-                                        Repayable funding are payments that trusts must repay in line with an agreed repayment plan, ideally within 3 years.
-                                    </div>
-                                </label>
-                            </div>
-
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.ShortTermCashAdvance" name="DecisionTypeShortTermCashAdvance" type="checkbox" value="true">
-                                <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.ShortTermCashAdvance">
-                                    @EnumHelper.GetEnumDescription(DecisionType.ShortTermCashAdvance)
-                                    <div id="@DecisionType.ShortTermCashAdvance-hint" class="govuk-hint">
-                                        A short-term cash advance or a general annual grant (GAG) advance is given to help an academy manage its cash flow. This should be repaid within the same academy financial year.
-                                    </div>
-                                </label>
-                            </div>
-
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.WriteOffRecoverableFunding" name="DecisionTypeWriteOffRecoverableFunding" type="checkbox" value="true">
-                                <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.WriteOffRecoverableFunding">
-                                    @EnumHelper.GetEnumDescription(DecisionType.WriteOffRecoverableFunding)
-                                    <div id="@DecisionType.WriteOffRecoverableFunding-hint" class="govuk-hint">
-                                        A write-off can be considered if a trust cannot repay financial support previously received from us.
-                                    </div>
-                                </label>
-                            </div>
-
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.OtherFinancialSupport" name="DecisionTypeOtherFinancialSupport" type="checkbox" value="true" />
-                                <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.OtherFinancialSupport">
-                                    @EnumHelper.GetEnumDescription(DecisionType.OtherFinancialSupport)
-                                    <div id="@DecisionType.OtherFinancialSupport-hint" class="govuk-hint">
-                                        All other types of financial support for exceptional circumstances. This includes exceptional annual grant (EAG), popular growth funding, restructuring support and start-up support.
-                                    </div>
-                                </label>
-                            </div>
-
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.EstimatesFundingOrPupilNumberAdjustment" name="DecisionTypeEstimatesFundingOrPupilNumberAdjustment" type="checkbox" value="true" />
-                                <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.EstimatesFundingOrPupilNumberAdjustment">
-                                    @EnumHelper.GetEnumDescription(DecisionType.EstimatesFundingOrPupilNumberAdjustment)
-                                    <div id="@DecisionType.EstimatesFundingOrPupilNumberAdjustment-hint" class="govuk-hint">
-                                        Covers: a) agreements to move from lagged funding (based on pupil census data) to funding based on an estimate of the coming year’s pupil numbers, used when a school is growing; b) an adjustment to a trust's General Annual Grant (GAG) to funding based on estimated pupil numbers in line with actual pupil numbers, once these are confirmed (PNA). Also called an in-year adjustment.
-                                    </div>
-                                </label>
-                            </div>
-
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.EsfaApproval" name="DecisionTypeEsfaApproval" type="checkbox" value="true">
-                                <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.EsfaApproval">
-                                    @EnumHelper.GetEnumDescription(DecisionType.EsfaApproval)
-                                    <div id="@DecisionType.EsfaApproval-hint" class="govuk-hint">
-                                        Some versions of the funding agreement require trusts to seek approval from ESFA to spend or write off funds, such as severance pay or agreeing off-payroll arrangements for staff. Trusts going ahead with these decisions or transactions would be in breach of their funding agreement. Also called transactions approval. This typically affects trusts under an NTI (Notice to Improve).
-                                    </div>
-                                </label>
-                            </div>
-
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@DecisionType.FreedomOfInformationExemptions" name="DecisionTypeFreedomOfInformationExemptions" type="checkbox" value="true">
-                                <label class="govuk-label govuk-checkboxes__label" for="@DecisionType.FreedomOfInformationExemptions">
-                                    @EnumHelper.GetEnumDescription(DecisionType.FreedomOfInformationExemptions)
-                                    <div id="@DecisionType.FreedomOfInformationExemptions-hint" class="govuk-hint">
-                                        If information qualifies as an exemption to the Freedom of Information Act, we can decline to release information. Some exemptions require ministerial approval. You must contact the FOI team if you think you need to apply an exemption to your FOI response or if you have any concerns about releasing information as part of a response.
-                                    </div>
-                                </label>
-                            </div>
-                        </fieldset>
-                    </div>
-
-                    @* Total amount requested *@
-                    <div class="govuk-form-group">
-                        <fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-                                <h2 class="govuk-heading-m">What was the total amount requested? </h2>
-                            </legend>
-                            <div id="total-amount-request-hint" class="govuk-hint">
-                                If no amount was requested, enter £0.
-                            </div>
-                            <div class="govuk-input__wrapper">
-                                <div class="govuk-input__prefix" aria-hidden="true">£</div>
-                                <input class="govuk-input govuk-input--width-6" id="total-amount-request" name="CreateDecisionDto.TotalAmountRequested" type="text" value="0.00">
-                            </div>
-                        </fieldset>
-                    </div>
-
-                    @* Notes *@
-                    <div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
-                        <div class="govuk-form-group">
-                            <h2 class="govuk-heading-m">Supporting notes</h2>
-                            <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-decision-notes" name="CreateDecisionDto.SupportingNotes" rows="3" aria-describedby="case-decision-notes-info"></textarea>
-                        </div>
-                        <div id="case-decision-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-                            You can enter up to @Model.NotesMaxLength characters
-                        </div>
-                    </div>
-
-                    <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-decision-button" name="action">
-                            Continue
-                        </button>
-                    </div>
-                </form>
+									<label class="govuk-label govuk-radios__label" for="submission-required-1">
+										<span>
+											No
+										</span>
+									</label>
+								</div>
 
 
-                <script type="application/javascript" nonce="@nonce">
-                    $(function () {
-                        let validator = formValidator($("#add-decision-form")[0]);
+							</div>
 
-                        let currencyFormatter = new Intl.NumberFormat("en-GB", {
-                            style: "currency",
-                            currency: "GBP",
-                        });
+						</fieldset>
+					</div>
 
-                        $totalAmountRequestedObj = $('#total-amount-request');
+					@* Date request received *@
+					<div class="govuk-form-group govuk-!-margin-top-9">
+						<fieldset class="govuk-fieldset">
+							<h2 class="govuk-heading-m">When did ESFA (Education and Skills Funding Agency) receive the request? </h2>
+							<div class="govuk-date-input" id="dtr-request-received">
+								<div class="govuk-date-input__item">
+									<div class="govuk-form-group">
+										<label class="govuk-label govuk-date-input__label" for="dtr-day-request-received">
+											Day
+										</label>
+										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-request-received"
+										   name="dtr-day-request-received" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.Decision.ReceivedRequestDate?.Day:00}")" />
+									</div>
+								</div>
+								<div class="govuk-date-input__item">
+									<div class="govuk-form-group">
+										<label class="govuk-label govuk-date-input__label" for="dtr-month-request-received">
+											Month
+										</label>
+										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-request-received"
+										   name="dtr-month-request-received" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.Decision.ReceivedRequestDate?.Month:00}")" />
+									</div>
+								</div>
+								<div class="govuk-date-input__item">
+									<div class="govuk-form-group">
+										<label class="govuk-label govuk-date-input__label" for="dtr-year-request-received">
+											Year
+										</label>
+										<input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-request-received"
+										   name="dtr-year-request-received" type="text" maxlength="4" inputmode="numeric" value="@($"{Model.Decision.ReceivedRequestDate?.Year}")" />
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					</div>
 
-                        $totalAmountRequestedObj.focusout(function () {
+					@* Types *@
+					<div class="govuk-form-group govuk-!-margin-top-6">
+						<fieldset class="govuk-fieldset">
+							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+								<h2 class="govuk-heading-m">What type of decision is it?</h2>
+							</legend>
 
-                            var onlyNumbersRegex = /[^\d\.]/g;
-                            var input = $totalAmountRequestedObj.val().replace(onlyNumbersRegex, "");
+							@foreach (var decisionTypeCheckbox in Model.DecisionTypeCheckBoxes)
+							{
+								var isChecked = Model.Decision.DecisionTypes.Contains(decisionTypeCheckbox.DecisionType);
 
-                            var formattedCurrency = currencyFormatter.format(input).replace('£', '');
-
-                            $totalAmountRequestedObj.val(formattedCurrency)
-                        });
-
-
-
-                        validator.addValidator('dtr-day-request-received', [{
-                          method: function(field, params) {
-                              return noDateOrCompleteDate(params.year.value, params.month.value, params.day.value);
-                          },
-                          message: 'Please enter a complete date (DD MM YYYY)',
-                          params: {
-                            day: document.getElementById('dtr-day-request-received'),
-                            month: document.getElementById('dtr-month-request-received'),
-                            year: document.getElementById('dtr-year-request-received')
-                          }
-                        }]);
-
-                        function noDateOrCompleteDate(year, month, day) {
-                            var missingValuesCount = 0;
-                            if(year.length == 0) {
-                                missingValuesCount++;
-                            }
-                            if(month.length == 0) {
-                                missingValuesCount++;
-                            }
-                            if(day.length == 0) {
-                                missingValuesCount++;
-                            }
-                            return missingValuesCount == 0 || missingValuesCount == 3; @* the date should be either empty or valid *@
-                        }
+								<div class="govuk-checkboxes__item">
+									<input class="govuk-checkboxes__input" id="@decisionTypeCheckbox.DecisionType" name="Decision.DecisionTypes" type="checkbox" value="@decisionTypeCheckbox.DecisionType" checked="@isChecked">
+									<label class="govuk-label govuk-checkboxes__label" for="@decisionTypeCheckbox.DecisionType">
+										@EnumHelper.GetEnumDescription(decisionTypeCheckbox.DecisionType)
 
 
-                        autoResizer();
-                    });
-                </script>
-            }
+										<div id="@decisionTypeCheckbox.DecisionType-hint" class="govuk-hint">
+											@decisionTypeCheckbox.Hint
+										</div>
+									</label>
+								</div>
+							}
+						</fieldset>
+					</div>
 
-        </div>
-    </div>
+					@* Total amount requested *@
+					<div class="govuk-form-group">
+						<fieldset class="govuk-fieldset" aria-describedby="submission-required-hint">
+							<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+								<h2 class="govuk-heading-m">What was the total amount requested? </h2>
+							</legend>
+							<div id="total-amount-request-hint" class="govuk-hint">
+								If no amount was requested, enter £0.
+							</div>
+							<div class="govuk-input__wrapper">
+								<div class="govuk-input__prefix" aria-hidden="true">£</div>
+								<input 
+									class="govuk-input govuk-input--width-6" 
+									id="total-amount-request" 
+									name="Decision.TotalAmountRequested" 
+									type="text" 
+									value="@Model.Decision.TotalAmountRequested">
+							</div>
+						</fieldset>
+					</div>
+
+					@* Notes *@
+					<div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
+						<div class="govuk-form-group">
+							<h2 class="govuk-heading-m">Supporting notes</h2>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-decision-notes" name="Decision.SupportingNotes" rows="3" aria-describedby="case-decision-notes-info">@Model.Decision.SupportingNotes</textarea>
+						</div>
+						<div id="case-decision-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+							You can enter up to @Model.NotesMaxLength characters
+						</div>
+					</div>
+
+					<div class="govuk-button-group">
+						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-decision-button" name="action">
+							Continue
+						</button>
+					</div>
+				</form>
+
+
+				<script type="application/javascript" nonce="@nonce">
+
+					function formatCurrency(element) {
+
+						let currencyFormatter = new Intl.NumberFormat("en-GB", {
+							style: "currency",
+							currency: "GBP"
+						});
+
+						const formattedCurrency = currencyFormatter.format(element.val()).replace("£", "");
+						element.val(formattedCurrency);
+					}
+
+					function parseCurrency(element) {
+						const onlyNumbersRegex = /[^\d\.]/g;
+						const formattedCurrency = element.val().replace(onlyNumbersRegex, "");
+						element.val(formattedCurrency);
+					}
+
+					$(function () {
+						let validator = formValidator($("#add-decision-form")[0]);
+
+						$totalAmountRequestedObj = $('#total-amount-request');
+
+						$(document).ready(function() {
+							formatCurrency($totalAmountRequestedObj);
+						});
+
+						$totalAmountRequestedObj.on('focusin keyup', function() {
+							parseCurrency($totalAmountRequestedObj);
+						});
+
+						$totalAmountRequestedObj.focusout(function () {
+							formatCurrency($totalAmountRequestedObj);
+						});
+
+						validator.addValidator('dtr-day-request-received', [{
+						  method: function(field, params) {
+							  return noDateOrCompleteDate(params.year.value, params.month.value, params.day.value);
+						  },
+						  message: 'Please enter a complete date (DD MM YYYY)',
+						  params: {
+							day: document.getElementById('dtr-day-request-received'),
+							month: document.getElementById('dtr-month-request-received'),
+							year: document.getElementById('dtr-year-request-received')
+						  }
+						}]);
+
+						function noDateOrCompleteDate(year, month, day) {
+							var missingValuesCount = 0;
+							if(year.length == 0) {
+								missingValuesCount++;
+							}
+							if(month.length == 0) {
+								missingValuesCount++;
+							}
+							if(day.length == 0) {
+								missingValuesCount++;
+							}
+							return missingValuesCount == 0 || missingValuesCount == 3; @* the date should be either empty or valid *@
+						}
+
+
+						autoResizer();
+					});
+				</script>
+			}
+
+		</div>
+	</div>
 </div>
-
