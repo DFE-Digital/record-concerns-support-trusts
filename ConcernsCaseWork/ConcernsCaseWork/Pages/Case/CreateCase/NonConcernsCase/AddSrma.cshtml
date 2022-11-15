@@ -102,7 +102,7 @@
 							<h2 class="govuk-heading-m">Notes</h2>
 							<textarea asp-for="Notes" class="govuk-textarea govuk-js-character-count concern-auto-resize" rows="3" aria-describedby="srma-notes-info"></textarea>
 						</div>
-						<div id="srma-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+						<div id="@nameof(Model.Notes)-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
 							You can enter up to @Model.NotesMaxLength characters
 						</div>
 					</div>

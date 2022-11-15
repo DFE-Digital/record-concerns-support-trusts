@@ -33,6 +33,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases
                 .With(c => c.CaseAim = "Here is the aim")
                 .With(c => c.DeEscalationPoint = "Point of de-escalation")
                 .With(c => c.NextSteps = "Here are the next steps")
+                .With(c => c.CaseHistory = "Some case history")
                 .With(c => c.DirectionOfTravel = "Up")
                 .With(c => c.StatusId = 2)
                 .With( c => c.RatingId = 4)
