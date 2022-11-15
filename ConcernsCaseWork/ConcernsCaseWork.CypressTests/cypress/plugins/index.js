@@ -59,4 +59,8 @@ module.exports = (on, config) => {
       return result;
     }
   })
+
+  config.baseUrl = config.env.url;
+
+  return config;
 }
