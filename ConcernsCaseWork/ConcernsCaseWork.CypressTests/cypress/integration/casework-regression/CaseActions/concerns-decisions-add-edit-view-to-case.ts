@@ -1,17 +1,10 @@
-import { last } from "cypress/types/lodash/index.js";
 import AddToCasePage from "../../../pages/caseActions/addToCasePage.js";
-import { DecisionPage } from "../../../pages/caseActions/decisionPage";
+import { DecisionPage } from "../../../pages/caseActions/decisionPage"
 
 describe("User can add case actions to an existing case", () => {
 	beforeEach(() => {
 		cy.login();
 	});
-
-	let stText = "null";
-	let condText = "null";
-	let reasText = "null";
-	let returnedDate = "null";
-	let notesText = "null";
 
 	it("Checking that Concerns decision is visible then adding concerns decision case action to a case,  Validation of wrong date when entered", function () {
 		cy.addConcernsDecisionsAddToCase();
