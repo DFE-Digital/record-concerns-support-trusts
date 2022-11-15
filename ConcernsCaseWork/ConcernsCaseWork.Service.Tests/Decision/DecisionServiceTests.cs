@@ -1,6 +1,8 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Decision;
@@ -57,9 +59,9 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 		{
 			Fixture fixture = CreateMockedFixture();
 
-			var expectedInputDto = fixture.Create<CreateDecisionDto>();
-			var expectedResponseDto = fixture.Create<CreateDecisionResponseDto>();
-			var responseWrapper = new ApiWrapper<CreateDecisionResponseDto>(expectedResponseDto);
+			var expectedInputDto = fixture.Create<CreateDecisionRequest>();
+			var expectedResponseDto = fixture.Create<CreateDecisionResponse>();
+			var responseWrapper = new ApiWrapper<CreateDecisionResponse>(expectedResponseDto);
 
 			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{expectedInputDto.ConcernsCaseUrn}/decisions", responseWrapper);
 			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
@@ -78,8 +80,8 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 			var urn = 3;
 
 			Fixture fixture = CreateMockedFixture();
-			var expectedResponseDto = fixture.Create<List<GetDecisionResponseDto>>();
-			var responseWrapper = new ApiWrapper<List<GetDecisionResponseDto>>(expectedResponseDto);
+			var expectedResponseDto = fixture.Create<List<DecisionSummaryResponse>>();
+			var responseWrapper = new ApiWrapper<List<DecisionSummaryResponse>>(expectedResponseDto);
 
 			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{urn}/decisions", responseWrapper);
 			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
@@ -88,6 +90,25 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 			var result = await sut.GetDecisionsByCaseUrn(urn);
 
 			result.Should().BeEquivalentTo(expectedResponseDto);
+		}
+
+		[Test]
+		public async Task DecisionService_PutDecision_Returns_Success()
+		{
+			Fixture fixture = CreateMockedFixture();
+			var request = fixture.Create<UpdateDecisionRequest>();
+			var response = fixture.Create<UpdateDecisionResponse>();
+
+			var responseWrapper = new ApiWrapper<UpdateDecisionResponse>(response);
+
+			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{1}/decisions/{2}", responseWrapper);
+			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
+
+			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>());
+			var result = await sut.PutDecision(1, 2, request);
+
+			result.ConcernsCaseUrn.Should().Be(response.ConcernsCaseUrn);
+			result.DecisionId.Should().Be(response.DecisionId);
 		}
 
 		private Mock<IHttpClientFactory> CreateHttpClientFactory(Mock<HttpMessageHandler> mockMessageHandler)

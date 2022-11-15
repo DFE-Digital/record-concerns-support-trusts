@@ -21,21 +21,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Dockerfile = ..\Dockerfile
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.Data", "ConcernsCaseWork.Data\ConcernsCaseWork.Data.csproj", "{45170F17-7677-4B17-B3D3-D7C7CDB77146}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Data", "ConcernsCaseWork.Data\ConcernsCaseWork.Data.csproj", "{45170F17-7677-4B17-B3D3-D7C7CDB77146}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.API", "ConcernsCaseWork.API\ConcernsCaseWork.API.csproj", "{2D4DBBC4-0B85-43D6-AFBC-03A3D3A1DB40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.API", "ConcernsCaseWork.API\ConcernsCaseWork.API.csproj", "{2D4DBBC4-0B85-43D6-AFBC-03A3D3A1DB40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.Service", "ConcernsCaseWork.Service\ConcernsCaseWork.Service.csproj", "{BC0E438D-D677-41F9-BE15-C7B79161CCE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Service", "ConcernsCaseWork.Service\ConcernsCaseWork.Service.csproj", "{BC0E438D-D677-41F9-BE15-C7B79161CCE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.Service.Tests", "ConcernsCaseWork.Service.Tests\ConcernsCaseWork.Service.Tests.csproj", "{E7F30872-499F-4E41-969F-8853E8CDC51C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Service.Tests", "ConcernsCaseWork.Service.Tests\ConcernsCaseWork.Service.Tests.csproj", "{E7F30872-499F-4E41-969F-8853E8CDC51C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.CoreTypes", "ConcernsCaseWork.CoreTypes\ConcernsCaseWork.CoreTypes.csproj", "{05EE2408-D770-408D-B254-7133D6BED2A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.CoreTypes", "ConcernsCaseWork.CoreTypes\ConcernsCaseWork.CoreTypes.csproj", "{05EE2408-D770-408D-B254-7133D6BED2A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.CoreTypes.Tests", "ConcernsCaseWork.CoreTypes.Tests\ConcernsCaseWork.CoreTypes.Tests.csproj", "{23A5894F-EF66-44C8-9975-A20CF64AEC35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.CoreTypes.Tests", "ConcernsCaseWork.CoreTypes.Tests\ConcernsCaseWork.CoreTypes.Tests.csproj", "{23A5894F-EF66-44C8-9975-A20CF64AEC35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.Logging", "ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj", "{3C8776EC-ABEA-42DE-86AA-21081ABE3445}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Logging", "ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj", "{3C8776EC-ABEA-42DE-86AA-21081ABE3445}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.API.Tests", "ConcernsCaseWork.API.Tests\ConcernsCaseWork.API.Tests.csproj", "{3C77991E-A62D-4C2B-B546-963401F8CDFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.API.Tests", "ConcernsCaseWork.API.Tests\ConcernsCaseWork.API.Tests.csproj", "{3C77991E-A62D-4C2B-B546-963401F8CDFD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.API.Contracts", "ConcernsCaseWork.API.Contracts\ConcernsCaseWork.API.Contracts.csproj", "{22E09A3E-1571-4182-9F2D-30AD39521BD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.API.Contracts.Tests", "ConcernsCaseWork.API.Contracts.Tests\ConcernsCaseWork.API.Contracts.Tests.csproj", "{56E4D701-66D5-4635-8D44-05BA26A2E74B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +103,14 @@ Global
 		{3C77991E-A62D-4C2B-B546-963401F8CDFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C77991E-A62D-4C2B-B546-963401F8CDFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C77991E-A62D-4C2B-B546-963401F8CDFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22E09A3E-1571-4182-9F2D-30AD39521BD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22E09A3E-1571-4182-9F2D-30AD39521BD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22E09A3E-1571-4182-9F2D-30AD39521BD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22E09A3E-1571-4182-9F2D-30AD39521BD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56E4D701-66D5-4635-8D44-05BA26A2E74B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56E4D701-66D5-4635-8D44-05BA26A2E74B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56E4D701-66D5-4635-8D44-05BA26A2E74B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56E4D701-66D5-4635-8D44-05BA26A2E74B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

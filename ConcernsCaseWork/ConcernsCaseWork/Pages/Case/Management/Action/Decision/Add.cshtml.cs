@@ -1,17 +1,24 @@
 ﻿
+using ConcernsCaseWork.API.Contracts.Constants;
+using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Exceptions;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Services.Decisions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
+#nullable disable
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 {
@@ -23,42 +30,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		private readonly ILogger<AddPageModel> _logger;
 
 		[BindProperty]
-		public CreateDecisionDto CreateDecisionDto { get; set; }
+		public CreateDecisionRequest Decision { get; set; }
 
-		[BindProperty]
-		public bool DecisionTypeNoticeToImprove { get; set; }
+		public int NotesMaxLength => DecisionConstants.MaxSupportingNotesLength;
 
-		[BindProperty]
-		public bool DecisionTypeSection128 { get; set; }
+		public long? DecisionId { get; set; }
 
-		[BindProperty]
-		public bool DecisionTypeQualifiedFloatingCharge { get; set; }
+		public long CaseUrn { get; set; }
 
-		[BindProperty]
-		public bool DecisionTypeNonRepayableFinancialSupport { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeRepayableFinancialSupport { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeShortTermCashAdvance { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeWriteOffRecoverableFunding { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeOtherFinancialSupport { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeEstimatesFundingOrPupilNumberAdjustment { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeEsfaApproval { get; set; }
-
-		[BindProperty]
-		public bool DecisionTypeFreedomOfInformationExemptions { get; set; }
-
-		public int NotesMaxLength => 2000;
+		public List<DecisionTypeCheckBox> DecisionTypeCheckBoxes { get; set; }
 
 		public AddPageModel(IDecisionService decisionService, ILogger<AddPageModel> logger)
 		{
@@ -66,36 +46,35 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			_logger = logger;
 		}
 
-		public long CaseUrn { get; set; }
-
-		public async Task<IActionResult> OnGetAsync(long urn)
+		public async Task<IActionResult> OnGetAsync(long urn, long? decisionId = null)
 		{
 			_logger.LogMethodEntered();
 
 			try
 			{
-				CaseUrn = (CaseUrn)urn;
+				SetupPage(urn, decisionId);
 
-				// if editing, pass the current dto state, if new pass null
-				DecisionTypeArrayToDecisionTypeProperties(null);
+				Decision = await CreateDecisionModel(urn, decisionId);
+
 				return Page();
 			}
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
 
-				TempData["Error.Message"] = ErrorOnGetPage;
+				SetErrorMessage(ErrorOnGetPage);
+
 				return Page();
 			}
 		}
 
-		public async Task<IActionResult> OnPostAsync(long urn)
+		public async Task<IActionResult> OnPostAsync(long urn, long? decisionId = null)
 		{
 			_logger.LogMethodEntered();
 
 			try
 			{
-				CaseUrn = (CaseUrn)urn;
+				SetupPage(urn, decisionId);
 
 				if (!ModelState.IsValid)
 				{
@@ -103,10 +82,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 					return Page();
 				}
 
-				PopulateCreateDecisionDtoFromRequest();
-				await _decisionService.PostDecision(CreateDecisionDto);
+				Decision.ReceivedRequestDate = ParseDate();
 
-				return Redirect($"/case/{CaseUrn}/management");
+				if (decisionId.HasValue)
+				{
+					var updateDecisionRequest = DecisionMapping.ToUpdateDecision(Decision);
+					await _decisionService.PutDecision(urn, (long)decisionId, updateDecisionRequest);
+
+					return Redirect($"/case/{urn}/management/action/decision/{decisionId}");
+				}
+
+				await _decisionService.PostDecision(Decision);
+
+				return Redirect($"/case/{urn}/management");
 			}
 			catch (InvalidUserInputException ex)
 			{
@@ -116,68 +104,122 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			{
 				_logger.LogErrorMsg(ex);
 
-				TempData["Error.Message"] = ErrorOnPostPage;
+				SetErrorMessage(ErrorOnPostPage);
 			}
-
 			return Page();
 		}
 
-		private void PopulateCreateDecisionDtoFromRequest()
+		private void SetupPage(long caseUrn, long? decisionId)
+		{
+			ViewData[ViewDataConstants.Title] = decisionId.HasValue ? "Edit decision" : "Add decision";
+
+			CaseUrn = (CaseUrn)caseUrn;
+			DecisionId = decisionId;
+
+			DecisionTypeCheckBoxes = BuildDecisionTypeCheckBoxes();
+		}
+
+		private async Task<CreateDecisionRequest> CreateDecisionModel(long caseUrn, long? decisionId)
+		{
+			var result = new CreateDecisionRequest();
+
+			result.ConcernsCaseUrn = (int)caseUrn;
+
+			if (decisionId.HasValue)
+			{
+				var apiDecision = await _decisionService.GetDecision(caseUrn, (int)decisionId);
+
+				result = DecisionMapping.ToEditDecisionModel(apiDecision);
+			}
+
+			return result;
+		}
+
+		private DateTime ParseDate()
 		{
 			var dtr_day = Request.Form["dtr-day-request-received"];
 			var dtr_month = Request.Form["dtr-month-request-received"];
 			var dtr_year = Request.Form["dtr-year-request-received"];
 			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-			var isValidDate = DateTimeHelper.TryParseExact(dtString, out DateTime parsedDate);
+			var isValidDate = DateTimeHelper.TryParseExact(dtString, out DateTime result);
 
 			if (dtString != "--" && !isValidDate)
 			{
 				throw new InvalidUserInputException($"{dtString} is an invalid date");
 			}
 
-			CreateDecisionDto.DecisionTypes = DecisionTypePropertiesToDecisionTypeArray();
-			CreateDecisionDto.ReceivedRequestDate = parsedDate;
-			CreateDecisionDto.CreatedAt = DateTimeOffset.Now;
-			CreateDecisionDto.UpdatedAt = DateTimeOffset.Now;
+			return result;
 		}
 
-		private void DecisionTypeArrayToDecisionTypeProperties(DecisionType[] decisionTypes)
-		{	
-			if (decisionTypes == null)
+		private List<DecisionTypeCheckBox> BuildDecisionTypeCheckBoxes()
+		{
+			var result = new List<DecisionTypeCheckBox>()
 			{
-				return;
-			}
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.NoticeToImprove,
+					Hint = "An NTI is an intervention tool. It's used to set out conditions that a trust must meet to act on area(s) of concern."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.Section128,
+					Hint = "A section 128 direction gives the Secretary of State the power to block an individual from taking part in the management of an independent school (including academies and free schools)."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.QualifiedFloatingCharge,
+					Hint = "A QFC helps us secure the repayment of funding we advance to an academy trust. This includes appointing an administrator, making sure the funding can be recovered and potentially disqualifying an unfit director."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.NonRepayableFinancialSupport,
+					Hint = "Non-repayable grants are paid in exceptional circumstances to support a trust or academy financially."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.RepayableFinancialSupport,
+					Hint = "Repayable funding are payments that trusts must repay in line with an agreed repayment plan, ideally within 3 years."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.ShortTermCashAdvance,
+					Hint = "A short-term cash advance or a general annual grant (GAG) advance is given to help an academy manage its cash flow. This should be repaid within the same academy financial year."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.WriteOffRecoverableFunding,
+					Hint = "A write-off can be considered if a trust cannot repay financial support previously received from us."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.OtherFinancialSupport,
+					Hint = "All other types of financial support for exceptional circumstances. This includes exceptional annual grant (EAG), popular growth funding, restructuring support and start-up support."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.EstimatesFundingOrPupilNumberAdjustment,
+					Hint = "Covers: a) agreements to move from lagged funding (based on pupil census data) to funding based on an estimate of the coming year’s pupil numbers, used when a school is growing; b) an adjustment to a trust's General Annual Grant (GAG) to funding based on estimated pupil numbers in line with actual pupil numbers, once these are confirmed (PNA). Also called an in-year adjustment."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.EsfaApproval,
+					Hint = "Some versions of the funding agreement require trusts to seek approval from ESFA to spend or write off funds, such as severance pay or agreeing off-payroll arrangements for staff. Trusts going ahead with these decisions or transactions would be in breach of their funding agreement. Also called transactions approval. This typically affects trusts under an NTI (Notice to Improve)."
+				},
+				new DecisionTypeCheckBox()
+				{
+					DecisionType = DecisionType.FreedomOfInformationExemptions,
+					Hint = "If information qualifies as an exemption to the Freedom of Information Act, we can decline to release information. Some exemptions require ministerial approval. You must contact the FOI team if you think you need to apply an exemption to your FOI response or if you have any concerns about releasing information as part of a response."
+				}
+			};
 
-			DecisionTypeNoticeToImprove = decisionTypes.Contains(DecisionType.NoticeToImprove);
-			DecisionTypeSection128 = decisionTypes.Contains(DecisionType.Section128);
-			DecisionTypeQualifiedFloatingCharge = decisionTypes.Contains(DecisionType.QualifiedFloatingCharge);
-			DecisionTypeNonRepayableFinancialSupport = decisionTypes.Contains(DecisionType.NonRepayableFinancialSupport);
-			DecisionTypeRepayableFinancialSupport = decisionTypes.Contains(DecisionType.RepayableFinancialSupport);
-			DecisionTypeShortTermCashAdvance = decisionTypes.Contains(DecisionType.ShortTermCashAdvance);
-			DecisionTypeWriteOffRecoverableFunding = decisionTypes.Contains(DecisionType.WriteOffRecoverableFunding);
-			DecisionTypeOtherFinancialSupport = decisionTypes.Contains(DecisionType.OtherFinancialSupport);
-			DecisionTypeEstimatesFundingOrPupilNumberAdjustment = decisionTypes.Contains(DecisionType.EstimatesFundingOrPupilNumberAdjustment);
-			DecisionTypeEsfaApproval = decisionTypes.Contains(DecisionType.EsfaApproval);
-			DecisionTypeFreedomOfInformationExemptions = decisionTypes.Contains(DecisionType.FreedomOfInformationExemptions);
-		}
-
-		// update the dto with the result of a call to this, so createDecisionDto.DecisionTypes = ToDecisionTypesArray([page property]), 
-		private DecisionType[] DecisionTypePropertiesToDecisionTypeArray()
-		{			 
-			return new DecisionType[]
-			{
-				DecisionTypeNoticeToImprove ? DecisionType.NoticeToImprove : 0,
-				DecisionTypeSection128 ? DecisionType.Section128 : 0,
-				DecisionTypeQualifiedFloatingCharge ? DecisionType.QualifiedFloatingCharge : 0,
-				DecisionTypeNonRepayableFinancialSupport ? DecisionType.NonRepayableFinancialSupport : 0,
-				DecisionTypeRepayableFinancialSupport ? DecisionType.RepayableFinancialSupport : 0,
-				DecisionTypeShortTermCashAdvance ? DecisionType.ShortTermCashAdvance : 0,
-				DecisionTypeWriteOffRecoverableFunding ? DecisionType.WriteOffRecoverableFunding : 0,
-				DecisionTypeOtherFinancialSupport ? DecisionType.OtherFinancialSupport : 0,
-				DecisionTypeEstimatesFundingOrPupilNumberAdjustment ? DecisionType.EstimatesFundingOrPupilNumberAdjustment : 0,
-				DecisionTypeEsfaApproval ? DecisionType.EsfaApproval : 0,
-				DecisionTypeFreedomOfInformationExemptions ? DecisionType.FreedomOfInformationExemptions : 0,
-			}.Where(x => x > 0).ToArray();
+			return result;
 		}
 	}
+
+	public class DecisionTypeCheckBox
+	{
+		public DecisionType DecisionType { get; set; }
+		public string Hint { get; set; }
+	}
+
 }

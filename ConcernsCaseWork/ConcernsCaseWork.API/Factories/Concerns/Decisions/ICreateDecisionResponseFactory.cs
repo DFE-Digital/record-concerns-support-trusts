@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.API.ResponseModels.Concerns.Decisions;
+﻿using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 
 namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 {
