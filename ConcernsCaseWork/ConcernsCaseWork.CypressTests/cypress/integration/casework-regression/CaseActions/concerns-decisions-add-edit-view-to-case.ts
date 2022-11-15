@@ -1,6 +1,6 @@
 import { last } from "cypress/types/lodash/index.js";
 import AddToCasePage from "../../../pages/caseActions/addToCasePage.js";
-import { DecisionPage } from "../../../pages/caseActions/decisionPage"
+import { DecisionPage } from "../../../pages/caseActions/DecisionPageTest"
 
 
 describe("User can add case actions to an existing case", () => {
