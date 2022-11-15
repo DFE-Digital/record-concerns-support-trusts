@@ -173,8 +173,18 @@ export class ViewDecisionPage {
 
 		return this;
 	}
-	public hasActionEdit(actionEdit: string): this {
-		cy.task("log", `Click on Edit ${actionEdit}`);
+	public hasActionEdit(): this {
+		cy.task("log", `Has Edit Action`);
+
+		cy.getByTestId("edit-decision-text").should(
+			"contain.text",
+			"Edit"
+		);
+
+		return this;
+	}
+	public editDecision(): this {
+		cy.task("log", `Edit Decision`);
 
 		cy.getByTestId("edit-decision-text").click();
 

@@ -1,6 +1,6 @@
 import { last } from "cypress/types/lodash/index.js";
 import AddToCasePage from "../../../pages/caseActions/addToCasePage.js";
-import { ViewDecisionPage } from "../../../pages/caseActions/viewDecisionPage";
+import { ViewDecisionPage } from "../../../pages/caseActions/DecisionPage";
 
 describe("User can add case actions to an existing case", () => {
 	before(() => {
@@ -67,6 +67,7 @@ describe("User can add case actions to an existing case", () => {
 			.should("contain.text", "Decision: Notice to Improve (NTI)")
 			.eq(-3)
 			.click();
+
 		decisionPage
 			.hasCrmEnquiry("444")
 			.hasRetrospectiveRequest("No")
@@ -77,30 +78,50 @@ describe("User can add case actions to an existing case", () => {
 			.hasTypeOfDecision("Notice to Improve (NTI)")
 			.hasTypeOfDecision("Section 128 (S128)")
 			.hasSupportingNotes("These are some supporting notes!")
-			.hasActionEdit("Edit");
+			.hasActionEdit()
+			.editDecision();
+
 		decisionPage
 			.withCrmEnquiry("777")
 			.withRetrospectiveRequest(false)
 			.withSubmissionRequired(true)
 			.withSubmissionLink("www.google.uk")
-			.withDateESFADay("21")
-			.withDateESFAMonth("04")
+			.withDateESFADay("22")
+			.withDateESFAMonth("03")
 			.withDateESFAYear("2022")
-			.withTypeOfDecisionID("NoticeToImprove")
-			.withTypeOfDecisionID("Section128")
-			.withTotalAmountRequested("£140,000")
-			.withSupportingNotes("These are some supporting notes!");
+			.withTypeOfDecisionID("QualifiedFloatingCharge")
+			.withTotalAmountRequested("£130,000")
+			.withSupportingNotes("Testing Supporting Notes");
+
 		decisionPage
 			.hasCrmEnquiry("777")
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("Yes")
 			.hasSubmissionLink("www.google.uk")
-			.hasDateESFAReceivedRequest("21-04-2022")
-			.hasTotalAmountRequested("£140,000")
-			.hasTypeOfDecision("Notice to Improve (NTI)")
-			.hasTypeOfDecision("Section 128 (S128)")
-			.hasSupportingNotes("These are some supporting notes!")
+			.hasDateESFAReceivedRequest("22-03-2022")
+			.hasTotalAmountRequested("£130,000")
+			.hasTypeOfDecision("Qualified Floating Charge (QFC)")
+			.hasSupportingNotes("Testing Supporting Notes")
 			AddToCasePage.getDecisionButton().click();
+	});
+	it("When Decisions is empty, View Behavior", function () {
+		
+		cy.addConcernsDecisionsAddToCase();
+		AddToCasePage.getDecisionButton().click();
+		cy.get("#open-case-actions td")
+			.should("contain.text", "Decision: Notice to Improve (NTI)")
+			.eq(-3)
+			.click();
+		decisionPage
+			.hasCrmEnquiry("")
+			.hasRetrospectiveRequest("")
+			.hasSubmissionRequired("")
+			.hasSubmissionLink("")
+			.hasDateESFAReceivedRequest("")
+			.hasTotalAmountRequested("")
+			.hasTypeOfDecision("")
+			.hasTypeOfDecision("")
+			.hasSupportingNotes("")
 	});
 	after(function () {
 		cy.clearLocalStorage();
