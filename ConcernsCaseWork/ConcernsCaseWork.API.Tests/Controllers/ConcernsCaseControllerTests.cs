@@ -38,6 +38,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null, 
                 null, 
                 null,
+                null,
                 null
             );
             

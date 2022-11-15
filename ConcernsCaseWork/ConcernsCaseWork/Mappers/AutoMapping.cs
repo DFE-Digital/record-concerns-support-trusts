@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Teams;
+using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.MeansOfReferral;
 using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.Service.Trusts;

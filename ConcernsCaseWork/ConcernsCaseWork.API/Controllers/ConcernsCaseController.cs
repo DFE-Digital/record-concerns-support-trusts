@@ -18,6 +18,7 @@ namespace ConcernsCaseWork.API.Controllers
         private readonly IGetConcernsCaseByTrustUkprn _getConcernsCaseByTrustUkprn;
         private readonly IUpdateConcernsCase _updateConcernsCase;
         private readonly IGetConcernsCasesByOwnerId _getConcernsCasesByOwnerId;
+        private readonly IGetActiveConcernsCaseSummariesByOwner _getActiveConcernsCaseSummaries;
 
         public ConcernsCaseController(
             ILogger<ConcernsCaseController> logger, 
@@ -25,7 +26,8 @@ namespace ConcernsCaseWork.API.Controllers
             IGetConcernsCaseByUrn getConcernsCaseByUrn,
             IGetConcernsCaseByTrustUkprn getConcernsCaseByTrustUkprn,
             IUpdateConcernsCase updateConcernsCase,
-            IGetConcernsCasesByOwnerId getConcernsCasesByOwnerId)
+            IGetConcernsCasesByOwnerId getConcernsCasesByOwnerId, 
+            IGetActiveConcernsCaseSummariesByOwner getActiveConcernsCaseSummaries)
         {
             _logger = logger;
             _createConcernsCase = createConcernsCase;
@@ -33,6 +35,7 @@ namespace ConcernsCaseWork.API.Controllers
             _getConcernsCaseByTrustUkprn = getConcernsCaseByTrustUkprn;
             _updateConcernsCase = updateConcernsCase;
             _getConcernsCasesByOwnerId = getConcernsCasesByOwnerId;
+            _getActiveConcernsCaseSummaries = getActiveConcernsCaseSummaries;
         }
         
         [HttpPost]
@@ -128,6 +131,20 @@ namespace ConcernsCaseWork.API.Controllers
             var response = new ApiResponseV2<ConcernsCaseResponse>(concernsCases, pagingResponse);
             
             return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("summary/{ownerId}")]
+        [MapToApiVersion("2.0")]
+        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesByOwnerId(string ownerId)
+        {
+	        _logger.LogInformation($"Attempting to get Concerns Case summaries by Owner Id {ownerId}");
+	        var caseSummaries = await _getActiveConcernsCaseSummaries.Execute(ownerId);
+
+	        _logger.LogInformation($"Returning Concerns cases with Owner Id {ownerId}");
+	        var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, null);
+            
+	        return Ok(response);
         }
     }
 }

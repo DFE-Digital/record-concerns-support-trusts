@@ -25,17 +25,21 @@ namespace ConcernsCaseWork.Pages
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private readonly IUserStateCachedService _userStateCache;
 		private readonly ICaseModelService _caseModelService;
+		private readonly ICaseSummaryService _caseSummaryService;
 		private readonly ILogger<HomePageModel> _logger;
 		private readonly ITeamsModelService _teamsService;
 		private readonly IRbacManager _rbacManager;
 
-		public IList<HomeModel> CasesActive { get; private set; }
+		//public IList<HomeModel> CasesActive { get; private set; }
 		public IList<HomeModel> CasesTeamActive { get; private set; }
+		
+		public List<ActiveCaseSummaryModel> ActiveCases { get; private set; }
 
 		public HomePageModel(ICaseModelService caseModelService,
 			IRbacManager rbacManager,
 			ILogger<HomePageModel> logger,
 			ITeamsModelService teamsService,
+			ICaseSummaryService caseSummaryService,
 			IUserStateCachedService userStateCache,
 			IClaimsPrincipalHelper claimsPrincipalHelper)
 		{
@@ -45,6 +49,7 @@ namespace ConcernsCaseWork.Pages
 			_teamsService = Guard.Against.Null(teamsService);
 			_userStateCache = Guard.Against.Null(userStateCache);
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
+			_caseSummaryService = Guard.Against.Null(caseSummaryService);
 		}
 
 		public async Task OnGetAsync()
@@ -58,7 +63,7 @@ namespace ConcernsCaseWork.Pages
 			// And get all live cases for each caseworker
 
 			// cases belonging to this user
-			Task<IList<HomeModel>> currentUserLiveCases = _caseModelService.GetCasesByCaseworkerAndStatus(GetUserName(), StatusEnum.Live);
+			var currentUserLiveCases = _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName());
 
 			// get any team members defined
 			var team = await _teamsService.GetCaseworkTeam(GetUserName());
@@ -70,7 +75,7 @@ namespace ConcernsCaseWork.Pages
 			await Task.WhenAll(currentUserLiveCases, liveCasesTeamLeadTask, recordUserSignedTask);
 
 			// Assign responses to UI public properties
-			CasesActive = currentUserLiveCases.Result;
+			ActiveCases = currentUserLiveCases.Result.ToList();
 			CasesTeamActive = liveCasesTeamLeadTask.Result;
 		}
 

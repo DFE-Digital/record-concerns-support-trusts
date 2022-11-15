@@ -63,6 +63,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 
 			services.AddScoped<IGetConcernsRecordsByCaseUrn, GetConcernsRecordsByCaseUrn>();
 			services.AddScoped<IGetConcernsCasesByOwnerId, GetConcernsCasesByOwnerId>();
+			services.AddScoped<IGetActiveConcernsCaseSummariesByOwner, GetActiveConcernsCaseSummariesByOwner>();
 
 			services.AddScoped<ISRMAGateway, SRMAGateway>();
 			services.AddScoped<IFinancialPlanGateway, FinancialPlanGateway>();
@@ -74,6 +75,8 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IGetConcernsCaseworkTeamOwners, GetConcernsCaseworkTeamOwners>();
 			services.AddScoped<IUpdateConcernsCaseworkTeam, UpdateConcernsCaseworkTeam>();
 			services.AddScoped<IConcernsTeamCaseworkGateway, ConcernsTeamCaseworkGateway>();
+			
+			services.AddScoped<ICaseSummaryGateway, CaseSummaryGateway>();
 
 			// concerns factories
 			services.AddScoped<IUseCaseAsync<CreateDecisionRequest, CreateDecisionResponse>, CreateDecision>();
