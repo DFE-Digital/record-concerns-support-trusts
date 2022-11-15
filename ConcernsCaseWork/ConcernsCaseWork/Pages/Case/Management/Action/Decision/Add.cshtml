@@ -301,13 +301,11 @@
 							currency: "GBP"
 						});
 
-						const formattedCurrency = currencyFormatter.format(element.val()).replace("£", "");
-						element.val(formattedCurrency);
-					}
-
-					function parseCurrency(element) {
 						const onlyNumbersRegex = /[^\d\.]/g;
-						const formattedCurrency = element.val().replace(onlyNumbersRegex, "");
+
+						const amount = element.val().replace(onlyNumbersRegex, "");
+
+						const formattedCurrency = currencyFormatter.format(amount).replace("£", "");
 						element.val(formattedCurrency);
 					}
 
@@ -318,11 +316,7 @@
 
 						$(document).ready(function() {
 							formatCurrency($totalAmountRequestedObj);
-						});
-
-						$totalAmountRequestedObj.on('focusin keyup', function() {
-							parseCurrency($totalAmountRequestedObj);
-						});
+						}); 
 
 						$totalAmountRequestedObj.focusout(function () {
 							formatCurrency($totalAmountRequestedObj);
