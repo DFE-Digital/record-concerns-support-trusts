@@ -69,7 +69,7 @@ public class CreateNonConcernsCasePageModel : AbstractPageModel
 				var userName = GetUserName();
 				var caseUrn = await _createCaseService.CreateNonConcernsCase(userName);
 				
-				return Redirect($"/case/{caseUrn}/management/action/decision/add");
+				return Redirect($"/case/{caseUrn}/management/action/decision/addOrUpdate");
 			}
 
 			switch (SelectedAction)

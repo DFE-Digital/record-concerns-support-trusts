@@ -92,6 +92,25 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 			result.Should().BeEquivalentTo(expectedResponseDto);
 		}
 
+		[Test]
+		public async Task DecisionService_PutDecision_Returns_Success()
+		{
+			Fixture fixture = CreateMockedFixture();
+			var request = fixture.Create<UpdateDecisionRequest>();
+			var response = fixture.Create<UpdateDecisionResponse>();
+
+			var responseWrapper = new ApiWrapper<UpdateDecisionResponse>(response);
+
+			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{1}/decisions/{2}", responseWrapper);
+			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
+
+			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>());
+			var result = await sut.PutDecision(1, 2, request);
+
+			result.ConcernsCaseUrn.Should().Be(response.ConcernsCaseUrn);
+			result.DecisionId.Should().Be(response.DecisionId);
+		}
+
 		private Mock<IHttpClientFactory> CreateHttpClientFactory(Mock<HttpMessageHandler> mockMessageHandler)
 		{
 			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
