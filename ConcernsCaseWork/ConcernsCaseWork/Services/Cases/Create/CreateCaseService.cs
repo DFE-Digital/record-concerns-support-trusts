@@ -69,6 +69,7 @@ public class CreateCaseService : ICreateCaseService
 				null, 
 				null, 
 				null, 
+				null,
 				statusDto.Id,
 				ratingDto.Id);
 			

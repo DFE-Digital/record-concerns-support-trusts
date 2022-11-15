@@ -24,6 +24,7 @@ namespace ConcernsCaseWork.API.Factories
                 CaseAim = concernsCase.CaseAim,
                 DeEscalationPoint = concernsCase.DeEscalationPoint,
                 NextSteps = concernsCase.NextSteps,
+                CaseHistory = concernsCase.CaseHistory,
                 DirectionOfTravel = concernsCase.DirectionOfTravel,
                 Urn = concernsCase.Urn,
                 StatusId = concernsCase.StatusId,
