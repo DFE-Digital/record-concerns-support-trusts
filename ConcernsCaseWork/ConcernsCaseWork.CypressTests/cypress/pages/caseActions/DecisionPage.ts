@@ -186,8 +186,11 @@ export class DecisionPage {
 	public editDecision(): this {
 		cy.task("log", `Edit Decision`);
 
-		cy.getByTestId("edit-decision-text").click();
+		cy.getByTestId("edit-decision-text").children('a').click();
+
 
 		return this;
 	}
+
+
 }

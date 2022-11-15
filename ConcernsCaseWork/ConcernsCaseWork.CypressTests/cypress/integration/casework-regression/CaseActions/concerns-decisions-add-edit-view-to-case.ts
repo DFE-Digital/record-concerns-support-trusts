@@ -1,10 +1,9 @@
 import { last } from "cypress/types/lodash/index.js";
 import AddToCasePage from "../../../pages/caseActions/addToCasePage.js";
-import { DecisionPage } from "../../../pages/caseActions/decisionPage"
-
+import { DecisionPage } from "../../../pages/caseActions/decisionPage";
 
 describe("User can add case actions to an existing case", () => {
-	before(() => {
+	beforeEach(() => {
 		cy.login();
 	});
 
@@ -44,9 +43,8 @@ describe("User can add case actions to an existing case", () => {
 	const decisionPage: DecisionPage = new DecisionPage();
 
 	it(" Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
-		
 		cy.addConcernsDecisionsAddToCase();
-		
+
 		decisionPage
 			.withCrmEnquiry("444")
 			.withRetrospectiveRequest(false)
@@ -89,6 +87,7 @@ describe("User can add case actions to an existing case", () => {
 			.withTypeOfDecisionID("QualifiedFloatingCharge")
 			.withTotalAmountRequested("£130,000")
 			.withSupportingNotes("Testing Supporting Notes");
+		AddToCasePage.getDecisionButton().click();
 
 		decisionPage
 			.hasCrmEnquiry("777")
@@ -98,11 +97,9 @@ describe("User can add case actions to an existing case", () => {
 			.hasDateESFAReceivedRequest("22-03-2022")
 			.hasTotalAmountRequested("£130,000")
 			.hasTypeOfDecision("Qualified Floating Charge (QFC)")
-			.hasSupportingNotes("Testing Supporting Notes")
-			AddToCasePage.getDecisionButton().click();
+			.hasSupportingNotes("Testing Supporting Notes");
 	});
 	it("When Decisions is empty, View Behavior", function () {
-		
 		cy.addConcernsDecisionsAddToCase();
 		AddToCasePage.getDecisionButton().click();
 		cy.get("#open-case-actions td")
@@ -110,15 +107,14 @@ describe("User can add case actions to an existing case", () => {
 			.eq(-3)
 			.click();
 		decisionPage
-			.hasCrmEnquiry("")
-			.hasRetrospectiveRequest("")
-			.hasSubmissionRequired("")
-			.hasSubmissionLink("")
-			.hasDateESFAReceivedRequest("")
-			.hasTotalAmountRequested("")
-			.hasTypeOfDecision("")
-			.hasTypeOfDecision("")
-			.hasSupportingNotes("")
+			.hasCrmEnquiry("Empty")
+			.hasRetrospectiveRequest("No")
+			.hasSubmissionRequired("No")
+			.hasSubmissionLink("Empty")
+			.hasDateESFAReceivedRequest("Empty")
+			.hasTotalAmountRequested("£0.00")
+			.hasTypeOfDecision("Empty")
+			.hasSupportingNotes("Empty");
 	});
 	after(function () {
 		cy.clearLocalStorage();
