@@ -1,6 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.Teams;
 using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Service.Teams;

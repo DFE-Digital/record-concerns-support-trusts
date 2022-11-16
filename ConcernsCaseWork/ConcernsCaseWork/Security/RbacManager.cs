@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Redis.Teams;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;

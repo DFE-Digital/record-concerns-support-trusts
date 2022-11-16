@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.API.ResponseModels.Concerns.Decisions;
+﻿using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
