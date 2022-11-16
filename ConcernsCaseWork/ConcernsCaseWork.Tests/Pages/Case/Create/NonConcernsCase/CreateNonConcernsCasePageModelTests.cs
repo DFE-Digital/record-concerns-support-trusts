@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 	public class CreateNonConcernsCasePageModelTests
 	{
 		private readonly IFixture _fixture = new Fixture();
-		
+
 		[Test]
 		public void Constructor_WithNullClaimsService_ThrowsException()
 		{
@@ -32,10 +32,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 					Mock.Of<ILogger<CreateNonConcernsCasePageModel>>(),
 					null,
 					Mock.Of<ICreateCaseService>()));
-			
+
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'claimsPrincipalHelper')"));
 		}
-		
+
 		[Test]
 		public void Constructor_WithNullLogger_ThrowsException()
 		{
@@ -45,10 +45,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 					null,
 					Mock.Of<IClaimsPrincipalHelper>(),
 					Mock.Of<ICreateCaseService>()));
-			
+
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'logger')"));
 		}
-				
+
 		[Test]
 		public void Constructor_WithNullUserStateCachedService_ThrowsException()
 		{
@@ -58,10 +58,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 					Mock.Of<ILogger<CreateNonConcernsCasePageModel>>(),
 					Mock.Of<IClaimsPrincipalHelper>(),
 					Mock.Of<ICreateCaseService>()));
-			
+
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'cachedService')"));
 		}
-						
+
 		[Test]
 		public void Constructor_WithNullCreateCaseService_ThrowsException()
 		{
@@ -71,10 +71,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 					Mock.Of<ILogger<CreateNonConcernsCasePageModel>>(),
 					Mock.Of<IClaimsPrincipalHelper>(),
 					null));
-			
+
 			Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'createCaseService')"));
 		}
-		
+
 		[Test]
 		public async Task WhenOnPost_WithDecisionSelectedAndCurrentUserNotFound_ReturnsError()
 		{
@@ -83,7 +83,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 			var mockCreateCaseService = new Mock<ICreateCaseService>();
 			var mockUserService = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
-			
+
 			mockClaimsPrincipalHelper
 				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
 				.Throws(new NullReferenceException("Some error message"));
@@ -93,19 +93,19 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 
 			// act
 			var result = await sut.OnPost();
-			
+
 			// assert
 			Assert.Multiple(() =>
 			{
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 				Assert.That(result, Is.TypeOf<PageResult>());
 			});
-			
+
 			mockLogger.VerifyLogInformationWasCalled("OnPost");
 			mockLogger.VerifyLogErrorWasCalled("Some error message");
 			mockLogger.VerifyNoOtherCalls();
 		}
-		
+
 		[Test]
 		public async Task WhenOnPost_WithDecisionSelected_RedirectsToDecisionsPage()
 		{
@@ -117,8 +117,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 
 			var userName = _fixture.Create<string>();
 			var caseUrn = _fixture.Create<long>();
-			var expectedUrl = $"/case/{caseUrn}/management/action/decision/add";
-			
+			var expectedUrl = $"/case/{caseUrn}/management/action/decision/addOrUpdate";
+
 			mockClaimsPrincipalHelper
 				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
 				.Returns(userName);
@@ -130,7 +130,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 
 			// act
 			var result = await sut.OnPost();
-			
+
 			// assert
 			Assert.Multiple(() =>
 			{
@@ -138,12 +138,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 				Assert.That(result, Is.TypeOf<RedirectResult>());
 				Assert.That((result as RedirectResult)?.Url, Is.EqualTo(expectedUrl));
 			});
-			
+
 			mockLogger.VerifyLogInformationWasCalled("OnPost");
 			mockLogger.VerifyLogErrorWasNotCalled();
 			mockLogger.VerifyNoOtherCalls();
 		}
-		
+
 		[Test]
 		public async Task WhenOnPost_WithSrmaActionSelected_RedirectsToNonConcernsAddSrmaPage()
 		{
@@ -156,7 +156,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 			var userName = _fixture.Create<string>();
 			var caseUrn = _fixture.Create<long>();
 			var expectedUrl = "/case/create/nonconcerns/srma";
-			
+
 			mockClaimsPrincipalHelper
 				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
 				.Returns(userName);
@@ -168,7 +168,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 
 			// act
 			var result = await sut.OnPost();
-			
+
 			// assert
 			Assert.Multiple(() =>
 			{
@@ -176,12 +176,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 				Assert.That(result, Is.TypeOf<RedirectResult>());
 				Assert.That((result as RedirectResult)?.Url, Is.EqualTo(expectedUrl));
 			});
-			
+
 			mockLogger.VerifyLogInformationWasCalled("OnPost");
 			mockLogger.VerifyLogErrorWasNotCalled();
 			mockLogger.VerifyNoOtherCalls();
 		}
-		
+
 		[Test]
 		public async Task WhenOnPost_WithTFFActionSelected_ReturnsNotImplementedError()
 		{
@@ -192,7 +192,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
 			var userName = _fixture.Create<string>();
-			
+
 			mockClaimsPrincipalHelper
 				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
 				.Returns(userName);
@@ -202,19 +202,19 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 
 			// act
 			var result = await sut.OnPost();
-			
+
 			// assert
 			Assert.Multiple(() =>
 			{
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 				Assert.That(result, Is.TypeOf<PageResult>());
 			});
-			
+
 			mockLogger.VerifyLogInformationWasCalled("OnPost");
 			mockLogger.VerifyLogErrorWasCalled("The method or operation is not implemented.");
 			mockLogger.VerifyNoOtherCalls();
 		}
-		
+
 		[Test]
 		public async Task WhenOnPost_WithNoActionSelected_ReturnsPage()
 		{
@@ -225,7 +225,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
 			var userName = _fixture.Create<string>();
-			
+
 			mockClaimsPrincipalHelper
 				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
 				.Returns(userName);
@@ -234,14 +234,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 
 			// act
 			var result = await sut.OnPost();
-			
+
 			// assert
 			Assert.Multiple(() =>
 			{
 				Assert.That(sut.TempData["Error.Message"], Is.Null);
 				Assert.That(result, Is.TypeOf<PageResult>());
 			});
-			
+
 			mockLogger.VerifyLogInformationWasCalled("OnPost");
 			mockLogger.VerifyLogErrorWasNotCalled();
 			mockLogger.VerifyNoOtherCalls();
@@ -259,10 +259,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 			var sut = SetupPageModel(mockUserService, mockLogger, mockClaimsPrincipalHelper, mockCreateCaseService);
 			sut.SelectedAction = CreateNonConcernsCasePageModel.Actions.None;
 			sut.SelectedActionOrDecision = CreateNonConcernsCasePageModel.Options.None;
-			
+
 			// act
 			var result = sut.OnGet();
-			
+
 			// assert
 			Assert.Multiple(() =>
 			{
@@ -271,7 +271,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 				Assert.That(sut.SelectedAction, Is.EqualTo(CreateNonConcernsCasePageModel.Actions.None));
 				Assert.That(sut.SelectedActionOrDecision, Is.EqualTo(CreateNonConcernsCasePageModel.Options.None));
 			});
-			
+
 			mockLogger.VerifyLogInformationWasCalled("OnGet");
 			mockLogger.VerifyLogErrorWasNotCalled();
 			mockLogger.VerifyNoOtherCalls();
