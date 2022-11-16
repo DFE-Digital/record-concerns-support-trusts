@@ -35,7 +35,7 @@ jobs:
       - name: Install dotnet reportgenerator
         run: dotnet tool install --global dotnet-reportgenerator-globaltool
       - name: Restore dependencies
-        run: dotnet restore ApplyToBecomeInternal/ApplyToBecomeInternal.sln
+        run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
       - name: Build solution, test and run SonarCloud scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

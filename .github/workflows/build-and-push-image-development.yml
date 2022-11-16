@@ -67,7 +67,7 @@ jobs:
         run: dotnet tool install --global dotnet-reportgenerator-globaltool
       
       - name: Restore dependencies
-        run: dotnet restore ApplyToBecomeInternal/ApplyToBecomeInternal.sln
+        run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
       
       - name: Build solution, test and run SonarCloud scanner
         env:
