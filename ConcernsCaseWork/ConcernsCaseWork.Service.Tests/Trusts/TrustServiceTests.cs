@@ -20,8 +20,7 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			// arrange
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
 			var expectedApiWrapperTrust = new ApiListWrapper<TrustSearchDto>(expectedTrusts, null);
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			var tramsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -75,8 +74,7 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 		public void WhenGetTrustsByPagination_ThrowsException()
 		{
 			// arrange
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			var tramsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -123,8 +121,7 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			// arrange
 			var expectedTrust = TrustFactory.BuildTrustDetailsDto();
 			var expectedApiWrapperTrust = new ApiWrapper<TrustDetailsDto>(expectedTrust);
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			var tramsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -167,8 +164,7 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 		public void WhenGetTrustByUkPrn_ThrowsException()
 		{
 			// arrange
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			var tramsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -195,8 +191,7 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 		{
 			// arrange
 			var expectedApiWrapperTrust = new ApiListWrapper<TrustDetailsDto>(null, null);
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var tramsApiEndpoint = configuration["trams:api_endpoint"];
+			var tramsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
