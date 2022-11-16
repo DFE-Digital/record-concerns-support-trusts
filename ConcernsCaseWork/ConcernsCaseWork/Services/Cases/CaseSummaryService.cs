@@ -11,12 +11,22 @@ using System.Threading.Tasks;
 namespace ConcernsCaseWork.Services.Cases;
 
 public class CaseSummaryService : ICaseSummaryService
-{
-	private const int _maxNumberActionsAndDecisionsToReturn = 3;
-	
+{	
 	private readonly IApiCaseSummaryService _caseSummaryService;
 	private readonly ITrustCachedService _trustCachedService;
-
+	private const int _maxNumberActionsAndDecisionsToReturn = 3;
+	private static IEnumerable<string> SortedRags
+		=> new[]
+		{
+			"Red-Plus",
+			"Red",
+			"Red-Amber",
+			"Amber",
+			"Amber-Green",
+			"Green",
+			""
+		};
+	
 	public CaseSummaryService(IApiCaseSummaryService caseSummaryService, ITrustCachedService trustCachedService)
 	{
 		_caseSummaryService = caseSummaryService;
@@ -31,24 +41,8 @@ public class CaseSummaryService : ICaseSummaryService
 
 		foreach (var caseSummary in caseSummaries.OrderByDescending(cs => cs.CreatedAt))
 		{
-			var trustName = "Trust not found";
-
-			if (caseSummary.TrustUkPrn != null)
-			{
-				try
-				{
-					var trust = await _trustCachedService.GetTrustSummaryByUkPrn(caseSummary.TrustUkPrn);	
-					if (trust != null)
-                    {
-                        trustName = trust.TrustName ?? trustName;
-                    }
-				}
-				catch (Exception)
-				{
-					// Log
-				}
-			}
-
+			var trustName = await GetTrustName(caseSummary.TrustUkPrn);
+			
 			var sortedActionAndDecisionNames = GetSortedActionAndDecisionNames(caseSummary);
 			
 			var summary = 
@@ -93,7 +87,7 @@ public class CaseSummaryService : ICaseSummaryService
 	{
 		var result = new List<string>();
 		
-		foreach (var rating in RagSortedWorstToBest)
+		foreach (var rating in SortedRags)
 		{
 			result
 				.AddRange(concerns
@@ -104,22 +98,28 @@ public class CaseSummaryService : ICaseSummaryService
 		
 		result
 			.AddRange(concerns
-				.Where(c => !RagSortedWorstToBest.Contains(c.Rating.Name))
+				.Where(c => !SortedRags.Contains(c.Rating.Name))
 				.OrderBy(r => r.CreatedAt)
 				.Select(c => c.Name));
 		
 		return result.ToArray();
 	}
 
-	private static IEnumerable<string> RagSortedWorstToBest
-		=> new[]
+	private async Task<string> GetTrustName(string trustUkPrn)
+	{
+		if (trustUkPrn == null)
 		{
-			"Red-Plus",
-			"Red",
-			"Red-Amber",
-			"Amber",
-			"Amber-Green",
-			"Green",
-			""
-		};
+			return "Trust has no UkPrn";
+		}
+		
+		try
+		{
+			var trust = await _trustCachedService.GetTrustSummaryByUkPrn(trustUkPrn);	
+			return trust?.TrustName ?? $"Trust with UkPrn {trustUkPrn} not found";
+		}
+		catch
+		{
+			return $"Error getting Trust with UkPrn {trustUkPrn}";
+		}
 	}
+}

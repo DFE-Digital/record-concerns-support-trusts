@@ -1,5 +1,4 @@
 using Ardalis.GuardClauses;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Redis.Models;

@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.CoreTypes;
-using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Ratings;

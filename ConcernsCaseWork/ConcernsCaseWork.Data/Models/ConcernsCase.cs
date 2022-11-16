@@ -29,6 +29,7 @@ namespace ConcernsCaseWork.Data.Models
         public virtual ConcernsStatus Status { get; set; }
         public virtual ConcernsRating Rating { get; set; }
         public virtual ICollection<ConcernsRecord> ConcernsRecords { get; set; }
+
         public virtual ICollection<Decision> Decisions { get; private set; } = new List<Decision>();
 
         public void AddDecision(Decision decision, DateTimeOffset now)

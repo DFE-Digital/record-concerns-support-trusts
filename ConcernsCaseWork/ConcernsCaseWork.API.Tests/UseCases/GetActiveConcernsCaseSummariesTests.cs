@@ -1,11 +1,7 @@
 using AutoFixture;
-using ConcernsCaseWork.API.Factories;
-using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.Data.Models;
-using ConcernsCaseWork.Service.Ratings;
-using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
