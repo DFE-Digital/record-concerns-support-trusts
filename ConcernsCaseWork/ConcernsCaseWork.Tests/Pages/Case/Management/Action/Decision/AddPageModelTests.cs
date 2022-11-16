@@ -16,12 +16,23 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using System.Collections.Generic;
 using System.Linq;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using FluentAssertions;
+using NUnit.Framework.Constraints;
+using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using System;
+using ConcernsCaseWork.Constants;
+using Azure;
+using ConcernsCaseWork.API.Contracts.Enums;
+using System.Transactions;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 {
-	[Parallelizable(ParallelScope.All)]
+	[Parallelizable(ParallelScope.Fixtures)]
 	public class AddPageModelTests
 	{
+		private readonly static Fixture _fixture = new();
+
 		[Test]
 		public void AddPageModel_Is_AbstractPageModel()
 		{
@@ -31,7 +42,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 		}
 
 		[Test]
-		public async Task OnGetAsync_Returns_Page()
+		public async Task OnGetAsync_When_NewDecision_Returns_Page()
 		{
 			const long expectedUrn = 2;
 			var builder = new TestBuilder();
@@ -40,8 +51,72 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				.BuildSut();
 
 			await sut.OnGetAsync(expectedUrn);
-			
-			Assert.AreEqual(expectedUrn, sut.CaseUrn);
+
+			sut.ViewData[ViewDataConstants.Title].Should().Be("Add decision");
+
+			var expectedDecision = new CreateDecisionRequest()
+			{
+				DecisionTypes = new DecisionType[] { }
+			};
+
+			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
+
+			sut.Decision.Should().BeEquivalentTo(expectedDecision, options => 
+				options.Excluding(o => o.ConcernsCaseUrn));
+			sut.Decision.ConcernsCaseUrn.Should().Be((int)expectedUrn);
+
+			sut.CaseUrn.Should().Be(expectedUrn);
+			sut.DecisionTypeCheckBoxes.Should().NotBeEmpty();
+		}
+
+		[Test]
+		public async Task OnGetAsync_When_ExistingDecision_Returns_Page()
+		{
+			const long expectedUrn = 2;
+			const long expectedDecisionId = 1;
+
+			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
+			getDecisionResponse.DecisionTypes = new API.Contracts.Enums.DecisionType[] {
+				API.Contracts.Enums.DecisionType.NoticeToImprove,
+				API.Contracts.Enums.DecisionType.OtherFinancialSupport
+			};
+
+			var decisionService = new Mock<IDecisionService>();
+			decisionService.Setup(m => m.GetDecision(2, 1)).ReturnsAsync(getDecisionResponse);
+
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrnRouteValue(expectedUrn)
+				.WithDecisionService(decisionService)
+				.BuildSut();
+
+			await sut.OnGetAsync(expectedUrn, expectedDecisionId);
+
+			sut.ViewData[ViewDataConstants.Title].Should().Be("Edit decision");
+
+			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
+
+			sut.Decision.ConcernsCaseUrn.Should().Be(getDecisionResponse.ConcernsCaseUrn);
+			sut.Decision.CrmCaseNumber.Should().Be(getDecisionResponse.CrmCaseNumber);
+			sut.Decision.DecisionTypes.Should().BeEquivalentTo(getDecisionResponse.DecisionTypes);
+			sut.Decision.SupportingNotes.Should().Be(getDecisionResponse.SupportingNotes);
+		}
+
+		[Test]
+		public async Task OnGetAsync_When_ExistingDecisionDoesNotExist_Then_ThrowsException()
+		{
+			var decisionService = new Mock<IDecisionService>();
+			decisionService.Setup(m => m.GetDecision(2, 1)).Throws(new Exception("Failed"));
+
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrnRouteValue(1)
+				.WithDecisionService(decisionService)
+				.BuildSut();
+
+			await sut.OnGetAsync(1, 2);
+
+			sut.TempData[ErrorConstants.ErrorMessageKey].Should().Be(ErrorConstants.ErrorOnGetPage);
 		}
 
 		[Test]
@@ -60,7 +135,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 		}
 
 		[Test]
-		public async Task OnPostAsync_Returns_Page()
+		public async Task OnPostAsync_When_NewDecision_Returns_PageRedirectToCase()
 		{
 			const long expectedUrn = 2;
 			var builder = new TestBuilder();
@@ -68,14 +143,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				.WithCaseUrnRouteValue(expectedUrn)
 				.BuildSut();
 
-			await sut.OnPostAsync(expectedUrn);
+			var page = await sut.OnPostAsync(expectedUrn) as RedirectResult;
 
-			Assert.AreEqual(expectedUrn, sut.CaseUrn);
+			sut.CaseUrn.Should().Be(expectedUrn);
+			page.Url.Should().Be("/case/2/management");
+			sut.Decision.DecisionTypes.Should().BeEmpty();
 		}
 
-
 		[Test]
-		public async Task OnPostAsync_When_DecisionTypesIsPopulated_Then_PopulateCreateDecisionTypesProperty_Returns_Page()
+		public async Task OnPostAsync_When_ExistingDecision_Returns_PageRedirectToDecision()
 		{
 			const long expectedUrn = 2;
 			var builder = new TestBuilder();
@@ -83,16 +159,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				.WithCaseUrnRouteValue(expectedUrn)
 				.BuildSut();
 
-			sut.DecisionTypeNoticeToImprove = true;
-			sut.DecisionTypeOtherFinancialSupport = true;
-			sut.DecisionTypeQualifiedFloatingCharge = true;
+			sut.Decision.DecisionTypes = new DecisionType[] {
+				DecisionType.NonRepayableFinancialSupport
+			};
 
-			const int expectedDecisionTypesLength = 3;
+			var page = await sut.OnPostAsync(expectedUrn, 1) as RedirectResult;
 
-
-			await sut.OnPostAsync(expectedUrn);
-
-			Assert.AreEqual(sut.CreateDecisionDto.DecisionTypes.Length, expectedDecisionTypesLength);
+			page.Url.Should().Be("/case/2/management/action/decision/1");
+			sut.Decision.DecisionTypes.Should().Contain(DecisionType.NonRepayableFinancialSupport);
 		}
 
 
@@ -115,7 +189,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			await sut.OnPostAsync(expectedUrn);
 
-			Assert.IsNotNull(sut.CreateDecisionDto.ReceivedRequestDate);
+			Assert.IsNotNull(sut.Decision.ReceivedRequestDate);
 		}
 
 
@@ -155,6 +229,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			Assert.IsTrue(decisionsValidationErrors.Contains(expectedMessage1));
 			Assert.IsTrue(decisionsValidationErrors.Contains(expectedMessage2));
+			sut.DecisionTypeCheckBoxes.Should().NotBeEmpty();
+			sut.ViewData[ViewDataConstants.Title].Should().Be("Add decision");
 		}
 
 		[Test]
@@ -191,7 +267,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 		private class TestBuilder
 		{
-			private readonly Mock<IDecisionService> _mockDecisionService;
+			private Mock<IDecisionService> _mockDecisionService;
 			private readonly Mock<ILogger<AddPageModel>> _mockLogger;
 			private readonly bool _isAuthenticated;
 			private object _caseUrnValue;
@@ -215,6 +291,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				return this;
 			}
 
+			public TestBuilder WithDecisionService(Mock<IDecisionService> decisionService) 
+			{
+				_mockDecisionService = decisionService;
+
+				return this;
+			}
+
 			public AddPageModel BuildSut()
 			{
 				(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(_isAuthenticated);
@@ -225,7 +308,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 					TempData = tempData,
 					Url = new UrlHelper(actionContext),
 					MetadataProvider = pageContext.ViewData.ModelMetadata,
-					CreateDecisionDto = new CreateDecisionDto()
+					Decision = new CreateDecisionRequest()
 				};
 
 				var routeData = result.RouteData.Values;

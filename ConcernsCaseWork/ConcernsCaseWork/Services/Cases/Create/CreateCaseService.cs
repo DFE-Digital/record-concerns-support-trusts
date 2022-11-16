@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Ratings;
@@ -67,6 +68,7 @@ public class CreateCaseService : ICreateCaseService
 				null, 
 				null, 
 				null, 
+				null,
 				statusDto.Id,
 				ratingDto.Id);
 			

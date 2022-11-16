@@ -3,6 +3,7 @@ using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
@@ -38,7 +39,7 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 		public SRMAStatus Status { get; set; }
 		
 		[BindProperty]
-		[Required (ErrorMessage = "Enter a valid datexx")]
+		[Required (ErrorMessage = "Enter a valid date")]
 		public ConcernsDateValidatable OfferedDate { get; set; }
 
 		[MaxLength(_notesMaxLength)]

@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.CoreTypes;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Ratings;
@@ -360,6 +361,24 @@ namespace ConcernsCaseWork.Services.Cases
 				caseDto = CaseMapping.MapNextSteps(patchCaseModel, caseDto);
 
 				await _caseService.PatchCaseByUrn(caseDto);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("CaseModelService::PatchNextSteps exception {Message}", ex.Message);
+
+				throw;
+			}
+		}
+		
+		public async Task PatchCaseHistory(long caseUrn, string userName, string caseHistory)
+		{
+			try
+			{
+				var caseDto = await _caseCachedService.GetCaseByUrn(userName, caseUrn);
+				
+				var newCaseDto = caseDto with { UpdatedAt = DateTimeOffset.Now, CaseHistory = caseHistory };
+
+				await _caseCachedService.PatchCaseByUrn(newCaseDto);
 			}
 			catch (Exception ex)
 			{

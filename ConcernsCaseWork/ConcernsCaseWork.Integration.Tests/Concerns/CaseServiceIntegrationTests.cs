@@ -112,26 +112,19 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 
 			// Update case properties
 			var timeNow = DateTimeOffset.Now;
-			var toUpdateCaseDto = new CaseDto(
-				postCaseDto.CreatedAt,
-				timeNow,
-				timeNow,
-				timeNow,
-				postCaseDto.CreatedBy,
-				"some updated description",
-				"some updated crm enquiry",
-				postCaseDto.TrustUkPrn,
-				"some updated reason at review",
-				postCaseDto.DeEscalation,
-				"some updated issue",
-				postCaseDto.CurrentStatus,
-				postCaseDto.NextSteps,
-				"some updated case aim",
-				postCaseDto.DeEscalationPoint,
-				DirectionOfTravelEnum.Improving.ToString(),
-				postCaseDto.Urn,
-				postCaseDto.StatusId,
-				postCaseDto.RatingId);
+			var toUpdateCaseDto = postCaseDto with
+			{
+				UpdatedAt = timeNow,
+				ReviewAt = timeNow,
+				ClosedAt = timeNow,
+				Description = "some updated description",
+				CrmEnquiry = "some updated crm enquiry",
+				ReasonAtReview = "some updated reason at review",
+				Issue = "some updated issue",
+				CaseAim = "some updated case aim",
+				CaseHistory = "some updated case history",
+				DirectionOfTravel = DirectionOfTravelEnum.Improving.ToString()
+			};
 
 			// act
 			var updatedCaseDto = await caseService.PatchCaseByUrn(toUpdateCaseDto);
@@ -157,6 +150,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			Assert.That(updatedCaseDto.DirectionOfTravel, Is.EqualTo(DirectionOfTravelEnum.Improving.ToString()));
 			Assert.That(updatedCaseDto.ReasonAtReview, Is.EqualTo("some updated reason at review"));
 			Assert.That(updatedCaseDto.TrustUkPrn, Is.EqualTo(postCaseDto.TrustUkPrn));
+			Assert.That(updatedCaseDto.CaseHistory, Is.EqualTo("some updated case history"));
 		}
 		
 		private async Task<CaseDto> PostCase(IServiceScope serviceScope, CreateCaseDto createCaseDto)

@@ -227,6 +227,9 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<string>("CaseAim")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CaseHistory")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("ClosedAt")
                         .HasColumnType("datetime2");
 

@@ -39,6 +39,10 @@ const trustRgx = new RegExp(/(School|Academy|Accrington|South|North|East|West|([
 const ragRgx = new RegExp(/(amber|green|red|redPlus|Red Plus)/, 'i');
 const dotRgx = new RegExp(/(Deteriorating|Unchanged|Improving)/, 'i');
 
+Cypress.Commands.add("getByTestId", (id) => {
+    cy.get(`[data-testid="${id}"]`)
+});
+
 Cypress.Commands.add("login", () => {
     cy.clearCookies();
     cy.clearLocalStorage();
@@ -48,7 +52,7 @@ Cypress.Commands.add("login", () => {
 
     new AuthenticationComponent().login(username, password);
 
-    cy.visit(Cypress.env("url"));
+    cy.visit("/");
 })
 
 //example: /case/5880/management"

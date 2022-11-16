@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.API.ResponseModels.Concerns.Decisions;
+﻿using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 
 namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 			{
 				ConcernsCaseUrn = concernsCaseUrn,
 				DecisionId = decision.DecisionId,
-				DecisionTypes = decision.DecisionTypes.Select(x => x.DecisionTypeId).ToArray(),
+				DecisionTypes = decision.DecisionTypes.Select(x => (Contracts.Enums.DecisionType)x.DecisionTypeId).ToArray(),
 				TotalAmountRequested = decision.TotalAmountRequested,
 				SupportingNotes =decision.SupportingNotes,
 				ReceivedRequestDate = decision.ReceivedRequestDate,
@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 				CreatedAt = decision.CreatedAt,
 				UpdatedAt = decision.UpdatedAt,
 				ClosedAt = decision.ClosedAt,
-				DecisionStatus = decision.Status,
+				DecisionStatus = (Contracts.Enums.DecisionStatus) decision.Status,
 				Title = decision.GetTitle()
 			};
 		}

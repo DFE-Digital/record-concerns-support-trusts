@@ -62,17 +62,29 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			mockCaseService
 				.Setup(s => s.PostCase(It.IsAny<CreateCaseDto>()))
 				.ReturnsAsync(
-					new CaseDto(
-						createdAndUpdatedDate, 
-						createdAndUpdatedDate, 
-						DateTimeOffset.MinValue, 
-						DateTimeOffset.MinValue, 
-						userName, null, null, 
-						trustUkPrn, null, 
-						DateTimeOffset.MinValue, null, null, null, null, null, null, 
-						expectedNewCaseUrn, 
-						statusDto.Id, 
-						ratingDto.Id));
+					new CaseDto
+					{
+						CreatedAt = createdAndUpdatedDate,
+						UpdatedAt = createdAndUpdatedDate,
+						ReviewAt = DateTimeOffset.MinValue,
+						ClosedAt = DateTimeOffset.MinValue,
+						CreatedBy = userName,
+						Description = null,
+						CrmEnquiry = null,
+						TrustUkPrn = trustUkPrn, 
+						ReasonAtReview = null,
+						DeEscalation = DateTimeOffset.MinValue,
+						Issue = null,
+						CurrentStatus = null,
+						CaseAim = null,
+						DeEscalationPoint = null,
+						NextSteps = null,
+						CaseHistory = null,
+						DirectionOfTravel = null,
+						Urn = expectedNewCaseUrn,
+						StatusId = statusDto.Id,
+						RatingId = ratingDto.Id 
+					});
 			
 			var createCaseService = new CreateCaseService(
 				mockLogger.Object,
@@ -209,17 +221,29 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			mockCaseService
 				.Setup(s => s.PostCase(It.IsAny<CreateCaseDto>()))
 				.ReturnsAsync(
-					new CaseDto(
-						createdAndUpdatedDate, 
-						createdAndUpdatedDate, 
-						DateTimeOffset.MinValue, 
-						DateTimeOffset.MinValue, 
-						userName, null, null, 
-						trustUkPrn, null, 
-						DateTimeOffset.MinValue, null, null, null, null, null, null, 
-						expectedNewCaseUrn, 
-						statusDto.Id, 
-						ratingDto.Id));
+					new CaseDto
+					{
+						CreatedAt = createdAndUpdatedDate,
+						UpdatedAt = createdAndUpdatedDate,
+						ReviewAt = DateTimeOffset.MinValue,
+						ClosedAt = DateTimeOffset.MinValue,
+						CreatedBy = userName,
+						Description = null,
+						CrmEnquiry = null,
+						TrustUkPrn = trustUkPrn, 
+						ReasonAtReview = null,
+						DeEscalation = DateTimeOffset.MinValue,
+						Issue = null,
+						CurrentStatus = null,
+						CaseAim = null,
+						DeEscalationPoint = null,
+						NextSteps = null,
+						CaseHistory = null,
+						DirectionOfTravel = null,
+						Urn = expectedNewCaseUrn,
+						StatusId = statusDto.Id,
+						RatingId = ratingDto.Id 
+					});
 
 			mockSrmaService.Setup(s => s.SaveSRMA(It.IsAny<SRMAModel>())).Throws(new Exception("some error happened"));
 			
@@ -287,18 +311,30 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			mockCaseService
 				.Setup(s => s.PostCase(It.IsAny<CreateCaseDto>()))
 				.ReturnsAsync(
-					new CaseDto(
-						createdAndUpdatedDate, 
-						createdAndUpdatedDate, 
-						DateTimeOffset.MinValue, 
-						DateTimeOffset.MinValue, 
-						userName, null, null, 
-						trustUkPrn, null, 
-						DateTimeOffset.MinValue, null, null, null, null, null, null, 
-						expectedNewCaseUrn, 
-						statusDto.Id, 
-						ratingDto.Id));
-			
+					new CaseDto
+					{
+						CreatedAt = createdAndUpdatedDate,
+						UpdatedAt = createdAndUpdatedDate,
+						ReviewAt = DateTimeOffset.MinValue,
+						ClosedAt = DateTimeOffset.MinValue,
+						CreatedBy = userName,
+						Description = null,
+						CrmEnquiry = null,
+						TrustUkPrn = trustUkPrn, 
+						ReasonAtReview = null,
+						DeEscalation = DateTimeOffset.MinValue,
+						Issue = null,
+						CurrentStatus = null,
+						CaseAim = null,
+						DeEscalationPoint = null,
+						NextSteps = null,
+						CaseHistory = null,
+						DirectionOfTravel = null,
+						Urn = expectedNewCaseUrn,
+						StatusId = statusDto.Id,
+						RatingId = ratingDto.Id 
+					});
+
 			var createCaseService = new CreateCaseService(
 				mockLogger.Object,
 				mockUserStateCachedService.Object,

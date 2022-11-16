@@ -60,5 +60,6 @@ namespace ConcernsCaseWork.Models
 		public IList<RecordModel> RecordsModel { get; set; } = new List<RecordModel>();
 		
 		public string PreviousUrl { get; set; }
+		public string CaseHistory { get; set; }
 	}
 }
