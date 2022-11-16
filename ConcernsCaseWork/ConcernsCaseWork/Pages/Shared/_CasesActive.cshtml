@@ -34,7 +34,7 @@
 	}
 	else
 	{
-		foreach (var activeCase in Model.OrderByDescending(m => m.CreatedAt))
+		foreach (var activeCase in Model)
 		{
 			<tr class="govuk-table__row tr__large">
 				<td class="govuk-table__cell">
@@ -44,7 +44,7 @@
 					@activeCase.UpdatedAt
 				</td>
 				<td class="govuk-table__cell">
-					@activeCase.CreatedAtDisplay
+					@activeCase.CreatedAt
 				</td>
 				<td class="govuk-table__cell">
 					@activeCase.TrustName
@@ -62,14 +62,14 @@
 						<td class="govuk-table__cell">
 							<div class="concerns-secondary-text-colour">Actions and decisions</div>
 							<ul class="govuk-list govuk-list--bullet">
-								@foreach (var action in activeCase.ActiveActionsAndDecisions.Take(3))
+								@foreach (var action in activeCase.ActiveActionsAndDecisions)
 								{
 									<li>
 										@action
 									</li>
 								}
 							</ul>
-							@if (activeCase.ActiveActionsAndDecisions.Count() > 3)
+							@if (activeCase.IsMoreActionsAndDecisions)
 							{
 								<span>and more</span>
 							}

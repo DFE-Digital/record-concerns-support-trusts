@@ -374,15 +374,15 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(userName, caseUrn);
+				var caseDto = await _caseService.GetCaseByUrn(caseUrn);
 				
 				var newCaseDto = caseDto with { UpdatedAt = DateTimeOffset.Now, CaseHistory = caseHistory };
 
-				await _caseCachedService.PatchCaseByUrn(newCaseDto);
+				await _caseService.PatchCaseByUrn(newCaseDto);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("CaseModelService::PatchNextSteps exception {Message}", ex.Message);
+				_logger.LogError("CaseModelService::PatchCaseHistory exception {Message}", ex.Message);
 
 				throw;
 			}

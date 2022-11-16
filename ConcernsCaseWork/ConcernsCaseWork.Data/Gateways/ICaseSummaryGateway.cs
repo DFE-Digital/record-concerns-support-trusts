@@ -2,5 +2,5 @@ namespace ConcernsCaseWork.Data.Gateways;
 
 public interface ICaseSummaryGateway
 {
-	Task<IList<CaseSummary>> GetActiveCaseSummaries(string ownerId); 
+	Task<IList<CaseSummaryVm>> GetActiveCaseSummaries(string ownerId); 
 }

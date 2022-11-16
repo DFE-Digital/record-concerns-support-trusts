@@ -1,5 +1,4 @@
-﻿using ConcernsCaseWork.CoreTypes;
-using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.Status;
 using System.Collections.Generic;

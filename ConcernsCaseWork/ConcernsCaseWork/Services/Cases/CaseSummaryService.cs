@@ -3,7 +3,6 @@ using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Service.Cases;
-using ConcernsCaseWork.Service.Trusts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +12,8 @@ namespace ConcernsCaseWork.Services.Cases;
 
 public class CaseSummaryService : ICaseSummaryService
 {
+	private const int _maxNumberActionsAndDecisionsToReturn = 3;
+	
 	private readonly IApiCaseSummaryService _caseSummaryService;
 	private readonly ITrustCachedService _trustCachedService;
 
@@ -28,7 +29,7 @@ public class CaseSummaryService : ICaseSummaryService
 
 		var results = new List<ActiveCaseSummaryModel>();
 
-		foreach (var caseSummary in caseSummaries)
+		foreach (var caseSummary in caseSummaries.OrderByDescending(cs => cs.CreatedAt))
 		{
 			var trustName = "Trust not found";
 
@@ -48,41 +49,77 @@ public class CaseSummaryService : ICaseSummaryService
 				}
 			}
 
+			var sortedActionAndDecisionNames = GetSortedActionAndDecisionNames(caseSummary);
+			
 			var summary = 
 				new ActiveCaseSummaryModel
 				{
-	                ActiveConcerns = caseSummary.ActiveConcerns,
-	                ActiveActionsAndDecisions = GetSortedActionAndDecisionNames(caseSummary),
+	                ActiveConcerns = GetSortedConcerns(caseSummary.ActiveConcerns),
+	                ActiveActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
 	                CaseUrn = caseSummary.CaseUrn,
-	                CreatedAt = caseSummary.CreatedAt,
-	                CreatedAtDisplay = caseSummary.CreatedAt.ToDayMonthYear(),
-	                UpdatedAt = caseSummary.UpdatedAt.ToDayMonthYear(),
+	                CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
 	                CreatedBy = caseSummary.CreatedBy,
+	                IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
 	                Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
+	                StatusName = caseSummary.StatusName,
 	                TrustName = trustName,
-	                StatusName = caseSummary.StatusName
+	                UpdatedAt = caseSummary.UpdatedAt.ToDayMonthYear()
 				};
 			
 			results.Add(summary);
 		}
 		
-		return results;
+		return results.ToList();
 	}
 	
 	private static string[] GetSortedActionAndDecisionNames(ActiveCaseSummaryDto activeCaseSummary)
 	{
-		var allActionsAndDecisions = new List<Summary>();
+		var allActionsAndDecisions = new List<ActiveCaseSummaryDto.ActionDecisionSummaryDto>();
 		
+		allActionsAndDecisions.AddRange(activeCaseSummary.Decisions);
 		allActionsAndDecisions.AddRange(activeCaseSummary.FinancialPlanCases);
 		allActionsAndDecisions.AddRange(activeCaseSummary.NoticesToImprove);
 		allActionsAndDecisions.AddRange(activeCaseSummary.NtisUnderConsideration);
 		allActionsAndDecisions.AddRange(activeCaseSummary.NtiWarningLetters);
 		allActionsAndDecisions.AddRange(activeCaseSummary.SrmaCases);
-		allActionsAndDecisions.AddRange(activeCaseSummary.Decisions);
 
 		return allActionsAndDecisions
-			.OrderByDescending(action => action.CreatedAt)
+			.OrderBy(action => action.CreatedAt)
 			.Select(action => action.Name)
 			.ToArray();
 	}
-}
+
+	private static string[] GetSortedConcerns(IEnumerable<ActiveCaseSummaryDto.ConcernSummaryDto> concerns)
+	{
+		var result = new List<string>();
+		
+		foreach (var rating in RagSortedWorstToBest)
+		{
+			result
+				.AddRange(concerns
+					.Where(c => c.Rating.Name == rating)
+					.OrderBy(r => r.CreatedAt)
+					.Select(c => c.Name));
+		}
+		
+		result
+			.AddRange(concerns
+				.Where(c => !RagSortedWorstToBest.Contains(c.Rating.Name))
+				.OrderBy(r => r.CreatedAt)
+				.Select(c => c.Name));
+		
+		return result.ToArray();
+	}
+
+	private static IEnumerable<string> RagSortedWorstToBest
+		=> new[]
+		{
+			"Red-Plus",
+			"Red",
+			"Red-Amber",
+			"Amber",
+			"Amber-Green",
+			"Green",
+			""
+		};
+	}

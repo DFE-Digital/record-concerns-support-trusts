@@ -11,12 +11,14 @@ public record ActiveCaseSummaryResponse
 	public string StatusName { get; set; }
 	public ConcernsRatingResponse Rating { get; set; }
 	public string TrustUkPrn { get; set; }
-	public IEnumerable<string> ActiveConcerns { get; set; }
-	public IEnumerable<string> Decisions { get; set; }
-	public IEnumerable<Summary> FinancialPlanCases { get; set; }
-	public IEnumerable<Summary> NoticesToImprove { get; set; }
-	public IEnumerable<Summary> NtiWarningLetters { get; set; }
-	public IEnumerable<Summary> NtisUnderConsideration { get; set; }
-	public IEnumerable<Summary> SrmaCases { get; set; }
+	public IEnumerable<Concern> ActiveConcerns { get; set; }
+	public IEnumerable<ActionOrDecision> Decisions { get; set; }
+	public IEnumerable<ActionOrDecision> FinancialPlanCases { get; set; }
+	public IEnumerable<ActionOrDecision> NoticesToImprove { get; set; }
+	public IEnumerable<ActionOrDecision> NtiWarningLetters { get; set; }
+	public IEnumerable<ActionOrDecision> NtisUnderConsideration { get; set; }
+	public IEnumerable<ActionOrDecision> SrmaCases { get; set; }
 	
+	public record ActionOrDecision(DateTime CreatedAt, DateTime? ClosedAt, string Name);
+	public record Concern(string Name, ConcernsRatingResponse Rating, DateTime CreatedAt);
 }

@@ -11,12 +11,15 @@ public record ActiveCaseSummaryDto
 	public string StatusName { get; set; }
 	public RatingDto Rating { get; set; }
 	public string TrustUkPrn { get; set; }
-	public IEnumerable<string> ActiveConcerns { get; set; }
-	public IEnumerable<Summary> Decisions { get; set; }
-	public IEnumerable<Summary> FinancialPlanCases { get; set; }
-	public IEnumerable<Summary> NoticesToImprove { get; set; }
-	public IEnumerable<Summary> NtiWarningLetters { get; set; }
-	public IEnumerable<Summary> NtisUnderConsideration { get; set; }
-	public IEnumerable<Summary> SrmaCases { get; set; }
+	public IEnumerable<ConcernSummaryDto> ActiveConcerns { get; set; }
+	public IEnumerable<ActionDecisionSummaryDto> Decisions { get; set; }
+	public IEnumerable<ActionDecisionSummaryDto> FinancialPlanCases { get; set; }
+	public IEnumerable<ActionDecisionSummaryDto> NoticesToImprove { get; set; }
+	public IEnumerable<ActionDecisionSummaryDto> NtiWarningLetters { get; set; }
+	public IEnumerable<ActionDecisionSummaryDto> NtisUnderConsideration { get; set; }
+	public IEnumerable<ActionDecisionSummaryDto> SrmaCases { get; set; }
+	
+	public record ActionDecisionSummaryDto(DateTime CreatedAt, DateTime? ClosedAt, string Name);
+
+	public record ConcernSummaryDto(string Name, RatingDto Rating, DateTime CreatedAt);
 }
-public record Summary(DateTime CreatedAt, DateTime? ClosedAt, string Name);
