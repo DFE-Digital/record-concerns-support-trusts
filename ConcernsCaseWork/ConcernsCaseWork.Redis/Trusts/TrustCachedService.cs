@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Service.Trusts;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Redis.Trusts
@@ -12,6 +13,7 @@ namespace ConcernsCaseWork.Redis.Trusts
 		private readonly ITrustService _trustService;
 
 		private const string TrustsKey = "Concerns.Trusts";
+		private const string TrustSummariesKey = "Concerns.Trusts.Summaries.";
 		
 		public TrustCachedService(ICacheProvider cacheProvider, ITrustService trustService, ILogger<TrustCachedService> logger) 
 			: base(cacheProvider)
@@ -55,5 +57,28 @@ namespace ConcernsCaseWork.Redis.Trusts
 			
 			return trustDetailsDto;
 		}
+		
+		public async Task<TrustSummaryDto> GetTrustSummaryByUkPrn(string ukPrn)
+		{
+			_logger.LogInformation("TrustCachedService::GetTrustSummaryByUkPrn {UkPrn}", ukPrn);
+
+			var key = TrustSummariesKey + ukPrn;
+			var trustSummaryDto = await GetData<TrustSummaryDto>(key);
+			if (trustSummaryDto != null)
+			{
+				return trustSummaryDto;
+			}
+
+			// Fetch from API
+			var trustDetailsDto = await _trustService.GetTrustByUkPrn(ukPrn);
+
+			trustSummaryDto = new TrustSummaryDto(ukPrn, ToTitleCase(trustDetailsDto.GiasData.GroupName));
+
+			await StoreData(key, trustSummaryDto);
+			
+			return trustSummaryDto;
+		}
+
+		private string ToTitleCase(string value) => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value?.ToLower() ?? "");
 	}
 }

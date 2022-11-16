@@ -19,20 +19,22 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			.Include(cases => cases.Status)
 			.Where(cases => cases.CreatedBy == ownerId && cases.Status.Name == "Live")
 			.Select (cases => new CaseSummary
-			{
-				SrmaCases = _concernsDbContext.SRMACases.Where(x => x.CaseUrn == cases.Urn).Select(action => new Summary(action.CreatedAt, action.ClosedAt, "Action: School Resource Management Adviser")).ToList(),
-				FinancialPlanCases = _concernsDbContext.FinancialPlanCases.Where(x => x.CaseUrn == cases.Urn).Select(action => new Summary(action.CreatedAt, action.ClosedAt, "Action: Financial plan")).ToList(),
-				NtisUnderConsideration = _concernsDbContext.NTIUnderConsiderations.Where(x => x.CaseUrn == cases.Urn).Select(action => new Summary(action.CreatedAt, action.ClosedAt, "Action: NTI under consideration")).ToList(),
-				NtiWarningLetters = _concernsDbContext.NTIWarningLetters.Where(x => x.CaseUrn == cases.Urn).Select(action => new Summary(action.CreatedAt, action.ClosedAt, "Action: NTI warning letter")).ToList(),
-				NoticesToImprove = _concernsDbContext.NoticesToImprove.Where(x => x.CaseUrn == cases.Urn).Select(action => new Summary(action.CreatedAt, action.ClosedAt, "Action: Notice To Improve")).ToList(),
-				ActiveConcerns = from concerns in cases.ConcernsRecords where concerns.StatusId == 1 select concerns.ConcernsType.ToString(),
+			{	
 				CaseUrn = cases.Urn,
 				CreatedAt = cases.CreatedAt,
 				CreatedBy = cases.CreatedBy,
 				Rating = cases.Rating,
 				StatusName = cases.Status.Name,
 				TrustUkPrn = cases.TrustUkprn,
-				UpdatedAt = cases.UpdatedAt
+				UpdatedAt = cases.UpdatedAt,
+				
+				ActiveConcerns = from concerns in cases.ConcernsRecords where concerns.StatusId == 1 select concerns.ConcernsType.ToString(),
+				//Decisions = _concernsDbContext..Where(x => x.CaseUrn == cases.Urn).Select(action => new Summary(action.CreatedAt, action.ClosedAt, "Decision")).ToList(),
+				FinancialPlanCases = _concernsDbContext.FinancialPlanCases.Where(x => x.CaseUrn == cases.Urn).Select(action => new Summary(action.CreatedAt, action.ClosedAt, "Action: Financial plan")).ToList(),
+				NtisUnderConsideration = _concernsDbContext.NTIUnderConsiderations.Where(x => x.CaseUrn == cases.Urn).Select(action => new Summary(action.CreatedAt, action.ClosedAt, "Action: NTI under consideration")).ToList(),
+            	NtiWarningLetters = _concernsDbContext.NTIWarningLetters.Where(x => x.CaseUrn == cases.Urn).Select(action => new Summary(action.CreatedAt, action.ClosedAt, "Action: NTI warning letter")).ToList(),
+            	NoticesToImprove = _concernsDbContext.NoticesToImprove.Where(x => x.CaseUrn == cases.Urn).Select(action => new Summary(action.CreatedAt, action.ClosedAt, "Action: Notice To Improve")).ToList(),
+				SrmaCases = _concernsDbContext.SRMACases.Where(x => x.CaseUrn == cases.Urn).Select(action => new Summary(action.CreatedAt, action.ClosedAt, "Action: School Resource Management Adviser")).ToList()
 			});
 
 		return await query.ToListAsync();
@@ -40,6 +42,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 }
 
 public record Summary(DateTime CreatedAt, DateTime? ClosedAt, string Name);
+
 public record CaseSummary
 {
 	public long CaseUrn { get; set; }
@@ -50,6 +53,7 @@ public record CaseSummary
 	public ConcernsRating Rating { get; set; }
 	public string TrustUkPrn { get; set; }
 	public IEnumerable<string> ActiveConcerns { get; set; }
+	public IEnumerable<Summary> Decisions { get; set; }
 	public IEnumerable<Summary> FinancialPlanCases { get; set; }
 	public IEnumerable<Summary> NoticesToImprove { get; set; }
 	public IEnumerable<Summary> NtiWarningLetters { get; set; }

@@ -1,7 +1,4 @@
-﻿@using ConcernsCaseWork.Extensions
-@using ConcernsCaseWork.Helpers
-@using ConcernsCaseWork.Mappers
-@model IList<ConcernsCaseWork.Models.ActiveCaseSummaryModel>
+﻿@model IList<ConcernsCaseWork.Models.ActiveCaseSummaryModel>
 
 <table class="govuk-table">
 	<caption class="govuk-table__caption govuk-table__caption--m">
@@ -37,20 +34,20 @@
 	}
 	else
 	{
-		foreach (var activeCase in Model.OrderByDescending(c => c.CreatedAt))
+		foreach (var activeCase in Model.OrderByDescending(m => m.CreatedAt))
 		{
 			<tr class="govuk-table__row tr__large">
 				<td class="govuk-table__cell">
 					<a class="govuk-link" href="case/@activeCase.CaseUrn/management">@activeCase.CaseUrn</a>
 				</td>
 				<td class="govuk-table__cell">
-					@activeCase.UpdatedAt.ToDayMonthYear()
+					@activeCase.UpdatedAt
 				</td>
 				<td class="govuk-table__cell">
-					@activeCase.CreatedAt.ToDayMonthYear()
+					@activeCase.CreatedAtDisplay
 				</td>
 				<td class="govuk-table__cell">
-					@activeCase.TrustUkPrn
+					@activeCase.TrustName
 				</td>
 			
 					@if (!activeCase.ActiveConcerns.Any() && !activeCase.ActiveActionsAndDecisions.Any())

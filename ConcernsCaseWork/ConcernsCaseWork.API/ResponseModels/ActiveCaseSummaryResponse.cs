@@ -12,6 +12,7 @@ public record ActiveCaseSummaryResponse
 	public ConcernsRatingResponse Rating { get; set; }
 	public string TrustUkPrn { get; set; }
 	public IEnumerable<string> ActiveConcerns { get; set; }
+	public IEnumerable<string> Decisions { get; set; }
 	public IEnumerable<Summary> FinancialPlanCases { get; set; }
 	public IEnumerable<Summary> NoticesToImprove { get; set; }
 	public IEnumerable<Summary> NtiWarningLetters { get; set; }

@@ -1,7 +1,10 @@
-using AutoMapper;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Service.Trusts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,30 +14,59 @@ namespace ConcernsCaseWork.Services.Cases;
 public class CaseSummaryService : ICaseSummaryService
 {
 	private readonly IApiCaseSummaryService _caseSummaryService;
-	private readonly IMapper _mapper;
+	private readonly ITrustCachedService _trustCachedService;
 
-	public CaseSummaryService(IApiCaseSummaryService caseSummaryService, IMapper mapper)
+	public CaseSummaryService(IApiCaseSummaryService caseSummaryService, ITrustCachedService trustCachedService)
 	{
 		_caseSummaryService = caseSummaryService;
-		_mapper = mapper;
+		_trustCachedService = trustCachedService;
 	}
 
 	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworker(string caseworker)
 	{
 		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(caseworker);
-		
-		return caseSummaries.Select(caseSummary => new ActiveCaseSummaryModel
+
+		var results = new List<ActiveCaseSummaryModel>();
+
+		foreach (var caseSummary in caseSummaries)
 		{
-			ActiveConcerns = caseSummary.ActiveConcerns,
-			ActiveActionsAndDecisions = GetSortedActionAndDecisionNames(caseSummary),
-			CaseUrn = caseSummary.CaseUrn,
-			CreatedAt = caseSummary.CreatedAt,
-			UpdatedAt = caseSummary.UpdatedAt,
-			CreatedBy = caseSummary.CreatedBy,
-			Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
-			TrustUkPrn = caseSummary.TrustUkPrn,
-			StatusName = caseSummary.StatusName
-		}).ToList();
+			var trustName = "Trust not found";
+
+			if (caseSummary.TrustUkPrn != null)
+			{
+				try
+				{
+					var trust = await _trustCachedService.GetTrustSummaryByUkPrn(caseSummary.TrustUkPrn);	
+					if (trust != null)
+                    {
+                        trustName = trust.TrustName ?? trustName;
+                    }
+				}
+				catch (Exception)
+				{
+					// Log
+				}
+			}
+
+			var summary = 
+				new ActiveCaseSummaryModel
+				{
+	                ActiveConcerns = caseSummary.ActiveConcerns,
+	                ActiveActionsAndDecisions = GetSortedActionAndDecisionNames(caseSummary),
+	                CaseUrn = caseSummary.CaseUrn,
+	                CreatedAt = caseSummary.CreatedAt,
+	                CreatedAtDisplay = caseSummary.CreatedAt.ToDayMonthYear(),
+	                UpdatedAt = caseSummary.UpdatedAt.ToDayMonthYear(),
+	                CreatedBy = caseSummary.CreatedBy,
+	                Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
+	                TrustName = trustName,
+	                StatusName = caseSummary.StatusName
+				};
+			
+			results.Add(summary);
+		}
+		
+		return results;
 	}
 	
 	private static string[] GetSortedActionAndDecisionNames(ActiveCaseSummaryDto activeCaseSummary)
@@ -46,6 +78,7 @@ public class CaseSummaryService : ICaseSummaryService
 		allActionsAndDecisions.AddRange(activeCaseSummary.NtisUnderConsideration);
 		allActionsAndDecisions.AddRange(activeCaseSummary.NtiWarningLetters);
 		allActionsAndDecisions.AddRange(activeCaseSummary.SrmaCases);
+		allActionsAndDecisions.AddRange(activeCaseSummary.Decisions);
 
 		return allActionsAndDecisions
 			.OrderByDescending(action => action.CreatedAt)

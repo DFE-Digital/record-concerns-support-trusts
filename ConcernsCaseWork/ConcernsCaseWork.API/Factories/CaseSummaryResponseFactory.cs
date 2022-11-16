@@ -9,19 +9,20 @@ public static class CaseSummaryResponseFactory
 	{
 		return new ActiveCaseSummaryResponse
 		{
+			ActiveConcerns = caseSummary.ActiveConcerns,
 			CaseUrn = caseSummary.CaseUrn,
 			CreatedAt = caseSummary.CreatedAt,
-			UpdatedAt = caseSummary.UpdatedAt,
-			StatusName = caseSummary.StatusName,
-			Rating = ConcernsRatingResponseFactory.Create(caseSummary.Rating),
-			TrustUkPrn = caseSummary.TrustUkPrn,
-			SrmaCases = caseSummary.SrmaCases,
+			CreatedBy = caseSummary.CreatedBy,
+			Decisions = caseSummary.Decisions,
 			FinancialPlanCases = caseSummary.FinancialPlanCases,
 			NtiWarningLetters = caseSummary.NtiWarningLetters,
 			NtisUnderConsideration = caseSummary.NtisUnderConsideration,
 			NoticesToImprove = caseSummary.NoticesToImprove,
-			ActiveConcerns = caseSummary.ActiveConcerns,
-			CreatedBy = caseSummary.CreatedBy
+			Rating = ConcernsRatingResponseFactory.Create(caseSummary.Rating),
+			SrmaCases = caseSummary.SrmaCases,
+			StatusName = caseSummary.StatusName,
+			TrustUkPrn = caseSummary.TrustUkPrn,
+			UpdatedAt = caseSummary.UpdatedAt
 		};
 	}
 }
