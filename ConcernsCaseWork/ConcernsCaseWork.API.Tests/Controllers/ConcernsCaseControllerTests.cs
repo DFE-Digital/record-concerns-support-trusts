@@ -66,6 +66,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 getConcernsCaseByUrn.Object, 
                 null,
                 null,
+                null,
                 null
             );
             
@@ -91,6 +92,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 getConcernsCaseByUrn.Object, 
                 null,
                 null, 
+                null,
                 null
             );
             
@@ -118,6 +120,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null, 
                 null, 
                 getConcernsCaseByTrustUkprn.Object,
+                null,
                 null,
                 null
             );
@@ -155,6 +158,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null, 
                 null,
                 updateConcernsCase.Object,
+                null,
                 null
             );
             
@@ -184,6 +188,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null, 
                 null,
                 updateConcernsCase.Object,
+                null,
                 null
             );
             
@@ -192,8 +197,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             result.Result.Should().BeEquivalentTo(new NotFoundResult());
         }
         
-        
-         
         [Fact]
         public void GetConcernsCaseByOwnerId_ReturnsCaseResponses_WhenConcernsCasesAreFound()
         {
@@ -211,7 +214,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null, 
                 null,
                 null,
-                getConcernsCaseByOwnerId.Object
+                getConcernsCaseByOwnerId.Object,
+                null
             );
             var result = controller.GetByOwnerId(ownerId, statusId, 1, 50);
             

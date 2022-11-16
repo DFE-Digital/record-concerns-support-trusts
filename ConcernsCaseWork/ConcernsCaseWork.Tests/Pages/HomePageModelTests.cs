@@ -1,4 +1,6 @@
 using AutoFixture;
+using Castle.Components.DictionaryAdapter;
+using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
@@ -34,83 +36,51 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			// arrange
 			var homeModels = HomePageFactory.BuildHomeModels();
-
+		
 			var mockCaseModelService = new Mock<ICaseModelService>();
 			var mockRbacManager = new Mock<IRbacManager>();
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
 			var mockUserStateCache = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+			var mockCaseSummaryService = new Mock<ICaseSummaryService>();
 
-			mockCaseModelService.Setup(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
-				.ReturnsAsync(homeModels);
+			var activeCases = new List<ActiveCaseSummaryModel>()
+			{
+				new ActiveCaseSummaryModel
+				{
+					ActiveActionsAndDecisions = new string[]
+					{
+						"Some action"
+					},
+					ActiveConcerns = null,
+					CaseUrn = 123,
+					CreatedBy = "some user",
+					CreatedAt = DateTime.Now.ToDayMonthYear(),
+					IsMoreActionsAndDecisions = false,
+					Rating = null,
+					StatusName = null,
+					TrustName = null,
+					UpdatedAt = null
+				}
+			};
+			mockCaseSummaryService
+				.Setup(s => s.GetActiveCaseSummariesByCaseworker(It.IsAny<string>()))
+				.ReturnsAsync(activeCases);
 
 			var mockTeamService = new Mock<ITeamsModelService>();
 			mockTeamService.Setup(x => x.GetCaseworkTeam(It.IsAny<string>()))
 				.ReturnsAsync(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel("random.user", Array.Empty<string>()));
-
-			var homePageModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockClaimsPrincipalHelper.Object);
-
+		
+			var homePageModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockCaseSummaryService.Object, mockClaimsPrincipalHelper.Object);
+		
 			// act
 			await homePageModel.OnGetAsync();
-
+		
 			// assert
-			Assert.IsAssignableFrom<List<HomeModel>>(homePageModel.CasesActive);
-			Assert.That(homePageModel.CasesActive.Count, Is.EqualTo(homeModels.Count));
-
-			foreach (var expected in homePageModel.CasesActive)
-			{
-				foreach (var actual in homeModels.Where(actual => expected.CaseUrn.Equals(actual.CaseUrn)))
-				{
-					Assert.That(expected.Closed, Is.EqualTo(actual.Closed));
-					Assert.That(expected.Created, Is.EqualTo(actual.Created));
-					Assert.That(DateTimeOffset.FromUnixTimeMilliseconds(expected.CreatedUnixTime).ToString("dd-MM-yyyy"), Is.EqualTo(actual.Created));
-					Assert.That(expected.Updated, Is.EqualTo(actual.Updated));
-					Assert.That(DateTimeOffset.FromUnixTimeMilliseconds(expected.UpdatedUnixTime).ToString("dd-MM-yyyy"), Is.EqualTo(actual.Updated));
-					Assert.That(expected.Review, Is.EqualTo(actual.Review));
-					Assert.That(expected.CreatedBy, Is.EqualTo(actual.CreatedBy));
-					Assert.That(expected.CaseUrn, Is.EqualTo(actual.CaseUrn));
-					Assert.That(expected.TrustName, Is.EqualTo(actual.TrustName));
-					Assert.That(expected.TrustNameTitle, Is.EqualTo(actual.TrustName.ToTitle()));
-
-					var expectedRecordsModel = expected.RecordsModel;
-					var actualRecordsModel = actual.RecordsModel;
-
-					for (var index = 0; index < expectedRecordsModel.Count; ++index)
-					{
-						Assert.That(expectedRecordsModel.ElementAt(index).Id, Is.EqualTo(actualRecordsModel.ElementAt(index).Id));
-						Assert.That(expectedRecordsModel.ElementAt(index).CaseUrn, Is.EqualTo(actualRecordsModel.ElementAt(index).CaseUrn));
-						Assert.That(expectedRecordsModel.ElementAt(index).RatingId, Is.EqualTo(actualRecordsModel.ElementAt(index).RatingId));
-						Assert.That(expectedRecordsModel.ElementAt(index).StatusId, Is.EqualTo(actualRecordsModel.ElementAt(index).StatusId));
-						Assert.That(expectedRecordsModel.ElementAt(index).TypeId, Is.EqualTo(actualRecordsModel.ElementAt(index).TypeId));
-
-						var expectedRecordRatingModel = expectedRecordsModel.ElementAt(index).RatingModel;
-						var actualRecordRatingModel = actualRecordsModel.ElementAt(index).RatingModel;
-						Assert.NotNull(expectedRecordRatingModel);
-						Assert.NotNull(actualRecordRatingModel);
-						Assert.That(expectedRecordRatingModel.Checked, Is.EqualTo(actualRecordRatingModel.Checked));
-						Assert.That(expectedRecordRatingModel.Name, Is.EqualTo(actualRecordRatingModel.Name));
-						Assert.That(expectedRecordRatingModel.Id, Is.EqualTo(actualRecordRatingModel.Id));
-						Assert.That(expectedRecordRatingModel.RagRating, Is.EqualTo(actualRecordRatingModel.RagRating));
-						Assert.That(expectedRecordRatingModel.RagRatingCss, Is.EqualTo(actualRecordRatingModel.RagRatingCss));
-
-						var expectedRecordTypeModel = expectedRecordsModel.ElementAt(index).TypeModel;
-						var actualRecordTypeModel = actualRecordsModel.ElementAt(index).TypeModel;
-						Assert.NotNull(expectedRecordTypeModel);
-						Assert.NotNull(actualRecordTypeModel);
-						Assert.That(expectedRecordTypeModel.Type, Is.EqualTo(actualRecordTypeModel.Type));
-						Assert.That(expectedRecordTypeModel.SubType, Is.EqualTo(actualRecordTypeModel.SubType));
-						Assert.That(expectedRecordTypeModel.TypeDisplay, Is.EqualTo(actualRecordTypeModel.TypeDisplay));
-						Assert.That(expectedRecordTypeModel.TypesDictionary, Is.EqualTo(actualRecordTypeModel.TypesDictionary));
-
-						var expectedRecordStatusModel = expectedRecordsModel.ElementAt(index).StatusModel;
-						var actualRecordStatusModel = actualRecordsModel.ElementAt(index).StatusModel;
-						Assert.NotNull(expectedRecordStatusModel);
-						Assert.NotNull(actualRecordTypeModel);
-						Assert.That(expectedRecordStatusModel.Name, Is.EqualTo(actualRecordStatusModel.Name));
-						Assert.That(expectedRecordStatusModel.Id, Is.EqualTo(actualRecordStatusModel.Id));
-					}
-				}
-			}
+			Assert.IsAssignableFrom<List<ActiveCaseSummaryModel>>(homePageModel.ActiveCases);
+			
+			Assert.That(homePageModel.ActiveCases.Count, Is.EqualTo(activeCases.Count));
+			Assert.That(homePageModel.ActiveCases, Is.EquivalentTo(activeCases));
 
 			// Verify ILogger
 			mockLogger.Verify(
@@ -121,10 +91,9 @@ namespace ConcernsCaseWork.Tests.Pages
 					null,
 					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
 				Times.Once);
-
+		
 			mockTeamService.Verify(x => x.GetCaseworkTeam(It.IsAny<string>()), Times.Once);
 			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()), Times.Once);
-			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()), Times.Exactly(1));
 		}
 
 		[Test]
@@ -136,6 +105,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
 			var mockUserStateCache = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+			var mockCaseSummaryService = new Mock<ICaseSummaryService>();
 			var emptyList = new List<HomeModel>();
 
 			mockCaseModelService.Setup(model => model.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()))
@@ -143,17 +113,19 @@ namespace ConcernsCaseWork.Tests.Pages
 			mockCaseModelService.Setup(model => model.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
 				.ReturnsAsync(emptyList);
 
+			mockCaseSummaryService.Setup(model => model.GetActiveCaseSummariesByCaseworker(It.IsAny<string>())).ReturnsAsync(new List<ActiveCaseSummaryModel>());
+
 			var mockTeamService = new Mock<ITeamsModelService>();
 			mockTeamService.Setup(x => x.GetCaseworkTeam(It.IsAny<string>()))
 				.ReturnsAsync(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel("random.user", Array.Empty<string>()));
 
 			// act
-			var indexModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockClaimsPrincipalHelper.Object);
+			var indexModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockCaseSummaryService.Object, mockClaimsPrincipalHelper.Object);
 			await indexModel.OnGetAsync();
 
 			// assert
-			Assert.IsAssignableFrom<List<HomeModel>>(indexModel.CasesActive);
-			Assert.That(indexModel.CasesActive.Count, Is.Zero);
+			Assert.IsAssignableFrom<List<ActiveCaseSummaryModel>>(indexModel.ActiveCases);
+			Assert.That(indexModel.ActiveCases.Count, Is.Zero);
 
 			// Not sure that these verifications should take place. it leads to a brittle test.
 			// Verify ILogger
@@ -222,6 +194,7 @@ namespace ConcernsCaseWork.Tests.Pages
 				MockUserStateCache = new Mock<IUserStateCachedService>();
 				MockTeamService = new Mock<ITeamsModelService>();
 				MockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+				MockCaseSummaryService = new Mock<ICaseSummaryService>();
 				IsAuthenticated = false;
 			}
 
@@ -237,7 +210,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			{
 				(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(IsAuthenticated);
 
-				return new HomePageModel(MockCaseModelService.Object, MockRbacManager.Object, MockLogger.Object, MockTeamService.Object, MockUserStateCache.Object, MockClaimsPrincipalHelper.Object)
+				return new HomePageModel(MockCaseModelService.Object, MockRbacManager.Object, MockLogger.Object, MockTeamService.Object, MockCaseSummaryService.Object, MockUserStateCache.Object, MockClaimsPrincipalHelper.Object)
 				{
 					PageContext = pageContext,
 					TempData = tempData,
@@ -255,6 +228,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			public Mock<IRbacManager> MockRbacManager { get; set; }
 
 			public Mock<ICaseModelService> MockCaseModelService { get; set; }
+			
+			public Mock<ICaseSummaryService> MockCaseSummaryService { get; set; }
 
 			public TestBuilder WithNoTeamCaseworkModel()
 			{
@@ -289,12 +264,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			ILogger<HomePageModel> mockLogger,
 			ITeamsModelService mockTeamService,
 			IUserStateCachedService mockUserStateCachedService,
+			ICaseSummaryService mockCaseSummaryService,
 			IClaimsPrincipalHelper mockClaimsPrincipalHelper,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new HomePageModel(mockCaseModelService, mockRbacManager, mockLogger, mockTeamService, mockUserStateCachedService, mockClaimsPrincipalHelper)
+			return new HomePageModel(mockCaseModelService, mockRbacManager, mockLogger, mockTeamService, mockCaseSummaryService, mockUserStateCachedService, mockClaimsPrincipalHelper)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

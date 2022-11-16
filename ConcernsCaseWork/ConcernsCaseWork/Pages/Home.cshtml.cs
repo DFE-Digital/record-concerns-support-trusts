@@ -75,7 +75,7 @@ namespace ConcernsCaseWork.Pages
 			await Task.WhenAll(currentUserLiveCases, liveCasesTeamLeadTask, recordUserSignedTask);
 
 			// Assign responses to UI public properties
-			ActiveCases = currentUserLiveCases.Result.ToList();
+			ActiveCases = currentUserLiveCases.Result;
 			CasesTeamActive = liveCasesTeamLeadTask.Result;
 		}
 

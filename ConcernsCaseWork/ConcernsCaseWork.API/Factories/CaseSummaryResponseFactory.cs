@@ -31,18 +31,17 @@ public static class CaseSummaryResponseFactory
 		=> new (concern.Name, ConcernsRatingResponseFactory.Create(concern.Rating), concern.CreatedAt);
 	
 	private static IEnumerable<ActiveCaseSummaryResponse.Concern> Create(IEnumerable<CaseSummaryVm.Concern> concerns)
-		=> concerns.Select(Create);
+		=> concerns == null ? Array.Empty<ActiveCaseSummaryResponse.Concern>() : concerns.Select(Create);
 
 	private static ActiveCaseSummaryResponse.ActionOrDecision Create(CaseSummaryVm.Action action)
 		=> new (action.CreatedAt, action.ClosedAt, action.Name);
 	
 	private static IEnumerable<ActiveCaseSummaryResponse.ActionOrDecision> Create(IEnumerable<CaseSummaryVm.Action> actions)
-		=> actions.Select(Create);
+		=> actions == null ? Array.Empty<ActiveCaseSummaryResponse.ActionOrDecision>() : actions.Select(Create);
 	
 	private static ActiveCaseSummaryResponse.ActionOrDecision Create(Decision decision)
 		=> new (decision.CreatedAt.DateTime, decision.ClosedAt?.DateTime, "Decision: " + decision.GetTitle());
 	
 	private static IEnumerable<ActiveCaseSummaryResponse.ActionOrDecision> Create(IEnumerable<Decision> decisions)
-		=> decisions.Select(Create);
-	
+		=> decisions == null ? Array.Empty<ActiveCaseSummaryResponse.ActionOrDecision>() : decisions.Select(Create);
 }

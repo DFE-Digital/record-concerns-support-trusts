@@ -4,10 +4,12 @@ using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.Data.Models;
+using ConcernsCaseWork.Service.Ratings;
 using System.Linq;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Moq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -23,9 +25,10 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             var ownerId = _fixture.Create<string>();
             var gateway = new Mock<ICaseSummaryGateway>();
             
-            var cases = Builder<ActiveCaseSummaryResponse>.CreateListOfSize(10)
+            var cases = Builder<CaseSummaryVm>.CreateListOfSize(10)
                 .All()
                 .With(c => c.CreatedBy = ownerId)
+                .With(c => c.Rating = Builder<ConcernsRating>.CreateNew().Build())
                 .Build();
 
             gateway.Setup(g => g.GetActiveCaseSummaries(ownerId)).ReturnsAsync(cases);
@@ -36,6 +39,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             var result = await sut.Execute(ownerId);
 
             // assert
+            result.Should().HaveCount(10);
         }
 
         [Fact]
@@ -43,13 +47,9 @@ namespace ConcernsCaseWork.API.Tests.UseCases
         {
 	        // arrange
 	        var ownerId = _fixture.Create<string>();
-	        var statusId = _fixture.Create<int>();
 	        var gateway = new Mock<ICaseSummaryGateway>();
-            
-	        var cases = Builder<ActiveCaseSummaryResponse>.CreateListOfSize(0)
-		        .All()
-		        .With(c => c.CreatedBy = ownerId)
-		        .Build();
+
+	        var cases = new List<CaseSummaryVm>();
 
 	        gateway.Setup(g => g.GetActiveCaseSummaries(ownerId)).ReturnsAsync(cases);
 
