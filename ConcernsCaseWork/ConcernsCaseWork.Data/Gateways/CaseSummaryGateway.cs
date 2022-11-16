@@ -1,4 +1,5 @@
 using ConcernsCaseWork.Data.Models;
+using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConcernsCaseWork.Data.Gateways;
@@ -29,19 +30,17 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 				UpdatedAt = cases.UpdatedAt,
 				
 				ActiveConcerns = from concerns in cases.ConcernsRecords where concerns.StatusId == 1 select new CaseSummaryVm.Concern(concerns.ConcernsType.ToString(), concerns.ConcernsRating, concerns.CreatedAt),
-				Decisions = from decisions in cases.Decisions select new CaseSummaryVm.ActionOrDecision(decisions.CreatedAt.DateTime, decisions.ClosedAt.HasValue ? decisions.ClosedAt.Value.DateTime : null, "Decision"),
-				FinancialPlanCases = _concernsDbContext.FinancialPlanCases.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.ActionOrDecision(action.CreatedAt, action.ClosedAt, "Action: Financial plan")).ToList(),
-				NtisUnderConsideration = _concernsDbContext.NTIUnderConsiderations.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.ActionOrDecision(action.CreatedAt, action.ClosedAt, "Action: NTI under consideration")).ToList(),
-            	NtiWarningLetters = _concernsDbContext.NTIWarningLetters.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.ActionOrDecision(action.CreatedAt, action.ClosedAt, "Action: NTI warning letter")).ToList(),
-            	NoticesToImprove = _concernsDbContext.NoticesToImprove.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.ActionOrDecision(action.CreatedAt, action.ClosedAt, "Action: Notice To Improve")).ToList(),
-				SrmaCases = _concernsDbContext.SRMACases.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.ActionOrDecision(action.CreatedAt, action.ClosedAt, "Action: School Resource Management Adviser")).ToList()
+				Decisions = from decisions in cases.Decisions select decisions,
+				FinancialPlanCases = _concernsDbContext.FinancialPlanCases.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: Financial plan")).ToArray(),
+				NtisUnderConsideration = _concernsDbContext.NTIUnderConsiderations.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: NTI under consideration")).ToArray(),
+            	NtiWarningLetters = _concernsDbContext.NTIWarningLetters.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: NTI warning letter")).ToArray(),
+            	NoticesToImprove = _concernsDbContext.NoticesToImprove.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: Notice To Improve")).ToArray(),
+				SrmaCases = _concernsDbContext.SRMACases.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: School Resource Management Adviser")).ToArray()
 			});
 
 		return await query.ToListAsync();
 	}
 }
-
-
 
 public record CaseSummaryVm
 {
@@ -53,13 +52,13 @@ public record CaseSummaryVm
 	public string TrustUkPrn { get; set; }
 	public DateTime UpdatedAt { get; set; }
 	public IEnumerable<Concern> ActiveConcerns { get; set; }
-	public IEnumerable<ActionOrDecision> Decisions { get; set; }
-	public IEnumerable<ActionOrDecision> FinancialPlanCases { get; set; }
-	public IEnumerable<ActionOrDecision> NoticesToImprove { get; set; }
-	public IEnumerable<ActionOrDecision> NtiWarningLetters { get; set; }
-	public IEnumerable<ActionOrDecision> NtisUnderConsideration { get; set; }
-	public IEnumerable<ActionOrDecision> SrmaCases { get; set; }
+	public IEnumerable<Decision> Decisions { get; set; }
+	public IEnumerable<Action> FinancialPlanCases { get; set; }
+	public IEnumerable<Action> NoticesToImprove { get; set; }
+	public IEnumerable<Action> NtiWarningLetters { get; set; }
+	public IEnumerable<Action> NtisUnderConsideration { get; set; }
+	public IEnumerable<Action> SrmaCases { get; set; }
 	
-	public record ActionOrDecision(DateTime CreatedAt, DateTime? ClosedAt, string Name);
+	public record Action(DateTime CreatedAt, DateTime? ClosedAt, string Name);
 	public record Concern(string Name, ConcernsRating Rating, DateTime CreatedAt);
 }

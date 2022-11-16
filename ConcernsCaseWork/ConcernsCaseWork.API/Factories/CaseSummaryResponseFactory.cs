@@ -1,5 +1,6 @@
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.Data.Gateways;
+using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 
 namespace ConcernsCaseWork.API.Factories;
 
@@ -32,10 +33,16 @@ public static class CaseSummaryResponseFactory
 	private static IEnumerable<ActiveCaseSummaryResponse.Concern> Create(IEnumerable<CaseSummaryVm.Concern> concerns)
 		=> concerns.Select(Create);
 
-	private static ActiveCaseSummaryResponse.ActionOrDecision Create(CaseSummaryVm.ActionOrDecision actionOrDecision)
-		=> new (actionOrDecision.CreatedAt, actionOrDecision.ClosedAt, actionOrDecision.Name);
+	private static ActiveCaseSummaryResponse.ActionOrDecision Create(CaseSummaryVm.Action action)
+		=> new (action.CreatedAt, action.ClosedAt, action.Name);
 	
-	private static IEnumerable<ActiveCaseSummaryResponse.ActionOrDecision> Create(IEnumerable<CaseSummaryVm.ActionOrDecision> actionsOrDecisions)
-		=> actionsOrDecisions.Select(Create);
+	private static IEnumerable<ActiveCaseSummaryResponse.ActionOrDecision> Create(IEnumerable<CaseSummaryVm.Action> actions)
+		=> actions.Select(Create);
+	
+	private static ActiveCaseSummaryResponse.ActionOrDecision Create(Decision decision)
+		=> new (decision.CreatedAt.DateTime, decision.ClosedAt?.DateTime, "Decision: " + decision.GetTitle());
+	
+	private static IEnumerable<ActiveCaseSummaryResponse.ActionOrDecision> Create(IEnumerable<Decision> decisions)
+		=> decisions.Select(Create);
 	
 }
