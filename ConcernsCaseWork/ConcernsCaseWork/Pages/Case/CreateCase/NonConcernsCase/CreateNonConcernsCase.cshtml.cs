@@ -2,6 +2,7 @@ using Ardalis.GuardClauses;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases.Create;
@@ -68,7 +69,7 @@ public class CreateNonConcernsCasePageModel : AbstractPageModel
 				var userName = GetUserName();
 				var caseUrn = await _createCaseService.CreateNonConcernsCase(userName);
 				
-				return Redirect($"/case/{caseUrn}/management/action/decision/add");
+				return Redirect($"/case/{caseUrn}/management/action/decision/addOrUpdate");
 			}
 
 			switch (SelectedAction)
