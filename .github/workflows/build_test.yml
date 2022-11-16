@@ -44,4 +44,4 @@ jobs:
           dotnet user-secrets set "app:username" "${{ secrets.APP_USERNAME }}"
           dotnet user-secrets set "app:password" "${{ secrets.APP_PASSWORD }}"
       - name: Test
-        run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --filter FullyQualifiedName\!~ConcernsCaseWork.Integration.Tests --no-build --verbosity diagnostic
+        run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --filter FullyQualifiedName!~ConcernsCaseWork.Integration.Tests --no-build --verbosity diagnostic
