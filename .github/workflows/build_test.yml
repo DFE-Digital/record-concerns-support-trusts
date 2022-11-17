@@ -60,19 +60,22 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
 
-      - name: Build solution, add secrets, test and run SonarCloud scanner
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Add secrets
         run: |
-          dotnet-sonarscanner begin /k:"DFE-Digital_amsd-casework" /o:"dfe-digital" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=CoverageReport/SonarQube.xml
-          dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
           cd ConcernsCaseWork/ConcernsCaseWork
           dotnet user-secrets set "VCAP_SERVICES" "${{ secrets.VCAP_SERVICES }}"
           dotnet user-secrets set "trams:api_endpoint" "${{ secrets.TRAMS_API_ENDPOINT }}"
           dotnet user-secrets set "trams:api_key" "${{ secrets.TRAMS_API_KEY }}"
           dotnet user-secrets set "app:username" "${{ secrets.APP_USERNAME }}"
           dotnet user-secrets set "app:password" "${{ secrets.APP_PASSWORD }}"
+
+      - name: Build solution, test and run SonarCloud scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          dotnet-sonarscanner begin /k:"DFE-Digital_amsd-casework" /o:"dfe-digital" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=CoverageReport/SonarQube.xml
+          dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
           dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity normal --collect:"XPlat Code Coverage" --filter "FullyQualifiedName!~ConcernsCaseWork.API.Tests.Integration&FullyQualifiedName!~ConcernsCaseWork.Integration.Tests"
           reportgenerator -reports:./**/coverage.cobertura.xml -targetdir:./ConcernsCaseWork/CoverageReport -reporttypes:SonarQube
           dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
