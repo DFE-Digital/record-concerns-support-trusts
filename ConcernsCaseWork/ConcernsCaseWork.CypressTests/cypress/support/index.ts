@@ -21,6 +21,7 @@ declare global {
     namespace Cypress {
         interface Chainable {
             getByTestId(id: string): Chainable<Element>;
+            getById(id: string): Chainable<Element>;
             login(): Chainable<Element>;
             storeSessionData(): Chainable<Element>;
             selectMoR(): Chainable<Element>;
@@ -40,6 +41,7 @@ declare global {
             closeSRMA(): Chainable<Element>;
             checkForExistingCase(force: boolean): Chainable<Element>;
             createSRMA(): Chainable<Element>;
+            addConcernsDecisionsAddToCase(): Chainable<Element>;
         }
     }
 }
