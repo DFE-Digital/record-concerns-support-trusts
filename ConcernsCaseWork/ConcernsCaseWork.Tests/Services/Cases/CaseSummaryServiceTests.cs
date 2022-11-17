@@ -214,7 +214,7 @@ public class CaseSummaryServiceTests
 
 		// assert
 		result.Count.Should().Be(1);
-		result.Single().ActiveConcerns.Select(c => int.Parse(c)).Should().BeInAscendingOrder();
+		result.Single().ActiveConcerns.Select(int.Parse).Should().BeInAscendingOrder();
 	}
 
 	[Test]
