@@ -43,6 +43,10 @@ Cypress.Commands.add("getByTestId", (id) => {
     cy.get(`[data-testid="${id}"]`)
 });
 
+Cypress.Commands.add("getById", (id) => {
+    cy.get(`[id="${id}"]`)
+});
+
 Cypress.Commands.add("login", () => {
     cy.clearCookies();
     cy.clearLocalStorage();
@@ -54,7 +58,6 @@ Cypress.Commands.add("login", () => {
 
     cy.visit("/");
 })
-
 //example: /case/5880/management"
 Cypress.Commands.add("visitPage", (slug) => {
     cy.visit(Cypress.env('url') + slug, { timeout: 30000 });
