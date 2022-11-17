@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 # Shallow clones disabled for a better relevancy of SC analysis
 
       - name: Azure Container Registry login
         uses: docker/login-action@v2
