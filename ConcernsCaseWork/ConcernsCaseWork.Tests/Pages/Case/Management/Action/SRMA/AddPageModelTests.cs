@@ -190,7 +190,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var pageModel = SetupAddPageModel(mockSrmaService.Object, mockLogger.Object);
 
-			var exceededNotesLength = "Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data Test Data";
+			var exceededNotesLength = "1".PadLeft(2001);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseUrn);

@@ -160,9 +160,9 @@ window.addUsersValidator = function(validator) {
 window.addSRMANotesValidator = function (validator) {
 	validator.addValidator('srma-notes', [{
 		method: function (field) {
-			return field.value.trim().length <= 500;
+			return field.value.trim().length <= 2000;
 		},
-		message: 'Notes must be 500 characters or less'
+		message: 'Notes must be 2000 characters or less'
 	}]);
 }
 window.addFinancialPlanNotesValidator = function (validator) {
