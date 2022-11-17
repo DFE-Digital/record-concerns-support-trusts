@@ -91,14 +91,14 @@ public class CaseSummaryService : ICaseSummaryService
 			result
 				.AddRange(concerns
 					.Where(c => c.Rating.Name == rating)
-					.OrderBy(r => r.CreatedAt)
+					.OrderByDescending(r => r.CreatedAt)
 					.Select(c => c.Name));
 		}
 		
 		result
 			.AddRange(concerns
 				.Where(c => !SortedRags.Contains(c.Rating.Name))
-				.OrderBy(r => r.CreatedAt)
+				.OrderByDescending(r => r.CreatedAt)
 				.Select(c => c.Name));
 		
 		return result.ToArray();
