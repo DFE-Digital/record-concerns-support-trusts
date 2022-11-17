@@ -79,6 +79,6 @@ namespace ConcernsCaseWork.Redis.Trusts
 			return trustSummaryDto;
 		}
 
-		private string ToTitleCase(string value) => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value?.ToLower() ?? "");
+		private static string ToTitleCase(string value) => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value?.ToLower() ?? "");
 	}
 }

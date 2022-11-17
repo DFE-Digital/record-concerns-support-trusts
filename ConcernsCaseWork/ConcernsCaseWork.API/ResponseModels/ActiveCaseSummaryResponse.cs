@@ -1,5 +1,3 @@
-using ConcernsCaseWork.Data.Gateways;
-
 namespace ConcernsCaseWork.API.ResponseModels;
 
 public record ActiveCaseSummaryResponse
