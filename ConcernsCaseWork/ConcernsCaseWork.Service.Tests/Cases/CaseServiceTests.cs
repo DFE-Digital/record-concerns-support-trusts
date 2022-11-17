@@ -20,8 +20,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			// arrange
 			var expectedCases = CaseFactory.BuildListCaseDto();
 			var expectedApiListWrapper = new ApiListWrapper<CaseDto>(expectedCases, null);
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -78,8 +77,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 		public void WhenGetCasesByCaseworker_ThrowsException_ReturnsEmptyCases()
 		{
 			// arrange
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -107,8 +105,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			// arrange
 			var expectedCase = CaseFactory.BuildCaseDto();
 			var expectedCaseWrap = new ApiWrapper<CaseDto>(expectedCase);
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var logger = new Mock<ILogger<CaseService>>();
 			var httpClientFactory = new Mock<IHttpClientFactory>();
@@ -157,8 +154,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 		public void WhenGetCaseByUrn_ReturnsException()
 		{
 			// arrange
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -185,8 +181,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 		{
 			// arrange
 			var expectedCaseWrap = new ApiListWrapper<CaseDto>(null, null);
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var logger = new Mock<ILogger<CaseService>>();
 			var httpClientFactory = new Mock<IHttpClientFactory>();
@@ -217,8 +212,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var expectedCaseWrap = new ApiListWrapper<CaseDto>(
 				expectedCases, 
 				new ApiListWrapper<CaseDto>.Pagination(1, 1, string.Empty));
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -280,8 +274,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 		public void WhenGetCasesByTrustUkPrn_ThrowsException()
 		{
 			// arrange
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -309,8 +302,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			// arrange
 			var expectedCases = CaseFactory.BuildListCaseDto();
 			var expectedApiListWrapperCases = new ApiListWrapper<CaseDto>(expectedCases, null);
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -368,8 +360,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 		public void WhenGetCasesByPagination_ThrowsException()
 		{
 			// arrange
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -398,8 +389,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var expectedCase = CaseFactory.BuildCaseDto();
 			var expectedCaseWrap = new ApiWrapper<CaseDto>(expectedCase);
 			
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var logger = new Mock<ILogger<CaseService>>();
 			var httpClientFactory = new Mock<IHttpClientFactory>();
@@ -448,8 +438,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 		public void WhenPostCase_ReturnsException()
 		{
 			// arrange
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -477,8 +466,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			// arrange
 			var expectedCaseWrap = new ApiWrapper<CaseDto>(null);
 			
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var logger = new Mock<ILogger<CaseService>>();
 			var httpClientFactory = new Mock<IHttpClientFactory>();
@@ -507,8 +495,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			// arrange
 			var expectedCase = CaseFactory.BuildCaseDto();
 			var expectedApiWrapperCase = new ApiWrapper<CaseDto>(expectedCase);
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -557,8 +544,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 		public void WhenPatchCaseByUrn_ReturnsException()
 		{
 			// arrange
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -584,8 +570,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 		public void WhenPatchCaseByUrn_UnwrapResponse_ReturnsException()
 		{
 			// arrange
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var expectedApiWrapperCase = new ApiWrapper<CaseDto>(null);
 			
