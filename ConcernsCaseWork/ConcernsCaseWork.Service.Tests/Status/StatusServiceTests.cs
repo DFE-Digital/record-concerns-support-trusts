@@ -20,8 +20,7 @@ namespace ConcernsCaseWork.Service.Tests.Status
 			// arrange
 			var expectedStatuses = StatusFactory.BuildListStatusDto();
 			var expectedApiWrapperStatuses = new ApiListWrapper<StatusDto>(expectedStatuses, null);
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -64,8 +63,7 @@ namespace ConcernsCaseWork.Service.Tests.Status
 		{
 			// arrange
 			var expectedApiWrapperStatuses = new ApiListWrapper<StatusDto>(null, null);
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -92,8 +90,7 @@ namespace ConcernsCaseWork.Service.Tests.Status
 		public void WhenGetStatus_ThrowsException()
 		{
 			// arrange
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();

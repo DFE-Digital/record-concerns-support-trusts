@@ -5,6 +5,7 @@ using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.Decision;
 using System;
+using System.Globalization;
 using System.Linq;
 
 namespace ConcernsCaseWork.Services.Decisions
@@ -38,7 +39,7 @@ namespace ConcernsCaseWork.Services.Decisions
 				SubmissionRequired = decisionResponse.SubmissionRequired != true ? "No" : "Yes",
 				SubmissionLink = decisionResponse.SubmissionDocumentLink,
 				EsfaReceivedRequestDate = receivedRequestDate?.ToDayMonthYear(),
-				TotalAmountRequested = decisionResponse.TotalAmountRequested.ToString("C"),
+				TotalAmountRequested = decisionResponse.TotalAmountRequested.ToString("C", new CultureInfo("en-GB")),
 				DecisionTypes = decisionResponse.DecisionTypes.Select(d => EnumHelper.GetEnumDescription(d)).ToList(),
 				SupportingNotes = decisionResponse.SupportingNotes,
 				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/addOrUpdate/{decisionResponse.DecisionId}",
