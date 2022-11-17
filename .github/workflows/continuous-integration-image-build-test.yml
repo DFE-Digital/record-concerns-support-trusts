@@ -43,7 +43,7 @@ jobs:
         run: |
           dotnet-sonarscanner begin /k:"DFE-Digital_amsd-casework" /o:"dfe-digital" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=CoverageReport/SonarQube.xml
           dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
-          dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity normal --collect:"XPlat Code Coverage"
+          dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity normal --collect:"XPlat Code Coverage" --filter "FullyQualifiedName!~ConcernsCaseWork.API.Tests.Integration&FullyQualifiedName!~ConcernsCaseWork.Integration.Tests"
           reportgenerator -reports:./**/coverage.cobertura.xml -targetdir:./ConcernsCaseWork/CoverageReport -reporttypes:SonarQube
           dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
