@@ -20,9 +20,8 @@ namespace ConcernsCaseWork.Service.Tests.Types
 			// arrange
 			var expectedTypes = TypeFactory.BuildListTypeDto();
 			var apiListWrapperTypes = new ApiListWrapper<TypeDto>(expectedTypes, null);
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
-			
+			var concernsApiEndpoint = "https://localhost";
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -36,10 +35,10 @@ namespace ConcernsCaseWork.Service.Tests.Types
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<TypeService>>();
 			var typeService = new TypeService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+
 			// act
 			var types = await typeService.GetTypes();
 
@@ -59,14 +58,13 @@ namespace ConcernsCaseWork.Service.Tests.Types
 				}
 			}
 		}
-		
+
 		[Test]
 		public void WhenGetTypes_ThrowsException()
 		{
 			// arrange
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
-			
+			var concernsApiEndpoint = "https://localhost";
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -79,23 +77,21 @@ namespace ConcernsCaseWork.Service.Tests.Types
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<TypeService>>();
 			var typeService = new TypeService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => typeService.GetTypes());
 		}
-		
+
 		[Test]
 		public void WhenGetTypes_And_ResponseData_IsNull_ThrowsException()
 		{
 			// arrange
 			var apiListWrapperTypes = new ApiListWrapper<TypeDto>(null, null);
-			
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
-			
+			var concernsApiEndpoint = "https://localhost";
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -109,10 +105,10 @@ namespace ConcernsCaseWork.Service.Tests.Types
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<TypeService>>();
 			var typeService = new TypeService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => typeService.GetTypes());
 		}
