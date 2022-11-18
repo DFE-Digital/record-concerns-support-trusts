@@ -131,6 +131,7 @@ class CreateCaseDetailsPage {
             expect($nxtinf1).to.be.visible
             expect($nxtinf1.text()).to.match(/(4000 characters)/i)
         });
+        
         //Case history validation
         cy.get('[class="govuk-grid-row"] *[for="case-history"]').should(($nxt) => {
             expect($nxt.text().trim()).equal("Next steps (optional)")
