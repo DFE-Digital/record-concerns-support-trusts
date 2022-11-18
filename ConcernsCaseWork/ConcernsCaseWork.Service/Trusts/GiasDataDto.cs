@@ -13,6 +13,9 @@ namespace ConcernsCaseWork.Service.Trusts
 		[JsonProperty("groupName")]
 		public string GroupName { get; }
 		
+		[JsonProperty("groupType")]
+		public string GroupType { get; }
+		
 		[JsonProperty("groupTypeCode")]
 		public string GroupTypeCode { get; }
 			
@@ -23,7 +26,7 @@ namespace ConcernsCaseWork.Service.Trusts
 		public GroupContactAddressDto GroupContactAddress { get; }
 			
 		[JsonConstructor]
-		public GiasDataDto(string ukprn, string groupId, string groupName, string groupTypeCode, string companiesHouseNumber, GroupContactAddressDto groupContactAddress) => 
-			(UkPrn, GroupId, GroupName, GroupTypeCode, CompaniesHouseNumber, GroupContactAddress) = (ukprn, groupId, groupName, groupTypeCode, companiesHouseNumber, groupContactAddress);
+		public GiasDataDto(string ukprn, string groupId, string groupName, string groupTypeCode, string companiesHouseNumber, GroupContactAddressDto groupContactAddress, string groupType) => 
+			(UkPrn, GroupId, GroupName, GroupTypeCode, CompaniesHouseNumber, GroupContactAddress, GroupType) = (ukprn, groupId, groupName, groupTypeCode, companiesHouseNumber, groupContactAddress, groupType);
 	}
 }
