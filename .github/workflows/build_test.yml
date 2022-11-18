@@ -12,22 +12,7 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
     environment: dev
-
-    services:
-      # Label used to access the service container
-      redis:
-        # Docker Hub image
-        image: redis:alpine
-        # Set health checks to wait until redis has started
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          # Maps port 6379 on service container to the host
-          - 6379:6379 
-    
+        
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -59,15 +44,6 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
-
-      - name: Add secrets
-        run: |
-          cd ConcernsCaseWork/ConcernsCaseWork
-          dotnet user-secrets set "VCAP_SERVICES" "${{ secrets.VCAP_SERVICES }}"
-          dotnet user-secrets set "trams:api_endpoint" "${{ secrets.TRAMS_API_ENDPOINT }}"
-          dotnet user-secrets set "trams:api_key" "${{ secrets.TRAMS_API_KEY }}"
-          dotnet user-secrets set "app:username" "${{ secrets.APP_USERNAME }}"
-          dotnet user-secrets set "app:password" "${{ secrets.APP_PASSWORD }}"
 
       - name: Build solution, test and run SonarCloud scanner
         env:
