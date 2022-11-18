@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.Data.Models
         public string NextSteps { get; set; }
         public string DirectionOfTravel { get; set; }
         public string CaseHistory { get; set; }
-        public int Urn { get; set; }
+        public int Urn { get; private set; }
         public int StatusId { get; set; }
         public int RatingId { get; set; }
 

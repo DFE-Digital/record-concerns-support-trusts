@@ -58,8 +58,6 @@ namespace ConcernsCaseWork.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasSequence<int>("GlobalSequence", "concerns").HasMin(1).StartsAt(1);
-
             modelBuilder.Entity<ConcernsCase>(entity =>
             {
                 entity.ToTable("ConcernsCase", "concerns");
@@ -68,7 +66,7 @@ namespace ConcernsCaseWork.Data
                     .HasName("PK__CCase__C5B214360AF620234");
 
                 entity.Property(e => e.Urn)
-                    .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
+	                .HasComputedColumnSql("[Id]");
 
                 entity.HasMany(x => x.Decisions)
                     .WithOne();
