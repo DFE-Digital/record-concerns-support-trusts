@@ -23,7 +23,7 @@ namespace ConcernsCaseWork.Data.Models
         public DateTime? ClosedAt { get; set; }
         public string CreatedBy { get; set; }
 
-        [StringLength(500)]
+        [StringLength(2000)]
         public string Notes { get; set; }
 
         [ForeignKey(nameof(ReasonId))]

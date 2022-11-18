@@ -29,7 +29,7 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 		private readonly ILogger<AddSrmaPageModel> _logger;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private readonly ICreateCaseService _createCaseService;
-		private const int _notesMaxLength = 500;
+		private const int _notesMaxLength = 2000;
 		
 		public int NotesMaxLength => _notesMaxLength;
 		public IEnumerable<RadioItem> SRMAStatuses => GetStatuses();
