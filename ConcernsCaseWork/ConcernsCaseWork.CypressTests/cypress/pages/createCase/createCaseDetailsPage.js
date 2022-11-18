@@ -130,8 +130,17 @@ class CreateCaseDetailsPage {
         cy.get('#next-steps-info').then(($nxtinf1) =>{
             expect($nxtinf1).to.be.visible
             expect($nxtinf1.text()).to.match(/(4000 characters)/i)
-        })
+        });
 
+        //Case history validation
+        cy.get('[class="govuk-grid-row"] *[for="case-history"]').should(($nxt) => {
+            expect($nxt.text().trim()).equal("Case history (optional)")
+        });
+        cy.get('#case-history').should('be.visible');
+        cy.get('#case-history-info').then(($nxtinf1) =>{
+            expect($nxtinf1).to.be.visible
+            expect($nxtinf1.text()).to.match(/(4000 characters)/i)
+        })
         cy.get('button[data-prevent-double-click^="true"]').then(($btncreate) =>{
              expect($btncreate.text()).to.match(/(Create case)/i);
         })
