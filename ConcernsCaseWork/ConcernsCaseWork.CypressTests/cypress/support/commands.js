@@ -90,6 +90,7 @@ Cypress.Commands.add('enterConcernDetails', () => {
     cy.get("#case-aim").type("Data entered at " + date);
     cy.get("#de-escalation-point").type("Data entered at " + date);
     cy.get("#next-steps").type("Data entered at " + date);
+    cy.get("#case-history").type("Data entered at " + date);
     cy.get("#case-details-form  button").click();
 })
 
@@ -325,7 +326,17 @@ Cypress.Commands.add('validateCreateCaseInitialDetails', () => {
     cy.get('#next-steps-info').then(($nxtinf1) => {
         expect($nxtinf1).to.be.visible
         expect($nxtinf1.text()).to.match(/(4000 characters)/i)
-    })
+    });
+
+    //Case History
+    cy.get('[class="govuk-grid-row"] *[for="case-history"]').should(($nxt) => {
+        expect($nxt.text().trim()).equal("Case history (optional)")
+    });
+    cy.get('#case-history').should('be.visible');
+    cy.get('#case-history-info').then(($nxtinf1) => {
+        expect($nxtinf1).to.be.visible
+        expect($nxtinf1.text()).to.match(/(4000 characters)/i)
+    });
 
     cy.get('button[data-prevent-double-click^="true"]').then(($btncreate) => {
         expect($btncreate.text()).to.match(/(Create case)/i);
@@ -396,12 +407,13 @@ Cypress.Commands.add('validateCaseManagPage', () => {
     })
 
     cy.get('[class^="govuk-accordion__section govuk-accordion"]').should(($accord) => {
-        expect($accord).to.have.length(5);
+        expect($accord).to.have.length(6);
         expect($accord.eq(0).text().trim()).to.contain('Issue').and.to.match(/Edit/);
         expect($accord.eq(1).text().trim()).to.contain('Current status').and.to.match(/Edit/);
         expect($accord.eq(2).text().trim()).to.contain('Case aim').and.to.match(/(Edit)/);
         expect($accord.eq(3).text().trim()).to.contain('De-escalation point').and.to.match(/(Edit)/);
         expect($accord.eq(4).text().trim()).to.contain('Next steps').and.to.match(/(Edit)/);
+        expect($accord.eq(5).text().trim()).to.contain('Case history').and.to.match(/(Edit)/);
     })
 })
 
