@@ -295,6 +295,49 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			Assert.That(pageResponseInstance.Url, Is.EqualTo($"/case/{caseUrn}/management"));
 		}
 
+		[Test]
+		public async Task WhenOnPostAsync_NotesTooLongThrowsExceptionReturnsPage()
+		{
+			// arrange
+			var caseUrn = _fixture.Create<long>();
+			var srmaId = _fixture.Create<long>();
+			var notes = "1".PadLeft(2001);
+			
+			var mockSrmaService = new Mock<ISRMAService>();
+			var mockLogger = new Mock<ILogger<ResolvePageModel>>();
+
+			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed);
+
+			mockSrmaService.Setup(s => s.SetNotes(It.IsAny<long>(), It.IsAny<string>()));
+			mockSrmaService.Setup(s => s.SetStatus(It.IsAny<long>(), It.IsAny<SRMAStatus>()));
+
+			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+				.ReturnsAsync(srmaModel);
+			
+			var pageModel = SetupResolvePageModel(mockSrmaService.Object, mockLogger.Object);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+			routeData.Add("srmaId", srmaId);
+			routeData.Add("resolution", "complete");
+
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "srma-notes", new StringValues(notes) }
+				});
+
+			// act
+			var pageResponse = await pageModel.OnPostAsync();
+			var pageResponseInstance = pageResponse as RedirectResult;
+
+			// assert
+			Assert.That(pageResponse, Is.Not.Null);
+			Assert.That(pageModel.TempData, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+
+		}
+
 		private static ResolvePageModel SetupResolvePageModel(
 			ISRMAService mockSrmaService,
 			ILogger<ResolvePageModel> mockLogger,
