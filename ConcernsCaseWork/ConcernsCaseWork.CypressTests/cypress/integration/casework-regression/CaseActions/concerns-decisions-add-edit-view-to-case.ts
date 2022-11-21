@@ -1,14 +1,18 @@
-import AddToCasePage from "../../../pages/caseActions/addToCasePage.js";
 import { DecisionPage } from "../../../pages/caseActions/decisionPage"
 
 describe("User can add case actions to an existing case", () => {
+	const decisionPage: DecisionPage = new DecisionPage();
+
 	beforeEach(() => {
 		cy.login();
 	});
 
-	const decisionPage: DecisionPage = new DecisionPage();
+	after(function () {
+		cy.clearLocalStorage();
+		cy.clearCookies();
+	});
 
-	it("Checking that Concerns decision is visible then adding concerns decision case action to a case,  Validation of wrong date when entered", function () {
+	it(" Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
 		cy.addConcernsDecisionsAddToCase();
 
 		decisionPage
@@ -26,23 +30,6 @@ describe("User can add case actions to an existing case", () => {
 			.saveDecision()
 			.hasValidationError("Please enter a complete date DD MM YYYY")
 			.hasValidationError("Notes must be 2000 characters or less");
-	});
-
-	it(" Concern Decision - Checking if View live initial record is visible", function () {
-		cy.addConcernsDecisionsAddToCase();
-		AddToCasePage.getDayDateField().click().type("12");
-		AddToCasePage.getMonthDateField().click().type("05");
-		AddToCasePage.getYearDateField().click().type("2022");
-		AddToCasePage.getNoticeToImproveBtn().click();
-		AddToCasePage.getDecisionButton().click();
-		cy.get("#open-case-actions").should(
-			"contain.text",
-			"Decision: Notice to Improve"
-		);
-	});
-
-	it(" Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
-		cy.addConcernsDecisionsAddToCase();
 
 		decisionPage
 			.withCrmEnquiry("444")
@@ -55,8 +42,9 @@ describe("User can add case actions to an existing case", () => {
 			.withTypeOfDecisionID("NoticeToImprove")
 			.withTypeOfDecisionID("Section128")
 			.withTotalAmountRequested("£140,000")
-			.withSupportingNotes("These are some supporting notes!");
-		AddToCasePage.getDecisionButton().click();
+			.withSupportingNotes("These are some supporting notes!")
+			.saveDecision();
+
 		cy.get("#open-case-actions td")
 			.should("contain.text", "Decision: Notice to Improve (NTI)")
 			.eq(-3)
@@ -85,8 +73,8 @@ describe("User can add case actions to an existing case", () => {
 			.withDateESFAYear("2022")
 			.withTypeOfDecisionID("QualifiedFloatingCharge")
 			.withTotalAmountRequested("£130,000")
-			.withSupportingNotes("Testing Supporting Notes");
-		AddToCasePage.getDecisionButton().click();
+			.withSupportingNotes("Testing Supporting Notes")
+			.saveDecision();
 
 		decisionPage
 			.hasCrmEnquiry("777")
@@ -98,13 +86,17 @@ describe("User can add case actions to an existing case", () => {
 			.hasTypeOfDecision("Qualified Floating Charge (QFC)")
 			.hasSupportingNotes("Testing Supporting Notes");
 	});
+
 	it("When Decisions is empty, View Behavior", function () {
 		cy.addConcernsDecisionsAddToCase();
-		AddToCasePage.getDecisionButton().click();
+
+		decisionPage.saveDecision();
+
 		cy.get("#open-case-actions td")
 			.should("contain.text", "Decision: Notice to Improve (NTI)")
 			.eq(-3)
 			.click();
+
 		decisionPage
 			.hasCrmEnquiry("Empty")
 			.hasRetrospectiveRequest("No")
@@ -114,9 +106,5 @@ describe("User can add case actions to an existing case", () => {
 			.hasTotalAmountRequested("£0.00")
 			.hasTypeOfDecision("Empty")
 			.hasSupportingNotes("Empty");
-	});
-	after(function () {
-		cy.clearLocalStorage();
-		cy.clearCookies();
 	});
 });
