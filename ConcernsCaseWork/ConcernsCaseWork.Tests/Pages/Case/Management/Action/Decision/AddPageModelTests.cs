@@ -78,6 +78,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				API.Contracts.Enums.DecisionType.NoticeToImprove,
 				API.Contracts.Enums.DecisionType.OtherFinancialSupport
 			};
+			getDecisionResponse.ReceivedRequestDate = new DateTimeOffset(new DateTime(2022, 5, 2));
 
 			var decisionService = new Mock<IDecisionService>();
 			decisionService.Setup(m => m.GetDecision(2, 1)).ReturnsAsync(getDecisionResponse);
@@ -98,6 +99,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			sut.Decision.CrmCaseNumber.Should().Be(getDecisionResponse.CrmCaseNumber);
 			sut.Decision.DecisionTypes.Should().BeEquivalentTo(getDecisionResponse.DecisionTypes);
 			sut.Decision.SupportingNotes.Should().Be(getDecisionResponse.SupportingNotes);
+			sut.ReceivedRequestDate.Day.Should().Be("02");
+			sut.ReceivedRequestDate.Month.Should().Be("05");
+			sut.ReceivedRequestDate.Year.Should().Be("2022");
 		}
 
 		[Test]
