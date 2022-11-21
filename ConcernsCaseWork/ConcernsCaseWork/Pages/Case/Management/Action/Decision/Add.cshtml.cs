@@ -7,6 +7,7 @@ using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Exceptions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Services.Decisions;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Security.Policy;
 using System.Threading.Tasks;
@@ -39,6 +41,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		public long CaseUrn { get; set; }
 
 		public List<DecisionTypeCheckBox> DecisionTypeCheckBoxes { get; set; }
+
+		[BindProperty]
+		public OptionalDateModel RequestReceivedDate { get; set; }
 
 		public AddPageModel(IDecisionService decisionService, ILogger<AddPageModel> logger)
 		{
@@ -74,15 +79,25 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			try
 			{
-				SetupPage(urn, decisionId);
+				string day = Request.Form["dtr-day-request-received"];
+				string month = Request.Form["dtr-month-request-received"];
+				string year = Request.Form["dtr-year-request-received"];
 
-				if (!ModelState.IsValid)
+				var dateValidationError = ValidateDate(day, month, year);
+				var errorMessages = new List<string>();
+				if (dateValidationError != null) errorMessages.Add(dateValidationError);
+
+				if (!ModelState.IsValid || errorMessages.Count > 0)
 				{
-					TempData["Decision.Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+					SetupPage(urn, decisionId);
+					var modelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+					errorMessages.AddRange(modelErrors);
+
+					TempData["Decision.Message"] = errorMessages;
 					return Page();
 				}
 
-				Decision.ReceivedRequestDate = ParseDate();
+				Decision.ReceivedRequestDate = ParseDate(day, month, year);
 
 				if (decisionId.HasValue)
 				{
@@ -130,23 +145,40 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				var apiDecision = await _decisionService.GetDecision(caseUrn, (int)decisionId);
 
 				result = DecisionMapping.ToEditDecisionModel(apiDecision);
+
+				//RequestReceivedDate.Day = result.ReceivedRequestDate?.Day.ToString();
+				//RequestReceivedDate.Month = result.ReceivedRequestDate?.Month.ToString();
+				//RequestReceivedDate.Year = result.ReceivedRequestDate?.Year.ToString();
 			}
 
 			return result;
 		}
 
-		private DateTime ParseDate()
+		private string? ValidateDate(string day, string month, string year)
 		{
-			var dtr_day = Request.Form["dtr-day-request-received"];
-			var dtr_month = Request.Form["dtr-month-request-received"];
-			var dtr_year = Request.Form["dtr-year-request-received"];
-			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
+			var dateValues = new List<string>() { day, month, year };
+			dateValues.RemoveAll(d => d == "");
+
+			if (dateValues.Count != 3 && dateValues.Count != 0)
+			{
+				return "Please enter a complete date DD MM YYYY";
+			}
+
+			var dtString = $"{day}-{month}-{year}";
 			var isValidDate = DateTimeHelper.TryParseExact(dtString, out DateTime result);
 
-			if (dtString != "--" && !isValidDate)
+			if (!isValidDate)
 			{
-				throw new InvalidUserInputException($"{dtString} is an invalid date");
+				return $"{dtString} is an invalid date";
 			}
+
+			return null;
+		}
+
+		private DateTime ParseDate(string day, string month, string year)
+		{
+			var dtString = $"{day}-{month}-{year}";
+			var result = DateTimeHelper.ParseExact(dtString);
 
 			return result;
 		}
