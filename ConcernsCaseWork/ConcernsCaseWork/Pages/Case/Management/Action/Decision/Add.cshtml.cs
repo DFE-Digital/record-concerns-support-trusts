@@ -63,8 +63,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 				ReceivedRequestDate = new OptionalDateModel()
 				{
-					Day = Decision.ReceivedRequestDate?.Day.ToString(),
-					Month = Decision.ReceivedRequestDate?.Month.ToString(),
+					Day = Decision.ReceivedRequestDate?.Day.ToString("00"),
+					Month = Decision.ReceivedRequestDate?.Month.ToString("00"),
 					Year = Decision.ReceivedRequestDate?.Year.ToString()
 				};
 
