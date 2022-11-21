@@ -9,10 +9,6 @@ namespace ConcernsCaseWork.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropSequence(
-                name: "GlobalSequence",
-                schema: "concerns");
-
             migrationBuilder.AlterColumn<int>(
                 name: "Urn",
                 schema: "concerns",
@@ -23,6 +19,10 @@ namespace ConcernsCaseWork.Data.Migrations
                 oldClrType: typeof(int),
                 oldType: "int",
                 oldDefaultValueSql: "NEXT VALUE FOR Concerns.GlobalSequence");
+            
+            migrationBuilder.DropSequence(
+                name: "GlobalSequence",
+                schema: "concerns");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
