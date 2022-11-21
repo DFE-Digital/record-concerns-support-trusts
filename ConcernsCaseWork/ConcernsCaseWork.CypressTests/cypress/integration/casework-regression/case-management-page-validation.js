@@ -25,6 +25,7 @@ describe("User can manage cases from the case management page", () => {
         cy.enterConcernDetails();
 
         cy.validateCaseManagPage();
+        
 
       
     });
