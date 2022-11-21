@@ -310,7 +310,6 @@
 					}
 
 					$(function () {
-						let validator = formValidator($("#add-decision-form")[0]);
 
 						$totalAmountRequestedObj = $('#total-amount-request');
 
@@ -321,33 +320,6 @@
 						$totalAmountRequestedObj.focusout(function () {
 							formatCurrency($totalAmountRequestedObj);
 						});
-
-						validator.addValidator('dtr-day-request-received', [{
-						  method: function(field, params) {
-							  return noDateOrCompleteDate(params.year.value, params.month.value, params.day.value);
-						  },
-						  message: 'Please enter a complete date (DD MM YYYY)',
-						  params: {
-							day: document.getElementById('dtr-day-request-received'),
-							month: document.getElementById('dtr-month-request-received'),
-							year: document.getElementById('dtr-year-request-received')
-						  }
-						}]);
-
-						function noDateOrCompleteDate(year, month, day) {
-							var missingValuesCount = 0;
-							if(year.length == 0) {
-								missingValuesCount++;
-							}
-							if(month.length == 0) {
-								missingValuesCount++;
-							}
-							if(day.length == 0) {
-								missingValuesCount++;
-							}
-							return missingValuesCount == 0 || missingValuesCount == 3; @* the date should be either empty or valid *@
-						}
-
 
 						autoResizer();
 					});
