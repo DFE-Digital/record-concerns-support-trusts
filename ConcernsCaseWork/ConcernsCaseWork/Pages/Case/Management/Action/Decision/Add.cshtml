@@ -201,7 +201,7 @@
 											Day
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-request-received"
-										   name="dtr-day-request-received" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.Decision.ReceivedRequestDate?.Day:00}")" />
+										   name="ReceivedRequestDate.Day" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.ReceivedRequestDate?.Day:00}")" />
 									</div>
 								</div>
 								<div class="govuk-date-input__item">
@@ -210,7 +210,7 @@
 											Month
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-request-received"
-										   name="dtr-month-request-received" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.Decision.ReceivedRequestDate?.Month:00}")" />
+										   name="ReceivedRequestDate.Month" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.ReceivedRequestDate?.Month:00}")" />
 									</div>
 								</div>
 								<div class="govuk-date-input__item">
@@ -219,7 +219,7 @@
 											Year
 										</label>
 										<input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-request-received"
-										   name="dtr-year-request-received" type="text" maxlength="4" inputmode="numeric" value="@($"{Model.Decision.ReceivedRequestDate?.Year}")" />
+										   name="ReceivedRequestDate.Year" type="text" maxlength="4" inputmode="numeric" value="@($"{Model.ReceivedRequestDate?.Year}")" />
 									</div>
 								</div>
 							</div>

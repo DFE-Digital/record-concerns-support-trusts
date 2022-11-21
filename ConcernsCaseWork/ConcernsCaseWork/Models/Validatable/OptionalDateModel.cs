@@ -16,9 +16,14 @@ namespace ConcernsCaseWork.Models.Validatable
 			var result = new List<ValidationResult>();
 
 			var dateValues = new List<string>() { Day, Month, Year };
-			dateValues.RemoveAll(d => d == "");
+			dateValues.RemoveAll(d => d == null);
 
-			if (dateValues.Count != 3 && dateValues.Count != 0)
+			if (dateValues.Count == 0)
+			{
+				return result;
+			}
+
+			if (dateValues.Count != 3)
 			{
 				result.Add(new ValidationResult("Please enter a complete date DD MM YYYY"));
 				return result;
@@ -30,6 +35,11 @@ namespace ConcernsCaseWork.Models.Validatable
 			}
 
 			return result;
+		}
+
+		public bool IsEmpty()
+		{
+			return ToString() == "--";
 		}
 
 		public override string ToString() => $"{Day}-{Month}-{Year}";
