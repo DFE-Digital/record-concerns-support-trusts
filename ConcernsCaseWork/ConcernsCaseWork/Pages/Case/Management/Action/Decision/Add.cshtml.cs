@@ -151,7 +151,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		{
 			if (date.IsEmpty())
 			{
-				return null;
+				return new DateTime();
 			}
 
 			var result = DateTimeHelper.ParseExact(date.ToString());

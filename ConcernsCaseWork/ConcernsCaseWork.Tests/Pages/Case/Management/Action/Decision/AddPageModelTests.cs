@@ -184,7 +184,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 		}
 
 		[Test]
-		public async Task OnPostAsync_When_DateIsNotSet_Returns_NullDate()
+		public async Task OnPostAsync_When_DateIsNotSet_Returns_MinDate()
 		{
 			const long expectedUrn = 2;
 			var builder = new TestBuilder();
@@ -196,7 +196,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			var page = await sut.OnPostAsync(expectedUrn);
 
-			sut.Decision.ReceivedRequestDate.Should().BeNull();
+			sut.Decision.ReceivedRequestDate.Should().Be(DateTime.MinValue);
 			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
 		}
 

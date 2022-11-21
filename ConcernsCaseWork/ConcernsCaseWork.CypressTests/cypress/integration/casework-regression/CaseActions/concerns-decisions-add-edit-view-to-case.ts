@@ -6,18 +6,26 @@ describe("User can add case actions to an existing case", () => {
 		cy.login();
 	});
 
+	const decisionPage: DecisionPage = new DecisionPage();
+
 	it("Checking that Concerns decision is visible then adding concerns decision case action to a case,  Validation of wrong date when entered", function () {
 		cy.addConcernsDecisionsAddToCase();
 
-		AddToCasePage.getDayDateField().click().type("23");
-		AddToCasePage.getMonthDateField().click().type("25");
-		AddToCasePage.getYearDateField().click().type("2022");
-		AddToCasePage.getDecisionButton().click();
+		decisionPage
+			.withDateESFADay("23")
+			.withDateESFAMonth("25")
+			.withDateESFAYear("2022")
+			.saveDecision()
+			.hasValidationError("23-25-2022 is an invalid date");
 
-		cy.get("#decision-error-list").should(
-			"contain.text",
-			"23-25-2022 is an invalid date"
-		);
+		decisionPage
+			.withDateESFADay("23")
+			.withDateESFAMonth("12")
+			.withDateESFAYear("")
+			.withSupportingNotesExceedingLimit()
+			.saveDecision()
+			.hasValidationError("Please enter a complete date DD MM YYYY")
+			.hasValidationError("Notes must be 2000 characters or less");
 	});
 
 	it(" Concern Decision - Checking if View live initial record is visible", function () {
@@ -32,8 +40,6 @@ describe("User can add case actions to an existing case", () => {
 			"Decision: Notice to Improve"
 		);
 	});
-
-	const decisionPage: DecisionPage = new DecisionPage();
 
 	it(" Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
 		cy.addConcernsDecisionsAddToCase();
