@@ -26,7 +26,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		[Required(ErrorMessage = "CaseUrn is null or invalid to parse")]
 		public long? CaseUrn { get; set; }
 		
-		[BindProperty]
+		[BindProperty(Name="case-history")]
 		[MaxLength(4000, ErrorMessage = "Case history must be 4000 characters or less")]
 		public string CaseHistory { get; set; }
 		
@@ -69,7 +69,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			{
 				if (!ModelState.IsValid)
 				{
-					return Page();
+					return Page();	
 				}
 				
 				var userName = GetUserName();

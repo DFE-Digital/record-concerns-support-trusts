@@ -17,7 +17,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit
 		private readonly ILogger<EditNotesPageModel> _logger;
 
 		public SRMAModel SRMAModel { get; set; }
-		public int NotesMaxLength => 500;
+		public int NotesMaxLength => 2000;
 
 		public EditNotesPageModel(ISRMAService srmaModelService, ILogger<EditNotesPageModel> logger)
 		{

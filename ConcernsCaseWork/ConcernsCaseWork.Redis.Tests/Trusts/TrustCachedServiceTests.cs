@@ -55,6 +55,7 @@ namespace ConcernsCaseWork.Redis.Tests.Trusts
 			Assert.That(actualTrust.GiasData.CompaniesHouseNumber, Is.EqualTo(expectedTrust.GiasData.CompaniesHouseNumber));
 			Assert.That(actualTrust.GiasData.GroupContactAddress, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress));
 			Assert.That(actualTrust.GiasData.GroupTypeCode, Is.EqualTo(expectedTrust.GiasData.GroupTypeCode));
+			Assert.That(actualTrust.GiasData.GroupType, Is.EqualTo(expectedTrust.GiasData.GroupType));
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<IDictionary<string, TrustDetailsDto>>(It.IsAny<string>()), Times.Exactly(2));
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<IDictionary<string, TrustDetailsDto>>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
@@ -89,6 +90,7 @@ namespace ConcernsCaseWork.Redis.Tests.Trusts
 			Assert.That(actualTrust.GiasData.CompaniesHouseNumber, Is.EqualTo(expectedTrust.GiasData.CompaniesHouseNumber));
 			Assert.That(actualTrust.GiasData.GroupContactAddress, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress));
 			Assert.That(actualTrust.GiasData.GroupTypeCode, Is.EqualTo(expectedTrust.GiasData.GroupTypeCode));
+			Assert.That(actualTrust.GiasData.GroupType, Is.EqualTo(expectedTrust.GiasData.GroupType));
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<IDictionary<string, TrustDetailsDto>>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<IDictionary<string, TrustDetailsDto>>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
@@ -124,6 +126,7 @@ namespace ConcernsCaseWork.Redis.Tests.Trusts
 			Assert.That(actualTrust.GiasData.CompaniesHouseNumber, Is.EqualTo(expectedTrust.GiasData.CompaniesHouseNumber));
 			Assert.That(actualTrust.GiasData.GroupContactAddress, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress));
 			Assert.That(actualTrust.GiasData.GroupTypeCode, Is.EqualTo(expectedTrust.GiasData.GroupTypeCode));
+			Assert.That(actualTrust.GiasData.GroupType, Is.EqualTo(expectedTrust.GiasData.GroupType));
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<IDictionary<string, TrustDetailsDto>>(It.IsAny<string>()), Times.Exactly(2));
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<IDictionary<string, TrustDetailsDto>>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);

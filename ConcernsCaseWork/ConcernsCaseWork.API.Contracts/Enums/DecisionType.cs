@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.API.Contracts.Enums
 	    [Description("Other financial support")]
 	    OtherFinancialSupport = 8,
 
-	    [Description("Other financial support")]
+	    [Description("Estimates funding/Pupil Number Adjustment")]
 	    EstimatesFundingOrPupilNumberAdjustment = 9,
 
 	    [Description("ESFA approval to spend or write-off")]

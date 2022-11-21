@@ -5,6 +5,7 @@
 
 @{
 	ViewData["Title"] = "View Closed case";
+	ViewData["BackButtonLink"] = "/case/closed";
 	var nonce = HttpContext.GetNonce();
 }
 
@@ -56,7 +57,7 @@
 						</div>
 						<div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1">
 							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.Issue</p>
+								<p class="dfe-text-area-display">@Model.CaseModel.Issue</p>
 							</div>
 						</div>
 					</div>
@@ -69,7 +70,7 @@
 						</div>
 						<div aria-labelledby="accordion-default-heading-2" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-2">
 							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.CurrentStatus</p>
+								<p class="dfe-text-area-display">@Model.CaseModel.CurrentStatus</p>
 							</div>
 						</div>
 					</div>
@@ -82,7 +83,7 @@
 						</div>
 						<div aria-labelledby="accordion-default-heading-3" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-3">
 							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.CaseAim</p>
+								<p class="dfe-text-area-display">@Model.CaseModel.CaseAim</p>
 							</div>
 						</div>
 					</div>
@@ -95,7 +96,7 @@
 						</div>
 						<div aria-labelledby="accordion-default-heading-4" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-4">
 							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.DeEscalationPoint</p>
+								<p class="dfe-text-area-display">@Model.CaseModel.DeEscalationPoint</p>
 							</div>
 						</div>
 					</div>
@@ -108,7 +109,7 @@
 						</div>
 						<div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
 							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.NextSteps</p>
+								<p class="dfe-text-area-display">@Model.CaseModel.NextSteps</p>
 							</div>
 						</div>
 					</div>
@@ -121,7 +122,7 @@
                     	</div>
                     	<div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
                     		<div class="govuk-body details govuk-body-accordion-limit">
-                    			<p class="word-break">@Model.CaseModel.CaseHistory</p>
+                    			<p class="dfe-text-area-display">@Model.CaseModel.CaseHistory</p>
                     		</div>
                     	</div>
                     </div>
@@ -134,7 +135,7 @@
 						</div>
 						<div aria-labelledby="accordion-default-heading-6" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-6">
 							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="word-break">@Model.CaseModel.ReasonAtReview</p>
+								<p class="dfe-text-area-display">@Model.CaseModel.ReasonAtReview</p>
 							</div>
 						</div>
 					</div>

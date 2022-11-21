@@ -16,6 +16,8 @@ namespace ConcernsCaseWork.Models
 		public string GroupNameTitle { get { return GroupName.ToTitle(); } }
 
 		public string GroupTypeCode { get; }
+		
+		public string GroupType { get; }
 
 		public string CompaniesHouseNumber { get; }
 
@@ -23,8 +25,8 @@ namespace ConcernsCaseWork.Models
 
 		public GroupContactAddressModel GroupContactAddress { get; }
 		
-		public GiasDataModel(string ukprn, string groupId, string groupName, string groupTypeCode, string companiesHouseNumber, GroupContactAddressModel groupContactAddress) =>
-			(UkPrn, GroupId, GroupName, GroupTypeCode, CompaniesHouseNumber, GroupContactAddress) = 
-			(ukprn, groupId, groupName.ToTitle(), groupTypeCode, companiesHouseNumber, groupContactAddress);
+		public GiasDataModel(string ukprn, string groupId, string groupName, string groupTypeCode, string companiesHouseNumber, GroupContactAddressModel groupContactAddress, string groupType) =>
+			(UkPrn, GroupId, GroupName, GroupTypeCode, CompaniesHouseNumber, GroupContactAddress, GroupType) = 
+			(ukprn, groupId, groupName.ToTitle(), groupTypeCode, companiesHouseNumber, groupContactAddress, groupType);
 	}
 }

@@ -1664,6 +1664,11 @@ span.summary-validation-symbol {
   font-size: 0;
 }
 
+// Respect line breaks
+.dfe-text-area-display {
+  white-space: pre-wrap;
+}
+
 .govuk-ragtag-wrapper {
   font-size: 0;
   display: inline-flex;
