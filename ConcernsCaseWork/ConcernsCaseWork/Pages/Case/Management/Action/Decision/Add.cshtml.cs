@@ -34,6 +34,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		[BindProperty]
 		public CreateDecisionRequest Decision { get; set; }
 
+		[BindProperty]
+		public OptionalDateModel ReceivedRequestDate { get; set; }
+
 		public int NotesMaxLength => DecisionConstants.MaxSupportingNotesLength;
 
 		public long? DecisionId { get; set; }
@@ -41,9 +44,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		public long CaseUrn { get; set; }
 
 		public List<DecisionTypeCheckBox> DecisionTypeCheckBoxes { get; set; }
-
-		[BindProperty]
-		public OptionalDateModel RequestReceivedDate { get; set; }
 
 		public AddPageModel(IDecisionService decisionService, ILogger<AddPageModel> logger)
 		{
@@ -60,6 +60,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				SetupPage(urn, decisionId);
 
 				Decision = await CreateDecisionModel(urn, decisionId);
+
+				ReceivedRequestDate = new OptionalDateModel()
+				{
+					Day = Decision.ReceivedRequestDate?.Day.ToString(),
+					Month = Decision.ReceivedRequestDate?.Month.ToString(),
+					Year = Decision.ReceivedRequestDate?.Year.ToString()
+				};
 
 				return Page();
 			}
@@ -79,25 +86,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 			try
 			{
-				string day = Request.Form["dtr-day-request-received"];
-				string month = Request.Form["dtr-month-request-received"];
-				string year = Request.Form["dtr-year-request-received"];
+				SetupPage(urn, decisionId);
 
-				var dateValidationError = ValidateDate(day, month, year);
-				var errorMessages = new List<string>();
-				if (dateValidationError != null) errorMessages.Add(dateValidationError);
-
-				if (!ModelState.IsValid || errorMessages.Count > 0)
+				if (!ModelState.IsValid)
 				{
-					SetupPage(urn, decisionId);
-					var modelErrors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-					errorMessages.AddRange(modelErrors);
-
-					TempData["Decision.Message"] = errorMessages;
+					TempData["Decision.Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
 					return Page();
 				}
 
-				Decision.ReceivedRequestDate = ParseDate(day, month, year);
+				Decision.ReceivedRequestDate = ParseDate(ReceivedRequestDate);
 
 				if (decisionId.HasValue)
 				{
@@ -145,40 +142,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				var apiDecision = await _decisionService.GetDecision(caseUrn, (int)decisionId);
 
 				result = DecisionMapping.ToEditDecisionModel(apiDecision);
-
-				//RequestReceivedDate.Day = result.ReceivedRequestDate?.Day.ToString();
-				//RequestReceivedDate.Month = result.ReceivedRequestDate?.Month.ToString();
-				//RequestReceivedDate.Year = result.ReceivedRequestDate?.Year.ToString();
 			}
 
 			return result;
 		}
 
-		private string? ValidateDate(string day, string month, string year)
+		private DateTime? ParseDate(OptionalDateModel date)
 		{
-			var dateValues = new List<string>() { day, month, year };
-			dateValues.RemoveAll(d => d == "");
-
-			if (dateValues.Count != 3 && dateValues.Count != 0)
+			if (date.IsEmpty())
 			{
-				return "Please enter a complete date DD MM YYYY";
+				return null;
 			}
 
-			var dtString = $"{day}-{month}-{year}";
-			var isValidDate = DateTimeHelper.TryParseExact(dtString, out DateTime result);
-
-			if (!isValidDate)
-			{
-				return $"{dtString} is an invalid date";
-			}
-
-			return null;
-		}
-
-		private DateTime ParseDate(string day, string month, string year)
-		{
-			var dtString = $"{day}-{month}-{year}";
-			var result = DateTimeHelper.ParseExact(dtString);
+			var result = DateTimeHelper.ParseExact(date.ToString());
 
 			return result;
 		}
