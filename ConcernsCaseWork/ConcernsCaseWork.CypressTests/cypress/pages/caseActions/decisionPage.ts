@@ -22,13 +22,13 @@ export class DecisionPage {
 	public withSubmissionRequired(isSubmissionRequired: Boolean): this {
 		cy.task("log", `With Submission Required ${isSubmissionRequired}`);
 
-        if (isSubmissionRequired) {
+		if (isSubmissionRequired) {
 			cy.getById("submission-required").click();
 		} else {
 			cy.getById("submission-required-1").click();
 		}
 
-				return this;
+		return this;
 	}
 
 	public withSubmissionLink(submissionLink: string): this {
@@ -48,7 +48,7 @@ export class DecisionPage {
 		return this;
 	}
 
-    public withDateESFAMonth(dateESFAMonth: string): this {
+	public withDateESFAMonth(dateESFAMonth: string): this {
 		cy.task(
 			"log", `With Date ESFA Month ${dateESFAMonth}`
 		);
@@ -58,16 +58,21 @@ export class DecisionPage {
 		return this;
 	}
 
- public withDateESFAYear(dateESFAYear: string): this {
+	public withDateESFAYear(dateESFAYear: string): this {
 		cy.task(
 			"log", `With Date ESFA Year ${dateESFAYear}`
 		);
 
-		cy.getById("dtr-year-request-received").clear().type(dateESFAYear);
+		const element = cy.getById("dtr-year-request-received");
+		element.clear();
+
+		if (dateESFAYear.length > 0) {
+			element.type(dateESFAYear);
+		}
 
 		return this;
 	}
-    public withTypeOfDecisionID(typeOfDecisionID: string): this {
+	public withTypeOfDecisionID(typeOfDecisionID: string): this {
 		cy.task("log", `With type of decision to pick ${typeOfDecisionID}`);
 
 		cy.getById(typeOfDecisionID).click();
@@ -83,7 +88,7 @@ export class DecisionPage {
 		return this;
 	}
 
-	
+
 	public withSupportingNotes(supportingNotes: string): this {
 		cy.task("log", `With Supporting Notes ${supportingNotes}`);
 
@@ -92,6 +97,30 @@ export class DecisionPage {
 		return this;
 	}
 
+	public withSupportingNotesExceedingLimit(): this {
+		cy.task("log", `With Supporting Notes exceeding limit`);
+
+		cy.getById("case-decision-notes").clear().invoke("val", "x".repeat(2001));
+
+		return this;
+	}
+
+	public saveDecision(): this {
+		cy.get('#add-decision-button').click();
+
+		return this;
+	}
+
+	public hasValidationError(message: string): this {
+		cy.task("log", `Has Validation error ${message}`);
+
+		cy.get("#decision-error-list").should(
+			"contain.text",
+			message
+		);
+
+		return this;
+	}
 
 	public hasCrmEnquiry(crmNumber: string): this {
 		cy.task("log", `Has CRM enquiry ${crmNumber}`);
@@ -188,9 +217,6 @@ export class DecisionPage {
 
 		cy.getByTestId("edit-decision-text").children('a').click();
 
-
 		return this;
 	}
-
-
 }
