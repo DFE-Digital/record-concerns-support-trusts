@@ -147,7 +147,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			return result;
 		}
 
-		private DateTime? ParseDate(OptionalDateModel date)
+		private DateTime ParseDate(OptionalDateModel date)
 		{
 			if (date.IsEmpty())
 			{
