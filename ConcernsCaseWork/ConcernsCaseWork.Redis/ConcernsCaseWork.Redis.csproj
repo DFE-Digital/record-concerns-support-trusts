@@ -6,7 +6,7 @@
 
     <ItemGroup>
       <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
-      <PackageReference Include="AutoMapper" Version="11.0.1" />
+      <PackageReference Include="AutoMapper" Version="12.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="7.0.0" />
       <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.0" />
     </ItemGroup>
