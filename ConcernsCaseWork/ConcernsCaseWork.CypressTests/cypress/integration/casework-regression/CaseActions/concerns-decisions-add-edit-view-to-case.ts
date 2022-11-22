@@ -46,7 +46,7 @@ describe("User can add case actions to an existing case", () => {
 			.saveDecision();
 
 		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: Notice to Improve (NTI)")
+			.should("contain.text", "Decision: Multiple Decision Types")
 			.eq(-3)
 			.click();
 
@@ -93,7 +93,7 @@ describe("User can add case actions to an existing case", () => {
 		decisionPage.saveDecision();
 
 		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: Notice to Improve (NTI)")
+			.should("contain.text", "Decision: No Decision Types")
 			.eq(-3)
 			.click();
 
