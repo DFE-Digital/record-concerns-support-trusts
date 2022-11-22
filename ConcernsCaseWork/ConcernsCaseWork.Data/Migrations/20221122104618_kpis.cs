@@ -169,7 +169,7 @@ BEGIN
 			currentRecord.Id,
 			currentRecord.UpdatedAt,
 			'ClosedAt',
-			'Closed',
+			'Close',
 			NULL,
 			FORMAT(currentRecord.ClosedAt, 'dd-MM-yyyy')
 		FROM
@@ -201,7 +201,7 @@ BEGIN
 			currentRecord.CaseId,
 			currentRecord.UpdatedAt,
 			'CreatedAt',
-			'Created',
+			'Create',
 			NULL,
 			FORMAT(currentRecord.CreatedAt, 'dd-MM-yyyy')
 		FROM
@@ -251,7 +251,7 @@ BEGIN
 			currentRecord.CaseId,
 			currentRecord.UpdatedAt,
 			'ClosedAt',
-			'Closed',
+			'Close',
 			NULL,
 			FORMAT(currentRecord.ClosedAt, 'dd-MM-yyyy')
 		FROM
@@ -287,7 +287,7 @@ BEGIN
 			currentRecord.CaseUrn,
 			currentRecord.UpdatedAt,
 			'CreatedAt',
-			'Created',
+			'Create',
 			NULL,
 			FORMAT(currentRecord.CreatedAt, 'dd-MM-yyyy')
 		FROM
@@ -342,7 +342,7 @@ BEGIN
 			currentRecord.CaseUrn,
 			currentRecord.UpdatedAt,
 			'ClosedAt',
-			'Closed',
+			'Close',
 			NULL,
 			FORMAT(currentRecord.ClosedAt, 'dd-MM-yyyy')
 		FROM
@@ -378,7 +378,7 @@ BEGIN
 			currentRecord.CaseUrn,
 			currentRecord.UpdatedAt,
 			'CreatedAt',
-			'Created',
+			'Create',
 			NULL,
 			FORMAT(currentRecord.CreatedAt, 'dd-MM-yyyy')
 		FROM
@@ -432,7 +432,7 @@ BEGIN
 			currentRecord.CaseUrn,
 			currentRecord.UpdatedAt,
 			'Status',
-			'Closed',
+			'Close',
 			NULL,
 			[updatedStatus].[Name]
 		FROM
@@ -457,7 +457,7 @@ BEGIN
 			currentRecord.CaseUrn,
 			currentRecord.UpdatedAt,
 			'ClosedAt',
-			'Closed',
+			'Close',
 			NULL,
 			FORMAT(currentRecord.ClosedAt, 'dd-MM-yyyy')
 		FROM
@@ -496,7 +496,7 @@ BEGIN
 			currentRecord.CaseUrn,
 			currentRecord.UpdatedAt,
 			'CreatedAt',
-			'Created',
+			'Create',
 			NULL,
 			FORMAT(currentRecord.CreatedAt, 'dd-MM-yyyy')
 		FROM
@@ -546,7 +546,7 @@ BEGIN
 			currentRecord.CaseUrn,
 			currentRecord.UpdatedAt,
 			'ClosedAt',
-			'Closed',
+			'Close',
 			NULL,
 			FORMAT(currentRecord.ClosedAt, 'dd-MM-yyyy')
 		FROM
@@ -659,7 +659,7 @@ BEGIN
 			currentRecord.CaseUrn,
 			currentRecord.UpdatedAt,
 			'ClosedAt',
-			'Closed',
+			'Close',
 			NULL,
 			FORMAT(currentRecord.ClosedAt, 'dd-MM-yyyy')
 		FROM
@@ -750,7 +750,7 @@ BEGIN
 			currentRecord.CaseUrn,
 			GETDATE(), -- should be currentRecord.UpdatedAt but this is not set due to a bug
 			'ClosedAt',
-			'Closed',
+			'Close',
 			NULL,
 			FORMAT(currentRecord.ClosedAt, 'dd-MM-yyyy')
 		FROM
