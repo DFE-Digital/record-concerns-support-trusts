@@ -103,7 +103,7 @@ BEGIN
 			'CreatedAt',
 			'Create',
 			NULL,
-			FORMAT(currentRecord.ClosedAt, 'dd-MM-yyyy')
+			FORMAT(currentRecord.CreatedAt, 'dd-MM-yyyy')
 		FROM
 			inserted AS currentRecord
 		LEFT OUTER JOIN
