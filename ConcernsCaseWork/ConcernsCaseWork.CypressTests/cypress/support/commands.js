@@ -24,10 +24,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import "cypress-localstorage-commands";
-import LoginPage from "/cypress/pages/loginPage";
-import HomePage from "/cypress/pages/homePage";
 import CaseManagementPage from "/cypress/pages/caseMangementPage";
-import caseMangementPage from "/cypress/pages/caseMangementPage";
 import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
 import { AuthenticationComponent } from "../auth/authenticationComponent";
 import { LogTask } from './constants';
@@ -97,26 +94,14 @@ Cypress.Commands.add('enterConcernDetails', () => {
 
 Cypress.Commands.add('addConcernsDecisionsAddToCase',()=>{
     cy.visit(Cypress.env('url')+"/home");
-    cy.checkForExistingCase();
+
+    cy.basicCreateCase();
     cy.reload();
     CaseManagementPage.getAddToCaseBtn().click();
     AddToCasePage.addToCase('Decision');
     AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
     AddToCasePage.getAddToCaseBtn().click();
     cy.log(utils.checkForGovErrorSummaryList());
-
-    if (utils.checkForGovErrorSummaryList() > 0) {
-        cy.log("Case Action already exists");
-        cy.visit(Cypress.env('url'), { timeout: 30000 });
-        cy.checkForExistingCase(true);
-        CaseManagementPage.getAddToCaseBtn().click();
-        AddToCasePage.addToCase('Decision');
-        AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
-        AddToCasePage.getAddToCaseBtn().click();
-    } else {
-        cy.log("No Case Action exists");
-        cy.log(utils.checkForGovErrorSummaryList());
-    }
 })
 
 
@@ -483,6 +468,26 @@ Cypress.Commands.add('checkForExistingCase', function (forceCreate) {
         cy.createCase();
     }
 
+});
+
+Cypress.Commands.add('basicCreateCase', () => {
+
+    cy.get('[href="/case"]').click();
+    cy.get("#search").should("be.visible");
+
+    cy.randomSelectTrust();
+    cy.get("#search__option--0").click();
+
+    cy.get(".govuk-summary-list__value").then(($el) => {
+        expect($el.text()).to.match(/(school|england|academy|trust|West|East|North|South|([A-Z])\w+)/i)
+    });
+
+    cy.selectConcernType();
+    cy.selectRiskToTrust();
+
+    let date = new Date();
+    cy.get("#issue").type("Data entered at " + date);
+    cy.get("#case-details-form  button").click();
 });
 
 //description: creates a new case from the case list (home) page
