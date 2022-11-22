@@ -10,7 +10,7 @@
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
         <PackageReference Include="AutoFixture.Idioms" Version="4.17.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
         <PackageReference Include="Moq" Version="4.18.2" />
         <PackageReference Include="NUnit" Version="3.13.3" />
         <PackageReference Include="NUnit.Analyzers" Version="3.5.0">
@@ -28,5 +28,5 @@
       <ProjectReference Include="..\ConcernsCaseWork.Shared.Tests\ConcernsCaseWork.Shared.Tests.csproj" />
       <ProjectReference Include="..\ConcernsCaseWork.Redis\ConcernsCaseWork.Redis.csproj" />
     </ItemGroup>
-	
+
 </Project>
