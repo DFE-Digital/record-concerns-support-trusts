@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             var sut = new CreateDecision(Mock.Of<IConcernsCaseGateway>(), Mock.Of<IDecisionFactory>(), Mock.Of<ICreateDecisionResponseFactory>());
 
             Func<Task> action = async () => await sut.Execute(null, CancellationToken.None);
-            action.Should().Throw<ArgumentNullException>();
+            await action.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             var sut = new CreateDecision(Mock.Of<IConcernsCaseGateway>(), Mock.Of<IDecisionFactory>(), Mock.Of<ICreateDecisionResponseFactory>());
 
             Func<Task> action = async () => await sut.Execute(badRequestObject, CancellationToken.None);
-            action.Should().Throw<ArgumentException>().And.ParamName.Should().Be("request");
+            (await action.Should().ThrowAsync<ArgumentException>()).And.ParamName.Should().Be("request");
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             var sut = new CreateDecision(mockGateway.Object, Mock.Of<IDecisionFactory>(), Mock.Of<ICreateDecisionResponseFactory>());
             Func<Task> action = async () => await sut.Execute(request, CancellationToken.None);
 
-            action.Should().Throw<InvalidOperationException>().And.Message.Should()
+            (await action.Should().ThrowAsync<InvalidOperationException>()).And.Message.Should()
                 .Contain($"The concerns case for urn {request.ConcernsCaseUrn}, was not found");
         }
 
