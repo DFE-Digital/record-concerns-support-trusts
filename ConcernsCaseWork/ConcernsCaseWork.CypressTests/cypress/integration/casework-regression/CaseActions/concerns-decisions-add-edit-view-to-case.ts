@@ -1,4 +1,4 @@
-import { Logger } from "../../../common/Logger";
+import { Logger } from "../../../common/LoggerLol";
 import { DecisionPage } from "../../../pages/caseActions/decisionPage"
 
 describe("User can add case actions to an existing case", () => {
