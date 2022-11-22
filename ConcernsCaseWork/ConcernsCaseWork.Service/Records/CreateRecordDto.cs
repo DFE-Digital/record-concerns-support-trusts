@@ -37,14 +37,14 @@ namespace ConcernsCaseWork.Service.Records
 		[JsonProperty("statusId")]
 		public long StatusId { get; }
 		
-		[JsonProperty("meansOfReferralUrn")]
-		public long MeansOfReferralUrn { get; }
+		[JsonProperty("meansOfReferralId")]
+		public long MeansOfReferralId { get; }
 		
 		[JsonConstructor]
 		public CreateRecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
 			string name, string description, string reason, long caseUrn, long typeId, 
-			long ratingId, long statusId, long meansOfReferralUrn) => 
-			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeId, RatingId, StatusId, MeansOfReferralUrn) = 
-			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeId, ratingId, statusId, meansOfReferralUrn);
+			long ratingId, long statusId, long meansOfReferralId) => 
+			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeId, RatingId, StatusId, MeansOfReferralId) = 
+			(createdAt, updatedAt, reviewAt, closedAt, name, description, reason, caseUrn, typeId, ratingId, statusId, meansOfReferralId);
 	}
 }
