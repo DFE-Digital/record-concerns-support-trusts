@@ -7,11 +7,6 @@ namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 {
 	public class CreateDecisionOutcomeRequest
 	{
-		public CreateDecisionOutcomeRequest()
-		{
-			BusinessAreasConsulted = new BusinessArea[] { };
-		}
-
 		private const int _maxUrlLength = 2048;
 		private const int _maxCaseNumberLength = 20;
 
@@ -29,7 +24,12 @@ namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 		public BusinessArea[] BusinessAreasConsulted { get; set; }
 
 		[Range(1, int.MaxValue, ErrorMessage = "The DecisionId must be greater than zero")]
-		public int DecisionId { get; set; } 
+		public int DecisionId { get; set; }
+
+		public CreateDecisionOutcomeRequest()
+		{
+			BusinessAreasConsulted = new BusinessArea[] { };
+		}
 
 		public bool IsValid()
 		{
