@@ -32,9 +32,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 		[BindProperty]
 		public CreateDecisionOutcomeRequest DecisionOutcome { get; set; }
 
-		public long? DecisionId { get; set; }
+		public long DecisionId { get; set; }
 
-		public long CaseUrn { get; set; }
+		public long? OutcomeId { get; set; }
 
 		public List<BusinessArea> BusinessAreaCheckBoxes => Enum.GetValues<BusinessArea>().ToList();
 		public List<DecisionOutcome> DecisionOutcomesCheckBoxes => Enum.GetValues<DecisionOutcome>().ToList();
@@ -46,15 +46,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			_logger = logger;
 		}
 
-		public async Task<IActionResult> OnGetAsync(long urn, long? decisionId = null)
+		public async Task<IActionResult> OnGetAsync(long decisionId, long? outcomeId = null)
 		{
 			_logger.LogMethodEntered();
 
 			try
 			{
-				SetupPage(urn, decisionId);
+				SetupPage(decisionId, outcomeId);
 
-				DecisionOutcome = await CreateDecisionOutcomeModel(urn, decisionId);
+				DecisionOutcome = await CreateDecisionOutcomeModel(decisionId, outcomeId);
 
 				return Page();
 			}
@@ -110,43 +110,33 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			return Page();
 		}
 
-		private void SetupPage(long caseUrn, long? decisionId)
+		private void SetupPage(long decisionId, long? outcomeId)
 		{
-			ViewData[ViewDataConstants.Title] = decisionId.HasValue ? "Edit decision" : "Add decision";
+			ViewData[ViewDataConstants.Title] = outcomeId.HasValue ? "Edit outcome" : "Add outcome";
 
-			CaseUrn = (CaseUrn)caseUrn;
 			DecisionId = decisionId;
 		}
 
-		private async Task<CreateDecisionOutcomeRequest> CreateDecisionOutcomeModel(long caseUrn, long? decisionId)
+		private async Task<CreateDecisionOutcomeRequest> CreateDecisionOutcomeModel(long decisionId, long? outcomeId)
 		{
-			/*
-			var result = new CreateDecisionRequest();
 
-			result.ConcernsCaseUrn = (int)caseUrn;
+			var result = new CreateDecisionOutcomeRequest();
+			result.DecisionId = (int)decisionId;
 
-			if (decisionId.HasValue)
+			if (outcomeId.HasValue)
 			{
-				var apiDecision = await _decisionService.GetDecision(caseUrn, (int)decisionId);
+				// apiDecisionOutcome = await callApi
+				// result = map to edit outcome model
 
-				result = DecisionMapping.ToEditDecisionModel(apiDecision);
+				result.DecisionOutcome = API.Contracts.Enums.DecisionOutcome.PartiallyApproved;
+				result.TotalAmountApproved = 233232;
+				result.DecisionMadeDate = DateTimeOffset.Now;
+				result.DecisionTakeEffectDate = DateTimeOffset.Now;
+				result.Authoriser = Authoriser.G7;
+				result.BusinessAreasConsulted = new BusinessArea[] { BusinessArea.BusinessPartner, BusinessArea.Funding };
 			}
 
 			return result;
-
-			*/
-
-
-			return new CreateDecisionOutcomeRequest()
-			{
-				DecisionOutcome = API.Contracts.Enums.DecisionOutcome.PartiallyApproved,
-				TotalAmountApproved = 233232,
-				DecisionMadeDate = DateTimeOffset.Now,
-				DecisionTakeEffectDate = DateTimeOffset.Now,
-				Authoriser = Authoriser.G7,
-				BusinessAreasConsulted = new BusinessArea[] { BusinessArea.BusinessPartner, BusinessArea.Funding },
-				DecisionId = 7
-			};
 		}
 
 

@@ -21,8 +21,7 @@ namespace ConcernsCaseWork.Service.Tests.MeansOfReferral
 			// arrange
 			var expectedMeansOfReferral = TypeFactory.BuildListTypeDto();
 			var apiListWrapperMeansOfReferral = new ApiListWrapper<TypeDto>(expectedMeansOfReferral, null);
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -63,8 +62,7 @@ namespace ConcernsCaseWork.Service.Tests.MeansOfReferral
 		public void WhenGetMeansOfReferral_ThrowsException()
 		{
 			// arrange
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -92,8 +90,7 @@ namespace ConcernsCaseWork.Service.Tests.MeansOfReferral
 			// arrange
 			var apiListWrapperMeansOfReferral = new ApiListWrapper<TypeDto>(null, null);
 			
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();

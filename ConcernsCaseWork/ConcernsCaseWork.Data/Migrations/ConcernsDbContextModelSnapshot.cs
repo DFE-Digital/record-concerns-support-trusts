@@ -22,9 +22,6 @@ namespace ConcernsCaseWork.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.HasSequence<int>("GlobalSequence", "concerns")
-                .HasMin(1L);
-
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Decision", b =>
                 {
                     b.Property<int>("DecisionId")
@@ -282,9 +279,9 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Urn")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR Concerns.GlobalSequence");
+                        .HasComputedColumnSql("[Id]");
 
                     b.HasKey("Id")
                         .HasName("PK__CCase__C5B214360AF620234");
@@ -336,7 +333,7 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2022, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies",
                             Name = "External",
-                            UpdatedAt = new DateTime(2022, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -2126,8 +2123,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Notes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<int?>("ReasonId")
                         .HasColumnType("int");

@@ -39,8 +39,7 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 		{
 			var expectedDto = new ConcernsCaseworkTeamDto("user.one", new[] { "user.two" });
 			var responseWrapper = new ApiWrapper<ConcernsCaseworkTeamDto>(expectedDto);
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -65,8 +64,7 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 		[Test]
 		public async Task GetTeam_Allows_NoContent_Result()
 		{
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -91,8 +89,7 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 		{
 			var expectedData = new string[] { "user.one", "user.two" };
 			var responseWrapper = new ApiWrapper<string[]>(expectedData);
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -119,8 +116,7 @@ namespace ConcernsCaseWork.Service.Tests.Teams
 		[Test]
 		public async Task GetTeamOwners_Allows_NoContent_Result()
 		{
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()

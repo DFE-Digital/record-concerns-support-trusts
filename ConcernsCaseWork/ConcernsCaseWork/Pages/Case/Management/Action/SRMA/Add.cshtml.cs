@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		private readonly ILogger<AddPageModel> _logger;
 		private readonly ISRMAService _srmaModelService;
 
-		public int NotesMaxLength => 500;
+		public int NotesMaxLength => 2000;
 		public IEnumerable<RadioItem> SRMAStatuses => GetStatuses();
 		
 		[BindProperty(SupportsGet = true, Name = "Urn")]

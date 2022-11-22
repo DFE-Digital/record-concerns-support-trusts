@@ -123,6 +123,14 @@ window.addCaseAimValidator = function(validator) {
 		message: 'Case aim must be 1000 characters or less'
 	}]);
 }
+window.addCaseHistoryValidator = function (validator) {
+	validator.addValidator('case-history', [{
+		method: function (field) {
+			return field.value.trim().length <= 4000;
+		},
+		message: 'Case history must be 4000 characters or less'
+	}]);
+}
 window.addDirectionOfTravelValidator = function(validator) {
 	validator.addValidator('direction-of-travel', [{
 		method: function(field) {
@@ -160,9 +168,9 @@ window.addUsersValidator = function(validator) {
 window.addSRMANotesValidator = function (validator) {
 	validator.addValidator('srma-notes', [{
 		method: function (field) {
-			return field.value.trim().length <= 500;
+			return field.value.trim().length <= 2000;
 		},
-		message: 'Notes must be 500 characters or less'
+		message: 'Notes must be 2000 characters or less'
 	}]);
 }
 window.addFinancialPlanNotesValidator = function (validator) {

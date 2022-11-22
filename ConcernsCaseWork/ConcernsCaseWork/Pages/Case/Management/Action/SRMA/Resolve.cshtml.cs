@@ -97,6 +97,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				}
 
 				var srmaNotes = Request.Form["srma-notes"].ToString();
+				if (!string.IsNullOrEmpty(srmaNotes))
+				{
+					if (srmaNotes.Length > 2000)
+					{
+						throw new Exception("Notes provided exceed maximum allowed length 2000 characters).");
+					}
+				}
+				
 				await _srmaModelService.SetNotes(srmaId, srmaNotes);
 				await _srmaModelService.SetStatus(srmaId, resolvedStatus);
 				await _srmaModelService.SetDateClosed(srmaId, DateTime.Now);

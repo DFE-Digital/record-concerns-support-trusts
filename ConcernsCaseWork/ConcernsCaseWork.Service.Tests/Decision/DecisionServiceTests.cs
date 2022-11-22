@@ -113,8 +113,7 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 
 		private Mock<IHttpClientFactory> CreateHttpClientFactory(Mock<HttpMessageHandler> mockMessageHandler)
 		{
-			var configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
-			var concernsApiEndpoint = configuration["ConcernsCasework:ApiEndpoint"];
+			var concernsApiEndpoint = "https://localhost";
 
 			var result = new Mock<IHttpClientFactory>();
 
