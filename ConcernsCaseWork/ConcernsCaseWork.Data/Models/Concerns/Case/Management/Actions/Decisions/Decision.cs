@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Data.Enums;
+﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
+using ConcernsCaseWork.Data.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions
@@ -112,7 +113,6 @@ namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decision
 
         public Enums.Concerns.DecisionStatus Status { get; set; }
         public DateTimeOffset? ClosedAt { get; set; }
-
         public string GetTitle()
         {
             switch (DecisionTypes?.Count ?? 0)

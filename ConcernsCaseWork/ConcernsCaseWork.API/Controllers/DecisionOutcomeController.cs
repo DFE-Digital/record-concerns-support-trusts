@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ConcernsCaseWork.API.Controllers
 {
