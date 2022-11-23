@@ -133,8 +133,8 @@ If everything looks good, answer `yes` and wait for the new infrastructure to be
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | 2.30.0 |
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.32.0 |
+| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | >= 2.30.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.25.0 |
 
 ## Modules
 
