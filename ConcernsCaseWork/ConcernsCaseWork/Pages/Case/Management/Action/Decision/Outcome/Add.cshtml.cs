@@ -7,6 +7,7 @@ using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Exceptions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Services.Decisions;
@@ -32,6 +33,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 		[BindProperty]
 		public CreateDecisionOutcomeRequest DecisionOutcome { get; set; }
 
+		[BindProperty]
+		public OptionalDateModel DecisionMadeDate { get; set; }
+
+		[BindProperty]
+		public OptionalDateModel TakeEffectDate { get; set; }
+
+		public long CaseUrn { get; set; }
+
 		public long DecisionId { get; set; }
 
 		public long? OutcomeId { get; set; }
@@ -46,15 +55,29 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			_logger = logger;
 		}
 
-		public async Task<IActionResult> OnGetAsync(long decisionId, long? outcomeId = null)
+		public async Task<IActionResult> OnGetAsync(long urn, long decisionId, long? outcomeId = null)
 		{
 			_logger.LogMethodEntered();
 
 			try
 			{
-				SetupPage(decisionId, outcomeId);
+				SetupPage(urn, decisionId, outcomeId);
 
 				DecisionOutcome = await CreateDecisionOutcomeModel(decisionId, outcomeId);
+
+				DecisionMadeDate = new OptionalDateModel()
+				{
+					Day = DecisionOutcome.DecisionMadeDate?.Day.ToString("00"),
+					Month = DecisionOutcome.DecisionMadeDate?.Month.ToString("00"),
+					Year = DecisionOutcome.DecisionMadeDate?.Year.ToString()
+				};
+
+				TakeEffectDate = new OptionalDateModel()
+				{
+					Day = DecisionOutcome.DecisionTakeEffectDate?.Day.ToString("00"),
+					Month = DecisionOutcome.DecisionTakeEffectDate?.Month.ToString("00"),
+					Year = DecisionOutcome.DecisionTakeEffectDate?.Year.ToString()
+				};
 
 				return Page();
 			}
@@ -68,13 +91,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			}
 		}
 
-		public async Task<IActionResult> OnPostAsync(long urn, long? decisionId = null)
+		public async Task<IActionResult> OnPostAsync(long urn, long decisionId, long? outcomeId = null)
 		{
 			_logger.LogMethodEntered();
 
 			try
 			{
-				SetupPage(urn, decisionId);
+				SetupPage(urn, decisionId, outcomeId);
 
 				if (!ModelState.IsValid)
 				{
@@ -82,20 +105,24 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 					return Page();
 				}
 
-				DecisionOutcome.DecisionMadeDate = ParseDate(Request.Form["dtr-day-decision-made"], Request.Form["dtr-month-decision-made"], Request.Form["dtr-year-decision-made"]);
-				DecisionOutcome.DecisionTakeEffectDate = ParseDate(Request.Form["dtr-day-take-effect"], Request.Form["dtr-month-take-effect"], Request.Form["dtr-year-take-effect"]);
+				DecisionOutcome.DecisionMadeDate = ParseDate(DecisionMadeDate);
+				DecisionOutcome.DecisionTakeEffectDate = ParseDate(TakeEffectDate);
 
-				if (decisionId.HasValue)
+				if (OutcomeId.HasValue)
 				{
 					//var updateDecisionRequest = DecisionMapping.ToUpdateDecision(Decision);
 					//await _decisionService.PutDecision(urn, (long)decisionId, updateDecisionRequest);
 
-					//return Redirect($"/case/{urn}/management/action/decision/{decisionId}");
+
+					//var updateDecisionOutcomeRequest = Map to decision outcome request model
+					//await out decision outcome 
+
+					return Redirect($"/case/{CaseUrn}/management/action/decision/{DecisionId}");
 				}
 
-				//await _decisionService.PostDecision(Decision);
+				//await post decision outcome 
 
-				return Redirect($"/case/{urn}/management");
+				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (InvalidUserInputException ex)
 			{
@@ -110,11 +137,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			return Page();
 		}
 
-		private void SetupPage(long decisionId, long? outcomeId)
+		private void SetupPage(long urn, long decisionId, long? outcomeId)
 		{
 			ViewData[ViewDataConstants.Title] = outcomeId.HasValue ? "Edit outcome" : "Add outcome";
 
+			CaseUrn = (CaseUrn)urn;
 			DecisionId = decisionId;
+			OutcomeId = outcomeId;
 		}
 
 		private async Task<CreateDecisionOutcomeRequest> CreateDecisionOutcomeModel(long decisionId, long? outcomeId)
@@ -140,15 +169,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 		}
 
 
-		private DateTime ParseDate(string day, string month, string year)
+		private DateTime ParseDate(OptionalDateModel date)
 		{
-			var dtString = $"{day}-{month}-{year}";
-			var isValidDate = DateTimeHelper.TryParseExact(dtString, out DateTime result);
-
-			if (dtString != "--" && !isValidDate)
+			if (date.IsEmpty())
 			{
-				throw new InvalidUserInputException($"{dtString} is an invalid date");
+				return new DateTime();
 			}
+
+			var result = DateTimeHelper.ParseExact(date.ToString());
 
 			return result;
 		}

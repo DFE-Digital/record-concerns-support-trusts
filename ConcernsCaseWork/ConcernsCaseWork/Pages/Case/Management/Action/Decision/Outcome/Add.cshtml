@@ -128,7 +128,7 @@
                                             Day
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-decision-made"
-                                               name="dtr-day-decision-made" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionMadeDate?.Day:00}")" />
+                                               name="DecisionMadeDate.Day" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionMadeDate?.Day:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -137,7 +137,7 @@
                                             Month
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-decision-made"
-                                               name="dtr-month-decision-made" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionMadeDate?.Month:00}")" />
+                                               name="DecisionMadeDate.Month" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionMadeDate?.Month:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -146,7 +146,7 @@
                                             Year
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-decision-made"
-                                               name="dtr-year-decision-made" type="text" maxlength="4" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionMadeDate?.Year}")" />
+                                               name="DecisionMadeDate.Year" type="text" maxlength="4" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionMadeDate?.Year}")" />
                                     </div>
                                 </div>
                             </div>
@@ -169,7 +169,7 @@
                                             Day
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-take-effect"
-                                               name="dtr-day-take-effect" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionTakeEffectDate?.Day:00}")" />
+                                               name="DecisionTakeEffectDate.Day" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionTakeEffectDate?.Day:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -178,7 +178,7 @@
                                             Month
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-take-effect"
-                                               name="dtr-month-take-effect" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionTakeEffectDate?.Month:00}")" />
+                                               name="DecisionTakeEffectDate.Month" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionTakeEffectDate?.Month:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -187,7 +187,7 @@
                                             Year
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-take-effect"
-                                               name="dtr-year-take-effect" type="text" maxlength="4" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionTakeEffectDate?.Year}")" />
+                                               name="DecisionTakeEffectDate.Year" type="text" maxlength="4" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionTakeEffectDate?.Year}")" />
                                     </div>
                                 </div>
                             </div>
@@ -286,45 +286,6 @@
 						$totalAmountRequestedObj.focusout(function () {
 							formatCurrency($totalAmountRequestedObj);
 						});
-
-						validator.addValidator('dtr-date-decision-made', [{
-						  method: function(field, params) {
-							  return noDateOrCompleteDate(params.year.value, params.month.value, params.day.value);
-						  },
-						  message: 'Please enter a complete date (DD MM YYYY)',
-						  params: {
-							day: document.getElementById('dtr-day-decision-made'),
-							month: document.getElementById('dtr-month-decision-made'),
-							year: document.getElementById('dtr-year-decision-made')
-						  }
-						}]);
-
-
-                        validator.addValidator('dtr-take-effect', [{
-						  method: function(field, params) {
-							  return noDateOrCompleteDate(params.year.value, params.month.value, params.day.value);
-						  },
-						  message: 'Please enter a complete date (DD MM YYYY)',
-						  params: {
-							day: document.getElementById('dtr-day-take-effect'),
-							month: document.getElementById('dtr-month-take-effect'),
-							year: document.getElementById('dtr-year-take-effect')
-						  }
-						}]);
-
-						function noDateOrCompleteDate(year, month, day) {
-							var missingValuesCount = 0;
-							if(year.length == 0) {
-								missingValuesCount++;
-							}
-							if(month.length == 0) {
-								missingValuesCount++;
-							}
-							if(day.length == 0) {
-								missingValuesCount++;
-							}
-							return missingValuesCount == 0 || missingValuesCount == 3; @* the date should be either empty or valid *@
-						}
 
 
 						autoResizer();
