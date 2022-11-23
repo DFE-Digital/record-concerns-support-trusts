@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Pages.Base;
@@ -34,6 +35,38 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 			var sut = builder.BuildSut();
 			Assert.NotNull(sut as AbstractPageModel);
 		}
+
+		[Test]
+		public async Task OnGetAsync_When_NewDecisionOutcome_Returns_Page()
+		{
+			const long expectedUrn = 2;
+			const long expectedDecisionId = 7;
+			var builder = new TestBuilder();
+			var sut = builder
+				.BuildSut();
+
+			await sut.OnGetAsync(expectedUrn, expectedDecisionId);
+
+			sut.ViewData[ViewDataConstants.Title].Should().Be("Add outcome");
+
+			var expectedDecision = new CreateDecisionOutcomeRequest()
+			{
+				BusinessAreasConsulted = new BusinessArea[] { }
+			};
+
+			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
+
+			sut.DecisionOutcome.Should().BeEquivalentTo(expectedDecision, options =>
+				options.Excluding(o => o.DecisionId));
+
+			sut.DecisionOutcome.DecisionId.Should().Be((int)expectedDecisionId);
+			sut.CaseUrn.Should().Be(expectedUrn);
+			sut.DecisionId.Should().Be(expectedDecisionId);
+			sut.DecisionOutcomesCheckBoxes.Should().NotBeEmpty();
+			sut.BusinessAreaCheckBoxes.Should().NotBeEmpty();
+			sut.AuthoriserCheckBoxes.Should().NotBeEmpty();
+		}
+
 
 		private class TestBuilder
 		{

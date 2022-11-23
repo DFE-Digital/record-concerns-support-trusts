@@ -10,6 +10,7 @@ namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 		private const int _maxUrlLength = 2048;
 		private const int _maxCaseNumberLength = 20;
 
+		[EnumDataType(typeof(DecisionOutcome), ErrorMessage = "Select a decision outcome")]
 		public DecisionOutcome DecisionOutcome { get; set; }
 
 		[Range(typeof(decimal), "0", "79228162514264337593543950335", ErrorMessage = "The total amount approved must be zero or greater")]
