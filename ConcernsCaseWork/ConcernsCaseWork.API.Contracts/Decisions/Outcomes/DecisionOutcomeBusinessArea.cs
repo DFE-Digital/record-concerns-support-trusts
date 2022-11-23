@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.API.Contracts.Decisions.Outcomes
 {
-	public enum DecisionOutcomeResult
+	public enum DecisionOutcomeBusinessArea
 	{
-		Approved = 1,
-		ApprovedWithConditions = 2,
-		PartiallyApproved = 3,
-		Withdrawn = 4,
-		Declined = 5
+		SchoolsFinancialSupportAndOversight = 1,
+		BusinessPartner = 2,
+		Capital = 3,
+		Funding = 4,
+		ProviderMarketOversight = 5,
+		RegionsGroup = 6
 	}
 }

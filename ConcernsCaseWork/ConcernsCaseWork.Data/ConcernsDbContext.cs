@@ -1,12 +1,16 @@
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
 using ConcernsCaseWork.Data.Models.Concerns.TeamCasework;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Contracts;
+using DecisionOutcomeStatus = ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeStatus;
 
 namespace ConcernsCaseWork.Data
 {
     public partial class ConcernsDbContext : DbContext
     {
+		const string TablePrefix = "concerns";
         public ConcernsDbContext()
         {
         }
@@ -670,9 +674,55 @@ namespace ConcernsCaseWork.Data
 			            .Select(enm => new DecisionStatus(enm) { Name = enm.ToString() }));
             });
 
+			BuildDecisionOutcomeTable(modelBuilder);
+
             OnModelCreatingPartial(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+		private void BuildDecisionOutcomeTable(ModelBuilder modelBuilder)
+		{
+			//modelBuilder.Entity<DecisionOutcome>(e =>
+			//{
+			//	e.ToTable("DecisionOutcome", TablePrefix);
+			//	e.HasKey(x => x.DecisionOutcomeId);
+			//	e.Property(x => x.TotalAmount).HasColumnType("money");
+			//	e.HasMany(x => x.BusinessAreasConsulted).WithOne();
+			//});
+
+			modelBuilder.Entity<DecisionOutcomeStatus>(e =>
+			{
+				e.ToTable("DecisionOutcomeStatus", TablePrefix);
+				e.HasKey(x => x.Id);
+				e.HasData(
+					Enum
+						.GetValues(typeof(API.Contracts.Decisions.Outcomes.DecisionOutcomeStatus))
+						.Cast<API.Contracts.Decisions.Outcomes.DecisionOutcomeStatus>()
+						.Select(enm => new DecisionOutcomeStatus() { Id = enm, Name = enm.ToString() }));
+			});
+
+			modelBuilder.Entity<DecisionOutcomeAuthorizer>(e =>
+			{
+				e.ToTable("DecisionOutcomeAuthorizer", TablePrefix);
+				e.HasKey(x => x.Id);
+				e.HasData(
+					Enum
+						.GetValues(typeof(API.Contracts.Decisions.Outcomes.DecisionOutcomeAuthorizer))
+						.Cast<API.Contracts.Decisions.Outcomes.DecisionOutcomeAuthorizer>()
+						.Select(enm => new DecisionOutcomeAuthorizer() { Id = enm, Name = enm.ToString() }));
+			});
+
+			//modelBuilder.Entity<DecisionOutcomeBusinessArea>(e =>
+			//{
+			//	e.ToTable("DecisionOutcomeBusinessArea", TablePrefix);
+			//	e.HasKey(x => x.Id);
+			//	e.HasData(
+			//	Enum
+			//		.GetValues(typeof(API.Contracts.Decisions.Outcomes.DecisionOutcomeStatus))
+			//		.Cast<API.Contracts.Decisions.Outcomes.DecisionOutcomeStatus>()
+			//		.Select(enm => new DecisionOutcomeStatus() { Id = enm, Name = enm.ToString() }));
+			//});
+		}
     }
 }
