@@ -650,6 +650,7 @@ namespace ConcernsCaseWork.Data
 	            e.HasKey(x => x.DecisionId);
 	            e.Property(x => x.TotalAmountRequested).HasColumnType("money");
 	            e.HasMany(x => x.DecisionTypes).WithOne();
+				e.HasOne(x => x.Outcome);
             });
 
             modelBuilder.Entity<DecisionType>(e =>
