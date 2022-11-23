@@ -75,38 +75,24 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				StatusId = 1
 			};
 
-			var dbCase = _context.ConcernsCase.Add(toAdd);
-			var concernsCaseId = dbCase.Entity.Id;
+			var concernsCaseToAdd = _context.ConcernsCase.Add(toAdd);
+			await _context.SaveChangesAsync();
+
+			var concernsCaseId = concernsCaseToAdd.Entity.Id;
 
 			decisionToAdd.ConcernsCaseId = concernsCaseId;
 			toAdd.Decisions.Add(decisionToAdd);
 
 			await _context.SaveChangesAsync();
 
-			var decisionOutcome = new Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome()
-			{
-				DecisionId = decisionToAdd.DecisionId,
-				Status = DecisionOutcomeStatus.Approved,
-				BusinessAreasConsulted = new List<Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeBusinessAreaMapping>()
-				{
-					new Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeBusinessAreaMapping()
-					{
-						DecisionOutcomeBusinessId = DecisionOutcomeBusinessArea.Capital
-					}
-				}
-			};
-
-			_context.DecisionOutcomes.Add(decisionOutcome);
-			await _context.SaveChangesAsync();
-
 			var result = await _client.PostAsync($"/v2/concerns-cases/1/decisions/1/outcome", CreateJsonPayload(body));
 
-			var concernsCase = _context.ConcernsCase.First(c => c.Id == concernsCaseId);
-			var decision = concernsCase.Decisions.First();
+			var decision = _context.ConcernsCase.First(c => c.Id == concernsCaseId).Decisions.First();
 
 			result.StatusCode.Should().Be(HttpStatusCode.Created);
 
-			// decision.Outcome.Should().NotBeNull();
+
+			decision.Outcome.Should().NotBeNull();
 		}
 
 		[Fact]
