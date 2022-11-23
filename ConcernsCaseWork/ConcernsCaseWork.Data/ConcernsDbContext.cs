@@ -52,6 +52,8 @@ namespace ConcernsCaseWork.Data
         public virtual DbSet<ConcernsCaseworkTeam> ConcernsTeamCaseworkTeam { get; set; }
         public virtual DbSet<ConcernsCaseworkTeamMember> ConcernsTeamCaseworkTeamMember { get; set; }
 
+		public virtual DbSet<DecisionOutcome> DecisionOutcomes { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {    
 	        if (!optionsBuilder.IsConfigured)
@@ -683,13 +685,19 @@ namespace ConcernsCaseWork.Data
 
 		private void BuildDecisionOutcomeTable(ModelBuilder modelBuilder)
 		{
-			//modelBuilder.Entity<DecisionOutcome>(e =>
-			//{
-			//	e.ToTable("DecisionOutcome", TablePrefix);
-			//	e.HasKey(x => x.DecisionOutcomeId);
-			//	e.Property(x => x.TotalAmount).HasColumnType("money");
-			//	e.HasMany(x => x.BusinessAreasConsulted).WithOne();
-			//});
+			modelBuilder.Entity<DecisionOutcome>(e =>
+			{
+				e.ToTable("DecisionOutcome", TablePrefix);
+				e.HasKey(x => x.DecisionOutcomeId);
+				e.Property(x => x.TotalAmount).HasColumnType("money");
+				e.HasMany(x => x.BusinessAreasConsulted).WithOne();
+			});
+
+			modelBuilder.Entity<DecisionOutcomeBusinessAreaMapping>(e =>
+			{
+				e.ToTable("DecisionOutcomeBusinessAreaMapping", TablePrefix);
+				e.HasKey(x => new { x.DecisionOutcomeId, x.DecisionOutcomeBusinessId });
+			});
 
 			modelBuilder.Entity<DecisionOutcomeStatus>(e =>
 			{
@@ -713,16 +721,16 @@ namespace ConcernsCaseWork.Data
 						.Select(enm => new DecisionOutcomeAuthorizer() { Id = enm, Name = enm.ToString() }));
 			});
 
-			//modelBuilder.Entity<DecisionOutcomeBusinessArea>(e =>
-			//{
-			//	e.ToTable("DecisionOutcomeBusinessArea", TablePrefix);
-			//	e.HasKey(x => x.Id);
-			//	e.HasData(
-			//	Enum
-			//		.GetValues(typeof(API.Contracts.Decisions.Outcomes.DecisionOutcomeStatus))
-			//		.Cast<API.Contracts.Decisions.Outcomes.DecisionOutcomeStatus>()
-			//		.Select(enm => new DecisionOutcomeStatus() { Id = enm, Name = enm.ToString() }));
-			//});
+			modelBuilder.Entity<DecisionOutcomeBusinessArea>(e =>
+			{
+				e.ToTable("DecisionOutcomeBusinessArea", TablePrefix);
+				e.HasKey(x => x.Id);
+				e.HasData(
+				Enum
+					.GetValues(typeof(API.Contracts.Decisions.Outcomes.DecisionOutcomeBusinessArea))
+					.Cast<API.Contracts.Decisions.Outcomes.DecisionOutcomeBusinessArea>()
+					.Select(enm => new DecisionOutcomeBusinessArea() { Id = enm, Name = enm.ToString() }));
+			});
 		}
     }
 }

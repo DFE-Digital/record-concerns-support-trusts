@@ -4,10 +4,6 @@ using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using FluentAssertions;
-using FluentAssertions.Common;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -45,14 +41,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 					{
 						config.AddJsonFile(configPath);
 					});
-
-					//builder.ConfigureServices(services =>
-					//{
-					//	services.AddDbContext<ConcernsDbContext>(options =>
-					//	{
-					//		options.UseSqlite("Data Source=concerns.db");
-					//	});
-					//});
 				});
 
 			_client = _application.CreateClient();
@@ -93,6 +81,22 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			decisionToAdd.ConcernsCaseId = concernsCaseId;
 			toAdd.Decisions.Add(decisionToAdd);
 
+			await _context.SaveChangesAsync();
+
+			var decisionOutcome = new Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome()
+			{
+				DecisionId = decisionToAdd.DecisionId,
+				Status = DecisionOutcomeStatus.Approved,
+				BusinessAreasConsulted = new List<Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeBusinessAreaMapping>()
+				{
+					new Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeBusinessAreaMapping()
+					{
+						DecisionOutcomeBusinessId = DecisionOutcomeBusinessArea.Capital
+					}
+				}
+			};
+
+			_context.DecisionOutcomes.Add(decisionOutcome);
 			await _context.SaveChangesAsync();
 
 			var result = await _client.PostAsync($"/v2/concerns-cases/1/decisions/1/outcome", CreateJsonPayload(body));
