@@ -1,10 +1,4 @@
-﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome
 {
@@ -15,7 +9,7 @@ namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decision
 		public int DecisionId { get; set; }
 
 		[Required]
-		public DecisionOutcomeStatus Status { get; set; }
+		public API.Contracts.Decisions.Outcomes.DecisionOutcomeStatus Status { get; set; }
 
 		public decimal? TotalAmount { get; set; }
 
@@ -23,9 +17,9 @@ namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decision
 
 		public DateTimeOffset? DecisionEffectiveFromDate { get; set; }
 
-		public DecisionOutcomeAuthorizer? Authorizer { get; set; }
+		public API.Contracts.Decisions.Outcomes.DecisionOutcomeAuthorizer? Authorizer { get; set; }
 
-		public List<DecisionOutcomeBusinessArea> BusinessAreasConsulted { get; set; }
+		public List<DecisionOutcomeBusinessAreaMapping> BusinessAreasConsulted { get; set; }
 
 		public DateTimeOffset CreatedAt { get; set; }
 		public DateTimeOffset UpdatedAt { get; set; }
