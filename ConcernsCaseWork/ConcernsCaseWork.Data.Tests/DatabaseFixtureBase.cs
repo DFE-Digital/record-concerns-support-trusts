@@ -1,20 +1,28 @@
-using ConcernsCaseWork.Data.Models;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework.Internal.Commands;
+using Microsoft.Extensions.Configuration;
 
 namespace ConcernsCaseWork.Data.Tests;
 
-[TestFixture]
 public class DatabaseTestFixture
 {
-	private const string ConnectionString = @"Server=(localdb)\MSSQLLocalDb;Database=integrationtests;Trusted_Connection=True";
+	private readonly string _connectionString;
 
 	private static readonly object _lock = new();
 	private static bool _databaseInitialized;
+	
+	protected TestDbGateway TestDbGateway => new ();
 
-	public DatabaseTestFixture()
+	protected DatabaseTestFixture()
 	{
+		var configPath = Path.Combine(
+			Directory.GetCurrentDirectory(), "appsettings.tests.json");
+
+		var config = new ConfigurationBuilder()
+			.AddJsonFile(configPath)
+			.Build();
+
+		_connectionString = config.GetConnectionString("DefaultConnection") ?? throw new Exception("Connection string not found");
+		
 		lock (_lock)
 		{
 			if (!_databaseInitialized)
@@ -30,9 +38,9 @@ public class DatabaseTestFixture
 		}
 	}
 
-	public ConcernsDbContext CreateContext()
+	protected ConcernsDbContext CreateContext()
 		=> new ConcernsDbContext(
 			new DbContextOptionsBuilder<ConcernsDbContext>()
-				.UseSqlServer(ConnectionString)
+				.UseSqlServer(_connectionString)
 				.Options);
 }

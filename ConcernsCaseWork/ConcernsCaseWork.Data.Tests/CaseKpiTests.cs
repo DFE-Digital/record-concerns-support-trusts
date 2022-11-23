@@ -1,4 +1,3 @@
-using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
@@ -11,29 +10,17 @@ namespace ConcernsCaseWork.Data.Tests;
 public class CaseKpiTests : DatabaseTestFixture
 {
 	private readonly RandomGenerator _randomGenerator = new ();
-	private readonly TestDataFactory _testDataFactory = new ();
 
 	[Test]
 	public void CreateNewCase_CreatesKpiEntries()
 	{
-		// arrange
-		var start = DateTime.Now;
-		using var context = CreateContext();
-		
-		var statusId = context.ConcernsStatus.First().Id;
-		var ratingId = context.ConcernsRatings.First().Id;
-		
-		var createdCase = _testDataFactory.BuildOpenCase(statusId, ratingId);
-
 		// act
-		context.ConcernsCase.Add(createdCase);
-		context.SaveChanges();
-
+		var createdCase = TestDbGateway.GenerateTestOpenCaseInDb();
+		
 		// assert
-		createdCase.Urn.Should().BeGreaterThan(0);
-		var urn = createdCase.Urn;
+		createdCase.Id.Should().BeGreaterThan(0);
 
-		var results = GetKpiResults(urn, start);
+		var results = GetKpiResults(createdCase.Id, 0);
 
 		var createdAtKpi = results.Single(r => r.DataItemChanged == "CreatedAt");
 		createdAtKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
@@ -63,25 +50,21 @@ public class CaseKpiTests : DatabaseTestFixture
 	public void UpdateCase_RiskToTrust_CreatesKpiEntries()
 	{
 		// arrange
-		var createdCase = CreateOpenCaseInDb();
-		var whenCaseCreated = DateTime.Now;
+		var createdCase = TestDbGateway.GenerateTestOpenCaseInDb();
+		var maxKpiIdAfterCreate = GetMaxKpiIdForCase(createdCase.Id);
 
 		var originalRating = createdCase.Rating;
-		var urn = createdCase.Urn;
 
-		using var context = CreateContext();
-
-		var rating = context.ConcernsRatings.OrderBy(r => r.Id).Last();
+		var rating = TestDbGateway.GetDifferentRating(originalRating.Id);
 
 		createdCase.UpdatedAt = _randomGenerator.DateTime();
 		createdCase.Rating = rating;
 
 		// act
-		context.ConcernsCase.Update(createdCase);
-		context.SaveChanges();
+		TestDbGateway.UpdateCase(createdCase);
 
 		// assert
-		var results = GetKpiResults(urn, whenCaseCreated);
+		var results = GetKpiResults(createdCase.Id, maxKpiIdAfterCreate);
 
 		var riskToTrustKpi = results.First(r => r.DataItemChanged == "Risk to Trust");
 		riskToTrustKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
@@ -97,10 +80,9 @@ public class CaseKpiTests : DatabaseTestFixture
 	public void UpdateCase_DirectionOfTravel_CreatesKpiEntries()
 	{
 		// arrange
-		var createdCase = CreateOpenCaseInDb();
-		var whenCaseCreated = DateTime.Now;
+		var createdCase = TestDbGateway.GenerateTestOpenCaseInDb();
+		var maxKpiIdAfterCreate = GetMaxKpiIdForCase(createdCase.Id);
 		var originalDirectionOfTravel = createdCase.DirectionOfTravel;
-		var urn = createdCase.Urn;
 		
 		using var context = CreateContext();
 		createdCase.UpdatedAt = _randomGenerator.DateTime();
@@ -111,7 +93,7 @@ public class CaseKpiTests : DatabaseTestFixture
 		context.SaveChanges();
 		
 		// assert
-		var results = GetKpiResults(urn, whenCaseCreated);
+		var results = GetKpiResults(createdCase.Id, maxKpiIdAfterCreate);
 
 		var riskToTrustKpi = results.First(r => r.DataItemChanged == "Direction of Travel");
 		riskToTrustKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
@@ -127,9 +109,8 @@ public class CaseKpiTests : DatabaseTestFixture
 	public void CloseCase_CreatesKpiEntryForClosedAt()
 	{
 		// arrange
-		var createdCase = CreateOpenCaseInDb();
-		var whenCaseCreated = DateTime.Now;		
-		var urn = createdCase.Urn;
+		var createdCase = TestDbGateway.GenerateTestOpenCaseInDb();
+		var maxKpiIdAfterCreate = GetMaxKpiIdForCase(createdCase.Id);
 		
 		using var context = CreateContext();	
 		createdCase.UpdatedAt = _randomGenerator.DateTime();
@@ -140,7 +121,7 @@ public class CaseKpiTests : DatabaseTestFixture
 		context.SaveChanges();
 
 		// assert
-		var results = GetKpiResults(urn, whenCaseCreated);
+		var results = GetKpiResults(createdCase.Id, maxKpiIdAfterCreate);
 
 		var riskToTrustKpi = results.First(r => r.DataItemChanged == "ClosedAt");
 		riskToTrustKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
@@ -152,33 +133,14 @@ public class CaseKpiTests : DatabaseTestFixture
 		results.Count.Should().Be(1);
 	}
 	
-	private ConcernsCase CreateOpenCaseInDb()
-	{
-		using var context = CreateContext();
-		
-		var statusId = context.ConcernsStatus.First().Id;
-		var ratingId = context.ConcernsRatings.First().Id;
-
-		var createdCase = _testDataFactory.BuildOpenCase(statusId, ratingId);
-
-		// act
-		context.ConcernsCase.Add(createdCase);
-		context.SaveChanges();
-
-		return createdCase;
-	}
-
-	private CaseKpi GetCaseKpi(IDataRecord record)
-		=> new (record.GetDateTime(0), record.GetString(1), record.GetString(2), record.GetString(3), record.GetString(4));
-
-	private List<CaseKpi> GetKpiResults(int urn, DateTime startTimestamp)
+	private List<CaseKpi> GetKpiResults(int caseId, int previousMaxKpiId)
 	{
 		using var context = CreateContext();
 		using var command = context.Database.GetDbConnection().CreateCommand();
 		
-		command.CommandText = "SELECT DateTimeOfChange, DataItemChanged, Operation, ISNULL(OldValue,''), NewValue FROM [kpi].[Case] WHERE CaseId = @Id AND [Timestamp] >= @StartTimestamp";
-		command.Parameters.Add(new SqlParameter("Id", urn));
-		command.Parameters.Add(new SqlParameter("StartTimestamp", startTimestamp));
+		command.CommandText = "SELECT DateTimeOfChange, DataItemChanged, Operation, ISNULL(OldValue,''), NewValue FROM [kpi].[Case] WHERE CaseId = @Id AND Id > @PreviousMaxKpiId";
+		command.Parameters.Add(new SqlParameter("Id", caseId));
+		command.Parameters.Add(new SqlParameter("PreviousMaxKpiId", previousMaxKpiId));
 		
 		context.Database.OpenConnection();
 		using var result = command.ExecuteReader();
@@ -186,11 +148,27 @@ public class CaseKpiTests : DatabaseTestFixture
 		var kpis = new List<CaseKpi>();
 		while (result.Read())
 		{
-			kpis.Add(GetCaseKpi(result));
+			kpis.Add(BuildCaseKpi(result));
 		}
 
 		return kpis;
 	}
+	
+	private int GetMaxKpiIdForCase(int caseId)
+	{
+		using var context = CreateContext();
+		using var command = context.Database.GetDbConnection().CreateCommand();
+		
+		command.CommandText = "SELECT MAX(Id) FROM [kpi].[Case] WHERE CaseId = @Id";
+		command.Parameters.Add(new SqlParameter("Id", caseId));
+		
+		context.Database.OpenConnection();
+		var maxKpiId = command.ExecuteScalar() ?? 0;
+
+		return (int)maxKpiId;
+	}
+
+	private static CaseKpi BuildCaseKpi(IDataRecord record) => new (record.GetDateTime(0), record.GetString(1), record.GetString(2), record.GetString(3), record.GetString(4));
 	
 	private record CaseKpi(DateTime DateTimeOfChange, string DataItemChanged, string Operation, string OldValue, string NewValue);
 }

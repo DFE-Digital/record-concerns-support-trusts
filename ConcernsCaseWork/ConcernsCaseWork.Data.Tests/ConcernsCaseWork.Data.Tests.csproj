@@ -11,6 +11,7 @@
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="6.8.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
         <PackageReference Include="NBuilder" Version="6.1.0" />
         <PackageReference Include="NUnit" Version="3.13.3" />
@@ -21,6 +22,20 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ConcernsCaseWork.Data\ConcernsCaseWork.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="appsettings.tests.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.Configuration">
+        <HintPath>..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\6.0.11\Microsoft.Extensions.Configuration.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>
