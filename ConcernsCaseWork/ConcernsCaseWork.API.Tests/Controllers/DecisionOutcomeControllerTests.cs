@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
@@ -24,43 +25,18 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
 {
-	public class DecisionOutcomeControllerTests : IDisposable
+	public class DecisionOutcomeControllerTests : IClassFixture<ApiTestFixture>
 	{
-		private WebApplicationFactory<Startup> _application;
 		private HttpClient _client;
 		private Fixture _fixture;
 		private ConcernsDbContext _context;
 
-		public DecisionOutcomeControllerTests()
+		public DecisionOutcomeControllerTests(ApiTestFixture apiTestFixture)
 		{
+			_client = apiTestFixture.Client;
+			_context = apiTestFixture.DbContext;
+
 			_fixture = new();
-			_application = new WebApplicationFactory<Startup>()
-				.WithWebHostBuilder(builder =>
-				{
-					var configPath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.tests.json");
-
-					builder.ConfigureAppConfiguration((context, config) =>
-					{
-						config.AddJsonFile(configPath);
-					});
-				});
-
-			_client = _application.CreateClient();
-			_client.DefaultRequestHeaders.Add("ConcernsApiKey", "app-key");
-
-			var contextOptions = new DbContextOptionsBuilder<ConcernsDbContext>()
-				.UseSqlServer("Server=localhost;Database=integrationtests;Integrated Security=true")
-				.Options;
-
-			_context = new ConcernsDbContext(contextOptions);
-			_context.Database.Migrate();
-		}
-
-		public void Dispose()
-		{
-			_application.Dispose();
-			_client.Dispose();
-			_context.Dispose();
 		}
 
 		[Fact]
