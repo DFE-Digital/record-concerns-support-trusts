@@ -141,7 +141,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
 			var message = await result.Content.ReadAsStringAsync();
-			message.Should().Contain("Not Found: Decision with id -1");
+			message.Should().Contain($"Not Found: Decision with id -1, Case {concernsCaseId}");
 		}
 
 		[Fact]
