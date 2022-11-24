@@ -18,15 +18,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ConcernsCaseWork.API.Tests.Controllers
+namespace ConcernsCaseWork.API.Tests.Integration
 {
-	public class DecisionOutcomeControllerTests : IClassFixture<ApiTestFixture>
+	public class DecisionOutcomeIntegrationTests : IClassFixture<ApiTestFixture>
 	{
 		private HttpClient _client;
 		private Fixture _fixture;
 		private ConcernsDbContext _context;
 
-		public DecisionOutcomeControllerTests(ApiTestFixture apiTestFixture)
+		public DecisionOutcomeIntegrationTests(ApiTestFixture apiTestFixture)
 		{
 			_client = apiTestFixture.Client;
 			_context = apiTestFixture.DbContext;
