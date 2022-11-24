@@ -39,9 +39,8 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 
 			DbContext = new ConcernsDbContext(contextOptions);
 			DbContext.Database.Migrate();
-
-
 		}
+
 		public void Dispose()
 		{
 			_application.Dispose();
