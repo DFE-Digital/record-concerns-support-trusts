@@ -13,14 +13,12 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome
 
 		public CreateDecisionOutcome(IConcernsCaseGateway concernsCaseGateway, IDecisionOutcomeGateway decisionOutcomeGateway)
 		{
-			_concernsCaseGateway = concernsCaseGateway ?? throw new ArgumentNullException(nameof(concernsCaseGateway));
-			_decisionOutcomeGateway = decisionOutcomeGateway ?? throw new ArgumentNullException(nameof(decisionOutcomeGateway));
+			_concernsCaseGateway = concernsCaseGateway;
+			_decisionOutcomeGateway = decisionOutcomeGateway;
 		}
 
 		public async Task<CreateDecisionOutcomeResponse> Execute(CreateDecisionOutcomeUseCaseParams parameters, CancellationToken cancellationToken)
 		{
-			_ = parameters ?? throw new ArgumentNullException(nameof(parameters));
-
 			var concernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(parameters.ConcernsCaseId);
 
 			if (concernsCase == null) throw new NotFoundException($"Concern with id {parameters.ConcernsCaseId}");
