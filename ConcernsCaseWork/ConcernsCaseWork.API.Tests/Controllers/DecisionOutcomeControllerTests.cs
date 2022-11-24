@@ -6,14 +6,9 @@ using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -47,23 +42,10 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
 			var body = JsonConvert.SerializeObject(request);
 
-			var decisionToAdd = Decision.CreateNew("123456", false, false, "", new DateTimeOffset(), new DecisionType[] { }, 200, "Notes!", new DateTimeOffset());
+			var concernsCase = await CreateConcernsCase();
+			var concernsCaseId = concernsCase.Id;
 
-			var toAdd = new ConcernsCase()
-			{
-				RatingId = 1,
-				StatusId = 1
-			};
-
-			var concernsCaseToAdd = _context.ConcernsCase.Add(toAdd);
-			await _context.SaveChangesAsync();
-
-			var concernsCaseId = concernsCaseToAdd.Entity.Id;
-
-			decisionToAdd.ConcernsCaseId = concernsCaseId;
-			toAdd.Decisions.Add(decisionToAdd);
-
-			await _context.SaveChangesAsync();
+			var decisionToAdd = await CreateDecision(concernsCase.Id);
 
 			var result = await _client.PostAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{decisionToAdd.DecisionId}/outcome", CreateJsonPayload(body));
 
@@ -98,23 +80,10 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				Status = DecisionOutcomeStatus.Approved
 			};
 
-			var decisionToAdd = Decision.CreateNew("123456", false, false, "", new DateTimeOffset(), new DecisionType[] { }, 200, "Notes!", new DateTimeOffset());
+			var concernsCase = await CreateConcernsCase();
+			var concernsCaseId = concernsCase.Id;
 
-			var toAdd = new ConcernsCase()
-			{
-				RatingId = 1,
-				StatusId = 1
-			};
-
-			var concernsCaseToAdd = _context.ConcernsCase.Add(toAdd);
-			await _context.SaveChangesAsync();
-
-			var concernsCaseId = concernsCaseToAdd.Entity.Id;
-
-			decisionToAdd.ConcernsCaseId = concernsCaseId;
-			toAdd.Decisions.Add(decisionToAdd);
-
-			await _context.SaveChangesAsync();
+			var decisionToAdd = await CreateDecision(concernsCase.Id);
 
 			var body = JsonConvert.SerializeObject(request);
 
@@ -162,15 +131,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				Status = DecisionOutcomeStatus.Approved
 			};
 
-			var toAdd = new ConcernsCase()
-			{
-				RatingId = 1,
-				StatusId = 1
-			};
-
-			var concernsCaseToAdd = _context.ConcernsCase.Add(toAdd);
-			await _context.SaveChangesAsync();
-			var concernsCaseId = concernsCaseToAdd.Entity.Id;
+			var concernsCase = await CreateConcernsCase();
+			var concernsCaseId = concernsCase.Id;
 
 			var body = JsonConvert.SerializeObject(request);
 
@@ -218,6 +180,32 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 			var result = await _client.PutAsync($"/v2/concerns-cases/1/decisions/1/outcome", CreateJsonPayload(body));
 
 			result.StatusCode.Should().Be(HttpStatusCode.OK);
+		}
+
+		private async Task<ConcernsCase> CreateConcernsCase()
+		{
+			var toAdd = new ConcernsCase()
+			{
+				RatingId = 1,
+				StatusId = 1
+			};
+
+			var result = _context.ConcernsCase.Add(toAdd);
+			await _context.SaveChangesAsync();
+
+			return result.Entity;
+		}
+
+		private async Task<Decision> CreateDecision(int concernsCaseId)
+		{
+			var decisionToAdd = Decision.CreateNew("123456", false, false, "", new DateTimeOffset(), new DecisionType[] { }, 200, "Notes!", new DateTimeOffset());
+
+			decisionToAdd.ConcernsCaseId = concernsCaseId;
+			_context.Decisions.Add(decisionToAdd);
+
+			await _context.SaveChangesAsync();
+
+			return decisionToAdd;
 		}
 
 		private StringContent CreateJsonPayload(string body)
