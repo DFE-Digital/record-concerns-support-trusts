@@ -8,24 +8,29 @@ namespace ConcernsCaseWork.API.Controllers
 {
 	[ApiVersion("2.0")]
 	[ApiController]
-	[Route("v{version:apiVersion}/concerns-cases/{urn:int}/decisions/{decisionId:int}/outcome")]
+	[Route("v{version:apiVersion}/concerns-cases/{caseId:int}/decisions/{decisionId:int}/outcome")]
 	public class DecisionOutcomeController : ControllerBase
 	{
 		IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse> _createDecisionOutcomeUseCase;
+		private ILogger<ConcernsStatusController> _logger;
 
 		public DecisionOutcomeController(
-			IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse> createDecisionOutcomeUseCase)
+			IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse> createDecisionOutcomeUseCase,
+			ILogger<ConcernsStatusController> logger)
 		{
 			_createDecisionOutcomeUseCase = createDecisionOutcomeUseCase;
+			_logger = logger;
 		}
 
 		[HttpPost]
 		[ApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<CreateDecisionOutcomeResponse>>> Create(int urn, int decisionId, CreateDecisionOutcomeRequest request, CancellationToken cancellationToken)
+		public async Task<ActionResult<ApiSingleResponseV2<CreateDecisionOutcomeResponse>>> Create(int caseId, int decisionId, CreateDecisionOutcomeRequest request, CancellationToken cancellationToken)
 		{
+			_logger.LogInformation($"Creating decision outcome for case {caseId}, decision {decisionId}");
+
 			var parameters = new CreateDecisionOutcomeUseCaseParams()
 			{
-				ConcernsCaseId = urn,
+				ConcernsCaseId = caseId,
 				DecisionId = decisionId,
 				Request = request
 			};
@@ -33,6 +38,8 @@ namespace ConcernsCaseWork.API.Controllers
 			var created = await _createDecisionOutcomeUseCase.Execute(parameters, cancellationToken);
 
 			var result = new ApiSingleResponseV2<CreateDecisionOutcomeResponse>(created);
+
+			_logger.LogInformation($"Created decision outcome for case {caseId}, decision {decisionId}, outcome {created.DecisionOutcomeId}");
 
 			return new ObjectResult(result) { StatusCode = StatusCodes.Status201Created };
 		}
