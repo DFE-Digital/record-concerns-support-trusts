@@ -140,7 +140,7 @@ public class CaseKpiTests : DatabaseTestFixture
 		using var context = CreateContext();
 		using var command = context.Database.GetDbConnection().CreateCommand();
 		
-		command.CommandText = "SELECT DateTimeOfChange, DataItemChanged, Operation, ISNULL(OldValue,''), NewValue FROM [kpi].[Case] WHERE CaseId = @Id AND Id > @PreviousMaxKpiId";
+		command.CommandText = "SELECT DateTimeOfChange, DataItemChanged, Operation, ISNULL(OldValue,''), NewValue FROM [concerns].[kpi-Case] WHERE CaseId = @Id AND Id > @PreviousMaxKpiId";
 		command.Parameters.Add(new SqlParameter("Id", caseId));
 		command.Parameters.Add(new SqlParameter("PreviousMaxKpiId", previousMaxKpiId));
 		
@@ -161,7 +161,7 @@ public class CaseKpiTests : DatabaseTestFixture
 		using var context = CreateContext();
 		using var command = context.Database.GetDbConnection().CreateCommand();
 		
-		command.CommandText = "SELECT MAX(Id) FROM [kpi].[Case] WHERE CaseId = @Id";
+		command.CommandText = "SELECT MAX(Id) FROM [concerns].[kpi-Case] WHERE CaseId = @Id";
 		command.Parameters.Add(new SqlParameter("Id", caseId));
 		
 		context.Database.OpenConnection();

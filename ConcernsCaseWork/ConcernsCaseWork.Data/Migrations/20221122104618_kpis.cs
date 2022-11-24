@@ -9,10 +9,7 @@ namespace ConcernsCaseWork.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
 			migrationBuilder.Sql(@"
-				CREATE SCHEMA [kpi]
-				GO
-
-				CREATE TABLE [kpi].[Case](
+				CREATE TABLE [concerns].[kpi-Case](
 					[Id] [int] IDENTITY(1,1) NOT NULL,
 					[Timestamp] [datetime2](7) NOT NULL,
 					[CaseId] [int] NOT NULL,
@@ -24,17 +21,14 @@ namespace ConcernsCaseWork.Data.Migrations
 				 CONSTRAINT [PK_kpi.Case] PRIMARY KEY CLUSTERED 
 				(
 					[Id] ASC
-				)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+				)
 				) ON [PRIMARY]
 				GO
 
-				ALTER TABLE [kpi].[Case] ADD  CONSTRAINT [DF_kpi.Case_Timestamp]  DEFAULT (getdate()) FOR [Timestamp]
-				GO
-				ALTER TABLE [kpi].[Case]  WITH CHECK ADD  CONSTRAINT [FK_Case_ConcernsCase] FOREIGN KEY([CaseId])
-				REFERENCES [concerns].[ConcernsCase] ([Id])
+				ALTER TABLE [concerns].[kpi-Case] ADD  CONSTRAINT [DF_kpi.Case_Timestamp]  DEFAULT (getdate()) FOR [Timestamp]
 				GO
 
-				CREATE TABLE [kpi].[Concern](
+				CREATE TABLE [concerns].[kpi-Concern](
 					[Id] [int] IDENTITY(1,1) NOT NULL,
 					[Timestamp] [datetime2](7) NOT NULL,
 					[RecordId] [int] NOT NULL,
@@ -47,20 +41,14 @@ namespace ConcernsCaseWork.Data.Migrations
 				 CONSTRAINT [PK_kpi.Concern] PRIMARY KEY CLUSTERED 
 				(
 					[Id] ASC
-				)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+				)
 				) ON [PRIMARY]
 				GO
 
-				ALTER TABLE [kpi].[Concern] ADD  CONSTRAINT [DF_kpi.Concern_Timestamp]  DEFAULT (getdate()) FOR [Timestamp]
-				GO
-				ALTER TABLE [kpi].[Concern]  WITH CHECK ADD  CONSTRAINT [FK_Concern_ConcernsCase] FOREIGN KEY([CaseId])
-				REFERENCES [concerns].[ConcernsCase] ([Id])
-				GO
-				ALTER TABLE [kpi].[Concern]  WITH CHECK ADD  CONSTRAINT [FK_Concern_ConcernsRecord] FOREIGN KEY([RecordId])
-				REFERENCES [concerns].[ConcernsRecord] ([Id])
+				ALTER TABLE [concerns].[kpi-Concern] ADD  CONSTRAINT [DF_kpi.Concern_Timestamp]  DEFAULT (getdate()) FOR [Timestamp]
 				GO
 
-				CREATE TABLE [kpi].[ConcernsCaseAction](
+				CREATE TABLE [concerns].[kpi-CaseAction](
 					[Id] [int] IDENTITY(1,1) NOT NULL,
 					[ActionType] [varchar](50) NULL,
 					[Timestamp] [datetime2](7) NOT NULL,
@@ -71,14 +59,14 @@ namespace ConcernsCaseWork.Data.Migrations
 					[Operation] [varchar](20) NOT NULL,
 					[OldValue] [nvarchar](4000) NULL,
 					[NewValue] [nvarchar](4000) NULL,
-				 CONSTRAINT [PK_kpi.ConcernsCaseAction] PRIMARY KEY CLUSTERED 
+				 CONSTRAINT [PK_kpi.CaseAction] PRIMARY KEY CLUSTERED 
 				(
 					[Id] ASC
-				)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+				)
 				) ON [PRIMARY]
 				GO
 
-				ALTER TABLE [kpi].[ConcernsCaseAction] ADD  CONSTRAINT [DF_kpi.ConcernsCaseAction_Timestamp]  DEFAULT (getdate()) FOR [Timestamp]
+				ALTER TABLE [concerns].[kpi-CaseAction] ADD  CONSTRAINT [DF_kpi.CaseAction_Timestamp]  DEFAULT (getdate()) FOR [Timestamp]
 				GO
 			");
 			
@@ -90,7 +78,7 @@ namespace ConcernsCaseWork.Data.Migrations
 					SET NOCOUNT ON;
 
 					-- Case Created
-					INSERT INTO [kpi].[Case]
+					INSERT INTO [concerns].[kpi-Case]
 							   ([CaseId]
 							   ,[DateTimeOfChange]
 							   ,[DataItemChanged]
@@ -111,7 +99,7 @@ namespace ConcernsCaseWork.Data.Migrations
 						WHERE originalRecord.Id IS NULL
 
 					-- Modified Risk to Trust
-					INSERT INTO [kpi].[Case]
+					INSERT INTO [concerns].[kpi-Case]
 							   ([CaseId]
 							   ,[DateTimeOfChange]
 							   ,[DataItemChanged]
@@ -136,7 +124,7 @@ namespace ConcernsCaseWork.Data.Migrations
 						WHERE ISNULL([originalRecord].RatingId,0) <> [currentRecord].RatingId
 
 					-- Modified Direction of Travel
-					INSERT INTO [kpi].[Case]
+					INSERT INTO [concerns].[kpi-Case]
 							   ([CaseId]
 							   ,[DateTimeOfChange]
 							   ,[DataItemChanged]
@@ -158,7 +146,7 @@ namespace ConcernsCaseWork.Data.Migrations
 
 
 					-- Case Closed
-					INSERT INTO [kpi].[Case]
+					INSERT INTO [concerns].[kpi-Case]
 							   ([CaseId]
 							   ,[DateTimeOfChange]
 							   ,[DataItemChanged]
@@ -188,7 +176,7 @@ namespace ConcernsCaseWork.Data.Migrations
 					SET NOCOUNT ON;
 
 					-- Concern Created
-					INSERT INTO [kpi].[Concern]
+					INSERT INTO [concerns].[kpi-Concern]
 							   ([RecordId]
 							   ,[CaseId]
 							   ,[DateTimeOfChange]
@@ -211,7 +199,7 @@ namespace ConcernsCaseWork.Data.Migrations
 						WHERE originalRecord.Id IS NULL
 
 					-- Modified Risk to Trust
-					INSERT INTO [kpi].[Concern]
+					INSERT INTO [concerns].[kpi-Concern]
 							   ([RecordId]
 							   ,[CaseId]
 							   ,[DateTimeOfChange]
@@ -238,7 +226,7 @@ namespace ConcernsCaseWork.Data.Migrations
 						WHERE ISNULL([originalRecord].[RatingId], 0) <> [currentRecord].[RatingId]
 
 					-- Concern Closed
-					INSERT INTO [kpi].[Concern]
+					INSERT INTO [concerns].[kpi-Concern]
 							   ([RecordId]
 							   ,[CaseId]
 							   ,[DateTimeOfChange]
@@ -270,7 +258,7 @@ namespace ConcernsCaseWork.Data.Migrations
 					SET NOCOUNT ON;
 
 					-- Action opened
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -295,7 +283,7 @@ namespace ConcernsCaseWork.Data.Migrations
 						WHERE originalRecord.Id IS NULL
 
 					-- Modified Status
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -325,7 +313,7 @@ namespace ConcernsCaseWork.Data.Migrations
 
 
 					-- Action Closed
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -359,7 +347,7 @@ namespace ConcernsCaseWork.Data.Migrations
 					SET NOCOUNT ON;
 
 					-- Action opened
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -384,7 +372,7 @@ namespace ConcernsCaseWork.Data.Migrations
 						WHERE originalRecord.Id IS NULL
 
 					-- Modified Status
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -413,7 +401,7 @@ namespace ConcernsCaseWork.Data.Migrations
 						WHERE ISNULL([originalRecord].StatusId,0) <> [currentRecord].StatusId
 
 					-- Modified Closed Status
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -438,7 +426,7 @@ namespace ConcernsCaseWork.Data.Migrations
 						WHERE currentRecord.ClosedAt IS NOT NULL
 
 					-- Action Closed
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -474,7 +462,7 @@ namespace ConcernsCaseWork.Data.Migrations
 					DECLARE @SourceTablename varchar(50) = 'NTIUnderConsiderationCase';
 
 					-- Action opened
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -499,7 +487,7 @@ namespace ConcernsCaseWork.Data.Migrations
 						WHERE originalRecord.Id IS NULL
 
 					-- Modified Status
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -524,7 +512,7 @@ namespace ConcernsCaseWork.Data.Migrations
 						WHERE currentRecord.ClosedStatusId IS NOT NULL AND currentRecord.ClosedStatusId in (SELECT Id FROM [concerns].[NTIUnderConsiderationStatus])
 
 					-- Action Closed
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -558,7 +546,7 @@ namespace ConcernsCaseWork.Data.Migrations
 					SET NOCOUNT ON;
 
 					-- Action opened
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -583,7 +571,7 @@ namespace ConcernsCaseWork.Data.Migrations
 						WHERE originalRecord.Id IS NULL
 
 					-- Modified Status
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -612,7 +600,7 @@ namespace ConcernsCaseWork.Data.Migrations
 						WHERE  ISNULL([originalRecord].StatusId, 0) <> [currentRecord].StatusId
 						
 					-- Modified Closed Status
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -636,7 +624,7 @@ namespace ConcernsCaseWork.Data.Migrations
 							[concerns].[NTIWarningLetterStatus] [updatedStatus]  ON [updatedStatus].Id = [currentRecord].ClosedStatusId
 
 					-- Action Closed
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -670,7 +658,7 @@ namespace ConcernsCaseWork.Data.Migrations
 					SET NOCOUNT ON;
 
 					-- Action opened
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -695,7 +683,7 @@ namespace ConcernsCaseWork.Data.Migrations
 						WHERE originalRecord.Id IS NULL
 
 					-- Modified Status
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],
@@ -724,7 +712,7 @@ namespace ConcernsCaseWork.Data.Migrations
 						WHERE ISNULL([originalRecord].StatusId, 0) <> [currentRecord].StatusId
 
 					-- Action Closed
-					INSERT INTO [kpi].[ConcernsCaseAction]
+					INSERT INTO [concerns].[kpi-CaseAction]
 							   ([ActionType],
 								[ActionId],
 								[CaseUrn],

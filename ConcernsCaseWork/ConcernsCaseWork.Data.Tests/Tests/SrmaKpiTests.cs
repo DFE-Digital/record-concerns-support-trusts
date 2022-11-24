@@ -106,7 +106,7 @@ public class SrmaKpiTests : DatabaseTestFixture
 		using var command = context.Database.GetDbConnection().CreateCommand();
 		
 		command.CommandText = 
-			"SELECT ActionType, ActionId, DateTimeOfChange, DataItemChanged, Operation, ISNULL(OldValue,''), NewValue FROM [kpi].[ConcernsCaseAction] WHERE CaseUrn = @Id AND ActionType='SRMACase' AND ActionId=@SrmaId AND Id > @PreviousMaxKpiId";
+			"SELECT ActionType, ActionId, DateTimeOfChange, DataItemChanged, Operation, ISNULL(OldValue,''), NewValue FROM [concerns].[kpi-CaseAction] WHERE CaseUrn = @Id AND ActionType='SRMACase' AND ActionId=@SrmaId AND Id > @PreviousMaxKpiId";
 		command.Parameters.Add(new SqlParameter("Id", caseUrn));
 		command.Parameters.Add(new SqlParameter("PreviousMaxKpiId", previousMaxKpiId));
 		command.Parameters.Add(new SqlParameter("SrmaId", srmaId));
@@ -128,7 +128,7 @@ public class SrmaKpiTests : DatabaseTestFixture
 		using var context = CreateContext();
 		using var command = context.Database.GetDbConnection().CreateCommand();
 		
-		command.CommandText = "SELECT MAX(Id) FROM [kpi].[ConcernsCaseAction] WHERE CaseUrn = @Id AND ActionType='SRMACase' AND ActionId=@SrmaId";
+		command.CommandText = "SELECT MAX(Id) FROM [concerns].[kpi-CaseAction] WHERE CaseUrn = @Id AND ActionType='SRMACase' AND ActionId=@SrmaId";
 		command.Parameters.Add(new SqlParameter("Id", caseUrn));
 		command.Parameters.Add(new SqlParameter("SrmaId", srmaId));
 		

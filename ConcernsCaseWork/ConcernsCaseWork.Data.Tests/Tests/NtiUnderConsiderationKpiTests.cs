@@ -80,7 +80,7 @@ public class NtiUnderConsiderationKpiTests : DatabaseTestFixture
 		
 		command.CommandText = 
 			@"SELECT ActionType, ActionId, DateTimeOfChange, DataItemChanged, Operation, ISNULL(OldValue,''), NewValue 
-				FROM [kpi].[ConcernsCaseAction] 
+				FROM [concerns].[kpi-CaseAction] 
 				WHERE CaseUrn = @Id AND ActionType='NTIUnderConsiderationCase' AND ActionId=@NtiUnderConsiderationId AND Id > @PreviousMaxKpiId";
 		command.Parameters.Add(new SqlParameter("Id", caseUrn));
 		command.Parameters.Add(new SqlParameter("PreviousMaxKpiId", previousMaxKpiId));
@@ -103,7 +103,7 @@ public class NtiUnderConsiderationKpiTests : DatabaseTestFixture
 		using var context = CreateContext();
 		using var command = context.Database.GetDbConnection().CreateCommand();
 		
-		command.CommandText = @"SELECT MAX(Id) FROM [kpi].[ConcernsCaseAction] 
+		command.CommandText = @"SELECT MAX(Id) FROM [concerns].[kpi-CaseAction] 
 			WHERE CaseUrn = @Id AND ActionType='NtiUnderConsiderationCase' AND ActionId=@NtiUnderConsiderationId";
 		command.Parameters.Add(new SqlParameter("Id", caseUrn));
 		command.Parameters.Add(new SqlParameter("NtiUnderConsiderationId", ntiUnderConsiderationId));

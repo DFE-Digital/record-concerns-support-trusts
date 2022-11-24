@@ -117,7 +117,7 @@ public class NtiWarningLetterKpiTests : DatabaseTestFixture
 		
 		command.CommandText = 
 			@"SELECT ActionType, ActionId, DateTimeOfChange, DataItemChanged, Operation, ISNULL(OldValue,''), NewValue 
-				FROM [kpi].[ConcernsCaseAction] 
+				FROM [concerns].[kpi-CaseAction] 
 				WHERE CaseUrn = @Id AND ActionType='NTIWarningLetterCase' AND ActionId=@NtiWarningLetterId AND Id > @PreviousMaxKpiId";
 		command.Parameters.Add(new SqlParameter("Id", caseUrn));
 		command.Parameters.Add(new SqlParameter("PreviousMaxKpiId", previousMaxKpiId));
@@ -140,7 +140,7 @@ public class NtiWarningLetterKpiTests : DatabaseTestFixture
 		using var context = CreateContext();
 		using var command = context.Database.GetDbConnection().CreateCommand();
 		
-		command.CommandText = @"SELECT MAX(Id) FROM [kpi].[ConcernsCaseAction] 
+		command.CommandText = @"SELECT MAX(Id) FROM [concerns].[kpi-CaseAction] 
 			WHERE CaseUrn = @Id AND ActionType='NtiWarningLetterCase' AND ActionId=@NtiWarningLetterId";
 		command.Parameters.Add(new SqlParameter("Id", caseUrn));
 		command.Parameters.Add(new SqlParameter("NtiWarningLetterId", ntiWarningLetterId));
