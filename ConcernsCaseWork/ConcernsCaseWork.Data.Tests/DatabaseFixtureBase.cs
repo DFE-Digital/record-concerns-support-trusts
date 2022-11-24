@@ -9,8 +9,6 @@ public class DatabaseTestFixture
 
 	private static readonly object _lock = new();
 	private static bool _databaseInitialized;
-	
-	protected TestDbGateway TestDbGateway => new ();
 
 	protected DatabaseTestFixture()
 	{

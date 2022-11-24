@@ -1,21 +1,23 @@
+using ConcernsCaseWork.Data.Tests.DbGateways;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
-namespace ConcernsCaseWork.Data.Tests;
+namespace ConcernsCaseWork.Data.Tests.Tests;
 
 [TestFixture]
 public class ConcernKpiTests : DatabaseTestFixture
 {
 	private readonly RandomGenerator _randomGenerator = new ();
+	private readonly TestConcernDbGateway _gateway = new ();
 
 	[Test]
 	public void CreateNewConcern_CreatesKpiEntries()
 	{
 		// act
-		var concern = TestDbGateway.GenerateTestConcernInDb();
+		var concern = _gateway.GenerateTestConcernInDb();
 
 		// assert
 		concern.Id.Should().BeGreaterThan(0);
@@ -45,14 +47,14 @@ public class ConcernKpiTests : DatabaseTestFixture
 	public void UpdateConcern_RiskToTrust_CreatesKpiEntry()
 	{
 		// arrange
-		var concern = TestDbGateway.GenerateTestConcernInDb();
+		var concern = _gateway.GenerateTestConcernInDb();
 		var maxKpiIdAfterCreate = GetMaxKpiIdForConcern(concern.Id);
 		var originalRating = concern.ConcernsRating.Name;
 		
 		// act
-		concern.ConcernsRating = TestDbGateway.GetDifferentRating(concern.RatingId);
+		concern.ConcernsRating = _gateway.GetDifferentCaseRating(concern.RatingId);
 		concern.RatingId = concern.ConcernsRating.Id;
-		TestDbGateway.UpdateConcern(concern);
+		_gateway.UpdateConcern(concern);
 
 		// assert
 		concern.Id.Should().BeGreaterThan(0);
@@ -74,25 +76,26 @@ public class ConcernKpiTests : DatabaseTestFixture
 	public void CloseConcern_CreatesKpiEntry()
 	{
 		// arrange
-		var concern = TestDbGateway.GenerateTestConcernInDb();
+		var concern = _gateway.GenerateTestConcernInDb();
 		var maxKpiIdAfterCreate = GetMaxKpiIdForConcern(concern.Id);
 		
 		// act
 		concern.ClosedAt = _randomGenerator.DateTime();
-		TestDbGateway.UpdateConcern(concern);
+		concern.UpdatedAt = _randomGenerator.DateTime();
+		_gateway.UpdateConcern(concern);
 
 		// assert
 		concern.Id.Should().BeGreaterThan(0);
 
 		var results = GetKpiResults(concern.Id, maxKpiIdAfterCreate);
 
-		var riskKpi = results.Single(r => r.DataItemChanged == "ClosedAt");
-		riskKpi.CaseId.Should().Be(concern.CaseId);
-		riskKpi.DateTimeOfChange.Should().Be(concern.UpdatedAt);
-		riskKpi.DataItemChanged.Should().Be("ClosedAt");
-		riskKpi.Operation.Should().Be("Close");
-		riskKpi.OldValue.Should().BeEmpty();
-		riskKpi.NewValue.Replace("-","/").Should().Be(concern.ClosedAt.ToShortDateString());
+		var closedAtKpi = results.Single(r => r.DataItemChanged == "ClosedAt");
+		closedAtKpi.CaseId.Should().Be(concern.CaseId);
+		closedAtKpi.DateTimeOfChange.Should().Be(concern.UpdatedAt);
+		closedAtKpi.DataItemChanged.Should().Be("ClosedAt");
+		closedAtKpi.Operation.Should().Be("Close");
+		closedAtKpi.OldValue.Should().BeEmpty();
+		closedAtKpi.NewValue.Replace("-","/").Should().Be(concern.ClosedAt.ToShortDateString());
 
 		results.Count.Should().Be(1);
 	}

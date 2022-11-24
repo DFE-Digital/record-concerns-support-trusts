@@ -1,21 +1,23 @@
+using ConcernsCaseWork.Data.Tests.DbGateways;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
-namespace ConcernsCaseWork.Data.Tests;
+namespace ConcernsCaseWork.Data.Tests.Tests;
 
 [TestFixture]
 public class CaseKpiTests : DatabaseTestFixture
 {
 	private readonly RandomGenerator _randomGenerator = new ();
+	private readonly TestCaseDbGateway _gateway = new ();
 
 	[Test]
 	public void CreateNewCase_CreatesKpiEntries()
 	{
 		// act
-		var createdCase = TestDbGateway.GenerateTestOpenCaseInDb();
+		var createdCase = _gateway.GenerateTestOpenCase();
 		
 		// assert
 		createdCase.Id.Should().BeGreaterThan(0);
@@ -50,18 +52,18 @@ public class CaseKpiTests : DatabaseTestFixture
 	public void UpdateCase_RiskToTrust_CreatesKpiEntries()
 	{
 		// arrange
-		var createdCase = TestDbGateway.GenerateTestOpenCaseInDb();
+		var createdCase = _gateway.GenerateTestOpenCase();
 		var maxKpiIdAfterCreate = GetMaxKpiIdForCase(createdCase.Id);
 
 		var originalRating = createdCase.Rating;
 
-		var rating = TestDbGateway.GetDifferentRating(originalRating.Id);
+		var rating = _gateway.GetDifferentCaseRating(originalRating.Id);
 
 		createdCase.UpdatedAt = _randomGenerator.DateTime();
 		createdCase.Rating = rating;
 
 		// act
-		TestDbGateway.UpdateCase(createdCase);
+		_gateway.UpdateCase(createdCase);
 
 		// assert
 		var results = GetKpiResults(createdCase.Id, maxKpiIdAfterCreate);
@@ -80,7 +82,7 @@ public class CaseKpiTests : DatabaseTestFixture
 	public void UpdateCase_DirectionOfTravel_CreatesKpiEntries()
 	{
 		// arrange
-		var createdCase = TestDbGateway.GenerateTestOpenCaseInDb();
+		var createdCase = _gateway.GenerateTestOpenCase();
 		var maxKpiIdAfterCreate = GetMaxKpiIdForCase(createdCase.Id);
 		var originalDirectionOfTravel = createdCase.DirectionOfTravel;
 		
@@ -109,7 +111,7 @@ public class CaseKpiTests : DatabaseTestFixture
 	public void CloseCase_CreatesKpiEntryForClosedAt()
 	{
 		// arrange
-		var createdCase = TestDbGateway.GenerateTestOpenCaseInDb();
+		var createdCase = _gateway.GenerateTestOpenCase();
 		var maxKpiIdAfterCreate = GetMaxKpiIdForCase(createdCase.Id);
 		
 		using var context = CreateContext();	
