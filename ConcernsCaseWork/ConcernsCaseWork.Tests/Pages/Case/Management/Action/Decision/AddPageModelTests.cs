@@ -1,30 +1,28 @@
 ﻿using AutoFixture;
-using NUnit.Framework;
-using System.Threading.Tasks;
-using ConcernsCaseWork.Pages.Case.Management.Action.Decision;
-using ConcernsCaseWork.Pages.Base;
-using Microsoft.Extensions.Logging;
-using Moq;
 using AutoFixture.AutoMoq;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
+using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models.Validatable;
+using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Pages.Case.Management.Action.Decision;
 using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Shared.Tests.Factory;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
+using Moq;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-using FluentAssertions;
-using NUnit.Framework.Constraints;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
-using System;
-using ConcernsCaseWork.Constants;
-using Azure;
-using ConcernsCaseWork.API.Contracts.Enums;
-using System.Transactions;
+using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 {
@@ -80,6 +78,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				API.Contracts.Enums.DecisionType.NoticeToImprove,
 				API.Contracts.Enums.DecisionType.OtherFinancialSupport
 			};
+			getDecisionResponse.ReceivedRequestDate = new DateTimeOffset(new DateTime(2022, 5, 2));
 
 			var decisionService = new Mock<IDecisionService>();
 			decisionService.Setup(m => m.GetDecision(2, 1)).ReturnsAsync(getDecisionResponse);
@@ -100,6 +99,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			sut.Decision.CrmCaseNumber.Should().Be(getDecisionResponse.CrmCaseNumber);
 			sut.Decision.DecisionTypes.Should().BeEquivalentTo(getDecisionResponse.DecisionTypes);
 			sut.Decision.SupportingNotes.Should().Be(getDecisionResponse.SupportingNotes);
+			sut.ReceivedRequestDate.Day.Should().Be("02");
+			sut.ReceivedRequestDate.Month.Should().Be("05");
+			sut.ReceivedRequestDate.Year.Should().Be("2022");
 		}
 
 		[Test]
@@ -143,11 +145,19 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				.WithCaseUrnRouteValue(expectedUrn)
 				.BuildSut();
 
+			sut.ReceivedRequestDate = new OptionalDateModel()
+			{
+				Day = "22",
+				Month = "05",
+				Year = "2022"
+			};
+
 			var page = await sut.OnPostAsync(expectedUrn) as RedirectResult;
 
 			sut.CaseUrn.Should().Be(expectedUrn);
 			page.Url.Should().Be("/case/2/management");
 			sut.Decision.DecisionTypes.Should().BeEmpty();
+			sut.Decision.ReceivedRequestDate.Should().NotBeNull();
 		}
 
 		[Test]
@@ -163,10 +173,35 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				DecisionType.NonRepayableFinancialSupport
 			};
 
+			sut.ReceivedRequestDate = new OptionalDateModel()
+			{
+				Day = "22",
+				Month = "05",
+				Year = "2022"
+			};
+
 			var page = await sut.OnPostAsync(expectedUrn, 1) as RedirectResult;
 
 			page.Url.Should().Be("/case/2/management/action/decision/1");
 			sut.Decision.DecisionTypes.Should().Contain(DecisionType.NonRepayableFinancialSupport);
+			sut.Decision.ReceivedRequestDate.Should().NotBeNull();
+		}
+
+		[Test]
+		public async Task OnPostAsync_When_DateIsNotSet_Returns_MinDate()
+		{
+			const long expectedUrn = 2;
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrnRouteValue(expectedUrn)
+				.BuildSut();
+
+			sut.ReceivedRequestDate = new OptionalDateModel();
+
+			var page = await sut.OnPostAsync(expectedUrn);
+
+			sut.Decision.ReceivedRequestDate.Should().Be(DateTime.MinValue);
+			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
 		}
 
 
@@ -179,13 +214,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				.WithCaseUrnRouteValue(expectedUrn)
 				.BuildSut();
 
-			sut.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "dtr-day-request-received", new StringValues("19") },
-					{ "dtr-month-request-received", new StringValues("10") },
-					{ "dtr-year-request-received", new StringValues("2022") }
-				});
+			sut.ReceivedRequestDate = new OptionalDateModel()
+			{
+				Day = "19",
+				Month = "10",
+				Year = "2022"
+			};
 
 			await sut.OnPostAsync(expectedUrn);
 
@@ -232,38 +266,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			sut.DecisionTypeCheckBoxes.Should().NotBeEmpty();
 			sut.ViewData[ViewDataConstants.Title].Should().Be("Add decision");
 		}
-
-		[Test]
-		public async Task OnPostAsync_When_InvalidDate_Error_Message()
-		{
-			long caseUrn = 233433;
-			var invalidDay = "32";
-			var invalidMonth = "13";
-			var invalidYear = "7";
-
-			var expectedErrorMessage = $"{invalidDay}-{invalidMonth}-{invalidYear} is an invalid date";
-
-			var builder = new TestBuilder()
-				.WithCaseUrnRouteValue(caseUrn);
-
-			var sut = builder.BuildSut();
-
-			sut.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "dtr-day-request-received", new StringValues(invalidDay) },
-					{ "dtr-month-request-received", new StringValues(invalidMonth) },
-					{ "dtr-year-request-received", new StringValues(invalidYear) }
-				});
-
-
-			await sut.OnPostAsync(caseUrn);
-
-			var decisionsValidationErrors = sut.TempData["Decision.Message"] as IEnumerable<string>;
-
-			Assert.IsTrue(decisionsValidationErrors.Contains(expectedErrorMessage));
-		}
-
 
 		private class TestBuilder
 		{

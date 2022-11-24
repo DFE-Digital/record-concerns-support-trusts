@@ -25,9 +25,8 @@ describe("User can manage cases from the case management page", () => {
         cy.enterConcernDetails();
 
         cy.validateCaseManagPage();
+        
 
-        cy.get('[id^="accordion-default-heading"]').eq(0).should('have.attr', 'aria-expanded', 'true');
-        cy.get('[id^="accordion-default-heading"]').eq(0).click().should('have.attr', 'aria-expanded', 'false');
-        cy.get('[id^="accordion-default-heading"]').eq(0).click().should('have.attr', 'aria-expanded', 'true');
+      
     });
 });

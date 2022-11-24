@@ -1,43 +1,40 @@
-import AddToCasePage from "../../../pages/caseActions/addToCasePage.js";
+import { Logger } from "../../../common/logger";
 import { DecisionPage } from "../../../pages/caseActions/decisionPage"
 
 describe("User can add case actions to an existing case", () => {
+	const decisionPage: DecisionPage = new DecisionPage();
+
 	beforeEach(() => {
 		cy.login();
 	});
 
-	it("Checking that Concerns decision is visible then adding concerns decision case action to a case,  Validation of wrong date when entered", function () {
-		cy.addConcernsDecisionsAddToCase();
-
-		AddToCasePage.getDayDateField().click().type("23");
-		AddToCasePage.getMonthDateField().click().type("25");
-		AddToCasePage.getYearDateField().click().type("2022");
-		AddToCasePage.getDecisionButton().click();
-
-		cy.get("#decision-error-list").should(
-			"contain.text",
-			"23-25-2022 is an invalid date"
-		);
+	after(function () {
+		cy.clearLocalStorage();
+		cy.clearCookies();
 	});
-
-	it(" Concern Decision - Checking if View live initial record is visible", function () {
-		cy.addConcernsDecisionsAddToCase();
-		AddToCasePage.getDayDateField().click().type("12");
-		AddToCasePage.getMonthDateField().click().type("05");
-		AddToCasePage.getYearDateField().click().type("2022");
-		AddToCasePage.getNoticeToImproveBtn().click();
-		AddToCasePage.getDecisionButton().click();
-		cy.get("#open-case-actions").should(
-			"contain.text",
-			"Decision: Notice to Improve"
-		);
-	});
-
-	const decisionPage: DecisionPage = new DecisionPage();
 
 	it(" Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
 		cy.addConcernsDecisionsAddToCase();
 
+		Logger.Log("Checking an invalid date");
+		decisionPage
+			.withDateESFADay("23")
+			.withDateESFAMonth("25")
+			.withDateESFAYear("2022")
+			.saveDecision()
+			.hasValidationError("23-25-2022 is an invalid date");
+
+		Logger.Log("Checking an incomplete date with notes exceeded");
+		decisionPage
+			.withDateESFADay("23")
+			.withDateESFAMonth("12")
+			.withDateESFAYear("")
+			.withSupportingNotesExceedingLimit()
+			.saveDecision()
+			.hasValidationError("Please enter a complete date DD MM YYYY")
+			.hasValidationError("Notes must be 2000 characters or less");
+
+		Logger.Log("Creating Decision");
 		decisionPage
 			.withCrmEnquiry("444")
 			.withRetrospectiveRequest(false)
@@ -49,13 +46,16 @@ describe("User can add case actions to an existing case", () => {
 			.withTypeOfDecisionID("NoticeToImprove")
 			.withTypeOfDecisionID("Section128")
 			.withTotalAmountRequested("£140,000")
-			.withSupportingNotes("These are some supporting notes!");
-		AddToCasePage.getDecisionButton().click();
+			.withSupportingNotes("These are some supporting notes!")
+			.saveDecision();
+
+		Logger.Log("Selecting Decision from open actions");
 		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: Notice to Improve (NTI)")
+			.should("contain.text", "Decision: Multiple Decision Types")
 			.eq(-3)
 			.click();
 
+		Logger.Log("Viewing Decision");
 		decisionPage
 			.hasCrmEnquiry("444")
 			.hasRetrospectiveRequest("No")
@@ -69,6 +69,7 @@ describe("User can add case actions to an existing case", () => {
 			.hasActionEdit()
 			.editDecision();
 
+		Logger.Log("Editing Decision");
 		decisionPage
 			.withCrmEnquiry("777")
 			.withRetrospectiveRequest(false)
@@ -79,9 +80,10 @@ describe("User can add case actions to an existing case", () => {
 			.withDateESFAYear("2022")
 			.withTypeOfDecisionID("QualifiedFloatingCharge")
 			.withTotalAmountRequested("£130,000")
-			.withSupportingNotes("Testing Supporting Notes");
-		AddToCasePage.getDecisionButton().click();
+			.withSupportingNotes("Testing Supporting Notes")
+			.saveDecision();
 
+		Logger.Log("Viewing Edited Decision");
 		decisionPage
 			.hasCrmEnquiry("777")
 			.hasRetrospectiveRequest("No")
@@ -92,13 +94,19 @@ describe("User can add case actions to an existing case", () => {
 			.hasTypeOfDecision("Qualified Floating Charge (QFC)")
 			.hasSupportingNotes("Testing Supporting Notes");
 	});
+
 	it("When Decisions is empty, View Behavior", function () {
+		Logger.Log("Creating Empty Decision");
 		cy.addConcernsDecisionsAddToCase();
-		AddToCasePage.getDecisionButton().click();
+
+		decisionPage.saveDecision();
+
 		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: Notice to Improve (NTI)")
+			.should("contain.text", "Decision: No Decision Types")
 			.eq(-3)
 			.click();
+
+		Logger.Log("Viewing Empty Decision");
 		decisionPage
 			.hasCrmEnquiry("Empty")
 			.hasRetrospectiveRequest("No")
@@ -108,9 +116,5 @@ describe("User can add case actions to an existing case", () => {
 			.hasTotalAmountRequested("£0.00")
 			.hasTypeOfDecision("Empty")
 			.hasSupportingNotes("Empty");
-	});
-	after(function () {
-		cy.clearLocalStorage();
-		cy.clearCookies();
 	});
 });
