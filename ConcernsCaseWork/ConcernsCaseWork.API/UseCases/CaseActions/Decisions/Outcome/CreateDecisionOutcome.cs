@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Exceptions;
+using ConcernsCaseWork.API.Factories.Concerns.Decisions;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
 
@@ -12,12 +13,14 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome
 
 		public CreateDecisionOutcome(IConcernsCaseGateway concernsCaseGateway, IDecisionOutcomeGateway decisionOutcomeGateway)
 		{
-			_concernsCaseGateway = concernsCaseGateway;
-			_decisionOutcomeGateway = decisionOutcomeGateway;
+			_concernsCaseGateway = concernsCaseGateway ?? throw new ArgumentNullException(nameof(concernsCaseGateway));
+			_decisionOutcomeGateway = decisionOutcomeGateway ?? throw new ArgumentNullException(nameof(decisionOutcomeGateway));
 		}
 
 		public async Task<CreateDecisionOutcomeResponse> Execute(CreateDecisionOutcomeUseCaseParams parameters, CancellationToken cancellationToken)
 		{
+			_ = parameters ?? throw new ArgumentNullException(nameof(parameters));
+
 			var concernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(parameters.ConcernsCaseId);
 
 			if (concernsCase == null) throw new NotFoundException($"Concern with id {parameters.ConcernsCaseId}");
