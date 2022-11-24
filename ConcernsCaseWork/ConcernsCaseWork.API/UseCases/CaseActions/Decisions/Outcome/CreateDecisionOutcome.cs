@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome
 
 			var decision = concernsCase.Decisions.FirstOrDefault(d => d.DecisionId == parameters.DecisionId);
 
-			if (decision == null) throw new NotFoundException($"Decision with id {parameters.DecisionId}");
+			if (decision == null) throw new NotFoundException($"Decision with id {parameters.DecisionId}, Case {parameters.ConcernsCaseId}");
 
 			var toCreate = ToCreateDbModel(parameters.Request, parameters.DecisionId);
 			var decisionOutcome = await _decisionOutcomeGateway.CreateDecisionOutcome(toCreate, cancellationToken);
