@@ -51,8 +51,8 @@ namespace ConcernsCaseWork.Data
         public virtual DbSet<NoticeToImproveConditionMapping> NoticeToImproveConditionsMappings { get; set; }
         public virtual DbSet<ConcernsCaseworkTeam> ConcernsTeamCaseworkTeam { get; set; }
         public virtual DbSet<ConcernsCaseworkTeamMember> ConcernsTeamCaseworkTeamMember { get; set; }
-
 		public virtual DbSet<DecisionOutcome> DecisionOutcomes { get; set; }
+		public virtual DbSet<Decision> Decisions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {    
