@@ -3,6 +3,7 @@ using ConcernsCaseWork.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -19,6 +20,8 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 
 		public ApiTestFixture()
 		{
+			IConfigurationRoot testConfig = null;
+
 			_application = new WebApplicationFactory<Startup>()
 				.WithWebHostBuilder(builder =>
 				{
@@ -27,14 +30,18 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 					builder.ConfigureAppConfiguration((context, config) =>
 					{
 						config.AddJsonFile(configPath);
+
+						testConfig = config.Build();
 					});
 				});
 
 			Client = _application.CreateClient();
 			Client.DefaultRequestHeaders.Add("ConcernsApiKey", "app-key");
 
+			var connection = testConfig.GetSection("ConnectionStrings")["DefaultConnection"];
+
 			var contextOptions = new DbContextOptionsBuilder<ConcernsDbContext>()
-				.UseSqlServer("Server=localhost;Database=integrationtests;Integrated Security=true")
+				.UseSqlServer(connection)
 				.Options;
 
 			DbContext = new ConcernsDbContext(contextOptions);
