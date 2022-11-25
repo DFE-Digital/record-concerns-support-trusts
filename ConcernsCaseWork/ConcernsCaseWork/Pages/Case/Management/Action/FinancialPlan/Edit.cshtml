@@ -72,7 +72,7 @@
 									var idStr = id++ == 0 ? "status" : "status-" + id;
 									var checkedStr = status.IsChecked ? "checked" : "";
 									<div class="govuk-radios__item">
-										<input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id" @checkedStr>
+										<input class="govuk-radios__input" id="@idStr" name="status" type="radio" data-testid="status-@status.Id" value="@status.Id" @checkedStr>
 
 										<label class="govuk-label govuk-radios__label" for="@idStr">
 											<span>
