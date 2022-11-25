@@ -55,7 +55,7 @@ describe("The correct items are visible on the details page", () => {
             })
             .then((response) => {
                 expect(response.status).to.eq(200);
-                expect(response.body.data[0].meansOfReferralUrn).to.eq(12574);
+                expect(response.body.data[0].meansOfReferralId).to.eq(1);
             })
         });
     });
