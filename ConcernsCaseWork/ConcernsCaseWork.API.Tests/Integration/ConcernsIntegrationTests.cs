@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
         public ConcernsIntegrationTests(ConcernsDataApiFactory fixture)
         {
             _client = fixture.CreateClient();
-            _client.DefaultRequestHeaders.Add("ConcernsApiKey", "app-key");
+            _client.DefaultRequestHeaders.Add("ApiKey", "app-key");
             _dbContext = fixture.Services.GetRequiredService<ConcernsDbContext>();
             _fixture = new Fixture();
             _randomGenerator = new RandomGenerator();
