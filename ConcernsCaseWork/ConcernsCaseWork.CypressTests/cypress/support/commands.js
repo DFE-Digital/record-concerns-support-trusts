@@ -101,7 +101,6 @@ Cypress.Commands.add('addConcernsDecisionsAddToCase',()=>{
     AddToCasePage.addToCase('Decision');
     AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
     AddToCasePage.getAddToCaseBtn().click();
-    cy.log(utils.checkForGovErrorSummaryList());
 })
 
 
@@ -486,7 +485,7 @@ Cypress.Commands.add('basicCreateCase', () => {
     cy.selectRiskToTrust();
 
     let date = new Date();
-    cy.get("#issue").type("Data entered at " + date);
+    cy.get("#issue").invoke("val", "Data entered at " + date);
     cy.get("#case-details-form  button").click();
 });
 
