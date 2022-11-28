@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 		public OptionalDateModel DecisionMadeDate { get; set; }
 
 		[BindProperty]
-		public OptionalDateModel TakeEffectDate { get; set; }
+		public OptionalDateModel DecisionTakeEffectDate { get; set; }
 
 		public long CaseUrn { get; set; }
 
@@ -72,7 +72,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 					Year = DecisionOutcome.DecisionMadeDate?.Year.ToString()
 				};
 
-				TakeEffectDate = new OptionalDateModel()
+				DecisionTakeEffectDate = new OptionalDateModel()
 				{
 					Day = DecisionOutcome.DecisionTakeEffectDate?.Day.ToString("00"),
 					Month = DecisionOutcome.DecisionTakeEffectDate?.Month.ToString("00"),
@@ -106,21 +106,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 				}
 
 				DecisionOutcome.DecisionMadeDate = ParseDate(DecisionMadeDate);
-				DecisionOutcome.DecisionTakeEffectDate = ParseDate(TakeEffectDate);
+				DecisionOutcome.DecisionTakeEffectDate = ParseDate(DecisionTakeEffectDate);
 
 				if (OutcomeId.HasValue)
 				{
 					//var updateDecisionRequest = DecisionMapping.ToUpdateDecision(Decision);
 					//await _decisionService.PutDecision(urn, (long)decisionId, updateDecisionRequest);
 
-
-					//var updateDecisionOutcomeRequest = Map to decision outcome request model
-					//await out decision outcome 
-
 					return Redirect($"/case/{CaseUrn}/management/action/decision/{DecisionId}");
 				}
 
-				//await post decision outcome 
+				await _decisionService.PostDecisionOutcome(DecisionOutcome);
 
 				return Redirect($"/case/{CaseUrn}/management");
 			}
@@ -148,21 +144,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 
 		private async Task<CreateDecisionOutcomeRequest> CreateDecisionOutcomeModel(long decisionId, long? outcomeId)
 		{
-
 			var result = new CreateDecisionOutcomeRequest();
-			result.DecisionId = (int)decisionId;
+			result.DecisionId = decisionId;
 
 			if (outcomeId.HasValue)
 			{
-				// apiDecisionOutcome = await callApi
-				// result = map to edit outcome model
-
-				result.DecisionOutcome = API.Contracts.Enums.DecisionOutcome.PartiallyApproved;
-				result.TotalAmountApproved = 233232;
-				result.DecisionMadeDate = DateTimeOffset.Now;
-				result.DecisionTakeEffectDate = DateTimeOffset.Now;
-				result.Authoriser = Authoriser.G7;
-				result.BusinessAreasConsulted = new BusinessArea[] { BusinessArea.BusinessPartner, BusinessArea.Funding };
+				var apiDecisionOutcome = await _decisionService.GetDecisionOutcome(decisionId, outcomeId.Value);
+				result = DecisionMapping.ToEditDecisionModel(apiDecisionOutcome);
 			}
 
 			return result;

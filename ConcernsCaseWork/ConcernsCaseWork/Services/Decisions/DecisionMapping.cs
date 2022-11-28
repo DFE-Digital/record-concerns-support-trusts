@@ -84,6 +84,28 @@ namespace ConcernsCaseWork.Services.Decisions
 			return updateDecisionRequest;
 		}
 
+		public static CreateDecisionOutcomeRequest ToEditDecisionModel(GetDecisionOutcomeResponse getDecisionOutcomeResponse)
+		{
+			var result = new CreateDecisionOutcomeRequest()
+			{
+				DecisionId = getDecisionOutcomeResponse.DecisionId,
+				DecisionOutcome = getDecisionOutcomeResponse.DecisionOutcome,
+				TotalAmountApproved = getDecisionOutcomeResponse.TotalAmountApproved,
+				DecisionMadeDate = GetNullableDate(getDecisionOutcomeResponse.DecisionMadeDate),
+				DecisionTakeEffectDate = GetNullableDate(getDecisionOutcomeResponse.DecisionTakeEffectDate),
+				Authoriser = getDecisionOutcomeResponse.Authoriser,
+				BusinessAreasConsulted = getDecisionOutcomeResponse.BusinessAreasConsulted
+			};
+
+			return result;
+		}
+
+		private static DateTimeOffset? GetNullableDate(DateTimeOffset? date)
+		{
+			return date.Value != DateTimeOffset.MinValue ? date : null;
+		}
+
+
 		private static DateTimeOffset? GetEsfaReceivedRequestDate(GetDecisionResponse decisionResponse)
 		{
 			return decisionResponse.ReceivedRequestDate != DateTimeOffset.MinValue ? decisionResponse.ReceivedRequestDate : null;
