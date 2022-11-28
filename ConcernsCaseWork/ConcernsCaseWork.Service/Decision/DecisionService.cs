@@ -65,19 +65,17 @@ namespace ConcernsCaseWork.Service.Decision
 			return putResponse;
 		}
 
-		public async Task<CreateDecisionOutcomeResponse> PostDecisionOutcome(CreateDecisionOutcomeRequest createDecisionOutcomeRequest)
+		public async Task<CreateDecisionOutcomeResponse> PostDecisionOutcome(
+			long caseUrn,
+			long decisionId,
+			CreateDecisionOutcomeRequest createDecisionOutcomeRequest)
 		{
 			_logger.LogMethodEntered();
 
-			_ = Guard.Against.Null(createDecisionOutcomeRequest);
+			// post
+			var postResponse = await Post<CreateDecisionOutcomeRequest, CreateDecisionOutcomeResponse>($"/{EndpointsVersion}/concerns-cases/{caseUrn}/decisions/{decisionId}/outcome", createDecisionOutcomeRequest);
 
-			//post
-			//var postResponse = await Post<CreateDecisionOutcomeRequest, CreateDecisionOutcomeResponse>($"/{EndpointsVersion}/concerns-cases/{createDecisionOutcomeRequest.DecisionId}/decisions", createDecisionOutcomeRequest);
-
-			//_logger.LogInformation($"Decision outcome created. DecisionId: {postResponse.DecisionId}, OutcomeID:{postResponse.OutcomeId}");
-
-
-			var postResponse = new CreateDecisionOutcomeResponse();
+			_logger.LogInformation($"Decision outcome created. Case: {caseUrn} DecisionId: {postResponse.DecisionId}, OutcomeID:{postResponse.DecisionOutcomeId}");
 
 			return postResponse;
 		}

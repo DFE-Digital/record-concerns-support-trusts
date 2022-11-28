@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.Service.Decision
 
 		Task<UpdateDecisionResponse> PutDecision(long caseUrn, long decisionId, UpdateDecisionRequest updateDecisionRequest);
 
-		Task<CreateDecisionOutcomeResponse> PostDecisionOutcome(CreateDecisionOutcomeRequest createDecisionOutcomeRequest);
+		Task<CreateDecisionOutcomeResponse> PostDecisionOutcome(long caseUrn, long decisionId, CreateDecisionOutcomeRequest createDecisionOutcomeRequest);
 
 		Task<GetDecisionOutcomeResponse> GetDecisionOutcome(long decisionId, long outcomeId);
 	}
