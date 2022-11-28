@@ -1,8 +1,10 @@
-﻿using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Factories.Concerns.Decisions;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
+using ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Gateways;
 using System.Net.Mime;
@@ -59,11 +61,14 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<INTIUnderConsiderationGateway, NTIUnderConsiderationGateway>();
 			services.AddScoped<INTIWarningLetterGateway, NTIWarningLetterGateway>();
 			services.AddScoped<INoticeToImproveGateway, NoticeToImproveGateway>();
+			services.AddScoped<IDecisionOutcomeGateway, DecisionOutcomeGateway>();
 
 			services.AddScoped<IGetConcernsCaseworkTeam, GetConcernsCaseworkTeam>();
 			services.AddScoped<IGetConcernsCaseworkTeamOwners, GetConcernsCaseworkTeamOwners>();
 			services.AddScoped<IUpdateConcernsCaseworkTeam, UpdateConcernsCaseworkTeam>();
 			services.AddScoped<IConcernsTeamCaseworkGateway, ConcernsTeamCaseworkGateway>();
+
+			services.AddScoped<IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse>, CreateDecisionOutcome>();
 
 			// concerns factories
 			services.AddScoped<IUseCaseAsync<CreateDecisionRequest, CreateDecisionResponse>, CreateDecision>();

@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
@@ -88,12 +89,11 @@ namespace ConcernsCaseWork.Services.Decisions
 		{
 			var result = new CreateDecisionOutcomeRequest()
 			{
-				DecisionId = getDecisionOutcomeResponse.DecisionId,
-				DecisionOutcome = getDecisionOutcomeResponse.DecisionOutcome,
-				TotalAmountApproved = getDecisionOutcomeResponse.TotalAmountApproved,
+				Status = getDecisionOutcomeResponse.DecisionOutcomeStatus,
+				TotalAmount = getDecisionOutcomeResponse.TotalAmountApproved,
 				DecisionMadeDate = GetNullableDate(getDecisionOutcomeResponse.DecisionMadeDate),
-				DecisionTakeEffectDate = GetNullableDate(getDecisionOutcomeResponse.DecisionTakeEffectDate),
-				Authoriser = getDecisionOutcomeResponse.Authoriser,
+				DecisionEffectiveFromDate = GetNullableDate(getDecisionOutcomeResponse.DecisionTakeEffectDate),
+				Authorizer = getDecisionOutcomeResponse.Authoriser,
 				BusinessAreasConsulted = getDecisionOutcomeResponse.BusinessAreasConsulted
 			};
 
