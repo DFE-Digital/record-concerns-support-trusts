@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
+using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
@@ -55,15 +56,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 
 			var expectedDecision = new CreateDecisionOutcomeRequest()
 			{
-				BusinessAreasConsulted = new BusinessArea[] { }
+				BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea> { }
 			};
 
 			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
 
-			sut.DecisionOutcome.Should().BeEquivalentTo(expectedDecision, options =>
-				options.Excluding(o => o.DecisionId));
+			sut.DecisionOutcome.Should().BeEquivalentTo(expectedDecision);
 
-			sut.DecisionOutcome.DecisionId.Should().Be((int)expectedDecisionId);
 			sut.CaseUrn.Should().Be(expectedUrn);
 			sut.DecisionId.Should().Be(expectedDecisionId);
 			sut.DecisionOutcomesCheckBoxes.Should().NotBeEmpty();
@@ -80,7 +79,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 
 			var getDecisionOutcomeResponse = _fixture.Create<GetDecisionOutcomeResponse>();
 
-			getDecisionOutcomeResponse.DecisionOutcome = API.Contracts.Enums.DecisionOutcome.ApprovedWithConditions;
+			getDecisionOutcomeResponse.DecisionOutcomeStatus = DecisionOutcomeStatus.PartiallyApproved;
 
 			getDecisionOutcomeResponse.DecisionMadeDate = new DateTimeOffset(new DateTime(2022, 5, 2));
 			getDecisionOutcomeResponse.DecisionTakeEffectDate = new DateTimeOffset(new DateTime(2022, 6, 16));
@@ -99,10 +98,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 
 			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
 
-			sut.DecisionOutcome.DecisionId.Should().Be(getDecisionOutcomeResponse.DecisionId);
-			sut.DecisionOutcome.DecisionOutcome.Should().Be(getDecisionOutcomeResponse.DecisionOutcome);
-			sut.DecisionOutcome.TotalAmountApproved.Should().Be(getDecisionOutcomeResponse.TotalAmountApproved);
-			sut.DecisionOutcome.Authoriser.Should().Be(getDecisionOutcomeResponse.Authoriser);
+			sut.DecisionOutcome.Status.Should().Be(getDecisionOutcomeResponse.DecisionOutcomeStatus);
+			sut.DecisionOutcome.TotalAmount.Should().Be(getDecisionOutcomeResponse.TotalAmountApproved);
+			sut.DecisionOutcome.Authorizer.Should().Be(getDecisionOutcomeResponse.Authoriser);
 			sut.DecisionOutcome.BusinessAreasConsulted.Should().BeEquivalentTo(getDecisionOutcomeResponse.BusinessAreasConsulted);
 
 			sut.DecisionMadeDate.Day.Should().Be("02");
@@ -161,7 +159,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 			page.Url.Should().Be("/case/2/management");
 			sut.DecisionOutcome.BusinessAreasConsulted.Should().BeEmpty();
 			sut.DecisionOutcome.DecisionMadeDate.Should().NotBeNull();
-			sut.DecisionOutcome.DecisionTakeEffectDate.Should().NotBeNull();
+			sut.DecisionOutcome.DecisionEffectiveFromDate.Should().NotBeNull();
 		}
 
 		[Test]
@@ -175,8 +173,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 				.WithCaseUrnRouteValue(expectedUrn)
 				.BuildSut();
 
-			sut.DecisionOutcome.BusinessAreasConsulted = new BusinessArea[] {
-				BusinessArea.Funding
+			sut.DecisionOutcome.BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea> {
+				DecisionOutcomeBusinessArea.Funding
 			};
 
 			sut.DecisionMadeDate = new OptionalDateModel()
@@ -196,9 +194,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 			var page = await sut.OnPostAsync(expectedUrn, expectedDecisionId, expectedOutcomeId) as RedirectResult;
 
 			page.Url.Should().Be("/case/2/management/action/decision/3");
-			sut.DecisionOutcome.BusinessAreasConsulted.Should().Contain(BusinessArea.Funding);
+			sut.DecisionOutcome.BusinessAreasConsulted.Should().Contain(DecisionOutcomeBusinessArea.Funding);
 			sut.DecisionOutcome.DecisionMadeDate.Should().NotBeNull();
-			sut.DecisionOutcome.DecisionTakeEffectDate.Should().NotBeNull();
+			sut.DecisionOutcome.DecisionEffectiveFromDate.Should().NotBeNull();
 		}
 
 		[Test]
@@ -218,7 +216,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 			var page = await sut.OnPostAsync(expectedUrn, expectedDecisionId);
 
 			sut.DecisionOutcome.DecisionMadeDate.Should().Be(DateTime.MinValue);
-			sut.DecisionOutcome.DecisionTakeEffectDate.Should().Be(DateTime.MinValue);
+			sut.DecisionOutcome.DecisionEffectiveFromDate.Should().Be(DateTime.MinValue);
 			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
 		}
 
@@ -248,7 +246,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 
 			await sut.OnPostAsync(expectedUrn, expectedDecisionId);
 
-			Assert.IsNotNull(sut.DecisionOutcome.DecisionTakeEffectDate);
+			Assert.IsNotNull(sut.DecisionOutcome.DecisionEffectiveFromDate);
 			Assert.IsNotNull(sut.DecisionOutcome.DecisionMadeDate);
 		}
 

@@ -78,9 +78,9 @@
                                 @foreach (var outcome in Model.DecisionOutcomesCheckBoxes)
                                 {
                                     var idStr = outcomeId++ == 0 ? "outcome" : "outcome-" + outcomeId;
-                                    var checkedStr = Model.DecisionOutcome.DecisionOutcome == outcome ? "checked" : "";
+                                    var checkedStr = Model.DecisionOutcome.Status == outcome ? "checked" : "";
                                     <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="@idStr" data-testid="@outcome" name="DecisionOutcome.DecisionOutcome" type="radio" value="@outcome" @checkedStr>
+                                        <input class="govuk-radios__input" id="@idStr" data-testid="@outcome" name="DecisionOutcome.Status" type="radio" value="@outcome" @checkedStr>
 
                                         <label class="govuk-label govuk-radios__label" for="@idStr">
                                             <span>
@@ -108,9 +108,9 @@
                                 <input class="govuk-input govuk-input--width-6"
                                        id="total-amount-approved"
                                        data-testid="total-amount-approved"
-                                       name="DecisionOutcome.TotalAmountApproved"
+                                       name="DecisionOutcome.TotalAmount"
                                        type="text"
-                                       value="@Model.DecisionOutcome.TotalAmountApproved">
+                                       value="@Model.DecisionOutcome.TotalAmount">
                             </div>
                         </fieldset>
                     </div>
@@ -247,12 +247,12 @@
                                 @foreach (var authoriser in Model.AuthoriserCheckBoxes)
                                 {
                                     var idStr = authoriserId++ == 0 ? "authoriser" : "authoriser-" + authoriserId;
-                                    var checkedStr = Model.DecisionOutcome.Authoriser == authoriser ? "checked" : "";
+                                    var checkedStr = Model.DecisionOutcome.Authorizer == authoriser ? "checked" : "";
                                     <div class="govuk-radios__item">
                                         <input class="govuk-radios__input"
                                                id="@idStr"
                                                data-testid="@authoriser"
-                                               name="DecisionOutcome.Authoriser"
+                                               name="DecisionOutcome.Authorizer"
                                                type="radio"
                                                value="@authoriser"
                                                @checkedStr>

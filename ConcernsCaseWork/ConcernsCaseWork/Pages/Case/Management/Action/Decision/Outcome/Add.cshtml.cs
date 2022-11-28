@@ -1,5 +1,6 @@
 ﻿
 using ConcernsCaseWork.API.Contracts.Constants;
+using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.Constants;
@@ -45,9 +46,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 
 		public long? OutcomeId { get; set; }
 
-		public List<BusinessArea> BusinessAreaCheckBoxes => Enum.GetValues<BusinessArea>().ToList();
-		public List<DecisionOutcome> DecisionOutcomesCheckBoxes => Enum.GetValues<DecisionOutcome>().ToList();
-		public List<Authoriser> AuthoriserCheckBoxes => Enum.GetValues<Authoriser>().ToList();
+		public List<DecisionOutcomeBusinessArea> BusinessAreaCheckBoxes => Enum.GetValues<DecisionOutcomeBusinessArea>().ToList();
+		public List<DecisionOutcomeStatus> DecisionOutcomesCheckBoxes => Enum.GetValues<DecisionOutcomeStatus>().ToList();
+		public List<DecisionOutcomeAuthorizer> AuthoriserCheckBoxes => Enum.GetValues<DecisionOutcomeAuthorizer>().ToList();
 
 		public AddPageModel(IDecisionService decisionService, ILogger<AddPageModel> logger)
 		{
@@ -74,9 +75,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 
 				DecisionTakeEffectDate = new OptionalDateModel()
 				{
-					Day = DecisionOutcome.DecisionTakeEffectDate?.Day.ToString("00"),
-					Month = DecisionOutcome.DecisionTakeEffectDate?.Month.ToString("00"),
-					Year = DecisionOutcome.DecisionTakeEffectDate?.Year.ToString()
+					Day = DecisionOutcome.DecisionEffectiveFromDate?.Day.ToString("00"),
+					Month = DecisionOutcome.DecisionEffectiveFromDate?.Month.ToString("00"),
+					Year = DecisionOutcome.DecisionEffectiveFromDate?.Year.ToString()
 				};
 
 				return Page();
@@ -106,7 +107,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 				}
 
 				DecisionOutcome.DecisionMadeDate = ParseDate(DecisionMadeDate);
-				DecisionOutcome.DecisionTakeEffectDate = ParseDate(DecisionTakeEffectDate);
+				DecisionOutcome.DecisionEffectiveFromDate = ParseDate(DecisionTakeEffectDate);
 
 				if (OutcomeId.HasValue)
 				{
@@ -145,7 +146,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 		private async Task<CreateDecisionOutcomeRequest> CreateDecisionOutcomeModel(long decisionId, long? outcomeId)
 		{
 			var result = new CreateDecisionOutcomeRequest();
-			result.DecisionId = decisionId;
 
 			if (outcomeId.HasValue)
 			{

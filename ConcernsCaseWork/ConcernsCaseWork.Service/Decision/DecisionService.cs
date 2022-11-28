@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
@@ -76,7 +77,7 @@ namespace ConcernsCaseWork.Service.Decision
 			//_logger.LogInformation($"Decision outcome created. DecisionId: {postResponse.DecisionId}, OutcomeID:{postResponse.OutcomeId}");
 
 
-			var postResponse = new CreateDecisionOutcomeResponse(createDecisionOutcomeRequest.DecisionId, 1);
+			var postResponse = new CreateDecisionOutcomeResponse();
 
 			return postResponse;
 		}
@@ -90,12 +91,12 @@ namespace ConcernsCaseWork.Service.Decision
 			{
 				DecisionId = decisionId,
 				DecisionOutcomeId = outcomeId,
-				DecisionOutcome = API.Contracts.Enums.DecisionOutcome.PartiallyApproved,
+				DecisionOutcomeStatus = DecisionOutcomeStatus.PartiallyApproved,
 				TotalAmountApproved = 233232,
 				DecisionMadeDate = DateTimeOffset.Now,
 				DecisionTakeEffectDate = DateTimeOffset.Now,
-				Authoriser = Authoriser.G7,
-				BusinessAreasConsulted = new BusinessArea[] { BusinessArea.BusinessPartner, BusinessArea.Funding }
+				Authoriser = DecisionOutcomeAuthorizer.G7,
+				BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea> { DecisionOutcomeBusinessArea.BusinessPartner, DecisionOutcomeBusinessArea.Funding }
 			};
 
 			_logger.LogInformation($"Retrieved decision {outcomeId} for decisionID {decisionId}");
