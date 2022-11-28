@@ -148,10 +148,18 @@ describe("User can add Financial Plan case action to an existing case", () => {
         Logger.Log("Incomplete plan requested date");
 
         financialPlanPage
+            .withStatus("Return To Trust")
+            .withNotes("Notes for validation")
             .clearPlanRequestedDate()
             .withPlanRequestedDay("06")
             .save()
             .hasValidationError("Plan requested 06-- is an invalid date");
+
+        Logger.Log("Check fields were not cleared on error");
+
+        financialPlanPage
+            .hasEnteredStatus("Return To Trust")
+            .hasEnteredNotes("Notes for validation");
 
         Logger.Log("Invalid plan requested date");
 

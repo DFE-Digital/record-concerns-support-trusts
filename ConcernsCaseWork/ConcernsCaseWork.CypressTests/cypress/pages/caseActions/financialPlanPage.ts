@@ -137,6 +137,26 @@ export class FinancialPlanPage
         return this;
     }
 
+    public hasEnteredStatus(status: string): this
+    {
+        Logger.Log(`With entered status ${status}`);
+
+        var selector = `status-${status.split(" ").join("")}`;
+
+        cy.getByTestId(selector).should("be.checked");
+
+        return this;
+    }
+
+    public hasEnteredNotes(notes: string): this
+    {
+        Logger.Log(`With entered notes ${notes}`);
+
+        cy.getById("financial-plan-notes").should("contain.text", notes);
+
+        return this;
+    }
+
     public hasStatus(status: string): this
     {
         Logger.Log(`Has status ${status}`);
