@@ -15,7 +15,7 @@ namespace ConcernsCaseWork.API.Contracts.Decisions.Outcomes
 		}
 
 		[Required]
-		[EnumDataType(typeof(DecisionOutcomeStatus))]
+		[EnumDataType(typeof(DecisionOutcomeStatus), ErrorMessage = "Select a decision outcome")]
 		public DecisionOutcomeStatus Status { get; set; }
 
 		[Range(typeof(decimal), "0", "79228162514264337593543950335", ErrorMessage = "The total amount requested must be zero or greater")]

@@ -38,6 +38,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\assets" />
     <Folder Include="wwwroot\dist" />
+    <Folder Include="Pages\Case\Management\Action\Decision\Outcome\" />
   </ItemGroup>
 	
   <ItemGroup>
@@ -232,6 +233,9 @@
     </Compile>
   </ItemGroup>
 	
+  <ItemGroup>
+    <None Remove="Pages\Case\Management\Action\Decision\Outcome\" />
+  </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema=" " /></VisualStudio></ProjectExtensions>
 	
 </Project>
