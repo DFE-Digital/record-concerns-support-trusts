@@ -3,7 +3,7 @@
 	public sealed class FinancialPlanStatusModel
 	{
 		public string Name { get; }
-		public long Id { get; set; }
+		public long? Id { get; set; }
 		public bool IsClosedStatus { get; }
 
 		public FinancialPlanStatusModel()
