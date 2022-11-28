@@ -107,6 +107,14 @@ export class FinancialPlanPage
         return this;
     }
 
+    public withNotesExceedingLimit(): this {
+		cy.task("log", `With Notes exceeding limit`);
+
+		cy.getById("financial-plan-notes").clear().invoke("val", "x".repeat(2001));
+
+		return this;
+	}
+
     public save(): this
     {
         Logger.Log("Save financial plan");

@@ -20,9 +20,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		private readonly IFinancialPlanModelService _financialPlanModelService;
 		private readonly IFinancialPlanStatusCachedService _financialPlanStatusCachedService;
 
-		[BindProperty]
-		public CreateFinancialPlanModel CreateFinancialPlanModel { get; set; }
-
 		public AddPageModel(IFinancialPlanModelService financialPlanModelService, IFinancialPlanStatusCachedService financialPlanStatusService, ILogger<AddPageModel> logger)
 		{
 			_financialPlanModelService = financialPlanModelService;
@@ -36,7 +33,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 			try
 			{
-				CreateFinancialPlanModel = new CreateFinancialPlanModel();
+				FinancialPlanModel = new FinancialPlanModel();
 
 				FinancialPlanStatuses = await GetStatusOptionsAsync();
 				
@@ -66,9 +63,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					CreatedAt = DateTime.Now,
 					DatePlanRequested = planRequestedDate,
 					DateViablePlanReceived = viablePlanReceivedDate,
-					StatusId = CreateFinancialPlanModel.StatusId,
+					StatusId = FinancialPlanModel.Status?.Id,
 					CreatedBy = currentUser,
-					Notes = CreateFinancialPlanModel.Notes
+					Notes = FinancialPlanModel.Notes
 				};
 
 				await _financialPlanModelService.PostFinancialPlanByCaseUrn(model, currentUser);
