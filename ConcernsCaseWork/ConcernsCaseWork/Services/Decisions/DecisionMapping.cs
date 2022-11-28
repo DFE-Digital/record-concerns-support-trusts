@@ -4,6 +4,7 @@ using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Service.Decision;
 using System;
 using System.Globalization;
@@ -85,6 +86,21 @@ namespace ConcernsCaseWork.Services.Decisions
 			return updateDecisionRequest;
 		}
 
+		public static CreateDecisionOutcomeRequest ToCreateDecisionOutcomeRequest(EditDecisionOutcomeModel model)
+		{
+			var result = new CreateDecisionOutcomeRequest()
+			{
+				Status = model.Status,
+				TotalAmount = model.TotalAmount,
+				Authorizer = model.Authorizer,
+				BusinessAreasConsulted = model.BusinessAreasConsulted,
+				DecisionMadeDate = ParseDate(model.DecisionMadeDate),
+				DecisionEffectiveFromDate = ParseDate(model.DecisionEffectiveFromDate)
+			};
+
+			return result;
+		}
+
 		public static CreateDecisionOutcomeRequest ToEditDecisionModel(GetDecisionOutcomeResponse getDecisionOutcomeResponse)
 		{
 			var result = new CreateDecisionOutcomeRequest()
@@ -96,6 +112,18 @@ namespace ConcernsCaseWork.Services.Decisions
 				Authorizer = getDecisionOutcomeResponse.Authoriser,
 				BusinessAreasConsulted = getDecisionOutcomeResponse.BusinessAreasConsulted
 			};
+
+			return result;
+		}
+
+		private static DateTime? ParseDate(OptionalDateModel date)
+		{
+			if (date.IsEmpty())
+			{
+				return null;
+			}
+
+			var result = DateTimeHelper.ParseExact(date.ToString());
 
 			return result;
 		}

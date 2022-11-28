@@ -6,6 +6,7 @@ using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.CoreTypes;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome;
@@ -336,7 +337,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 					TempData = tempData,
 					Url = new UrlHelper(actionContext),
 					MetadataProvider = pageContext.ViewData.ModelMetadata,
-					DecisionOutcome = new CreateDecisionOutcomeRequest()
+					DecisionOutcome = new EditDecisionOutcomeModel()
 				};
 
 				var routeData = result.RouteData.Values;
