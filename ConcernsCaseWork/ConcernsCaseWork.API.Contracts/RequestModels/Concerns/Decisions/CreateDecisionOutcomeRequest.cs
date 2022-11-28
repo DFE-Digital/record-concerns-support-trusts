@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 		public BusinessArea[] BusinessAreasConsulted { get; set; }
 
 		[Range(1, int.MaxValue, ErrorMessage = "The DecisionId must be greater than zero")]
-		public int DecisionId { get; set; }
+		public long DecisionId { get; set; }
 
 		public CreateDecisionOutcomeRequest()
 		{

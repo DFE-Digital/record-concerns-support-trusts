@@ -80,7 +80,7 @@
                                     var idStr = outcomeId++ == 0 ? "outcome" : "outcome-" + outcomeId;
                                     var checkedStr = Model.DecisionOutcome.DecisionOutcome == outcome ? "checked" : "";
                                     <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="@idStr" name="DecisionOutcome.DecisionOutcome" type="radio" value="@outcome" @checkedStr>
+                                        <input class="govuk-radios__input" id="@idStr" data-testid="@outcome" name="DecisionOutcome.DecisionOutcome" type="radio" value="@outcome" @checkedStr>
 
                                         <label class="govuk-label govuk-radios__label" for="@idStr">
                                             <span>
@@ -107,6 +107,7 @@
                                 <div class="govuk-input__prefix" aria-hidden="true">£</div>
                                 <input class="govuk-input govuk-input--width-6"
                                        id="total-amount-approved"
+                                       data-testid="total-amount-approved"
                                        name="DecisionOutcome.TotalAmountApproved"
                                        type="text"
                                        value="@Model.DecisionOutcome.TotalAmountApproved">
@@ -127,8 +128,14 @@
                                         <label class="govuk-label govuk-date-input__label" for="dtr-day-decision-made">
                                             Day
                                         </label>
-                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-decision-made"
-                                               name="DecisionMadeDate.Day" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionMadeDate?.Day:00}")" />
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                               id="dtr-day-decision-made"
+                                               data-testid="dtr-day-decision-made"
+                                               name="DecisionMadeDate.Day"
+                                               type="text"
+                                               maxlength="2"
+                                               inputmode="numeric"
+                                               value="@($"{Model.DecisionMadeDate?.Day:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -136,8 +143,14 @@
                                         <label class="govuk-label govuk-date-input__label" for="dtr-month-decision-made">
                                             Month
                                         </label>
-                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-decision-made"
-                                               name="DecisionMadeDate.Month" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionMadeDate?.Month:00}")" />
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                               id="dtr-month-decision-made"
+                                               data-testid="dtr-month-decision-made"
+                                               name="DecisionMadeDate.Month"
+                                               type="text"
+                                               maxlength="2"
+                                               inputmode="numeric"
+                                               value="@($"{Model.DecisionMadeDate?.Month:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -145,8 +158,14 @@
                                         <label class="govuk-label govuk-date-input__label" for="dtr-year-decision-made">
                                             Year
                                         </label>
-                                        <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-decision-made"
-                                               name="DecisionMadeDate.Year" type="text" maxlength="4" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionMadeDate?.Year}")" />
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-4"
+                                               id="dtr-year-decision-made"
+                                               data-testid="dtr-year-decision-made"
+                                               name="DecisionMadeDate.Year"
+                                               type="text"
+                                               maxlength="4"
+                                               inputmode="numeric"
+                                               value="@($"{Model.DecisionMadeDate?.Year}")" />
                                     </div>
                                 </div>
                             </div>
@@ -168,8 +187,14 @@
                                         <label class="govuk-label govuk-date-input__label" for="dtr-day-take-effect">
                                             Day
                                         </label>
-                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-take-effect"
-                                               name="DecisionTakeEffectDate.Day" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionTakeEffectDate?.Day:00}")" />
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                               id="dtr-day-take-effect"
+                                               data-testid="dtr-day-take-effect"
+                                               name="DecisionTakeEffectDate.Day"
+                                               type="text"
+                                               maxlength="2"
+                                               inputmode="numeric"
+                                               value="@($"{Model.DecisionTakeEffectDate?.Day:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -177,8 +202,14 @@
                                         <label class="govuk-label govuk-date-input__label" for="dtr-month-take-effect">
                                             Month
                                         </label>
-                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-take-effect"
-                                               name="DecisionTakeEffectDate.Month" type="text" maxlength="2" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionTakeEffectDate?.Month:00}")" />
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                               id="dtr-month-take-effect"
+                                               data-testid="dtr-month-take-effect"
+                                               name="DecisionTakeEffectDate.Month"
+                                               type="text"
+                                               maxlength="2"
+                                               inputmode="numeric"
+                                               value="@($"{Model.DecisionTakeEffectDate?.Month:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -186,8 +217,14 @@
                                         <label class="govuk-label govuk-date-input__label" for="dtr-year-take-effect">
                                             Year
                                         </label>
-                                        <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-take-effect"
-                                               name="DecisionTakeEffectDate.Year" type="text" maxlength="4" inputmode="numeric" value="@($"{Model.DecisionOutcome.DecisionTakeEffectDate?.Year}")" />
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-4"
+                                               id="dtr-year-take-effect"
+                                               data-testid="dtr-year-take-effect"
+                                               name="DecisionTakeEffectDate.Year"
+                                               type="text"
+                                               maxlength="4"
+                                               inputmode="numeric"
+                                               value="@($"{Model.DecisionTakeEffectDate?.Year}")" />
                                     </div>
                                 </div>
                             </div>
@@ -212,7 +249,13 @@
                                     var idStr = authoriserId++ == 0 ? "authoriser" : "authoriser-" + authoriserId;
                                     var checkedStr = Model.DecisionOutcome.Authoriser == authoriser ? "checked" : "";
                                     <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="@idStr" name="DecisionOutcome.Authoriser" type="radio" value="@authoriser" @checkedStr>
+                                        <input class="govuk-radios__input"
+                                               id="@idStr"
+                                               data-testid="@authoriser"
+                                               name="DecisionOutcome.Authoriser"
+                                               type="radio"
+                                               value="@authoriser"
+                                               @checkedStr>
 
                                         <label class="govuk-label govuk-radios__label" for="@idStr">
                                             <span>
@@ -240,7 +283,13 @@
 								var isChecked = Model.DecisionOutcome.BusinessAreasConsulted.Contains(businessAreaCheckbox);
 
                                 <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input" id="@businessAreaCheckbox" name="DecisionOutcome.BusinessAreasConsulted" type="checkbox" value="@businessAreaCheckbox" checked="@isChecked">
+                                    <input class="govuk-checkboxes__input"
+                                           id="@businessAreaCheckbox"
+                                           data-testid="@businessAreaCheckbox"
+                                           name="DecisionOutcome.BusinessAreasConsulted"
+                                           type="checkbox"
+                                           value="@businessAreaCheckbox"
+                                           checked="@isChecked">
                                     <label class="govuk-label govuk-checkboxes__label" for="@businessAreaCheckbox">
                                         @EnumHelper.GetEnumDescription(businessAreaCheckbox)
                                     </label>
@@ -250,7 +299,13 @@
                     </div>
 
                     <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-decision-button" name="action">
+                        <button data-prevent-double-click="true"
+                                class="govuk-button govuk-!-margin-top-6"
+                                data-module="govuk-button"
+                                role="button"
+                                id="add-decision-outcome-button"
+                                data-testid="add-decision-outcome-button"
+                                name="action">
                             Save and continue
                         </button>
                     </div>
