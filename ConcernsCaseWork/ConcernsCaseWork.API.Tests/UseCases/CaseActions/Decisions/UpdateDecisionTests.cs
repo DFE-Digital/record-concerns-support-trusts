@@ -33,7 +33,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
         }
 
         [Fact]
-        public void Execute_When_ConcernsCase_Not_Found_Throws_Exception()
+        public async Task Execute_When_ConcernsCase_Not_Found_Throws_Exception()
         {
             var mockDecisionFactory = new Mock<IDecisionFactory>();
             var mockUpdateDecisionResponseFactory = new Mock<IUpdateDecisionResponseFactory>();
@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             var sut = fixture.Create<UpdateDecision>();
             Func<Task<UpdateDecisionResponse>> action = () => sut.Execute((caseUrn, decisionId, request), CancellationToken.None);
 
-            action.Should().Throw<InvalidOperationException>().And.Message.Should()
+            (await action.Should().ThrowAsync<InvalidOperationException>()).And.Message.Should()
                 .Be($"Concerns Case {caseUrn} not found");
             mockGateWay.Verify(x => x.GetConcernsCaseByUrn(caseUrn, true), Times.Once);
         }
