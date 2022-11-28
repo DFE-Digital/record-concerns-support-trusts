@@ -219,4 +219,10 @@ export class DecisionPage {
 
 		return this;
 	}
+
+	public createDecisionOutcome(): this{
+		cy.getByTestId('continue-record-decision-button').click();
+
+		return this;
+	}
 }
