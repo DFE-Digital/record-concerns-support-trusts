@@ -1,4 +1,3 @@
-import { isSymbol } from "cypress/types/lodash";
 import { Logger } from "../../../common/logger";
 import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import { FinancialPlanPage } from "../../../pages/caseActions/financialPlanPage";
@@ -19,9 +18,9 @@ describe("User can add Financial Plan case action to an existing case", () => {
         cy.storeSessionData();
     });
 
-    it("Should add a financial plan", () => 
+    it.only("Should add a financial plan", () => 
     {
-        validateDates();
+        checkFormValidation();
 
         Logger.Log("Configuring a valid financial plan");
 
@@ -127,7 +126,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
         financialPlanPage.edit();
 
-        validateDates();
+        checkFormValidation();
     });
 
     it("Should only let one financial plan be created per case", () => 
@@ -143,7 +142,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .should("contain.text", "There is already an open Financial Plan action linked to this case. Please resolve that before opening another one.");
     });
 
-    function validateDates()
+    function checkFormValidation()
     {
         Logger.Log("Incomplete plan requested date");
 
@@ -188,6 +187,13 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .withPlanReceivedYear("33")
             .save()
             .hasValidationError("Viable plan 08-33-33 is an invalid date");
+
+        Logger.Log("Notes exceeding character limit");
+
+            financialPlanPage
+                .withNotesExceedingLimit()
+                .save()
+                .hasValidationError("Notes must be 2000 characters or less");
     }
 
     function addFinancialPlanToCase()
@@ -199,4 +205,3 @@ describe("User can add Financial Plan case action to an existing case", () => {
         AddToCasePage.getAddToCaseBtn().click();
     }
 });
-
