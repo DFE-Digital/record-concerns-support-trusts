@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
             var sut = new GetDecision(Mock.Of<IConcernsCaseGateway>(), Mock.Of<IGetDecisionResponseFactory>());
 
             Func<Task> action = async () => await sut.Execute(null, CancellationToken.None);
-            action.Should().Throw<ArgumentNullException>();
+            await action.Should().ThrowAsync<ArgumentNullException>();
         }
 
         [Fact]

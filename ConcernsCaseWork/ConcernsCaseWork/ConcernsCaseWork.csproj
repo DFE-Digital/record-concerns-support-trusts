@@ -6,26 +6,26 @@
     <UserSecretsId>ac20b61d-9280-4be5-bbad-ad27aaff2f24</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
-	
+
   <ItemGroup>
     <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
-    <PackageReference Include="AutoMapper" Version="11.0.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="FluentAssertions" Version="6.8.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.8" />
-    <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.25.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.11" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.25.8" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
     <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.17.0" />
     <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" Version="0.17.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Sentry.AspNetCore" Version="3.21.0" />
-    <PackageReference Include="Sentry.Serilog" Version="3.21.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Sentry.AspNetCore" Version="3.24.0" />
+    <PackageReference Include="Sentry.Serilog" Version="3.24.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.4.0" />
   </ItemGroup>
-	
+
   <ItemGroup>
 	  <ProjectReference Include="..\ConcernsCaseWork.API.Contracts\ConcernsCaseWork.API.Contracts.csproj" />
 	  <ProjectReference Include="..\ConcernsCaseWork.API\ConcernsCaseWork.API.csproj" />
@@ -40,13 +40,13 @@
     <Folder Include="wwwroot\dist" />
     <Folder Include="Pages\Case\Management\Action\Decision\Outcome\" />
   </ItemGroup>
-	
+
   <ItemGroup>
     <Content Update="wwwroot\files\Risk_Management_Framework.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-	
+
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\bold-affa96571d-v2.woff" />
     <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\bold-b542beb274-v2.woff2" />
@@ -226,7 +226,7 @@
     <_ContentIncludedByDefault Remove="wwwroot\dist\moj\vendor\jquery.js" />
     <_ContentIncludedByDefault Remove="wwwroot\dist\moj\vendor\jquery.js.LICENSE.txt" />
   </ItemGroup>
-	
+
   <ItemGroup>
     <Compile Update="Pages\Case\Concern\Index.cshtml.cs">
       <DependentUpon>Index.cshtml</DependentUpon>
@@ -237,5 +237,5 @@
     <None Remove="Pages\Case\Management\Action\Decision\Outcome\" />
   </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema=" " /></VisualStudio></ProjectExtensions>
-	
+
 </Project>
