@@ -156,6 +156,60 @@ export class FinancialPlanPage
         return this;
     }
 
+    public hasEnteredPlanRequestedDay(day: string): this
+    {
+        Logger.Log(`Has entered plan requested day ${day}`);
+
+        cy.getById("dtr-day-plan-requested").should("have.value", day);
+
+        return this;
+    }
+
+    public hasEnteredPlanRequestedMonth(month: string): this
+    {
+        Logger.Log(`Has entered plan requested month ${month}`);
+
+        cy.getById("dtr-month-plan-requested").should("have.value", month);
+
+        return this;
+    }
+
+    public hasEnteredPlanRequestedYear(year: string): this
+    {
+        Logger.Log(`Has entered plan requested year ${year}`);
+
+        cy.getById("dtr-year-plan-requested").should("have.value", year);
+
+        return this;
+    }
+
+    public hasEnteredPlanReceivedDay(day: string): this
+    {
+        Logger.Log(`Has entered plan received day ${day}`);
+
+        cy.getById("dtr-day-viable-plan").should("have.value", day);
+
+        return this;
+    }
+
+    public hasEnteredPlanReceivedMonth(month: string): this
+    {
+        Logger.Log(`Has entered plan received month ${month}`);
+
+        cy.getById("dtr-month-viable-plan").should("have.value", month);
+
+        return this;
+    }
+
+    public hasEnteredPlanReceivedYear(year: string): this
+    {
+        Logger.Log(`Has entered plan received year ${year}`);
+
+        cy.getById("dtr-year-viable-plan").should("have.value", year);
+
+        return this;
+    }
+
     public hasEnteredNotes(notes: string): this
     {
         Logger.Log(`With entered notes ${notes}`);
