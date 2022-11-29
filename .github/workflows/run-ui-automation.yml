@@ -21,7 +21,7 @@ jobs:
         environment:
           ACCEPT_EULA: "Y"
           SA_PASSWORD: "change_this_password"
-          
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
