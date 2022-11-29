@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
             
             var securityScheme = new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "ConcernsApiKey" }
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "ApiKey" }
             };
             
             operation.Security.Add(new OpenApiSecurityRequirement {{ securityScheme, new List<string>() }});

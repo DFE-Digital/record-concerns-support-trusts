@@ -7,6 +7,7 @@ using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Exceptions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Services.Decisions;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Security.Policy;
 using System.Threading.Tasks;
@@ -31,6 +33,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		[BindProperty]
 		public CreateDecisionRequest Decision { get; set; }
+
+		[BindProperty]
+		public OptionalDateModel ReceivedRequestDate { get; set; }
 
 		public int NotesMaxLength => DecisionConstants.MaxSupportingNotesLength;
 
@@ -55,6 +60,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				SetupPage(urn, decisionId);
 
 				Decision = await CreateDecisionModel(urn, decisionId);
+
+				ReceivedRequestDate = new OptionalDateModel()
+				{
+					Day = Decision.ReceivedRequestDate?.Day.ToString("00"),
+					Month = Decision.ReceivedRequestDate?.Month.ToString("00"),
+					Year = Decision.ReceivedRequestDate?.Year.ToString()
+				};
 
 				return Page();
 			}
@@ -82,7 +94,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 					return Page();
 				}
 
-				Decision.ReceivedRequestDate = ParseDate();
+				Decision.ReceivedRequestDate = ParseDate(ReceivedRequestDate);
 
 				if (decisionId.HasValue)
 				{
@@ -135,18 +147,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			return result;
 		}
 
-		private DateTime ParseDate()
+		private DateTime ParseDate(OptionalDateModel date)
 		{
-			var dtr_day = Request.Form["dtr-day-request-received"];
-			var dtr_month = Request.Form["dtr-month-request-received"];
-			var dtr_year = Request.Form["dtr-year-request-received"];
-			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
-			var isValidDate = DateTimeHelper.TryParseExact(dtString, out DateTime result);
-
-			if (dtString != "--" && !isValidDate)
+			if (date.IsEmpty())
 			{
-				throw new InvalidUserInputException($"{dtString} is an invalid date");
+				return new DateTime();
 			}
+
+			var result = DateTimeHelper.ParseExact(date.ToString());
 
 			return result;
 		}
