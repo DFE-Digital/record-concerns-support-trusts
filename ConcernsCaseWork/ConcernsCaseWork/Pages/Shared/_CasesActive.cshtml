@@ -50,53 +50,53 @@
 					@activeCase.TrustName
 				</td>
 			
-					@if (!activeCase.ActiveConcerns.Any() && !activeCase.ActiveActionsAndDecisions.Any())
-					{
-						<td class="govuk-table__cell">
-							<span>There are no active concerns, actions or decisions.</span>
-						</td>
-					}
+			@if (!activeCase.ActiveConcerns.Any() && !activeCase.ActiveActionsAndDecisions.Any())
+			{
+				<td class="govuk-table__cell">
+					<span>There are no active concerns, actions or decisions.</span>
+				</td>
+			}
 
-					@if (!activeCase.ActiveConcerns.Any() && activeCase.ActiveActionsAndDecisions.Any())
+			@if (!activeCase.ActiveConcerns.Any() && activeCase.ActiveActionsAndDecisions.Any())
+			{
+				<td class="govuk-table__cell">
+					<div class="concerns-secondary-text-colour">Actions and decisions</div>
+					<ul class="govuk-list govuk-list--bullet">
+						@foreach (var action in activeCase.ActiveActionsAndDecisions)
+						{
+							<li>
+								@action
+							</li>
+						}
+					</ul>
+					@if (activeCase.IsMoreActionsAndDecisions)
 					{
-						<td class="govuk-table__cell">
-							<div class="concerns-secondary-text-colour">Actions and decisions</div>
-							<ul class="govuk-list govuk-list--bullet">
-								@foreach (var action in activeCase.ActiveActionsAndDecisions)
-								{
-									<li>
-										@action
-									</li>
-								}
-							</ul>
-							@if (activeCase.IsMoreActionsAndDecisions)
-							{
-								<span>and more</span>
-							}
-						</td>
+						<span>and more</span>
 					}
-										
-					@if (activeCase.ActiveConcerns.Any())
-					{
-						<td class="govuk-table__cell">
-							<div class="concerns-secondary-text-colour">Concerns</div>
-							<ul class="govuk-list govuk-list--bullet">
-								@foreach (var concern in activeCase.ActiveConcerns)
-								{
-									<li>@concern</li>
-								}
-							</ul>
-							<div class="concerns-secondary-text-colour">Risk to trust</div>
-							<div class="govuk-label-wrapper">
-								@for (var index = 0; index < activeCase.Rating.RagRating.Item2.Count; ++index)
-								{
-									<span class="govuk-tag ragtag @activeCase.Rating.RagRatingCss.ElementAt(index)">
-										@activeCase.Rating.RagRating.Item2.ElementAt(index)
-									</span>
-								}
-							</div>
-						</td>
-					}
+				</td>
+			}
+								
+			@if (activeCase.ActiveConcerns.Any())
+			{
+				<td class="govuk-table__cell">
+					<div class="concerns-secondary-text-colour">Concerns</div>
+					<ul class="govuk-list govuk-list--bullet">
+						@foreach (var concern in activeCase.ActiveConcerns)
+						{
+							<li>@concern</li>
+						}
+					</ul>
+					<div class="concerns-secondary-text-colour">Risk to trust</div>
+					<div class="govuk-label-wrapper">
+						@for (var index = 0; index < activeCase.Rating.RagRating.Item2.Count; ++index)
+						{
+							<span class="govuk-tag ragtag @activeCase.Rating.RagRatingCss.ElementAt(index)">
+								@activeCase.Rating.RagRating.Item2.ElementAt(index)
+							</span>
+						}
+					</div>
+				</td>
+			}
 			</tr>
 		}
 	}

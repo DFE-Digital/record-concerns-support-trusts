@@ -36,7 +36,7 @@ public class CaseSummaryService : ICaseSummaryService
 	{
 		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(caseworker);
 
-		var results = new List<ActiveCaseSummaryModel>();
+		var sortedCaseSummaries = new List<ActiveCaseSummaryModel>();
 
 		foreach (var caseSummary in caseSummaries.OrderByDescending(cs => cs.CreatedAt))
 		{
@@ -59,10 +59,46 @@ public class CaseSummaryService : ICaseSummaryService
 	                UpdatedAt = caseSummary.UpdatedAt.ToDayMonthYear()
 				};
 			
-			results.Add(summary);
+			sortedCaseSummaries.Add(summary);
 		}
 		
-		return results.ToList();
+		return sortedCaseSummaries.ToList();
+	}
+	
+	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworkers(IEnumerable<string> caseWorkers)
+	{
+		var getSummaryTasks = caseWorkers
+			.Select(caseworker => _caseSummaryService.GetActiveCaseSummariesByCaseworker(caseworker))
+			.ToArray();
+
+		var caseSummaries = (await Task.WhenAll(getSummaryTasks)).SelectMany(t => t);
+
+		var sortedCaseSummaries = new List<ActiveCaseSummaryModel>();
+		foreach (var caseSummary in caseSummaries.OrderByDescending(cs => cs.CreatedAt))
+		{
+			var trustName = await GetTrustName(caseSummary.TrustUkPrn);
+			
+			var sortedActionAndDecisionNames = GetSortedActionAndDecisionNames(caseSummary);
+			
+			var summary = 
+				new ActiveCaseSummaryModel
+				{
+					ActiveConcerns = GetSortedConcerns(caseSummary.ActiveConcerns),
+					ActiveActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
+					CaseUrn = caseSummary.CaseUrn,
+					CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
+					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
+					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
+					Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
+					StatusName = caseSummary.StatusName,
+					TrustName = trustName,
+					UpdatedAt = caseSummary.UpdatedAt.ToDayMonthYear()
+				};
+			
+			sortedCaseSummaries.Add(summary);
+		}
+		
+		return sortedCaseSummaries.ToList();
 	}
 	
 	private static string[] GetSortedActionAndDecisionNames(ActiveCaseSummaryDto activeCaseSummary)
@@ -121,4 +157,6 @@ public class CaseSummaryService : ICaseSummaryService
 			return $"Error getting Trust with UkPrn {trustUkPrn}";
 		}
 	}
+
+	private static string GetDisplayUserName(string userName) => userName.Substring(0, userName.IndexOf('@'));
 }

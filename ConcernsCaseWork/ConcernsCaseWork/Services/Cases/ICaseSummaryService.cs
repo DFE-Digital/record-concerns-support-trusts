@@ -7,4 +7,5 @@ namespace ConcernsCaseWork.Services.Cases;
 public interface ICaseSummaryService
 {
 	Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworker(string caseworker);
+	Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworkers(IEnumerable<string> caseWorkers);
 }

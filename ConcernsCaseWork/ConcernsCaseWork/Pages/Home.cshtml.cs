@@ -29,8 +29,7 @@ namespace ConcernsCaseWork.Pages
 		private readonly ITeamsModelService _teamsService;
 		private readonly IRbacManager _rbacManager;
 
-		//public IList<HomeModel> CasesActive { get; private set; }
-		public IList<HomeModel> CasesTeamActive { get; private set; }
+		public List<ActiveCaseSummaryModel> ActiveTeamCases { get; private set; }
 		
 		public List<ActiveCaseSummaryModel> ActiveCases { get; private set; }
 
@@ -62,20 +61,20 @@ namespace ConcernsCaseWork.Pages
 			// And get all live cases for each caseworker
 
 			// cases belonging to this user
-			var currentUserLiveCases = _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName());
+			var currentUserActiveCases = _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName());
 
 			// get any team members defined
 			var team = await _teamsService.GetCaseworkTeam(GetUserName());
 
-			var liveCasesTeamLeadTask = _caseModelService.GetCasesByCaseworkerAndStatus(team.TeamMembers, StatusEnum.Live);
+			var teamActiveCases = _caseSummaryService.GetActiveCaseSummariesByCaseworkers(team.TeamMembers);
 
 			var recordUserSignedTask = RecordUserSignIn(team);
 
-			await Task.WhenAll(currentUserLiveCases, liveCasesTeamLeadTask, recordUserSignedTask);
+			await Task.WhenAll(currentUserActiveCases, teamActiveCases, recordUserSignedTask);
 
 			// Assign responses to UI public properties
-			ActiveCases = currentUserLiveCases.Result;
-			CasesTeamActive = liveCasesTeamLeadTask.Result;
+			ActiveCases = currentUserActiveCases.Result;
+			ActiveTeamCases = teamActiveCases.Result;
 		}
 
 		/// <summary>
