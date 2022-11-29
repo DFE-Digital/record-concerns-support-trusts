@@ -94,10 +94,22 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .children("a")
             .click();
 
-        Logger.Log("Changing the financial plan");
+        Logger.Log("Ensure values are displayed correctly");
 
         financialPlanPage
             .edit()
+            .hasEnteredStatus("Awaiting Plan")
+            .hasEnteredPlanRequestedDay("06")
+            .hasEnteredPlanRequestedMonth("07")
+            .hasEnteredPlanRequestedYear("2022")
+            .hasEnteredPlanReceivedDay("22")
+            .hasEnteredPlanReceivedMonth("10")
+            .hasEnteredPlanReceivedYear("2022")
+            .hasEnteredNotes("Notes!");
+
+        Logger.Log("Changing the financial plan");
+
+        financialPlanPage
             .withStatus("Return To Trust")
             .withPlanRequestedDay("01")
             .withPlanRequestedMonth("02")
@@ -116,7 +128,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .children("a")
             .click();
 
-        Logger.Log("Checking edited Financial Plan values");
+        Logger.Log("Viewing edited Financial Plan values");
 
         financialPlanPage
             .hasStatus("Return to trust for further work")
