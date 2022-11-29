@@ -48,7 +48,7 @@ jobs:
         run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln
 
       - name: Where am I
-        run: ls
+        run: ls ConcernsCaseWork
 
       - name: Run application
         run: dotnet run --project ConcernsCaseWork/ConcernsCaseWork.csproj
