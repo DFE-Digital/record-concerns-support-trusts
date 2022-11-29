@@ -21,8 +21,3 @@ jobs:
         environment:
           ACCEPT_EULA: "Y"
           SA_PASSWORD: "change_this_password"
-
-    # steps:
-    #   - name: Running SQL Server image
-    #   run: echo hello world
-    #   #run: docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=change_this_password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2017-latest
