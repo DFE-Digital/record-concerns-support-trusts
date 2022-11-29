@@ -1,0 +1,19 @@
+name: Run UI automation
+
+on:
+  push:
+    branches:
+    - run-ui-automation
+  pull_request:
+    branches: [ run-ui-automation ]
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Running SQL Server image
+      run: |
+        docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=change_this_password" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2017-latest
