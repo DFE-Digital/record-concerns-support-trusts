@@ -48,4 +48,4 @@ jobs:
         run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln
 
       - name: Run application
-        run: dotnet run ConcernsCaseWork/ConcernsCaseWork.sln
+        run: dotnet run --project ConcernsCaseWork/ConcernsCaseWork.csproj
