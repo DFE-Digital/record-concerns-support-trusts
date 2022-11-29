@@ -126,6 +126,7 @@ namespace ConcernsCaseWork
 			}
 			
 			app.UseMiddleware<ExceptionHandlerMiddleware>();
+			app.UseMiddleware<ApiKeyMiddleware>();
 			
 			// Security headers
 			app.UseSecurityHeaders(

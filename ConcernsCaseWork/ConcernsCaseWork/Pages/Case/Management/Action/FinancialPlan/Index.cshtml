@@ -54,7 +54,7 @@
 				@* Status *@
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-table-case-details__header">Current Status</th>
-					<td class="govuk-table__cell">
+					<td class="govuk-table__cell" data-testid="status-text">
 						@{
 
 							if (Model.FinancialPlanModel.Status != null)
@@ -76,7 +76,7 @@
 				@* Date plan requested *@
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-table-case-details__header">Date plan requested</th>
-					<td class="govuk-table__cell">
+					<td class="govuk-table__cell" data-testid="date-plan-requested-text">
 						@{
 							if (Model.FinancialPlanModel.DatePlanRequested.HasValue)
 							{
@@ -93,7 +93,7 @@
 				@* Date viable plan received *@
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-table-case-details__header">Date viable plan received</th>
-					<td class="govuk-table__cell">
+					<td class="govuk-table__cell" data-testid="date-plan-received-text">
 						@{
 							if (Model.FinancialPlanModel.DateViablePlanReceived.HasValue)
 							{
@@ -110,7 +110,7 @@
 				@* Notes *@
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-table-case-details__header">Notes</th>
-					<td class="govuk-table__cell">
+					<td class="govuk-table__cell" data-testid="notes-text">
 						@{
 							if (!string.IsNullOrEmpty(Model.FinancialPlanModel.Notes))
 							{
