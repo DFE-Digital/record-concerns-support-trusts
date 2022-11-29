@@ -3,9 +3,9 @@ name: Run UI automation
 on:
   push:
     branches:
-    - feature/run-ui-automation
+    - develop
   pull_request:
-    branches: [ feature/run-ui-automation ]
+    branches: [ develop ]
     types: [ opened, synchronize, reopened ]
 
 jobs:
