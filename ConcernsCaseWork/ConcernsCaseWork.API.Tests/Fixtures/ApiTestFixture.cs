@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 				});
 
 			Client = _application.CreateClient();
-			Client.DefaultRequestHeaders.Add("ConcernsApiKey", "app-key");
+			Client.DefaultRequestHeaders.Add("ApiKey", "app-key");
 
 			var connection = testConfig.GetSection("ConnectionStrings")["DefaultConnection"];
 
