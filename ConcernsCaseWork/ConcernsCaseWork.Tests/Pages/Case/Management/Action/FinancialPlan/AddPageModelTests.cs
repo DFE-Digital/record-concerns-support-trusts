@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
+﻿using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
 using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.FinancialPlan;
@@ -311,13 +312,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new AddPageModel(mockFinancialPlanModelService, mockFinancialPlanStatusService, mockLogger)
+			var result = new AddPageModel(mockFinancialPlanModelService, mockFinancialPlanStatusService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
 				Url = new UrlHelper(actionContext),
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
+
+			result.FinancialPlanModel = new FinancialPlanModel();
+
+			return result;
 		}
 		
 		private static List<FinancialPlanStatusDto> GetListValidStatuses() => FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto().ToList();

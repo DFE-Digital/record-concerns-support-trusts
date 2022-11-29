@@ -480,13 +480,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new EditPageModel(mockFinancialPlanModelService, mockFinancialPlanStatusService, mockLogger)
+			var result = new EditPageModel(mockFinancialPlanModelService, mockFinancialPlanStatusService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
 				Url = new UrlHelper(actionContext),
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
+
+			result.FinancialPlanModel = new FinancialPlanModel();
+
+			return result;
 		}
 
 		private static FinancialPlanModel SetupFinancialPlanModel(long planId, long caseUrn, string statusName = "")
