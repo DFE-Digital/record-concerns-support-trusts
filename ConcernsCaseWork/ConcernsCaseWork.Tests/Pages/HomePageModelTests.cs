@@ -1,15 +1,13 @@
 using AutoFixture;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Teams;
 using ConcernsCaseWork.Pages;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
-using ConcernsCaseWork.Security;
-using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.Shared.Tests.MockHelpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -19,6 +17,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ITeamsModelService = ConcernsCaseWork.Services.Teams.ITeamsModelService;
@@ -28,62 +27,46 @@ namespace ConcernsCaseWork.Tests.Pages
 	[Parallelizable(ParallelScope.All)]
 	public class HomePageModelTests
 	{
+		private readonly IFixture _fixture = new Fixture();
+		
 		[Test]
 		public async Task WhenInstanceOfIndexPageOnGetAsync_ReturnCases()
 		{
 			// arrange
+			var currentUserName = _fixture.Create<string>();
+			
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
 			var mockUserStateCache = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			var mockCaseSummaryService = new Mock<ICaseSummaryService>();
 
-			var activeCases = new List<ActiveCaseSummaryModel>()
-			{
-				new ActiveCaseSummaryModel
-				{
-					ActiveActionsAndDecisions = new string[]
-					{
-						"Some action"
-					},
-					ActiveConcerns = null,
-					CaseUrn = 123,
-					CreatedBy = "some user",
-					CreatedAt = DateTime.Now.ToDayMonthYear(),
-					IsMoreActionsAndDecisions = false,
-					Rating = null,
-					StatusName = null,
-					TrustName = null,
-					UpdatedAt = null
-				}
-			};
-			mockCaseSummaryService
-				.Setup(s => s.GetActiveCaseSummariesByCaseworker(It.IsAny<string>()))
-				.ReturnsAsync(activeCases);
+			var activeCases = _fixture.CreateMany<ActiveCaseSummaryModel>().ToList();
+			var activeTeamCases = _fixture.CreateMany<ActiveCaseSummaryModel>().ToList();
+			
+			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(currentUserName)).ReturnsAsync(activeCases);
+			
+			var teamUserNames = activeTeamCases.Select(t => t.CreatedBy).Distinct().ToArray();
+			
+			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworkers(teamUserNames)).ReturnsAsync(activeCases);
 
 			var mockTeamService = new Mock<ITeamsModelService>();
-			mockTeamService.Setup(x => x.GetCaseworkTeam(It.IsAny<string>()))
-				.ReturnsAsync(new ConcernsTeamCaseworkModel("random.user", Array.Empty<string>()));
+			mockTeamService.Setup(x => x.GetCaseworkTeam(currentUserName))
+				.ReturnsAsync(new ConcernsTeamCaseworkModel(currentUserName, teamUserNames));
 		
 			var homePageModel = SetupHomeModel(mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockCaseSummaryService.Object, mockClaimsPrincipalHelper.Object);
 		
 			// act
 			await homePageModel.OnGetAsync();
-		
-			// assert
-			Assert.IsAssignableFrom<List<ActiveCaseSummaryModel>>(homePageModel.ActiveCases);
 			
-			Assert.That(homePageModel.ActiveCases.Count, Is.EqualTo(activeCases.Count));
-			Assert.That(homePageModel.ActiveCases, Is.EquivalentTo(activeCases));
+			// assert
+			Assert.Multiple(() =>
+			{
+				Assert.That(homePageModel.ActiveCases, Is.EquivalentTo(activeCases));
+				Assert.That(homePageModel.ActiveTeamCases, Is.EquivalentTo(activeTeamCases));
+			});
 
-			// Verify ILogger
-			mockLogger.Verify(
-				m => m.Log(
-					LogLevel.Information,
-					It.IsAny<EventId>(),
-					It.Is<It.IsAnyType>((v, _) => v.ToString().Contains("HomePageModel")),
-					null,
-					It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-				Times.Once);
+			mockLogger.VerifyLogInformationWasCalled("HomePageModel");
+			mockLogger.VerifyLogErrorWasNotCalled();
 		
 			mockTeamService.Verify(x => x.GetCaseworkTeam(It.IsAny<string>()), Times.Once);
 		}
@@ -92,20 +75,14 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenInstanceOfIndexPageOnGetAsync_ReturnEmptyCases()
 		{
 			// arrange
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockRbacManager = new Mock<IRbacManager>();
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
 			var mockUserStateCache = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			var mockCaseSummaryService = new Mock<ICaseSummaryService>();
-			var emptyList = new List<HomeModel>();
 
-			mockCaseModelService.Setup(model => model.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()))
-				.ReturnsAsync(emptyList);
-			mockCaseModelService.Setup(model => model.GetCasesByCaseworkerAndStatus(It.IsAny<string>(), It.IsAny<StatusEnum>()))
-				.ReturnsAsync(emptyList);
-
-			mockCaseSummaryService.Setup(model => model.GetActiveCaseSummariesByCaseworker(It.IsAny<string>())).ReturnsAsync(new List<ActiveCaseSummaryModel>());
+			mockCaseSummaryService
+				.Setup(model => model.GetActiveCaseSummariesByCaseworker(It.IsAny<string>()))
+				.ReturnsAsync(new List<ActiveCaseSummaryModel>());
 
 			var mockTeamService = new Mock<ITeamsModelService>();
 			mockTeamService.Setup(x => x.GetCaseworkTeam(It.IsAny<string>()))
@@ -131,7 +108,6 @@ namespace ConcernsCaseWork.Tests.Pages
 				Times.Once);
 
 			mockTeamService.Verify(x => x.GetCaseworkTeam(It.IsAny<string>()), Times.Once);
-			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()), Times.Once);
 		}
 
 		[Test]
