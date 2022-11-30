@@ -150,5 +150,19 @@ namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decision
             CrmCaseNumber = updatedDecision.CrmCaseNumber;
             UpdatedAt = now;
         }
+
+        /// <summary>
+        /// Closes the decision, by copying values from another decision. This is in lieu of another suitable class to carry data.
+        /// Create an unsaved decision and pass it to this method, all properties that can be copied will be. Existing decision IDs will
+        /// be unchanged.
+        /// </summary>
+        /// <param name="notes"></param>
+        /// <param name="updatedAt"></param>
+        public void Close(string notes, DateTimeOffset updatedAt)
+        {
+	        ClosedAt = updatedAt;
+	        SupportingNotes = notes;
+	        UpdatedAt = updatedAt;
+        }
     }
 }

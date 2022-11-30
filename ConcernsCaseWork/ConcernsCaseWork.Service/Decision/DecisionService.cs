@@ -61,5 +61,18 @@ namespace ConcernsCaseWork.Service.Decision
 			_logger.LogInformation($"Decision updated. caseUrn: {putResponse.ConcernsCaseUrn}, DecisionId:{putResponse.DecisionId}");
 			return putResponse;
 		}
+		
+		public async Task<CloseDecisionResponse> CloseDecision(long caseUrn, long decisionId, CloseDecisionRequest closeDecisionRequest)
+		{
+			_logger.LogMethodEntered();
+
+			var endpoint = $"/{EndpointsVersion}/concerns-cases/{caseUrn}/decisions/{decisionId}/close";
+
+			var putResponse = await Put<CloseDecisionRequest, CloseDecisionResponse>(endpoint, closeDecisionRequest);
+
+			_logger.LogInformation("Decision closed. caseUrn: {ResponseConcernsCaseUrn}, DecisionId:{ResponseDecisionId}", putResponse.ConcernsCaseUrn, putResponse.DecisionId);
+			
+			return putResponse;
+		}
 	}
 }
