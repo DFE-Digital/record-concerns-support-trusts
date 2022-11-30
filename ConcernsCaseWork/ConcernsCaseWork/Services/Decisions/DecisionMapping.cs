@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
@@ -83,6 +84,27 @@ namespace ConcernsCaseWork.Services.Decisions
 
 			return updateDecisionRequest;
 		}
+
+		public static CreateDecisionOutcomeRequest ToEditDecisionModel(GetDecisionOutcomeResponse getDecisionOutcomeResponse)
+		{
+			var result = new CreateDecisionOutcomeRequest()
+			{
+				Status = getDecisionOutcomeResponse.DecisionOutcomeStatus,
+				TotalAmount = getDecisionOutcomeResponse.TotalAmountApproved,
+				DecisionMadeDate = GetNullableDate(getDecisionOutcomeResponse.DecisionMadeDate),
+				DecisionEffectiveFromDate = GetNullableDate(getDecisionOutcomeResponse.DecisionTakeEffectDate),
+				Authorizer = getDecisionOutcomeResponse.Authoriser,
+				BusinessAreasConsulted = getDecisionOutcomeResponse.BusinessAreasConsulted
+			};
+
+			return result;
+		}
+
+		private static DateTimeOffset? GetNullableDate(DateTimeOffset? date)
+		{
+			return date.Value != DateTimeOffset.MinValue ? date : null;
+		}
+
 
 		private static DateTimeOffset? GetEsfaReceivedRequestDate(GetDecisionResponse decisionResponse)
 		{
