@@ -45,6 +45,7 @@ public class GetDecisionResponseFactoryTests
                     .Excluding(x => x.DecisionTypes)
                     .Excluding(x => x.Status)
                     .Excluding(x => x.ConcernsCaseId)
+					.Excluding(x => x.Outcome)
                 );
             result.DecisionTypes.Should().BeEquivalentTo(decision.DecisionTypes.Select(x => x.DecisionTypeId),
                 opt => opt.WithStrictOrdering());
