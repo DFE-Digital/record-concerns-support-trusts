@@ -27,10 +27,10 @@ In a console window:
 
 This API has a swagger page accessible at <url>/swagger, which lists all available endpoints. 
 
-Authorisation is handled by an api key sent in the HTTP request header ```'ConcernsApiKey'```. 
+Authorisation is handled by an api key sent in the HTTP request header ```'ApiKey'```. 
 
 This api key should be one of the comma-separated list of valid keys which is held in the ```ConcernsCaseworkApi:ApiKeys``` property.
 
 Use this api key in the 'Authorise' option in the swagger page to run commands directly against the API. 
 
-Alternatively, include an HTTP request header of ```'ConcernsApiKey'``` in any requests to this API, such as from Postman.
+Alternatively, include an HTTP request header of ```'ApiKey'``` in any requests to this API, such as from Postman.
