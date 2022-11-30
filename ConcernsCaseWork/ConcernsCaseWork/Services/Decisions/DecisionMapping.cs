@@ -101,14 +101,14 @@ namespace ConcernsCaseWork.Services.Decisions
 			return result;
 		}
 
-		public static CreateDecisionOutcomeRequest ToEditDecisionModel(GetDecisionOutcomeResponse getDecisionOutcomeResponse)
+		public static EditDecisionOutcomeModel ToEditDecisionOutcomeModel(GetDecisionOutcomeResponse getDecisionOutcomeResponse)
 		{
-			var result = new CreateDecisionOutcomeRequest()
+			var result = new EditDecisionOutcomeModel()
 			{
 				Status = getDecisionOutcomeResponse.DecisionOutcomeStatus,
 				TotalAmount = getDecisionOutcomeResponse.TotalAmountApproved,
-				DecisionMadeDate = GetNullableDate(getDecisionOutcomeResponse.DecisionMadeDate),
-				DecisionEffectiveFromDate = GetNullableDate(getDecisionOutcomeResponse.DecisionTakeEffectDate),
+				DecisionMadeDate = ToOptionaDateModel(getDecisionOutcomeResponse.DecisionMadeDate),
+				DecisionEffectiveFromDate = ToOptionaDateModel(getDecisionOutcomeResponse.DecisionTakeEffectDate),
 				Authorizer = getDecisionOutcomeResponse.Authoriser,
 				BusinessAreasConsulted = getDecisionOutcomeResponse.BusinessAreasConsulted
 			};
@@ -128,11 +128,24 @@ namespace ConcernsCaseWork.Services.Decisions
 			return result;
 		}
 
+		private static OptionalDateModel ToOptionaDateModel(DateTimeOffset? date)
+		{
+			var result = new OptionalDateModel();
+
+			if (date.HasValue)
+			{
+				result.Day = date.Value.Day.ToString();
+				result.Month = date.Value.Month.ToString();
+				result.Year = date.Value.Year.ToString();
+			}
+
+			return result;
+		}
+
 		private static DateTimeOffset? GetNullableDate(DateTimeOffset? date)
 		{
 			return date.Value != DateTimeOffset.MinValue ? date : null;
 		}
-
 
 		private static DateTimeOffset? GetEsfaReceivedRequestDate(GetDecisionResponse decisionResponse)
 		{

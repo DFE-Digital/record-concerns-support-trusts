@@ -187,5 +187,34 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.DecisionMadeDate.Should().BeNull();
 			result.DecisionEffectiveFromDate.Should().BeNull();
 		}
+
+		[Test]
+		public void ToEditDecisionOutcomeModel_ReturnsModel()
+		{
+			var model = new GetDecisionOutcomeResponse()
+			{
+				DecisionOutcomeStatus = DecisionOutcomeStatus.PartiallyApproved,
+				TotalAmountApproved = 100,
+				DecisionMadeDate = new DateTimeOffset(2022, 11, 29, 0, 0, 0, new TimeSpan(0, 0, 0)),
+				DecisionTakeEffectDate = new DateTimeOffset(2022, 11, 29, 0, 0, 0, new TimeSpan(0, 0, 0)),
+				Authoriser = DecisionOutcomeAuthorizer.G7,
+				BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea> { DecisionOutcomeBusinessArea.SchoolsFinancialSupportAndOversight, DecisionOutcomeBusinessArea.BusinessPartner }
+			};
+
+			var result = DecisionMapping.ToEditDecisionOutcomeModel(model);
+
+			result.Status.Should().Be(model.DecisionOutcomeStatus);
+			result.TotalAmount.Should().Be(model.TotalAmountApproved);
+			result.DecisionMadeDate.Day.Should().Be(model.DecisionMadeDate.Value.Day.ToString());
+			result.DecisionMadeDate.Month.Should().Be(model.DecisionMadeDate.Value.Month.ToString());
+			result.DecisionMadeDate.Year.Should().Be(model.DecisionMadeDate.Value.Year.ToString());
+
+			result.DecisionEffectiveFromDate.Day.Should().Be(model.DecisionTakeEffectDate.Value.Day.ToString());
+			result.DecisionEffectiveFromDate.Month.Should().Be(model.DecisionTakeEffectDate.Value.Month.ToString());
+			result.DecisionEffectiveFromDate.Year.Should().Be(model.DecisionTakeEffectDate.Value.Year.ToString());
+			result.Authorizer.Should().Be(model.Authoriser);
+			result.BusinessAreasConsulted.Should().BeEquivalentTo(model.BusinessAreasConsulted);
+		}
+
 	}
 }
