@@ -97,7 +97,7 @@ namespace ConcernsCaseWork.Service.Decision
 				BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea> { DecisionOutcomeBusinessArea.BusinessPartner, DecisionOutcomeBusinessArea.Funding }
 			};
 
-			_logger.LogInformation($"Retrieved decision {outcomeId} for decisionID {decisionId}");
+			_logger.LogInformation($"Retrieved decision outcome {outcomeId} for decisionID {decisionId}");
 			//return result;
 
 			var result = await Task.FromResult(response);
