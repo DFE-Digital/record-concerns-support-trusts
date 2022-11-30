@@ -23,26 +23,21 @@ namespace ConcernsCaseWork.Pages
 	{
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private readonly IUserStateCachedService _userStateCache;
-		private readonly ICaseModelService _caseModelService;
 		private readonly ICaseSummaryService _caseSummaryService;
 		private readonly ILogger<HomePageModel> _logger;
 		private readonly ITeamsModelService _teamsService;
-		private readonly IRbacManager _rbacManager;
 
 		public List<ActiveCaseSummaryModel> ActiveTeamCases { get; private set; }
 		
 		public List<ActiveCaseSummaryModel> ActiveCases { get; private set; }
 
-		public HomePageModel(ICaseModelService caseModelService,
-			IRbacManager rbacManager,
+		public HomePageModel(
 			ILogger<HomePageModel> logger,
 			ITeamsModelService teamsService,
 			ICaseSummaryService caseSummaryService,
 			IUserStateCachedService userStateCache,
 			IClaimsPrincipalHelper claimsPrincipalHelper)
 		{
-			_caseModelService = Guard.Against.Null(caseModelService);
-			_rbacManager = Guard.Against.Null(rbacManager);
 			_logger = Guard.Against.Null(logger);
 			_teamsService = Guard.Against.Null(teamsService);
 			_userStateCache = Guard.Against.Null(userStateCache);

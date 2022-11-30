@@ -1,6 +1,4 @@
 using AutoFixture;
-using Castle.Components.DictionaryAdapter;
-using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
@@ -21,7 +19,6 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ITeamsModelService = ConcernsCaseWork.Services.Teams.ITeamsModelService;
@@ -35,10 +32,6 @@ namespace ConcernsCaseWork.Tests.Pages
 		public async Task WhenInstanceOfIndexPageOnGetAsync_ReturnCases()
 		{
 			// arrange
-			var homeModels = HomePageFactory.BuildHomeModels();
-		
-			var mockCaseModelService = new Mock<ICaseModelService>();
-			var mockRbacManager = new Mock<IRbacManager>();
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
 			var mockUserStateCache = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
@@ -69,9 +62,9 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			var mockTeamService = new Mock<ITeamsModelService>();
 			mockTeamService.Setup(x => x.GetCaseworkTeam(It.IsAny<string>()))
-				.ReturnsAsync(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel("random.user", Array.Empty<string>()));
+				.ReturnsAsync(new ConcernsTeamCaseworkModel("random.user", Array.Empty<string>()));
 		
-			var homePageModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockCaseSummaryService.Object, mockClaimsPrincipalHelper.Object);
+			var homePageModel = SetupHomeModel(mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockCaseSummaryService.Object, mockClaimsPrincipalHelper.Object);
 		
 			// act
 			await homePageModel.OnGetAsync();
@@ -93,7 +86,6 @@ namespace ConcernsCaseWork.Tests.Pages
 				Times.Once);
 		
 			mockTeamService.Verify(x => x.GetCaseworkTeam(It.IsAny<string>()), Times.Once);
-			mockCaseModelService.Verify(c => c.GetCasesByCaseworkerAndStatus(It.IsAny<string[]>(), It.IsAny<StatusEnum>()), Times.Once);
 		}
 
 		[Test]
@@ -117,10 +109,10 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			var mockTeamService = new Mock<ITeamsModelService>();
 			mockTeamService.Setup(x => x.GetCaseworkTeam(It.IsAny<string>()))
-				.ReturnsAsync(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel("random.user", Array.Empty<string>()));
+				.ReturnsAsync(new ConcernsTeamCaseworkModel("random.user", Array.Empty<string>()));
 
 			// act
-			var indexModel = SetupHomeModel(mockCaseModelService.Object, mockRbacManager.Object, mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockCaseSummaryService.Object, mockClaimsPrincipalHelper.Object);
+			var indexModel = SetupHomeModel(mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockCaseSummaryService.Object, mockClaimsPrincipalHelper.Object);
 			await indexModel.OnGetAsync();
 
 			// assert
@@ -188,8 +180,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			{
 				this.Fixture = new Fixture();
 				CaseworkerId = this.Fixture.Create<string>();
-				MockCaseModelService = new Mock<ICaseModelService>();
-				MockRbacManager = new Mock<IRbacManager>();
 				MockLogger = new Mock<ILogger<HomePageModel>>();
 				MockUserStateCache = new Mock<IUserStateCachedService>();
 				MockTeamService = new Mock<ITeamsModelService>();
@@ -210,7 +200,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			{
 				(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(IsAuthenticated);
 
-				return new HomePageModel(MockCaseModelService.Object, MockRbacManager.Object, MockLogger.Object, MockTeamService.Object, MockCaseSummaryService.Object, MockUserStateCache.Object, MockClaimsPrincipalHelper.Object)
+				return new HomePageModel(MockLogger.Object, MockTeamService.Object, MockCaseSummaryService.Object, MockUserStateCache.Object, MockClaimsPrincipalHelper.Object)
 				{
 					PageContext = pageContext,
 					TempData = tempData,
@@ -224,17 +214,13 @@ namespace ConcernsCaseWork.Tests.Pages
 			public Mock<IUserStateCachedService> MockUserStateCache { get; set; }
 
 			public Mock<ILogger<HomePageModel>> MockLogger { get; set; }
-
-			public Mock<IRbacManager> MockRbacManager { get; set; }
-
-			public Mock<ICaseModelService> MockCaseModelService { get; set; }
 			
 			public Mock<ICaseSummaryService> MockCaseSummaryService { get; set; }
 
 			public TestBuilder WithNoTeamCaseworkModel()
 			{
 				this.MockTeamService.Setup(x => x.GetCaseworkTeam(CaseworkerId))
-					.ReturnsAsync(new ConcernsCaseWork.Models.Teams.ConcernsTeamCaseworkModel(CaseworkerId, Array.Empty<string>()));
+					.ReturnsAsync(new ConcernsTeamCaseworkModel(CaseworkerId, Array.Empty<string>()));
 
 				return this;
 			}
@@ -259,8 +245,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			}
 		}
 
-		private static HomePageModel SetupHomeModel(ICaseModelService mockCaseModelService,
-			IRbacManager mockRbacManager,
+		private static HomePageModel SetupHomeModel(
 			ILogger<HomePageModel> mockLogger,
 			ITeamsModelService mockTeamService,
 			IUserStateCachedService mockUserStateCachedService,
@@ -270,7 +255,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new HomePageModel(mockCaseModelService, mockRbacManager, mockLogger, mockTeamService, mockCaseSummaryService, mockUserStateCachedService, mockClaimsPrincipalHelper)
+			return new HomePageModel(mockLogger, mockTeamService, mockCaseSummaryService, mockUserStateCachedService, mockClaimsPrincipalHelper)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
