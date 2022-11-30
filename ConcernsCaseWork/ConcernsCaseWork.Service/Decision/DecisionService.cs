@@ -1,9 +1,12 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace ConcernsCaseWork.Service.Decision
 {
@@ -60,6 +63,48 @@ namespace ConcernsCaseWork.Service.Decision
 
 			_logger.LogInformation($"Decision updated. caseUrn: {putResponse.ConcernsCaseUrn}, DecisionId:{putResponse.DecisionId}");
 			return putResponse;
+		}
+
+		public async Task<CreateDecisionOutcomeResponse> PostDecisionOutcome(CreateDecisionOutcomeRequest createDecisionOutcomeRequest)
+		{
+			_logger.LogMethodEntered();
+
+			_ = Guard.Against.Null(createDecisionOutcomeRequest);
+
+			//post
+			//var postResponse = await Post<CreateDecisionOutcomeRequest, CreateDecisionOutcomeResponse>($"/{EndpointsVersion}/concerns-cases/{createDecisionOutcomeRequest.DecisionId}/decisions", createDecisionOutcomeRequest);
+
+			//_logger.LogInformation($"Decision outcome created. DecisionId: {postResponse.DecisionId}, OutcomeID:{postResponse.OutcomeId}");
+
+
+			var postResponse = new CreateDecisionOutcomeResponse();
+
+			return postResponse;
+		}
+
+		public async Task<GetDecisionOutcomeResponse> GetDecisionOutcome(long decisionId, long outcomeId)
+		{
+			_logger.LogMethodEntered();
+			//var result = await Get<GetDecisionOutcomeResponse>($"/{EndpointsVersion}/concerns-cases/{decisionId}/decisions/{outcomeId}");
+
+			var response = new GetDecisionOutcomeResponse()
+			{
+				DecisionId = decisionId,
+				DecisionOutcomeId = outcomeId,
+				DecisionOutcomeStatus = DecisionOutcomeStatus.PartiallyApproved,
+				TotalAmountApproved = 233232,
+				DecisionMadeDate = DateTimeOffset.Now,
+				DecisionTakeEffectDate = DateTimeOffset.Now,
+				Authoriser = DecisionOutcomeAuthorizer.G7,
+				BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea> { DecisionOutcomeBusinessArea.BusinessPartner, DecisionOutcomeBusinessArea.Funding }
+			};
+
+			_logger.LogInformation($"Retrieved decision {outcomeId} for decisionID {decisionId}");
+			//return result;
+
+			var result = await Task.FromResult(response);
+			return result;
+
 		}
 		
 		public async Task<CloseDecisionResponse> CloseDecision(long caseUrn, long decisionId, CloseDecisionRequest closeDecisionRequest)

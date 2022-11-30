@@ -32,4 +32,10 @@
       <ProjectReference Include="..\ConcernsCaseWork.Shared.Tests\ConcernsCaseWork.Shared.Tests.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Pages\Case\Management\Action\Decision\Outcome\" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Pages\Case\Management\Action\Decision\Outcome\" />
+    </ItemGroup>
 </Project>
