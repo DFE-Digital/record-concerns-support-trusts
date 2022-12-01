@@ -153,68 +153,38 @@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header" data-testid="business-areas-consulted-label">Business areas consulted</th>
                     <td class="govuk-table__cell" data-testid="business-areas-consulted-text">
-                        @{
-                            if (Model.Decision.DecisionTypes.Any())
-                            {
-                                <ul>
-                                    @foreach (var decisionType in Model.Decision.DecisionTypes)
-                                    {
-                                        <li>
-                                            @{
-                                                RenderValue(decisionType);
-                                            }
-                                        </li>
-                                    }
-                                </ul>
-                            }
-                            else
-                            {
-                                RenderEmptyLabel();
-                            }
-                        }
-
-
+                        Funding
                     </td>
                 </tr>
 
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header" data-testid="decision-outcome-label">Decision outcome</th>
-                    <td class="govuk-table__cell" data-testid="decision-outcome-text">
-                        @{
-                            //RenderValue(Model.Decision.RetrospectiveApproval);
-                        }
+                    <th scope="row" class="govuk-table-case-details__header" data-testid="decision-status-label">Decision outcome</th>
+                    <td class="govuk-table__cell" data-testid="decision-status-text">
+                        Retrospective Approval
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header" data-testid="date-decision-label">Date decision</th>
-                    <td class="govuk-table__cell" data-testid="date-decision-text">
-                        @{
-                            //RenderValue(Model.Decision.SubmissionRequired);
-                        }
+                    <th scope="row" class="govuk-table-case-details__header" data-testid="decision-made-date-label">Date decision</th>
+                    <td class="govuk-table__cell" data-testid="decision-made-date-text">
+                        2022-01-01
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header" data-testid="date-of-change-label">Date of change</th>
-                    <td class="govuk-table__cell" data-testid="date-of-change-text">
-                        @{
-                            //RenderValue(Model.Decision.SubmissionLink);
-                        }
+                    <th scope="row" class="govuk-table-case-details__header" data-testid="decision-effective-date-label">Date of change</th>
+                    <td class="govuk-table__cell" data-testid="decision-effective-text">
+                        2022-02-02
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header" data-testid="total-amount-approved-label">Total amount approved</th>
-                    <td class="govuk-table__cell" data-testid="total-amount-approved-text">
-                        @{
-                            //RenderValue(Model.Decision.EsfaReceivedRequestDate);
-                        }
+                    <th scope="row" class="govuk-table-case-details__header" data-testid="total-amount-label">Total amount approved</th>
+                    <td class="govuk-table__cell" data-testid="total-amount-text">
+                        £100
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header" data-testid="authorised-by-label">Decision authorised by</th>
-                    <td class="govuk-table__cell" data-testid="authorised-by-text">
-                        @{
-                            //RenderValue(Model.Decision.TotalAmountRequested);
-                        }
+                    <td class="govuk-table__cell" data-testid="authorisor-text">
+                        G6
                     </td>
                 </tr>
 
@@ -228,8 +198,6 @@
                 </tr>
             </tbody>
         </table>
-
-
 
         <div class="govuk-button-group">
             <a data-prevent-double-click="true"
