@@ -12,19 +12,26 @@ namespace ConcernsCaseWork.API.Controllers
 	public class DecisionOutcomeController : ControllerBase
 	{
 		IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse> _createDecisionOutcomeUseCase;
+		IUseCaseAsync<UpdateDecisionOutcomeUseCaseParams, UpdateDecisionOutcomeResponse> _updateDecisionOutcomeUseCase;
 		private ILogger<ConcernsStatusController> _logger;
 
 		public DecisionOutcomeController(
 			IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse> createDecisionOutcomeUseCase,
+			IUseCaseAsync<UpdateDecisionOutcomeUseCaseParams, UpdateDecisionOutcomeResponse> updateDecisionOutcomeUseCase,
 			ILogger<ConcernsStatusController> logger)
 		{
 			_createDecisionOutcomeUseCase = createDecisionOutcomeUseCase;
+			_updateDecisionOutcomeUseCase = updateDecisionOutcomeUseCase;
 			_logger = logger;
 		}
 
 		[HttpPost]
 		[ApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<CreateDecisionOutcomeResponse>>> Create(int caseId, int decisionId, CreateDecisionOutcomeRequest request, CancellationToken cancellationToken)
+		public async Task<ActionResult<ApiSingleResponseV2<CreateDecisionOutcomeResponse>>> Create(
+			int caseId, 
+			int decisionId, 
+			CreateDecisionOutcomeRequest request, 
+			CancellationToken cancellationToken)
 		{
 			_logger.LogInformation($"Creating decision outcome for case {caseId}, decision {decisionId}");
 
@@ -46,9 +53,37 @@ namespace ConcernsCaseWork.API.Controllers
 
 		[HttpPut]
 		[ApiVersion("2.0")]
-		public IActionResult Put(int urn, int decisionId, UpdateDecisionOutcomeRequest request)
+		public async Task<ActionResult<ApiSingleResponseV2<UpdateDecisionOutcomeResponse>>> Put(
+			int caseId, 
+			int decisionId, 
+			UpdateDecisionOutcomeRequest request, 
+			CancellationToken cancellationToken)
 		{
-			return new ObjectResult("") { StatusCode = StatusCodes.Status200OK };
+			_logger.LogInformation($"Updating decision outcome for case {caseId}, decision {decisionId}");
+
+			var parameters = new UpdateDecisionOutcomeUseCaseParams()
+			{
+				ConcernsCaseId = caseId,
+				DecisionId = decisionId,
+				Request = request
+			};
+
+			var updated = await _updateDecisionOutcomeUseCase.Execute(parameters, cancellationToken);
+
+			_logger.LogInformation($"Updated decision outcome for case {caseId}, decision {decisionId}, outcome {updated.DecisionOutcomeId}");
+
+			var result = new ApiSingleResponseV2<UpdateDecisionOutcomeResponse>()
+			{
+				Data = new UpdateDecisionOutcomeResponse()
+				{
+					ConcernsCaseUrn = caseId,
+					DecisionId = decisionId,
+					DecisionOutcomeId = updated.DecisionOutcomeId
+
+				}
+			};
+
+			return new ObjectResult(result) { StatusCode = StatusCodes.Status200OK };
 		}
 	}
 }

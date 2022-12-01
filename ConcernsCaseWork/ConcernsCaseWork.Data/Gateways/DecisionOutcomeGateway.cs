@@ -34,10 +34,44 @@ namespace ConcernsCaseWork.Data.Gateways
 				throw;
 			}
 		}
+
+		public async Task<DecisionOutcome> UpdateDecisionOutcome(DecisionOutcome request, CancellationToken cancellationToken = default)
+		{
+			try
+			{
+				var toUpdate = await _concernsDbContext.Decisions
+					.Include(x => x.Outcome)
+					.Select(x => x.Outcome)
+					.FirstAsync(x => x.DecisionId == request.DecisionId);
+
+				toUpdate.Status = request.Status;
+				toUpdate.TotalAmount = request.TotalAmount;
+				toUpdate.Authorizer = request.Authorizer;
+				toUpdate.BusinessAreasConsulted = request.BusinessAreasConsulted;
+				toUpdate.DecisionEffectiveFromDate = request.DecisionEffectiveFromDate;
+				toUpdate.DecisionMadeDate = request.DecisionMadeDate;
+
+				await _concernsDbContext.SaveChangesAsync(cancellationToken);
+
+				return toUpdate;
+
+			}
+			catch (DbUpdateException ex)
+			{
+				_logger.LogError($"Failed to update Decision Outcome for Decision {request.DecisionId}, {ex}");
+				throw;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("An application exception has occurred whilst updating Decision Outcome for Decision {Id}, {ex}", request.DecisionId, ex);
+				throw;
+			}
+		}
 	}
 
 	public interface IDecisionOutcomeGateway
 	{
 		Task<DecisionOutcome> CreateDecisionOutcome(DecisionOutcome request, CancellationToken cancellationToken = default);
+		Task<DecisionOutcome> UpdateDecisionOutcome(DecisionOutcome request, CancellationToken cancellationToken = default);
 	}
 }

@@ -69,6 +69,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IConcernsTeamCaseworkGateway, ConcernsTeamCaseworkGateway>();
 
 			services.AddScoped<IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse>, CreateDecisionOutcome>();
+			services.AddScoped<IUseCaseAsync<UpdateDecisionOutcomeUseCaseParams, UpdateDecisionOutcomeResponse>, UpdateDecisionOutcome>();
 
 			// concerns factories
 			services.AddScoped<IUseCaseAsync<CreateDecisionRequest, CreateDecisionResponse>, CreateDecision>();
