@@ -1,22 +1,16 @@
 ﻿using ConcernsCaseWork.API.Contracts.Constants;
-using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-using ConcernsCaseWork.Constants;
-using ConcernsCaseWork.CoreTypes;
+using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Exceptions;
-using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.Decision;
-using ConcernsCaseWork.Services.Decisions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
@@ -32,14 +26,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		
 		[BindProperty(SupportsGet = true)]
 		[Required]
-		public long DecisionId { get; set; }
+		[Range(1, int.MaxValue, ErrorMessage = "DecisionId must be provided")]
+		public int DecisionId { get; set; }
 
 		[BindProperty(Name="Urn", SupportsGet = true)]
 		[Required]
-		public long CaseUrn { get; set; }
+		[Range(1, int.MaxValue, ErrorMessage = "CaseUrn must be provided")]
+		public int CaseUrn { get; set; }
 		
-		[BindProperty]
-		[MaxLength(DecisionConstants.MaxSupportingNotesLength)]
+		[BindProperty(Name="SupportingNotes")]
+		[MaxLength(DecisionConstants.MaxSupportingNotesLength, ErrorMessage = "Supporting Notes must be 2000 characters or less")]
 		public string Notes { get; set; }
 
 		public ClosePageModel(IDecisionService decisionService, ILogger<ClosePageModel> logger)
@@ -48,12 +44,26 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			_logger = logger;
 		}
 
-		public IActionResult OnGetAsync(long urn, long? decisionId = null)
+		public async Task<IActionResult> OnGetAsync()
 		{
 			_logger.LogMethodEntered();
 
 			try
 			{
+				if (!ModelState.IsValid)
+				{
+					return Page();
+				}
+				
+				var decision = await _decisionService.GetDecision(CaseUrn, DecisionId);
+
+				if (!IsDecisionEditable(decision))
+				{
+					return Redirect($"/case/{CaseUrn}/management/action/decision/{DecisionId}");
+				}
+				
+				Notes = decision.SupportingNotes;
+				
 				return Page();
 			}
 			catch (Exception ex)
@@ -96,20 +106,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			return Page();
 		}
 
-		private async Task<CreateDecisionRequest> CreateDecisionModel(long caseUrn, long? decisionId)
-		{
-			var result = new CreateDecisionRequest();
-
-			result.ConcernsCaseUrn = (int)caseUrn;
-
-			if (decisionId.HasValue)
-			{
-				var apiDecision = await _decisionService.GetDecision(caseUrn, (int)decisionId);
-
-				result = DecisionMapping.ToEditDecisionModel(apiDecision);
-			}
-
-			return result;
-		}
+		// TODO: These ought to be part of a general service / model
+		private static bool IsDecisionEditable(GetDecisionResponse decision) => !IsDecisionClosed(decision) && DecisionHasOutcome(decision);
+		private static bool IsDecisionClosed(GetDecisionResponse decision) => decision.ClosedAt.HasValue;
+		private static bool DecisionHasOutcome(GetDecisionResponse decision) => true; // TODO: return if decision has outcome
 	}
 }

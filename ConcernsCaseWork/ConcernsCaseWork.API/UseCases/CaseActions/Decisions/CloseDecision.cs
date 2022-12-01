@@ -5,7 +5,9 @@ using ConcernsCaseWork.Data.Gateways;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 
-public class CloseDecision: IUseCaseAsync<(int urn, int decisionId, CloseDecisionRequest request), CloseDecisionResponse>
+public record DecisionUseCaseRequestWrapper<T>(int CaseUrn, int? DecisionId, T Request);
+
+public class CloseDecision: IUseCaseAsync<DecisionUseCaseRequestWrapper<CloseDecisionRequest>, CloseDecisionResponse>
 {
 	private readonly IConcernsCaseGateway _concernsCaseGateway;
 	private readonly ICloseDecisionResponseFactory _responseFactory;
@@ -16,27 +18,25 @@ public class CloseDecision: IUseCaseAsync<(int urn, int decisionId, CloseDecisio
 		_responseFactory = responseFactory ?? throw new ArgumentNullException(nameof(responseFactory));
 	}
 	
-	public Task<CloseDecisionResponse> Execute((int urn, int decisionId, CloseDecisionRequest request) request, CancellationToken cancellationToken)
+	public Task<CloseDecisionResponse> Execute(DecisionUseCaseRequestWrapper<CloseDecisionRequest> request, CancellationToken cancellationToken)
 	{
-		_ = request.urn > 0 ? request.urn : throw new ArgumentOutOfRangeException(nameof(request.urn));
-		_ = request.decisionId > 0 ? request.decisionId : throw new ArgumentOutOfRangeException(nameof(request.decisionId));
-		_ = request.request ?? throw new ArgumentNullException(nameof(request.request));
+		_ = request ?? throw new ArgumentNullException(nameof(request));
+		_ = request.CaseUrn > 0 ? request.CaseUrn : throw new ArgumentOutOfRangeException(nameof(request.CaseUrn));
+		_ = request.DecisionId > 0 ? request.DecisionId : throw new ArgumentOutOfRangeException(nameof(request.DecisionId));
 
 		async Task<CloseDecisionResponse> DoWork() {
 			cancellationToken.ThrowIfCancellationRequested();
 			
-			var concernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(request.urn, withChangeTracking: true);
+			var concernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(request.CaseUrn, withChangeTracking: true);
 
 			if (concernsCase == null)
 			{
-				throw new InvalidOperationException($"Concerns Case {request.urn} not found");
+				throw new InvalidOperationException($"Concerns Case {request.CaseUrn} not found");
 			}
 
-			concernsCase.CloseDecision(request.decisionId, request.request.SupportingNotes, DateTimeOffset.Now);
+			concernsCase.CloseDecision((int)request.DecisionId!, request.Request.SupportingNotes, DateTimeOffset.Now);
 
-			await _concernsCaseGateway.UpdateExistingAsync(concernsCase);
-
-			return _responseFactory.Create(request.urn, request.decisionId);
+			return _responseFactory.Create(request.CaseUrn, (int)request.DecisionId);
 		}
 
 		return DoWork();

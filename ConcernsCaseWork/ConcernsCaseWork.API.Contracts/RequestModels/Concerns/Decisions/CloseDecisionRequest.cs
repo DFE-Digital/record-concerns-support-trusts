@@ -6,7 +6,7 @@ public class CloseDecisionRequest
 {
 	private const int _maxSupportingNotesLength = 2000;
 	
-	public long CaseUrn { get; set; }
+	public int CaseUrn { get; set; }
 	public int DecisionId { get; set; }
 
 	[StringLength(_maxSupportingNotesLength, ErrorMessage  = "Notes must be 2000 characters or less", MinimumLength = 0)]
@@ -14,6 +14,6 @@ public class CloseDecisionRequest
 
 	public bool IsValid()
 	{
-		return SupportingNotes?.Length <= _maxSupportingNotesLength;
+		return (SupportingNotes?.Length ?? 0) <= _maxSupportingNotesLength;
 	}
 }

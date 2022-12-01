@@ -2,6 +2,7 @@ using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.UseCases;
+using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
 
@@ -17,14 +18,15 @@ namespace ConcernsCaseWork.API.Controllers
 	    private readonly IUseCaseAsync<GetDecisionRequest, GetDecisionResponse> _getDecisionUserCase;
 	    private readonly IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]> _getDecisionsUserCase;
 	    private readonly IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest), UpdateDecisionResponse> _updateDecisionUseCase;
-	    private readonly IUseCaseAsync<(int urn, int decisionId, CloseDecisionRequest), CloseDecisionResponse> _closeDecisionUseCase;
+	    private readonly IUseCaseAsync<DecisionUseCaseRequestWrapper<CloseDecisionRequest>, CloseDecisionResponse> _closeDecisionUseCase;
 
 	    public ConcernsCaseDecisionController(
 		    ILogger<ConcernsCaseDecisionController> logger,
 		    IUseCaseAsync<CreateDecisionRequest, CreateDecisionResponse> createDecisionUseCase,
 		    IUseCaseAsync<GetDecisionRequest, GetDecisionResponse> getDecisionUseCase,
 		    IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]> getDecisionsUseCase,
-		    IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest), UpdateDecisionResponse> updateDecisionUseCase, IUseCaseAsync<(int urn, int decisionId, CloseDecisionRequest), CloseDecisionResponse> closeDecisionUseCase)
+		    IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest), UpdateDecisionResponse> updateDecisionUseCase, 
+		    IUseCaseAsync<DecisionUseCaseRequestWrapper<CloseDecisionRequest>, CloseDecisionResponse> closeDecisionUseCase)
 	    {
 		    _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		    _createDecisionUseCase = createDecisionUseCase ?? throw new ArgumentNullException(nameof(createDecisionUseCase));
@@ -32,7 +34,6 @@ namespace ConcernsCaseWork.API.Controllers
 		    _getDecisionsUserCase = getDecisionsUseCase ?? throw new ArgumentNullException(nameof(getDecisionsUseCase));
 		    _updateDecisionUseCase = updateDecisionUseCase ?? throw new ArgumentNullException(nameof(updateDecisionUseCase));
 		    _closeDecisionUseCase = closeDecisionUseCase;
-		    ;
 	    }
 
 	    [HttpPost]
@@ -115,17 +116,18 @@ namespace ConcernsCaseWork.API.Controllers
 	    {
 		    LogInfo($"Attempting to update Decision by Urn {urn}, DecisionId {decisionId}");
 
-		    if (!ValidateUrn(urn, nameof(GetById))
-		        || !ValidateDecisionId(decisionId, nameof(GetById))
+		    if (!ValidateUrn(urn, nameof(CloseDecision))
+		        || !ValidateDecisionId(decisionId, nameof(CloseDecision))
 		        || !request.IsValid())
 		    {
 			    return BadRequest();
 		    }
 
-		    var result = await _closeDecisionUseCase.Execute((urn, decisionId, request), cancellationToken);
+		    var closeDecisionRequest = new DecisionUseCaseRequestWrapper<CloseDecisionRequest>(urn, decisionId, request);
+		    var result = await _closeDecisionUseCase.Execute(closeDecisionRequest, cancellationToken);
 		    var response = new ApiSingleResponseV2<CloseDecisionResponse>(result);
 
-		    LogInfo($"Returning close decision response. Concerns Case Urn {result.ConcernsCaseUrn}, DecisionId {result.DecisionId}");
+		    LogInfo($"Returning close decision response. Concerns Case Urn {result.CaseUrn}, DecisionId {result.DecisionId}");
 		    return new OkObjectResult(response);
 	    }
 

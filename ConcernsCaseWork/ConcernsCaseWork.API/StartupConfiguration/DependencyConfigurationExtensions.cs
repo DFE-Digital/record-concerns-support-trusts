@@ -30,6 +30,24 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 
 			return services;
 		}
+		
+		public static IServiceCollection AddUseCaseAsyncs(this IServiceCollection services)
+		{
+			var allTypes = typeof(IUseCaseAsync<,>).Assembly.GetTypes();
+
+			foreach (var type in allTypes)
+			{
+				foreach (var @interface in type.GetInterfaces())
+				{
+					if (@interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IUseCaseAsync<,>))
+					{
+						services.AddScoped(@interface, type);
+					}
+				}
+			}
+
+			return services;
+		}
 
 		public static IServiceCollection AddDependencies(this IServiceCollection services)
 		{
@@ -69,6 +87,8 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IConcernsTeamCaseworkGateway, ConcernsTeamCaseworkGateway>();
 
 			services.AddScoped<IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse>, CreateDecisionOutcome>();
+			// TODO: Can remove this registration if we use DecisionUseCaseRequestWrapper for all IUseCaseAsync
+			services.AddScoped<IUseCaseAsync<DecisionUseCaseRequestWrapper<CloseDecisionRequest>, CloseDecisionResponse>, CloseDecision>();
 
 			// concerns factories
 			services.AddScoped<IUseCaseAsync<CreateDecisionRequest, CreateDecisionResponse>, CreateDecision>();
@@ -80,6 +100,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IGetDecisionsSummariesFactory, GetDecisionsSummariesFactory>();
 			services.AddScoped<IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest details), UpdateDecisionResponse>, UpdateDecision>();
 			services.AddScoped<IUpdateDecisionResponseFactory, UpdateDecisionResponseFactory>();
+			services.AddScoped<ICloseDecisionResponseFactory, CloseDecisionResponseFactory>();
 
 			return services;
 		}

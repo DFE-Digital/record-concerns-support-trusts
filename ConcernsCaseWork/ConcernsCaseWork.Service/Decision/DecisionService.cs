@@ -115,7 +115,7 @@ namespace ConcernsCaseWork.Service.Decision
 
 			var putResponse = await Put<CloseDecisionRequest, CloseDecisionResponse>(endpoint, closeDecisionRequest);
 
-			_logger.LogInformation("Decision closed. caseUrn: {ResponseConcernsCaseUrn}, DecisionId:{ResponseDecisionId}", putResponse.ConcernsCaseUrn, putResponse.DecisionId);
+			_logger.LogInformation("Decision closed. caseUrn: {ResponseConcernsCaseUrn}, DecisionId:{ResponseDecisionId}", putResponse.CaseUrn, putResponse.DecisionId);
 			
 			return putResponse;
 		}

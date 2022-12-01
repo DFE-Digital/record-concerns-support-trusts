@@ -66,7 +66,7 @@ namespace ConcernsCaseWork.Data.Models
 	        if (currentDecision == null)
 	        {
 		        throw new ArgumentOutOfRangeException(nameof(decisionId),
-			        $"Decision id {decisionId} not found in this concerns case. Concerns case urn {Urn}");
+			        $"Decision id {decisionId} not found in this case. Case urn {Urn}");
 	        }
 
 	        currentDecision.Close(notes, now);

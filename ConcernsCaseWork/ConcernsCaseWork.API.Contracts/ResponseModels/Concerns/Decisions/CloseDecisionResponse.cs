@@ -6,12 +6,12 @@ public class CloseDecisionResponse
 	{
 
 	}
-	public CloseDecisionResponse(int concernsCaseUrn, int decisionId)
+	public CloseDecisionResponse(int caseUrn, int decisionId)
 	{
-		ConcernsCaseUrn = concernsCaseUrn >= 0 ? concernsCaseUrn : throw new ArgumentOutOfRangeException(nameof(concernsCaseUrn), "value must be greater than zero");
+		CaseUrn = caseUrn >= 0 ? caseUrn : throw new ArgumentOutOfRangeException(nameof(caseUrn), "value must be greater than zero");
 		DecisionId = decisionId >= 0 ? decisionId : throw new ArgumentOutOfRangeException(nameof(decisionId), "value must be greater than zero"); ;
 	}
 
-	public int ConcernsCaseUrn { get; set; }
+	public int CaseUrn { get; set; }
 	public int DecisionId { get; set; }
 }

@@ -7,12 +7,14 @@ using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Controllers;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.UseCases;
+using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.Data.Enums.Concerns;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -274,7 +276,41 @@ public class ConcernsCaseDecisionControllerTests
             var expectedOkResult = new OkObjectResult(new ApiSingleResponseV2<UpdateDecisionResponse>(expectedResponse));
             okResult.Should().BeEquivalentTo(expectedOkResult);
         }
+        
+        [Fact]
+        public async Task CloseDecision_When_Invalid_Request_Returns_BadRequest()
+        {
+	        var testBuilder = new TestBuilder();
+	        var request = testBuilder.CreateCloseDecisionRequestNotesTooLong();
+	        var sut = testBuilder.BuildSut();
 
+	        var result = await sut.CloseDecision(request.CaseUrn, request.DecisionId, request, CancellationToken.None);
+	        result.Result.Should().BeEquivalentTo(new BadRequestResult());
+        }
+
+        [Fact]
+        public async Task CloseDecision_When_Valid_Arguments_Returns_OkResponse()
+        {
+	        var testBuilder = new TestBuilder();
+	        var request = testBuilder.CreateValidCloseDecisionRequest();
+
+	        var expectedResponse = testBuilder.Fixture.Create<CloseDecisionResponse>();
+	        testBuilder.CloseDecisionUseCase
+		        .Setup(x =>
+			        x.Execute(It.Is<DecisionUseCaseRequestWrapper<CloseDecisionRequest>>(r => 
+				        r.CaseUrn == request.CaseUrn && r.DecisionId == request.DecisionId), 
+				        It.IsAny<CancellationToken>()))
+		        .ReturnsAsync(expectedResponse);
+
+	        var sut = testBuilder.BuildSut();
+	        var actionResult = await sut.CloseDecision(request.CaseUrn, request.DecisionId, request, CancellationToken.None);
+
+	        var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+	        okResult.Value.Should().BeAssignableTo<ApiSingleResponseV2<CloseDecisionResponse>>();
+	        var response = (ApiSingleResponseV2<CloseDecisionResponse>)okResult.Value;
+	        response!.Data.Should().BeEquivalentTo(expectedResponse);
+        }
+        
         private class TestBuilder
         {
             internal readonly Fixture Fixture;
@@ -283,6 +319,7 @@ public class ConcernsCaseDecisionControllerTests
             internal readonly Mock<IUseCaseAsync<GetDecisionRequest, GetDecisionResponse>> GetDecisionUseCase;
             internal readonly Mock<IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]>> GetDecisionsUseCase;
             internal readonly Mock<IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest), UpdateDecisionResponse>> UpdateDecisionUseCase;
+            internal readonly Mock<IUseCaseAsync<DecisionUseCaseRequestWrapper<CloseDecisionRequest>, CloseDecisionResponse>> CloseDecisionUseCase;
 
             public TestBuilder()
             {
@@ -294,11 +331,17 @@ public class ConcernsCaseDecisionControllerTests
                 GetDecisionUseCase = Fixture.Freeze<Mock<IUseCaseAsync<GetDecisionRequest, GetDecisionResponse>>>();
                 GetDecisionsUseCase = Fixture.Freeze<Mock<IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]>>>();
                 UpdateDecisionUseCase = Fixture.Freeze<Mock<IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest), UpdateDecisionResponse>>>();
+                CloseDecisionUseCase = Fixture.Freeze<Mock<IUseCaseAsync<DecisionUseCaseRequestWrapper<CloseDecisionRequest>, CloseDecisionResponse>>>();
             }
 
             internal ConcernsCaseDecisionController BuildSut()
             {
-                return new ConcernsCaseDecisionController(MockLogger.Object, CreateDecisionUseCase.Object, GetDecisionUseCase.Object, GetDecisionsUseCase.Object, UpdateDecisionUseCase.Object);
+                return new ConcernsCaseDecisionController(MockLogger.Object, 
+	                CreateDecisionUseCase.Object, 
+	                GetDecisionUseCase.Object, 
+	                GetDecisionsUseCase.Object, 
+	                UpdateDecisionUseCase.Object,
+	                CloseDecisionUseCase.Object);
             }
 
             public UpdateDecisionRequest CreateValidUpdateDecisionRequest()
@@ -310,6 +353,17 @@ public class ConcernsCaseDecisionControllerTests
                 return Fixture.Build<UpdateDecisionRequest>()
                         .With(x => x.DecisionTypes, new Contracts.Enums.DecisionType[] {0})
                         .Create();
+            }
+            
+            public CloseDecisionRequest CreateValidCloseDecisionRequest()
+            {
+	            return Fixture.Create<CloseDecisionRequest>();
+            }
+            public CloseDecisionRequest CreateCloseDecisionRequestNotesTooLong()
+            {
+	            return Fixture.Build<CloseDecisionRequest>()
+		            .With(x => x.SupportingNotes,  "test".PadLeft(2001, 'a'))
+		            .Create();
             }
         }
     }}

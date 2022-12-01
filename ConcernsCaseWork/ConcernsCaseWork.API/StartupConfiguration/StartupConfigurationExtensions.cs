@@ -8,7 +8,8 @@ public static class StartupConfigurationExtensions
 		services.AddDatabase(configuration);
 		services.AddApi(configuration);
 		services.AddUseCases();
-
+		//services.AddUseCaseAsyncs(); //TODO: need to update decisions iuseasync to use the new DecisionUseCaseRequestWrapper
+		
 		return services;
 	}
 }
