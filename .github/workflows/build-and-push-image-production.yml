@@ -6,9 +6,9 @@ on:
       - main
 
 jobs:
-  set-test-release-version:
-    name: Set Test Release Version
-    environment: test
+  set-production-release-version:
+    name: Set Production Release Version
+    environment: production
     runs-on: ubuntu-latest
     outputs:
       version: ${{steps.release-version.outputs.version}}
@@ -16,8 +16,8 @@ jobs:
       - id: release-version
         run: echo "::set-output name=version::release-6"
 
-  build-and-push-image-test:
-    name: Build and push image test
+  build-and-push-image-production:
+    name: Build and push image prodcution
 
     runs-on: ubuntu-latest
     needs: set-test-release-version
@@ -31,14 +31,14 @@ jobs:
       - name: Azure Container Registry login
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.TEST_AZURE_ACR_CLIENTID }}
-          password: ${{ secrets.TEST_AZURE_ACR_SECRET }}
-          registry: ${{ secrets.TEST_ACR_URL }}
+          username: ${{ secrets.PROD_AZURE_ACR_CLIENTID }}
+          password: ${{ secrets.PROD_AZURE_ACR_SECRET }}
+          registry: ${{ secrets.PROD_ACR_URL }}
 
       - name: Prepare tags
         id: prepare-tags
         run: |
-          DOCKER_IMAGE=${{ secrets.TEST_ACR_URL }}/amsd-app
+          DOCKER_IMAGE=${{ secrets.PROD_ACR_URL }}/amsd-app
           VERSION=latest
           TAGS="${DOCKER_IMAGE}:${VERSION}"
           if [ "${{ github.event_name }}" = "push" ]; then
@@ -64,21 +64,3 @@ jobs:
           build-args: ASPNET_IMAGE_TAG=6.0.9-bullseye-slim-amd64
           push: true
           tags: ${{ steps.prepare-tags.outputs.tags }}
-      
-      - name: Azure login with ACA credentials
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.TEST_AZURE_ACA_CREDENTIALS }}
-
-      - name: Update Azure Container Apps Revision
-        uses: azure/CLI@v1
-        with:
-          azcliversion: 2.40.0
-          inlineScript: |
-            az config set extension.use_dynamic_install=yes_without_prompt
-            az containerapp update \
-              --name ${{ secrets.TEST_ACA_CONTAINERAPP_NAME }} \
-              --resource-group ${{ secrets.TEST_ACA_RESOURCE_GROUP }} \
-              --image ${{ secrets.TEST_ACR_URL }}/amsd-app:${{ steps.prepare-tags.outputs.deploy-version }} \
-              --output none
-

@@ -101,7 +101,6 @@ Cypress.Commands.add('addConcernsDecisionsAddToCase',()=>{
     AddToCasePage.addToCase('Decision');
     AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
     AddToCasePage.getAddToCaseBtn().click();
-    cy.log(utils.checkForGovErrorSummaryList());
 })
 
 
@@ -391,15 +390,7 @@ Cypress.Commands.add('validateCaseManagPage', () => {
         expect($row.eq(3).text().trim()).to.contain('Concerns').and.to.match(concernsRgx).and.to.match(/(Add concern)/).and.to.match(/(Edit)/);
     })
 
-    cy.get('[class^="govuk-accordion__section govuk-accordion"]').should(($accord) => {
-        expect($accord).to.have.length(6);
-        expect($accord.eq(0).text().trim()).to.contain('Issue').and.to.match(/Edit/);
-        expect($accord.eq(1).text().trim()).to.contain('Current status').and.to.match(/Edit/);
-        expect($accord.eq(2).text().trim()).to.contain('Case aim').and.to.match(/(Edit)/);
-        expect($accord.eq(3).text().trim()).to.contain('De-escalation point').and.to.match(/(Edit)/);
-        expect($accord.eq(4).text().trim()).to.contain('Next steps').and.to.match(/(Edit)/);
-        expect($accord.eq(5).text().trim()).to.contain('Case history').and.to.match(/(Edit)/);
-    })
+
 })
 
 Cypress.Commands.add('closeAllOpenConcerns', () => {
@@ -486,7 +477,7 @@ Cypress.Commands.add('basicCreateCase', () => {
     cy.selectRiskToTrust();
 
     let date = new Date();
-    cy.get("#issue").type("Data entered at " + date);
+    cy.get("#issue").invoke("val", "Data entered at " + date);
     cy.get("#case-details-form  button").click();
 });
 
