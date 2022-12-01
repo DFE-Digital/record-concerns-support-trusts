@@ -6,6 +6,7 @@ using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.CoreTypes;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome;
@@ -54,7 +55,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 
 			sut.ViewData[ViewDataConstants.Title].Should().Be("Add outcome");
 
-			var expectedDecision = new CreateDecisionOutcomeRequest()
+			var expectedDecision = new EditDecisionOutcomeModel()
 			{
 				BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea> { }
 			};
@@ -81,8 +82,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 
 			getDecisionOutcomeResponse.DecisionOutcomeStatus = DecisionOutcomeStatus.PartiallyApproved;
 
-			getDecisionOutcomeResponse.DecisionMadeDate = new DateTimeOffset(new DateTime(2022, 5, 2));
-			getDecisionOutcomeResponse.DecisionTakeEffectDate = new DateTimeOffset(new DateTime(2022, 6, 16));
+			getDecisionOutcomeResponse.DecisionMadeDate = new DateTimeOffset(new DateTime(2022, 05, 02));
+			getDecisionOutcomeResponse.DecisionTakeEffectDate = new DateTimeOffset(new DateTime(2022, 06, 16));
 
 			var decisionService = new Mock<IDecisionService>();
 			decisionService.Setup(m => m.GetDecisionOutcome(expectedDecisionId, expectedOutcomeId)).ReturnsAsync(getDecisionOutcomeResponse);
@@ -103,13 +104,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 			sut.DecisionOutcome.Authorizer.Should().Be(getDecisionOutcomeResponse.Authoriser);
 			sut.DecisionOutcome.BusinessAreasConsulted.Should().BeEquivalentTo(getDecisionOutcomeResponse.BusinessAreasConsulted);
 
-			sut.DecisionMadeDate.Day.Should().Be("02");
-			sut.DecisionMadeDate.Month.Should().Be("05");
-			sut.DecisionMadeDate.Year.Should().Be("2022");
+			sut.DecisionOutcome.DecisionMadeDate.Day.Should().Be("2");
+			sut.DecisionOutcome.DecisionMadeDate.Month.Should().Be("5");
+			sut.DecisionOutcome.DecisionMadeDate.Year.Should().Be("2022");
 
-			sut.DecisionTakeEffectDate.Day.Should().Be("16");
-			sut.DecisionTakeEffectDate.Month.Should().Be("06");
-			sut.DecisionTakeEffectDate.Year.Should().Be("2022");
+			sut.DecisionOutcome.DecisionEffectiveFromDate.Day.Should().Be("16");
+			sut.DecisionOutcome.DecisionEffectiveFromDate.Month.Should().Be("6");
+			sut.DecisionOutcome.DecisionEffectiveFromDate.Year.Should().Be("2022");
 		}
 
 		[Test]
@@ -138,14 +139,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 				.WithCaseUrnRouteValue(expectedUrn)
 				.BuildSut();
 
-			sut.DecisionMadeDate = new OptionalDateModel()
+			sut.DecisionOutcome.DecisionMadeDate = new OptionalDateModel()
 			{
 				Day = "22",
 				Month = "05",
 				Year = "2022"
 			};
 
-			sut.DecisionTakeEffectDate = new OptionalDateModel()
+			sut.DecisionOutcome.DecisionEffectiveFromDate = new OptionalDateModel()
 			{
 				Day = "04",
 				Month = "11",
@@ -177,14 +178,14 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 				DecisionOutcomeBusinessArea.Funding
 			};
 
-			sut.DecisionMadeDate = new OptionalDateModel()
+			sut.DecisionOutcome.DecisionMadeDate = new OptionalDateModel()
 			{
 				Day = "23",
 				Month = "11",
 				Year = "2022"
 			};
 
-			sut.DecisionTakeEffectDate = new OptionalDateModel()
+			sut.DecisionOutcome.DecisionEffectiveFromDate = new OptionalDateModel()
 			{
 				Day = "24",
 				Month = "11",
@@ -197,57 +198,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 			sut.DecisionOutcome.BusinessAreasConsulted.Should().Contain(DecisionOutcomeBusinessArea.Funding);
 			sut.DecisionOutcome.DecisionMadeDate.Should().NotBeNull();
 			sut.DecisionOutcome.DecisionEffectiveFromDate.Should().NotBeNull();
-		}
-
-		[Test]
-		public async Task OnPostAsync_When_DateIsNotSet_Returns_MinDate()
-		{
-			const long expectedUrn = 2;
-			const long expectedDecisionId = 3;
-
-			var builder = new TestBuilder();
-			var sut = builder
-				.WithCaseUrnRouteValue(expectedUrn)
-				.BuildSut();
-
-			sut.DecisionMadeDate = new OptionalDateModel();
-			sut.DecisionTakeEffectDate = new OptionalDateModel();
-
-			var page = await sut.OnPostAsync(expectedUrn, expectedDecisionId);
-
-			sut.DecisionOutcome.DecisionMadeDate.Should().Be(DateTime.MinValue);
-			sut.DecisionOutcome.DecisionEffectiveFromDate.Should().Be(DateTime.MinValue);
-			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
-		}
-
-		[Test]
-		public async Task OnPostAsync_When_DateFieldsArePopulated_Then_PopulateCreateDecisionDateProperty_Returns_Page()
-		{
-			const long expectedUrn = 2;
-			const long expectedDecisionId = 2;
-			var builder = new TestBuilder();
-			var sut = builder
-				.WithCaseUrnRouteValue(expectedUrn)
-				.BuildSut();
-
-			sut.DecisionTakeEffectDate = new OptionalDateModel()
-			{
-				Day = "23",
-				Month = "11",
-				Year = "2022"
-			};
-
-			sut.DecisionMadeDate = new OptionalDateModel()
-			{
-				Day = "24",
-				Month = "11",
-				Year = "2022"
-			};
-
-			await sut.OnPostAsync(expectedUrn, expectedDecisionId);
-
-			Assert.IsNotNull(sut.DecisionOutcome.DecisionEffectiveFromDate);
-			Assert.IsNotNull(sut.DecisionOutcome.DecisionMadeDate);
 		}
 
 		[Test]
@@ -336,7 +286,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 					TempData = tempData,
 					Url = new UrlHelper(actionContext),
 					MetadataProvider = pageContext.ViewData.ModelMetadata,
-					DecisionOutcome = new CreateDecisionOutcomeRequest()
+					DecisionOutcome = new EditDecisionOutcomeModel()
 				};
 
 				var routeData = result.RouteData.Values;
