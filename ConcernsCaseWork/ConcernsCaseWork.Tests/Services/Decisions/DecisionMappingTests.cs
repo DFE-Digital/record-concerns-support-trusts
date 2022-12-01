@@ -1,7 +1,12 @@
-﻿using AutoFixture;
+﻿using Albedo.Refraction;
+using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Services.Decisions;
 using FluentAssertions;
 using NUnit.Framework;
@@ -131,5 +136,85 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 
 			result.SubmissionDocumentLink.Should().BeNull();
 		}
+
+		[Test]
+		public void ToCreateDecisionRequest_ReturnsCorrectModel()
+		{
+			var model = _fixture.Create<EditDecisionOutcomeModel>();
+			model.DecisionMadeDate = new OptionalDateModel()
+			{
+				Day = "2",
+				Month = "5",
+				Year = "2022"
+			};
+
+			model.DecisionEffectiveFromDate = new OptionalDateModel()
+			{
+				Day = "6",
+				Month = "12",
+				Year = "2023"
+			};
+
+			var result = DecisionMapping.ToCreateDecisionOutcomeRequest(model);
+
+			result.Status.Should().Be(model.Status);
+			result.TotalAmount.Should().Be(model.TotalAmount);
+			result.Authorizer.Should().Be(model.Authorizer);
+			result.BusinessAreasConsulted.Should().BeEquivalentTo(model.BusinessAreasConsulted);
+
+			result.DecisionMadeDate.Value.Day.Should().Be(2);
+			result.DecisionMadeDate.Value.Month.Should().Be(5);
+			result.DecisionMadeDate.Value.Year.Should().Be(2022);
+
+			result.DecisionEffectiveFromDate.Value.Day.Should().Be(6);
+			result.DecisionEffectiveFromDate.Value.Month.Should().Be(12);
+			result.DecisionEffectiveFromDate.Value.Year.Should().Be(2023);
+		}
+
+		[Test]
+		public void ToCreateDecisionRequest_MinimumFieldsFilled_ReturnsCorrectModel()
+		{
+			var model = new EditDecisionOutcomeModel()
+			{
+				Status = DecisionOutcomeStatus.Approved,
+				DecisionEffectiveFromDate = new OptionalDateModel(),
+				DecisionMadeDate = new OptionalDateModel()
+			};
+
+			var result = DecisionMapping.ToCreateDecisionOutcomeRequest(model);
+
+			result.Status.Should().Be(model.Status);
+			result.DecisionMadeDate.Should().BeNull();
+			result.DecisionEffectiveFromDate.Should().BeNull();
+		}
+
+		[Test]
+		public void ToEditDecisionOutcomeModel_ReturnsModel()
+		{
+			var model = new GetDecisionOutcomeResponse()
+			{
+				DecisionOutcomeStatus = DecisionOutcomeStatus.PartiallyApproved,
+				TotalAmountApproved = 100,
+				DecisionMadeDate = new DateTimeOffset(2022, 11, 29, 0, 0, 0, new TimeSpan(0, 0, 0)),
+				DecisionTakeEffectDate = new DateTimeOffset(2022, 11, 29, 0, 0, 0, new TimeSpan(0, 0, 0)),
+				Authoriser = DecisionOutcomeAuthorizer.G7,
+				BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea> { DecisionOutcomeBusinessArea.SchoolsFinancialSupportAndOversight, DecisionOutcomeBusinessArea.BusinessPartner }
+			};
+
+			var result = DecisionMapping.ToEditDecisionOutcomeModel(model);
+
+			result.Status.Should().Be(model.DecisionOutcomeStatus);
+			result.TotalAmount.Should().Be(model.TotalAmountApproved);
+			result.DecisionMadeDate.Day.Should().Be(model.DecisionMadeDate.Value.Day.ToString());
+			result.DecisionMadeDate.Month.Should().Be(model.DecisionMadeDate.Value.Month.ToString());
+			result.DecisionMadeDate.Year.Should().Be(model.DecisionMadeDate.Value.Year.ToString());
+
+			result.DecisionEffectiveFromDate.Day.Should().Be(model.DecisionTakeEffectDate.Value.Day.ToString());
+			result.DecisionEffectiveFromDate.Month.Should().Be(model.DecisionTakeEffectDate.Value.Month.ToString());
+			result.DecisionEffectiveFromDate.Year.Should().Be(model.DecisionTakeEffectDate.Value.Year.ToString());
+			result.Authorizer.Should().Be(model.Authoriser);
+			result.BusinessAreasConsulted.Should().BeEquivalentTo(model.BusinessAreasConsulted);
+		}
+
 	}
 }

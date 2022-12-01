@@ -4,6 +4,7 @@ using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Service.Decision;
 using System;
 using System.Globalization;
@@ -85,17 +86,58 @@ namespace ConcernsCaseWork.Services.Decisions
 			return updateDecisionRequest;
 		}
 
-		public static CreateDecisionOutcomeRequest ToEditDecisionModel(GetDecisionOutcomeResponse getDecisionOutcomeResponse)
+		public static CreateDecisionOutcomeRequest ToCreateDecisionOutcomeRequest(EditDecisionOutcomeModel model)
 		{
 			var result = new CreateDecisionOutcomeRequest()
 			{
+				Status = model.Status,
+				TotalAmount = model.TotalAmount,
+				Authorizer = model.Authorizer,
+				BusinessAreasConsulted = model.BusinessAreasConsulted,
+				DecisionMadeDate = ParseDate(model.DecisionMadeDate),
+				DecisionEffectiveFromDate = ParseDate(model.DecisionEffectiveFromDate)
+			};
+
+			return result;
+		}
+
+		public static EditDecisionOutcomeModel ToEditDecisionOutcomeModel(GetDecisionOutcomeResponse getDecisionOutcomeResponse)
+		{
+			var result = new EditDecisionOutcomeModel()
+			{
 				Status = getDecisionOutcomeResponse.DecisionOutcomeStatus,
 				TotalAmount = getDecisionOutcomeResponse.TotalAmountApproved,
-				DecisionMadeDate = GetNullableDate(getDecisionOutcomeResponse.DecisionMadeDate),
-				DecisionEffectiveFromDate = GetNullableDate(getDecisionOutcomeResponse.DecisionTakeEffectDate),
+				DecisionMadeDate = ToOptionaDateModel(getDecisionOutcomeResponse.DecisionMadeDate),
+				DecisionEffectiveFromDate = ToOptionaDateModel(getDecisionOutcomeResponse.DecisionTakeEffectDate),
 				Authorizer = getDecisionOutcomeResponse.Authoriser,
 				BusinessAreasConsulted = getDecisionOutcomeResponse.BusinessAreasConsulted
 			};
+
+			return result;
+		}
+
+		private static DateTime? ParseDate(OptionalDateModel date)
+		{
+			if (date.IsEmpty())
+			{
+				return null;
+			}
+
+			var result = DateTimeHelper.ParseExact(date.ToString());
+
+			return result;
+		}
+
+		private static OptionalDateModel ToOptionaDateModel(DateTimeOffset? date)
+		{
+			var result = new OptionalDateModel();
+
+			if (date.HasValue)
+			{
+				result.Day = date.Value.Day.ToString();
+				result.Month = date.Value.Month.ToString();
+				result.Year = date.Value.Year.ToString();
+			}
 
 			return result;
 		}
@@ -104,7 +146,6 @@ namespace ConcernsCaseWork.Services.Decisions
 		{
 			return date.Value != DateTimeOffset.MinValue ? date : null;
 		}
-
 
 		private static DateTimeOffset? GetEsfaReceivedRequestDate(GetDecisionResponse decisionResponse)
 		{
