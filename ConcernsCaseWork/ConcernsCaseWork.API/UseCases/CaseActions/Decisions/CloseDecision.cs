@@ -33,6 +33,8 @@ public class CloseDecision: IUseCaseAsync<DecisionUseCaseRequestWrapper<CloseDec
 			}
 
 			concernsCase.CloseDecision((int)request.DecisionId!, request.Request.SupportingNotes, DateTimeOffset.Now);
+		
+			await _concernsCaseGateway.UpdateExistingAsync(concernsCase);
 
 			return _responseFactory.Create(request.CaseUrn, (int)request.DecisionId);
 		}
