@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Exceptions;
+using ConcernsCaseWork.API.Factories.CaseActionFactories;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
 
@@ -29,7 +30,7 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome
 			if (decision.Outcome != null) throw new ResourceConflictException(
 				$"Decision with id {parameters.DecisionId} already has an outcome, Case {parameters.ConcernsCaseId}");
 
-			var toCreate = ToDbModel(parameters.Request, parameters.DecisionId);
+			var toCreate = DecisionOutcomeFactory.ToDbModel(parameters.Request, parameters.DecisionId);
 			var decisionOutcome = await _decisionOutcomeGateway.CreateDecisionOutcome(toCreate, cancellationToken);
 
 			return new CreateDecisionOutcomeResponse()
@@ -38,31 +39,6 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome
 				ConcernsCaseUrn = parameters.ConcernsCaseId,
 				DecisionOutcomeId = decisionOutcome.DecisionOutcomeId
 			};
-		}
-
-		private Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome ToDbModel(
-			CreateDecisionOutcomeRequest request,
-			int decisionId)
-		{
-			var today = DateTimeOffset.Now;
-
-			var result = new Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome()
-			{
-				DecisionId = decisionId,
-				Status = request.Status,
-				TotalAmount = request.TotalAmount,
-				Authorizer = request.Authorizer,
-				CreatedAt = today,
-				UpdatedAt = today,
-				DecisionMadeDate = request.DecisionMadeDate,
-				DecisionEffectiveFromDate = request.DecisionEffectiveFromDate,
-				BusinessAreasConsulted = request.BusinessAreasConsulted.Select(b => new DecisionOutcomeBusinessAreaMapping()
-				{
-					DecisionOutcomeBusinessId = b
-				}).ToList()
-			};
-
-			return result;
 		}
 	}
 
