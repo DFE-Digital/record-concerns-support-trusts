@@ -13,6 +13,7 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
+using System.Net;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration
@@ -31,7 +32,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
         public ConcernsIntegrationTests(ConcernsDataApiFactory fixture)
         {
             _client = fixture.CreateClient();
-            _client.DefaultRequestHeaders.Add("ConcernsApiKey", "app-key");
+            _client.DefaultRequestHeaders.Add("ApiKey", "app-key");
             _dbContext = fixture.Services.GetRequiredService<ConcernsDbContext>();
             _fixture = new Fixture();
             _randomGenerator = new RandomGenerator();
@@ -57,7 +58,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 .With(c => c.StatusId = 1)
                 .With(c => c.RatingId = 2)
                 .Build();
-            
+
 
             var httpRequestMessage = new HttpRequestMessage
             {
@@ -68,16 +69,16 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
             var caseToBeCreated = ConcernsCaseFactory.Create(createRequest);
             var expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(caseToBeCreated);
-            
+
             var expected = new ApiSingleResponseV2<ConcernsCaseResponse>(expectedConcernsCaseResponse);
-            
+
             var response = await _client.SendAsync(httpRequestMessage);
-            response.StatusCode.Should().Be(201);
+            response.StatusCode.Should().Be(HttpStatusCode.Created);
             var result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
-            
+
             var createdCase = _dbContext.ConcernsCase.FirstOrDefault(c => c.Urn == result.Data.Urn);
             expected.Data.Urn = createdCase.Urn;
-            
+
             result.Should().BeEquivalentTo(expected);
             createdCase.Description.Should().BeEquivalentTo(createRequest.Description);
         }
@@ -87,26 +88,26 @@ namespace ConcernsCaseWork.API.Tests.Integration
         {
             SetupConcernsCaseTestData("mockUkprn");
             var concernsCase = _dbContext.ConcernsCase.First();
-            
+
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
                 RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases/urn/{concernsCase.Urn}")
             };
-            
+
             var expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(concernsCase);
-            
+
             var expected = new ApiSingleResponseV2<ConcernsCaseResponse>(expectedConcernsCaseResponse);
-            
+
             var response = await _client.SendAsync(httpRequestMessage);
-            
-            response.StatusCode.Should().Be(200);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             var result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
-            
+
             result.Should().BeEquivalentTo(expected);
             result.Data.Urn.Should().Be(concernsCase.Urn);
         }
-        
+
         [Fact]
         public async Task CanGetConcernCaseByTrustUkprn()
         {
@@ -114,21 +115,21 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
             var expectedData = SetupConcernsCaseTestData(ukprn);
             var concernsCase = expectedData.First();
-            
+
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
                 RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases/ukprn/{ukprn}")
             };
-            
+
             var expectedConcernsCaseResponse = ConcernsCaseResponseFactory.Create(concernsCase);
             var expectedPaging = new PagingResponse {Page = 1, RecordCount = expectedData.Count};
-            
+
             var expected = new ApiResponseV2<ConcernsCaseResponse>(new List<ConcernsCaseResponse>{expectedConcernsCaseResponse}, expectedPaging);
-            
+
             var response = await _client.SendAsync(httpRequestMessage);
-            
-            response.StatusCode.Should().Be(200);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             var result = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsCaseResponse>>();
 
             result.Data.Count(d => d.Urn == concernsCase.Urn).Should().Be(1);
@@ -140,7 +141,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var ukprn = "100008";
 
             var concernsCases = SetupConcernsCaseTestData(ukprn, 2);
-            
+
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
@@ -149,13 +150,13 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var expectedPaging = new PagingResponse {Page = 1, RecordCount = concernsCases.Count};
 
             var expectedConcernsCaseResponse = concernsCases.Select(c => ConcernsCaseResponseFactory.Create(c)).ToList();
-            
+
             var expected = new ApiResponseV2<ConcernsCaseResponse>(expectedConcernsCaseResponse, expectedPaging);
-            
+
             var response = await _client.SendAsync(httpRequestMessage);
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsCaseResponse>>();
-            
-            response.StatusCode.Should().Be(200);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Data.Count(d => d.Urn == concernsCases[0].Urn).Should().Be(1);
             content.Data.Count(d => d.Urn == concernsCases[1].Urn).Should().Be(1);
         }
@@ -165,9 +166,9 @@ namespace ConcernsCaseWork.API.Tests.Integration
         {
             var ukprn = "100005";
             var count = 20;
-            
+
             var concernsCases = SetupConcernsCaseTestData(ukprn, 10);
-            
+
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
@@ -175,17 +176,17 @@ namespace ConcernsCaseWork.API.Tests.Integration
             };
             var response = await _client.SendAsync(httpRequestMessage);
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsCaseResponse>>();
-            
-            response.StatusCode.Should().Be(200);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Data.Count().Should().Be(concernsCases.Count);
         }
-        
+
         [Fact]
         public async Task GettingMultipleConcernCasesByTrustUkprn_WhenGreaterThanCount_ShouldReturnCountNumberOfItems()
         {
             var ukprn = "100008";
             var count = 5;
-            
+
             SetupConcernsCaseTestData(ukprn, 10);
 
             var httpRequestMessage = new HttpRequestMessage
@@ -195,8 +196,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
             };
             var response = await _client.SendAsync(httpRequestMessage);
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsCaseResponse>>();
-            
-            response.StatusCode.Should().Be(200);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Data.Count().Should().Be(count);
         }
 
@@ -210,11 +211,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
             };
             var response = await _client.SendAsync(httpRequestMessage);
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsStatusResponse>>();
-            
-            response.StatusCode.Should().Be(200);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Data.Count().Should().Be(3);
         }
-        
+
         [Fact]
         public async Task IndexConcernsTypes_ShouldReturnAllConcernsTypes()
         {
@@ -225,11 +226,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
             };
             var response = await _client.SendAsync(httpRequestMessage);
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsTypeResponse>>();
-            
-            response.StatusCode.Should().Be(200);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Data.Count().Should().Be(13);
         }
-        
+
         [Fact]
         public async Task UpdateConcernsCase_ShouldReturnTheUpdatedConcernsCase()
         {
@@ -255,9 +256,9 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 StatusId = 2,
                 RatingId =  1
             };
-            
+
             AddConcernsCase(currentConcernsCase);
-            
+
             var urn = currentConcernsCase.Urn;
 
             var updateRequest = Builder<ConcernCaseRequest>.CreateNew()
@@ -275,8 +276,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
             };
             var response = await _client.SendAsync(httpRequestMessage);
             var content = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
-            
-            response.StatusCode.Should().Be(200);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Data.Should().BeEquivalentTo(expectedContent);
         }
 
@@ -284,7 +285,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
         public async Task CanCreateNewConcernRecord()
         {
 	        var caseRating = _dbContext.ConcernsRatings.First();
-	        
+
             var concernsCase = new ConcernsCase
             {
                 CreatedAt = _randomGenerator.DateTime(),
@@ -307,7 +308,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 StatusId = 2,
                 RatingId = caseRating.Id
             };
-            
+
             AddConcernsCase(concernsCase);
 
             var linkedCase = _dbContext.ConcernsCase.First();
@@ -321,28 +322,28 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 .With(c => c.RatingId = linkedRating.Id)
                 .With(c => c.MeansOfReferralId = meansOfReferral.Id)
                 .Build();
-            
+
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
                 RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records"),
                 Content =  JsonContent.Create(createRequest)
             };
-            
+
             var expectedRecordToBeCreated = ConcernsRecordFactory.Create(createRequest, linkedCase, linkedType, linkedRating, meansOfReferral);
             var expectedConcernsRecordResponse = ConcernsRecordResponseFactory.Create(expectedRecordToBeCreated);
             var expected = new ApiSingleResponseV2<ConcernsRecordResponse>(expectedConcernsRecordResponse);
-            
+
             var response = await _client.SendAsync(httpRequestMessage);
-            response.StatusCode.Should().Be(201);
+            response.StatusCode.Should().Be(HttpStatusCode.Created);
             var result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsRecordResponse>>();
-            
+
             var createdRecord = _dbContext.ConcernsRecord.FirstOrDefault(c => c.Id == result.Data.Id);
             expected.Data.Id = createdRecord.Id;
-            
+
             result.Should().BeEquivalentTo(expected);
         }
-        
+
         [Fact]
         public async Task UpdateConcernsRecord_ShouldReturnTheUpdatedConcernsRecord()
         {
@@ -372,7 +373,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var concernsType = _dbContext.ConcernsTypes.FirstOrDefault(t => t.Id == 1);
             var concernsRating = _dbContext.ConcernsRatings.FirstOrDefault(r => r.Id == 1);
             var concernsMeansOfReferral = _dbContext.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 1);
-            
+
             AddConcernsCase(currentConcernsCase);
 
             var currentConcernsRecord = new ConcernsRecord
@@ -390,7 +391,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 ConcernsRating = concernsRating,
                 ConcernsMeansOfReferral = concernsMeansOfReferral
             };
-            
+
             AddConcernsRecord(currentConcernsRecord);
             var currentRecordId = currentConcernsRecord.Id;
 
@@ -412,8 +413,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
             };
             var response = await _client.SendAsync(httpRequestMessage);
             var content = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsRecordResponse>>();
-            
-            response.StatusCode.Should().Be(200);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Data.Should().BeEquivalentTo(expectedContent);
         }
 
@@ -446,20 +447,20 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 StatusId = 2,
                 RatingId = 3
             };
-            
+
             AddConcernsCase(concernsCase);
-            
+
             var concernsType = _dbContext.ConcernsTypes.FirstOrDefault(t => t.Id == 1);
             var concernsRating = _dbContext.ConcernsRatings.FirstOrDefault(r => r.Id == 1);
-            
+
             var currentMeansOfReferral = hasCurrentMeansOfReferral
                 ? _dbContext.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 1)
                 : null;
-            
+
             var updateMeansOfReferral = isAddingMeansOfReferral
                 ? _dbContext.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 2)
                 : null;
-            
+
             var currentConcernsRecord = new ConcernsRecord
             {
                 CreatedAt = _randomGenerator.DateTime(),
@@ -475,7 +476,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 ConcernsRating = concernsRating,
                 ConcernsMeansOfReferral = currentMeansOfReferral
             };
-            
+
             AddConcernsRecord(currentConcernsRecord);
             var currentRecordId = currentConcernsRecord.Id;
 
@@ -485,7 +486,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 .With(r => r.RatingId = concernsRating.Id)
                 .With(r => r.MeansOfReferralId = updateMeansOfReferral?.Id)
                 .Build();
-            
+
             var expectedConcernsRecord = ConcernsRecordFactory.Create(updateRequest, concernsCase, concernsType, concernsRating, updateMeansOfReferral ?? currentMeansOfReferral);
             expectedConcernsRecord.Id = currentRecordId;
             var expectedContent = ConcernsRecordResponseFactory.Create(expectedConcernsRecord);
@@ -498,11 +499,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
             };
             var response = await _client.SendAsync(httpRequestMessage);
             var content = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsRecordResponse>>();
-            
-            response.StatusCode.Should().Be(200);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Data.Should().BeEquivalentTo(expectedContent);
         }
-        
+
         [Fact]
         public async Task GetConcernsRecordsByConcernsCaseUid()
         {
@@ -528,7 +529,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 StatusId = 2,
                 RatingId = 4
             };
-            
+
             AddConcernsCase(concernsCase);
 
             var concernsRating = _dbContext.ConcernsRatings.FirstOrDefault();
@@ -550,7 +551,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 StatusId = 1,
                 MeansOfReferralId = concernsMeansOfReferral!.Id
             };
-            
+
             var recordCreateRequest2 = new ConcernsRecordRequest
             {
                 CreatedAt = _randomGenerator.DateTime(),
@@ -573,22 +574,22 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/"),
                 Content =  JsonContent.Create(recordCreateRequest1)
             };
-            
+
             var createResponse1 = await _client.SendAsync(httpCreateRequestMessage1);
             var content1 = await createResponse1.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsRecordResponse>>();
-            createResponse1.StatusCode.Should().Be(201);
-            
+            createResponse1.StatusCode.Should().Be(HttpStatusCode.Created);
+
             var httpCreateRequestMessage2 = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
                 RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/"),
                 Content =  JsonContent.Create(recordCreateRequest2)
             };
-            
+
             var createResponse2 = await _client.SendAsync(httpCreateRequestMessage2);
             var content2 = await createResponse2.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsRecordResponse>>();
-            createResponse2.StatusCode.Should().Be(201);
-            
+            createResponse2.StatusCode.Should().Be(HttpStatusCode.Created);
+
             var createdRecord1 = ConcernsRecordFactory
                 .Create(recordCreateRequest1, concernsCase, concernsType, concernsRating, concernsMeansOfReferral);
             createdRecord1.Id = content1.Data.Id;
@@ -598,16 +599,16 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var createdRecords = new List<ConcernsRecord> {createdRecord1, createdRecord2};
             var expected = createdRecords
                 .Select(ConcernsRecordResponseFactory.Create).ToList();
-            
+
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
                 RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-records/case/urn/{concernsCase.Urn}")
             };
-            
+
             var response = await _client.SendAsync(httpRequestMessage);
-            response.StatusCode.Should().Be(200);
-            
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsRecordResponse>>();
             content.Data.Count().Should().Be(2);
             content.Data.Should().BeEquivalentTo(expected);
@@ -619,7 +620,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var ownerId = "7583";
 
             var openConcernsCases = new List<ConcernsCase>();
-            
+
             for (var i = 0; i < 5; i++)
             {
                 var concernsCase = new ConcernsCase
@@ -644,7 +645,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     StatusId = 2,
                     RatingId = 1
                 };
-                
+
                 AddConcernsCase(concernsCase);
                 openConcernsCases.Add(concernsCase);
             }
@@ -673,22 +674,22 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     StatusId = 3,
                     RatingId = 3
                 };
-                
+
                 AddConcernsCase(concernsCase);
             }
 
             var expected = openConcernsCases.Select(ConcernsCaseResponseFactory.Create).ToList();
 
-            
+
             var httpRequestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
                 RequestUri = new Uri($"https://notarealdomain.com/v2/concerns-cases/owner/{ownerId}?status=2")
             };
-            
+
             var response = await _client.SendAsync(httpRequestMessage);
-            response.StatusCode.Should().Be(200);
-            
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsCaseResponse>>();
             content.Data.Count().Should().Be(5);
             content.Data.Should().BeEquivalentTo(expected);
@@ -721,15 +722,15 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     StatusId = 2,
                     RatingId = 3
                 };
-                
+
                 AddConcernsCase(concernsCase);
-                
+
                 listOfCases.Add(concernsCase);
             }
-            
+
 	        return listOfCases;
         }
-        
+
         [Fact]
         public async Task IndexConcernsMeansOfReferral_ShouldReturnAllConcernsMeansOfReferral()
         {
@@ -740,19 +741,19 @@ namespace ConcernsCaseWork.API.Tests.Integration
             };
             var response = await _client.SendAsync(httpRequestMessage);
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsMeansOfReferralResponse>>();
-            
-            response.StatusCode.Should().Be(200);
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Data.Count().Should().Be(2);
-            						
+
             content.Data.First().Name.Should().Be("Internal");
             content.Data.First().Description.Should().Be("ESFA activity, TFFT or other departmental activity");
             content.Data.First().Id.Should().BeGreaterThan(0);
-			
+
             content.Data.Last().Name.Should().Be("External");
             content.Data.Last().Description.Should().Be("CIU casework, whistleblowing, self reported, regional director (RD) or other government bodies");
             content.Data.Last().Id.Should().BeGreaterThan(0);
         }
-        
+
         public void Dispose()
         {
 	        if (RecordsToBeDisposedAtEndOfTests.Any())
@@ -761,7 +762,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		        _dbContext.SaveChanges();
 		        RecordsToBeDisposedAtEndOfTests.Clear();
 	        }
-	        
+
 	        if (CasesToBeDisposedAtEndOfTests.Any())
 	        {
 				_dbContext.ConcernsCase.RemoveRange(CasesToBeDisposedAtEndOfTests);
@@ -786,14 +787,14 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		        throw;
 	        }
         }
-        
+
         private void AddConcernsRecord(ConcernsRecord concernsRecord)
-        {	        
+        {
 	        try
 	        {
 		        _dbContext.ConcernsRecord.Add(concernsRecord);
 		        _dbContext.SaveChanges();
-		        
+
 		        RecordsToBeDisposedAtEndOfTests.Add(concernsRecord);
 	        }
 	        catch (Exception)

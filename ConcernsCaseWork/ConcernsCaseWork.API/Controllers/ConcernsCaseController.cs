@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.API.Controllers
     [ApiController]
     [Route("v{version:apiVersion}/concerns-cases")]
     public class ConcernsCaseController: ControllerBase
-    { 
+    {
         private readonly ILogger<ConcernsCaseController> _logger;
         private readonly ICreateConcernsCase _createConcernsCase;
         private readonly IGetConcernsCaseByUrn _getConcernsCaseByUrn;
@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.API.Controllers
         private readonly IGetConcernsCasesByOwnerId _getConcernsCasesByOwnerId;
 
         public ConcernsCaseController(
-            ILogger<ConcernsCaseController> logger, 
+            ILogger<ConcernsCaseController> logger,
             ICreateConcernsCase createConcernsCase,
             IGetConcernsCaseByUrn getConcernsCaseByUrn,
             IGetConcernsCaseByTrustUkprn getConcernsCaseByTrustUkprn,
@@ -34,7 +34,7 @@ namespace ConcernsCaseWork.API.Controllers
             _updateConcernsCase = updateConcernsCase;
             _getConcernsCasesByOwnerId = getConcernsCasesByOwnerId;
         }
-        
+
         [HttpPost]
         [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>> Create(ConcernCaseRequest request)
@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.API.Controllers
             _logger.LogInformation($"Failed to create Concerns Case due to bad request");
             return BadRequest();
         }
-        
+
         [HttpGet]
         [Route("urn/{urn}")]
         [MapToApiVersion("2.0")]
@@ -58,20 +58,20 @@ namespace ConcernsCaseWork.API.Controllers
         {
             _logger.LogInformation($"Attempting to get Concerns Case by Urn {urn}");
             var concernsCase = _getConcernsCaseByUrn.Execute(urn);
-            
+
             if (concernsCase == null)
             {
                 _logger.LogInformation($"No Concerns case found for URN {urn}");
                 return NotFound();
             }
-            
+
             _logger.LogInformation($"Returning Concerns case with Urn {urn}");
             _logger.LogDebug(JsonSerializer.Serialize(concernsCase));
             var response = new ApiSingleResponseV2<ConcernsCaseResponse>(concernsCase);
-            
+
             return Ok(response);
         }
-        
+
         [HttpGet]
         [Route("ukprn/{trustUkprn}")]
         [MapToApiVersion("2.0")]
@@ -84,10 +84,10 @@ namespace ConcernsCaseWork.API.Controllers
             _logger.LogDebug(JsonSerializer.Serialize(concernsCases));
             var pagingResponse = PagingResponseFactory.Create(page, count, concernsCases.Count, Request);
             var response = new ApiResponseV2<ConcernsCaseResponse>(concernsCases, pagingResponse);
-            
+
             return Ok(response);
         }
-        
+
         [HttpPatch("{urn}")]
         [MapToApiVersion("2.0")]
         public ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>> Update(int urn, ConcernCaseRequest request)
@@ -113,7 +113,7 @@ namespace ConcernsCaseWork.API.Controllers
             _logger.LogInformation($"Failed to update Concerns Case due to bad request");
             return BadRequest();
         }
-        
+
         [HttpGet]
         [Route("owner/{ownerId}")]
         [MapToApiVersion("2.0")]
@@ -126,7 +126,7 @@ namespace ConcernsCaseWork.API.Controllers
             _logger.LogDebug(JsonSerializer.Serialize(concernsCases));
             var pagingResponse = PagingResponseFactory.Create(page, count, concernsCases.Count, Request);
             var response = new ApiResponseV2<ConcernsCaseResponse>(concernsCases, pagingResponse);
-            
+
             return Ok(response);
         }
     }

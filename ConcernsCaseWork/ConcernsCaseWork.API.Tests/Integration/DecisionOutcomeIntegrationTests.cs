@@ -162,7 +162,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			var error = await result.Content.ReadAsStringAsync();
 
-			error.Should().Contain("The field Status is invalid");
+			error.Should().Contain("Select a decision outcome status");
 			error.Should().Contain("The field Authorizer is invalid");
 			error.Should().Contain("The total amount requested must be zero or greater");
 		}

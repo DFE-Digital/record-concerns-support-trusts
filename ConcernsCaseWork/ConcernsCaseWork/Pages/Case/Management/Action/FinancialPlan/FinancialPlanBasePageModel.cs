@@ -5,6 +5,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.FinancialPlan;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 	public abstract class FinancialPlanBasePageModel : AbstractPageModel
 	{
 		public readonly int NotesMaxLength = 2000;
+
+		[BindProperty]
 		public FinancialPlanModel FinancialPlanModel { get; set; }
 		public IEnumerable<RadioItem> FinancialPlanStatuses { get; set; } = new List<RadioItem>();
 		

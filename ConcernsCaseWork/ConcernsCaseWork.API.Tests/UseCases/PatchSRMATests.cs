@@ -35,7 +35,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             var result = useCase.Execute(new PatchSRMARequest { SRMAId = srmaDbModel.Id, Delegate = patchStatusDelegate});
 
             result.Should().NotBeNull();
-            result.Status.Should().BeEquivalentTo(targetStatus);
+            result.Status.Should().Be(targetStatus);
         }
 
         [Fact]
