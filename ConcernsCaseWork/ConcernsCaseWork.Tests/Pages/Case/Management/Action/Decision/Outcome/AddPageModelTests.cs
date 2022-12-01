@@ -201,36 +201,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 		}
 
 		[Test]
-		public async Task OnPostAsync_When_DateFieldsArePopulated_Then_PopulateCreateDecisionDateProperty_Returns_Page()
-		{
-			const long expectedUrn = 2;
-			const long expectedDecisionId = 2;
-			var builder = new TestBuilder();
-			var sut = builder
-				.WithCaseUrnRouteValue(expectedUrn)
-				.BuildSut();
-
-			sut.DecisionOutcome.DecisionEffectiveFromDate = new OptionalDateModel()
-			{
-				Day = "23",
-				Month = "11",
-				Year = "2022"
-			};
-
-			sut.DecisionOutcome.DecisionMadeDate = new OptionalDateModel()
-			{
-				Day = "24",
-				Month = "11",
-				Year = "2022"
-			};
-
-			await sut.OnPostAsync(expectedUrn, expectedDecisionId);
-
-			Assert.IsNotNull(sut.DecisionOutcome.DecisionEffectiveFromDate);
-			Assert.IsNotNull(sut.DecisionOutcome.DecisionMadeDate);
-		}
-
-		[Test]
 		public async Task OnPostAsync_When_Validation_Failures_Concatenates_Error_Messages()
 		{
 			long expectedUrn = 233433;
