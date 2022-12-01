@@ -1,27 +1,22 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
+using ConcernsCaseWork.API.Tests.Helpers;
 using ConcernsCaseWork.Data;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using ConcernsCaseWork.Data.Models;
+using FluentAssertions;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
-using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
-using Newtonsoft.Json;
-using System.Net;
-using FluentAssertions;
-using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
-using System.Net.Http.Json;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using System.Runtime.CompilerServices;
-using Azure.Core;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
@@ -83,7 +78,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			var createdDecision = await CreateDecision(concernsCaseId, decisionRequest);
 
-			var createdOutcome = await CreateDecisionOutcome(concernsCaseId, createdDecision.DecisionId, outcomeRequest);
+			await CreateDecisionOutcome(concernsCaseId, createdDecision.DecisionId, outcomeRequest);
 
 			var getResponse = await _client.GetAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{createdDecision.DecisionId}");
 			getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -120,9 +115,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			request.DecisionMadeDate = _decisionMadeDate;
 			request.DecisionEffectiveFromDate = _decisionEffectiveDate;
 
-			var body = JsonConvert.SerializeObject(request);
-
-			var postResult = await _client.PostAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{decisionId}/outcome", CreateJsonPayload(body));
+			var postResult = await _client.PostAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/{decisionId}/outcome", request.ConvertToJson());
 			postResult.StatusCode.Should().Be(HttpStatusCode.Created);
 
 			var response = await postResult.Content.ReadFromJsonAsync<ApiSingleResponseV2<CreateDecisionOutcomeResponse>>();
@@ -132,19 +125,12 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 		private async Task<CreateDecisionResponse> CreateDecision(int concernsCaseId, CreateDecisionRequest request)
 		{
-			var body = JsonConvert.SerializeObject(request);
-
-			var postResult = await _client.PostAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/", CreateJsonPayload(body));
+			var postResult = await _client.PostAsync($"/v2/concerns-cases/{concernsCaseId}/decisions/", request.ConvertToJson());
 			postResult.StatusCode.Should().Be(HttpStatusCode.Created);
 
 			var response = await postResult.Content.ReadFromJsonAsync<ApiSingleResponseV2<CreateDecisionResponse>>();
 
 			return response.Data;
-		}
-
-		private StringContent CreateJsonPayload(string body)
-		{
-			return new StringContent(body, Encoding.UTF8, MediaTypeNames.Application.Json);
 		}
 	}
 }
