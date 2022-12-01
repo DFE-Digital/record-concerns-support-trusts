@@ -1,10 +1,12 @@
 import { Logger } from "../../../common/logger";
+import { EditDecisionPage } from "../../../pages/caseActions/decision/editDecisionPage";
+import { ViewDecisionPage } from "../../../pages/caseActions/decision/viewDecisionPage";
 import { DecisionOutcomePage } from "../../../pages/caseActions/decisionOutcomePage";
-import { DecisionPage } from "../../../pages/caseActions/decisionPage";
 
 
 describe("Testing decision outcome", () =>{
-	const decisionPage: DecisionPage = new DecisionPage();
+    const viewDecisionPage = new ViewDecisionPage();
+    const editDecisionPage = new EditDecisionPage();
 	const decisionOutcomePage: DecisionOutcomePage = new DecisionOutcomePage();
 
 	
@@ -21,15 +23,15 @@ describe("Testing decision outcome", () =>{
         Logger.Log("Creating Empty Decision");
 		cy.addConcernsDecisionsAddToCase();
 
-		decisionPage
-        .saveDecision();
+		editDecisionPage
+            .saveDecision();
 
 		cy.get("#open-case-actions td")
 			.should("contain.text", "Decision: No Decision Types")
 			.eq(-3)
 			.click();
 
-        decisionPage
+        viewDecisionPage
             .createDecisionOutcome();
 
             Logger.Log("Checking when no decision is selected");
@@ -38,7 +40,7 @@ describe("Testing decision outcome", () =>{
                 .withDateDecisionMadeDay("24")
                 .withDateDecisionMadeMonth("12")
                 .withDateDecisionMadeYear("2022")
-                .saveDecisionOutcome()
+            .saveDecisionOutcome()
                 .hasValidationError("Select a decision outcome");
 
             Logger.Log("Checking an invalid date");
