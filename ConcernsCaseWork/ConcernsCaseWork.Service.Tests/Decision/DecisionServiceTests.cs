@@ -117,24 +117,23 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 		{
 			Fixture fixture = CreateMockedFixture();
 
+			
 			var expectedInputDto = fixture.Create<CreateDecisionOutcomeRequest>();
 			var expectedResponseDto = fixture.Create<CreateDecisionOutcomeResponse>();
 			var responseWrapper = new ApiWrapper<CreateDecisionOutcomeResponse>(expectedResponseDto);
+			var caseUrn = expectedResponseDto.ConcernsCaseUrn;
+			var decisionId = expectedResponseDto.DecisionId;
 
-
-
-			/*
-			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{expectedInputDto.DecisionId}/decisions", responseWrapper);
+			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{caseUrn}/decisions/{decisionId}", responseWrapper);
 			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
 
 			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>());
-			var result = await sut.PostDecisionOutcome(expectedInputDto);
+			var result = await sut.PostDecisionOutcome(caseUrn, decisionId, expectedInputDto);
 
 			Assert.That(result, Is.Not.Null);
+			Assert.That(result.ConcernsCaseUrn, Is.EqualTo(expectedResponseDto.ConcernsCaseUrn));
 			Assert.That(result.DecisionId, Is.EqualTo(expectedResponseDto.DecisionId));
-
-			*/
-			//Assert.That(result.OutcomeId, Is.EqualTo(expectedResponseDto.OutcomeId));
+			Assert.That(result.DecisionOutcomeId, Is.EqualTo(expectedResponseDto.DecisionOutcomeId));
 		}
 
 		private Mock<IHttpClientFactory> CreateHttpClientFactory(Mock<HttpMessageHandler> mockMessageHandler)

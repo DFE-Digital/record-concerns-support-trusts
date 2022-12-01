@@ -15,8 +15,8 @@ namespace ConcernsCaseWork.API.Contracts.Decisions.Outcomes
 		[Description("G6")]
 		G6 = 2,
 
-		[Description("Regional Schools Commisioner (RSC - Advisory board)")]
-		RegionalSchoolsCommisioner = 3,
+		[Description("Regional Director (RD)")]
+		RegionalDirector = 3,
 
 		[Description("Deputy Director")]
 		DeputyDirector = 4,
