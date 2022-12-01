@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Azure.Core;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
@@ -54,12 +55,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<GetDecisionResponse>>();
 			var result = wrapper.Data;
 
-			result.Should().BeEquivalentTo(request, (options) =>
-			{
-				options.Excluding(r => r.ConcernsCaseUrn);
-
-				return options;
-			});
+			AssertDecision(result, request);
 
 			result.ConcernsCaseUrn.Should().Be(concernsCaseId);
 			result.Outcome.Should().BeNull();
@@ -86,6 +82,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var wrapper = await getResponse.Content.ReadFromJsonAsync<ApiSingleResponseV2<GetDecisionResponse>>();
 			var result = wrapper.Data;
 
+			AssertDecision(result, decisionRequest);
+
 			result.Outcome.Status.Should().Be(outcomeRequest.Status);
 			result.Outcome.Authorizer.Should().Be(outcomeRequest.Authorizer);
 			result.Outcome.TotalAmount.Should().Be(100);
@@ -93,6 +91,16 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.Outcome.DecisionEffectiveFromDate.Should().Be(_decisionEffectiveDate);
 
 			result.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(outcomeRequest.BusinessAreasConsulted);
+		}
+
+		private void AssertDecision(GetDecisionResponse actual, CreateDecisionRequest expected)
+		{
+			actual.Should().BeEquivalentTo(expected, (options) =>
+			{
+				options.Excluding(r => r.ConcernsCaseUrn);
+
+				return options;
+			});
 		}
 
 		private async Task<ConcernsCase> CreateConcernsCase()
