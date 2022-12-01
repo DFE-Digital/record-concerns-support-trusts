@@ -5,18 +5,18 @@ using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Ou
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome
 {
-	public class CreateDecisionOutcome : IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse>
+	public class UpdateDecisionOutcome : IUseCaseAsync<UpdateDecisionOutcomeUseCaseParams, UpdateDecisionOutcomeResponse>
 	{
 		private IConcernsCaseGateway _concernsCaseGateway;
 		private IDecisionOutcomeGateway _decisionOutcomeGateway;
 
-		public CreateDecisionOutcome(IConcernsCaseGateway concernsCaseGateway, IDecisionOutcomeGateway decisionOutcomeGateway)
+		public UpdateDecisionOutcome(IConcernsCaseGateway concernsCaseGateway, IDecisionOutcomeGateway decisionOutcomeGateway)
 		{
 			_concernsCaseGateway = concernsCaseGateway;
 			_decisionOutcomeGateway = decisionOutcomeGateway;
 		}
 
-		public async Task<CreateDecisionOutcomeResponse> Execute(CreateDecisionOutcomeUseCaseParams parameters, CancellationToken cancellationToken)
+		public async Task<UpdateDecisionOutcomeResponse> Execute(UpdateDecisionOutcomeUseCaseParams parameters, CancellationToken cancellationToken)
 		{
 			var concernsCase = _concernsCaseGateway.GetConcernsCaseByUrn(parameters.ConcernsCaseId);
 
@@ -26,13 +26,14 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome
 
 			if (decision == null) throw new NotFoundException($"Decision with id {parameters.DecisionId}, Case {parameters.ConcernsCaseId}");
 
-			if (decision.Outcome != null) throw new ResourceConflictException(
-				$"Decision with id {parameters.DecisionId} already has an outcome, Case {parameters.ConcernsCaseId}");
+			if (decision.Outcome == null) throw new NotFoundException(
+				$"Decision with id {parameters.DecisionId} does not have an outcome, Case {parameters.ConcernsCaseId}");
 
-			var toCreate = ToDbModel(parameters.Request, parameters.DecisionId);
-			var decisionOutcome = await _decisionOutcomeGateway.CreateDecisionOutcome(toCreate, cancellationToken);
+			var model = ToDbModel(parameters.Request, parameters.DecisionId);
 
-			return new CreateDecisionOutcomeResponse()
+			var decisionOutcome = await _decisionOutcomeGateway.UpdateDecisionOutcome(model, cancellationToken);
+
+			return new UpdateDecisionOutcomeResponse()
 			{
 				DecisionId = parameters.DecisionId,
 				ConcernsCaseUrn = parameters.ConcernsCaseId,
@@ -41,7 +42,7 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome
 		}
 
 		private Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome ToDbModel(
-			CreateDecisionOutcomeRequest request,
+			UpdateDecisionOutcomeRequest request,
 			int decisionId)
 		{
 			var today = DateTimeOffset.Now;
@@ -66,10 +67,10 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome
 		}
 	}
 
-	public record CreateDecisionOutcomeUseCaseParams
+	public record UpdateDecisionOutcomeUseCaseParams
 	{
 		public int ConcernsCaseId { get; set; }
 		public int DecisionId { get; set; }
-		public CreateDecisionOutcomeRequest Request { get; set; }
+		public UpdateDecisionOutcomeRequest Request { get; set; }
 	}
 }
