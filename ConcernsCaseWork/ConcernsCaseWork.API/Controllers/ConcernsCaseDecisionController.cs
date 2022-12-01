@@ -33,7 +33,7 @@ namespace ConcernsCaseWork.API.Controllers
 		    _getDecisionUserCase = getDecisionUseCase ?? throw new ArgumentNullException(nameof(getDecisionUseCase));
 		    _getDecisionsUserCase = getDecisionsUseCase ?? throw new ArgumentNullException(nameof(getDecisionsUseCase));
 		    _updateDecisionUseCase = updateDecisionUseCase ?? throw new ArgumentNullException(nameof(updateDecisionUseCase));
-		    _closeDecisionUseCase = closeDecisionUseCase;
+		    _closeDecisionUseCase = closeDecisionUseCase ?? throw new ArgumentNullException(nameof(closeDecisionUseCase));
 	    }
 
 	    [HttpPost]

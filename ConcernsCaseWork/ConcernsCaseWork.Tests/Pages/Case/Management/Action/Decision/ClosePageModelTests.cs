@@ -198,6 +198,28 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 		}
 		
 		[Test]
+		public async Task OnPostAsync_When_CloseDecision_Throws_Error_Returns_Error()
+		{
+			// arrange
+			var decisionService = new Mock<IDecisionService>();
+			decisionService
+				.Setup(m => m.CloseDecision(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CloseDecisionRequest>()))
+					.Throws(new Exception("Failed"));
+			
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithDecisionService(decisionService)
+				.BuildSut();
+
+			// act
+			var page = await sut.OnPostAsync();
+
+			// assert
+			page.Should().BeOfType<PageResult>();
+			sut.TempData[ErrorConstants.ErrorMessageKey].Should().Be(ErrorConstants.ErrorOnPostPage);
+		}
+		
+		[Test]
 		public async Task OnPostAsync_When_ModelValidationErrorThrown_Returns_Page()
 		{
 			// arrange

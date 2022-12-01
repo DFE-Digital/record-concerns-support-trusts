@@ -1,12 +1,10 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
-using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace ConcernsCaseWork.Service.Decision
 {
@@ -107,7 +105,7 @@ namespace ConcernsCaseWork.Service.Decision
 
 		}
 		
-		public async Task<CloseDecisionResponse> CloseDecision(long caseUrn, long decisionId, CloseDecisionRequest closeDecisionRequest)
+		public async Task<CloseDecisionResponse> CloseDecision(int caseUrn, int decisionId, CloseDecisionRequest closeDecisionRequest)
 		{
 			_logger.LogMethodEntered();
 

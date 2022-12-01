@@ -5,8 +5,6 @@ using ConcernsCaseWork.Data.Gateways;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 
-public record DecisionUseCaseRequestWrapper<T>(int CaseUrn, int? DecisionId, T Request);
-
 public class CloseDecision: IUseCaseAsync<DecisionUseCaseRequestWrapper<CloseDecisionRequest>, CloseDecisionResponse>
 {
 	private readonly IConcernsCaseGateway _concernsCaseGateway;

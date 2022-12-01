@@ -18,6 +18,6 @@ namespace ConcernsCaseWork.Service.Decision
 
 		Task<GetDecisionOutcomeResponse> GetDecisionOutcome(long decisionId, long outcomeId);
 		
-		Task<CloseDecisionResponse> CloseDecision(long caseUrn, long decisionId, CloseDecisionRequest closeDecisionRequest);
+		Task<CloseDecisionResponse> CloseDecision(int caseUrn, int decisionId, CloseDecisionRequest closeDecisionRequest);
 	}
 }
