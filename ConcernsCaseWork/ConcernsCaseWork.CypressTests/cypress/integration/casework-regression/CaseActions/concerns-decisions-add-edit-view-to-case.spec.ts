@@ -1,12 +1,10 @@
 import { Logger } from "../../../common/logger";
-import { CloseDecisionPage } from "../../../pages/caseActions/decision/closeDecisionPage";
 import { EditDecisionPage } from "../../../pages/caseActions/decision/editDecisionPage";
 import { ViewDecisionPage } from "../../../pages/caseActions/decision/viewDecisionPage";
 
 describe("User can add case actions to an existing case", () => {
 	const viewDecisionPage = new ViewDecisionPage();
 	const editDecisionPage = new EditDecisionPage();
-	const closeDecisionPage = new CloseDecisionPage();
 
 	beforeEach(() => {
 		cy.login();
@@ -18,7 +16,7 @@ describe("User can add case actions to an existing case", () => {
 	});
 
 	it("Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
-		cy.createCaseAndAddDecision();
+		cy.addConcernsDecisionsAddToCase();
 
 		Logger.Log("Checking an invalid date");
 		editDecisionPage
@@ -99,41 +97,9 @@ describe("User can add case actions to an existing case", () => {
 			.hasSupportingNotes("Testing Supporting Notes");
 	});
 
-	it.only(" Concern Decision - Creating a case, then creating a Decision, validating data is visible for this decision then Close the decision", function () {
-		cy.createCaseAndAddDecision();
-
-		Logger.Log("Adding note on the decision that will be closing ");
-		closeDecisionPage
-			.withSupportingNotes("This is a test")
-			.saveDecision();
-
-		Logger.Log("Selecting the Decision from open cases and closing this decision");
-
-		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: No Decision Types")
-			.eq(-3)
-			.children("a")
-			.click();
-		cy.url().then((url) => cy.visit(url + "/close"));
-
-		Logger.Log("Add close decision finalise supporting notes");
-		closeDecisionPage
-			.withFinaliseSupportingNotes("This is a test for closed decision")
-			.saveDecision();
-
-		Logger.Log("Selecting Decision from closed cases and verifying that the finalise note matches the above");
-
-		cy.get("#close-case-actions td")
-			.should("contain.text", "Decision: No Decision Types")
-			.eq(-4)
-			.children("a")
-			.click();
-		closeDecisionPage.hasSupportingNotes("This is a test for closed decision");
-	});
-
 	it("When Decisions is empty, View Behavior", function () {
 		Logger.Log("Creating Empty Decision");
-		cy.createCaseAndAddDecision();
+		cy.addConcernsDecisionsAddToCase();
 
 		editDecisionPage.saveDecision();
 

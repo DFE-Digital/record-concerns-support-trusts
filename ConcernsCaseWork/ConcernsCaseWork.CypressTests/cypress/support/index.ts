@@ -41,9 +41,8 @@ declare global {
             closeSRMA(): Chainable<Element>;
             checkForExistingCase(force: boolean): Chainable<Element>;
             createSRMA(): Chainable<Element>;
-            createCaseAndAddDecision(): Chainable<Element>;
+            addConcernsDecisionsAddToCase(): Chainable<Element>;
             basicCreateCase(): Chainable<Element>;
-            hasSupportingNotes(): Chainable<Element>;
             checkForExistingCase(): Chainable<Element>;
         }
     }

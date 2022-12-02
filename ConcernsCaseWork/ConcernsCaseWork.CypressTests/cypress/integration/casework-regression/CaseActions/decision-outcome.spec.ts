@@ -21,7 +21,7 @@ describe("Testing decision outcome", () =>{
 
     it("Create a decision outcome, checking validation and view it was created correctly", () => {
         Logger.Log("Creating Empty Decision");
-		cy.createCaseAndAddDecision();
+		cy.addConcernsDecisionsAddToCase();
 
 		editDecisionPage
             .saveDecision();

@@ -92,7 +92,7 @@ Cypress.Commands.add('enterConcernDetails', () => {
 })
 
 
-Cypress.Commands.add('createCaseAndAddDecision',()=>{
+Cypress.Commands.add('addConcernsDecisionsAddToCase',()=>{
     cy.visit(Cypress.env('url')+"/home");
 
     cy.basicCreateCase();
