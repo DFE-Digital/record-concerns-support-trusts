@@ -51,7 +51,7 @@ jobs:
       - name: Setup node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '14.x'
+          node-version: '16.x'
 
       - name: Build Frontend
         run: make build-frontend
@@ -64,7 +64,7 @@ jobs:
           build-args: ASPNET_IMAGE_TAG=6.0.9-bullseye-slim-amd64
           push: true
           tags: ${{ steps.prepare-tags.outputs.tags }}
-      
+
       - name: Azure login with ACA credentials
         uses: azure/login@v1
         with:
@@ -81,4 +81,3 @@ jobs:
               --resource-group ${{ secrets.TEST_ACA_RESOURCE_GROUP }} \
               --image ${{ secrets.TEST_ACR_URL }}/amsd-app:${{ steps.prepare-tags.outputs.deploy-version }} \
               --output none
-
