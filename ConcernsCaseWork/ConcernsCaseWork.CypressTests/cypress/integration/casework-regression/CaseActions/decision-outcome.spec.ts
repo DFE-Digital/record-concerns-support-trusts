@@ -38,29 +38,33 @@ describe("Testing decision outcome", () =>{
 
         Logger.Log("Checking when no status is selected");
         decisionOutcomePage
-            .withDateDecisionMadeDay("24")
-            .withDateDecisionMadeMonth("12")
-            .withDateDecisionMadeYear("2022")
             .saveDecisionOutcome()
             .hasValidationError("Select a decision outcome");
 
-        Logger.Log("Checking an invalid date and status errors are shown together");
-        decisionOutcomePage
-            .withDateDecisionMadeDay("24")
-            .withDateDecisionMadeMonth("13")
-            .withDateDecisionMadeYear("2022")
-            .saveDecisionOutcome()
-            .hasValidationError("24-13-2022 is an invalid date")
-            .hasValidationError("Select a decision outcome");
-
-        Logger.Log("Checking an incomplete date");
+        Logger.Log("Checking an invalid date");
         decisionOutcomePage
             .withDecisionOutcomeStatus("Withdrawn")
             .withDateDecisionMadeDay("24")
+            .withDateDecisionMadeMonth("13")
+            .withDateDecisionMadeYear("2022")
+            .withDecisionTakeEffectDay("12")
+            .withDecisionTakeEffectMonth("22")
+            .withDecisionTakeEffectYear("2023")
+            .saveDecisionOutcome()
+            .hasValidationError("Date decision made: 24-13-2022 is an invalid date")
+            .hasValidationError("Date decision effective: 12-22-2023 is an invalid date")
+
+        Logger.Log("Checking an incomplete dates");
+        decisionOutcomePage
+            .withDateDecisionMadeDay("24")
             .withDateDecisionMadeMonth("12")
             .withDateDecisionMadeYear("")
+            .withDecisionTakeEffectDay("12")
+            .withDecisionTakeEffectMonth("06")
+            .withDecisionTakeEffectYear("")
             .saveDecisionOutcome()
-            .hasValidationError("Please enter a complete date DD MM YYYY");
+            .hasValidationError("Date decision made: Please enter a complete date dd MM YYYY")
+            .hasValidationError("Date decision effective: Please enter a complete date dd MM YYYY");
 
         Logger.Log("Create Decision Outcome");
         decisionOutcomePage
