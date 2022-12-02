@@ -109,11 +109,11 @@ namespace ConcernsCaseWork.Service.Decision
 
 			var endpoint = $"/{EndpointsVersion}/concerns-cases/{caseUrn}/decisions/{decisionId}/close";
 
-			var putResponse = await Put<CloseDecisionRequest, CloseDecisionResponse>(endpoint, closeDecisionRequest);
+			var response = await Patch<CloseDecisionRequest, CloseDecisionResponse>(endpoint, closeDecisionRequest);
 
-			_logger.LogInformation("Decision closed. caseUrn: {ResponseConcernsCaseUrn}, DecisionId:{ResponseDecisionId}", putResponse.CaseUrn, putResponse.DecisionId);
+			_logger.LogInformation("Decision closed. caseUrn: {ResponseConcernsCaseUrn}, DecisionId:{ResponseDecisionId}", response.CaseUrn, response.DecisionId);
 			
-			return putResponse;
+			return response;
 		}
 	}
 }

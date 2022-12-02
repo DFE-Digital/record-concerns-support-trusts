@@ -110,7 +110,7 @@ namespace ConcernsCaseWork.API.Controllers
 		    return new OkObjectResult(response);
 	    }
 	    
-	    [HttpPut("{decisionId:int}/close")]
+	    [HttpPatch("{decisionId:int}/close")]
 	    [MapToApiVersion("2.0")]
 	    public async Task<ActionResult<ApiSingleResponseV2<CloseDecisionResponse>>> CloseDecision(int urn, int decisionId, CloseDecisionRequest request, CancellationToken cancellationToken)
 	    {

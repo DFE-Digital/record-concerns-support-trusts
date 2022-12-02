@@ -202,8 +202,76 @@ namespace ConcernsCaseWork.Service.Base
 		}
 
 		/// <summary>
-		/// Sends a PUT message with T as the request content. Returns a TResponse from message body and also checks (first) that the response code is in the 200 range.
-		/// Note Prefer to PUT/POST without returning a body
+		/// Sends a PATCH message with T as the request content. Returns a TResponse from message body and also checks (first) that the response code is in the 200 range.
+		/// Note Prefer to PUT/PATCH/POST without returning a body
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TResult"></typeparam>
+		/// <param name="endpoint"></param>
+		/// <param name="dto"></param>
+		/// <returns></returns>
+		public Task<TResult> Patch<T, TResult>(string endpoint, T dto, bool treatNoContentAsError = false)
+		{
+			Guard.Against.NullOrWhiteSpace(endpoint);
+			Guard.Against.Null(dto);
+
+			async Task<TResult> DoWork()
+			{
+				try
+				{
+					// Create a request
+					var request = new StringContent(
+						JsonConvert.SerializeObject(dto),
+						Encoding.UTF8,
+						MediaTypeNames.Application.Json);
+
+					// Create http client
+					var client = CreateHttpClient();
+
+					// Execute request
+					var response = await client.PatchAsync(endpoint, request);
+
+					// Check status code
+					response.EnsureSuccessStatusCode();
+
+					if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+					{
+						if (treatNoContentAsError)
+						{
+							throw new ArgumentNullException(nameof(response.Content),
+								$"A PATCH to endpoint '{endpoint}' resulted in a NoContent response. Exception thrown because {nameof(treatNoContentAsError)} is 'true'");
+						}
+
+						return default;
+					}
+
+					// Read response content
+					var content = await response.Content.ReadAsStringAsync();
+
+					// Deserialize content to POCO
+					var resultDto = JsonConvert.DeserializeObject<ApiWrapper<TResult>>(content);
+
+					// Unwrap response
+					if (resultDto is { Data: { } })
+					{
+						return resultDto.Data;
+					}
+
+					throw new Exception($"Academies API error unwrap response. Endpoint '{endpoint}' returned a non-success code ({response.StatusCode})");
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, ex.Message);
+					throw;
+				}
+			}
+
+			return DoWork();
+		}
+
+		/// <summary>
+		/// Sends a PATCH message with T as the request content. Returns a TResponse from message body and also checks (first) that the response code is in the 200 range.
+		/// Note Prefer to PUT/PATCH/POST without returning a body
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <typeparam name="TResult"></typeparam>
@@ -268,7 +336,7 @@ namespace ConcernsCaseWork.Service.Base
 
 			return DoWork();
 		}
-
+		
 		/// <summary>
 		/// Sends a POST, with no result from response body. Ensures the response code is in the 200 range
 		/// </summary>

@@ -33,7 +33,7 @@ public class CloseDecisionIntegrationTests : IClassFixture<ApiTestFixture>
 	}
 
 	[Fact]
-	public async Task When_Put_Returns_200Response()
+	public async Task When_Patch_Returns_200Response()
 	{
 		// arrange
 		var cCase = await CreateCase();
@@ -46,7 +46,7 @@ public class CloseDecisionIntegrationTests : IClassFixture<ApiTestFixture>
 		
 		// act
 		var result = await _client
-			.PutAsync($"/v2/concerns-cases/{cCase.Urn}/decisions/{decisionId}/close", 
+			.PatchAsync($"/v2/concerns-cases/{cCase.Urn}/decisions/{decisionId}/close", 
 			request.ConvertToJson());
 
 		// assert
@@ -62,7 +62,7 @@ public class CloseDecisionIntegrationTests : IClassFixture<ApiTestFixture>
 	}
 	
 	[Fact]
-	public async Task When_Put_AndDecisionIsClosed_ReturnsBadRequest()
+	public async Task When_Patch_AndDecisionIsClosed_ReturnsBadRequest()
 	{
 		// arrange
 		var cCase = await CreateCase();
@@ -75,7 +75,7 @@ public class CloseDecisionIntegrationTests : IClassFixture<ApiTestFixture>
 		
 		// act
 		var result = await _client
-			.PutAsync($"/v2/concerns-cases/{cCase.Urn}/decisions/{decisionId}/close", 
+			.PatchAsync($"/v2/concerns-cases/{cCase.Urn}/decisions/{decisionId}/close", 
 				request.ConvertToJson());
 
 		result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -86,7 +86,7 @@ public class CloseDecisionIntegrationTests : IClassFixture<ApiTestFixture>
 	}
 
 	[Fact]
-	public async Task When_Put_With_No_Outcome_Returns_BadRequest()
+	public async Task When_Patch_With_No_Outcome_Returns_BadRequest()
 	{
 		// arrange
 		var cCase = await CreateCase();
@@ -99,7 +99,7 @@ public class CloseDecisionIntegrationTests : IClassFixture<ApiTestFixture>
 		
 		// act
 		var result = await _client
-			.PutAsync($"/v2/concerns-cases/{cCase.Urn}/decisions/{decisionId}/close", 
+			.PatchAsync($"/v2/concerns-cases/{cCase.Urn}/decisions/{decisionId}/close", 
 				request.ConvertToJson());
 
 		result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -111,7 +111,7 @@ public class CloseDecisionIntegrationTests : IClassFixture<ApiTestFixture>
 	
 	[Theory]
 	[InlineData(2001, -1, -2)]
-	public async Task When_PutWithInvalidRequest_Returns_400Response(int notesLength, int caseUrn, int decisionId)
+	public async Task When_PatchWithInvalidRequest_Returns_400Response(int notesLength, int caseUrn, int decisionId)
 	{
 		// arrange
 		var request = new CloseDecisionRequest()
@@ -119,7 +119,7 @@ public class CloseDecisionIntegrationTests : IClassFixture<ApiTestFixture>
 			SupportingNotes = _fixture.Create<string>().PadRight(notesLength, 'g')
 		};
 
-		var result = await _client.PutAsync($"/v2/concerns-cases/{caseUrn}/decisions/{decisionId}/close", request.ConvertToJson());
+		var result = await _client.PatchAsync($"/v2/concerns-cases/{caseUrn}/decisions/{decisionId}/close", request.ConvertToJson());
 
 		result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
@@ -132,7 +132,7 @@ public class CloseDecisionIntegrationTests : IClassFixture<ApiTestFixture>
 	}
 
 	[Fact]
-	public async Task When_PutWithMissingCase_Returns_404Response()
+	public async Task When_PatchWithMissingCase_Returns_404Response()
 	{
 		var caseId = _fixture.Create<int>();
 		
@@ -141,7 +141,7 @@ public class CloseDecisionIntegrationTests : IClassFixture<ApiTestFixture>
 			SupportingNotes = _fixture.Create<string>()
 		};
 
-		var result = await _client.PutAsync($"/v2/concerns-cases/{caseId}/decisions/{_fixture.Create<int>()}/close", request.ConvertToJson());
+		var result = await _client.PatchAsync($"/v2/concerns-cases/{caseId}/decisions/{_fixture.Create<int>()}/close", request.ConvertToJson());
 
 		result.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
@@ -151,7 +151,7 @@ public class CloseDecisionIntegrationTests : IClassFixture<ApiTestFixture>
 	}
 
 	[Fact]
-	public async Task When_PutWithMissingDecision_Returns_404Response()
+	public async Task When_PatchWithMissingDecision_Returns_404Response()
 	{
 		var request = new CloseDecisionRequest()
 		{
@@ -162,7 +162,7 @@ public class CloseDecisionIntegrationTests : IClassFixture<ApiTestFixture>
 		var cCaseId = cCase.Id;
 		var decisionId = _fixture.Create<int>();
 
-		var result = await _client.PutAsync($"/v2/concerns-cases/{cCaseId}/decisions/{decisionId}/close", request.ConvertToJson());
+		var result = await _client.PatchAsync($"/v2/concerns-cases/{cCaseId}/decisions/{decisionId}/close", request.ConvertToJson());
 
 		result.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
