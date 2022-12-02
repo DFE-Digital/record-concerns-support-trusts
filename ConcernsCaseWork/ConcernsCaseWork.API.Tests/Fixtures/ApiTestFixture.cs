@@ -47,7 +47,7 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 				.UseSqlServer(connection)
 				.Options;
 
-			DbContext = new ConcernsDbContext(contextOptions);
+			DbContext = GetContext();
 			DbContext.Database.Migrate();
 		}
 
