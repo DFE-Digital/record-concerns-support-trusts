@@ -2,7 +2,7 @@
 
 namespace ConcernsCaseWork.Models.CaseActions
 {
-	public class DecisionModel
+	public class ViewDecisionModel
 	{
 		public int DecisionId { get; set; }
 		public int ConcernsCaseUrn { get; set; }

@@ -57,7 +57,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 				DecisionType.RepayableFinancialSupport
 			};
 
-			var result = DecisionMapping.ToDecisionModel(apiDecision);
+			var result = DecisionMapping.ToViewDecisionModel(apiDecision);
 
 			result.DecisionId.Should().Be(apiDecision.DecisionId);
 			result.ConcernsCaseUrn.Should().Be(apiDecision.ConcernsCaseUrn);
@@ -79,7 +79,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			var apiDecision = new GetDecisionResponse();
 			apiDecision.DecisionTypes = new DecisionType[] { };
 
-			var result = DecisionMapping.ToDecisionModel(apiDecision);
+			var result = DecisionMapping.ToViewDecisionModel(apiDecision);
 
 			result.EsfaReceivedRequestDate.Should().BeNull();
 		}
