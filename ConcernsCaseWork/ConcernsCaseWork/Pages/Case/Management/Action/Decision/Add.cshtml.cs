@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		public CreateDecisionRequest Decision { get; set; }
 
 		[BindProperty]
-		[DisplayName("Date request received")]
+		[DisplayName("Date ESFA received request")]
 		public OptionalDateModel ReceivedRequestDate { get; set; }
 
 		public int NotesMaxLength => DecisionConstants.MaxSupportingNotesLength;
