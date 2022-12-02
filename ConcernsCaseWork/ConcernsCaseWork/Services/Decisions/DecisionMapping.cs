@@ -28,11 +28,11 @@ namespace ConcernsCaseWork.Services.Decisions
 			return result;
 		}
 
-		public static DecisionModel ToDecisionModel(GetDecisionResponse decisionResponse)
+		public static ViewDecisionModel ToViewDecisionModel(GetDecisionResponse decisionResponse)
 		{
 			var receivedRequestDate = GetEsfaReceivedRequestDate(decisionResponse);
 
-			var result = new DecisionModel()
+			var result = new ViewDecisionModel()
 			{
 				DecisionId = decisionResponse.DecisionId,
 				ConcernsCaseUrn = decisionResponse.ConcernsCaseUrn,
