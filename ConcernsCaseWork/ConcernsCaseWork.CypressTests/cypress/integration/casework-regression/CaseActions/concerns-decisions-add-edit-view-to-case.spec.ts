@@ -15,7 +15,7 @@ describe("User can add case actions to an existing case", () => {
 		cy.clearCookies();
 	});
 
-	it(" Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
+	it("Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
 		cy.addConcernsDecisionsAddToCase();
 
 		Logger.Log("Checking an invalid date");
