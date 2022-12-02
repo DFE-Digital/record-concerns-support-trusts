@@ -5,7 +5,6 @@ using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
-using ConcernsCaseWork.Service.Decision;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -28,11 +27,11 @@ namespace ConcernsCaseWork.Services.Decisions
 			return result;
 		}
 
-		public static DecisionModel ToDecisionModel(GetDecisionResponse decisionResponse)
+		public static ViewDecisionModel ToViewDecisionModel(GetDecisionResponse decisionResponse)
 		{
 			var receivedRequestDate = GetEsfaReceivedRequestDate(decisionResponse);
 
-			var result = new DecisionModel()
+			var result = new ViewDecisionModel()
 			{
 				DecisionId = decisionResponse.DecisionId,
 				ConcernsCaseUrn = decisionResponse.ConcernsCaseUrn,
@@ -41,11 +40,32 @@ namespace ConcernsCaseWork.Services.Decisions
 				SubmissionRequired = decisionResponse.SubmissionRequired != true ? "No" : "Yes",
 				SubmissionLink = decisionResponse.SubmissionDocumentLink,
 				EsfaReceivedRequestDate = receivedRequestDate?.ToDayMonthYear(),
-				TotalAmountRequested = decisionResponse.TotalAmountRequested.ToString("C", new CultureInfo("en-GB")),
+				TotalAmountRequested = ToCurrencyField(decisionResponse.TotalAmountRequested),
 				DecisionTypes = decisionResponse.DecisionTypes.Select(d => EnumHelper.GetEnumDescription(d)).ToList(),
 				SupportingNotes = decisionResponse.SupportingNotes,
 				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/addOrUpdate/{decisionResponse.DecisionId}",
-				BackLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management"
+				BackLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management",
+				Outcome = ToViewDecisionOutcomeModel(decisionResponse)
+			};
+
+			return result;
+		}
+
+		private static ViewDecisionOutcomeModel ToViewDecisionOutcomeModel(GetDecisionResponse decisionResponse)
+		{
+			var decisionOutcomeResponse = decisionResponse.Outcome;
+
+			if (decisionOutcomeResponse == null) return null;
+
+			var result = new ViewDecisionOutcomeModel()
+			{
+				Status = EnumHelper.GetEnumDescription(decisionOutcomeResponse.Status),
+				Authorizer = EnumHelper.GetEnumDescription(decisionOutcomeResponse.Authorizer),
+				TotalAmount = ToCurrencyField(decisionOutcomeResponse.TotalAmount),
+				DecisionMadeDate = decisionOutcomeResponse.DecisionMadeDate?.ToDayMonthYear(),
+				DecisionEffectiveFromDate = decisionOutcomeResponse.DecisionEffectiveFromDate?.ToDayMonthYear(),
+				BusinessAreasConsulted = decisionOutcomeResponse.BusinessAreasConsulted.Select(b => EnumHelper.GetEnumDescription(b)).ToList(),
+				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/{decisionResponse.DecisionId}/outcome/addOrUpdate",
 			};
 
 			return result;
@@ -142,14 +162,14 @@ namespace ConcernsCaseWork.Services.Decisions
 			return result;
 		}
 
-		private static DateTimeOffset? GetNullableDate(DateTimeOffset? date)
-		{
-			return date.Value != DateTimeOffset.MinValue ? date : null;
-		}
-
 		private static DateTimeOffset? GetEsfaReceivedRequestDate(GetDecisionResponse decisionResponse)
 		{
 			return decisionResponse.ReceivedRequestDate != DateTimeOffset.MinValue ? decisionResponse.ReceivedRequestDate : null;
+		}
+
+		private static string? ToCurrencyField(decimal? amount)
+		{
+			return amount?.ToString("C", new CultureInfo("en-GB"));
 		}
 	}
 }

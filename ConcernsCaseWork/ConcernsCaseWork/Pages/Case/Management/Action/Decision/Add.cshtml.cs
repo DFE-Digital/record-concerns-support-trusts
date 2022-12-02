@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Security.Policy;
@@ -35,6 +36,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		public CreateDecisionRequest Decision { get; set; }
 
 		[BindProperty]
+		[DisplayName("Date ESFA received request")]
 		public OptionalDateModel ReceivedRequestDate { get; set; }
 
 		public int NotesMaxLength => DecisionConstants.MaxSupportingNotesLength;
