@@ -33,7 +33,7 @@ describe("User can add case actions to an existing case", () => {
 			.withDateESFAYear("")
 			.withSupportingNotesExceedingLimit()
 			.saveDecision()
-			.hasValidationError("Date request received: Please enter a complete date dd MM YYYY")
+			.hasValidationError("Date request received: Please enter a complete date DD MM YYYY")
 			.hasValidationError("Notes must be 2000 characters or less");
 
 		Logger.Log("Creating Decision");
