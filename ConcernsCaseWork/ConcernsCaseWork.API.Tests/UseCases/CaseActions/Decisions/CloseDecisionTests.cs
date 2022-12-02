@@ -2,12 +2,14 @@ using AutoFixture;
 using AutoFixture.Idioms;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.API.Factories.Concerns.Decisions;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
 using FluentAssertions;
 using Moq;
 using System;
@@ -36,7 +38,7 @@ public class CloseDecisionTests
 		var sut = _fixture.Create<CloseDecision>();
 
 		sut.Should()
-			.BeAssignableTo<IUseCaseAsync<DecisionUseCaseRequestWrapper<CloseDecisionRequest>, CloseDecisionResponse>>();
+			.BeAssignableTo<IUseCaseAsync<DecisionUseCaseRequestParams<CloseDecisionRequest>, CloseDecisionResponse>>();
 	}
 
 	[Fact]
@@ -60,7 +62,7 @@ public class CloseDecisionTests
 		var action = () => sut.Execute(request, CancellationToken.None);
 
 		// assert
-		(await action.Should().ThrowAsync<InvalidOperationException>()).And.Message.Should()
+		(await action.Should().ThrowAsync<NotFoundException>()).And.Message.Should()
 			.Be($"Concerns Case {caseUrn} not found");
 	}
 	
@@ -87,8 +89,8 @@ public class CloseDecisionTests
 		var action = () => sut.Execute(request, CancellationToken.None);
 
 		// assert
-		(await action.Should().ThrowAsync<ArgumentOutOfRangeException>()).And.Message.Should()
-			.Be($"Decision id {decisionId} not found in this case. Case urn {caseUrn} (Parameter 'decisionId')");
+		(await action.Should().ThrowAsync<NotFoundException>()).And.Message.Should()
+			.Be($"Decision with id {decisionId} not found");
 	}
 	
 	[Theory]
@@ -145,7 +147,7 @@ public class CloseDecisionTests
 		var mockGateWay = new Mock<IConcernsCaseGateway>();
 
 		var cCase = CreateOpenCase();
-		var decision = CreateOpenDecision();
+		var decision = CreateOpenDecisionWithOutcome();
 		cCase.AddDecision(decision, _fixture.Create<DateTime>());
 		
 		var caseUrn = cCase.Urn;
@@ -165,6 +167,68 @@ public class CloseDecisionTests
 		// assert
 		result.CaseUrn.Should().Be(caseUrn);
 		result.DecisionId.Should().Be(decisionId);
+	}
+
+	[Fact]
+	public async Task Execute_When_Decision_Already_Closed_Should_ThrowException()
+	{
+		// arrange
+		var mockCloseDecisionResponseFactory = new Mock<ICloseDecisionResponseFactory>();
+		var mockGateWay = new Mock<IConcernsCaseGateway>();
+
+		var cCase = CreateOpenCase();
+		var decision = CreateClosedDecision();
+		
+		cCase.AddDecision(decision, _fixture.Create<DateTime>());
+		
+		var caseUrn = cCase.Urn;
+		var decisionId = decision.DecisionId;
+		
+		var request = CreateRequest(caseUrn, decisionId);
+		
+		mockGateWay.Setup(x => x.GetConcernsCaseByUrn(caseUrn, true)).Returns(cCase);
+		mockCloseDecisionResponseFactory.Setup(x => x.Create(caseUrn, decisionId))
+			.Returns(new CloseDecisionResponse(caseUrn, (int)decisionId!));
+
+		var sut = new CloseDecision(mockGateWay.Object, mockCloseDecisionResponseFactory.Object);
+		
+		// act
+		var action = () => sut.Execute(request, CancellationToken.None);
+
+		// assert
+		(await action.Should().ThrowAsync<OperationNotCompletedException>()).And.Message.Should()
+			.Be($"Decision with id {decisionId} cannot be closed as it is already closed.");
+	}
+	
+	[Fact]
+	public async Task Execute_When_Decision_Does_Not_Have_An_Outcome_Should_ThrowException()
+	{
+		// arrange
+		var mockCloseDecisionResponseFactory = new Mock<ICloseDecisionResponseFactory>();
+		var mockGateWay = new Mock<IConcernsCaseGateway>();
+
+		var cCase = CreateOpenCase();
+		var decision = CreateOpenDecision();
+		
+		cCase.AddDecision(decision, _fixture.Create<DateTime>());
+		
+		var caseUrn = cCase.Urn;
+		var decisionId = decision.DecisionId;
+		
+		var request = CreateRequest(caseUrn, decisionId);
+		
+		mockGateWay.Setup(x => x.GetConcernsCaseByUrn(caseUrn, true)).Returns(cCase);
+		mockCloseDecisionResponseFactory.Setup(x => x.Create(caseUrn, decisionId))
+			.Returns(new CloseDecisionResponse(caseUrn, (int)decisionId!));
+
+		var sut = new CloseDecision(mockGateWay.Object, mockCloseDecisionResponseFactory.Object);
+		
+		// act
+		var action = () => sut.Execute(request, CancellationToken.None);
+
+		// assert
+		(await action.Should().ThrowAsync<OperationNotCompletedException>()).And.Message.Should()
+			.Be($"Decision with id {decisionId} cannot be closed as it does not have an Outcome.");
 	}
 	
 	[Fact]
@@ -200,6 +264,24 @@ public class CloseDecisionTests
 		decision.DecisionId = _fixture.Create<int>();
 		return decision;
 	}
+	
+	private Decision CreateOpenDecisionWithOutcome()
+	{
+		var decision = CreateOpenDecision();
+
+		decision.DecisionId = _fixture.Create<int>();
+		decision.Outcome = new DecisionOutcome();
+		return decision;
+	}
+	
+	private Decision CreateClosedDecision()
+	{
+		var decision = CreateOpenDecisionWithOutcome();
+
+		decision.DecisionId = _fixture.Create<int>();
+		decision.ClosedAt = _fixture.Create<DateTimeOffset>();
+		return decision;
+	}
 
 	private ConcernsCase CreateOpenCase() 
 		=> _fixture.Build<ConcernsCase>()
@@ -208,8 +290,8 @@ public class CloseDecisionTests
 			.With(c => c.Rating, new ConcernsRating())
 			.Create();
 
-	private DecisionUseCaseRequestWrapper<CloseDecisionRequest> CreateRequest(int? caseUrn, int? decisionId) 
-		=> _fixture.Build<DecisionUseCaseRequestWrapper<CloseDecisionRequest>>()
+	private DecisionUseCaseRequestParams<CloseDecisionRequest> CreateRequest(int? caseUrn, int? decisionId) 
+		=> _fixture.Build<DecisionUseCaseRequestParams<CloseDecisionRequest>>()
 			.With(c => c.CaseUrn, caseUrn)
 			.With(c => c.DecisionId, decisionId)
 			.Create();

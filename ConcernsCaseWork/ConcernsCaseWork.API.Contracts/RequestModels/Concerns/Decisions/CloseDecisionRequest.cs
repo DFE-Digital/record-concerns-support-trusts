@@ -5,9 +5,6 @@ namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 public class CloseDecisionRequest
 {
 	private const int _maxSupportingNotesLength = 2000;
-	
-	public int CaseUrn { get; set; }
-	public int DecisionId { get; set; }
 
 	[StringLength(_maxSupportingNotesLength, ErrorMessage  = "Notes must be 2000 characters or less", MinimumLength = 0)]
 	public string SupportingNotes { get; set; }

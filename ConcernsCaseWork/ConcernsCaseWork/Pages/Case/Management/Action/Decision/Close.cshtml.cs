@@ -109,6 +109,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		// TODO: These ought to be part of a general service / model
 		private static bool IsDecisionEditable(GetDecisionResponse decision) => !IsDecisionClosed(decision) && DecisionHasOutcome(decision);
 		private static bool IsDecisionClosed(GetDecisionResponse decision) => decision.ClosedAt.HasValue;
-		private static bool DecisionHasOutcome(GetDecisionResponse decision) => true; // TODO: return if decision has outcome
+		private static bool DecisionHasOutcome(GetDecisionResponse decision) => decision.Outcome != null;
 	}
 }

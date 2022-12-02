@@ -18,7 +18,7 @@ namespace ConcernsCaseWork.API.Controllers
 	    private readonly IUseCaseAsync<GetDecisionRequest, GetDecisionResponse> _getDecisionUserCase;
 	    private readonly IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]> _getDecisionsUserCase;
 	    private readonly IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest), UpdateDecisionResponse> _updateDecisionUseCase;
-	    private readonly IUseCaseAsync<DecisionUseCaseRequestWrapper<CloseDecisionRequest>, CloseDecisionResponse> _closeDecisionUseCase;
+	    private readonly IUseCaseAsync<DecisionUseCaseRequestParams<CloseDecisionRequest>, CloseDecisionResponse> _closeDecisionUseCase;
 
 	    public ConcernsCaseDecisionController(
 		    ILogger<ConcernsCaseDecisionController> logger,
@@ -26,7 +26,7 @@ namespace ConcernsCaseWork.API.Controllers
 		    IUseCaseAsync<GetDecisionRequest, GetDecisionResponse> getDecisionUseCase,
 		    IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]> getDecisionsUseCase,
 		    IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest), UpdateDecisionResponse> updateDecisionUseCase, 
-		    IUseCaseAsync<DecisionUseCaseRequestWrapper<CloseDecisionRequest>, CloseDecisionResponse> closeDecisionUseCase)
+		    IUseCaseAsync<DecisionUseCaseRequestParams<CloseDecisionRequest>, CloseDecisionResponse> closeDecisionUseCase)
 	    {
 		    _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		    _createDecisionUseCase = createDecisionUseCase ?? throw new ArgumentNullException(nameof(createDecisionUseCase));
@@ -123,7 +123,7 @@ namespace ConcernsCaseWork.API.Controllers
 			    return BadRequest();
 		    }
 
-		    var closeDecisionRequest = new DecisionUseCaseRequestWrapper<CloseDecisionRequest>(urn, decisionId, request);
+		    var closeDecisionRequest = new DecisionUseCaseRequestParams<CloseDecisionRequest>(urn, decisionId, request);
 		    var result = await _closeDecisionUseCase.Execute(closeDecisionRequest, cancellationToken);
 		    var response = new ApiSingleResponseV2<CloseDecisionResponse>(result);
 

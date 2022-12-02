@@ -284,7 +284,7 @@ public class ConcernsCaseDecisionControllerTests
 	        var request = testBuilder.CreateCloseDecisionRequestNotesTooLong();
 	        var sut = testBuilder.BuildSut();
 
-	        var result = await sut.CloseDecision(request.CaseUrn, request.DecisionId, request, CancellationToken.None);
+	        var result = await sut.CloseDecision(1, 2, request, CancellationToken.None);
 	        result.Result.Should().BeEquivalentTo(new BadRequestResult());
         }
 
@@ -293,17 +293,19 @@ public class ConcernsCaseDecisionControllerTests
         {
 	        var testBuilder = new TestBuilder();
 	        var request = testBuilder.CreateValidCloseDecisionRequest();
+	        var caseUrn = 55;
+	        var decisionId = 77;
 
 	        var expectedResponse = testBuilder.Fixture.Create<CloseDecisionResponse>();
 	        testBuilder.CloseDecisionUseCase
 		        .Setup(x =>
-			        x.Execute(It.Is<DecisionUseCaseRequestWrapper<CloseDecisionRequest>>(r => 
-				        r.CaseUrn == request.CaseUrn && r.DecisionId == request.DecisionId), 
+			        x.Execute(It.Is<DecisionUseCaseRequestParams<CloseDecisionRequest>>(r => 
+				        r.CaseUrn == caseUrn && r.DecisionId == decisionId), 
 				        It.IsAny<CancellationToken>()))
 		        .ReturnsAsync(expectedResponse);
 
 	        var sut = testBuilder.BuildSut();
-	        var actionResult = await sut.CloseDecision(request.CaseUrn, request.DecisionId, request, CancellationToken.None);
+	        var actionResult = await sut.CloseDecision(caseUrn, decisionId, request, CancellationToken.None);
 
 	        var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
 	        okResult.Value.Should().BeAssignableTo<ApiSingleResponseV2<CloseDecisionResponse>>();
@@ -319,7 +321,7 @@ public class ConcernsCaseDecisionControllerTests
             internal readonly Mock<IUseCaseAsync<GetDecisionRequest, GetDecisionResponse>> GetDecisionUseCase;
             internal readonly Mock<IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]>> GetDecisionsUseCase;
             internal readonly Mock<IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest), UpdateDecisionResponse>> UpdateDecisionUseCase;
-            internal readonly Mock<IUseCaseAsync<DecisionUseCaseRequestWrapper<CloseDecisionRequest>, CloseDecisionResponse>> CloseDecisionUseCase;
+            internal readonly Mock<IUseCaseAsync<DecisionUseCaseRequestParams<CloseDecisionRequest>, CloseDecisionResponse>> CloseDecisionUseCase;
 
             public TestBuilder()
             {
@@ -331,7 +333,7 @@ public class ConcernsCaseDecisionControllerTests
                 GetDecisionUseCase = Fixture.Freeze<Mock<IUseCaseAsync<GetDecisionRequest, GetDecisionResponse>>>();
                 GetDecisionsUseCase = Fixture.Freeze<Mock<IUseCaseAsync<GetDecisionsRequest, DecisionSummaryResponse[]>>>();
                 UpdateDecisionUseCase = Fixture.Freeze<Mock<IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest), UpdateDecisionResponse>>>();
-                CloseDecisionUseCase = Fixture.Freeze<Mock<IUseCaseAsync<DecisionUseCaseRequestWrapper<CloseDecisionRequest>, CloseDecisionResponse>>>();
+                CloseDecisionUseCase = Fixture.Freeze<Mock<IUseCaseAsync<DecisionUseCaseRequestParams<CloseDecisionRequest>, CloseDecisionResponse>>>();
             }
 
             internal ConcernsCaseDecisionController BuildSut()

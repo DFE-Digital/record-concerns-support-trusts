@@ -1,3 +1,4 @@
+using ConcernsCaseWork.Data.Exceptions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 
 namespace ConcernsCaseWork.Data.Models
@@ -65,10 +66,19 @@ namespace ConcernsCaseWork.Data.Models
 	        var currentDecision = Decisions.FirstOrDefault(x => x.DecisionId == decisionId);
 	        if (currentDecision == null)
 	        {
-		        throw new ArgumentOutOfRangeException(nameof(decisionId),
-			        $"Decision id {decisionId} not found in this case. Case urn {Urn}");
+		        throw new EntityNotFoundException(decisionId, nameof(Decision));
 	        }
 
+	        if (currentDecision.ClosedAt != null)
+	        {
+		        throw new StateChangeNotAllowedException($"Decision with id {decisionId} cannot be closed as it is already closed.");
+	        }
+	        
+	        if (currentDecision.Outcome == null)
+	        {
+		        throw new StateChangeNotAllowedException($"Decision with id {decisionId} cannot be closed as it does not have an Outcome.");
+	        }
+	        
 	        currentDecision.Close(notes, now);
         }
     }

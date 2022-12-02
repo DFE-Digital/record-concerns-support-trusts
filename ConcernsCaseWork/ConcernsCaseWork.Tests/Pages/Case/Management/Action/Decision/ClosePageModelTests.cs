@@ -43,6 +43,35 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 		}
 		
 		[Test]
+		public async Task OnGetAsync_When_Decision_Found_Returns_Page()
+		{
+			// arrange
+			const int expectedUrn = 2;
+			const int expectedDecisionId = 1;
+			
+			var decisionService = new Mock<IDecisionService>();
+			
+			var decision = CreateOpenDecisionResponse(expectedUrn);
+			decisionService.Setup(m => m.GetDecision(expectedUrn, expectedDecisionId)).ReturnsAsync(decision);
+			
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrn(expectedUrn)
+				.WithDecisionId(expectedDecisionId)
+				.WithDecisionService(decisionService)
+				.BuildSut();
+
+			// act
+			await sut.OnGetAsync();
+
+			// assert
+			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
+			sut.CaseUrn.Should().Be(expectedUrn);
+			sut.DecisionId.Should().Be(expectedDecisionId);
+			sut.Notes.Should().Be(decision.SupportingNotes);
+		}
+		
+		[Test]
 		[TestCase(0)]
 		[TestCase(-1)]
 		public void OnValidateModel_When_InvalidCaseUrn_ShouldFailModelValidation(int caseUrn)
@@ -105,9 +134,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			validationResults.Single().ErrorMessage.Should().Be("Supporting Notes must be 2000 characters or less");
 			validationResults.Single().MemberNames.Should().Contain("Notes");
 		}
-
+		
 		[Test]
-		public async Task OnGetAsync_When_Decision_Found_Returns_Page()
+		public async Task OnGetAsync_When_Decision_Is_Closed_Redirects_To_Decision_View_Page()
 		{
 			// arrange
 			const int expectedUrn = 2;
@@ -115,7 +144,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			
 			var decisionService = new Mock<IDecisionService>();
 			
-			var decision = CreateOpenDecisionResponse(expectedUrn);
+			var decision = CreateClosedDecisionResponse(expectedUrn);
 			decisionService.Setup(m => m.GetDecision(expectedUrn, expectedDecisionId)).ReturnsAsync(decision);
 			
 			var builder = new TestBuilder();
@@ -126,13 +155,42 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 				.BuildSut();
 
 			// act
-			await sut.OnGetAsync();
+			var page = await sut.OnGetAsync();
 
 			// assert
-			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
+			page.Should().BeOfType<RedirectResult>();
 			sut.CaseUrn.Should().Be(expectedUrn);
-			sut.DecisionId.Should().Be(expectedDecisionId);
-			sut.Notes.Should().Be(decision.SupportingNotes);
+			((RedirectResult)page).Url.Should().Be($"/case/{expectedUrn}/management/action/decision/{expectedDecisionId}");
+		}
+				
+		[Test]
+		public async Task OnGetAsync_When_Decision_Has_No_Outcome_Redirects_To_Decision_View_Page()
+		{
+			// arrange
+			const int expectedUrn = 2;
+			const int expectedDecisionId = 1;
+			
+			var decisionService = new Mock<IDecisionService>();
+			
+			var decision = CreateOpenDecisionResponse(expectedUrn);
+			decision.Outcome = null;
+			
+			decisionService.Setup(m => m.GetDecision(expectedUrn, expectedDecisionId)).ReturnsAsync(decision);
+			
+			var builder = new TestBuilder();
+			var sut = builder
+				.WithCaseUrn(expectedUrn)
+				.WithDecisionId(expectedDecisionId)
+				.WithDecisionService(decisionService)
+				.BuildSut();
+
+			// act
+			var page = await sut.OnGetAsync();
+
+			// assert
+			page.Should().BeOfType<RedirectResult>();
+			sut.CaseUrn.Should().Be(expectedUrn);
+			((RedirectResult)page).Url.Should().Be($"/case/{expectedUrn}/management/action/decision/{expectedDecisionId}");
 		}
 		
 		[Test]
@@ -245,6 +303,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			=> _fixture
 				.Build<GetDecisionResponse>()
 				.With(r => r.ClosedAt, (DateTimeOffset?)null)
+				.With(r => r.ConcernsCaseUrn, caseUrn)
+				.Create();
+		
+		private static GetDecisionResponse CreateClosedDecisionResponse(int caseUrn)
+			=> _fixture
+				.Build<GetDecisionResponse>()
+				.With(r => r.ClosedAt, DateTimeOffset.Now)
 				.With(r => r.ConcernsCaseUrn, caseUrn)
 				.Create();
 

@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,8 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 		public HttpClient Client { get; private set; }
 
 		public ConcernsDbContext DbContext { get; private set; }
+		
+		private DbContextOptions<ConcernsDbContext> DbContextOptions { get; init; }
 
 		public ApiTestFixture()
 		{
@@ -40,13 +43,15 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 
 			var connection = testConfig.GetSection("ConnectionStrings")["DefaultConnection"];
 
-			var contextOptions = new DbContextOptionsBuilder<ConcernsDbContext>()
+			DbContextOptions = new DbContextOptionsBuilder<ConcernsDbContext>()
 				.UseSqlServer(connection)
 				.Options;
 
 			DbContext = new ConcernsDbContext(contextOptions);
 			DbContext.Database.Migrate();
 		}
+
+		public ConcernsDbContext GetContext() => new ConcernsDbContext(DbContextOptions);
 
 		public void Dispose()
 		{
