@@ -19,7 +19,7 @@ describe("Testing decision outcome", () =>{
 		cy.clearCookies();
 	});
 
-    it("Create a decision outcome and view it was created correctly", () => {
+    it("Create a decision outcome, checking validation and view it was created correctly", () => {
         Logger.Log("Creating Empty Decision");
 		cy.addConcernsDecisionsAddToCase();
 
@@ -31,31 +31,31 @@ describe("Testing decision outcome", () =>{
 			.eq(-3)
 			.click();
 
+        Logger.Log("Creating a decision outcome");
         viewDecisionPage
+            .hasNoDecisionOutcome()
             .createDecisionOutcome();
 
-        Logger.Log("Checking when no decision is selected");
+        Logger.Log("Checking when no status is selected");
         decisionOutcomePage
-            .withTotalAmountApproved("50,000")
             .withDateDecisionMadeDay("24")
             .withDateDecisionMadeMonth("12")
             .withDateDecisionMadeYear("2022")
-        .saveDecisionOutcome()
+            .saveDecisionOutcome()
             .hasValidationError("Select a decision outcome");
 
-        Logger.Log("Checking an invalid date");
+        Logger.Log("Checking an invalid date and status errors are shown together");
         decisionOutcomePage
-            .withDecisionOutcomeStatus("ApprovedWithConditions")
-            .withTotalAmountApproved("50,000")
             .withDateDecisionMadeDay("24")
             .withDateDecisionMadeMonth("13")
             .withDateDecisionMadeYear("2022")
             .saveDecisionOutcome()
-            .hasValidationError("24-13-2022 is an invalid date");
+            .hasValidationError("24-13-2022 is an invalid date")
+            .hasValidationError("Select a decision outcome");
 
         Logger.Log("Checking an incomplete date");
         decisionOutcomePage
-            .withTotalAmountApproved("50,000")
+            .withDecisionOutcomeStatus("Withdrawn")
             .withDateDecisionMadeDay("24")
             .withDateDecisionMadeMonth("12")
             .withDateDecisionMadeYear("")
@@ -69,14 +69,42 @@ describe("Testing decision outcome", () =>{
             .withDateDecisionMadeDay("24")
             .withDateDecisionMadeMonth("11")
             .withDateDecisionMadeYear("2022")
-            .withDecisionTakeEffectDay("24")
-            .withDecisionTakeEffectMonth("11")
-            .withDecisionTakeEffectYear("2022")
+            .withDecisionTakeEffectDay("11")
+            .withDecisionTakeEffectMonth("12")
+            .withDecisionTakeEffectYear("2023")
             .withDecisionAuthouriser("DeputyDirector")
             .withBusinessArea("BusinessPartner")
             .withBusinessArea("Capital")
             .withBusinessArea("ProviderMarketOversight")
             .saveDecisionOutcome();
+
+        Logger.Log("Select created decision")
+        cy.get("#open-case-actions td")
+			.should("contain.text", "Decision: No Decision Types")
+			.eq(-3)
+			.click();
+
+        Logger.Log("View decision outcome")
+
+        viewDecisionPage
+            .hasBusinessArea("Business Partner")
+            .hasBusinessArea("Capital")
+            .hasBusinessArea("Provider Market Oversight")
+            .hasDecisionOutcomeStatus("Approved with conditions")
+            .hasMadeDate("24-11-2022")
+            .hasEffectiveFromDate("11-12-2023")
+            .hasTotalAmountApproved("£50,000")
+            .hasAuthoriser("Deputy Director")
+            .cannotCreateAnotherDecisionOutcome();
+    });
+
+    it("Create an decision outcome with only status, should set status but all other labels should be empty", () =>
+    {
+        Logger.Log("Creating Empty Decision");
+		cy.addConcernsDecisionsAddToCase();
+
+		editDecisionPage
+            .saveDecision();
 
         cy.get("#open-case-actions td")
 			.should("contain.text", "Decision: No Decision Types")
@@ -84,12 +112,24 @@ describe("Testing decision outcome", () =>{
 			.click();
 
         viewDecisionPage
-            .hasBusinessArea("Funding")
-            .hasDecisionOutcomeStatus("Retrospective Approval")
-            .hasMadeDate("2022-01-01")
-            .hasEffectiveFromDate("2022-02-02")
-            .hasTotalAmountApproved("£100")
-            .hasAuthoriser("G6")
-            .editDecisionOutcome()
+            .createDecisionOutcome();
+
+        Logger.Log("Create Decision Outcome with only status");
+        decisionOutcomePage
+            .withDecisionOutcomeStatus("Withdrawn")
+            .saveDecisionOutcome();
+
+        cy.get("#open-case-actions td")
+            .should("contain.text", "Decision: No Decision Types")
+            .eq(-3)
+            .click();
+
+        viewDecisionPage
+            .hasBusinessArea("Empty")
+            .hasDecisionOutcomeStatus("Withdrawn")
+            .hasMadeDate("Empty")
+            .hasEffectiveFromDate("Empty")
+            .hasTotalAmountApproved("£0.00")
+            .hasAuthoriser("Empty");
     });
 })

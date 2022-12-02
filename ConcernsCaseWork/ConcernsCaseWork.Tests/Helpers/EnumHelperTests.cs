@@ -10,7 +10,8 @@ namespace ConcernsCaseWork.Tests.Helpers
 		[TestCase(SRMAStatus.TrustConsidering, "Trust considering")]
 		[TestCase(SRMAStatus.PreparingForDeployment, "Preparing for deployment")]
 		[TestCase(SRMAStatus.Deployed, "Deployed")]
-		public void WhenGetEnumDescription_ReturnsExpected(SRMAStatus value, string expectedResult)
+		[TestCase(null, null)]
+		public void WhenGetEnumDescription_ReturnsExpected(SRMAStatus? value, string expectedResult)
 		{
 			// act
 			var result = EnumHelper.GetEnumDescription(value);
@@ -18,7 +19,5 @@ namespace ConcernsCaseWork.Tests.Helpers
 			//assert
 			Assert.That(result, Is.EqualTo(expectedResult));
 		}
-
-
 	}
 }

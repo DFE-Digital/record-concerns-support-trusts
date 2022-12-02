@@ -45,7 +45,28 @@ namespace ConcernsCaseWork.Services.Decisions
 				DecisionTypes = decisionResponse.DecisionTypes.Select(d => EnumHelper.GetEnumDescription(d)).ToList(),
 				SupportingNotes = decisionResponse.SupportingNotes,
 				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/addOrUpdate/{decisionResponse.DecisionId}",
-				BackLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management"
+				BackLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management",
+				Outcome = ToViewDecisionOutcomeModel(decisionResponse)
+			};
+
+			return result;
+		}
+
+		private static ViewDecisionOutcomeModel ToViewDecisionOutcomeModel(GetDecisionResponse decisionResponse)
+		{
+			var decisionOutcomeResponse = decisionResponse.Outcome;
+
+			if (decisionOutcomeResponse == null) return null;
+
+			var result = new ViewDecisionOutcomeModel()
+			{
+				Status = EnumHelper.GetEnumDescription(decisionOutcomeResponse.Status),
+				Authorizer = EnumHelper.GetEnumDescription(decisionOutcomeResponse.Authorizer),
+				TotalAmount = decisionOutcomeResponse.TotalAmount?.ToString("C", new CultureInfo("en-GB")),
+				DecisionMadeDate = decisionOutcomeResponse.DecisionMadeDate?.ToDayMonthYear(),
+				DecisionEffectiveFromDate = decisionOutcomeResponse.DecisionEffectiveFromDate?.ToDayMonthYear(),
+				BusinessAreasConsulted = decisionOutcomeResponse.BusinessAreasConsulted.Select(b => EnumHelper.GetEnumDescription(b)).ToList(),
+				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/{decisionResponse.DecisionId}/outcome/addOrUpdate",
 			};
 
 			return result;

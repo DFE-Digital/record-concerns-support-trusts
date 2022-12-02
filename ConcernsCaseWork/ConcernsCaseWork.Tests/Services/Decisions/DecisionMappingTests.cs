@@ -1,10 +1,8 @@
-﻿using Albedo.Refraction;
-using AutoFixture;
+﻿using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
-using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Services.Decisions;
@@ -40,7 +38,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 		[TestCase(null, "No")]
 		[TestCase(false, "No")]
 		[TestCase(true, "Yes")]
-		public void ToDecisionModel_ReturnsCorrectModel(
+		public void ToViewDecisionModel_ReturnsCorrectModel(
 			bool? booleanFlag,
 			string booleanResolvedValue)
 		{
@@ -57,6 +55,20 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 				DecisionType.RepayableFinancialSupport
 			};
 
+			apiDecision.Outcome = new DecisionOutcome()
+			{
+				TotalAmount = 15000,
+				Authorizer = DecisionOutcomeAuthorizer.CounterSigningDeputyDirector,
+				Status = DecisionOutcomeStatus.ApprovedWithConditions,
+				DecisionMadeDate = new DateTimeOffset(2023, 5, 7, 0, 0, 0, new TimeSpan()),
+				DecisionEffectiveFromDate = new DateTimeOffset(2023, 12, 13, 0, 0, 0, new TimeSpan()),
+				BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea>()
+				{
+					DecisionOutcomeBusinessArea.Capital,
+					DecisionOutcomeBusinessArea.SchoolsFinancialSupportAndOversight
+				}
+			};
+
 			var result = DecisionMapping.ToViewDecisionModel(apiDecision);
 
 			result.DecisionId.Should().Be(apiDecision.DecisionId);
@@ -71,10 +83,19 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.SupportingNotes.Should().Be(apiDecision.SupportingNotes);
 			result.EditLink.Should().Be("/case/2/management/action/decision/addOrUpdate/10");
 			result.BackLink.Should().Be("/case/2/management");
+
+			result.Outcome.Status.Should().Be("Approved with conditions");
+			result.Outcome.Authorizer.Should().Be("Countersigning Deputy Director");
+			result.Outcome.TotalAmount.Should().Be("£15,000.00");
+			result.Outcome.DecisionMadeDate.Should().Be("07-05-2023");
+			result.Outcome.DecisionEffectiveFromDate.Should().Be("13-12-2023");
+
+			result.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(new List<string>() { "Capital", "Schools Financial Support and Oversight (SFSO)" });
+			result.Outcome.EditLink.Should().Be("/case/2/management/action/decision/10/outcome/addOrUpdate");
 		}
 
 		[Test]
-		public void ToDecisionModel_WhenNoPropertiesFilled_ReturnsCorrectModel()
+		public void ToDecisionModel_WhenNoPropertiesFilled_AndNoOutcome_ReturnsCorrectModel()
 		{
 			var apiDecision = new GetDecisionResponse();
 			apiDecision.DecisionTypes = new DecisionType[] { };
@@ -82,6 +103,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			var result = DecisionMapping.ToViewDecisionModel(apiDecision);
 
 			result.EsfaReceivedRequestDate.Should().BeNull();
+			result.Outcome.Should().BeNull();
 		}
 
 		[Test]
