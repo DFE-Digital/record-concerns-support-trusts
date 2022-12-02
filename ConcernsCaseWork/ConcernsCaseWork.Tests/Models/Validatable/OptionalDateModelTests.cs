@@ -57,7 +57,7 @@ namespace ConcernsCaseWork.Tests.Models.Validatable
 
 			var expected = new List<ValidationResult>()
 			{
-				new ValidationResult("Test Date: Please enter a complete date dd MM YYYY")
+				new ValidationResult("Test Date: Please enter a complete date DD MM YYYY")
 			};
 
 			result.Should().BeEquivalentTo(expected);

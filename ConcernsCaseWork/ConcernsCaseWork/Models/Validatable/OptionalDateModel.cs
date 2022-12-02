@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.Models.Validatable
 
 			if (dateValues.Count != 3)
 			{
-				result.Add(new ValidationResult($"{validationContext.DisplayName}: Please enter a complete date dd MM YYYY"));
+				result.Add(new ValidationResult($"{validationContext.DisplayName}: Please enter a complete date DD MM YYYY"));
 				return result;
 			}
 

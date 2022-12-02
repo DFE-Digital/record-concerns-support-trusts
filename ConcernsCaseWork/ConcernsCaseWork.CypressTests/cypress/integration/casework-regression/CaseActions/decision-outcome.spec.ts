@@ -63,8 +63,8 @@ describe("Testing decision outcome", () =>{
             .withDecisionTakeEffectMonth("06")
             .withDecisionTakeEffectYear("")
             .saveDecisionOutcome()
-            .hasValidationError("Date decision made: Please enter a complete date dd MM YYYY")
-            .hasValidationError("Date decision effective: Please enter a complete date dd MM YYYY");
+            .hasValidationError("Date decision made: Please enter a complete date DD MM YYYY")
+            .hasValidationError("Date decision effective: Please enter a complete date DD MM YYYY");
 
         Logger.Log("Create Decision Outcome");
         decisionOutcomePage
