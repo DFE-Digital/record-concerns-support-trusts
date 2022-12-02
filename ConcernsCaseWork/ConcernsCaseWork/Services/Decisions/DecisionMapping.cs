@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Services.Decisions
 				OpenedDate = decisionSummary.CreatedAt.ToDayMonthYear(),
 				ClosedDate = decisionSummary.ClosedAt?.ToDayMonthYear(),
 				Name = $"Decision: {decisionSummary.Title}",
-				StatusName = EnumHelper.GetEnumDescription(decisionSummary.Status),
+				StatusName = decisionSummary.Outcome.HasValue ? EnumHelper.GetEnumDescription(decisionSummary.Outcome) : EnumHelper.GetEnumDescription(decisionSummary.Status),
 				RelativeUrl = $"/case/{decisionSummary.ConcernsCaseUrn}/management/action/decision/{decisionSummary.DecisionId}"
 			};
 
