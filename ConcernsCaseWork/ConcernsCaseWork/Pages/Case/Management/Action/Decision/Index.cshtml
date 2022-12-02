@@ -6,13 +6,13 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @section BeforeMain {
-	<div class="govuk-width-container">
-		<partial name="_BackLink"/>
-	</div>
+    <div class="govuk-width-container">
+        <partial name="_BackLink" />
+    </div>
 }
 
-<div class="govuk-width-container">
-    <partial name="_BannerError" />
+    <div class="govuk-width-container">
+        <partial name="_BannerError" />
 
     @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
     {
@@ -20,7 +20,7 @@
     }
     else
     {
-        <h1 class="govuk-heading-l">
+        <h1 class="govuk-heading-l" data-testid="decision-heading">
             <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
             Decision
         </h1>
@@ -111,8 +111,6 @@
                                 RenderEmptyLabel();
                             }
                         }
-
-
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
@@ -134,82 +132,114 @@
             </tbody>
         </table>
 
-        <h1 class="govuk-heading-l">
-            Decision Outcome
-        </h1>
+        if (Model.Decision.Outcome != null)
+        {
+            <h1 class="govuk-heading-l" data-testid="decision-outcome-heading">
+                Decision Outcome
+            </h1>
 
-        <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m"></caption>
-            <thead>
-                <tr>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
+            <table class="govuk-table" data-testid="decision-outcome-table">
+                <caption class="govuk-table__caption govuk-table__caption--m"></caption>
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
 
-            <tbody class="govuk-table__body">
+                <tbody class="govuk-table__body">
 
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header" data-testid="business-areas-consulted-label">Business areas consulted</th>
-                    <td class="govuk-table__cell" data-testid="business-areas-consulted-text">
-                        Funding
-                    </td>
-                </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table-case-details__header" data-testid="business-areas-consulted-label">Business areas consulted</th>
+                        <td class="govuk-table__cell" data-testid="business-areas-consulted-text">
+                            @{
+                                if (Model.Decision.Outcome.BusinessAreasConsulted.Any())
+                                {
+                                    <ul>
+                                        @foreach (var businessArea in Model.Decision.Outcome.BusinessAreasConsulted)
+                                        {
+                                            <li>
+                                                @{
+                                                    RenderValue(businessArea);
+                                                }
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    RenderEmptyLabel();
+                                }
+                            }
+                        </td>
+                    </tr>
 
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header" data-testid="decision-status-label">Decision outcome</th>
-                    <td class="govuk-table__cell" data-testid="decision-status-text">
-                        Retrospective Approval
-                    </td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header" data-testid="decision-made-date-label">Date decision</th>
-                    <td class="govuk-table__cell" data-testid="decision-made-date-text">
-                        2022-01-01
-                    </td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header" data-testid="decision-effective-date-label">Date of change</th>
-                    <td class="govuk-table__cell" data-testid="decision-effective-text">
-                        2022-02-02
-                    </td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header" data-testid="total-amount-approved-label">Total amount approved</th>
-                    <td class="govuk-table__cell" data-testid="total-amount-approved-text">
-                        £100
-                    </td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header" data-testid="authorised-by-label">Decision authorised by</th>
-                    <td class="govuk-table__cell" data-testid="authoriser-text">
-                        G6
-                    </td>
-                </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table-case-details__header" data-testid="decision-status-label">Decision outcome</th>
+                        <td class="govuk-table__cell" data-testid="decision-status-text">
+                            @{
+                                RenderValue(Model.Decision.Outcome.Status);
+                            }
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table-case-details__header" data-testid="decision-made-date-label">Date decision</th>
+                        <td class="govuk-table__cell" data-testid="decision-made-date-text">
+                            @{
+                                RenderValue(Model.Decision.Outcome.DecisionMadeDate);
+                            }
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table-case-details__header" data-testid="decision-effective-date-label">Date of change</th>
+                        <td class="govuk-table__cell" data-testid="decision-effective-text">
+                            @{
+                                RenderValue(Model.Decision.Outcome.DecisionEffectiveFromDate);
+                            }
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table-case-details__header" data-testid="total-amount-approved-label">Total amount approved</th>
+                        <td class="govuk-table__cell" data-testid="total-amount-approved-text">
+                            @{
+                                RenderValue(Model.Decision.Outcome.TotalAmount);
+                            }
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table-case-details__header" data-testid="authorised-by-label">Decision authorised by</th>
+                        <td class="govuk-table__cell" data-testid="authoriser-text">
+                            @{
+                                RenderValue(Model.Decision.Outcome.Authorizer);
+                            }
+                        </td>
+                    </tr>
 
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header" data-testid="edit-decision-outcome-label">Action</th>
-                    <td class="govuk-table__cell" data-testid="edit-decision-outcome-text">
-                        @{
-                            RenderLink("Edit", "action", Model.Decision.EditLink);
-                        }
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="govuk-button-group">
-            <a data-prevent-double-click="true"
-               class="govuk-button govuk-!-margin-top-6"
-               data-module="govuk-button"
-               role="button"
-               data-testid="continue-record-decision-button"
-               href="@Request.Path/outcome/addOrUpdate">
-                Continue to record decision outcome
-            </a>
-        </div>
-
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table-case-details__header" data-testid="edit-decision-outcome-label">Action</th>
+                        <td class="govuk-table__cell" data-testid="edit-decision-outcome-text">
+                            @{
+                                RenderLink("Edit", "action", Model.Decision.Outcome.EditLink);
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="govuk-button-group">
+                <a data-prevent-double-click="true"
+           class="govuk-button govuk-!-margin-top-6"
+           data-module="govuk-button"
+           role="button"
+           data-testid="continue-record-decision-button"
+           href="@Request.Path/outcome/addOrUpdate">
+                    Continue to record decision outcome
+                </a>
+            </div>
+        }
     }
 </div>
 
@@ -222,18 +252,18 @@
         }
         else
         {
-			@value
-		}
-	}
+            @value
+        }
+    }
 
-	private void RenderLink<T>(T value, string fieldName, string url)
-	{
-		var testid = $"{fieldName}-label";
+    private void RenderLink<T>(T value, string fieldName, string url)
+    {
+        var testid = $"{fieldName}-label";
 
-		<a class="govuk-link" href="@url">
-			Edit
-			<span class="govuk-visually-hidden" data-testid=testid>@fieldName</span>
-		</a>
+        <a class="govuk-link" href="@url">
+            Edit
+            <span class="govuk-visually-hidden" data-testid=testid>@fieldName</span>
+        </a>
     }
 
     private bool IsEmpty<T>(T value)
@@ -248,6 +278,6 @@
 
     private void RenderEmptyLabel()
     {
-		<span class="govuk-tag ragtag ragtag__grey">Empty</span>
+        <span class="govuk-tag ragtag ragtag__grey">Empty</span>
     }
 }

@@ -16,5 +16,6 @@ namespace ConcernsCaseWork.Models.CaseActions
 		public string SupportingNotes { get; set; }
 		public string EditLink { get; set; }
 		public string BackLink { get; set; }
+		public ViewDecisionOutcomeModel? Outcome { get; set; }
 	}
 }

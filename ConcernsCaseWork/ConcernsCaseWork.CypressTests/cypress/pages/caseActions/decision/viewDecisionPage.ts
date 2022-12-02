@@ -153,6 +153,25 @@ export class ViewDecisionPage
 		return this;
 	}
 
+	public hasNoDecisionOutcome(): this
+	{
+		Logger.Log(`Has no decision outcome displayed`);
+
+		cy.getByTestId("decision-outcome-heading").should("not.exist");
+		cy.getByTestId("decision-outcome-table").should("not.exist");
+
+		return this;
+	}
+
+	public cannotCreateAnotherDecisionOutcome(): this
+	{
+		Logger.Log("Checking we cannot create another decision outcome if one exists");
+
+		cy.getByTestId("continue-record-decision-button").should("not.exist");
+
+		return this;
+	}
+
 	public editDecision(): this {
 		cy.task("log", `Edit Decision`);
 
