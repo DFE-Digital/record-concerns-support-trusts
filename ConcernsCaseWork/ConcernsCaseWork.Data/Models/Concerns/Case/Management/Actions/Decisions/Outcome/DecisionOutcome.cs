@@ -4,6 +4,11 @@ namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decision
 {
 	public record DecisionOutcome
 	{
+		public DecisionOutcome()
+		{
+			BusinessAreasConsulted = new List<DecisionOutcomeBusinessAreaMapping>();
+		}
+
 		public int DecisionOutcomeId { get; set; }
 
 		public int DecisionId { get; set; }

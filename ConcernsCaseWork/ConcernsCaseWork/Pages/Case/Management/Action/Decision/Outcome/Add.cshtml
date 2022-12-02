@@ -131,11 +131,11 @@
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2"
                                                id="dtr-day-decision-made"
                                                data-testid="dtr-day-decision-made"
-                                               name="DecisionMadeDate.Day"
+                                               name="DecisionOutcome.DecisionMadeDate.Day"
                                                type="text"
                                                maxlength="2"
                                                inputmode="numeric"
-                                               value="@($"{Model.DecisionMadeDate?.Day:00}")" />
+                                               value="@($"{Model.DecisionOutcome.DecisionMadeDate?.Day:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -146,11 +146,11 @@
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2"
                                                id="dtr-month-decision-made"
                                                data-testid="dtr-month-decision-made"
-                                               name="DecisionMadeDate.Month"
+                                               name="DecisionOutcome.DecisionMadeDate.Month"
                                                type="text"
                                                maxlength="2"
                                                inputmode="numeric"
-                                               value="@($"{Model.DecisionMadeDate?.Month:00}")" />
+                                               value="@($"{Model.DecisionOutcome.DecisionMadeDate?.Month:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -161,11 +161,11 @@
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-4"
                                                id="dtr-year-decision-made"
                                                data-testid="dtr-year-decision-made"
-                                               name="DecisionMadeDate.Year"
+                                               name="DecisionOutcome.DecisionMadeDate.Year"
                                                type="text"
                                                maxlength="4"
                                                inputmode="numeric"
-                                               value="@($"{Model.DecisionMadeDate?.Year}")" />
+                                               value="@($"{Model.DecisionOutcome.DecisionMadeDate?.Year}")" />
                                     </div>
                                 </div>
                             </div>
@@ -190,11 +190,11 @@
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2"
                                                id="dtr-day-take-effect"
                                                data-testid="dtr-day-take-effect"
-                                               name="DecisionTakeEffectDate.Day"
+                                               name="DecisionOutcome.DecisionEffectiveFromDate.Day"
                                                type="text"
                                                maxlength="2"
                                                inputmode="numeric"
-                                               value="@($"{Model.DecisionTakeEffectDate?.Day:00}")" />
+                                               value="@($"{Model.DecisionOutcome.DecisionEffectiveFromDate?.Day:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -205,11 +205,11 @@
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2"
                                                id="dtr-month-take-effect"
                                                data-testid="dtr-month-take-effect"
-                                               name="DecisionTakeEffectDate.Month"
+                                               name="DecisionOutcome.DecisionEffectiveFromDate.Month"
                                                type="text"
                                                maxlength="2"
                                                inputmode="numeric"
-                                               value="@($"{Model.DecisionTakeEffectDate?.Month:00}")" />
+                                               value="@($"{Model.DecisionOutcome.DecisionEffectiveFromDate?.Month:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -220,11 +220,11 @@
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-4"
                                                id="dtr-year-take-effect"
                                                data-testid="dtr-year-take-effect"
-                                               name="DecisionTakeEffectDate.Year"
+                                               name="DecisionOutcome.DecisionEffectiveFromDate.Year"
                                                type="text"
                                                maxlength="4"
                                                inputmode="numeric"
-                                               value="@($"{Model.DecisionTakeEffectDate?.Year}")" />
+                                               value="@($"{Model.DecisionOutcome.DecisionEffectiveFromDate?.Year}")" />
                                     </div>
                                 </div>
                             </div>

@@ -114,7 +114,7 @@ namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decision
         public Enums.Concerns.DecisionStatus Status { get; set; }
         public DateTimeOffset? ClosedAt { get; set; }
 
-		public DecisionOutcome Outcome { get; set; }
+		public DecisionOutcome? Outcome { get; set; }
 
         public string GetTitle()
         {
