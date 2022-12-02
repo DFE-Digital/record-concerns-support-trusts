@@ -130,7 +130,7 @@ export class ViewDecisionPage
 	{
 		Logger.Log(`Has effective from date ${effectiveDate}`);
 
-		cy.getByTestId("decision-effective-text").should("contain.text", effectiveDate);
+		cy.getByTestId("decision-date-effective-text").should("contain.text", effectiveDate);
 
 		return this;
 	}
