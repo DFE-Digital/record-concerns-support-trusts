@@ -15,7 +15,7 @@ describe("User can add case actions to an existing case", () => {
 		cy.clearCookies();
 	});
 
-	it(" Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
+	it("Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
 		cy.addConcernsDecisionsAddToCase();
 
 		Logger.Log("Checking an invalid date");
@@ -24,7 +24,7 @@ describe("User can add case actions to an existing case", () => {
 			.withDateESFAMonth("25")
 			.withDateESFAYear("2022")
 			.saveDecision()
-			.hasValidationError("23-25-2022 is an invalid date");
+			.hasValidationError("Date ESFA received request: 23-25-2022 is an invalid date");
 
 		Logger.Log("Checking an incomplete date with notes exceeded");
 		editDecisionPage
@@ -33,7 +33,7 @@ describe("User can add case actions to an existing case", () => {
 			.withDateESFAYear("")
 			.withSupportingNotesExceedingLimit()
 			.saveDecision()
-			.hasValidationError("Please enter a complete date DD MM YYYY")
+			.hasValidationError("Date ESFA received request: Please enter a complete date DD MM YYYY")
 			.hasValidationError("Notes must be 2000 characters or less");
 
 		Logger.Log("Creating Decision");

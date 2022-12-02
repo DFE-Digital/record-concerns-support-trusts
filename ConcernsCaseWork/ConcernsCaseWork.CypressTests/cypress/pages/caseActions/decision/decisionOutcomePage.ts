@@ -1,7 +1,7 @@
 export class DecisionOutcomePage {
 	
-	public withDecisionOutcomeID(decisionOutcomeID: string): this {
-		cy.task("log", `With decision outcome to pick ${decisionOutcomeID}`);
+	public withDecisionOutcomeStatus(decisionOutcomeID: string): this {
+		cy.task("log", `With decision outcome status ${decisionOutcomeID}`);
 
 		cy.getByTestId(decisionOutcomeID).click();
 
@@ -86,7 +86,7 @@ export class DecisionOutcomePage {
 		return this;
 	}
 
-	public withDecisionAuthouriserID(authoriserID: string): this {
+	public withDecisionAuthouriser(authoriserID: string): this {
 		cy.task("log", `With decision authouriser to pick ${authoriserID}`);
 
 		cy.getByTestId(authoriserID).click();
@@ -94,7 +94,7 @@ export class DecisionOutcomePage {
 		return this;
 	}
 
-	public withBusinessAreaID(businessAreaID: string): this {
+	public withBusinessArea(businessAreaID: string): this {
 		cy.task("log", `With decision business area consulted to pick ${businessAreaID}`);
 
 		cy.getByTestId(businessAreaID).click();

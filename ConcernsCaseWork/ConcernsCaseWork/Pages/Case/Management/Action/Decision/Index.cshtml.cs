@@ -15,7 +15,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		private IDecisionService _decisionService;
 		private ILogger _logger;
 
-		public DecisionModel Decision { get; set; }
+		public ViewDecisionModel Decision { get; set; }
 
 		public IndexPageModel(
 			IDecisionService decisionService,
@@ -39,7 +39,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 				var apiDecision = await _decisionService.GetDecision(urn, (int)decisionId);
 
-				Decision = DecisionMapping.ToDecisionModel(apiDecision);
+				Decision = DecisionMapping.ToViewDecisionModel(apiDecision);
 
 				ViewData[ViewDataConstants.BackButtonLink] = Decision.BackLink;
 			}
