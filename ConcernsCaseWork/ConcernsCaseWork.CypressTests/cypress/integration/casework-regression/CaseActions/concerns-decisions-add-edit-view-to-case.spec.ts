@@ -1,10 +1,12 @@
 import { Logger } from "../../../common/logger";
 import { EditDecisionPage } from "../../../pages/caseActions/decision/editDecisionPage";
 import { ViewDecisionPage } from "../../../pages/caseActions/decision/viewDecisionPage";
+import { CloseDecisionPage } from "../../../pages/caseActions/decision/closeDecisionPage";
 
 describe("User can add case actions to an existing case", () => {
 	const viewDecisionPage = new ViewDecisionPage();
 	const editDecisionPage = new EditDecisionPage();
+	const closeDecisionPage = new CloseDecisionPage();
 
 	beforeEach(() => {
 		cy.login();
@@ -24,7 +26,9 @@ describe("User can add case actions to an existing case", () => {
 			.withDateESFAMonth("25")
 			.withDateESFAYear("2022")
 			.saveDecision()
-			.hasValidationError("Date ESFA received request: 23-25-2022 is an invalid date");
+			.hasValidationError(
+				"Date ESFA received request: 23-25-2022 is an invalid date"
+			);
 
 		Logger.Log("Checking an incomplete date with notes exceeded");
 		editDecisionPage
@@ -33,7 +37,9 @@ describe("User can add case actions to an existing case", () => {
 			.withDateESFAYear("")
 			.withSupportingNotesExceedingLimit()
 			.saveDecision()
-			.hasValidationError("Date ESFA received request: Please enter a complete date DD MM YYYY")
+			.hasValidationError(
+				"Date ESFA received request: Please enter a complete date DD MM YYYY"
+			)
 			.hasValidationError("Notes must be 2000 characters or less");
 
 		Logger.Log("Creating Decision");
@@ -96,6 +102,34 @@ describe("User can add case actions to an existing case", () => {
 			.hasTotalAmountRequested("£130,000")
 			.hasTypeOfDecision("Qualified Floating Charge (QFC)")
 			.hasSupportingNotes("Testing Supporting Notes");
+	});
+
+	it.only(" Concern Decision - Creating a case, then creating a Decision, validating data is visible for this decision then Close the decision", function () {
+		cy.addConcernsDecisionsAddToCase();
+
+		Logger.Log("Adding note on the decision that will be closing ");
+		closeDecisionPage.withSupportingNotes("This is a test").saveDecision();
+
+		Logger.Log(
+			"Selecting the Decision from open cases and closing this decision"
+		);
+		closeDecisionPage
+			.selectCreatedDecision()
+			.continueRecordDecisionOutcome()
+			.closeDecision();
+
+		Logger.Log("Add close decision finalise supporting notes");
+		closeDecisionPage
+			.withFinaliseSupportingNotes("This is a test for closed decision")
+			.saveDecision();
+
+		Logger.Log(
+			"Selecting Decision from closed cases and verifying that the finalise note matches the above"
+		);
+
+		closeDecisionPage
+			.selectClosedActionDecision()
+			.hasSupportingNotes("This is a test for closed decision");
 	});
 
 	it("When Decisions is empty, View Behavior", function () {
