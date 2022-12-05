@@ -224,34 +224,37 @@
 	        }
                 </tbody>
             </table>
-        @if (Model.Decision.IsEditable)
-        {
-	        <div class="govuk-button-group">
-		        <a
-			        data-prevent-double-click="true"
-			        class="govuk-button govuk-!-margin-top-6"
-			        data-module="govuk-button"
-			        role="button"
-			        data-testid="close-decision-button"
-			        href="@Request.Path/close">
-			        Continue to close decision
-		        </a>
-	        </div>
         }
-        }
-        else if(Model.Decision.IsEditable)
-        {
-            <div class="govuk-button-group">
-                <a data-prevent-double-click="true"
-           class="govuk-button govuk-!-margin-top-6"
-           data-module="govuk-button"
-           role="button"
-           data-testid="continue-record-decision-button"
-           href="@Request.Path/outcome/addOrUpdate">
-                    Continue to record decision outcome
-                </a>
-            </div>
-        }
+	    @if (Model.Decision.IsEditable)
+	    {
+		    if (Model.Decision.Outcome == null)
+		    {
+			    <div class="govuk-button-group">
+				    <a data-prevent-double-click="true"
+				       class="govuk-button govuk-!-margin-top-6"
+				       data-module="govuk-button"
+				       role="button"
+				       data-testid="continue-record-decision-button"
+				       href="@Request.Path/outcome/addOrUpdate">
+					    Continue to record decision outcome
+				    </a>
+			    </div>
+		    }
+		    else
+		    {
+			    <div class="govuk-button-group">
+				    <a
+					    data-prevent-double-click="true"
+					    class="govuk-button govuk-!-margin-top-6"
+					    data-module="govuk-button"
+					    role="button"
+					    data-testid="close-decision-button"
+					    href="@Request.Path/close">
+					    Continue to close decision
+				    </a>
+			    </div>
+		    }
+	    }
     }
 </div>
 
