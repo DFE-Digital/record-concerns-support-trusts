@@ -1,3 +1,4 @@
+using ConcernsCaseWork.Data.Exceptions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 
 namespace ConcernsCaseWork.Data.Models
@@ -56,6 +57,29 @@ namespace ConcernsCaseWork.Data.Models
 
 	        currentDecision.UpdatedAt = now;
 	        currentDecision.Update(updatedDecision, now);
+        }
+        
+        public void CloseDecision(int decisionId, string notes, DateTimeOffset now)
+        {
+	        _ = decisionId > 0 ? decisionId : throw new ArgumentOutOfRangeException(nameof(decisionId));
+
+	        var currentDecision = Decisions.FirstOrDefault(x => x.DecisionId == decisionId);
+	        if (currentDecision == null)
+	        {
+		        throw new EntityNotFoundException(decisionId, nameof(Decision));
+	        }
+
+	        if (currentDecision.ClosedAt != null)
+	        {
+		        throw new StateChangeNotAllowedException($"Decision with id {decisionId} cannot be closed as it is already closed.");
+	        }
+	        
+	        if (currentDecision.Outcome == null)
+	        {
+		        throw new StateChangeNotAllowedException($"Decision with id {decisionId} cannot be closed as it does not have an Outcome.");
+	        }
+	        
+	        currentDecision.Close(notes, now);
         }
     }
 }

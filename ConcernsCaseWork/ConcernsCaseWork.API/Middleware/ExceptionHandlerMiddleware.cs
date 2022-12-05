@@ -1,6 +1,7 @@
 using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.UseCases.CaseActions.NTI.NoticeToImprove;
+using ConcernsCaseWork.Data.Exceptions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Logging;
 using System;
@@ -62,6 +63,8 @@ public class ExceptionHandlerMiddleware
 				return new StatusCodeMessagePrefix() { StatusCode = HttpStatusCode.Conflict, MessagePrefix = "Conflict" };
 			case NotFoundException:
 				return new StatusCodeMessagePrefix() { StatusCode = HttpStatusCode.NotFound, MessagePrefix = "Not Found" };
+			case OperationNotCompletedException:
+				return new StatusCodeMessagePrefix() { StatusCode = HttpStatusCode.BadRequest, MessagePrefix = "Operation not completed" };
 			default:
 				return new StatusCodeMessagePrefix() { StatusCode = HttpStatusCode.InternalServerError, MessagePrefix = "Internal Server Error" };
 		}

@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
@@ -17,22 +17,51 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 	internal class DecisionMappingTests
 	{
 		private readonly static Fixture _fixture = new();
-
+		
 		[Test]
-		public void ToActionSummary_ReturnsCorrectModel()
+		public void ToActionSummary_WhenDoesNotHaveOutcome_ReturnsCorrectModel()
 		{
 			var apiDecision = _fixture.Create<DecisionSummaryResponse>();
 			apiDecision.Status = DecisionStatus.InProgress;
-			apiDecision.CreatedAt = new DateTimeOffset(2023, 1, 4, 0, 0, 0, new TimeSpan());
-			apiDecision.ClosedAt = new DateTimeOffset(2023, 2, 24, 0, 0, 0, new TimeSpan());
+			apiDecision.CreatedAt = new DateTimeOffset(2021, 9, 5, 0, 0, 0, new TimeSpan());
+			apiDecision.ClosedAt = new DateTimeOffset(2024, 8, 30, 0, 0, 0, new TimeSpan());
+			apiDecision.Outcome = null;
 
 			var result = DecisionMapping.ToActionSummary(apiDecision);
 
 			result.StatusName.Should().Be("In progress");
-			result.OpenedDate.Should().Be("04-01-2023");
-			result.ClosedDate.Should().Be("24-02-2023");
+			result.OpenedDate.Should().Be("05-09-2021");
+			result.ClosedDate.Should().Be("30-08-2024");
 			result.Name.Should().Be($"Decision: {apiDecision.Title}");
 			result.RelativeUrl.Should().Be($"/case/{apiDecision.ConcernsCaseUrn}/management/action/decision/{apiDecision.DecisionId}");
+		}
+		
+		[Test]
+		[TestCase(DecisionOutcomeStatus.Declined, "Declined")]
+		[TestCase(DecisionOutcomeStatus.Approved, "Approved")]
+		[TestCase(DecisionOutcomeStatus.Withdrawn, "Withdrawn")]
+		[TestCase(DecisionOutcomeStatus.PartiallyApproved, "Partially approved")]
+		[TestCase(DecisionOutcomeStatus.ApprovedWithConditions, "Approved with conditions")]
+		public void ToActionSummary_WhenHasOutcome_ReturnsCorrectModel(DecisionOutcomeStatus outcomeStatus, string expectedStatusName)
+		{
+			var apiDecision = _fixture.Create<DecisionSummaryResponse>();
+			apiDecision.Status = DecisionStatus.InProgress;
+			apiDecision.Outcome = outcomeStatus;
+
+			var result = DecisionMapping.ToActionSummary(apiDecision);
+
+			result.StatusName.Should().Be(expectedStatusName);
+		}
+				
+		[Test]
+		public void ToActionSummary_WhenClosedAtIsNull_ReturnsCorrectModel()
+		{
+			var apiDecision = _fixture.Create<DecisionSummaryResponse>();
+			apiDecision.ClosedAt = null;
+
+			var result = DecisionMapping.ToActionSummary(apiDecision);
+
+			result.ClosedDate.Should().BeNull();
 		}
 
 		[TestCase(null, "No")]
