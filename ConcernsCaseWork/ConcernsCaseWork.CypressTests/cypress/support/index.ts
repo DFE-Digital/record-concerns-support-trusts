@@ -38,14 +38,16 @@ declare global {
             validateCreateCaseDetailsComponent(): Chainable<Element>;
             validateCreateCaseInitialDetails(): Chainable<Element>;
             validateCaseManagPage(): Chainable<Element>;
+            hasValidationError(): Chainable<Element>;
             closeAllOpenConcerns(): Chainable<Element>;
             closeSRMA(): Chainable<Element>;
             checkForExistingCase(force: boolean): Chainable<Element>;
             createSRMA(): Chainable<Element>;
             closeDecision(): Chainable<Element>;
             continueRecordDecisionOutcome(): Chainable<Element>;
-            closeDecision(): Chainable<Element>;
+            continueToCloseDecision(): Chainable<Element>;
             selectClosedActionDecision(): Chainable<Element>;
+            saveAndContinueOutcome(): Chainable<Element>;
             hasSupportingNotes(): Chainable<Element>;
             addConcernsDecisionsAddToCase(): Chainable<Element>;
             basicCreateCase(): Chainable<Element>;

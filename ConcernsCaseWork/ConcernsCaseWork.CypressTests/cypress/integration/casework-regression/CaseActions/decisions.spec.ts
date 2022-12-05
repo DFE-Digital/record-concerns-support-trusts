@@ -104,24 +104,40 @@ describe("User can add case actions to an existing case", () => {
 			.hasSupportingNotes("Testing Supporting Notes");
 	});
 
-	it.only(" Concern Decision - Creating a case, then creating a Decision, validating data is visible for this decision then Close the decision", function () {
+	it(" Concern Decision - Creating a case, then creating a Decision, validating data is visible for this decision then Close the decision", function () {
 		cy.addConcernsDecisionsAddToCase();
 
 		Logger.Log("Adding note on the decision that will be closing ");
 		closeDecisionPage.withSupportingNotes("This is a test").saveDecision();
 
 		Logger.Log(
-			"Selecting the Decision from open cases and closing this decision"
+			"Selecting the Decision from open cases and validating it before closing it"
 		);
 		closeDecisionPage
 			.selectCreatedDecision()
 			.continueRecordDecisionOutcome()
+			.saveAndContinueOutcome()
+			.hasValidationError("Select a decision outcome");
+
+		Logger.Log("Selecting decision outcome, saving and closing decision");
+		closeDecisionPage
+			.selectDecisionOutcome()
+			.saveAndContinueOutcome()
+			.selectCreatedDecision()
 			.closeDecision();
+			
+			Logger.Log("Validating notes can not exceed limits");
+		closeDecisionPage
+			.withSupportingNotesExceedingLimit()
+			.saveDecision()
+			.hasValidationErrorForNotes("Supporting Notes must be 2000 characters or less");
+
 
 		Logger.Log("Add close decision finalise supporting notes");
 		closeDecisionPage
 			.withFinaliseSupportingNotes("This is a test for closed decision")
 			.saveDecision();
+			
 
 		Logger.Log(
 			"Selecting Decision from closed cases and verifying that the finalise note matches the above"
@@ -130,6 +146,8 @@ describe("User can add case actions to an existing case", () => {
 		closeDecisionPage
 			.selectClosedActionDecision()
 			.hasSupportingNotes("This is a test for closed decision");
+
+			
 	});
 
 	it("When Decisions is empty, View Behavior", function () {
