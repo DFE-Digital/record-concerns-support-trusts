@@ -30,6 +30,7 @@ declare global {
             selectConcernType(): Chainable<Element>;
             addActionItemToCase(): Chainable<Element>;
             selectRiskToTrust(): Chainable<Element>;
+            selectCreatedDecision(): Chainable<Element>;
             enterConcernDetails(): Chainable<Element>;
             visitPage(slug: string): Chainable<Element>;
             editRiskToTrust(cta: string, rag: string): Chainable<Element>;
@@ -41,6 +42,11 @@ declare global {
             closeSRMA(): Chainable<Element>;
             checkForExistingCase(force: boolean): Chainable<Element>;
             createSRMA(): Chainable<Element>;
+            closeDecision(): Chainable<Element>;
+            continueRecordDecisionOutcome(): Chainable<Element>;
+            closeDecision(): Chainable<Element>;
+            selectClosedActionDecision(): Chainable<Element>;
+            hasSupportingNotes(): Chainable<Element>;
             addConcernsDecisionsAddToCase(): Chainable<Element>;
             basicCreateCase(): Chainable<Element>;
             checkForExistingCase(): Chainable<Element>;
