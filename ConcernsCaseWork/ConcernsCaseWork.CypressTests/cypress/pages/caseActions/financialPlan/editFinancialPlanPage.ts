@@ -1,6 +1,6 @@
-import { Logger } from "../../common/logger";
+import { Logger } from "../../../common/logger";
 
-export class FinancialPlanPage 
+export class EditFinancialPlanPage 
 {
     public hasHeadingText(heading: string): this
     {
@@ -124,15 +124,6 @@ export class FinancialPlanPage
         return this;
     }
 
-    public edit(): this
-    {
-        Logger.Log("Edit financial plan");
-
-        cy.getById("edit-financialplan-button").click();
-
-        return this;
-    }
-
     public hasValidationError(error: string): this
     {
         Logger.Log(`Has validation error ${error}`);
@@ -145,7 +136,7 @@ export class FinancialPlanPage
         return this;
     }
 
-    public hasEnteredStatus(status: string): this
+    public hasStatus(status: string): this
     {
         Logger.Log(`With entered status ${status}`);
 
@@ -156,7 +147,7 @@ export class FinancialPlanPage
         return this;
     }
 
-    public hasEnteredPlanRequestedDay(day: string): this
+    public hasPlanRequestedDay(day: string): this
     {
         Logger.Log(`Has entered plan requested day ${day}`);
 
@@ -165,7 +156,7 @@ export class FinancialPlanPage
         return this;
     }
 
-    public hasEnteredPlanRequestedMonth(month: string): this
+    public hasPlanRequestedMonth(month: string): this
     {
         Logger.Log(`Has entered plan requested month ${month}`);
 
@@ -174,7 +165,7 @@ export class FinancialPlanPage
         return this;
     }
 
-    public hasEnteredPlanRequestedYear(year: string): this
+    public hasPlanRequestedYear(year: string): this
     {
         Logger.Log(`Has entered plan requested year ${year}`);
 
@@ -183,7 +174,7 @@ export class FinancialPlanPage
         return this;
     }
 
-    public hasEnteredPlanReceivedDay(day: string): this
+    public hasPlanReceivedDay(day: string): this
     {
         Logger.Log(`Has entered plan received day ${day}`);
 
@@ -192,7 +183,7 @@ export class FinancialPlanPage
         return this;
     }
 
-    public hasEnteredPlanReceivedMonth(month: string): this
+    public hasPlanReceivedMonth(month: string): this
     {
         Logger.Log(`Has entered plan received month ${month}`);
 
@@ -201,7 +192,7 @@ export class FinancialPlanPage
         return this;
     }
 
-    public hasEnteredPlanReceivedYear(year: string): this
+    public hasPlanReceivedYear(year: string): this
     {
         Logger.Log(`Has entered plan received year ${year}`);
 
@@ -210,47 +201,11 @@ export class FinancialPlanPage
         return this;
     }
 
-    public hasEnteredNotes(notes: string): this
+    public hasNotes(notes: string): this
     {
         Logger.Log(`With entered notes ${notes}`);
 
         cy.getById("financial-plan-notes").should("contain.text", notes);
-
-        return this;
-    }
-
-    public hasStatus(status: string): this
-    {
-        Logger.Log(`Has status ${status}`);
-
-        cy.getByTestId("status-text").should("contain.text", status);
-
-        return this;
-    }
-
-    public hasPlanRequestedDate(date: string): this
-    {
-        Logger.Log(`Has plan requested date ${date}`);
-
-        cy.getByTestId("date-plan-requested-text").should("contain.text", date);
-
-        return this;
-    }
-
-    public hasPlanReceivedDate(date: string): this
-    {
-        Logger.Log(`Has plan received date ${date}`);
-
-        cy.getByTestId("date-plan-received-text").should("contain.text", date);
-
-        return this;
-    }
-
-    public hasNotes(notes: string): this
-    {
-        Logger.Log(`Has notes ${notes}`);
-
-        cy.getByTestId("notes-text");
 
         return this;
     }
