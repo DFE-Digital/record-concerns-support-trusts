@@ -18,10 +18,25 @@
     }
     else
     {
-        <h1 class="govuk-heading-l" data-testid="decision-heading">
-            <span class="govuk-caption-m">Decision ID @Model.Decision.DecisionId</span>
-	        Decision
-        </h1>
+	    <h1 class="govuk-heading-l" data-testid="decision-heading">
+		    <span class="govuk-caption-m">Decision ID @Model.Decision.DecisionId</span>
+		    Decision
+	    </h1>
+	    @if (Model.Decision.IsEditable)
+	    {
+		    if (Model.Decision.Outcome != null)
+		    {
+			    <div class="govuk-hint" data-testid="decision-extra-info">
+				    Review information before editing, returning back to case or continuing to close decision.
+			    </div>
+		    }
+		    else
+		    {
+			    <div class="govuk-hint" data-testid="decision-extra-info">
+				    Review information before editing, going back to case overview or continuing to record decision outcome.
+			    </div>
+		    }
+	    }
 
 	    <table class="govuk-table">
             <tbody class="govuk-table__body">
