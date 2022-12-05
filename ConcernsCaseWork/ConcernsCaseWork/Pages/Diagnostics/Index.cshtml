@@ -1,0 +1,22 @@
+﻿@page
+@model ConcernsCaseWork.Pages.Diagnostics.IndexModel
+@using System.Globalization;
+@{
+}
+
+<div class="govuk-width-container">
+    <partial name="_BannerError" />
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">Diagnostics</h1>
+	        @if (Model.Env != string.Empty)
+            {
+                <div>Environment: @Model.Env</div>
+            }
+	        <div>Release Tag: @Model.ReleaseTag</div>
+	        <div>Current Culture: @CultureInfo.CurrentCulture.Name</div>
+	        <div>Current UI Culture: @CultureInfo.CurrentUICulture.Name</div>
+	        <div>UTC Time: @DateTime.UtcNow</div>
+        </div>
+    </div>
+</div>
