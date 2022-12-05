@@ -91,6 +91,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
                 .DefinedTypes
                 .Where(x =>
                     x.IsClass &&
+                    x.GenericTypeParameters.Length == 0 &&
                     x.Namespace != null
                     && x.Namespace.Equals(typeToFind.Namespace))
 					

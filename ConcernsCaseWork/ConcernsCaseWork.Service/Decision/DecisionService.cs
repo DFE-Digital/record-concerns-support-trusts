@@ -1,12 +1,10 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
-using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace ConcernsCaseWork.Service.Decision
 {
@@ -103,6 +101,19 @@ namespace ConcernsCaseWork.Service.Decision
 			var result = await Task.FromResult(response);
 			return result;
 
+		}
+		
+		public async Task<CloseDecisionResponse> CloseDecision(int caseUrn, int decisionId, CloseDecisionRequest closeDecisionRequest)
+		{
+			_logger.LogMethodEntered();
+
+			var endpoint = $"/{EndpointsVersion}/concerns-cases/{caseUrn}/decisions/{decisionId}/close";
+
+			var response = await Patch<CloseDecisionRequest, CloseDecisionResponse>(endpoint, closeDecisionRequest);
+
+			_logger.LogInformation("Decision closed. caseUrn: {ResponseConcernsCaseUrn}, DecisionId:{ResponseDecisionId}", response.CaseUrn, response.DecisionId);
+			
+			return response;
 		}
 	}
 }
