@@ -1,8 +1,10 @@
-﻿using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
+using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Factories.Concerns.Decisions;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
+using ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome;
 using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Gateways;
 using System.Net.Mime;
@@ -20,6 +22,24 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 				foreach (var @interface in type.GetInterfaces())
 				{
 					if (@interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IUseCase<,>))
+					{
+						services.AddScoped(@interface, type);
+					}
+				}
+			}
+
+			return services;
+		}
+		
+		public static IServiceCollection AddUseCaseAsyncs(this IServiceCollection services)
+		{
+			var allTypes = typeof(IUseCaseAsync<,>).Assembly.GetTypes();
+
+			foreach (var type in allTypes)
+			{
+				foreach (var @interface in type.GetInterfaces())
+				{
+					if (@interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IUseCaseAsync<,>))
 					{
 						services.AddScoped(@interface, type);
 					}
@@ -59,11 +79,17 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<INTIUnderConsiderationGateway, NTIUnderConsiderationGateway>();
 			services.AddScoped<INTIWarningLetterGateway, NTIWarningLetterGateway>();
 			services.AddScoped<INoticeToImproveGateway, NoticeToImproveGateway>();
+			services.AddScoped<IDecisionOutcomeGateway, DecisionOutcomeGateway>();
 
 			services.AddScoped<IGetConcernsCaseworkTeam, GetConcernsCaseworkTeam>();
 			services.AddScoped<IGetConcernsCaseworkTeamOwners, GetConcernsCaseworkTeamOwners>();
 			services.AddScoped<IUpdateConcernsCaseworkTeam, UpdateConcernsCaseworkTeam>();
 			services.AddScoped<IConcernsTeamCaseworkGateway, ConcernsTeamCaseworkGateway>();
+
+			services.AddScoped<IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse>, CreateDecisionOutcome>();
+			// TODO: Can remove this registration if we use DecisionUseCaseRequestWrapper for all IUseCaseAsync
+			services.AddScoped<IUseCaseAsync<DecisionUseCaseRequestParams<CloseDecisionRequest>, CloseDecisionResponse>, CloseDecision>();
+			services.AddScoped<IUseCaseAsync<UpdateDecisionOutcomeUseCaseParams, UpdateDecisionOutcomeResponse>, UpdateDecisionOutcome>();
 
 			// concerns factories
 			services.AddScoped<IUseCaseAsync<CreateDecisionRequest, CreateDecisionResponse>, CreateDecision>();
@@ -75,6 +101,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IGetDecisionsSummariesFactory, GetDecisionsSummariesFactory>();
 			services.AddScoped<IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest details), UpdateDecisionResponse>, UpdateDecision>();
 			services.AddScoped<IUpdateDecisionResponseFactory, UpdateDecisionResponseFactory>();
+			services.AddScoped<ICloseDecisionResponseFactory, CloseDecisionResponseFactory>();
 
 			return services;
 		}

@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome;
 
 namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
 {
@@ -43,8 +44,8 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
         [Fact]
         public void All_Methods_Guard_Against_Null()
         {
-            // Arrange
-            var requestTypes = GetTypes();
+			// Arrange
+			var requestTypes = GetTypes();
             var fixture = CreateFixture();
 
             foreach (var typeInfo in requestTypes)
@@ -90,8 +91,10 @@ namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
                 .DefinedTypes
                 .Where(x =>
                     x.IsClass &&
+                    x.GenericTypeParameters.Length == 0 &&
                     x.Namespace != null
-                    && x.Namespace.StartsWith(typeToFind.Namespace))
+                    && x.Namespace.Equals(typeToFind.Namespace))
+					
                 .ToArray();
         }
 

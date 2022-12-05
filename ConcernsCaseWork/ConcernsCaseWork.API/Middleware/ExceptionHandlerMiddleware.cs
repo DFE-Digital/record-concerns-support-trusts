@@ -1,4 +1,10 @@
+using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.API.UseCases.CaseActions.NTI.NoticeToImprove;
+using ConcernsCaseWork.Data.Exceptions;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Net;
 
 namespace ConcernsCaseWork.API.Middleware;
@@ -19,20 +25,63 @@ public class ExceptionHandlerMiddleware
 		}
 		catch (Exception ex)
 		{
-			logger.LogError($"Something went wrong: {ex}");
-			await HandleExceptionAsync(httpContext, ex, logger);
+			var messageWithPrefix = GetStatusCodeWithPrefix(ex);
+
+			var parameters = new HttpExceptionParams()
+			{
+				Context = httpContext,
+				Logger = logger,
+				Exception = ex,
+				MessagePrefix = messageWithPrefix.MessagePrefix,
+				StatusCode = messageWithPrefix.StatusCode
+			};
+
+			await HandleHttpException(parameters);
 		}
 	}
-	private async Task HandleExceptionAsync(HttpContext context, Exception exception, ILogger<ExceptionHandlerMiddleware> logger)
+
+	private async Task HandleHttpException(HttpExceptionParams parameters)
 	{
-		logger.LogError(exception.Message);
-		logger.LogError(exception.StackTrace);
-		context.Response.ContentType = "application/json";
-		context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
-		await context.Response.WriteAsync(new ErrorResponse()
+		parameters.Logger.LogError($"{parameters.MessagePrefix}: {parameters.Exception}");
+
+		parameters.Logger.LogError(parameters.Exception.Message);
+		parameters.Logger.LogError(parameters.Exception.StackTrace);
+		parameters.Context.Response.ContentType = "application/json";
+		parameters.Context.Response.StatusCode = (int)parameters.StatusCode;
+		await parameters.Context.Response.WriteAsync(new ErrorResponse()
 		{
-			StatusCode = context.Response.StatusCode,
-			Message = "Internal Server Error: " + exception.Message
+			StatusCode = parameters.Context.Response.StatusCode,
+			Message = $"{parameters.MessagePrefix}: {parameters.Exception.Message}"
 		}.ToString());
+	}
+
+	private StatusCodeMessagePrefix GetStatusCodeWithPrefix(Exception ex)
+	{
+		switch (ex)
+		{
+			case ResourceConflictException:
+				return new StatusCodeMessagePrefix() { StatusCode = HttpStatusCode.Conflict, MessagePrefix = "Conflict" };
+			case NotFoundException:
+				return new StatusCodeMessagePrefix() { StatusCode = HttpStatusCode.NotFound, MessagePrefix = "Not Found" };
+			case OperationNotCompletedException:
+				return new StatusCodeMessagePrefix() { StatusCode = HttpStatusCode.BadRequest, MessagePrefix = "Operation not completed" };
+			default:
+				return new StatusCodeMessagePrefix() { StatusCode = HttpStatusCode.InternalServerError, MessagePrefix = "Internal Server Error" };
+		}
+	}
+
+	private class StatusCodeMessagePrefix
+	{
+		public HttpStatusCode StatusCode { get; set; }
+		public string MessagePrefix { get; set; }
+	}
+
+	private class HttpExceptionParams
+	{
+		public HttpContext Context { get; set; }
+		public Exception Exception { get; set; }
+		public ILogger<ExceptionHandlerMiddleware> Logger { get; set; }
+		public HttpStatusCode StatusCode { get; set; }
+		public string MessagePrefix { get; set; }
 	}
 }
