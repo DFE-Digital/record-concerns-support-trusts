@@ -22,22 +22,43 @@ export class CloseDecisionPage
 		return this;
 	}
 
-	public closeDecision(): this {
+	public withSupportingNotesExceedingLimit(): this {
+		cy.task("log", `With Supporting Notes exceeding limit`);
+
+		cy.getById("SupportingNotes").clear().invoke("val", "x".repeat(2001));
+
+		return this;
+	}
+
+	public continueToCloseDecision(): this {
 		cy.get('#close-decision-button').click();
+
+		return this;
+	}
+
+	public closeDecision(): this {
+		cy.getByTestId('close-decision-button').click();
 
 		return this;
 	}
 
 	
 	public continueRecordDecisionOutcome(): this {
-		cy.get('#continue-record-decision-button').click();
+		cy.getByTestId('continue-record-decision-button').click();
 
 		return this;
 	}
 	
+	public saveAndContinueOutcome(): this {
+		cy.getByTestId('add-decision-outcome-button').click();
+
+
+
+		return this;
+	}
 	
 		public selectDecisionOutcome(): this {
-		cy.get('#outcome').click();
+		cy.getByTestId('Approved').click();
 
 		return this;
 	}
@@ -53,6 +74,8 @@ export class CloseDecisionPage
 	}
 	
 	
+
+
 	public selectClosedActionDecision(): this {
 		cy.get("#close-case-actions td")
 	.should("contain.text", "Decision: No Decision Types")
@@ -63,6 +86,28 @@ export class CloseDecisionPage
 		return this;
 	}
 	
+	public hasValidationError(message: string): this {
+		cy.task("log", `Has Validation error ${message}`);
+
+		cy.get("#decision-error-list").should(
+			"contain.text",
+			message
+		);
+
+		return this;
+	}
+
+	public hasValidationErrorForNotes(message: string): this {
+		cy.task("log", `Has Validation error ${message}`);
+
+		cy.get("#errorSummary").should(
+			"contain.text",
+			message
+		);
+
+		return this;
+	}
+
 	
   
 
