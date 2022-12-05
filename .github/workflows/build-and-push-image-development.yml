@@ -42,11 +42,11 @@ jobs:
         run: make build-frontend
 
       - name: Push image
-        uses: docker/build-push-action@v3
-        build-args: COMMIT_SHA=${GITHUB_SHA}        
+        uses: docker/build-push-action@v3        
         with:
           context: .
           file: ./Dockerfile.gpaas-azure-migration
+          build-args: COMMIT_SHA=${GITHUB_SHA}
           push: true
           tags: ${{ steps.prepare-tags.outputs.tags }}
 
