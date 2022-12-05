@@ -61,6 +61,8 @@ jobs:
         with:
           context: .
           file: ./Dockerfile.gpaas-azure-migration
-          build-args: ASPNET_IMAGE_TAG=6.0.9-bullseye-slim-amd64
+          build-args: |
+            ASPNET_IMAGE_TAG=6.0.9-bullseye-slim-amd64
+            COMMIT_SHA=${GITHUB_SHA}
           push: true
           tags: ${{ steps.prepare-tags.outputs.tags }}
