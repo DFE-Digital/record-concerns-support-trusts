@@ -43,6 +43,7 @@ jobs:
 
       - name: Push image
         uses: docker/build-push-action@v3
+        build-args: COMMIT_SHA=${GITHUB_SHA}        
         with:
           context: .
           file: ./Dockerfile.gpaas-azure-migration
