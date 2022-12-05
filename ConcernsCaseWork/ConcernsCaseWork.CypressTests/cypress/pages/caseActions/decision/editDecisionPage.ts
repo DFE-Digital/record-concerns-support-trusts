@@ -106,7 +106,7 @@ export class EditDecisionPage
 		return this;
 	}
 
-	public saveDecision(): this {
+	public save(): this {
 		cy.get('#add-decision-button').click();
 
 		return this;

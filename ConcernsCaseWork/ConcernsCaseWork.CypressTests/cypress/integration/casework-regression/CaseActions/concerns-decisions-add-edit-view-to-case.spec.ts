@@ -23,7 +23,7 @@ describe("User can add case actions to an existing case", () => {
 			.withDateESFADay("23")
 			.withDateESFAMonth("25")
 			.withDateESFAYear("2022")
-			.saveDecision()
+			.save()
 			.hasValidationError("Date ESFA received request: 23-25-2022 is an invalid date");
 
 		Logger.Log("Checking an incomplete date with notes exceeded");
@@ -32,7 +32,7 @@ describe("User can add case actions to an existing case", () => {
 			.withDateESFAMonth("12")
 			.withDateESFAYear("")
 			.withSupportingNotesExceedingLimit()
-			.saveDecision()
+			.save()
 			.hasValidationError("Date ESFA received request: Please enter a complete date DD MM YYYY")
 			.hasValidationError("Notes must be 2000 characters or less");
 
@@ -49,7 +49,7 @@ describe("User can add case actions to an existing case", () => {
 			.withTypeOfDecisionID("Section128")
 			.withTotalAmountRequested("£140,000")
 			.withSupportingNotes("These are some supporting notes!")
-			.saveDecision();
+			.save();
 
 		Logger.Log("Selecting Decision from open actions");
 		cy.get("#open-case-actions td")
@@ -83,7 +83,7 @@ describe("User can add case actions to an existing case", () => {
 			.withTypeOfDecisionID("QualifiedFloatingCharge")
 			.withTotalAmountRequested("£130,000")
 			.withSupportingNotes("Testing Supporting Notes")
-			.saveDecision();
+			.save();
 
 		Logger.Log("Viewing Edited Decision");
 		viewDecisionPage
@@ -101,7 +101,7 @@ describe("User can add case actions to an existing case", () => {
 		Logger.Log("Creating Empty Decision");
 		cy.addConcernsDecisionsAddToCase();
 
-		editDecisionPage.saveDecision();
+		editDecisionPage.save();
 
 		cy.get("#open-case-actions td")
 			.should("contain.text", "Decision: No Decision Types")

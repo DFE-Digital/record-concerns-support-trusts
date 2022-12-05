@@ -127,5 +127,11 @@ class CaseManagementPage {
             return splitText.trim();
         });   
 	}
+
+    hasValidationError(error) {
+        cy.getByTestId("case-closure-validation-errors").should("contain.text", error);
+
+        return this;
+    }
 }
     export default new CaseManagementPage();
