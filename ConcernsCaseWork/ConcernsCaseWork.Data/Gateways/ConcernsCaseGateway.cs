@@ -1,5 +1,6 @@
 using ConcernsCaseWork.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ConcernsCaseWork.Data.Gateways
 {
@@ -34,11 +35,14 @@ namespace ConcernsCaseWork.Data.Gateways
 
         public ConcernsCase GetConcernsCaseByUrn(int urn, bool withChangeTracking = false)
         {
-	        var exp = _concernsDbContext.ConcernsCase
-		        .Include(x => x.Decisions)
-		        .ThenInclude(x => x.DecisionTypes);
+			var exp = _concernsDbContext.ConcernsCase
+				.Include(x => x.Decisions)
+				.ThenInclude(x => x.DecisionTypes)
+				.Include(x => x.Decisions)
+				.ThenInclude(x => x.Outcome)
+				.ThenInclude(x => x.BusinessAreasConsulted);
 
-	        if (!withChangeTracking)
+			if (!withChangeTracking)
 	        {
 		        exp.AsNoTracking();
 	        }

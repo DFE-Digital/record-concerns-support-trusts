@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Logging;
@@ -60,6 +61,59 @@ namespace ConcernsCaseWork.Service.Decision
 
 			_logger.LogInformation($"Decision updated. caseUrn: {putResponse.ConcernsCaseUrn}, DecisionId:{putResponse.DecisionId}");
 			return putResponse;
+		}
+
+		public async Task<CreateDecisionOutcomeResponse> PostDecisionOutcome(
+			long caseUrn,
+			long decisionId,
+			CreateDecisionOutcomeRequest createDecisionOutcomeRequest)
+		{
+			_logger.LogMethodEntered();
+
+			// post
+			var postResponse = await Post<CreateDecisionOutcomeRequest, CreateDecisionOutcomeResponse>($"/{EndpointsVersion}/concerns-cases/{caseUrn}/decisions/{decisionId}/outcome", createDecisionOutcomeRequest);
+
+			_logger.LogInformation($"Decision outcome created. Case: {caseUrn} DecisionId: {postResponse.DecisionId}, OutcomeID:{postResponse.DecisionOutcomeId}");
+
+			return postResponse;
+		}
+
+		public async Task<GetDecisionOutcomeResponse> GetDecisionOutcome(long decisionId, long outcomeId)
+		{
+			_logger.LogMethodEntered();
+			//var result = await Get<GetDecisionOutcomeResponse>($"/{EndpointsVersion}/concerns-cases/{decisionId}/decisions/{outcomeId}");
+
+			var response = new GetDecisionOutcomeResponse()
+			{
+				DecisionId = decisionId,
+				DecisionOutcomeId = outcomeId,
+				DecisionOutcomeStatus = DecisionOutcomeStatus.PartiallyApproved,
+				TotalAmountApproved = 233232,
+				DecisionMadeDate = DateTimeOffset.Now,
+				DecisionTakeEffectDate = DateTimeOffset.Now,
+				Authoriser = DecisionOutcomeAuthorizer.G7,
+				BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea> { DecisionOutcomeBusinessArea.BusinessPartner, DecisionOutcomeBusinessArea.Funding }
+			};
+
+			_logger.LogInformation($"Retrieved decision outcome {outcomeId} for decisionID {decisionId}");
+			//return result;
+
+			var result = await Task.FromResult(response);
+			return result;
+
+		}
+		
+		public async Task<CloseDecisionResponse> CloseDecision(int caseUrn, int decisionId, CloseDecisionRequest closeDecisionRequest)
+		{
+			_logger.LogMethodEntered();
+
+			var endpoint = $"/{EndpointsVersion}/concerns-cases/{caseUrn}/decisions/{decisionId}/close";
+
+			var response = await Patch<CloseDecisionRequest, CloseDecisionResponse>(endpoint, closeDecisionRequest);
+
+			_logger.LogInformation("Decision closed. caseUrn: {ResponseConcernsCaseUrn}, DecisionId:{ResponseDecisionId}", response.CaseUrn, response.DecisionId);
+			
+			return response;
 		}
 	}
 }

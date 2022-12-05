@@ -1,8 +1,10 @@
 import { Logger } from "../../../common/logger";
-import { DecisionPage } from "../../../pages/caseActions/decisionPage"
+import { EditDecisionPage } from "../../../pages/caseActions/decision/editDecisionPage";
+import { ViewDecisionPage } from "../../../pages/caseActions/decision/viewDecisionPage";
 
 describe("User can add case actions to an existing case", () => {
-	const decisionPage: DecisionPage = new DecisionPage();
+	const viewDecisionPage = new ViewDecisionPage();
+	const editDecisionPage = new EditDecisionPage();
 
 	beforeEach(() => {
 		cy.login();
@@ -13,29 +15,29 @@ describe("User can add case actions to an existing case", () => {
 		cy.clearCookies();
 	});
 
-	it(" Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
+	it("Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
 		cy.addConcernsDecisionsAddToCase();
 
 		Logger.Log("Checking an invalid date");
-		decisionPage
+		editDecisionPage
 			.withDateESFADay("23")
 			.withDateESFAMonth("25")
 			.withDateESFAYear("2022")
 			.saveDecision()
-			.hasValidationError("23-25-2022 is an invalid date");
+			.hasValidationError("Date ESFA received request: 23-25-2022 is an invalid date");
 
 		Logger.Log("Checking an incomplete date with notes exceeded");
-		decisionPage
+		editDecisionPage
 			.withDateESFADay("23")
 			.withDateESFAMonth("12")
 			.withDateESFAYear("")
 			.withSupportingNotesExceedingLimit()
 			.saveDecision()
-			.hasValidationError("Please enter a complete date DD MM YYYY")
+			.hasValidationError("Date ESFA received request: Please enter a complete date DD MM YYYY")
 			.hasValidationError("Notes must be 2000 characters or less");
 
 		Logger.Log("Creating Decision");
-		decisionPage
+		editDecisionPage
 			.withCrmEnquiry("444")
 			.withRetrospectiveRequest(false)
 			.withSubmissionRequired(true)
@@ -56,7 +58,7 @@ describe("User can add case actions to an existing case", () => {
 			.click();
 
 		Logger.Log("Viewing Decision");
-		decisionPage
+		viewDecisionPage
 			.hasCrmEnquiry("444")
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("Yes")
@@ -70,7 +72,7 @@ describe("User can add case actions to an existing case", () => {
 			.editDecision();
 
 		Logger.Log("Editing Decision");
-		decisionPage
+		editDecisionPage
 			.withCrmEnquiry("777")
 			.withRetrospectiveRequest(false)
 			.withSubmissionRequired(true)
@@ -84,7 +86,7 @@ describe("User can add case actions to an existing case", () => {
 			.saveDecision();
 
 		Logger.Log("Viewing Edited Decision");
-		decisionPage
+		viewDecisionPage
 			.hasCrmEnquiry("777")
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("Yes")
@@ -99,7 +101,7 @@ describe("User can add case actions to an existing case", () => {
 		Logger.Log("Creating Empty Decision");
 		cy.addConcernsDecisionsAddToCase();
 
-		decisionPage.saveDecision();
+		editDecisionPage.saveDecision();
 
 		cy.get("#open-case-actions td")
 			.should("contain.text", "Decision: No Decision Types")
@@ -107,7 +109,7 @@ describe("User can add case actions to an existing case", () => {
 			.click();
 
 		Logger.Log("Viewing Empty Decision");
-		decisionPage
+		viewDecisionPage
 			.hasCrmEnquiry("Empty")
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("No")

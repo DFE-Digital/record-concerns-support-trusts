@@ -233,6 +233,11 @@
 								<h2 class="govuk-heading-m">What type of decision is it?</h2>
 							</legend>
 
+							<div id="decision-type-hint" class="govuk-hint">
+								Select all types that apply. Find more information on decision types in <a href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Submissions%20templates%20and%20guidance.aspx" target="_blank">AMSD Knowledge</a>
+							</div>
+							<br>
+
 							@foreach (var decisionTypeCheckbox in Model.DecisionTypeCheckBoxes)
 							{
 								var isChecked = Model.Decision.DecisionTypes.Contains(decisionTypeCheckbox.DecisionType);

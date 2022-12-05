@@ -184,6 +184,194 @@ namespace ConcernsCaseWork.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome", b =>
+                {
+                    b.Property<int>("DecisionOutcomeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DecisionOutcomeId"), 1L, 1);
+
+                    b.Property<int?>("Authorizer")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("DecisionEffectiveFromDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("DecisionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("DecisionMadeDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("TotalAmount")
+                        .HasColumnType("money");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("DecisionOutcomeId");
+
+                    b.HasIndex("DecisionId")
+                        .IsUnique();
+
+                    b.ToTable("DecisionOutcome", "concerns");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeAuthorizer", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DecisionOutcomeAuthorizer", "concerns");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "G7"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "G6"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "RegionalSchoolsCommissioner"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "DeputyDirector"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "CountersigningDeputyDirector"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Director"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Minister"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeBusinessArea", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DecisionOutcomeBusinessArea", "concerns");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "SchoolsFinancialSupportAndOversight"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "BusinessPartner"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Capital"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Funding"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "ProviderMarketOversight"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "RegionsGroup"
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeBusinessAreaMapping", b =>
+                {
+                    b.Property<int>("DecisionOutcomeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DecisionOutcomeBusinessId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DecisionOutcomeId", "DecisionOutcomeBusinessId");
+
+                    b.ToTable("DecisionOutcomeBusinessAreaMapping", "concerns");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DecisionOutcomeStatus", "concerns");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Approved"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "ApprovedWithConditions"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "PartiallyApproved"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Withdrawn"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Declined"
+                        });
+                });
+
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.TeamCasework.ConcernsCaseworkTeam", b =>
                 {
                     b.Property<string>("Id")
@@ -2274,6 +2462,24 @@ namespace ConcernsCaseWork.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome", b =>
+                {
+                    b.HasOne("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Decision", null)
+                        .WithOne("Outcome")
+                        .HasForeignKey("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome", "DecisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeBusinessAreaMapping", b =>
+                {
+                    b.HasOne("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome", null)
+                        .WithMany("BusinessAreasConsulted")
+                        .HasForeignKey("DecisionOutcomeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.TeamCasework.ConcernsCaseworkTeamMember", b =>
                 {
                     b.HasOne("ConcernsCaseWork.Data.Models.Concerns.TeamCasework.ConcernsCaseworkTeam", null)
@@ -2523,6 +2729,13 @@ namespace ConcernsCaseWork.Data.Migrations
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Decision", b =>
                 {
                     b.Navigation("DecisionTypes");
+
+                    b.Navigation("Outcome");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome", b =>
+                {
+                    b.Navigation("BusinessAreasConsulted");
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.TeamCasework.ConcernsCaseworkTeam", b =>
