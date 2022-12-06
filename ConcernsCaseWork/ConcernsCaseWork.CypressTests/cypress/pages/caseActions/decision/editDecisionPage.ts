@@ -101,7 +101,7 @@ export class EditDecisionPage
 	public withSupportingNotesExceedingLimit(): this {
 		cy.task("log", `With Supporting Notes exceeding limit`);
 
-		cy.getById("case-decision-notes").clear().invoke("val", "x".repeat(2001));
+		cy.getById("case-decision-notes").clear().invoke("val", "x 1".repeat(1001));
 
 		return this;
 	}
