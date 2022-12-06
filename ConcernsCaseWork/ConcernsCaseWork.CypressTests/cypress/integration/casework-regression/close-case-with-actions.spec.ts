@@ -19,6 +19,9 @@ import { ViewNtiWarningLetterPage } from "../../pages/caseActions/ntiWarningLett
 import { EditNoticeToImprovePage } from "../../pages/caseActions/noticeToImprove/editNoticeToImprovePage";
 import { ViewNoticeToImprovePage } from "../../pages/caseActions/noticeToImprove/viewNoticeToImprovePage";
 import { CloseNoticeToImprovePage } from "../../pages/caseActions/noticeToImprove/closeNoticeToImprovePage";
+import { ViewDecisionPage } from "../../pages/caseActions/decision/viewDecisionPage";
+import { CloseDecisionPage } from "../../pages/caseActions/decision/closeDecisionPage";
+import { DecisionOutcomePage } from "../../pages/caseActions/decision/decisionOutcomePage";
 
 describe("Testing closing of cases when there are case actions and concerns", () =>
 {
@@ -27,6 +30,9 @@ describe("Testing closing of cases when there are case actions and concerns", ()
     const closeFinancialPlanPage = new CloseFinancialPlanPage();
 
     const editDecisionPage =  new EditDecisionPage();
+    const viewDecisionPage = new ViewDecisionPage();
+    const closeDecisionPage = new CloseDecisionPage();
+    const decisionOutcomePage = new DecisionOutcomePage();
 
     const editSrmaPage = new EditSrmaPage();
     const viewSrmaPage = new ViewSrmaPage();
@@ -143,6 +149,14 @@ describe("Testing closing of cases when there are case actions and concerns", ()
         AddToCasePage.getAddToCaseBtn().click();
         editDecisionPage.save();
 
+        cy.get("#open-case-actions td")
+            .getByTestId("Decision: No Decision Types").click();
+
+        viewDecisionPage.createDecisionOutcome()
+        decisionOutcomePage
+            .withDecisionOutcomeStatus("Approved")
+            .saveDecisionOutcome();
+
         // SRMA
         CaseManagementPage.getAddToCaseBtn().click();
         AddToCasePage.addToCase('Srma')
@@ -196,6 +210,10 @@ describe("Testing closing of cases when there are case actions and concerns", ()
         closeNtiUnderConsiderationPage
             .withReason("No further action being taken")
             .close();
+
+        Logger.Log("Completing decision");
+        cy.get("#open-case-actions td")
+            .getByTestId("Decision: No Decision Types").click();
     }
 
     function closeConcern()
