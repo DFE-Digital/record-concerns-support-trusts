@@ -98,7 +98,7 @@
 					</td>
 					<td class="govuk-table__cell govuk-table__header__right">
 						@{
-							RenderLink(Model.SRMAModel.DateOffered, "SRMA date offered", $@"{Request.Path}\offeredDate");
+							RenderLink(Model.SRMAModel.DateOffered, "date trust was contacted about SRMA", $@"{Request.Path}\offeredDate");
 						}
 					</td>
 				</tr>
@@ -170,7 +170,7 @@
 					</td>
 					<td class="govuk-table__cell govuk-table__header__right">
 						@{
-							RenderLink(Model.SRMAModel.DateVisitStart, "SRMA Dates of visit", $@"{Request.Path}\visitdates");
+							RenderLink(Model.SRMAModel.DateVisitStart, "SRMA dates of visit", $@"{Request.Path}\visitdates");
 						}
 					</td>
 				</tr>
@@ -195,7 +195,7 @@
 					</td>
 					<td class="govuk-table__cell govuk-table__header__right">
 						@{
-							RenderLink(Model.SRMAModel.DateReportSentToTrust, "SRMA Date report sent to trust", $@"{Request.Path}\datereportsent");
+							RenderLink(Model.SRMAModel.DateReportSentToTrust, "date SRMA report sent to trust", $@"{Request.Path}\datereportsent");
 						}
 					</td>
 				</tr>
@@ -210,7 +210,7 @@
 					</td>
 					<td class="govuk-table__cell govuk-table__header__right">
 						@{
-							RenderLink(Model.SRMAModel.Notes, "SRMA Notes", $@"{Request.Path}\notes");
+							RenderLink(Model.SRMAModel.Notes, "SRMA notes", $@"{Request.Path}\notes");
 						}
 					</td>
 				</tr>
@@ -243,7 +243,8 @@
 
     private void RenderLink<T>(T value, string fieldName, string url)
     {
-        <a class="govuk-link" href="@url">
+	    var ariaLabel = "Change " + fieldName;
+        <a class="govuk-link" href="@url" aria-label="@ariaLabel">
             @(IsEmpty(value) ? "Add" : "Edit")
             <span class="govuk-visually-hidden">@fieldName</span>
         </a>
