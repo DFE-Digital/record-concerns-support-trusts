@@ -154,7 +154,7 @@
 										            <div class="govuk-!-padding-bottom-1">
 											            @if (Model.IsEditableCase)
 											            {
-												            <a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/edit_rating" aria-label="Change @concern.TypeModel.TypeDisplay rating">Edit</a>
+												            <a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/edit_rating" aria-label="Change @concern.TypeModel.TypeDisplay rating" data-testid="edit-concern">Edit</a>
 											            }
 										            </div>
 									            }
@@ -316,7 +316,7 @@
 							{
 								<tr class="govuk-table__row">
 									<td class="govuk-table__cell">
-									<a href="@action.RelativeUrl" class="govuk-link govuk-link-no-visited-state">
+									<a data-testid="@action.Name" href="@action.RelativeUrl" class="govuk-link govuk-link-no-visited-state">
 										<span>@action.Name</span>
 										</a>
 									</td>

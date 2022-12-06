@@ -24,7 +24,7 @@ describe("Testing decision outcome", () =>{
 		cy.addConcernsDecisionsAddToCase();
 
 		editDecisionPage
-            .saveDecision();
+            .save();
 
 		cy.get("#open-case-actions td")
 			.should("contain.text", "Decision: No Decision Types")
@@ -108,7 +108,7 @@ describe("Testing decision outcome", () =>{
 		cy.addConcernsDecisionsAddToCase();
 
 		editDecisionPage
-            .saveDecision();
+            .save();
 
         cy.get("#open-case-actions td")
 			.should("contain.text", "Decision: No Decision Types")

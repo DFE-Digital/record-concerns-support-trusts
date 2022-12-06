@@ -137,6 +137,16 @@ namespace ConcernsCaseWork.Services.Decisions
 			return result;
 		}
 
+		public static DecisionSummaryModel ToDecisionSummaryModel(DecisionSummaryResponse apiDecision)
+		{
+			var result = new DecisionSummaryModel()
+			{
+				ClosedAt = apiDecision.ClosedAt?.Date
+			};
+
+			return result;
+		}
+
 		private static DateTime? ParseDate(OptionalDateModel date)
 		{
 			if (date.IsEmpty())

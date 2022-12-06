@@ -27,7 +27,7 @@ describe("User can add case actions to an existing case", () => {
 			.withDateESFADay("23")
 			.withDateESFAMonth("25")
 			.withDateESFAYear("2022")
-			.saveDecision()
+			.save()
 			.hasValidationError(
 				"Date ESFA received request: 23-25-2022 is an invalid date"
 			);
@@ -38,7 +38,7 @@ describe("User can add case actions to an existing case", () => {
 			.withDateESFAMonth("12")
 			.withDateESFAYear("")
 			.withSupportingNotesExceedingLimit()
-			.saveDecision()
+			.save()
 			.hasValidationError(
 				"Date ESFA received request: Please enter a complete date DD MM YYYY"
 			)
@@ -57,7 +57,7 @@ describe("User can add case actions to an existing case", () => {
 			.withTypeOfDecisionID("Section128")
 			.withTotalAmountRequested("£140,000")
 			.withSupportingNotes("These are some supporting notes!")
-			.saveDecision();
+			.save();
 
 		Logger.Log("Selecting Decision from open actions");
 		cy.get("#open-case-actions td")
@@ -92,7 +92,7 @@ describe("User can add case actions to an existing case", () => {
 			.withTypeOfDecisionID("QualifiedFloatingCharge")
 			.withTotalAmountRequested("£130,000")
 			.withSupportingNotes("Testing Supporting Notes")
-			.saveDecision();
+			.save();
 
 		Logger.Log("Viewing Edited Decision");
 		viewDecisionPage
@@ -122,7 +122,7 @@ describe("User can add case actions to an existing case", () => {
 			.withTypeOfDecisionID("Section128")
 			.withTotalAmountRequested("£140,000")
 			.withSupportingNotes("This is a test")
-			.saveDecision();
+			.save();
 
 		Logger.Log(
 			"Selecting the Decision from open cases and validating it before closing it"
@@ -158,19 +158,19 @@ describe("User can add case actions to an existing case", () => {
 			.click();
 
 		Logger.Log("Selecting decision outcome, saving and closing decision");
-		closeDecisionPage
+		viewDecisionPage
 			.closeDecision();
 			
 		Logger.Log("Validating notes can not exceed limits");
 		closeDecisionPage
 			.withSupportingNotesExceedingLimit()
-			.saveDecision()
+			.closeDecision()
 			.hasValidationError("Supporting Notes must be 2000 characters or less");
 
 		Logger.Log("Add close decision finalise supporting notes");
 		closeDecisionPage
 			.withFinaliseSupportingNotes("This is a test for closed decision")
-			.saveDecision();
+			.closeDecision();
 			
 
 		Logger.Log(
@@ -211,7 +211,7 @@ describe("User can add case actions to an existing case", () => {
 		Logger.Log("Creating Empty Decision");
 		cy.addConcernsDecisionsAddToCase();
 
-		editDecisionPage.saveDecision();
+		editDecisionPage.save();
 
 		cy.get("#open-case-actions td")
 			.should("contain.text", "Decision: No Decision Types")

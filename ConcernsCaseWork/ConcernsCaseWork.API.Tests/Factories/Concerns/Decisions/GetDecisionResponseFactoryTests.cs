@@ -2,16 +2,14 @@
 using AutoFixture.Idioms;
 using ConcernsCaseWork.API.Factories.Concerns.Decisions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
 using FluentAssertions;
-using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
 {
-public class GetDecisionResponseFactoryTests
+	public class GetDecisionResponseFactoryTests
     {
         [Fact]
         public void Can_Construct_GetDecisionResponseFactory()
