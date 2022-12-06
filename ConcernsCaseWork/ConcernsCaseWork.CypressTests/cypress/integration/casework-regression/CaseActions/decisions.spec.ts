@@ -2,11 +2,13 @@ import { Logger } from "../../../common/logger";
 import { EditDecisionPage } from "../../../pages/caseActions/decision/editDecisionPage";
 import { ViewDecisionPage } from "../../../pages/caseActions/decision/viewDecisionPage";
 import { CloseDecisionPage } from "../../../pages/caseActions/decision/closeDecisionPage";
+import { DecisionOutcomePage } from "../../../pages/caseActions/decision/decisionOutcomePage";
 
 describe("User can add case actions to an existing case", () => {
 	const viewDecisionPage = new ViewDecisionPage();
 	const editDecisionPage = new EditDecisionPage();
 	const closeDecisionPage = new CloseDecisionPage();
+	const decisionOutcomePage = new DecisionOutcomePage();
 
 	beforeEach(() => {
 		cy.login();
@@ -108,30 +110,62 @@ describe("User can add case actions to an existing case", () => {
 		cy.addConcernsDecisionsAddToCase();
 
 		Logger.Log("Adding note on the decision that will be closing ");
-		closeDecisionPage.withSupportingNotes("This is a test").saveDecision();
+		editDecisionPage
+			.withCrmEnquiry("444")
+			.withRetrospectiveRequest(false)
+			.withSubmissionRequired(true)
+			.withSubmissionLink("www.gov.uk")
+			.withDateESFADay("21")
+			.withDateESFAMonth("04")
+			.withDateESFAYear("2022")
+			.withTypeOfDecisionID("NoticeToImprove")
+			.withTypeOfDecisionID("Section128")
+			.withTotalAmountRequested("£140,000")
+			.withSupportingNotes("This is a test")
+			.saveDecision();
 
 		Logger.Log(
 			"Selecting the Decision from open cases and validating it before closing it"
 		);
-		closeDecisionPage
-			.selectCreatedDecision()
-			.continueRecordDecisionOutcome()
-			.saveAndContinueOutcome()
-			.hasValidationError("Select a decision outcome");
+
+		cy.get("#open-case-actions td")
+			.should("contain.text", "Decision: Multiple Decision Types")
+			.eq(-3)
+			.children("a")
+			.click();
+		
+		viewDecisionPage.createDecisionOutcome();
+
+		decisionOutcomePage
+			.withDecisionOutcomeStatus("ApprovedWithConditions")
+			.withTotalAmountApproved("50,000")
+            .withDateDecisionMadeDay("24")
+            .withDateDecisionMadeMonth("11")
+            .withDateDecisionMadeYear("2022")
+            .withDecisionTakeEffectDay("11")
+            .withDecisionTakeEffectMonth("12")
+            .withDecisionTakeEffectYear("2023")
+            .withDecisionAuthouriser("DeputyDirector")
+            .withBusinessArea("BusinessPartner")
+            .withBusinessArea("Capital")
+            .withBusinessArea("ProviderMarketOversight")
+			.saveDecisionOutcome();
+
+		cy.get("#open-case-actions td")
+			.should("contain.text", "Decision: Multiple Decision Types")
+			.eq(-3)
+			.children("a")
+			.click();
 
 		Logger.Log("Selecting decision outcome, saving and closing decision");
 		closeDecisionPage
-			.selectDecisionOutcome()
-			.saveAndContinueOutcome()
-			.selectCreatedDecision()
 			.closeDecision();
 			
-			Logger.Log("Validating notes can not exceed limits");
+		Logger.Log("Validating notes can not exceed limits");
 		closeDecisionPage
 			.withSupportingNotesExceedingLimit()
 			.saveDecision()
-			.hasValidationErrorForNotes("Supporting Notes must be 2000 characters or less");
-
+			.hasValidationError("Supporting Notes must be 2000 characters or less");
 
 		Logger.Log("Add close decision finalise supporting notes");
 		closeDecisionPage
@@ -143,11 +177,34 @@ describe("User can add case actions to an existing case", () => {
 			"Selecting Decision from closed cases and verifying that the finalise note matches the above"
 		);
 
-		closeDecisionPage
-			.selectClosedActionDecision()
-			.hasSupportingNotes("This is a test for closed decision");
+		cy.get("#close-case-actions td")
+			.should("contain.text", "Decision: Multiple Decision Types")
+			.eq(-4)
+			.children("a")
+			.click();
 
-			
+		viewDecisionPage
+			.hasCrmEnquiry("444")
+			.hasRetrospectiveRequest("No")
+			.hasSubmissionRequired("Yes")
+			.hasSubmissionLink("www.gov.uk")
+			.hasDateESFAReceivedRequest("21-04-2022")
+			.hasTotalAmountRequested("£140,000")
+			.hasTypeOfDecision("Notice to Improve (NTI)")
+			.hasTypeOfDecision("Section 128 (S128)")
+			.hasSupportingNotes("This is a test for closed decision")
+			.hasBusinessArea("Business Partner")
+            .hasBusinessArea("Capital")
+            .hasBusinessArea("Provider Market Oversight")
+            .hasDecisionOutcomeStatus("Approved with conditions")
+            .hasMadeDate("24-11-2022")
+            .hasEffectiveFromDate("11-12-2023")
+            .hasTotalAmountApproved("£50,000")
+            .hasAuthoriser("Deputy Director")
+			.cannotCreateAnotherDecisionOutcome()
+			.cannotCloseDecision()
+			.cannotEditDecision()
+			.cannotEditDecisionOutcome();
 	});
 
 	it("When Decisions is empty, View Behavior", function () {
