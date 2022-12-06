@@ -225,4 +225,10 @@ export class ViewDecisionPage
 
 		return this;
 	}
+
+	public closeDecision(): this {
+		cy.getByTestId('close-decision-button').click();
+
+		return this;
+	}
 }

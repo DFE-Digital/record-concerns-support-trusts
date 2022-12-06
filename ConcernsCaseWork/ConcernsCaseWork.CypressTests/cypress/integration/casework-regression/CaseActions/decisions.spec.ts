@@ -158,19 +158,19 @@ describe("User can add case actions to an existing case", () => {
 			.click();
 
 		Logger.Log("Selecting decision outcome, saving and closing decision");
-		closeDecisionPage
+		viewDecisionPage
 			.closeDecision();
 			
 		Logger.Log("Validating notes can not exceed limits");
 		closeDecisionPage
 			.withSupportingNotesExceedingLimit()
-			.saveDecision()
+			.closeDecision()
 			.hasValidationError("Supporting Notes must be 2000 characters or less");
 
 		Logger.Log("Add close decision finalise supporting notes");
 		closeDecisionPage
 			.withFinaliseSupportingNotes("This is a test for closed decision")
-			.saveDecision();
+			.closeDecision();
 			
 
 		Logger.Log(
