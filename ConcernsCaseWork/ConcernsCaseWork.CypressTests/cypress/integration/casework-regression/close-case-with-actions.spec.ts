@@ -63,6 +63,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                 .hasValidationError("Resolve Financial Plan")
                 .hasValidationError("Resolve SRMA")
                 .hasValidationError("Resolve NTI Under Consideration")
+                .hasValidationError("Resolve Decision")
                 .hasValidationError("Resolve Concerns");
 
             CaseManagementPage.getBackBtn().click();
