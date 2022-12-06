@@ -1,35 +1,32 @@
+import { Logger } from "../../../common/logger";
+
 export class CloseDecisionPage
 {
     public withFinaliseSupportingNotes(finaliseSupportingNotes: string): this {
-		cy.task("log", `With Supporting Notes - add notes ${finaliseSupportingNotes}`);
+		Logger.Log(`With Supporting Notes - add notes ${finaliseSupportingNotes}`);
 
 		cy.getById("SupportingNotes").clear().type(finaliseSupportingNotes);
 
 		return this;
 	}
-	public saveDecision(): this {
+	public closeDecision(): this {
+		Logger.Log("Confirm closing the decision");
+
 		cy.get('#add-decision-button').click();
 
 		return this;
 	}
 
 	public withSupportingNotesExceedingLimit(): this {
-		cy.task("log", `With Supporting Notes exceeding limit`);
+		Logger.Log("With supporting notes exceeding the limit");
 
 		cy.getById("SupportingNotes").clear().invoke("val", "x".repeat(2001));
 
 		return this;
 	}
 
-
-	public closeDecision(): this {
-		cy.getByTestId('close-decision-button').click();
-
-		return this;
-	}
-
 	public hasValidationError(message: string): this {
-		cy.task("log", `Has Validation error ${message}`);
+		Logger.Log(`Has Validation error ${message}`);
 
 		cy.get("#errorSummary").should(
 			"contain.text",
