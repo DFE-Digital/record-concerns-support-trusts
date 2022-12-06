@@ -69,6 +69,7 @@ describe("User can add case actions to an existing case", () => {
 			.hasTypeOfDecision("Section 128 (S128)")
 			.hasSupportingNotes("These are some supporting notes!")
 			.hasActionEdit()
+			.cannotCloseDecision()
 			.editDecision();
 
 		Logger.Log("Editing Decision");

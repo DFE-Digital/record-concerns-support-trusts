@@ -45,7 +45,8 @@ namespace ConcernsCaseWork.Services.Decisions
 				SupportingNotes = decisionResponse.SupportingNotes,
 				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/addOrUpdate/{decisionResponse.DecisionId}",
 				BackLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management",
-				Outcome = ToViewDecisionOutcomeModel(decisionResponse)
+				Outcome = ToViewDecisionOutcomeModel(decisionResponse),
+				IsEditable = decisionResponse.IsEditable
 			};
 
 			return result;
