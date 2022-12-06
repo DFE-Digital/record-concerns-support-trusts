@@ -13,6 +13,12 @@ import { CloseNtiUnderConsiderationPage } from "../../pages/caseActions/ntiUnder
 import EditConcernPage from "../../pages/editConcernPage";
 import HomePage from "../../pages/homePage";
 import ClosedCasePage from "../../pages/closedCasePage";
+import { EditNtiWarningLetterPage } from "../../pages/caseActions/ntiWarningLetter/editNtiWarningLetterPage";
+import { CloseNtiWarningLetterPage } from "../../pages/caseActions/ntiWarningLetter/closeNtiWarningLetterPage";
+import { ViewNtiWarningLetterPage } from "../../pages/caseActions/ntiWarningLetter/viewNtiWarningLetterPage";
+import { EditNoticeToImprovePage } from "../../pages/caseActions/noticeToImprove/editNoticeToImprovePage";
+import { ViewNoticeToImprovePage } from "../../pages/caseActions/noticeToImprove/viewNoticeToImprovePage";
+import { CloseNoticeToImprovePage } from "../../pages/caseActions/noticeToImprove/closeNoticeToImprovePage";
 
 describe("Testing closing of cases when there are case actions and concerns", () =>
 {
@@ -21,12 +27,21 @@ describe("Testing closing of cases when there are case actions and concerns", ()
     const closeFinancialPlanPage = new CloseFinancialPlanPage();
 
     const editDecisionPage =  new EditDecisionPage();
+
     const editSrmaPage = new EditSrmaPage();
     const viewSrmaPage = new ViewSrmaPage();
 
     const editNtiUnderConsiderationPage = new EditNtiUnderConsiderationPage();
     const viewNtiUnderConsiderationPage = new ViewNtiUnderConsiderationPage();
     const closeNtiUnderConsiderationPage = new CloseNtiUnderConsiderationPage();
+
+    const editNtiWarningLetterPage = new EditNtiWarningLetterPage();
+    const closeNtiWarningLetterPage = new CloseNtiWarningLetterPage();
+    const viewNtiWarningLetterPage = new ViewNtiWarningLetterPage();
+
+    const editNtiPage = new EditNoticeToImprovePage();
+    const viewNtiPage = new ViewNoticeToImprovePage();
+    const closeNtiPage =  new CloseNoticeToImprovePage();
 
     beforeEach(() => {
 		cy.login();
@@ -36,7 +51,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
     describe("When we have case actions and concerns that have not been closed", () =>
     {
-        it.only("Should raise a validation error for each case action that has not been closed and only allow a case to be closed when they are resolved", () =>
+        it("Should raise a validation error for each case action that has not been closed and only allow a case to be closed when they are resolved", () =>
         {
             addAllAllowedCaseActions();
 
@@ -54,25 +69,98 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             resolveAllAllowedCaseActions();
 
-            Logger.Log("Closing concern");
-            CaseManagementPage.editConcern();
-            EditConcernPage
-                .closeConcern()
-                .confirmCloseConcern();
+            closeConcern();
+            closeCase();
+        });
 
-            CaseManagementPage.getCaseIDText().then((caseId) =>
-            {
-                Logger.Log("Closing case");
-                CaseManagementPage.getCloseCaseBtn().click();
-                CaseManagementPage.withRationaleForClosure("Closing case");
-                CaseManagementPage.getCloseCaseBtn().click();
-    
-                Logger.Log("Viewing case is closed");
-                HomePage.getClosedCasesBtn().click();
-                ClosedCasePage.getClosedCase(caseId);
-            });
+        it("Should raise a validation error for NTI warning letter and only close when the action resolved", () =>
+        {
+            Logger.Log("Adding NTI warning letter");
+
+            CaseManagementPage.getAddToCaseBtn().click();
+            AddToCasePage.addToCase('NtiWarningLetter')
+            AddToCasePage.getAddToCaseBtn().click();
+            editNtiWarningLetterPage.save();
+
+            Logger.Log("Validating an error is displayed for NTI warning letter when case is closed");
+            CaseManagementPage.getCloseCaseBtn().click();
+            CaseManagementPage.hasValidationError("Resolve NTI Warning Letter");
+            CaseManagementPage.getBackBtn().click();
+
+            Logger.Log("Completing NTI Warning Letter");
+            cy.get("#open-case-actions td")
+                .getByTestId("NTI Warning Letter").click();
+
+            viewNtiWarningLetterPage.close();
+            closeNtiWarningLetterPage
+                .withReason("Cancel warning letter")
+                .close();
+
+            closeConcern();
+            closeCase();
+        });
+
+        it("Should raise a validation error for Notice To Improve and only close when the action is resolved", () =>
+        {
+            Logger.Log("Adding Notice To Improve");
+            CaseManagementPage.getAddToCaseBtn().click();
+            AddToCasePage.addToCase('Nti')
+            AddToCasePage.getAddToCaseBtn().click();
+            editNtiPage.save();
+
+
+            Logger.Log("Validating an error is displayed for Notice To Improve when case is closed");
+            CaseManagementPage.getCloseCaseBtn().click();
+            CaseManagementPage.hasValidationError("Resolve Notice To Improve");
+            CaseManagementPage.getBackBtn().click();
+
+            Logger.Log("Completing Notice To Improve");
+            cy.get("#open-case-actions td")
+                .getByTestId("NTI").click();
+
+            viewNtiPage.close();
+            closeNtiPage.close();
+
+            closeConcern();
+            closeCase();
         });
     });
+
+    function addAllAllowedCaseActions()
+    {
+        Logger.Log("Adding all allowed case actions");
+
+        // Financial plan
+        CaseManagementPage.getAddToCaseBtn().click();
+        AddToCasePage.addToCase('FinancialPlan')
+        AddToCasePage.getAddToCaseBtn().click();
+        editFinancialPlanPage.save();
+
+        // Decision
+        CaseManagementPage.getAddToCaseBtn().click();
+        AddToCasePage.addToCase('Decision')
+        AddToCasePage.getAddToCaseBtn().click();
+        editDecisionPage.save();
+
+        // SRMA
+        CaseManagementPage.getAddToCaseBtn().click();
+        AddToCasePage.addToCase('Srma')
+        AddToCasePage.getAddToCaseBtn().click();
+
+        editSrmaPage
+            .withStatus("Trust Considering")
+            .withContactedDay("05")
+            .withContactedMonth("06")
+            .withContactedYear("2022")
+            .save();
+
+        // NTI warning letter
+        CaseManagementPage.getAddToCaseBtn().click();
+        AddToCasePage.addToCase('NtiUnderConsideration');
+        AddToCasePage.getAddToCaseBtn().click();
+
+        editNtiUnderConsiderationPage.save();
+    }
 
     function resolveAllAllowedCaseActions()
     {
@@ -109,39 +197,27 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             .close();
     }
 
-    function addAllAllowedCaseActions()
+    function closeConcern()
     {
-        Logger.Log("Adding all allowed case actions");
+        Logger.Log("Closing concern");
+        CaseManagementPage.editConcern();
+        EditConcernPage
+            .closeConcern()
+            .confirmCloseConcern();
+    }
 
-        // Financial plan
-        CaseManagementPage.getAddToCaseBtn().click();
-        AddToCasePage.addToCase('FinancialPlan')
-        AddToCasePage.getAddToCaseBtn().click();
-        editFinancialPlanPage.save();
+    function closeCase()
+    {
+        CaseManagementPage.getCaseIDText().then((caseId) =>
+        {
+            Logger.Log("Closing case");
+            CaseManagementPage.getCloseCaseBtn().click();
+            CaseManagementPage.withRationaleForClosure("Closing case");
+            CaseManagementPage.getCloseCaseBtn().click();
 
-        // Decision
-        CaseManagementPage.getAddToCaseBtn().click();
-        AddToCasePage.addToCase('Decision')
-        AddToCasePage.getAddToCaseBtn().click();
-        editDecisionPage.save();
-
-        // SRMA
-        CaseManagementPage.getAddToCaseBtn().click();
-        AddToCasePage.addToCase('Srma')
-        AddToCasePage.getAddToCaseBtn().click();
-
-        editSrmaPage
-            .withStatus("Trust Considering")
-            .withContactedDay("05")
-            .withContactedMonth("06")
-            .withContactedYear("2022")
-            .save();
-
-        // NTI warning letter
-        CaseManagementPage.getAddToCaseBtn().click();
-        AddToCasePage.addToCase('NtiUnderConsideration');
-        AddToCasePage.getAddToCaseBtn().click();
-
-        editNtiUnderConsiderationPage.save();
+            Logger.Log("Viewing case is closed");
+            HomePage.getClosedCasesBtn().click();
+            ClosedCasePage.getClosedCase(caseId);
+        });
     }
 });
