@@ -133,5 +133,15 @@ class CaseManagementPage {
 
         return this;
     }
+
+    editConcern()
+    {
+        cy.getByTestId("edit-concern").click();
+    }
+
+    withRationaleForClosure(reason)
+    {
+        cy.getById("case-outcomes").clear().type(reason);
+    }
 }
     export default new CaseManagementPage();
