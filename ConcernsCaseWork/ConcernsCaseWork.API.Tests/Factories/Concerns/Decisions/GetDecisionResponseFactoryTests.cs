@@ -2,16 +2,14 @@
 using AutoFixture.Idioms;
 using ConcernsCaseWork.API.Factories.Concerns.Decisions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
 using FluentAssertions;
-using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
 {
-public class GetDecisionResponseFactoryTests
+	public class GetDecisionResponseFactoryTests
     {
         [Fact]
         public void Can_Construct_GetDecisionResponseFactory()
@@ -98,22 +96,6 @@ public class GetDecisionResponseFactoryTests
 	        result.IsEditable.Should().BeFalse();
         }
         
-		[Fact]
-		public void Create_WithNoOutcome_Returns_DecisionResponse()
-		{
-			var fixture = CreateFixture();
-
-			var concernsCaseUrn = fixture.Create<int>();
-			var decision = fixture.Create<Decision>();
-			decision.Outcome = null;
-
-			var sut = new GetDecisionResponseFactory();
-
-			var result = sut.Create(concernsCaseUrn, decision);
-
-			result.Outcome.Should().BeNull();
-		}
-
 		[Fact]
 		public void Create_WithNoOutcome_Returns_DecisionResponse()
 		{
