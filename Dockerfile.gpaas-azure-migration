@@ -45,7 +45,7 @@ FROM "mcr.microsoft.com/dotnet/aspnet:${ASPNET_IMAGE_TAG}" AS final
 
 ARG COMMIT_SHA
 RUN echo "Setting env releasetag=${COMMIT_SHA}"
-ENV ConcernsCasework:ReleaseTag=${COMMIT_SHA}
+ENV ConcernsCasework:ReleaseTag="${COMMIT_SHA}"
 
 RUN apt-get update
 RUN apt-get install unixodbc curl gnupg -y
