@@ -214,6 +214,9 @@ describe("Testing closing of cases when there are case actions and concerns", ()
         Logger.Log("Completing decision");
         cy.get("#open-case-actions td")
             .getByTestId("Decision: No Decision Types").click();
+
+        viewDecisionPage.closeDecision();
+        closeDecisionPage.closeDecision();
     }
 
     function closeConcern()
