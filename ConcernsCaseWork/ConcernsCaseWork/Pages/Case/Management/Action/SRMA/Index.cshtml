@@ -221,7 +221,7 @@
 			<a data-prevent-double-click="true" asp-page-handler="DeclineComplete" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="complete-decline-srma-button">
 				@Model.DeclineCompleteButtonLabel
 			</a>
-			<a data-prevent-double-click="true" asp-page-handler="Cancel" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button">
+			<a data-prevent-double-click="true" asp-page-handler="Cancel" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" data-testid="cancel-srma-button">
 				SRMA cancelled
 			</a>
 		</div>
@@ -243,7 +243,7 @@
 
     private void RenderLink<T>(T value, string fieldName, string url)
     {
-        <a class="govuk-link" href="@url">
+        <a class="govuk-link" href="@url" data-testid="@fieldName">
             @(IsEmpty(value) ? "Add" : "Edit")
             <span class="govuk-visually-hidden">@fieldName</span>
         </a>

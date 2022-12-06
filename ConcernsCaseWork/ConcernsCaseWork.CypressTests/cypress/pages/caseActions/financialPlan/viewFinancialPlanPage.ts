@@ -46,4 +46,13 @@ export class ViewFinancialPlanPage
 
         return this;
     }
+
+    public close(): this
+    {
+        Logger.Log("Closing financial plan");
+
+        cy.getByTestId("close-financialplan-button").click();
+
+        return this;
+    }
 }
