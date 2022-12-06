@@ -10,6 +10,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Services.Decisions
 {
@@ -267,5 +268,14 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.BusinessAreasConsulted.Should().BeEquivalentTo(model.BusinessAreasConsulted);
 		}
 
+		[Test]
+		public void ToDecisionSummary_ReturnsCorrectModel()
+		{
+			var apiDecision = _fixture.Create<DecisionSummaryResponse>();
+
+			var result = DecisionMapping.ToDecisionSummaryModel(apiDecision);
+
+			result.ClosedAt.Should().Be(apiDecision.ClosedAt?.Date);
+		}
 	}
 }

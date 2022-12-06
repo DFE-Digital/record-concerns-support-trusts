@@ -1,11 +1,15 @@
+using AutoFixture;
+using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Cases;
+using ConcernsCaseWork.Services.Decisions;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
@@ -24,6 +28,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management
@@ -31,6 +36,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 	[Parallelizable(ParallelScope.All)]
 	public class ClosurePageModelTests
 	{
+		private static readonly Fixture _fixture = new();
+
 		[Test]
 		public async Task WhenOnGetAsync_When_No_OpenConcerns_ReturnsModel()
 		{
@@ -414,8 +421,24 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			ICaseModelService mockCaseModelService, ITrustModelService mockTrustModelService, IRecordModelService mockRecordModelService, IStatusCachedService mockStatusCachedService, ISRMAService mockSRMAModelService, IFinancialPlanModelService mockFinancialPlanModelService, INtiUnderConsiderationModelService mockNTIUnderConsiderationService, INtiWarningLetterModelService mockNTIWarningLetterModelService, INtiModelService mockNTIModelService, ICaseActionValidator mockCaseActionValidator, ILogger<ClosurePageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
+
+			var decisionSummaries = _fixture.CreateMany<DecisionSummaryResponse>().ToList();
+			var mockDecisionService = new Mock<IDecisionService>();
+			mockDecisionService.Setup(m => m.GetDecisionsByCaseUrn(It.IsAny<long>())).ReturnsAsync(decisionSummaries);
 			
-			return new ClosurePageModel(mockCaseModelService, mockTrustModelService, mockRecordModelService, mockStatusCachedService, mockSRMAModelService, mockFinancialPlanModelService, mockNTIUnderConsiderationService, mockNTIWarningLetterModelService, mockNTIModelService, mockCaseActionValidator, mockLogger)
+			return new ClosurePageModel(
+				mockCaseModelService, 
+				mockTrustModelService, 
+				mockRecordModelService, 
+				mockStatusCachedService, 
+				mockSRMAModelService, 
+				mockFinancialPlanModelService, 
+				mockNTIUnderConsiderationService, 
+				mockNTIWarningLetterModelService, 
+				mockNTIModelService,
+				mockDecisionService.Object,
+				mockCaseActionValidator, 
+				mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
