@@ -73,6 +73,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			string booleanResolvedValue)
 		{
 			var apiDecision = _fixture.Create<GetDecisionResponse>();
+			apiDecision.IsEditable = true;
 			apiDecision.ConcernsCaseUrn = 2;
 			apiDecision.DecisionId = 10;
 			apiDecision.RetrospectiveApproval = booleanFlag;
@@ -122,8 +123,9 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 
 			result.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(new List<string>() { "Capital", "Schools Financial Support and Oversight (SFSO)" });
 			result.Outcome.EditLink.Should().Be("/case/2/management/action/decision/10/outcome/addOrUpdate");
+			result.IsEditable.Should().BeTrue();
 		}
-
+	
 		[Test]
 		public void ToDecisionModel_WhenNoPropertiesFilled_AndNoOutcome_ReturnsCorrectModel()
 		{

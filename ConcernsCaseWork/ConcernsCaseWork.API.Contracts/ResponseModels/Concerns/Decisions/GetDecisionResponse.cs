@@ -23,5 +23,6 @@ namespace ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions
 		public string Title { get; set; }
 
 		public DecisionOutcome? Outcome { get; set; }
+		public bool IsEditable { get; set; }
 	}
 }

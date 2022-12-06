@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			_logger.LogInformation("Case::Action::Decision::IndexPageModel::OnGetAsync");
 
 			ViewData[ViewDataConstants.Title] = "Decision";
-			ViewData[ViewDataConstants.BackButtonLabel] = "Back to case";
+			ViewData[ViewDataConstants.BackButtonLabel] = "Back to case overview";
 
 			try
 			{

@@ -172,6 +172,15 @@ export class ViewDecisionPage
 		return this;
 	}
 
+	public cannotCloseDecision(): this
+	{
+		Logger.Log("Checking we cannot close a decision without an outcome");
+
+		cy.getByTestId("close-decision-button").should("not.exist");
+
+		return this;
+	}
+
 	public editDecision(): this {
 		cy.task("log", `Edit Decision`);
 
