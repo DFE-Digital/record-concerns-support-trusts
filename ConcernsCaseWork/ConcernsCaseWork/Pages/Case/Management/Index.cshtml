@@ -110,8 +110,8 @@
 		            </tr>
 	            }
 	            <tr class="govuk-table__row">
-		            <th scope="row" class="govuk-table-case-details__header__no_border">Concerns</th>
-		            <td colspan="2" class="govuk-table-case-details__cell_no_border">
+		            <th scope="row" class="govuk-table-case-details__header">Concerns</th>
+		            <td colspan="2" class="govuk-table__cell">
 			            @if (Model.CaseModel.RecordsModel.Any())
 			            {
 				            <table class="govuk-table">
@@ -173,7 +173,13 @@
 			            </div>
 
 		            </td>
-		            <td class="govuk-table__header__right"></td>
+		            <td class="govuk-table__cell__no_border"></td>
+	            </tr>
+	            }
+	            <tr class="govuk-table__row">
+	                <th scope="row" class="govuk-table-case-details__header__no_border">SFSO territory</th>
+	                <td class="govuk-table__cell__no_border">TBD</td>
+		            <td class="govuk-table__cell__no_border"></td>
 	            </tr>
                     
 	            </tbody>

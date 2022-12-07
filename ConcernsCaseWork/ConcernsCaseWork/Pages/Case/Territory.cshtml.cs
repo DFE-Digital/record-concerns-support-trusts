@@ -1,42 +1,44 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
-using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class RatingPageModel : AbstractPageModel
+	public class SelectTerritoryPageModel : AbstractPageModel
 	{
-		private readonly IRatingModelService _ratingModelService;
-		private readonly ILogger<RatingPageModel> _logger;
+		private readonly ILogger<SelectTerritoryPageModel> _logger;
 		private readonly ITrustModelService _trustModelService;
 		private readonly IUserStateCachedService _userStateCache;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<CreateRecordModel> CreateRecordsModel { get; private set; }
-		public IList<RatingModel> RatingsModel { get; private set; }
+		public CreateCaseModel CreateCaseModel { get; private set; }
 		
-		public RatingPageModel(ITrustModelService trustModelService, 
+		[BindProperty]
+		[Required(ErrorMessage = "An SFSO Territory must be selected")]
+		public TerritoryEnum Territory { get; set; }
+
+		public SelectTerritoryPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
-			IRatingModelService ratingModelService,
-			ILogger<RatingPageModel> logger, 
+			ILogger<SelectTerritoryPageModel> logger, 
 			IClaimsPrincipalHelper claimsPrincipalHelper)
 		{
-			_ratingModelService = Guard.Against.Null(ratingModelService);
 			_trustModelService = Guard.Against.Null(trustModelService);
 			_userStateCache = Guard.Against.Null(userStateCache);
 			_logger = Guard.Against.Null(logger);
@@ -45,7 +47,7 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public async Task OnGetAsync()
 		{
-			_logger.LogInformation("Case::RatingPageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 				
 			// Fetch UI data
 			await LoadPage();
@@ -53,44 +55,25 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		public async Task<IActionResult> OnPostAsync()
 		{
+			_logger.LogMethodEntered();
+				
 			try
 			{
-				_logger.LogInformation("Case::RatingPageModel::OnPostAsync");
-				
-				var ragRating = Request.Form["rating"].ToString();
-				if (string.IsNullOrEmpty(ragRating))
-					throw new Exception("Missing form values");
-				
-				// Rating
-				var splitRagRating = ragRating.Split(":");
-				var ragRatingId = splitRagRating[0];
-				var ragRatingName = splitRagRating[1];
-				
-				// validate that the links from case to other data is valid. This really should be in a domain layer or at least the trams service.
-				var rating = await _ratingModelService.GetRatingModelById(long.Parse(ragRatingId));
-
-				if (rating == null)
+				if (!ModelState.IsValid)
 				{
-					throw new InvalidOperationException($"The given ratingUrn '{ragRatingId}' does not match any known rating in the system");
+					return await LoadPage();
 				}
-
-				// Redis state
+				
 				var userState = await GetUserState();
-
-				// Update cache model
-				userState.CreateCaseModel.RatingId = long.Parse(ragRatingId);
-				userState.CreateCaseModel.RagRatingName = ragRatingName;
-				userState.CreateCaseModel.RagRating = RatingMapping.FetchRag(ragRatingName);
-				userState.CreateCaseModel.RagRatingCss = RatingMapping.FetchRagCss(ragRatingName);
+				userState.CreateCaseModel.Territory = Territory;
 				
 				// Store case model in cache for the details page
 				await _userStateCache.StoreData(GetUserName(), userState);
-				
-				return RedirectToPage("territory");
+				return RedirectToPage("details");
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::RatingPageModel::OnPostAsync::Exception - {Message}", ex.Message);
+				_logger.LogErrorMsg(ex);
 				
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
@@ -110,7 +93,7 @@ namespace ConcernsCaseWork.Pages.Case
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::RatingPageModel::OnGetCancel::Exception - {Message}", ex.Message);
+				_logger.LogErrorMsg(ex);
 					
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
@@ -123,19 +106,19 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				var userState = await GetUserState();
 				var trustUkPrn = userState.TrustUkPrn;
-				
-				if (string.IsNullOrEmpty(trustUkPrn)) 
+
+				if (string.IsNullOrEmpty(trustUkPrn))
 					throw new Exception("Cache TrustUkprn is null");
-				
+		
+				CreateCaseModel = userState.CreateCaseModel;
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-				RatingsModel = await _ratingModelService.GetRatingsModel();
-				
+		
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::RatingPageModel::LoadPage::Exception - {Message}", ex.Message);
+				_logger.LogErrorMsg(ex);
 				
 				TempData["Error.Message"] = ErrorOnGetPage;
 				return Page();
@@ -146,7 +129,7 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			var userState = await _userStateCache.GetData(GetUserName());
 			if (userState is null)
-				throw new Exception("Cache CaseStateData is null");
+				throw new Exception("Could not retrieve cached new case data for user");
 			
 			return userState;
 		}
