@@ -78,7 +78,7 @@
                                 @foreach (var outcome in Model.DecisionOutcomesCheckBoxes)
                                 {
                                     var idStr = outcomeId++ == 0 ? "outcome" : "outcome-" + outcomeId;
-                                    var checkedStr = Model.DecisionOutcome.Status == outcome ? "checked" : "";
+                                    var checkedStr = Model.DecisionOutcome?.Status == outcome ? "checked" : "";
                                     <div class="govuk-radios__item">
                                         <input class="govuk-radios__input" id="@idStr" data-testid="@outcome" name="DecisionOutcome.Status" type="radio" value="@outcome" @checkedStr>
 
@@ -110,7 +110,7 @@
                                        data-testid="total-amount-approved"
                                        name="DecisionOutcome.TotalAmount"
                                        type="text"
-                                       value="@Model.DecisionOutcome.TotalAmount">
+                                       value="@Model.DecisionOutcome?.TotalAmount">
                             </div>
                         </fieldset>
                     </div>
@@ -135,7 +135,7 @@
                                                type="text"
                                                maxlength="2"
                                                inputmode="numeric"
-                                               value="@($"{Model.DecisionOutcome.DecisionMadeDate?.Day:00}")" />
+                                               value="@($"{Model.DecisionOutcome?.DecisionMadeDate?.Day:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -150,7 +150,7 @@
                                                type="text"
                                                maxlength="2"
                                                inputmode="numeric"
-                                               value="@($"{Model.DecisionOutcome.DecisionMadeDate?.Month:00}")" />
+                                               value="@($"{Model.DecisionOutcome?.DecisionMadeDate?.Month:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -165,7 +165,7 @@
                                                type="text"
                                                maxlength="4"
                                                inputmode="numeric"
-                                               value="@($"{Model.DecisionOutcome.DecisionMadeDate?.Year}")" />
+                                               value="@($"{Model.DecisionOutcome?.DecisionMadeDate?.Year}")" />
                                     </div>
                                 </div>
                             </div>
@@ -194,7 +194,7 @@
                                                type="text"
                                                maxlength="2"
                                                inputmode="numeric"
-                                               value="@($"{Model.DecisionOutcome.DecisionEffectiveFromDate?.Day:00}")" />
+                                               value="@($"{Model.DecisionOutcome?.DecisionEffectiveFromDate?.Day:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -209,7 +209,7 @@
                                                type="text"
                                                maxlength="2"
                                                inputmode="numeric"
-                                               value="@($"{Model.DecisionOutcome.DecisionEffectiveFromDate?.Month:00}")" />
+                                               value="@($"{Model.DecisionOutcome?.DecisionEffectiveFromDate?.Month:00}")" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -224,7 +224,7 @@
                                                type="text"
                                                maxlength="4"
                                                inputmode="numeric"
-                                               value="@($"{Model.DecisionOutcome.DecisionEffectiveFromDate?.Year}")" />
+                                               value="@($"{Model.DecisionOutcome?.DecisionEffectiveFromDate?.Year}")" />
                                     </div>
                                 </div>
                             </div>
@@ -247,7 +247,7 @@
                                 @foreach (var authoriser in Model.AuthoriserCheckBoxes)
                                 {
                                     var idStr = authoriserId++ == 0 ? "authoriser" : "authoriser-" + authoriserId;
-                                    var checkedStr = Model.DecisionOutcome.Authorizer == authoriser ? "checked" : "";
+                                    var checkedStr = Model.DecisionOutcome?.Authorizer == authoriser ? "checked" : "";
                                     <div class="govuk-radios__item">
                                         <input class="govuk-radios__input"
                                                id="@idStr"
@@ -280,7 +280,7 @@
 
                             @foreach (var businessAreaCheckbox in Model.BusinessAreaCheckBoxes)
 							{
-								var isChecked = Model.DecisionOutcome.BusinessAreasConsulted.Contains(businessAreaCheckbox);
+								var isChecked = Model.DecisionOutcome?.BusinessAreasConsulted.Contains(businessAreaCheckbox);
 
                                 <div class="govuk-checkboxes__item">
                                     <input class="govuk-checkboxes__input"

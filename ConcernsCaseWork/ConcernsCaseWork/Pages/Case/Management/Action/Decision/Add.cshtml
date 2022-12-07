@@ -137,55 +137,52 @@
 							<div id="submission-required-hint" class="govuk-hint">
 								Find more information on submissions and templates at <a href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Submissions%20templates%20and%20guidance.aspx" target="_blank">SFSO Knowledge: Submissions</a>
 							</div>
-							<div class="govuk-radios" data-module="govuk-radios">
-								<div class="govuk-radios__item">
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                <div class="govuk-radios__item">
 
-									@{
-										if (Model.Decision.SubmissionRequired.HasValue)
-										{
-											<input class="govuk-radios__input" id="submission-required" name="Decision.SubmissionRequired" type="radio" data-aria-controls="conditional-submission-required" value="true" checked="@(Model.Decision.SubmissionRequired.Value)">
-										}
-										else
-										{
-											<input class="govuk-radios__input" id="submission-required" name="Decision.SubmissionRequired" type="radio" data-aria-controls="conditional-submission-required" value="true">
-										}
-									}
+                                    @{
+                                        if (Model.Decision.SubmissionRequired.HasValue)
+                                        {
+                                            <input class="govuk-radios__input" id="submission-required" name="Decision.SubmissionRequired" type="radio" value="true" checked="@(Model.Decision.SubmissionRequired.Value)">
+                                        }
+                                        else
+                                        {
+                                            <input class="govuk-radios__input" id="submission-required" name="Decision.SubmissionRequired" type="radio" value="true">
+                                        }
+                                    }
 
-									<label class="govuk-label govuk-radios__label" for="submission-required">
-										Yes
-									</label>
-								</div>
-								<div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-submission-required">
-									<div class="govuk-form-group">
-										<label class="govuk-label" for="submission-required-link">
-											If yes, paste in a link to the submission document on Sharepoint.
-										</label>
-										<input class="govuk-input govuk-input--width-30" id="submission-document-link" name="Decision.SubmissionDocumentLink" type="text" value="@Model.Decision.SubmissionDocumentLink">
-									</div>
+                                    <label class="govuk-label govuk-radios__label" for="submission-required">
+                                        Yes
+                                    </label>
+                                </div>
+       
+                                <div class="govuk-radios__item">
 
-								</div>
-								<div class="govuk-radios__item">
+                                    @{
+                                        if (Model.Decision.SubmissionRequired.HasValue)
+                                        {
+                                            <input class="govuk-radios__input" id="submission-required-1" name="Decision.SubmissionRequired" type="radio" value="false" checked="@(!Model.Decision.SubmissionRequired.Value)">
+                                        }
+                                        else
+                                        {
+                                            <input class="govuk-radios__input" id="submission-required-1" name="Decision.SubmissionRequired" type="radio" value="false">
+                                        }
+                                    }
 
-									@{
-										if (Model.Decision.SubmissionRequired.HasValue)
-										{
-											<input class="govuk-radios__input" id="submission-required-1" name="Decision.SubmissionRequired" type="radio" value="false" checked="@(!Model.Decision.SubmissionRequired.Value)">
-										}
-										else
-										{
-											<input class="govuk-radios__input" id="submission-required-1" name="Decision.SubmissionRequired" type="radio" value="false">
-										}
-									}
+                                    <label class="govuk-label govuk-radios__label" for="submission-required-1">
+                                        <span>
+                                            No
+                                        </span>
+                                    </label>
+                                </div>
 
-									<label class="govuk-label govuk-radios__label" for="submission-required-1">
-										<span>
-											No
-										</span>
-									</label>
-								</div>
-
-
-							</div>
+                                <div class="govuk-form-group">
+                                    <label class="govuk-label" for="submission-required-link">
+                                        If yes, paste in a link to the submission document on Sharepoint.
+                                    </label>
+                                    <input class="govuk-input govuk-input--width-30" id="submission-document-link" name="Decision.SubmissionDocumentLink" type="text" value="@Model.Decision.SubmissionDocumentLink">
+                                </div>
+                            </div>
 
 						</fieldset>
 					</div>
@@ -233,9 +230,9 @@
 								<h2 class="govuk-heading-m">What type of decision is it?</h2>
 							</legend>
 
-							<div id="decision-type-hint" class="govuk-hint">
-								Select all types that apply. Find more information on decision types in <a href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Submissions%20templates%20and%20guidance.aspx" target="_blank">AMSD Knowledge</a>
-							</div>
+                            <div id="decision-type-hint" class="govuk-hint">
+                                Select all types that apply. Find decisions by type at <a href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Home.aspx" target="_blank">SFSO Knowledge (opens in a new tab)</a> for more information.
+                            </div>
 							<br>
 
 							@foreach (var decisionTypeCheckbox in Model.DecisionTypeCheckBoxes)
