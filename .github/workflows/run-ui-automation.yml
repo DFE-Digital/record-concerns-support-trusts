@@ -41,6 +41,11 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
+      - name: Setup node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+
       - name: Restore dependencies
         run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
 
@@ -58,11 +63,17 @@ jobs:
           dotnet user-secrets set "ConcernsCasework:ApiKey" "app-key"
           dotnet user-secrets set "ConcernsCasework:ApiEndpoint" "https://localhost"
 
+      - name Install Website
+        working-directory: ./ConcernsCaseWork/ConcernsCaseWork/wwwroot
+        run: | 
+          npm install
+          npm run build
+
       - name: Run application
         run: dotnet run --project ConcernsCaseWork/ConcernsCaseWork/ConcernsCaseWork.csproj &
 
       - name: Setup and run the cypress tests
-      - working-directory: ./ConcernsCaseWork/ConcernsCaseWork.CypressTests
-      - run: | 
+        working-directory: ./ConcernsCaseWork/ConcernsCaseWork.CypressTests
+        run: | 
           npm install
           npm run cy:run
