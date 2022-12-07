@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Data.Exceptions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 
@@ -26,6 +27,8 @@ namespace ConcernsCaseWork.Data.Models
         public int Urn { get; set; }
         public int StatusId { get; set; }
         public int RatingId { get; set; }
+        
+        public TerritoryEnum? Territory { get; set; }
 
         public virtual ConcernsStatus Status { get; set; }
         public virtual ConcernsRating Rating { get; set; }

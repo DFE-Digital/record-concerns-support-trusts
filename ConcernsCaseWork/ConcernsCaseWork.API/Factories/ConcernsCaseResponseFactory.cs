@@ -28,7 +28,8 @@ namespace ConcernsCaseWork.API.Factories
                 DirectionOfTravel = concernsCase.DirectionOfTravel,
                 Urn = concernsCase.Urn,
                 StatusId = concernsCase.StatusId,
-                RatingId = concernsCase.RatingId
+                RatingId = concernsCase.RatingId,
+                Territory = concernsCase.Territory
             };
         }
     }
