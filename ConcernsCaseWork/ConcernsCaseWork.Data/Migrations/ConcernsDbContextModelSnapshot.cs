@@ -17,10 +17,10 @@ namespace ConcernsCaseWork.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Decision", b =>
                 {
@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DecisionId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DecisionId"));
 
                     b.Property<DateTimeOffset?>("ClosedAt")
                         .HasColumnType("datetimeoffset");
@@ -190,7 +190,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DecisionOutcomeId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DecisionOutcomeId"));
 
                     b.Property<int?>("Authorizer")
                         .HasColumnType("int");
@@ -407,7 +407,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CaseAim")
                         .HasColumnType("nvarchar(max)");
@@ -487,7 +487,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -531,7 +531,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -591,7 +591,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CaseId")
                         .HasColumnType("int");
@@ -651,7 +651,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -697,7 +697,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -828,7 +828,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<int>("CaseUrn")
                         .HasColumnType("int");
@@ -873,7 +873,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -934,13 +934,601 @@ namespace ConcernsCaseWork.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIUnderConsideration", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("CaseUrn")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ClosedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ClosedStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClosedStatusId");
+
+                    b.ToTable("NTIUnderConsiderationCase", "concerns");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIUnderConsiderationReason", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NTIUnderConsiderationReason", "concerns");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Cash flow problems",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Cumulative deficit (actual)",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Cumulative deficit (projected)",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Governance concerns",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Non-Compliance with Academies Financial/Trust Handbook",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Non-Compliance with financial returns",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Risk of insolvency",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Safeguarding",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIUnderConsiderationReasonMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<long>("NTIUnderConsiderationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("NTIUnderConsiderationReasonId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NTIUnderConsiderationId");
+
+                    b.HasIndex("NTIUnderConsiderationReasonId");
+
+                    b.ToTable("NTIUnderConsiderationReasonMapping", "concerns");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIUnderConsiderationStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NTIUnderConsiderationStatus", "concerns");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "No further action being taken",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Warning letter or NTI can be set up using \"Add to case\".",
+                            Name = "To be escalated",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetter", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("CaseUrn")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ClosedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ClosedStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateLetterSent")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int?>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClosedStatusId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("NTIWarningLetterCase", "concerns");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterCondition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ConditionTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConditionTypeId");
+
+                    b.ToTable("NTIWarningLetterCondition", "concerns");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ConditionTypeId = 1,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DisplayOrder = 1,
+                            Name = "Trust financial plan",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ConditionTypeId = 2,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DisplayOrder = 1,
+                            Name = "Action plan",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ConditionTypeId = 2,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DisplayOrder = 2,
+                            Name = "Lines of accountability",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ConditionTypeId = 2,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DisplayOrder = 3,
+                            Name = "Providing sufficient challenge",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ConditionTypeId = 2,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DisplayOrder = 4,
+                            Name = "Scheme of delegation",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ConditionTypeId = 3,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DisplayOrder = 1,
+                            Name = "Publishing requirements (compliance with)",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ConditionTypeId = 4,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DisplayOrder = 1,
+                            Name = "Financial returns",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterConditionMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("NTIWarningLetterConditionId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("NTIWarningLetterId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NTIWarningLetterConditionId");
+
+                    b.HasIndex("NTIWarningLetterId");
+
+                    b.ToTable("NTIWarningLetterConditionMapping", "concerns");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterConditionType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NTIWarningLetterConditionType", "concerns");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DisplayOrder = 1,
+                            Name = "Financial management conditions",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DisplayOrder = 2,
+                            Name = "Governance conditions",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DisplayOrder = 3,
+                            Name = "Compliance conditions",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DisplayOrder = 4,
+                            Name = "Standard conditions (mandatory)",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterReason", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NTIWarningLetterReason", "concerns");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Cash flow problems",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Cumulative deficit (actual)",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Cumulative deficit (projected)",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Governance concerns",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Non-compliance with Academies Financial/Trust Handbook",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Non-compliance with financial returns",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Risk of insolvency",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Safeguarding",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterReasonMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<long>("NTIWarningLetterId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("NTIWarningLetterReasonId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NTIWarningLetterId");
+
+                    b.HasIndex("NTIWarningLetterReasonId");
+
+                    b.ToTable("NTIWarningLetterReasonMapping", "concerns");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsClosingState")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PastTenseName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NTIWarningLetterStatus", "concerns");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsClosingState = false,
+                            Name = "Preparing warning letter",
+                            PastTenseName = "",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsClosingState = false,
+                            Name = "Sent to trust",
+                            PastTenseName = "",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "The warning letter is no longer needed.",
+                            IsClosingState = true,
+                            Name = "Cancel warning letter",
+                            PastTenseName = "Cancelled",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "You are satisfied that all the conditions have been, or will be, met as outlined in the letter",
+                            IsClosingState = true,
+                            Name = "Conditions met",
+                            PastTenseName = "Conditions met",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Conditions have not been met. Close NTI: Warning letter and begin NTI on case page using \"Add to case\".",
+                            IsClosingState = true,
+                            Name = "Escalate to Notice To Improve",
+                            PastTenseName = "Escalated to Notice To Improve",
+                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImprove", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<int>("CaseUrn")
                         .HasColumnType("int");
@@ -994,7 +1582,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ConditionTypeId")
                         .HasColumnType("int");
@@ -1377,7 +1965,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("NoticeToImproveConditionId")
                         .HasColumnType("int");
@@ -1400,7 +1988,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -1483,7 +2071,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -1563,7 +2151,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<long>("NoticeToImproveId")
                         .HasColumnType("bigint");
@@ -1586,7 +2174,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -1687,601 +2275,13 @@ namespace ConcernsCaseWork.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIUnderConsideration", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<int>("CaseUrn")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ClosedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ClosedStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClosedStatusId");
-
-                    b.ToTable("NTIUnderConsiderationCase", "concerns");
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIUnderConsiderationReason", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("NTIUnderConsiderationReason", "concerns");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Cash flow problems",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Cumulative deficit (actual)",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Cumulative deficit (projected)",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Governance concerns",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Non-Compliance with Academies Financial/Trust Handbook",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Non-Compliance with financial returns",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Risk of insolvency",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Safeguarding",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIUnderConsiderationReasonMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<long>("NTIUnderConsiderationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("NTIUnderConsiderationReasonId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NTIUnderConsiderationId");
-
-                    b.HasIndex("NTIUnderConsiderationReasonId");
-
-                    b.ToTable("NTIUnderConsiderationReasonMapping", "concerns");
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIUnderConsiderationStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("NTIUnderConsiderationStatus", "concerns");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "No further action being taken",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Warning letter or NTI can be set up using \"Add to case\".",
-                            Name = "To be escalated",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetter", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<int>("CaseUrn")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ClosedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ClosedStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DateLetterSent")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<int?>("StatusId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClosedStatusId");
-
-                    b.HasIndex("StatusId");
-
-                    b.ToTable("NTIWarningLetterCase", "concerns");
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterCondition", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("ConditionTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConditionTypeId");
-
-                    b.ToTable("NTIWarningLetterCondition", "concerns");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ConditionTypeId = 1,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisplayOrder = 1,
-                            Name = "Trust financial plan",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ConditionTypeId = 2,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisplayOrder = 1,
-                            Name = "Action plan",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ConditionTypeId = 2,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisplayOrder = 2,
-                            Name = "Lines of accountability",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ConditionTypeId = 2,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisplayOrder = 3,
-                            Name = "Providing sufficient challenge",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ConditionTypeId = 2,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisplayOrder = 4,
-                            Name = "Scheme of delegation",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ConditionTypeId = 3,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisplayOrder = 1,
-                            Name = "Publishing requirements (compliance with)",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ConditionTypeId = 4,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisplayOrder = 1,
-                            Name = "Financial returns",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterConditionMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("NTIWarningLetterConditionId")
-                        .HasColumnType("int");
-
-                    b.Property<long>("NTIWarningLetterId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NTIWarningLetterConditionId");
-
-                    b.HasIndex("NTIWarningLetterId");
-
-                    b.ToTable("NTIWarningLetterConditionMapping", "concerns");
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterConditionType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("NTIWarningLetterConditionType", "concerns");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisplayOrder = 1,
-                            Name = "Financial management conditions",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisplayOrder = 2,
-                            Name = "Governance conditions",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisplayOrder = 3,
-                            Name = "Compliance conditions",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DisplayOrder = 4,
-                            Name = "Standard conditions (mandatory)",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterReason", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("NTIWarningLetterReason", "concerns");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Cash flow problems",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Cumulative deficit (actual)",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Cumulative deficit (projected)",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Governance concerns",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Non-compliance with Academies Financial/Trust Handbook",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Non-compliance with financial returns",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Risk of insolvency",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Safeguarding",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterReasonMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<long>("NTIWarningLetterId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("NTIWarningLetterReasonId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NTIWarningLetterId");
-
-                    b.HasIndex("NTIWarningLetterReasonId");
-
-                    b.ToTable("NTIWarningLetterReasonMapping", "concerns");
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsClosingState")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PastTenseName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("NTIWarningLetterStatus", "concerns");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsClosingState = false,
-                            Name = "Preparing warning letter",
-                            PastTenseName = "",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsClosingState = false,
-                            Name = "Sent to trust",
-                            PastTenseName = "",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "The warning letter is no longer needed.",
-                            IsClosingState = true,
-                            Name = "Cancel warning letter",
-                            PastTenseName = "Cancelled",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "You are satisfied that all the conditions have been, or will be, met as outlined in the letter",
-                            IsClosingState = true,
-                            Name = "Conditions met",
-                            PastTenseName = "Conditions met",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Conditions have not been met. Close NTI: Warning letter and begin NTI on case page using \"Add to case\".",
-                            IsClosingState = true,
-                            Name = "Escalate to Notice To Improve",
-                            PastTenseName = "Escalated to Notice To Improve",
-                            UpdatedAt = new DateTime(2022, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
-                });
-
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.SRMACase", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CaseUrn")
                         .HasColumnType("int");
@@ -2339,7 +2339,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -2384,7 +2384,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -2561,70 +2561,6 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImprove", b =>
-                {
-                    b.HasOne("ConcernsCaseWork.Data.Models.NoticeToImproveStatus", "ClosedStatus")
-                        .WithMany()
-                        .HasForeignKey("ClosedStatusId");
-
-                    b.HasOne("ConcernsCaseWork.Data.Models.NoticeToImproveStatus", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId");
-
-                    b.Navigation("ClosedStatus");
-
-                    b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveCondition", b =>
-                {
-                    b.HasOne("ConcernsCaseWork.Data.Models.NoticeToImproveConditionType", "ConditionType")
-                        .WithMany()
-                        .HasForeignKey("ConditionTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ConditionType");
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveConditionMapping", b =>
-                {
-                    b.HasOne("ConcernsCaseWork.Data.Models.NoticeToImproveCondition", "NoticeToImproveCondition")
-                        .WithMany("NoticeToImproveConditionsMapping")
-                        .HasForeignKey("NoticeToImproveConditionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConcernsCaseWork.Data.Models.NoticeToImprove", "NoticeToImprove")
-                        .WithMany("NoticeToImproveConditionsMapping")
-                        .HasForeignKey("NoticeToImproveId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("NoticeToImprove");
-
-                    b.Navigation("NoticeToImproveCondition");
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveReasonMapping", b =>
-                {
-                    b.HasOne("ConcernsCaseWork.Data.Models.NoticeToImprove", "NoticeToImprove")
-                        .WithMany("NoticeToImproveReasonsMapping")
-                        .HasForeignKey("NoticeToImproveId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ConcernsCaseWork.Data.Models.NoticeToImproveReason", "NoticeToImproveReason")
-                        .WithMany("NoticeToImproveReasonsMapping")
-                        .HasForeignKey("NoticeToImproveReasonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("NoticeToImprove");
-
-                    b.Navigation("NoticeToImproveReason");
-                });
-
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIUnderConsideration", b =>
                 {
                     b.HasOne("ConcernsCaseWork.Data.Models.NTIUnderConsiderationStatus", "ClosedStatus")
@@ -2717,6 +2653,70 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Navigation("NTIWarningLetterReason");
                 });
 
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImprove", b =>
+                {
+                    b.HasOne("ConcernsCaseWork.Data.Models.NoticeToImproveStatus", "ClosedStatus")
+                        .WithMany()
+                        .HasForeignKey("ClosedStatusId");
+
+                    b.HasOne("ConcernsCaseWork.Data.Models.NoticeToImproveStatus", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId");
+
+                    b.Navigation("ClosedStatus");
+
+                    b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveCondition", b =>
+                {
+                    b.HasOne("ConcernsCaseWork.Data.Models.NoticeToImproveConditionType", "ConditionType")
+                        .WithMany()
+                        .HasForeignKey("ConditionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ConditionType");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveConditionMapping", b =>
+                {
+                    b.HasOne("ConcernsCaseWork.Data.Models.NoticeToImproveCondition", "NoticeToImproveCondition")
+                        .WithMany("NoticeToImproveConditionsMapping")
+                        .HasForeignKey("NoticeToImproveConditionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConcernsCaseWork.Data.Models.NoticeToImprove", "NoticeToImprove")
+                        .WithMany("NoticeToImproveConditionsMapping")
+                        .HasForeignKey("NoticeToImproveId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NoticeToImprove");
+
+                    b.Navigation("NoticeToImproveCondition");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveReasonMapping", b =>
+                {
+                    b.HasOne("ConcernsCaseWork.Data.Models.NoticeToImprove", "NoticeToImprove")
+                        .WithMany("NoticeToImproveReasonsMapping")
+                        .HasForeignKey("NoticeToImproveId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ConcernsCaseWork.Data.Models.NoticeToImproveReason", "NoticeToImproveReason")
+                        .WithMany("NoticeToImproveReasonsMapping")
+                        .HasForeignKey("NoticeToImproveReasonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NoticeToImprove");
+
+                    b.Navigation("NoticeToImproveReason");
+                });
+
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.SRMACase", b =>
                 {
                     b.HasOne("ConcernsCaseWork.Data.Models.SRMAReason", "Reason")
@@ -2765,23 +2765,6 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Navigation("FkConcernsRecord");
                 });
 
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImprove", b =>
-                {
-                    b.Navigation("NoticeToImproveConditionsMapping");
-
-                    b.Navigation("NoticeToImproveReasonsMapping");
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveCondition", b =>
-                {
-                    b.Navigation("NoticeToImproveConditionsMapping");
-                });
-
-            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveReason", b =>
-                {
-                    b.Navigation("NoticeToImproveReasonsMapping");
-                });
-
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIUnderConsideration", b =>
                 {
                     b.Navigation("UnderConsiderationReasonsMapping");
@@ -2807,6 +2790,23 @@ namespace ConcernsCaseWork.Data.Migrations
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterReason", b =>
                 {
                     b.Navigation("WarningLetterReasonsMapping");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImprove", b =>
+                {
+                    b.Navigation("NoticeToImproveConditionsMapping");
+
+                    b.Navigation("NoticeToImproveReasonsMapping");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveCondition", b =>
+                {
+                    b.Navigation("NoticeToImproveConditionsMapping");
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveReason", b =>
+                {
+                    b.Navigation("NoticeToImproveReasonsMapping");
                 });
 #pragma warning restore 612, 618
         }
