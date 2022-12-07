@@ -39,9 +39,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.API.Tests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.API.Contracts", "ConcernsCaseWork.API.Contracts\ConcernsCaseWork.API.Contracts.csproj", "{22E09A3E-1571-4182-9F2D-30AD39521BD3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.API.Contracts.Tests", "ConcernsCaseWork.API.Contracts.Tests\ConcernsCaseWork.API.Contracts.Tests.csproj", "{56E4D701-66D5-4635-8D44-05BA26A2E74B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.API.Contracts.Tests", "ConcernsCaseWork.API.Contracts.Tests\ConcernsCaseWork.API.Contracts.Tests.csproj", "{56E4D701-66D5-4635-8D44-05BA26A2E74B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcernsCaseWork.Data.Tests", "ConcernsCaseWork.Data.Tests\ConcernsCaseWork.Data.Tests.csproj", "{F099C498-7FDC-47C3-BB7D-D36C71DEEE28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Data.Tests", "ConcernsCaseWork.Data.Tests\ConcernsCaseWork.Data.Tests.csproj", "{F099C498-7FDC-47C3-BB7D-D36C71DEEE28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
