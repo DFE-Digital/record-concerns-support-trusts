@@ -76,4 +76,4 @@ jobs:
         working-directory: ./ConcernsCaseWork/ConcernsCaseWork.CypressTests
         run: | 
           npm install
-          npm run cy:run
+          npm run cy:run -- --env url="https://localhost:8001"
