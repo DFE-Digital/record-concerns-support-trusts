@@ -5,25 +5,25 @@ namespace ConcernsCaseWork.API.Contracts.Enums;
 public enum TerritoryEnum
 {
 	[Description("Midlands and West - South West")]
-	MidlandsAndWestSouthWest,
+	Midlands_And_West__SouthWest,
 	[Description("Midlands and West - West Midlands")]
-	MidlandsAndWestWestMidlands,
+	Midlands_And_West__West_Midlands,
 	[Description("Midlands and West - East Midlands")]
-	MidlandsAndWestEastMidlands,
+	Midlands_And_West__East_Midlands,
 	[Description("North and UTC - North East")]
-	NorthAndUtcNorthEast,
+	North_And_Utc__North_East,
 	[Description("North and UTC - North West")]
-	NorthAndUtcNorthWest,
+	North_And_Utc__North_West,
 	[Description("North and UTC - Yorkshire and The Humber")]
-	NorthAndUtcYorkshireAndHumber,
+	North_And_Utc__Yorkshire_And_Humber,
 	[Description("North and UTC - UTC")]
-	NorthAndUtcUtc,
+	North_And_Utc__Utc,
 	[Description("South and East - South East")]
-	SouthAndSouthEastSouthEast,
+	South_And_South_East__South_East,
 	[Description("South and East - London")]
-	SouthAndSouthEastLondon,
+	South_And_South_East__London,
 	[Description("South and East - East of England")]
-	SouthAndSouthEastEastOfEngland,
+	South_And_South_East__East_Of_England,
 	[Description("National Operations")]
-	NationalOperations,
+	National_Operations,
 }

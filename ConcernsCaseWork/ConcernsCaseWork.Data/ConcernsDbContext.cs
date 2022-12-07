@@ -76,6 +76,9 @@ namespace ConcernsCaseWork.Data
 
                 entity.HasMany(x => x.Decisions)
                     .WithOne();
+
+                entity.Property(e => e.Territory)
+	                .HasConversion<string>();
             });
 
             modelBuilder.Entity<ConcernsStatus>(entity =>

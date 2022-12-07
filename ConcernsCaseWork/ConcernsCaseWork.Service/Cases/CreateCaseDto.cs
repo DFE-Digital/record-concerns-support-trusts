@@ -52,7 +52,6 @@ namespace ConcernsCaseWork.Service.Cases
 		public string CaseHistory { get; set; }
 		
 		[JsonProperty("territory")]
-		[JsonConverter(typeof(StringEnumConverter))]
 		public TerritoryEnum? Territory { get; set; }
 		
 		/// <summary>

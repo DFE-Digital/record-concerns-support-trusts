@@ -23,6 +23,6 @@ namespace ConcernsCaseWork.API.RequestModels
         public string DirectionOfTravel { get; set; }
         public int StatusId { get; set; }
         public int RatingId { get; set; }
-        public TerritoryEnum Territory { get; set; }
+        public TerritoryEnum? Territory { get; set; }
     }
 }

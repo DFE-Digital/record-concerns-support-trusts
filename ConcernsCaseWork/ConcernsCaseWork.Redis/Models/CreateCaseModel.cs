@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.Redis.Models
 
 		public IList<string> RagRatingCss { get; set; }
 		
-		public TerritoryEnum Territory { get; set; }
+		public TerritoryEnum? Territory { get; set; }
 
 		public IList<CreateRecordModel> CreateRecordsModel { get; set; } = new List<CreateRecordModel>();
 	}
