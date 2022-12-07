@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using ConcernsCaseWork.API.Contracts.Enums;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ConcernsCaseWork.Service.Cases
 {
@@ -49,6 +51,10 @@ namespace ConcernsCaseWork.Service.Cases
 		[JsonProperty("caseHistory")]
 		public string CaseHistory { get; set; }
 		
+		[JsonProperty("territory")]
+		[JsonConverter(typeof(StringEnumConverter))]
+		public TerritoryEnum? Territory { get; set; }
+		
 		/// <summary>
 		/// Deteriorating, unchanged, improved
 		/// </summary>
@@ -66,12 +72,12 @@ namespace ConcernsCaseWork.Service.Cases
 			DateTimeOffset closedAt, string createdBy, string crmEnquiry, string trustUkPrn, 
 			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
 			string nextSteps, string caseAim, string deEscalationPoint, string caseHistory, string directionOfTravel, long statusId,
-			long ratingId) => 
+			long ratingId, TerritoryEnum? territory) => 
 			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, CreatedBy, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, CaseAim, DeEscalationPoint, CaseHistory, DirectionOfTravel, 
-				StatusId, RatingId) = 
+				StatusId, RatingId, Territory) = 
 			(createdAt, updatedAt, reviewAt, closedAt, createdBy, crmEnquiry, trustUkPrn,
 				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, caseAim, deEscalationPoint, caseHistory, directionOfTravel, 
-				statusId, ratingId);
+				statusId, ratingId, territory);
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.Base;
@@ -182,7 +183,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<string>(), 
 				Fixture.Create<string>(),
 				1,
-				2
+				2,
+				Fixture.Create<TerritoryEnum>()
 			);
 		}
 		
