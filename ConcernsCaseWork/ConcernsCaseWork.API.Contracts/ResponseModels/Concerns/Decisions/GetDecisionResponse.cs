@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.Enums;
+﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
+using ConcernsCaseWork.API.Contracts.Enums;
 
 namespace ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions
 {
@@ -20,5 +21,8 @@ namespace ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions
 		public DecisionStatus DecisionStatus { get; set; }
 		public DateTimeOffset? ClosedAt { get; set; }
 		public string Title { get; set; }
+
+		public DecisionOutcome? Outcome { get; set; }
+		public bool IsEditable { get; set; }
 	}
 }

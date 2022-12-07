@@ -17,6 +17,7 @@ namespace ConcernsCaseWork.Tests.Models.Validatable
 		public void Setup()
 		{
 			_validationContext = _fixture.Create<ValidationContext>();
+			_validationContext.DisplayName = "Test Date";
 		}
 
 		[Test]
@@ -56,7 +57,7 @@ namespace ConcernsCaseWork.Tests.Models.Validatable
 
 			var expected = new List<ValidationResult>()
 			{
-				new ValidationResult("Please enter a complete date DD MM YYYY")
+				new ValidationResult("Test Date: Please enter a complete date DD MM YYYY")
 			};
 
 			result.Should().BeEquivalentTo(expected);
@@ -76,7 +77,7 @@ namespace ConcernsCaseWork.Tests.Models.Validatable
 
 			var expected = new List<ValidationResult>()
 			{
-				new ValidationResult("22-22-2022 is an invalid date")
+				new ValidationResult("Test Date: 22-22-2022 is an invalid date")
 			};
 
 			result.Should().BeEquivalentTo(expected);

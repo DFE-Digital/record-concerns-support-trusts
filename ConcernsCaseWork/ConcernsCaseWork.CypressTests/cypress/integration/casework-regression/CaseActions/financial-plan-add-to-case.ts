@@ -1,10 +1,12 @@
 import { Logger } from "../../../common/logger";
 import AddToCasePage from "../../../pages/caseActions/addToCasePage";
-import { FinancialPlanPage } from "../../../pages/caseActions/financialPlanPage";
+import { EditFinancialPlanPage } from "../../../pages/caseActions/financialPlan/editFinancialPlanPage";
+import { ViewFinancialPlanPage } from "../../../pages/caseActions/financialPlan/viewFinancialPlanPage";
 import CaseManagementPage from "../../../pages/caseMangementPage";
 
 describe("User can add Financial Plan case action to an existing case", () => {
-    let financialPlanPage = new FinancialPlanPage();
+    let viewFinancialPlanPage = new ViewFinancialPlanPage();
+    let editFinancialPlanPage = new EditFinancialPlanPage();
     
     beforeEach(() => {
         cy.login();
@@ -24,7 +26,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
         Logger.Log("Configuring a valid financial plan");
 
-        financialPlanPage
+        editFinancialPlanPage
             .withStatus("Awaiting Plan")
             .withPlanRequestedDay("06")
             .withPlanRequestedMonth("07")
@@ -45,7 +47,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
         Logger.Log("Checking Financial Plan values");
 
-        financialPlanPage
+        viewFinancialPlanPage
             .hasStatus("Awaiting plan")
             .hasPlanRequestedDate("06-07-2022")
             .hasPlanReceivedDate("22-10-2022")
@@ -54,7 +56,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
     it("Should handle an empty form", () =>
     {
-        financialPlanPage.save();
+        editFinancialPlanPage.save();
 
         Logger.Log("Selecting Financial Plan from open actions");
 
@@ -64,7 +66,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .children("a")
             .click();
 
-        financialPlanPage
+        viewFinancialPlanPage
             .hasStatus("In progress")
             .hasPlanRequestedDate("Empty")
             .hasPlanReceivedDate("Empty")
@@ -75,7 +77,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
     {
         Logger.Log("Configuring initial financial plan");
 
-        financialPlanPage
+        editFinancialPlanPage
             .withStatus("Awaiting Plan")
             .withPlanRequestedDay("06")
             .withPlanRequestedMonth("07")
@@ -96,20 +98,21 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
         Logger.Log("Ensure values are displayed correctly");
 
-        financialPlanPage
-            .edit()
-            .hasEnteredStatus("Awaiting Plan")
-            .hasEnteredPlanRequestedDay("06")
-            .hasEnteredPlanRequestedMonth("07")
-            .hasEnteredPlanRequestedYear("2022")
-            .hasEnteredPlanReceivedDay("22")
-            .hasEnteredPlanReceivedMonth("10")
-            .hasEnteredPlanReceivedYear("2022")
-            .hasEnteredNotes("Notes!");
+        viewFinancialPlanPage.edit();
+
+        editFinancialPlanPage
+            .hasStatus("Awaiting Plan")
+            .hasPlanRequestedDay("06")
+            .hasPlanRequestedMonth("07")
+            .hasPlanRequestedYear("2022")
+            .hasPlanReceivedDay("22")
+            .hasPlanReceivedMonth("10")
+            .hasPlanReceivedYear("2022")
+            .hasNotes("Notes!");
 
         Logger.Log("Changing the financial plan");
 
-        financialPlanPage
+        editFinancialPlanPage
             .withStatus("Return To Trust")
             .withPlanRequestedDay("01")
             .withPlanRequestedMonth("02")
@@ -130,13 +133,13 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
         Logger.Log("Viewing edited Financial Plan values");
 
-        financialPlanPage
+        viewFinancialPlanPage
             .hasStatus("Return to trust for further work")
             .hasPlanRequestedDate("01-02-2007")
             .hasPlanReceivedDate("05-07-2008")
             .hasNotes("Editing notes");
 
-        financialPlanPage.edit();
+        viewFinancialPlanPage.edit();
 
         checkFormValidation();
     });
@@ -145,7 +148,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
     {
         Logger.Log("Configuring first financial plan");
 
-        financialPlanPage.save();
+        editFinancialPlanPage.save();
 
         Logger.Log("Try to add second financial plan to case");
         addFinancialPlanToCase();
@@ -158,7 +161,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
     {
         Logger.Log("Incomplete plan requested date");
 
-        financialPlanPage
+        editFinancialPlanPage
             .withStatus("Return To Trust")
             .withNotes("Notes for validation")
             .clearPlanRequestedDate()
@@ -168,13 +171,13 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
         Logger.Log("Check fields were not cleared on error");
 
-        financialPlanPage
-            .hasEnteredStatus("Return To Trust")
-            .hasEnteredNotes("Notes for validation");
+        editFinancialPlanPage
+            .hasStatus("Return To Trust")
+            .hasNotes("Notes for validation");
 
         Logger.Log("Invalid plan requested date");
 
-        financialPlanPage
+        editFinancialPlanPage
             .clearPlanRequestedDate()
             .withPlanRequestedDay("06")
             .withPlanRequestedMonth("22")
@@ -184,7 +187,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
         Logger.Log("Incomplete plan received date");
 
-        financialPlanPage
+        editFinancialPlanPage
             .clearPlanReceivedDate()
             .withPlanReceivedDay("08")
             .save()
@@ -192,7 +195,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
         Logger.Log("Invalid plan received date");
 
-        financialPlanPage
+        editFinancialPlanPage
             .clearPlanReceivedDate()
             .withPlanReceivedDay("08")
             .withPlanReceivedMonth("33")
@@ -202,7 +205,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
         Logger.Log("Notes exceeding character limit");
 
-            financialPlanPage
+        editFinancialPlanPage
                 .withNotesExceedingLimit()
                 .save()
                 .hasValidationError("Notes must be 2000 characters or less");

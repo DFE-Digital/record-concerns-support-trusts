@@ -162,6 +162,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICaseActionValidationStrategy, NTIUnderConsiderationValidator>();
 			services.AddScoped<ICaseActionValidationStrategy, NTIWarningLetterValidator>();
 			services.AddScoped<ICaseActionValidationStrategy, NTIValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, DecisionValidator>();
 			services.AddScoped<ICaseActionValidator, CaseActionValidator>();
 			services.AddScoped<IDecisionModelService, DecisionModelService>();
 			services.AddScoped<ICreateCaseService, CreateCaseService>();

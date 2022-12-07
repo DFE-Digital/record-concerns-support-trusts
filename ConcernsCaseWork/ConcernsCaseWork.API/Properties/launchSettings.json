@@ -3,12 +3,12 @@
   "profiles": {
     "ConcernsCaseWork.API": {
       "commandName": "Project",
-	  "launchBrowser": true,
-	  "launchUrl": "swagger",
-	  "applicationUrl": "https://localhost:3001",
-	  "environmentVariables": {
-		"ASPNETCORE_ENVIRONMENT": "Development"
-	  }
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:3001",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }

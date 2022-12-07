@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
+using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Logging;
@@ -109,6 +110,30 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 
 			result.ConcernsCaseUrn.Should().Be(response.ConcernsCaseUrn);
 			result.DecisionId.Should().Be(response.DecisionId);
+		}
+
+		[Test]
+		public async Task DecisionService_PostDecisionOutcome_When_Success_Returns_Response()
+		{
+			Fixture fixture = CreateMockedFixture();
+
+			
+			var expectedInputDto = fixture.Create<CreateDecisionOutcomeRequest>();
+			var expectedResponseDto = fixture.Create<CreateDecisionOutcomeResponse>();
+			var responseWrapper = new ApiWrapper<CreateDecisionOutcomeResponse>(expectedResponseDto);
+			var caseUrn = expectedResponseDto.ConcernsCaseUrn;
+			var decisionId = expectedResponseDto.DecisionId;
+
+			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{caseUrn}/decisions/{decisionId}", responseWrapper);
+			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
+
+			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>());
+			var result = await sut.PostDecisionOutcome(caseUrn, decisionId, expectedInputDto);
+
+			Assert.That(result, Is.Not.Null);
+			Assert.That(result.ConcernsCaseUrn, Is.EqualTo(expectedResponseDto.ConcernsCaseUrn));
+			Assert.That(result.DecisionId, Is.EqualTo(expectedResponseDto.DecisionId));
+			Assert.That(result.DecisionOutcomeId, Is.EqualTo(expectedResponseDto.DecisionOutcomeId));
 		}
 
 		private Mock<IHttpClientFactory> CreateHttpClientFactory(Mock<HttpMessageHandler> mockMessageHandler)
