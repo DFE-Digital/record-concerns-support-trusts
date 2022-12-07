@@ -14,6 +14,8 @@ namespace ConcernsCaseWork.API.Contracts.Decisions.Outcomes
 			BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea>();
 		}
 
+		public int DecisionOutcomeId { get; set; }
+
 		[Required]
 		[EnumDataType(typeof(DecisionOutcomeStatus), ErrorMessage = "Select a decision outcome status")]
 		public DecisionOutcomeStatus Status { get; set; }

@@ -41,6 +41,7 @@ namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 
 			var result = new DecisionOutcome()
 			{
+				DecisionOutcomeId = entity.DecisionOutcomeId,
 				Status = entity.Status,
 				Authorizer = entity.Authorizer,
 				DecisionEffectiveFromDate = entity.DecisionEffectiveFromDate,
