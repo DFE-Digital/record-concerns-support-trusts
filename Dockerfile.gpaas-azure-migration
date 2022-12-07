@@ -1,6 +1,7 @@
 ﻿# Stage 1
 ARG ASPNET_IMAGE_TAG=6.0.9-bullseye-slim
 ARG NODEJS_IMAGE_TAG=16-bullseye
+ARG COMMIT_SHA=not-set
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS publish
 WORKDIR /build
@@ -41,6 +42,10 @@ RUN npm run build
 # Stage 3 - Final
 ARG ASPNET_IMAGE_TAG
 FROM "mcr.microsoft.com/dotnet/aspnet:${ASPNET_IMAGE_TAG}" AS final
+
+ARG COMMIT_SHA
+RUN echo "Setting env releasetag=${COMMIT_SHA}"
+ENV ConcernsCasework:ReleaseTag="${COMMIT_SHA}"
 
 RUN apt-get update
 RUN apt-get install unixodbc curl gnupg -y

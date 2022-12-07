@@ -14,19 +14,19 @@ jobs:
       version: ${{steps.release-version.outputs.version}}
     steps:
       - id: release-version
-        run: echo "::set-output name=version::release-6"
+        run: echo "::set-output name=version::release-7"
 
   build-and-push-image-production:
     name: Build and push image prodcution
 
     runs-on: ubuntu-latest
-    needs: set-test-release-version
+    needs: set-production-release-version
 
     steps:
       - name: Check out code
         uses: actions/checkout@v3
         with:
-          ref: ${{needs.set-test-release-version.outputs.version}}
+          ref: ${{needs.set-production-release-version.outputs.version}}
 
       - name: Azure Container Registry login
         uses: docker/login-action@v2
@@ -43,7 +43,7 @@ jobs:
           TAGS="${DOCKER_IMAGE}:${VERSION}"
           if [ "${{ github.event_name }}" = "push" ]; then
             VERSION=sha-${GITHUB_SHA}
-            TAGS="$TAGS,${DOCKER_IMAGE}:${VERSION},${DOCKER_IMAGE}:${{needs.set-test-release-version.outputs.version}}"
+            TAGS="$TAGS,${DOCKER_IMAGE}:${VERSION},${DOCKER_IMAGE}:${{needs.set-production-release-version.outputs.version}}"
           fi
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=deploy-version::${VERSION}
@@ -61,6 +61,8 @@ jobs:
         with:
           context: .
           file: ./Dockerfile.gpaas-azure-migration
-          build-args: ASPNET_IMAGE_TAG=6.0.9-bullseye-slim-amd64
+          build-args: |
+            ASPNET_IMAGE_TAG=6.0.9-bullseye-slim-amd64
+            COMMIT_SHA=${GITHUB_SHA}
           push: true
           tags: ${{ steps.prepare-tags.outputs.tags }}

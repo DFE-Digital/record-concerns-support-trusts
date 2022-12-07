@@ -88,8 +88,8 @@
 			            <td class="govuk-table__cell govuk-table__header__right">
 				            @if (Model.IsEditableCase)
 				            {
-					            <a class="govuk-link" href="@Request.Path/edit_rating">
-						            Edit<span class="govuk-visually-hidden"> risk rating</span>
+					            <a class="govuk-link" href="@Request.Path/edit_rating" aria-label="Change risk to trust rating">
+						            Edit<span class="govuk-visually-hidden"> risk to trust rating</span>
 					            </a>
 				            }
 			            </td>
@@ -102,7 +102,7 @@
 			            <td class="govuk-table__cell govuk-table__header__right">
 				            @if (Model.IsEditableCase)
 				            {
-					            <a class="govuk-link" href="@Request.Path/edit_directionoftravel">
+					            <a class="govuk-link" href="@Request.Path/edit_directionoftravel" aria-label="Change direction of travel">
 						            Edit<span class="govuk-visually-hidden"> direction of travel</span>
 					            </a>
 				            }
@@ -154,7 +154,7 @@
 										            <div class="govuk-!-padding-bottom-1">
 											            @if (Model.IsEditableCase)
 											            {
-												            <a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/edit_rating">Edit</a>
+												            <a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/edit_rating" aria-label="Change @concern.TypeModel.TypeDisplay rating" data-testid="edit-concern">Edit</a>
 											            }
 										            </div>
 									            }
@@ -206,7 +206,7 @@
 			            @if (Model.IsEditableCase)
 			            {
 				            <td class="govuk-table__cell govuk-table__header__right">
-					            <a class="govuk-link float__right" href="@Request.Path/edit_issue">Edit</a>
+					            <a class="govuk-link float__right" href="@Request.Path/edit_issue" aria-label="Change issue">Edit</a>
 				            </td>
 			            }
 		            </tr>
@@ -220,7 +220,7 @@
 			            @if (Model.IsEditableCase)
 			            {
 				            <td class="govuk-table__cell govuk-table__header__right">
-					            <a class="govuk-link float__right" href="@Request.Path/edit_current_status">Edit</a>
+					            <a class="govuk-link float__right" href="@Request.Path/edit_current_status" aria-label="Change status">Edit</a>
 				            </td>
 			            }
 		            </tr>
@@ -234,7 +234,7 @@
 			            @if (Model.IsEditableCase)
 			            {
 				            <td class="govuk-table__cell govuk-table__header__right">
-					            <a class="govuk-link float__right" href="@Request.Path/edit_case_aim">Edit</a>
+					            <a class="govuk-link float__right" href="@Request.Path/edit_case_aim" aria-label="Change case aim">Edit</a>
 				            </td>
 			            }
 		            </tr>
@@ -248,7 +248,7 @@
 			            @if (Model.IsEditableCase)
 			            {
 				            <td class="govuk-table__cell govuk-table__header__right">
-					            <a class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point">Edit</a>
+					            <a class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point" aria-label="Change de-escalation point">Edit</a>
 				            </td>
 			            }
 		            </tr>
@@ -262,7 +262,7 @@
 			            @if (Model.IsEditableCase)
 			            {
 				            <td class="govuk-table__cell govuk-table__header__right">
-					            <a class="govuk-link float__right" href="@Request.Path/edit_next_steps">Edit</a>
+					            <a class="govuk-link float__right" href="@Request.Path/edit_next_steps" aria-label="Change next steps">Edit</a>
 				            </td>
 			            }
 		            </tr>
@@ -316,7 +316,7 @@
 							{
 								<tr class="govuk-table__row">
 									<td class="govuk-table__cell">
-									<a href="@action.RelativeUrl" class="govuk-link govuk-link-no-visited-state">
+									<a data-testid="@action.Name" href="@action.RelativeUrl" class="govuk-link govuk-link-no-visited-state">
 										<span>@action.Name</span>
 										</a>
 									</td>

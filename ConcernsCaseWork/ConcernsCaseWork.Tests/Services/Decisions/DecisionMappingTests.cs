@@ -10,6 +10,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Services.Decisions
 {
@@ -72,6 +73,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			string booleanResolvedValue)
 		{
 			var apiDecision = _fixture.Create<GetDecisionResponse>();
+			apiDecision.IsEditable = true;
 			apiDecision.ConcernsCaseUrn = 2;
 			apiDecision.DecisionId = 10;
 			apiDecision.RetrospectiveApproval = booleanFlag;
@@ -122,8 +124,9 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 
 			result.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(new List<string>() { "Capital", "Schools Financial Support and Oversight (SFSO)" });
 			result.Outcome.EditLink.Should().Be("/case/2/management/action/decision/10/outcome/addOrUpdate/10007");
+			result.IsEditable.Should().BeTrue();
 		}
-
+	
 		[Test]
 		public void ToDecisionModel_WhenNoPropertiesFilled_AndNoOutcome_ReturnsCorrectModel()
 		{
@@ -304,6 +307,16 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.DecisionEffectiveFromDate.Value.Year.ToString().Should().Be(model.DecisionEffectiveFromDate.Year);
 			result.Authorizer.Should().Be(model.Authorizer);
 			result.BusinessAreasConsulted.Should().BeEquivalentTo(model.BusinessAreasConsulted);
+		}
+
+		[Test]
+		public void ToDecisionSummary_ReturnsCorrectModel()
+		{
+			var apiDecision = _fixture.Create<DecisionSummaryResponse>();
+
+			var result = DecisionMapping.ToDecisionSummaryModel(apiDecision);
+
+			result.ClosedAt.Should().Be(apiDecision.ClosedAt?.Date);
 		}
 	}
 }
