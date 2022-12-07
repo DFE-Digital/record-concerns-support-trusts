@@ -23,8 +23,8 @@ describe("Testing decision outcome", () =>{
         Logger.Log("Creating Empty Decision");
         cy.addConcernsDecisionsAddToCase();
 
-        editDecisionPage
-            .saveDecision();
+		editDecisionPage
+            .save();
 
         cy.get("#open-case-actions td")
             .should("contain.text", "Decision: No Decision Types")
@@ -107,8 +107,8 @@ describe("Testing decision outcome", () =>{
         Logger.Log("Creating Empty Decision");
         cy.addConcernsDecisionsAddToCase();
 
-        editDecisionPage
-            .saveDecision();
+		editDecisionPage
+            .save();
 
         cy.get("#open-case-actions td")
             .should("contain.text", "Decision: No Decision Types")
