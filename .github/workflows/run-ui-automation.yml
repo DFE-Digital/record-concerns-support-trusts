@@ -60,3 +60,9 @@ jobs:
 
       - name: Run application
         run: dotnet run --project ConcernsCaseWork/ConcernsCaseWork/ConcernsCaseWork.csproj &
+
+      - name: Setup and run the cypress tests
+      - working-directory: ./ConcernsCaseWork/ConcernsCaseWork.CypressTests
+      - run: | 
+          npm install
+          npm run cy:run
