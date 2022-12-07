@@ -48,7 +48,7 @@ jobs:
         run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln
 
       - name: Configure application
-        working-directory: ./ConcernsCaseWork
+        working-directory: ./ConcernsCaseWork/ConcernsCaseWork
         run: |
           dotnet user-secrets set "VCAP_SERVICES" "{'redis': [{'credentials': {'host': '127.0.0.1','password': 'password','port': '6379','tls_enabled': 'false'}}]}"
           dotnet user-secrets set "trams:api_key" "app-key"
