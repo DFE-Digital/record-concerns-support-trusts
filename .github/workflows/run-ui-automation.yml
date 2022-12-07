@@ -63,7 +63,7 @@ jobs:
           dotnet user-secrets set "ConcernsCasework:ApiKey" "app-key"
           dotnet user-secrets set "ConcernsCasework:ApiEndpoint" "https://localhost"
 
-      - name Install Website
+      - name: Install Website
         working-directory: ./ConcernsCaseWork/ConcernsCaseWork/wwwroot
         run: | 
           npm install
