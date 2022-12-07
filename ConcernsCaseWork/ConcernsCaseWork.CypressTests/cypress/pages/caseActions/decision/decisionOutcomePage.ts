@@ -119,4 +119,105 @@ export class DecisionOutcomePage {
 
 		return this;
 	}
+
+	public hasDecisionOutcomeStatus(decisionOutcomeID: string): this {
+		cy.task("log", `Has decision outcome status ${decisionOutcomeID}`);
+
+		cy.getByTestId(decisionOutcomeID).should('have.value', decisionOutcomeID);
+
+		return this;
+	}
+
+	public hasTotalAmountApproved(totalAmountApproved: string): this {
+		cy.task("log", `Total amount approved ${totalAmountApproved}`);
+
+		cy.getByTestId("total-amount-approved").should(
+			"contain.value",
+			totalAmountApproved
+		);
+
+		return this;
+	}
+
+	public hasDecisionMadeDay(decisionMadeDay: string): this {
+		cy.task("log", `Decision Made Date ${decisionMadeDay}`);
+
+		cy.getByTestId("dtr-day-decision-made").should(
+			"contain.value",
+			decisionMadeDay
+		);
+
+		return this;
+	}
+
+	public hasDecisionMadeMonth(decisionMadeMonth: string): this {
+		cy.task("log", `Decision Made Date ${decisionMadeMonth}`);
+
+		cy.getByTestId("dtr-month-decision-made").should(
+			"contain.value",
+			decisionMadeMonth
+		);
+
+		return this;
+	}
+
+	public hasDecisionMadeYear(decisionMadeYear: string): this {
+		cy.task("log", `Decision Made Date ${decisionMadeYear}`);
+
+		cy.getByTestId("dtr-year-decision-made").should(
+			"contain.value",
+			decisionMadeYear
+		);
+
+		return this;
+	}
+
+	public hasDateEffectiveFromDay(dateEffectiveFromDay: string): this {
+		cy.task("log", `Date Effective From Day ${dateEffectiveFromDay}`);
+
+		cy.getByTestId("dtr-day-take-effect").should(
+			"contain.value",
+			dateEffectiveFromDay
+		);
+
+		return this;
+	}
+
+	public hasDateEffectiveFromMonth(dateEffectiveFromMonth: string): this {
+		cy.task("log", `Date Effective From Month ${dateEffectiveFromMonth}`);
+
+		cy.getByTestId("dtr-month-take-effect").should(
+			"contain.value",
+			dateEffectiveFromMonth
+		);
+
+		return this;
+	}
+
+	public hasDateEffectiveFromYear(dateEffectiveFromYear: string): this {
+		cy.task("log", `Date Effective From Year ${dateEffectiveFromYear}`);
+
+		cy.getByTestId("dtr-year-take-effect").should(
+			"contain.value",
+			dateEffectiveFromYear
+		);
+
+		return this;
+	}
+
+	public hasDecisionAuthouriser(authoriserID: string): this {
+		cy.task("log", `Has authoriser ${authoriserID}`);
+
+		cy.getByTestId(authoriserID).should('have.value', authoriserID);
+
+		return this;
+	}
+
+	public hasBusinessArea(businessAreaID: string): this {
+		cy.task("log", `Has Business Area ${businessAreaID}`);
+
+		cy.getByTestId(businessAreaID).should('have.value', businessAreaID);
+
+		return this;
+	}
 }
