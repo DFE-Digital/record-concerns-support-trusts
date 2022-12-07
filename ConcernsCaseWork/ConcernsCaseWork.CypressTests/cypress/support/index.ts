@@ -13,6 +13,8 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 // Import commands.js using ES2015 syntax:
 import './commands'
 import './utils'
