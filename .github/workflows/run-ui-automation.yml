@@ -59,4 +59,4 @@ jobs:
           dotnet user-secrets set "ConcernsCasework:ApiEndpoint" "https://localhost"
 
       - name: Run application
-        run: dotnet run --project ConcernsCaseWork/ConcernsCaseWork/ConcernsCaseWork.csproj
+        run: dotnet run --project ConcernsCaseWork/ConcernsCaseWork/ConcernsCaseWork.csproj &
