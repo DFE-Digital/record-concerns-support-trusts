@@ -1,0 +1,61 @@
+name: Run integration tests
+
+on:
+  push:
+    branches:
+    - develop
+  pull_request:
+    branches: [ develop ]
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  run-ui-automation:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    services:
+      sql-server:
+        image: mcr.microsoft.com/mssql/server:2017-latest
+        ports:
+        - 1433:1433
+        env:
+          ACCEPT_EULA: "Y"
+          SA_PASSWORD: "change_this_password"
+
+      redis:
+        image: redis:alpine
+        ports:
+        - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Install certificates
+        run: |
+          sudo apt install libnss3-tools
+          sh ConcernsCaseWork/setup-certs/ubuntu-create-dotnet-devcert.sh
+
+      - name: Setup node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+
+      - name: Restore dependencies
+        run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
+
+      - name: Build application
+        run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln
+
+      - name: Run tests
+        run: dotnet test
