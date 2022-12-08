@@ -179,7 +179,17 @@
 	            
 	            <tr class="govuk-table__row">
 	                <th scope="row" class="govuk-table-case-details__header">SFSO territory</th>
-	                <td class="govuk-table__cell">@Model.CaseModel.Territory?.Description()</td>
+		            <td class="govuk-table__cell">
+			            @if (Model.CaseModel.Territory == null)
+			            {
+				            <span class='govuk-tag ragtag ragtag__grey'>Empty</span>
+			            }
+			            else
+			            {
+				            @Model.CaseModel.Territory?.Description()
+			            }
+			      
+		            </td>
 		                 <td class="govuk-table__cell govuk-table__header__right">
                         @if (Model.IsEditableCase)
                         {
