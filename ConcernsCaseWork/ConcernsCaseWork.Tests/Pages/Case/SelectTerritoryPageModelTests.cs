@@ -141,6 +141,67 @@ public class SelectTerritoryPageModelTests
 		mockLogger.VerifyLogInformationWasCalled("Territory");
 		mockLogger.VerifyLogErrorWasCalled("Could not retrieve cached new case data for user");
 	}
+	
+	[Test]
+	public async Task WhenOnGetCancel_UserStateNotFound_ClearsUserStateAndRedirectToDetailsPage()
+	{
+		// arrange
+		var mockUserStateCachedService = new Mock<IUserStateCachedService>();
+		var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+		var username = "testing";
+		
+		mockClaimsPrincipalHelper.Setup(h => h.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(username);
+		
+		var sut = SetupTerritoryModel(Mock.Of<ITrustModelService>(), mockUserStateCachedService.Object, Mock.Of<ILogger<SelectTerritoryPageModel>>(), mockClaimsPrincipalHelper.Object,true);
+
+		// act
+		var pageResponse = await sut.OnGetCancel();
+
+		// assert
+		Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
+		var page = pageResponse as RedirectResult;
+		
+		Assert.That(page, Is.Not.Null);
+		Assert.That(page.Url, Is.EqualTo("/"));
+		
+		mockUserStateCachedService
+			.Verify(cs => cs.StoreData(username, It.Is<UserState>(s => s.CreateCaseModel.TrustUkPrn == null)), 
+				Times.Once);
+	}
+
+	[Test]
+	public async Task WhenOnGetCancel_UserStateFound_ClearsUserStateAndRedirectToDetailsPage()
+	{
+		// arrange
+		var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+		var mockUserStateCachedService = new Mock<IUserStateCachedService>();
+
+		var username = "testing";
+		var userState = new UserState(username) { TrustUkPrn = null };
+
+		mockUserStateCachedService.Setup(c => c.GetData(username)).ReturnsAsync(userState);
+		mockClaimsPrincipalHelper.Setup(h => h.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(username);
+		
+		var sut = SetupTerritoryModel(
+			Mock.Of<ITrustModelService>(), 
+			mockUserStateCachedService.Object, 
+			Mock.Of<ILogger<SelectTerritoryPageModel>>(), 
+			mockClaimsPrincipalHelper.Object,true);
+		
+		// act
+		var pageResponse = await sut.OnGetCancel();
+
+		// assert
+		Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
+		var page = pageResponse as RedirectResult;
+		
+		Assert.That(page, Is.Not.Null);
+		Assert.That(page.Url, Is.EqualTo("/"));
+		
+		mockUserStateCachedService
+			.Verify(cs => cs.StoreData(username, It.Is<UserState>(s => s.CreateCaseModel.TrustUkPrn == null)), 
+			Times.Once);
+	}
 
 	[Test]
 	public async Task WhenOnPost_RedirectToDetailsPage()
@@ -233,7 +294,6 @@ public class SelectTerritoryPageModelTests
 		Assert.That(page, Is.Not.Null);
 		
 		mockLogger.VerifyLogErrorWasCalled("Could not retrieve cached new case data for user");
-
 	}
 	
 	[Test]

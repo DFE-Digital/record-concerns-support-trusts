@@ -92,7 +92,16 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			try
 			{
-				var userState = await GetUserState();
+				UserState userState;
+				try
+				{
+					userState = await GetUserState();
+				}
+				catch (Exception)
+				{
+					userState = new UserState(GetUserName());
+				}
+
 				userState.CreateCaseModel = new CreateCaseModel();
 				await _userStateCache.StoreData(GetUserName(), userState);
 				
@@ -101,9 +110,8 @@ namespace ConcernsCaseWork.Pages.Case
 			catch (Exception ex)
 			{
 				_logger.LogErrorMsg(ex);
-					
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
+	
+				return Redirect("/");
 			}
 		}
 		
