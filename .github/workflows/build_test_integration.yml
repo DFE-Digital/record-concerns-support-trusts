@@ -41,16 +41,6 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
-      - name: Install certificates
-        run: |
-          sudo apt install libnss3-tools
-          sh ConcernsCaseWork/setup-certs/ubuntu-create-dotnet-devcert.sh
-
-      - name: Setup node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: "16.x"
-
       - name: Restore dependencies
         run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
 
@@ -58,4 +48,4 @@ jobs:
         run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln
 
       - name: Run tests
-        run: dotnet test
+        run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln
