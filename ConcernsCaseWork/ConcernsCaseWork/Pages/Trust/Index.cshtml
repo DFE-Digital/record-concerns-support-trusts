@@ -6,33 +6,104 @@
 @{
 	ViewData["Title"] = "Find Trust";
 	var nonce = HttpContext.GetNonce();
+	Model.FindTrustModel.Nonce = nonce;
 }
 
 <div class="govuk-width-container">
-	
-	<partial name="_BannerError"/>
-	
-	<div class="moj-search govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
-			<partial name="../Shared/_FindTrust" />
-		</div>
-	</div>
 
+	<partial name="_BannerError"/>
+	<form role="form" method="post" id="select-trust-form" novalidate>
+
+		<partial name="_ValidationErrors" />
+        <div class="moj-search govuk-grid-row">
+	        <div class="govuk-grid-column-two-thirds">
+	            <partial name="../Shared/_FindTrust" />
+	        </div>
+		</div>
+
+		<div class="govuk-button-group">
+			<button data-prevent-double-click="true"
+			        class="govuk-button govuk-!-margin-top-6"
+			        data-module="govuk-button"
+			        type="submit"
+			        role="button"
+			        id="continue"
+			        name="action"
+			        value="continue">
+				Continue
+			</button>
+			@*asp-page-handler="Cancel"*@
+			<a data-prevent-double-click="true" href="/" class="govuk-link" data-module="govuk-button" role="button">Cancel</a>
+		</div>
+	</form>
 </div>
 
 <script type="application/javascript" nonce="@nonce">
+    $(document).ready(function () {
+
+         $(document).ajaxStart(function() {
+            showLoader();
+	    })
+         $(document).ajaxStop(function() {
+            hideLoader();
+	    })
+
+
+	    const autocompleteContainer = document.getElementById("autocomplete-container");
+	    const input = $("#search");
+        let trustSearchResults = undefined;
+        let selectedTrustUkprn = undefined;
+        //const trustUkprn = trustSearchResults.find(trust => trust.displayName === selected).ukPrn;
+
+        function searchForTrusts(queryStr, populateResults) {
+			trustSearchResults = undefined;
+            selectedTrustUkprn = undefined;
+			$.get("trust/TrustsSearchResult", { searchQuery: queryStr })
+				.done(function (trusts) {
+                    if (trusts !== undefined) {
+                        trustSearchResults = trusts;
+						populateResults(trusts.map(x => x.displayName));
+					}
+                    else {
+						trustSearchResults = undefined;
+                        populateResults();
+                    }
+				});
+        }
+
+	    accessibleAutocomplete({
+			element: autocompleteContainer, // this should be something else
+			id: "trustSearch",
+			name: "trustSearch",
+			source: searchForTrusts,
+			confirmOnBlur: false,
+			minLength: 3,
+	        showNoOptonsFound: true,
+	        onConfirm: (selected) => {
+				selectedTrustUkprn = trustSearchResults === undefined ? undefined : trustSearchResults.find(trust => trust.displayName === selected).ukPrn;
+                $('#selectedTrustUkprn').val(selectedTrustUkprn);
+			}
+		});
+	});
+
+</script>
+
+@*<script type="application/javascript" nonce="@nonce">
 	$(function () {
+        // should this go
 		let clearResults = function () {
 			$("#trusts-partial-results").empty();
 			$("#autocomplete-container").empty();
 			$(".autocomplete__menu").addClass("autocomplete__menu--hidden");
 		};
 
+        // should this go
 		$("#search").focusin(function() {
 			this.value = "";
 			clearResults();
 		});
 
+        // should this go
 		try {
 			let searchForm = $("#search-form");
 			const validator = formValidator(searchForm[0]);
@@ -83,7 +154,7 @@
 									const trustUkprn = trusts.find(item => item.displayName === selected).ukPrn;
 							  		input.attr("aria-valuetext", trustUkprn);
 									input.val(selected);
-								  
+
 								  	// Ajax Post Trust
 									$.get("trust?handler=SelectedTrust",
 										{ trustUkPrn: trustUkprn })
@@ -121,3 +192,4 @@
 	});
 </script>
 
+*@
