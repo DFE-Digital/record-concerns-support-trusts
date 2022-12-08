@@ -1,0 +1,353 @@
+﻿@page "/case/{urn:long}/management/action/decision/{decisionId:long}/outcome/addOrUpdate/{outcomeId:long?}"
+@model ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome.AddPageModel;
+@using ConcernsCaseWork.API.Contracts.Enums;
+@using Microsoft.AspNetCore.Mvc.TagHelpers;
+@using NetEscapades.AspNetCore.SecurityHeaders;
+@using ConcernsCaseWork.Helpers;
+
+@{
+    var nonce = HttpContext.GetNonce();
+
+    var decisionsValidationErrors = TempData["Decision.Message"] as IEnumerable<string>;
+}
+
+@section BeforeMain {
+    <div class="govuk-width-container">
+        <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
+            Back to case
+        </a>
+    </div>
+}
+
+<div class="govuk-width-container">
+    <partial name="_BannerError" />
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+                <partial name="_Error" />
+            }
+            else
+            {
+                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+                @if (TempData["Decision.Message"] != null)
+                {
+                    <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
+                        <h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
+                        <div class="govuk-error-summary__body">
+                            <ul id="decision-error-list" class="govuk-list govuk-error-summary__list">
+                                @foreach (var msg in decisionsValidationErrors)
+                                {
+                                    <li class="govuk-error-message">@msg</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+
+                <h1 class="govuk-heading-l">
+                    <span class="govuk-caption-m">Decision ID @RouteData.Values["decisionId"]</span>
+                    Record decision outcome
+                </h1>
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        You must record the decision outcome to complete this page. If you are not able to record this yet, go back to <a id="back-to-case-text-link" href="/case/@RouteData.Values["urn"]/management">case overview</a>
+                    </strong>
+                </div>
+
+                <form role="form" method="post" id="add-decision-outcome-form" novalidate>
+
+                    <input type="hidden" name="DecisionOutcome.DecisionId" value="@RouteData.Values["decisionId"]" />
+
+                    @* Decision Oucome *@
+                    <div class="govuk-form-group govuk-!-margin-top-6">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">What was the decision outcome?</h2>
+                            </legend>
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                @{
+                                    int outcomeId = 0;
+                                }
+
+                                @foreach (var outcome in Model.DecisionOutcomesCheckBoxes)
+                                {
+                                    var idStr = outcomeId++ == 0 ? "outcome" : "outcome-" + outcomeId;
+                                    var checkedStr = Model.DecisionOutcome?.Status == outcome ? "checked" : "";
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="@idStr" data-testid="@outcome" name="DecisionOutcome.Status" type="radio" value="@outcome" @checkedStr>
+
+                                        <label class="govuk-label govuk-radios__label" for="@idStr">
+                                            <span>
+                                                @EnumHelper.GetEnumDescription(outcome)
+                                            </span>
+                                        </label>
+                                    </div>
+                                }
+
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    @* Total amount approved *@
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset" aria-describedby="total-amount-approved-hint">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">What was the total amount approved? </h2>
+                            </legend>
+                            <div id="total-amount-approved-hint" class="govuk-hint">
+                                If no amount was requested, enter £0.
+                            </div>
+                            <div class="govuk-input__wrapper">
+                                <div class="govuk-input__prefix" aria-hidden="true">£</div>
+                                <input class="govuk-input govuk-input--width-6"
+                                       id="total-amount-approved"
+                                       data-testid="total-amount-approved"
+                                       name="DecisionOutcome.TotalAmount"
+                                       type="text"
+                                       value="@Model.DecisionOutcome?.TotalAmount">
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    @* Date decision made *@
+                    <div class="govuk-form-group govuk-!-margin-top-9">
+                        <fieldset class="govuk-fieldset">
+                            <h2 class="govuk-heading-m">
+                                When was the decision made?
+                            </h2>
+
+                            <div class="govuk-date-input" id="dtr-date-decision-made">
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="dtr-day-decision-made">
+                                            Day
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                               id="dtr-day-decision-made"
+                                               data-testid="dtr-day-decision-made"
+                                               name="DecisionOutcome.DecisionMadeDate.Day"
+                                               type="text"
+                                               maxlength="2"
+                                               inputmode="numeric"
+                                               value="@($"{Model.DecisionOutcome?.DecisionMadeDate?.Day:00}")" />
+                                    </div>
+                                </div>
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="dtr-month-decision-made">
+                                            Month
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                               id="dtr-month-decision-made"
+                                               data-testid="dtr-month-decision-made"
+                                               name="DecisionOutcome.DecisionMadeDate.Month"
+                                               type="text"
+                                               maxlength="2"
+                                               inputmode="numeric"
+                                               value="@($"{Model.DecisionOutcome?.DecisionMadeDate?.Month:00}")" />
+                                    </div>
+                                </div>
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="dtr-year-decision-made">
+                                            Year
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-4"
+                                               id="dtr-year-decision-made"
+                                               data-testid="dtr-year-decision-made"
+                                               name="DecisionOutcome.DecisionMadeDate.Year"
+                                               type="text"
+                                               maxlength="4"
+                                               inputmode="numeric"
+                                               value="@($"{Model.DecisionOutcome?.DecisionMadeDate?.Year}")" />
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    @* Decision take effect date *@
+                    <div class="govuk-form-group govuk-!-margin-top-9">
+                        <fieldset class="govuk-fieldset">
+                            <h2 class="govuk-heading-m">
+                                When did or does the decision take effect?
+                            </h2>
+                            <div id="decision-take-effect-date-hint" class="govuk-hint">
+                                For example, the date a change happens or when a payment is made.
+                            </div>
+                            <div class="govuk-date-input" id="dtr-take-effect">
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="dtr-day-take-effect">
+                                            Day
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                               id="dtr-day-take-effect"
+                                               data-testid="dtr-day-take-effect"
+                                               name="DecisionOutcome.DecisionEffectiveFromDate.Day"
+                                               type="text"
+                                               maxlength="2"
+                                               inputmode="numeric"
+                                               value="@($"{Model.DecisionOutcome?.DecisionEffectiveFromDate?.Day:00}")" />
+                                    </div>
+                                </div>
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="dtr-month-take-effect">
+                                            Month
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-2"
+                                               id="dtr-month-take-effect"
+                                               data-testid="dtr-month-take-effect"
+                                               name="DecisionOutcome.DecisionEffectiveFromDate.Month"
+                                               type="text"
+                                               maxlength="2"
+                                               inputmode="numeric"
+                                               value="@($"{Model.DecisionOutcome?.DecisionEffectiveFromDate?.Month:00}")" />
+                                    </div>
+                                </div>
+                                <div class="govuk-date-input__item">
+                                    <div class="govuk-form-group">
+                                        <label class="govuk-label govuk-date-input__label" for="dtr-year-take-effect">
+                                            Year
+                                        </label>
+                                        <input class="govuk-input govuk-date-input__input govuk-input--width-4"
+                                               id="dtr-year-take-effect"
+                                               data-testid="dtr-year-take-effect"
+                                               name="DecisionOutcome.DecisionEffectiveFromDate.Year"
+                                               type="text"
+                                               maxlength="4"
+                                               inputmode="numeric"
+                                               value="@($"{Model.DecisionOutcome?.DecisionEffectiveFromDate?.Year}")" />
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    @* Authoriser *@
+                    <div class="govuk-form-group govuk-!-margin-top-6">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">
+                                    Who authorised this decision?
+                                </h2>
+                            </legend>
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                @{
+                                    int authoriserId = 0;
+                                }
+
+                                @foreach (var authoriser in Model.AuthoriserCheckBoxes)
+                                {
+                                    var idStr = authoriserId++ == 0 ? "authoriser" : "authoriser-" + authoriserId;
+                                    var checkedStr = Model.DecisionOutcome?.Authorizer == authoriser ? "checked" : "";
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input"
+                                               id="@idStr"
+                                               data-testid="@authoriser"
+                                               name="DecisionOutcome.Authorizer"
+                                               type="radio"
+                                               value="@authoriser"
+                                               @checkedStr>
+
+                                        <label class="govuk-label govuk-radios__label" for="@idStr">
+                                            <span>
+                                                @EnumHelper.GetEnumDescription(authoriser)
+                                            </span>
+                                        </label>
+                                    </div>
+                                }
+
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    @* Business area consulted *@
+                    <div class="govuk-form-group govuk-!-margin-top-6">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-heading-m">
+                                    Which business areas were consulted?
+                                </h2>
+                            </legend>
+
+                            @foreach (var businessAreaCheckbox in Model.BusinessAreaCheckBoxes)
+							{
+								var isChecked = Model.DecisionOutcome?.BusinessAreasConsulted.Contains(businessAreaCheckbox);
+
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input"
+                                           id="@businessAreaCheckbox"
+                                           data-testid="@businessAreaCheckbox"
+                                           name="DecisionOutcome.BusinessAreasConsulted"
+                                           type="checkbox"
+                                           value="@businessAreaCheckbox"
+                                           checked="@isChecked">
+                                    <label class="govuk-label govuk-checkboxes__label" for="@businessAreaCheckbox">
+                                        @EnumHelper.GetEnumDescription(businessAreaCheckbox)
+                                    </label>
+                                </div>
+                            }
+                        </fieldset>
+                    </div>
+
+                    <div class="govuk-button-group">
+                        <button data-prevent-double-click="true"
+                                class="govuk-button govuk-!-margin-top-6"
+                                data-module="govuk-button"
+                                role="button"
+                                id="add-decision-outcome-button"
+                                data-testid="add-decision-outcome-button"
+                                name="action">
+                            Save and continue
+                        </button>
+                    </div>
+                </form>
+
+
+                <script type="application/javascript" nonce="@nonce">
+
+					function formatCurrency(element) {
+
+						let currencyFormatter = new Intl.NumberFormat("en-GB", {
+							style: "currency",
+							currency: "GBP"
+						});
+
+						const onlyNumbersRegex = /[^\d\.]/g;
+
+						const amount = element.val().replace(onlyNumbersRegex, "");
+
+						const formattedCurrency = currencyFormatter.format(amount).replace("£", "");
+						element.val(formattedCurrency);
+					}
+
+					$(function () {
+						let validator = formValidator($("#add-decision-outcome-form")[0]);
+
+						$totalAmountRequestedObj = $('#total-amount-approved');
+
+						$(document).ready(function() {
+							formatCurrency($totalAmountRequestedObj);
+						});
+
+						$totalAmountRequestedObj.focusout(function () {
+							formatCurrency($totalAmountRequestedObj);
+						});
+
+
+						autoResizer();
+					});
+                </script>
+            }
+
+        </div>
+    </div>
+</div>

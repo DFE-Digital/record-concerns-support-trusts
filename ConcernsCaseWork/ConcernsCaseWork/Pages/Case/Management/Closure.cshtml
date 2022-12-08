@@ -22,7 +22,7 @@
 			{
 				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
 				<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
-				<div class="govuk-error-summary__body">
+				<div class="govuk-error-summary__body" data-testid="case-closure-validation-errors">
 					<ul class="govuk-list govuk-error-summary__list">
 						@foreach (var msg in TempData["OpenActions.Message"] as IEnumerable<string>)
 						{

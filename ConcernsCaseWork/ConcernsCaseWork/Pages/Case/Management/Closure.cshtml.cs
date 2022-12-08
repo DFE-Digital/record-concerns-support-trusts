@@ -18,6 +18,9 @@ using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Status;
+using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.CoreTypes;
+using ConcernsCaseWork.Services.Decisions;
 
 namespace ConcernsCaseWork.Pages.Case.Management
 {
@@ -34,14 +37,26 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly INtiUnderConsiderationModelService _ntiUnderConsiderationModelService;
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly INtiModelService _ntiModelService;
+		private readonly IDecisionService _decisionService;
 		private readonly ICaseActionValidator _caseActionValidator;
 		private readonly ILogger<ClosurePageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		
-		public ClosurePageModel(ICaseModelService caseModelService, ITrustModelService trustModelService, IRecordModelService recordModelService, 
-			IStatusCachedService statusCachedService, ISRMAService srmaModelService, IFinancialPlanModelService financialPlanModelService, INtiUnderConsiderationModelService ntiUnderConsiderationModelService, INtiWarningLetterModelService ntiWarningLetterModelService, INtiModelService ntiModelService, ICaseActionValidator caseActionValidator, ILogger<ClosurePageModel> logger)
+		public ClosurePageModel(
+			ICaseModelService caseModelService, 
+			ITrustModelService trustModelService, 
+			IRecordModelService recordModelService, 
+			IStatusCachedService statusCachedService, 
+			ISRMAService srmaModelService, 
+			IFinancialPlanModelService financialPlanModelService, 
+			INtiUnderConsiderationModelService ntiUnderConsiderationModelService, 
+			INtiWarningLetterModelService ntiWarningLetterModelService, 
+			INtiModelService ntiModelService,
+			IDecisionService decisionService,
+			ICaseActionValidator caseActionValidator,
+			ILogger<ClosurePageModel> logger)
 		{
 			_caseModelService = caseModelService;
 			_trustModelService = trustModelService;
@@ -52,6 +67,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_ntiUnderConsiderationModelService = ntiUnderConsiderationModelService;
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_ntiModelService = ntiModelService;
+			_decisionService = decisionService;
 			_caseActionValidator = caseActionValidator;
 			_logger = logger;
 		}
@@ -156,12 +172,14 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			var ntiUnderConsiderationModelsTask = _ntiUnderConsiderationModelService.GetNtiUnderConsiderationsForCase(caseUrn);
 			var ntiWarningLetterModelsTask = _ntiWarningLetterModelService.GetNtiWarningLettersForCase(caseUrn);
 			var ntiModelModelsTask = _ntiModelService.GetNtisForCaseAsync(caseUrn);
+			var decisionsTask = GetDecisions(caseUrn);
 
 			caseActionModels.AddRange(await srmaModelsTask);
 			caseActionModels.AddRange(await financialPlanModelsTask);
 			caseActionModels.AddRange(await ntiUnderConsiderationModelsTask);
 			caseActionModels.AddRange(await ntiWarningLetterModelsTask);
 			caseActionModels.AddRange(await ntiModelModelsTask);
+			caseActionModels.AddRange(await decisionsTask);
 			var caseActionErrorMessages = _caseActionValidator.Validate(caseActionModels);
 
 			errorMessages.AddRange(caseActionErrorMessages);
@@ -177,6 +195,15 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			}
 
 			return errorMessages;
+		}
+
+		private async Task<List<DecisionSummaryModel>> GetDecisions(long caseUrn)
+		{
+			var apiDecisions = await _decisionService.GetDecisionsByCaseUrn(caseUrn);
+
+			var result = apiDecisions.Select(d => DecisionMapping.ToDecisionSummaryModel(d)).ToList();
+
+			return result;
 		}
 	}
 }

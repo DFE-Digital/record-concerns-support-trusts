@@ -2,7 +2,7 @@
 
 namespace ConcernsCaseWork.Models.CaseActions
 {
-	public class DecisionModel
+	public class ViewDecisionModel
 	{
 		public int DecisionId { get; set; }
 		public int ConcernsCaseUrn { get; set; }
@@ -16,5 +16,7 @@ namespace ConcernsCaseWork.Models.CaseActions
 		public string SupportingNotes { get; set; }
 		public string EditLink { get; set; }
 		public string BackLink { get; set; }
+		public ViewDecisionOutcomeModel? Outcome { get; set; }
+		public bool IsEditable { get; set; }
 	}
 }

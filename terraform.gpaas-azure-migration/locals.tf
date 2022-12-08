@@ -10,6 +10,7 @@ locals {
   container_secret_environment_variables = var.container_secret_environment_variables
   enable_mssql_database                  = var.enable_mssql_database
   enable_redis_cache                     = var.enable_redis_cache
+  enable_cdn_frontdoor                   = var.enable_cdn_frontdoor
   key_vault_access_users                 = toset(var.key_vault_access_users)
   tfvars_filename                        = var.tfvars_filename
 }

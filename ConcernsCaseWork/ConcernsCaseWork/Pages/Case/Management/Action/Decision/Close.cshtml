@@ -1,0 +1,69 @@
+﻿@page "/case/{urn:long}/management/action/decision/{decisionId:long?}/close"
+@model ConcernsCaseWork.Pages.Case.Management.Action.Decision.ClosePageModel;
+@using Microsoft.AspNetCore.Mvc.TagHelpers;
+@using NetEscapades.AspNetCore.SecurityHeaders
+
+@{
+	ViewData["Title"] = "Close decision";
+	ViewData["BackButtonLabel"] = "Back to case";
+	ViewData["BackButtonLink"] = $"/case/{@Model.CaseUrn}/management";
+	var nonce = HttpContext.GetNonce();
+}
+
+@section BeforeMain {
+	<div class="govuk-width-container">
+		<partial name="_BackLink"/>
+	</div>
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError" />
+
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+
+			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+			{
+				<partial name="_Error" />
+			}
+			else
+			{
+				<partial name="_ValidationErrors"/>
+				<form role="form" method="post" id="add-decision-form" novalidate>
+					
+					<h1 class="govuk-heading-l">
+						<span class="govuk-caption-m">Decision ID @Model.DecisionId</span>
+						Close decision
+					</h1>
+					<h1 class="govuk-heading-m">
+						Supporting notes
+					</h1>
+					
+					@* Notes *@
+					<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
+						<div class="govuk-form-group">
+							<div class="govuk-hint">Include any academy name(s) related to the decision</div>
+							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="SupportingNotes" name="SupportingNotes" rows="3" aria-describedby="SupportingNotes-info">@Model.Notes</textarea>
+						</div>
+						<div id="SupportingNotes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+							You can enter up to @Model.NotesMaxLength characters
+						</div>
+					</div>
+
+					<div class="govuk-button-group">
+						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-decision-button" name="action">
+							Close decision
+						</button>
+					</div>
+				</form>
+			}
+
+		</div>
+	</div>
+</div>
+
+<script type="application/javascript" nonce="@nonce">
+	$(function () {
+		autoResizer();
+	});
+</script>

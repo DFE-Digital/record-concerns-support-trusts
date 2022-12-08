@@ -15,6 +15,7 @@ namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 				ConcernsCaseUrn = concernsCaseUrn,
 				DecisionId = decision.DecisionId,
 				Status = (Contracts.Enums.DecisionStatus)decision.Status,
+				Outcome = decision.Outcome?.Status,
 				CreatedAt = decision.CreatedAt,
 				UpdatedAt = decision.UpdatedAt,
 				ClosedAt = decision.ClosedAt,
