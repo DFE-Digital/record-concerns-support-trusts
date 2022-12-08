@@ -22,8 +22,8 @@ cp localhost.crt ~/.mozilla/certificates/aspnetcore-localhost-https.crt
 
 echo "Setting up chrome"
 # Trust Edge/Chrome
-mkdir -p $HOME/.pki/nssdb
-certutil -d $HOME/.pki/nssdb -N
+mkdir -p sql:$HOME/.pki/nssdb
+certutil -d sql:$HOME/.pki/nssdb -N
 certutil -d sql:$HOME/.pki/nssdb -A -t "P,," -n localhost -i ./localhost.crt
 certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n localhost -i ./localhost.crt
 
