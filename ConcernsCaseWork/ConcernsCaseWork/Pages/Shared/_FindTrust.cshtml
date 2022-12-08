@@ -1,7 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
+@model FindTrustModel
+
 @{
+	if (String.IsNullOrWhiteSpace(Model.Nonce))
+	{
+		throw new InvalidOperationException("Nonce not provided by parent page");
+	}
 }
 
 <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
@@ -29,7 +35,7 @@
 </ul>
 <input type="hidden" id="selectedTrustUkprn" name="selectedTrustUkprn" required />
 
-@*<script type="application/javascript" nonce="@nonce">
+<script type="application/javascript" nonce="@Model.Nonce">
     $(document).ready(function () {
 
          $(document).ajaxStart(function() {
@@ -44,11 +50,12 @@
         const input = $("#search");
         let trustSearchResults = undefined;
         let selectedTrustUkprn = undefined;
-        //const trustUkprn = trustSearchResults.find(trust => trust.displayName === selected).ukPrn;
 
         function searchForTrusts(queryStr, populateResults) {
             trustSearchResults = undefined;
             selectedTrustUkprn = undefined;
+
+            // use trust page for searching
             $.get("trust/TrustsSearchResult", { searchQuery: queryStr })
                 .done(function (trusts) {
                     if (trusts !== undefined) {
@@ -63,7 +70,7 @@
         }
 
         accessibleAutocomplete({
-            element: autocompleteContainer, // this should be something else
+            element: autocompleteContainer,
             id: "trustSearch",
             name: "trustSearch",
             source: searchForTrusts,
@@ -77,4 +84,4 @@
         });
     });
 
-</script>*@
+</script>
