@@ -44,7 +44,7 @@ jobs:
       - name: Install certificates
         run: |
           sudo apt install libnss3-tools
-          ConcernsCaseWork sh ./setup-certs.sh
+          sh ConcernsCaseWork/setup-certs.sh
 
       - name: Setup node.js
         uses: actions/setup-node@v1
