@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		[BindProperty]
 		[Required(ErrorMessage = "An SFSO Territory must be selected")]
-		public TerritoryEnum Territory { get; set; }
+		public TerritoryEnum? Territory { get; set; }
 
 		public SelectTerritoryPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,
@@ -49,8 +49,16 @@ namespace ConcernsCaseWork.Pages.Case
 		{
 			_logger.LogMethodEntered();
 				
-			// Fetch UI data
-			await LoadPage();
+			try
+			{
+				await LoadPage();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogErrorMsg(ex);
+				
+				TempData["Error.Message"] = ErrorOnGetPage;
+			}
 		}
 		
 		public async Task<IActionResult> OnPostAsync()
@@ -66,9 +74,8 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				var userState = await GetUserState();
 				userState.CreateCaseModel.Territory = Territory;
-				
-				// Store case model in cache for the details page
 				await _userStateCache.StoreData(GetUserName(), userState);
+				
 				return RedirectToPage("details");
 			}
 			catch (Exception ex)
@@ -78,7 +85,7 @@ namespace ConcernsCaseWork.Pages.Case
 				TempData["Error.Message"] = ErrorOnPostPage;
 			}
 			
-			return await LoadPage();
+			return Page();
 		}
 		
 		public async Task<ActionResult> OnGetCancel()
@@ -102,27 +109,17 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		private async Task<ActionResult> LoadPage()
 		{
-			try
-			{
-				var userState = await GetUserState();
-				var trustUkPrn = userState.TrustUkPrn;
+			var userState = await GetUserState();
+			var trustUkPrn = userState.TrustUkPrn;
 
-				if (string.IsNullOrEmpty(trustUkPrn))
-					throw new Exception("Cache TrustUkprn is null");
+			if (string.IsNullOrEmpty(trustUkPrn))
+				throw new Exception("Cache TrustUkprn is null");
 		
-				CreateCaseModel = userState.CreateCaseModel;
-				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
-				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
+			CreateCaseModel = userState.CreateCaseModel;
+			CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
+			TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
 		
-				return Page();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogErrorMsg(ex);
-				
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
-			}
+			return Page();
 		}
 		
 		private async Task<UserState> GetUserState()

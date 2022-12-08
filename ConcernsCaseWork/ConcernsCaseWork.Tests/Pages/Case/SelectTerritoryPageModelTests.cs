@@ -5,16 +5,14 @@ using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -80,7 +78,7 @@ public class SelectTerritoryPageModelTests
 	}
 
 	[Test]
-	public async Task WhenOnGetAsync_Missing_TrustUkprn_Returns_Page()
+	public async Task WhenOnGetAsync_Missing_TrustUkprn_Returns_PageWithError()
 	{
 		// arrange
 		var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
@@ -120,7 +118,7 @@ public class SelectTerritoryPageModelTests
 	}
 
 	[Test]
-	public async Task WhenOnGetAsync_AndUserStateIsNull_ReturnsErrorLoadingPage()
+	public async Task WhenOnGetAsync_AndUserStateIsNull_ReturnsPageWithError()
 	{
 		// arrange
 		var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
@@ -141,7 +139,7 @@ public class SelectTerritoryPageModelTests
 		Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 		
 		mockLogger.VerifyLogInformationWasCalled("Territory");
-		mockLogger.VerifyLogErrorWasCalled("LoadPage::Exception - Could not retrieve cached new case data for user");
+		mockLogger.VerifyLogErrorWasCalled("Could not retrieve cached new case data for user");
 	}
 
 	[Test]
@@ -174,7 +172,7 @@ public class SelectTerritoryPageModelTests
 	}
 	
 	[Test]
-	public async Task WhenOnPost_MissingFormParameters_ReturnsPage()
+	public async Task WhenOnPost_ModelStateValidationFailed_ReturnsPageWithError()
 	{
 		// arrange
 		var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
@@ -184,13 +182,46 @@ public class SelectTerritoryPageModelTests
 
 		var expectedTrustByUkprn = TrustFactory.BuildTrustDetailsModel();
 		var expected = CaseFactory.BuildCreateCaseModel();
-		var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
 
-		mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
-		mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<ClaimsPrincipal>())).Returns("Tester");
+		var username = "some.test.user";
+		var userState = new UserState(username) { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+
+		mockUserStateCachedService.Setup(c => c.GetData(username)).ReturnsAsync(userState);
+		mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<ClaimsPrincipal>())).Returns(username);
 		mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expectedTrustByUkprn);
 		
 		var sut = SetupTerritoryModel(mockTrustModelService.Object, mockUserStateCachedService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object,true);
+		var keyName = "testkey";
+		var errorMsg = "some model validation error";
+		sut.ModelState.AddModelError(keyName, errorMsg);
+		
+		// act
+		var pageResponse = await sut.OnPostAsync();
+
+		// assert
+		Assert.Multiple(() =>
+		{
+			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
+			Assert.That(sut.ModelState.IsValid, Is.False);
+			Assert.That(sut.ModelState.Keys.Count(), Is.EqualTo(1));
+			Assert.That(sut.ModelState.First().Key, Is.EqualTo(keyName));
+			Assert.That(sut.ModelState.First().Value?.Errors.Single().ErrorMessage, Is.EqualTo(errorMsg));
+		});
+	}
+
+	[Test]
+	public async Task WhenOnPost_CouldNotGetUserState_ReturnsPageWithError()
+	{
+		// arrange
+		var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+		var mockLogger = new Mock<ILogger<SelectTerritoryPageModel>>();
+		var mockUserStateCachedService = new Mock<IUserStateCachedService>();
+
+		var username = "some.test.user";
+
+		mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<ClaimsPrincipal>())).Returns(username);
+		
+		var sut = SetupTerritoryModel(Mock.Of<ITrustModelService>(), mockUserStateCachedService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object,true);
 		
 		// act
 		var pageResponse = await sut.OnPostAsync();
@@ -201,39 +232,30 @@ public class SelectTerritoryPageModelTests
 		
 		Assert.That(page, Is.Not.Null);
 		
-		mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
-		mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
+		mockLogger.VerifyLogErrorWasCalled("Could not retrieve cached new case data for user");
+
 	}
 	
 	[Test]
-	public async Task WhenOnPost_EmptyFormParameters_ReturnsPage()
+	public async Task WhenOnPost_ModelStateIsInvalidAndCouldNotGetTrustUkPrn_ReturnsPageWithError()
 	{
 		// arrange
 		var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 		var mockLogger = new Mock<ILogger<SelectTerritoryPageModel>>();
 		var mockUserStateCachedService = new Mock<IUserStateCachedService>();
-		var mockTrustModelService = new Mock<ITrustModelService>();
 
-		var expectedTrustByUkprn = TrustFactory.BuildTrustDetailsModel();
-		var expected = CaseFactory.BuildCreateCaseModel();
-		var userState = new UserState("testing") { TrustUkPrn = "trust-ukprn", CreateCaseModel = expected };
+		var username = "some.test.user";
+		var userState = new UserState(username) { TrustUkPrn = null };
 
-		mockUserStateCachedService.Setup(c => c.GetData(It.IsAny<string>())).ReturnsAsync(userState);
-		mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<ClaimsPrincipal>())).Returns("Tester");
-		mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expectedTrustByUkprn);
+		mockUserStateCachedService.Setup(c => c.GetData(username)).ReturnsAsync(userState);
+		mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<ClaimsPrincipal>())).Returns(username);
+
+		mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<ClaimsPrincipal>())).Returns(username);
 		
-		var sut = SetupTerritoryModel(mockTrustModelService.Object, mockUserStateCachedService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object,true);
-		
-		sut.HttpContext.Request.Form = new FormCollection(
-			new Dictionary<string, StringValues>
-			{
-				{ "issue", new StringValues("") },
-				{ "current-status", new StringValues("") },
-				{ "next-steps", new StringValues("") },
-				{ "case-aim", new StringValues("") },
-				{ "de-escalation-point", new StringValues("") },
-				{ "case-history", new StringValues("case-history") }
-			});
+		var sut = SetupTerritoryModel(Mock.Of<ITrustModelService>(), mockUserStateCachedService.Object, mockLogger.Object, mockClaimsPrincipalHelper.Object,true);
+		var keyName = "testkey";
+		var errorMsg = "some model validation error";
+		sut.ModelState.AddModelError(keyName, errorMsg);
 		
 		// act
 		var pageResponse = await sut.OnPostAsync();
@@ -244,8 +266,7 @@ public class SelectTerritoryPageModelTests
 		
 		Assert.That(page, Is.Not.Null);
 		
-		mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
-		mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
+		mockLogger.VerifyLogErrorWasCalled("Cache TrustUkprn is null");
 	}
 	
 	private static SelectTerritoryPageModel SetupTerritoryModel(

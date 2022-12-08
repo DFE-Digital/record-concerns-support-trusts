@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.CoreTypes;
+﻿using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.CoreTypes;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Cases;
@@ -384,6 +386,24 @@ namespace ConcernsCaseWork.Services.Cases
 			catch (Exception ex)
 			{
 				_logger.LogError("CaseModelService::PatchNextSteps exception {Message}", ex.Message);
+
+				throw;
+			}
+		}
+				
+		public async Task PatchTerritory(int caseUrn, string userName, TerritoryEnum? territory)
+		{
+			try
+			{
+				var caseDto = await _caseCachedService.GetCaseByUrn(userName, caseUrn);
+				
+				var newCaseDto = caseDto with { UpdatedAt = DateTimeOffset.Now, Territory = territory };
+
+				await _caseCachedService.PatchCaseByUrn(newCaseDto);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogErrorMsg(ex);
 
 				throw;
 			}

@@ -32,14 +32,15 @@
 		<partial name="_ValidationErrors"/>
 
 		<form role="form" method="post" id="case-territory-form" novalidate>
+			
 			<div class="govuk-form-group @if (Model.ModelState.ContainsKey("Territory")) { @errorClass; }" >
 				<fieldset class="govuk-fieldset">
 					<legend class="govuk-fieldset__legend govuk-!-font-weight-bold">
 						Which SFSO territory is managing this case?
 					</legend>
-					@if (Model.ModelState.ContainsKey("Territory"))
-					{
-						<span class="govuk-error-message" id="territory-error">@string.Join("<br />", ModelState["Territory"]!.Errors.Select(errs => errs?.ErrorMessage))</span>
+					@if (!Model.ModelState.IsValid && Model.ModelState.ContainsKey("Territory"))
+            								{
+						<span class="govuk-error-message" id="territory-error">@string.Join("<br />", @Model.ModelState["Territory"]!.Errors.Select(errs => errs?.ErrorMessage))</span>
 					}
 					<div class="govuk-radios" data-module="govuk-radios" id="Territory">
 						@foreach (TerritoryEnum territory in Enum.GetValues(typeof(TerritoryEnum)))
@@ -54,7 +55,7 @@
 					</div>
 				</fieldset>
 			</div>
-		
+
 			<div class="govuk-button-group">
 				<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button">
 					Next step

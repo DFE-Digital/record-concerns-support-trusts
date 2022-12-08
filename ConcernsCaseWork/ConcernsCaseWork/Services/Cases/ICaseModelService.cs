@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.CoreTypes;
+﻿using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.Status;
@@ -23,6 +23,7 @@ namespace ConcernsCaseWork.Services.Cases
 		Task PatchDeEscalationPoint(PatchCaseModel patchCaseModel);
 		Task PatchNextSteps(PatchCaseModel patchCaseModel);
 		Task PatchCaseHistory(long caseUrn, string userName, string caseHistory);
+		Task PatchTerritory(int caseUrn, string userName, TerritoryEnum? territory);
 		Task<long> PostCase(CreateCaseModel createCaseModel);
 	}
 }
