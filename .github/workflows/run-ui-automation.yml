@@ -13,24 +13,24 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
 
-    # services:
-    #   sql-server:
-    #     image: mcr.microsoft.com/mssql/server:2017-latest
-    #     ports:
-    #     - 1433:1433
-    #     env:
-    #       ACCEPT_EULA: "Y"
-    #       SA_PASSWORD: "change_this_password"
+    services:
+      sql-server:
+        image: mcr.microsoft.com/mssql/server:2017-latest
+        ports:
+        - 1433:1433
+        env:
+          ACCEPT_EULA: "Y"
+          SA_PASSWORD: "change_this_password"
 
-    #   redis:
-    #     image: redis:alpine
-    #     ports:
-    #     - 6379:6379
-    #     options: >-
-    #       --health-cmd "redis-cli ping"
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
+      redis:
+        image: redis:alpine
+        ports:
+        - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout repository
@@ -46,39 +46,39 @@ jobs:
           sudo apt install libnss3-tools
           sh ConcernsCaseWork/setup-certs/ubuntu-create-dotnet-devcert.sh
 
-      # - name: Setup node.js
-      #   uses: actions/setup-node@v1
-      #   with:
-      #     node-version: "16.x"
+      - name: Setup node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
 
-      # - name: Restore dependencies
-      #   run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
+      - name: Restore dependencies
+        run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
 
-      # - name: Build application
-      #   run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln
+      - name: Build application
+        run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln
 
-      # - name: Configure application
-      #   working-directory: ./ConcernsCaseWork/ConcernsCaseWork
-      #   run: |
-      #     dotnet user-secrets set "VCAP_SERVICES" "{'redis': [{'credentials': {'host': '127.0.0.1','password': 'password','port': '6379','tls_enabled': 'false'}}]}"
-      #     dotnet user-secrets set "trams:api_key" "app-key"
-      #     dotnet user-secrets set "trams:api_endpoint" "https://trams-external-api.azurewebsites.net"
-      #     dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=sip;Integrated Security=true;TrustServerCertificate=True"
-      #     dotnet user-secrets set "ConcernsCaseworkApi:ApiKeys" "app-key"
-      #     dotnet user-secrets set "ConcernsCasework:ApiKey" "app-key"
-      #     dotnet user-secrets set "ConcernsCasework:ApiEndpoint" "https://localhost"
+      - name: Configure application
+        working-directory: ./ConcernsCaseWork/ConcernsCaseWork
+        run: |
+          dotnet user-secrets set "VCAP_SERVICES" "{'redis': [{'credentials': {'host': '127.0.0.1','password': 'password','port': '6379','tls_enabled': 'false'}}]}"
+          dotnet user-secrets set "trams:api_key" "app-key"
+          dotnet user-secrets set "trams:api_endpoint" "https://trams-external-api.azurewebsites.net"
+          dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=sip;Integrated Security=true;TrustServerCertificate=True"
+          dotnet user-secrets set "ConcernsCaseworkApi:ApiKeys" "app-key"
+          dotnet user-secrets set "ConcernsCasework:ApiKey" "app-key"
+          dotnet user-secrets set "ConcernsCasework:ApiEndpoint" "https://localhost"
 
-      # - name: Install Website
-      #   working-directory: ./ConcernsCaseWork/ConcernsCaseWork/wwwroot
-      #   run: | 
-      #     npm install
-      #     npm run build
+      - name: Install Website
+        working-directory: ./ConcernsCaseWork/ConcernsCaseWork/wwwroot
+        run: | 
+          npm install
+          npm run build
 
-      # - name: Run application
-      #   run: dotnet run --project ConcernsCaseWork/ConcernsCaseWork/ConcernsCaseWork.csproj &
+      - name: Run application
+        run: dotnet run --project ConcernsCaseWork/ConcernsCaseWork/ConcernsCaseWork.csproj &
 
-      # - name: Setup and run the cypress tests
-      #   working-directory: ./ConcernsCaseWork/ConcernsCaseWork.CypressTests
-      #   run: | 
-      #     npm install
-      #     npm run cy:run -- --env url="https://localhost:8001"
+      - name: Setup and run the cypress tests
+        working-directory: ./ConcernsCaseWork/ConcernsCaseWork.CypressTests
+        run: | 
+          npm install
+          npm run cy:run -- --env url="https://localhost:8001"
