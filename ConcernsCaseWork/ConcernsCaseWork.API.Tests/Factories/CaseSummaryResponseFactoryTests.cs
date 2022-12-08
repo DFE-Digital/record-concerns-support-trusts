@@ -17,11 +17,11 @@ public class CaseSummaryResponseFactoryTests
 	private readonly IFixture _fixture = new Fixture();
 
 	[Fact]
-	public void ReturnsCaseSummaryResponse_WhenGivenACaseSummaryVmWithNoConcernsOrActionsOrDecisions()
+	public void ReturnsCaseSummaryResponse_WhenGivenAnActiveCaseSummaryVmWithNoConcernsOrActionsOrDecisions()
 	{
 		// arrange
 		var ratingName = _fixture.Create<string>();
-		var caseSummaryVm = Builder<CaseSummaryVm>.CreateNew().Build();
+		var caseSummaryVm = Builder<ActiveCaseSummaryVm>.CreateNew().Build();
 		caseSummaryVm.Rating = new ConcernsRating { Name = ratingName };
 
 		// act
@@ -45,11 +45,11 @@ public class CaseSummaryResponseFactoryTests
 	}
 
 	[Fact]
-	public void ReturnsCaseSummaryResponse_WhenGivenACaseSummaryVmWithConcernsAndActionsAndDecisions()
+	public void ReturnsCaseSummaryResponse_WhenGivenAnActiveCaseSummaryVmWithConcernsAndActionsAndDecisions()
 	{
 		// arrange
 		var ratingName = _fixture.Create<string>();
-		var caseSummaryVm = Builder<CaseSummaryVm>.CreateNew().Build();
+		var caseSummaryVm = Builder<ActiveCaseSummaryVm>.CreateNew().Build();
 		caseSummaryVm.Rating = new ConcernsRating { Name = ratingName };
 		caseSummaryVm.ActiveConcerns = BuildListConcerns();
 		caseSummaryVm.Decisions = BuildListDecisions();
@@ -87,8 +87,8 @@ public class CaseSummaryResponseFactoryTests
 		result.SrmaCases.Count().Should().Be(caseSummaryVm.SrmaCases.Count());
 	}
 
-	private List<CaseSummaryVm.Concern> BuildListConcerns()
-		=> new List<CaseSummaryVm.Concern>
+	private List<ActiveCaseSummaryVm.Concern> BuildListConcerns()
+		=> new List<ActiveCaseSummaryVm.Concern>
 		{
 			new(_fixture.Create<string>(), new ConcernsRating { Name = _fixture.Create<string>() }, _fixture.Create<DateTime>()),
 			new(_fixture.Create<string>(), new ConcernsRating { Name = _fixture.Create<string>() }, _fixture.Create<DateTime>()),
@@ -120,5 +120,5 @@ public class CaseSummaryResponseFactoryTests
 			DateTimeOffset.Now
 		);
 
-private List<CaseSummaryVm.Action> BuildListActions() => _fixture.CreateMany<CaseSummaryVm.Action>().ToList();
+private List<ActiveCaseSummaryVm.Action> BuildListActions() => _fixture.CreateMany<ActiveCaseSummaryVm.Action>().ToList();
 }

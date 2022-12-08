@@ -31,6 +31,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 	{
 		private readonly ITrustModelService _trustModelService;
 		private readonly ICaseModelService _caseModelService;
+		private readonly ICaseSummaryService _caseSummaryService;
 		private readonly IRecordModelService _recordModelService;
 		private readonly IRatingModelService _ratingModelService;
 		private readonly IStatusCachedService _statusCachedService;
@@ -40,7 +41,10 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
-		public IList<TrustCasesModel> TrustCasesModel { get; private set; }
+		
+		public IList<ActiveCaseSummaryModel> ActiveCases { get; private set; }
+		
+		public IList<ClosedCaseSummaryModel> ClosedCases { get; private set; }
 		public bool IsEditableCase { get; private set; }
 		public List<ActionSummaryModel> CaseActions { get; private set; }
 		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
@@ -57,7 +61,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			IStatusCachedService statusCachedService,
 			INtiUnderConsiderationStatusesCachedService ntiUCStatusesCachedService,
 			ILogger<IndexPageModel> logger,
-		IActionsModelService actionsModelService
+			IActionsModelService actionsModelService,
+			ICaseSummaryService caseSummaryService
 			)
 		{
 			_trustModelService = trustModelService;
@@ -68,6 +73,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_ntiStatusesCachedService = ntiUCStatusesCachedService;
 			_logger = logger;
 			_actionsModelService = actionsModelService;
+			_caseSummaryService = caseSummaryService;
 		}
 
 		public async Task<IActionResult> OnGetAsync()
@@ -101,13 +107,15 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				SetIsConcernsCase();
 
 				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
-				var trustCasesTask = _caseModelService.GetCasesByTrustUkprn(CaseModel.TrustUkPrn);
+				var activeTrustCasesTask = _caseSummaryService.GetActiveCaseSummariesByTrust(CaseModel.TrustUkPrn);
+				var closedTrustCasesTask = _caseSummaryService.GetClosedCaseSummariesByTrust(CaseModel.TrustUkPrn);
 				var caseActionsTask = PopulateCaseActions(caseUrn);
 
-				Task.WaitAll(trustDetailsTask, trustCasesTask, caseActionsTask);
+				Task.WaitAll(trustDetailsTask, activeTrustCasesTask, closedTrustCasesTask, caseActionsTask);
 
 				TrustDetailsModel = trustDetailsTask.Result;
-				TrustCasesModel = trustCasesTask.Result;
+				ActiveCases = activeTrustCasesTask.Result;
+				ClosedCases = closedTrustCasesTask.Result;
 
 				NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
 			}

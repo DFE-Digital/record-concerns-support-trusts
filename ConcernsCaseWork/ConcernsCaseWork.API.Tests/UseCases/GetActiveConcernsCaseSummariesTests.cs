@@ -21,13 +21,13 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             var ownerId = _fixture.Create<string>();
             var gateway = new Mock<ICaseSummaryGateway>();
             
-            var cases = Builder<CaseSummaryVm>.CreateListOfSize(10)
+            var cases = Builder<ActiveCaseSummaryVm>.CreateListOfSize(10)
                 .All()
                 .With(c => c.CreatedBy = ownerId)
                 .With(c => c.Rating = Builder<ConcernsRating>.CreateNew().Build())
                 .Build();
 
-            gateway.Setup(g => g.GetActiveCaseSummaries(ownerId)).ReturnsAsync(cases);
+            gateway.Setup(g => g.GetActiveCaseSummariesByOwner(ownerId)).ReturnsAsync(cases);
             
             var sut = new GetActiveConcernsCaseSummariesByOwner(gateway.Object);
 
@@ -45,9 +45,9 @@ namespace ConcernsCaseWork.API.Tests.UseCases
 	        var ownerId = _fixture.Create<string>();
 	        var gateway = new Mock<ICaseSummaryGateway>();
 
-	        var cases = new List<CaseSummaryVm>();
+	        var cases = new List<ActiveCaseSummaryVm>();
 
-	        gateway.Setup(g => g.GetActiveCaseSummaries(ownerId)).ReturnsAsync(cases);
+	        gateway.Setup(g => g.GetActiveCaseSummariesByOwner(ownerId)).ReturnsAsync(cases);
 
 	        var sut = new GetActiveConcernsCaseSummariesByOwner(gateway.Object);
 	        

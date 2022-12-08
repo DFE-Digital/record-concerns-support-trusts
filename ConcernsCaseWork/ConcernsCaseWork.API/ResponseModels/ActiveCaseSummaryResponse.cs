@@ -1,6 +1,6 @@
 namespace ConcernsCaseWork.API.ResponseModels;
 
-public record ActiveCaseSummaryResponse
+public abstract record CaseSummaryResponse
 {
 	public long CaseUrn { get; set; }
 	public string CreatedBy { get; set; }
@@ -9,7 +9,6 @@ public record ActiveCaseSummaryResponse
 	public string StatusName { get; set; }
 	public ConcernsRatingResponse Rating { get; set; }
 	public string TrustUkPrn { get; set; }
-	public IEnumerable<Concern> ActiveConcerns { get; set; }
 	public IEnumerable<ActionOrDecision> Decisions { get; set; }
 	public IEnumerable<ActionOrDecision> FinancialPlanCases { get; set; }
 	public IEnumerable<ActionOrDecision> NoticesToImprove { get; set; }
@@ -19,4 +18,15 @@ public record ActiveCaseSummaryResponse
 	
 	public record ActionOrDecision(DateTime CreatedAt, DateTime? ClosedAt, string Name);
 	public record Concern(string Name, ConcernsRatingResponse Rating, DateTime CreatedAt);
+}
+
+public record ActiveCaseSummaryResponse : CaseSummaryResponse
+{
+	public IEnumerable<Concern> ActiveConcerns { get; set; }
+}
+
+public record ClosedCaseSummaryResponse : CaseSummaryResponse
+{
+	public DateTime ClosedAt { get; set; }	
+	public IEnumerable<Concern> ClosedConcerns { get; set; }
 }

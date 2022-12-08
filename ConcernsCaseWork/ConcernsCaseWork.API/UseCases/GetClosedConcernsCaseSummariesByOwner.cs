@@ -4,18 +4,18 @@ using ConcernsCaseWork.Data.Gateways;
 
 namespace ConcernsCaseWork.API.UseCases;
 
-public class GetActiveConcernsCaseSummariesByOwner : IGetActiveConcernsCaseSummariesByOwner
+public class GetClosedConcernsCaseSummariesByOwner : IGetClosedConcernsCaseSummariesByOwner
 {
 	private readonly ICaseSummaryGateway _gateway;
 
-	public GetActiveConcernsCaseSummariesByOwner(ICaseSummaryGateway gateway)
+	public GetClosedConcernsCaseSummariesByOwner(ICaseSummaryGateway gateway)
 	{
 		_gateway = gateway;
 	}
 	
-	public async Task<IList<ActiveCaseSummaryResponse>> Execute(string userName)
+	public async Task<IList<ClosedCaseSummaryResponse>> Execute(string userName)
 	{
-		var caseSummaries = await _gateway.GetActiveCaseSummariesByOwner(userName);
+		var caseSummaries = await _gateway.GetClosedCaseSummariesByOwner(userName);
 		
 		return caseSummaries.Select(CaseSummaryResponseFactory.Create).ToList();
 	}

@@ -1,10 +1,10 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ConcernsCaseWork.Service.Status;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,14 +15,16 @@ namespace ConcernsCaseWork.Pages.Case
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	public class ClosedPageModel : AbstractPageModel
 	{
-		private readonly ICaseModelService _caseModelService;
+		private readonly ICaseSummaryService _caseSummaryService;
+		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private readonly ILogger<ClosedPageModel> _logger;
 		
-		public IList<HomeModel> CasesClosed { get; private set; }
+		public List<ClosedCaseSummaryModel> ClosedCases { get; private set; }
 		
-		public ClosedPageModel(ICaseModelService caseModelService, ILogger<ClosedPageModel> logger)
+		public ClosedPageModel(ICaseSummaryService caseSummaryService, IClaimsPrincipalHelper claimsPrincipalHelper, ILogger<ClosedPageModel> logger)
 		{
-			_caseModelService = caseModelService;
+			_caseSummaryService = caseSummaryService;
+			_claimsPrincipalHelper = claimsPrincipalHelper;
 			_logger = logger;
 		}
 		
@@ -32,15 +34,17 @@ namespace ConcernsCaseWork.Pages.Case
 			{
 				_logger.LogInformation("ClosedPageModel::OnGetAsync executed");
 		        
-				CasesClosed = await _caseModelService.GetCasesByCaseworkerAndStatus(User.Identity.Name, StatusEnum.Close);
+				ClosedCases = await _caseSummaryService.GetClosedCaseSummariesByCaseworker(GetUserName());
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Case::ClosedPageModel::OnGetAsync::Exception - {Message}", ex.Message);
 
-				CasesClosed = Array.Empty<HomeModel>();
+				ClosedCases = new List<ClosedCaseSummaryModel>();
 				TempData["Error.Message"] = ErrorOnGetPage;
 			}
 		}
+
+		private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 	}
 }

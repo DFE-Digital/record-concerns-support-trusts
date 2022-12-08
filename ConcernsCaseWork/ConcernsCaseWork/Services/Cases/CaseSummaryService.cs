@@ -35,34 +35,7 @@ public class CaseSummaryService : ICaseSummaryService
 	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworker(string caseworker)
 	{
 		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(caseworker);
-
-		var sortedCaseSummaries = new List<ActiveCaseSummaryModel>();
-
-		foreach (var caseSummary in caseSummaries.OrderByDescending(cs => cs.CreatedAt))
-		{
-			var trustName = await GetTrustName(caseSummary.TrustUkPrn);
-			
-			var sortedActionAndDecisionNames = GetSortedActionAndDecisionNames(caseSummary);
-			
-			var summary = 
-				new ActiveCaseSummaryModel
-				{
-	                ActiveConcerns = GetSortedConcerns(caseSummary.ActiveConcerns),
-	                ActiveActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
-	                CaseUrn = caseSummary.CaseUrn,
-	                CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
-	                CreatedBy = caseSummary.CreatedBy,
-	                IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
-	                Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
-	                StatusName = caseSummary.StatusName,
-	                TrustName = trustName,
-	                UpdatedAt = caseSummary.UpdatedAt.ToDayMonthYear()
-				};
-			
-			sortedCaseSummaries.Add(summary);
-		}
-		
-		return sortedCaseSummaries.ToList();
+		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 	
 	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworkers(IEnumerable<string> caseWorkers)
@@ -83,7 +56,7 @@ public class CaseSummaryService : ICaseSummaryService
 			var summary = 
 				new ActiveCaseSummaryModel
 				{
-					ActiveConcerns = GetSortedConcerns(caseSummary.ActiveConcerns),
+					ActiveConcerns = GetSortedActiveConcerns(caseSummary.ActiveConcerns),
 					ActiveActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
 					CaseUrn = caseSummary.CaseUrn,
 					CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
@@ -100,17 +73,98 @@ public class CaseSummaryService : ICaseSummaryService
 		
 		return sortedCaseSummaries.ToList();
 	}
-	
-	private static string[] GetSortedActionAndDecisionNames(ActiveCaseSummaryDto activeCaseSummary)
+
+	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByTrust(string trustUkPrn)
 	{
-		var allActionsAndDecisions = new List<ActiveCaseSummaryDto.ActionDecisionSummaryDto>();
+		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByTrust(trustUkPrn);
+		return await BuildActiveCaseSummaryModel(caseSummaries);
+	}
+
+	public async Task<List<ClosedCaseSummaryModel>> GetClosedCaseSummariesByCaseworker(string caseworker)
+	{
+		var caseSummaries = await _caseSummaryService.GetClosedCaseSummariesByCaseworker(caseworker);
+		return await BuildClosedCaseSummaryModel(caseSummaries);
+	}
+
+	public async Task<List<ClosedCaseSummaryModel>> GetClosedCaseSummariesByTrust(string trustUkPrn)
+	{
+		var caseSummaries = await _caseSummaryService.GetClosedCaseSummariesByTrust(trustUkPrn);
+		return await BuildClosedCaseSummaryModel(caseSummaries);
+	}
+
+	private async Task<List<ActiveCaseSummaryModel>> BuildActiveCaseSummaryModel(IEnumerable<ActiveCaseSummaryDto> caseSummaries)
+	{
+		var sortedCaseSummaries = new List<ActiveCaseSummaryModel>();
+
+		foreach (var caseSummary in caseSummaries.OrderByDescending(cs => cs.CreatedAt))
+		{
+			var trustName = await GetTrustName(caseSummary.TrustUkPrn);
+			
+			var sortedActionAndDecisionNames = GetSortedActionAndDecisionNames(caseSummary);
+			
+			var summary = 
+				new ActiveCaseSummaryModel
+				{
+					ActiveConcerns = GetSortedActiveConcerns(caseSummary.ActiveConcerns),
+					ActiveActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
+					CaseUrn = caseSummary.CaseUrn,
+					CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
+					CreatedBy = caseSummary.CreatedBy,
+					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
+					Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
+					StatusName = caseSummary.StatusName,
+					TrustName = trustName,
+					UpdatedAt = caseSummary.UpdatedAt.ToDayMonthYear()
+				};
+			
+			sortedCaseSummaries.Add(summary);
+		}
 		
-		allActionsAndDecisions.AddRange(activeCaseSummary.Decisions);
-		allActionsAndDecisions.AddRange(activeCaseSummary.FinancialPlanCases);
-		allActionsAndDecisions.AddRange(activeCaseSummary.NoticesToImprove);
-		allActionsAndDecisions.AddRange(activeCaseSummary.NtisUnderConsideration);
-		allActionsAndDecisions.AddRange(activeCaseSummary.NtiWarningLetters);
-		allActionsAndDecisions.AddRange(activeCaseSummary.SrmaCases);
+		return sortedCaseSummaries.ToList();
+	}
+
+	private async Task<List<ClosedCaseSummaryModel>> BuildClosedCaseSummaryModel(IEnumerable<ClosedCaseSummaryDto> caseSummaries)
+	{
+		var sortedCaseSummaries = new List<ClosedCaseSummaryModel>();
+
+		foreach (var caseSummary in caseSummaries.OrderByDescending(cs => cs.CreatedAt))
+		{
+			var trustName = await GetTrustName(caseSummary.TrustUkPrn);
+			
+			var sortedActionAndDecisionNames = GetSortedActionAndDecisionNames(caseSummary);
+			
+			var summary = 
+				new ClosedCaseSummaryModel
+				{
+					ClosedConcerns = GetSortedClosedConcerns(caseSummary.ClosedConcerns),
+					ClosedActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
+					ClosedAt = caseSummary.ClosedAt.ToDayMonthYear(),
+					CaseUrn = caseSummary.CaseUrn,
+					CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
+					CreatedBy = caseSummary.CreatedBy,
+					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
+					Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
+					StatusName = caseSummary.StatusName,
+					TrustName = trustName,
+					UpdatedAt = caseSummary.UpdatedAt.ToDayMonthYear()
+				};
+			
+			sortedCaseSummaries.Add(summary);
+		}
+		
+		return sortedCaseSummaries.ToList();
+	}
+
+	private static string[] GetSortedActionAndDecisionNames(CaseSummaryDto caseSummary)
+	{
+		var allActionsAndDecisions = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
+		
+		allActionsAndDecisions.AddRange(caseSummary.Decisions);
+		allActionsAndDecisions.AddRange(caseSummary.FinancialPlanCases);
+		allActionsAndDecisions.AddRange(caseSummary.NoticesToImprove);
+		allActionsAndDecisions.AddRange(caseSummary.NtisUnderConsideration);
+		allActionsAndDecisions.AddRange(caseSummary.NtiWarningLetters);
+		allActionsAndDecisions.AddRange(caseSummary.SrmaCases);
 
 		return allActionsAndDecisions
 			.OrderBy(action => action.CreatedAt)
@@ -118,8 +172,9 @@ public class CaseSummaryService : ICaseSummaryService
 			.ToArray();
 	}
 
-	private static string[] GetSortedConcerns(IEnumerable<ActiveCaseSummaryDto.ConcernSummaryDto> concerns)
+	private static string[] GetSortedActiveConcerns(IEnumerable<CaseSummaryDto.ConcernSummaryDto> concerns)
 	{
+		// Worst risk rating first. If risk ratings are the same, oldest first (by create date)
 		var result = new List<string>();
 		
 		foreach (var rating in SortedRags)
@@ -136,6 +191,16 @@ public class CaseSummaryService : ICaseSummaryService
 				.Where(c => !SortedRags.Contains(c.Rating.Name))
 				.OrderByDescending(r => r.CreatedAt)
 				.Select(c => c.Name));
+		
+		return result.ToArray();
+	}
+	
+	private static string[] GetSortedClosedConcerns(IEnumerable<CaseSummaryDto.ConcernSummaryDto> concerns)
+	{
+		// Oldest first (by create date)
+		var result = concerns
+				.OrderByDescending(r => r.CreatedAt)
+				.Select(c => c.Name);
 		
 		return result.ToArray();
 	}
