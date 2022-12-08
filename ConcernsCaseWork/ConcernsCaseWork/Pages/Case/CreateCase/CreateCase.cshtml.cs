@@ -31,12 +31,15 @@ public class CreateCasePageModel : AbstractPageModel
 
 	[BindProperty(SupportsGet = true)]
 	public TrustAddressModel TrustAddress { get; set; }
-		
+
 	[BindProperty]
 	public CaseTypes CaseType { get; set; }
 
 	[TempData]
 	public CreateCaseSteps CreateCaseStep { get; set; } = CreateCaseSteps.SearchForTrust;
+
+	[BindProperty]
+	public FindTrustModel FindTrustModel { get; set; }
 
 	public CreateCasePageModel(ITrustModelService trustModelService,
 		IUserStateCachedService cachedUserService,
@@ -52,7 +55,7 @@ public class CreateCasePageModel : AbstractPageModel
 	public async Task<IActionResult> OnGet()
 	{
 		_logger.LogMethodEntered();
-		
+
 		try
 		{
 			if (CreateCaseStep == CreateCaseSteps.SelectCaseType)
@@ -63,17 +66,17 @@ public class CreateCasePageModel : AbstractPageModel
 		catch (Exception ex)
 		{
 			_logger.LogErrorMsg(ex);
-  
+
 			TempData["Error.Message"] = ErrorOnGetPage;
 		}
 
 		return Page();
 	}
-	
+
 	public async Task<IActionResult> OnPost()
 	{
 		_logger.LogMethodEntered();
-			
+
 		try
 		{
 			if (CreateCaseStep != CreateCaseSteps.SelectCaseType)
@@ -98,12 +101,12 @@ public class CreateCasePageModel : AbstractPageModel
 		catch (Exception ex)
 		{
 			_logger.LogErrorMsg(ex);
-			
+
 			TempData["Error.Message"] = ErrorOnPostPage;
 		}
-		
+
 		return Page();
-		
+
 		async Task ResetUserState()
 		{
 			var userName = GetUserName();
@@ -111,32 +114,32 @@ public class CreateCasePageModel : AbstractPageModel
 			userState.CreateCaseModel = new CreateCaseModel();
 			await _cachedUserService.StoreData(userName, userState);
 		}
-		
+
 		void ResetCurrentStep()
 		{
 			CreateCaseStep = CreateCaseSteps.SearchForTrust;
 		}
 	}
-	
+
 	// This is an AJAX call
 	public async Task<IActionResult> OnGetTrustsSearchResult(string searchQuery)
 	{
 		_logger.LogMethodEntered();
-		
+
 		try
 		{
-			if (!SearchQueryIsValid()) 
+			if (!SearchQueryIsValid())
 				return new JsonResult(new List<TrustSearchModel>());
 
 			var trustSearchResponse = await BuildTrustResponse();
-			
+
 			return new JsonResult(trustSearchResponse);
 		}
 		catch (Exception ex)
 		{
 			return HandleExceptionForAjaxCall(ex);
 		}
-		
+
 		bool SearchQueryIsValid() => !(string.IsNullOrEmpty(searchQuery) || searchQuery.Length < _searchQueryMinLength);
 
 		async Task<IList<TrustSearchModel>> BuildTrustResponse()
@@ -150,14 +153,14 @@ public class CreateCasePageModel : AbstractPageModel
 	public async Task<IActionResult> OnGetSelectedTrust(string trustUkPrn)
 	{
 		_logger.LogMethodEntered();
-		
+
 		try
 		{
 			if (!TrustUkPrnIsValid())
 				throw new Exception($"Selected trust is incorrect - {trustUkPrn}");
 
 			await CacheTrustUkPrn();
-			
+
 			SetNextStep();
 
 			return ReloadPageForNextStep();
@@ -166,7 +169,7 @@ public class CreateCasePageModel : AbstractPageModel
 		{
 			return HandleExceptionForAjaxCall(ex);
 		}
-		
+
 		bool TrustUkPrnIsValid() => !(string.IsNullOrEmpty(trustUkPrn) || trustUkPrn.Contains('-') || trustUkPrn.Length < _searchQueryMinLength);
 
 		async Task CacheTrustUkPrn()
@@ -176,9 +179,9 @@ public class CreateCasePageModel : AbstractPageModel
 			userState.TrustUkPrn = trustUkPrn;
 			await _cachedUserService.StoreData(userName, userState);
 		}
-		
+
 		void SetNextStep() => CreateCaseStep = CreateCaseSteps.SelectCaseType;
-		
+
 		JsonResult ReloadPageForNextStep() => new (new { redirectUrl = "/case/create" });
 	}
 
@@ -190,12 +193,12 @@ public class CreateCasePageModel : AbstractPageModel
 		{
 			throw new Exception($"Could not retrieve cache for user '{userName}'");
 		}
-		
+
 		if (string.IsNullOrEmpty(userState.TrustUkPrn))
 		{
 			throw new Exception($"Could not retrieve trust from cache for user '{userName}'");
 		}
-		
+
 		var trustAddress = await _trustModelService.GetTrustAddressByUkPrn(userState.TrustUkPrn);
 
 		TrustAddress = trustAddress ?? throw new Exception($"Could not find trust with UK PRN of {userState.TrustUkPrn}");
@@ -204,7 +207,7 @@ public class CreateCasePageModel : AbstractPageModel
 	private ObjectResult HandleExceptionForAjaxCall(Exception ex)
 	{
 		_logger.LogErrorMsg(ex);
-			
+
 		return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 	}
 
@@ -216,7 +219,7 @@ public class CreateCasePageModel : AbstractPageModel
 		Concern,
 		NonConcern
 	}
-	
+
 	public enum CreateCaseSteps
 	{
 		SearchForTrust,
