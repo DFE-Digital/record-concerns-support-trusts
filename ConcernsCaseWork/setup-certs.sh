@@ -20,7 +20,7 @@ sudo mv policies.json /usr/lib/firefox/distribution/
 mkdir -p ~/.mozilla/certificates
 cp localhost.crt ~/.mozilla/certificates/aspnetcore-localhost-https.crt
 
-echo "Setting up chrome"
+echo "Setting up chrome "
 # Trust Edge/Chrome
 certutil -d sql:$HOME/.pki/nssdb -N
 certutil -d sql:$HOME/.pki/nssdb -A -t "P,," -n localhost -i ./localhost.crt
