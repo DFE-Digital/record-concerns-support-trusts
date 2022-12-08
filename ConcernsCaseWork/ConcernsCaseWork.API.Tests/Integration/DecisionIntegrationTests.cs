@@ -17,6 +17,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
+	[Collection("Database")]
 	public class DecisionIntegrationTests : IClassFixture<ApiTestFixture>
 	{
 		private HttpClient _client;
