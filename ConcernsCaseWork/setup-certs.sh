@@ -9,7 +9,9 @@ echo "{
     }
 }" > policies.json
 
+ls
 dotnet dev-certs https -ep localhost.crt --format PEM
+ls
 
 sudo mv policies.json /usr/lib/firefox/distribution/
 mkdir -p ~/.mozilla/certificates
