@@ -21,15 +21,15 @@ describe("Testing decision outcome", () =>{
 
     it("Create a decision outcome, checking validation and view it was created correctly", () => {
         Logger.Log("Creating Empty Decision");
-		cy.addConcernsDecisionsAddToCase();
+        cy.addConcernsDecisionsAddToCase();
 
 		editDecisionPage
-            .saveDecision();
+            .save();
 
-		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: No Decision Types")
-			.eq(-3)
-			.click();
+        cy.get("#open-case-actions td")
+            .should("contain.text", "Decision: No Decision Types")
+            .eq(-3)
+            .click();
 
         Logger.Log("Creating a decision outcome");
         viewDecisionPage
@@ -84,9 +84,9 @@ describe("Testing decision outcome", () =>{
 
         Logger.Log("Select created decision")
         cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: No Decision Types")
-			.eq(-3)
-			.click();
+            .should("contain.text", "Decision: No Decision Types")
+            .eq(-3)
+            .click();
 
         Logger.Log("View decision outcome")
 
@@ -102,18 +102,18 @@ describe("Testing decision outcome", () =>{
             .cannotCreateAnotherDecisionOutcome();
     });
 
-    it("Create an decision outcome with only status, should set status but all other labels should be empty", () =>
+    it("Create a decision outcome with only status, should set status but all other labels should be empty", () =>
     {
         Logger.Log("Creating Empty Decision");
-		cy.addConcernsDecisionsAddToCase();
+        cy.addConcernsDecisionsAddToCase();
 
 		editDecisionPage
-            .saveDecision();
+            .save();
 
         cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: No Decision Types")
-			.eq(-3)
-			.click();
+            .should("contain.text", "Decision: No Decision Types")
+            .eq(-3)
+            .click();
 
         viewDecisionPage
             .createDecisionOutcome();
@@ -136,4 +136,86 @@ describe("Testing decision outcome", () =>{
             .hasTotalAmountApproved("£0.00")
             .hasAuthoriser("Empty");
     });
+
+    it("Edit a decision outcome ", () => {
+        Logger.Log("Creating Empty Decision");
+		cy.addConcernsDecisionsAddToCase();
+
+		editDecisionPage
+            .save();
+
+        cy.get("#open-case-actions td")
+			.should("contain.text", "Decision: No Decision Types")
+			.eq(-3)
+			.click();
+
+        viewDecisionPage
+            .createDecisionOutcome();
+
+        Logger.Log("Create Decision Outcome");
+        decisionOutcomePage
+            .withDecisionOutcomeStatus("Withdrawn")
+            .withTotalAmountApproved("1,000")
+            .withDateDecisionMadeDay("3")
+            .withDateDecisionMadeMonth("5")
+            .withDateDecisionMadeYear("2022")
+            .withDecisionTakeEffectDay("6")
+            .withDecisionTakeEffectMonth("8")
+            .withDecisionTakeEffectYear("2022")
+            .withDecisionAuthouriser("DeputyDirector")
+            .withBusinessArea("BusinessPartner")
+            .withBusinessArea("Capital")
+            .withBusinessArea("ProviderMarketOversight")
+            .saveDecisionOutcome();
+
+        cy.get("#open-case-actions td")
+            .should("contain.text", "Decision: No Decision Types")
+            .eq(-3)
+            .click();
+
+        viewDecisionPage
+			.editDecisionOutcome();
+
+        Logger.Log("Verify Existing Values");
+        decisionOutcomePage
+            .hasDecisionOutcomeStatus("Withdrawn")
+            .hasTotalAmountApproved("1,000")
+            .hasDecisionMadeDay("3")
+            .hasDecisionMadeMonth("5")
+            .hasDecisionMadeYear("2022")
+            .hasDateEffectiveFromDay("6")
+            .hasDateEffectiveFromMonth("8")
+            .hasDateEffectiveFromYear("2022")
+            .hasDecisionAuthouriser("DeputyDirector")
+            .hasBusinessArea("BusinessPartner")
+            .hasBusinessArea("Capital")
+            .hasBusinessArea("ProviderMarketOversight");
+
+
+            Logger.Log("Edit Decision Outcome");
+            decisionOutcomePage
+                .withDecisionOutcomeStatus("Approved")
+                .withTotalAmountApproved("1,000,000")
+                .withDateDecisionMadeDay("12")
+                .withDateDecisionMadeMonth("11")
+                .withDateDecisionMadeYear("2023")
+                .withDecisionTakeEffectDay("14")
+                .withDecisionTakeEffectMonth("1")
+                .withDecisionTakeEffectYear("2024")
+                .withDecisionAuthouriser("Minister")
+                .saveDecisionOutcome();
+
+
+            Logger.Log("View Updated Decision Outcome");
+            viewDecisionPage
+                .hasDecisionOutcomeStatus("Approved")
+                .hasTotalAmountApproved("1,000,000")
+                .hasMadeDate("12-11-2023")
+                .hasEffectiveFromDate("14-01-2024")
+                .hasAuthoriser("Minister")
+                .hasBusinessArea("Business Partner")
+                .hasBusinessArea("Capital")
+                .hasBusinessArea("Provider Market Oversight (PMO)");
+            
+    })
 })

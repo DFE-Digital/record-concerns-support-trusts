@@ -1,13 +1,21 @@
-﻿using ConcernsCaseWork.Pages.Validators;
+﻿using ConcernsCaseWork.Models.CaseActions;
+using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using Microsoft.AspNetCore.Components.Forms;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using AutoFixture;
+using System.Linq;
+using FluentAssertions;
 
 namespace ConcernsCaseWork.Tests.Pages.Validators
 {
 	[Parallelizable(ParallelScope.All)]
 	public class CaseActionValidatorTests
 	{
+		private Fixture _fixture = new();
+
 		[Test]
 		public void When_Open_SRMA_Return_Error_Message()
 		{
@@ -151,6 +159,38 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 
 			// assert
 			Assert.That(validationError, Is.EqualTo(string.Empty));
+		}
+
+		[Test]
+		public void When_NoOpenDecisions_Returns_EmptyString()
+		{
+			var caseActionModels = _fixture.CreateMany<CaseActionModel>().ToList();
+			caseActionModels.ForEach(c => c.ClosedAt = null);
+
+			var decisionModels = _fixture.CreateMany<DecisionSummaryModel>().ToList();
+
+			var input = new List<CaseActionModel>();
+			input.AddRange(caseActionModels);
+			input.AddRange(decisionModels);
+
+			var validator = new DecisionValidator();
+
+			var result = validator.Validate(input);
+
+			result.Should().BeEmpty();
+		}
+
+		[Test]
+		public void When_MultipleOpenDecisions_Returns_ErrorMessage()
+		{
+			var input = _fixture.CreateMany<DecisionSummaryModel>().ToList();
+			input.ForEach(c => c.ClosedAt = null);
+
+			var validator = new DecisionValidator();
+
+			var result = validator.Validate(input);
+
+			result.Should().Be("Resolve Decision(s)");
 		}
 	}
 }

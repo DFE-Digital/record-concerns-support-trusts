@@ -10,6 +10,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Services.Decisions
 {
@@ -87,6 +88,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 
 			apiDecision.Outcome = new DecisionOutcome()
 			{
+				DecisionOutcomeId = 10007,
 				TotalAmount = 15000,
 				Authorizer = DecisionOutcomeAuthorizer.CounterSigningDeputyDirector,
 				Status = DecisionOutcomeStatus.ApprovedWithConditions,
@@ -121,7 +123,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.Outcome.DecisionEffectiveFromDate.Should().Be("13-12-2023");
 
 			result.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(new List<string>() { "Capital", "Schools Financial Support and Oversight (SFSO)" });
-			result.Outcome.EditLink.Should().Be("/case/2/management/action/decision/10/outcome/addOrUpdate");
+			result.Outcome.EditLink.Should().Be("/case/2/management/action/decision/10/outcome/addOrUpdate/10007");
 			result.IsEditable.Should().BeTrue();
 		}
 	
@@ -244,30 +246,77 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 		[Test]
 		public void ToEditDecisionOutcomeModel_ReturnsModel()
 		{
-			var model = new GetDecisionOutcomeResponse()
+			var model = new DecisionOutcome()
 			{
-				DecisionOutcomeStatus = DecisionOutcomeStatus.PartiallyApproved,
-				TotalAmountApproved = 100,
+				Status = DecisionOutcomeStatus.PartiallyApproved,
+				TotalAmount = 100,
 				DecisionMadeDate = new DateTimeOffset(2022, 11, 29, 0, 0, 0, new TimeSpan(0, 0, 0)),
-				DecisionTakeEffectDate = new DateTimeOffset(2022, 11, 29, 0, 0, 0, new TimeSpan(0, 0, 0)),
-				Authoriser = DecisionOutcomeAuthorizer.G7,
+				DecisionEffectiveFromDate = new DateTimeOffset(2022, 11, 29, 0, 0, 0, new TimeSpan(0, 0, 0)),
+				Authorizer = DecisionOutcomeAuthorizer.G7,
 				BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea> { DecisionOutcomeBusinessArea.SchoolsFinancialSupportAndOversight, DecisionOutcomeBusinessArea.BusinessPartner }
 			};
 
-			var result = DecisionMapping.ToEditDecisionOutcomeModel(model);
+			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
+			getDecisionResponse.Outcome = model;
 
-			result.Status.Should().Be(model.DecisionOutcomeStatus);
-			result.TotalAmount.Should().Be(model.TotalAmountApproved);
+			var result = DecisionMapping.ToEditDecisionOutcomeModel(getDecisionResponse);
+
+			result.Status.Should().Be(model.Status);
+			result.TotalAmount.Should().Be(model.TotalAmount);
 			result.DecisionMadeDate.Day.Should().Be(model.DecisionMadeDate.Value.Day.ToString());
 			result.DecisionMadeDate.Month.Should().Be(model.DecisionMadeDate.Value.Month.ToString());
 			result.DecisionMadeDate.Year.Should().Be(model.DecisionMadeDate.Value.Year.ToString());
 
-			result.DecisionEffectiveFromDate.Day.Should().Be(model.DecisionTakeEffectDate.Value.Day.ToString());
-			result.DecisionEffectiveFromDate.Month.Should().Be(model.DecisionTakeEffectDate.Value.Month.ToString());
-			result.DecisionEffectiveFromDate.Year.Should().Be(model.DecisionTakeEffectDate.Value.Year.ToString());
-			result.Authorizer.Should().Be(model.Authoriser);
+			result.DecisionEffectiveFromDate.Day.Should().Be(model.DecisionEffectiveFromDate.Value.Day.ToString());
+			result.DecisionEffectiveFromDate.Month.Should().Be(model.DecisionEffectiveFromDate.Value.Month.ToString());
+			result.DecisionEffectiveFromDate.Year.Should().Be(model.DecisionEffectiveFromDate.Value.Year.ToString());
+			result.Authorizer.Should().Be(model.Authorizer);
 			result.BusinessAreasConsulted.Should().BeEquivalentTo(model.BusinessAreasConsulted);
 		}
 
+
+		[Test]
+		public void ToUpdateDecisionOutcome_ReturnsCorrectModel()
+		{
+			var model = _fixture.Create<EditDecisionOutcomeModel>();
+
+			model.DecisionMadeDate = new OptionalDateModel()
+			{
+				Day = "2",
+				Month = "5",
+				Year = "2022"
+			};
+
+			model.DecisionEffectiveFromDate = new OptionalDateModel()
+			{
+				Day = "6",
+				Month = "12",
+				Year = "2023"
+			};
+
+			var result = DecisionMapping.ToUpdateDecisionOutcome(model);
+
+			result.Status.Should().Be(model.Status);
+			result.TotalAmount.Should().Be(model.TotalAmount);
+			result.DecisionMadeDate.Value.Day.ToString().Should().Be(model.DecisionMadeDate.Day);
+			result.DecisionMadeDate.Value.Month.ToString().Should().Be(model.DecisionMadeDate.Month);
+			result.DecisionMadeDate.Value.Year.ToString().Should().Be(model.DecisionMadeDate.Year);
+
+			result.DecisionEffectiveFromDate.Value.Day.ToString().Should().Be(model.DecisionEffectiveFromDate.Day);
+			result.DecisionEffectiveFromDate.Value.Month.ToString().Should().Be(model.DecisionEffectiveFromDate.Month);
+			result.DecisionEffectiveFromDate.Value.Year.ToString().Should().Be(model.DecisionEffectiveFromDate.Year);
+			result.Authorizer.Should().Be(model.Authorizer);
+			result.BusinessAreasConsulted.Should().BeEquivalentTo(model.BusinessAreasConsulted);
+		}
+
+		[Test]
+		public void ToDecisionSummary_ReturnsCorrectModel()
+		{
+			var apiDecision = _fixture.Create<DecisionSummaryResponse>();
+
+			var result = DecisionMapping.ToDecisionSummaryModel(apiDecision);
+
+			result.ClosedAt.Should().Be(apiDecision.ClosedAt?.Date);
+		}
 	}
 }

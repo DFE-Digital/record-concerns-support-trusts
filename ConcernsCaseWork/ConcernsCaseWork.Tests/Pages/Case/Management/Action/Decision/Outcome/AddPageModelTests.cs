@@ -55,14 +55,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 
 			sut.ViewData[ViewDataConstants.Title].Should().Be("Add outcome");
 
-			var expectedDecision = new EditDecisionOutcomeModel()
-			{
-				BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea> { }
-			};
-
 			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
-
-			sut.DecisionOutcome.Should().BeEquivalentTo(expectedDecision);
 
 			sut.CaseUrn.Should().Be(expectedUrn);
 			sut.DecisionId.Should().Be(expectedDecisionId);
@@ -75,18 +68,18 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 		public async Task OnGetAsync_When_ExistingDecision_Returns_Page()
 		{
 			const long expectedCaseUrn = 1;
-			const long expectedDecisionId = 2;
+			const int expectedDecisionId = 2;
 			const long expectedOutcomeId = 3;
 
-			var getDecisionOutcomeResponse = _fixture.Create<GetDecisionOutcomeResponse>();
+			var getDecisionResponse = _fixture.Create<GetDecisionResponse>();
 
-			getDecisionOutcomeResponse.DecisionOutcomeStatus = DecisionOutcomeStatus.PartiallyApproved;
+			getDecisionResponse.Outcome.Status = DecisionOutcomeStatus.PartiallyApproved;
 
-			getDecisionOutcomeResponse.DecisionMadeDate = new DateTimeOffset(new DateTime(2022, 05, 02));
-			getDecisionOutcomeResponse.DecisionTakeEffectDate = new DateTimeOffset(new DateTime(2022, 06, 16));
+			getDecisionResponse.Outcome.DecisionMadeDate = new DateTimeOffset(new DateTime(2022, 05, 02));
+			getDecisionResponse.Outcome.DecisionEffectiveFromDate = new DateTimeOffset(new DateTime(2022, 06, 16));
 
 			var decisionService = new Mock<IDecisionService>();
-			decisionService.Setup(m => m.GetDecisionOutcome(expectedDecisionId, expectedOutcomeId)).ReturnsAsync(getDecisionOutcomeResponse);
+			decisionService.Setup(m => m.GetDecision(expectedCaseUrn, expectedDecisionId)).ReturnsAsync(getDecisionResponse);
 
 			var builder = new TestBuilder();
 			var sut = builder
@@ -99,10 +92,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 
 			sut.TempData[ErrorConstants.ErrorMessageKey].Should().BeNull();
 
-			sut.DecisionOutcome.Status.Should().Be(getDecisionOutcomeResponse.DecisionOutcomeStatus);
-			sut.DecisionOutcome.TotalAmount.Should().Be(getDecisionOutcomeResponse.TotalAmountApproved);
-			sut.DecisionOutcome.Authorizer.Should().Be(getDecisionOutcomeResponse.Authoriser);
-			sut.DecisionOutcome.BusinessAreasConsulted.Should().BeEquivalentTo(getDecisionOutcomeResponse.BusinessAreasConsulted);
+			sut.DecisionOutcome.Status.Should().Be(getDecisionResponse.Outcome.Status);
+			sut.DecisionOutcome.TotalAmount.Should().Be(getDecisionResponse.Outcome.TotalAmount);
+			sut.DecisionOutcome.Authorizer.Should().Be(getDecisionResponse.Outcome.Authorizer);
+			sut.DecisionOutcome.BusinessAreasConsulted.Should().BeEquivalentTo(getDecisionResponse.Outcome.BusinessAreasConsulted);
 
 			sut.DecisionOutcome.DecisionMadeDate.Day.Should().Be("2");
 			sut.DecisionOutcome.DecisionMadeDate.Month.Should().Be("5");
@@ -117,7 +110,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 		public async Task OnGetAsync_When_ExistingDecisionOutcomeDoesNotExist_Then_ThrowsException()
 		{
 			var decisionService = new Mock<IDecisionService>();
-			decisionService.Setup(m => m.GetDecisionOutcome(2, 1)).Throws(new Exception("Failed"));
+			decisionService.Setup(m => m.GetDecision(2, 1)).Throws(new Exception("Failed"));
 
 			var builder = new TestBuilder();
 			var sut = builder

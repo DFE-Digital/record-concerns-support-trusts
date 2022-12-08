@@ -206,4 +206,29 @@ export class ViewDecisionPage
 
 		return this;
 	}
+
+	public cannotEditDecision(): this
+	{
+		cy.task("log", `Cannot edit decision`);
+
+		cy.getByTestId("edit-decision-text").should("not.exist");
+
+		return this;
+	}
+
+	
+	public cannotEditDecisionOutcome(): this
+	{
+		cy.task("log", `Cannot edit decision outcome`);
+
+		cy.getByTestId("edit-decision-outcome-text").should("not.exist");
+
+		return this;
+	}
+
+	public closeDecision(): this {
+		cy.getByTestId('close-decision-button').click();
+
+		return this;
+	}
 }
