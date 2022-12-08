@@ -70,7 +70,7 @@ jobs:
           npm run build
 
       - name: Install certificates
-          run: dotnet dev-certs https --trust
+        run: dotnet dev-certs https --trust
 
       - name: Run application
         run: dotnet run --project ConcernsCaseWork/ConcernsCaseWork/ConcernsCaseWork.csproj &
