@@ -4,192 +4,36 @@
 @model ConcernsCaseWork.Pages.Trust.IndexPageModel
 
 @{
-	ViewData["Title"] = "Find Trust";
-	var nonce = HttpContext.GetNonce();
-	Model.FindTrustModel.Nonce = nonce;
+    ViewData["Title"] = "Find Trust";
+	Model.FindTrustModel.Nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
 
-	<partial name="_BannerError"/>
-	<form role="form" method="post" id="select-trust-form" novalidate>
+    <partial name="_BannerError" />
+    <form role="form" method="post" id="select-trust-form" novalidate>
 
-		<partial name="_ValidationErrors" />
+        <partial name="_ValidationErrors" />
         <div class="moj-search govuk-grid-row">
-	        <div class="govuk-grid-column-two-thirds">
-	            <partial name="../Shared/_FindTrust" />
-	        </div>
-		</div>
+            <div class="govuk-grid-column-two-thirds">
+                @{
+                    await Html.RenderPartialAsync("_FindTrust", Model.FindTrustModel);
+                }
+            </div>
+        </div>
 
-		<div class="govuk-button-group">
-			<button data-prevent-double-click="true"
-			        class="govuk-button govuk-!-margin-top-6"
-			        data-module="govuk-button"
-			        type="submit"
-			        role="button"
-			        id="continue"
-			        name="action"
-			        value="continue">
-				Continue
-			</button>
-			@*asp-page-handler="Cancel"*@
-			<a data-prevent-double-click="true" href="/" class="govuk-link" data-module="govuk-button" role="button">Cancel</a>
-		</div>
-	</form>
+        <div class="govuk-button-group">
+            <button data-prevent-double-click="true"
+                    class="govuk-button govuk-!-margin-top-6"
+                    data-module="govuk-button"
+                    type="submit"
+                    role="button"
+                    id="continue"
+                    name="action"
+                    value="continue">
+                Continue
+            </button>
+            <a data-prevent-double-click="true" href="/" class="govuk-link" data-module="govuk-button" role="button">Cancel</a>
+        </div>
+    </form>
 </div>
-
-<script type="application/javascript" nonce="@nonce">
-    $(document).ready(function () {
-
-         $(document).ajaxStart(function() {
-            showLoader();
-	    })
-         $(document).ajaxStop(function() {
-            hideLoader();
-	    })
-
-
-	    const autocompleteContainer = document.getElementById("autocomplete-container");
-	    const input = $("#search");
-        let trustSearchResults = undefined;
-        let selectedTrustUkprn = undefined;
-        //const trustUkprn = trustSearchResults.find(trust => trust.displayName === selected).ukPrn;
-
-        function searchForTrusts(queryStr, populateResults) {
-			trustSearchResults = undefined;
-            selectedTrustUkprn = undefined;
-			$.get("trust/TrustsSearchResult", { searchQuery: queryStr })
-				.done(function (trusts) {
-                    if (trusts !== undefined) {
-                        trustSearchResults = trusts;
-						populateResults(trusts.map(x => x.displayName));
-					}
-                    else {
-						trustSearchResults = undefined;
-                        populateResults();
-                    }
-				});
-        }
-
-	    accessibleAutocomplete({
-			element: autocompleteContainer, // this should be something else
-			id: "trustSearch",
-			name: "trustSearch",
-			source: searchForTrusts,
-			confirmOnBlur: false,
-			minLength: 3,
-	        showNoOptonsFound: true,
-	        onConfirm: (selected) => {
-				selectedTrustUkprn = trustSearchResults === undefined ? undefined : trustSearchResults.find(trust => trust.displayName === selected).ukPrn;
-                $('#selectedTrustUkprn').val(selectedTrustUkprn);
-			}
-		});
-	});
-
-</script>
-
-@*<script type="application/javascript" nonce="@nonce">
-	$(function () {
-        // should this go
-		let clearResults = function () {
-			$("#trusts-partial-results").empty();
-			$("#autocomplete-container").empty();
-			$(".autocomplete__menu").addClass("autocomplete__menu--hidden");
-		};
-
-        // should this go
-		$("#search").focusin(function() {
-			this.value = "";
-			clearResults();
-		});
-
-        // should this go
-		try {
-			let searchForm = $("#search-form");
-			const validator = formValidator(searchForm[0]);
-			validator.addValidator('search', [{
-				method: function(field) {
-					return field.value.trim().length > 0;
-				},
-				message: 'Search cannot be blank'
-			}, {
-				method: function(field) {
-					return (field.value.length > 2);
-				},
-				message: 'Enter search criteria higher than three characters'
-			}]);
-
-			searchForm.submit(function (event) {
-				validator.onSubmit(event);
-				if (validator.validate()) {
-					event.preventDefault();
-
-					clearResults();
-					showLoader();
-
-					// Ajax Get Trusts
-					let searchQuery = $("#search").val();
-					$.get("case/TrustsSearchResult", { searchQuery: searchQuery })
-					.done(function (trusts) {
-						hideGlobalError();
-						hideLoader();
-
-						if (trusts.length === 0) {
-							$(".autocomplete__menu").removeClass("autocomplete__menu--hidden");
-						}
-						else {
-							let autocompleteContainer = document.getElementById("autocomplete-container");
-
-							const trustNames = trusts.map(trust => trust.displayName);
-							const input = $("#search");
-
-							accessibleAutocomplete({
-							  	element: autocompleteContainer,
-							  	id: input.attr("id"),
-							  	name: input.attr("name"),
-							  	source: trustNames,
-							  	confirmOnBlur: false,
-							  	minLength: 3,
-							  	onConfirm: (selected) => {
-									const trustUkprn = trusts.find(item => item.displayName === selected).ukPrn;
-							  		input.attr("aria-valuetext", trustUkprn);
-									input.val(selected);
-
-								  	// Ajax Post Trust
-									$.get("trust?handler=SelectedTrust",
-										{ trustUkPrn: trustUkprn })
-									.done(function (result) {
-										window.location.replace(result.redirectUrl);
-									})
-									.fail(function() {
-										showGlobalError();
-									});
-							  	}
-							});
-
-							$(".autocomplete__wrapper #search").hide("fast");
-							let autocompleteSearch = $("#autocomplete-container #search");
-							autocompleteSearch.val(searchQuery);
-						}
-
-					}).fail(function() {
-						clearResults();
-						showGlobalError();
-						hideLoader();
-					});
-				} else {
-					clearResults();
-					hideGlobalError()
-					hideLoader();
-				}
-			});
-
-		} catch(err) {
-			clearResults();
-			showGlobalError();
-			hideLoader();
-		}
-	});
-</script>
-
-*@

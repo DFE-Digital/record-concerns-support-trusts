@@ -28,9 +28,6 @@ namespace ConcernsCaseWork.Pages.Trust
 
 		private const int _searchQueryMinLength = 3;
 
-		[BindProperty]
-		[HiddenInput]
-		public string SelectedTrustUkprn { get; set; }
 
 		[BindProperty]
 		public FindTrustModel FindTrustModel { get; set; }
@@ -70,51 +67,34 @@ namespace ConcernsCaseWork.Pages.Trust
 		}
 
 
-		public async Task<ActionResult> OnPost(string selectedTrustUkprn)
+		public async Task<ActionResult> OnPost()
 		{
 			_logger.LogMethodEntered();
 
 			try
 			{
-				string trustUkPrn = SelectedTrustUkprn;
 				_logger.LogInformation("Trust::IndexPageModel::OnPost");
 
-				// Double check selected trust.;
-				if (string.IsNullOrEmpty(trustUkPrn) || trustUkPrn.Contains("-"))
+				if (string.IsNullOrEmpty(FindTrustModel?.SelectedTrustUkprn) ||
+				    FindTrustModel.SelectedTrustUkprn.Contains("-") ||
+				    FindTrustModel.SelectedTrustUkprn.Length < _searchQueryMinLength)
 				{
-					throw new Exception($"Trust::IndexModel::OnPost::Selected trust is incorrect - {trustUkPrn}");
+					throw new Exception($"Selected trust is incorrect - {FindTrustModel?.SelectedTrustUkprn}");
 				}
 
 				// Store CaseState into cache.
 				var userState = await _userStateCache.GetData(GetUserName()) ?? new UserState(GetUserName());
-				userState.TrustUkPrn = trustUkPrn;
+				userState.TrustUkPrn = FindTrustModel.SelectedTrustUkprn;
 				userState.CreateCaseModel = new CreateCaseModel();
 				await _userStateCache.StoreData(GetUserName(), userState);
 
-				return Redirect(Url.Page("Overview", new { id = trustUkPrn }));
-
-				//return new JsonResult(new { redirectUrl = Url.Page("Overview", new { id = trustUkPrn }) });
+				return Redirect(Url.Page("Overview", new { id = FindTrustModel.SelectedTrustUkprn }));
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Trust::IndexPageModel::OnPost::Exception - {Message}", ex.Message);
 
 				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-			}
-		}
-
-		public async Task<ActionResult> OnGetCancel()
-		{
-			try
-			{
-				return Redirect("/");
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("Case::Concern::AddPageModel::OnGetCancel::Exception - {Message}", ex.Message);
-
-				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
 			}
 		}
 
