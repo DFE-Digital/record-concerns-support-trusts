@@ -44,9 +44,7 @@ jobs:
       - name: Install certificates
         run: |
           sudo apt install libnss3-tools
-          dotnet dev-certs https -ep localhost.crt --format PEM
-          certutil -d sql:$HOME/.pki/nssdb -A -t "P,," -n localhost -i ./localhost.crt
-          certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n localhost -i ./localhost.crt
+          ConcernsCaseWork sh ./setup-certs.sh
 
       - name: Setup node.js
         uses: actions/setup-node@v1
