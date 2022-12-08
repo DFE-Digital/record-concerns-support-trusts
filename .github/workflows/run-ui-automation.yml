@@ -37,6 +37,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           name: cypress-screenshots
+          path: ./ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
