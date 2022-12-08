@@ -35,6 +35,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          name: cypress-screenshots
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -81,8 +83,6 @@ jobs:
 
       - name: Setup and run the cypress tests
         working-directory: ./ConcernsCaseWork/ConcernsCaseWork.CypressTests
-        with:
-          name: cypress-screenshots
         run: | 
           npm install
           npm run cy:run -- --env url="https://localhost:8001"
