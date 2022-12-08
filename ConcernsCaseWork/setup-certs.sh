@@ -13,6 +13,7 @@ echo "{
 
 echo "Creating the cert"
 dotnet dev-certs https -ep localhost.crt --format PEM
+echo "Dev cert created"
 
 echo "Setting up firefox"
 sudo mv policies.json /usr/lib/firefox/distribution/
