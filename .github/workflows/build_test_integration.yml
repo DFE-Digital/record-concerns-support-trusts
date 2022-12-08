@@ -48,4 +48,4 @@ jobs:
         run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln
 
       - name: Run tests
-        run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln
+        run: dotnet test ConcernsCaseWork/ConcernsCaseWork.API.Tests/ConcernsCaseWork.API.Tests.csproj
