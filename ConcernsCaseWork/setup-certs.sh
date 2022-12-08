@@ -1,3 +1,5 @@
+ls
+echo "Copying to policies.json"
 # Setup Firefox
 echo "{
     \"policies\": {
@@ -9,14 +11,15 @@ echo "{
     }
 }" > policies.json
 
-ls
+echo "Creating the cert"
 dotnet dev-certs https -ep localhost.crt --format PEM
-ls
 
+echo "Setting up firefox"
 sudo mv policies.json /usr/lib/firefox/distribution/
 mkdir -p ~/.mozilla/certificates
 cp localhost.crt ~/.mozilla/certificates/aspnetcore-localhost-https.crt
 
+echo "Setting up chrome"
 # Trust Edge/Chrome
 certutil -d sql:$HOME/.pki/nssdb -A -t "P,," -n localhost -i ./localhost.crt
 certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n localhost -i ./localhost.crt
