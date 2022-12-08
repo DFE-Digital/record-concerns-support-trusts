@@ -84,3 +84,5 @@ jobs:
         run: | 
           npm install
           npm run cy:run -- --env url="https://localhost:8001"
+        with: cypress-screenshots
+        path: ./cypress/screenshots
