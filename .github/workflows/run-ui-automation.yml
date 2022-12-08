@@ -81,9 +81,9 @@ jobs:
 
       - name: Setup and run the cypress tests
         working-directory: ./ConcernsCaseWork/ConcernsCaseWork.CypressTests
-        run: | 
-          npm install
-          npm run cy:run -- --env url="https://localhost:8001"
         with: 
           name: cypress-screenshots
           path: ./cypress/screenshots
+        run: | 
+          npm install
+          npm run cy:run -- --env url="https://localhost:8001"
