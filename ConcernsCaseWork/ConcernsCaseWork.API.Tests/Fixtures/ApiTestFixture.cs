@@ -50,6 +50,7 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 				.Options;
 
 			DbContext = GetContext();
+			DbContext.Database.EnsureDeleted();
 			DbContext.Database.Migrate();
 		}
 
