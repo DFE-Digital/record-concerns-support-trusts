@@ -47,8 +47,5 @@ jobs:
       - name: Build application
         run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln
 
-      - name: Sleep to wait for sql
-        run: sleep 30
-
       - name: Run tests
         run: dotnet test ConcernsCaseWork/ConcernsCaseWork.API.Tests/ConcernsCaseWork.API.Tests.csproj --filter DecisionOutcomeIntegrationTests
