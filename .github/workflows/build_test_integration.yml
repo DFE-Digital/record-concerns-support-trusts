@@ -1,51 +1,51 @@
-name: Run integration tests
+# name: Run integration tests
 
-on:
-  push:
-    branches:
-    - develop
-  pull_request:
-    branches: [ develop ]
-    types: [ opened, synchronize, reopened ]
+# on:
+#   push:
+#     branches:
+#     - develop
+#   pull_request:
+#     branches: [ develop ]
+#     types: [ opened, synchronize, reopened ]
 
-jobs:
-  run-ui-automation:
-    runs-on: ubuntu-latest
-    environment: dev
+# jobs:
+#   run-ui-automation:
+#     runs-on: ubuntu-latest
+#     environment: dev
 
-    services:
-      sql-server:
-        image: mcr.microsoft.com/mssql/server:2017-latest
-        ports:
-        - 1433:1433
-        env:
-          ACCEPT_EULA: Y
-          SA_PASSWORD: P1swrd!$
+#     services:
+#       sql-server:
+#         image: mcr.microsoft.com/mssql/server:2017-latest
+#         ports:
+#         - 1433:1433
+#         env:
+#           ACCEPT_EULA: Y
+#           SA_PASSWORD: P1swrd!$
 
-      redis:
-        image: redis:alpine
-        ports:
-        - 6379:6379
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+#       redis:
+#         image: redis:alpine
+#         ports:
+#         - 6379:6379
+#         options: >-
+#           --health-cmd "redis-cli ping"
+#           --health-interval 10s
+#           --health-timeout 5s
+#           --health-retries 5
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x
+#       - name: Setup .NET
+#         uses: actions/setup-dotnet@v1
+#         with:
+#           dotnet-version: 6.0.x
 
-      - name: Restore dependencies
-        run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
+#       - name: Restore dependencies
+#         run: dotnet restore ConcernsCaseWork/ConcernsCaseWork.sln
 
-      - name: Build application
-        run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln
+#       - name: Build application
+#         run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln
 
-      - name: Run tests
-        run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --filter "FullyQualifiedName!~ConcernsCaseWork.Integration.Tests"
+#       - name: Run tests
+#         run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --filter "FullyQualifiedName!~ConcernsCaseWork.Integration.Tests"
