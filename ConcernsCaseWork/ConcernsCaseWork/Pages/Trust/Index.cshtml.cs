@@ -41,11 +41,13 @@ namespace ConcernsCaseWork.Pages.Trust
 			FindTrustModel = new();
 		}
 
-		public async Task<ActionResult> OnGetTrustsSearchResult(string searchQuery)
+		public async Task<ActionResult> OnGetTrustsSearchResult(string searchQuery, string nonce)
 		{
 			try
 			{
-				_logger.LogInformation("Trust::IndexPageModel::OnGetTrustsPartial");
+				_logger.LogMethodEntered();
+
+				_logger.LogInformationMsg($"Entered trust search: searchQuery -'{searchQuery}', nonce-{nonce}");
 
 				// Double check search query.
 				if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < _searchQueryMinLength)
@@ -56,7 +58,7 @@ namespace ConcernsCaseWork.Pages.Trust
 				var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);
 				var trustSearchResponse = await _trustModelService.GetTrustsBySearchCriteria(trustSearch);
 
-				return new JsonResult(trustSearchResponse);
+				return new JsonResult(new { Nonce = nonce, Data = trustSearchResponse});
 			}
 			catch (Exception ex)
 			{
