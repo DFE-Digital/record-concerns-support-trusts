@@ -16,51 +16,57 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 		private WebApplicationFactory<Startup> _application;
 
 		public HttpClient Client { get; private set; }
-
-		public ConcernsDbContext DbContext { get; private set; }
 		
-		private DbContextOptions<ConcernsDbContext> DbContextOptions { get; init; }
+		private DbContextOptions<ConcernsDbContext> _dbContextOptions { get; init; }
+
+		private readonly object _lock = new();
+		private bool _isInitialised = false;
 
 		public ApiTestFixture()
 		{
-			IConfigurationRoot testConfig = null;
-
-			_application = new WebApplicationFactory<Startup>()
-				.WithWebHostBuilder(builder =>
+			lock (_lock)
+			{
+				if (!_isInitialised)
 				{
-					var configPath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.tests.json");
+					IConfigurationRoot testConfig = null;
 
-					builder.ConfigureAppConfiguration((context, config) =>
-					{
-						config.AddJsonFile(configPath);
+					_application = new WebApplicationFactory<Startup>()
+						.WithWebHostBuilder(builder =>
+						{
+							var configPath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.tests.json");
 
-						testConfig = config.Build();
-					});
-				});
+							builder.ConfigureAppConfiguration((context, config) =>
+							{
+								config.AddJsonFile(configPath);
 
-			Client = _application.CreateClient();
-			Client.DefaultRequestHeaders.Add("ApiKey", "app-key");
+								testConfig = config.Build();
+							});
+						});
 
-			var connection = testConfig.GetSection("ConnectionStrings")["DefaultConnection"];
+					Client = _application.CreateClient();
+					Client.DefaultRequestHeaders.Add("ApiKey", "app-key");
 
-			Console.WriteLine($"Logging the connection {connection}");
+					var connection = testConfig.GetSection("ConnectionStrings")["DefaultConnection"];
 
-			DbContextOptions = new DbContextOptionsBuilder<ConcernsDbContext>()
-				.UseSqlServer(connection)
-				.Options;
+					Console.WriteLine($"Logging the connection {connection}");
 
-			DbContext = GetContext();
-			DbContext.Database.EnsureDeleted();
-			DbContext.Database.Migrate();
+					_dbContextOptions = new DbContextOptionsBuilder<ConcernsDbContext>()
+						.UseSqlServer(connection)
+						.Options;
+
+					using var context = GetContext();
+					context.Database.Migrate();
+					_isInitialised = true;
+				}
+			}
 		}
 
-		public ConcernsDbContext GetContext() => new ConcernsDbContext(DbContextOptions);
+		public ConcernsDbContext GetContext() => new ConcernsDbContext(_dbContextOptions);
 
 		public void Dispose()
 		{
 			_application.Dispose();
 			Client.Dispose();
-			DbContext.Dispose();
 		}
 	}
 }
