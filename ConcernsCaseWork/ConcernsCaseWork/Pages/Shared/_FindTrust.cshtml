@@ -48,25 +48,58 @@
 
         const autocompleteContainer = document.getElementById("autocomplete-container");
         const input = $("#search");
+        const trustSearchDelay = 1000;
         let trustSearchResults = undefined;
         let selectedTrustUkprn = undefined;
+        let xhr = undefined;
+        let timeout = undefined;
 
-        function searchForTrusts(queryStr, populateResults) {
+	    function generateNonce(length) {
+	        var text = "";
+	        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	        for(var i = 0; i < length; i++) {
+	            text += possible.charAt(Math.floor(Math.random() * possible.length));
+	        }
+	        return text;
+	    }
+
+        function cancelSearch() {
+            clearTimeout(timeout);
+	        if (xhr !== undefined) {
+	            xhr.abort();
+	        }
+            xhr = undefined;
             trustSearchResults = undefined;
             selectedTrustUkprn = undefined;
+        }
 
-            // use trust page for searching
-            $.get("/trust/TrustsSearchResult", { searchQuery: queryStr })
-                .done(function (trusts) {
-                    if (trusts !== undefined) {
-                        trustSearchResults = trusts;
-                        populateResults(trusts.map(x => x.displayName));
-                    }
-                    else {
-                        trustSearchResults = undefined;
-                        populateResults();
-                    }
-                });
+        function searchForTrusts(queryStr, populateResults) {
+
+            cancelSearch();
+
+            var requestIfNotCancelled = () => {
+	            // use trust page for searching
+                xhr = $.get("/trust/TrustsSearchResult", { searchQuery: queryStr, nonce:generateNonce(20) })
+	                .done(function (response) {
+
+	                    let nonce = response.nonce;
+	                    let trusts = response.data;
+
+	                    if (trusts !== undefined) {
+	                        trustSearchResults = trusts;
+	                        populateResults(trusts.map(x => x.displayName));
+	                    }
+	                    else {
+	                        trustSearchResults = undefined;
+	                        populateResults();
+	                    }
+	                })
+	                .always(function() {
+	                    xhr = undefined;
+	                });
+            };
+
+            timeout = setTimeout(requestIfNotCancelled, trustSearchDelay);
         }
 
         accessibleAutocomplete({
