@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
         public ConcernsIntegrationTests(ApiTestFixture fixture)
         {
 			_client = fixture.Client;
-            _client.DefaultRequestHeaders.Add("ApiKey", "app-key");
+            // _client.DefaultRequestHeaders.Add("ApiKey", "app-key");
             _randomGenerator = new RandomGenerator();
 			_testFixture = fixture;
         }
@@ -391,10 +391,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 Description = _randomGenerator.NextString(3, 10),
                 Reason = _randomGenerator.NextString(3, 10),
                 StatusId = 1,
-                ConcernsCase = currentConcernsCase,
-                ConcernsType = concernsType,
-                ConcernsRating = concernsRating,
-                ConcernsMeansOfReferral = concernsMeansOfReferral
+                CaseId = currentConcernsCase.Id,
+                TypeId = concernsType.Id,
+                RatingId = concernsRating.Id,
+                MeansOfReferralId = concernsMeansOfReferral.Id
             };
 
             AddConcernsRecord(currentConcernsRecord);
@@ -427,7 +427,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
         [InlineData(true, true)]
         [InlineData(false, false)]
         [InlineData(true, false)]
-        [InlineData(false, true)]
+		[InlineData(false, true)]
         public async Task UpdateConcernsRecord_MeansOfReferral_ShouldReturnTheUpdatedConcernsRecord(bool hasCurrentMeansOfReferral, bool isAddingMeansOfReferral)
         {
             var concernsCase = new ConcernsCase
@@ -477,10 +477,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 Description = _randomGenerator.NextString(3, 10),
                 Reason = _randomGenerator.NextString(3, 10),
                 StatusId = 1,
-                ConcernsCase = concernsCase,
-                ConcernsType = concernsType,
-                ConcernsRating = concernsRating,
-                ConcernsMeansOfReferral = currentMeansOfReferral
+                CaseId = concernsCase.Id,
+                TypeId = concernsType.Id,
+                RatingId = concernsRating.Id,
+                MeansOfReferralId = currentMeansOfReferral?.Id
             };
 
             AddConcernsRecord(currentConcernsRecord);
