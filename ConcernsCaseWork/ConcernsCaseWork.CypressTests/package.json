@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "cy:open": "cypress open",
-    "cy:run": "cypress run",
+    "cy:run": "cypress run --spec './cypress/integration/casework-regression/home-page.ts'",
     "clean:reports": "rm -rf mochawesome-report/",
     "combine:reports": "mochawesome-merge  cypress/reports/mocha/*.json> cypress/reports/report.json",
     "create:html:report": "marge  ./cypress/reports/report.json -f report -o mochareports",

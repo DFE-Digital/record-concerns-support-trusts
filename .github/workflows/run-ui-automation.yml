@@ -66,7 +66,7 @@ jobs:
           dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=sip;Integrated Security=true;TrustServerCertificate=True"
           dotnet user-secrets set "ConcernsCaseworkApi:ApiKeys" "app-key"
           dotnet user-secrets set "ConcernsCasework:ApiKey" "app-key"
-          dotnet user-secrets set "ConcernsCasework:ApiEndpoint" "https://localhost"
+          dotnet user-secrets set "ConcernsCasework:ApiEndpoint" "https://localhost:8001"
 
       - name: Install Website
         working-directory: ./ConcernsCaseWork/ConcernsCaseWork/wwwroot
