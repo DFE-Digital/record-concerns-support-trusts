@@ -19,8 +19,8 @@ jobs:
         ports:
         - 1433:1433
         env:
-          ACCEPT_EULA: "Y"
-          SA_PASSWORD: "change_this_password"
+          ACCEPT_EULA: Y
+          MSSQL_SA_PASSWORD: P1swrd!$
 
       redis:
         image: redis:alpine
