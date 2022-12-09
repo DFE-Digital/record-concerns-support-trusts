@@ -32,6 +32,7 @@ public static class CaseSummaryResponseFactory
 		{
 			ClosedConcerns = Create(caseSummary.ClosedConcerns),
 			CaseUrn = caseSummary.CaseUrn,
+			ClosedAt = caseSummary.ClosedAt,
 			CreatedAt = caseSummary.CreatedAt,
 			CreatedBy = caseSummary.CreatedBy,
 			Decisions = Create(caseSummary.Decisions),

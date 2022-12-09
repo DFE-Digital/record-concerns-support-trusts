@@ -103,7 +103,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 		var query = _concernsDbContext.ConcernsCase
 			.Include(cases => cases.Rating)
 			.Include(cases => cases.Status)
-			.Where(cases => cases.TrustUkprn == trustUkPrn && cases.Status.Name == "Active")
+			.Where(cases => cases.TrustUkprn == trustUkPrn && cases.Status.Name == "Live")
 			.Select (cases => new ActiveCaseSummaryVm
 			{	
 				CaseUrn = cases.Urn,

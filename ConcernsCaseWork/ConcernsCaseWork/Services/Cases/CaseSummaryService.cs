@@ -109,7 +109,7 @@ public class CaseSummaryService : ICaseSummaryService
 					ActiveActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
 					CaseUrn = caseSummary.CaseUrn,
 					CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
-					CreatedBy = caseSummary.CreatedBy,
+					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
 					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
 					Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
 					StatusName = caseSummary.StatusName,
@@ -141,7 +141,7 @@ public class CaseSummaryService : ICaseSummaryService
 					ClosedAt = caseSummary.ClosedAt.ToDayMonthYear(),
 					CaseUrn = caseSummary.CaseUrn,
 					CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
-					CreatedBy = caseSummary.CreatedBy,
+					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
 					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
 					Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
 					StatusName = caseSummary.StatusName,
@@ -223,5 +223,5 @@ public class CaseSummaryService : ICaseSummaryService
 		}
 	}
 
-	private static string GetDisplayUserName(string userName) => userName.Substring(0, userName.IndexOf('@'));
+	private static string GetDisplayUserName(string userName) => userName.Contains('@') ? userName[..userName.IndexOf('@')].Replace(".", " ").ToTitle() : userName;
 }

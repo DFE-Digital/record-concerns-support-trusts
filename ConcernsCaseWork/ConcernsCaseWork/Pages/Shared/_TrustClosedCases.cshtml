@@ -5,10 +5,10 @@
         <th class="govuk-table__header govuk-table__cell__cases" scope="col">
             Case ID
         </th>
-	    <th class="govuk-table__header govuk-table__cell__cases" scope="col">
+	    <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_6" scope="col">
 		    Date created
 	    </th>
-        <th class="govuk-table__header govuk-table__cell__cases" scope="col">
+        <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_6" scope="col">
             Date closed
         </th>
         <th class="govuk-table__header govuk-table__cell__cases" scope="col">
@@ -35,7 +35,7 @@
 		{
 			<tr class="govuk-table__row tr__large">
 				<td class="govuk-table__cell">
-					<a class="govuk-link" href="case/@closedCase.CaseUrn/management">@closedCase.CaseUrn</a>
+					<a class="govuk-link" href="/case/@closedCase.CaseUrn/closed">@closedCase.CaseUrn</a>
 				</td>
 				<td class="govuk-table__cell">
 					@closedCase.CreatedAt
