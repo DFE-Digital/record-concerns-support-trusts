@@ -50,6 +50,7 @@ public class CreateCasePageModel : AbstractPageModel
 		_cachedUserService = Guard.Against.Null(cachedUserService);
 		_logger = Guard.Against.Null(logger);
 		_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
+		FindTrustModel = new();
 	}
 
 	public async Task<IActionResult> OnGet()
@@ -121,69 +122,40 @@ public class CreateCasePageModel : AbstractPageModel
 		}
 	}
 
-	// This is an AJAX call
-	public async Task<IActionResult> OnGetTrustsSearchResult(string searchQuery)
-	{
-		_logger.LogMethodEntered();
 
-		try
-		{
-			if (!SearchQueryIsValid())
-				return new JsonResult(new List<TrustSearchModel>());
-
-			var trustSearchResponse = await BuildTrustResponse();
-
-			return new JsonResult(trustSearchResponse);
-		}
-		catch (Exception ex)
-		{
-			return HandleExceptionForAjaxCall(ex);
-		}
-
-		bool SearchQueryIsValid() => !(string.IsNullOrEmpty(searchQuery) || searchQuery.Length < _searchQueryMinLength);
-
-		async Task<IList<TrustSearchModel>> BuildTrustResponse()
-		{
-			var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);
-			return await _trustModelService.GetTrustsBySearchCriteria(trustSearch);
-		}
-	}
-
-	// This is an AJAX call
-	public async Task<IActionResult> OnGetSelectedTrust(string trustUkPrn)
+	public async Task<ActionResult> OnPostSelectedTrust()
 	{
 		_logger.LogMethodEntered();
 
 		try
 		{
 			if (!TrustUkPrnIsValid())
-				throw new Exception($"Selected trust is incorrect - {trustUkPrn}");
+				throw new Exception($"Selected trust is incorrect - {FindTrustModel.SelectedTrustUkprn}");
 
 			await CacheTrustUkPrn();
 
 			SetNextStep();
 
-			return ReloadPageForNextStep();
+			return RedirectToPage("CreateCase");
 		}
 		catch (Exception ex)
 		{
 			return HandleExceptionForAjaxCall(ex);
 		}
 
-		bool TrustUkPrnIsValid() => !(string.IsNullOrEmpty(trustUkPrn) || trustUkPrn.Contains('-') || trustUkPrn.Length < _searchQueryMinLength);
 
 		async Task CacheTrustUkPrn()
 		{
 			var userName = GetUserName();
 			var userState = await _cachedUserService.GetData(userName);
-			userState.TrustUkPrn = trustUkPrn;
+			userState.TrustUkPrn = FindTrustModel.SelectedTrustUkprn;
 			await _cachedUserService.StoreData(userName, userState);
 		}
 
 		void SetNextStep() => CreateCaseStep = CreateCaseSteps.SelectCaseType;
-
-		JsonResult ReloadPageForNextStep() => new (new { redirectUrl = "/case/create" });
 	}
+
+	private  bool TrustUkPrnIsValid() => !(string.IsNullOrEmpty(FindTrustModel.SelectedTrustUkprn) || FindTrustModel.SelectedTrustUkprn.Contains('-') || FindTrustModel.SelectedTrustUkprn.Length < _searchQueryMinLength);
 
 	private async Task SetTrustAddress()
 	{
