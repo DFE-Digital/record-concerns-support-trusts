@@ -56,7 +56,7 @@
             selectedTrustUkprn = undefined;
 
             // use trust page for searching
-            $.get("trust/TrustsSearchResult", { searchQuery: queryStr })
+            $.get("/trust/TrustsSearchResult", { searchQuery: queryStr })
                 .done(function (trusts) {
                     if (trusts !== undefined) {
                         trustSearchResults = trusts;

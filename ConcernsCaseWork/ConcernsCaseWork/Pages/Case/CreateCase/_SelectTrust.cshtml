@@ -2,21 +2,40 @@
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model CreateCasePageModel
 @{
-    var nonce = Context.GetNonce();
+    Model.FindTrustModel.Nonce = Context.GetNonce();
 }
 <div class="govuk-width-container">
 
-	<partial name="_BannerError"/>
+    <partial name="_BannerError" />
 
-	<div class="moj-search govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
-			<h1 class="govuk-heading-m">Create case</h1>
-            <!-- CHRIS TODO Update this find trust component-->
-			<partial name="../Shared/_FindTrust"/>
-		</div>
-	</div>
+    <form role="form" method="post" id="select-trust-form" asp-page-handler="selectedTrust" novalidate>
+	    <partial name="_ValidationErrors" />
+	    <div class="moj-search govuk-grid-row">
+		    <div class="govuk-grid-column-two-thirds">
+			    <h1 class="govuk-heading-m">Create case</h1>
+		    </div>
+		    <div class="govuk-grid-column-two-thirds">
+			    @{
+				    await Html.RenderPartialAsync("_FindTrust", Model.FindTrustModel);
+			    }
+		    </div>
+	    </div>
+	    <div class="govuk-button-group">
+		    <button data-prevent-double-click="true"
+		            class="govuk-button govuk-!-margin-top-6"
+		            data-module="govuk-button"
+		            type="submit"
+		            role="button"
+		            id="continue"
+		            name="action"
+		            value="continue">
+			    Continue
+		    </button>
+		    <a data-prevent-double-click="true" href="/" class="govuk-link" data-module="govuk-button" role="button">Cancel</a>
+	    </div>
+    </form>
 </div>
-
+@*
 <script type="application/javascript" nonce="@nonce">
 	$(function () {
 		let clearResults = function () {
@@ -116,4 +135,4 @@
 			hideLoader();
 		}
 	});
-</script>
+</script>*@
