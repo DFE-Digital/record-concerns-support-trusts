@@ -43,6 +43,8 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 
 			var connection = testConfig.GetSection("ConnectionStrings")["DefaultConnection"];
 
+			Console.WriteLine($"Logging the connection {connection}");
+
 			DbContextOptions = new DbContextOptionsBuilder<ConcernsDbContext>()
 				.UseSqlServer(connection)
 				.Options;
