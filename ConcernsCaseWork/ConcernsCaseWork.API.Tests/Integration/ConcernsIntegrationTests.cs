@@ -15,27 +15,26 @@ using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using System.Net;
 using Xunit;
+using ConcernsCaseWork.API.Tests.Fixtures;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
-    [Collection("Database")]
-    public class ConcernsIntegrationTests : IClassFixture<ConcernsDataApiFactory>, IDisposable
+    public class ConcernsIntegrationTests : IClassFixture<ApiTestFixture>, IDisposable
     {
         private readonly HttpClient _client;
-        private readonly ConcernsDbContext _dbContext;
-        private readonly Fixture _fixture;
         private readonly RandomGenerator _randomGenerator;
 
         private List<ConcernsCase> CasesToBeDisposedAtEndOfTests { get; } = new List<ConcernsCase>();
         private List<ConcernsRecord> RecordsToBeDisposedAtEndOfTests { get; } = new List<ConcernsRecord>();
 
-        public ConcernsIntegrationTests(ConcernsDataApiFactory fixture)
+		private ApiTestFixture _testFixture;
+
+        public ConcernsIntegrationTests(ApiTestFixture fixture)
         {
-            _client = fixture.CreateClient();
+			_client = fixture.Client;
             _client.DefaultRequestHeaders.Add("ApiKey", "app-key");
-            _dbContext = fixture.Services.GetRequiredService<ConcernsDbContext>();
-            _fixture = new Fixture();
             _randomGenerator = new RandomGenerator();
+			_testFixture = fixture;
         }
 
         [Fact]
@@ -76,7 +75,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
             response.StatusCode.Should().Be(HttpStatusCode.Created);
             var result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
 
-            var createdCase = _dbContext.ConcernsCase.FirstOrDefault(c => c.Urn == result.Data.Urn);
+			using var context = _testFixture.GetContext();
+            var createdCase = context.ConcernsCase.FirstOrDefault(c => c.Urn == result.Data.Urn);
             expected.Data.Urn = createdCase.Urn;
 
             result.Should().BeEquivalentTo(expected);
@@ -87,7 +87,9 @@ namespace ConcernsCaseWork.API.Tests.Integration
         public async Task CanGetConcernCaseByUrn()
         {
             SetupConcernsCaseTestData("mockUkprn");
-            var concernsCase = _dbContext.ConcernsCase.First();
+
+			using var context = _testFixture.GetContext();
+			var concernsCase = context.ConcernsCase.First();
 
             var httpRequestMessage = new HttpRequestMessage
             {
@@ -284,7 +286,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
         [Fact]
         public async Task CanCreateNewConcernRecord()
         {
-	        var caseRating = _dbContext.ConcernsRatings.First();
+			using var context = _testFixture.GetContext();
+			var caseRating = context.ConcernsRatings.First();
 
             var concernsCase = new ConcernsCase
             {
@@ -311,10 +314,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
             AddConcernsCase(concernsCase);
 
-            var linkedCase = _dbContext.ConcernsCase.First();
-            var linkedType = _dbContext.ConcernsTypes.First();
-            var linkedRating = _dbContext.ConcernsRatings.First();
-            var meansOfReferral = _dbContext.ConcernsMeansOfReferrals.First();
+            var linkedCase = context.ConcernsCase.First();
+            var linkedType = context.ConcernsTypes.First();
+            var linkedRating = context.ConcernsRatings.First();
+            var meansOfReferral = context.ConcernsMeansOfReferrals.First();
 
             var createRequest = Builder<ConcernsRecordRequest>.CreateNew()
                 .With(c => c.CaseUrn = linkedCase.Urn)
@@ -338,7 +341,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             response.StatusCode.Should().Be(HttpStatusCode.Created);
             var result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsRecordResponse>>();
 
-            var createdRecord = _dbContext.ConcernsRecord.FirstOrDefault(c => c.Id == result.Data.Id);
+            var createdRecord = context.ConcernsRecord.FirstOrDefault(c => c.Id == result.Data.Id);
             expected.Data.Id = createdRecord.Id;
 
             result.Should().BeEquivalentTo(expected);
@@ -370,9 +373,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 RatingId = 3
             };
 
-            var concernsType = _dbContext.ConcernsTypes.FirstOrDefault(t => t.Id == 1);
-            var concernsRating = _dbContext.ConcernsRatings.FirstOrDefault(r => r.Id == 1);
-            var concernsMeansOfReferral = _dbContext.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 1);
+			using var context = _testFixture.GetContext();
+
+			var concernsType = context.ConcernsTypes.FirstOrDefault(t => t.Id == 1);
+            var concernsRating = context.ConcernsRatings.FirstOrDefault(r => r.Id == 1);
+            var concernsMeansOfReferral = context.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 1);
 
             AddConcernsCase(currentConcernsCase);
 
@@ -449,16 +454,17 @@ namespace ConcernsCaseWork.API.Tests.Integration
             };
 
             AddConcernsCase(concernsCase);
+			using var context = _testFixture.GetContext();
 
-            var concernsType = _dbContext.ConcernsTypes.FirstOrDefault(t => t.Id == 1);
-            var concernsRating = _dbContext.ConcernsRatings.FirstOrDefault(r => r.Id == 1);
+			var concernsType = context.ConcernsTypes.FirstOrDefault(t => t.Id == 1);
+            var concernsRating = context.ConcernsRatings.FirstOrDefault(r => r.Id == 1);
 
             var currentMeansOfReferral = hasCurrentMeansOfReferral
-                ? _dbContext.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 1)
+                ? context.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 1)
                 : null;
 
             var updateMeansOfReferral = isAddingMeansOfReferral
-                ? _dbContext.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 2)
+                ? context.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 2)
                 : null;
 
             var currentConcernsRecord = new ConcernsRecord
@@ -531,10 +537,11 @@ namespace ConcernsCaseWork.API.Tests.Integration
             };
 
             AddConcernsCase(concernsCase);
+			using var context = _testFixture.GetContext();
 
-            var concernsRating = _dbContext.ConcernsRatings.FirstOrDefault();
-            var concernsType = _dbContext.ConcernsTypes.FirstOrDefault();
-            var concernsMeansOfReferral = _dbContext.ConcernsMeansOfReferrals.FirstOrDefault();
+			var concernsRating = context.ConcernsRatings.FirstOrDefault();
+            var concernsType = context.ConcernsTypes.FirstOrDefault();
+            var concernsMeansOfReferral = context.ConcernsMeansOfReferrals.FirstOrDefault();
 
             var recordCreateRequest1 = new ConcernsRecordRequest
             {
@@ -756,51 +763,57 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
         public void Dispose()
         {
-	        if (RecordsToBeDisposedAtEndOfTests.Any())
+			using var context = _testFixture.GetContext();
+
+			if (RecordsToBeDisposedAtEndOfTests.Any())
 	        {
-		        _dbContext.ConcernsRecord.RemoveRange(RecordsToBeDisposedAtEndOfTests);
-		        _dbContext.SaveChanges();
+		        context.ConcernsRecord.RemoveRange(RecordsToBeDisposedAtEndOfTests);
+		        context.SaveChanges();
 		        RecordsToBeDisposedAtEndOfTests.Clear();
 	        }
 
 	        if (CasesToBeDisposedAtEndOfTests.Any())
 	        {
-				_dbContext.ConcernsCase.RemoveRange(CasesToBeDisposedAtEndOfTests);
-				_dbContext.SaveChanges();
+				context.ConcernsCase.RemoveRange(CasesToBeDisposedAtEndOfTests);
+				context.SaveChanges();
 				CasesToBeDisposedAtEndOfTests.Clear();
 	        }
         }
 
         private void AddConcernsCase(ConcernsCase concernsCase)
         {
-	        try
+			using var context = _testFixture.GetContext();
+
+			try
 	        {
-		        _dbContext.ConcernsCase.Add(concernsCase);
-		        _dbContext.SaveChanges();
+		        context.ConcernsCase.Add(concernsCase);
+		        context.SaveChanges();
 
 		        CasesToBeDisposedAtEndOfTests.Add(concernsCase);
 	        }
 	        catch (Exception)
 	        {
-		        _dbContext.ConcernsCase.Remove(concernsCase);
-		        _dbContext.SaveChanges();
+		        context.ConcernsCase.Remove(concernsCase);
+		        context.SaveChanges();
 		        throw;
 	        }
         }
 
         private void AddConcernsRecord(ConcernsRecord concernsRecord)
         {
-	        try
+			using var context = _testFixture.GetContext();
+
+			try
 	        {
-		        _dbContext.ConcernsRecord.Add(concernsRecord);
-		        _dbContext.SaveChanges();
+		        context.ConcernsRecord.Add(concernsRecord);
+		        context.SaveChanges();
 
 		        RecordsToBeDisposedAtEndOfTests.Add(concernsRecord);
 	        }
 	        catch (Exception)
 	        {
-		        _dbContext.ConcernsRecord.Remove(concernsRecord);
-		        _dbContext.SaveChanges();
+		        context.ConcernsRecord.Remove(concernsRecord);
+		        context.SaveChanges();
 		        throw;
 	        }
         }
