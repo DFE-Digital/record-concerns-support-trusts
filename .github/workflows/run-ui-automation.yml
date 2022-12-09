@@ -77,14 +77,13 @@ jobs:
       - name: Run application
         run: dotnet run --project ConcernsCaseWork/ConcernsCaseWork/ConcernsCaseWork.csproj &
 
-      - name: Setup artifact store
-        uses: actions/upload-artifact@v3
-        with:
-          name: cypress-screenshots
-          path: ./ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots/**
-
       - name: Setup and run the cypress tests
         working-directory: ./ConcernsCaseWork/ConcernsCaseWork.CypressTests
         run: | 
           npm install
           npm run cy:run -- --env url="https://localhost:8001"
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+           name: screenshots
+           path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots
