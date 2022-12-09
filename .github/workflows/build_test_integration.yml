@@ -51,4 +51,4 @@ jobs:
         run: sleep 30
 
       - name: Run tests
-        run: dotnet test ConcernsCaseWork/ConcernsCaseWork.API.Tests/ConcernsCaseWork.API.Tests.csproj --filter DecisionIntegrationTests
+        run: dotnet test ConcernsCaseWork/ConcernsCaseWork.API.Tests/ConcernsCaseWork.API.Tests.csproj --filter DecisionOutcomeIntegrationTests
