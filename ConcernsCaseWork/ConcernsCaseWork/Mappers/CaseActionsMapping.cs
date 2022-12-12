@@ -34,6 +34,7 @@ namespace ConcernsCaseWork.Mappers
 				Id = Convert.ToInt32(srmaModel.Id),
 				CaseUrn = Convert.ToInt32(srmaModel.CaseUrn),
 				CreatedAt = srmaModel.CreatedAt,
+				CreatedBy = srmaModel.CreatedBy,
 				ClosedAt = srmaModel.ClosedAt,
 				DateAccepted = srmaModel.DateAccepted,
 				DateOffered = srmaModel.DateOffered,
