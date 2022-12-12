@@ -33,7 +33,8 @@ namespace ConcernsCaseWork.Mappers
 				createCaseModel.CaseHistory,
 				createCaseModel.DirectionOfTravel,
 				createCaseModel.StatusId,
-				createCaseModel.RatingId);
+				createCaseModel.RatingId,
+				createCaseModel.Territory);
 		}
 
 		public static CaseModel Map(CaseDto caseDto, string status = null)
@@ -57,6 +58,7 @@ namespace ConcernsCaseWork.Mappers
 				DeEscalationPoint = caseDto.DeEscalationPoint,
 				DirectionOfTravel = caseDto.DirectionOfTravel,
 				CaseHistory = caseDto.CaseHistory,
+				Territory = caseDto.Territory,
 				Urn = caseDto.Urn,
 				StatusId = caseDto.StatusId,
 				StatusName = status,

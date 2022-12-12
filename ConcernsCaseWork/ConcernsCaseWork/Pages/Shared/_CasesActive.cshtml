@@ -1,6 +1,6 @@
-﻿@model IList<ConcernsCaseWork.Models.HomeModel>
+﻿@model IList<ConcernsCaseWork.Models.ActiveCaseSummaryModel>
 
-<table class="govuk-table" data-module="moj-sortable-table">
+<table class="govuk-table">
 	<caption class="govuk-table__caption govuk-table__caption--m">
 		Your active casework
 	</caption>
@@ -10,19 +10,16 @@
 			Case ID
 		</th>
 		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
-			Last update
-		</th>
-		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_10" scope="col" aria-sort="ascending">
-			Trust/Academy
-		</th>
-		<th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="ascending">
-			Concerns
-		</th>
-		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="ascending">
-			Trust risk
+			Last updated
 		</th>
 		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
-			Created
+			Date created
+		</th>
+		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_10" scope="col" aria-sort="none">
+			Trust
+		</th>
+		<th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="none">
+			Contents
 		</th>
 	</tr>
 	</thead>
@@ -37,37 +34,69 @@
 	}
 	else
 	{
-		foreach (var homeModel in Model)
+		foreach (var activeCase in Model)
 		{
 			<tr class="govuk-table__row tr__large">
 				<td class="govuk-table__cell">
-					<a class="govuk-link" href="case/@homeModel.CaseUrn/management">@homeModel.CaseUrn</a>
-				</td>
-				<td class="govuk-table__cell" data-sort-value="@homeModel.UpdatedUnixTime">
-					@homeModel.Updated
+					<a class="govuk-link" href="case/@activeCase.CaseUrn/management">@activeCase.CaseUrn</a>
 				</td>
 				<td class="govuk-table__cell">
-					@homeModel.TrustNameTitle
+					@activeCase.UpdatedAt
 				</td>
 				<td class="govuk-table__cell">
-					@foreach (var record in homeModel.RecordsModel)
+					@activeCase.CreatedAt
+				</td>
+				<td class="govuk-table__cell">
+					@activeCase.TrustName
+				</td>
+			
+			@if (!activeCase.ActiveConcerns.Any() && !activeCase.ActiveActionsAndDecisions.Any())
+			{
+				<td class="govuk-table__cell">
+					<span>There are no active concerns, actions or decisions.</span>
+				</td>
+			}
+
+			@if (!activeCase.ActiveConcerns.Any() && activeCase.ActiveActionsAndDecisions.Any())
+			{
+				<td class="govuk-table__cell">
+					<div class="concerns-secondary-text-colour">Actions and decisions</div>
+					<ul class="govuk-list govuk-list--bullet">
+						@foreach (var action in activeCase.ActiveActionsAndDecisions)
+						{
+							<li>
+								@action
+							</li>
+						}
+					</ul>
+					@if (activeCase.IsMoreActionsAndDecisions)
 					{
-						<div class="govuk-!-padding-bottom-1">
-							@record.TypeModel.TypeDisplay
-						</div>
+						<span>and more</span>
 					}
 				</td>
-				<td class="govuk-table__cell govuk-label-wrapper" data-sort-value="@homeModel.RatingModel.RagRating.Item1">
-					@for (var index = 0; index < homeModel.RatingModel.RagRating.Item2.Count; ++index)
-					{
-						<span class="govuk-tag ragtag @homeModel.RatingModel.RagRatingCss.ElementAt(index)">
-							@homeModel.RatingModel.RagRating.Item2.ElementAt(index)
-						</span>
-					}
+			}
+								
+			@if (activeCase.ActiveConcerns.Any())
+			{
+				<td class="govuk-table__cell">
+					<div class="concerns-secondary-text-colour">Concerns</div>
+					<ul class="govuk-list govuk-list--bullet">
+						@foreach (var concern in activeCase.ActiveConcerns)
+						{
+							<li>@concern</li>
+						}
+					</ul>
+					<div class="concerns-secondary-text-colour">Risk to trust</div>
+					<div class="govuk-label-wrapper">
+						@for (var index = 0; index < activeCase.Rating.RagRating.Item2.Count; ++index)
+						{
+							<span class="govuk-tag ragtag @activeCase.Rating.RagRatingCss.ElementAt(index)">
+								@activeCase.Rating.RagRating.Item2.ElementAt(index)
+							</span>
+						}
+					</div>
 				</td>
-				<td class="govuk-table__cell" data-sort-value="@homeModel.CreatedUnixTime">
-					@homeModel.Created
-				</td>
+			}
 			</tr>
 		}
 	}

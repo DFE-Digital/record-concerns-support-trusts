@@ -69,3 +69,26 @@ variable "enable_cdn_frontdoor" {
   type        = bool
   default     = false
 }
+
+variable "enable_dns_zone" {
+  description = "Conditionally create a DNS zone"
+  type        = bool
+}
+
+variable "dns_zone_domain_name" {
+  description = "DNS zone domain name. If created, records will automatically be created to point to the CDN."
+  type        = string
+  default     = ""
+}
+
+variable "cdn_frontdoor_custom_domains" {
+  description = "Azure CDN Front Door custom domains. If they are within the DNS zone (optionally created), the Validation TXT records and ALIAS/CNAME records will be created"
+  type        = list(string)
+  default     = []
+}
+
+variable "cdn_frontdoor_host_redirects" {
+  description = "CDN Front Door host redirects `[{ \"from\" = \"example.com\", \"to\" = \"www.example.com\" }]`"
+  type        = list(map(string))
+  default     = []
+}

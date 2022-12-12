@@ -127,5 +127,21 @@ class CaseManagementPage {
             return splitText.trim();
         });   
 	}
+
+    hasValidationError(error) {
+        cy.getByTestId("case-closure-validation-errors").should("contain.text", error);
+
+        return this;
+    }
+
+    editConcern()
+    {
+        cy.getByTestId("edit-concern").click();
+    }
+
+    withRationaleForClosure(reason)
+    {
+        cy.getById("case-outcomes").clear().type(reason);
+    }
 }
     export default new CaseManagementPage();

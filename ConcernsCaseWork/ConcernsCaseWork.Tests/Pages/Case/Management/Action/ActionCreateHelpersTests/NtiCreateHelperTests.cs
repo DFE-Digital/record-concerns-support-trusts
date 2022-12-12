@@ -67,7 +67,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 			mockNtiService.Setup(svc => svc.GetNtisForCaseAsync(caseUrn)).ReturnsAsync(ntis);
 
 			// act
-			var actual = sut.NewCaseActionAllowed(caseUrn, string.Empty).Result;
+			var actual = sut.NewCaseActionAllowed(caseUrn).Result;
 
 			// assert
 			Assert.That(actual, Is.True);
@@ -97,7 +97,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 			mockNtiWarningLetterService.Setup(svc => svc.GetNtiWarningLettersForCase(888)).ReturnsAsync(warningLetterActions);
 
 			// act, assert
-			Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.NewCaseActionAllowed(888, string.Empty));
+			Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.NewCaseActionAllowed(888));
 		}
 
 		[Test]
@@ -124,7 +124,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 			mockNtiWarningLetterService.Setup(svc => svc.GetNtiWarningLettersForCase(888)).ReturnsAsync(warningLetterActions);
 
 			// act, assert
-			Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.NewCaseActionAllowed(888, string.Empty));
+			Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.NewCaseActionAllowed(888));
 		}
 
 		[Test]
@@ -159,7 +159,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 			mockNtiService.Setup(svc => svc.GetNtisForCaseAsync(caseUrn)).ReturnsAsync(ntis);
 
 			// act, assert
-			Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.NewCaseActionAllowed(caseUrn, string.Empty));
+			Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.NewCaseActionAllowed(caseUrn));
 		}
 
 		private static NtiCreateHelper CreateNtiCreateHelper(Mock<INtiUnderConsiderationModelService> mockNtiUnderConsiderationService = null,

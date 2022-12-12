@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			{
 				SetupPage(urn, decisionId, outcomeId);
 
-				DecisionOutcome = await CreateDecisionOutcomeModel(decisionId, outcomeId);
+				DecisionOutcome = await CreateDecisionOutcomeModel(urn, decisionId);
 
 				return Page();
 			}
@@ -90,8 +90,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 
 				if (OutcomeId.HasValue)
 				{
-					//var updateDecisionRequest = DecisionMapping.ToUpdateDecision(Decision);
-					//await _decisionService.PutDecision(urn, (long)decisionId, updateDecisionRequest);
+					var updateDecisionOutcomeRequest = DecisionMapping.ToUpdateDecisionOutcome(DecisionOutcome);
+					await _decisionService.PutDecisionOutcome(urn, decisionId, updateDecisionOutcomeRequest);
 
 					return Redirect($"/case/{CaseUrn}/management/action/decision/{DecisionId}");
 				}
@@ -124,15 +124,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 			OutcomeId = outcomeId;
 		}
 
-		private async Task<EditDecisionOutcomeModel> CreateDecisionOutcomeModel(long decisionId, long? outcomeId)
+		private async Task<EditDecisionOutcomeModel> CreateDecisionOutcomeModel(long urn, long decisionId)
 		{
 			var result = new EditDecisionOutcomeModel();
 
-			if (outcomeId.HasValue)
-			{
-				var apiDecisionOutcome = await _decisionService.GetDecisionOutcome(decisionId, outcomeId.Value);
-				result = DecisionMapping.ToEditDecisionOutcomeModel(apiDecisionOutcome);
-			}
+			var apiDecision = await _decisionService.GetDecision(urn, (int)decisionId);
+			result = DecisionMapping.ToEditDecisionOutcomeModel(apiDecision);
 
 			return result;
 		}

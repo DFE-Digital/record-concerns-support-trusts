@@ -37,6 +37,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			Assert.That(caseDto.DirectionOfTravel, Is.EqualTo(expectedCaseDto.DirectionOfTravel));
 			Assert.That(caseDto.ReasonAtReview, Is.EqualTo(expectedCaseDto.ReasonAtReview));
 			Assert.That(caseDto.TrustUkPrn, Is.EqualTo(expectedCaseDto.TrustUkPrn));
+			Assert.That(caseDto.Territory, Is.EqualTo(expectedCaseDto.Territory));
 		}
 		
 		[Test]
@@ -68,6 +69,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			Assert.That(createCaseDto.DirectionOfTravel, Is.EqualTo(expectedCaseDto.DirectionOfTravel));
 			Assert.That(createCaseDto.ReasonAtReview, Is.EqualTo(expectedCaseDto.ReasonAtReview));
 			Assert.That(createCaseDto.TrustUkPrn, Is.EqualTo(expectedCaseDto.TrustUkPrn));
+			Assert.That(createCaseDto.Territory, Is.EqualTo(expectedCaseDto.Territory));
 		}
 	}
 }
