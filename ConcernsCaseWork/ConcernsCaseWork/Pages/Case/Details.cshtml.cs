@@ -100,7 +100,7 @@ namespace ConcernsCaseWork.Pages.Case
 				CreateCaseModel = userState.CreateCaseModel;
 				CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(trustUkPrn);
-		
+
 				return Page();
 			}
 			catch (Exception ex)

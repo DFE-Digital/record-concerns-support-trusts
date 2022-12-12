@@ -2,16 +2,14 @@
 using AutoFixture.Idioms;
 using ConcernsCaseWork.API.Factories.Concerns.Decisions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
 using FluentAssertions;
-using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
 {
-public class GetDecisionResponseFactoryTests
+	public class GetDecisionResponseFactoryTests
     {
         [Fact]
         public void Can_Construct_GetDecisionResponseFactory()
@@ -66,7 +64,38 @@ public class GetDecisionResponseFactoryTests
             result.DecisionStatus.Should().HaveSameValueAs(decision.Status);
             result.Title.Should().Be(decision.GetTitle());
         }
+        
+        [Fact]
+        public void Create_WhenClosedAtIsNull_Returns_DecisionResponse_WithIsEditable_True()
+        {
+	        var fixture = CreateFixture();
 
+	        var concernsCaseUrn = fixture.Create<int>();
+	        var decision = fixture.Create<Decision>();
+	        decision.ClosedAt = null;
+
+	        var sut = new GetDecisionResponseFactory();
+
+	        var result = sut.Create(concernsCaseUrn, decision);
+
+	        result.IsEditable.Should().BeTrue();
+        }
+        
+        [Fact]
+        public void Create_WhenClosedAtIsNotNull_Returns_DecisionResponse_WithIsEditable_False()
+        {
+	        var fixture = CreateFixture();
+
+	        var concernsCaseUrn = fixture.Create<int>();
+	        var decision = fixture.Create<Decision>();
+
+	        var sut = new GetDecisionResponseFactory();
+
+	        var result = sut.Create(concernsCaseUrn, decision);
+
+	        result.IsEditable.Should().BeFalse();
+        }
+        
 		[Fact]
 		public void Create_WithNoOutcome_Returns_DecisionResponse()
 		{

@@ -42,9 +42,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var typeModel = TypeFactory.BuildTypeModel();
 			var createRecordsModel = RecordFactory.BuildListCreateRecordModel();
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			mockRecordModelService.Setup(r => r.GetCreateRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()))
+			mockRecordModelService.Setup(r => r.GetCreateRecordsModelByCaseUrn(It.IsAny<long>()))
 				.ReturnsAsync(createRecordsModel);
 			mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
@@ -73,8 +73,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			Assert.That(pageModel.CreateRecordsModel.Count, Is.EqualTo(createRecordsModel.Count));
 			Assert.Null(pageModel.TempData["Error.Message"]);
 			
-			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
-			mockRecordModelService.Verify(r => r.GetCreateRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Once);
+			mockRecordModelService.Verify(r => r.GetCreateRecordsModelByCaseUrn(It.IsAny<long>()), Times.Once);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
 			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Once);
 			mockTypeModelService.Verify(t => t.GetTypeModel(), Times.Once);
@@ -106,8 +106,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			Assert.Null(pageModel.TrustDetailsModel);
 			Assert.NotNull(pageModel.TempData["Error.Message"]);
 			
-			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-			mockRecordModelService.Verify(r => r.GetCreateRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
+			mockRecordModelService.Verify(r => r.GetCreateRecordsModelByCaseUrn(It.IsAny<long>()), Times.Never);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Never);
 			mockTypeModelService.Verify(t => t.GetTypeModel(), Times.Never);
@@ -125,7 +125,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			
-			mockRecordModelService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>(), It.IsAny<string>()));
+			mockRecordModelService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>()));
 			
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
 				mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object);
@@ -158,13 +158,13 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			Assert.Null(pageModel.MeansOfReferralModel);
 			Assert.Null(pageModel.TempData["Error.Message"]);
 			
-			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-			mockRecordModelService.Verify(r => r.GetCreateRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
+			mockRecordModelService.Verify(r => r.GetCreateRecordsModelByCaseUrn(It.IsAny<long>()), Times.Never);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Never);
 			mockTypeModelService.Verify(t => t.GetTypeModel(), Times.Never);
 			mockMeansOfReferralModelService.Verify(t => t.GetMeansOfReferrals(), Times.Never);
-			mockRecordModelService.Verify(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>(), It.IsAny<string>()), Times.Once());
+			mockRecordModelService.Verify(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>()), Times.Once());
 		}		
 		
 		[Test]
@@ -179,7 +179,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			
-			mockRecordModelService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>(), It.IsAny<string>()));
+			mockRecordModelService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>()));
 			
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
 				mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object);
@@ -209,12 +209,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			Assert.Null(pageModel.TrustDetailsModel);
 			Assert.NotNull(pageModel.TempData["Error.Message"]);
 			
-			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-			mockRecordModelService.Verify(r => r.GetCreateRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
+			mockRecordModelService.Verify(r => r.GetCreateRecordsModelByCaseUrn(It.IsAny<long>()), Times.Never);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Never);
 			mockTypeModelService.Verify(t => t.GetTypeModel(), Times.Never);
-			mockRecordModelService.Verify(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>(), It.IsAny<string>()), Times.Never());
+			mockRecordModelService.Verify(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>()), Times.Never());
 		}		
 		
 		[Test]
@@ -229,7 +229,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var mockMeansOfReferralModelService = new Mock<IMeansOfReferralModelService>();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			
-			mockRecordModelService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>(), It.IsAny<string>()));
+			mockRecordModelService.Setup(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>()));
 			
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockTrustModelService.Object,
 				mockTypeModelService.Object, mockRecordModelService.Object, mockRatingModelService.Object, mockMeansOfReferralModelService.Object, mockLogger.Object);
@@ -256,12 +256,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			Assert.Null(pageModel.TrustDetailsModel);
 			Assert.NotNull(pageModel.TempData["Error.Message"]);
 			
-			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-			mockRecordModelService.Verify(r => r.GetCreateRecordsModelByCaseUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
+			mockRecordModelService.Verify(r => r.GetCreateRecordsModelByCaseUrn(It.IsAny<long>()), Times.Never);
 			mockTrustModelService.Verify(t => t.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
 			mockRatingModelService.Verify(r => r.GetRatingsModel(), Times.Never);
 			mockTypeModelService.Verify(t => t.GetTypeModel(), Times.Never);
-			mockRecordModelService.Verify(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>(), It.IsAny<string>()), Times.Never());
+			mockRecordModelService.Verify(r => r.PostRecordByCaseUrn(It.IsAny<CreateRecordModel>()), Times.Never());
 		}		
 		
 		private static IndexPageModel SetupIndexPageModel(

@@ -45,7 +45,8 @@ namespace ConcernsCaseWork.Services.Decisions
 				SupportingNotes = decisionResponse.SupportingNotes,
 				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/addOrUpdate/{decisionResponse.DecisionId}",
 				BackLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management",
-				Outcome = ToViewDecisionOutcomeModel(decisionResponse)
+				Outcome = ToViewDecisionOutcomeModel(decisionResponse),
+				IsEditable = decisionResponse.IsEditable
 			};
 
 			return result;
@@ -65,7 +66,7 @@ namespace ConcernsCaseWork.Services.Decisions
 				DecisionMadeDate = decisionOutcomeResponse.DecisionMadeDate?.ToDayMonthYear(),
 				DecisionEffectiveFromDate = decisionOutcomeResponse.DecisionEffectiveFromDate?.ToDayMonthYear(),
 				BusinessAreasConsulted = decisionOutcomeResponse.BusinessAreasConsulted.Select(b => EnumHelper.GetEnumDescription(b)).ToList(),
-				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/{decisionResponse.DecisionId}/outcome/addOrUpdate",
+				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/{decisionResponse.DecisionId}/outcome/addOrUpdate/{decisionOutcomeResponse.DecisionOutcomeId}",
 			};
 
 			return result;
@@ -106,6 +107,21 @@ namespace ConcernsCaseWork.Services.Decisions
 			return updateDecisionRequest;
 		}
 
+		public static UpdateDecisionOutcomeRequest ToUpdateDecisionOutcome(EditDecisionOutcomeModel model)
+		{
+			var result = new UpdateDecisionOutcomeRequest() {
+
+				Status = model.Status,
+				TotalAmount = model.TotalAmount,
+				DecisionMadeDate = ParseDate(model.DecisionMadeDate),
+				DecisionEffectiveFromDate = ParseDate(model.DecisionEffectiveFromDate),
+				Authorizer = model.Authorizer,
+				BusinessAreasConsulted = model.BusinessAreasConsulted
+			};
+
+			return result;
+		}
+
 		public static CreateDecisionOutcomeRequest ToCreateDecisionOutcomeRequest(EditDecisionOutcomeModel model)
 		{
 			var result = new CreateDecisionOutcomeRequest()
@@ -121,16 +137,30 @@ namespace ConcernsCaseWork.Services.Decisions
 			return result;
 		}
 
-		public static EditDecisionOutcomeModel ToEditDecisionOutcomeModel(GetDecisionOutcomeResponse getDecisionOutcomeResponse)
+		public static EditDecisionOutcomeModel ToEditDecisionOutcomeModel(GetDecisionResponse decisionResponse)
 		{
+			var decisionOutcomeResponse = decisionResponse.Outcome;
+
+			if (decisionOutcomeResponse == null) return null;
+
 			var result = new EditDecisionOutcomeModel()
 			{
-				Status = getDecisionOutcomeResponse.DecisionOutcomeStatus,
-				TotalAmount = getDecisionOutcomeResponse.TotalAmountApproved,
-				DecisionMadeDate = ToOptionaDateModel(getDecisionOutcomeResponse.DecisionMadeDate),
-				DecisionEffectiveFromDate = ToOptionaDateModel(getDecisionOutcomeResponse.DecisionTakeEffectDate),
-				Authorizer = getDecisionOutcomeResponse.Authoriser,
-				BusinessAreasConsulted = getDecisionOutcomeResponse.BusinessAreasConsulted
+				Status = decisionOutcomeResponse.Status,
+				TotalAmount = decisionOutcomeResponse.TotalAmount,
+				DecisionMadeDate = ToOptionaDateModel(decisionOutcomeResponse.DecisionMadeDate),
+				DecisionEffectiveFromDate = ToOptionaDateModel(decisionOutcomeResponse.DecisionEffectiveFromDate),
+				Authorizer = decisionOutcomeResponse.Authorizer,
+				BusinessAreasConsulted = decisionOutcomeResponse.BusinessAreasConsulted
+			};
+
+			return result;
+		}
+
+		public static DecisionSummaryModel ToDecisionSummaryModel(DecisionSummaryResponse apiDecision)
+		{
+			var result = new DecisionSummaryModel()
+			{
+				ClosedAt = apiDecision.ClosedAt?.Date
 			};
 
 			return result;

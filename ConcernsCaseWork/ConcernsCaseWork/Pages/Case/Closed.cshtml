@@ -25,24 +25,27 @@
 				</caption>
 
 				<thead class="govuk-table__head">
-				<tr class="govuk-table__row tr__large">
-					<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-						Case ID
-					</th>
-					<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col">
-						Trust/Academy
-					</th>
-					<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-						Concerns
-					</th>
-					<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-						Date closed
-					</th>
-				</tr>
+					<tr class="govuk-table__row tr__large">
+						<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+							Case ID
+						</th>
+						<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
+							Date created
+						</th>
+						<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
+							Date closed
+						</th>
+						<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_10" scope="col" aria-sort="none">
+							Trust
+						</th>
+						<th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="none">
+							Contents
+						</th>
+					</tr>
 				</thead>
 
 				<tbody class="govuk-table__body">
-				@if (Model.CasesClosed.Count == 0)
+				@if (Model.ClosedCases.Count == 0)
 				{
 					<tr class="govuk-table__row tr__large">
 						<td class="govuk-table__cell__cases govuk-oneline-row">
@@ -52,26 +55,69 @@
 				}
 				else
 				{
-					foreach (var homeModel in Model.CasesClosed)
+					foreach (var closedCase in Model.ClosedCases)
 					{
 						<tr class="govuk-table__row tr__large">
 							<td class="govuk-table__cell">
-								<a class="govuk-link" href="/case/@homeModel.CaseUrn/closed">@homeModel.CaseUrn</a>
+								<a class="govuk-link" href="/case/@closedCase.CaseUrn/closed">@closedCase.CaseUrn</a>
 							</td>
 							<td class="govuk-table__cell">
-								@homeModel.TrustNameTitle
+								@closedCase.UpdatedAt
 							</td>
 							<td class="govuk-table__cell">
-								@foreach (var record in homeModel.RecordsModel)
+								@closedCase.CreatedAt
+							</td>
+							<td class="govuk-table__cell">
+								@closedCase.TrustName
+							</td>
+						
+						@if (!closedCase.ClosedConcerns.Any() && !closedCase.ClosedActionsAndDecisions.Any())
+						{
+							<td class="govuk-table__cell">
+								<span>There are no active concerns, actions or decisions.</span>
+							</td>
+						}
+
+						@if (!closedCase.ClosedConcerns.Any() && closedCase.ClosedActionsAndDecisions.Any())
+						{
+							<td class="govuk-table__cell">
+								<div class="concerns-secondary-text-colour">Actions and decisions</div>
+								<ul class="govuk-list govuk-list--bullet">
+									@foreach (var action in closedCase.ClosedActionsAndDecisions)
+									{
+										<li>
+											@action
+										</li>
+									}
+								</ul>
+								@if (closedCase.IsMoreActionsAndDecisions)
 								{
-									<div class="govuk-!-padding-bottom-1">
-										@record.TypeModel.TypeDisplay
-									</div>
+									<span>and more</span>
 								}
 							</td>
+						}
+											
+						@if (closedCase.ClosedConcerns.Any())
+						{
 							<td class="govuk-table__cell">
-								@homeModel.Closed
+								<div class="concerns-secondary-text-colour">Concerns</div>
+								<ul class="govuk-list govuk-list--bullet">
+									@foreach (var concern in closedCase.ClosedConcerns)
+									{
+										<li>@concern</li>
+									}
+								</ul>
+								<div class="concerns-secondary-text-colour">Risk to trust</div>
+								<div class="govuk-label-wrapper">
+									@for (var index = 0; index < closedCase.Rating.RagRating.Item2.Count; ++index)
+									{
+										<span class="govuk-tag ragtag @closedCase.Rating.RagRatingCss.ElementAt(index)">
+											@closedCase.Rating.RagRating.Item2.ElementAt(index)
+										</span>
+									}
+								</div>
 							</td>
+						}
 						</tr>
 					}
 				}

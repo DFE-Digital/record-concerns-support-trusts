@@ -258,7 +258,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			
 			// assert
 			Assert.NotNull(pageResponseInstance);
-			Assert.That(pageResponseInstance.PageName, Is.EqualTo("details"));
+			Assert.That(pageResponseInstance.PageName, Is.EqualTo("territory"));
 
 			mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
 			mockUserStateCachedService.Verify(c => c.StoreData(It.IsAny<string>(), It.IsAny<UserState>()), Times.Once);

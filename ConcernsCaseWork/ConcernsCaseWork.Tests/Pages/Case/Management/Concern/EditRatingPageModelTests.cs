@@ -40,10 +40,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var typeModel = TypeFactory.BuildTypeModel();
 			var ratingModelList = RatingFactory.BuildListRatingModel();
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 
-			mockRecordModelService.Setup(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
+			mockRecordModelService.Setup(r => r.GetRecordModelById(It.IsAny<long>(), It.IsAny<long>()))
 				.ReturnsAsync(recordModel);
 
 			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelById(It.IsAny<long>()))
@@ -77,7 +77,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			Assert.That(pageModel.CaseModel.PreviousUrl, Is.EqualTo("https://returnto/thispage"));
 			
 			mockCaseModelService.Verify(c => 
-				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
+				c.GetCaseByUrn(It.IsAny<long>()), Times.Once);
 		}
 
 		[Test]
@@ -94,10 +94,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var caseModel = CaseFactory.BuildCaseModel();
 			var recordModel = RecordFactory.BuildRecordModel();
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 
-			mockRecordModelService.Setup(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
+			mockRecordModelService.Setup(r => r.GetRecordModelById(It.IsAny<long>(), It.IsAny<long>()))
 				.ReturnsAsync(recordModel);
 
 			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockRatingModelService.Object, mockRecordModelService.Object, mockTrustModelService.Object, mockTypeModelService.Object, mockLogger.Object);
@@ -116,7 +116,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 			
 			mockCaseModelService.Verify(c => 
-				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+				c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
 		}
 
 		[Test]
@@ -133,10 +133,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var caseModel = CaseFactory.BuildCaseModel();
 			var recordModel = RecordFactory.BuildRecordModel();
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 
-			mockRecordModelService.Setup(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
+			mockRecordModelService.Setup(r => r.GetRecordModelById(It.IsAny<long>(), It.IsAny<long>()))
 				.ReturnsAsync(recordModel);
 
 			var pageModel = SetupEditRiskRatingPageModel(mockCaseModelService.Object, mockRatingModelService.Object, mockRecordModelService.Object, mockTrustModelService.Object, mockTypeModelService.Object, mockLogger.Object);
@@ -158,7 +158,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 			
 			mockCaseModelService.Verify(c => 
-				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+				c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
 		}
 		
 		[Test]
@@ -186,8 +186,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 
-			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
-			mockRecordModelService.Verify(c => c.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Never);
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
+			mockRecordModelService.Verify(c => c.GetRecordModelById(It.IsAny<long>(), It.IsAny<long>()), Times.Never);
 			mockRatingModelService.Verify(c => c.GetSelectedRatingsModelById(It.IsAny<long>()), Times.Never);
 		}
 
@@ -208,10 +208,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			var typeModel = TypeFactory.BuildTypeModel();
 			var ratingModelList = RatingFactory.BuildListRatingModel();
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 
-			mockRecordModelService.Setup(r => r.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()))
+			mockRecordModelService.Setup(r => r.GetRecordModelById(It.IsAny<long>(), It.IsAny<long>()))
 				.ReturnsAsync(recordModel);
 
 			mockRatingModelService.Setup(r => r.GetSelectedRatingsModelById(It.IsAny<long>()))
@@ -249,8 +249,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Concern
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 
-			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
-			mockRecordModelService.Verify(c => c.GetRecordModelById(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<long>()), Times.Once);
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Once);
+			mockRecordModelService.Verify(c => c.GetRecordModelById(It.IsAny<long>(), It.IsAny<long>()), Times.Once);
 			mockRatingModelService.Verify(c => c.GetSelectedRatingsModelById(It.IsAny<long>()), Times.Once);
 		}
 

@@ -1,81 +1,110 @@
-﻿@model IList<ConcernsCaseWork.Models.HomeModel>
-
-<table class="govuk-table" data-module="moj-sortable-table">
+﻿@model IList<ConcernsCaseWork.Models.ActiveCaseSummaryModel>
+<table class="govuk-table">
 	<caption class="govuk-table__caption govuk-table__caption--m">
 		Your team casework
 	</caption>
 	<thead class="govuk-table__head">
-		<tr class="govuk-table__row tr__large">
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col">
-				Case ID
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
-				Last update
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_10" scope="col" aria-sort="ascending">
-				Trust/Academy
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_15" scope="col" aria-sort="ascending">
-				Concerns
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="ascending">
-				Trust risk
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
-				Created
-			</th>
-			<th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="ascending">
-				Assigned to
-			</th>
-		</tr>
+	<tr class="govuk-table__row tr__large">
+		<th class="govuk-table__header govuk-table__cell__cases" scope="col">
+			Case ID
+		</th>
+		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
+			Last updated
+		</th>
+		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header--numeric" scope="col" aria-sort="none">
+			Date created
+		</th>
+		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_10" scope="col" aria-sort="none">
+			Trust
+		</th>
+		<th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_10" scope="col" aria-sort="none">
+			Contents
+		</th>
+		<th class="govuk-table__header govuk-table__cell__cases" scope="col" aria-sort="none">
+			Assigned to
+		</th>
+	</tr>
 	</thead>
 	<tbody class="govuk-table__body">
-		@if (Model?.Count == 0)
+	@if (Model.Count == 0)
+	{
+		<tr class="govuk-table__row tr__large">
+			<td class="govuk-table__cell__cases govuk-oneline-row">
+				<span>There are no cases available.</span>
+			</td>
+		</tr>
+	}
+	else
+	{
+		foreach (var activeCase in Model)
 		{
 			<tr class="govuk-table__row tr__large">
-				<td class="govuk-table__cell__cases govuk-oneline-row">
-					<span>There are no cases available.</span>
+				<td class="govuk-table__cell">
+					<a class="govuk-link" href="case/@activeCase.CaseUrn/management">@activeCase.CaseUrn</a>
+				</td>
+				<td class="govuk-table__cell">
+					@activeCase.UpdatedAt
+				</td>
+				<td class="govuk-table__cell">
+					@activeCase.CreatedAt
+				</td>
+				<td class="govuk-table__cell">
+					@activeCase.TrustName
+				</td>
+			
+			@if (!activeCase.ActiveConcerns.Any() && !activeCase.ActiveActionsAndDecisions.Any())
+			{
+				<td class="govuk-table__cell">
+					<span>There are no active concerns, actions or decisions.</span>
+				</td>
+			}
+
+			@if (!activeCase.ActiveConcerns.Any() && activeCase.ActiveActionsAndDecisions.Any())
+			{
+				<td class="govuk-table__cell">
+					<div class="concerns-secondary-text-colour">Actions and decisions</div>
+					<ul class="govuk-list govuk-list--bullet">
+						@foreach (var action in activeCase.ActiveActionsAndDecisions)
+						{
+							<li>
+								@action
+							</li>
+						}
+					</ul>
+					@if (activeCase.IsMoreActionsAndDecisions)
+					{
+						<span>and more</span>
+					}
+				</td>
+			}
+								
+			@if (activeCase.ActiveConcerns.Any())
+			{
+				<td class="govuk-table__cell">
+					<div class="concerns-secondary-text-colour">Concerns</div>
+					<ul class="govuk-list govuk-list--bullet">
+						@foreach (var concern in activeCase.ActiveConcerns)
+						{
+							<li>@concern</li>
+						}
+					</ul>
+					<div class="concerns-secondary-text-colour">Risk to trust</div>
+					<div class="govuk-label-wrapper">
+						@for (var index = 0; index < activeCase.Rating.RagRating.Item2.Count; ++index)
+						{
+							<span class="govuk-tag ragtag @activeCase.Rating.RagRatingCss.ElementAt(index)">
+								@activeCase.Rating.RagRating.Item2.ElementAt(index)
+							</span>
+						}
+					</div>
+				</td>
+			}
+					
+				<td class="govuk-table__cell">
+					@activeCase.CreatedBy
 				</td>
 			</tr>
 		}
-		else
-		{
-			foreach (var homeModel in Model)
-			{
-				<tr class="govuk-table__row tr__large">
-					<td class="govuk-table__cell">
-						<a class="govuk-link" href="case/@homeModel.CaseUrn/management">@homeModel.CaseUrn</a>
-					</td>
-					<td class="govuk-table__cell" data-sort-value="@homeModel.UpdatedUnixTime">
-						@homeModel.Updated
-					</td>
-					<td class="govuk-table__cell">
-						@homeModel.TrustNameTitle
-					</td>
-					<td class="govuk-table__cell">
-						@foreach (var record in homeModel.RecordsModel)
-						{
-							<div class="govuk-!-padding-bottom-1">
-								@record.TypeModel.TypeDisplay
-							</div>
-						}
-					</td>
-					<td class="govuk-table__cell govuk-label-wrapper" data-sort-value="@homeModel.RatingModel.RagRating.Item1">
-						@for (var index = 0; index < homeModel.RatingModel.RagRating.Item2.Count; ++index)
-						{
-							<span class="govuk-tag ragtag @homeModel.RatingModel.RagRatingCss.ElementAt(index)">
-								@homeModel.RatingModel.RagRating.Item2.ElementAt(index)
-							</span>
-						}
-					</td>
-					<td class="govuk-table__cell" data-sort-value="@homeModel.CreatedUnixTime">
-						@homeModel.Created
-					</td>
-					<td class="govuk-table__cell">
-						@homeModel.CreatedBy
-					</td>
-				</tr>
-			}
-		}
+	}
 	</tbody>
 </table>

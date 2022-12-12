@@ -29,7 +29,7 @@ public class ClosedPageTests
 		var financialPlan = SetupFinancialPlanModel(financialPlanId, caseUrn, null);
 		financialPlan.ClosedAt = DateTime.Now;
 
-		mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+		mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 			.ReturnsAsync(financialPlan);
 
 		var pageModel = SetupIndexPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
@@ -72,7 +72,7 @@ public class ClosedPageTests
 		var financialPlanId = 6;
 		var financialPlan = SetupFinancialPlanModel(financialPlanId, caseUrn, null);
 
-		mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+		mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 			.ReturnsAsync(financialPlan);
 
 		var pageModel = SetupIndexPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);

@@ -157,6 +157,62 @@ namespace ConcernsCaseWork.Redis.Tests.Trusts
 			mockCacheProvider.Verify(c => c.GetFromCache<IDictionary<string, TrustDetailsDto>>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<IDictionary<string, TrustDetailsDto>>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
 			mockTrustService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
-		}		
+		}
+		
+		[Test]
+		public async Task WhenGetTrustSummaryByUkPrn_ReturnsTrustSummary_CacheIsNotNull()
+		{
+			// arrange
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockTrustService = new Mock<ITrustService>();
+			var mockLogger = new Mock<ILogger<TrustCachedService>>();
+
+			var trustUkPrn = "trust-ukprn";
+			var trustName = "some trust name";
+
+			var expectedTrust = new TrustSummaryDto(trustUkPrn, trustName);
+			
+			mockCacheProvider.Setup(c => c.GetFromCache<TrustSummaryDto>(It.IsAny<string>())).
+				ReturnsAsync(expectedTrust);
+			
+			var trustCachedService = new TrustCachedService(mockCacheProvider.Object, mockTrustService.Object, mockLogger.Object);
+			
+			// act
+			var trustSummary = await trustCachedService.GetTrustSummaryByUkPrn(trustUkPrn);
+
+			// assert
+			Assert.That(trustSummary.TrustName.ToUpper(), Is.EqualTo(trustName.ToUpper()));
+			Assert.That(trustSummary.UkPrn, Is.EqualTo(trustUkPrn));
+
+			mockCacheProvider.Verify(c => c.GetFromCache<TrustSummaryDto>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<IDictionary<string, TrustSummaryDto>>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
+			mockTrustService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
+		}
+				
+		[Test]
+		public async Task WhenGetTrustSummaryByUkPrn_WhenCacheIsNull_ReturnsTrustSummaryAndUpdatesCache()
+		{
+			// arrange
+			var mockCacheProvider = new Mock<ICacheProvider>();
+			var mockTrustService = new Mock<ITrustService>();
+			var mockLogger = new Mock<ILogger<TrustCachedService>>();
+
+			var expectedTrust = TrustFactory.BuildTrustDetailsDto();
+			
+			mockTrustService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(expectedTrust);
+			
+			var trustCachedService = new TrustCachedService(mockCacheProvider.Object, mockTrustService.Object, mockLogger.Object);
+			
+			// act
+			var trustSummary = await trustCachedService.GetTrustSummaryByUkPrn(expectedTrust.GiasData.UkPrn);
+
+			// assert
+			Assert.That(trustSummary.TrustName.ToUpper(), Is.EqualTo(expectedTrust.GiasData.GroupName.ToUpper()));
+			Assert.That(trustSummary.UkPrn, Is.EqualTo(expectedTrust.GiasData.UkPrn));
+
+			mockCacheProvider.Verify(c => c.GetFromCache<TrustSummaryDto>(It.IsAny<string>()), Times.Once);
+			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<TrustSummaryDto>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
+			mockTrustService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Once);
+		}
 	}
 }

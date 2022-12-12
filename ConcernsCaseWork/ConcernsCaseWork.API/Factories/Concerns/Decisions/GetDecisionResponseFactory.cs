@@ -28,11 +28,12 @@ namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 				ClosedAt = decision.ClosedAt,
 				DecisionStatus = (Contracts.Enums.DecisionStatus)decision.Status,
 				Title = decision.GetTitle(),
-				Outcome = CreateDecisionOutcome(decision.Outcome)
+				Outcome = CreateDecisionOutcome(decision.Outcome),
+				IsEditable = decision.ClosedAt == null
 			};
 		}
 
-		private DecisionOutcome  CreateDecisionOutcome(Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome? entity)
+		private DecisionOutcome CreateDecisionOutcome(Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcome? entity)
 		{
 			if (entity == null)
 			{
@@ -41,6 +42,7 @@ namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 
 			var result = new DecisionOutcome()
 			{
+				DecisionOutcomeId = entity.DecisionOutcomeId,
 				Status = entity.Status,
 				Authorizer = entity.Authorizer,
 				DecisionEffectiveFromDate = entity.DecisionEffectiveFromDate,
