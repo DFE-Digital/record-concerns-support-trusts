@@ -72,6 +72,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(caseModel.DirectionOfTravel, Is.EqualTo(caseDto.DirectionOfTravel));
 			Assert.That(caseModel.ReasonAtReview, Is.EqualTo(caseDto.ReasonAtReview));
 			Assert.That(caseModel.TrustUkPrn, Is.EqualTo(caseDto.TrustUkPrn));
+			Assert.That(caseModel.Territory, Is.EqualTo(caseDto.Territory));
 		}
 		
 		[Test]

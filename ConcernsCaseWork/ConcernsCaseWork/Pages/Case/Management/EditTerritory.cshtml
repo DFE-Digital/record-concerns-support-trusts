@@ -1,0 +1,66 @@
+﻿@page "/case/{urn:long}/management/edit-territory"
+@using ConcernsCaseWork.API.Contracts.Enums
+@using ConcernsCaseWork.Extensions
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ConcernsCaseWork.Pages.Case.Management.EditTerritoryPageModel
+
+@{
+	ViewData["Title"] = "Edit case SFSO territory";
+	ViewData["CancelBackLink"] = Model.ReferrerUrl;
+	var errorClass = "govuk-form-group--error";
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError"/>
+
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+
+			<h1 class="govuk-heading-l">
+				Change territory
+			</h1>
+
+			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+            	<partial name="_Error"/>
+            }
+			else
+			{
+				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+				
+				<form role="form" method="post" id="case-territory-form" novalidate>
+
+					<div class="govuk-form-group @if (Model.ModelState.ContainsKey("Territory")) { @errorClass; }" >
+						<fieldset class="govuk-fieldset">
+							@if (!Model.ModelState.IsValid && Model.ModelState.ContainsKey("Territory"))
+							{
+								<span class="govuk-error-message" id="territory-error">@string.Join("<br />", @Model.ModelState["Territory"]!.Errors.Select(errs => errs?.ErrorMessage))</span>
+							}
+							<div class="govuk-radios" data-module="govuk-radios" id="Territory">
+								@foreach (TerritoryEnum territory in Enum.GetValues(typeof(TerritoryEnum)))
+								{
+									var isChecked = Model.Territory == territory ? "checked" : "";
+									<div class="govuk-radios__item">
+										<input class="govuk-radios__input" id="territory-@territory" name="territory" type="radio" value="@territory" @isChecked>
+										<label class="govuk-label govuk-radios__label" for="territory-@territory">
+											@territory.Description()
+										</label>
+									</div>
+								}
+							</div>
+						</fieldset>
+					</div>
+
+					<!--Button group-->
+					<div class="govuk-button-group">
+						<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
+							Apply
+						</button>
+						<partial name="_Cancel"/>
+					</div>
+
+				</form>
+			}
+		</div>
+	</div>
+</div>

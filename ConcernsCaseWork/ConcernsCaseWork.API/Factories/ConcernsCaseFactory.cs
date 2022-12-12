@@ -28,6 +28,7 @@ namespace ConcernsCaseWork.API.Factories
                 CaseHistory = request.CaseHistory,
                 StatusId = request.StatusId,
                 RatingId = request.RatingId,
+                Territory = request.Territory
             };
         }
         
@@ -59,6 +60,7 @@ namespace ConcernsCaseWork.API.Factories
             original.DirectionOfTravel = toMerge.DirectionOfTravel ?? original.DirectionOfTravel;
             original.StatusId = toMerge.StatusId;
             original.RatingId = toMerge.RatingId;
+            original.Territory = toMerge.Territory;
 
             return original;
         }
