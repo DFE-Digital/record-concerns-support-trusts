@@ -57,7 +57,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			IStatusCachedService statusCachedService,
 			INtiUnderConsiderationStatusesCachedService ntiUCStatusesCachedService,
 			ILogger<IndexPageModel> logger,
-		IActionsModelService actionsModelService
+			IActionsModelService actionsModelService
 			)
 		{
 			_trustModelService = trustModelService;
