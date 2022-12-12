@@ -26,6 +26,7 @@ public static class CaseSummaryResponseFactory
 			UpdatedAt = caseSummary.UpdatedAt
 		};
 	}
+	
 	public static ClosedCaseSummaryResponse Create(ClosedCaseSummaryVm caseSummary)
 	{
 		return new ClosedCaseSummaryResponse

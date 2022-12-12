@@ -72,8 +72,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
 			_mockTrustModelService.Verify(c =>
 				c.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
-			_mockCaseModelService.Verify(c =>
-				c.GetCasesByTrustUkprn(It.IsAny<string>()), Times.Never);
 		}
 
 		[Test]
@@ -173,8 +171,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			_mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
-				.ReturnsAsync(trustCasesModel);
 			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
 			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<long>()))
@@ -205,8 +201,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			_mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
-				.ReturnsAsync(trustCasesModel);
 			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
 			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<long>()))
@@ -239,8 +233,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			_mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
-			_mockCaseModelService.Setup(c => c.GetCasesByTrustUkprn(It.IsAny<string>()))
-				.ReturnsAsync(trustCasesModel);
 			_mockTrustModelService.Setup(t => t.GetTrustByUkPrn(It.IsAny<string>()))
 				.ReturnsAsync(trustDetailsModel);
 			_mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn(It.IsAny<long>()))

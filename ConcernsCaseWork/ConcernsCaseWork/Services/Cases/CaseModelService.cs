@@ -66,52 +66,6 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 		}
 
-		/// <summary>
-		/// Use case get all cases by trust ukprn
-		/// Trust overview scenario where service displays open and close cases by trust
-		/// </summary>
-		/// <param name="trustUkprn"></param>
-		/// <returns></returns>
-		public async Task<IList<TrustCasesModel>> GetCasesByTrustUkprn(string trustUkprn)
-		{
-			try
-			{
-				var casesDto = await _caseSearchService.GetCasesByCaseTrustSearch(new CaseTrustSearch(trustUkprn));
-				if (!casesDto.Any()) return Array.Empty<TrustCasesModel>();
-
-				// Fetch statuses
-				var statuses = await _statusCachedService.GetStatuses();
-				
-				// Fetch monitoring status
-				var monitoringStatus = await _statusCachedService.GetStatusByName(StatusEnum.Monitoring.ToString());
-
-				// Filter cases that are for monitoring
-				casesDto = casesDto.Where(c => c.StatusId.CompareTo(monitoringStatus.Id) != 0).ToList();
-				
-				// Fetch records by case urn
-				var recordsTasks = casesDto.Select(c => _recordService.GetRecordsByCaseUrn(c.Urn)).ToList();
-				await Task.WhenAll(recordsTasks);
-			
-				// Get results from tasks
-				var recordsDto = recordsTasks.SelectMany(recordTask => recordTask.Result).ToList();
-				if (!recordsDto.Any()) return Array.Empty<TrustCasesModel>();
-				
-				// Fetch Ratings
-				var ratingsDto = await _ratingCachedService.GetRatings();
-
-				// Fetch Types
-				var typesDto = await _typeCachedService.GetTypes();
-
-				return CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, statuses);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("CaseModelService::GetCasesByTrustUkprn exception {Message}", ex.Message);
-				
-				throw;
-			}
-		}
-
 		public async Task PatchClosure(PatchCaseModel patchCaseModel)
 		{
 			try

@@ -1,7 +1,6 @@
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Redis.Models;
-using ConcernsCaseWork.Service.Status;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,7 +9,6 @@ namespace ConcernsCaseWork.Services.Cases
 	public interface ICaseModelService
 	{
 		Task<CaseModel> GetCaseByUrn(long urn);
-		Task<IList<TrustCasesModel>> GetCasesByTrustUkprn(string trustUkprn);
 		Task PatchClosure(PatchCaseModel patchCaseModel);
 		Task PatchCaseRating(PatchCaseModel patchCaseModel);
 		Task PatchRecordRating(PatchRecordModel patchRecordModel);

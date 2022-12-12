@@ -17,7 +17,7 @@ public class CaseSummaryResponseFactoryTests
 	private readonly IFixture _fixture = new Fixture();
 
 	[Fact]
-	public void ReturnsCaseSummaryResponse_WhenGivenAnActiveCaseSummaryVmWithNoConcernsOrActionsOrDecisions()
+	public void ReturnsActiveCaseSummaryResponse_WhenGivenAnActiveCaseSummaryVmWithNoConcernsOrActionsOrDecisions()
 	{
 		// arrange
 		var ratingName = _fixture.Create<string>();
@@ -45,7 +45,7 @@ public class CaseSummaryResponseFactoryTests
 	}
 
 	[Fact]
-	public void ReturnsCaseSummaryResponse_WhenGivenAnActiveCaseSummaryVmWithConcernsAndActionsAndDecisions()
+	public void ReturnsActiveCaseSummaryResponse_WhenGivenAnActiveCaseSummaryVmWithConcernsAndActionsAndDecisions()
 	{
 		// arrange
 		var ratingName = _fixture.Create<string>();
@@ -86,9 +86,81 @@ public class CaseSummaryResponseFactoryTests
 		result.NtiWarningLetters.Count().Should().Be(caseSummaryVm.NtiWarningLetters.Count());
 		result.SrmaCases.Count().Should().Be(caseSummaryVm.SrmaCases.Count());
 	}
+	
+	[Fact]
+	public void ReturnsClosedCaseSummaryResponse_WhenGivenAClosedCaseSummaryVmWithNoConcernsOrActionsOrDecisions()
+	{
+		// arrange
+		var ratingName = _fixture.Create<string>();
+		var caseSummaryVm = Builder<ClosedCaseSummaryVm>.CreateNew().Build();
+		caseSummaryVm.Rating = new ConcernsRating { Name = ratingName };
 
-	private List<ActiveCaseSummaryVm.Concern> BuildListConcerns()
-		=> new List<ActiveCaseSummaryVm.Concern>
+		// act
+		var result = CaseSummaryResponseFactory.Create(caseSummaryVm);
+
+		// assert
+		result.CaseUrn.Should().Be(caseSummaryVm.CaseUrn);
+		result.CreatedAt.Should().Be(caseSummaryVm.CreatedAt);
+		result.UpdatedAt.Should().Be(caseSummaryVm.UpdatedAt);
+		result.CreatedBy.Should().Be(caseSummaryVm.CreatedBy);
+		result.Rating.Name.Should().Be(caseSummaryVm.Rating.Name);
+		result.StatusName.Should().Be(caseSummaryVm.StatusName);
+		result.TrustUkPrn.Should().Be(caseSummaryVm.TrustUkPrn);
+		result.ClosedAt.Should().Be(caseSummaryVm.ClosedAt);
+		result.ClosedConcerns.Should().BeEmpty();
+		result.Decisions.Should().BeEmpty();
+		result.FinancialPlanCases.Should().BeEmpty();
+		result.NtisUnderConsideration.Should().BeEmpty();
+		result.NoticesToImprove.Should().BeEmpty();
+		result.NtiWarningLetters.Should().BeEmpty();
+		result.SrmaCases.Should().BeEmpty();
+	}
+
+	[Fact]
+	public void ReturnsClosedCaseSummaryResponse_WhenGivenAClosedCaseSummaryVmWithConcernsAndActionsAndDecisions()
+	{
+		// arrange
+		var ratingName = _fixture.Create<string>();
+		var caseSummaryVm = Builder<ClosedCaseSummaryVm>.CreateNew().Build();
+		caseSummaryVm.Rating = new ConcernsRating { Name = ratingName };
+		caseSummaryVm.ClosedConcerns = BuildListConcerns();
+		caseSummaryVm.Decisions = BuildListDecisions();
+		caseSummaryVm.FinancialPlanCases = BuildListActions();
+		caseSummaryVm.NoticesToImprove = BuildListActions();
+		caseSummaryVm.NtiWarningLetters = BuildListActions();
+		caseSummaryVm.NtisUnderConsideration = BuildListActions();
+		caseSummaryVm.SrmaCases = BuildListActions();
+
+		// act
+		var result = CaseSummaryResponseFactory.Create(caseSummaryVm);
+
+		// assert
+		result.CaseUrn.Should().Be(caseSummaryVm.CaseUrn);
+		result.CreatedAt.Should().Be(caseSummaryVm.CreatedAt);
+		result.UpdatedAt.Should().Be(caseSummaryVm.UpdatedAt);
+		result.CreatedBy.Should().Be(caseSummaryVm.CreatedBy);
+		result.Rating.Name.Should().Be(caseSummaryVm.Rating.Name);
+		result.StatusName.Should().Be(caseSummaryVm.StatusName);
+		result.TrustUkPrn.Should().Be(caseSummaryVm.TrustUkPrn);
+		result.ClosedAt.Should().Be(caseSummaryVm.ClosedAt);
+		result.Decisions.Should().NotBeEmpty();
+		result.FinancialPlanCases.Should().NotBeEmpty();
+		result.NtisUnderConsideration.Should().NotBeEmpty();
+		result.NoticesToImprove.Should().NotBeEmpty();
+		result.NtiWarningLetters.Should().NotBeEmpty();
+		result.SrmaCases.Should().NotBeEmpty();
+		
+		result.ClosedConcerns.Count().Should().Be(caseSummaryVm.ClosedConcerns.Count());
+		result.Decisions.Count().Should().Be(caseSummaryVm.Decisions.Count());
+		result.FinancialPlanCases.Count().Should().Be(caseSummaryVm.FinancialPlanCases.Count());
+		result.NtisUnderConsideration.Count().Should().Be(caseSummaryVm.NtisUnderConsideration.Count());
+		result.NoticesToImprove.Count().Should().Be(caseSummaryVm.NoticesToImprove.Count());
+		result.NtiWarningLetters.Count().Should().Be(caseSummaryVm.NtiWarningLetters.Count());
+		result.SrmaCases.Count().Should().Be(caseSummaryVm.SrmaCases.Count());
+	}
+
+	private List<CaseSummaryVm.Concern> BuildListConcerns()
+		=> new List<CaseSummaryVm.Concern>
 		{
 			new(_fixture.Create<string>(), new ConcernsRating { Name = _fixture.Create<string>() }, _fixture.Create<DateTime>()),
 			new(_fixture.Create<string>(), new ConcernsRating { Name = _fixture.Create<string>() }, _fixture.Create<DateTime>()),
@@ -120,5 +192,5 @@ public class CaseSummaryResponseFactoryTests
 			DateTimeOffset.Now
 		);
 
-private List<ActiveCaseSummaryVm.Action> BuildListActions() => _fixture.CreateMany<ActiveCaseSummaryVm.Action>().ToList();
+	private List<CaseSummaryVm.Action> BuildListActions() => _fixture.CreateMany<CaseSummaryVm.Action>().ToList();
 }
