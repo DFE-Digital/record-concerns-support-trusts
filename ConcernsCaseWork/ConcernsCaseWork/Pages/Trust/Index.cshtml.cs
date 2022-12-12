@@ -14,6 +14,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Pages.Base;
+using System.Linq;
 
 namespace ConcernsCaseWork.Pages.Trust
 {
@@ -72,6 +73,12 @@ namespace ConcernsCaseWork.Pages.Trust
 		public async Task<ActionResult> OnPost()
 		{
 			_logger.LogMethodEntered();
+
+			if (!ModelState.IsValid)
+			{
+				TempData["Decision.Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+				return Page();
+			}
 
 			try
 			{
