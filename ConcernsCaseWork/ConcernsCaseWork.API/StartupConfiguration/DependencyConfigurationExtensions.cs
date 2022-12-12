@@ -73,6 +73,10 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 
 			services.AddScoped<IGetConcernsRecordsByCaseUrn, GetConcernsRecordsByCaseUrn>();
 			services.AddScoped<IGetConcernsCasesByOwnerId, GetConcernsCasesByOwnerId>();
+			services.AddScoped<IGetActiveConcernsCaseSummariesByOwner, GetActiveConcernsCaseSummariesByOwner>();
+			services.AddScoped<IGetClosedConcernsCaseSummariesByOwner, GetClosedConcernsCaseSummariesByOwner>();
+			services.AddScoped<IGetActiveConcernsCaseSummariesByTrust, GetActiveConcernsCaseSummariesByTrust>();
+			services.AddScoped<IGetClosedConcernsCaseSummariesByTrust, GetClosedConcernsCaseSummariesByTrust>();
 
 			services.AddScoped<ISRMAGateway, SRMAGateway>();
 			services.AddScoped<IFinancialPlanGateway, FinancialPlanGateway>();
@@ -85,6 +89,8 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IGetConcernsCaseworkTeamOwners, GetConcernsCaseworkTeamOwners>();
 			services.AddScoped<IUpdateConcernsCaseworkTeam, UpdateConcernsCaseworkTeam>();
 			services.AddScoped<IConcernsTeamCaseworkGateway, ConcernsTeamCaseworkGateway>();
+			
+			services.AddScoped<ICaseSummaryGateway, CaseSummaryGateway>();
 
 			services.AddScoped<IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse>, CreateDecisionOutcome>();
 			// TODO: Can remove this registration if we use DecisionUseCaseRequestWrapper for all IUseCaseAsync

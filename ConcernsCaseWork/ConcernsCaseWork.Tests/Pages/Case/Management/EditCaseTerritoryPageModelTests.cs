@@ -36,7 +36,7 @@ public class EditTerritoryPageModelTests
 
 		mockClaimsServicePrincipal.Setup(s => s.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(userName);
 
-		mockCaseModelService.Setup(c => c.GetCaseByUrn(userName, caseUrn)).ReturnsAsync(caseModel);
+		mockCaseModelService.Setup(c => c.GetCaseByUrn(caseUrn)).ReturnsAsync(caseModel);
 
 		var sut = SetupEditTerritoryPageModel(mockCaseModelService.Object, mockClaimsServicePrincipal.Object, mockLogger.Object);
 		sut.CaseUrn = caseUrn;
@@ -55,7 +55,7 @@ public class EditTerritoryPageModelTests
 		});
 
 		mockCaseModelService.Verify(c =>
-			c.GetCaseByUrn(It.IsAny<string>(), caseUrn), Times.Once);
+			c.GetCaseByUrn(caseUrn), Times.Once);
 
 		mockLogger.VerifyLogInformationWasCalled();
 		mockLogger.VerifyLogErrorWasNotCalled();
@@ -76,7 +76,7 @@ public class EditTerritoryPageModelTests
 
 		mockClaimsServicePrincipal.Setup(s => s.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(userName);
 
-		mockCaseModelService.Setup(c => c.GetCaseByUrn(userName, caseUrn)).ReturnsAsync(caseModel);
+		mockCaseModelService.Setup(c => c.GetCaseByUrn(caseUrn)).ReturnsAsync(caseModel);
 
 		var sut = SetupEditTerritoryPageModel(mockCaseModelService.Object, mockClaimsServicePrincipal.Object, mockLogger.Object);
 
@@ -97,7 +97,7 @@ public class EditTerritoryPageModelTests
 		});
 
 		mockCaseModelService.Verify(c =>
-			c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
 
 		mockLogger.VerifyLogInformationWasCalled();
 		mockLogger.VerifyLogErrorWasCalled();
@@ -131,7 +131,7 @@ public class EditTerritoryPageModelTests
 		});
 
 		mockCaseModelService.Verify(c =>
-			c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
 
 		mockLogger.VerifyLogInformationWasCalled();
 		mockLogger.VerifyLogErrorWasCalled();

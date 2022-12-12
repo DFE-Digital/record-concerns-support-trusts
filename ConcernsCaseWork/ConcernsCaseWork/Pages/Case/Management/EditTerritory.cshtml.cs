@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 					return Page();
 				}
 				
-				var caseModel = await _caseModelService.GetCaseByUrn(GetUserName(), (long)CaseUrn);
+				var caseModel = await _caseModelService.GetCaseByUrn((long)CaseUrn);
 				Territory = caseModel.Territory;
 				TempData["SelectedTerritory"] = Territory.ToString();
 			}
