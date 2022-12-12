@@ -85,6 +85,8 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 				DecisionType.NoticeToImprove,
 				DecisionType.RepayableFinancialSupport
 			};
+			apiDecision.CreatedAt = new DateTimeOffset(2022, 12, 24, 0, 0, 0, new TimeSpan());
+			apiDecision.ClosedAt = new DateTimeOffset(2022, 12, 25, 0, 0, 0, new TimeSpan());
 
 			apiDecision.Outcome = new DecisionOutcome()
 			{
@@ -115,6 +117,8 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.SupportingNotes.Should().Be(apiDecision.SupportingNotes);
 			result.EditLink.Should().Be("/case/2/management/action/decision/addOrUpdate/10");
 			result.BackLink.Should().Be("/case/2/management");
+			result.CreatedDate.Should().Be("24 December 2022");
+			result.ClosedDate.Should().Be("25 December 2022");
 
 			result.Outcome.Status.Should().Be("Approved with conditions");
 			result.Outcome.Authorizer.Should().Be("Countersigning Deputy Director");
