@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Factories;
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.Data.Models;
@@ -32,6 +33,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 .With(c => c.DirectionOfTravel = "Up")
                 .With(c => c.StatusId = 3)
                 .With(c => c.RatingId = 3)
+                .With(c => c.Territory = TerritoryEnum.South_And_South_East__South_East)
                 .Build();
 
             var expected = new ConcernsCase
@@ -53,6 +55,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 NextSteps = request.NextSteps,
                 CaseHistory = request.CaseHistory,
                 DirectionOfTravel = request.DirectionOfTravel,
+                Territory = request.Territory,
                 StatusId = request.StatusId,
                 RatingId = request.RatingId
             };

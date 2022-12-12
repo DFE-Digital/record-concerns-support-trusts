@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Extensions;
+﻿using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Cases;
@@ -1620,6 +1621,156 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 			Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PatchNextSteps(CaseFactory.BuildPatchCaseModel()));
 
 			// assert
+			mockCaseCachedService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Never);
+		}
+		
+		[Test]
+		public async Task WhenPatchCaseHistory_SetsCaseHistoryAndUpdatedAt()
+		{
+			// arrange
+			var dateTimeStart = DateTimeOffset.Now;
+			
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
+
+			var caseDto = CaseFactory.BuildCaseDto();
+
+			mockCaseCachedService.Setup(cs => cs.GetCaseByUrn(caseDto.CreatedBy, caseDto.Urn)).ReturnsAsync(caseDto);
+
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
+				mockTrustCachedService.Object, mockRecordCachedService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object,  
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
+			
+			// act
+			await caseModelService.PatchCaseHistory((int)caseDto.Urn, caseDto.CreatedBy, "some test case history");
+
+			// assert
+			var timeStopped = DateTimeOffset.Now;
+			mockCaseCachedService
+				.Verify(r => r.PatchCaseByUrn(It.Is<CaseDto>(dto => dto.CaseHistory.ToString() == "some test case history" && dto.UpdatedAt >= dateTimeStart && dto.UpdatedAt <= timeStopped)), 
+					Times.Once);
+		}
+
+		[Test]
+		public void WhenPatchCaseHistory_WhenPatchCaseThrowsException_ThrowsException()
+		{
+			// arrange
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
+			
+			mockCaseCachedService.Setup(cs => cs.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(new CaseDto());
+			
+			mockCaseCachedService.Setup(cs => cs.PatchCaseByUrn(It.IsAny<CaseDto>()))
+				.ThrowsAsync(new Exception("some error message"));
+			
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
+				mockTrustCachedService.Object, mockRecordCachedService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object,  
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
+
+			// act/ assert
+			var exception = Assert.ThrowsAsync<Exception>(() => caseModelService.PatchCaseHistory(1, "some user", "some case history text"));
+			Assert.That(exception!.Message, Is.EqualTo("some error message"));
+			mockCaseCachedService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Once);
+		}
+		
+		[Test]
+		public async Task WhenPatchTerritory_SetsTerritoryAndUpdatedAt()
+		{
+			// arrange
+			var dateTimeStart = DateTimeOffset.Now;
+			
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
+
+			var caseDto = CaseFactory.BuildCaseDto();
+
+			mockCaseCachedService.Setup(cs => cs.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(caseDto);
+
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
+				mockTrustCachedService.Object, mockRecordCachedService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object,  
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
+			
+			// act
+			await caseModelService.PatchTerritory((int)caseDto.Urn, caseDto.CreatedBy, TerritoryEnum.South_And_South_East__London);
+
+			// assert
+			var timeStopped = DateTimeOffset.Now;
+			mockCaseCachedService
+				.Verify(r => r.PatchCaseByUrn(It.Is<CaseDto>(dto => dto.Territory.ToString() == TerritoryEnum.South_And_South_East__London.ToString() && dto.UpdatedAt >= dateTimeStart && dto.UpdatedAt <= timeStopped)), 
+					Times.Once);
+		}
+
+		[Test]
+		public void WhenPatchTerritory_WhenPatchCaseThrowsException_ThrowsException()
+		{
+			// arrange
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
+			
+			mockCaseCachedService.Setup(cs => cs.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>())).ReturnsAsync(new CaseDto());
+			
+			mockCaseCachedService.Setup(cs => cs.PatchCaseByUrn(It.IsAny<CaseDto>()))
+				.ThrowsAsync(new Exception("some error message"));
+			
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
+				mockTrustCachedService.Object, mockRecordCachedService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object,  
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
+
+			// act/ assert
+			var exception = Assert.ThrowsAsync<Exception>(() => caseModelService.PatchTerritory(1, "some user", TerritoryEnum.North_And_Utc__Utc));
+			Assert.That(exception!.Message, Is.EqualTo("some error message"));
+			mockCaseCachedService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Once);
+		}
+		
+		[Test]
+		public void WhenPatchTerritory_WhenCaseDtoNotFound_ThrowsNullReferenceException()
+		{
+			// arrange
+			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockTrustCachedService = new Mock<ITrustCachedService>();
+			var mockRecordCachedService = new Mock<IRecordCachedService>();
+			var mockRatingCachedService = new Mock<IRatingCachedService>();
+			var mockTypeCachedService = new Mock<ITypeCachedService>();
+			var mockStatusCachedService = new Mock<IStatusCachedService>();
+			var mockLogger = new Mock<ILogger<CaseModelService>>();
+			var mockCaseSearchService = new Mock<ICaseSearchService>();
+			
+			var caseModelService = new CaseModelService(mockCaseCachedService.Object, 
+				mockTrustCachedService.Object, mockRecordCachedService.Object,
+				mockRatingCachedService.Object, mockTypeCachedService.Object,  
+				mockStatusCachedService.Object, mockCaseSearchService.Object, mockLogger.Object);
+
+			// act/ assert
+			var exception = Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PatchTerritory(1, "some user", TerritoryEnum.North_And_Utc__Utc));
+			Assert.That(exception!.Message, Is.EqualTo("Object reference not set to an instance of an object."));
 			mockCaseCachedService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Never);
 		}
 	}

@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Factories;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.Data.Models;
@@ -32,6 +33,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 NextSteps = "next steps",
                 CaseHistory = "case history",
                 DirectionOfTravel = "Direction",
+                Territory = TerritoryEnum.National_Operations,
                 Urn = 109,
                 StatusId = 123,
                 RatingId = 345
@@ -56,6 +58,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 NextSteps = concernsCase.NextSteps,
                 CaseHistory = concernsCase.CaseHistory,
                 DirectionOfTravel = concernsCase.DirectionOfTravel,
+                Territory = concernsCase.Territory,
                 Urn = concernsCase.Urn,
                 StatusId = concernsCase.StatusId,
                 RatingId = concernsCase.RatingId
