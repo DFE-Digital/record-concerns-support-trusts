@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers
 	public abstract class CaseActionCreateHelper
 	{
 		public abstract bool CanHandle(CaseActionEnum caseActionEnum);
-		public abstract Task<bool> NewCaseActionAllowed(long caseUrn, string caseWorker);
+		public abstract Task<bool> NewCaseActionAllowed(long caseUrn);
 		protected virtual bool HasOpenCaseAction(IEnumerable<CaseActionModel> caseActions)
 		{
 			return caseActions?.Any(ca => ca.ClosedAt == null) ?? false;

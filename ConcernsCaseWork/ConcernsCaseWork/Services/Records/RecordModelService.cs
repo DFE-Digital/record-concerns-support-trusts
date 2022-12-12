@@ -1,7 +1,6 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
-using ConcernsCaseWork.Redis.Records;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.Records;
 using ConcernsCaseWork.Service.Status;
@@ -18,12 +17,12 @@ namespace ConcernsCaseWork.Services.Records
 	public sealed class RecordModelService : IRecordModelService
 	{
 		private readonly IStatusCachedService _statusCachedService;
-		private readonly IRecordCachedService _recordCachedService;
+		private readonly IRecordService _recordCachedService;
 		private readonly IRatingModelService _ratingModelService;
 		private readonly ITypeModelService _typeModelService;
 		private readonly ILogger<RecordModelService> _logger;
 		
-		public RecordModelService(IRecordCachedService recordCachedService, 
+		public RecordModelService(IRecordService recordCachedService, 
 			IStatusCachedService statusCachedService,
 			IRatingModelService ratingModelService,
 			ITypeModelService typeModelService,
@@ -36,11 +35,11 @@ namespace ConcernsCaseWork.Services.Records
 			_logger = logger;
 		}
 
-		public Task<IList<RecordModel>> GetRecordsModelByCaseUrn(string caseworker, long caseUrn)
+		public Task<IList<RecordModel>> GetRecordsModelByCaseUrn(long caseUrn)
 		{
 			_logger.LogInformation("RecordModelService::GetRecordsModelByCaseUrn");
 
-			var recordsDtoTask = _recordCachedService.GetRecordsByCaseUrn(caseworker, caseUrn);
+			var recordsDtoTask = _recordCachedService.GetRecordsByCaseUrn(caseUrn);
 			var typesDtoTask = _typeModelService.GetTypes();
 			var ratingsDtoTask = _ratingModelService.GetRatings();
 			var statusesDtoTask = _statusCachedService.GetStatuses();
@@ -58,11 +57,11 @@ namespace ConcernsCaseWork.Services.Records
 			return Task.FromResult(recordsModel);
 		}
 
-		public async Task<RecordModel> GetRecordModelById(string caseworker, long caseUrn, long id)
+		public async Task<RecordModel> GetRecordModelById(long caseUrn, long id)
 		{
 			_logger.LogInformation("RecordModelService::GetRecordModelByUrn");
 
-			var records = await GetRecordsModelByCaseUrn(caseworker, caseUrn);
+			var records = await GetRecordsModelByCaseUrn(caseUrn);
 
 			if (!records.Any()) throw new Exception($"Case {caseUrn} does not contain any records");
 			var recordModel = records.FirstOrDefault(r => r.Id == id) ?? records.First();
@@ -75,7 +74,7 @@ namespace ConcernsCaseWork.Services.Records
 			try
 			{
 				// Fetch Records & statuses
-				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(patchRecordModel.CreatedBy, patchRecordModel.CaseUrn);
+				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(patchRecordModel.CaseUrn);
 				var statusesDto = await _statusCachedService.GetStatuses();
 
 				var recordDto = recordsDto.FirstOrDefault(r => r.Id.CompareTo(patchRecordModel.Id) == 0);
@@ -83,7 +82,7 @@ namespace ConcernsCaseWork.Services.Records
 
 				recordDto = RecordMapping.MapClosure(patchRecordModel, recordDto, statusDto);
 
-				await _recordCachedService.PatchRecordById(recordDto, patchRecordModel.CreatedBy);
+				await _recordCachedService.PatchRecordById(recordDto);
 			}
 			catch (Exception ex)
 			{
@@ -93,11 +92,11 @@ namespace ConcernsCaseWork.Services.Records
 			}
 		}
 		
-		public async Task<IList<CreateRecordModel>> GetCreateRecordsModelByCaseUrn(string caseworker, long caseUrn)
+		public async Task<IList<CreateRecordModel>> GetCreateRecordsModelByCaseUrn(long caseUrn)
 		{
 			_logger.LogInformation("RecordModelService::GetCreateRecordsModelByCaseUrn");
 
-			var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseworker, caseUrn);
+			var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(caseUrn);
 			var typesDto = await _typeModelService.GetTypes();
 			var ratingsDto = await _ratingModelService.GetRatings();
 			
@@ -107,7 +106,7 @@ namespace ConcernsCaseWork.Services.Records
 			return createRecordsModel;
 		}
 
-		public async Task<RecordDto> PostRecordByCaseUrn(CreateRecordModel createRecordModel, string caseworker)
+		public async Task<RecordDto> PostRecordByCaseUrn(CreateRecordModel createRecordModel)
 		{
 			_logger.LogInformation("RecordModelService::PostRecordByCaseUrn");
 			
@@ -129,7 +128,7 @@ namespace ConcernsCaseWork.Services.Records
 				statusDto.Id,
 				createRecordModel.MeansOfReferralId);
 			
-			var recordDto = await _recordCachedService.PostRecordByCaseUrn(createRecordDto, caseworker);
+			var recordDto = await _recordCachedService.PostRecordByCaseUrn(createRecordDto);
 			
 			return recordDto;
 		}

@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			var caseModel = CaseFactory.BuildCaseModel();
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 
 			var pageModel = SetupEditCurrentStatusPageModel(mockCaseModelService.Object, mockLogger.Object);
@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(pageModel.CaseModel.TrustUkPrn, Is.EqualTo(caseModel.TrustUkPrn));
 			
 			mockCaseModelService.Verify(c => 
-				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Once);
+				c.GetCaseByUrn(It.IsAny<long>()), Times.Once);
 		}
 
 		[Test]
@@ -80,7 +80,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			var caseModel = CaseFactory.BuildCaseModel();
 			
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 			
 			var pageModel = SetupEditCurrentStatusPageModel(mockCaseModelService.Object, mockLogger.Object);
@@ -100,7 +100,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 			
 			mockCaseModelService.Verify(c => 
-				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+				c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
 		}
 		
 		[Test]
@@ -125,7 +125,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 			
 			mockCaseModelService.Verify(c => 
-				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+				c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
 		}
 
 		[Test]
@@ -160,7 +160,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(page.Url, Is.EqualTo("https://returnto/thispage"));
 			
 			mockCaseModelService.Verify(c => 
-				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+				c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
 		}
 		
 		private static EditCurrentStatusPageModel SetupEditCurrentStatusPageModel(

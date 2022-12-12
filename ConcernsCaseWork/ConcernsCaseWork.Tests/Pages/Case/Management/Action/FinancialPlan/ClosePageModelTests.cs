@@ -56,7 +56,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var caseUrn = 4;
 			var financialPlanId = 6;
 							
-			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn, null));
 
 			mockFinancialPlanStatusService.Setup(fp => fp.GetClosureFinancialPlansStatusesAsync())
@@ -117,7 +117,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var financialPlan = SetupFinancialPlanModel(financialPlanId, caseUrn, null);
 			financialPlan.ClosedAt = DateTime.Now;
 							
-			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(financialPlan);
 
 			mockFinancialPlanStatusService.Setup(fp => fp.GetClosureFinancialPlansStatusesAsync())
@@ -179,7 +179,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			Assert.That(pageModel.TempData["Error.Message"],
 				Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 			
-			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>(), It.IsAny<string>()), Times.Never);
+			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>()), Times.Never);
 		}
 
 		[Test]
@@ -220,7 +220,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
 			
 			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
-				fpm.ClosedAt != null), It.IsAny<string>()), Times.Once);
+				fpm.ClosedAt != null)), Times.Once);
 		}
 		
 		[Test]
@@ -237,7 +237,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			mockFinancialPlanStatusService.Setup(fp => fp.GetClosureFinancialPlansStatusesAsync())
 				.ReturnsAsync(GetListValidStatuses());
 			
-			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(SetupFinancialPlanModel(caseUrn, financialPlanId, null));
 
 			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
@@ -263,7 +263,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["FinancialPlan.Message"], Is.EqualTo("Please select a reason for closing the Financial Plan"));
 			
-			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>(), It.IsAny<string>()), Times.Never);
+			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>()), Times.Never);
 		}
 
 		private static ClosePageModel SetupClosePageModel(

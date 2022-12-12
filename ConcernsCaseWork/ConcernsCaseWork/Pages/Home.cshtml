@@ -21,16 +21,32 @@
 					</a>
 				</li>
 			</ul>
+			
 			<div class="govuk-tabs__panel" id="your-casework">
-				<partial name="_Home" model="Model" />
+				<div class="govuk-button-group concerns-align-buttons-right-in-govuk-button-group">
+					<a class="govuk-button" asp-page="/case/index" role="button">
+						Create case
+					</a>
+					<a class="govuk-button govuk-button--secondary" asp-page="/trust/index" role="button">
+						Find trust
+					</a>
+					<a class="govuk-button govuk-button--secondary" asp-page="/case/closed" role="button">
+						Closed cases
+					</a>
+				</div>
+
+				<!-- Active casework -->
+				<partial name="_CasesActive" model="Model.ActiveCases"/>
 			</div>
+			
 			<div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="team-casework">
 				<div class="govuk-button-group flexalign__right">
 					<a class="govuk-button govuk-button--secondary" asp-page="/team/selectColleagues" role="button">
 						Select Colleagues
 					</a>
 				</div>
-				<partial name="_CasesTeamActive" model="Model.CasesTeamActive" />
+				<!-- Team casework -->
+				<partial name="_CasesTeamActive" model="Model.ActiveTeamCases" />
 			</div>
 		</div>
 	</div>

@@ -119,7 +119,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				};
 				
 				// Post record
-				await _recordModelService.PostRecordByCaseUrn(createRecordModel, User.Identity.Name);
+				await _recordModelService.PostRecordByCaseUrn(createRecordModel);
 				
 				return Redirect(url);
 			}
@@ -141,10 +141,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 					throw new Exception("Case urn cannot be 0");
 				
 				// Get Case
-				var caseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+				var caseModel = await _caseModelService.GetCaseByUrn(caseUrn);
 				
 				PreviousUrl = url;
-				CreateRecordsModel = await _recordModelService.GetCreateRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
+				CreateRecordsModel = await _recordModelService.GetCreateRecordsModelByCaseUrn(caseUrn);
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(caseModel.TrustUkPrn);
 				RatingsModel = await _ratingModelService.GetRatingsModel();
 				TypeModel = await _typeModelService.GetTypeModel();
