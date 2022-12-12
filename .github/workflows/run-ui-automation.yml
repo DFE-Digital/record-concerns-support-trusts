@@ -67,6 +67,9 @@ jobs:
           dotnet user-secrets set "ConcernsCaseworkApi:ApiKeys" "app-key"
           dotnet user-secrets set "ConcernsCasework:ApiKey" "app-key"
           dotnet user-secrets set "ConcernsCasework:ApiEndpoint" "https://localhost:8001"
+          dotnet user-secrets set "AzureAd:ClientId" "${{ secrets.AZURE_AD_CLIENT_ID }}"
+          dotnet user-secrets set "AzureAd:TenantId" "${{ secrets.AZURE_AD_TENANT_ID }}"
+          dotnet user-secrets set "AzureAd:ClientSecret" "${{ secrets.AZURE_AD_CLIENT_SECRET }}"
 
       - name: Install Website
         working-directory: ./ConcernsCaseWork/ConcernsCaseWork/wwwroot
