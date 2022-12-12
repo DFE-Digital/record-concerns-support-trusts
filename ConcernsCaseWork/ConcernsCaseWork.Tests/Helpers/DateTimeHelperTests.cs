@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Helpers;
+using FluentAssertions;
 using NUnit.Framework;
 using System;
 
@@ -30,6 +31,20 @@ namespace ConcernsCaseWork.Tests.Helpers
 
 			//assert
 			Assert.That(result, Is.EqualTo(expectedResult));
+		}
+
+		[TestCase("16 December 2022", 2022, 12, 16)]
+		[TestCase("22 May 2022", 2022, 5, 22)]
+		public void WhenParseToDisplayDate_ReturnsExpected(string dateString, int expectedYear, int expectedMonth, int expectedDay)
+		{
+			// arrange
+			var date = new DateTime(expectedYear, expectedMonth, expectedDay);
+
+			// act
+			var result = DateTimeHelper.ParseToDisplayDate(date);
+
+			//assert 
+			result.Should().Be(dateString);
 		}
 	}
 }
