@@ -3,16 +3,12 @@ using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
-using ConcernsCaseWork.Redis.Ratings;
 using ConcernsCaseWork.Redis.Status;
-using ConcernsCaseWork.Redis.Trusts;
-using ConcernsCaseWork.Redis.Types;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Records;
 using ConcernsCaseWork.Service.Status;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,31 +16,19 @@ namespace ConcernsCaseWork.Services.Cases
 {
 	public sealed class CaseModelService : ICaseModelService
 	{
-		private readonly IRatingCachedService _ratingCachedService;
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly IRecordService _recordService;
-		private readonly ITrustCachedService _trustCachedService;
-		private readonly ITypeCachedService _typeCachedService;
-		private readonly ICaseSearchService _caseSearchService;
 		private readonly ICaseService _caseService;
 		private readonly ILogger<CaseModelService> _logger;
 
 		public CaseModelService(
-			ITrustCachedService trustCachedService, 
 			IRecordService recordService, 
-			IRatingCachedService ratingCachedService,
-			ITypeCachedService typeCachedService,
 			IStatusCachedService statusCachedService,
-			ICaseSearchService caseSearchService,
 			ICaseService caseService,
 			ILogger<CaseModelService> logger)
 		{
 			_statusCachedService = statusCachedService;
-			_ratingCachedService = ratingCachedService;
 			_recordService = recordService;
-			_trustCachedService = trustCachedService;
-			_typeCachedService = typeCachedService;
-			_caseSearchService = caseSearchService;
 			_caseService = caseService;
 			_logger = logger;
 		}

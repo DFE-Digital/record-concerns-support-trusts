@@ -118,6 +118,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 			var userName = _fixture.Create<string>();
 			var caseUrn = _fixture.Create<long>();
 			var expectedUrl = $"/case/{caseUrn}/management/action/decision/addOrUpdate";
+
 			mockClaimsPrincipalHelper
 				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
 				.Returns(userName);
