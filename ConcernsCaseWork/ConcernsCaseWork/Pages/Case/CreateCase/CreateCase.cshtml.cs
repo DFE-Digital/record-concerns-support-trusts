@@ -11,9 +11,13 @@ using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -35,7 +39,8 @@ public class CreateCasePageModel : AbstractPageModel
 	[BindProperty]
 	public CaseTypes CaseType { get; set; }
 
-	[TempData]
+	//[TempData]
+	[FromQuery(Name = "step")]
 	public CreateCaseSteps CreateCaseStep { get; set; } = CreateCaseSteps.SearchForTrust;
 
 	[BindProperty]
@@ -63,6 +68,10 @@ public class CreateCasePageModel : AbstractPageModel
 			{
 				await SetTrustAddress();
 			}
+			else
+			{
+				ResetCurrentStep();
+			}
 		}
 		catch (Exception ex)
 		{
@@ -80,24 +89,35 @@ public class CreateCasePageModel : AbstractPageModel
 
 		try
 		{
+			if (CreateCaseStep != CreateCaseSteps.SearchForTrust)
+			{
+				await RestoreTrustUkprnFromCache();
+			}
+
 			if (CreateCaseStep != CreateCaseSteps.SelectCaseType)
 			{
 				throw new Exception();
 			}
 
 			await ResetUserState();
-			ResetCurrentStep();
 
+			ActionResult result;
 			switch (CaseType)
 			{
 				case CaseTypes.Concern:
-					return Redirect("/case/concern/index");
+					result = Redirect("/case/concern/index");
+					break;
 				case CaseTypes.NonConcern:
-					return Redirect("/case/create/nonconcerns");
+					result = Redirect("/case/create/nonconcerns");
+					break;
 				case CaseTypes.NotSelected:
 				default:
-					throw new ArgumentOutOfRangeException(nameof(CaseType));
+					ModelState.AddModelError(nameof(CaseType), "Invalid case type");
+					result = Page();
+					break;
 			}
+
+			return result;
 		}
 		catch (Exception ex)
 		{
@@ -116,12 +136,21 @@ public class CreateCasePageModel : AbstractPageModel
 			await _cachedUserService.StoreData(userName, userState);
 		}
 
-		void ResetCurrentStep()
-		{
-			CreateCaseStep = CreateCaseSteps.SearchForTrust;
-		}
+
 	}
 
+	private void ResetCurrentStep()
+	{
+		CreateCaseStep = CreateCaseSteps.SearchForTrust;
+	}
+
+	private async Task RestoreTrustUkprnFromCache()
+	{
+		ModelState.ClearValidationState(nameof(FindTrustModel.SelectedTrustUkprn));
+		FindTrustModel.SelectedTrustUkprn = (await GetUserState()).TrustUkPrn;
+		ModelState.SetModelValue(nameof(FindTrustModel.SelectedTrustUkprn), new ValueProviderResult(FindTrustModel.SelectedTrustUkprn));
+		this.TryValidateModel(FindTrustModel);
+	}
 
 	public async Task<ActionResult> OnPostSelectedTrust()
 	{
@@ -129,6 +158,12 @@ public class CreateCasePageModel : AbstractPageModel
 
 		try
 		{
+			if (!ModelState.IsValid)
+			{
+				TempData["Decision.Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+				return Page();
+			}
+
 			if (!TrustUkPrnIsValid())
 				throw new Exception($"Selected trust is incorrect - {FindTrustModel.SelectedTrustUkprn}");
 
@@ -136,7 +171,7 @@ public class CreateCasePageModel : AbstractPageModel
 
 			SetNextStep();
 
-			return RedirectToPage("CreateCase");
+			return RedirectToPage("CreateCase", new { step = CreateCaseSteps.SelectCaseType });
 		}
 		catch (Exception ex)
 		{
@@ -155,7 +190,7 @@ public class CreateCasePageModel : AbstractPageModel
 		void SetNextStep() => CreateCaseStep = CreateCaseSteps.SelectCaseType;
 	}
 
-	private  bool TrustUkPrnIsValid() => !(string.IsNullOrEmpty(FindTrustModel.SelectedTrustUkprn) || FindTrustModel.SelectedTrustUkprn.Contains('-') || FindTrustModel.SelectedTrustUkprn.Length < _searchQueryMinLength);
+	private bool TrustUkPrnIsValid() => !(string.IsNullOrEmpty(FindTrustModel.SelectedTrustUkprn) || FindTrustModel.SelectedTrustUkprn.Contains('-') || FindTrustModel.SelectedTrustUkprn.Length < _searchQueryMinLength);
 
 	private async Task SetTrustAddress()
 	{
@@ -184,6 +219,8 @@ public class CreateCasePageModel : AbstractPageModel
 	}
 
 	private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
+
+	async Task<UserState> GetUserState() => await _cachedUserService.GetData(GetUserName());
 
 	public enum CaseTypes
 	{
