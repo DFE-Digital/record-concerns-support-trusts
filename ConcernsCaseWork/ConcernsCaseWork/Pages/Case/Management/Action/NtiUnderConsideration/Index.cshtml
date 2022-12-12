@@ -1,17 +1,18 @@
 ﻿@page "/case/{urn:long}/management/action/ntiunderconsideration/{ntiUnderConsiderationId:long}/{handler?}"
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using ConcernsCaseWork.Helpers;
 @model ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration.IndexPageModel
 
 @{
     ViewData["Title"] = "NTI Under Consideration";
-	ViewData["BackButtonLabel"] = "Back to case";
-	ViewData["BackButtonLink"] = $"/case/{@RouteData.Values["urn"]}/management";
+    ViewData["BackButtonLabel"] = "Back to case";
+    ViewData["BackButtonLink"] = $"/case/{@RouteData.Values["urn"]}/management";
 }
 
 @section BeforeMain {
-	<div class="govuk-width-container">
-		<partial name="_BackLink"/>
-	</div>
+    <div class="govuk-width-container">
+        <partial name="_BackLink" />
+    </div>
 }
 
 <div class="govuk-width-container">
@@ -45,21 +46,46 @@
             </thead>
             <tbody class="govuk-table__body">
 
-            @* Status *@
-            @{
-	            if (!string.IsNullOrEmpty(Model.NTIUnderConsiderationModel.ClosedStatusName)){
-		            <tr class="govuk-table__row">
-			            <th scope="row" class="govuk-table-case-details__header">Status</th>
-			            <td class="govuk-table__cell">
-				            <div class="govuk-!-padding-bottom-2">
-					            <span>@Model.NTIUnderConsiderationModel.ClosedStatusName</span>
-				            </div>
-			            </td>
-		            </tr>
-				}
-            }
-            
-            @* Reasons *@
+                @* Date Opened *@
+                @{
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table-case-details__header">Date NTI: Under consideration opened</th>
+                        <td class="govuk-table__cell">
+                            <div class="govuk-!-padding-bottom-2">
+                                <span>@DateTimeHelper.ParseToDisplayDate(Model.NTIUnderConsiderationModel.CreatedAt)</span>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+                @if (Model.NTIUnderConsiderationModel.ClosedAt.HasValue)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table-case-details__header">Date NTI: Under consideration closed</th>
+                        <td class="govuk-table__cell">
+                            <div class="govuk-!-padding-bottom-2">
+                                <span>@DateTimeHelper.ParseToDisplayDate(Model.NTIUnderConsiderationModel.ClosedAt.Value)</span>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+                @* Status *@
+                @{
+                    if (!string.IsNullOrEmpty(Model.NTIUnderConsiderationModel.ClosedStatusName))
+                    {
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table-case-details__header">Status</th>
+                            <td class="govuk-table__cell">
+                                <div class="govuk-!-padding-bottom-2">
+                                    <span>@Model.NTIUnderConsiderationModel.ClosedStatusName</span>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+
+                @* Reasons *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Reasons</th>
                     <td class="govuk-table__cell">
