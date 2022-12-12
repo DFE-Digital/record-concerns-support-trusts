@@ -93,7 +93,6 @@ public class CaseSummaryResponseFactoryTests
 		// arrange
 		var ratingName = _fixture.Create<string>();
 		var caseSummaryVm = Builder<ClosedCaseSummaryVm>.CreateNew().Build();
-		caseSummaryVm.Rating = new ConcernsRating { Name = ratingName };
 
 		// act
 		var result = CaseSummaryResponseFactory.Create(caseSummaryVm);
@@ -103,7 +102,6 @@ public class CaseSummaryResponseFactoryTests
 		result.CreatedAt.Should().Be(caseSummaryVm.CreatedAt);
 		result.UpdatedAt.Should().Be(caseSummaryVm.UpdatedAt);
 		result.CreatedBy.Should().Be(caseSummaryVm.CreatedBy);
-		result.Rating.Name.Should().Be(caseSummaryVm.Rating.Name);
 		result.StatusName.Should().Be(caseSummaryVm.StatusName);
 		result.TrustUkPrn.Should().Be(caseSummaryVm.TrustUkPrn);
 		result.ClosedAt.Should().Be(caseSummaryVm.ClosedAt);
@@ -122,7 +120,6 @@ public class CaseSummaryResponseFactoryTests
 		// arrange
 		var ratingName = _fixture.Create<string>();
 		var caseSummaryVm = Builder<ClosedCaseSummaryVm>.CreateNew().Build();
-		caseSummaryVm.Rating = new ConcernsRating { Name = ratingName };
 		caseSummaryVm.ClosedConcerns = BuildListConcerns();
 		caseSummaryVm.Decisions = BuildListDecisions();
 		caseSummaryVm.FinancialPlanCases = BuildListActions();
@@ -139,7 +136,6 @@ public class CaseSummaryResponseFactoryTests
 		result.CreatedAt.Should().Be(caseSummaryVm.CreatedAt);
 		result.UpdatedAt.Should().Be(caseSummaryVm.UpdatedAt);
 		result.CreatedBy.Should().Be(caseSummaryVm.CreatedBy);
-		result.Rating.Name.Should().Be(caseSummaryVm.Rating.Name);
 		result.StatusName.Should().Be(caseSummaryVm.StatusName);
 		result.TrustUkPrn.Should().Be(caseSummaryVm.TrustUkPrn);
 		result.ClosedAt.Should().Be(caseSummaryVm.ClosedAt);
