@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using ITeamsModelService = ConcernsCaseWork.Services.Teams.ITeamsModelService;
 
@@ -30,7 +31,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		private readonly IFixture _fixture = new Fixture();
 		
 		[Test]
-		public async Task WhenInstanceOfIndexPageOnGetAsync_ReturnCases()
+		public async Task WhenInstanceOfHomePageOnGetAsync_ReturnCases()
 		{
 			// arrange
 			var currentUserName = _fixture.Create<string>();
@@ -39,30 +40,28 @@ namespace ConcernsCaseWork.Tests.Pages
 			var mockUserStateCache = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 			var mockCaseSummaryService = new Mock<ICaseSummaryService>();
+			var mockTeamService = new Mock<ITeamsModelService>();
 
 			var activeCases = _fixture.CreateMany<ActiveCaseSummaryModel>().ToList();
 			var activeTeamCases = _fixture.CreateMany<ActiveCaseSummaryModel>().ToList();
-			
-			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(currentUserName)).ReturnsAsync(activeCases);
-			
 			var teamUserNames = activeTeamCases.Select(t => t.CreatedBy).Distinct().ToArray();
 			
-			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworkers(teamUserNames)).ReturnsAsync(activeCases);
-
-			var mockTeamService = new Mock<ITeamsModelService>();
+			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(currentUserName)).ReturnsAsync(activeCases);
+			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworkers(teamUserNames)).ReturnsAsync(activeTeamCases);
+			mockClaimsPrincipalHelper.Setup(s => s.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(currentUserName);
 			mockTeamService.Setup(x => x.GetCaseworkTeam(currentUserName))
 				.ReturnsAsync(new ConcernsTeamCaseworkModel(currentUserName, teamUserNames));
 		
-			var homePageModel = SetupHomeModel(mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockCaseSummaryService.Object, mockClaimsPrincipalHelper.Object);
+			var sut = SetupHomePageModel(mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockCaseSummaryService.Object, mockClaimsPrincipalHelper.Object);
 		
 			// act
-			await homePageModel.OnGetAsync();
+			await sut.OnGetAsync();
 			
 			// assert
 			Assert.Multiple(() =>
 			{
-				Assert.That(homePageModel.ActiveCases, Is.EquivalentTo(activeCases));
-				Assert.That(homePageModel.ActiveTeamCases, Is.EquivalentTo(activeTeamCases));
+				Assert.That(sut.ActiveCases, Is.EquivalentTo(activeCases));
+				Assert.That(sut.ActiveTeamCases, Is.EquivalentTo(activeTeamCases));
 			});
 
 			mockLogger.VerifyLogInformationWasCalled("HomePageModel");
@@ -72,7 +71,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 
 		[Test]
-		public async Task WhenInstanceOfIndexPageOnGetAsync_ReturnEmptyCases()
+		public async Task WhenInstanceOfHomePageOnGetAsync_ReturnEmptyCases()
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<HomePageModel>>();
@@ -89,12 +88,12 @@ namespace ConcernsCaseWork.Tests.Pages
 				.ReturnsAsync(new ConcernsTeamCaseworkModel("random.user", Array.Empty<string>()));
 
 			// act
-			var indexModel = SetupHomeModel(mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockCaseSummaryService.Object, mockClaimsPrincipalHelper.Object);
-			await indexModel.OnGetAsync();
+			var sut = SetupHomePageModel(mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockCaseSummaryService.Object, mockClaimsPrincipalHelper.Object);
+			await sut.OnGetAsync();
 
 			// assert
-			Assert.IsAssignableFrom<List<ActiveCaseSummaryModel>>(indexModel.ActiveCases);
-			Assert.That(indexModel.ActiveCases.Count, Is.Zero);
+			Assert.IsAssignableFrom<List<ActiveCaseSummaryModel>>(sut.ActiveCases);
+			Assert.That(sut.ActiveCases, Is.Empty);
 
 			// Not sure that these verifications should take place. it leads to a brittle test.
 			// Verify ILogger
@@ -221,7 +220,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			}
 		}
 
-		private static HomePageModel SetupHomeModel(
+		private static HomePageModel SetupHomePageModel(
 			ILogger<HomePageModel> mockLogger,
 			ITeamsModelService mockTeamService,
 			IUserStateCachedService mockUserStateCachedService,

@@ -1,6 +1,5 @@
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.API.Contracts.Enums;
-using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
@@ -48,94 +47,6 @@ namespace ConcernsCaseWork.Services.Cases
 			_caseSearchService = caseSearchService;
 			_caseService = caseService;
 			_logger = logger;
-		}
-
-		public async Task<IList<HomeModel>> GetCasesByCaseworkerAndStatus(IList<string> caseworkers, StatusEnum statusEnum)
-		{
-			try
-			{
-				var allCaseworkerCasesTasks = caseworkers.Select(caseworker => GetCasesByCaseworkerAndStatus(caseworker, statusEnum)).ToList();
-				await Task.WhenAll(allCaseworkerCasesTasks);
-				
-				return allCaseworkerCasesTasks.SelectMany(homeModelTask => homeModelTask.Result).ToList();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("CaseModelService::GetCasesByCaseworkerAndStatus exception {Message}", ex.Message);
-			}
-
-			return Array.Empty<HomeModel>();
-		}
-
-		public async Task<IList<HomeModel>> GetCasesByCaseworkerAndStatus(string caseworker, StatusEnum statusEnum)
-		{
-			try
-			{
-				_logger.LogInformation("CaseModelService::GetCasesByCaseworkerAndStatus {Caseworker} - {StatusEnum}", caseworker, statusEnum);
-				
-				// Fetch Status
-				var statusDto = await _statusCachedService.GetStatusByName(statusEnum.ToString());
-
-				// Get from Academies API all cases by caseworker and status
-				var casesDto = await _caseSearchService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch(caseworker, statusDto.Id));
-				
-				// Return if cases are empty
-				if (!casesDto.Any()) return Array.Empty<HomeModel>();
-				
-				// Fetch rag rating
-				var ratingsDto = await _ratingCachedService.GetRatings();
-									
-				// Fetch types
-				var typesDto = await _typeCachedService.GetTypes();
-				
-				// Fetch statuses
-				var statusesDto = await _statusCachedService.GetStatuses();
-				
-				// Execute in parallel each case contained logic
-				var listHomeModel = casesDto.Select(caseDto =>
-				{
-					var trustDetailsTask = _trustCachedService.GetTrustByUkPrn(caseDto.TrustUkPrn);
-					var recordsTask = _recordService.GetRecordsByCaseUrn(caseDto.Urn);
-
-					Task.WaitAll(trustDetailsTask, recordsTask);
-
-					var trustDetailsDto = trustDetailsTask.Result;
-					var recordsDto = recordsTask.Result;
-
-					// Map records dto to model
-					var recordsModel = RecordMapping.MapDtoToModel(recordsDto, typesDto, ratingsDto, statusesDto);
-					
-					// Case rating
-					var caseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, caseDto.RatingId);
-					var trustName = TrustMapping.FetchTrustName(trustDetailsDto);
-					
-					return new HomeModel(
-						caseDto.Urn.ToString(), 
-						caseDto.CreatedAt,
-						caseDto.UpdatedAt,
-						caseDto.ClosedAt,
-						caseDto.ReviewAt,
-						caseDto.CreatedBy,
-						trustName,
-						caseRatingModel,
-						recordsModel
-					);
-				}).ToList();
-				
-				return statusEnum switch
-				{
-					StatusEnum.Live => listHomeModel.OrderByDescending(homeModel => homeModel.UpdatedUnixTime).ToList(),
-					StatusEnum.Monitoring => listHomeModel.OrderBy(homeModel => homeModel.ReviewUnixTime).ToList(),
-					StatusEnum.Close => listHomeModel.OrderByDescending(homeModel => homeModel.ClosedUnixTime).ToList(),
-					_ => throw new ArgumentOutOfRangeException(nameof(statusEnum), statusEnum, $"Invalid status enum {statusEnum}")
-				};
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("CaseModelService::GetCasesByCaseworkerAndStatus exception {Message}", ex.Message);
-			}
-
-			return Array.Empty<HomeModel>();
 		}
 
 		public async Task<CaseModel> GetCaseByUrn(long urn)
@@ -394,11 +305,11 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(userName, caseUrn);
+				var caseDto = await _caseService.GetCaseByUrn(caseUrn);
 				
 				var newCaseDto = caseDto with { UpdatedAt = DateTimeOffset.Now, Territory = territory };
 
-				await _caseCachedService.PatchCaseByUrn(newCaseDto);
+				await _caseService.PatchCaseByUrn(newCaseDto);
 			}
 			catch (Exception ex)
 			{

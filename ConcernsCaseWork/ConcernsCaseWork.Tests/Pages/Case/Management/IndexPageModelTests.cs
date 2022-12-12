@@ -38,6 +38,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		private Mock<ILogger<IndexPageModel>> _mockLogger = null;
 		private Mock<INtiUnderConsiderationStatusesCachedService> _mockNtiStatusesCachedService = null;
 		private Mock<IActionsModelService> _actionsModelService = null;
+		private Mock<ICaseSummaryService> _caseSummaryService = null;
 
 		private readonly static Fixture _fixture = new();
 
@@ -52,6 +53,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			_mockLogger = new Mock<ILogger<IndexPageModel>>();
 			_mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
 			_actionsModelService = new Mock<IActionsModelService>();
+			_caseSummaryService = new Mock<ICaseSummaryService>();
 		}
 
 		[Test]
@@ -90,11 +92,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			var closedActions = _fixture.CreateMany<ActionSummaryModel>().ToList();
 
-			var allCases = new List<ActionSummaryModel>();
-			allCases.AddRange(openActions);
-			allCases.AddRange(closedActions);
+			var allActions = new List<ActionSummaryModel>();
+			allActions.AddRange(openActions);
+			allActions.AddRange(closedActions);
 
-			_actionsModelService.Setup(m => m.GetActionsSummary(It.IsAny<long>())).ReturnsAsync(allCases);
+			_actionsModelService.Setup(m => m.GetActionsSummary(It.IsAny<long>())).ReturnsAsync(allActions);
 
 			var caseModel = _fixture.Create<CaseModel>();
 			_mockCaseModelService.Setup(m => m.GetCaseByUrn(It.IsAny<long>())).ReturnsAsync(caseModel);
@@ -108,8 +110,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var trustDetails = _fixture.Create<TrustDetailsModel>();
 			_mockTrustModelService.Setup(m => m.GetTrustByUkPrn(It.IsAny<string>())).ReturnsAsync(trustDetails);
 
-			var trustCases = _fixture.CreateMany<TrustCasesModel>().ToList();
-			_mockCaseModelService.Setup(m => m.GetCasesByTrustUkprn(It.IsAny<string>())).ReturnsAsync(trustCases);
+			var activeCases = _fixture.CreateMany<ActiveCaseSummaryModel>().ToList();
+			_caseSummaryService.Setup(m => m.GetActiveCaseSummariesByTrust(It.IsAny<string>())).ReturnsAsync(activeCases);
+			
+			var closedCases = _fixture.CreateMany<ClosedCaseSummaryModel>().ToList();
+			_caseSummaryService.Setup(m => m.GetClosedCaseSummariesByTrust(It.IsAny<string>())).ReturnsAsync(closedCases);
 
 			var pageModel = SetupIndexPageModel();
 			pageModel.RouteData.Values.Add("urn", urn);
@@ -126,7 +131,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			pageModel.CaseModel.Urn.Should().Be(caseModel.Urn);
 			pageModel.CaseModel.RecordsModel.Should().BeEquivalentTo(records);
 			pageModel.TrustDetailsModel.Should().BeEquivalentTo(trustDetails);
-			pageModel.TrustCasesModel.Should().BeEquivalentTo(trustCases);
+			pageModel.ActiveCases.Should().BeEquivalentTo(activeCases);
+			pageModel.ClosedCases.Should().BeEquivalentTo(closedCases);
 		}
 
 		[Test]
@@ -267,7 +273,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				_mockStatusCachedService.Object, 
 				_mockNtiStatusesCachedService.Object,
 				_mockLogger.Object, 
-				_actionsModelService.Object)
+				_actionsModelService.Object,
+				_caseSummaryService.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

@@ -147,10 +147,10 @@ namespace ConcernsCaseWork.API.Controllers
         [MapToApiVersion("2.0")]
         public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesByOwnerId(string ownerId)
         {
-	        _logger.LogInformation($"Attempting to get Concerns Case summaries by Owner Id {ownerId}");
+	        _logger.LogInformation($"Attempting to get active Concerns Case summaries by Owner Id {ownerId}");
 	        var caseSummaries = await _getActiveConcernsCaseSummariesByOwner.Execute(ownerId);
 
-	        _logger.LogInformation($"Returning Concerns cases with Owner Id {ownerId}");
+	        _logger.LogInformation($"Returning active Concerns cases with Owner Id {ownerId}");
 	        var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, null);
             
 	        return Ok(response);
@@ -161,10 +161,10 @@ namespace ConcernsCaseWork.API.Controllers
         [MapToApiVersion("2.0")]
         public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByOwnerId(string ownerId)
         {
-	        _logger.LogInformation($"Attempting to get Concerns Case summaries by Owner Id {ownerId}");
+	        _logger.LogInformation($"Attempting to get closed Concerns Case summaries by Owner Id {ownerId}");
 	        var caseSummaries = await _getClosedConcernsCaseSummariesByOwner.Execute(ownerId);
 
-	        _logger.LogInformation($"Returning Concerns cases with Owner Id {ownerId}");
+	        _logger.LogInformation($"Returning closed Concerns cases with Owner Id {ownerId}");
 	        var response = new ApiResponseV2<ClosedCaseSummaryResponse>(caseSummaries, null);
             
 	        return Ok(response);
@@ -175,10 +175,10 @@ namespace ConcernsCaseWork.API.Controllers
         [MapToApiVersion("2.0")]
         public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesByTrust(string trustukprn)
         {
-	        _logger.LogInformation($"Attempting to get Concerns Case summaries by Trust {trustukprn}");
+	        _logger.LogInformation($"Attempting to get active Concerns Case summaries by Trust {trustukprn}");
 	        var caseSummaries = await _getActiveConcernsCaseSummariesByTrust.Execute(trustukprn);
 
-	        _logger.LogInformation($"Returning Concerns cases with Trust {trustukprn}");
+	        _logger.LogInformation($"Returning Concerns active cases with Trust {trustukprn}");
 	        var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, null);
             
 	        return Ok(response);
@@ -189,10 +189,10 @@ namespace ConcernsCaseWork.API.Controllers
         [MapToApiVersion("2.0")]
         public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByTrust(string trustukprn)
         {
-	        _logger.LogInformation($"Attempting to get Concerns Case summaries by Trust {trustukprn}");
+	        _logger.LogInformation($"Attempting to get closed Concerns Case summaries by Trust {trustukprn}");
 	        var caseSummaries = await _getClosedConcernsCaseSummariesByTrust.Execute(trustukprn);
 
-	        _logger.LogInformation($"Returning Concerns cases with Trust {trustukprn}");
+	        _logger.LogInformation($"Returning closed Concerns cases with Trust {trustukprn}");
 	        var response = new ApiResponseV2<ClosedCaseSummaryResponse>(caseSummaries, null);
             
 	        return Ok(response);

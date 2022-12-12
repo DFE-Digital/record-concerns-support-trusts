@@ -41,15 +41,12 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
-		
 		public IList<ActiveCaseSummaryModel> ActiveCases { get; private set; }
-		
 		public IList<ClosedCaseSummaryModel> ClosedCases { get; private set; }
-		public bool IsEditableCase { get; private set; }
 		public List<ActionSummaryModel> CaseActions { get; private set; }
 		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
-
 		public bool IsConcernsCase { get; set; }
+		public bool IsEditableCase { get; private set; }
 
 		public List<ActionSummaryModel> OpenCaseActions { get; set; }
 		public List<ActionSummaryModel> ClosedCaseActions { get; set; }
