@@ -217,7 +217,13 @@ public class CaseSummaryServiceTests
 	}
 
 	[Test]
-	public async Task GetActiveCaseSummariesByCaseworker_ReturnsCasesWithConcernsSortedByCreatedAtOldestFirstWhenRagRatingsTheSame()
+	[TestCase("Amber")]
+	[TestCase("Red")]
+	[TestCase("Red-Amber")]
+	[TestCase("Amber-Green")]
+	[TestCase("Red-Plus")]
+	[TestCase("Green")]
+	public async Task GetActiveCaseSummariesByCaseworker_ReturnsCasesWithConcernsSortedByCreatedAtOldestFirstWhenRagRatingsTheSame(string ragRating)
 	{
 		// arrange
 		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
@@ -225,14 +231,15 @@ public class CaseSummaryServiceTests
 
 		var userName = _fixture.Create<string>();
 		var data = BuildActiveCaseSummaryDto();
+		var ratingDto = new RatingDto(ragRating, DateTimeOffset.Now, DateTimeOffset.Now, 1);
 		data.ActiveConcerns = new List<CaseSummaryDto.ConcernSummaryDto>
 		{
-			new("4", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-4)),
-			new("1", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-1)),
-			new("3", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-3)),
-			new("5", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-5)),
-			new("2", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-2)),
-			new("6", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-6))
+			new("4", ratingDto, DateTime.Now.AddDays(-4)),
+			new("3", ratingDto, DateTime.Now.AddDays(-3)),
+			new("2", ratingDto, DateTime.Now.AddDays(-2)),
+			new("5", ratingDto, DateTime.Now.AddDays(-5)),
+			new("1", ratingDto, DateTime.Now.AddDays(-1)), // newest should be last
+			new("6", ratingDto, DateTime.Now.AddDays(-6)) // oldest should be first
 		};
 
 		mockCaseSummaryService
@@ -246,7 +253,7 @@ public class CaseSummaryServiceTests
 
 		// assert
 		result.Count.Should().Be(1);
-		result.Single().ActiveConcerns.Select(int.Parse).Should().BeInAscendingOrder();
+		result.Single().ActiveConcerns.Select(int.Parse).Should().BeInDescendingOrder();
 	}
 	
 	#endregion
@@ -449,7 +456,13 @@ public class CaseSummaryServiceTests
 	}
 
 	[Test]
-	public async Task GetActiveCaseSummariesByCaseworkers_ReturnsCasesWithConcernsSortedByCreatedAtOldestFirstWhenRagRatingsTheSame()
+	[TestCase("Amber")]
+	[TestCase("Red")]
+	[TestCase("Red-Amber")]
+	[TestCase("Amber-Green")]
+	[TestCase("Red-Plus")]
+	[TestCase("Green")]
+	public async Task GetActiveCaseSummariesByCaseworkers_ReturnsCasesWithConcernsSortedByCreatedAtOldestFirstWhenRagRatingsTheSame(string ragRating)
 	{
 		// arrange
 		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
@@ -457,46 +470,29 @@ public class CaseSummaryServiceTests
 
 		var userNames = _fixture.Create<string[]>();
 		var data1 = BuildActiveCaseSummaryDto();
+		var ratingDto = new RatingDto(ragRating, DateTimeOffset.Now, DateTimeOffset.Now, 1);
 		data1.ActiveConcerns = new List<CaseSummaryDto.ConcernSummaryDto>
 		{
-			new("4", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-4)),
-			new("1", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-1)),
-			new("3", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-3)),
-			new("5", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-5)),
-			new("2", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-2)),
-			new("6", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-6))
+			new("4", ratingDto, DateTime.Now.AddDays(-4)),
+			new("1", ratingDto, DateTime.Now.AddDays(-1)), // newest should be last
+			new("3", ratingDto, DateTime.Now.AddDays(-3)),
+			new("5", ratingDto, DateTime.Now.AddDays(-5)),
+			new("2", ratingDto, DateTime.Now.AddDays(-2)),
+			new("6", ratingDto, DateTime.Now.AddDays(-6)) // oldest should be first
 		};
-		
-		var data2 = BuildActiveCaseSummaryDto();
-		data2.ActiveConcerns = new List<CaseSummaryDto.ConcernSummaryDto>
-		{
-			new("4", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-4)),
-			new("1", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-1)),
-			new("3", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-3)),
-			new("5", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-5)),
-			new("2", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-2)),
-			new("6", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-6))
-		};
-		
+
 		mockCaseSummaryService
 			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userNames[0]))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{ data1 });
-		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userNames[1]))
-			.ReturnsAsync(new List<ActiveCaseSummaryDto>{ data2 });
-		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userNames[2]))
-			.ReturnsAsync(new List<ActiveCaseSummaryDto>{ });
-		
+
 		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByCaseworkers(userNames);
 
 		// assert
-		result.Count.Should().Be(2);
-		result[0].ActiveConcerns.Select(int.Parse).Should().BeInAscendingOrder();
-		result[1].ActiveConcerns.Select(int.Parse).Should().BeInAscendingOrder();
+		result.Count.Should().Be(1);
+		result.Single().ActiveConcerns.Select(int.Parse).Should().BeInDescendingOrder();
 	}
 	
 	#endregion
@@ -697,7 +693,7 @@ public class CaseSummaryServiceTests
 
 		// assert
 		result.Count.Should().Be(1);
-		result.Single().ClosedConcerns.Select(int.Parse).Should().BeInDescendingOrder();
+		result.Single().ClosedConcerns.Select(int.Parse).Should().BeInAscendingOrder();
 	}
 
 	#endregion
@@ -898,7 +894,7 @@ public class CaseSummaryServiceTests
 
 		// assert
 		result.Count.Should().Be(1);
-		result.Single().ClosedConcerns.Select(int.Parse).Should().BeInDescendingOrder();
+		result.Single().ClosedConcerns.Select(int.Parse).Should().BeInAscendingOrder();
 	}
 
 	#endregion
@@ -1101,7 +1097,13 @@ public class CaseSummaryServiceTests
 	}
 
 	[Test]
-	public async Task GetActiveCaseSummariesByTrust_ReturnsCasesWithConcernsSortedByCreatedAtOldestFirstWhenRagRatingsTheSame()
+	[TestCase("Amber")]
+	[TestCase("Red")]
+	[TestCase("Red-Amber")]
+	[TestCase("Amber-Green")]
+	[TestCase("Red-Plus")]
+	[TestCase("Green")]
+	public async Task GetActiveCaseSummariesByTrust_ReturnsCasesWithConcernsSortedByCreatedAtOldestFirstWhenRagRatingsTheSame(string ragRating)
 	{
 		// arrange
 		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
@@ -1109,14 +1111,15 @@ public class CaseSummaryServiceTests
 
 		var userName = _fixture.Create<string>();
 		var data = BuildActiveCaseSummaryDto();
+		var ratingDto = new RatingDto(ragRating, DateTimeOffset.Now, DateTimeOffset.Now, 1);
 		data.ActiveConcerns = new List<CaseSummaryDto.ConcernSummaryDto>
 		{
-			new("4", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-4)),
-			new("1", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-1)),
-			new("3", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-3)),
-			new("5", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-5)),
-			new("2", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-2)),
-			new("6", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-6))
+			new("4", ratingDto, DateTime.Now.AddDays(-4)),
+			new("3", ratingDto, DateTime.Now.AddDays(-3)),
+			new("2", ratingDto, DateTime.Now.AddDays(-2)),
+			new("5", ratingDto, DateTime.Now.AddDays(-5)),
+			new("1", ratingDto, DateTime.Now.AddDays(-1)), // newest should be last
+			new("6", ratingDto, DateTime.Now.AddDays(-6)) // oldest should be first
 		};
 
 		mockCaseSummaryService
@@ -1130,7 +1133,7 @@ public class CaseSummaryServiceTests
 
 		// assert
 		result.Count.Should().Be(1);
-		result.Single().ActiveConcerns.Select(int.Parse).Should().BeInAscendingOrder();
+		result.Single().ActiveConcerns.Select(int.Parse).Should().BeInDescendingOrder();
 	}
 
 	#endregion
