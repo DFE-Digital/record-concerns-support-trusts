@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.Base;
@@ -36,6 +37,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					DeEscalationPoint = Fixture.Create<string>(),
 					NextSteps = Fixture.Create<string>(),
 					CaseHistory = Fixture.Create<string>(),
+					Territory = Fixture.Create<TerritoryEnum>(),
 					DirectionOfTravel = Fixture.Create<string>(),
 					Urn = 1,
 					StatusId = 1,
@@ -59,6 +61,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					DeEscalationPoint = Fixture.Create<string>(),
 					NextSteps = Fixture.Create<string>(),
 					CaseHistory = Fixture.Create<string>(),
+					Territory = Fixture.Create<TerritoryEnum>(),
 					DirectionOfTravel = Fixture.Create<string>(),
 					Urn = 2,
 					StatusId = 3,
@@ -82,6 +85,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					DeEscalationPoint = Fixture.Create<string>(),
 					NextSteps = Fixture.Create<string>(),
 					CaseHistory = Fixture.Create<string>(),
+					Territory = Fixture.Create<TerritoryEnum>(),
 					DirectionOfTravel = Fixture.Create<string>(),
 					Urn = 3,
 					StatusId = 2,
@@ -105,6 +109,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					DeEscalationPoint = Fixture.Create<string>(),
 					NextSteps = Fixture.Create<string>(),
 					CaseHistory = Fixture.Create<string>(),
+					Territory = Fixture.Create<TerritoryEnum>(),
 					DirectionOfTravel = Fixture.Create<string>(),
 					Urn = 4,
 					StatusId = 1,
@@ -128,6 +133,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					DeEscalationPoint = Fixture.Create<string>(),
 					NextSteps = Fixture.Create<string>(),
 					CaseHistory = Fixture.Create<string>(),
+					Territory = Fixture.Create<TerritoryEnum>(),
 					DirectionOfTravel = Fixture.Create<string>(),
 					Urn = 5,
 					StatusId = 2,
@@ -155,6 +161,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 					DeEscalationPoint = Fixture.Create<string>(),
 					NextSteps = Fixture.Create<string>(),
 					CaseHistory = Fixture.Create<string>(),
+					Territory = Fixture.Create<TerritoryEnum>(),
 					DirectionOfTravel = Fixture.Create<string>(),
 					Urn = 1,
 					StatusId = 1,
@@ -182,7 +189,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<string>(), 
 				Fixture.Create<string>(),
 				1,
-				2
+				2,
+				Fixture.Create<TerritoryEnum>()
 			);
 		}
 		
@@ -230,6 +238,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				NextSteps = Fixture.Create<string>(),
 				CaseAim = Fixture.Create<string>(),
 				CaseHistory = Fixture.Create<string>(),
+				Territory = Fixture.Create<TerritoryEnum>(),
 				DeEscalationPoint = Fixture.Create<string>(),
 				DirectionOfTravel = Fixture.Create<string>(),
 				Urn = 1,

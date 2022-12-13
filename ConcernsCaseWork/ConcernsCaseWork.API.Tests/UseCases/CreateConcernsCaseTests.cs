@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Factories;
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.UseCases;
@@ -35,6 +36,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases
                 .With(c => c.NextSteps = "Here are the next steps")
                 .With(c => c.CaseHistory = "Some case history")
                 .With(c => c.DirectionOfTravel = "Up")
+                .With(c => c.Territory = TerritoryEnum.North_And_Utc__North_West)
                 .With(c => c.StatusId = 2)
                 .With( c => c.RatingId = 4)
                 .Build();

@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Service.Cases;
+﻿using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.Service.Cases;
 using System;
 using System.Collections.Generic;
 
@@ -60,6 +61,9 @@ namespace ConcernsCaseWork.Models
 		public IList<RecordModel> RecordsModel { get; set; } = new List<RecordModel>();
 		
 		public string PreviousUrl { get; set; }
+		
 		public string CaseHistory { get; set; }
+		
+		public TerritoryEnum? Territory { get; set; }
 	}
 }

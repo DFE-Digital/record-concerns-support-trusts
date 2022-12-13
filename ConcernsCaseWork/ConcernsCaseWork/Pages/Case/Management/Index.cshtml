@@ -1,5 +1,6 @@
 ﻿@page "/case/{urn:long}/management"
 @model ConcernsCaseWork.Pages.Case.Management.IndexPageModel
+@using ConcernsCaseWork.Extensions
 @using ConcernsCaseWork.Models.CaseActions
 @using ConcernsCaseWork.Service.Status;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
@@ -110,8 +111,8 @@
 		            </tr>
 	            }
 	            <tr class="govuk-table__row">
-		            <th scope="row" class="govuk-table-case-details__header__no_border">Concerns</th>
-		            <td colspan="2" class="govuk-table-case-details__cell_no_border">
+		            <th scope="row" class="govuk-table-case-details__header">Concerns</th>
+		            <td colspan="2" class="govuk-table__cell">
 			            @if (Model.CaseModel.RecordsModel.Any())
 			            {
 				            <table class="govuk-table">
@@ -173,7 +174,30 @@
 			            </div>
 
 		            </td>
-		            <td class="govuk-table__header__right"></td>
+		            <td class="govuk-table__cell__no_border"></td>
+	            </tr>
+	            
+	            <tr class="govuk-table__row">
+	                <th scope="row" class="govuk-table-case-details__header">SFSO territory</th>
+		            <td class="govuk-table__cell">
+			            @if (Model.CaseModel.Territory == null)
+			            {
+				            <span class='govuk-tag ragtag ragtag__grey'>Empty</span>
+			            }
+			            else
+			            {
+				            @Model.CaseModel.Territory?.Description()
+			            }
+			      
+		            </td>
+		                 <td class="govuk-table__cell govuk-table__header__right">
+                        @if (Model.IsEditableCase)
+                        {
+             	            <a class="govuk-link" href="@Request.Path/edit-territory" aria-label="Change SFSO territory">
+             		            Edit<span class="govuk-visually-hidden"> SFSO territory</span>
+             	            </a>
+                        }
+                        </td>
 	            </tr>
                     
 	            </tbody>
@@ -342,13 +366,13 @@
                     <caption class="govuk-table__caption govuk-table__caption--m">
                         Active cases
                     </caption>
-                    <partial name="_TrustActiveCases" model="@Model.TrustCasesModel" />
+                    <partial name="_TrustActiveCases" model="@Model.ActiveCases" />
                 </table>
                 <table class="govuk-table  govuk-!-margin-top-9">
                     <caption class="govuk-table__caption govuk-table__caption--m">
                         Closed cases
                     </caption>
-                    <partial name="_TrustClosedCases" model="@Model.TrustCasesModel" />
+                    <partial name="_TrustClosedCases" model="@Model.ClosedCases" />
                 </table>
             </div>
         </div>

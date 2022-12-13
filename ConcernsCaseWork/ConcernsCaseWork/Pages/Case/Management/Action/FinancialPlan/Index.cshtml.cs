@@ -35,7 +35,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 				(caseUrn, financialPlanId) = GetRouteData();
 
-				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, User.Identity.Name);
+				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId);
 
 				if (FinancialPlanModel == null)
 				{

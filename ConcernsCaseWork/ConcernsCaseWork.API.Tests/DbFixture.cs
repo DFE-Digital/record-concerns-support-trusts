@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.API.Tests
             contextBuilder.UseSqlServer(ConnString);
             ConcernsDbContext concernsDbContext = new(contextBuilder.Options);
             
-            concernsDbContext.Database.EnsureCreated();
+            concernsDbContext.Database.Migrate();
             
             _concernsTransaction = concernsDbContext.Database.BeginTransaction();
         }
