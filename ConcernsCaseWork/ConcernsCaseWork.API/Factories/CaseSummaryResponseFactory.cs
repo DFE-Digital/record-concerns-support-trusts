@@ -41,7 +41,6 @@ public static class CaseSummaryResponseFactory
 			NtiWarningLetters = Create(caseSummary.NtiWarningLetters),
 			NtisUnderConsideration = Create(caseSummary.NtisUnderConsideration),
 			NoticesToImprove = Create(caseSummary.NoticesToImprove),
-			Rating = ConcernsRatingResponseFactory.Create(caseSummary.Rating),
 			SrmaCases = Create(caseSummary.SrmaCases),
 			StatusName = caseSummary.StatusName,
 			TrustUkPrn = caseSummary.TrustUkPrn,

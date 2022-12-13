@@ -143,7 +143,6 @@ public class CaseSummaryService : ICaseSummaryService
 					CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
 					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
 					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
-					Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
 					StatusName = caseSummary.StatusName,
 					TrustName = trustName,
 					UpdatedAt = caseSummary.UpdatedAt.ToDayMonthYear()
