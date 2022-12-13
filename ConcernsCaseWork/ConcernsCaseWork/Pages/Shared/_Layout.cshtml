@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Hosting
+﻿@using ConcernsCaseWork.Constants
+@using Microsoft.AspNetCore.Hosting
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Microsoft.Extensions.Hosting
 @using NetEscapades.AspNetCore.SecurityHeaders
@@ -9,6 +10,7 @@
 <html class="govuk-template" lang="en">
 @{
     var nonce = Context.GetNonce();
+    bool.TryParse(Context.Request.Cookies[CookieConstants.CookieConsentName], out bool hasConsented);
 }
 <head>
     @if (_env.IsProduction())
@@ -16,25 +18,29 @@
         <!-- Google Tag Manager -->
         <script nonce="@nonce">
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                new Date().getTime(),event:'gtm.js'});let f=d.getElementsByTagName(s)[0],
-                j=d.createElement(s),dl=l!=='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            new Date().getTime(),event:'gtm.js'});let f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!=='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
             })(window,document,'script','dataLayer','GTM-NGC8DRV');
         </script>
         <!-- End Google Tag Manager -->
+    }
 
-
-        <!-- Hotjar Tracking Code for https://amsd-casework.london.cloudapps.digital -->
-        <script nonce="@nonce">
-            (function (h, o, t, j, a, r) {
-                h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) };
-                h._hjSettings = { hjid: 3090373, hjsv: 6 };
-                a = o.getElementsByTagName('head')[0];
-                r = o.createElement('script'); r.async = 1;
-                r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
-                a.appendChild(r);
-            })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
-        </script>
+    @{
+        if (hasConsented)
+        {
+            <!-- Hotjar Tracking Code for https://amsd-casework.london.cloudapps.digital -->
+            <script nonce="@nonce">
+                (function (h, o, t, j, a, r) {
+                    h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) };
+                    h._hjSettings = { hjid: 3090373, hjsv: 6 };
+                    a = o.getElementsByTagName('head')[0];
+                    r = o.createElement('script'); r.async = 1;
+                    r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+                    a.appendChild(r);
+                })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+            </script>
+        }
     }
 
     <meta charset="utf-8" />
@@ -65,6 +71,31 @@
     <script nonce="@nonce">
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     </script>
+    
+    <form method="post" action="@Url.Action("OnPost", "CookiesPageModel")">
+        <div class="govuk-cookie-banner " data-nosnippet role="region" aria-label="Cookies on Concerns casework">
+            <div class="govuk-cookie-banner__message govuk-width-container">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-two-thirds">
+                        <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies on Concerns casework</h2>
+                        <div class="govuk-cookie-banner__content">
+                            <p class="govuk-body">We use some essential cookies to make this service work.</p>
+                            <p class="govuk-body">We’d also like to use analytics cookies so we can understand how you use the service and make improvements.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="govuk-button-group">
+                    <button value="true" type="submit" data-testid="banner-accept-analytics-cookies-button" name="banner-analytics-cookies" class="govuk-button" data-module="govuk-button">
+                        Accept analytics cookies
+                    </button>
+                    <button value="false" type="submit" data-testid="banner-reject-analytics-cookies-button" name="banner-analytics-cookies" class="govuk-button" data-module="govuk-button">
+                        Reject analytics cookies
+                    </button>
+                    <a class="govuk-link" href="/cookies">View cookies</a>
+                </div>
+            </div>
+        </div>
+    </form>
 
     <header class="moj-header " role="banner">
         <div class="govuk-width-container">
@@ -115,7 +146,7 @@
                             </a>
                         </li>
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="/cookies">
+                            <a data-testid="cookies-link" class="govuk-footer__link" href="/cookies">
                                 Cookies
                             </a>
                         </li>
