@@ -42,24 +42,32 @@ namespace ConcernsCaseWork.Pages.Trust
 			FindTrustModel = new();
 		}
 
+		/// <summary>
+		/// This method takes a search query and returns the trusts that are (partial) matches, based on group name, ukPrn and companies house number
+		/// </summary>
+		/// <param name="searchQuery"></param>
+		/// <param name="nonce"></param>
+		/// <returns></returns>
+
 		public async Task<ActionResult> OnGetTrustsSearchResult(string searchQuery, string nonce)
 		{
 			try
 			{
 				_logger.LogMethodEntered();
 
-				_logger.LogInformationMsg($"Entered trust search: searchQuery -'{searchQuery}', nonce-{nonce}");
 
 				// Double check search query.
 				if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < _searchQueryMinLength)
 				{
-					return new JsonResult(Array.Empty<TrustSearchModel>());
+					_logger.LogInformationMsg($"Search rejected, searchQuery too short");
+					return new JsonResult(new TrustSearchResponse() { Nonce = nonce });
 				}
 
+				_logger.LogInformationMsg($"Entered trust search: searchQuery -'{searchQuery}', nonce-{nonce}");
 				var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);
 				var trustSearchResponse = await _trustModelService.GetTrustsBySearchCriteria(trustSearch);
 
-				return new JsonResult(new { Nonce = nonce, Data = trustSearchResponse});
+				return new JsonResult(new TrustSearchResponse() { Nonce = nonce, Data = trustSearchResponse });
 			}
 			catch (Exception ex)
 			{
@@ -85,8 +93,8 @@ namespace ConcernsCaseWork.Pages.Trust
 				_logger.LogInformation("Trust::IndexPageModel::OnPost");
 
 				if (string.IsNullOrEmpty(FindTrustModel?.SelectedTrustUkprn) ||
-				    FindTrustModel.SelectedTrustUkprn.Contains("-") ||
-				    FindTrustModel.SelectedTrustUkprn.Length < _searchQueryMinLength)
+					FindTrustModel.SelectedTrustUkprn.Contains("-") ||
+					FindTrustModel.SelectedTrustUkprn.Length < _searchQueryMinLength)
 				{
 					throw new Exception($"Selected trust is incorrect - {FindTrustModel?.SelectedTrustUkprn}");
 				}
