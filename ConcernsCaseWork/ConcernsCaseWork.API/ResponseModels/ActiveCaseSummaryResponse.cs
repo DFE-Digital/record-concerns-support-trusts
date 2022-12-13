@@ -7,7 +7,6 @@ public abstract record CaseSummaryResponse
 	public DateTime CreatedAt { get; set; }
 	public DateTime UpdatedAt { get; set; }
 	public string StatusName { get; set; }
-	public ConcernsRatingResponse Rating { get; set; }
 	public string TrustUkPrn { get; set; }
 	public IEnumerable<ActionOrDecision> Decisions { get; set; }
 	public IEnumerable<ActionOrDecision> FinancialPlanCases { get; set; }
@@ -23,6 +22,7 @@ public abstract record CaseSummaryResponse
 public record ActiveCaseSummaryResponse : CaseSummaryResponse
 {
 	public IEnumerable<Concern> ActiveConcerns { get; set; }
+	public ConcernsRatingResponse Rating { get; set; }
 }
 
 public record ClosedCaseSummaryResponse : CaseSummaryResponse
