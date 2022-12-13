@@ -249,6 +249,15 @@ Cypress.Commands.add('validateCreateCaseDetailsComponent', () => {
 
 })
 
+Cypress.Commands.add('validateCreateTerritory', () => {
+    cy.task(LogTask, "Validating terrirtory error message when not selected");
+
+    cy.get('[data-testid="next-button-territory"]').click();
+    cy.get('#errorSummary').should("contain.text", 'An SFSO Territory must be selected');
+        });
+ 
+
+
 Cypress.Commands.add('validateCreateCaseInitialDetails', () => {
     cy.task(LogTask, "Validating case initial details");
 
@@ -386,9 +395,10 @@ Cypress.Commands.add('validateCaseManagPage', () => {
     cy.get('tr[class=govuk-table__row]').should(($row) => {
         expect($row).to.have.lengthOf.at.least(4);
         expect($row.eq(0).text().trim()).to.contain('Trust').and.to.match(trustRgx);
-        expect($row.eq(1).text().trim()).to.contain('Risk to trust').and.to.match(ragRgx).and.to.match(/(Edit risk rating)/);
+        expect($row.eq(1).text().trim()).to.contain('Risk to trust').and.to.match(ragRgx).and.to.match(/(Edit risk to trust rating)/);
         expect($row.eq(2).text().trim()).to.contain('Direction of travel').and.to.match(dotRgx).and.to.match(/(Edit direction of travel)/);
         expect($row.eq(3).text().trim()).to.contain('Concerns').and.to.match(concernsRgx).and.to.match(/(Add concern)/).and.to.match(/(Edit)/);
+        expect($row.eq(5).text().trim()).to.contain('SFSO territory');
     })
 
 
@@ -476,7 +486,7 @@ Cypress.Commands.add('basicCreateCase', () => {
 
     cy.selectConcernType();
     cy.selectRiskToTrust();
-    
+    cy.selectTerritory();
 
     let date = new Date();
     cy.get("#issue").invoke("val", "Data entered at " + date);
@@ -501,8 +511,15 @@ Cypress.Commands.add('createCase', () => {
 
     cy.selectConcernType();
     cy.selectRiskToTrust();
+    cy.selectTerritory();
     // cy.selectMoR();
     cy.enterConcernDetails();
+});
+
+Cypress.Commands.add('selectTerritory', () => {
+
+    cy.get('#territory-Midlands_And_West__SouthWest').click();
+    cy.get('[data-testid="next-button-territory"]').click();
 });
 
 //description: selects an action item from the add to case page
