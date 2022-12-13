@@ -45,33 +45,7 @@ public class CaseSummaryService : ICaseSummaryService
 			.ToArray();
 
 		var caseSummaries = (await Task.WhenAll(getSummaryTasks)).SelectMany(t => t);
-
-		var sortedCaseSummaries = new List<ActiveCaseSummaryModel>();
-		foreach (var caseSummary in caseSummaries.OrderByDescending(cs => cs.CreatedAt))
-		{
-			var trustName = await GetTrustName(caseSummary.TrustUkPrn);
-			
-			var sortedActionAndDecisionNames = GetSortedActionAndDecisionNames(caseSummary);
-			
-			var summary = 
-				new ActiveCaseSummaryModel
-				{
-					ActiveConcerns = GetSortedActiveConcerns(caseSummary.ActiveConcerns),
-					ActiveActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
-					CaseUrn = caseSummary.CaseUrn,
-					CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
-					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
-					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
-					Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
-					StatusName = caseSummary.StatusName,
-					TrustName = trustName,
-					UpdatedAt = caseSummary.UpdatedAt.ToDayMonthYear()
-				};
-			
-			sortedCaseSummaries.Add(summary);
-		}
-		
-		return sortedCaseSummaries.ToList();
+		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 
 	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByTrust(string trustUkPrn)
@@ -143,7 +117,6 @@ public class CaseSummaryService : ICaseSummaryService
 					CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
 					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
 					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
-					Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
 					StatusName = caseSummary.StatusName,
 					TrustName = trustName,
 					UpdatedAt = caseSummary.UpdatedAt.ToDayMonthYear()
@@ -182,14 +155,19 @@ public class CaseSummaryService : ICaseSummaryService
 			result
 				.AddRange(concerns
 					.Where(c => c.Rating.Name == rating)
-					.OrderByDescending(r => r.CreatedAt)
+					.OrderBy(r => r.CreatedAt)
 					.Select(c => c.Name));
+
+			if (result.Count == concerns.Count())
+			{
+				break;
+			}
 		}
 		
 		result
 			.AddRange(concerns
 				.Where(c => !SortedRags.Contains(c.Rating.Name))
-				.OrderByDescending(r => r.CreatedAt)
+				.OrderBy(r => r.CreatedAt)
 				.Select(c => c.Name));
 		
 		return result.ToArray();
@@ -199,7 +177,7 @@ public class CaseSummaryService : ICaseSummaryService
 	{
 		// Oldest first (by create date)
 		var result = concerns
-				.OrderByDescending(r => r.CreatedAt)
+				.OrderBy(r => r.CreatedAt)
 				.Select(c => c.Name);
 		
 		return result.ToArray();

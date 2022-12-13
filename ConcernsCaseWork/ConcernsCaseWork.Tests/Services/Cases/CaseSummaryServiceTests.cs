@@ -49,7 +49,7 @@ public class CaseSummaryServiceTests
 
 		var userName = _fixture.Create<string>();
 
-		var data = BuildListActiveCaseSummaryDtos();
+		var data = BuildListActiveCaseSummaryDtos(userName);
 		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName)).ReturnsAsync(data);
 		
 		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
@@ -60,6 +60,31 @@ public class CaseSummaryServiceTests
 		// assert
 		result.Should().HaveCount(data.Count);
 	}
+	
+	[Test]
+	[TestCase("foo.bar@foobar.com", "Foo Bar")]
+	[TestCase("someuser@foobar.com", "Someuser")]
+	[TestCase("foo.bar", "foo.bar")]
+	[TestCase("foo.bar@", "Foo Bar")]
+	[TestCase("SOMEUSER", "SOMEUSER")]
+	public async Task GetActiveCaseSummariesByCaseworker_WhenCaseOwnerIsEmail_ReturnsListWithCaseWorkerNameFormatted(string userName, string expectedFormattedName)
+	{
+		// arrange
+		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
+		var trustCachedService = new Mock<ITrustCachedService>();
+
+		var data = BuildListActiveCaseSummaryDtos(userName);
+		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName)).ReturnsAsync(data);
+		
+		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+
+		// act
+		var result = await sut.GetActiveCaseSummariesByCaseworker(userName);
+
+		// assert
+		result.Should().HaveCount(data.Count);
+		result.All(r => r.CreatedBy == expectedFormattedName).Should().BeTrue();
+	}
 		
 	[Test]
 	public async Task GetActiveCaseSummariesByCaseworker_WhenCasesWithMoreThan3DecisionsAndActions_ReturnsListWithIsMoreActionsAndDecisionsTrue()
@@ -69,7 +94,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildActiveCaseSummaryDto(emptyActionsAndDecisions: true);
+		var data = BuildActiveCaseSummaryDto(userName, emptyActionsAndDecisions: true);
 		data.FinancialPlanCases = new List<CaseSummaryDto.ActionDecisionSummaryDto>
 		{
 			new(DateTime.Now, null, "some name 1"), 
@@ -99,7 +124,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildActiveCaseSummaryDto(emptyActionsAndDecisions: true);
+		var data = BuildActiveCaseSummaryDto(userName, emptyActionsAndDecisions: true);
 		data.Decisions = new List<CaseSummaryDto.ActionDecisionSummaryDto>
 		{
 			new(DateTime.Now, null, "some name 1"),
@@ -134,7 +159,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildActiveCaseSummaryDto(emptyActionsAndDecisions: true);
+		var data = BuildActiveCaseSummaryDto(userName, emptyActionsAndDecisions: true);
 		data.Decisions = new CaseSummaryDto.ActionDecisionSummaryDto[]
 		{
 			new(DateTime.Now.AddDays(-3), null, "1"),
@@ -192,7 +217,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildActiveCaseSummaryDto();
+		var data = BuildActiveCaseSummaryDto(userName);
 		data.ActiveConcerns = new List<CaseSummaryDto.ConcernSummaryDto> { 
 			new("4", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now),
 			new("2", new RatingDto("Red", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now),
@@ -217,22 +242,29 @@ public class CaseSummaryServiceTests
 	}
 
 	[Test]
-	public async Task GetActiveCaseSummariesByCaseworker_ReturnsCasesWithConcernsSortedByCreatedAtOldestFirstWhenRagRatingsTheSame()
+	[TestCase("Amber")]
+	[TestCase("Red")]
+	[TestCase("Red-Amber")]
+	[TestCase("Amber-Green")]
+	[TestCase("Red-Plus")]
+	[TestCase("Green")]
+	public async Task GetActiveCaseSummariesByCaseworker_ReturnsCasesWithConcernsSortedByCreatedAtOldestFirstWhenRagRatingsTheSame(string ragRating)
 	{
 		// arrange
 		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildActiveCaseSummaryDto();
+		var data = BuildActiveCaseSummaryDto(userName);
+		var ratingDto = new RatingDto(ragRating, DateTimeOffset.Now, DateTimeOffset.Now, 1);
 		data.ActiveConcerns = new List<CaseSummaryDto.ConcernSummaryDto>
 		{
-			new("4", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-4)),
-			new("1", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-1)),
-			new("3", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-3)),
-			new("5", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-5)),
-			new("2", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-2)),
-			new("6", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-6))
+			new("4", ratingDto, DateTime.Now.AddDays(-4)),
+			new("3", ratingDto, DateTime.Now.AddDays(-3)),
+			new("2", ratingDto, DateTime.Now.AddDays(-2)),
+			new("5", ratingDto, DateTime.Now.AddDays(-5)),
+			new("1", ratingDto, DateTime.Now.AddDays(-1)), // newest should be last
+			new("6", ratingDto, DateTime.Now.AddDays(-6)) // oldest should be first
 		};
 
 		mockCaseSummaryService
@@ -246,7 +278,7 @@ public class CaseSummaryServiceTests
 
 		// assert
 		result.Count.Should().Be(1);
-		result.Single().ActiveConcerns.Select(int.Parse).Should().BeInAscendingOrder();
+		result.Single().ActiveConcerns.Select(int.Parse).Should().BeInDescendingOrder();
 	}
 	
 	#endregion
@@ -300,8 +332,8 @@ public class CaseSummaryServiceTests
 		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
 		var trustCachedService = new Mock<ITrustCachedService>();
 
-		var userName = _fixture.Create<string[]>();
-		var data = BuildActiveCaseSummaryDto(emptyActionsAndDecisions: true);
+		var userNames = _fixture.Create<string[]>();
+		var data = BuildActiveCaseSummaryDto(userNames[0], emptyActionsAndDecisions: true);
 		data.FinancialPlanCases = new List<CaseSummaryDto.ActionDecisionSummaryDto>
 		{
 			new(DateTime.Now, null, "some name 1"), 
@@ -311,13 +343,13 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName[0]))
+			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userNames[0]))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{data});
 		
 		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesByCaseworkers(userName);
+		var result = await sut.GetActiveCaseSummariesByCaseworkers(userNames);
 
 		// assert
 		result.Single().IsMoreActionsAndDecisions.Should().BeTrue();
@@ -331,7 +363,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userNames = _fixture.Create<string[]>();
-		var data = BuildActiveCaseSummaryDto(emptyActionsAndDecisions: true);
+		var data = BuildActiveCaseSummaryDto(userNames[0], emptyActionsAndDecisions: true);
 		data.Decisions = new List<CaseSummaryDto.ActionDecisionSummaryDto>
 		{
 			new(DateTime.Now, null, "some name 1"),
@@ -366,7 +398,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userNames = _fixture.Create<string[]>();
-		var data = BuildActiveCaseSummaryDto(emptyActionsAndDecisions: true);
+		var data = BuildActiveCaseSummaryDto(userNames[0], emptyActionsAndDecisions: true);
 		data.Decisions = new CaseSummaryDto.ActionDecisionSummaryDto[]
 		{
 			new(DateTime.Now.AddDays(-3), null, "1"),
@@ -424,7 +456,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userNames = _fixture.Create<string[]>();
-		var data = BuildActiveCaseSummaryDto();
+		var data = BuildActiveCaseSummaryDto(userNames[0]);
 		data.ActiveConcerns = new List<CaseSummaryDto.ConcernSummaryDto> { 
 			new("4", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now),
 			new("2", new RatingDto("Red", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now),
@@ -449,44 +481,34 @@ public class CaseSummaryServiceTests
 	}
 
 	[Test]
-	public async Task GetActiveCaseSummariesByCaseworkers_ReturnsCasesWithConcernsSortedByCreatedAtOldestFirstWhenRagRatingsTheSame()
+	[TestCase("Amber")]
+	[TestCase("Red")]
+	[TestCase("Red-Amber")]
+	[TestCase("Amber-Green")]
+	[TestCase("Red-Plus")]
+	[TestCase("Green")]
+	public async Task GetActiveCaseSummariesByCaseworkers_ReturnsCasesWithConcernsSortedByCreatedAtOldestFirstWhenRagRatingsTheSame(string ragRating)
 	{
 		// arrange
 		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userNames = _fixture.Create<string[]>();
-		var data1 = BuildActiveCaseSummaryDto();
+		var data1 = BuildActiveCaseSummaryDto(userNames[0]);
+		var ratingDto = new RatingDto(ragRating, DateTimeOffset.Now, DateTimeOffset.Now, 1);
 		data1.ActiveConcerns = new List<CaseSummaryDto.ConcernSummaryDto>
 		{
-			new("4", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-4)),
-			new("1", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-1)),
-			new("3", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-3)),
-			new("5", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-5)),
-			new("2", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-2)),
-			new("6", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-6))
+			new("4", ratingDto, DateTime.Now.AddDays(-4)),
+			new("1", ratingDto, DateTime.Now.AddDays(-1)), // newest should be last
+			new("3", ratingDto, DateTime.Now.AddDays(-3)),
+			new("5", ratingDto, DateTime.Now.AddDays(-5)),
+			new("2", ratingDto, DateTime.Now.AddDays(-2)),
+			new("6", ratingDto, DateTime.Now.AddDays(-6)) // oldest should be first
 		};
-		
-		var data2 = BuildActiveCaseSummaryDto();
-		data2.ActiveConcerns = new List<CaseSummaryDto.ConcernSummaryDto>
-		{
-			new("4", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-4)),
-			new("1", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-1)),
-			new("3", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-3)),
-			new("5", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-5)),
-			new("2", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-2)),
-			new("6", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-6))
-		};
-		
+
 		mockCaseSummaryService
 			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userNames[0]))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{ data1 });
-		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userNames[1]))
-			.ReturnsAsync(new List<ActiveCaseSummaryDto>{ data2 });
-		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userNames[2]))
-			.ReturnsAsync(new List<ActiveCaseSummaryDto>{ });
 		
 		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
 
@@ -494,9 +516,8 @@ public class CaseSummaryServiceTests
 		var result = await sut.GetActiveCaseSummariesByCaseworkers(userNames);
 
 		// assert
-		result.Count.Should().Be(2);
-		result[0].ActiveConcerns.Select(int.Parse).Should().BeInAscendingOrder();
-		result[1].ActiveConcerns.Select(int.Parse).Should().BeInAscendingOrder();
+		result.Count.Should().Be(1);
+		result.Single().ActiveConcerns.Select(int.Parse).Should().BeInDescendingOrder();
 	}
 	
 	#endregion
@@ -552,7 +573,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildClosedCaseSummaryDto(emptyActionsAndDecisions: true);
+		var data = BuildClosedCaseSummaryDto(userName, emptyActionsAndDecisions: true);
 		data.FinancialPlanCases = new List<CaseSummaryDto.ActionDecisionSummaryDto>
 		{
 			new(DateTime.Now, null, "some name 1"), 
@@ -582,7 +603,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildClosedCaseSummaryDto(emptyActionsAndDecisions: true);
+		var data = BuildClosedCaseSummaryDto(userName, emptyActionsAndDecisions: true);
 		data.Decisions = new List<CaseSummaryDto.ActionDecisionSummaryDto>
 		{
 			new(DateTime.Now, null, "some name 1"),
@@ -617,7 +638,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildClosedCaseSummaryDto(emptyActionsAndDecisions: true);
+		var data = BuildClosedCaseSummaryDto(userName, emptyActionsAndDecisions: true);
 		data.Decisions = new CaseSummaryDto.ActionDecisionSummaryDto[]
 		{
 			new(DateTime.Now.AddDays(-3), null, "1"),
@@ -675,7 +696,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildClosedCaseSummaryDto();
+		var data = BuildClosedCaseSummaryDto(userName);
 		data.ClosedConcerns = new List<CaseSummaryDto.ConcernSummaryDto>
 		{
 			new("2", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-5)),
@@ -697,7 +718,7 @@ public class CaseSummaryServiceTests
 
 		// assert
 		result.Count.Should().Be(1);
-		result.Single().ClosedConcerns.Select(int.Parse).Should().BeInDescendingOrder();
+		result.Single().ClosedConcerns.Select(int.Parse).Should().BeInAscendingOrder();
 	}
 
 	#endregion
@@ -753,7 +774,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildClosedCaseSummaryDto(emptyActionsAndDecisions: true);
+		var data = BuildClosedCaseSummaryDto(userName, emptyActionsAndDecisions: true);
 		data.FinancialPlanCases = new List<CaseSummaryDto.ActionDecisionSummaryDto>
 		{
 			new(DateTime.Now, null, "some name 1"), 
@@ -783,7 +804,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildClosedCaseSummaryDto(emptyActionsAndDecisions: true);
+		var data = BuildClosedCaseSummaryDto(userName, emptyActionsAndDecisions: true);
 		data.Decisions = new List<CaseSummaryDto.ActionDecisionSummaryDto>
 		{
 			new(DateTime.Now, null, "some name 1"),
@@ -818,7 +839,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildClosedCaseSummaryDto(emptyActionsAndDecisions: true);
+		var data = BuildClosedCaseSummaryDto(userName, emptyActionsAndDecisions: true);
 		data.Decisions = new CaseSummaryDto.ActionDecisionSummaryDto[]
 		{
 			new(DateTime.Now.AddDays(-3), null, "1"),
@@ -876,7 +897,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildClosedCaseSummaryDto();
+		var data = BuildClosedCaseSummaryDto(userName);
 		data.ClosedConcerns = new List<CaseSummaryDto.ConcernSummaryDto>
 		{
 			new("2", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-5)),
@@ -898,7 +919,7 @@ public class CaseSummaryServiceTests
 
 		// assert
 		result.Count.Should().Be(1);
-		result.Single().ClosedConcerns.Select(int.Parse).Should().BeInDescendingOrder();
+		result.Single().ClosedConcerns.Select(int.Parse).Should().BeInAscendingOrder();
 	}
 
 	#endregion
@@ -953,7 +974,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildActiveCaseSummaryDto(emptyActionsAndDecisions: true);
+		var data = BuildActiveCaseSummaryDto(userName, emptyActionsAndDecisions: true);
 		data.FinancialPlanCases = new List<CaseSummaryDto.ActionDecisionSummaryDto>
 		{
 			new(DateTime.Now, null, "some name 1"), 
@@ -983,7 +1004,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildActiveCaseSummaryDto(emptyActionsAndDecisions: true);
+		var data = BuildActiveCaseSummaryDto(userName, emptyActionsAndDecisions: true);
 		data.Decisions = new List<CaseSummaryDto.ActionDecisionSummaryDto>
 		{
 			new(DateTime.Now, null, "some name 1"),
@@ -1018,7 +1039,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildActiveCaseSummaryDto(emptyActionsAndDecisions: true);
+		var data = BuildActiveCaseSummaryDto(userName, emptyActionsAndDecisions: true);
 		data.Decisions = new CaseSummaryDto.ActionDecisionSummaryDto[]
 		{
 			new(DateTime.Now.AddDays(-3), null, "1"),
@@ -1076,7 +1097,7 @@ public class CaseSummaryServiceTests
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildActiveCaseSummaryDto();
+		var data = BuildActiveCaseSummaryDto(userName);
 		data.ActiveConcerns = new List<CaseSummaryDto.ConcernSummaryDto> { 
 			new("4", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now),
 			new("2", new RatingDto("Red", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now),
@@ -1101,22 +1122,29 @@ public class CaseSummaryServiceTests
 	}
 
 	[Test]
-	public async Task GetActiveCaseSummariesByTrust_ReturnsCasesWithConcernsSortedByCreatedAtOldestFirstWhenRagRatingsTheSame()
+	[TestCase("Amber")]
+	[TestCase("Red")]
+	[TestCase("Red-Amber")]
+	[TestCase("Amber-Green")]
+	[TestCase("Red-Plus")]
+	[TestCase("Green")]
+	public async Task GetActiveCaseSummariesByTrust_ReturnsCasesWithConcernsSortedByCreatedAtOldestFirstWhenRagRatingsTheSame(string ragRating)
 	{
 		// arrange
 		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
 		var trustCachedService = new Mock<ITrustCachedService>();
 
 		var userName = _fixture.Create<string>();
-		var data = BuildActiveCaseSummaryDto();
+		var data = BuildActiveCaseSummaryDto(userName);
+		var ratingDto = new RatingDto(ragRating, DateTimeOffset.Now, DateTimeOffset.Now, 1);
 		data.ActiveConcerns = new List<CaseSummaryDto.ConcernSummaryDto>
 		{
-			new("4", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-4)),
-			new("1", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-1)),
-			new("3", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-3)),
-			new("5", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-5)),
-			new("2", new RatingDto("Red-Plus", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-2)),
-			new("6", new RatingDto("Green", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now.AddDays(-6))
+			new("4", ratingDto, DateTime.Now.AddDays(-4)),
+			new("3", ratingDto, DateTime.Now.AddDays(-3)),
+			new("2", ratingDto, DateTime.Now.AddDays(-2)),
+			new("5", ratingDto, DateTime.Now.AddDays(-5)),
+			new("1", ratingDto, DateTime.Now.AddDays(-1)), // newest should be last
+			new("6", ratingDto, DateTime.Now.AddDays(-6)) // oldest should be first
 		};
 
 		mockCaseSummaryService
@@ -1130,17 +1158,24 @@ public class CaseSummaryServiceTests
 
 		// assert
 		result.Count.Should().Be(1);
-		result.Single().ActiveConcerns.Select(int.Parse).Should().BeInAscendingOrder();
+		result.Single().ActiveConcerns.Select(int.Parse).Should().BeInDescendingOrder();
 	}
 
 	#endregion
 	
 	private List<ActiveCaseSummaryDto> BuildListActiveCaseSummaryDtos()
 		=> _fixture.CreateMany<ActiveCaseSummaryDto>().ToList();
+	
+	private List<ActiveCaseSummaryDto> BuildListActiveCaseSummaryDtos(string userName)
+		=> _fixture.Build<ActiveCaseSummaryDto>()
+			.With(d => d.CreatedBy, userName)
+			.CreateMany().ToList();
 
-	private ActiveCaseSummaryDto BuildActiveCaseSummaryDto(bool emptyActionsAndDecisions = false)
+	private ActiveCaseSummaryDto BuildActiveCaseSummaryDto(string userName, bool emptyActionsAndDecisions = false)
 	{
-		var dto = _fixture.Create<ActiveCaseSummaryDto>();
+		var dto = _fixture.Build<ActiveCaseSummaryDto>()
+			.With(d => d.CreatedBy, userName)
+			.Create();
 
 		if (!emptyActionsAndDecisions) return dto;
 		
@@ -1157,9 +1192,12 @@ public class CaseSummaryServiceTests
 	private List<ClosedCaseSummaryDto> BuildListClosedCaseSummaryDtos()
 		=> _fixture.CreateMany<ClosedCaseSummaryDto>().ToList();
 
-	private ClosedCaseSummaryDto BuildClosedCaseSummaryDto(bool emptyActionsAndDecisions = false)
+	private ClosedCaseSummaryDto BuildClosedCaseSummaryDto(string userName, bool emptyActionsAndDecisions = false)
 	{
-		var dto = _fixture.Create<ClosedCaseSummaryDto>();
+		var dto = _fixture
+			.Build<ClosedCaseSummaryDto>()
+			.With(d => d.CreatedBy, userName)
+			.Create();
 
 		if (!emptyActionsAndDecisions) return dto;
 		

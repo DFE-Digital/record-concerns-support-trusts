@@ -8,7 +8,6 @@ public abstract record CaseSummaryVm
 	public long CaseUrn { get; set; }
 	public string CreatedBy { get; set; }
 	public DateTime CreatedAt { get; set; }
-	public ConcernsRating Rating { get; set; }
 	public string StatusName { get; set; }
 	public string TrustUkPrn { get; set; }
 	public DateTime UpdatedAt { get; set; }
@@ -26,6 +25,7 @@ public abstract record CaseSummaryVm
 public record ActiveCaseSummaryVm : CaseSummaryVm
 {
 	public IEnumerable<Concern> ActiveConcerns { get; set; }
+	public ConcernsRating Rating { get; set; }
 }
 
 public record ClosedCaseSummaryVm : CaseSummaryVm
