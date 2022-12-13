@@ -1,3 +1,5 @@
+using ConcernsCaseWork.API.Contracts.Enums;
+
 namespace ConcernsCaseWork.API.ResponseModels
 {
     public class ConcernsCaseResponse
@@ -22,5 +24,6 @@ namespace ConcernsCaseWork.API.ResponseModels
         public int Urn { get; set; }
         public int StatusId { get; set; }
         public int RatingId { get; set; }
+        public TerritoryEnum? Territory { get; set; }
     }
 }

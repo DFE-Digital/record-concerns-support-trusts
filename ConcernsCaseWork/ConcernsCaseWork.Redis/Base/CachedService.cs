@@ -39,7 +39,7 @@ namespace ConcernsCaseWork.Redis.Base
 
 		public Task ClearData(string key)
 		{
-			Guard.Against.NullOrWhiteSpace(key);			
+			Guard.Against.NullOrWhiteSpace(key);
 			return _cacheProvider.ClearCache(key);
 		}
 	}

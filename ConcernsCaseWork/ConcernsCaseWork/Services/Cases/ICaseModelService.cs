@@ -1,7 +1,6 @@
-﻿using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Redis.Models;
-using ConcernsCaseWork.Service.Status;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,10 +8,7 @@ namespace ConcernsCaseWork.Services.Cases
 {
 	public interface ICaseModelService
 	{
-		Task<IList<HomeModel>> GetCasesByCaseworkerAndStatus(IList<string> caseworkers, StatusEnum statusEnum);
-		Task<IList<HomeModel>> GetCasesByCaseworkerAndStatus(string caseworker, StatusEnum status);
-		Task<CaseModel> GetCaseByUrn(string caseworker, long urn);
-		Task<IList<TrustCasesModel>> GetCasesByTrustUkprn(string trustUkprn);
+		Task<CaseModel> GetCaseByUrn(long urn);
 		Task PatchClosure(PatchCaseModel patchCaseModel);
 		Task PatchCaseRating(PatchCaseModel patchCaseModel);
 		Task PatchRecordRating(PatchRecordModel patchRecordModel);
@@ -23,6 +19,7 @@ namespace ConcernsCaseWork.Services.Cases
 		Task PatchDeEscalationPoint(PatchCaseModel patchCaseModel);
 		Task PatchNextSteps(PatchCaseModel patchCaseModel);
 		Task PatchCaseHistory(long caseUrn, string userName, string caseHistory);
+		Task PatchTerritory(int caseUrn, string userName, TerritoryEnum? territory);
 		Task<long> PostCase(CreateCaseModel createCaseModel);
 	}
 }

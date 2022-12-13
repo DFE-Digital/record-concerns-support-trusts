@@ -78,31 +78,21 @@ namespace ConcernsCaseWork.Service.Decision
 			return postResponse;
 		}
 
-		public async Task<GetDecisionOutcomeResponse> GetDecisionOutcome(long decisionId, long outcomeId)
+
+		public async Task<UpdateDecisionOutcomeResponse> PutDecisionOutcome(long caseUrn, long decisionId, UpdateDecisionOutcomeRequest updateDecisionOutcomeRequest)
 		{
 			_logger.LogMethodEntered();
-			//var result = await Get<GetDecisionOutcomeResponse>($"/{EndpointsVersion}/concerns-cases/{decisionId}/decisions/{outcomeId}");
 
-			var response = new GetDecisionOutcomeResponse()
-			{
-				DecisionId = decisionId,
-				DecisionOutcomeId = outcomeId,
-				DecisionOutcomeStatus = DecisionOutcomeStatus.PartiallyApproved,
-				TotalAmountApproved = 233232,
-				DecisionMadeDate = DateTimeOffset.Now,
-				DecisionTakeEffectDate = DateTimeOffset.Now,
-				Authoriser = DecisionOutcomeAuthorizer.G7,
-				BusinessAreasConsulted = new List<DecisionOutcomeBusinessArea> { DecisionOutcomeBusinessArea.BusinessPartner, DecisionOutcomeBusinessArea.Funding }
-			};
+			var endpoint = $"/{EndpointsVersion}/concerns-cases/{caseUrn}/decisions/{decisionId}/outcome";
 
-			_logger.LogInformation($"Retrieved decision outcome {outcomeId} for decisionID {decisionId}");
-			//return result;
+			// put the decision outcome
+			var putResponse = await Put<UpdateDecisionOutcomeRequest, UpdateDecisionOutcomeResponse>(endpoint, updateDecisionOutcomeRequest);
 
-			var result = await Task.FromResult(response);
-			return result;
+			_logger.LogInformation($"Decision Outcome updated. caseUrn: {putResponse.ConcernsCaseUrn}, DecisionId:{putResponse.DecisionId}, DecisionOutcomeId: {putResponse.DecisionOutcomeId}");
 
+			return putResponse;
 		}
-		
+
 		public async Task<CloseDecisionResponse> CloseDecision(int caseUrn, int decisionId, CloseDecisionRequest closeDecisionRequest)
 		{
 			_logger.LogMethodEntered();

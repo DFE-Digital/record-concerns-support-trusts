@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConcernsCaseWork.API.Contracts.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Redis.Models
@@ -46,6 +47,8 @@ namespace ConcernsCaseWork.Redis.Models
 		public Tuple<int, IList<string>> RagRating { get; set; }
 
 		public IList<string> RagRatingCss { get; set; }
+		
+		public TerritoryEnum? Territory { get; set; }
 
 		public IList<CreateRecordModel> CreateRecordsModel { get; set; } = new List<CreateRecordModel>();
 	}

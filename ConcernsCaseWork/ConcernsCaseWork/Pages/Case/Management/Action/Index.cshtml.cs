@@ -59,7 +59,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 				// Fetch case urn
 				var caseUrn = GetRouteData();
 
-				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
 			}
 			catch (Exception ex)
 			{
@@ -96,7 +96,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 				var caseActionStarter = actionStartHelpers.SingleOrDefault(s => s.CanHandle(caseAction)) 
 					?? throw new NotImplementedException($"{caseAction} - has not been implemented");
 
-				if (await caseActionStarter.NewCaseActionAllowed(caseUrn, User.Identity.Name))
+				if (await caseActionStarter.NewCaseActionAllowed(caseUrn))
 				{
 					return RedirectToPage($"{action.ToLower()}/add", new { urn = caseUrn });
 				}

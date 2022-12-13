@@ -86,7 +86,7 @@ namespace ConcernsCaseWork.Pages.Case
 				// Store case model in cache for the details page
 				await _userStateCache.StoreData(GetUserName(), userState);
 				
-				return RedirectToPage("details");
+				return RedirectToPage("territory");
 			}
 			catch (Exception ex)
 			{

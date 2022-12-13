@@ -1,10 +1,8 @@
 using ConcernsCaseWork.API.StartupConfiguration;
-using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Redis.CaseActions;
-using ConcernsCaseWork.Redis.Cases;
 using ConcernsCaseWork.Redis.Configuration;
 using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Redis.MeansOfReferral;
@@ -12,9 +10,6 @@ using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Redis.Ratings;
-using ConcernsCaseWork.Redis.Records;
-using ConcernsCaseWork.Redis.Security;
-using ConcernsCaseWork.Redis.Sequence;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Redis.Teams;
 using ConcernsCaseWork.Redis.Trusts;
@@ -58,7 +53,6 @@ using ConcernsCaseWork.Service.MeansOfReferral;
 using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
-using Microsoft.AspNetCore.Authorization;
 using ConcernsCaseWork.Authorization;
 
 namespace ConcernsCaseWork.Extensions
@@ -166,8 +160,10 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICaseActionValidator, CaseActionValidator>();
 			services.AddScoped<IDecisionModelService, DecisionModelService>();
 			services.AddScoped<ICreateCaseService, CreateCaseService>();
+			services.AddScoped<ICaseSummaryService, CaseSummaryService>();
+			services.AddScoped<IApiCaseSummaryService, ApiCaseSummaryService>();
 
-			// Trams api services
+			// api services
 			services.AddScoped<ICaseService, CaseService>();
 			services.AddScoped<IRatingService, RatingService>();
 			services.AddScoped<IRecordService, RecordService>();
@@ -201,9 +197,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IStatusCachedService, StatusCachedService>();
 			services.AddScoped<IRatingCachedService, RatingCachedService>();
 			services.AddScoped<ITrustCachedService, TrustCachedService>();
-			services.AddScoped<ICaseCachedService, CaseCachedService>();
-			services.AddScoped<IRecordCachedService, RecordCachedService>();
-			services.AddScoped<IFinancialPlanCachedService, FinancialPlanCachedService>();
 			services.AddScoped<IFinancialPlanStatusCachedService, FinancialPlanStatusCachedService>();
 			services.AddScoped<CachedSRMAProvider, CachedSRMAProvider>();
 			services.AddScoped<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
@@ -219,13 +212,12 @@ namespace ConcernsCaseWork.Extensions
             services.AddScoped<INtiReasonsCachedService, NtiReasonsCachedService>();
             services.AddScoped<INtiConditionsCachedService, NtiConditionsCachedService>();
 			services.AddScoped<ITeamsCachedService, TeamsCachedService>();
+			services.AddScoped<ICaseSummaryService, CaseSummaryService>();
 
 			// Redis Sequence
 			// TODO. This class looks very temporary. What's it for and how are we going to replace it.
-			services.AddScoped<ISequenceCachedService, SequenceCachedService>();
 
 			// AD Integration
-			services.AddSingleton<IActiveDirectoryService, ActiveDirectoryService>();
 			services.AddScoped<IRbacManager, RbacManager>();
 
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
