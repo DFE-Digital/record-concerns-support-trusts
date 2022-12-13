@@ -47,6 +47,11 @@ namespace ConcernsCaseWork.Pages.Case
 
 			try
 			{
+				if (!ModelState.IsValid)
+				{
+					return Page();
+				}
+
 				// Double check selected trust.
 				if (string.IsNullOrEmpty(FindTrustModel?.SelectedTrustUkprn) ||
 				    FindTrustModel.SelectedTrustUkprn.Contains("-") ||

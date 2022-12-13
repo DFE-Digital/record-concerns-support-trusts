@@ -39,7 +39,6 @@ public class CreateCasePageModel : AbstractPageModel
 	[BindProperty]
 	public CaseTypes CaseType { get; set; }
 
-	//[TempData]
 	[FromQuery(Name = "step")]
 	public CreateCaseSteps CreateCaseStep { get; set; } = CreateCaseSteps.SearchForTrust;
 
