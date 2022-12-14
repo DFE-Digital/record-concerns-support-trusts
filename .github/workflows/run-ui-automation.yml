@@ -41,14 +41,6 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
-      - name: Install Dotnet EF
-        run: dotnet tool install --global dotnet-ef
-          
-
-      - name: Run Database migrations
-        working-directory: ./ConcernsCaseWork/ConcernsCaseWork.Data
-        run: dotnet ef database update --connection "Server=localhost,1433;Database=sip;User Id=sa;Password=P1swrd!$;TrustServerCertificate=True"
-
       - name: Install certificates
         run: |
           sudo apt install libnss3-tools
@@ -64,6 +56,13 @@ jobs:
 
       - name: Build application
         run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln
+
+      - name: Install Dotnet EF
+        run: dotnet tool install --global dotnet-ef
+          
+      - name: Run Database migrations
+        working-directory: ./ConcernsCaseWork/ConcernsCaseWork.Data
+        run: dotnet ef database update --connection "Server=localhost,1433;Database=sip;User Id=sa;Password=P1swrd!$;TrustServerCertificate=True"
 
       - name: Configure application
         working-directory: ./ConcernsCaseWork/ConcernsCaseWork
