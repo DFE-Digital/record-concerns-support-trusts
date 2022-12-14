@@ -43,11 +43,13 @@ describe("Testing cookies on the site", () =>
 
     it("Should reject the cookies on the banner then accept them afterwards", () =>
     {
+        cookiesBanner.viewCookies();
+
+        cy.url().should("include", "/cookies");
+
         cookiesBanner
             .reject()
             .notVisible();
-
-        cy.visit("/cookies");
 
         cookiesPage
         .hasConsent("No")
@@ -67,7 +69,7 @@ describe("Testing cookies on the site", () =>
 
     function hasCookieValue(cookieValue: string)
     {
-        Logger.Log("Should set the consent cookie to No");
+        Logger.Log(`Should set the consent cookie to ${cookieValue}`);
 
         cy.getCookie(".ConcernsCasework.Consent")
         .then(cookie =>
