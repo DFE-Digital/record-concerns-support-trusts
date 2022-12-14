@@ -41,6 +41,11 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
+      - name: Install database
+        run: | 
+          dotnet tool install --global dotnet-ef
+          dotnet ef database update --connection "Server=localhost,1433;Database=sip;User Id=sa;Password=P1swrd!$;TrustServerCertificate=True"
+
       - name: Install certificates
         run: |
           sudo apt install libnss3-tools
@@ -63,7 +68,7 @@ jobs:
           dotnet user-secrets set "VCAP_SERVICES" "${{ secrets.VCAP_SERVICES }}"
           dotnet user-secrets set "trams:api_key" "${{ secrets.TRAMS_API_KEY }}"
           dotnet user-secrets set "trams:api_endpoint" "${{ secrets.TRAMS_API_ENDPOINT }}"
-          dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=integrationtests;User Id=sa;Password=P1swrd!$;TrustServerCertificate=True"
+          dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=sip;User Id=sa;Password=P1swrd!$;TrustServerCertificate=True"
           dotnet user-secrets set "ConcernsCaseworkApi:ApiKeys" "${{ secrets.TRAMS_API_KEY }}"
           dotnet user-secrets set "ConcernsCasework:ApiKey" "${{ secrets.TRAMS_API_KEY }}"
           dotnet user-secrets set "ConcernsCasework:ApiEndpoint" "https://localhost:8001"
