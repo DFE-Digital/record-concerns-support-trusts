@@ -10,6 +10,7 @@ describe("The correct items are visible on the details page", () => {
 	afterEach(() => {
 		cy.storeSessionData();
 	});
+	
 
 	it("Should validate the case and Territory details", () => {
 		
