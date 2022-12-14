@@ -95,7 +95,7 @@ public class ConcernKpiTests : DatabaseTestFixture
 		closedAtKpi.DataItemChanged.Should().Be("ClosedAt");
 		closedAtKpi.Operation.Should().Be("Close");
 		closedAtKpi.OldValue.Should().BeEmpty();
-		closedAtKpi.NewValue.Replace("-","/").Should().Be(concern.ClosedAt.ToShortDateString());
+		closedAtKpi.NewValue.Replace("-","/").Should().Be(concern.ClosedAt.Value.ToShortDateString());
 
 		results.Count.Should().Be(1);
 	}

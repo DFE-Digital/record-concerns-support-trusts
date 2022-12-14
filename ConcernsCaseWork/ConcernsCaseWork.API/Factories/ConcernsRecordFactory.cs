@@ -17,7 +17,6 @@ namespace ConcernsCaseWork.API.Factories
                 CreatedAt = concernsRecordRequest.CreatedAt,
                 UpdatedAt = concernsRecordRequest.UpdatedAt,
                 ReviewAt = concernsRecordRequest.ReviewAt,
-                ClosedAt = concernsRecordRequest.ClosedAt,
                 Name = concernsRecordRequest.Name,
                 Description = concernsRecordRequest.Description,
                 Reason = concernsRecordRequest.Reason,
