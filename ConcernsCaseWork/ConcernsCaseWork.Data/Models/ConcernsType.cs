@@ -8,5 +8,11 @@ namespace ConcernsCaseWork.Data.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public virtual ICollection<ConcernsRecord> FkConcernsRecord { get; set; }
+
+        public override string ToString() => 
+	        Name + 
+            (string.IsNullOrEmpty(Description) 
+	            ? ""
+	            : ": " + Description);
     }
 }

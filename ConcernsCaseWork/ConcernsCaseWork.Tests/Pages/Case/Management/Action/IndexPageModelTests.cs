@@ -57,7 +57,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 
 			var caseModel = CaseFactory.BuildCaseModel();
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()))
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
 
 			var pageModel = SetupIndexPageModel(mockCaseModelService.Object, mockSrmaService.Object, mockFinancialPlanModelService.Object

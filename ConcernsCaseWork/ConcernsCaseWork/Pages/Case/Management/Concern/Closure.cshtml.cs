@@ -134,8 +134,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Concern
 				if (caseUrn == 0 || recordId == 0)
 					throw new Exception("Case urn or record id cannot be 0");
 				
-				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
-				var recordModel = await _recordModelService.GetRecordModelById(User.Identity.Name, caseUrn, recordId);
+				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
+				var recordModel = await _recordModelService.GetRecordModelById(caseUrn, recordId);
 				RatingsModel = await _ratingModelService.GetSelectedRatingsModelById(recordModel.RatingId);
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				TypeModel = await _typeModelService.GetSelectedTypeModelById(recordModel.TypeId);
