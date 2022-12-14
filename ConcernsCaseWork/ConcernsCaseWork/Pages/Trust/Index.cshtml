@@ -6,13 +6,13 @@
 @{
     ViewData["Title"] = "Find Trust";
 	Model.FindTrustModel.Nonce = HttpContext.GetNonce();
-	var validationErrors = TempData["Decision.Message"] as IEnumerable<string>;
+    var validationErrors = TempData["Error.Message"] as IEnumerable<string>;
 }
 
 <div class="govuk-width-container">
 
 	<partial name="_BannerError" />
-    
+
 	<form role="form" method="post" id="select-trust-form" novalidate>
 
         <partial name="_ValidationErrors" />

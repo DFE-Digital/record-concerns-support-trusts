@@ -91,6 +91,11 @@ public class CreateCasePageModel : AbstractPageModel
 			if (CreateCaseStep != CreateCaseSteps.SearchForTrust)
 			{
 				await RestoreTrustUkprnFromCache();
+				if (!TrustUkPrnIsValid())
+				{
+					ModelState.AddModelError("trust", "A trust is required");
+					return Page();
+				}
 			}
 
 			if (CreateCaseStep != CreateCaseSteps.SelectCaseType)
@@ -148,7 +153,6 @@ public class CreateCasePageModel : AbstractPageModel
 		ModelState.ClearValidationState(nameof(FindTrustModel.SelectedTrustUkprn));
 		FindTrustModel.SelectedTrustUkprn = (await GetUserState()).TrustUkPrn;
 		ModelState.SetModelValue(nameof(FindTrustModel.SelectedTrustUkprn), new ValueProviderResult(FindTrustModel.SelectedTrustUkprn));
-		this.TryValidateModel(FindTrustModel);
 	}
 
 	public async Task<ActionResult> OnPostSelectedTrust()
@@ -159,7 +163,7 @@ public class CreateCasePageModel : AbstractPageModel
 		{
 			if (!ModelState.IsValid)
 			{
-				TempData["Decision.Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+				TempData["Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
 				return Page();
 			}
 
