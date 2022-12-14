@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using ConcernsCaseWork.Constants;
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace ConcernsCaseWork.Tests.Pages
 {
@@ -29,8 +30,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			var cookieManager = new Mock<IRequestCookieCollection>();
 			cookieManager.Setup(m => m[It.IsAny<string>()]).Returns(cookieValue);
 
-			var mockCookieCollection = new Mock<IRequestCookieCollection>();
-
 			model.Request.Cookies = cookieManager.Object;
 
 			model.OnGet();
@@ -40,13 +39,13 @@ namespace ConcernsCaseWork.Tests.Pages
 
 		[TestCase(true, "True")]
 		[TestCase(false, "False")]
-		public void When_OnPost_UserConsents_Then_CookieSet(bool hasConsented, string expected)
+		public void When_OnPost_Then_CookieSet(bool hasConsented, string expected)
 		{
 			var model = CreatePageModel();
 
 			model.HasConsented = hasConsented;
 
-			model.OnPost();
+			var pageResult = model.OnPost();
 
 			var cookies = model.Response.GetTypedHeaders().SetCookie;
 			cookies.Should().HaveCount(1);
@@ -54,6 +53,29 @@ namespace ConcernsCaseWork.Tests.Pages
 			var cookie = cookies.FirstOrDefault(c => c.Name == CookieConstants.CookieConsentName);
 
 			cookie.Value.Value.Should().Be(expected);
+			pageResult.Should().BeOfType(typeof(PageResult));
+		}
+
+		[TestCase("true", "true")]
+		[TestCase("false", "false")]
+		public void When_OnPost_BannerValue_Then_CookieSet(string hasConsented, string expected)
+		{
+			var model = CreatePageModel();
+
+			model.Request.Headers["Referer"] = "/case";
+
+			var cookieManager = new Mock<IRequestCookieCollection>();
+
+			var pageResult = model.OnPost(hasConsented) as RedirectResult;
+
+			var cookies = model.Response.GetTypedHeaders().SetCookie;
+			cookies.Should().HaveCount(1);
+
+			var cookie = cookies.FirstOrDefault(c => c.Name == CookieConstants.CookieConsentName);
+
+			cookie.Value.Value.Should().Be(expected);
+
+			pageResult.Url.Should().Be("/case");
 		}
 
 		private static CookiesPageModel CreatePageModel()

@@ -3,7 +3,9 @@ using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Base;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Threading.Tasks;
 
@@ -31,11 +33,19 @@ namespace ConcernsCaseWork.Pages
 			return Page();
 		}
 
-		public IActionResult OnPost()
+		public IActionResult OnPost(string? bannerConsent = null)
 		{
 			_logger.LogMethodEntered();
 
 			var cookieOptions = new CookieOptions { Expires = DateTime.Today.AddMonths(6), Secure = true };
+
+			if (bannerConsent != null)
+			{
+				Response.Cookies.Append(CookieConstants.CookieConsentName, bannerConsent, cookieOptions);
+
+				return Redirect(Request.GetTypedHeaders().Referer.ToString());
+			}
+
 			Response.Cookies.Append(CookieConstants.CookieConsentName, HasConsented.ToString(), cookieOptions);
 
 			return Page();
