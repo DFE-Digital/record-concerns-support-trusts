@@ -1,4 +1,6 @@
 import { LogTask } from "../../support/constants";
+import  editTrustPage from "../../pages/editTrustPage";
+import { Logger } from "../../common/logger";
 
 describe("The correct items are visible on the details page", () => {
 	before(() => {
@@ -9,7 +11,8 @@ describe("The correct items are visible on the details page", () => {
 		cy.storeSessionData();
 	});
 
-	it("Should validate the case details", () => {
+	it("Should validate the case and Territory details", () => {
+		
 		cy.get('[href="/case"]').click();
 		cy.get("#search").should("be.visible");
 
@@ -31,5 +34,23 @@ describe("The correct items are visible on the details page", () => {
 		cy.validateCreateCaseDetailsComponent();
 
 		cy.validateCreateCaseInitialDetails();
+
+
+		Logger.Log("Editing Territory and validation")
+		cy.get('#issue').clear().type("ABC");
+		cy.get('button[data-prevent-double-click^="true"]').click();
+		
+		editTrustPage.validateTerritoryOldSelection();
+		editTrustPage.getEditTerritory();
+		editTrustPage.getTerritoryNAUNorthEastOption();
+		editTrustPage.getTerritoryApplyBtn();
+		editTrustPage.validateTerritoryNewSelection();
+
+		
+		
+
 	})
+
+	
+
 });
