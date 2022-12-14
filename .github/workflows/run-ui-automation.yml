@@ -1,5 +1,5 @@
 name: Run UI automation
-
+ 
 on:
   push:
     branches:
