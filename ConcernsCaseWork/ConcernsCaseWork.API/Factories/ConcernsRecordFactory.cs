@@ -47,9 +47,12 @@ namespace ConcernsCaseWork.API.Factories
             original.ConcernsType = concernsType;
             original.ConcernsRating = concernsRating;
             original.StatusId = concernsRecordRequest.StatusId;
+            original.RatingId = concernsRecordRequest.RatingId;
+            original.TypeId = concernsRecordRequest.TypeId;
 
             if (concernsMeansOfReferral != null)
             {
+				original.MeansOfReferralId = concernsRecordRequest.MeansOfReferralId;
                 original.ConcernsMeansOfReferral = concernsMeansOfReferral;
             }
 

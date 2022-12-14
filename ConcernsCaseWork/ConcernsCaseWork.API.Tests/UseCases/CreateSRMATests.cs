@@ -20,6 +20,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases
         {
 			var status = SRMAStatus.Deployed;
 			var datetOffered = DateTime.Now.AddDays(-5);
+			var updatedAt = DateTime.Now;
 
 			var createSRMARequest = Builder<CreateSRMARequest>
 	            .CreateNew()
@@ -30,13 +31,15 @@ namespace ConcernsCaseWork.API.Tests.UseCases
 			var srmaDbModel = new SRMACase
 			{
 				StatusId = (int)status,
-				DateOffered = datetOffered
+				DateOffered = datetOffered,
+				UpdatedAt = updatedAt
             };
 
             var expectedResult = new SRMAResponse
             {
 				DateOffered = datetOffered,
-				Status = status
+				Status = status,
+				UpdatedAt = updatedAt
 			};
 			
 			var mockGateway = new Mock<ISRMAGateway>();
