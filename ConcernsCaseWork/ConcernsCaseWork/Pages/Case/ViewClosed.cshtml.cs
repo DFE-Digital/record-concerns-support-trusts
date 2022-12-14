@@ -59,7 +59,7 @@ namespace ConcernsCaseWork.Pages.Case
 				var caseUrn = GetRequestedCaseUrn();
 				var userName = GetUserName();
 
-				CaseModel = await _caseModelService.GetCaseByUrn(userName, caseUrn);
+				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
 
 				if (await IsCaseOpen())
 				{
@@ -69,10 +69,10 @@ namespace ConcernsCaseWork.Pages.Case
 				
 				TrustDetailsModel = await _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
 				
-				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(userName, caseUrn);
+				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(caseUrn);
 				CaseModel.RecordsModel = recordsModel;
 
-				CaseActions = (await _actionsModelService.GetActionsSummary(userName, caseUrn)).Where(a => a.ClosedDate != null).ToList();
+				CaseActions = (await _actionsModelService.GetActionsSummary(caseUrn)).Where(a => a.ClosedDate != null).ToList();
 			}
 			catch (Exception ex)
 			{

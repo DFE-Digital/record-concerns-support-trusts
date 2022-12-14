@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				var financialPlanId = GetRequestedFinancialPlanId();
 				var loggedInUserName = GetLoggedInUserName();
 				
-				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId, loggedInUserName);
+				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId);
 				
 				if (FinancialPlanModel.IsClosed)
 				{
@@ -68,7 +68,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				var statusName = GetRequestedStatus();
 				var status = await GetRequiredStatusByNameAsync(statusName);
 				var notes = GetRequestedNotes();
-				var loggedInUserName = GetLoggedInUserName();
 
 				var patchFinancialPlanModel = new PatchFinancialPlanModel
 				{
@@ -80,7 +79,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					ClosedAt = DateTime.Now
 				};
 
-				await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel, loggedInUserName);
+				await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel);
 	
 				return Redirect($"/case/{caseUrn}/management");
 			}
@@ -88,7 +87,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			{
 				TempData["FinancialPlan.Message"] = ex.Message;
 				
-				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(GetRequestedCaseUrn(), GetRequestedFinancialPlanId(), GetLoggedInUserName());
+				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(GetRequestedCaseUrn(), GetRequestedFinancialPlanId());
 				
 				var currentStatusName = FinancialPlanModel.Status?.Name;
 				FinancialPlanStatuses = await GetStatusOptionsAsync(currentStatusName);

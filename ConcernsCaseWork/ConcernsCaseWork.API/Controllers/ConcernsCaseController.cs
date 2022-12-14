@@ -18,6 +18,10 @@ namespace ConcernsCaseWork.API.Controllers
         private readonly IGetConcernsCaseByTrustUkprn _getConcernsCaseByTrustUkprn;
         private readonly IUpdateConcernsCase _updateConcernsCase;
         private readonly IGetConcernsCasesByOwnerId _getConcernsCasesByOwnerId;
+        private readonly IGetActiveConcernsCaseSummariesByOwner _getActiveConcernsCaseSummariesByOwner;
+        private readonly IGetClosedConcernsCaseSummariesByOwner _getClosedConcernsCaseSummariesByOwner;
+        private readonly IGetActiveConcernsCaseSummariesByTrust _getActiveConcernsCaseSummariesByTrust;
+        private readonly IGetClosedConcernsCaseSummariesByTrust _getClosedConcernsCaseSummariesByTrust;
 
         public ConcernsCaseController(
             ILogger<ConcernsCaseController> logger,
@@ -25,7 +29,11 @@ namespace ConcernsCaseWork.API.Controllers
             IGetConcernsCaseByUrn getConcernsCaseByUrn,
             IGetConcernsCaseByTrustUkprn getConcernsCaseByTrustUkprn,
             IUpdateConcernsCase updateConcernsCase,
-            IGetConcernsCasesByOwnerId getConcernsCasesByOwnerId)
+            IGetConcernsCasesByOwnerId getConcernsCasesByOwnerId, 
+            IGetActiveConcernsCaseSummariesByOwner getActiveConcernsCaseSummaries, 
+            IGetClosedConcernsCaseSummariesByOwner getClosedConcernsCaseSummaries, 
+            IGetActiveConcernsCaseSummariesByTrust getActiveConcernsCaseSummariesByTrust, 
+            IGetClosedConcernsCaseSummariesByTrust getClosedConcernsCaseSummariesByTrust)
         {
             _logger = logger;
             _createConcernsCase = createConcernsCase;
@@ -33,6 +41,10 @@ namespace ConcernsCaseWork.API.Controllers
             _getConcernsCaseByTrustUkprn = getConcernsCaseByTrustUkprn;
             _updateConcernsCase = updateConcernsCase;
             _getConcernsCasesByOwnerId = getConcernsCasesByOwnerId;
+            _getActiveConcernsCaseSummariesByOwner = getActiveConcernsCaseSummaries;
+            _getClosedConcernsCaseSummariesByOwner = getClosedConcernsCaseSummaries;
+            _getActiveConcernsCaseSummariesByTrust = getActiveConcernsCaseSummariesByTrust;
+            _getClosedConcernsCaseSummariesByTrust = getClosedConcernsCaseSummariesByTrust;
         }
 
         [HttpPost]
@@ -128,6 +140,62 @@ namespace ConcernsCaseWork.API.Controllers
             var response = new ApiResponseV2<ConcernsCaseResponse>(concernsCases, pagingResponse);
 
             return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("summary/{ownerId}/active")]
+        [MapToApiVersion("2.0")]
+        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesByOwnerId(string ownerId)
+        {
+	        _logger.LogInformation($"Attempting to get active Concerns Case summaries by Owner Id {ownerId}");
+	        var caseSummaries = await _getActiveConcernsCaseSummariesByOwner.Execute(ownerId);
+
+	        _logger.LogInformation($"Returning active Concerns cases with Owner Id {ownerId}");
+	        var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, null);
+            
+	        return Ok(response);
+        }
+        
+        [HttpGet]
+        [Route("summary/{ownerId}/closed")]
+        [MapToApiVersion("2.0")]
+        public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByOwnerId(string ownerId)
+        {
+	        _logger.LogInformation($"Attempting to get closed Concerns Case summaries by Owner Id {ownerId}");
+	        var caseSummaries = await _getClosedConcernsCaseSummariesByOwner.Execute(ownerId);
+
+	        _logger.LogInformation($"Returning closed Concerns cases with Owner Id {ownerId}");
+	        var response = new ApiResponseV2<ClosedCaseSummaryResponse>(caseSummaries, null);
+            
+	        return Ok(response);
+        }
+        
+        [HttpGet]
+        [Route("summary/bytrust/{trustukprn}/active")]
+        [MapToApiVersion("2.0")]
+        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesByTrust(string trustukprn)
+        {
+	        _logger.LogInformation($"Attempting to get active Concerns Case summaries by Trust {trustukprn}");
+	        var caseSummaries = await _getActiveConcernsCaseSummariesByTrust.Execute(trustukprn);
+
+	        _logger.LogInformation($"Returning Concerns active cases with Trust {trustukprn}");
+	        var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, null);
+            
+	        return Ok(response);
+        }
+        
+        [HttpGet]
+        [Route("summary/bytrust/{trustukprn}/closed")]
+        [MapToApiVersion("2.0")]
+        public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByTrust(string trustukprn)
+        {
+	        _logger.LogInformation($"Attempting to get closed Concerns Case summaries by Trust {trustukprn}");
+	        var caseSummaries = await _getClosedConcernsCaseSummariesByTrust.Execute(trustukprn);
+
+	        _logger.LogInformation($"Returning closed Concerns cases with Trust {trustukprn}");
+	        var response = new ApiResponseV2<ClosedCaseSummaryResponse>(caseSummaries, null);
+            
+	        return Ok(response);
         }
     }
 }

@@ -31,6 +31,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 	{
 		private readonly ITrustModelService _trustModelService;
 		private readonly ICaseModelService _caseModelService;
+		private readonly ICaseSummaryService _caseSummaryService;
 		private readonly IRecordModelService _recordModelService;
 		private readonly IRatingModelService _ratingModelService;
 		private readonly IStatusCachedService _statusCachedService;
@@ -40,12 +41,12 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
-		public IList<TrustCasesModel> TrustCasesModel { get; private set; }
-		public bool IsEditableCase { get; private set; }
+		public IList<ActiveCaseSummaryModel> ActiveCases { get; private set; }
+		public IList<ClosedCaseSummaryModel> ClosedCases { get; private set; }
 		public List<ActionSummaryModel> CaseActions { get; private set; }
 		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
-
 		public bool IsConcernsCase { get; set; }
+		public bool IsEditableCase { get; private set; }
 
 		public List<ActionSummaryModel> OpenCaseActions { get; set; }
 		public List<ActionSummaryModel> ClosedCaseActions { get; set; }
@@ -57,7 +58,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			IStatusCachedService statusCachedService,
 			INtiUnderConsiderationStatusesCachedService ntiUCStatusesCachedService,
 			ILogger<IndexPageModel> logger,
-			IActionsModelService actionsModelService
+			IActionsModelService actionsModelService,
+			ICaseSummaryService caseSummaryService
 			)
 		{
 			_trustModelService = trustModelService;
@@ -68,6 +70,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_ntiStatusesCachedService = ntiUCStatusesCachedService;
 			_logger = logger;
 			_actionsModelService = actionsModelService;
+			_caseSummaryService = caseSummaryService;
 		}
 
 		public async Task<IActionResult> OnGetAsync()
@@ -81,7 +84,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 					throw new Exception("CaseUrn is null or invalid to parse");
 
 				// Get Case
-				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
 
 				if (await IsCaseClosed())
 				{
@@ -94,20 +97,22 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				// Map Case Rating
 				CaseModel.RatingModel = await _ratingModelService.GetRatingModelById(CaseModel.RatingId);
 				// Get Case concerns
-				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(User.Identity.Name, caseUrn);
+				var recordsModel = await _recordModelService.GetRecordsModelByCaseUrn(caseUrn);
 
 				// Map Case concerns
 				CaseModel.RecordsModel = recordsModel;
 				SetIsConcernsCase();
 
 				var trustDetailsTask = _trustModelService.GetTrustByUkPrn(CaseModel.TrustUkPrn);
-				var trustCasesTask = _caseModelService.GetCasesByTrustUkprn(CaseModel.TrustUkPrn);
+				var activeTrustCasesTask = _caseSummaryService.GetActiveCaseSummariesByTrust(CaseModel.TrustUkPrn);
+				var closedTrustCasesTask = _caseSummaryService.GetClosedCaseSummariesByTrust(CaseModel.TrustUkPrn);
 				var caseActionsTask = PopulateCaseActions(caseUrn);
 
-				Task.WaitAll(trustDetailsTask, trustCasesTask, caseActionsTask);
+				Task.WaitAll(trustDetailsTask, activeTrustCasesTask, closedTrustCasesTask, caseActionsTask);
 
 				TrustDetailsModel = trustDetailsTask.Result;
-				TrustCasesModel = trustCasesTask.Result;
+				ActiveCases = activeTrustCasesTask.Result;
+				ClosedCases = closedTrustCasesTask.Result;
 
 				NtiStatuses = (await _ntiStatusesCachedService.GetAllStatuses()).ToList();
 			}
@@ -124,7 +129,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private async Task PopulateCaseActions(long caseUrn)
 		{
 			CaseActions = CaseActions ?? new List<ActionSummaryModel>();
-			CaseActions.AddRange(await _actionsModelService.GetActionsSummary(User.Identity.Name, caseUrn));
+			CaseActions.AddRange(await _actionsModelService.GetActionsSummary(caseUrn));
 
 			OpenCaseActions = CaseActions.Where(a => a.ClosedDate == null).ToList();
 			ClosedCaseActions = CaseActions.Except(OpenCaseActions).ToList();

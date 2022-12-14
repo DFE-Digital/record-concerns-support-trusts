@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers
 			return canHandleNTI;
 		}
 
-		public override async Task<bool> NewCaseActionAllowed(long caseUrn, string caseWorker)
+		public override async Task<bool> NewCaseActionAllowed(long caseUrn)
 		{
 			var ntiUnderConsiderations = await _ntiUnderConsiderationModelService.GetNtiUnderConsiderationsForCase(caseUrn);
 			var ntiWarningLetters = await _ntiWarningLetterModelService.GetNtiWarningLettersForCase(caseUrn);
