@@ -30,4 +30,10 @@
       <ProjectReference Include="..\ConcernsCaseWork.Data\ConcernsCaseWork.Data.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="appsettings.tests.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
