@@ -1,7 +1,6 @@
 describe("Home page tests", () => {
 	before(() => {
-		// cy.login();
-		cy.visit("");
+		cy.login();
 	});
 
 	after(function () {
