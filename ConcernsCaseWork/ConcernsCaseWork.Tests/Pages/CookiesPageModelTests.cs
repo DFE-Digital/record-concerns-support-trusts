@@ -56,8 +56,8 @@ namespace ConcernsCaseWork.Tests.Pages
 			pageResult.Should().BeOfType(typeof(PageResult));
 		}
 
-		[TestCase("true", "true")]
-		[TestCase("false", "false")]
+		[TestCase("True", "True")]
+		[TestCase("False", "False")]
 		public void When_OnPost_BannerValue_Then_CookieSet(string hasConsented, string expected)
 		{
 			var model = CreatePageModel();
