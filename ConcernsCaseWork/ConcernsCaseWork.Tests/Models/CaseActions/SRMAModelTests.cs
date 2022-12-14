@@ -28,6 +28,7 @@ namespace ConcernsCaseWork.Tests.Models.CaseActions
 				status, 
 				notes, 
 				reason,
+				date,
 				date
 			);
 			
@@ -42,6 +43,8 @@ namespace ConcernsCaseWork.Tests.Models.CaseActions
 			Assert.That(srmaModel.Status, Is.EqualTo(status));
 			Assert.That(srmaModel.Notes, Is.EqualTo(notes));
 			Assert.That(srmaModel.Reason, Is.EqualTo(reason));
+			Assert.That(srmaModel.CreatedAt, Is.EqualTo(date));
+			Assert.That(srmaModel.UpdatedAt, Is.EqualTo(date));
 		}
 	}
 }

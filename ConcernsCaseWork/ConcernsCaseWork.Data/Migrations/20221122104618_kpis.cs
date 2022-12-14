@@ -671,7 +671,7 @@ namespace ConcernsCaseWork.Data.Migrations
 							'SRMACase',
 							currentRecord.Id,
 							currentRecord.CaseUrn,
-							GETDATE(), -- should be currentRecord.UpdatedAt but this is not set due to a bug
+							currentRecord.UpdatedAt,
 							'CreatedAt',
 							'Create',
 							NULL,
@@ -696,7 +696,7 @@ namespace ConcernsCaseWork.Data.Migrations
 							'SRMACase',
 							currentRecord.Id,
 							currentRecord.CaseUrn,
-							GETDATE(), -- should be currentRecord.UpdatedAt but this is not set due to a bug
+							currentRecord.UpdatedAt,
 							'Status',
 							'Update',
 							[originalStatus].[Name],
@@ -725,7 +725,7 @@ namespace ConcernsCaseWork.Data.Migrations
 							'SRMACase',
 							currentRecord.Id,
 							currentRecord.CaseUrn,
-							GETDATE(), -- should be currentRecord.UpdatedAt but this is not set due to a bug
+							currentRecord.UpdatedAt,
 							'ClosedAt',
 							'Close',
 							NULL,

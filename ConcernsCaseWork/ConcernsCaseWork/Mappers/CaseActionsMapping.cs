@@ -23,7 +23,8 @@ namespace ConcernsCaseWork.Mappers
 				DateVisitStart = srmaDto.DateVisitStart,
 				Notes = srmaDto.Notes,
 				Reason = (Enums.SRMAReasonOffered)(srmaDto.Reason ?? SRMAReasonOffered.Unknown),
-				Status = (Enums.SRMAStatus)srmaDto.Status
+				Status = (Enums.SRMAStatus)srmaDto.Status,
+				UpdatedAt = srmaDto.UpdatedAt
 			};
 		}
 
@@ -43,6 +44,7 @@ namespace ConcernsCaseWork.Mappers
 				Notes = srmaModel.Notes,
 				Reason = (SRMAReasonOffered)srmaModel.Reason,
 				Status = (SRMAStatus)srmaModel.Status,
+				UpdatedAt = srmaModel.UpdatedAt
 			};
 		}
 
