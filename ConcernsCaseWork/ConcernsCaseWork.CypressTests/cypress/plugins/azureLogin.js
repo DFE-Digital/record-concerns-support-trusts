@@ -7,6 +7,7 @@ const puppeteer = require('puppeteer');
 module.exports.azureLogin = async function azureLogin(url, username, password) {
     const browser = await puppeteer.launch({
         headless: false,
+        ignoreHTTPSErrors: true,
         args: [
             "--incognito"
           ]
