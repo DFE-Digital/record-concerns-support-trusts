@@ -44,7 +44,7 @@ jobs:
       - name: Install certificates
         run: |
           sudo apt install libnss3-tools
-          sh ConcernsCaseWork/setup-certs/ubuntu-create-dotnet-devcert.sh
+          sh ConcernsCaseWork/setup-certs/ubuntu-create-dotnet-devcert.sh -s
 
       - name: Setup node.js
         uses: actions/setup-node@v1
