@@ -20,10 +20,12 @@ export class CookiesPage
         return this;
     }
 
-    public save()
+    public save(): this
     {
         Logger.Log("Saving cookie consent");
 
         cy.getByTestId("save-cookie-preferences-button").click();
+
+        return this;
     }
 }

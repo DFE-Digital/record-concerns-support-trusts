@@ -64,7 +64,7 @@ namespace ConcernsCaseWork.Tests.Pages
 
 			model.Request.Headers["Referer"] = "/case";
 
-			var cookieManager = new Mock<IRequestCookieCollection>();
+			var cookieManager = new Mock<IRequestCookieCollection>();                  
 
 			var pageResult = model.OnPost(hasConsented) as RedirectResult;
 
