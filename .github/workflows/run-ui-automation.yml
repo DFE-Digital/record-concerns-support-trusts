@@ -41,10 +41,13 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
-      - name: Install database
-        run: | 
-          dotnet tool install --global dotnet-ef
-          dotnet ef database update --connection "Server=localhost,1433;Database=sip;User Id=sa;Password=P1swrd!$;TrustServerCertificate=True"
+      - name: Install Dotnet EF
+        run: dotnet tool install --global dotnet-ef
+          
+
+      - name: Run Database migrations
+        working-directory: ./ConcernsCaseWork/ConcernsCaseWork.Data
+        run: dotnet ef database update --connection "Server=localhost,1433;Database=sip;User Id=sa;Password=P1swrd!$;TrustServerCertificate=True"
 
       - name: Install certificates
         run: |
