@@ -130,7 +130,7 @@ public class CaseKpiTests : DatabaseTestFixture
 		riskToTrustKpi.DataItemChanged.Should().Be("ClosedAt");
 		riskToTrustKpi.Operation.Should().Be("Close");
 		riskToTrustKpi.OldValue.Should().BeEmpty();
-		riskToTrustKpi.NewValue.Replace("-","/").Should().Be(createdCase.ClosedAt.ToShortDateString());
+		riskToTrustKpi.NewValue.Replace("-","/").Should().Be(createdCase.ClosedAt.Value.ToShortDateString());
 		
 		results.Count.Should().Be(1);
 	}

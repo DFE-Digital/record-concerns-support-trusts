@@ -13,8 +13,6 @@ namespace ConcernsCaseWork.Redis.Models
 
 		public DateTimeOffset ReviewAt { get; set; }
 
-		public DateTimeOffset ClosedAt { get; set; }
-
 		public string CreatedBy { get; set; }
 		
 		public string CrmEnquiry { get; set; }

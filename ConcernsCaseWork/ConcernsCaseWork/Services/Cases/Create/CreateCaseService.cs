@@ -54,8 +54,7 @@ public class CreateCaseService : ICreateCaseService
 			var dto = new CreateCaseDto(
 				createdAndUpdatedDate, 
 				createdAndUpdatedDate, 
-				DateTime.MinValue, 
-				DateTime.MinValue, 
+				DateTime.MinValue,
 				userName, 
 				null, 
 				trustUkPrn, 

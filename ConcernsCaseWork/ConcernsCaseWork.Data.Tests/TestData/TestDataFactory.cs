@@ -12,7 +12,6 @@ public class TestDataFactory
 		{
 			CreatedAt = _randomGenerator.DateTime(),
 			UpdatedAt = _randomGenerator.DateTime(),
-			ClosedAt = DateTime.MinValue,
 			CreatedBy = _randomGenerator.NextString(3, 10),
 			DirectionOfTravel = _randomGenerator.NextString(3, 10),
 			StatusId = statusId,
