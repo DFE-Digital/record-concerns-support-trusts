@@ -14,7 +14,7 @@ jobs:
       version: ${{steps.release-version.outputs.version}}
     steps:
       - id: release-version
-        run: echo "::set-output name=version::release-6"
+        run: echo "::set-output name=version::release-8"
 
   build-and-push-image-test:
     name: Build and push image test
@@ -51,7 +51,7 @@ jobs:
       - name: Setup node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '14.x'
+          node-version: '16.x'
 
       - name: Build Frontend
         run: make build-frontend
@@ -61,10 +61,12 @@ jobs:
         with:
           context: .
           file: ./Dockerfile.gpaas-azure-migration
-          build-args: ASPNET_IMAGE_TAG=6.0.9-bullseye-slim-amd64
+          build-args: |
+            ASPNET_IMAGE_TAG=6.0.9-bullseye-slim-amd64
+            COMMIT_SHA=${GITHUB_SHA}
           push: true
           tags: ${{ steps.prepare-tags.outputs.tags }}
-      
+
       - name: Azure login with ACA credentials
         uses: azure/login@v1
         with:
@@ -81,4 +83,3 @@ jobs:
               --resource-group ${{ secrets.TEST_ACA_RESOURCE_GROUP }} \
               --image ${{ secrets.TEST_ACR_URL }}/amsd-app:${{ steps.prepare-tags.outputs.deploy-version }} \
               --output none
-

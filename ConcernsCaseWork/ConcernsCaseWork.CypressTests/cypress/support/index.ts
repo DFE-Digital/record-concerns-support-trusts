@@ -42,6 +42,8 @@ declare global {
             checkForExistingCase(force: boolean): Chainable<Element>;
             createSRMA(): Chainable<Element>;
             addConcernsDecisionsAddToCase(): Chainable<Element>;
+            basicCreateCase(): Chainable<Element>;
+            checkForExistingCase(): Chainable<Element>;
         }
     }
 }

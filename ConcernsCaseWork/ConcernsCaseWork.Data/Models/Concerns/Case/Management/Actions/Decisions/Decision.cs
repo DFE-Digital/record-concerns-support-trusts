@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Data.Enums;
+using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
 using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions
@@ -113,6 +114,8 @@ namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decision
         public Enums.Concerns.DecisionStatus Status { get; set; }
         public DateTimeOffset? ClosedAt { get; set; }
 
+		public DecisionOutcome? Outcome { get; set; }
+
         public string GetTitle()
         {
             switch (DecisionTypes?.Count ?? 0)
@@ -149,6 +152,20 @@ namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decision
             RetrospectiveApproval = updatedDecision.RetrospectiveApproval;
             CrmCaseNumber = updatedDecision.CrmCaseNumber;
             UpdatedAt = now;
+        }
+
+        /// <summary>
+        /// Closes the decision, by copying values from another decision. This is in lieu of another suitable class to carry data.
+        /// Create an unsaved decision and pass it to this method, all properties that can be copied will be. Existing decision IDs will
+        /// be unchanged.
+        /// </summary>
+        /// <param name="notes"></param>
+        /// <param name="updatedAt"></param>
+        public void Close(string notes, DateTimeOffset updatedAt)
+        {
+	        ClosedAt = updatedAt;
+	        SupportingNotes = notes;
+	        UpdatedAt = updatedAt;
         }
     }
 }

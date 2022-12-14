@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Service.FinancialPlan;
+using ConcernsCaseWork.Models.CaseActions;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
@@ -32,6 +33,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 			try
 			{
+				FinancialPlanModel = new FinancialPlanModel();
+
 				FinancialPlanStatuses = await GetStatusOptionsAsync();
 				
 				return Page();
@@ -52,23 +55,20 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				var caseUrn = GetRequestedCaseUrn();
 				var planRequestedDate = GetRequestedPlanRequestedDate();
 				var viablePlanReceivedDate = GetRequestedViablePlanReceivedDate();
-				var notes = GetRequestedNotes();
-				var statusName = GetRequestedStatus();
-				var selectedStatus = await GetOptionalStatusByNameAsync(statusName);
 				var currentUser = GetLoggedInUserName();
 
-				var createFinancialPlanModel = new CreateFinancialPlanModel
+				var model = new CreateFinancialPlanModel
 				{
 					CaseUrn = caseUrn,
 					CreatedAt = DateTime.Now,
 					DatePlanRequested = planRequestedDate,
 					DateViablePlanReceived = viablePlanReceivedDate,
-					StatusId = selectedStatus?.Id,
+					StatusId = FinancialPlanModel.Status?.Id,
 					CreatedBy = currentUser,
-					Notes = notes
+					Notes = FinancialPlanModel.Notes
 				};
 
-				await _financialPlanModelService.PostFinancialPlanByCaseUrn(createFinancialPlanModel, currentUser);
+				await _financialPlanModelService.PostFinancialPlanByCaseUrn(model);
 
 				return Redirect($"/case/{caseUrn}/management");
 			}

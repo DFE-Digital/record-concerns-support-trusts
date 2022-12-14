@@ -1,8 +1,6 @@
 using Ardalis.GuardClauses;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Redis.Cases;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Ratings;
 using ConcernsCaseWork.Redis.Status;
@@ -20,7 +18,7 @@ public class CreateCaseService : ICreateCaseService
 	private readonly ILogger<CreateCaseService> _logger;
 	private readonly IUserStateCachedService _userStateCachedService;
 	private readonly IStatusCachedService _statusCachedService;
-	private readonly ICaseCachedService _caseCachedService;
+	private readonly ICaseService _caseService;
 	private readonly IRatingCachedService _ratingCachedService;
 	private readonly ISRMAService _srmaService;
 
@@ -28,7 +26,7 @@ public class CreateCaseService : ICreateCaseService
 		ILogger<CreateCaseService> logger, 
 		IUserStateCachedService userStateCachedService, 
 		IStatusCachedService statusCachedService, 
-		ICaseCachedService caseCachedService, 
+		ICaseService caseService, 
 		IRatingCachedService ratingCachedService,
 		ISRMAService srmaService)
 	{
@@ -36,7 +34,7 @@ public class CreateCaseService : ICreateCaseService
 		_ratingCachedService = Guard.Against.Null(ratingCachedService);
 		_statusCachedService = Guard.Against.Null(statusCachedService);
 		_userStateCachedService = Guard.Against.Null(userStateCachedService);
-		_caseCachedService = Guard.Against.Null(caseCachedService);
+		_caseService = Guard.Against.Null(caseService);
 		_logger = Guard.Against.Null(logger);
 	}
 
@@ -71,9 +69,10 @@ public class CreateCaseService : ICreateCaseService
 				null, 
 				null,
 				statusDto.Id,
-				ratingDto.Id);
+				ratingDto.Id,
+				null);
 			
-			var newCase = await _caseCachedService.PostCase(dto);
+			var newCase = await _caseService.PostCase(dto);
 			return newCase.Urn;
 		}
 		catch (Exception ex)

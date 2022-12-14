@@ -9,7 +9,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
 {
-public class GetDecisionResponseFactoryTests
+	public class GetDecisionResponseFactoryTests
     {
         [Fact]
         public void Can_Construct_GetDecisionResponseFactory()
@@ -40,17 +40,77 @@ public class GetDecisionResponseFactoryTests
             var result = sut.Create(concernsCaseUrn, decision);
 
             result.ConcernsCaseUrn.Should().Be(concernsCaseUrn);
-            result.Should().BeEquivalentTo(decision,
-                opt => opt.IncludingAllDeclaredProperties()
-                    .Excluding(x => x.DecisionTypes)
-                    .Excluding(x => x.Status)
-                    .Excluding(x => x.ConcernsCaseId)
-                );
-            result.DecisionTypes.Should().BeEquivalentTo(decision.DecisionTypes.Select(x => x.DecisionTypeId),
+			result.Should().BeEquivalentTo(decision,
+				opt => opt.IncludingAllDeclaredProperties()
+					.Excluding(x => x.DecisionTypes)
+					.Excluding(x => x.Status)
+					.Excluding(x => x.ConcernsCaseId)
+					.Excluding(x => x.Outcome)
+				);
+
+			result.Outcome.Status.Should().Be(decision.Outcome.Status);
+			result.Outcome.Authorizer.Should().Be(decision.Outcome.Authorizer);
+			result.Outcome.DecisionMadeDate.Should().Be(decision.Outcome.DecisionMadeDate);
+			result.Outcome.DecisionEffectiveFromDate.Should().Be(decision.Outcome.DecisionEffectiveFromDate);
+			result.Outcome.TotalAmount.Should().Be(decision.Outcome.TotalAmount);
+
+			var expectedBusinessAreas = decision.Outcome.BusinessAreasConsulted.Select(b => b.DecisionOutcomeBusinessId);
+
+			result.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(expectedBusinessAreas);
+
+
+			result.DecisionTypes.Should().BeEquivalentTo(decision.DecisionTypes.Select(x => x.DecisionTypeId),
                 opt => opt.WithStrictOrdering());
-            result.DecisionStatus.Should().Be(decision.Status);
+            result.DecisionStatus.Should().HaveSameValueAs(decision.Status);
             result.Title.Should().Be(decision.GetTitle());
         }
+        
+        [Fact]
+        public void Create_WhenClosedAtIsNull_Returns_DecisionResponse_WithIsEditable_True()
+        {
+	        var fixture = CreateFixture();
+
+	        var concernsCaseUrn = fixture.Create<int>();
+	        var decision = fixture.Create<Decision>();
+	        decision.ClosedAt = null;
+
+	        var sut = new GetDecisionResponseFactory();
+
+	        var result = sut.Create(concernsCaseUrn, decision);
+
+	        result.IsEditable.Should().BeTrue();
+        }
+        
+        [Fact]
+        public void Create_WhenClosedAtIsNotNull_Returns_DecisionResponse_WithIsEditable_False()
+        {
+	        var fixture = CreateFixture();
+
+	        var concernsCaseUrn = fixture.Create<int>();
+	        var decision = fixture.Create<Decision>();
+
+	        var sut = new GetDecisionResponseFactory();
+
+	        var result = sut.Create(concernsCaseUrn, decision);
+
+	        result.IsEditable.Should().BeFalse();
+        }
+        
+		[Fact]
+		public void Create_WithNoOutcome_Returns_DecisionResponse()
+		{
+			var fixture = CreateFixture();
+
+			var concernsCaseUrn = fixture.Create<int>();
+			var decision = fixture.Create<Decision>();
+			decision.Outcome = null;
+
+			var sut = new GetDecisionResponseFactory();
+
+			var result = sut.Create(concernsCaseUrn, decision);
+
+			result.Outcome.Should().BeNull();
+		}
 
         [Fact]
         public void Constructor_Guards_Against_Null_Arguments()

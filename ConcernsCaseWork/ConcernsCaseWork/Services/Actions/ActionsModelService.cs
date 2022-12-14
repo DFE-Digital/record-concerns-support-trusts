@@ -48,14 +48,14 @@ namespace ConcernsCaseWork.Services.Actions
 			_decisionModelService = decisionModelService;
 		}
 
-		public async Task<IList<ActionSummaryModel>> GetActionsSummary(string userName, long caseUrn)
+		public async Task<IList<ActionSummaryModel>> GetActionsSummary(long caseUrn)
 		{
 			var caseActions = new List<ActionSummaryModel>();
 				
 			try
 			{
 				caseActions.AddRange(await GetSrmas(caseUrn));
-				caseActions.AddRange(await GetFinancialPlans(caseUrn, userName));
+				caseActions.AddRange(await GetFinancialPlans(caseUrn));
 				caseActions.AddRange(await GetNtisUnderConsideration(caseUrn));
 				caseActions.AddRange(await GetNtiWarningLettersForCase(caseUrn));
 				caseActions.AddRange(await GetNtisForCase(caseUrn));
@@ -76,8 +76,8 @@ namespace ConcernsCaseWork.Services.Actions
 			=> (await _srmaService.GetSRMAsForCase(caseUrn))
 				.Select(a => a.ToActionSummary());
 		
-		private async Task<IEnumerable<ActionSummaryModel>> GetFinancialPlans(long caseUrn, string userName)
-			=> (await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, userName))
+		private async Task<IEnumerable<ActionSummaryModel>> GetFinancialPlans(long caseUrn)
+			=> (await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn))
 
 				.Select(a => a.ToActionSummary());
 

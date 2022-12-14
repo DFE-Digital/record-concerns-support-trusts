@@ -1,6 +1,9 @@
 ﻿# Stage 1
 ARG ASPNET_IMAGE_TAG=6.0.9-bullseye-slim
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+ARG NODEJS_IMAGE_TAG=16-bullseye
+ARG COMMIT_SHA=not-set
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS publish
 WORKDIR /build
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -29,9 +32,20 @@ RUN dotnet publish ConcernsCaseWork -c Release -o /app
 
 COPY ./script/web-docker-entrypoint.sh /app/docker-entrypoint.sh
 
-# Stage 2
+# Stage 2 - Build assets
+FROM node:${NODEJS_IMAGE_TAG} as build
+COPY --from=publish /app /app
+WORKDIR /app/wwwroot
+RUN npm install
+RUN npm run build
+
+# Stage 3 - Final
 ARG ASPNET_IMAGE_TAG
 FROM "mcr.microsoft.com/dotnet/aspnet:${ASPNET_IMAGE_TAG}" AS final
+
+ARG COMMIT_SHA
+RUN echo "Setting env releasetag=${COMMIT_SHA}"
+ENV ConcernsCasework:ReleaseTag="${COMMIT_SHA}"
 
 RUN apt-get update
 RUN apt-get install unixodbc curl gnupg -y

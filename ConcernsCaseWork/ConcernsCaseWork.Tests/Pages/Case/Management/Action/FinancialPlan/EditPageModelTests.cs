@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var caseUrn = 4;
 			var financialPlanId = 6;
                         
-			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn, null));
 			
 			mockFinancialPlanStatusService.Setup(fp => fp.GetOpenFinancialPlansStatusesAsync())
@@ -96,7 +96,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var financialPlan = SetupFinancialPlanModel(financialPlanId, caseUrn, null);
 			financialPlan.ClosedAt = DateTime.Now;
                         
-			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(financialPlan);
 			
 			mockFinancialPlanStatusService.Setup(fp => fp.GetOpenFinancialPlansStatusesAsync())
@@ -158,7 +158,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			Assert.That(pageModel.TempData["Error.Message"],
 				Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 				
-			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>(), It.IsAny<string>()), Times.Never);
+			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>()), Times.Never);
 		}
 		
 		[Test]
@@ -176,7 +176,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var financialPlanId = 2L;
 			
 			mockFinancialPlanModelService
-				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn));
 				
 			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
@@ -218,7 +218,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var financialPlanId = 2L;
 			
 			mockFinancialPlanModelService
-				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn));
 			
 			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
@@ -259,7 +259,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var financialPlanId = 2L;
 			
 			mockFinancialPlanModelService
-				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn));
 				
 			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
@@ -301,7 +301,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var financialPlanId = 2L;
 			
 			mockFinancialPlanModelService
-				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn));
 			
 			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
@@ -342,7 +342,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn, statuses.First().Name);
 			
 			mockFinancialPlanModelService
-				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(existingFinancialPlanModel);
 			
 			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
@@ -372,8 +372,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
 					fpm.ClosedAt == null && 
 					fpm.DatePlanRequested == new DateTime(year, month, day) &&
-					fpm.DateViablePlanReceived == null), 
-				It.IsAny<string>()), Times.Once);
+					fpm.DateViablePlanReceived == null)), Times.Once);
 			
 			Assert.IsNotNull(pageResponse);
 			Assert.IsNull(pageModel.TempData["Error.Message"]);
@@ -394,7 +393,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn, statuses.First().Name);
 			
 			mockFinancialPlanModelService
-				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(existingFinancialPlanModel);
 			
 			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
@@ -424,8 +423,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
 				fpm.ClosedAt == null && 
 				fpm.DateViablePlanReceived == new DateTime(year, month, day) &&
-				fpm.DatePlanRequested == null), 
-				It.IsAny<string>()), Times.Once);
+				fpm.DatePlanRequested == null)), Times.Once);
 			
 			Assert.IsNotNull(pageResponse);
 			Assert.IsNull(pageModel.TempData["Error.Message"]);
@@ -446,7 +444,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn, statuses.First().Name);
 			
 			mockFinancialPlanModelService
-				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(existingFinancialPlanModel);
 			
 			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
@@ -468,7 +466,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 			// assert
 			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
-				fpm.ClosedAt == null), It.IsAny<string>()), Times.Once);
+				fpm.ClosedAt == null)), Times.Once);
 			
 			Assert.IsNotNull(pageResponse);
 			Assert.IsNull(pageModel.TempData["Error.Message"]);
@@ -482,13 +480,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new EditPageModel(mockFinancialPlanModelService, mockFinancialPlanStatusService, mockLogger)
+			var result = new EditPageModel(mockFinancialPlanModelService, mockFinancialPlanStatusService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
 				Url = new UrlHelper(actionContext),
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
+
+			result.FinancialPlanModel = new FinancialPlanModel();
+
+			return result;
 		}
 
 		private static FinancialPlanModel SetupFinancialPlanModel(long planId, long caseUrn, string statusName = "")

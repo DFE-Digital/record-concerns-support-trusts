@@ -19,9 +19,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers
 			return caseActionEnum == CaseActionEnum.FinancialPlan;
 		}
 
-		public override async Task<bool> NewCaseActionAllowed(long caseUrn, string caseWorker)
+		public override async Task<bool> NewCaseActionAllowed(long caseUrn)
 		{
-			var fps = await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn, caseWorker);
+			var fps = await _financialPlanModelService.GetFinancialPlansModelByCaseUrn(caseUrn);
 			return base.HasOpenCaseAction(fps) ? throw new InvalidOperationException("There is already an open Financial Plan action linked to this case. Please resolve that before opening another one.")
 				: true;
 		}

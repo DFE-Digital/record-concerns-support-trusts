@@ -27,7 +27,7 @@ public class IndexPageTests
 		var caseUrn = 4;
 		var financialPlanId = 6;
                         
-		mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+		mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 			.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn, null));
 	
 		var pageModel = SetupIndexPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
@@ -71,7 +71,7 @@ public class IndexPageTests
 		var financialPlan = SetupFinancialPlanModel(financialPlanId, caseUrn, null);
 		financialPlan.ClosedAt = DateTime.Now;
                         
-		mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId, It.IsAny<string>()))
+		mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 			.ReturnsAsync(financialPlan);
 			
 		var pageModel = SetupIndexPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
