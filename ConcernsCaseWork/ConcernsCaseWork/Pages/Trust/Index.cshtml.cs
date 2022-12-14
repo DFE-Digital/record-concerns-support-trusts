@@ -84,7 +84,7 @@ namespace ConcernsCaseWork.Pages.Trust
 
 			if (!ModelState.IsValid)
 			{
-				TempData["Decision.Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+				TempData["Error.Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
 				return Page();
 			}
 
