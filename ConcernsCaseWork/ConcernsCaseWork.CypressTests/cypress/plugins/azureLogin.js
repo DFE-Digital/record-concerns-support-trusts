@@ -1,3 +1,5 @@
+import { join } from "path";
+
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 
 const puppeteer = require('puppeteer');
@@ -19,14 +21,22 @@ module.exports.azureLogin = async function azureLogin(url, username, password) {
     console.log("Navigating to Azure AD")
     await page.goto(url);
 
+    await page.waitForTimeout(10000);
+
+    await page.screenshot(
+    {
+        path: join(__dirname, "../screenshots/capture.jpg")
+    });
+
     const submitSelector = "input[type=submit]";
     const usernameSelector = "input[name=loginfmt]";
     const passwordSelector = "input[name=passwd]";
-    const timeout = 10000;
+    const timeout = 2000;
 
-    console.log("Entering username");
-    await page.waitForSelector(usernameSelector);
+    console.log("Waiting for element selector");
+    await page.waitForSelector(usernameSelector, { visible: true });
     await page.waitForTimeout(timeout);
+
     await page.type(usernameSelector, username, { delay: 50 });
     await page.click(submitSelector);
 
