@@ -1,4 +1,4 @@
-name: Run UI automation
+name: Run UI automation against dev
 
 on:
   push:
