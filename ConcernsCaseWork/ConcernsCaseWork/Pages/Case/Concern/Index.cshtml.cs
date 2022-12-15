@@ -114,7 +114,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 						CreatedAt = currentDate,
 						ReviewAt = currentDate,
 						UpdatedAt = currentDate,
-						ClosedAt = currentDate,
 						CreatedBy = GetUserName(),
 						DeEscalation = currentDate,
 						RagRatingName = ragRatingName,

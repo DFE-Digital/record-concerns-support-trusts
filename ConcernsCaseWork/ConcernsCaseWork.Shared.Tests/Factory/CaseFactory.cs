@@ -174,8 +174,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			return new CreateCaseDto(
 				dateTimeNow, 
 				dateTimeNow, 
-				dateTimeNow, 
-				dateTimeNow, 
+				dateTimeNow,
 				createdBy ?? Fixture.Create<string>(), 
 				Fixture.Create<string>(),
 				trustUkprn ?? Fixture.Create<string>(), 
@@ -201,7 +200,6 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				CreatedAt = dateTimeNow, 
 				UpdatedAt = dateTimeNow, 
 				ReviewAt = dateTimeNow, 
-				ClosedAt = dateTimeNow, 
 				CreatedBy = Fixture.Create<string>(), 
 				CrmEnquiry = Fixture.Create<string>(),
 				TrustUkPrn = Fixture.Create<string>(), 

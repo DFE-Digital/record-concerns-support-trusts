@@ -1,4 +1,4 @@
-using ConcernsCaseWork.Mappers;
+﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
@@ -274,8 +274,7 @@ namespace ConcernsCaseWork.Services.Cases
 				{
 					var createRecordDto = new CreateRecordDto(
 						currentDate, 
-						currentDate, 
-						currentDate, 
+						currentDate,
 						currentDate, 
 						recordModel.Type, 
 						recordModel.SubType, 
