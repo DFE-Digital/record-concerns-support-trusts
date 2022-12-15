@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace ConcernsCaseWork.Extensions
@@ -78,5 +79,37 @@ namespace ConcernsCaseWork.Extensions
 		}
 		
 		public static string GetValueOrNullIfWhitespace(this string value) => string.IsNullOrWhiteSpace(value) ? null : value;
+
+		public static string FromEmailToFullName(this string email)
+		{
+			var fullName = email.Split('@')[0];
+			var names = fullName.Split('.');
+
+			var parsedNames = new List<string>();
+
+			foreach (var name in names)
+			{
+				var parsedName = name.ToLower().CapitaliseFirstChar();
+				parsedNames.Add(parsedName);
+			}
+
+			var result = string.Join(' ', parsedNames);
+
+			return result;
+		}
+
+		private static string CapitaliseFirstChar(this string input)
+		{
+			var charArray = input.ToCharArray();
+
+			var capitalChar = charArray[0].ToString().ToUpper();
+			charArray[0] = char.Parse(capitalChar);
+
+
+			var result = new string(charArray);
+
+			return result;
+		}
+
 	}
 }
