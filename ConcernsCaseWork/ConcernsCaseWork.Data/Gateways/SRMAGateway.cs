@@ -19,6 +19,7 @@ namespace ConcernsCaseWork.Data.Gateways
         {
             try
             {
+	            request.UpdatedAt = request.CreatedAt;
                 _concernsDbContext.SRMACases.Add(request);
                 await _concernsDbContext.SaveChangesAsync();
                 return request;
@@ -75,6 +76,8 @@ namespace ConcernsCaseWork.Data.Gateways
                     throw new InvalidOperationException("Patched SRMA is invalid.");
                 }
 
+                patchedSRMA.UpdatedAt = DateTime.Now;
+                
                 var tracked = _concernsDbContext.Update<SRMACase>(patchedSRMA);
                 await _concernsDbContext.SaveChangesAsync();
 
