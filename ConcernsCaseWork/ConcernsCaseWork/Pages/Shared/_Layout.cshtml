@@ -62,9 +62,7 @@
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
     <script src="~/dist/vendor/jquery.min.js" nonce="@nonce"></script>
-    <script nonce="@nonce">
-        document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
-    </script>
+    <script nonce="@nonce">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
     <header class="moj-header " role="banner">
         <div class="govuk-width-container">
@@ -89,6 +87,16 @@
             </div>
         </div>
     </header>
+    <div class="govuk-phase-banner">
+        <p class="govuk-phase-banner__content">
+            <strong class="govuk-tag govuk-phase-banner__content__tag">
+                beta
+            </strong>
+            <span class="govuk-phase-banner__text">
+                This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.
+            </span>
+        </p>
+    </div>
 
     @await RenderSectionAsync("Scripts", required: false)
     @await RenderSectionAsync("BeforeMain", required: false)
@@ -124,15 +132,15 @@
                                 Privacy policy
                             </a>
                         </li>
-						@if (!_env.IsProduction())
-						{
-							<li class="govuk-footer__inline-list-item">
-								<a class="govuk-footer__link" href="/cleardata">
-									Clear data
-								</a>
-							</li>
-						}
-					</ul>
+                        @if (!_env.IsProduction())
+                        {
+                            <li class="govuk-footer__inline-list-item">
+                                <a class="govuk-footer__link" href="/cleardata">
+                                    Clear data
+                                </a>
+                            </li>
+                        }
+                    </ul>
                 </div>
                 <div class="govuk-footer__meta-item">
                     <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright</a>
