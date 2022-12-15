@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
@@ -38,6 +39,10 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null, 
                 null, 
                 null,
+                null,
+                null,
+                null,
+                null,
                 null
             );
             
@@ -65,6 +70,10 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 getConcernsCaseByUrn.Object, 
                 null,
                 null,
+                null,
+                null,
+                null,
+                null,
                 null
             );
             
@@ -90,6 +99,10 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 getConcernsCaseByUrn.Object, 
                 null,
                 null, 
+                null,
+                null,
+                null,
+                null,
                 null
             );
             
@@ -117,6 +130,10 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null, 
                 null, 
                 getConcernsCaseByTrustUkprn.Object,
+                null,
+                null,
+                null,
+                null,
                 null,
                 null
             );
@@ -154,6 +171,10 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null, 
                 null,
                 updateConcernsCase.Object,
+                null,
+                null,
+                null,
+                null,
                 null
             );
             
@@ -183,6 +204,10 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null, 
                 null,
                 updateConcernsCase.Object,
+                null,
+                null,
+                null,
+                null,
                 null
             );
             
@@ -191,8 +216,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             result.Result.Should().BeEquivalentTo(new NotFoundResult());
         }
         
-        
-         
         [Fact]
         public void GetConcernsCaseByOwnerId_ReturnsCaseResponses_WhenConcernsCasesAreFound()
         {
@@ -210,7 +233,11 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null, 
                 null,
                 null,
-                getConcernsCaseByOwnerId.Object
+                getConcernsCaseByOwnerId.Object,
+                null,
+                null,
+                null,
+                null
             );
             var result = controller.GetByOwnerId(ownerId, statusId, 1, 50);
             
@@ -222,6 +249,230 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             };
             var expected = new ApiResponseV2<ConcernsCaseResponse>(response, expectedPagingResponse);
             result.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
+        }
+        
+        [Fact]
+        public async Task GetActiveConcernsCaseSummariesByOwnerId_ReturnsCaseSummaryResponses_WhenConcernsCasesAreFound()
+        {
+	        var mockService = new Mock<IGetActiveConcernsCaseSummariesByOwner>();
+	        var ownerId = "some.user";
+	        var data = Builder<ActiveCaseSummaryResponse>.CreateListOfSize(4).Build();
+
+	        mockService.Setup(a => a.Execute(ownerId))
+		        .ReturnsAsync(data);
+
+	        var controller = new ConcernsCaseController(
+		        mockLogger.Object,
+		        null, 
+		        null, 
+		        null,
+		        null,
+		        null,
+		        mockService.Object,
+		        null,
+		        null,
+		        null
+	        );
+	        var response = await controller.GetActiveSummariesByOwnerId(ownerId);
+  
+	        var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
+	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
+        }
+                
+        [Fact]
+        public async Task GetActiveConcernsCaseSummariesByOwnerId_ReturnsEmptyList_WhenNoConcernsCasesAreFound()
+        {
+	        var mockService = new Mock<IGetActiveConcernsCaseSummariesByOwner>();
+	        var ownerId = "some.user";
+	        var data = new List<ActiveCaseSummaryResponse>();
+
+	        mockService.Setup(a => a.Execute(ownerId))
+		        .ReturnsAsync(data);
+
+	        var controller = new ConcernsCaseController(
+		        mockLogger.Object,
+		        null, 
+		        null, 
+		        null,
+		        null,
+		        null,
+		        mockService.Object,
+		        null,
+		        null,
+		        null
+	        );
+	        var response = await controller.GetActiveSummariesByOwnerId(ownerId);
+  
+	        var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
+	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
+        }
+        
+        [Fact]
+        public async Task GetActiveConcernsCaseSummariesByTrust_ReturnsCaseSummaryResponses_WhenConcernsCasesAreFound()
+        {
+	        var mockService = new Mock<IGetActiveConcernsCaseSummariesByTrust>();
+	        var trustPrn = "123643";
+	        var data = Builder<ActiveCaseSummaryResponse>.CreateListOfSize(4).Build();
+
+	        mockService.Setup(a => a.Execute(trustPrn))
+		        .ReturnsAsync(data);
+
+	        var controller = new ConcernsCaseController(
+		        mockLogger.Object,
+		        null, 
+		        null, 
+		        null,
+		        null,
+		        null,
+		        null,
+		        null,
+		        mockService.Object,
+		        null
+	        );
+	        var response = await controller.GetActiveSummariesByTrust(trustPrn);
+  
+	        var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
+	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
+        }
+                
+        [Fact]
+        public async Task GetActiveConcernsCaseSummariesByTrust_ReturnsEmptyList_WhenNoConcernsCasesAreFound()
+        {
+	        var mockService = new Mock<IGetActiveConcernsCaseSummariesByTrust>();
+	        var trustPrn = "123643";
+	        var data = new List<ActiveCaseSummaryResponse>();
+
+	        mockService.Setup(a => a.Execute(trustPrn))
+		        .ReturnsAsync(data);
+
+	        var controller = new ConcernsCaseController(
+		        mockLogger.Object,
+		        null, 
+		        null, 
+		        null,
+		        null,
+		        null,
+		        null,
+		        null,
+		        mockService.Object,
+		        null
+	        );
+	        var response = await controller.GetActiveSummariesByTrust(trustPrn);
+  
+	        var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
+	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
+        }
+                
+        [Fact]
+        public async Task GetClosedConcernsCaseSummariesByOwnerId_ReturnsCaseSummaryResponses_WhenConcernsCasesAreFound()
+        {
+	        var mockService = new Mock<IGetClosedConcernsCaseSummariesByOwner>();
+	        var ownerId = "some.user";
+	        var data = Builder<ClosedCaseSummaryResponse>.CreateListOfSize(4).Build();
+
+	        mockService.Setup(a => a.Execute(ownerId))
+		        .ReturnsAsync(data);
+
+	        var controller = new ConcernsCaseController(
+		        mockLogger.Object,
+		        null, 
+		        null, 
+		        null,
+		        null,
+		        null,
+		        null,
+		        mockService.Object,
+		        null,
+		        null
+	        );
+	        var response = await controller.GetClosedSummariesByOwnerId(ownerId);
+  
+	        var expected = new ApiResponseV2<ClosedCaseSummaryResponse>(data, null);
+	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
+        }
+                
+        [Fact]
+        public async Task GetClosedConcernsCaseSummariesByOwnerId_ReturnsEmptyList_WhenNoConcernsCasesAreFound()
+        {
+	        var mockService = new Mock<IGetClosedConcernsCaseSummariesByOwner>();
+	        var ownerId = "some.user";
+	        var data = new List<ClosedCaseSummaryResponse>();
+
+	        mockService.Setup(a => a.Execute(ownerId))
+		        .ReturnsAsync(data);
+
+	        var controller = new ConcernsCaseController(
+		        mockLogger.Object,
+		        null, 
+		        null, 
+		        null,
+		        null,
+		        null,
+		        null,
+		        mockService.Object,
+		        null,
+		        null
+	        );
+	        var response = await controller.GetClosedSummariesByOwnerId(ownerId);
+  
+	        var expected = new ApiResponseV2<ClosedCaseSummaryResponse>(data, null);
+	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
+        }
+        
+        [Fact]
+        public async Task GetClosedConcernsCaseSummariesByTrust_ReturnsCaseSummaryResponses_WhenConcernsCasesAreFound()
+        {
+	        var mockService = new Mock<IGetClosedConcernsCaseSummariesByTrust>();
+	        var trustPrn = "64863";
+	        var data = Builder<ClosedCaseSummaryResponse>.CreateListOfSize(4).Build();
+
+	        mockService.Setup(a => a.Execute(trustPrn))
+		        .ReturnsAsync(data);
+
+	        var controller = new ConcernsCaseController(
+		        mockLogger.Object,
+		        null, 
+		        null, 
+		        null,
+		        null,
+		        null,
+		        null,
+		        null,
+		        null,
+		        mockService.Object
+	        );
+	        var response = await controller.GetClosedSummariesByTrust(trustPrn);
+  
+	        var expected = new ApiResponseV2<ClosedCaseSummaryResponse>(data, null);
+	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
+        }
+                
+        [Fact]
+        public async Task GetClosedConcernsCaseSummariesByTrust_ReturnsEmptyList_WhenNoConcernsCasesAreFound()
+        {
+	        var mockService = new Mock<IGetClosedConcernsCaseSummariesByTrust>();
+	        var ownerId = "93865";
+	        var data = new List<ClosedCaseSummaryResponse>();
+
+	        mockService.Setup(a => a.Execute(ownerId))
+		        .ReturnsAsync(data);
+
+	        var controller = new ConcernsCaseController(
+		        mockLogger.Object,
+		        null, 
+		        null, 
+		        null,
+		        null,
+		        null,
+		        null,
+		        null,
+		        null,
+		        mockService.Object
+	        );
+	        var response = await controller.GetClosedSummariesByTrust(ownerId);
+  
+	        var expected = new ApiResponseV2<ClosedCaseSummaryResponse>(data, null);
+	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
     }
 }

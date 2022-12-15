@@ -4,19 +4,13 @@ using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 
@@ -41,7 +35,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			mockClaimsServicePrincipal.Setup(s => s.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(userName);
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(userName, caseUrn)).ReturnsAsync(caseModel);
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(caseUrn)).ReturnsAsync(caseModel);
 
 			var sut = SetupEditCaseHistoryPageModel(mockCaseModelService.Object, mockClaimsServicePrincipal.Object, mockLogger.Object);
 			sut.CaseUrn = caseUrn;
@@ -59,8 +53,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				Assert.That(sut.ReferrerUrl, Is.EqualTo($"/case/{caseUrn}/management"));
 			});
 
-			mockCaseModelService.Verify(c =>
-				c.GetCaseByUrn(It.IsAny<string>(), caseUrn), Times.Once);
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(caseUrn), Times.Once);
 
 			mockLogger.VerifyLogInformationWasCalled();
 			mockLogger.VerifyLogErrorWasNotCalled();
@@ -81,7 +74,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			mockClaimsServicePrincipal.Setup(s => s.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(userName);
 
-			mockCaseModelService.Setup(c => c.GetCaseByUrn(userName, caseUrn)).ReturnsAsync(caseModel);
+			mockCaseModelService.Setup(c => c.GetCaseByUrn(caseUrn)).ReturnsAsync(caseModel);
 
 			var sut = SetupEditCaseHistoryPageModel(mockCaseModelService.Object, mockClaimsServicePrincipal.Object, mockLogger.Object);
 
@@ -101,8 +94,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 					Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 			});
 
-			mockCaseModelService.Verify(c =>
-				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
 
 			mockLogger.VerifyLogInformationWasCalled();
 			mockLogger.VerifyLogErrorWasCalled();
@@ -136,7 +128,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			});
 
 			mockCaseModelService.Verify(c =>
-				c.GetCaseByUrn(It.IsAny<string>(), It.IsAny<long>()), Times.Never);
+				c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
 
 			mockLogger.VerifyLogInformationWasCalled();
 			mockLogger.VerifyLogErrorWasCalled();

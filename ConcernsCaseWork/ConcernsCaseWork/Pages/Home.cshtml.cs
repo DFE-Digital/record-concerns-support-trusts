@@ -3,14 +3,12 @@ using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
-using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Teams;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using ConcernsCaseWork.Service.Status;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,27 +21,26 @@ namespace ConcernsCaseWork.Pages
 	{
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private readonly IUserStateCachedService _userStateCache;
-		private readonly ICaseModelService _caseModelService;
+		private readonly ICaseSummaryService _caseSummaryService;
 		private readonly ILogger<HomePageModel> _logger;
 		private readonly ITeamsModelService _teamsService;
-		private readonly IRbacManager _rbacManager;
 
-		public IList<HomeModel> CasesActive { get; private set; }
-		public IList<HomeModel> CasesTeamActive { get; private set; }
+		public List<ActiveCaseSummaryModel> ActiveTeamCases { get; private set; }
+		
+		public List<ActiveCaseSummaryModel> ActiveCases { get; private set; }
 
-		public HomePageModel(ICaseModelService caseModelService,
-			IRbacManager rbacManager,
+		public HomePageModel(
 			ILogger<HomePageModel> logger,
 			ITeamsModelService teamsService,
+			ICaseSummaryService caseSummaryService,
 			IUserStateCachedService userStateCache,
 			IClaimsPrincipalHelper claimsPrincipalHelper)
 		{
-			_caseModelService = Guard.Against.Null(caseModelService);
-			_rbacManager = Guard.Against.Null(rbacManager);
 			_logger = Guard.Against.Null(logger);
 			_teamsService = Guard.Against.Null(teamsService);
 			_userStateCache = Guard.Against.Null(userStateCache);
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
+			_caseSummaryService = Guard.Against.Null(caseSummaryService);
 		}
 
 		public async Task OnGetAsync()
@@ -57,20 +54,20 @@ namespace ConcernsCaseWork.Pages
 			// And get all live cases for each caseworker
 
 			// cases belonging to this user
-			Task<IList<HomeModel>> currentUserLiveCases = _caseModelService.GetCasesByCaseworkerAndStatus(GetUserName(), StatusEnum.Live);
+			var currentUserActiveCases = _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName());
 
 			// get any team members defined
 			var team = await _teamsService.GetCaseworkTeam(GetUserName());
 
-			var liveCasesTeamLeadTask = _caseModelService.GetCasesByCaseworkerAndStatus(team.TeamMembers, StatusEnum.Live);
+			var teamActiveCases = _caseSummaryService.GetActiveCaseSummariesByCaseworkers(team.TeamMembers);
 
 			var recordUserSignedTask = RecordUserSignIn(team);
 
-			await Task.WhenAll(currentUserLiveCases, liveCasesTeamLeadTask, recordUserSignedTask);
+			await Task.WhenAll(currentUserActiveCases, teamActiveCases, recordUserSignedTask);
 
 			// Assign responses to UI public properties
-			CasesActive = currentUserLiveCases.Result;
-			CasesTeamActive = liveCasesTeamLeadTask.Result;
+			ActiveCases = currentUserActiveCases.Result;
+			ActiveTeamCases = teamActiveCases.Result;
 		}
 
 		/// <summary>

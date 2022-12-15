@@ -255,8 +255,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			// assert
 			mockFinancialPlanModelService.Verify(f => f.PostFinancialPlanByCaseUrn(It.Is<CreateFinancialPlanModel>(fpm =>
 					fpm.DatePlanRequested == new DateTime(year, month, day) &&
-					fpm.DateViablePlanReceived == null), 
-				It.IsAny<string>()), Times.Once);
+					fpm.DateViablePlanReceived == null)), Times.Once);
 			
 			Assert.IsNotNull(pageResponse);
 			Assert.IsNull(pageModel.TempData["Error.Message"]);
@@ -299,8 +298,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			mockFinancialPlanModelService.Verify(f => 
 				f.PostFinancialPlanByCaseUrn(It.Is<CreateFinancialPlanModel>(fpm => 
 						fpm.DateViablePlanReceived == new DateTime(year, month, day) &&
-				        fpm.DatePlanRequested == null), 
-				It.IsAny<string>()), Times.Once);
+				        fpm.DatePlanRequested == null)), Times.Once);
 			
 			Assert.IsNotNull(pageResponse);
 			Assert.IsNull(pageModel.TempData["Error.Message"]);

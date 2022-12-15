@@ -38,7 +38,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 			var sut = builder.BuildSut();
 			var expectedResult = true;
 
-			var result = sut.NewCaseActionAllowed(It.IsAny<long>(), It.IsAny<string>()).Result;
+			var result = sut.NewCaseActionAllowed(It.IsAny<long>()).Result;
 
 			Assert.That(result, Is.EqualTo(expectedResult));
 		}
