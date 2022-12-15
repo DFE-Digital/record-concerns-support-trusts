@@ -21,7 +21,7 @@ jobs:
         working-directory: ./ConcernsCaseWork/ConcernsCaseWork.CypressTests
         run: | 
           npm install
-          npm run cy:run -- --env url="https://s184d01-amsd-amsd-app.bluetree-2785dd40.westeurope.azurecontainerapps.io" username="${{secrets.USERNAME}}" password="${{secrets.PASSWORD}}" api="https://s184d01-amsd-amsd-app.bluetree-2785dd40.westeurope.azurecontainerapps.io" apiKey="${{secrets.TRAMS_API_KEY}}"
+          npm run cy:run -- --env url="https://s184d01-amsd-amsd-app.bluetree-2785dd40.westeurope.azurecontainerapps.io",username="${{secrets.USERNAME}}",password="${{secrets.PASSWORD}}",api="https://s184d01-amsd-amsd-app.bluetree-2785dd40.westeurope.azurecontainerapps.io",apiKey="${{secrets.TRAMS_API_KEY}}"
       - uses: actions/upload-artifact@v1
         if: failure()
         with:
