@@ -16,6 +16,12 @@ module.exports.azureLogin = async function azureLogin(url, username, password) {
           ]
     });
 
+    const usernameExists = username.length > 0;
+    const passwordExists = password.length > 0;
+    console.log("Username exists " + usernameExists);
+    console.log("Password exists " + passwordExists);
+
+
     const [page] = await browser.pages();
 
     console.log("Navigating to Azure AD")
@@ -33,7 +39,6 @@ module.exports.azureLogin = async function azureLogin(url, username, password) {
     const passwordSelector = "input[name=passwd]";
     const timeout = 2000;
 
-    console.log("Waiting for element selector");
     await page.waitForSelector(usernameSelector, { visible: true });
     await page.waitForTimeout(timeout);
 
