@@ -118,7 +118,6 @@ namespace ConcernsCaseWork.Services.Records
 				currentDate, 
 				currentDate, 
 				currentDate, 
-				currentDate, 
 				createRecordModel.Type, 
 				createRecordModel.SubType, 
 				createRecordModel.TypeDisplay, 
