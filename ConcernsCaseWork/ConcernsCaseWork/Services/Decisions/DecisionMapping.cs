@@ -46,7 +46,9 @@ namespace ConcernsCaseWork.Services.Decisions
 				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/addOrUpdate/{decisionResponse.DecisionId}",
 				BackLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management",
 				Outcome = ToViewDecisionOutcomeModel(decisionResponse),
-				IsEditable = decisionResponse.IsEditable
+				IsEditable = decisionResponse.IsEditable,
+				CreatedDate = DateTimeHelper.ParseToDisplayDate(decisionResponse.CreatedAt),
+				ClosedDate = decisionResponse.ClosedAt.HasValue ? DateTimeHelper.ParseToDisplayDate(decisionResponse.ClosedAt.Value) : string.Empty
 			};
 
 			return result;

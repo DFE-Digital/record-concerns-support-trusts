@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Extensions;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace ConcernsCaseWork.Tests.Extensions
@@ -69,6 +70,19 @@ namespace ConcernsCaseWork.Tests.Extensions
 			Assert.That(actualTypeUrn, Is.EqualTo(expectedTypeUrn));
 			Assert.That(actualType, Is.EqualTo(expectedType));
 			Assert.That(actualSubType, Is.EqualTo(expectedSubType));
+		}
+
+
+		[TestCase("mark1.wilson@education.gov.uk", "Mark1 Wilson")]
+		[TestCase("test22.USER@education.gov.uk", "Test22 User")]
+		[TestCase("valid.user@education.gov.uk", "Valid User")]
+		[TestCase("concernscasework@education.gov.uk", "Concernscasework")]
+		[TestCase("concerns-casework@education.gov.uk", "Concerns-casework")]
+		public void WhenFromEmailToFullName_ReturnsExpected(string email, string expectedName)
+		{
+			var result = email.FromEmailToFullName();
+
+			result.Should().Be(expectedName);
 		}
 	}
 }
