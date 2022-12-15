@@ -33,18 +33,21 @@ namespace ConcernsCaseWork.Tests.Models.CaseActions
 			);
 			
 			// assert
-			Assert.That(srmaModel.Id, Is.EqualTo(1));
-			Assert.That(srmaModel.CaseUrn, Is.EqualTo(1));
-			Assert.That(srmaModel.DateOffered, Is.EqualTo(date));
-			Assert.That(srmaModel.DateAccepted, Is.EqualTo(date));
-			Assert.That(srmaModel.DateReportSentToTrust, Is.EqualTo(date));
-			Assert.That(srmaModel.DateVisitStart, Is.EqualTo(date));
-			Assert.That(srmaModel.DateVisitEnd, Is.EqualTo(date));
-			Assert.That(srmaModel.Status, Is.EqualTo(status));
-			Assert.That(srmaModel.Notes, Is.EqualTo(notes));
-			Assert.That(srmaModel.Reason, Is.EqualTo(reason));
-			Assert.That(srmaModel.CreatedAt, Is.EqualTo(date));
-			Assert.That(srmaModel.UpdatedAt, Is.EqualTo(date));
+			Assert.Multiple(() =>
+			{
+				Assert.That(srmaModel.Id, Is.EqualTo(1));
+				Assert.That(srmaModel.CaseUrn, Is.EqualTo(1));
+				Assert.That(srmaModel.DateOffered, Is.EqualTo(date));
+				Assert.That(srmaModel.DateAccepted, Is.EqualTo(date));
+				Assert.That(srmaModel.DateReportSentToTrust, Is.EqualTo(date));
+				Assert.That(srmaModel.DateVisitStart, Is.EqualTo(date));
+				Assert.That(srmaModel.DateVisitEnd, Is.EqualTo(date));
+				Assert.That(srmaModel.Status, Is.EqualTo(status));
+				Assert.That(srmaModel.Notes, Is.EqualTo(notes));
+				Assert.That(srmaModel.Reason, Is.EqualTo(reason));
+				Assert.That(srmaModel.CreatedAt, Is.EqualTo(date));
+				Assert.That(srmaModel.UpdatedAt, Is.EqualTo(date));
+			});
 		}
 	}
 }
