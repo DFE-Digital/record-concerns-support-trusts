@@ -27,13 +27,6 @@ module.exports.azureLogin = async function azureLogin(url, username, password) {
     console.log("Navigating to Azure AD")
     await page.goto(url);
 
-    await page.waitForTimeout(10000);
-
-    await page.screenshot(
-    {
-        path: join(__dirname, "../screenshots/capture.jpg")
-    });
-
     const submitSelector = "input[type=submit]";
     const usernameSelector = "input[name=loginfmt]";
     const passwordSelector = "input[name=passwd]";
@@ -50,6 +43,13 @@ module.exports.azureLogin = async function azureLogin(url, username, password) {
     await page.waitForTimeout(timeout);
     await page.type(passwordSelector, password, { delay: 50 });
     await page.click(submitSelector);
+
+    await page.waitForTimeout(10000);
+
+    await page.screenshot(
+    {
+        path: join(__dirname, "../screenshots/capture.jpg")
+    });
 
     console.log("Selecting stay signed in")
     // // Stay signed in
