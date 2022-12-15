@@ -22,7 +22,7 @@ module.exports.azureLogin = async function azureLogin(url, username, password) {
     const submitSelector = "input[type=submit]";
     const usernameSelector = "input[name=loginfmt]";
     const passwordSelector = "input[name=passwd]";
-    const timeout = 2000;
+    const timeout = 10000;
 
     console.log("Entering username");
     await page.waitForSelector(usernameSelector);
