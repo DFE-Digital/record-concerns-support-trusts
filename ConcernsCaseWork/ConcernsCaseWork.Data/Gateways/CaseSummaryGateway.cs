@@ -71,7 +71,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			.Select (cases => new ClosedCaseSummaryVm
 			{	
 				CaseUrn = cases.Urn,
-				ClosedAt = cases.ClosedAt,
+				ClosedAt = cases.ClosedAt.Value,
 				CreatedAt = cases.CreatedAt,
 				CreatedBy = cases.CreatedBy,
 				StatusName = cases.Status.Name,
@@ -100,7 +100,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			.Select (cases => new ClosedCaseSummaryVm
 			{	
 				CaseUrn = cases.Urn,
-				ClosedAt = cases.ClosedAt,
+				ClosedAt = cases.ClosedAt.Value,
 				CreatedAt = cases.CreatedAt,
 				CreatedBy = cases.CreatedBy,
 				StatusName = cases.Status.Name,

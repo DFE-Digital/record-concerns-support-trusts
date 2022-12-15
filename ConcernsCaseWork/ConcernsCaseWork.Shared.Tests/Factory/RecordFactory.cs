@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		public static CreateRecordDto BuildCreateRecordDto(long caseUrn = 1, long typeId = 1, long ratingId = 1, long meansOfReferralId = 1)
 		{
 			var currentDate = DateTimeOffset.Now;
-			return new CreateRecordDto(currentDate, currentDate, currentDate, currentDate,
+			return new CreateRecordDto(currentDate, currentDate, currentDate, 
 				Fixture.Create<string>(), Fixture.Create<string>(), Fixture.Create<string>(), caseUrn, typeId, ratingId,
 				1, meansOfReferralId);
 		}

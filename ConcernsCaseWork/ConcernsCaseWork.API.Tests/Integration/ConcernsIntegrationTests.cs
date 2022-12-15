@@ -405,7 +405,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 .With(r => r.RatingId = concernsRating.Id)
                 .With(r => r.MeansOfReferralId = concernsMeansOfReferral.Id).Build();
 
-            var expectedConcernsRecord = ConcernsRecordFactory.Create(updateRequest, currentConcernsCase, concernsType, concernsRating, concernsMeansOfReferral);
+            var expectedConcernsRecord = ConcernsRecordFactory.Update(currentConcernsRecord, updateRequest, currentConcernsCase, concernsType, concernsRating, concernsMeansOfReferral);
             expectedConcernsRecord.Id = currentRecordId;
             var expectedContent = ConcernsRecordResponseFactory.Create(expectedConcernsRecord);
 
@@ -434,7 +434,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 CreatedAt = _randomGenerator.DateTime(),
                 UpdatedAt = _randomGenerator.DateTime(),
                 ReviewAt = _randomGenerator.DateTime(),
-                ClosedAt = _randomGenerator.DateTime(),
                 CreatedBy = _randomGenerator.NextString(3, 10),
                 Description = _randomGenerator.NextString(3, 10),
                 CrmEnquiry = _randomGenerator.NextString(3, 10),
@@ -471,7 +470,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 CreatedAt = _randomGenerator.DateTime(),
                 UpdatedAt = _randomGenerator.DateTime(),
                 ReviewAt = _randomGenerator.DateTime(),
-                ClosedAt = _randomGenerator.DateTime(),
                 Name = _randomGenerator.NextString(3, 10),
                 Description = _randomGenerator.NextString(3, 10),
                 Reason = _randomGenerator.NextString(3, 10),
@@ -487,12 +485,13 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
             var updateRequest = Builder<ConcernsRecordRequest>.CreateNew()
                 .With(r => r.CaseUrn = concernsCase.Urn)
+                .With(r => r.ClosedAt = null)
                 .With(r => r.TypeId = concernsType.Id)
                 .With(r => r.RatingId = concernsRating.Id)
                 .With(r => r.MeansOfReferralId = updateMeansOfReferral?.Id)
                 .Build();
 
-            var expectedConcernsRecord = ConcernsRecordFactory.Create(updateRequest, concernsCase, concernsType, concernsRating, updateMeansOfReferral ?? currentMeansOfReferral);
+            var expectedConcernsRecord = ConcernsRecordFactory.Update(currentConcernsRecord, updateRequest, concernsCase, concernsType, concernsRating, updateMeansOfReferral ?? currentMeansOfReferral);
             expectedConcernsRecord.Id = currentRecordId;
             var expectedContent = ConcernsRecordResponseFactory.Create(expectedConcernsRecord);
 
