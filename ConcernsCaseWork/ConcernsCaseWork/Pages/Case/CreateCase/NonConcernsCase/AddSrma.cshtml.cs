@@ -124,7 +124,8 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 				Status,
 				Notes,
 				SRMAReasonOffered.Unknown,
-				DateTime.Now
+				DateTime.Now,
+				User.Identity.Name
 				);
 
 			return srma;

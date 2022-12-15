@@ -16,6 +16,7 @@ namespace ConcernsCaseWork.Tests.Models.CaseActions
 			var notes = "Test Data";
 			var status = SRMAStatus.Unknown;
 			var reason = SRMAReasonOffered.Unknown;
+			var createdBy = "Test User";
 
 			var srmaModel = new SRMAModel(
 				1,
@@ -28,7 +29,8 @@ namespace ConcernsCaseWork.Tests.Models.CaseActions
 				status, 
 				notes, 
 				reason,
-				date
+				date,
+				createdBy
 			);
 			
 			// assert
@@ -42,6 +44,7 @@ namespace ConcernsCaseWork.Tests.Models.CaseActions
 			Assert.That(srmaModel.Status, Is.EqualTo(status));
 			Assert.That(srmaModel.Notes, Is.EqualTo(notes));
 			Assert.That(srmaModel.Reason, Is.EqualTo(reason));
+			Assert.That(srmaModel.CreatedBy, Is.EqualTo(createdBy));
 		}
 	}
 }

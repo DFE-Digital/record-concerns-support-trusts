@@ -10,6 +10,7 @@ namespace ConcernsCaseWork.API.RequestModels.CaseActions.SRMA
 		[Required]
         public int CaseUrn { get; set; }
 		public DateTime CreatedAt { get; set; }
+		public string CreatedBy { get; set; }
 		public DateTime DateOffered { get; set; }
 		public DateTime? DateAccepted { get; set; }
 		public DateTime? DateReportSentToTrust { get; set; }
