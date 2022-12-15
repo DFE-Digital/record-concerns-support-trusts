@@ -1,21 +1,14 @@
-﻿using ConcernsCaseWork.API.Contracts.Enums;
-using ConcernsCaseWork.CoreTypes;
-using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
-using ConcernsCaseWork.Redis.Cases;
 using ConcernsCaseWork.Redis.Models;
-using ConcernsCaseWork.Redis.Ratings;
-using ConcernsCaseWork.Redis.Records;
 using ConcernsCaseWork.Redis.Status;
-using ConcernsCaseWork.Redis.Trusts;
-using ConcernsCaseWork.Redis.Types;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Records;
 using ConcernsCaseWork.Service.Status;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,127 +16,28 @@ namespace ConcernsCaseWork.Services.Cases
 {
 	public sealed class CaseModelService : ICaseModelService
 	{
-		private readonly IRatingCachedService _ratingCachedService;
 		private readonly IStatusCachedService _statusCachedService;
-		private readonly IRecordCachedService _recordCachedService;
-		private readonly ITrustCachedService _trustCachedService;
-		private readonly ICaseCachedService _caseCachedService;
-		private readonly ITypeCachedService _typeCachedService;
-		private readonly ICaseSearchService _caseSearchService;
+		private readonly IRecordService _recordService;
+		private readonly ICaseService _caseService;
 		private readonly ILogger<CaseModelService> _logger;
 
-		public CaseModelService(ICaseCachedService caseCachedService, 
-			ITrustCachedService trustCachedService, 
-			IRecordCachedService recordCachedService, 
-			IRatingCachedService ratingCachedService,
-			ITypeCachedService typeCachedService,
+		public CaseModelService(
+			IRecordService recordService, 
 			IStatusCachedService statusCachedService,
-			ICaseSearchService caseSearchService,
+			ICaseService caseService,
 			ILogger<CaseModelService> logger)
 		{
 			_statusCachedService = statusCachedService;
-			_ratingCachedService = ratingCachedService;
-			_recordCachedService = recordCachedService;
-			_trustCachedService = trustCachedService;
-			_caseCachedService = caseCachedService;
-			_typeCachedService = typeCachedService;
-			_caseSearchService = caseSearchService;
+			_recordService = recordService;
+			_caseService = caseService;
 			_logger = logger;
 		}
 
-		public async Task<IList<HomeModel>> GetCasesByCaseworkerAndStatus(IList<string> caseworkers, StatusEnum statusEnum)
+		public async Task<CaseModel> GetCaseByUrn(long urn)
 		{
 			try
 			{
-				var allCaseworkerCasesTasks = caseworkers.Select(caseworker => GetCasesByCaseworkerAndStatus(caseworker, statusEnum)).ToList();
-				await Task.WhenAll(allCaseworkerCasesTasks);
-				
-				return allCaseworkerCasesTasks.SelectMany(homeModelTask => homeModelTask.Result).ToList();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("CaseModelService::GetCasesByCaseworkerAndStatus exception {Message}", ex.Message);
-			}
-
-			return Array.Empty<HomeModel>();
-		}
-
-		public async Task<IList<HomeModel>> GetCasesByCaseworkerAndStatus(string caseworker, StatusEnum statusEnum)
-		{
-			try
-			{
-				_logger.LogInformation("CaseModelService::GetCasesByCaseworkerAndStatus {Caseworker} - {StatusEnum}", caseworker, statusEnum);
-				
-				// Fetch Status
-				var statusDto = await _statusCachedService.GetStatusByName(statusEnum.ToString());
-
-				// Get from Academies API all cases by caseworker and status
-				var casesDto = await _caseCachedService.GetCasesByCaseworkerAndStatus(caseworker, statusDto.Id);
-
-				// Return if cases are empty
-				if (!casesDto.Any()) return Array.Empty<HomeModel>();
-				
-				// Fetch rag rating
-				var ratingsDto = await _ratingCachedService.GetRatings();
-									
-				// Fetch types
-				var typesDto = await _typeCachedService.GetTypes();
-				
-				// Fetch statuses
-				var statusesDto = await _statusCachedService.GetStatuses();
-				
-				// Execute in parallel each case contained logic
-				var listHomeModel = casesDto.Select(caseDto =>
-				{
-					var trustDetailsTask = _trustCachedService.GetTrustByUkPrn(caseDto.TrustUkPrn);
-					var recordsTask = _recordCachedService.GetRecordsByCaseUrn(caseDto.CreatedBy, caseDto.Urn);
-
-					Task.WaitAll(trustDetailsTask, recordsTask);
-
-					var trustDetailsDto = trustDetailsTask.Result;
-					var recordsDto = recordsTask.Result;
-
-					// Map records dto to model
-					var recordsModel = RecordMapping.MapDtoToModel(recordsDto, typesDto, ratingsDto, statusesDto);
-					
-					// Case rating
-					var caseRatingModel = RatingMapping.MapDtoToModel(ratingsDto, caseDto.RatingId);
-					var trustName = TrustMapping.FetchTrustName(trustDetailsDto);
-					
-					return new HomeModel(
-						caseDto.Urn.ToString(), 
-						caseDto.CreatedAt,
-						caseDto.UpdatedAt,
-						caseDto.ClosedAt,
-						caseDto.ReviewAt,
-						caseDto.CreatedBy,
-						trustName,
-						caseRatingModel,
-						recordsModel
-					);
-				}).ToList();
-				
-				return statusEnum switch
-				{
-					StatusEnum.Live => listHomeModel.OrderByDescending(homeModel => homeModel.UpdatedUnixTime).ToList(),
-					StatusEnum.Monitoring => listHomeModel.OrderBy(homeModel => homeModel.ReviewUnixTime).ToList(),
-					StatusEnum.Close => listHomeModel.OrderByDescending(homeModel => homeModel.ClosedUnixTime).ToList(),
-					_ => throw new ArgumentOutOfRangeException(nameof(statusEnum), statusEnum, $"Invalid status enum {statusEnum}")
-				};
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("CaseModelService::GetCasesByCaseworkerAndStatus exception {Message}", ex.Message);
-			}
-
-			return Array.Empty<HomeModel>();
-		}
-
-		public async Task<CaseModel> GetCaseByUrn(string caseworker, long urn)
-		{
-			try
-			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(caseworker, urn);
+				var caseDto = await _caseService.GetCaseByUrn(urn);
 				var caseModel = CaseMapping.Map(caseDto);
 				
 				return caseModel;
@@ -156,62 +50,16 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 		}
 
-		/// <summary>
-		/// Use case get all cases by trust ukprn
-		/// Trust overview scenario where service displays open and close cases by trust
-		/// </summary>
-		/// <param name="trustUkprn"></param>
-		/// <returns></returns>
-		public async Task<IList<TrustCasesModel>> GetCasesByTrustUkprn(string trustUkprn)
-		{
-			try
-			{
-				var casesDto = await _caseSearchService.GetCasesByCaseTrustSearch(new CaseTrustSearch(trustUkprn));
-				if (!casesDto.Any()) return Array.Empty<TrustCasesModel>();
-
-				// Fetch statuses
-				var statuses = await _statusCachedService.GetStatuses();
-				
-				// Fetch monitoring status
-				var monitoringStatus = await _statusCachedService.GetStatusByName(StatusEnum.Monitoring.ToString());
-
-				// Filter cases that are for monitoring
-				casesDto = casesDto.Where(c => c.StatusId.CompareTo(monitoringStatus.Id) != 0).ToList();
-				
-				// Fetch records by case urn
-				var recordsTasks = casesDto.Select(c => _recordCachedService.GetRecordsByCaseUrn(c.CreatedBy, c.Urn)).ToList();
-				await Task.WhenAll(recordsTasks);
-			
-				// Get results from tasks
-				var recordsDto = recordsTasks.SelectMany(recordTask => recordTask.Result).ToList();
-				if (!recordsDto.Any()) return Array.Empty<TrustCasesModel>();
-				
-				// Fetch Ratings
-				var ratingsDto = await _ratingCachedService.GetRatings();
-
-				// Fetch Types
-				var typesDto = await _typeCachedService.GetTypes();
-
-				return CaseMapping.MapTrustCases(recordsDto, ratingsDto, typesDto, casesDto, statuses);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError("CaseModelService::GetCasesByTrustUkprn exception {Message}", ex.Message);
-				
-				throw;
-			}
-		}
-
 		public async Task PatchClosure(PatchCaseModel patchCaseModel)
 		{
 			try
 			{
 				var statusDto = await _statusCachedService.GetStatusByName(patchCaseModel.StatusName);
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 				
 				caseDto = CaseMapping.MapClosure(patchCaseModel, caseDto, statusDto);
 				
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -226,11 +74,11 @@ namespace ConcernsCaseWork.Services.Cases
 			try
 			{
 				// Fetch Rating
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 
 				caseDto = CaseMapping.MapRating(patchCaseModel, caseDto);
 				
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -245,12 +93,12 @@ namespace ConcernsCaseWork.Services.Cases
 			try
 			{
 				// Fetch Records
-				var recordsDto = await _recordCachedService.GetRecordsByCaseUrn(patchRecordModel.CreatedBy, patchRecordModel.CaseUrn);
+				var recordsDto = await _recordService.GetRecordsByCaseUrn(patchRecordModel.CaseUrn);
 
 				var recordDto = recordsDto.FirstOrDefault(r => r.Id.CompareTo(patchRecordModel.Id) == 0);
 				recordDto = RecordMapping.MapRating(patchRecordModel, recordDto);
 
-				await _recordCachedService.PatchRecordById(recordDto, patchRecordModel.CreatedBy);
+				await _recordService.PatchRecordById(recordDto);
 			}
 			catch (Exception ex)
 			{
@@ -264,11 +112,11 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 				
 				caseDto = CaseMapping.MapDirectionOfTravel(patchCaseModel, caseDto);
 
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -282,12 +130,12 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 				
 				// Patch source dtos
 				caseDto = CaseMapping.MapIssue(patchCaseModel, caseDto);
 
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -301,12 +149,12 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 				
 				// Patch source dtos
 				caseDto = CaseMapping.MapCaseAim(patchCaseModel, caseDto);
 
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -320,12 +168,12 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 				
 				// Patch source dtos
 				caseDto = CaseMapping.MapCurrentStatus(patchCaseModel, caseDto);
 
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -339,12 +187,12 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 				
 				// Patch source dtos
 				caseDto = CaseMapping.MapDeEscalationPoint(patchCaseModel, caseDto);
 
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -358,12 +206,12 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(patchCaseModel.CreatedBy, patchCaseModel.Urn);
+				var caseDto = await _caseService.GetCaseByUrn(patchCaseModel.Urn);
 				
 				// Patch source dtos
 				caseDto = CaseMapping.MapNextSteps(patchCaseModel, caseDto);
 
-				await _caseCachedService.PatchCaseByUrn(caseDto);
+				await _caseService.PatchCaseByUrn(caseDto);
 			}
 			catch (Exception ex)
 			{
@@ -377,15 +225,15 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(userName, caseUrn);
+				var caseDto = await _caseService.GetCaseByUrn(caseUrn);
 				
 				var newCaseDto = caseDto with { UpdatedAt = DateTimeOffset.Now, CaseHistory = caseHistory };
 
-				await _caseCachedService.PatchCaseByUrn(newCaseDto);
+				await _caseService.PatchCaseByUrn(newCaseDto);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("CaseModelService::PatchNextSteps exception {Message}", ex.Message);
+				_logger.LogError("CaseModelService::PatchCaseHistory exception {Message}", ex.Message);
 
 				throw;
 			}
@@ -395,11 +243,11 @@ namespace ConcernsCaseWork.Services.Cases
 		{
 			try
 			{
-				var caseDto = await _caseCachedService.GetCaseByUrn(userName, caseUrn);
+				var caseDto = await _caseService.GetCaseByUrn(caseUrn);
 				
 				var newCaseDto = caseDto with { UpdatedAt = DateTimeOffset.Now, Territory = territory };
 
-				await _caseCachedService.PatchCaseByUrn(newCaseDto);
+				await _caseService.PatchCaseByUrn(newCaseDto);
 			}
 			catch (Exception ex)
 			{
@@ -418,7 +266,7 @@ namespace ConcernsCaseWork.Services.Cases
 
 				// Create a case
 				createCaseModel.StatusId = statusDto.Id;
-				var newCase = await _caseCachedService.PostCase(CaseMapping.Map(createCaseModel));
+				var newCase = await _caseService.PostCase(CaseMapping.Map(createCaseModel));
 
 				// Create records
 				var currentDate = DateTimeOffset.Now;
@@ -438,7 +286,7 @@ namespace ConcernsCaseWork.Services.Cases
 						statusDto.Id,
 						recordModel.MeansOfReferralId);
 					
-					return _recordCachedService.PostRecordByCaseUrn(createRecordDto, createCaseModel.CreatedBy);
+					return _recordService.PostRecordByCaseUrn(createRecordDto);
 				});
 
 				await Task.WhenAll(recordTasks);

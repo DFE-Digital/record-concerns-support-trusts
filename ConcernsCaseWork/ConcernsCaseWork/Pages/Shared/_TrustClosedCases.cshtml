@@ -1,53 +1,91 @@
-﻿@model IList<ConcernsCaseWork.Models.TrustCasesModel>
-@using ConcernsCaseWork.Service.Status;
-
-@{
-    var closedCases = Model?.Where(c => c.Status == StatusEnum.Close) ?? Enumerable.Empty<ConcernsCaseWork.Models.TrustCasesModel>();
-}
+﻿@model IList<ConcernsCaseWork.Models.ClosedCaseSummaryModel>
 
 <thead class="govuk-table__head">
     <tr class="govuk-table__row tr__large">
         <th class="govuk-table__header govuk-table__cell__cases" scope="col">
             Case ID
         </th>
-        <th class="govuk-table__header govuk-table__cell__cases" scope="col">
-            Concern Types
+	    <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_6" scope="col">
+		    Date created
+	    </th>
+        <th class="govuk-table__header govuk-table__cell__cases govuk-table__header__width_6" scope="col">
+            Date closed
         </th>
         <th class="govuk-table__header govuk-table__cell__cases" scope="col">
-            Date closed
+            Contents
+        </th>
+        <th class="govuk-table__header govuk-table__cell__cases" scope="col">
+            Assigned to
         </th>
     </tr>
 </thead>
 
 <tbody class="govuk-table__body">
-    @if (!closedCases.Any())
+    @if (!Model.Any())
     {
         <tr class="govuk-table__row tr__large">
             <td class="govuk-table__cell__cases govuk-oneline-row">
-                <span>There are no closed cases available.</span>
+                <span>There are no active cases available.</span>
             </td>
         </tr>
     }
-    else
-    {
-        foreach (var trustCase in closedCases)
-        {
-            <tr class="govuk-table__row tr__large">
-                <td class="govuk-table__cell">
-                    <a class="govuk-link" href="/case/@trustCase.CaseUrn/closed">@trustCase.CaseUrn</a>
+	else
+	{
+		foreach (var closedCase in Model)
+		{
+			<tr class="govuk-table__row tr__large">
+				<td class="govuk-table__cell">
+					<a class="govuk-link" href="/case/@closedCase.CaseUrn/closed">@closedCase.CaseUrn</a>
+				</td>
+				<td class="govuk-table__cell">
+					@closedCase.CreatedAt
+				</td>
+				<td class="govuk-table__cell">
+                	@closedCase.ClosedAt
                 </td>
-                <td class="govuk-table__cell">
-                    @foreach (var record in trustCase.RecordsModel)
-                    {
-                        <div class="govuk-!-padding-bottom-1">
-                            @record.TypeModel.TypeDisplay
-                        </div>
-                    }
-                </td>
-                <td class="govuk-table__cell">
-                    @trustCase.ClosedAt
-                </td>
-            </tr>
-        }
-    }
+
+			@if (!closedCase.ClosedConcerns.Any() && !closedCase.ClosedActionsAndDecisions.Any())
+			{
+				<td class="govuk-table__cell">
+					<span>There are no active concerns, actions or decisions.</span>
+				</td>
+			}
+
+			@if (!closedCase.ClosedConcerns.Any() && closedCase.ClosedActionsAndDecisions.Any())
+			{
+				<td class="govuk-table__cell">
+					<div class="concerns-secondary-text-colour">Actions and decisions</div>
+					<ul class="govuk-list govuk-list--bullet">
+						@foreach (var action in closedCase.ClosedActionsAndDecisions)
+						{
+							<li>
+								@action
+							</li>
+						}
+					</ul>
+					@if (closedCase.IsMoreActionsAndDecisions)
+					{
+						<span>and more</span>
+					}
+				</td>
+			}
+								
+			@if (closedCase.ClosedConcerns.Any())
+			{
+				<td class="govuk-table__cell">
+					<div class="concerns-secondary-text-colour">Concerns</div>
+					<ul class="govuk-list govuk-list--bullet">
+						@foreach (var concern in closedCase.ClosedConcerns)
+						{
+							<li>@concern</li>
+						}
+					</ul>
+				</td>
+			}
+				<td class="govuk-table__cell">
+            		@closedCase.CreatedBy
+            	</td>
+			</tr>
+		}
+	}
 </tbody>

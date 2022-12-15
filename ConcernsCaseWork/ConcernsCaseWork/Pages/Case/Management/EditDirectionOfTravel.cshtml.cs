@@ -93,7 +93,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				if (caseUrn == 0)
 					throw new Exception("Case urn cannot be 0");
 				
-				CaseModel = await _caseModelService.GetCaseByUrn(User.Identity.Name, caseUrn);
+				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
 				CaseModel.PreviousUrl = url;
 				
 				return Page();

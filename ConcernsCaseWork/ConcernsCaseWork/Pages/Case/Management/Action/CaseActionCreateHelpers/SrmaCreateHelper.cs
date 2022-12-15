@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers
 			return caseActionEnum == CaseActionEnum.Srma;
 		}
 
-		public override async Task<bool> NewCaseActionAllowed(long caseUrn, string caseWorker)
+		public override async Task<bool> NewCaseActionAllowed(long caseUrn)
 		{
 			var srmas = await _srmaService.GetSRMAsForCase(caseUrn);
 

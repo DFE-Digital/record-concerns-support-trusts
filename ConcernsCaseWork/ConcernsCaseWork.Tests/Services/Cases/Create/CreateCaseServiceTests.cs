@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Redis.Cases;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Ratings;
 using ConcernsCaseWork.Redis.Status;
@@ -32,7 +31,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
 			var mockRatingCachedService = new Mock<IRatingCachedService>();
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 
 			var ratingDto = new RatingDto("N/A", DateTimeOffset.Now, DateTimeOffset.Now, 1);
@@ -60,7 +59,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				.Setup(s => s.StoreData(userName, It.IsAny<UserState>()))
 				.Verifiable();
 
-			mockCaseCachedService
+			mockCaseService
 				.Setup(s => s.PostCase(It.IsAny<CreateCaseDto>()))
 				.ReturnsAsync(
 					new CaseDto
@@ -91,7 +90,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				mockLogger.Object,
 				mockUserStateCachedService.Object,
 				mockStatusCachedService.Object,
-				mockCaseCachedService.Object,
+				mockCaseService.Object,
 				mockRatingCachedService.Object,
 				mockSrmaService.Object
 				);
@@ -102,7 +101,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			// assert
 			Assert.That(createdCaseUrn, Is.EqualTo(expectedNewCaseUrn));
 			
-			mockCaseCachedService
+			mockCaseService
 				.Verify(s => s.PostCase(It.Is<CreateCaseDto>(c => 
 						c.Issue == null
                       && c.CaseAim == null
@@ -137,7 +136,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
 			var mockRatingCachedService = new Mock<IRatingCachedService>();
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 
 			var ratingDto = new RatingDto("N/A", DateTimeOffset.Now, DateTimeOffset.Now, 1);
@@ -164,7 +163,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				mockLogger.Object,
 				mockUserStateCachedService.Object,
 				mockStatusCachedService.Object,
-				mockCaseCachedService.Object,
+				mockCaseService.Object,
 				mockRatingCachedService.Object,
 				mockSrmaService.Object);
 
@@ -191,7 +190,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
 			var mockRatingCachedService = new Mock<IRatingCachedService>();
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 
 			var ratingDto = new RatingDto("N/A", DateTimeOffset.Now, DateTimeOffset.Now, 1);
@@ -219,7 +218,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				.Setup(s => s.StoreData(userName, It.IsAny<UserState>()))
 				.Verifiable();
 
-			mockCaseCachedService
+			mockCaseService
 				.Setup(s => s.PostCase(It.IsAny<CreateCaseDto>()))
 				.ReturnsAsync(
 					new CaseDto
@@ -252,7 +251,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				mockLogger.Object,
 				mockUserStateCachedService.Object,
 				mockStatusCachedService.Object,
-				mockCaseCachedService.Object,
+				mockCaseService.Object,
 				mockRatingCachedService.Object,
 				mockSrmaService.Object
 				);
@@ -263,6 +262,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			var result = Assert.ThrowsAsync<Exception>(() => createCaseService.CreateNonConcernsCase(userName, srmaModel));
 
 			// assert
+			Assert.That(result, Is.Not.Null);
 			Assert.That(result.Message, Is.EqualTo("some error happened"));
 
 			mockLogger.VerifyLogInformationWasCalled(Times.Exactly(2) ,"CreateNonConcernsCase");
@@ -280,7 +280,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			var mockLogger = new Mock<ILogger<CreateCaseService>>();
 			var mockRatingCachedService = new Mock<IRatingCachedService>();
 			var mockStatusCachedService = new Mock<IStatusCachedService>();
-			var mockCaseCachedService = new Mock<ICaseCachedService>();
+			var mockCaseService = new Mock<ICaseService>();
 			var mockSrmaService = new Mock<ISRMAService>();
 
 			var ratingDto = new RatingDto("N/A", DateTimeOffset.Now, DateTimeOffset.Now, 1);
@@ -308,7 +308,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				.Setup(s => s.StoreData(userName, It.IsAny<UserState>()))
 				.Verifiable();
 
-			mockCaseCachedService
+			mockCaseService
 				.Setup(s => s.PostCase(It.IsAny<CreateCaseDto>()))
 				.ReturnsAsync(
 					new CaseDto
@@ -339,7 +339,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				mockLogger.Object,
 				mockUserStateCachedService.Object,
 				mockStatusCachedService.Object,
-				mockCaseCachedService.Object,
+				mockCaseService.Object,
 				mockRatingCachedService.Object,
 				mockSrmaService.Object
 				);
@@ -358,7 +358,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 			
 			mockSrmaService.Verify(s => s.SaveSRMA(srmaModel), Times.Once);
 			
-			mockCaseCachedService
+			mockCaseService
 				.Verify(s => s.PostCase(It.Is<CreateCaseDto>(c => 
 						c.Issue == null
 						&& c.CaseAim == null
