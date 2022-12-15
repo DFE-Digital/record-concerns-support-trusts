@@ -3,6 +3,7 @@ using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.Concerns.TeamCasework;
 using ConcernsCaseWork.API.UseCases;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 
 namespace ConcernsCaseWork.API.Controllers
@@ -67,7 +68,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpPut("owners/{ownerId}")]
         [MapToApiVersion("2.0")]
         public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseworkTeamResponse>>> Put(
-            string ownerId,
+	        [MaxLength(300)]string ownerId,
             [FromBody] ConcernsCaseworkTeamUpdateRequest updateModel,
             CancellationToken cancellationToken)
         {
