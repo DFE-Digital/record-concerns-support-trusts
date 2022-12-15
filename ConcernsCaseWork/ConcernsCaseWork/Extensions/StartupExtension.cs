@@ -54,6 +54,7 @@ using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -135,6 +136,9 @@ namespace ConcernsCaseWork.Extensions
 
 		public static void AddInternalServices(this IServiceCollection services)
 		{
+			services.AddSingleton<IAuthorizationHandler, HeaderRequirementHandler>();
+			services.AddSingleton<IAuthorizationHandler, ClaimsRequirementHandler>();
+
 			// Web application services
 			services.AddScoped<ICaseModelService, CaseModelService>();
 			services.AddScoped<ITrustModelService, TrustModelService>();

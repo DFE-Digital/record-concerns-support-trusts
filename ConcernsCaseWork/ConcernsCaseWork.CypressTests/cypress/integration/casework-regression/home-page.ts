@@ -1,15 +1,9 @@
+import { Logger } from "../../common/logger";
+
 describe("Home page tests", () => {
-	before(() => {
-		cy.login();
-	});
-
-	after(function () {
-		cy.clearLocalStorage();
-		cy.clearCookies();
-	});
-
-	afterEach(() => {
-		cy.storeSessionData();
+	beforeEach(() => {
+		// cy.login();
+		cy.visit("/");
 	});
 
 	it("Create, Find and Closed Case buttons should be displayed", () => {
