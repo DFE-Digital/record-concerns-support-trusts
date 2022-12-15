@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpPut("owners/{ownerId}")]
         [MapToApiVersion("2.0")]
         public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseworkTeamResponse>>> Put(
-	        [MaxLength(300)]string ownerId,
+	        [StringLength(300)]string ownerId,
             [FromBody] ConcernsCaseworkTeamUpdateRequest updateModel,
             CancellationToken cancellationToken)
         {

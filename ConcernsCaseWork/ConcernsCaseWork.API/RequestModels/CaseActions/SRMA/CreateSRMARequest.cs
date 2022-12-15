@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.API.RequestModels.CaseActions.SRMA
         public int CaseUrn { get; set; }
 		public DateTime CreatedAt { get; set; }
 		
-		[MaxLength(300)]
+		[StringLength(300)]
 		public string CreatedBy { get; set; }
 		public DateTime DateOffered { get; set; }
 		public DateTime? DateAccepted { get; set; }
@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.API.RequestModels.CaseActions.SRMA
 		public DateTime? DateVisitEnd { get; set; }
 		public SRMAStatus Status { get; set; }
 		
-		[MaxLength(2000)]
+		[StringLength(2000)]
 		public string Notes { get; set; }
 		public SRMAReasonOffered? Reason { get; set; }
 	}

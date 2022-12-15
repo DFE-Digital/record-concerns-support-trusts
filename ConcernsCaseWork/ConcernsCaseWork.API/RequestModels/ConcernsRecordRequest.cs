@@ -9,13 +9,13 @@ namespace ConcernsCaseWork.API.RequestModels
         public DateTime ReviewAt { get; set; }
         public DateTime? ClosedAt { get; set; }
         
-        [MaxLength(300)]
+        [StringLength(300)]
         public string Name { get; set; }
         
-        [MaxLength(300)]
+        [StringLength(300)]
         public string Description { get; set; }
         
-        [MaxLength(300)]
+        [StringLength(300)]
         public string Reason { get; set; }
         public int CaseUrn { get; set; }
         public int TypeId { get; set; }

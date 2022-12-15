@@ -44,10 +44,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
         {
             var createRequest = Builder<ConcernCaseRequest>.CreateNew()
                 .With(c => c.CreatedBy = "12345")
-                .With(c => c.Description = "Description for case")
-                .With(c => c.CrmEnquiry = "5678")
+                .With(c => c.Description = "")
+                .With(c => c.CrmEnquiry = "")
                 .With(c => c.TrustUkprn = "100223")
-                .With(c => c.ReasonAtReview = "We have concerns")
+                .With(c => c.ReasonAtReview = "")
                 .With(c => c.DeEscalation = new DateTime(2022,04,01))
                 .With(c => c.Issue = "Here is the issue")
                 .With(c => c.CurrentStatus = "Case status")
@@ -242,10 +242,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 ReviewAt = _randomGenerator.DateTime(),
                 ClosedAt = _randomGenerator.DateTime(),
                 CreatedBy = _randomGenerator.NextString(3, 10),
-                Description = _randomGenerator.NextString(3, 10),
-                CrmEnquiry = _randomGenerator.NextString(3, 10),
+                Description = "", // not used
+                CrmEnquiry = "", // not used
                 TrustUkprn = _randomGenerator.NextString(3, 10),
-                ReasonAtReview = _randomGenerator.NextString(3, 10),
+                ReasonAtReview = "", // not used
                 DeEscalation = _randomGenerator.DateTime(),
                 Issue = _randomGenerator.NextString(3, 10),
                 CurrentStatus = _randomGenerator.NextString(3, 10),
@@ -264,6 +264,9 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var urn = currentConcernsCase.Urn;
 
             var updateRequest = Builder<ConcernCaseRequest>.CreateNew()
+	            .With(cr => cr.Description = "")
+	            .With(cr => cr.CrmEnquiry = "")
+	            .With(cr => cr.ReasonAtReview = "")
                 .With(cr => cr.RatingId = 1).Build();
 
             var expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
