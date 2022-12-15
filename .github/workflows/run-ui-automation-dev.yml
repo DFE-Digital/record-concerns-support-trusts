@@ -1,0 +1,29 @@
+name: Run UI automation
+
+on:
+  push:
+    branches:
+    - develop
+  pull_request:
+    branches: [ develop ]
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  run-ui-automation:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup and run the cypress tests
+        working-directory: ./ConcernsCaseWork/ConcernsCaseWork.CypressTests
+        run: | 
+          npm install
+          npm run cy:run -- --env url="https://s184d01-amsd-amsd-app.bluetree-2785dd40.westeurope.azurecontainerapps.io" username="${{secrets.USERNAME}}" password="${secrets.PASSWORD}"
+      - uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+           name: screenshots
+           path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots
