@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
 namespace ConcernsCaseWork.Data.Migrations
 {
-    public partial class kpis : Migration
+	public partial class AddKPItriggers : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -741,7 +739,19 @@ namespace ConcernsCaseWork.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+	        migrationBuilder.Sql(@"
+				DROP TRIGGER [concerns].[tgrConcernsCase_Insert_Update] 
+				DROP TRIGGER [concerns].[tgrConcern_Insert_Update]
+				DROP TRIGGER [concerns].[tgrFinancialPlanCaseAction_Insert_Update]
+				DROP TRIGGER [concerns].[tgrNoticeToImproveCaseAction_Insert_Update]
+				DROP TRIGGER [concerns].[tgrNTIUnderConsiderationCaseAction_Insert_Update]
+				DROP TRIGGER [concerns].[tgrNTIWarningLetterCaseAction_Insert_Update]
+				DROP TRIGGER [concerns].[tgrSRMACaseAction_Insert_Update]
 
+				DROP TABLE [concerns].[kpi-CaseAction]
+				DROP TABLE [concerns].[kpi-Case]
+				DROP TABLE [concerns].[kpi-Concern]
+			");
         }
     }
 }
