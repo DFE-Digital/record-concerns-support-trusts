@@ -127,7 +127,8 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 				Notes,
 				SRMAReasonOffered.Unknown,
 				now,
-				now
+				now,
+				User.Identity.Name
 				);
 
 			return srma;

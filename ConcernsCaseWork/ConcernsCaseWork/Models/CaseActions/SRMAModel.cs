@@ -13,14 +13,14 @@ namespace ConcernsCaseWork.Models.CaseActions
 		public SRMAStatus Status { get; set; }
 		public string Notes { get; set; }
 		public SRMAReasonOffered Reason { get; set; }
+		public string CreatedBy { get; set; }
 
 		public SRMAModel()
 		{
 		}
-
-		public SRMAModel(long id, long caseUrn, DateTime dateOffered, DateTime? dateAccepted, DateTime? dateReportSentToTrust, DateTime? dateVisitStart, DateTime? dateVisitEnd,
-			SRMAStatus status, string notes, SRMAReasonOffered reason, DateTime createdAt, DateTime updatedAt) : this() =>
-		(Id, CaseUrn, DateOffered, DateAccepted, DateReportSentToTrust, DateVisitStart, DateVisitEnd, Status, Notes, Reason, CreatedAt, UpdatedAt) =
-		(id, caseUrn, dateOffered, dateAccepted, dateReportSentToTrust, dateVisitStart, dateVisitEnd, status, notes, reason, createdAt, updatedAt);
+		
+		public SRMAModel(long id, long caseUrn, DateTime dateOffered, DateTime? dateAccepted, DateTime? dateReportSentToTrust, DateTime? dateVisitStart, DateTime? dateVisitEnd, SRMAStatus status, string notes, SRMAReasonOffered reason, DateTime createdAt, string createdBy) : this() =>
+		(Id, CaseUrn, DateOffered, DateAccepted, DateReportSentToTrust, DateVisitStart, DateVisitEnd, Status, Notes, Reason, CreatedAt, CreatedBy) =
+		(id, caseUrn, dateOffered, dateAccepted, dateReportSentToTrust, dateVisitStart, dateVisitEnd, status, notes, reason, createdAt, createdBy);
 	}
 }

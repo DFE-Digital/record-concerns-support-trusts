@@ -30,7 +30,9 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 DateAccepted = dtNow.AddDays(25),
                 Status = SRMAStatus.TrustConsidering,
                 Reason = SRMAReasonOffered.SchoolsFinancialSupportAndOversight,
-                Notes = "notes notes notes"
+                Notes = "notes notes notes",
+                CreatedBy = "Test User"
+
             };
 
             var createSRMARequest = Builder<CreateSRMARequest>.CreateNew()
@@ -45,6 +47,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 .With(r => r.Reason = details.Reason)
                 .With(r => r.Notes = details.Notes)
                 .With(r => r.CreatedAt = details.CreatedAt)
+                .With(r => r.CreatedBy = details.CreatedBy)
                 .Build();
 
             var expectedSRMAModel = new SRMACase
@@ -59,7 +62,8 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 StatusId = (int)details.Status,
                 ReasonId = (int)details.Reason,
                 Notes = details.Notes,
-                CreatedAt = details.CreatedAt
+                CreatedAt = details.CreatedAt,
+                CreatedBy = details.CreatedBy
             };
 
             var response = SRMAFactory.CreateDBModel(createSRMARequest);

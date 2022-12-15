@@ -146,6 +146,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
 			var dateOffered = DateTimeHelper.ParseExact(dtString);
 			var now = DateTime.Now;
+			var createdBy = User.Identity.Name;
 
 			var srma = new SRMAModel(
 				0,
@@ -159,7 +160,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				notes,
 				SRMAReasonOffered.Unknown,
 				now,
-				now
+				now,
+				createdBy
 				);
 
 			return srma;
