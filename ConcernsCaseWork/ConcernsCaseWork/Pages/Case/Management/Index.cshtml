@@ -204,7 +204,7 @@
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table-case-details__header">Caseworker</th>
                         <td class="govuk-table__cell">
-                            @Model.CaseModel.CreatedBy
+                            @Model.CaseModel.CreatedBy.FromEmailToFullName()
                         </td>
                         <td class="govuk-table__cell govuk-table__header__right"></td>
                     </tr>
