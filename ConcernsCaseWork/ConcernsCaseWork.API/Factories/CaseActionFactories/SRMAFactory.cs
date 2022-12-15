@@ -21,7 +21,8 @@ namespace ConcernsCaseWork.API.Factories.CaseActionFactories
                 DateAccepted = createSRMARequest.DateAccepted,
                 StatusId = (int)createSRMARequest.Status,
                 ReasonId = (int?)(createSRMARequest.Reason == SRMAReasonOffered.Unknown ? null : createSRMARequest.Reason),
-                Notes = createSRMARequest.Notes
+                Notes = createSRMARequest.Notes,
+                CreatedBy = createSRMARequest.CreatedBy
             };
         }
 

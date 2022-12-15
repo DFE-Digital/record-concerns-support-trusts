@@ -105,7 +105,8 @@ public class SrmaMappingTests
 			testData.Status,
 			testData.Notes,
 			testData.SRMAReasonOffered,
-			testData.CreatedAt)
+			testData.CreatedAt,
+			testData.CreatedBy)
 		{
 			UpdatedAt = testData.UpdatedAt,
 			ClosedAt = testData.ClosedAt,
