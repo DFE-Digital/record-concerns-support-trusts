@@ -1,3 +1,4 @@
+using ConcernsCaseWork.Data.Conventions;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
@@ -60,6 +61,11 @@ namespace ConcernsCaseWork.Data
 	        {
 		        optionsBuilder.UseConcernsSqlServer("Data Source=127.0.0.1;Initial Catalog=local_trams_test_db;persist security info=True;User id=sa; Password=StrongPassword905");
 	        }
+        }
+        
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+	        configurationBuilder.Conventions.Add(_ => new BlankTriggerAddingConvention());
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
