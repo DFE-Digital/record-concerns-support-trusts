@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 using System.Net.Http;
+using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Fixtures
 {
@@ -34,7 +35,8 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 
 							builder.ConfigureAppConfiguration((context, config) =>
 							{
-								config.AddJsonFile(configPath);
+								config.AddJsonFile(configPath)
+									.AddEnvironmentVariables();
 
 								testConfig = config.Build();
 							});
@@ -42,6 +44,10 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 
 					Client = _application.CreateClient();
 					Client.DefaultRequestHeaders.Add("ApiKey", "app-key");
+
+					var envDb = Environment.GetEnvironmentVariable("ConnectionStrings:DefaultConnection");
+
+					Console.WriteLine($"Enviroment provided {envDb}");
 
 					var connection = testConfig.GetSection("ConnectionStrings")["DefaultConnection"];
 
@@ -65,5 +71,15 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 			_application.Dispose();
 			Client.Dispose();
 		}
+	}
+
+	[CollectionDefinition(ApiTestCollectionName)]
+	public class ApiTestCollection : ICollectionFixture<ApiTestFixture>
+	{
+		public const string ApiTestCollectionName = "ApiTestCollection";
+
+		// This class has no code, and is never created. Its purpose is simply
+		// to be the place to apply [CollectionDefinition] and all the
+		// ICollectionFixture<> interfaces.
 	}
 }

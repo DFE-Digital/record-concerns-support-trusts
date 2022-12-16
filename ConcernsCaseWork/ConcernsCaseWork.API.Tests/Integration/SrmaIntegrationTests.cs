@@ -10,7 +10,8 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
-	public class SrmaIntegrationTests : IClassFixture<ApiTestFixture>
+	[Collection(ApiTestCollection.ApiTestCollectionName)]
+	public class SrmaIntegrationTests
 	{
 		private Fixture _fixture;
 		private HttpClient _client;
