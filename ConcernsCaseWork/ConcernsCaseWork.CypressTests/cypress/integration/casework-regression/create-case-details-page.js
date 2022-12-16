@@ -33,8 +33,9 @@ describe("The correct items are visible on the details page", () => {
 
 
 		Logger.Log("Editing Territory and validation")
+		cy.wait(1000);
 		cy.get('#issue').clear().type("ABC");
-		cy.get('button[data-prevent-double-click^="true"]').click();
+		cy.getByTestId("create-case-button").click();
 		
 		editTrustPage.hasTerritory("Midlands and West - South West");
 		editTrustPage.editTerritory();
