@@ -1,19 +1,96 @@
 ﻿@page
+@model ConcernsCaseWork.Pages.CookiesPageModel
 @{
-	ViewData["Title"] = "Cookies";
+    ViewData["Title"] = "Cookies";
 }
 
 <div class="govuk-width-container">
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds-from-desktop">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
             <h1 class="govuk-heading-l govuk-!-margin-bottom-9">Cookies on Record concerns and support for trusts</h1>
-			<p class="govuk-body">This service puts small files (known as ‘cookies’) onto your computer, phone or tablet to collect information about how you use the service.</p>
-			<h2 class="govuk-heading-m">What cookies we use</h2>
-			<p class="govuk-body">We only use essential cookies.</p>
-			<h3 class="govuk-heading-s">A cookie to give you access to your account</h3>
-			<p class="govuk-body">"Concerns_cookie_session" is a cookie that reminds the service who you are when you’re signed in.</p>
-			<p class="govuk-body">It enables you to access the information in your account, such as your open projects.</p>
-			<p class="govuk-body">It expires when you sign out, or after 6 hours on the service.</p>
-		</div>
-	</div>
+            <p class="govuk-body">This service puts small files (known as ‘cookies’) onto your computer, phone or tablet to collect information about how you use the service.</p>
+            <p class="govuk-body">We use cookies to make this site work and collect information about how you use our service.</p>
+            <h2 class="govuk-heading-s">Essential cookies</h2>
+            <p class="govuk-body">Essential cookies keep your information secure while you use this service. We do not need to as your permission to use them.</p>
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Name</th>
+                        <th scope="col" class="govuk-table__header">Purpose</th>
+                        <th scope="col" class="govuk-table__header">Expires</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">ConcernsCasework.Login</th>
+                        <td class="govuk-table__cell">Who you are when you are signed in</td>
+                        <td class="govuk-table__cell">Signout or 6 hours</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">ConcernsCasework.Consent</th>
+                        <td class="govuk-table__cell">Whether you have consented to analytic cookies, can be changed below</td>
+                        <td class="govuk-table__cell">6 months</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2 class="govuk-heading-s">Analytics cookies (optional)</h2>
+            <p class="govuk-body">
+                We use a tool called Hotjar to collect information about how you use the Record concerns and support for trusts system. We do this to help make sure the system is meeting the needs of its users and to help us make improvements.
+            </p>
+            <p class="govuk-body">
+                Hotjar stores information about:
+            </p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>
+                    whether you’ve visited before
+                </li>
+                <li>
+                    your unique user identity
+                </li>
+                <li>
+                    the pages you visit on Record concerns and support for trusts
+                </li>
+                <li>
+                    how long you spend on each page
+                </li>
+                <li>
+                    how you got to the service
+                </li>
+                <li>
+                    what you click on while you’re visiting the service
+                </li>
+            </ul>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h2 class="govuk-heading-l">Change your cookie settings</h2>
+                    <form method="post" novalidate>
+                        <div class="govuk-form-group">
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                    Do you want to accept analytics cookies?
+                                </legend>
+                                <div class="govuk-radios" data-module="govuk-radios">
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="analytics-cookies-yes" data-testid="analytics-cookies-yes" name="HasConsented" type="radio" value="true" checked="@Model.HasConsented">
+                                        <label class="govuk-label govuk-radios__label" for="analytics-cookies-yes">
+                                            Yes
+                                        </label>
+                                    </div>
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="analytics-cookies-no" data-testid="analytics-cookies-no" name="HasConsented" type="radio" value="false" checked="@(!Model.HasConsented)">
+                                        <label class="govuk-label govuk-radios__label" for="analytics-cookies-no">
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <button class="govuk-button" data-testid="save-cookie-preferences-button" data-module="govuk-button">
+                            Save cookie settings
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
