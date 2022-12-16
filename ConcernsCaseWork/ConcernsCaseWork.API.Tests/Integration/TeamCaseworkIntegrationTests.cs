@@ -10,7 +10,8 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
-	public class TeamCaseworkIntegrationTests : IClassFixture<ApiTestFixture>
+	[Collection(ApiTestCollection.ApiTestCollectionName)]
+	public class TeamCaseworkIntegrationTests
 	{
 		private Fixture _fixture;
 		private HttpClient _client;

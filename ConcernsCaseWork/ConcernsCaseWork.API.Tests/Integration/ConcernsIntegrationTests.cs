@@ -19,7 +19,8 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
-	public class ConcernsIntegrationTests : IClassFixture<ApiTestFixture>, IDisposable
+	[Collection(ApiTestCollection.ApiTestCollectionName)]
+	public class ConcernsIntegrationTests : IDisposable
     {
         private readonly HttpClient _client;
         private readonly Fixture _autoFixture;

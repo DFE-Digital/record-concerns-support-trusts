@@ -10,7 +10,8 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
-	public class NtiUnderConsiderationIntegrationTests : IClassFixture<ApiTestFixture>
+	[Collection(ApiTestCollection.ApiTestCollectionName)]
+	public class NtiUnderConsiderationIntegrationTests
 	{
 		private Fixture _fixture;
 		private HttpClient _client;

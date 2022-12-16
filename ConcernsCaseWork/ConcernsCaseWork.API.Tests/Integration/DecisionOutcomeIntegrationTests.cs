@@ -18,7 +18,8 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
-	public class DecisionOutcomeIntegrationTests : IClassFixture<ApiTestFixture>
+	[Collection(ApiTestCollection.ApiTestCollectionName)]
+	public class DecisionOutcomeIntegrationTests
 	{
 		private HttpClient _client;
 		private Fixture _autoFixture;
