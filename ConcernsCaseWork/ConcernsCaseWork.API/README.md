@@ -1,5 +1,5 @@
-﻿# Concerns Casework API
-This API services all requests for data specific to Concerns Casework. 
+﻿# Record concerns and support for trusts API
+This API services all requests for data specific to Record concerns and support for trusts. 
 
 ## Run the API locally
 

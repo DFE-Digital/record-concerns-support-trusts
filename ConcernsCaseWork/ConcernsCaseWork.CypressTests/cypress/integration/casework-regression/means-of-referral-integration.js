@@ -28,9 +28,9 @@ describe("The correct items are visible on the details page", () => {
         });
         cy.selectConcernType();
 
-        cy.task(LogTask, "Setting the Overall Risk and Means of Referral");
+        cy.task(LogTask, "Setting the Overall Risk and Means of Referral and selecting Territory");
         cy.selectRiskToTrust();
-
+        cy.selectTerritory();
         cy.get(".govuk-summary-list__value").then(($el) => {
         });
         cy.validateCreateCaseDetailsComponent();

@@ -18,6 +18,7 @@ describe("User edits the trust risk on existing case", () => {
 
 		cy.selectConcernType();
 		cy.selectRiskToTrust();
+		cy.selectTerritory();
 		cy.enterConcernDetails();
 
 		cy.task(LogTask, "Navigating to the risk rating page");
