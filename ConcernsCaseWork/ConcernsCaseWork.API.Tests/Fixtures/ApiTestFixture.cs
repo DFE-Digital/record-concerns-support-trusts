@@ -1,10 +1,7 @@
-﻿using AutoFixture;
-using ConcernsCaseWork.Data;
+﻿using ConcernsCaseWork.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Net.Http;
