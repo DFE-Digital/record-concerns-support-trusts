@@ -33,6 +33,7 @@ describe("User adds subsequent Concern to a case", () => {
 		CreateCaseConcernsPage.getNextStepBtn().click();
 
 		cy.selectRiskToTrust();
+		cy.selectTerritory();
 
 		cy.enterConcernDetails();
 
