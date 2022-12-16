@@ -56,3 +56,18 @@ jobs:
           dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity normal --collect:"XPlat Code Coverage" --filter "FullyQualifiedName!~ConcernsCaseWork.API.Tests.Integration&FullyQualifiedName!~ConcernsCaseWork.Integration.Tests"
           reportgenerator -reports:./**/coverage.cobertura.xml -targetdir:./ConcernsCaseWork/CoverageReport -reporttypes:SonarQube
           dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+
+ - name: Cypress Run
+        uses: cypress-io/github-action@v4
+         with:
+          wait-on: 'https://localhost'
+          wait-on-timeout: 124
+          record: true
+        env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         CYPRESS_url: "https://localhost"
+         CYPRESS_username: ${{ secrets.USERNAME }}
+         CYPRESS_ password: ${{ secrets.PASSWORD }}
+         CYPRESS_ api: "https://localhost"
+         
