@@ -16,6 +16,8 @@ using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using System.Net;
 using Xunit;
+using ConcernsCaseWork.API.RequestModels.CaseActions.NTI.UnderConsideration;
+using ConcernsCaseWork.API.Tests.Helpers;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
@@ -84,7 +86,34 @@ namespace ConcernsCaseWork.API.Tests.Integration
             createdCase.Description.Should().BeEquivalentTo(createRequest.Description);
         }
 
-        [Fact]
+		[Fact]
+		public async Task When_PostInvalidConcernCaseRequest_Returns_ValidationErrors()
+		{
+			var request = _fixture.Create<ConcernCaseRequest>();
+			request.TrustUkprn = new string('a', 51);
+			request.Issue = new string('a', 2001);
+			request.CaseAim = new string('a', 1001);
+			request.CurrentStatus = new string('a', 4001);
+			request.DeEscalationPoint = new string('a', 1001);
+			request.NextSteps = new string('a', 4001);
+			request.CaseHistory = new string('a', 4001);
+			request.DirectionOfTravel = new string('a', 101);
+
+			var result = await _client.PostAsync($"/v2/concerns-cases", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+			var error = await result.Content.ReadAsStringAsync();
+			error.Should().Contain("The field TrustUkprn must be a string with a maximum length of 50.");
+			error.Should().Contain("The field Issue must be a string with a maximum length of 2000.");
+			error.Should().Contain("The field CaseAim must be a string with a maximum length of 1000.");
+			error.Should().Contain("The field CurrentStatus must be a string with a maximum length of 4000.");
+			error.Should().Contain("The field DeEscalationPoint must be a string with a maximum length of 1000.");
+			error.Should().Contain("The field NextSteps must be a string with a maximum length of 4000.");
+			error.Should().Contain("The field CaseHistory must be a string with a maximum length of 4000.");
+			error.Should().Contain("The field DirectionOfTravel must be a string with a maximum length of 100.");
+		}
+
+		[Fact]
         public async Task CanGetConcernCaseByUrn()
         {
             SetupConcernsCaseTestData("mockUkprn");
@@ -286,7 +315,34 @@ namespace ConcernsCaseWork.API.Tests.Integration
             content.Data.Should().BeEquivalentTo(expectedContent);
         }
 
-        [Fact]
+		[Fact]
+		public async Task When_PatchInvalidConcernCaseRequest_Returns_ValidationErrors()
+		{
+			var request = _fixture.Create<ConcernCaseRequest>();
+			request.TrustUkprn = new string('a', 51);
+			request.Issue = new string('a', 2001);
+			request.CaseAim = new string('a', 1001);
+			request.CurrentStatus = new string('a', 4001);
+			request.DeEscalationPoint = new string('a', 1001);
+			request.NextSteps = new string('a', 4001);
+			request.CaseHistory = new string('a', 4001);
+			request.DirectionOfTravel = new string('a', 101);
+
+			var result = await _client.PatchAsync($"/v2/concerns-cases/1", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+			var error = await result.Content.ReadAsStringAsync();
+			error.Should().Contain("The field TrustUkprn must be a string with a maximum length of 50.");
+			error.Should().Contain("The field Issue must be a string with a maximum length of 2000.");
+			error.Should().Contain("The field CaseAim must be a string with a maximum length of 1000.");
+			error.Should().Contain("The field CurrentStatus must be a string with a maximum length of 4000.");
+			error.Should().Contain("The field DeEscalationPoint must be a string with a maximum length of 1000.");
+			error.Should().Contain("The field NextSteps must be a string with a maximum length of 4000.");
+			error.Should().Contain("The field CaseHistory must be a string with a maximum length of 4000.");
+			error.Should().Contain("The field DirectionOfTravel must be a string with a maximum length of 100.");
+		}
+
+		[Fact]
         public async Task CanCreateNewConcernRecord()
         {
 	        var caseRating = _dbContext.ConcernsRatings.First();
@@ -350,7 +406,24 @@ namespace ConcernsCaseWork.API.Tests.Integration
             result.Should().BeEquivalentTo(expected);
         }
 
-        [Fact]
+		[Fact]
+		public async Task When_PostInvalidConcernsRecordRequest_Returns_ValidationErrors()
+		{
+			var request = _fixture.Create<ConcernsRecordRequest>();
+			request.Name = new string('a', 301);
+			request.Description = new string('a', 301);
+			request.Reason = new string('a', 301);
+
+			var result = await _client.PostAsync($"/v2/concerns-records", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+			var error = await result.Content.ReadAsStringAsync();
+			error.Should().Contain("The field Name must be a string with a maximum length of 300.");
+			error.Should().Contain("The field Description must be a string with a maximum length of 300.");
+			error.Should().Contain("The field Reason must be a string with a maximum length of 300.");
+		}
+
+		[Fact]
         public async Task UpdateConcernsRecord_ShouldReturnTheUpdatedConcernsRecord()
         {
             var currentConcernsCase = new ConcernsCase
@@ -425,7 +498,24 @@ namespace ConcernsCaseWork.API.Tests.Integration
             content.Data.Should().BeEquivalentTo(expectedContent);
         }
 
-        [Theory]
+		[Fact]
+		public async Task When_PatchInvalidConcernsRecordRequest_Returns_ValidationErrors()
+		{
+			var request = _fixture.Create<ConcernsRecordRequest>();
+			request.Name = new string('a', 301);
+			request.Description = new string('a', 301);
+			request.Reason = new string('a', 301);
+
+			var result = await _client.PatchAsync($"/v2/concerns-records/1", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+			var error = await result.Content.ReadAsStringAsync();
+			error.Should().Contain("The field Name must be a string with a maximum length of 300.");
+			error.Should().Contain("The field Description must be a string with a maximum length of 300.");
+			error.Should().Contain("The field Reason must be a string with a maximum length of 300.");
+		}
+
+		[Theory]
         [InlineData(true, true)]
         [InlineData(false, false)]
         [InlineData(true, false)]
