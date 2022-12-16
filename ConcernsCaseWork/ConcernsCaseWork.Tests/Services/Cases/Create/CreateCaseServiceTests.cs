@@ -105,7 +105,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				.Verify(s => s.PostCase(It.Is<CreateCaseDto>(c => 
 						c.Issue == null
                       && c.CaseAim == null
-                      && c.ClosedAt == DateTimeOffset.MinValue
                       && c.CreatedAt >= createdAndUpdatedDate
                       && c.CreatedBy == userName
                       && c.CrmEnquiry == null
@@ -362,7 +361,6 @@ namespace ConcernsCaseWork.Tests.Services.Cases.Create
 				.Verify(s => s.PostCase(It.Is<CreateCaseDto>(c => 
 						c.Issue == null
 						&& c.CaseAim == null
-						&& c.ClosedAt == DateTimeOffset.MinValue
 						&& c.CreatedAt >= createdAndUpdatedDate
 						&& c.CreatedBy == userName
 						&& c.CrmEnquiry == null

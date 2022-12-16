@@ -3,17 +3,18 @@
 
 @using ConcernsCaseWork.Extensions
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using ConcernsCaseWork.Helpers;
 
 @{
     ViewData["Title"] = "NTI Warning Letter";
-	ViewData["BackButtonLabel"] = "Back to case";
-	ViewData["BackButtonLink"] = $"/case/{@RouteData.Values["urn"]}/management";
+    ViewData["BackButtonLabel"] = "Back to case";
+    ViewData["BackButtonLink"] = $"/case/{@RouteData.Values["urn"]}/management";
 }
 
 @section BeforeMain {
-	<div class="govuk-width-container">
-		<partial name="_BackLink"/>
-	</div>
+    <div class="govuk-width-container">
+        <partial name="_BackLink" />
+    </div>
 }
 
 <div class="govuk-width-container">
@@ -48,6 +49,30 @@
             </thead>
             <tbody class="govuk-table__body">
 
+                @* Date Opened *@
+                @{
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table-case-details__header">Date NTI: Warning letter opened</th>
+                        <td class="govuk-table__cell">
+                            <div class="govuk-!-padding-bottom-2">
+                                <span>@DateTimeHelper.ParseToDisplayDate(Model.NtiWarningLetterModel.CreatedAt)</span>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+                @if (Model.NtiWarningLetterModel.ClosedAt.HasValue)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table-case-details__header">Date NTI: Warning letter completed</th>
+                        <td class="govuk-table__cell">
+                            <div class="govuk-!-padding-bottom-2">
+                                <span>@DateTimeHelper.ParseToDisplayDate(Model.NtiWarningLetterModel.ClosedAt.Value)</span>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
                 @* Status *@
                 <tr class="govuk-table__row">
                     @if (Model.NtiWarningLetterModel.ClosedAt == null)
@@ -71,20 +96,20 @@
                 </tr>
 
 
-				@* Date sent *@
-	            <tr class="govuk-table__row">
-		            <th scope="row" class="govuk-table-case-details__header">Date sent</th>
-		            <td class="govuk-table__cell">
-			            @if(@Model.NtiWarningLetterModel.SentDate.HasValue)
-			            {
-				            RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiWarningLetterModel.SentDate.Value));
-			            }
-			            else
-			            {
-				            RenderEmptyLabel();
-			            }
-		            </td>
-	            </tr>
+                @* Date sent *@
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table-case-details__header">Date sent</th>
+                    <td class="govuk-table__cell">
+                        @if (@Model.NtiWarningLetterModel.SentDate.HasValue)
+                        {
+                            RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiWarningLetterModel.SentDate.Value));
+                        }
+                        else
+                        {
+                            RenderEmptyLabel();
+                        }
+                    </td>
+                </tr>
 
                 @* Reasons *@
                 <tr class="govuk-table__row">

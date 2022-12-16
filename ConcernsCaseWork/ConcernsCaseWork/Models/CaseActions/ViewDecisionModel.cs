@@ -18,5 +18,7 @@ namespace ConcernsCaseWork.Models.CaseActions
 		public string BackLink { get; set; }
 		public ViewDecisionOutcomeModel? Outcome { get; set; }
 		public bool IsEditable { get; set; }
+		public string CreatedDate { get; set; }
+		public string ClosedDate { get; set; }
 	}
 }
