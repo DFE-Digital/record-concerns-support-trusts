@@ -68,6 +68,6 @@ jobs:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
          CYPRESS_url: "https://localhost"
          CYPRESS_username: ${{ secrets.USERNAME }}
-         CYPRESS_ password: ${{ secrets.PASSWORD }}
-         CYPRESS_ api: "https://localhost"
+         CYPRESS_password: ${{ secrets.PASSWORD }}
+         CYPRESS_api: "https://localhost"
          
