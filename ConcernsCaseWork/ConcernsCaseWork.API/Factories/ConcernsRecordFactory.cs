@@ -17,7 +17,6 @@ namespace ConcernsCaseWork.API.Factories
                 CreatedAt = concernsRecordRequest.CreatedAt,
                 UpdatedAt = concernsRecordRequest.UpdatedAt,
                 ReviewAt = concernsRecordRequest.ReviewAt,
-                ClosedAt = concernsRecordRequest.ClosedAt,
                 Name = concernsRecordRequest.Name,
                 Description = concernsRecordRequest.Description,
                 Reason = concernsRecordRequest.Reason,
@@ -48,9 +47,12 @@ namespace ConcernsCaseWork.API.Factories
             original.ConcernsType = concernsType;
             original.ConcernsRating = concernsRating;
             original.StatusId = concernsRecordRequest.StatusId;
+            original.RatingId = concernsRecordRequest.RatingId;
+            original.TypeId = concernsRecordRequest.TypeId;
 
             if (concernsMeansOfReferral != null)
             {
+				original.MeansOfReferralId = concernsRecordRequest.MeansOfReferralId;
                 original.ConcernsMeansOfReferral = concernsMeansOfReferral;
             }
 
