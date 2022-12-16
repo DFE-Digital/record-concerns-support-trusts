@@ -113,6 +113,8 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 
 		private SRMAModel CreateSrma()
 		{
+			var now = DateTime.Now;
+			
 			var srma = new SRMAModel(
 				0,
 				0,
@@ -124,7 +126,9 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 				Status,
 				Notes,
 				SRMAReasonOffered.Unknown,
-				DateTime.Now
+				now,
+				now,
+				User.Identity.Name
 				);
 
 			return srma;

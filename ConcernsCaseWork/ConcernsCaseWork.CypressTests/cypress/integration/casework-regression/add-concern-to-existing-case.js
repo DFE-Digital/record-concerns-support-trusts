@@ -25,6 +25,7 @@ describe("User creates and adds subsequent concern to a case", () => {
 
 		cy.selectConcernType();
 		cy.selectRiskToTrust();
+		cy.selectTerritory();
 		cy.enterConcernDetails();
 
 		cy.task(LogTask, "Adding a concern via the Add Concern Link")
