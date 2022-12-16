@@ -17,6 +17,7 @@ describe("User closes a case", () => {
 		cy.get("#search__option--0").click();
 		cy.selectConcernType();
 		cy.selectRiskToTrust();
+		cy.selectTerritory();
 		cy.enterConcernDetails();
 
 		cy.task(LogTask, "Opens an active case");
