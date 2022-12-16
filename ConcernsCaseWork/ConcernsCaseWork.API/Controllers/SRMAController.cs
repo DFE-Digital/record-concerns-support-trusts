@@ -4,6 +4,7 @@ using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Enums;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
 namespace ConcernsCaseWork.API.Controllers
@@ -144,7 +145,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpPatch]
         [Route("{srmaId}/update-notes")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateNotes(int srmaId, string notes)
+        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateNotes(int srmaId, [StringLength(2000)] string notes)
         {
             var patched = _patchSRMAUseCase.Execute(new PatchSRMARequest
             {
