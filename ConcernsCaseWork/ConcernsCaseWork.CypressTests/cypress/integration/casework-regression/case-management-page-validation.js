@@ -22,6 +22,8 @@ describe("User can manage cases from the case management page", () => {
 
         cy.selectRiskToTrust();
 
+        cy.selectTerritory();
+
         cy.enterConcernDetails();
 
         cy.validateCaseManagPage();
