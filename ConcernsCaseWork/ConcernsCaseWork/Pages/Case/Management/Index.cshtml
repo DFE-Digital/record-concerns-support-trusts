@@ -180,7 +180,7 @@
 
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table-case-details__header">SFSO territory</th>
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell" data-testid="territory_Field">
                             @if (Model.CaseModel.Territory == null)
                             {
                                 <span class='govuk-tag ragtag ragtag__grey'>Empty</span>
@@ -194,7 +194,7 @@
                         <td class="govuk-table__cell govuk-table__header__right">
                             @if (Model.IsEditableCase)
                             {
-                                <a class="govuk-link" href="@Request.Path/edit-territory" aria-label="Change SFSO territory">
+                                    <a class="govuk-link" data-testid="edit_Button_SFSO" href="@Request.Path/edit-territory" aria-label="Change SFSO territory">
                                     Edit<span class="govuk-visually-hidden"> SFSO territory</span>
                                 </a>
                             }
