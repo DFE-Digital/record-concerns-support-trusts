@@ -1,16 +1,11 @@
 import { LogTask } from "../../support/constants";
-import  editTrustPage from "../../pages/editTrustPage";
+import  editTrustPage from "../../pages/editTerritoryPage";
 import { Logger } from "../../common/logger";
 
 describe("The correct items are visible on the details page", () => {
-	before(() => {
+	beforeEach(() => {
 		cy.login();
 	});
-
-	afterEach(() => {
-		cy.storeSessionData();
-	});
-	
 
 	it("Should validate the case and Territory details", () => {
 		
@@ -41,17 +36,10 @@ describe("The correct items are visible on the details page", () => {
 		cy.get('#issue').clear().type("ABC");
 		cy.get('button[data-prevent-double-click^="true"]').click();
 		
-		editTrustPage.validateTerritoryOldSelection();
-		editTrustPage.getEditTerritory();
-		editTrustPage.getTerritoryNAUNorthEastOption();
-		editTrustPage.getTerritoryApplyBtn();
-		editTrustPage.validateTerritoryNewSelection();
-
-		
-		
-
-	})
-
-	
-
+		editTrustPage.hasTerritory("Midlands and West - South West");
+		editTrustPage.editTerritory();
+		editTrustPage.selectTerritoryNAUNorthEast();
+		editTrustPage.save();
+		editTrustPage.hasTerritory("North and UTC - North East");
+	});
 });
