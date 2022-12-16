@@ -31,7 +31,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			var result = await _client.PostAsync($"/v2/case-actions/nti-warning-letter", request.ConvertToJson());
 			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
-
 			var error = await result.Content.ReadAsStringAsync();
 			error.Should().Contain("The field CreatedBy must be a string with a maximum length of 300.");
 			error.Should().Contain("The field Notes must be a string with a maximum length of 2000.");
