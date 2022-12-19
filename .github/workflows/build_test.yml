@@ -8,12 +8,13 @@ on:
   pull_request:
     branches: [ main, develop ]
     types: [ opened, synchronize, reopened ]
-        
+ 
 jobs:
   build-test:
     runs-on: ubuntu-latest
     environment: dev
     env:
+      # Note: The database name may be overridden by the tests
       CONNECTION_STRING: 'Server=localhost,1433;Database=integrationtests;User Id=sa;Password=P1swrd!$;TrustServerCertificate=True'
       CONNECTION_STRING_KEY: 'ConnectionStrings:DefaultConnection'
 
@@ -75,6 +76,6 @@ jobs:
         run: |
           dotnet-sonarscanner begin /k:"DFE-Digital_amsd-casework" /o:"dfe-digital" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=CoverageReport/SonarQube.xml
           dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
-          dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity normal --collect:"XPlat Code Coverage" --environment "${{CONNECTION_STRING_KEY}}"="Server=localhost,1433;Database=integrationtests;User Id=sa;Password=P1swrd!$;TrustServerCertificate=True" --filter "FullyQualifiedName!~ConcernsCaseWork.Integration.Tests"
+          dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity normal --collect:"XPlat Code Coverage" --environment "${{env.CONNECTION_STRING_KEY}}"="Server=localhost,1433;Database=integrationtests;User Id=sa;Password=P1swrd!$;TrustServerCertificate=True" --filter "FullyQualifiedName!~ConcernsCaseWork.Integration.Tests"
           reportgenerator -reports:./**/coverage.cobertura.xml -targetdir:./ConcernsCaseWork/CoverageReport -reporttypes:SonarQube
           dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
