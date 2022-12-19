@@ -74,7 +74,9 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 			var sqlBuilder = new SqlConnectionStringBuilder(connection);
 			sqlBuilder.InitialCatalog = "ApiTests";
 
-			var result = sqlBuilder.ToString().Replace("Trust Server Certificate", "TrustServerCertificate");
+			// var result = sqlBuilder.ToString().Replace("Trust Server Certificate", "TrustServerCertificate");
+
+			var result = sqlBuilder.ToString();
 
 			return result;
 		}
