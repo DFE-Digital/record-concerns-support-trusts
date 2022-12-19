@@ -54,8 +54,6 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 					Client = _application.CreateClient();
 					Client.DefaultRequestHeaders.Add("ApiKey", "app-key");
 
-					Console.WriteLine($"The connection string is {connectionString}");
-
 					_dbContextOptions = new DbContextOptionsBuilder<ConcernsDbContext>()
 						.UseSqlServer(connectionString)
 						.Options;
@@ -73,8 +71,6 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 			var connection = currentConfig[ConnectionStringKey];
 			var sqlBuilder = new SqlConnectionStringBuilder(connection);
 			sqlBuilder.InitialCatalog = "ApiTests";
-
-			// var result = sqlBuilder.ToString().Replace("Trust Server Certificate", "TrustServerCertificate");
 
 			var result = sqlBuilder.ToString();
 
