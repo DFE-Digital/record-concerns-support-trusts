@@ -72,7 +72,9 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 			var sqlBuilder = new SqlConnectionStringBuilder(connection);
 			sqlBuilder.InitialCatalog = "ApiTests";
 
-			return sqlBuilder.ToString();
+			var result = sqlBuilder.ToString();
+
+			return result;
 		}
 
 		public ConcernsDbContext GetContext() => new ConcernsDbContext(_dbContextOptions);
