@@ -1,8 +1,10 @@
 ﻿using ConcernsCaseWork.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using Xunit;
@@ -20,13 +22,15 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 		private readonly object _lock = new();
 		private bool _isInitialised = false;
 
+		private const string ConnectionStringKey = "ConnectionStrings:DefaultConnection";
+
 		public ApiTestFixture()
 		{
 			lock (_lock)
 			{
 				if (!_isInitialised)
 				{
-					IConfigurationRoot testConfig = null;
+					string connectionString = null;
 
 					_application = new WebApplicationFactory<Startup>()
 						.WithWebHostBuilder(builder =>
@@ -38,23 +42,20 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 								config.AddJsonFile(configPath)
 									.AddEnvironmentVariables();
 
-								testConfig = config.Build();
+								connectionString = BuildDatabaseConnectionString(config);
+
+								config.AddInMemoryCollection(new Dictionary<string, string>
+								{
+									[ConnectionStringKey] = connectionString
+								});
 							});
 						});
 
 					Client = _application.CreateClient();
 					Client.DefaultRequestHeaders.Add("ApiKey", "app-key");
 
-					var envDb = Environment.GetEnvironmentVariable("ConnectionStrings:DefaultConnection");
-
-					Console.WriteLine($"Enviroment provided {envDb}");
-
-					var connection = testConfig.GetSection("ConnectionStrings")["DefaultConnection"];
-
-					Console.WriteLine($"Logging the connection {connection}");
-
 					_dbContextOptions = new DbContextOptionsBuilder<ConcernsDbContext>()
-						.UseSqlServer(connection)
+						.UseSqlServer(connectionString)
 						.Options;
 
 					using var context = GetContext();
@@ -62,6 +63,16 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 					_isInitialised = true;
 				}
 			}
+		}
+
+		private static string BuildDatabaseConnectionString(IConfigurationBuilder config)
+		{
+			var currentConfig = config.Build();
+			var connection = currentConfig[ConnectionStringKey];
+			var sqlBuilder = new SqlConnectionStringBuilder(connection);
+			sqlBuilder.InitialCatalog = "ApiTests";
+
+			return sqlBuilder.ToString();
 		}
 
 		public ConcernsDbContext GetContext() => new ConcernsDbContext(_dbContextOptions);
