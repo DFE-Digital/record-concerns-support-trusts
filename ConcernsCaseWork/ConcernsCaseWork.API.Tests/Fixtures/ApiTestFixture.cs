@@ -1,13 +1,13 @@
-﻿using AutoFixture;
-using ConcernsCaseWork.Data;
+﻿using ConcernsCaseWork.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.SignalR;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Fixtures
 {
@@ -17,47 +17,80 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 
 		public HttpClient Client { get; private set; }
 
-		public ConcernsDbContext DbContext { get; private set; }
-		
-		private DbContextOptions<ConcernsDbContext> DbContextOptions { get; init; }
+		private DbContextOptions<ConcernsDbContext> _dbContextOptions { get; init; }
+
+		private readonly object _lock = new();
+		private bool _isInitialised = false;
+
+		private const string ConnectionStringKey = "ConnectionStrings:DefaultConnection";
 
 		public ApiTestFixture()
 		{
-			IConfigurationRoot testConfig = null;
-
-			_application = new WebApplicationFactory<Startup>()
-				.WithWebHostBuilder(builder =>
+			lock (_lock)
+			{
+				if (!_isInitialised)
 				{
-					var configPath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.tests.json");
+					string connectionString = null;
 
-					builder.ConfigureAppConfiguration((context, config) =>
-					{
-						config.AddJsonFile(configPath);
+					_application = new WebApplicationFactory<Startup>()
+						.WithWebHostBuilder(builder =>
+						{
+							var configPath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.tests.json");
 
-						testConfig = config.Build();
-					});
-				});
+							builder.ConfigureAppConfiguration((context, config) =>
+							{
+								config.AddJsonFile(configPath)
+									.AddEnvironmentVariables();
 
-			Client = _application.CreateClient();
-			Client.DefaultRequestHeaders.Add("ApiKey", "app-key");
+								connectionString = BuildDatabaseConnectionString(config);
 
-			var connection = testConfig.GetSection("ConnectionStrings")["DefaultConnection"];
+								config.AddInMemoryCollection(new Dictionary<string, string>
+								{
+									[ConnectionStringKey] = connectionString
+								});
+							});
+						});
 
-			DbContextOptions = new DbContextOptionsBuilder<ConcernsDbContext>()
-				.UseSqlServer(connection)
-				.Options;
+					Client = _application.CreateClient();
+					Client.DefaultRequestHeaders.Add("ApiKey", "app-key");
 
-			DbContext = GetContext();
-			DbContext.Database.Migrate();
+					_dbContextOptions = new DbContextOptionsBuilder<ConcernsDbContext>()
+						.UseSqlServer(connectionString)
+						.Options;
+
+					using var context = GetContext();
+					context.Database.Migrate();
+					_isInitialised = true;
+				}
+			}
 		}
 
-		public ConcernsDbContext GetContext() => new ConcernsDbContext(DbContextOptions);
+		private static string BuildDatabaseConnectionString(IConfigurationBuilder config)
+		{
+			var currentConfig = config.Build();
+			var connection = currentConfig[ConnectionStringKey];
+			var sqlBuilder = new SqlConnectionStringBuilder(connection);
+			sqlBuilder.InitialCatalog = "ApiTests";
+
+			return sqlBuilder.ToString();
+		}
+
+		public ConcernsDbContext GetContext() => new ConcernsDbContext(_dbContextOptions);
 
 		public void Dispose()
 		{
 			_application.Dispose();
 			Client.Dispose();
-			DbContext.Dispose();
 		}
+	}
+
+	[CollectionDefinition(ApiTestCollectionName)]
+	public class ApiTestCollection : ICollectionFixture<ApiTestFixture>
+	{
+		public const string ApiTestCollectionName = "ApiTestCollection";
+
+		// This class has no code, and is never created. Its purpose is simply
+		// to be the place to apply [CollectionDefinition] and all the
+		// ICollectionFixture<> interfaces.
 	}
 }
