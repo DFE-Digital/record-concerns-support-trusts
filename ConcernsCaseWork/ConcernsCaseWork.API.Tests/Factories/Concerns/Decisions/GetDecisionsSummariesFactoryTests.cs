@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
         {
             var fixture = CreateFixture();
 
-            var expectedDecisions = CreateDecisions(fixture, fixture.Create<int>());
+            var expectedDecisions = CreateDecisions(fixture, 5);
 
             var sut = new GetDecisionsSummariesFactory();
             Action act = () => sut.Create(invalidUrn, expectedDecisions);
@@ -47,7 +47,7 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
         {
             var fixture = CreateFixture();
 
-            var expectedDecisions = CreateDecisions(fixture, fixture.Create<int>());
+            var expectedDecisions = CreateDecisions(fixture, 5);
 
             var sut = new GetDecisionsSummariesFactory();
             var result = sut.Create(123, expectedDecisions);
@@ -71,7 +71,7 @@ namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions
         {
             var fixture = CreateFixture();
 
-            var expectedDecisions = CreateDecisions(fixture, fixture.Create<int>(), 0);
+            var expectedDecisions = CreateDecisions(fixture, 5, 0);
 
             var sut = new GetDecisionsSummariesFactory();
             var result = sut.Create(123, expectedDecisions);

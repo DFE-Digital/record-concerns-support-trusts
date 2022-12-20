@@ -8,11 +8,34 @@ on:
   pull_request:
     branches: [ main, develop ]
     types: [ opened, synchronize, reopened ]
-        
+ 
 jobs:
   build-test:
     runs-on: ubuntu-latest
     environment: dev
+    env:
+      # Note: The database name may be overridden by the tests
+      CONNECTION_STRING: 'Server=localhost,1433;Database=integrationtests;User Id=sa;Password=P1swrd!$;TrustServerCertificate=True'
+      CONNECTION_STRING_KEY: 'ConnectionStrings:DefaultConnection'
+
+    services:
+      sql-server:
+        image: mcr.microsoft.com/mssql/server:2017-latest
+        ports:
+        - 1433:1433
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: P1swrd!$
+
+      redis:
+        image: redis:alpine
+        ports:
+        - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
         
     steps:
       - name: Checkout repository
@@ -53,6 +76,6 @@ jobs:
         run: |
           dotnet-sonarscanner begin /k:"DFE-Digital_amsd-casework" /o:"dfe-digital" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths=CoverageReport/SonarQube.xml
           dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
-          dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity normal --collect:"XPlat Code Coverage" --filter "FullyQualifiedName!~ConcernsCaseWork.API.Tests.Integration&FullyQualifiedName!~ConcernsCaseWork.Integration.Tests"
+          dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity normal --collect:"XPlat Code Coverage" --environment "${{env.CONNECTION_STRING_KEY}}"="${{env.CONNECTION_STRING}}" --filter "FullyQualifiedName!~ConcernsCaseWork.Integration.Tests"
           reportgenerator -reports:./**/coverage.cobertura.xml -targetdir:./ConcernsCaseWork/CoverageReport -reporttypes:SonarQube
           dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
