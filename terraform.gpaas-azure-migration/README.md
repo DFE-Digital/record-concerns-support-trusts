@@ -129,6 +129,13 @@ If everything looks good, answer `yes` and wait for the new infrastructure to be
 | <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) | >= 2.30.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.35.0 |
 
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | 2.31.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.36.0 |
+
 ## Modules
 
 | Name | Source | Version |
