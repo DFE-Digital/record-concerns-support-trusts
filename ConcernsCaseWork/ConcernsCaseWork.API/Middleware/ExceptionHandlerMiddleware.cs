@@ -21,6 +21,13 @@ public class ExceptionHandlerMiddleware
 	{
 		try
 		{
+			httpContext.Response.OnStarting(() =>
+			{
+				httpContext.Response.Headers.ContentSecurityPolicy = "default-src 'self'";
+
+				return Task.CompletedTask;
+			});
+
 			await _next(httpContext);
 		}
 		catch (Exception ex)

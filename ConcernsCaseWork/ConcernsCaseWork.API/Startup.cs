@@ -31,6 +31,7 @@ namespace ConcernsCaseWork.API
             app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.UseMiddleware<ApiKeyMiddleware>();
             app.UseMiddleware<UrlDecoderMiddleware>();
+			app.UseMiddleware<ResponseHeaderMiddleware>();
 
             app.UseHttpsRedirection();
             

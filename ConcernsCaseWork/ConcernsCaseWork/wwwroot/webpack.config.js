@@ -3,7 +3,10 @@ const path = require('path');
 
 module.exports = {
 	mode: 'production',
-	entry: ['./src/js/site.js', './src/css/site.scss'],
+	entry: {
+		main: './src/js/site.js',
+		addDecision: './src/js/addDecision.js'
+	},
 	plugins: [new MiniCssExtractPlugin({filename: 'site.css'})],
 	module: {
 		rules: [
@@ -24,7 +27,7 @@ module.exports = {
 		]
 	},
 	output: {
-		path: path.resolve(__dirname, 'dist/css'),
-		filename: 'index.bundle.js',
+		path: path.resolve(__dirname, 'dist/'),
+		filename: '[name].bundle.js',
 	}
 };

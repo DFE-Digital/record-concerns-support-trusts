@@ -13,6 +13,10 @@
     bool.TryParse(Context.Request.Cookies[CookieConstants.CookieConsentName], out bool hasConsented);
 }
 <head>
+        @{
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' ;script-src 'nonce-@nonce' 'strict-dynamic' 'self';" />
+    }
+
     @if (_env.IsProduction())
     {
         <!-- Google Tag Manager -->
