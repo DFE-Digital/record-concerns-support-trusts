@@ -1,156 +1,183 @@
 ﻿@page "/case/{urn:long}/closed"
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
+@using ConcernsCaseWork.Extensions
+@using ConcernsCaseWork.Helpers;
 @model ConcernsCaseWork.Pages.Case.ViewClosedPageModel
 
 @{
-	ViewData["Title"] = "View Closed case";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "View Closed case";
+    var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
-	<partial name="_BannerError"/>
-	
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
-			
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-			{
-				<partial name="_Error"/>
-			}
-			else
-			{
-				<h1 class="govuk-heading-l" name="caseID">
-					<span class="govuk-caption-m">Case ID</span>
-					@Model.CaseModel.Urn
-				</h1>
+    <partial name="_BannerError" />
 
-				<h2 class="govuk-heading-m">@Model.TrustDetailsModel.GiasData.GroupNameTitle</h2>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
 
-				<dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-6">
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+                <partial name="_Error" />
+            }
+            else
+            {
+                <h1 class="govuk-heading-l" name="caseID">
+                    <span class="govuk-caption-m">Case ID</span>
+                    @Model.CaseModel.Urn
+                </h1>
 
-					<!-- Concern -->
-					<div class="govuk-summary-list__row">
-						<dt class="dfe-width-30percent govuk-summary-list__key">
-							Concerns
-						</dt>
-						<dd class="govuk-summary-list__value">
-							@foreach (var recordModel in Model.CaseModel.RecordsModel)
-							{
-								<p class="govuk-body caseDetail_type">
-									@recordModel.TypeModel.TypeDisplay
-								</p>
-							}
-						</dd>
-					</div>
-				</dl>
+                <h2 class="govuk-heading-m">@Model.TrustDetailsModel.GiasData.GroupNameTitle</h2>
 
-				<!--Accordions-->
-				<div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+                <dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-6">
 
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-1">Issue</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1">
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="dfe-text-area-display">@Model.CaseModel.Issue</p>
-							</div>
-						</div>
-					</div>
+                    <!-- Concern -->
+                    <div class="govuk-summary-list__row">
+                        <dt class="dfe-width-30percent govuk-summary-list__key">
+                            Concerns
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @foreach (var recordModel in Model.CaseModel.RecordsModel)
+                            {
+                                <p class="govuk-body caseDetail_type">
+                                    @recordModel.TypeModel.TypeDisplay
+                                </p>
+                            }
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="dfe-width-30percent govuk-summary-list__key">
+                            Case Worker
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.CaseModel.CreatedBy.FromEmailToFullName()
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="dfe-width-30percent govuk-summary-list__key">
+                            Date created
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @DateTimeHelper.ParseToDisplayDate(Model.CaseModel.CreatedAt)
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="dfe-width-30percent govuk-summary-list__key">
+                            Date closed
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @DateTimeHelper.ParseToDisplayDate(Model.CaseModel.ClosedAt.Value)
+                        </dd>
+                    </div>
+                </dl>
 
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-2">Current status</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-2" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-2">
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="dfe-text-area-display">@Model.CaseModel.CurrentStatus</p>
-							</div>
-						</div>
-					</div>
+                <!--Accordions-->
+                <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
 
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-3">Case aim</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-3" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-3">
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="dfe-text-area-display">@Model.CaseModel.CaseAim</p>
-							</div>
-						</div>
-					</div>
-
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-4">De-escalation point</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-4" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-4">
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="dfe-text-area-display">@Model.CaseModel.DeEscalationPoint</p>
-							</div>
-						</div>
-					</div>
-
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-5">Next steps</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="dfe-text-area-display">@Model.CaseModel.NextSteps</p>
-							</div>
-						</div>
-					</div>
-							
-					<div class="govuk-accordion__section">
-                    	<div class="govuk-accordion__section-header">
-                    		<h2 class="govuk-accordion__section-heading">
-                    			<span class="govuk-accordion__section-button" id="accordion-default-heading-5">Case History</span>
-                    		</h2>
-                    	</div>
-                    	<div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
-                    		<div class="govuk-body details govuk-body-accordion-limit">
-                    			<p class="dfe-text-area-display">@Model.CaseModel.CaseHistory</p>
-                    		</div>
-                    	</div>
+                    <div class="govuk-accordion__section">
+                        <div class="govuk-accordion__section-header">
+                            <h2 class="govuk-accordion__section-heading">
+                                <span class="govuk-accordion__section-button" id="accordion-default-heading-1">Issue</span>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1">
+                            <div class="govuk-body details govuk-body-accordion-limit">
+                                <p class="dfe-text-area-display">@Model.CaseModel.Issue</p>
+                            </div>
+                        </div>
                     </div>
 
-					<div class="govuk-accordion__section">
-						<div class="govuk-accordion__section-header">
-							<h2 class="govuk-accordion__section-heading">
-								<span class="govuk-accordion__section-button" id="accordion-default-heading-6">Rationale for closure</span>
-							</h2>
-						</div>
-						<div aria-labelledby="accordion-default-heading-6" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-6">
-							<div class="govuk-body details govuk-body-accordion-limit">
-								<p class="dfe-text-area-display">@Model.CaseModel.ReasonAtReview</p>
-							</div>
-						</div>
-					</div>
+                    <div class="govuk-accordion__section">
+                        <div class="govuk-accordion__section-header">
+                            <h2 class="govuk-accordion__section-heading">
+                                <span class="govuk-accordion__section-button" id="accordion-default-heading-2">Current status</span>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="accordion-default-heading-2" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-2">
+                            <div class="govuk-body details govuk-body-accordion-limit">
+                                <p class="dfe-text-area-display">@Model.CaseModel.CurrentStatus</p>
+                            </div>
+                        </div>
+                    </div>
 
-				</div>
+                    <div class="govuk-accordion__section">
+                        <div class="govuk-accordion__section-header">
+                            <h2 class="govuk-accordion__section-heading">
+                                <span class="govuk-accordion__section-button" id="accordion-default-heading-3">Case aim</span>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="accordion-default-heading-3" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-3">
+                            <div class="govuk-body details govuk-body-accordion-limit">
+                                <p class="dfe-text-area-display">@Model.CaseModel.CaseAim</p>
+                            </div>
+                        </div>
+                    </div>
 
-				<script type="application/javascript" nonce="@nonce">
-					$(function () {
-						$("button[id^='accordion-default-heading']").attr("aria-expanded", "true");
-						$(".govuk-accordion__section").addClass("govuk-accordion__section--expanded");
-					});
-				</script>				
-			}
-		</div>
-		<div>
-			<partial name="Shared/_ListClosedActionsForCase" model="Model.CaseActions"/>
-		</div>
-	</div>
+                    <div class="govuk-accordion__section">
+                        <div class="govuk-accordion__section-header">
+                            <h2 class="govuk-accordion__section-heading">
+                                <span class="govuk-accordion__section-button" id="accordion-default-heading-4">De-escalation point</span>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="accordion-default-heading-4" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-4">
+                            <div class="govuk-body details govuk-body-accordion-limit">
+                                <p class="dfe-text-area-display">@Model.CaseModel.DeEscalationPoint</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="govuk-accordion__section">
+                        <div class="govuk-accordion__section-header">
+                            <h2 class="govuk-accordion__section-heading">
+                                <span class="govuk-accordion__section-button" id="accordion-default-heading-5">Next steps</span>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
+                            <div class="govuk-body details govuk-body-accordion-limit">
+                                <p class="dfe-text-area-display">@Model.CaseModel.NextSteps</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="govuk-accordion__section">
+                        <div class="govuk-accordion__section-header">
+                            <h2 class="govuk-accordion__section-heading">
+                                <span class="govuk-accordion__section-button" id="accordion-default-heading-5">Case History</span>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
+                            <div class="govuk-body details govuk-body-accordion-limit">
+                                <p class="dfe-text-area-display">@Model.CaseModel.CaseHistory</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="govuk-accordion__section">
+                        <div class="govuk-accordion__section-header">
+                            <h2 class="govuk-accordion__section-heading">
+                                <span class="govuk-accordion__section-button" id="accordion-default-heading-6">Rationale for closure</span>
+                            </h2>
+                        </div>
+                        <div aria-labelledby="accordion-default-heading-6" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-6">
+                            <div class="govuk-body details govuk-body-accordion-limit">
+                                <p class="dfe-text-area-display">@Model.CaseModel.ReasonAtReview</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <script type="application/javascript" nonce="@nonce">
+                    $(function () {
+                        $("button[id^='accordion-default-heading']").attr("aria-expanded", "true");
+                        $(".govuk-accordion__section").addClass("govuk-accordion__section--expanded");
+                    });
+                </script>
+
+            }
+        </div>
+        <div>
+            <partial name="Shared/_ListClosedActionsForCase" model="Model.CaseActions" />
+        </div>
+    </div>
 </div>
