@@ -135,14 +135,14 @@ public class CloseDecisionIntegrationTests
 	[Fact]
 	public async Task When_PatchWithMissingCase_Returns_404Response()
 	{
-		var caseId = _fixture.Create<int>();
+		var caseId = 1000000;
 		
 		var request = new CloseDecisionRequest()
 		{
 			SupportingNotes = _fixture.Create<string>()
 		};
 
-		var result = await _client.PatchAsync($"/v2/concerns-cases/{caseId}/decisions/{_fixture.Create<int>()}/close", request.ConvertToJson());
+		var result = await _client.PatchAsync($"/v2/concerns-cases/{caseId}/decisions/1/close", request.ConvertToJson());
 
 		result.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
@@ -161,7 +161,7 @@ public class CloseDecisionIntegrationTests
 
 		var cCase = await CreateCase();
 		var cCaseId = cCase.Id;
-		var decisionId = _fixture.Create<int>();
+		var decisionId = 1000000;
 
 		var result = await _client.PatchAsync($"/v2/concerns-cases/{cCaseId}/decisions/{decisionId}/close", request.ConvertToJson());
 

@@ -101,7 +101,9 @@ namespace ConcernsCaseWork.Mappers
 				Name = "NTI",
 				OpenedDate = model.CreatedAt.ToDayMonthYear(),
 				RelativeUrl = $"/case/{model.CaseUrn}/management/action/nti/{model.Id}",
-				StatusName = status
+				StatusName = status,
+				RawOpenedDate = model.CreatedAt,
+				RawClosedDate = model.ClosedAt,
 			};
 
 			return result;

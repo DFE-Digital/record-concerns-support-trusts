@@ -8,6 +8,7 @@ using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Services.Decisions;
 using FluentAssertions;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,8 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.ClosedDate.Should().Be("30-08-2024");
 			result.Name.Should().Be($"Decision: {apiDecision.Title}");
 			result.RelativeUrl.Should().Be($"/case/{apiDecision.ConcernsCaseUrn}/management/action/decision/{apiDecision.DecisionId}");
+			result.RawOpenedDate.Should().Be(apiDecision.CreatedAt);
+			result.RawClosedDate.Should().Be(apiDecision.ClosedAt);
 		}
 		
 		[Test]
@@ -52,17 +55,6 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			var result = DecisionMapping.ToActionSummary(apiDecision);
 
 			result.StatusName.Should().Be(expectedStatusName);
-		}
-				
-		[Test]
-		public void ToActionSummary_WhenClosedAtIsNull_ReturnsCorrectModel()
-		{
-			var apiDecision = _fixture.Create<DecisionSummaryResponse>();
-			apiDecision.ClosedAt = null;
-
-			var result = DecisionMapping.ToActionSummary(apiDecision);
-
-			result.ClosedDate.Should().BeNull();
 		}
 
 		[TestCase(null, "No")]

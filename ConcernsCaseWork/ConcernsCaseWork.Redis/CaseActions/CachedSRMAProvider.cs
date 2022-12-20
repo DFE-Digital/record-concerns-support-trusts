@@ -115,9 +115,9 @@ namespace ConcernsCaseWork.Redis.CaseActions
 			}
 		}
 
-		public async Task SetDateClosed(long srmaId, DateTime? ClosedDate)
+		public async Task SetDateClosed(long srmaId)
 		{
-			var patched = await _srmaProvider.SetDateClosed(srmaId, ClosedDate);
+			var patched = await _srmaProvider.SetDateClosed(srmaId);
 			if (patched != null)
 			{
 				if (patched.Id != srmaId)

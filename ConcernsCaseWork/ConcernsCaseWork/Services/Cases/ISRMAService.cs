@@ -18,6 +18,6 @@ namespace ConcernsCaseWork.Services.Cases
 		public Task SetVisitDates(long srmaId, DateTime startDate, DateTime? endDate);
 		public Task SetDateAccepted(long srmaId, DateTime? acceptedDate);
 		public Task SetDateReportSent(long srmaId, DateTime? reportSentDate);
-		public Task SetDateClosed(long srmaId, DateTime? ClosedDate);
+		public Task SetDateClosed(long srmaId);
 	}
 }
