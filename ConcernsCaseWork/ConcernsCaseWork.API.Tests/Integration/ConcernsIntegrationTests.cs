@@ -259,7 +259,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsTypeResponse>>();
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            content.Data.Count().Should().Be(13);
+            content.Data.Count().Should().Be(8);
         }
 
         [Fact]
@@ -455,7 +455,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			using var context = _testFixture.GetContext();
 
-			var concernsType = context.ConcernsTypes.FirstOrDefault(t => t.Id == 1);
+			var concernsType = context.ConcernsTypes.FirstOrDefault(t => t.Id == 3);
             var concernsRating = context.ConcernsRatings.FirstOrDefault(r => r.Id == 1);
             var concernsMeansOfReferral = context.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 1);
 
@@ -554,7 +554,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			using var context = _testFixture.GetContext();
 
-			var concernsType = context.ConcernsTypes.FirstOrDefault(t => t.Id == 1);
+			var concernsType = context.ConcernsTypes.FirstOrDefault(t => t.Id == 3);
             var concernsRating = context.ConcernsRatings.FirstOrDefault(r => r.Id == 1);
 
             var currentMeansOfReferral = hasCurrentMeansOfReferral
