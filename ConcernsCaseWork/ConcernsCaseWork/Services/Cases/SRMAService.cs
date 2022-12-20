@@ -40,9 +40,9 @@ namespace ConcernsCaseWork.Services.Cases
 			await _cachedSrmaProvider.SetDateAccepted(srmaId, acceptedDate);	
 		}
 
-		public async Task SetDateClosed(long srmaId, DateTime? ClosedDate)
+		public async Task SetDateClosed(long srmaId)
 		{
-			await _cachedSrmaProvider.SetDateClosed(srmaId, ClosedDate);	
+			await _cachedSrmaProvider.SetDateClosed(srmaId);
 		}
 
 		public async Task SetDateReportSent(long srmaId, DateTime? reportSentDate)

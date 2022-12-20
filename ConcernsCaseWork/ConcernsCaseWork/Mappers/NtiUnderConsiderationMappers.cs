@@ -75,7 +75,9 @@ namespace ConcernsCaseWork.Mappers
 				Name = "NTI Under Consideration",
 				OpenedDate = model.CreatedAt.ToDayMonthYear(),
 				RelativeUrl = $"/case/{model.CaseUrn}/management/action/ntiunderconsideration/{model.Id}",
-				StatusName = statusName
+				StatusName = statusName,
+				RawOpenedDate = model.CreatedAt,
+				RawClosedDate = model.ClosedAt
 			};
 
 			return result;

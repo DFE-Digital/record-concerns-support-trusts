@@ -250,7 +250,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpPatch]
         [Route("{srmaId}/update-closed-date")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateDateClosed(int srmaId, string dateClosed)
+        public ActionResult<ApiSingleResponseV2<SRMAResponse>> UpdateDateClosed(int srmaId)
         {
             try
             {
@@ -259,7 +259,7 @@ namespace ConcernsCaseWork.API.Controllers
                     SRMAId = srmaId,
                     Delegate = (srma) =>
                     {
-                        srma.ClosedAt = DeserialiseDateTime(dateClosed);
+						srma.ClosedAt = DateTime.Now;
                         return srma;
                     }
                 });
