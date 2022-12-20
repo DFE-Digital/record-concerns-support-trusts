@@ -38,8 +38,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			return new TypeModel
 			{
-				Type = "Compliance",
-				SubType = "Compliance: Financial reporting",
+				Type = "Financial",
+				SubType = "Financial: Deficit",
 				TypesDictionary = new Dictionary<string, IList<TypeModel.TypeValueModel>>()
 			};
 		}
