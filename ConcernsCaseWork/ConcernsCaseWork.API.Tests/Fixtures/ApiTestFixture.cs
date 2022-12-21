@@ -19,8 +19,8 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 
 		private DbContextOptions<ConcernsDbContext> _dbContextOptions { get; init; }
 
-		private readonly object _lock = new();
-		private bool _isInitialised = false;
+		private static readonly object _lock = new();
+		private static bool _isInitialised = false;
 
 		private const string ConnectionStringKey = "ConnectionStrings:DefaultConnection";
 
@@ -59,6 +59,7 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 						.Options;
 
 					using var context = GetContext();
+					context.Database.EnsureDeleted();
 					context.Database.Migrate();
 					_isInitialised = true;
 				}

@@ -8,7 +8,6 @@ using System.Data;
 namespace ConcernsCaseWork.Data.Tests.Tests;
 
 [TestFixture]
-[Ignore("These tests currently must be run manually as they depend on removing and re-creating a database instance which is not yet supported in our pipelines")]
 public class NoticeToImproveKpiTests : DatabaseTestFixture
 {
 	private readonly RandomGenerator _randomGenerator = new ();
