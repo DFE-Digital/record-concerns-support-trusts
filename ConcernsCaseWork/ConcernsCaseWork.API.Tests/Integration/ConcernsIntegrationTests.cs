@@ -328,6 +328,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			request.NextSteps = new string('a', 4001);
 			request.CaseHistory = new string('a', 4001);
 			request.DirectionOfTravel = new string('a', 101);
+			request.ReasonAtReview = new string('a', 201);
 
 			var result = await _client.PatchAsync($"/v2/concerns-cases/1", request.ConvertToJson());
 			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -341,6 +342,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			error.Should().Contain("The field NextSteps must be a string with a maximum length of 4000.");
 			error.Should().Contain("The field CaseHistory must be a string with a maximum length of 4000.");
 			error.Should().Contain("The field DirectionOfTravel must be a string with a maximum length of 100.");
+			error.Should().Contain("The field ReasonAtReview must be a string with a maximum length of 200.");
 		}
 
 		[Fact]
