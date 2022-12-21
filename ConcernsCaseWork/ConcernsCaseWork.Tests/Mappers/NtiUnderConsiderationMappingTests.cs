@@ -47,7 +47,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(serviceModel.ClosedStatusId, Is.EqualTo(ntiDto.ClosedStatusId));
 			Assert.That(serviceModel.ClosedStatusName, Is.EqualTo(ntiDto.ClosedStatusName));
 			Assert.That(serviceModel.ClosedAt, Is.EqualTo(ntiDto.ClosedAt.Value));
-			Assert.That(serviceModel.CreatedAt, Is.EqualTo(ntiDto.CreatedAt.Date));
+			Assert.That(serviceModel.CreatedAt, Is.EqualTo(ntiDto.CreatedAt));
 			Assert.That(serviceModel.Notes, Is.EqualTo(ntiDto.Notes));
 			Assert.That(serviceModel.NtiReasonsForConsidering, Is.Not.Null);
 			Assert.That(serviceModel.UpdatedAt, Is.EqualTo(ntiDto.UpdatedAt));
