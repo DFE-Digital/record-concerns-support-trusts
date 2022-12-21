@@ -405,14 +405,14 @@ Cypress.Commands.add('validateCaseManagPage', () => {
 })
 
 Cypress.Commands.add('closeAllOpenConcerns', () => {
-    const elem = '.govuk-table-case-details__cell_no_border [href*="edit_rating"]';
+    const elem = '[data-testid*="edit-concern"]';
     if (Cypress.$(elem).length > 0) { //Cypress.$ needed to handle element missing exception
 
-        cy.get('.govuk-table-case-details__cell_no_border [href*="edit_rating"]').its('length').then(($elLen) => {
+        cy.getByTestId('edit-concern').its('length').then(($elLen) => {
             cy.log($elLen)
 
             while ($elLen > 0) {
-                cy.get('.govuk-table-case-details__cell_no_border [href*="edit_rating"]').eq($elLen - 1).click();
+                cy.getByTestId('edit-concern').eq($elLen - 1).click();
                 cy.get('[href*="closure"]').click();
                 cy.get('.govuk-button-group [href*="edit_rating/closure"]:nth-of-type(1)').click();
                 $elLen = $elLen - 1

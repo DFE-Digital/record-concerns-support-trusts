@@ -80,7 +80,7 @@ describe("User can add case actions to an existing case", () => {
             ntiAddPage.getUCAddCaseActionBtn().click();
             utils.getGovErrorSummaryList().should('not.exist');
             ntiAddPage.getNtiTableRow().should(($row) => {
-                expect($row.eq(0).text().trim()).to.contain(stText).and.to.match(/Reason/i);
+                expect($row.eq(1).text().trim()).to.contain(stText).and.to.match(/Reason/i);
             });
     
             cy.task(LogTask, "No status displayed in the Open Acions table");
@@ -103,7 +103,7 @@ describe("User can add case actions to an existing case", () => {
 
         ntiAddPage.getUCAddCaseActionBtn().click();
         ntiAddPage.getNtiTableRow().should(($row) => {
-            expect($row.eq(1).text().trim()).to.contain(term.trim()).and.to.match(/Notes/i);
+            expect($row.eq(2).text().trim()).to.contain(term.trim()).and.to.match(/Notes/i);
         });
 
         cy.task(LogTask, "User can close an NTI UC as No Further Action");
