@@ -119,7 +119,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 				ClosedAt = timeNow,
 				Description = "",
 				CrmEnquiry = "",
-				ReasonAtReview = "",
+				ReasonAtReview = "some reason at review",
 				Issue = "some updated issue",
 				CaseAim = "some updated case aim",
 				CaseHistory = "some updated case history",
@@ -150,7 +150,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 				Assert.That(updatedCaseDto.UpdatedAt, Is.EqualTo(timeNow));
 				Assert.That(updatedCaseDto.DeEscalationPoint, Is.EqualTo(postCaseDto.DeEscalationPoint));
 				Assert.That(updatedCaseDto.DirectionOfTravel, Is.EqualTo(DirectionOfTravelEnum.Improving.ToString()));
-				Assert.That(updatedCaseDto.ReasonAtReview, Is.EqualTo(""));
+				Assert.That(updatedCaseDto.ReasonAtReview, Is.EqualTo("some reason at review"));
 				Assert.That(updatedCaseDto.TrustUkPrn, Is.EqualTo(postCaseDto.TrustUkPrn));
 				Assert.That(updatedCaseDto.CaseHistory, Is.EqualTo("some updated case history"));
 			});
