@@ -8,8 +8,8 @@ describe('Footer links direct to the correct pages from Active Casework page', (
 		cy.storeSessionData();
 	});
 
-    it('Should open Accessibility link', () => {
-        cy.wait(500);
+    it('Should open Accessibility link and verify the title', () => {
+        cy.wait(300);
         cy.fixture('footer-links-fixture').then((footerLinkData) =>{
         cy.get('.govuk-footer__link[href="'+footerLinkData.accessibilityLink+'"]', { timeout: 50000 }).click()
         cy.get('.govuk-grid-column-two-thirds-from-desktop h1').contains(footerLinkData.accessibilityTestText)
@@ -17,8 +17,8 @@ describe('Footer links direct to the correct pages from Active Casework page', (
         cy.get('#back-link-event').click()
     });
 
-    it('Should open Cookies link', () => {
-        cy.wait(500);
+    it('Should open Cookies link and verify the title', () => {
+        cy.wait(300);
         cy.fixture('footer-links-fixture').then((footerLinkData) =>{
         cy.get('.govuk-footer__link[href="'+footerLinkData.cookiesLink+'"]', { timeout: 50000 }).click()
         cy.get('.govuk-grid-column-two-thirds-from-desktop h1').contains(footerLinkData.cookiesTestText)
@@ -26,8 +26,8 @@ describe('Footer links direct to the correct pages from Active Casework page', (
         cy.get('#back-link-event').click()
     });
 
-    it('Should open Privacy Policy link', () => {
-        cy.wait(500);
+    it('Should open Privacy Policy link and verify the title', () => {
+        cy.wait(300);
         cy.fixture('footer-links-fixture').then((footerLinkData) =>{
         cy.get('.govuk-footer__link[href="'+footerLinkData.privacyPolicyLink+'"]', { timeout: 50000 }).click()
         cy.get('.govuk-grid-column-two-thirds-from-desktop h2').contains(footerLinkData.privacyPolicyText)
