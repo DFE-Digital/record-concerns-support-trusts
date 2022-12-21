@@ -1,11 +1,11 @@
 
     {
         "accessibilityLink":"/accessibility",
-        "accessibilityTestText": "Accessibility on Concerns casework",
+        "accessibilityTestText": "Accessibility on Record concerns and support for trusts",
         "cookiesLink":"/cookies",
-        "cookiesTestText": "Cookies on Concerns casework",
+        "cookiesTestText": "Cookies on Record concerns and support for trusts",
         "privacyPolicyLink":"/privacypolicy",
-        "privacyPolicyText": "How we use your personal data when you use Concerns casework",
+        "privacyPolicyText": "How we use your personal data when you use Record concerns and support for trusts",
         "adminLink":"/admin",
         "adminText":"Users Roles and Groups"
     }

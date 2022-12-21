@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.API.RequestModels
         [StringLength(50)]
         public string TrustUkprn { get; set; }
         
-        [StringLength(0)] // not used
+        [StringLength(200)]
         public string ReasonAtReview { get; set; }
         public DateTime? DeEscalation { get; set; }
         

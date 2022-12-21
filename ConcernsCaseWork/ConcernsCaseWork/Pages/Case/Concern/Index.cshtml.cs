@@ -194,7 +194,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			if (string.IsNullOrEmpty(trustUkPrn))
 				throw new Exception("Cache TrustUkprn is null");
 		
-			CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 			TrustAddress = await _trustModelService.GetTrustAddressByUkPrn(trustUkPrn);
 			CreateRecordsModel = new List<CreateRecordModel>();
 			RatingsModel = await _ratingModelService.GetRatingsModel();
