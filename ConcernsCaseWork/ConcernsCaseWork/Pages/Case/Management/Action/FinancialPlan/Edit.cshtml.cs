@@ -88,10 +88,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				TempData["FinancialPlan.Message"] = ex.Message;
 				
 				FinancialPlanStatuses = await GetStatusOptionsAsync();
-				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(GetRequestedCaseUrn(), GetRequestedFinancialPlanId());
-				
-				var currentStatusName = FinancialPlanModel.Status?.Name;
-				FinancialPlanStatuses = await GetStatusOptionsAsync(currentStatusName);
 			}
 			catch (Exception ex)
 			{
