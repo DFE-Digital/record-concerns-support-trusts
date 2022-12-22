@@ -43,7 +43,7 @@ describe("User closes a case", () => {
 			'[href*="/case/' + closedCaseId + '/management/closure"]'
 		).click();
 		cy.get("#case-outcomes").type("SAMPLE CLOSURE TEXT");
-		cy.get(".govuk-button").click();
+		cy.getById("close-case-button").click();
 
 		cy.task(LogTask, "Case should be marked as closed and removed from active cases");
 		cy.get("#main-content tr:nth-child(1) td:nth-child(1) a").then(($el) => {

@@ -1,4 +1,4 @@
-describe('Error messages should be displayed when user omits data', () => {
+describe('Concern validation tests', () => {
 	before(() => {
 		cy.login();
 	});
@@ -7,18 +7,14 @@ describe('Error messages should be displayed when user omits data', () => {
 		cy.storeSessionData();
 	});
 
-	it('User clicks on Create Case and should see Search Trusts', () => {
+	it('Error messages should be displayed when user omits data', () => {
 		cy.get('[href="/case"]').click();
 		cy.get('#search').should('be.visible');
-	});
 
-	it('User searches for a valid Trust and selects it', () => {
 		cy.randomSelectTrust();
 		cy.get('#search__option--0').click();
-	});
 
-	it('Should throw an error when a Concern Type is omitted', () => {
-		cy.get('.govuk-button').click();
+		cy.getByTestId('add-concern-button').click();
 		cy.get('.govuk-list.govuk-error-summary__list li:nth-of-type(1)')
 			.should('contain.text', 'Select concern type');
 		cy.get('.govuk-list.govuk-error-summary__list li:nth-of-type(2)')
