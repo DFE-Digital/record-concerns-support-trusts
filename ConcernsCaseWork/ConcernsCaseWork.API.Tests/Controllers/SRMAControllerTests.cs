@@ -368,10 +368,10 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                      updatedByDelegate = req.Delegate(srmaModel);
                  });
 
-            controllerSUT.UpdateDateClosed(srmaId, targetDateClosed.ToString(dtSerialisationFormat));
+            controllerSUT.UpdateDateClosed(srmaId);
 
             updatedByDelegate.Should().NotBeNull();
-            updatedByDelegate.ClosedAt.Should().Be(targetDateClosed);
+			updatedByDelegate.ClosedAt.Should().NotBeNull();
         }
     }
 }

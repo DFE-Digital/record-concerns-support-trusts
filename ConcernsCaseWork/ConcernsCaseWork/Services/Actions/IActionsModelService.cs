@@ -6,6 +6,6 @@ namespace ConcernsCaseWork.Services.Actions
 {
 	public interface IActionsModelService
 	{
-		Task<IList<ActionSummaryModel>> GetActionsSummary(long caseUrn);
+		Task<ActionSummaryBreakdownModel> GetActionsSummary(long caseUrn);
 	}
 }

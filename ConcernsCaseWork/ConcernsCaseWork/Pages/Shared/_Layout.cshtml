@@ -56,7 +56,7 @@
     <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png">
     <link rel="stylesheet" href="~/dist/css/site.css" />
 
-    <title>@ViewData["Title"] - Concerns casework - GOV.UK</title>
+    <title>@ViewData["Title"] - Record concerns and support for trusts - GOV.UK</title>
 
 </head>
 <body class="govuk-template__body ">
@@ -66,9 +66,7 @@
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
     <script src="~/dist/vendor/jquery.min.js" nonce="@nonce"></script>
-    <script nonce="@nonce">
-        document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
-    </script>
+    <script nonce="@nonce">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
     <partial name="_CookiesBanner" />
 
@@ -81,7 +79,7 @@
                         <image src="/assets/images/moj-logotype-crest.png" xlink:href="" class="moj-header__logotype-crest-fallback-image" width="40" height="40"></image>
                     </svg>
                     <a class="moj-header__link moj-header__link--organisation-name" href="/">DfE</a>
-                    <a class="moj-header__link moj-header__link--service-name" href="/">Concerns casework</a>
+                    <a class="moj-header__link moj-header__link--service-name" href="/">Record concerns and support for trusts</a>
                 </div>
 
                 @if (Context.User.Identity.IsAuthenticated)
@@ -95,6 +93,16 @@
             </div>
         </div>
     </header>
+    <div class="govuk-phase-banner">
+        <p class="govuk-phase-banner__content">
+            <strong class="govuk-tag govuk-phase-banner__content__tag">
+                beta
+            </strong>
+            <span class="govuk-phase-banner__text">
+                This is a new service – your <a class="govuk-link" target="_blank" href="https://forms.office.com/Pages/ResponsePage.aspx?id=yXfS-grGoU2187O4s0qC-YLQJBLL9YBFkLxTwHUdBrNUNjBMT0YzNU8xM0g3Q1BCVUFURUg2MTFSMy4u">feedback (opens in a new tab)</a> will help us to improve it.
+            </span>
+        </p>
+    </div>
 
     @await RenderSectionAsync("Scripts", required: false)
     @await RenderSectionAsync("BeforeMain", required: false)
@@ -130,15 +138,15 @@
                                 Privacy policy
                             </a>
                         </li>
-						@if (!_env.IsProduction())
-						{
-							<li class="govuk-footer__inline-list-item">
-								<a class="govuk-footer__link" href="/cleardata">
-									Clear data
-								</a>
-							</li>
-						}
-					</ul>
+                        @if (!_env.IsProduction())
+                        {
+                            <li class="govuk-footer__inline-list-item">
+                                <a class="govuk-footer__link" href="/cleardata">
+                                    Clear data
+                                </a>
+                            </li>
+                        }
+                    </ul>
                 </div>
                 <div class="govuk-footer__meta-item">
                     <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright</a>

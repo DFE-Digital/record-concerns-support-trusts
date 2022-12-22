@@ -773,22 +773,6 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Financial reporting",
-                            Name = "Compliance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Financial returns",
-                            Name = "Compliance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
                             Id = 3,
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Deficit",
@@ -799,23 +783,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 4,
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Projected deficit / Low future surplus",
-                            Name = "Financial",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Cash flow shortfall",
-                            Name = "Financial",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Clawback",
+                            Description = "Projected deficit",
                             Name = "Financial",
                             UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -831,48 +799,40 @@ namespace ConcernsCaseWork.Data.Migrations
                             Id = 8,
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Governance",
-                            Name = "Governance",
+                            Name = "Governance and compliance",
                             UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            Id = 9,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Closure",
-                            Name = "Governance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            Id = 20,
+                            CreatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Viability",
+                            Name = "Financial",
+                            UpdatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            Id = 10,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Executive Pay",
-                            Name = "Governance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 11,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Safeguarding",
-                            Name = "Governance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 12,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Allegations and self reported concerns",
+                            Id = 21,
+                            CreatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Irregularity",
                             Name = "Irregularity",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            Id = 13,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Related party transactions - in year",
+                            Id = 22,
+                            CreatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Suspected fraud",
                             Name = "Irregularity",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CreatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Compliance",
+                            Name = "Governance and compliance",
+                            UpdatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 

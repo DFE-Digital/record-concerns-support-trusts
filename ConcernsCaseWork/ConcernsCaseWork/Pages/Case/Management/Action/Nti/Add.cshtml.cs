@@ -285,8 +285,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 				Conditions = Array.Empty<NtiConditionModel>(),
 				Notes = notes,
 				DateStarted = dateStarted,
-				CreatedAt = DateTime.Now.Date,
-				UpdatedAt = DateTime.Now.Date
+				CreatedAt = DateTime.Now,
+				UpdatedAt = DateTime.Now
 			};
 
 			return nti;

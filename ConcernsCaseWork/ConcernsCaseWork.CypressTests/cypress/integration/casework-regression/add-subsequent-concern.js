@@ -1,5 +1,4 @@
 import CreateCaseConcernsPage from "/cypress/pages/createCase/createCaseConcernsPage";
-import CaseMangementPage from "/cypress/pages/caseMangementPage";
 import { LogTask } from "../../support/constants";
 
 describe("User adds subsequent Concern to a case", () => {
@@ -37,6 +36,6 @@ describe("User adds subsequent Concern to a case", () => {
 
 		cy.enterConcernDetails();
 
-		CaseMangementPage.getConcernTable().should('contain.text', 'Financial');
+		cy.contains("Financial: Deficit");
 	});
 });

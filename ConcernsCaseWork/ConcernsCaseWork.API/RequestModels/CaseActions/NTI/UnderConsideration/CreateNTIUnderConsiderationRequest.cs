@@ -6,10 +6,13 @@ namespace ConcernsCaseWork.API.RequestModels.CaseActions.NTI.UnderConsideration
 	{
 		[Required]
         public int CaseUrn { get; set; }
+        
+        [StringLength(2000)]
         public string Notes { get; set; }
 
         public ICollection<int> UnderConsiderationReasonsMapping { get; set; }
 
+        [StringLength(300)]
         public string CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
