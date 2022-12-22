@@ -1,4 +1,5 @@
 using ConcernsCaseWork.Data.Tests.DbGateways;
+using ConcernsCaseWork.Data.Tests.Helpers;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
@@ -31,7 +32,7 @@ public class NtiUnderConsiderationKpiTests : DatabaseTestFixture
 		createdAtKpi.DataItemChanged.Should().Be("CreatedAt");
 		createdAtKpi.Operation.Should().Be("Create");
 		createdAtKpi.OldValue.Should().BeEmpty();
-		createdAtKpi.NewValue.Replace("-","/").Should().Be(ntiUnderConsideration.CreatedAt.ToShortDateString());
+		createdAtKpi.NewValue.Should().Be(ntiUnderConsideration.CreatedAt.ToKpiDateFormat());
 
 		results.Count.Should().Be(1);
 	}
@@ -59,7 +60,7 @@ public class NtiUnderConsiderationKpiTests : DatabaseTestFixture
 		closedAtKpi.DataItemChanged.Should().Be("ClosedAt");
 		closedAtKpi.Operation.Should().Be("Close");
 		closedAtKpi.OldValue.Should().BeEmpty();
-		closedAtKpi.NewValue.Replace("-","/").Should().Be(updatedNti.ClosedAt!.Value.ToShortDateString());
+		closedAtKpi.NewValue.Should().Be(updatedNti.ClosedAt!.Value.ToKpiDateFormat());
 		
 		var closedStatusKpi = results.Single(r => r.DataItemChanged == "Status");
 		closedStatusKpi.ActionId.Should().Be(updatedNti.Id);

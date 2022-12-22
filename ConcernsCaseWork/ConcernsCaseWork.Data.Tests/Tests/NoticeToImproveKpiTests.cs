@@ -1,4 +1,5 @@
 using ConcernsCaseWork.Data.Tests.DbGateways;
+using ConcernsCaseWork.Data.Tests.Helpers;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
@@ -31,7 +32,7 @@ public class NoticeToImproveKpiTests : DatabaseTestFixture
 		createdAtKpi.DataItemChanged.Should().Be("CreatedAt");
 		createdAtKpi.Operation.Should().Be("Create");
 		createdAtKpi.OldValue.Should().BeEmpty();
-		createdAtKpi.NewValue.Replace("-","/").Should().Be(noticeToImprove.CreatedAt.ToShortDateString());
+		createdAtKpi.NewValue.Should().Be(noticeToImprove.CreatedAt.ToKpiDateFormat());
 
 		var statusKpi = results.Single(r => r.DataItemChanged == "Status");
 		statusKpi.ActionId.Should().Be(noticeToImprove.Id);
@@ -95,7 +96,7 @@ public class NoticeToImproveKpiTests : DatabaseTestFixture
 		closedAtKpi.DataItemChanged.Should().Be("ClosedAt");
 		closedAtKpi.Operation.Should().Be("Close");
 		closedAtKpi.OldValue.Should().BeEmpty();
-		closedAtKpi.NewValue.Replace("-","/").Should().Be(noticeToImprove.ClosedAt!.Value.ToShortDateString());
+		closedAtKpi.NewValue.Should().Be(noticeToImprove.ClosedAt!.Value.ToKpiDateFormat());
 
 		results.Count.Should().Be(1);
 	}

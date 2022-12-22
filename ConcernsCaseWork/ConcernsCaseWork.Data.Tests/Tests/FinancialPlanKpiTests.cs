@@ -1,4 +1,5 @@
 using ConcernsCaseWork.Data.Tests.DbGateways;
+using ConcernsCaseWork.Data.Tests.Helpers;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
@@ -31,7 +32,7 @@ public class FinancialPlanKpiTests : DatabaseTestFixture
 		createdAtKpi.DataItemChanged.Should().Be("CreatedAt");
 		createdAtKpi.Operation.Should().Be("Create");
 		createdAtKpi.OldValue.Should().BeEmpty();
-		createdAtKpi.NewValue.Replace("-","/").Should().Be(financialPlan.CreatedAt.ToShortDateString());
+		createdAtKpi.NewValue.Should().Be(financialPlan.CreatedAt.ToKpiDateFormat());
 
 		var statusKpi = results.Single(r => r.DataItemChanged == "Status");
 		statusKpi.ActionId.Should().Be(financialPlan.Id);
@@ -95,7 +96,7 @@ public class FinancialPlanKpiTests : DatabaseTestFixture
 		closedAtKpi.DataItemChanged.Should().Be("ClosedAt");
 		closedAtKpi.Operation.Should().Be("Close");
 		closedAtKpi.OldValue.Should().BeEmpty();
-		closedAtKpi.NewValue.Replace("-","/").Should().Be(financialPlan.ClosedAt!.Value.ToShortDateString());
+		closedAtKpi.NewValue.Should().Be(financialPlan.ClosedAt!.Value.ToKpiDateFormat());
 
 		results.Count.Should().Be(1);
 	}
