@@ -64,7 +64,9 @@ namespace ConcernsCaseWork.Mappers
 				Name = "SRMA",
 				OpenedDate = srmaModel.CreatedAt.ToDayMonthYear(),
 				RelativeUrl = relativeUrl,
-				StatusName = EnumHelper.GetEnumDescription(srmaModel.Status)
+				StatusName = EnumHelper.GetEnumDescription(srmaModel.Status),
+				RawOpenedDate = srmaModel.CreatedAt,
+				RawClosedDate = srmaModel.ClosedAt
 			};
 
 			return result;
