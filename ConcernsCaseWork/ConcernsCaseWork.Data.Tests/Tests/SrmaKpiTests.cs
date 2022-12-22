@@ -1,4 +1,5 @@
 using ConcernsCaseWork.Data.Tests.DbGateways;
+using ConcernsCaseWork.Data.Tests.Helpers;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
@@ -8,7 +9,6 @@ using System.Data;
 namespace ConcernsCaseWork.Data.Tests.Tests;
 
 [TestFixture]
-[Ignore("These tests currently must be run manually as they depend on removing and re-creating a database instance which is not yet supported in our pipelines")]
 public class SrmaKpiTests : DatabaseTestFixture
 {
 	private readonly RandomGenerator _randomGenerator = new ();
@@ -32,7 +32,7 @@ public class SrmaKpiTests : DatabaseTestFixture
 		createdAtKpi.DataItemChanged.Should().Be("CreatedAt");
 		createdAtKpi.Operation.Should().Be("Create");
 		createdAtKpi.OldValue.Should().BeEmpty();
-		createdAtKpi.NewValue.Replace("-","/").Should().Be(srma.CreatedAt.ToShortDateString());
+		createdAtKpi.NewValue.Should().Be(srma.CreatedAt.ToKpiDateFormat());
 
 		var statusKpi = results.Single(r => r.DataItemChanged == "Status");
 		statusKpi.ActionId.Should().Be(srma.Id);
@@ -96,7 +96,7 @@ public class SrmaKpiTests : DatabaseTestFixture
 		closedAtKpi.DataItemChanged.Should().Be("ClosedAt");
 		closedAtKpi.Operation.Should().Be("Close");
 		closedAtKpi.OldValue.Should().BeEmpty();
-		closedAtKpi.NewValue.Replace("-","/").Should().Be(srma.ClosedAt!.Value.ToShortDateString());
+		closedAtKpi.NewValue.Should().Be(srma.ClosedAt!.Value.ToKpiDateFormat());
 
 		results.Count.Should().Be(1);
 	}

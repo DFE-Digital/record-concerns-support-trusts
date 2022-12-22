@@ -1,3 +1,4 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -5,22 +6,23 @@ namespace ConcernsCaseWork.Data.Tests;
 
 public class DatabaseTestFixture
 {
-	private readonly string _connectionString;
+	private readonly string? _connectionString;
 
 	private static readonly object _lock = new();
 	private static bool _databaseInitialized;
 
 	protected DatabaseTestFixture()
 	{
+
 		var configPath = Path.Combine(
-			Directory.GetCurrentDirectory(), "appsettings.tests.json");
+		Directory.GetCurrentDirectory(), "appsettings.tests.json");
 
 		var config = new ConfigurationBuilder()
 			.AddJsonFile(configPath)
-			.Build();
+			.AddEnvironmentVariables();
 
-		_connectionString = config.GetConnectionString("DefaultConnection") ?? throw new Exception("Connection string not found");
-		
+		_connectionString = BuildDatabaseConnectionString(config);
+
 		lock (_lock)
 		{
 			if (!_databaseInitialized)
@@ -36,9 +38,25 @@ public class DatabaseTestFixture
 		}
 	}
 
+	private static string BuildDatabaseConnectionString(IConfigurationBuilder configBuilder)
+	{
+		var currentConfig = configBuilder.Build();
+
+		var connection = currentConfig.GetConnectionString("DefaultConnection") ?? throw new Exception("Connection string not found");
+
+		var sqlBuilder = new SqlConnectionStringBuilder(connection);
+		sqlBuilder.InitialCatalog = "DataTests";
+
+		var result = sqlBuilder.ToString();
+
+		return result;
+	}
+
 	protected ConcernsDbContext CreateContext()
-		=> new ConcernsDbContext(
+	{
+		return new ConcernsDbContext(
 			new DbContextOptionsBuilder<ConcernsDbContext>()
 				.UseSqlServer(_connectionString)
 				.Options);
+	}
 }
