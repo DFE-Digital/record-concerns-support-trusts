@@ -127,6 +127,9 @@ public class SrmaMappingTests
 			Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/srma/{testData.Id}/closed"));
 			Assert.That(actionSummary.StatusName, Is.EqualTo(EnumHelper.GetEnumDescription(testData.Status)));
 		});
+
+		actionSummary.RawOpenedDate.Should().Be(testData.CreatedAt);
+		actionSummary.RawClosedDate.Should().Be(testData.ClosedAt);
 	}
 
 	[Test]
