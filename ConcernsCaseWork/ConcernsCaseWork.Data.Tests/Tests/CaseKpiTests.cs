@@ -1,4 +1,5 @@
 using ConcernsCaseWork.Data.Tests.DbGateways;
+using ConcernsCaseWork.Data.Tests.Helpers;
 using FizzWare.NBuilder;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
@@ -29,7 +30,7 @@ public class CaseKpiTests : DatabaseTestFixture
 		createdAtKpi.DataItemChanged.Should().Be("CreatedAt");
 		createdAtKpi.Operation.Should().Be("Create");
 		createdAtKpi.OldValue.Should().BeEmpty();
-		createdAtKpi.NewValue.Replace("-","/").Should().Be(createdCase.CreatedAt.ToShortDateString());
+		createdAtKpi.NewValue.Should().Be(createdCase.CreatedAt.ToKpiDateFormat());
 
 		var riskToTrustKpi = results.Single(r => r.DataItemChanged == "Risk to Trust");
 		riskToTrustKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
@@ -130,7 +131,7 @@ public class CaseKpiTests : DatabaseTestFixture
 		riskToTrustKpi.DataItemChanged.Should().Be("ClosedAt");
 		riskToTrustKpi.Operation.Should().Be("Close");
 		riskToTrustKpi.OldValue.Should().BeEmpty();
-		riskToTrustKpi.NewValue.Replace("-","/").Should().Be(createdCase.ClosedAt.Value.ToShortDateString());
+		riskToTrustKpi.NewValue.Should().Be(createdCase.ClosedAt.Value.ToKpiDateFormat());
 		
 		results.Count.Should().Be(1);
 	}
