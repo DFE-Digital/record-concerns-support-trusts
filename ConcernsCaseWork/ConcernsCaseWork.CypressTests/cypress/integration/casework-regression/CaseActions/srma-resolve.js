@@ -1,8 +1,11 @@
 import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
 import CaseManagementPage from "/cypress/pages/caseMangementPage";
 import { LogTask } from "../../../support/constants";
+import { CookieBanner } from "../../../pages/cookieBanner";
 
 describe("User can resolve an SRMA and is given validation based on options chosen", () => {
+    const cookiesBanner = new CookieBanner();
+
     before(() => {
         cy.login();
     });
@@ -12,6 +15,8 @@ describe("User can resolve an SRMA and is given validation based on options chos
     });
 
     it("Should validate an SRMA", () => {
+        cookiesBanner.accept();
+
         cy.task(LogTask, "User creates a case");
         cy.visit(Cypress.env('url'), { timeout: 30000 });
         cy.checkForExistingCase(true);
@@ -48,7 +53,7 @@ describe("User can resolve an SRMA and is given validation based on options chos
         CaseManagementPage.getOpenActionLink("srma").click();
 
         cy.task(LogTask, "User can set status to Trust Considering");
-        cy.get('[class="govuk-link"]').eq(0).click();
+        cy.get('[class="govuk-link"]').eq(1).click();
 
         cy.get('[id*="status"]').eq(0).click();
         cy.get('label.govuk-label.govuk-radios__label').eq(0).invoke('text').then(term => {
@@ -56,7 +61,7 @@ describe("User can resolve an SRMA and is given validation based on options chos
             cy.log("Status set as " + term);
             cy.get('[id="add-srma-button"]').click();
             cy.get('[class="govuk-table__row"]').should(($row) => {
-                expect($row.eq(0).text().trim()).to.contain("Trust considering").and.to.match(/Status/i);
+                expect($row.eq(1).text().trim()).to.contain("Trust considering").and.to.match(/Status/i);
             });
         })
 
@@ -79,14 +84,14 @@ describe("User can resolve an SRMA and is given validation based on options chos
         cy.reload();
 
         cy.task(LogTask, "User can set status to preparing for deployment");
-        cy.get('[class="govuk-link"]').eq(0).click();
+        cy.get('[class="govuk-link"]').eq(1).click();
         cy.get('[id*="status"]').eq(1).click();
         cy.get('label.govuk-label.govuk-radios__label').eq(1).invoke('text').then(term => {
             cy.wrap(term.trim()).as("stText");
             cy.log("Status set as " + term);
             cy.get('[id="add-srma-button"]').click();
             cy.get('[class="govuk-table__row"]').should(($row) => {
-                expect($row.eq(0).text().trim()).to.contain(term.trim()).and.to.match(/Status/i);
+                expect($row.eq(1).text().trim()).to.contain(term.trim()).and.to.match(/Status/i);
             });
         });
 
@@ -126,7 +131,7 @@ describe("User can resolve an SRMA and is given validation based on options chos
         cy.reload();
 
         cy.task(LogTask, "User CAN cancel with reason populated");
-        cy.get('[class="govuk-link"]').eq(2).click();
+        cy.get('[class="govuk-link"]').eq(3).click();
 
         let rand = Math.floor(Math.random() * 2)
 
@@ -136,13 +141,13 @@ describe("User can resolve an SRMA and is given validation based on options chos
             cy.log("Reason set as " + term);
             cy.get('[id="add-srma-button"]').click();
             cy.get('[class="govuk-table__row"]').should(($row) => {
-                expect($row.eq(2).text().trim()).to.contain(term.trim()).and.to.match(/Reason/i);
-                expect($row.eq(0).text().trim()).to.contain("Preparing for deployment").and.to.match(/Status/i);
+                expect($row.eq(3).text().trim()).to.contain(term.trim()).and.to.match(/Reason/i);
+                expect($row.eq(1).text().trim()).to.contain("Preparing for deployment").and.to.match(/Status/i);
             });
         });
 
         cy.task(LogTask, "User CAN cancel with reason populated");
-        cy.get('[class="govuk-link"]').eq(2).click();
+        cy.get('[class="govuk-link"]').eq(3).click();
     });
 
     after(function () {
