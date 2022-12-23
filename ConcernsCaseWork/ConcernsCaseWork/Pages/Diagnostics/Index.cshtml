@@ -9,7 +9,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-l">Diagnostics</h1>
-            @if (Model.Env != string.Empty)
+            @if (!String.IsNullOrWhiteSpace(Model.Env))
             {
                 <div>Environment: @Model.Env</div>
             }
@@ -23,8 +23,9 @@
             <div>UTC Time: @DateTime.UtcNow</div>
 
             <div>Module Version Id: @Model.ModuleVersionId</div>
-            <div>Build time @Model.BuildTime</div>
-            <div>Build GUID @Model.BuildGuid</div>
+            <div>Build Mode: @Model.BuildMode</div>
+            <div>Build Time: @Model.BuildTime</div>
+            <div>Build GUID: @Model.BuildGuid</div>
         </div>
     </div>
 </div>
