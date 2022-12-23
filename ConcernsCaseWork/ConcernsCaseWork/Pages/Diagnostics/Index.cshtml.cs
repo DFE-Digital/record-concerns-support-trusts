@@ -27,6 +27,7 @@ namespace ConcernsCaseWork.Pages.Diagnostics
 		public string BuildGuid { get; set; }
 		public string BuildTime { get; set; }
 		public string BuildMode { get; set; }
+		public string BuildMessage { get; set; }
 
 		public IndexModel(IConfiguration configuration, IWebHostEnvironment env)
 		{
@@ -58,7 +59,9 @@ namespace ConcernsCaseWork.Pages.Diagnostics
 			this.BuildMode = GetBuildMode();
 			this.BuildTime = assembly.GetCustomAttribute<BuildTimeAttribute>().BuildTime;
 			this.BuildGuid = assembly.GetCustomAttribute<BuildGuidAttribute>().BuildGuid;
+			this.BuildMessage = assembly.GetCustomAttribute<CustomBuildMessageAttribute>().CustomBuildMessage;
 		}
+
 
 
 		private string GetBuildMode()
