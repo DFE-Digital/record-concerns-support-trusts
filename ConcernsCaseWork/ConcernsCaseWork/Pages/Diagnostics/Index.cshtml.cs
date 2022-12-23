@@ -26,6 +26,7 @@ namespace ConcernsCaseWork.Pages.Diagnostics
 		public string AssemblyInformationalVersion { get; set; }
 		public string BuildGuid { get; set; }
 		public string BuildTime { get; set; }
+		public string BuildMode { get; set; }
 
 		public IndexModel(IConfiguration configuration, IWebHostEnvironment env)
 		{
@@ -37,6 +38,13 @@ namespace ConcernsCaseWork.Pages.Diagnostics
 		{
 			this.ReleaseTag = _configuration["ConcernsCasework:ReleaseTag"];
 
+
+
+			switch (_env.IsDevelopment())
+			{
+
+			}
+
 			if (_env.IsDevelopment() || _env.IsStaging())
 			{
 				this.Env = _env.IsDevelopment() ? "Development" : "Staging";
@@ -47,8 +55,20 @@ namespace ConcernsCaseWork.Pages.Diagnostics
 			this.AssemblyFileVersion = assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
 			this.AssemblyInformationalVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 			this.ModuleVersionId = assembly.ManifestModule.ModuleVersionId.ToString();
+			this.BuildMode = GetBuildMode();
 			this.BuildTime = assembly.GetCustomAttribute<BuildTimeAttribute>().BuildTime;
 			this.BuildGuid = assembly.GetCustomAttribute<BuildGuidAttribute>().BuildGuid;
+		}
+
+
+		private string GetBuildMode()
+		{
+#if DEBUG
+			return "DEBUG";
+#else
+	return "RELEASE"
+#endif
+
 		}
 	}
 }
