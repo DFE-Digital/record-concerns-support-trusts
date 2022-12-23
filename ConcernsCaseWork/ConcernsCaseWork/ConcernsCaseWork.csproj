@@ -13,6 +13,7 @@
 	<PropertyGroup Label="custom">
 		<BuildDateTime>$([System.DateTime]::UtcNow.ToString("s"))</BuildDateTime>
 		<BuildGuid>$([System.Guid]::NewGuid().ToString())</BuildGuid>
+		<CustomBuildMessage></CustomBuildMessage>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -21,6 +22,9 @@
 		</AssemblyAttribute>
 		<AssemblyAttribute Include="ConcernsCaseWork.Attributes.BuildGuidAttribute">
 			<_Parameter1>"$(BuildGuid)"</_Parameter1>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="ConcernsCaseWork.Attributes.CustomBuildMessageAttribute">
+			<_Parameter1>"$(CustomBuildMessage)"</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
 
