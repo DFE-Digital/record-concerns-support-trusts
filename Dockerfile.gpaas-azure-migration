@@ -28,7 +28,7 @@ RUN mkdir -p /app/SQL
 RUN dotnet ef migrations script --output /app/SQL/DbMigrationScript.sql --idempotent -p /build/ConcernsCaseWork.Data
 RUN touch /app/SQL/DbMigrationScript.sql
 
-RUN dotnet publish ConcernsCaseWork -c Release -o /app ==no-build
+RUN dotnet publish ConcernsCaseWork -c Release -o /app --no-build
 # RUN dotnet publish ConcernsCaseWork -c Release -o /app "-p:customBuildMessage=Merry Christmas ${COMMIT_SHA};"
 
 COPY ./script/web-docker-entrypoint.sh /app/docker-entrypoint.sh
