@@ -66,7 +66,7 @@ namespace ConcernsCaseWork.Pages.Diagnostics
 #if DEBUG
 			return "DEBUG";
 #else
-	return "RELEASE"
+	return "RELEASE";
 #endif
 
 		}
