@@ -1,24 +1,32 @@
 import { Logger } from "../../../common/logger";
 
-export class CloseNoticeToImprovePage {
-    public withDayClosed(value: string): this {
-        Logger.Log(`With day closed ${value}`);
+export class LiftNoticeToImprovePage {
+    public withSubmissionDecisionId(value: string): this {
+        Logger.Log(`With submission decision id ${value}`);
+
+        cy.getById(`submission-decision-id`).clear().type(value);
+
+        return this;
+    }
+
+    public withDayLifted(value: string): this {
+        Logger.Log(`With day lifted ${value}`);
 
         cy.getById(`dtr-day`).clear().type(value);
 
         return this;
     }
 
-    public withMonthClosed(value: string): this {
-        Logger.Log(`With month closed ${value}`);
+    public withMonthLifted(value: string): this {
+        Logger.Log(`With month lifted ${value}`);
 
         cy.getById(`dtr-month`).clear().type(value);
 
         return this;
     }
 
-    public withYearClosed(value: string): this {
-        Logger.Log(`With year closed ${value}`);
+    public withYearLifted(value: string): this {
+        Logger.Log(`With year lifted ${value}`);
 
         cy.getById(`dtr-year`).clear().type(value);
 
@@ -41,6 +49,14 @@ export class CloseNoticeToImprovePage {
         return this;
     }
 
+    public hasNotes(value: string): this {
+        Logger.Log(`Has notes ${value}`);
+
+        cy.getById(`nti-notes`).should("have.value", value);
+
+        return this;
+    }
+
     public hasValidationError(value: string): this {
         Logger.Log(`Has validation error ${value}`);
 
@@ -59,10 +75,10 @@ export class CloseNoticeToImprovePage {
         return this;
     }
 
-    public close(): this {
-        Logger.Log("Confirming Close of Notice To Improve");
+    public lift(): this {
+        Logger.Log("Lifting Notice To Improve");
 
-        cy.getById("add-nti-wl-button").click();
+        cy.getById("lift-nti-button").click();
 
         return this;
     }

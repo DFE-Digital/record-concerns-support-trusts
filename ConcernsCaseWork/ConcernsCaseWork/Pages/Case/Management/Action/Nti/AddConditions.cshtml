@@ -68,7 +68,7 @@
                                         {
                                             var idStr = conditionId++ == 0 ? "condition" : "condition-" + conditionId;
                                             <div class="govuk-checkboxes__item">
-                                                <input class="govuk-checkboxes__input" id="@idStr" name="condition" type="checkbox" value="@condition.Id" checked="@Model.IsConditionSelected(condition)">
+                                                <input class="govuk-checkboxes__input" data-testid="condition-@condition.Name" id="@idStr" name="condition" type="checkbox" value="@condition.Id" checked="@Model.IsConditionSelected(condition)">
                                                 <label class="govuk-label govuk-checkboxes__label" for="@idStr">
                                                     @condition.Name
                                                 </label>
