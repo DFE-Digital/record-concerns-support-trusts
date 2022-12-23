@@ -1,9 +1,12 @@
+using ConcernsCaseWork.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Reflection;
 
 namespace ConcernsCaseWork.Pages.Diagnostics
 {
@@ -18,7 +21,11 @@ namespace ConcernsCaseWork.Pages.Diagnostics
 		public string ReleaseTag { get; set; }
 
 		public string ModuleVersionId { get; set; }
-
+		public Version AssemblyVersion { get; set; }
+		public string AssemblyFileVersion { get; set; }
+		public string AssemblyInformationalVersion { get; set; }
+		public string BuildGuid { get; set; }
+		public string BuildTime { get; set; }
 
 		public IndexModel(IConfiguration configuration, IWebHostEnvironment env)
 		{
@@ -35,8 +42,13 @@ namespace ConcernsCaseWork.Pages.Diagnostics
 				this.Env = _env.IsDevelopment() ? "Development" : "Staging";
 			}
 
-			var assembly = this.GetType().Assembly;
+			var assembly = Assembly.GetEntryAssembly();
+			this.AssemblyVersion = assembly.GetName().Version;
+			this.AssemblyFileVersion = assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
+			this.AssemblyInformationalVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 			this.ModuleVersionId = assembly.ManifestModule.ModuleVersionId.ToString();
+			this.BuildTime = assembly.GetCustomAttribute<BuildTimeAttribute>().BuildTime;
+			this.BuildGuid = assembly.GetCustomAttribute<BuildGuidAttribute>().BuildGuid;
 		}
 	}
 }
