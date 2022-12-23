@@ -96,7 +96,7 @@
                     else
                     {
                         <th scope="row" class="govuk-table-case-details__header">Status</th>
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell" data-testid="status-text">
                             @{
                                 if (Model.NtiModel.ClosedStatus != null)
                                 {
@@ -164,7 +164,7 @@
                                     break;
                                 case (int)NTIStatus.Closed:
                                     <th scope="row" class="govuk-table-case-details__header">Date NTI Closed</th>
-                                    <td class="govuk-table__cell">
+                                    <td class="govuk-table__cell" data-testid="date-nti-closed">
                                         @{
 
                                             if (Model.NtiModel.DateNTIClosed.HasValue)
@@ -268,7 +268,7 @@
 
                     <li>
                         <div class="govuk-!-padding-bottom-1">
-                            <a data-prevent-double-click="true" href="@Request.Path/cancel" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-wl-button">
+                            <a data-prevent-double-click="true" href="@Request.Path/cancel" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-wl-button" data-testid="cancel-nti-button">
                                 Cancel NTI
                             </a>
                             <p class="govuk-hint">
@@ -279,7 +279,7 @@
 
                     <li>
                         <div class="govuk-!-padding-bottom-1">
-                            <a data-prevent-double-click="true" href="@Request.Path/lift" class="govuk-button govuk-button--primary" data-module="govuk-button" role="button">
+                            <a data-prevent-double-click="true" href="@Request.Path/lift" class="govuk-button govuk-button--primary" data-module="govuk-button" role="button" data-testid="lift-nti-button">
                                 Lift NTI
                             </a>
                             <p class="govuk-hint">
