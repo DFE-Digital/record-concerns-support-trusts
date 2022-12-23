@@ -19,7 +19,7 @@ COPY ./ConcernsCaseWork/ConcernsCaseWork.Redis ./ConcernsCaseWork.Redis
 COPY ./ConcernsCaseWork/ConcernsCaseWork.sln ./ConcernsCaseWork.sln
 
 RUN dotnet restore ConcernsCaseWork
-RUN dotnet build ConcernsCaseWork "/p:customBuildMessage=Merry Christmas ${COMMIT_SHA};"
+RUN dotnet build ConcernsCaseWork "/p:customBuildMessage=Merry Christmas ${COMMIT_SHA};" -c Release
 
 RUN dotnet new tool-manifest
 RUN dotnet tool install dotnet-ef
@@ -28,7 +28,8 @@ RUN mkdir -p /app/SQL
 RUN dotnet ef migrations script --output /app/SQL/DbMigrationScript.sql --idempotent -p /build/ConcernsCaseWork.Data
 RUN touch /app/SQL/DbMigrationScript.sql
 
-RUN dotnet publish ConcernsCaseWork -c Release -o /app
+RUN dotnet publish ConcernsCaseWork -c Release -o /app ==no-build
+# RUN dotnet publish ConcernsCaseWork -c Release -o /app "-p:customBuildMessage=Merry Christmas ${COMMIT_SHA};"
 
 COPY ./script/web-docker-entrypoint.sh /app/docker-entrypoint.sh
 
