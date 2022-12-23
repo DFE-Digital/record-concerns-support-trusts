@@ -1,24 +1,31 @@
+using ConcernsCaseWork.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using System.Globalization;
-
 using System;
+using System.Reflection;
 
 namespace ConcernsCaseWork.Pages.Diagnostics
 {
 	[Authorize]
 
-    public class IndexModel : PageModel
-    {
-	    private readonly IConfiguration _configuration;
-	    private readonly IWebHostEnvironment _env;
-        public string Env { get; set; }
-	    public string ReleaseTag { get; set; }
+	[ResponseCache(NoStore = true, Duration = 0)]
+	public class IndexModel : PageModel
+	{
+		private readonly IConfiguration _configuration;
+		private readonly IWebHostEnvironment _env;
+		public string Env { get; set; }
+		public string ReleaseTag { get; set; }
 
+		public string ModuleVersionId { get; set; }
+		public Version AssemblyVersion { get; set; }
+		public string AssemblyFileVersion { get; set; }
+		public string AssemblyInformationalVersion { get; set; }
+		public string BuildGuid { get; set; }
+		public string BuildTime { get; set; }
 
 		public IndexModel(IConfiguration configuration, IWebHostEnvironment env)
 		{
@@ -26,15 +33,22 @@ namespace ConcernsCaseWork.Pages.Diagnostics
 			_env = env;
 		}
 
-        public void OnGet()
-        {
-	        this.ReleaseTag = _configuration["ConcernsCasework:ReleaseTag"];
+		public void OnGet()
+		{
+			this.ReleaseTag = _configuration["ConcernsCasework:ReleaseTag"];
 
-	        if (_env.IsDevelopment() || _env.IsStaging())
-	        {
-		        this.Env = _env.IsDevelopment() ? "Development" : "Staging";
-	        }
-        }
+			if (_env.IsDevelopment() || _env.IsStaging())
+			{
+				this.Env = _env.IsDevelopment() ? "Development" : "Staging";
+			}
 
-    }
+			var assembly = Assembly.GetEntryAssembly();
+			this.AssemblyVersion = assembly.GetName().Version;
+			this.AssemblyFileVersion = assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
+			this.AssemblyInformationalVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+			this.ModuleVersionId = assembly.ManifestModule.ModuleVersionId.ToString();
+			this.BuildTime = assembly.GetCustomAttribute<BuildTimeAttribute>().BuildTime;
+			this.BuildGuid = assembly.GetCustomAttribute<BuildGuidAttribute>().BuildGuid;
+		}
+	}
 }

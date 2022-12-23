@@ -9,14 +9,22 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-l">Diagnostics</h1>
-	        @if (Model.Env != string.Empty)
+            @if (Model.Env != string.Empty)
             {
                 <div>Environment: @Model.Env</div>
             }
-	        <div>Release Tag: @Model.ReleaseTag</div>
-	        <div>Current Culture: @CultureInfo.CurrentCulture.Name</div>
-	        <div>Current UI Culture: @CultureInfo.CurrentUICulture.Name</div>
-	        <div>UTC Time: @DateTime.UtcNow</div>
+            <div>Release Tag: @Model.ReleaseTag</div>
+            <div>Assembly Version: @Model.AssemblyVersion</div>
+            <div>Assembly File Version: @Model.AssemblyFileVersion</div>
+            <div>Product/Assembly Informational Version: @Model.AssemblyInformationalVersion</div>
+
+            <div>Current Culture: @CultureInfo.CurrentCulture.Name</div>
+            <div>Current UI Culture: @CultureInfo.CurrentUICulture.Name</div>
+            <div>UTC Time: @DateTime.UtcNow</div>
+
+            <div>Module Version Id: @Model.ModuleVersionId</div>
+            <div>Build time @Model.BuildTime</div>
+            <div>Build GUID @Model.BuildGuid</div>
         </div>
     </div>
 </div>
