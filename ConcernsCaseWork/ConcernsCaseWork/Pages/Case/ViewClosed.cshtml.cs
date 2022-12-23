@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.Extensions;
+﻿using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
@@ -34,6 +34,7 @@ namespace ConcernsCaseWork.Pages.Case
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public List<ActionSummaryModel> CaseActions { get; private set; }
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.ClosedCasesSummaryPage);
 		
 		public ViewClosedPageModel(ICaseModelService caseModelService, 
 			ITrustModelService trustModelService,

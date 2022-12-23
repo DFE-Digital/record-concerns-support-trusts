@@ -1,8 +1,8 @@
 using Ardalis.GuardClauses;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Helpers;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases.Create;
@@ -28,6 +28,8 @@ public class CreateNonConcernsCasePageModel : AbstractPageModel
 
 	[BindProperty]
 	public Actions SelectedAction { get; set; }
+	
+	public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
 
 	public CreateNonConcernsCasePageModel(
 		IUserStateCachedService cachedService,

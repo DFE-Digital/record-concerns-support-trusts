@@ -1,4 +1,5 @@
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.Decision;
@@ -16,6 +17,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		private ILogger _logger;
 
 		public ViewDecisionModel Decision { get; set; }
+		
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, label: "Back to case overview");
 
 		public IndexPageModel(
 			IDecisionService decisionService,
