@@ -3,11 +3,17 @@ import { EditNoticeToImprovePage } from "../../../pages/caseActions/noticeToImpr
 import CaseManagementPage from "../../../pages/caseMangementPage";
 import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import { ViewNoticeToImprovePage } from "../../../pages/caseActions/noticeToImprove/viewNoticeToImprovePage";
+import { CancelNoticeToImprovePage } from "../../../pages/caseActions/noticeToImprove/cancelNoticeToImprovePage";
+import { LiftNoticeToImprovePage } from "../../../pages/caseActions/noticeToImprove/liftNoticeToImprovePage";
+import { CloseNoticeToImprovePage } from "../../../pages/caseActions/noticeToImprove/closeNoticeToImprovePage";
 
 describe("Testing case action NTI", () =>
 {
     const editNtiPage = new EditNoticeToImprovePage();
     const viewNtiPage = new ViewNoticeToImprovePage();
+    const cancelNtiPage = new CancelNoticeToImprovePage();
+    const liftNtiPage = new LiftNoticeToImprovePage();
+    const closeNtiPage = new CloseNoticeToImprovePage();
 
     beforeEach(() => {
 		cy.login();
@@ -33,7 +39,7 @@ describe("Testing case action NTI", () =>
             .save()
             .hasValidationError("Notes must be 2000 characters or less");
 
-        configureNti();
+        configureNtiWithConditions();
 
         Logger.Log("Validate the NTI on the view page");
         cy.get("#open-case-actions td")
@@ -58,7 +64,7 @@ describe("Testing case action NTI", () =>
 
     it("Should handle editing an existing NTI", () =>
     {
-        configureNti();
+        configureNtiWithConditions();
 
         Logger.Log("Validate the NTI on the view page");
         cy.get("#open-case-actions td")
@@ -163,6 +169,106 @@ describe("Testing case action NTI", () =>
             .should("contain.text", "There is already an open NTI action linked to this case. Please resolve that before opening another one.");
     });
 
+    it("should be able to cancel an NTI", () =>
+    {
+        configureNtiWithConditions();
+
+        cy.get("#open-case-actions td")
+            .getByTestId("NTI").click();
+
+        viewNtiPage.cancel();
+
+        cancelNtiPage.hasNotes("Nti notes data");
+
+        cancelNtiPage
+            .withNotesExceedingLimit()
+            .cancel()
+            .hasValidationError("Notes must be 2000 characters or less");
+
+        cy.wait(500);
+
+        cancelNtiPage
+            .withNotes("This is my final notes")
+            .cancel();
+
+        assertClosedNti();
+
+        viewNtiPage.hasStatus("Cancelled");
+    });
+
+    it("Should be able to lift an NTI", () =>
+    {
+        configureNtiWithConditions();
+
+        cy.get("#open-case-actions td")
+            .getByTestId("NTI").click();
+
+        viewNtiPage.lift();
+
+        liftNtiPage.hasNotes("Nti notes data");
+
+        Logger.Log("Validating fields");
+        liftNtiPage
+            .withDayLifted("22")
+            .lift()
+            .hasValidationError("Please enter a complete date (DD MM YYYY)");
+
+        liftNtiPage.clearDateFields();
+
+        liftNtiPage
+            .withNotesExceedingLimit()
+            .lift()
+            .hasValidationError("Notes must be 2000 characters or less");
+
+        Logger.Log("Filling out NTI lifted");
+        liftNtiPage
+            .withSubmissionDecisionId("123456")
+            .withDayLifted("12")
+            .withMonthLifted("7")
+            .withYearLifted("2005")
+            .withNotes("This is my final notes")
+            .lift();
+
+        assertClosedNti();
+
+        viewNtiPage.hasStatus("Lifted");
+    });
+
+    it("Should be able to close an NTI", () =>
+    {
+        configureNtiWithConditions();
+
+        cy.get("#open-case-actions td")
+            .getByTestId("NTI").click();
+
+        viewNtiPage.close();
+
+        closeNtiPage
+            .withDayClosed("22")
+            .close()
+            .hasValidationError("Please enter a complete date (DD MM YYYY)");
+
+        closeNtiPage.clearDateFields();
+
+        closeNtiPage
+            .withNotesExceedingLimit()
+            .close()
+            .hasValidationError("Notes must be 2000 characters or less");
+
+        closeNtiPage
+            .withDayClosed("15")
+            .withMonthClosed("12")
+            .withYearClosed("2020")
+            .withNotes("This is my final notes")
+            .close();
+
+        assertClosedNti();
+
+        viewNtiPage
+            .hasStatus("Closed")
+            .hasDateClosed("15-12-2020");
+    });
+
     function addNtiToCase()
     {
         Logger.Log("Adding Notice To Improve");
@@ -171,7 +277,7 @@ describe("Testing case action NTI", () =>
         AddToCasePage.getAddToCaseBtn().click();
     }
 
-    function configureNti()
+    function configureNtiWithConditions()
     {
         Logger.Log("Filling out the NTI form")
         editNtiPage
@@ -198,5 +304,32 @@ describe("Testing case action NTI", () =>
             .saveConditions();
 
         editNtiPage.save();
+    }
+
+    function assertClosedNti()
+    {
+        Logger.Log("Viewing the closed NTI");
+
+        cy.get("#close-case-actions td")
+            .getByTestId("NTI").click();
+
+            viewNtiPage
+                .hasDateIssued("22-10-2022")
+                .hasReasonIssued("Cash flow problems")
+                .hasReasonIssued("Risk of insolvency")
+                .hasConditions("Audit and risk committee")
+                .hasConditions("Trust financial plan")
+                .hasConditions("Action plan")
+                .hasConditions("Admissions")
+                .hasConditions("Review and update safeguarding policies")
+                .hasConditions("Off-payroll payments")
+                .hasConditions("Financial returns")
+                .hasConditions("Trustee contact details")
+                .hasConditions("Qualified Floating Charge (QFC)")
+                .hasNotes("This is my final notes")
+                .hasNoEditButton()
+                .hasNoCloseButton()
+                .hasNoCancelButton()
+                .hasNoLiftButton();
     }
 });
