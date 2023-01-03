@@ -25,6 +25,15 @@ export class ViewNtiWarningLetterPage {
         return this;
     }
 
+    public hasReasonCount(value: number): this
+    {
+        Logger.Log(`Has reason count ${value}`);
+
+        cy.getByTestId("nti-reasons").children().should("have.length", value);
+
+        return this;
+    }
+
     public hasNotes(value: string): this {
         Logger.Log(`Has notes ${value}`);
 
@@ -37,6 +46,15 @@ export class ViewNtiWarningLetterPage {
         Logger.Log(`Has condition ${value}`);
 
         cy.getByTestId(`nti-conditions`).should("contain.text", value);
+
+        return this;
+    }
+
+    public hasConditionCount(value: number): this
+    {
+        Logger.Log(`Has condition count ${value}`);
+
+        cy.getByTestId(`nti-conditions`).children().should("have.length", value);
 
         return this;
     }

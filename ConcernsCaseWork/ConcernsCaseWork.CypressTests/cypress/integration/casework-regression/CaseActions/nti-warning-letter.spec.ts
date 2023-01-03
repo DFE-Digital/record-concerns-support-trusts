@@ -90,7 +90,9 @@ describe("Testing the NTI warning letter action", () =>
         viewNtiWarningLetterPage
             .hasStatus("Preparing warning letter")
             .hasDateSent("10-02-2020")
+            .hasReasonCount(1)
             .hasReason("Governance concerns")
+            .hasConditionCount(1)
             .hasCondition("Scheme of delegation")
             .hasNotes("My edited notes");
     });
