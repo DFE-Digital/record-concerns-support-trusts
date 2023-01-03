@@ -42,10 +42,12 @@ jobs:
           VERSION=latest
           TAGS="${DOCKER_IMAGE}:${VERSION}"
           if [ "${{ github.event_name }}" = "push" ]; then
-            VERSION=sha-${GITHUB_SHA}
+            CHECKED_OUT_SHA="$(git log -1 '--format=format:%H')"
+            VERSION=sha-${CHECKED_OUT_SHA}
             TAGS="$TAGS,${DOCKER_IMAGE}:${VERSION},${DOCKER_IMAGE}:${{needs.set-production-release-version.outputs.version}}"
           fi
           echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=checked-out-sha::${CHECKED_OUT_SHA}
           echo ::set-output name=deploy-version::${VERSION}
 
       - name: Setup node.js
@@ -63,7 +65,7 @@ jobs:
           file: ./Dockerfile.gpaas-azure-migration
           build-args: |
             ASPNET_IMAGE_TAG=6.0.9-bullseye-slim-amd64
-            COMMIT_SHA=${GITHUB_SHA}
+            COMMIT_SHA=${{ steps.prepare-tags.outputs.checked-out-sha }}
           push: true
           tags: ${{ steps.prepare-tags.outputs.tags }}
 
