@@ -40,8 +40,8 @@ describe("Testing the NTI under consideration", () =>
                     .getByTestId("NTI Under Consideration").click();
 
             viewNtiUnderConsiderationPage
-                .hasReasons("Cash flow problems")
-                .hasReasons("Safeguarding")
+                .hasReason("Cash flow problems")
+                .hasReason("Safeguarding")
                 .hasNotes("These are my notes");
                 
             viewNtiUnderConsiderationPage.edit();
@@ -65,8 +65,9 @@ describe("Testing the NTI under consideration", () =>
                 .save();
 
             viewNtiUnderConsiderationPage
-                .hasReasons("Governance concerns")
-                .hasReasons("Risk of insolvency")
+                .hasReasonCount(2)
+                .hasReason("Governance concerns")
+                .hasReason("Risk of insolvency")
                 .hasNotes("Edited my notes"); 
         });
     });
@@ -83,7 +84,7 @@ describe("Testing the NTI under consideration", () =>
                 .getByTestId("NTI Under Consideration").click();
 
             viewNtiUnderConsiderationPage
-                .hasReasons("Empty")
+                .hasReason("Empty")
                 .hasNotes("Empty");   
         });
     });
@@ -129,8 +130,8 @@ describe("Testing the NTI under consideration", () =>
                     .getByTestId("NTI Under Consideration").click();
 
             viewNtiUnderConsiderationPage
-                .hasReasons("Cash flow problems")
-                .hasReasons("Safeguarding")
+                .hasReason("Cash flow problems")
+                .hasReason("Safeguarding")
                 .hasStatus("No further action being taken")
                 .hasNotes("These are my final notes")
                 .cannotEdit()

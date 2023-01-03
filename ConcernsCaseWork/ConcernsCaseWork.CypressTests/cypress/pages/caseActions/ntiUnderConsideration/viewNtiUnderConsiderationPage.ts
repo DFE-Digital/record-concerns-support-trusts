@@ -2,10 +2,18 @@ import { Logger } from "../../../common/logger";
 
 export class ViewNtiUnderConsiderationPage
 {
-    public hasReasons(value: string): this {
-        Logger.Log(`Has reasons ${value}`);
+    public hasReason(value: string): this {
+        Logger.Log(`Has reason ${value}`);
 
         cy.getByTestId(`nti-reasons`).should("contain.text", value);
+
+        return this;
+    }
+
+    public hasReasonCount(value: number): this {
+        Logger.Log(`Has reason count ${value}`);
+
+        cy.getByTestId(`nti-reasons`).children().should("have.length", value);
 
         return this;
     }
