@@ -1,8 +1,8 @@
 import { Logger } from "../../../common/logger";
 
 export class EditNtiUnderConsiderationPage {
-    public withReasons(value: string): this {
-        Logger.Log(`With reasons ${value}`);
+    public withReason(value: string): this {
+        Logger.Log(`With reason ${value}`);
 
         cy.getByTestId(`reason-${value}`).check();
 
@@ -25,8 +25,8 @@ export class EditNtiUnderConsiderationPage {
         return this;
     }
 
-    public hasReasons(value: string): this {
-        Logger.Log(`Has reasons ${value}`);
+    public hasReason(value: string): this {
+        Logger.Log(`Has reason ${value}`);
 
         cy.getByTestId(`reason-${value}`).should("be.checked", value);
 

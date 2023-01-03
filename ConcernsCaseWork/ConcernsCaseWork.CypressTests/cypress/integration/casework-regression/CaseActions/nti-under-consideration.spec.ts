@@ -30,8 +30,8 @@ describe("Testing the NTI under consideration", () =>
                 .hasValidationError("Notes provided exceed maximum allowed length (2000 characters).");
 
             editNtiUnderConsiderationPage
-                .withReasons("Cash flow problems")
-                .withReasons("Safeguarding")
+                .withReason("Cash flow problems")
+                .withReason("Safeguarding")
                 .withNotes("These are my notes")
                 .save();
 
@@ -47,8 +47,8 @@ describe("Testing the NTI under consideration", () =>
             viewNtiUnderConsiderationPage.edit();
 
             editNtiUnderConsiderationPage
-                .hasReasons("Cash flow problems")
-                .hasReasons("Safeguarding")
+                .hasReason("Cash flow problems")
+                .hasReason("Safeguarding")
                 .hasNotes("These are my notes");
 
             Logger.Log("Validating notes field");
@@ -59,8 +59,8 @@ describe("Testing the NTI under consideration", () =>
 
             editNtiUnderConsiderationPage
                 .clearReasons()
-                .withReasons("Governance concerns")
-                .withReasons("Risk of insolvency")
+                .withReason("Governance concerns")
+                .withReason("Risk of insolvency")
                 .withNotes("Edited my notes")
                 .save();
 
@@ -93,8 +93,8 @@ describe("Testing the NTI under consideration", () =>
         it("Should be able to close the NTI under consideration", () =>
         {
             editNtiUnderConsiderationPage
-                .withReasons("Cash flow problems")
-                .withReasons("Safeguarding")
+                .withReason("Cash flow problems")
+                .withReason("Safeguarding")
                 .withNotes("These are my notes")
                 .save();
 
@@ -104,12 +104,20 @@ describe("Testing the NTI under consideration", () =>
 
             viewNtiUnderConsiderationPage.close();
 
-            Logger.Log("Validating we cannot close without a reason")
+            closeNtiUnderConsiderationPage.hasNotes("These are my notes");
+
+            Logger.Log("Validating the close page")
             closeNtiUnderConsiderationPage
                 .close()
                 .hasValidationError("Please select a reason for closing NTI under consideration");
 
-            closeNtiUnderConsiderationPage.hasNotes("These are my notes");
+            closeNtiUnderConsiderationPage
+                .withStatus("No further action being taken")
+                .withNotesExceedingLimit()
+                .close()
+                .hasValidationError("Notes provided exceed maximum allowed length (2000 characters).");
+
+            Logger.Log("Filling out the close form");
 
             closeNtiUnderConsiderationPage
                 .withStatus("No further action being taken")

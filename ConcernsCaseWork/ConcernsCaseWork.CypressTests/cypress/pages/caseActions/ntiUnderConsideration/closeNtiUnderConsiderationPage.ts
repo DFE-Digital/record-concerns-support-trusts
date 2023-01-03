@@ -19,6 +19,14 @@ export class CloseNtiUnderConsiderationPage
         return this;
     }
 
+    public withNotesExceedingLimit(): this {
+        Logger.Log(`With notes exceeding limit`);
+
+        cy.getById('nti-notes').clear().invoke("val", "x 1".repeat(1001));
+
+        return this;
+    }
+
     public hasNotes(value: string): this {
         Logger.Log(`Has notes ${value}`);
 
