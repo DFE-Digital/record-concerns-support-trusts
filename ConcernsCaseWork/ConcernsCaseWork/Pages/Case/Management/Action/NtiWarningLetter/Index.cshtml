@@ -78,7 +78,7 @@
                     @if (Model.NtiWarningLetterModel.ClosedAt == null)
                     {
                         <th scope="row" class="govuk-table-case-details__header">Current status</th>
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell" data-testid="nti-status">
                             @{
                                 RenderValue(Model.NtiWarningLetterModel.Status?.Name);
                             }
@@ -87,7 +87,7 @@
                     else
                     {
                         <th scope="row" class="govuk-table-case-details__header">Status</th>
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell" data-testid="nti-status">
                             @{
                                 RenderValue(Model.NtiWarningLetterModel.ClosedStatus?.Name);
                             }
@@ -99,7 +99,7 @@
                 @* Date sent *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Date sent</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="nti-date-sent">
                         @if (@Model.NtiWarningLetterModel.SentDate.HasValue)
                         {
                             RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiWarningLetterModel.SentDate.Value));
@@ -114,7 +114,7 @@
                 @* Reasons *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Reasons</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="nti-reasons">
                         @{
                             if (Model.NtiWarningLetterModel.Reasons.Any())
                             {
@@ -136,7 +136,7 @@
                 @* Conditions *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Conditions</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="nti-conditions">
                         @{
                             if (Model.NtiWarningLetterModel.Conditions.Any())
                             {
@@ -158,7 +158,7 @@
                 @* Notes *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Notes</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="nti-notes">
                         @{
 
                             if (!string.IsNullOrEmpty(Model.NtiWarningLetterModel.Notes))
