@@ -28,7 +28,7 @@
                     <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
                         <h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
                         <div class="govuk-error-summary__body">
-                            <ul class="govuk-list govuk-error-summary__list">
+                            <ul class="govuk-list govuk-error-summary__list" data-testid="nti-validation-errors">
                                 <li>
                                     <a href="#">@TempData["NTI.Message"]</a>
                                 </li>
@@ -63,7 +63,7 @@
                                 {
                                     var idStr = statusId++ == 0 ? "status" : "status-" + statusId;
                                     <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id" checked="@status.IsChecked">
+                                        <input class="govuk-radios__input" id="@idStr" data-testid="status-@status.Text" name="status" type="radio" value="@status.Id" checked="@status.IsChecked">
                                         <label class="govuk-label govuk-radios__label" for="@idStr">
                                             <span>
                                                 @status.Text
@@ -132,7 +132,7 @@
                                 {
                                     var idStr = reasonId++ == 0 ? "reason" : "reason-" + reasonId;
                                     <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" id="@idStr" name="reason" type="checkbox" value="@reason.Id" checked="@reason.IsChecked">
+                                        <input class="govuk-checkboxes__input" data-testid="reason-@reason.Text" id="@idStr" name="reason" type="checkbox" value="@reason.Id" checked="@reason.IsChecked">
                                         <label class="govuk-label govuk-checkboxes__label" for="@idStr">
                                             @reason.Text
                                         </label>
@@ -148,7 +148,7 @@
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                                 <h2 class="govuk-heading-m">What are the conditions of the NTI: Notice to improve?</h2>
                             </legend>
-                            <button class="govuk-button govuk-button--secondary" data-module="govuk-button" name="action" value="@Model.ActionForAddConditionsButton">
+                            <button class="govuk-button govuk-button--secondary" data-testid="edit-conditions-button" data-module="govuk-button" name="action" value="@Model.ActionForAddConditionsButton">
                                 Edit conditions
                             </button>
                         </fieldset>

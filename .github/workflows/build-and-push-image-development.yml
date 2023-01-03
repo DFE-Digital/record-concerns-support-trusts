@@ -2,8 +2,7 @@ name: Continuous delivery
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main, develop ]
 jobs:
   build-and-push-image-development:
     name: Build and push image development

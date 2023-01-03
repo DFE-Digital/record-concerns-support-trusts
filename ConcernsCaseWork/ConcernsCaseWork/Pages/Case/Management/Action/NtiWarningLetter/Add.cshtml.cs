@@ -301,8 +301,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 				Conditions = new List<NtiWarningLetterConditionModel>(),
 				Notes = notes,
 				SentDate = sentDate,
-				CreatedAt = DateTime.Now.Date,
-				UpdatedAt = DateTime.Now.Date
+				CreatedAt = DateTime.Now,
+				UpdatedAt = DateTime.Now
 			};
 
 			return nti;

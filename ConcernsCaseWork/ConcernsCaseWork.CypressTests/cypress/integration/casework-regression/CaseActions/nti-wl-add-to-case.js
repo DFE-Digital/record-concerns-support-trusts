@@ -15,6 +15,8 @@ describe("User can add case actions to an existing case", () => {
     });
 
     it("Should create a NTI warning letter case action", () => {
+        const today = new Date().toLocaleDateString("en-GB", { day: '2-digit', month: 'long', year: 'numeric' })
+
         cy.task(LogTask, "Create a case");
         cy.visit(Cypress.env('url'), { timeout: 30000 });
         cy.checkForExistingCase(true);
@@ -148,12 +150,13 @@ describe("User can add case actions to an existing case", () => {
         utils.getGovErrorSummaryList().should('not.exist');
         CaseManagementPage.getOpenActionLink("ntiwarningletter").click();
         ntiAddPage.getNtiTableRow().should(($row) => {
-            expect($row).to.have.length(5);
-            expect($row.eq(0).text().trim()).to.contain("Sent to trust").and.to.match(/Current status/i);
-            expect($row.eq(1).text().trim()).to.contain("20-06-2023").and.to.match(/(Date sent)/i);
-            expect($row.eq(2).text().trim()).to.contain("Cash flow problems").and.to.match(/(Reasons)/i);
-            expect($row.eq(3).text().trim()).to.contain("Action plan").and.to.match(/(Conditions)/i);
-            expect($row.eq(4).text().trim()).to.contain("Notes").and.to.match(/(Notes)/i);
+            expect($row).to.have.length(6);
+            expect($row.eq(0).text().trim()).to.contain(today).and.to.match(/Date NTI: Warning letter opened/i);
+            expect($row.eq(1).text().trim()).to.contain("Sent to trust").and.to.match(/Current status/i);
+            expect($row.eq(2).text().trim()).to.contain("20-06-2023").and.to.match(/(Date sent)/i);
+            expect($row.eq(3).text().trim()).to.contain("Cash flow problems").and.to.match(/(Reasons)/i);
+            expect($row.eq(4).text().trim()).to.contain("Action plan").and.to.match(/(Conditions)/i);
+            expect($row.eq(5).text().trim()).to.contain("Notes").and.to.match(/(Notes)/i);
         });
 
         cy.task(LogTask, "User can close an nti wl as No Further Action");

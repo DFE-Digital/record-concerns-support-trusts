@@ -80,7 +80,7 @@
                     @if (Model.NtiModel.ClosedAt == null)
                     {
                         <th scope="row" class="govuk-table-case-details__header">Current status</th>
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell" data-testid="status-text">
                             @{
                                 if (Model.NtiModel.Status != null)
                                 {
@@ -96,7 +96,7 @@
                     else
                     {
                         <th scope="row" class="govuk-table-case-details__header">Status</th>
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell" data-testid="status-text">
                             @{
                                 if (Model.NtiModel.ClosedStatus != null)
                                 {
@@ -117,7 +117,7 @@
                 @* Date NTI Issued *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Date NTI Issued</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-issued-text">
                         @{
                             if (Model.NtiModel.DateStarted.HasValue)
                             {
@@ -164,7 +164,7 @@
                                     break;
                                 case (int)NTIStatus.Closed:
                                     <th scope="row" class="govuk-table-case-details__header">Date NTI Closed</th>
-                                    <td class="govuk-table__cell">
+                                    <td class="govuk-table__cell" data-testid="date-nti-closed">
                                         @{
 
                                             if (Model.NtiModel.DateNTIClosed.HasValue)
@@ -190,7 +190,7 @@
                 @* Reasons *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Reasons</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="reason-text">
                         @{
                             if (Model.NtiModel.Reasons.Any())
                             {
@@ -212,7 +212,7 @@
                 @* Conditions *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Conditions</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="condition-text">
                         @{
                             if (Model.NtiModel.Conditions.Any())
                             {
@@ -234,7 +234,7 @@
                 @* Notes *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Notes</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="notes-text">
                         @{
 
                             if (!string.IsNullOrEmpty(Model.NtiModel.Notes))
@@ -259,7 +259,7 @@
                 <ul class="govuk-list">
                     <li>
                         <div class="govuk-!-padding-bottom-6">
-                            <a data-prevent-double-click="true" href="@Request.Path/edit" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-wl-button">
+                            <a data-prevent-double-click="true" href="@Request.Path/edit" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-wl-button" data-testid="edit-nti-button">
                                 Edit Information
                             </a>
 
@@ -268,7 +268,7 @@
 
                     <li>
                         <div class="govuk-!-padding-bottom-1">
-                            <a data-prevent-double-click="true" href="@Request.Path/cancel" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-wl-button">
+                            <a data-prevent-double-click="true" href="@Request.Path/cancel" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-wl-button" data-testid="cancel-nti-button">
                                 Cancel NTI
                             </a>
                             <p class="govuk-hint">
@@ -279,7 +279,7 @@
 
                     <li>
                         <div class="govuk-!-padding-bottom-1">
-                            <a data-prevent-double-click="true" href="@Request.Path/lift" class="govuk-button govuk-button--primary" data-module="govuk-button" role="button">
+                            <a data-prevent-double-click="true" href="@Request.Path/lift" class="govuk-button govuk-button--primary" data-module="govuk-button" role="button" data-testid="lift-nti-button">
                                 Lift NTI
                             </a>
                             <p class="govuk-hint">

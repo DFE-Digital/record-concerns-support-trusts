@@ -4,8 +4,11 @@ import utils from "/cypress/support/utils"
 import srmaAddPage from "/cypress/pages/caseActions/srmaAddPage";
 import srmaEditPage from "/cypress/pages/caseActions/srmaEditPage";
 import { LogTask } from "../../../support/constants";
+import { CookieBanner } from "../../../pages/cookieBanner";
 
 describe("User can resolve an SRMA when Status is Deployed and resolution reason is Complete", () => {
+	const cookiesBanner = new CookieBanner();
+
 	before(() => {
 		cy.login();
 	});
@@ -19,6 +22,8 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 
 
 	it("Should validate SRMA Deployed complete", () => {
+		cookiesBanner.accept();
+
         cy.task(LogTask, "User creates a case");
         cy.visit(Cypress.env('url'), { timeout: 30000 });
         cy.checkForExistingCase(true);
@@ -57,7 +62,7 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 
 		cy.task(LogTask, "User can set status to DEPLOYED");
 
-		cy.get('[class="govuk-link"]').eq(0).click();
+		cy.get('[class="govuk-link"]').eq(1).click();
 
 		cy.get('[id*="status"]').eq(2).click();
 
@@ -68,7 +73,7 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 			cy.get('[id="add-srma-button"]').click();
 
 			cy.get('[class="govuk-table__row"]').should(($row) => {
-				expect($row.eq(0).text().trim()).to.contain("Deployed").and.to.match(/Status/i);
+				expect($row.eq(1).text().trim()).to.contain("Deployed").and.to.match(/Status/i);
 			});
 		});
 
@@ -98,7 +103,7 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 
 
 
-		cy.get('[class="govuk-link"]').eq(2).click();
+		cy.get('[class="govuk-link"]').eq(3).click();
 
 		let rand = Math.floor(Math.random() * 2);
 
@@ -109,7 +114,7 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 			cy.get('[id="add-srma-button"]').click();
 
 			cy.get('[class="govuk-table__row"]').should(($row) => {
-				expect($row.eq(2).text().trim()).to.contain(term.trim()).and.to.match(/Reason/i);
+				expect($row.eq(3).text().trim()).to.contain(term.trim()).and.to.match(/Reason/i);
 			});
 		});
 
@@ -136,7 +141,7 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 		cy.task(LogTask, "User can Add SRMA Date accepted to remove validation");
 
 
-		srmaEditPage.getTableAddEditLink().eq(3).click();
+		srmaEditPage.getTableAddEditLink().eq(4).click();
 		cy.log("date offered closure ").then(() => {
 			cy.log(srmaAddPage.setDateAccepted()).then((returnedVal) => {
 				cy.log("logging date offered closure inside nested " + returnedVal).then(() => {
@@ -150,7 +155,7 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 			});
 			srmaAddPage.getAddCaseActionBtn().click();
 			srmaEditPage.getSrmaTableRow().should(($row) => {
-				expect($row.eq(3).text().trim()).to.contain(returnedDate.trim()).and.to.match(/Date accepted/i);
+				expect($row.eq(4).text().trim()).to.contain(returnedDate.trim()).and.to.match(/Date accepted/i);
 			})
 
 			cy.log("logging date offered out 0 +self.stText " + self.stText);
@@ -180,7 +185,7 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 		cy.task(LogTask, "User can Add SRMA Date of visit to remove validation");
 
 
-		srmaEditPage.getTableAddEditLink().eq(4).click();
+		srmaEditPage.getTableAddEditLink().eq(5).click();
 
 		cy.log("dates of visit Start Date closure ").then(() => {
 			cy.log(srmaAddPage.setDateVisitStart()).then((returnedVal) => {
@@ -210,12 +215,12 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 
 			//back on srma page validation
 			srmaEditPage.getSrmaTableRow().should(($row) => {
-				expect($row.eq(4).text().trim()).to.contain(returnedDate.trim()).and.to.match(/Dates of visit/i);
+				expect($row.eq(5).text().trim()).to.contain(returnedDate.trim()).and.to.match(/Dates of visit/i);
 			});
 
 
 			cy.get('[class="govuk-table__row"]').should(($row) => {
-				expect($row.eq(4).text().trim()).to.contain(returnedDateEnd.trim());
+				expect($row.eq(5).text().trim()).to.contain(returnedDateEnd.trim());
 			});
 		});
 
@@ -240,19 +245,19 @@ describe("User can resolve an SRMA when Status is Deployed and resolution reason
 
 
 		cy.get('[id="complete-decline-srma-button"]').click();
-		cy.get('[class="govuk-link"]').eq(5).click();
+		cy.get('[class="govuk-link"]').eq(6).click();
 
 		cy.get('[id="dtr-day"]').clear().type("09");
 		cy.get('[id="dtr-month"]').clear().type("02");
 		cy.get('[id="dtr-year"]').clear().type("2021");
 
 		cy.get('[id="add-srma-button"]').click();// We need to retrun to the page to handle value updates
-		cy.get('[class="govuk-link"]').eq(5).click();
+		cy.get('[class="govuk-link"]').eq(6).click();
 
 		cy.get('[id="add-srma-button"]').click();
 
 		cy.get('[class="govuk-table__row"]').should(($row) => {
-			expect($row.eq(5).text().trim()).to.contain("09-02-2021").and.to.match(/Date report sent to trust/i);
+			expect($row.eq(6).text().trim()).to.contain("09-02-2021").and.to.match(/Date report sent to trust/i);
 		});
 
 		err = '[class="govuk-list govuk-error-summary__list"]';   

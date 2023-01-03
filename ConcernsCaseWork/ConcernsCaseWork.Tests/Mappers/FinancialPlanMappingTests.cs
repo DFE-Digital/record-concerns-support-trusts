@@ -330,6 +330,9 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/financialplan/{testData.Id}/closed"));
 				Assert.That(actionSummary.StatusName, Is.EqualTo("Awaiting plan"));
 			});
+
+			actionSummary.RawOpenedDate.Should().Be(testData.CreatedAt);
+			actionSummary.RawClosedDate.Should().Be(testData.ClosedAt);
 		}
 
 		[Test]

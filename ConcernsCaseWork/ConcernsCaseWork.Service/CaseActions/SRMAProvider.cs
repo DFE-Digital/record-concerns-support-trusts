@@ -98,12 +98,12 @@ namespace ConcernsCaseWork.Service.CaseActions
 			}
 		}
 
-		public async Task<SRMADto> SetDateClosed(long srmaId, DateTime? closedDate)
+		public async Task<SRMADto> SetDateClosed(long srmaId)
 		{
 			try
 			{
 				var client = _httpClientFactory.CreateClient(HttpClientName);
-				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-closed-date?dateClosed={SerialiseDateTime(closedDate)}");
+				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-closed-date");
 
 				var response = await client.SendAsync(request);
 				var content = await response.Content.ReadAsStringAsync();

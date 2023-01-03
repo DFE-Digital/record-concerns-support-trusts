@@ -1,17 +1,12 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Service.Status;
+using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Decisions;
-using ConcernsCaseWork.Services.FinancialPlan;
-using ConcernsCaseWork.Services.Nti;
-using ConcernsCaseWork.Services.NtiUnderConsideration;
-using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Trusts;
@@ -43,7 +38,6 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
 		public IList<ActiveCaseSummaryModel> ActiveCases { get; private set; }
 		public IList<ClosedCaseSummaryModel> ClosedCases { get; private set; }
-		public List<ActionSummaryModel> CaseActions { get; private set; }
 		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
 		public bool IsConcernsCase { get; set; }
 		public bool IsEditableCase { get; private set; }
@@ -128,11 +122,10 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		private async Task PopulateCaseActions(long caseUrn)
 		{
-			CaseActions = CaseActions ?? new List<ActionSummaryModel>();
-			CaseActions.AddRange(await _actionsModelService.GetActionsSummary(caseUrn));
+			var caseActionsSummaryBreakdown = await _actionsModelService.GetActionsSummary(caseUrn);
 
-			OpenCaseActions = CaseActions.Where(a => a.ClosedDate == null).ToList();
-			ClosedCaseActions = CaseActions.Except(OpenCaseActions).ToList();
+			OpenCaseActions = caseActionsSummaryBreakdown.OpenActions;
+			ClosedCaseActions = caseActionsSummaryBreakdown.ClosedActions;
 		}
 
 		private bool UserHasEditCasePrivileges()
