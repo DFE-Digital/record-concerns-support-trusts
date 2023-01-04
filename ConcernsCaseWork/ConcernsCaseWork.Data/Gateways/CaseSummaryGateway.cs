@@ -57,7 +57,8 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 					.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
 					.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: School Resource Management Adviser"))
 					.ToArray()
-			});
+			})
+			.AsSplitQuery();
 
 		return await query.ToListAsync();
 	}
@@ -85,7 +86,8 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 				NtiWarningLetters = _concernsDbContext.NTIWarningLetters.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: NTI warning letter")).ToArray(),
 				NoticesToImprove = _concernsDbContext.NoticesToImprove.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: Notice To Improve")).ToArray(),
 				SrmaCases = _concernsDbContext.SRMACases.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: School Resource Management Adviser")).ToArray()
-			});
+			})
+			.AsSplitQuery();
 
 		return await query.ToListAsync();
 	}
@@ -114,7 +116,8 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 				NtiWarningLetters = _concernsDbContext.NTIWarningLetters.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: NTI warning letter")).ToArray(),
 				NoticesToImprove = _concernsDbContext.NoticesToImprove.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: Notice To Improve")).ToArray(),
 				SrmaCases = _concernsDbContext.SRMACases.Where(x => x.CaseUrn == cases.Urn).Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: School Resource Management Adviser")).ToArray()
-			});
+			})
+			.AsSplitQuery();
 
 		return await query.ToListAsync();
 	}
@@ -163,7 +166,8 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 					.Where(x => x.CaseUrn == cases.Urn && !x.ClosedAt.HasValue)
 					.Select(action => new CaseSummaryVm.Action(action.CreatedAt, action.ClosedAt, "Action: School Resource Management Adviser"))
 					.ToArray()
-			});
+			})
+			.AsSplitQuery();
 
 		return await query.ToListAsync();
 	}
