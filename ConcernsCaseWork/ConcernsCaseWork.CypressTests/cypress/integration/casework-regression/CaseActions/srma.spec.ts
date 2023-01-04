@@ -56,7 +56,7 @@ describe("Testing the SRMA case action", () =>
 
         editSrmaPage
             .withReason("Regions Group Intervention")
-        cy.wait(1000);
+        cy.waitForJavascript();
         editSrmaPage.save();
 
         Logger.Log("Configure date accepted");
@@ -263,7 +263,7 @@ describe("Testing the SRMA case action", () =>
         .save()
         .hasValidationError("Notes must be 2000 characters or less");
 
-        cy.wait(1000);
+        cy.waitForJavascript();
 
         editSrmaPage.withNotes("Editing the notes field")
             .save();
@@ -295,14 +295,14 @@ describe("Testing the SRMA case action", () =>
             editSrmaPage
                 .confirmComplete();
 
-            cy.wait(1000);
+            cy.waitForJavascript();
 
             editSrmaPage
                 .withNotesExceedingLimit()
                 .save()
                 .hasValidationError("Notes must be 2000 characters or less");
 
-            cy.wait(1000);
+            cy.waitForJavascript();
 
             editSrmaPage
                 .withNotes("Resolved notes")
@@ -334,7 +334,7 @@ describe("Testing the SRMA case action", () =>
                 .save()
                 .hasValidationError("Confirm SRMA was cancelled");
             
-            cy.wait(1000);
+            cy.waitForJavascript();
 
             editSrmaPage
                 .confirmCancelled()
@@ -366,7 +366,7 @@ describe("Testing the SRMA case action", () =>
                 .save()
                 .hasValidationError("Confirm SRMA was declined by trust");
             
-            cy.wait(1000);
+            cy.waitForJavascript();
 
             editSrmaPage
                 .confirmDeclined()
