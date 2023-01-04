@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Pages.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,6 +19,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public FinancialPlanModel FinancialPlanModel { get; set; }
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
 
 		public IndexPageModel(IFinancialPlanModelService financialPlanModelService, ILogger<IndexPageModel> logger)
 		{
