@@ -4,6 +4,9 @@ ARG NODEJS_IMAGE_TAG=16-bullseye
 ARG COMMIT_SHA=not-set
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS publish
+
+ARG COMMIT_SHA
+
 WORKDIR /build
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -29,7 +32,6 @@ RUN dotnet ef migrations script --output /app/SQL/DbMigrationScript.sql --idempo
 RUN touch /app/SQL/DbMigrationScript.sql
 
 RUN dotnet publish ConcernsCaseWork -c Release -o /app --no-build
-# RUN dotnet publish ConcernsCaseWork -c Release -o /app "-p:customBuildMessage=Merry Christmas ${COMMIT_SHA};"
 
 COPY ./script/web-docker-entrypoint.sh /app/docker-entrypoint.sh
 COPY ./script/set-appsettings-release-tag.sh /app/set-appsettings-release-tag.sh
@@ -42,7 +44,6 @@ RUN npm install
 RUN npm run build
 
 # Stage 3 - Final
-ARG ASPNET_IMAGE_TAG
 FROM "mcr.microsoft.com/dotnet/aspnet:${ASPNET_IMAGE_TAG}" AS final
 
 ARG COMMIT_SHA
