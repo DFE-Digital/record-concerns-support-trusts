@@ -164,9 +164,9 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
         editSrmaPage
             .withStatus("Trust Considering")
-            .withContactedDay("05")
-            .withContactedMonth("06")
-            .withContactedYear("2022")
+            .withDayTrustContacted("05")
+            .withMonthTrustContacted("06")
+            .withYearTrustContacted("2022")
             .save();
 
         // NTI warning letter
@@ -189,7 +189,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             .addReason()
             .withSrmaReason("OfferLinked")
             .save()
-            .cancelSrma()
+            .cancel()
             .confirmCancellation()
             .save();
 
