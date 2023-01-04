@@ -24,8 +24,8 @@ public class SelectActionOrDecisionPageModel : AbstractPageModel
 	private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 	private readonly ICreateCaseService _createCaseService;
 
-	[BindProperty] 
-	[Required]
+	[BindProperty]
+	[Required(ErrorMessage = "Select an option")]
 	public Options? SelectedActionOrDecision { get; set; }
 	
 	public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);

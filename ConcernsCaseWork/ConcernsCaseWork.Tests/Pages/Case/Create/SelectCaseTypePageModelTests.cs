@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -93,7 +94,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 			Assert.Multiple(() =>
 			{
 				Assert.That(sut.TrustAddress, Is.Null);
-				Assert.That(sut.CaseType, Is.EqualTo(SelectCaseTypePageModel.CaseTypes.NotSelected));
+				Assert.That(sut.CaseType, Is.EqualTo(default));
 				Assert.That(result, Is.TypeOf<PageResult>());
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 			});
@@ -143,7 +144,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 				Assert.That(sut.TrustAddress.TrustName, Is.EqualTo(trustAddress.TrustName));
 				Assert.That(sut.TrustAddress.County, Is.EqualTo(trustAddress.County));
 				Assert.That(sut.TrustAddress.DisplayAddress, Is.EqualTo(trustAddress.DisplayAddress));
-				Assert.That(sut.CaseType, Is.EqualTo(SelectCaseTypePageModel.CaseTypes.NotSelected));
+				Assert.That(sut.CaseType, Is.EqualTo(default));
 				Assert.That(result, Is.TypeOf<PageResult>());
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo(null));
 			});
@@ -182,7 +183,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 			{
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 				Assert.That(sut.TrustAddress, Is.Null);
-				Assert.That(sut.CaseType, Is.EqualTo(SelectCaseTypePageModel.CaseTypes.NotSelected));
+				Assert.That(sut.CaseType, Is.EqualTo(default));
 				Assert.That(result, Is.TypeOf<PageResult>());
 			});
 			
@@ -217,7 +218,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 			{
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 				Assert.That(sut.TrustAddress, Is.Null);
-				Assert.That(sut.CaseType, Is.EqualTo(SelectCaseTypePageModel.CaseTypes.NotSelected));
+				Assert.That(sut.CaseType, Is.EqualTo(default));
 				Assert.That(result, Is.TypeOf<PageResult>());
 			});
 			
@@ -251,7 +252,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 			{
 				Assert.That(result, Is.TypeOf<PageResult>());
 				Assert.That(sut.TrustAddress, Is.Null);
-				Assert.That(sut.CaseType, Is.EqualTo(SelectCaseTypePageModel.CaseTypes.NotSelected));
+				Assert.That(sut.CaseType, Is.EqualTo(default));
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 			});
 			
@@ -283,7 +284,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 			{
 				Assert.That(result, Is.TypeOf<PageResult>());
 				Assert.That(sut.TrustAddress, Is.Null);
-				Assert.That(sut.CaseType, Is.EqualTo(SelectCaseTypePageModel.CaseTypes.NotSelected));
+				Assert.That(sut.CaseType, Is.EqualTo(default));
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 			});
 			
@@ -368,7 +369,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 				Assert.That(sut.TrustAddress.TrustName, Is.EqualTo(trustAddress.TrustName));
 				Assert.That(sut.TrustAddress.County, Is.EqualTo(trustAddress.County));
 				Assert.That(sut.TrustAddress.DisplayAddress, Is.EqualTo(trustAddress.DisplayAddress));
-				Assert.That(sut.CaseType, Is.EqualTo(SelectCaseTypePageModel.CaseTypes.NotSelected));
+				Assert.That(sut.CaseType, Is.EqualTo(default));
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 				Assert.That(result, Is.TypeOf<PageResult>());
 			});
@@ -400,13 +401,49 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 			Assert.Multiple(() =>
 			{
 				Assert.That(sut.TrustAddress, Is.Null);
-				Assert.That(sut.CaseType, Is.EqualTo(SelectCaseTypePageModel.CaseTypes.NotSelected));
+				Assert.That(sut.CaseType, Is.EqualTo(default));
 				Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
 				Assert.That(result, Is.TypeOf<PageResult>());
 			});
 			
 			mockLogger.VerifyLogInformationWasCalled("OnPost");
 			mockLogger.VerifyLogErrorWasCalled("Some error message");
+			mockLogger.VerifyNoOtherCalls();
+		}
+
+		[Test]
+		public async Task WhenOnPost_WithValidationError_ReturnsPageWithError()
+		{
+			// arrange
+			var mockLogger = new Mock<ILogger<SelectCaseTypePageModel>>();
+			var mockTrustService = new Mock<ITrustModelService>();
+			var mockUserService = new Mock<IUserStateCachedService>();
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+
+			var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
+			var keyName = "testkey";
+			var errorMsg = "some model validation error";
+			sut.ModelState.AddModelError(keyName, errorMsg);
+
+			// act
+			var result = await sut.OnPost();
+			
+			// assert
+			Assert.Multiple(() =>
+			{
+				Assert.That(sut.TrustAddress, Is.Null);
+				Assert.That(sut.CaseType, Is.EqualTo(default));
+				
+				Assert.That(sut.TempData["Error.Message"], Is.Null);
+				Assert.That(result, Is.TypeOf<PageResult>());
+				
+				Assert.That(sut.ModelState.IsValid, Is.False);
+				Assert.That(sut.ModelState.Keys.Count(), Is.EqualTo(1));
+				Assert.That(sut.ModelState.First().Key, Is.EqualTo(keyName));
+				Assert.That(sut.ModelState.First().Value?.Errors.Single().ErrorMessage, Is.EqualTo(errorMsg));
+			});
+
+			mockLogger.VerifyLogInformationWasCalled("OnPost");
 			mockLogger.VerifyNoOtherCalls();
 		}
 

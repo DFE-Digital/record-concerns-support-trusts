@@ -38,7 +38,7 @@
 
 			<h2 class="govuk-heading-m">What are you recording?</h2>
 
-			<div class="govuk-radios" data-module="govuk-radios">
+			<div class="govuk-radios" data-module="govuk-radios" id="@nameof(Model.CaseType)">
 				<div class="govuk-radios__item">
 					<input asp-for="CaseType" class="govuk-radios__input" id="concerncase-option" type="radio" value="@SelectCaseTypePageModel.CaseTypes.Concern">
 					<label asp-for="CaseType" class="govuk-label govuk-radios__label" for="concerncase-option">
@@ -50,7 +50,7 @@
 				</div>
 				<div class="govuk-radios__item">
 					<input asp-for="CaseType" class="govuk-radios__input" id="non-concerncase-option" type="radio" value="@SelectCaseTypePageModel.CaseTypes.NonConcern">
-					<label class="govuk-label govuk-radios__label" for="non-concerncase-option">
+					<label asp-for="CaseType" class="govuk-label govuk-radios__label" for="non-concerncase-option">
 						Non-concern related action(s) or decision(s)
 					</label>
 					<div class="govuk-hint govuk-radios__hint">

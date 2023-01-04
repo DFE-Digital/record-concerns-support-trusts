@@ -9,8 +9,10 @@ using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.CreateCase;
@@ -28,7 +30,8 @@ public class SelectCaseTypePageModel : AbstractPageModel
 	public TrustAddressModel TrustAddress { get; set; }
 		
 	[BindProperty]
-	public CaseTypes CaseType { get; set; }
+	[Required(ErrorMessage = "Case Type must be selected")]
+	public CaseTypes? CaseType { get; set; }
 	
 	public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
 
@@ -67,6 +70,11 @@ public class SelectCaseTypePageModel : AbstractPageModel
 		
 		try
 		{
+			if (!ModelState.IsValid)
+			{
+				return Page();
+			}
+			
 			await ResetUserState();
 
 			switch (CaseType)
@@ -75,9 +83,6 @@ public class SelectCaseTypePageModel : AbstractPageModel
 					return Redirect("/case/concern/index");
 				case CaseTypes.NonConcern:
 					return Redirect("/case/create/nonconcerns");
-				case CaseTypes.NotSelected:
-				default:
-					throw new ArgumentOutOfRangeException(nameof(CaseType));
 			}
 		}
 		catch (Exception ex)
@@ -121,7 +126,6 @@ public class SelectCaseTypePageModel : AbstractPageModel
 
 	public enum CaseTypes
 	{
-		NotSelected,
 		Concern,
 		NonConcern
 	}
