@@ -186,6 +186,9 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/ntiwarningletter/{testData.Id}"));
 				Assert.That(actionSummary.StatusName, Is.EqualTo(testData.Status.Name));
 			});
+
+			actionSummary.RawOpenedDate.Should().Be(testData.CreatedAt);
+			actionSummary.RawClosedDate.Should().Be(testData.ClosedAt);
 		}
 
 		[TestCaseSource(nameof(GetStatusTestCases))]
