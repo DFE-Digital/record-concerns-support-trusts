@@ -74,7 +74,7 @@
                     {
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table-case-details__header">Status</th>
-                            <td class="govuk-table__cell">
+                            <td class="govuk-table__cell" data-testid="nti-status">
                                 <div class="govuk-!-padding-bottom-2">
                                     <span>@Model.NTIUnderConsiderationModel.ClosedStatusName</span>
                                 </div>
@@ -86,7 +86,7 @@
                 @* Reasons *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Reasons</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="nti-reasons">
                         @{
                             if (Model.NTIUnderConsiderationModel.NtiReasonsForConsidering.Any())
                             {
@@ -111,7 +111,7 @@
                 @* Notes *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Notes</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="nti-notes">
                         @{
 
                             if (!string.IsNullOrEmpty(Model.NTIUnderConsiderationModel.Notes))
