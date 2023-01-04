@@ -60,16 +60,6 @@ export class ViewSrmaPage {
         return this;
     }
 
-    public withSrmaReason(reason: string): this {
-        Logger.Log(`With SRMA reason`);
-
-        const id = reason.split(" ").join("");
-
-        cy.getByTestId(id).click();
-
-        return this;
-    }
-
     public hasStatus(value: string): this {
         Logger.Log(`Has status ${value}`);
 
@@ -126,6 +116,14 @@ export class ViewSrmaPage {
         return this;
     }
 
+    public hasValidationError(value: string): this {
+        Logger.Log(`Has validation error ${value}`);
+
+        cy.getById("errorSummary").should("contain.text", value);
+
+        return this;
+    }
+
     public resolve(): this
     {
         Logger.Log("Resolving the SRMA");
@@ -156,14 +154,6 @@ export class ViewSrmaPage {
         Logger.Log("Saving SRMA");
 
         cy.getById("add-srma-button").click();
-
-        return this;
-    }
-
-    public confirmCancellation(): this {
-        Logger.Log("Confirming the SRMA is cancelled");
-
-        cy.getById("confirmChk").check();
 
         return this;
     }

@@ -41,6 +41,12 @@ describe("Testing the SRMA case action", () =>
         cy.get("#open-case-actions td")
             .getByTestId("SRMA").click();
 
+        Logger.Log("Should not allow progression without a reason");
+
+        viewSrmaPage
+            .cancel()
+            .hasValidationError("Enter the reason");
+
         Logger.Log("Configure reason");
 
         viewSrmaPage.addReason();

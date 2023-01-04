@@ -187,10 +187,16 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
         viewSrmaPage
             .addReason()
-            .withSrmaReason("OfferLinked")
-            .save()
-            .cancel()
-            .confirmCancellation()
+
+        editSrmaPage
+            .withReason("Offer Linked")
+            .save();
+        
+        viewSrmaPage
+            .cancel();
+
+        editSrmaPage
+            .confirmCancelled()
             .save();
 
         Logger.Log("Completing Financial Plan");
