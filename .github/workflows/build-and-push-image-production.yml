@@ -66,3 +66,20 @@ jobs:
             COMMIT_SHA=${GITHUB_SHA}
           push: true
           tags: ${{ steps.prepare-tags.outputs.tags }}
+
+      - name: Azure login with ACA credentials
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.PROD_AZURE_ACA_CREDENTIALS }}
+
+      - name: Update Azure Container Apps Revision
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.40.0
+          inlineScript: |
+            az config set extension.use_dynamic_install=yes_without_prompt
+            az containerapp update \
+              --name ${{ secrets.PROD_ACA_CONTAINERAPP_NAME }} \
+              --resource-group ${{ secrets.PROD_ACA_RESOURCE_GROUP }} \
+              --image ${{ secrets.PROD_ACR_URL }}/amsd-app:${{ steps.prepare-tags.outputs.deploy-version }} \
+              --output none

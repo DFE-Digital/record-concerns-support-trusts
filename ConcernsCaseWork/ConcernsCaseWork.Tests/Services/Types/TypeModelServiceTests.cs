@@ -34,7 +34,7 @@ namespace ConcernsCaseWork.Tests.Services.Types
 			// assert
 			Assert.That(structuredTypes, Is.Not.Null);
 			Assert.That(structuredTypes.TypesDictionary, Is.Not.Null);
-			Assert.That(structuredTypes.TypesDictionary.Count, Is.EqualTo(5));
+			Assert.That(structuredTypes.TypesDictionary.Count, Is.EqualTo(4));
 
 			foreach ((string key, IList<TypeModel.TypeValueModel> value) in structuredTypes.TypesDictionary)
 			{

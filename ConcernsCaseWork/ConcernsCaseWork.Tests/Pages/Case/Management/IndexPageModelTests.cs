@@ -90,11 +90,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			var closedActions = _fixture.CreateMany<ActionSummaryModel>().ToList();
 
-			var allActions = new List<ActionSummaryModel>();
-			allActions.AddRange(openActions);
-			allActions.AddRange(closedActions);
+			var actionBreakdown = new ActionSummaryBreakdownModel();
+			actionBreakdown.OpenActions = openActions;
+			actionBreakdown.ClosedActions = closedActions;
 
-			_actionsModelService.Setup(m => m.GetActionsSummary(It.IsAny<long>())).ReturnsAsync(allActions);
+			_actionsModelService.Setup(m => m.GetActionsSummary(It.IsAny<long>())).ReturnsAsync(actionBreakdown);
 
 			var caseModel = _fixture.Create<CaseModel>();
 			_mockCaseModelService.Setup(m => m.GetCaseByUrn(It.IsAny<long>())).ReturnsAsync(caseModel);
@@ -288,7 +288,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			_mockNtiStatusesCachedService.Setup(s => s.GetAllStatuses())
 				.ReturnsAsync(new List<NtiUnderConsiderationStatusDto>());
 			_actionsModelService.Setup(m => m.GetActionsSummary(It.IsAny<long>()))
-				.ReturnsAsync(new List<ActionSummaryModel>());
+				.ReturnsAsync(new ActionSummaryBreakdownModel());
 		}
 
 		private void PageLoadedWithoutError(IndexPageModel pageModel)

@@ -166,7 +166,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
-			var response = sut.SetDateClosed(654, dateClosed).Result;
+			var response = sut.SetDateClosed(654).Result;
 
 			// Assert
 			Assert.AreEqual(expectedSRMADto.Id, response.Id);

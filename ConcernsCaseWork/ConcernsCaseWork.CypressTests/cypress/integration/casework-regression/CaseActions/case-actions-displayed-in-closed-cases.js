@@ -188,7 +188,7 @@ describe("User can see case actions displayed in closed cases", () => {
             });
     
             cy.get("#case-outcomes").type("SAMPLE CLOSURE TEXT");
-            cy.get(".govuk-button").click();
+            cy.getById('close-case-button').click();
     
             cy.task(LogTask, "User can navigate to the closed case page");
             cy.visit(Cypress.env('url'), { timeout: 50000 });

@@ -117,9 +117,9 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 				UpdatedAt = timeNow,
 				ReviewAt = timeNow,
 				ClosedAt = timeNow,
-				Description = "some updated description",
-				CrmEnquiry = "some updated crm enquiry",
-				ReasonAtReview = "some updated reason at review",
+				Description = "",
+				CrmEnquiry = "",
+				ReasonAtReview = "some reason at review",
 				Issue = "some updated issue",
 				CaseAim = "some updated case aim",
 				CaseHistory = "some updated case history",
@@ -130,29 +130,32 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			var updatedCaseDto = await caseService.PatchCaseByUrn(toUpdateCaseDto);
 
 			// assert
-			Assert.That(updatedCaseDto, Is.Not.Null);
-			Assert.That(updatedCaseDto.Description, Is.EqualTo("some updated description"));
-			Assert.That(updatedCaseDto.Issue, Is.EqualTo("some updated issue"));
-			Assert.That(updatedCaseDto.Urn, Is.EqualTo(postCaseDto.Urn));
-			Assert.That(updatedCaseDto.CaseAim, Is.EqualTo("some updated case aim"));
-			Assert.That(updatedCaseDto.ClosedAt, Is.EqualTo(timeNow));
-			Assert.That(updatedCaseDto.CreatedAt, Is.EqualTo(postCaseDto.CreatedAt));
-			Assert.That(updatedCaseDto.CreatedBy, Is.EqualTo(postCaseDto.CreatedBy));
-			Assert.That(updatedCaseDto.CrmEnquiry, Is.EqualTo("some updated crm enquiry"));
-			Assert.That(updatedCaseDto.CurrentStatus, Is.EqualTo(postCaseDto.CurrentStatus));
-			Assert.That(updatedCaseDto.DeEscalation, Is.EqualTo(postCaseDto.DeEscalation));
-			Assert.That(updatedCaseDto.NextSteps, Is.EqualTo(postCaseDto.NextSteps));
-			Assert.That(updatedCaseDto.ReviewAt, Is.EqualTo(timeNow));
-			Assert.That(updatedCaseDto.StatusId, Is.EqualTo(postCaseDto.StatusId));
-			Assert.That(updatedCaseDto.RatingId, Is.EqualTo(postCaseDto.RatingId));
-			Assert.That(updatedCaseDto.UpdatedAt, Is.EqualTo(timeNow));
-			Assert.That(updatedCaseDto.DeEscalationPoint, Is.EqualTo(postCaseDto.DeEscalationPoint));
-			Assert.That(updatedCaseDto.DirectionOfTravel, Is.EqualTo(DirectionOfTravelEnum.Improving.ToString()));
-			Assert.That(updatedCaseDto.ReasonAtReview, Is.EqualTo("some updated reason at review"));
-			Assert.That(updatedCaseDto.TrustUkPrn, Is.EqualTo(postCaseDto.TrustUkPrn));
-			Assert.That(updatedCaseDto.CaseHistory, Is.EqualTo("some updated case history"));
+			Assert.Multiple(() =>
+			{
+				Assert.That(updatedCaseDto, Is.Not.Null);
+				Assert.That(updatedCaseDto.Description, Is.EqualTo(""));
+				Assert.That(updatedCaseDto.Issue, Is.EqualTo("some updated issue"));
+				Assert.That(updatedCaseDto.Urn, Is.EqualTo(postCaseDto.Urn));
+				Assert.That(updatedCaseDto.CaseAim, Is.EqualTo("some updated case aim"));
+				Assert.That(updatedCaseDto.ClosedAt, Is.EqualTo(timeNow));
+				Assert.That(updatedCaseDto.CreatedAt, Is.EqualTo(postCaseDto.CreatedAt));
+				Assert.That(updatedCaseDto.CreatedBy, Is.EqualTo(postCaseDto.CreatedBy));
+				Assert.That(updatedCaseDto.CrmEnquiry, Is.EqualTo(""));
+				Assert.That(updatedCaseDto.CurrentStatus, Is.EqualTo(postCaseDto.CurrentStatus));
+				Assert.That(updatedCaseDto.DeEscalation, Is.EqualTo(postCaseDto.DeEscalation));
+				Assert.That(updatedCaseDto.NextSteps, Is.EqualTo(postCaseDto.NextSteps));
+				Assert.That(updatedCaseDto.ReviewAt, Is.EqualTo(timeNow));
+				Assert.That(updatedCaseDto.StatusId, Is.EqualTo(postCaseDto.StatusId));
+				Assert.That(updatedCaseDto.RatingId, Is.EqualTo(postCaseDto.RatingId));
+				Assert.That(updatedCaseDto.UpdatedAt, Is.EqualTo(timeNow));
+				Assert.That(updatedCaseDto.DeEscalationPoint, Is.EqualTo(postCaseDto.DeEscalationPoint));
+				Assert.That(updatedCaseDto.DirectionOfTravel, Is.EqualTo(DirectionOfTravelEnum.Improving.ToString()));
+				Assert.That(updatedCaseDto.ReasonAtReview, Is.EqualTo("some reason at review"));
+				Assert.That(updatedCaseDto.TrustUkPrn, Is.EqualTo(postCaseDto.TrustUkPrn));
+				Assert.That(updatedCaseDto.CaseHistory, Is.EqualTo("some updated case history"));
+			});
 		}
-		
+
 		private async Task<CaseDto> PostCase(IServiceScope serviceScope, CreateCaseDto createCaseDto)
 		{
 			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();

@@ -12,42 +12,25 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 			var currentDate = DateTimeOffset.Now;
 			return new List<TypeDto>
 			{
-				new TypeDto("Compliance", "Compliance: Financial reporting", currentDate, 
-					currentDate, 1),
-				new TypeDto("Compliance", "Compliance: Financial returns", currentDate, 
-					currentDate, 2),
 				new TypeDto("Financial", "Financial: Deficit", currentDate, 
 					currentDate, 3),
-				new TypeDto("Financial", "Financial: Projected deficit / Low future surplus", currentDate, 
+				new TypeDto("Financial", "Financial: Projected deficit", currentDate, 
 					currentDate, 4),
-				new TypeDto("Financial", "Financial: Cash flow shortfall", currentDate, 
-					currentDate, 5),
-				new TypeDto("Financial", "Financial: Clawback", currentDate, 
-					currentDate, 6),
+				new TypeDto("Financial", "Financial: Viability", currentDate, 
+					currentDate, 20),
+				
 				new TypeDto("Force Majeure", "", currentDate, 
 					currentDate, 7),
-				new TypeDto("Governance", "Governance: Governance", currentDate, 
+				
+				new TypeDto("Governance and compliance", "Governance and compliance: Governance", currentDate, 
 					currentDate, 8),
-				new TypeDto("Governance", "Governance: Closure", currentDate, 
-					currentDate, 9),
-				new TypeDto("Governance", "Governance: Executive Pay", currentDate, 
-					currentDate, 10),
-				new TypeDto("Governance", "Governance: Safeguarding", currentDate, 
-					currentDate, 11),
-				new TypeDto("Irregularity", "Irregularity: Allegations and self reported concerns", currentDate, 
-					currentDate, 12),
-				new TypeDto("Irregularity", "Irregularity: Related party transactions - in year", currentDate, 
-					currentDate, 13)
-			};
-		}
+				new TypeDto("Governance and compliance", "Governance and compliance: Compliance", currentDate, 
+					currentDate, 23),
 
-		public static List<TypeDto> BuildListOrphanTypeDto()
-		{
-			var currentDate = DateTimeOffset.Now;
-			return new List<TypeDto>
-			{
-				new TypeDto("Compliance", "Compliance: Financial reporting", currentDate,
-					currentDate, 0)
+				new TypeDto("Irregularity", "Irregularity: Irregularity", currentDate, 
+					currentDate, 21),
+				new TypeDto("Irregularity", "Irregularity: Suspected fraud", currentDate, 
+					currentDate, 22)
 			};
 		}
 
@@ -55,8 +38,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 		{
 			return new TypeModel
 			{
-				Type = "Compliance",
-				SubType = "Compliance: Financial reporting",
+				Type = "Financial",
+				SubType = "Financial: Deficit",
 				TypesDictionary = new Dictionary<string, IList<TypeModel.TypeValueModel>>()
 			};
 		}
