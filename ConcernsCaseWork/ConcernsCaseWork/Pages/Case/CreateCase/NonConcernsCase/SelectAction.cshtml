@@ -28,7 +28,7 @@
 
 			<h2 class="govuk-heading-m">Select an action</h2>
 
-			<div class="govuk-radios" data-module="govuk-radios">
+			<div class="govuk-radios" data-module="govuk-radios" id="@nameof(Model.SelectedAction)">
 				<div class="govuk-radios__item">
 					<input asp-for="SelectedAction" class="govuk-radios__input" id="srma-option" type="radio" value="@SelectActionPageModel.Actions.SRMA">
 					<label class="govuk-label govuk-radios__label" for="srma-option">

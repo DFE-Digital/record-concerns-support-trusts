@@ -24,7 +24,7 @@ public class SelectActionPageModel : AbstractPageModel
 	private readonly ICreateCaseService _createCaseService;
 
 	[BindProperty] 
-	[Required] 
+	[Required(ErrorMessage = "Select an action")] 
 	public Actions? SelectedAction { get; set; }
 	
 	public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
