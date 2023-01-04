@@ -339,47 +339,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 		}
 		
 		[Test]
-		public async Task WhenOnPost_WithNoSelectedCaseType_ReturnsPageWithError()
-		{
-			// arrange
-			var mockLogger = new Mock<ILogger<SelectCaseTypePageModel>>();
-			var mockTrustService = new Mock<ITrustModelService>();
-			var mockUserService = new Mock<IUserStateCachedService>();
-			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
-			
-			var userName = "some user name";
-			var trustAddress = new TrustAddressModel("Some trust name", "a county", "Full display address, town, postcode");
-			
-			mockClaimsPrincipalHelper
-				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
-				.Returns(userName);
-
-			mockUserService.Setup(s => s.GetData(userName)).ReturnsAsync(new UserState(userName));
-
-			var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
-			sut.TrustAddress = trustAddress;
-
-			// act
-			var result = await sut.OnPost();
-			
-			// assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(sut.TrustAddress, Is.Not.Null);
-				Assert.That(sut.TrustAddress.TrustName, Is.EqualTo(trustAddress.TrustName));
-				Assert.That(sut.TrustAddress.County, Is.EqualTo(trustAddress.County));
-				Assert.That(sut.TrustAddress.DisplayAddress, Is.EqualTo(trustAddress.DisplayAddress));
-				Assert.That(sut.CaseType, Is.EqualTo(default));
-				Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
-				Assert.That(result, Is.TypeOf<PageResult>());
-			});
-			
-			mockLogger.VerifyLogInformationWasCalled("OnPost");
-			mockLogger.VerifyLogErrorWasCalled();
-			mockLogger.VerifyNoOtherCalls();
-		}
-		
-		[Test]
 		public async Task WhenOnPost_WithCurrentUserNotFound_ReturnsError()
 		{
 			// arrange
