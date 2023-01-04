@@ -15,5 +15,5 @@ APP_SETTINGS_FILES=(
 
 for app_settings_file in "${APP_SETTINGS_FILES[@]}"
 do
-  echo "$(cat "$app_settings_file" | jq --arg releasetag "$RELEASE_TAG" '.ReleaseTag=$releasetag')" > "$app_settings_file"
+  echo "$(cat "$app_settings_file" | jq --arg releasetag "$RELEASE_TAG" '.ConcernsCasework.ReleaseTag=$releasetag')" > "$app_settings_file"
 done
