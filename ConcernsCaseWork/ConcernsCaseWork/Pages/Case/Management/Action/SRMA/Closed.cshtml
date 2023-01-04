@@ -64,7 +64,7 @@
                 @* Status *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Status</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="status">
                         @EnumHelper.GetEnumDescription(Model.SRMAModel.Status)
                     </td>
                 </tr>
@@ -72,7 +72,7 @@
                 @* Date offered *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Date trust was contacted</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-trust-contacted">
                         @DateExtension.ToDayMonthYear(Model.SRMAModel.DateOffered)
                     </td>
                 </tr>
@@ -82,7 +82,7 @@
                     <th scope="row" class="govuk-table-case-details__header">
                         Reason
                     </th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="reason">
                         @EnumHelper.GetEnumDescription(Model.SRMAModel.Reason)
                     </td>
                 </tr>
@@ -92,7 +92,7 @@
                     <th scope="row" class="govuk-table-case-details__header">
                         Date accepted
                     </th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-accepted">
                         @if (Model.SRMAModel.DateAccepted.HasValue)
                         {
                             @DateExtension.ToDayMonthYearWithDefault(Model.SRMAModel.DateAccepted.Value)
@@ -105,7 +105,7 @@
                     <th scope="row" class="govuk-table-case-details__header">
                         Dates of visit
                     </th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-of-visit">
                         @if (Model.SRMAModel.DateVisitStart.HasValue && Model.SRMAModel.DateVisitEnd.HasValue)
                         {
                             @DateExtension.ToDayMonthYear(Model.SRMAModel.DateVisitStart.Value) <text> - </text> @DateExtension.ToDayMonthYear(Model.SRMAModel.DateVisitEnd.Value)
@@ -119,7 +119,7 @@
                     <th scope="row" class="govuk-table-case-details__header">
                         Date report sent to trust
                     </th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-report-sent-to-trust">
                         @if (Model.SRMAModel.DateReportSentToTrust.HasValue)
                         {
                             @DateExtension.ToDayMonthYearWithDefault(Model.SRMAModel.DateReportSentToTrust.Value)
@@ -130,7 +130,7 @@
                 @* Notes *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Notes</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="notes">
                         @Model.SRMAModel.Notes
                     </td>
                 </tr>
