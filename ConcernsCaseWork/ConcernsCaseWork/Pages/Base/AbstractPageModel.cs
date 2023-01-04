@@ -42,6 +42,5 @@ namespace ConcernsCaseWork.Pages.Base
 
 		protected string GetPreviousPage() => PageHistoryManager.GetPreviousPage(PageHistoryStorageHandler.GetPageHistory(HttpContext).ToList());
 		protected Hyperlink BuildBackLinkFromHistory(string fallbackUrl, string label = "Back") => new (label, GetPreviousPage() ?? fallbackUrl);
-		protected Hyperlink BuildBackLinkForSpecificPage(string url, string label = "Back") => new (label, url);
 	}
 }

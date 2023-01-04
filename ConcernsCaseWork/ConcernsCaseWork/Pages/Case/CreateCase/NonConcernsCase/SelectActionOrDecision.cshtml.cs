@@ -10,30 +10,29 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase;
 
 [Authorize]
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-public class CreateNonConcernsCasePageModel : AbstractPageModel
+public class SelectActionOrDecisionPageModel : AbstractPageModel
 {
 	private readonly IUserStateCachedService _cachedService;
-	private readonly ILogger<CreateNonConcernsCasePageModel> _logger;
+	private readonly ILogger<SelectActionOrDecisionPageModel> _logger;
 	private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 	private readonly ICreateCaseService _createCaseService;
 
-	[BindProperty]
-	public Options SelectedActionOrDecision { get; set; }
-
-	[BindProperty]
-	public Actions SelectedAction { get; set; }
+	[BindProperty] 
+	[Required]
+	public Options? SelectedActionOrDecision { get; set; }
 	
 	public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
 
-	public CreateNonConcernsCasePageModel(
+	public SelectActionOrDecisionPageModel(
 		IUserStateCachedService cachedService,
-		ILogger<CreateNonConcernsCasePageModel> logger,
+		ILogger<SelectActionOrDecisionPageModel> logger,
 		IClaimsPrincipalHelper claimsPrincipalHelper,
 		ICreateCaseService createCaseService)
 	{
@@ -47,17 +46,7 @@ public class CreateNonConcernsCasePageModel : AbstractPageModel
 	{
 		_logger.LogMethodEntered();
 
-		try
-		{
-			return Page();
-		}
-		catch (Exception ex)
-		{
-			_logger.LogErrorMsg(ex);
-			TempData["Error.Message"] = ErrorOnPostPage;
-			
-			return Page();
-		}
+		return Page();
 	}
 	
 	public async Task<ActionResult> OnPost()
@@ -66,30 +55,25 @@ public class CreateNonConcernsCasePageModel : AbstractPageModel
 
 		try
 		{
-			if (SelectedActionOrDecision == Options.Decision)
+			if (!ModelState.IsValid)
 			{
-				var userName = GetUserName();
-				var caseUrn = await _createCaseService.CreateNonConcernsCase(userName);
-				
-				return Redirect($"/case/{caseUrn}/management/action/decision/addOrUpdate");
+				return Page();
 			}
-
-			switch (SelectedAction)
+			
+			switch (SelectedActionOrDecision)
 			{
-				case Actions.TFF:
-					throw new NotImplementedException();
+				case Options.Decision:
+					var userName = GetUserName();
+					var caseUrn = await _createCaseService.CreateNonConcernsCase(userName);
 				
-				case Actions.SRMA:
-					return Redirect("/case/create/nonconcerns/srma");
+					return Redirect($"/case/{caseUrn}/management/action/decision/addOrUpdate");
 				
-				case Actions.None:
-					break;
-				
+				case Options.Action:
+					return Redirect("/case/create/nonconcerns/action");
+
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
-
-			return Page();
 		}
 		catch (Exception ex)
 		{
@@ -102,16 +86,8 @@ public class CreateNonConcernsCasePageModel : AbstractPageModel
 
 	public enum Options
 	{
-		None,
 		Action,
 		Decision
-	}
-	
-	public enum Actions
-	{
-		None,
-		SRMA,
-		TFF
 	}
 	
 	private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);

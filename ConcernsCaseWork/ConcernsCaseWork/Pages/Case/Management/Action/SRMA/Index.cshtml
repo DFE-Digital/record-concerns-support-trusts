@@ -7,8 +7,6 @@
 
 @{
 	ViewData["Title"] = "SRMA";
-	ViewData["BackButtonLabel"] = "Back to case";
-	ViewData["BackButtonLink"] = $"/case/{Model.CaseUrn}/management";
 
 	var errorClass = "govuk-error-message";
 	var srmaValidationErrors = TempData["SRMA.Message"] as IEnumerable<string>;
@@ -20,7 +18,7 @@
 }
 
 @section BeforeMain {
-	<div class="govuk-extra-width-container">
+	<div class="govuk-width-container">
 		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
 	</div>
 }

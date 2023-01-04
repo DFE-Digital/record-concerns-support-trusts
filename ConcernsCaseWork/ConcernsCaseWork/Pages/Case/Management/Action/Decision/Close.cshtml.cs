@@ -39,8 +39,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		[BindProperty(Name="SupportingNotes")]
 		[MaxLength(DecisionConstants.MaxSupportingNotesLength, ErrorMessage = "Supporting Notes must be 2000 characters or less")]
 		public string Notes { get; set; }
-		
-		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, label: "Back to case overview");
 
 		public ClosePageModel(IDecisionService decisionService, ILogger<ClosePageModel> logger)
 		{

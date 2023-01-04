@@ -1,9 +1,17 @@
+@page "/case/create/type"
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model CreateCasePageModel
+@model SelectCaseTypePageModel
+
 @{
-	ViewData["Title"] = "Create case";
-	ViewData["BackButtonLink"] = "/case";
+	ViewData["Title"] = "New Case";
 }
+
+@section BeforeMain {
+	<div class="govuk-width-container">
+		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+	</div>
+}
+
 <div class="govuk-width-container" id="choosecasetype">
 	
 	<partial name="_BannerError"/>
@@ -32,7 +40,7 @@
 
 			<div class="govuk-radios" data-module="govuk-radios">
 				<div class="govuk-radios__item">
-					<input asp-for="CaseType" class="govuk-radios__input" id="concerncase-option" type="radio" value="@CreateCasePageModel.CaseTypes.Concern">
+					<input asp-for="CaseType" class="govuk-radios__input" id="concerncase-option" type="radio" value="@SelectCaseTypePageModel.CaseTypes.Concern">
 					<label asp-for="CaseType" class="govuk-label govuk-radios__label" for="concerncase-option">
 						A concern or multiple concerns
 					</label>
@@ -41,7 +49,7 @@
 					</div>
 				</div>
 				<div class="govuk-radios__item">
-					<input asp-for="CaseType" class="govuk-radios__input" id="non-concerncase-option" type="radio" value="@CreateCasePageModel.CaseTypes.NonConcern">
+					<input asp-for="CaseType" class="govuk-radios__input" id="non-concerncase-option" type="radio" value="@SelectCaseTypePageModel.CaseTypes.NonConcern">
 					<label class="govuk-label govuk-radios__label" for="non-concerncase-option">
 						Non-concern related action(s) or decision(s)
 					</label>
@@ -62,7 +70,8 @@
 					Continue
 				</button>
 			</div>
-
 		</form>
 	}
 		</div>
+
+

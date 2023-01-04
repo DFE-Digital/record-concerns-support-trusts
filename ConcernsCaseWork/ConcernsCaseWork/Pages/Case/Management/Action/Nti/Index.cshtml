@@ -8,12 +8,10 @@
 
 @{
     ViewData["Title"] = "NTI";
-    ViewData["BackButtonLabel"] = "Back to case";
-    ViewData["BackButtonLink"] = $"/case/{@RouteData.Values["urn"]}/management";
 }
 
 @section BeforeMain {
-	<div class="govuk-extra-width-container">
+	<div class="govuk-width-container">
 		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
 	</div>
 }
