@@ -14,12 +14,11 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 {
 	[Parallelizable(ParallelScope.All)]
-	public class CreateNonConcernsCasePageModelTests
+	public class SelectActionPageModelTests
 	{
 		private readonly IFixture _fixture = new Fixture();
 
@@ -27,9 +26,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 		public void Constructor_WithNullClaimsService_ThrowsException()
 		{
 			var exception = Assert.Throws<ArgumentNullException>(() =>
-				_ = new CreateNonConcernsCasePageModel(
+				_ = new SelectActionPageModel(
 					Mock.Of<IUserStateCachedService>(),
-					Mock.Of<ILogger<CreateNonConcernsCasePageModel>>(),
+					Mock.Of<ILogger<SelectActionPageModel>>(),
 					null,
 					Mock.Of<ICreateCaseService>()));
 
@@ -40,7 +39,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 		public void Constructor_WithNullLogger_ThrowsException()
 		{
 			var exception = Assert.Throws<ArgumentNullException>(() =>
-				_ = new CreateNonConcernsCasePageModel(
+				_ = new SelectActionPageModel(
 					Mock.Of<IUserStateCachedService>(),
 					null,
 					Mock.Of<IClaimsPrincipalHelper>(),
@@ -53,9 +52,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 		public void Constructor_WithNullUserStateCachedService_ThrowsException()
 		{
 			var exception = Assert.Throws<ArgumentNullException>(() =>
-				_ = new CreateNonConcernsCasePageModel(
+				_ = new SelectActionPageModel(
 					null,
-					Mock.Of<ILogger<CreateNonConcernsCasePageModel>>(),
+					Mock.Of<ILogger<SelectActionPageModel>>(),
 					Mock.Of<IClaimsPrincipalHelper>(),
 					Mock.Of<ICreateCaseService>()));
 
@@ -66,9 +65,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 		public void Constructor_WithNullCreateCaseService_ThrowsException()
 		{
 			var exception = Assert.Throws<ArgumentNullException>(() =>
-				_ = new CreateNonConcernsCasePageModel(
+				_ = new SelectActionPageModel(
 					Mock.Of<IUserStateCachedService>(),
-					Mock.Of<ILogger<CreateNonConcernsCasePageModel>>(),
+					Mock.Of<ILogger<SelectActionPageModel>>(),
 					Mock.Of<IClaimsPrincipalHelper>(),
 					null));
 
@@ -76,79 +75,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 		}
 
 		[Test]
-		public async Task WhenOnPost_WithDecisionSelectedAndCurrentUserNotFound_ReturnsError()
+		public void WhenOnPost_WithSrmaActionSelected_RedirectsToNonConcernsAddSrmaPage()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<CreateNonConcernsCasePageModel>>();
-			var mockCreateCaseService = new Mock<ICreateCaseService>();
-			var mockUserService = new Mock<IUserStateCachedService>();
-			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
-
-			mockClaimsPrincipalHelper
-				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
-				.Throws(new NullReferenceException("Some error message"));
-
-			var sut = SetupPageModel(mockUserService, mockLogger, mockClaimsPrincipalHelper, mockCreateCaseService);
-			sut.SelectedActionOrDecision = CreateNonConcernsCasePageModel.Options.Decision;
-
-			// act
-			var result = await sut.OnPost();
-
-			// assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
-				Assert.That(result, Is.TypeOf<PageResult>());
-			});
-
-			mockLogger.VerifyLogInformationWasCalled("OnPost");
-			mockLogger.VerifyLogErrorWasCalled("Some error message");
-			mockLogger.VerifyNoOtherCalls();
-		}
-
-		[Test]
-		public async Task WhenOnPost_WithDecisionSelected_RedirectsToDecisionsPage()
-		{
-			// arrange
-			var mockLogger = new Mock<ILogger<CreateNonConcernsCasePageModel>>();
-			var mockCreateCaseService = new Mock<ICreateCaseService>();
-			var mockUserService = new Mock<IUserStateCachedService>();
-			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
-
-			var userName = _fixture.Create<string>();
-			var caseUrn = _fixture.Create<long>();
-			var expectedUrl = $"/case/{caseUrn}/management/action/decision/addOrUpdate";
-
-			mockClaimsPrincipalHelper
-				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
-				.Returns(userName);
-
-			mockCreateCaseService.Setup(s => s.CreateNonConcernsCase(userName)).ReturnsAsync(caseUrn);
-
-			var sut = SetupPageModel(mockUserService, mockLogger, mockClaimsPrincipalHelper, mockCreateCaseService);
-			sut.SelectedActionOrDecision = CreateNonConcernsCasePageModel.Options.Decision;
-
-			// act
-			var result = await sut.OnPost();
-
-			// assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(sut.TempData["Error.Message"], Is.Null);
-				Assert.That(result, Is.TypeOf<RedirectResult>());
-				Assert.That((result as RedirectResult)?.Url, Is.EqualTo(expectedUrl));
-			});
-
-			mockLogger.VerifyLogInformationWasCalled("OnPost");
-			mockLogger.VerifyLogErrorWasNotCalled();
-			mockLogger.VerifyNoOtherCalls();
-		}
-
-		[Test]
-		public async Task WhenOnPost_WithSrmaActionSelected_RedirectsToNonConcernsAddSrmaPage()
-		{
-			// arrange
-			var mockLogger = new Mock<ILogger<CreateNonConcernsCasePageModel>>();
+			var mockLogger = new Mock<ILogger<SelectActionPageModel>>();
 			var mockCreateCaseService = new Mock<ICreateCaseService>();
 			var mockUserService = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
@@ -164,10 +94,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 			mockCreateCaseService.Setup(s => s.CreateNonConcernsCase(userName)).ReturnsAsync(caseUrn);
 
 			var sut = SetupPageModel(mockUserService, mockLogger, mockClaimsPrincipalHelper, mockCreateCaseService);
-			sut.SelectedAction = CreateNonConcernsCasePageModel.Actions.SRMA;
+			sut.SelectedAction = SelectActionPageModel.Actions.SRMA;
 
 			// act
-			var result = await sut.OnPost();
+			var result = sut.OnPost();
 
 			// assert
 			Assert.Multiple(() =>
@@ -183,10 +113,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 		}
 
 		[Test]
-		public async Task WhenOnPost_WithTFFActionSelected_ReturnsNotImplementedError()
+		public void WhenOnPost_WithTFFActionSelected_ReturnsNotImplementedError()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<CreateNonConcernsCasePageModel>>();
+			var mockLogger = new Mock<ILogger<SelectActionPageModel>>();
 			var mockCreateCaseService = new Mock<ICreateCaseService>();
 			var mockUserService = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
@@ -198,10 +128,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 				.Returns(userName);
 
 			var sut = SetupPageModel(mockUserService, mockLogger, mockClaimsPrincipalHelper, mockCreateCaseService);
-			sut.SelectedAction = CreateNonConcernsCasePageModel.Actions.TFF;
+			sut.SelectedAction = SelectActionPageModel.Actions.TFF;
 
 			// act
-			var result = await sut.OnPost();
+			var result = sut.OnPost();
 
 			// assert
 			Assert.Multiple(() =>
@@ -216,10 +146,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 		}
 
 		[Test]
-		public async Task WhenOnPost_WithNoActionSelected_ReturnsPage()
+		public void WhenOnPost_WithNoActionSelected_ReturnsValidationError()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<CreateNonConcernsCasePageModel>>();
+			var mockLogger = new Mock<ILogger<SelectActionPageModel>>();
 			var mockCreateCaseService = new Mock<ICreateCaseService>();
 			var mockUserService = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
@@ -233,7 +163,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 			var sut = SetupPageModel(mockUserService, mockLogger, mockClaimsPrincipalHelper, mockCreateCaseService);
 
 			// act
-			var result = await sut.OnPost();
+			var result = sut.OnPost();
 
 			// assert
 			Assert.Multiple(() =>
@@ -251,14 +181,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 		public void WhenOnGet_ReturnsPage()
 		{
 			// arrange
-			var mockLogger = new Mock<ILogger<CreateNonConcernsCasePageModel>>();
+			var mockLogger = new Mock<ILogger<SelectActionPageModel>>();
 			var mockCreateCaseService = new Mock<ICreateCaseService>();
 			var mockUserService = new Mock<IUserStateCachedService>();
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
 			var sut = SetupPageModel(mockUserService, mockLogger, mockClaimsPrincipalHelper, mockCreateCaseService);
-			sut.SelectedAction = CreateNonConcernsCasePageModel.Actions.None;
-			sut.SelectedActionOrDecision = CreateNonConcernsCasePageModel.Options.None;
 
 			// act
 			var result = sut.OnGet();
@@ -268,8 +196,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 			{
 				Assert.That(sut.TempData["Error.Message"], Is.Null);
 				Assert.That(result, Is.TypeOf<PageResult>());
-				Assert.That(sut.SelectedAction, Is.EqualTo(CreateNonConcernsCasePageModel.Actions.None));
-				Assert.That(sut.SelectedActionOrDecision, Is.EqualTo(CreateNonConcernsCasePageModel.Options.None));
+				Assert.That(sut.SelectedAction, Is.EqualTo(default));
 			});
 
 			mockLogger.VerifyLogInformationWasCalled("OnGet");
@@ -277,15 +204,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 			mockLogger.VerifyNoOtherCalls();
 		}
 
-		private static CreateNonConcernsCasePageModel SetupPageModel(
+		private static SelectActionPageModel SetupPageModel(
 			IMock<IUserStateCachedService> mockUserStateCachedService,
-			IMock<ILogger<CreateNonConcernsCasePageModel>> mockLogger,
+			IMock<ILogger<SelectActionPageModel>> mockLogger,
 			IMock<IClaimsPrincipalHelper> mockClaimsPrincipleService,
 			IMock<ICreateCaseService> mockCreateCaseService)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(true);
 
-			return new CreateNonConcernsCasePageModel(mockUserStateCachedService.Object, mockLogger.Object, mockClaimsPrincipleService.Object, mockCreateCaseService.Object)
+			return new SelectActionPageModel(mockUserStateCachedService.Object, mockLogger.Object, mockClaimsPrincipleService.Object, mockCreateCaseService.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
