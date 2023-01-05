@@ -1,4 +1,5 @@
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.Decision;
@@ -16,6 +17,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		private ILogger _logger;
 
 		public ViewDecisionModel Decision { get; set; }
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case overview");
 
 		public IndexPageModel(
 			IDecisionService decisionService,
@@ -30,7 +32,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 			_logger.LogInformation("Case::Action::Decision::IndexPageModel::OnGetAsync");
 
 			ViewData[ViewDataConstants.Title] = "Decision";
-			ViewData[ViewDataConstants.BackButtonLabel] = "Back to case overview";
 
 			try
 			{
@@ -40,8 +41,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				var apiDecision = await _decisionService.GetDecision(urn, (int)decisionId);
 
 				Decision = DecisionMapping.ToViewDecisionModel(apiDecision);
-
-				ViewData[ViewDataConstants.BackButtonLink] = Decision.BackLink;
 			}
 			catch (Exception ex)
 			{
