@@ -1,6 +1,5 @@
 ﻿@page "/case/{urn:long}/management/action/decision/addOrUpdate/{decisionId:long?}"
 @model ConcernsCaseWork.Pages.Case.Management.Action.Decision.AddPageModel;
-@using ConcernsCaseWork.API.Contracts.Enums;
 @using Microsoft.AspNetCore.Mvc.TagHelpers;
 @using NetEscapades.AspNetCore.SecurityHeaders;
 @using ConcernsCaseWork.Helpers;
@@ -13,9 +12,7 @@
 
 @section BeforeMain {
 	<div class="govuk-width-container">
-		<a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
-			Back to case
-		</a>
+		<back-link url="/case/@RouteData.Values["urn"]/management" label="Back to case"></back-link>
 	</div>
 }
 

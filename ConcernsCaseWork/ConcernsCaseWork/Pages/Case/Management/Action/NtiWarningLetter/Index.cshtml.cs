@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Pages.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ using ConcernsCaseWork.Services.NtiWarningLetter;
 using System.Collections.Generic;
 using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
@@ -28,6 +30,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		public ICollection<NtiWarningLetterStatusDto> NtiWarningLetterStatuses { get; set; }
 		public ICollection<NtiWarningLetterReasonDto> NtiWarningLetterReasons { get; private set; }
 		public ICollection<NtiWarningLetterConditionDto> NtiWarningLetterConditions { get; private set; }
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
 
 		public IndexPageModel(INtiWarningLetterStatusesCachedService ntiWarningLetterStatusesCachedService,
 			INtiWarningLetterReasonsCachedService ntiWarningLetterReasonsCachedService,

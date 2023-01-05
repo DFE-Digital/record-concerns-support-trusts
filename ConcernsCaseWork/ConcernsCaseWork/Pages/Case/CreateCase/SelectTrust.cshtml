@@ -1,9 +1,19 @@
+@page "/case/create/{handler?}"
+@using ConcernsCaseWork.TagHelpers
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
-@model CreateCasePageModel
+@model SelectTrustPageModel
 @{
-    var nonce = Context.GetNonce();
+    var nonce = HttpContext.GetNonce();
+	ViewData["Title"] = "New Case";
 }
+
+@section BeforeMain {
+	<div class="govuk-width-container">
+		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+	</div>
+}
+
 <div class="govuk-width-container">
 	
 	<partial name="_BannerError"/>
@@ -116,3 +126,5 @@
 		}
 	});
 </script>
+
+

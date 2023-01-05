@@ -47,9 +47,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			pageModel.Decision.ConcernsCaseUrn.Should().Be(apiDecision.ConcernsCaseUrn);
 			pageModel.Decision.DecisionId.Should().Be(apiDecision.DecisionId);
-
-			pageModel.ViewData[ViewDataConstants.BackButtonLink].Should().Be($"/case/1/management");
-			pageModel.ViewData[ViewDataConstants.BackButtonLabel].Should().Be("Back to case overview");
+			
 			pageModel.ViewData[ViewDataConstants.Title].Should().Be("Decision");
 		}
 
