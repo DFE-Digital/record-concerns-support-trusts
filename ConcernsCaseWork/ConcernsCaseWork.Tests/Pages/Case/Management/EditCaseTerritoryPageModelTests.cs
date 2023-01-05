@@ -144,7 +144,7 @@ public class EditTerritoryPageModelTests
 		// arrange
 		var caseUrn = _fixture.Create<int>();
 		var userName = _fixture.Create<string>();
-		var caseTerritory = _fixture.Create<TerritoryEnum>();
+		var caseTerritory = _fixture.Create<Territory>();
 
 		var mockCaseModelService = new Mock<ICaseModelService>();
 		var mockLogger = new Mock<ILogger<EditTerritoryPageModel>>();

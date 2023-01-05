@@ -49,7 +49,7 @@ namespace ConcernsCaseWork.Service.Cases
 		public string CaseHistory { get; set; }
 		
 		[JsonProperty("territory")]
-		public TerritoryEnum? Territory { get; set; }
+		public Territory? Territory { get; set; }
 		
 		/// <summary>
 		/// Deteriorating, unchanged, improved
@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.Service.Cases
 			string createdBy, string crmEnquiry, string trustUkPrn, 
 			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
 			string nextSteps, string caseAim, string deEscalationPoint, string caseHistory, string directionOfTravel, long statusId,
-			long ratingId, TerritoryEnum? territory) => 
+			long ratingId, Territory? territory) => 
 			(CreatedAt, UpdatedAt, ReviewAt, CreatedBy, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, CaseAim, DeEscalationPoint, CaseHistory, DirectionOfTravel, 
 				StatusId, RatingId, Territory) = 

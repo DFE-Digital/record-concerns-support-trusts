@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Services.Cases
 		Task PatchDeEscalationPoint(PatchCaseModel patchCaseModel);
 		Task PatchNextSteps(PatchCaseModel patchCaseModel);
 		Task PatchCaseHistory(long caseUrn, string userName, string caseHistory);
-		Task PatchTerritory(int caseUrn, string userName, TerritoryEnum? territory);
+		Task PatchTerritory(int caseUrn, string userName, Territory? territory);
 		Task<long> PostCase(CreateCaseModel createCaseModel);
 	}
 }

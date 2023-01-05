@@ -43,7 +43,7 @@
 						<span class="govuk-error-message" id="territory-error">@string.Join("<br />", @Model.ModelState["Territory"]!.Errors.Select(errs => errs?.ErrorMessage))</span>
 					}
 					<div class="govuk-radios" data-module="govuk-radios" id="Territory">
-						@foreach (TerritoryEnum territory in Enum.GetValues(typeof(TerritoryEnum)))
+						@foreach (Territory territory in Enum.GetValues(typeof(Territory)))
 						{
 							<div class="govuk-radios__item">
 								<input class="govuk-radios__input" id="territory-@territory" name="territory" type="radio" value="@territory">

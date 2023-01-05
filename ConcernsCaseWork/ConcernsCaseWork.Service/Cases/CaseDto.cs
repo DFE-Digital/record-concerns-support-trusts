@@ -30,6 +30,6 @@ namespace ConcernsCaseWork.Service.Cases
 		public long StatusId { get; init; }
 		public long RatingId { get; set; }
 		public string CaseHistory { get; set; }
-		public TerritoryEnum? Territory { get; set; }
+		public Territory? Territory { get; set; }
 	}
 }
