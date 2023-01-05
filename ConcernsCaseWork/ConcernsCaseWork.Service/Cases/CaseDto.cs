@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.API.Contracts.Enums;
-using Newtonsoft.Json;
 
 namespace ConcernsCaseWork.Service.Cases
 {

@@ -1,4 +1,3 @@
-using ConcernsCaseWork.Data.Enums.Concerns;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConcernsCaseWork.Data.Gateways;

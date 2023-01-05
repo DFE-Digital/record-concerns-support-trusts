@@ -5,7 +5,6 @@ using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
-using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using FluentAssertions;
 using System;

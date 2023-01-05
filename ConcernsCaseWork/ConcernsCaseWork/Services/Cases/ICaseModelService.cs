@@ -1,7 +1,6 @@
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Redis.Models;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Cases

@@ -2,7 +2,6 @@
 using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.API.Factories.CaseActionFactories;
 using ConcernsCaseWork.Data.Gateways;
-using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome
 {

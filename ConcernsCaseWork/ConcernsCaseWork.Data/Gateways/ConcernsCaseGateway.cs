@@ -1,6 +1,5 @@
 using ConcernsCaseWork.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.X509Certificates;
 
 namespace ConcernsCaseWork.Data.Gateways
 {

@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Enums;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace ConcernsCaseWork.Service.Cases
 {
