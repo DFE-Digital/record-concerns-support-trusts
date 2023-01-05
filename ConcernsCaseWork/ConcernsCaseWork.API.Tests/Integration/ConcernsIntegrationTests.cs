@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
         private readonly HttpClient _client;
         private readonly Fixture _autoFixture;
         private readonly RandomGenerator _randomGenerator;
-		private ApiTestFixture _testFixture;
+		private readonly ApiTestFixture _testFixture;
 
 		private List<ConcernsCase> CasesToBeDisposedAtEndOfTests { get; } = new List<ConcernsCase>();
         private List<ConcernsRecord> RecordsToBeDisposedAtEndOfTests { get; } = new List<ConcernsRecord>();

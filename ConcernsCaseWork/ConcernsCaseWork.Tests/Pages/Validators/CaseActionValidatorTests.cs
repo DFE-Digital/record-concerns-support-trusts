@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 	[Parallelizable(ParallelScope.All)]
 	public class CaseActionValidatorTests
 	{
-		private Fixture _fixture = new();
+		private readonly Fixture _fixture = new();
 
 		[Test]
 		public void When_Open_SRMA_Return_Error_Message()

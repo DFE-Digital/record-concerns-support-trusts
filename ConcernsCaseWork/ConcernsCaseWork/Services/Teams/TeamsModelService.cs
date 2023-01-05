@@ -15,7 +15,7 @@ namespace ConcernsCaseWork.Services.Teams
 	{
 		private readonly ILogger<TeamsModelService> _logger;
 		private readonly IMapper _mapper;
-		private ITeamsCachedService _teamsServiceClient;
+		private readonly ITeamsCachedService _teamsServiceClient;
 
 		public TeamsModelService(ILogger<TeamsModelService> logger,
 			IMapper mapper,

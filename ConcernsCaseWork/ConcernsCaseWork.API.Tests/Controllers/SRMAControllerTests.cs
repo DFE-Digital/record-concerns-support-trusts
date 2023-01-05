@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         private readonly Mock<IUseCase<int, SRMAResponse>> _mockGetSRMAById;
         private readonly Mock<IUseCase<PatchSRMARequest, SRMAResponse>> _mockPatchSRMAUseCase;
         private readonly SRMAController controllerSUT;
-        private string dtSerialisationFormat = "dd-MM-yyyy";
+        private readonly string dtSerialisationFormat = "dd-MM-yyyy";
 
         public SRMAControllerTests()
         {

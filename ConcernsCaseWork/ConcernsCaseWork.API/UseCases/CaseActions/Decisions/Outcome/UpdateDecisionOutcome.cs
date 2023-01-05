@@ -8,8 +8,8 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome
 {
 	public class UpdateDecisionOutcome : IUseCaseAsync<UpdateDecisionOutcomeUseCaseParams, UpdateDecisionOutcomeResponse>
 	{
-		private IConcernsCaseGateway _concernsCaseGateway;
-		private IDecisionOutcomeGateway _decisionOutcomeGateway;
+		private readonly IConcernsCaseGateway _concernsCaseGateway;
+		private readonly IDecisionOutcomeGateway _decisionOutcomeGateway;
 
 		public UpdateDecisionOutcome(IConcernsCaseGateway concernsCaseGateway, IDecisionOutcomeGateway decisionOutcomeGateway)
 		{
