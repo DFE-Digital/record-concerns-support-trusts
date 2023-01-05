@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +19,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		private readonly ILogger<ClosedPageModel> _logger;
 
 		public SRMAModel SRMAModel { get; set; }
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, label: "Back to case");
 
 		public ClosedPageModel(ISRMAService srmaService, ILogger<ClosedPageModel> logger)
 		{
