@@ -30,9 +30,9 @@ jobs:
             VERSION=sha-${CHECKED_OUT_SHA}
             TAGS="$TAGS,${DOCKER_IMAGE}:${VERSION}"
           fi
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=checked-out-sha::${CHECKED_OUT_SHA}
-          echo ::set-output name=deploy-version::${VERSION}
+          echo "tags=${TAGS}" >> $GITHUB_OUTPUT
+          echo "checked-out-sha=${CHECKED_OUT_SHA}" >> $GITHUB_OUTPUT
+          echo "deploy-version=${VERSION}" >> $GITHUB_OUTPUT
 
       - name: Setup node.js
         uses: actions/setup-node@v1
