@@ -1,6 +1,8 @@
 using Ardalis.GuardClauses;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases.Create;
@@ -8,28 +10,28 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase;
 
 [Authorize]
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-public class CreateNonConcernsCasePageModel : AbstractPageModel
+public class SelectActionPageModel : AbstractPageModel
 {
 	private readonly IUserStateCachedService _cachedService;
-	private readonly ILogger<CreateNonConcernsCasePageModel> _logger;
+	private readonly ILogger<SelectActionPageModel> _logger;
 	private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 	private readonly ICreateCaseService _createCaseService;
 
-	[BindProperty]
-	public Options SelectedActionOrDecision { get; set; }
+	[BindProperty] 
+	[Required(ErrorMessage = "Select an action")] 
+	public Actions? SelectedAction { get; set; }
+	
+	public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
 
-	[BindProperty]
-	public Actions SelectedAction { get; set; }
-
-	public CreateNonConcernsCasePageModel(
+	public SelectActionPageModel(
 		IUserStateCachedService cachedService,
-		ILogger<CreateNonConcernsCasePageModel> logger,
+		ILogger<SelectActionPageModel> logger,
 		IClaimsPrincipalHelper claimsPrincipalHelper,
 		ICreateCaseService createCaseService)
 	{
@@ -43,72 +45,41 @@ public class CreateNonConcernsCasePageModel : AbstractPageModel
 	{
 		_logger.LogMethodEntered();
 
-		try
-		{
-			return Page();
-		}
-		catch (Exception ex)
-		{
-			_logger.LogErrorMsg(ex);
-			TempData["Error.Message"] = ErrorOnPostPage;
-			
-			return Page();
-		}
+		return Page();
 	}
 	
-	public async Task<ActionResult> OnPost()
+	public ActionResult OnPost()
 	{
 		_logger.LogMethodEntered();
 
 		try
 		{
-			if (SelectedActionOrDecision == Options.Decision)
+			if (!ModelState.IsValid)
 			{
-				var userName = GetUserName();
-				var caseUrn = await _createCaseService.CreateNonConcernsCase(userName);
-				
-				return Redirect($"/case/{caseUrn}/management/action/decision/addOrUpdate");
+				return Page();
 			}
-
+			
 			switch (SelectedAction)
 			{
 				case Actions.TFF:
 					throw new NotImplementedException();
-				
+
 				case Actions.SRMA:
 					return Redirect("/case/create/nonconcerns/srma");
-				
-				case Actions.None:
-					break;
-				
-				default:
-					throw new ArgumentOutOfRangeException();
 			}
-
-			return Page();
 		}
 		catch (Exception ex)
 		{
 			_logger.LogErrorMsg(ex);
 			TempData["Error.Message"] = ErrorOnPostPage;
-			
-			return Page();
 		}
-	}
-
-	public enum Options
-	{
-		None,
-		Action,
-		Decision
+		
+		return Page();
 	}
 	
 	public enum Actions
 	{
-		None,
 		SRMA,
 		TFF
 	}
-	
-	private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 }

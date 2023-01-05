@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,8 @@ namespace ConcernsCaseWork.Pages
 
 		[BindProperty]
 		public bool HasConsented { get; set; }
+		
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
 
 		public CookiesPageModel(ILogger<CookiesPageModel> logger)
 		{
