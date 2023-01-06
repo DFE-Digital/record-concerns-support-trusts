@@ -4,7 +4,12 @@
 
 @{
     ViewData["Title"] = "Closed cases";
-	ViewData["BackButtonLink"] = "/#your-casework";
+}
+
+@section BeforeMain {
+	<div class="govuk-extra-width-container">
+		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+	</div>
 }
 
 <div class="govuk-extra-width-container">
@@ -62,10 +67,10 @@
 								<a class="govuk-link" href="/case/@closedCase.CaseUrn/closed">@closedCase.CaseUrn</a>
 							</td>
 							<td class="govuk-table__cell">
-								@closedCase.UpdatedAt
+								@closedCase.CreatedAt
 							</td>
 							<td class="govuk-table__cell">
-								@closedCase.CreatedAt
+								@closedCase.ClosedAt
 							</td>
 							<td class="govuk-table__cell">
 								@closedCase.TrustName
