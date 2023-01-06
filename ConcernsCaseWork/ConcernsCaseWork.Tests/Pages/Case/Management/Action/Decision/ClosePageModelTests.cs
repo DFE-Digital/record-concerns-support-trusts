@@ -1,10 +1,8 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoMoq;
-using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Constants;
-using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Pages.Case.Management.Action.Decision;
 using ConcernsCaseWork.Service.Decision;
@@ -17,7 +15,6 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
-using Microsoft.IdentityModel.Tokens;
 using Moq;
 using NUnit.Framework;
 using System;

@@ -19,7 +19,6 @@ using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.Decision;
-using ConcernsCaseWork.CoreTypes;
 using ConcernsCaseWork.Services.Decisions;
 
 namespace ConcernsCaseWork.Pages.Case.Management

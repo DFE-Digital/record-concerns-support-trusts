@@ -239,7 +239,7 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 		}
 				
-		public async Task PatchTerritory(int caseUrn, string userName, TerritoryEnum? territory)
+		public async Task PatchTerritory(int caseUrn, string userName, Territory? territory)
 		{
 			try
 			{
