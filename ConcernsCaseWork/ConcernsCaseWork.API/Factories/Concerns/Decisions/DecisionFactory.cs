@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
-using System;
 using DecisionTypeModel = ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 namespace ConcernsCaseWork.API.Factories.Concerns.Decisions
 {

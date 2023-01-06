@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.API.Controllers
 
     public class ConcernsTeamCaseworkController : ControllerBase
     {
-        private ILogger<ConcernsTeamCaseworkController> _logger;
+        private readonly ILogger<ConcernsTeamCaseworkController> _logger;
         private readonly IGetConcernsCaseworkTeam _getCommand;
         private readonly IGetConcernsCaseworkTeamOwners _getTeamOwnersCommand;
         private readonly IUpdateConcernsCaseworkTeam _updateCommand;

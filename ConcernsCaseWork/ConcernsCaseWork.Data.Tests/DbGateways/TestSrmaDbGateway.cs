@@ -1,5 +1,4 @@
 using ConcernsCaseWork.Data.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace ConcernsCaseWork.Data.Tests.DbGateways;
 

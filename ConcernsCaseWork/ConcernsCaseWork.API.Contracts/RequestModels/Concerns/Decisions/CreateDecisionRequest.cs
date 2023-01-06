@@ -1,7 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Constants;
 using ConcernsCaseWork.API.Contracts.Enums;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions
 {

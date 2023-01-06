@@ -8,13 +8,9 @@ using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using FluentAssertions.Execution;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
-using ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome;
 
 namespace ConcernsCaseWork.API.Tests.UseCases.CaseActions.Decisions
 {

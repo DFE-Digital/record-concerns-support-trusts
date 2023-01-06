@@ -13,8 +13,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 	[Collection(ApiTestCollection.ApiTestCollectionName)]
 	public class NtiUnderConsiderationIntegrationTests
 	{
-		private Fixture _fixture;
-		private HttpClient _client;
+		private readonly Fixture _fixture;
+		private readonly HttpClient _client;
 
 		public NtiUnderConsiderationIntegrationTests(ApiTestFixture apiTestFixture)
 		{

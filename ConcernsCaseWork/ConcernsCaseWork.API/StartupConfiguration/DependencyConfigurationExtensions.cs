@@ -5,9 +5,7 @@ using ConcernsCaseWork.API.Factories.Concerns.Decisions;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome;
-using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Gateways;
-using System.Net.Mime;
 
 namespace ConcernsCaseWork.API.StartupConfiguration
 {

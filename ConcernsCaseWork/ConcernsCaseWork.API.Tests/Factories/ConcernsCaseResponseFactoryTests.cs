@@ -33,7 +33,7 @@ namespace ConcernsCaseWork.API.Tests.Factories
                 NextSteps = "next steps",
                 CaseHistory = "case history",
                 DirectionOfTravel = "Direction",
-                Territory = TerritoryEnum.National_Operations,
+                Territory = Territory.National_Operations,
                 Urn = 109,
                 StatusId = 123,
                 RatingId = 345
