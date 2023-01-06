@@ -1,10 +1,18 @@
+@page "/case/create/nonconcerns/action"
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model CreateNonConcernsCasePageModel
+@model SelectActionPageModel
+
 @{
-	ViewData["Title"] = "Create case";
-	ViewData["BackButtonLink"] = "/case";
+	ViewData["Title"] = "Add to Case";
 }
-<div class="govuk-width-container" id="actionordecision">
+
+@section BeforeMain {
+	<div class="govuk-width-container">
+		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+	</div>
+}
+
+<div class="govuk-width-container" id="action">
 	
 	<partial name="_BannerError"/>
 	
@@ -14,21 +22,21 @@
 	}
 	else
 	{
-		<form role="form" method="post" id="choose-case-type-form" novalidate>
+		<form role="form" method="post" id="choose-action-form" novalidate>
 			<partial name="_ValidationErrors"/>
 			<h1 class="govuk-heading-l">Add to case</h1>
 
 			<h2 class="govuk-heading-m">Select an action</h2>
 
-			<div class="govuk-radios" data-module="govuk-radios">
+			<div class="govuk-radios" data-module="govuk-radios" id="@nameof(Model.SelectedAction)">
 				<div class="govuk-radios__item">
-					<input asp-for="SelectedAction" class="govuk-radios__input" id="srma-option" type="radio" value="@CreateNonConcernsCasePageModel.Actions.SRMA">
+					<input asp-for="SelectedAction" class="govuk-radios__input" id="srma-option" type="radio" value="@SelectActionPageModel.Actions.SRMA">
 					<label class="govuk-label govuk-radios__label" for="srma-option">
 						School Management Resource Advisor (SRMA)
 					</label>
 				</div>
 				<div class="govuk-radios__item">
-					<input asp-for="SelectedAction" class="govuk-radios__input" id="tff-option" type="radio" value="@CreateNonConcernsCasePageModel.Actions.TFF" disabled>
+					<input asp-for="SelectedAction" class="govuk-radios__input" id="tff-option" type="radio" value="@SelectActionPageModel.Actions.TFF" disabled>
 					<label class="govuk-label govuk-radios__label" for="tff-option">
 						Trust Financial Forecast
 					</label>
@@ -50,3 +58,5 @@
 		</form>
 	}
 	</div>
+
+
