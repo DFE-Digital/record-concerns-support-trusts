@@ -1,9 +1,7 @@
 ﻿using AutoFixture;
-using AutoFixture.Idioms;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using FluentAssertions;
-using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.RequestModels.Concerns.Decisions
 {

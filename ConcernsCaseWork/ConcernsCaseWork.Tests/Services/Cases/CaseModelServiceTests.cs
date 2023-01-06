@@ -670,12 +670,12 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 				 mockLogger.Object);
 			
 			// act
-			await caseModelService.PatchTerritory((int)caseDto.Urn, caseDto.CreatedBy, TerritoryEnum.South_And_South_East__London);
+			await caseModelService.PatchTerritory((int)caseDto.Urn, caseDto.CreatedBy, Territory.South_And_South_East__London);
 
 			// assert
 			var timeStopped = DateTimeOffset.Now;
 			mockCaseService
-				.Verify(r => r.PatchCaseByUrn(It.Is<CaseDto>(dto => dto.Territory.ToString() == TerritoryEnum.South_And_South_East__London.ToString() && dto.UpdatedAt >= dateTimeStart && dto.UpdatedAt <= timeStopped)), 
+				.Verify(r => r.PatchCaseByUrn(It.Is<CaseDto>(dto => dto.Territory.ToString() == Territory.South_And_South_East__London.ToString() && dto.UpdatedAt >= dateTimeStart && dto.UpdatedAt <= timeStopped)), 
 					Times.Once);
 		}
 
@@ -700,7 +700,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 				 mockLogger.Object);
 
 			// act/ assert
-			var exception = Assert.ThrowsAsync<Exception>(() => caseModelService.PatchTerritory(1, "some user", TerritoryEnum.North_And_Utc__Utc));
+			var exception = Assert.ThrowsAsync<Exception>(() => caseModelService.PatchTerritory(1, "some user", Territory.North_And_Utc__Utc));
 			Assert.That(exception!.Message, Is.EqualTo("some error message"));
 			mockCaseService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Once);
 		}
@@ -721,7 +721,7 @@ namespace ConcernsCaseWork.Tests.Services.Cases
 				 mockLogger.Object);
 
 			// act/ assert
-			var exception = Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PatchTerritory(1, "some user", TerritoryEnum.North_And_Utc__Utc));
+			var exception = Assert.ThrowsAsync<NullReferenceException>(() => caseModelService.PatchTerritory(1, "some user", Territory.North_And_Utc__Utc));
 			Assert.That(exception!.Message, Is.EqualTo("Object reference not set to an instance of an object."));
 			mockCaseService.Verify(r => r.PatchCaseByUrn(It.IsAny<CaseDto>()), Times.Never);
 		}

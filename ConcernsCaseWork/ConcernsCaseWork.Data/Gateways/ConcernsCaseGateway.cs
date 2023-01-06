@@ -1,6 +1,5 @@
 using ConcernsCaseWork.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.X509Certificates;
 
 namespace ConcernsCaseWork.Data.Gateways
 {
@@ -52,7 +51,7 @@ namespace ConcernsCaseWork.Data.Gateways
 	        return concernsCase;
         }
 
-        public ConcernsCase GetConcernsCaseIncludingRecordsById(int urn)
+        public ConcernsCase GetConcernsCaseIncludingRecordsById(int id)
         {
             var concernsCase = _concernsDbContext.ConcernsCase
                 .Include(c => c.ConcernsRecords)
@@ -64,7 +63,7 @@ namespace ConcernsCaseWork.Data.Gateways
                 .Include(x => x.Decisions)
                 .ThenInclude(x => x.DecisionTypes)
                 .AsNoTracking()
-                .FirstOrDefault(c => c.Urn == urn);
+                .FirstOrDefault(c => c.Urn == id);
 
             return concernsCase;
         }
@@ -90,7 +89,7 @@ namespace ConcernsCaseWork.Data.Gateways
 
         public async Task<ConcernsCase> UpdateExistingAsync(ConcernsCase concernsCase)
         {
-	        _concernsDbContext.SaveChanges();
+	        await _concernsDbContext.SaveChangesAsync();
 	        return concernsCase;
         }
 

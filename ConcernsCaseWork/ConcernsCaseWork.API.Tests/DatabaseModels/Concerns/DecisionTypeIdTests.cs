@@ -2,7 +2,6 @@
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using FluentAssertions;
 using Xunit;
-using DecisionType = ConcernsCaseWork.Data.Enums.Concerns.DecisionType;
 
 namespace ConcernsCaseWork.API.Tests.DatabaseModels.Concerns
 {

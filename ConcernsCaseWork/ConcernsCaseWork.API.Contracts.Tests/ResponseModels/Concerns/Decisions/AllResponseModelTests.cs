@@ -1,15 +1,8 @@
 ﻿using AutoFixture;
 using AutoFixture.Idioms;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
-using FluentAssertions;
 using FluentAssertions.Execution;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.ResponseModels.Concerns.Decisions
 {
