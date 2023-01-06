@@ -1,13 +1,7 @@
 ﻿using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Service.Cases;
-using ConcernsCaseWork.Service.Ratings;
-using ConcernsCaseWork.Service.Records;
 using ConcernsCaseWork.Service.Status;
-using ConcernsCaseWork.Service.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ConcernsCaseWork.Mappers
 {
