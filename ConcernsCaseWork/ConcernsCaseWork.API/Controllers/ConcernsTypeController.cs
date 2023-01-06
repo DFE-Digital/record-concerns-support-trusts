@@ -9,8 +9,8 @@ namespace ConcernsCaseWork.API.Controllers
     [Route("v{version:apiVersion}/concerns-types")]
     public class ConcernsTypeController: ControllerBase
     {
-        private ILogger<ConcernsTypeController> _logger;
-        private IIndexConcernsTypes _indexConcernsTypes;
+        private readonly ILogger<ConcernsTypeController> _logger;
+        private readonly IIndexConcernsTypes _indexConcernsTypes;
 
         public ConcernsTypeController(
             ILogger<ConcernsTypeController> logger, 

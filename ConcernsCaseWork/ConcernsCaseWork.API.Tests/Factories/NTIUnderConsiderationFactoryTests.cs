@@ -11,7 +11,7 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Factories
 {
-    public class NTIUnderConsidertionFactoryTests
+    public class NTIUnderConsiderationFactoryTests
     {
         [Fact]
         public void CreateDBModel_ExpectedNTIUnderConsideration_WhenCreateNTIUnderConsiderationRequestProvided()

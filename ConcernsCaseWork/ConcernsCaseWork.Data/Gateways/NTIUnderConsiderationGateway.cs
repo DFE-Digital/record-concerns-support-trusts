@@ -67,7 +67,7 @@ namespace ConcernsCaseWork.Data.Gateways
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occured while trying to patch the NTI underconsideration with Id:", patchNTIUnderConsideration.Id);
+                _logger.LogError(ex, "Error occured while trying to patch the NTI under consideration with Id:", patchNTIUnderConsideration.Id);
                 throw;
             }
         }

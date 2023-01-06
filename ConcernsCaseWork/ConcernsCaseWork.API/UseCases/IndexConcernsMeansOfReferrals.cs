@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.API.UseCases
 {
     public class IndexConcernsMeansOfReferrals : IIndexConcernsMeansOfReferrals
     {
-        private IConcernsMeansOfReferralGateway _concernsMeansOfReferralGateway;
+        private readonly IConcernsMeansOfReferralGateway _concernsMeansOfReferralGateway;
 
         public IndexConcernsMeansOfReferrals(IConcernsMeansOfReferralGateway concernsMeansOfReferralGateway)
         {

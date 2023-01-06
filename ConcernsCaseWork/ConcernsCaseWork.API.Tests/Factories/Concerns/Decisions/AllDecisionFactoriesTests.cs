@@ -8,11 +8,8 @@ using FluentAssertions.Execution;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Factories.Concerns.Decisions

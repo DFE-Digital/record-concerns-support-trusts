@@ -223,7 +223,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 Notes = "Match"
             };
 
-            var noticeToImrpoveResponse = Builder<NoticeToImproveResponse>
+            var noticeToImproveResponse = Builder<NoticeToImproveResponse>
               .CreateNew()
               .With(r => r.Id = matchingNoticeToImprove.Id)
               .With(r => r.Notes = matchingNoticeToImprove.Notes)
@@ -231,7 +231,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
             _mockGetNoticeToImproveByIdUseCase
                 .Setup(x => x.Execute(noticeToImproveId))
-                .Returns(noticeToImrpoveResponse);
+                .Returns(noticeToImproveResponse);
 
 
             OkObjectResult controllerResponse = controllerSUT.GetNoticeToImproveById(noticeToImproveId).Result as OkObjectResult;
