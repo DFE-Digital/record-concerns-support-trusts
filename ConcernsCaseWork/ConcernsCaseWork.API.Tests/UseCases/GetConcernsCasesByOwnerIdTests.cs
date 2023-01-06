@@ -31,9 +31,9 @@ namespace ConcernsCaseWork.API.Tests.UseCases
 
             var expected = cases.Select(ConcernsCaseResponseFactory.Create).ToList();
 
-            var usecase = new GetConcernsCasesByOwnerId(gateway.Object);
+            var useCase = new GetConcernsCasesByOwnerId(gateway.Object);
 
-            var result = usecase.Execute(ownerId, null, 1, 50);
+            var result = useCase.Execute(ownerId, null, 1, 50);
             result.Should().BeEquivalentTo(expected);
         }
         
@@ -56,14 +56,14 @@ namespace ConcernsCaseWork.API.Tests.UseCases
 
             var expected = cases.Select(ConcernsCaseResponseFactory.Create).ToList();
 
-            var usecase = new GetConcernsCasesByOwnerId(gateway.Object);
+            var useCase = new GetConcernsCasesByOwnerId(gateway.Object);
 
-            var result = usecase.Execute(ownerId, statusId, 1, 50);
+            var result = useCase.Execute(ownerId, statusId, 1, 50);
             result.Should().BeEquivalentTo(expected);
         }
         
         [Fact]
-        public void Execute_ShouldReturnEmptyListWhenNoConcernsCasesArefound()
+        public void Execute_ShouldReturnEmptyListWhenNoConcernsCasesAreFound()
         {
             var ownerId = "96784";
             var statusId = 567;
@@ -75,9 +75,9 @@ namespace ConcernsCaseWork.API.Tests.UseCases
                 .Returns(new List<ConcernsCase>());
             
 
-            var usecase = new GetConcernsCasesByOwnerId(gateway.Object);
+            var useCase = new GetConcernsCasesByOwnerId(gateway.Object);
 
-            var result = usecase.Execute(ownerId, statusId, 1, 50);
+            var result = useCase.Execute(ownerId, statusId, 1, 50);
             result.Should().BeEquivalentTo(new List<ConcernsCaseResponse>());
         }
     }
