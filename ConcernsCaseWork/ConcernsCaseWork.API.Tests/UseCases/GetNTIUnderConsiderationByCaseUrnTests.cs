@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases
     public class GetNTIUnderConsiderationByCaseUrnTests
     {
         [Fact]
-        public void GetNTIUnderConsiderationyCaseUrn_ShouldReturnNTIUnderConsiderationResponse_WhenGivenCaseUrn()
+        public void GetNTIUnderConsiderationByCaseUrn_ShouldReturnNTIUnderConsiderationResponse_WhenGivenCaseUrn()
         {
             var caseUrn = 123;
 

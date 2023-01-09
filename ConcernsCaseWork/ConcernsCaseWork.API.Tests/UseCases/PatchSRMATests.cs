@@ -66,13 +66,13 @@ namespace ConcernsCaseWork.API.Tests.UseCases
         {
             var status = SRMAStatus.PreparingForDeployment;
             var reason = SRMAReasonOffered.OfferLinked;
-            var datetOffered = DateTime.Now.AddDays(-5);
+            var dateOffered = DateTime.Now.AddDays(-5);
 
             return new SRMACase
             {
                 Id = 834,
                 StatusId = (int)status,
-                DateOffered = datetOffered,
+                DateOffered = dateOffered,
                 ReasonId = (int)reason
             };
         }
