@@ -1,0 +1,18 @@
+@model ConcernsCaseWork.Models.RadioButtonsUiComponent
+
+<div class="govuk-radios" data-module="govuk-radios">
+	@foreach (var radioItem in Model.RadioItems)
+	{
+		<div class="govuk-radios__item">
+			<input class="govuk-radios__input" id="@radioItem.Id" name="@Model.Name" type="radio" data-testid="@radioItem.Id" value="@radioItem.Text" }>
+
+			<label class="govuk-label govuk-radios__label" for="@radioItem.Id">
+				<span>
+					@radioItem.Text
+				</span>
+			</label>
+		</div>
+	}
+	<input type="hidden" name="@Model.Name.@nameof(Model.Name)" value="@Model.Name" />
+	<input type="hidden" name="@Model.Name.@nameof(Model.ElementRootId)" value="@Model.ElementRootId" />
+</div>

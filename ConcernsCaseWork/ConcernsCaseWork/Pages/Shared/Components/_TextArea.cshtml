@@ -1,3 +1,4 @@
+@using ConcernsCaseWork.Models
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Models.TextAreaUiComponent
 @{
@@ -11,6 +12,8 @@
 	<div id="@Model.ElementRootId-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
 		You can enter up to @Model.MaxLength characters
 	</div>
+	<input type="hidden" name="@Model.Name.@nameof(Model.Name)" value="@Model.Name" />
+	<input type="hidden" name="@Model.Name.@nameof(Model.ElementRootId)" value="@Model.ElementRootId" />
 </div>
 
 <script type="application/javascript" nonce="@nonce">

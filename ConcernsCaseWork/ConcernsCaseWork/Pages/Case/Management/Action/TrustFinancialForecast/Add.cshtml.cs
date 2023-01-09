@@ -16,8 +16,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
@@ -29,26 +27,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 		//private readonly ITrustFinancialForecastService _trustFinancialForecastService;
 		private readonly ILogger<AddPageModel> _logger;
 		
-		[BindProperty]
-		public CreateTrustFinancialForecastRequest TrustFinancialForecast { get; set; }
+		[BindProperty] public string ForecastingToolRanAtSelected { get; set; }
+		[BindProperty] public OptionalDateTimeUiComponent SFSOInitialReviewHappenedAt { get; set; } = new(ElementRootId: "sfso-initial-review-happened-at", Name: nameof(SFSOInitialReviewHappenedAt));
+		[BindProperty] public OptionalDateTimeUiComponent TrustRespondedAt { get; set; } = new(ElementRootId: "trust-responded-at", Name: nameof(TrustRespondedAt));
+		[BindProperty(Name = "Urn", SupportsGet = true)] public int Urn { get; set; }
+		[BindProperty] public string Notes { get; set; }
+		[BindProperty] public string WasTrustResponseSatisfactorySelected { get; set; }
+		[BindProperty] public string SRMAOfferedAfterTFFSelected { get; set; }
 
-		[BindProperty]
-		public OptionalDateTimeUiComponent ForecastingToolRanAt{ get; set; } = new(ElementRootId: "forecasting-tool-ran-at", Name: nameof(ForecastingToolRanAt));
-		
-		[BindProperty]
-		public OptionalDateTimeUiComponent SFSOInitialReviewHappenedAt { get; set; } =
-			new(ElementRootId: "sfso-initial-review-happened-at", Name: nameof(SFSOInitialReviewHappenedAt));
-
-		[BindProperty] 
-		public OptionalDateTimeUiComponent TrustRespondedAt { get; set; } = new(ElementRootId: "trust-responded-at", Name: nameof(TrustRespondedAt));
-
-		[BindProperty(Name = "Urn", SupportsGet = true)]
-		public int Urn { get; set; }
-		
-		[BindProperty]
-		public string Notes { get; set; }
-
-		public TextAreaUiComponent NotesTextArea = new()
+		public TextAreaUiComponent NotesTextAreaComponent { get; } = new()
 		{
 			ElementRootId = "notes",
 			Contents = string.Empty,
@@ -56,8 +43,38 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 			MaxLength = 2000,
 			Name = nameof(Notes)
 		};
-
-		//public List<TrustFinancialForecastTypeCheckBox> TrustFinancialForecastTypeCheckBoxes { get; set; }
+		
+		public RadioButtonsUiComponent WasTrustResponseSatisfactoryComponent { get; } =
+			new(ElementRootId: "trust-response-satisfactory", Name: nameof(WasTrustResponseSatisfactorySelected))
+			{
+				RadioItems = new List<RadioItem>()
+				{
+					new () { Text = "Satisfactory" },
+					new () { Text = "Not satisfactory" }
+				}
+			};
+		
+		public RadioButtonsUiComponent SRMAOfferedAfterTFFComponent  { get; } =
+			new(ElementRootId: "srma-offered-after-tff", Name: nameof(SRMAOfferedAfterTFFSelected))
+			{
+				RadioItems = new List<RadioItem>()
+				{
+					new () { Text = "Yes" },
+					new () { Text = "No" }
+				}
+			};
+		
+		public RadioButtonsUiComponent ForecastingToolRanAtComponent  { get; } =
+			new(ElementRootId: "forecasting-tool-ran-at", Name: nameof(ForecastingToolRanAtSelected))
+			{
+				RadioItems = new List<RadioItem>()
+				{
+					new () { Text = "Current year - Spring" },
+					new () { Text = "Current year - Summer" },
+					new () { Text = "Previous year - Spring" },
+					new () { Text = "Previous year - Summer" }
+				}
+			};
 		
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case overview");
 
