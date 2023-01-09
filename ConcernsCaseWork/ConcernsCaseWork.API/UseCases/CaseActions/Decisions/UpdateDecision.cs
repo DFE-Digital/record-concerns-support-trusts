@@ -2,11 +2,6 @@
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Factories.Concerns.Decisions;
 using ConcernsCaseWork.Data.Gateways;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.Decisions
 {

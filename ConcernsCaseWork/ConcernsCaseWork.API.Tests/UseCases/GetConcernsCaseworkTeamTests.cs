@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases
         }
 
         [Fact]
-        public async Task Execute_When_Teamw_NotFound_Returns_Null()
+        public async Task Execute_When_Team_NotFound_Returns_Null()
         {
             var ownerId = "john.doe";
             var mockGateway = new Mock<IConcernsTeamCaseworkGateway>();

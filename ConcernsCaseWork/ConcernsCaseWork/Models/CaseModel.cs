@@ -64,6 +64,6 @@ namespace ConcernsCaseWork.Models
 		
 		public string CaseHistory { get; set; }
 		
-		public TerritoryEnum? Territory { get; set; }
+		public Territory? Territory { get; set; }
 	}
 }
