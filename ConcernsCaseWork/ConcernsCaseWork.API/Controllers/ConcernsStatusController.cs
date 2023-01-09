@@ -9,8 +9,8 @@ namespace ConcernsCaseWork.API.Controllers
     [Route("v{version:apiVersion}/concerns-statuses")]
     public class ConcernsStatusController: ControllerBase
     {
-        private ILogger<ConcernsStatusController> _logger;
-        private IIndexConcernsStatuses _indexConcernsStatuses;
+        private readonly ILogger<ConcernsStatusController> _logger;
+        private readonly IIndexConcernsStatuses _indexConcernsStatuses;
 
         public ConcernsStatusController(
             ILogger<ConcernsStatusController> logger, 

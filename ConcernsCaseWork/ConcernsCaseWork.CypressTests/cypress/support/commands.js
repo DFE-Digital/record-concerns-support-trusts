@@ -44,6 +44,14 @@ Cypress.Commands.add("getById", (id) => {
     cy.get(`[id="${id}"]`)
 });
 
+Cypress.Commands.add("waitForJavascript", () =>
+{
+    // Need to look into this later
+    // Essentially javascript validation is too slow and blocks submission even though the error has been corrected
+    // Might be a more intelligent way to do this in the future
+    cy.wait(1000);
+})
+
 Cypress.Commands.add("login", () => {
     cy.clearCookies();
     cy.clearLocalStorage();

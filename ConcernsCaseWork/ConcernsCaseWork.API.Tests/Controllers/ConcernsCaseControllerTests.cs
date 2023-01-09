@@ -16,7 +16,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 {
     public class ConcernsCaseControllerTests
     {
-        private Mock<ILogger<ConcernsCaseController>> mockLogger = new Mock<ILogger<ConcernsCaseController>>();
+        private readonly Mock<ILogger<ConcernsCaseController>> mockLogger = new Mock<ILogger<ConcernsCaseController>>();
         
         [Fact]
         public void CreateConcernsCase_Returns201WhenSuccessfullyCreatesAConcernsCase()

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConcernsCaseWork.Data.Tests.Helpers
+﻿namespace ConcernsCaseWork.Data.Tests.Helpers
 {
 	public static class TestExtensions
 	{
