@@ -22,9 +22,9 @@ namespace ConcernsCaseWork.API.Tests.Integration;
 [Collection(ApiTestCollection.ApiTestCollectionName)]
 public class CloseDecisionIntegrationTests
 {
-	private HttpClient _client;
-	private Fixture _fixture;
-	private ApiTestFixture _apiTestFixture;
+	private readonly HttpClient _client;
+	private readonly Fixture _fixture;
+	private readonly ApiTestFixture _apiTestFixture;
 
 	public CloseDecisionIntegrationTests(ApiTestFixture apiTestFixture)
 	{

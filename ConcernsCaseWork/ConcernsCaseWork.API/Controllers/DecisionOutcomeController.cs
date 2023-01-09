@@ -11,9 +11,9 @@ namespace ConcernsCaseWork.API.Controllers
 	[Route("v{version:apiVersion}/concerns-cases/{caseId:int}/decisions/{decisionId:int}/outcome")]
 	public class DecisionOutcomeController : ControllerBase
 	{
-		IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse> _createDecisionOutcomeUseCase;
-		IUseCaseAsync<UpdateDecisionOutcomeUseCaseParams, UpdateDecisionOutcomeResponse> _updateDecisionOutcomeUseCase;
-		private ILogger<ConcernsStatusController> _logger;
+		readonly IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse> _createDecisionOutcomeUseCase;
+		readonly IUseCaseAsync<UpdateDecisionOutcomeUseCaseParams, UpdateDecisionOutcomeResponse> _updateDecisionOutcomeUseCase;
+		private readonly ILogger<ConcernsStatusController> _logger;
 
 		public DecisionOutcomeController(
 			IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse> createDecisionOutcomeUseCase,

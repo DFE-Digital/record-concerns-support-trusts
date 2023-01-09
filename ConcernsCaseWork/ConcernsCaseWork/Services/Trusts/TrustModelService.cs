@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Trusts;
