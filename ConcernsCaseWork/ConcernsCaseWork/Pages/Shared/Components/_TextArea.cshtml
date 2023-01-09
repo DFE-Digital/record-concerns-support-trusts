@@ -1,0 +1,20 @@
+@using NetEscapades.AspNetCore.SecurityHeaders
+@model ConcernsCaseWork.Models.TextAreaUiComponent
+@{
+	var nonce = Context.GetNonce();
+}
+<div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.MaxLength">
+	<div class="govuk-form-group">
+		<h2 class="govuk-heading-m">@Model.Heading</h2>
+		<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="@Model.ElementRootId" name="@Model.Name" rows="3" aria-describedby="@Model.ElementRootId-info">@Model.Contents</textarea>
+	</div>
+	<div id="@Model.ElementRootId-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+		You can enter up to @Model.MaxLength characters
+	</div>
+</div>
+
+<script type="application/javascript" nonce="@nonce">
+	$(function () {	
+		autoResizer();
+	});
+</script>

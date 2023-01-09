@@ -1,0 +1,104 @@
+﻿@page "/case/{urn:long}/management/action/trustFinancialForecast/add"
+@model ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast.AddPageModel;
+@using Microsoft.AspNetCore.Mvc.TagHelpers;
+
+@section BeforeMain {
+	<div class="govuk-width-container">
+		<back-link url="@Model.BackLink.Url" label=@Model.BackLink.Label></back-link>
+	</div>
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError" />
+
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+
+		@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+		{
+			<partial name="_Error" />
+		}
+		else
+		{
+			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+
+			<h1 class="govuk-heading-l">
+				<span class="govuk-caption-m">Case ID @Model.Urn</span>
+				Trust Financial Forecast (TFF)
+			</h1>
+
+			<form role="form" method="post" id="add-trust-financial-forecast-form" novalidate>
+
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset">
+						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+							<h2 class="govuk-heading-m">
+								When was the forecasting tool run?
+							</h2>
+						</legend>
+						<partial name="Components/_DateTime" model="Model.ForecastingToolRanAt" />
+					</fieldset>
+				</div>
+
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset">
+						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+							<h2 class="govuk-heading-m">
+								When did SFSO initial review happen?
+							</h2>
+						</legend>
+						
+						<partial name="Components/_DateTime" model="Model.SFSOInitialReviewHappenedAt" />
+					</fieldset>
+				</div>
+
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset">
+						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+							<h2 class="govuk-heading-m">
+								When did the trust respond?
+							</h2>
+						</legend>
+						<partial name="Components/_DateTime" model="Model.TrustRespondedAt" />
+					</fieldset>
+				</div>
+
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset">
+						<h2 class="govuk-heading-m">
+							Was the trust response satisfactory?
+						</h2>
+					</fieldset>
+				</div>
+
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset">
+						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+							<h2 class="govuk-heading-m">
+								SRMA offered after TFF?
+							</h2>
+						</legend>
+					</fieldset>
+				</div>
+
+				<div class="govuk-form-group">
+					<fieldset class="govuk-fieldset">
+						<partial name="Components/_TextArea" model="Model.NotesTextArea" />
+					</fieldset>
+				</div>
+
+				<div class="govuk-button-group">
+					<button data-prevent-double-click="true" 
+					        class="govuk-button govuk-!-margin-top-6" 
+					        data-module="govuk-button" 
+					        role="button" id="add-trust-financial-forecast-button" 
+					        name="action">
+						Continue
+					</button>
+				</div>
+			</form>
+		}
+
+		</div>
+	</div>
+</div>

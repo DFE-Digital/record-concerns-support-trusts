@@ -1,0 +1,77 @@
+﻿@page "/case/{urn:long}/management/action/trustFinancialForecast"
+@model ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast.IndexPageModel
+
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@section BeforeMain {
+	<div class="govuk-width-container">
+		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+	</div>
+}
+
+<div class="govuk-width-container">
+    <partial name="_BannerError" />
+
+    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+    {
+        <partial name="_Error" />
+    }
+    else
+    {
+	    <h1 class="govuk-heading-l">
+		    <span class="govuk-caption-m">Case ID @Model.Urn</span>
+		    Trust Financial Forecast (TFF)
+	    </h1>
+	    
+	    <div class="govuk-hint" id="financial-plan-hint">
+		    <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Trust%20financial%20forecasting.aspx" class="govuk-link" rel="noreferrer noopener">
+			    SFSO Knowledge: Trust financial forecast
+		    </a>
+	    </div>
+	    
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+	            <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-when-run-label">When was the forecasting tool run?</th>
+	            <td class="govuk-table__cell" data-testid="trust-financial-forecast-when-run">
+		      
+	            </td>
+            </tr>
+            
+            <tr class="govuk-table__row">
+	            <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-when-reviewed-label">When did SFSO initial review happen?</th>
+	            <td class="govuk-table__cell" data-testid="trust-financial-forecast-when-reviewed">
+		    
+	            </td>
+            </tr>
+            
+            <tr class="govuk-table__row">
+	            <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-when-responded-label">When did the trust respond?</th>
+	            <td class="govuk-table__cell" data-testid="trust-financial-forecast-when-responded">
+		        
+	            </td>
+            </tr>
+            
+            <tr class="govuk-table__row">
+	            <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-was-satisfactory-label">Was the trust response satisfactory?</th>
+	            <td class="govuk-table__cell" data-testid="trust-financial-forecast-was-satisfactory">
+		        
+	            </td>
+            </tr>
+            
+            <tr class="govuk-table__row">
+	            <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-srma-offered-label">SRMA offered after TFF?</th>
+	            <td class="govuk-table__cell" data-testid="trust-financial-forecast-srma-offered">
+	            </td>
+            </tr>
+            
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-notes-label">Notes (optional)</th>
+                <td class="govuk-table__cell" data-testid="trust-financial-forecast-notes">
+                </td>
+            </tr>
+            
+            </tbody>
+        </table>
+    }
+</div>
