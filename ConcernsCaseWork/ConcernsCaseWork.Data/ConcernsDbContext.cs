@@ -4,7 +4,6 @@ using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
 using ConcernsCaseWork.Data.Models.Concerns.TeamCasework;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.Contracts;
 using DecisionOutcomeStatus = ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeStatus;
 
 namespace ConcernsCaseWork.Data

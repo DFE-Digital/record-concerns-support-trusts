@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
         private readonly HttpClient _client;
         private readonly Fixture _autoFixture;
         private readonly RandomGenerator _randomGenerator;
-		private ApiTestFixture _testFixture;
+		private readonly ApiTestFixture _testFixture;
 
 		private List<ConcernsCase> CasesToBeDisposedAtEndOfTests { get; } = new List<ConcernsCase>();
         private List<ConcernsRecord> RecordsToBeDisposedAtEndOfTests { get; } = new List<ConcernsRecord>();
@@ -284,7 +284,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 NextSteps = _randomGenerator.NextString(3, 10),
                 CaseHistory = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                Territory = TerritoryEnum.Midlands_And_West__SouthWest,
+                Territory = Territory.Midlands_And_West__SouthWest,
                 StatusId = 2,
                 RatingId =  1
             };
@@ -371,7 +371,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 NextSteps = _randomGenerator.NextString(3, 10),
                 CaseHistory = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                Territory = TerritoryEnum.North_And_Utc__Yorkshire_And_Humber,
+                Territory = Territory.North_And_Utc__Yorkshire_And_Humber,
                 StatusId = 2,
                 RatingId = caseRating.Id
             };
@@ -450,7 +450,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 NextSteps = _randomGenerator.NextString(3, 10),
                 CaseHistory = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                Territory = TerritoryEnum.Midlands_And_West__West_Midlands,
+                Territory = Territory.Midlands_And_West__West_Midlands,
                 StatusId = 2,
                 RatingId = 3
             };
@@ -547,7 +547,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 NextSteps = _randomGenerator.NextString(3, 10),
                 CaseHistory = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                Territory = TerritoryEnum.North_And_Utc__Yorkshire_And_Humber,
+                Territory = Territory.North_And_Utc__Yorkshire_And_Humber,
                 StatusId = 2,
                 RatingId = 3
             };
@@ -632,7 +632,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 NextSteps = _randomGenerator.NextString(3, 10),
                 CaseHistory = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                Territory = TerritoryEnum.North_And_Utc__North_West,
+                Territory = Territory.North_And_Utc__North_West,
                 StatusId = 2,
                 RatingId = 4
             };
@@ -751,7 +751,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     NextSteps = _randomGenerator.NextString(3, 10),
                     CaseHistory = _randomGenerator.NextString(3, 10),
                     DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                    Territory = TerritoryEnum.North_And_Utc__Utc,
+                    Territory = Territory.North_And_Utc__Utc,
                     StatusId = 2,
                     RatingId = 1
                 };
@@ -781,7 +781,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     NextSteps = _randomGenerator.NextString(3, 10),
                     CaseHistory = _randomGenerator.NextString(3, 10),
                     DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                    Territory = TerritoryEnum.South_And_South_East__East_Of_England,
+                    Territory = Territory.South_And_South_East__East_Of_England,
                     StatusId = 3,
                     RatingId = 3
                 };
@@ -830,7 +830,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     NextSteps = _randomGenerator.NextString(3, 10),
                     DirectionOfTravel = _randomGenerator.NextString(3, 10),
                     CaseHistory = _randomGenerator.NextString(3, 10),
-                    Territory = TerritoryEnum.Midlands_And_West__East_Midlands,
+                    Territory = Territory.Midlands_And_West__East_Midlands,
                     StatusId = 2,
                     RatingId = 3
                 };
