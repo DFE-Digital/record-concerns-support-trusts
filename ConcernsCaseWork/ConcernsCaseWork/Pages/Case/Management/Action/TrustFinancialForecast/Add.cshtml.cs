@@ -46,8 +46,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 				{
 					new ("Satisfactory", "satisfactory"),
 					new ("Not satisfactory", "not-satisfactory")
-				},
-				SelectedId = "not-satisfactory"
+				}
 			};
 		
 		public RadioButtonsUiComponent SRMAOfferedAfterTFF { get; set; } 
@@ -65,10 +64,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 			{
 				RadioItems = new List<SimpleRadioItem>
 				{
-					new ( "Current year - Spring" ,"Current-year---Spring"),
-					new ("Current year - Summer","Current-year---Summer"),
-					new ( "Previous year - Spring","Previous-year---Spring"),
-					new ("Previous year - Summer","Previous-year---Summer")
+					new ("Current year - Spring","current-year---spring"),
+					new ("Current year - Summer","current-year---summer"),
+					new ("Previous year - Spring","previous-year---spring"),
+					new ("Previous year - Summer","previous-year---summer")
 				}
 			};
 		
