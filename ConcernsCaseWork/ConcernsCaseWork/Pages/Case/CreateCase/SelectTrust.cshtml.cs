@@ -43,6 +43,9 @@ public class SelectTrustPageModel : AbstractPageModel
 	[BindProperty]
 	public FindTrustModel FindTrustModel { get; set; }
 
+	[BindProperty]
+	public CaseTypes CaseType { get; set; }
+
 	public SelectTrustPageModel(ITrustModelService trustModelService,
 		IUserStateCachedService cachedUserService,
 		ILogger<SelectTrustPageModel> logger,
