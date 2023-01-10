@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
+﻿using ConcernsCaseWork.API.Authorization;
+using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Factories.Concerns.Decisions;
@@ -49,6 +50,8 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 
 		public static IServiceCollection AddDependencies(this IServiceCollection services)
 		{
+			services.AddScoped<IClaimsPrincipalHelper, ClaimsPrincipalHelper>();
+
 			services.AddScoped<ICreateConcernsCase, CreateConcernsCase>();
 			services.AddScoped<IConcernsCaseGateway, ConcernsCaseGateway>();
 			services.AddScoped<IGetConcernsCaseByUrn, GetConcernsCaseByUrn>();

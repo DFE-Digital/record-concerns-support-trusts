@@ -5,6 +5,7 @@ using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
@@ -257,6 +258,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
+
+			var permissionsService = new Mock<ICasePermissionsService>();
 			
 			return new IndexPageModel(_mockCaseModelService.Object, 
 				_mockTrustModelService.Object, 
@@ -266,7 +269,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				_mockNtiStatusesCachedService.Object,
 				_mockLogger.Object, 
 				_actionsModelService.Object,
-				_caseSummaryService.Object)
+				_caseSummaryService.Object,
+				permissionsService.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

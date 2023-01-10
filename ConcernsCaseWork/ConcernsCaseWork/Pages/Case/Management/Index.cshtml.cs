@@ -1,9 +1,13 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.API.UseCases.Permissions;
+using ConcernsCaseWork.CoreTypes;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
@@ -16,6 +20,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management
@@ -32,6 +37,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
 		private readonly IActionsModelService _actionsModelService;
+		private readonly ICasePermissionsService _casePermissionsService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
@@ -53,7 +59,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			INtiUnderConsiderationStatusesCachedService ntiUCStatusesCachedService,
 			ILogger<IndexPageModel> logger,
 			IActionsModelService actionsModelService,
-			ICaseSummaryService caseSummaryService
+			ICaseSummaryService caseSummaryService,
+			ICasePermissionsService casePermissionsService
 			)
 		{
 			_trustModelService = trustModelService;
@@ -65,6 +72,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_logger = logger;
 			_actionsModelService = actionsModelService;
 			_caseSummaryService = caseSummaryService;
+			_casePermissionsService = casePermissionsService;
 		}
 
 		public async Task<IActionResult> OnGetAsync()
@@ -86,7 +94,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				}
 
 				// Check if case is editable
-				IsEditableCase = await IsCaseEditable();
+				IsEditableCase = await IsCaseEditable((int)caseUrn);
 
 				// Map Case Rating
 				CaseModel.RatingModel = await _ratingModelService.GetRatingModelById(CaseModel.RatingId);
@@ -146,10 +154,12 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			return false;
 		}
 
-		private async Task<bool> IsCaseEditable()
+		private async Task<bool> IsCaseEditable(int caseId)
 		{
 			var isCaseClosed = await IsCaseClosed();
-			var userHasEditCasePrivileges = UserHasEditCasePrivileges();
+			GetCasePermissionsResponse permissionsResponse = await _casePermissionsService.GetCasePermissions(caseId);
+
+			var userHasEditCasePrivileges = permissionsResponse.HasEditPermissions();
 
 			if (!isCaseClosed && userHasEditCasePrivileges)
 			{
