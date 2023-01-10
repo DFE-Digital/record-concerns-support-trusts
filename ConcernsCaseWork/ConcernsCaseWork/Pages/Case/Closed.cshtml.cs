@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
@@ -20,6 +21,7 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly ILogger<ClosedPageModel> _logger;
 		
 		public List<ClosedCaseSummaryModel> ClosedCases { get; private set; }
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
 		
 		public ClosedPageModel(ICaseSummaryService caseSummaryService, IClaimsPrincipalHelper claimsPrincipalHelper, ILogger<ClosedPageModel> logger)
 		{

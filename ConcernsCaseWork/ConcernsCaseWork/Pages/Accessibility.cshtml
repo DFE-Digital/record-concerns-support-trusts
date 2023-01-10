@@ -1,15 +1,21 @@
 ﻿@page
+@model AccessibilityPageModel
 @{
 	ViewData["Title"] = "Accessibility";
+}
+@section BeforeMain {
+	<div class="govuk-width-container">
+		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+	</div>
 }
 
 <div class="govuk-width-container">
 	<div class="govuk-grid-row">
 		<div class="govuk-grid-column-two-thirds-from-desktop">
 
-			<h1 class="govuk-heading-l govuk-!-margin-bottom-9">Accessibility on Concerns casework</h1>
+            <h1 class="govuk-heading-l govuk-!-margin-bottom-9">Accessibility on Record concerns and support for trusts</h1>
 
-			<p class="govuk-body">Concerns casework service is run by the Service Design and Delivery team at the Department for Education (DfE).</p>
+            <p class="govuk-body">Record concerns and support for trusts service is run by the Service Design and Delivery team at the Department for Education (DfE).</p>
 			<p class="govuk-body">We’re committed to enabling you to use this service. It’s designed so that you can:</p>
 			<ul class="govuk-list govuk-list--bullet">
 				<li>change colours, contrast levels and fonts</li>

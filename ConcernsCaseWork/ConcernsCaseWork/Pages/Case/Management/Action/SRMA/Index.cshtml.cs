@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Models;
 using JetBrains.Annotations;
 using System.Collections.Generic;
 
@@ -32,6 +34,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		
 		[BindProperty(Name = "Urn", SupportsGet = true)]
 		public long CaseUrn { get; set; }
+		
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
 
 		public IndexPageModel(ISRMAService srmaService, ILogger<IndexPageModel> logger)
 		{

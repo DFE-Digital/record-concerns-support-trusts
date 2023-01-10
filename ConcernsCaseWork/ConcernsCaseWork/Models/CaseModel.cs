@@ -16,7 +16,7 @@ namespace ConcernsCaseWork.Models
 
 		public DateTimeOffset ReviewAt { get; set; }
 
-		public DateTimeOffset ClosedAt { get; set; }
+		public DateTimeOffset? ClosedAt { get; set; }
 		
 		/// <summary>
 		/// Case owner from azure AD some unique identifier
@@ -64,6 +64,6 @@ namespace ConcernsCaseWork.Models
 		
 		public string CaseHistory { get; set; }
 		
-		public TerritoryEnum? Territory { get; set; }
+		public Territory? Territory { get; set; }
 	}
 }

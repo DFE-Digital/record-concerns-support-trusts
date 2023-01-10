@@ -73,7 +73,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("ConcernsCaseId");
 
-                    b.ToTable("ConcernsDecision", "concerns");
+                    b.ToTable("ConcernsDecision", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecision_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.DecisionStatus", b =>
@@ -86,7 +89,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ConcernsDecisionStates", "concerns");
+                    b.ToTable("ConcernsDecisionStates", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionStates_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -111,7 +117,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("DecisionId", "DecisionTypeId");
 
-                    b.ToTable("ConcernsDecisionType", "concerns");
+                    b.ToTable("ConcernsDecisionType", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionType_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.DecisionTypeId", b =>
@@ -124,7 +133,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ConcernsDecisionTypeId", "concerns");
+                    b.ToTable("ConcernsDecisionTypeId", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsDecisionTypeId_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -221,7 +233,10 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasIndex("DecisionId")
                         .IsUnique();
 
-                    b.ToTable("DecisionOutcome", "concerns");
+                    b.ToTable("DecisionOutcome", "concerns", t =>
+                        {
+                            t.HasTrigger("DecisionOutcome_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeAuthorizer", b =>
@@ -234,7 +249,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DecisionOutcomeAuthorizer", "concerns");
+                    b.ToTable("DecisionOutcomeAuthorizer", "concerns", t =>
+                        {
+                            t.HasTrigger("DecisionOutcomeAuthorizer_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -284,7 +302,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DecisionOutcomeBusinessArea", "concerns");
+                    b.ToTable("DecisionOutcomeBusinessArea", "concerns", t =>
+                        {
+                            t.HasTrigger("DecisionOutcomeBusinessArea_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -329,7 +350,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("DecisionOutcomeId", "DecisionOutcomeBusinessId");
 
-                    b.ToTable("DecisionOutcomeBusinessAreaMapping", "concerns");
+                    b.ToTable("DecisionOutcomeBusinessAreaMapping", "concerns", t =>
+                        {
+                            t.HasTrigger("DecisionOutcomeBusinessAreaMapping_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeStatus", b =>
@@ -342,7 +366,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DecisionOutcomeStatus", "concerns");
+                    b.ToTable("DecisionOutcomeStatus", "concerns", t =>
+                        {
+                            t.HasTrigger("DecisionOutcomeStatus_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -379,7 +406,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ConcernsCaseworkTeam", "concerns");
+                    b.ToTable("ConcernsCaseworkTeam", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsCaseworkTeam_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.TeamCasework.ConcernsCaseworkTeamMember", b =>
@@ -398,7 +428,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("ConcernsCaseworkTeamId");
 
-                    b.ToTable("ConcernsCaseworkTeamMember", "concerns");
+                    b.ToTable("ConcernsCaseworkTeamMember", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsCaseworkTeamMember_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.ConcernsCase", b =>
@@ -415,7 +448,7 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<string>("CaseHistory")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ClosedAt")
+                    b.Property<DateTime?>("ClosedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreatedAt")
@@ -481,7 +514,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("ConcernsCase", "concerns");
+                    b.ToTable("ConcernsCase", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsCase_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.ConcernsMeansOfReferral", b =>
@@ -507,7 +543,10 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasKey("Id")
                         .HasName("PK__CMeansOfReferral");
 
-                    b.ToTable("ConcernsMeansOfReferral", "concerns");
+                    b.ToTable("ConcernsMeansOfReferral", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsMeansOfReferral_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -548,7 +587,10 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasKey("Id")
                         .HasName("PK__CRating");
 
-                    b.ToTable("ConcernsRating", "concerns");
+                    b.ToTable("ConcernsRating", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsRating_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -599,7 +641,7 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<int>("CaseId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ClosedAt")
+                    b.Property<DateTime?>("ClosedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreatedAt")
@@ -645,7 +687,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("ConcernsRecord", "concerns");
+                    b.ToTable("ConcernsRecord", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsRecord_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.ConcernsStatus", b =>
@@ -668,7 +713,10 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasKey("Id")
                         .HasName("PK__CStatus__C5B214360AF620234");
 
-                    b.ToTable("ConcernsStatus", "concerns");
+                    b.ToTable("ConcernsStatus", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsStatus_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -717,25 +765,12 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasKey("Id")
                         .HasName("PK__CType");
 
-                    b.ToTable("ConcernsType", "concerns");
+                    b.ToTable("ConcernsType", "concerns", t =>
+                        {
+                            t.HasTrigger("ConcernsType_Trigger");
+                        });
 
                     b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Financial reporting",
-                            Name = "Compliance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Financial returns",
-                            Name = "Compliance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
                         new
                         {
                             Id = 3,
@@ -748,23 +783,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 4,
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Projected deficit / Low future surplus",
-                            Name = "Financial",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Cash flow shortfall",
-                            Name = "Financial",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Clawback",
+                            Description = "Projected deficit",
                             Name = "Financial",
                             UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
@@ -780,48 +799,40 @@ namespace ConcernsCaseWork.Data.Migrations
                             Id = 8,
                             CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Governance",
-                            Name = "Governance",
+                            Name = "Governance and compliance",
                             UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            Id = 9,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Closure",
-                            Name = "Governance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            Id = 20,
+                            CreatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Viability",
+                            Name = "Financial",
+                            UpdatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            Id = 10,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Executive Pay",
-                            Name = "Governance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 11,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Safeguarding",
-                            Name = "Governance",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 12,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Allegations and self reported concerns",
+                            Id = 21,
+                            CreatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Irregularity",
                             Name = "Irregularity",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            Id = 13,
-                            CreatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Related party transactions - in year",
+                            Id = 22,
+                            CreatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Suspected fraud",
                             Name = "Irregularity",
-                            UpdatedAt = new DateTime(2021, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CreatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Compliance",
+                            Name = "Governance and compliance",
+                            UpdatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -867,7 +878,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("FinancialPlanCase", "concerns");
+                    b.ToTable("FinancialPlanCase", "concerns", t =>
+                        {
+                            t.HasTrigger("FinancialPlanCase_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.FinancialPlanStatus", b =>
@@ -896,7 +910,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FinancialPlanStatus", "concerns");
+                    b.ToTable("FinancialPlanStatus", "concerns", t =>
+                        {
+                            t.HasTrigger("FinancialPlanStatus_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -971,7 +988,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("ClosedStatusId");
 
-                    b.ToTable("NTIUnderConsiderationCase", "concerns");
+                    b.ToTable("NTIUnderConsiderationCase", "concerns", t =>
+                        {
+                            t.HasTrigger("NTIUnderConsiderationCase_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIUnderConsiderationReason", b =>
@@ -993,7 +1013,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NTIUnderConsiderationReason", "concerns");
+                    b.ToTable("NTIUnderConsiderationReason", "concerns", t =>
+                        {
+                            t.HasTrigger("NTIUnderConsiderationReason_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -1074,7 +1097,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("NTIUnderConsiderationReasonId");
 
-                    b.ToTable("NTIUnderConsiderationReasonMapping", "concerns");
+                    b.ToTable("NTIUnderConsiderationReasonMapping", "concerns", t =>
+                        {
+                            t.HasTrigger("NTIUnderConsiderationReasonMapping_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIUnderConsiderationStatus", b =>
@@ -1099,7 +1125,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NTIUnderConsiderationStatus", "concerns");
+                    b.ToTable("NTIUnderConsiderationStatus", "concerns", t =>
+                        {
+                            t.HasTrigger("NTIUnderConsiderationStatus_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -1161,7 +1190,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("NTIWarningLetterCase", "concerns");
+                    b.ToTable("NTIWarningLetterCase", "concerns", t =>
+                        {
+                            t.HasTrigger("NTIWarningLetterCase_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterCondition", b =>
@@ -1191,7 +1223,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("ConditionTypeId");
 
-                    b.ToTable("NTIWarningLetterCondition", "concerns");
+                    b.ToTable("NTIWarningLetterCondition", "concerns", t =>
+                        {
+                            t.HasTrigger("NTIWarningLetterCondition_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -1279,7 +1314,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("NTIWarningLetterId");
 
-                    b.ToTable("NTIWarningLetterConditionMapping", "concerns");
+                    b.ToTable("NTIWarningLetterConditionMapping", "concerns", t =>
+                        {
+                            t.HasTrigger("NTIWarningLetterConditionMapping_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterConditionType", b =>
@@ -1304,7 +1342,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NTIWarningLetterConditionType", "concerns");
+                    b.ToTable("NTIWarningLetterConditionType", "concerns", t =>
+                        {
+                            t.HasTrigger("NTIWarningLetterConditionType_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -1360,7 +1401,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NTIWarningLetterReason", "concerns");
+                    b.ToTable("NTIWarningLetterReason", "concerns", t =>
+                        {
+                            t.HasTrigger("NTIWarningLetterReason_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -1441,7 +1485,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("NTIWarningLetterReasonId");
 
-                    b.ToTable("NTIWarningLetterReasonMapping", "concerns");
+                    b.ToTable("NTIWarningLetterReasonMapping", "concerns", t =>
+                        {
+                            t.HasTrigger("NTIWarningLetterReasonMapping_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NTIWarningLetterStatus", b =>
@@ -1472,7 +1519,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NTIWarningLetterStatus", "concerns");
+                    b.ToTable("NTIWarningLetterStatus", "concerns", t =>
+                        {
+                            t.HasTrigger("NTIWarningLetterStatus_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -1576,7 +1626,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("NoticeToImproveCase", "concerns");
+                    b.ToTable("NoticeToImproveCase", "concerns", t =>
+                        {
+                            t.HasTrigger("NoticeToImproveCase_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveCondition", b =>
@@ -1606,7 +1659,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("ConditionTypeId");
 
-                    b.ToTable("NoticeToImproveCondition", "concerns");
+                    b.ToTable("NoticeToImproveCondition", "concerns", t =>
+                        {
+                            t.HasTrigger("NoticeToImproveCondition_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -1982,7 +2038,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("NoticeToImproveId");
 
-                    b.ToTable("NoticeToImproveConditionMapping", "concerns");
+                    b.ToTable("NoticeToImproveConditionMapping", "concerns", t =>
+                        {
+                            t.HasTrigger("NoticeToImproveConditionMapping_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveConditionType", b =>
@@ -2007,7 +2066,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NoticeToImproveConditionType", "concerns");
+                    b.ToTable("NoticeToImproveConditionType", "concerns", t =>
+                        {
+                            t.HasTrigger("NoticeToImproveConditionType_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -2087,7 +2149,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NoticeToImproveReason", "concerns");
+                    b.ToTable("NoticeToImproveReason", "concerns", t =>
+                        {
+                            t.HasTrigger("NoticeToImproveReason_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -2168,7 +2233,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("NoticeToImproveReasonId");
 
-                    b.ToTable("NoticeToImproveReasonMapping", "concerns");
+                    b.ToTable("NoticeToImproveReasonMapping", "concerns", t =>
+                        {
+                            t.HasTrigger("NoticeToImproveReasonMapping_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.NoticeToImproveStatus", b =>
@@ -2193,7 +2261,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("NoticeToImproveStatus", "concerns");
+                    b.ToTable("NoticeToImproveStatus", "concerns", t =>
+                        {
+                            t.HasTrigger("NoticeToImproveStatus_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -2326,14 +2397,17 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ReasonId");
 
-                    b.ToTable("SRMACase", "concerns");
+                    b.ToTable("SRMACase", "concerns", t =>
+                        {
+                            t.HasTrigger("SRMACase_Trigger");
+                        });
                 });
 
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.SRMAReason", b =>
@@ -2355,7 +2429,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SRMAReason", "concerns");
+                    b.ToTable("SRMAReason", "concerns", t =>
+                        {
+                            t.HasTrigger("SRMAReason_Trigger");
+                        });
 
                     b.HasData(
                         new
@@ -2400,7 +2477,10 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SRMAStatus", "concerns");
+                    b.ToTable("SRMAStatus", "concerns", t =>
+                        {
+                            t.HasTrigger("SRMAStatus_Trigger");
+                        });
 
                     b.HasData(
                         new

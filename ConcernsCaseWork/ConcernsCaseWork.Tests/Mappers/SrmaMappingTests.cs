@@ -38,7 +38,7 @@ public class SrmaMappingTests
 			Assert.That(serviceModel.DateVisitStart, Is.EqualTo(dto.DateVisitStart));
 			Assert.That(serviceModel.ClosedAt, Is.EqualTo(dto.ClosedAt));
 			Assert.That(serviceModel.CreatedAt, Is.EqualTo(dto.CreatedAt));
-			Assert.That(serviceModel.UpdatedAt, Is.EqualTo(DateTime.MinValue)); // Not sure if this is correct behaviour??
+			Assert.That(serviceModel.UpdatedAt, Is.EqualTo(dto.UpdatedAt));
 		});
 	}
 
@@ -69,6 +69,7 @@ public class SrmaMappingTests
 			Assert.That(dto.DateVisitStart, Is.EqualTo(model.DateVisitStart));
 			Assert.That(dto.ClosedAt, Is.EqualTo(model.ClosedAt));
 			Assert.That(dto.CreatedAt, Is.EqualTo(model.CreatedAt));
+			Assert.That(dto.UpdatedAt, Is.EqualTo(model.UpdatedAt));
 		});
 	}
 
@@ -105,7 +106,9 @@ public class SrmaMappingTests
 			testData.Status,
 			testData.Notes,
 			testData.SRMAReasonOffered,
-			testData.CreatedAt)
+			testData.CreatedAt,
+			testData.UpdatedAt,
+			testData.CreatedBy)
 		{
 			UpdatedAt = testData.UpdatedAt,
 			ClosedAt = testData.ClosedAt,
@@ -124,6 +127,9 @@ public class SrmaMappingTests
 			Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/srma/{testData.Id}/closed"));
 			Assert.That(actionSummary.StatusName, Is.EqualTo(EnumHelper.GetEnumDescription(testData.Status)));
 		});
+
+		actionSummary.RawOpenedDate.Should().Be(testData.CreatedAt);
+		actionSummary.RawClosedDate.Should().Be(testData.ClosedAt);
 	}
 
 	[Test]

@@ -1,42 +1,41 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
 using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.API.Factories;
 using ConcernsCaseWork.API.RequestModels;
 using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.API.Tests.Fixtures;
+using ConcernsCaseWork.API.Tests.Helpers;
+using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using ConcernsCaseWork.Data;
-using ConcernsCaseWork.Data.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
-    [Collection("Database")]
-    public class ConcernsIntegrationTests : IClassFixture<ConcernsDataApiFactory>, IDisposable
+	[Collection(ApiTestCollection.ApiTestCollectionName)]
+	public class ConcernsIntegrationTests : IDisposable
     {
         private readonly HttpClient _client;
-        private readonly ConcernsDbContext _dbContext;
-        private readonly Fixture _fixture;
+        private readonly Fixture _autoFixture;
         private readonly RandomGenerator _randomGenerator;
+		private readonly ApiTestFixture _testFixture;
 
-        private List<ConcernsCase> CasesToBeDisposedAtEndOfTests { get; } = new List<ConcernsCase>();
+		private List<ConcernsCase> CasesToBeDisposedAtEndOfTests { get; } = new List<ConcernsCase>();
         private List<ConcernsRecord> RecordsToBeDisposedAtEndOfTests { get; } = new List<ConcernsRecord>();
 
-        public ConcernsIntegrationTests(ConcernsDataApiFactory fixture)
+        public ConcernsIntegrationTests(ApiTestFixture fixture)
         {
-            _client = fixture.CreateClient();
-            _client.DefaultRequestHeaders.Add("ApiKey", "app-key");
-            _dbContext = fixture.Services.GetRequiredService<ConcernsDbContext>();
-            _fixture = new Fixture();
+            _autoFixture = new Fixture();
             _randomGenerator = new RandomGenerator();
+			_testFixture = fixture;
+			_client = fixture.Client;
         }
 
         [Fact]
@@ -44,10 +43,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
         {
             var createRequest = Builder<ConcernCaseRequest>.CreateNew()
                 .With(c => c.CreatedBy = "12345")
-                .With(c => c.Description = "Description for case")
-                .With(c => c.CrmEnquiry = "5678")
+                .With(c => c.Description = "")
+                .With(c => c.CrmEnquiry = "")
                 .With(c => c.TrustUkprn = "100223")
-                .With(c => c.ReasonAtReview = "We have concerns")
+                .With(c => c.ReasonAtReview = "")
                 .With(c => c.DeEscalation = new DateTime(2022,04,01))
                 .With(c => c.Issue = "Here is the issue")
                 .With(c => c.CurrentStatus = "Case status")
@@ -77,18 +76,49 @@ namespace ConcernsCaseWork.API.Tests.Integration
             response.StatusCode.Should().Be(HttpStatusCode.Created);
             var result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsCaseResponse>>();
 
-            var createdCase = _dbContext.ConcernsCase.FirstOrDefault(c => c.Urn == result.Data.Urn);
+			using var context = _testFixture.GetContext();
+
+			var createdCase = context.ConcernsCase.FirstOrDefault(c => c.Urn == result.Data.Urn);
             expected.Data.Urn = createdCase.Urn;
 
             result.Should().BeEquivalentTo(expected);
             createdCase.Description.Should().BeEquivalentTo(createRequest.Description);
         }
 
-        [Fact]
+		[Fact]
+		public async Task When_PostInvalidConcernCaseRequest_Returns_ValidationErrors()
+		{
+			var request = _autoFixture.Create<ConcernCaseRequest>();
+			request.TrustUkprn = new string('a', 51);
+			request.Issue = new string('a', 2001);
+			request.CaseAim = new string('a', 1001);
+			request.CurrentStatus = new string('a', 4001);
+			request.DeEscalationPoint = new string('a', 1001);
+			request.NextSteps = new string('a', 4001);
+			request.CaseHistory = new string('a', 4001);
+			request.DirectionOfTravel = new string('a', 101);
+
+			var result = await _client.PostAsync($"/v2/concerns-cases", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+			var error = await result.Content.ReadAsStringAsync();
+			error.Should().Contain("The field TrustUkprn must be a string with a maximum length of 50.");
+			error.Should().Contain("The field Issue must be a string with a maximum length of 2000.");
+			error.Should().Contain("The field CaseAim must be a string with a maximum length of 1000.");
+			error.Should().Contain("The field CurrentStatus must be a string with a maximum length of 4000.");
+			error.Should().Contain("The field DeEscalationPoint must be a string with a maximum length of 1000.");
+			error.Should().Contain("The field NextSteps must be a string with a maximum length of 4000.");
+			error.Should().Contain("The field CaseHistory must be a string with a maximum length of 4000.");
+			error.Should().Contain("The field DirectionOfTravel must be a string with a maximum length of 100.");
+		}
+
+		[Fact]
         public async Task CanGetConcernCaseByUrn()
         {
-            SetupConcernsCaseTestData("mockUkprn");
-            var concernsCase = _dbContext.ConcernsCase.First();
+			using var context = _testFixture.GetContext();
+
+			SetupConcernsCaseTestData("mockUkprn");
+            var concernsCase = context.ConcernsCase.First();
 
             var httpRequestMessage = new HttpRequestMessage
             {
@@ -229,7 +259,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsTypeResponse>>();
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            content.Data.Count().Should().Be(13);
+            content.Data.Count().Should().Be(8);
         }
 
         [Fact]
@@ -242,10 +272,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 ReviewAt = _randomGenerator.DateTime(),
                 ClosedAt = _randomGenerator.DateTime(),
                 CreatedBy = _randomGenerator.NextString(3, 10),
-                Description = _randomGenerator.NextString(3, 10),
-                CrmEnquiry = _randomGenerator.NextString(3, 10),
+                Description = "", // not used
+                CrmEnquiry = "", // not used
                 TrustUkprn = _randomGenerator.NextString(3, 10),
-                ReasonAtReview = _randomGenerator.NextString(3, 10),
+                ReasonAtReview = "", // not used
                 DeEscalation = _randomGenerator.DateTime(),
                 Issue = _randomGenerator.NextString(3, 10),
                 CurrentStatus = _randomGenerator.NextString(3, 10),
@@ -254,7 +284,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 NextSteps = _randomGenerator.NextString(3, 10),
                 CaseHistory = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                Territory = TerritoryEnum.Midlands_And_West__SouthWest,
+                Territory = Territory.Midlands_And_West__SouthWest,
                 StatusId = 2,
                 RatingId =  1
             };
@@ -264,6 +294,9 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var urn = currentConcernsCase.Urn;
 
             var updateRequest = Builder<ConcernCaseRequest>.CreateNew()
+	            .With(cr => cr.Description = "")
+	            .With(cr => cr.CrmEnquiry = "")
+	            .With(cr => cr.ReasonAtReview = "")
                 .With(cr => cr.RatingId = 1).Build();
 
             var expectedConcernsCase = ConcernsCaseFactory.Create(updateRequest);
@@ -283,10 +316,41 @@ namespace ConcernsCaseWork.API.Tests.Integration
             content.Data.Should().BeEquivalentTo(expectedContent);
         }
 
-        [Fact]
+		[Fact]
+		public async Task When_PatchInvalidConcernCaseRequest_Returns_ValidationErrors()
+		{
+			var request = _autoFixture.Create<ConcernCaseRequest>();
+			request.TrustUkprn = new string('a', 51);
+			request.Issue = new string('a', 2001);
+			request.CaseAim = new string('a', 1001);
+			request.CurrentStatus = new string('a', 4001);
+			request.DeEscalationPoint = new string('a', 1001);
+			request.NextSteps = new string('a', 4001);
+			request.CaseHistory = new string('a', 4001);
+			request.DirectionOfTravel = new string('a', 101);
+			request.ReasonAtReview = new string('a', 201);
+
+			var result = await _client.PatchAsync($"/v2/concerns-cases/1", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+			var error = await result.Content.ReadAsStringAsync();
+			error.Should().Contain("The field TrustUkprn must be a string with a maximum length of 50.");
+			error.Should().Contain("The field Issue must be a string with a maximum length of 2000.");
+			error.Should().Contain("The field CaseAim must be a string with a maximum length of 1000.");
+			error.Should().Contain("The field CurrentStatus must be a string with a maximum length of 4000.");
+			error.Should().Contain("The field DeEscalationPoint must be a string with a maximum length of 1000.");
+			error.Should().Contain("The field NextSteps must be a string with a maximum length of 4000.");
+			error.Should().Contain("The field CaseHistory must be a string with a maximum length of 4000.");
+			error.Should().Contain("The field DirectionOfTravel must be a string with a maximum length of 100.");
+			error.Should().Contain("The field ReasonAtReview must be a string with a maximum length of 200.");
+		}
+
+		[Fact]
         public async Task CanCreateNewConcernRecord()
         {
-	        var caseRating = _dbContext.ConcernsRatings.First();
+			using var context = _testFixture.GetContext();
+
+			var caseRating = context.ConcernsRatings.First();
 
             var concernsCase = new ConcernsCase
             {
@@ -307,17 +371,17 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 NextSteps = _randomGenerator.NextString(3, 10),
                 CaseHistory = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                Territory = TerritoryEnum.North_And_Utc__Yorkshire_And_Humber,
+                Territory = Territory.North_And_Utc__Yorkshire_And_Humber,
                 StatusId = 2,
                 RatingId = caseRating.Id
             };
 
             AddConcernsCase(concernsCase);
 
-            var linkedCase = _dbContext.ConcernsCase.First();
-            var linkedType = _dbContext.ConcernsTypes.First();
-            var linkedRating = _dbContext.ConcernsRatings.First();
-            var meansOfReferral = _dbContext.ConcernsMeansOfReferrals.First();
+            var linkedCase = context.ConcernsCase.First();
+            var linkedType = context.ConcernsTypes.First();
+            var linkedRating = context.ConcernsRatings.First();
+            var meansOfReferral = context.ConcernsMeansOfReferrals.First();
 
             var createRequest = Builder<ConcernsRecordRequest>.CreateNew()
                 .With(c => c.CaseUrn = linkedCase.Urn)
@@ -341,13 +405,30 @@ namespace ConcernsCaseWork.API.Tests.Integration
             response.StatusCode.Should().Be(HttpStatusCode.Created);
             var result = await response.Content.ReadFromJsonAsync<ApiSingleResponseV2<ConcernsRecordResponse>>();
 
-            var createdRecord = _dbContext.ConcernsRecord.FirstOrDefault(c => c.Id == result.Data.Id);
+            var createdRecord = context.ConcernsRecord.FirstOrDefault(c => c.Id == result.Data.Id);
             expected.Data.Id = createdRecord.Id;
 
             result.Should().BeEquivalentTo(expected);
         }
 
-        [Fact]
+		[Fact]
+		public async Task When_PostInvalidConcernsRecordRequest_Returns_ValidationErrors()
+		{
+			var request = _autoFixture.Create<ConcernsRecordRequest>();
+			request.Name = new string('a', 301);
+			request.Description = new string('a', 301);
+			request.Reason = new string('a', 301);
+
+			var result = await _client.PostAsync($"/v2/concerns-records", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+			var error = await result.Content.ReadAsStringAsync();
+			error.Should().Contain("The field Name must be a string with a maximum length of 300.");
+			error.Should().Contain("The field Description must be a string with a maximum length of 300.");
+			error.Should().Contain("The field Reason must be a string with a maximum length of 300.");
+		}
+
+		[Fact]
         public async Task UpdateConcernsRecord_ShouldReturnTheUpdatedConcernsRecord()
         {
             var currentConcernsCase = new ConcernsCase
@@ -369,14 +450,16 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 NextSteps = _randomGenerator.NextString(3, 10),
                 CaseHistory = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                Territory = TerritoryEnum.Midlands_And_West__West_Midlands,
+                Territory = Territory.Midlands_And_West__West_Midlands,
                 StatusId = 2,
                 RatingId = 3
             };
 
-            var concernsType = _dbContext.ConcernsTypes.FirstOrDefault(t => t.Id == 1);
-            var concernsRating = _dbContext.ConcernsRatings.FirstOrDefault(r => r.Id == 1);
-            var concernsMeansOfReferral = _dbContext.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 1);
+			using var context = _testFixture.GetContext();
+
+			var concernsType = context.ConcernsTypes.FirstOrDefault(t => t.Id == 3);
+            var concernsRating = context.ConcernsRatings.FirstOrDefault(r => r.Id == 1);
+            var concernsMeansOfReferral = context.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 1);
 
             AddConcernsCase(currentConcernsCase);
 
@@ -390,10 +473,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 Description = _randomGenerator.NextString(3, 10),
                 Reason = _randomGenerator.NextString(3, 10),
                 StatusId = 1,
-                ConcernsCase = currentConcernsCase,
-                ConcernsType = concernsType,
-                ConcernsRating = concernsRating,
-                ConcernsMeansOfReferral = concernsMeansOfReferral
+                CaseId = currentConcernsCase.Id,
+                TypeId = concernsType.Id,
+                RatingId = concernsRating.Id,
+                MeansOfReferralId = concernsMeansOfReferral.Id
             };
 
             AddConcernsRecord(currentConcernsRecord);
@@ -405,7 +488,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 .With(r => r.RatingId = concernsRating.Id)
                 .With(r => r.MeansOfReferralId = concernsMeansOfReferral.Id).Build();
 
-            var expectedConcernsRecord = ConcernsRecordFactory.Create(updateRequest, currentConcernsCase, concernsType, concernsRating, concernsMeansOfReferral);
+            var expectedConcernsRecord = ConcernsRecordFactory.Update(currentConcernsRecord, updateRequest, currentConcernsCase, concernsType, concernsRating, concernsMeansOfReferral);
             expectedConcernsRecord.Id = currentRecordId;
             var expectedContent = ConcernsRecordResponseFactory.Create(expectedConcernsRecord);
 
@@ -422,7 +505,24 @@ namespace ConcernsCaseWork.API.Tests.Integration
             content.Data.Should().BeEquivalentTo(expectedContent);
         }
 
-        [Theory]
+		[Fact]
+		public async Task When_PatchInvalidConcernsRecordRequest_Returns_ValidationErrors()
+		{
+			var request = _autoFixture.Create<ConcernsRecordRequest>();
+			request.Name = new string('a', 301);
+			request.Description = new string('a', 301);
+			request.Reason = new string('a', 301);
+
+			var result = await _client.PatchAsync($"/v2/concerns-records/1", request.ConvertToJson());
+			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+			var error = await result.Content.ReadAsStringAsync();
+			error.Should().Contain("The field Name must be a string with a maximum length of 300.");
+			error.Should().Contain("The field Description must be a string with a maximum length of 300.");
+			error.Should().Contain("The field Reason must be a string with a maximum length of 300.");
+		}
+
+		[Theory]
         [InlineData(true, true)]
         [InlineData(false, false)]
         [InlineData(true, false)]
@@ -434,7 +534,6 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 CreatedAt = _randomGenerator.DateTime(),
                 UpdatedAt = _randomGenerator.DateTime(),
                 ReviewAt = _randomGenerator.DateTime(),
-                ClosedAt = _randomGenerator.DateTime(),
                 CreatedBy = _randomGenerator.NextString(3, 10),
                 Description = _randomGenerator.NextString(3, 10),
                 CrmEnquiry = _randomGenerator.NextString(3, 10),
@@ -448,22 +547,24 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 NextSteps = _randomGenerator.NextString(3, 10),
                 CaseHistory = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                Territory = TerritoryEnum.North_And_Utc__Yorkshire_And_Humber,
+                Territory = Territory.North_And_Utc__Yorkshire_And_Humber,
                 StatusId = 2,
                 RatingId = 3
             };
 
             AddConcernsCase(concernsCase);
 
-            var concernsType = _dbContext.ConcernsTypes.FirstOrDefault(t => t.Id == 1);
-            var concernsRating = _dbContext.ConcernsRatings.FirstOrDefault(r => r.Id == 1);
+			using var context = _testFixture.GetContext();
+
+			var concernsType = context.ConcernsTypes.FirstOrDefault(t => t.Id == 3);
+            var concernsRating = context.ConcernsRatings.FirstOrDefault(r => r.Id == 1);
 
             var currentMeansOfReferral = hasCurrentMeansOfReferral
-                ? _dbContext.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 1)
+                ? context.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 1)
                 : null;
 
             var updateMeansOfReferral = isAddingMeansOfReferral
-                ? _dbContext.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 2)
+                ? context.ConcernsMeansOfReferrals.FirstOrDefault(r => r.Id == 2)
                 : null;
 
             var currentConcernsRecord = new ConcernsRecord
@@ -471,15 +572,14 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 CreatedAt = _randomGenerator.DateTime(),
                 UpdatedAt = _randomGenerator.DateTime(),
                 ReviewAt = _randomGenerator.DateTime(),
-                ClosedAt = _randomGenerator.DateTime(),
                 Name = _randomGenerator.NextString(3, 10),
                 Description = _randomGenerator.NextString(3, 10),
                 Reason = _randomGenerator.NextString(3, 10),
                 StatusId = 1,
-                ConcernsCase = concernsCase,
-                ConcernsType = concernsType,
-                ConcernsRating = concernsRating,
-                ConcernsMeansOfReferral = currentMeansOfReferral
+                CaseId = concernsCase.Id,
+                TypeId = concernsType.Id,
+                RatingId = concernsRating.Id,
+                MeansOfReferralId = currentMeansOfReferral?.Id
             };
 
             AddConcernsRecord(currentConcernsRecord);
@@ -487,12 +587,13 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
             var updateRequest = Builder<ConcernsRecordRequest>.CreateNew()
                 .With(r => r.CaseUrn = concernsCase.Urn)
+                .With(r => r.ClosedAt = null)
                 .With(r => r.TypeId = concernsType.Id)
                 .With(r => r.RatingId = concernsRating.Id)
                 .With(r => r.MeansOfReferralId = updateMeansOfReferral?.Id)
                 .Build();
 
-            var expectedConcernsRecord = ConcernsRecordFactory.Create(updateRequest, concernsCase, concernsType, concernsRating, updateMeansOfReferral ?? currentMeansOfReferral);
+            var expectedConcernsRecord = ConcernsRecordFactory.Update(currentConcernsRecord, updateRequest, concernsCase, concernsType, concernsRating, updateMeansOfReferral ?? currentMeansOfReferral);
             expectedConcernsRecord.Id = currentRecordId;
             var expectedContent = ConcernsRecordResponseFactory.Create(expectedConcernsRecord);
 
@@ -531,16 +632,18 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 NextSteps = _randomGenerator.NextString(3, 10),
                 CaseHistory = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                Territory = TerritoryEnum.North_And_Utc__North_West,
+                Territory = Territory.North_And_Utc__North_West,
                 StatusId = 2,
                 RatingId = 4
             };
 
             AddConcernsCase(concernsCase);
 
-            var concernsRating = _dbContext.ConcernsRatings.FirstOrDefault();
-            var concernsType = _dbContext.ConcernsTypes.FirstOrDefault();
-            var concernsMeansOfReferral = _dbContext.ConcernsMeansOfReferrals.FirstOrDefault();
+			using var context = _testFixture.GetContext();
+
+			var concernsRating = context.ConcernsRatings.FirstOrDefault();
+            var concernsType = context.ConcernsTypes.FirstOrDefault();
+            var concernsMeansOfReferral = context.ConcernsMeansOfReferrals.FirstOrDefault();
 
             var recordCreateRequest1 = new ConcernsRecordRequest
             {
@@ -648,7 +751,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     NextSteps = _randomGenerator.NextString(3, 10),
                     CaseHistory = _randomGenerator.NextString(3, 10),
                     DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                    Territory = TerritoryEnum.North_And_Utc__Utc,
+                    Territory = Territory.North_And_Utc__Utc,
                     StatusId = 2,
                     RatingId = 1
                 };
@@ -678,7 +781,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     NextSteps = _randomGenerator.NextString(3, 10),
                     CaseHistory = _randomGenerator.NextString(3, 10),
                     DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                    Territory = TerritoryEnum.South_And_South_East__East_Of_England,
+                    Territory = Territory.South_And_South_East__East_Of_England,
                     StatusId = 3,
                     RatingId = 3
                 };
@@ -727,7 +830,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     NextSteps = _randomGenerator.NextString(3, 10),
                     DirectionOfTravel = _randomGenerator.NextString(3, 10),
                     CaseHistory = _randomGenerator.NextString(3, 10),
-                    Territory = TerritoryEnum.Midlands_And_West__East_Midlands,
+                    Territory = Territory.Midlands_And_West__East_Midlands,
                     StatusId = 2,
                     RatingId = 3
                 };
@@ -765,51 +868,57 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
         public void Dispose()
         {
-	        if (RecordsToBeDisposedAtEndOfTests.Any())
+			using var context = _testFixture.GetContext();
+
+			if (RecordsToBeDisposedAtEndOfTests.Any())
 	        {
-		        _dbContext.ConcernsRecord.RemoveRange(RecordsToBeDisposedAtEndOfTests);
-		        _dbContext.SaveChanges();
+		        context.ConcernsRecord.RemoveRange(RecordsToBeDisposedAtEndOfTests);
+		        context.SaveChanges();
 		        RecordsToBeDisposedAtEndOfTests.Clear();
 	        }
 
 	        if (CasesToBeDisposedAtEndOfTests.Any())
 	        {
-				_dbContext.ConcernsCase.RemoveRange(CasesToBeDisposedAtEndOfTests);
-				_dbContext.SaveChanges();
+				context.ConcernsCase.RemoveRange(CasesToBeDisposedAtEndOfTests);
+				context.SaveChanges();
 				CasesToBeDisposedAtEndOfTests.Clear();
 	        }
         }
 
         private void AddConcernsCase(ConcernsCase concernsCase)
         {
-	        try
+			using var context = _testFixture.GetContext();
+
+			try
 	        {
-		        _dbContext.ConcernsCase.Add(concernsCase);
-		        _dbContext.SaveChanges();
+		        context.ConcernsCase.Add(concernsCase);
+		        context.SaveChanges();
 
 		        CasesToBeDisposedAtEndOfTests.Add(concernsCase);
 	        }
 	        catch (Exception)
 	        {
-		        _dbContext.ConcernsCase.Remove(concernsCase);
-		        _dbContext.SaveChanges();
+		        context.ConcernsCase.Remove(concernsCase);
+		        context.SaveChanges();
 		        throw;
 	        }
         }
 
         private void AddConcernsRecord(ConcernsRecord concernsRecord)
         {
-	        try
+			using var context = _testFixture.GetContext();
+
+			try
 	        {
-		        _dbContext.ConcernsRecord.Add(concernsRecord);
-		        _dbContext.SaveChanges();
+		        context.ConcernsRecord.Add(concernsRecord);
+		        context.SaveChanges();
 
 		        RecordsToBeDisposedAtEndOfTests.Add(concernsRecord);
 	        }
 	        catch (Exception)
 	        {
-		        _dbContext.ConcernsRecord.Remove(concernsRecord);
-		        _dbContext.SaveChanges();
+		        context.ConcernsRecord.Remove(concernsRecord);
+		        context.SaveChanges();
 		        throw;
 	        }
         }

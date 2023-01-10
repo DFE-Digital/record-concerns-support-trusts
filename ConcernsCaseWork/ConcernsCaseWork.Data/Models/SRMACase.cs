@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Data.Models
         public DateTime? DateAccepted { get; set; }
         public DateTime? StartDateOfVisit { get; set; }
         public DateTime? EndDateOfVisit { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
         public DateTime? ClosedAt { get; set; }
         public string CreatedBy { get; set; }
 

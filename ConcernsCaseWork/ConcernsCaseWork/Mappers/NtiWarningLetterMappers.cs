@@ -96,7 +96,9 @@ namespace ConcernsCaseWork.Mappers
 				Name = "NTI Warning Letter",
 				OpenedDate = model.CreatedAt.ToDayMonthYear(),
 				RelativeUrl = $"/case/{model.CaseUrn}/management/action/ntiwarningletter/{model.Id}",
-				StatusName = status
+				StatusName = status,
+				RawOpenedDate = model.CreatedAt,
+                RawClosedDate = model.ClosedAt
 			};
 
 			return result;

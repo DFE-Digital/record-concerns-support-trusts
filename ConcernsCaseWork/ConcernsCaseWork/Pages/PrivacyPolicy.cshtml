@@ -1,6 +1,12 @@
 ﻿@page
+@model PrivacyPolicyPageModel
 @{
 	ViewData["Title"] = "Privacy Policy";
+}
+@section BeforeMain {
+	<div class="govuk-width-container">
+		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+	</div>
 }
 
 <div class="govuk-width-container">
@@ -9,7 +15,7 @@
 
 			<h1 class="govuk-heading-l govuk-!-margin-bottom-9">Privacy policy</h1>
 
-			<h2 class="govuk-heading-l govuk-!-margin-bottom-9">How we use your personal data when you use Concerns casework</h2>
+            <h2 class="govuk-heading-l govuk-!-margin-bottom-9">How we use your personal data when you use Record concerns and support for trusts</h2>
 
 			<p class="govuk-body">This service allows you to share data with the Department for Education (DfE).</p>
 
@@ -46,7 +52,7 @@
 
 			<h2 class="govuk-heading-m" id="what-personal-data-we-collect-and-why">What personal data we collect and why</h2>
 
-			<p class="govuk-body">We (DfE) use your personal data to run and improve Concerns casework service.</p>
+            <p class="govuk-body">We (DfE) use your personal data to run and improve Record concerns and support for trusts service.</p>
 
 			<p class="govuk-body">We collect your name and email address so that we can:</p>
 			<ul class="govuk-list govuk-list--bullet">

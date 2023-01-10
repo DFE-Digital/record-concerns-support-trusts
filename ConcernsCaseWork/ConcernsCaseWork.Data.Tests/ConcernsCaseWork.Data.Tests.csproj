@@ -11,7 +11,10 @@
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="6.8.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+        <PackageReference Include="NBuilder" Version="6.1.0" />
         <PackageReference Include="NUnit" Version="3.13.3" />
         <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
         <PackageReference Include="NUnit.Analyzers" Version="3.5.0">
@@ -26,6 +29,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ConcernsCaseWork.Data\ConcernsCaseWork.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="appsettings.tests.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

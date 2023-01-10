@@ -44,6 +44,14 @@ Cypress.Commands.add("getById", (id) => {
     cy.get(`[id="${id}"]`)
 });
 
+Cypress.Commands.add("waitForJavascript", () =>
+{
+    // Need to look into this later
+    // Essentially javascript validation is too slow and blocks submission even though the error has been corrected
+    // Might be a more intelligent way to do this in the future
+    cy.wait(1000);
+})
+
 Cypress.Commands.add("login", () => {
     cy.clearCookies();
     cy.clearLocalStorage();
@@ -101,6 +109,7 @@ Cypress.Commands.add('addConcernsDecisionsAddToCase',()=>{
     AddToCasePage.addToCase('Decision');
     AddToCasePage.getCaseActionRadio('Decision').siblings().should('contain.text', AddToCasePage.actionOptions[11]);
     AddToCasePage.getAddToCaseBtn().click();
+    
 })
 
 
@@ -248,6 +257,15 @@ Cypress.Commands.add('validateCreateCaseDetailsComponent', () => {
 
 })
 
+Cypress.Commands.add('validateCreateTerritory', () => {
+    cy.task(LogTask, "Validating terrirtory error message when not selected");
+
+    cy.get('[data-testid="next-button-territory"]').click();
+    cy.get('#errorSummary').should("contain.text", 'An SFSO Territory must be selected');
+        });
+ 
+
+
 Cypress.Commands.add('validateCreateCaseInitialDetails', () => {
     cy.task(LogTask, "Validating case initial details");
 
@@ -385,23 +403,24 @@ Cypress.Commands.add('validateCaseManagPage', () => {
     cy.get('tr[class=govuk-table__row]').should(($row) => {
         expect($row).to.have.lengthOf.at.least(4);
         expect($row.eq(0).text().trim()).to.contain('Trust').and.to.match(trustRgx);
-        expect($row.eq(1).text().trim()).to.contain('Risk to trust').and.to.match(ragRgx).and.to.match(/(Edit risk rating)/);
+        expect($row.eq(1).text().trim()).to.contain('Risk to trust').and.to.match(ragRgx).and.to.match(/(Edit risk to trust rating)/);
         expect($row.eq(2).text().trim()).to.contain('Direction of travel').and.to.match(dotRgx).and.to.match(/(Edit direction of travel)/);
         expect($row.eq(3).text().trim()).to.contain('Concerns').and.to.match(concernsRgx).and.to.match(/(Add concern)/).and.to.match(/(Edit)/);
+        expect($row.eq(5).text().trim()).to.contain('SFSO territory');
     })
 
 
 })
 
 Cypress.Commands.add('closeAllOpenConcerns', () => {
-    const elem = '.govuk-table-case-details__cell_no_border [href*="edit_rating"]';
+    const elem = '[data-testid*="edit-concern"]';
     if (Cypress.$(elem).length > 0) { //Cypress.$ needed to handle element missing exception
 
-        cy.get('.govuk-table-case-details__cell_no_border [href*="edit_rating"]').its('length').then(($elLen) => {
+        cy.getByTestId('edit-concern').its('length').then(($elLen) => {
             cy.log($elLen)
 
             while ($elLen > 0) {
-                cy.get('.govuk-table-case-details__cell_no_border [href*="edit_rating"]').eq($elLen - 1).click();
+                cy.getByTestId('edit-concern').eq($elLen - 1).click();
                 cy.get('[href*="closure"]').click();
                 cy.get('.govuk-button-group [href*="edit_rating/closure"]:nth-of-type(1)').click();
                 $elLen = $elLen - 1
@@ -475,10 +494,12 @@ Cypress.Commands.add('basicCreateCase', () => {
 
     cy.selectConcernType();
     cy.selectRiskToTrust();
+    cy.selectTerritory();
 
     let date = new Date();
     cy.get("#issue").invoke("val", "Data entered at " + date);
     cy.get("#case-details-form  button").click();
+
 });
 
 //description: creates a new case from the case list (home) page
@@ -498,8 +519,15 @@ Cypress.Commands.add('createCase', () => {
 
     cy.selectConcernType();
     cy.selectRiskToTrust();
+    cy.selectTerritory();
     // cy.selectMoR();
     cy.enterConcernDetails();
+});
+
+Cypress.Commands.add('selectTerritory', () => {
+
+    cy.get('#territory-Midlands_And_West__SouthWest').click();
+    cy.get('[data-testid="next-button-territory"]').click();
 });
 
 //description: selects an action item from the add to case page

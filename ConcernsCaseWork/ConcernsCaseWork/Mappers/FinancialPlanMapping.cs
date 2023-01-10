@@ -101,7 +101,9 @@ namespace ConcernsCaseWork.Mappers
 				Name = "Financial Plan",
 				OpenedDate = model.CreatedAt.ToDayMonthYear(),
 				RelativeUrl = relativeUrl,
-				StatusName = status
+				StatusName = status,
+				RawOpenedDate = model.CreatedAt,
+				RawClosedDate = model.ClosedAt
 			};
 
 			return result;

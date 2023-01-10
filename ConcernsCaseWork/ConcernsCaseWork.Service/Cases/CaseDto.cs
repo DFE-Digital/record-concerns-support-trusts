@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.API.Contracts.Enums;
-using Newtonsoft.Json;
 
 namespace ConcernsCaseWork.Service.Cases
 {
@@ -9,7 +8,7 @@ namespace ConcernsCaseWork.Service.Cases
 		public DateTimeOffset CreatedAt { get; init; }
 		public DateTimeOffset UpdatedAt { get; init; }
 		public DateTimeOffset ReviewAt { get; init; }
-		public DateTimeOffset ClosedAt { get; init; }
+		public DateTimeOffset? ClosedAt { get; init; }
 		public string CreatedBy { get; init; }
 		public string Description { get; init; }
 		public string CrmEnquiry { get; init; }
@@ -30,6 +29,6 @@ namespace ConcernsCaseWork.Service.Cases
 		public long StatusId { get; init; }
 		public long RatingId { get; set; }
 		public string CaseHistory { get; set; }
-		public TerritoryEnum? Territory { get; set; }
+		public Territory? Territory { get; set; }
 	}
 }

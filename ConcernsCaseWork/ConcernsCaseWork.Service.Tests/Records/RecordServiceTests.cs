@@ -2,7 +2,6 @@
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Records;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
@@ -156,7 +155,7 @@ namespace ConcernsCaseWork.Service.Tests.Records
 			Assert.That(actualRecord.Reason, Is.EqualTo(expectedRecord.Reason));
 			Assert.That(actualRecord.StatusId, Is.EqualTo(expectedRecord.StatusId));
 			Assert.That(actualRecord.CaseUrn, Is.EqualTo(expectedRecord.CaseUrn));
-			Assert.That(actualRecord.ClosedAt, Is.EqualTo(expectedRecord.ClosedAt));
+			Assert.That(actualRecord.ClosedAt, Is.Null);
 			Assert.That(actualRecord.RatingId, Is.EqualTo(expectedRecord.RatingId));
 			Assert.That(actualRecord.ReviewAt, Is.EqualTo(expectedRecord.ReviewAt));
 			Assert.That(actualRecord.TypeId, Is.EqualTo(expectedRecord.TypeId));

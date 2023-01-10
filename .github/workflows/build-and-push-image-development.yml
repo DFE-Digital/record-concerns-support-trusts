@@ -2,8 +2,7 @@ name: Continuous delivery
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main, develop ]
 jobs:
   build-and-push-image-development:
     name: Build and push image development
@@ -27,11 +26,13 @@ jobs:
           VERSION=latest
           TAGS="${DOCKER_IMAGE}:${VERSION}"
           if [ "${{ github.event_name }}" = "push" ]; then
-            VERSION=sha-${GITHUB_SHA}
+            CHECKED_OUT_SHA="$(git log -1 '--format=format:%H')"
+            VERSION=sha-${CHECKED_OUT_SHA}
             TAGS="$TAGS,${DOCKER_IMAGE}:${VERSION}"
           fi
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=deploy-version::${VERSION}
+          echo "tags=${TAGS}" >> $GITHUB_OUTPUT
+          echo "checked-out-sha=${CHECKED_OUT_SHA}" >> $GITHUB_OUTPUT
+          echo "deploy-version=${VERSION}" >> $GITHUB_OUTPUT
 
       - name: Setup node.js
         uses: actions/setup-node@v1
@@ -46,7 +47,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile.gpaas-azure-migration
-          build-args: COMMIT_SHA=${GITHUB_SHA}
+          build-args: COMMIT_SHA=${{ steps.prepare-tags.outputs.checked-out-sha }}
           push: true
           tags: ${{ steps.prepare-tags.outputs.tags }}
 

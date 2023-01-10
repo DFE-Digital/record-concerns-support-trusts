@@ -37,7 +37,7 @@
 								<span class="govuk-error-message" id="territory-error">@string.Join("<br />", @Model.ModelState["Territory"]!.Errors.Select(errs => errs?.ErrorMessage))</span>
 							}
 							<div class="govuk-radios" data-module="govuk-radios" id="Territory">
-								@foreach (TerritoryEnum territory in Enum.GetValues(typeof(TerritoryEnum)))
+								@foreach (Territory territory in Enum.GetValues(typeof(Territory)))
 								{
 									var isChecked = Model.Territory == territory ? "checked" : "";
 									<div class="govuk-radios__item">
@@ -53,7 +53,7 @@
 
 					<!--Button group-->
 					<div class="govuk-button-group">
-						<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
+						<button data-prevent-double-click="true" data-testid="apply_territory_btn" class="govuk-button" data-module="govuk-button">
 							Apply
 						</button>
 						<partial name="_Cancel"/>

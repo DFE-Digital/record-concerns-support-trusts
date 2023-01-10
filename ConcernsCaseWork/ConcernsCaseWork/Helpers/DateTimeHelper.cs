@@ -18,5 +18,12 @@ namespace ConcernsCaseWork.Helpers
 		{
 			return DateTime.ParseExact(value, allowedFormats, dateTimeFormatInfo, dateTimeStyle);
 		}
+
+		public static string ParseToDisplayDate(DateTimeOffset date)
+		{
+			var result = date.ToString("dd MMMM yyy");
+
+			return result;
+		}
 	}
 }

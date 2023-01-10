@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 
 			// assert
 			Assert.That(typesDto, Is.Not.Null);
-			Assert.That(typesDto.Count, Is.EqualTo(13));
+			Assert.That(typesDto.Count, Is.EqualTo(8));
 		}
 	}
 }

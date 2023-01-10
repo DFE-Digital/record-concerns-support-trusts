@@ -14,7 +14,7 @@ jobs:
       version: ${{steps.release-version.outputs.version}}
     steps:
       - id: release-version
-        run: echo "::set-output name=version::release-7"
+        run: echo "version=release-8" >> $GITHUB_OUTPUT
 
   build-and-push-image-production:
     name: Build and push image prodcution
@@ -42,11 +42,13 @@ jobs:
           VERSION=latest
           TAGS="${DOCKER_IMAGE}:${VERSION}"
           if [ "${{ github.event_name }}" = "push" ]; then
-            VERSION=sha-${GITHUB_SHA}
+            CHECKED_OUT_SHA="$(git log -1 '--format=format:%H')"
+            VERSION=sha-${CHECKED_OUT_SHA}
             TAGS="$TAGS,${DOCKER_IMAGE}:${VERSION},${DOCKER_IMAGE}:${{needs.set-production-release-version.outputs.version}}"
           fi
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=deploy-version::${VERSION}
+          echo "tags=${TAGS}" >> $GITHUB_OUTPUT
+          echo "checked-out-sha=${CHECKED_OUT_SHA}" >> $GITHUB_OUTPUT
+          echo "deploy-version=${VERSION}" >> $GITHUB_OUTPUT
 
       - name: Setup node.js
         uses: actions/setup-node@v1
@@ -63,6 +65,23 @@ jobs:
           file: ./Dockerfile.gpaas-azure-migration
           build-args: |
             ASPNET_IMAGE_TAG=6.0.9-bullseye-slim-amd64
-            COMMIT_SHA=${GITHUB_SHA}
+            COMMIT_SHA=${{ steps.prepare-tags.outputs.checked-out-sha }}
           push: true
           tags: ${{ steps.prepare-tags.outputs.tags }}
+
+      - name: Azure login with ACA credentials
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.PROD_AZURE_ACA_CREDENTIALS }}
+
+      - name: Update Azure Container Apps Revision
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.40.0
+          inlineScript: |
+            az config set extension.use_dynamic_install=yes_without_prompt
+            az containerapp update \
+              --name ${{ secrets.PROD_ACA_CONTAINERAPP_NAME }} \
+              --resource-group ${{ secrets.PROD_ACA_RESOURCE_GROUP }} \
+              --image ${{ secrets.PROD_ACR_URL }}/amsd-app:${{ steps.prepare-tags.outputs.deploy-version }} \
+              --output none

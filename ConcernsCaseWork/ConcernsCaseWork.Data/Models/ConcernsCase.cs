@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Data.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime ReviewAt { get; set; }
-        public DateTime ClosedAt { get; set; }
+        public DateTime? ClosedAt { get; set; }
         public string CreatedBy { get; set; }
         public string Description { get; set; }
         public string CrmEnquiry { get; set; }
@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.Data.Models
         public int StatusId { get; set; }
         public int RatingId { get; set; }
         
-        public TerritoryEnum? Territory { get; set; }
+        public Territory? Territory { get; set; }
 
         public virtual ConcernsStatus Status { get; set; }
         public virtual ConcernsRating Rating { get; set; }
