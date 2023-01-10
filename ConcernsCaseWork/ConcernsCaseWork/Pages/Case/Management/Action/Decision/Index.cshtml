@@ -4,13 +4,13 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @section BeforeMain {
-    <div class="govuk-width-container">
-        <partial name="_BackLink" />
-    </div>
+	<div class="govuk-width-container">
+		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+	</div>
 }
 
-    <div class="govuk-width-container">
-        <partial name="_BannerError" />
+<div class="govuk-width-container">
+    <partial name="_BannerError" />
 
     @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
     {
@@ -18,28 +18,49 @@
     }
     else
     {
-	    <h1 class="govuk-heading-l" data-testid="decision-heading">
-		    <span class="govuk-caption-m">Decision ID @Model.Decision.DecisionId</span>
-		    Decision
-	    </h1>
-	    @if (Model.Decision.IsEditable)
-	    {
-		    if (Model.Decision.Outcome != null)
-		    {
-			    <div class="govuk-hint" data-testid="decision-extra-info">
-				    Review information before editing, returning back to case or continuing to close decision.
-			    </div>
-		    }
-		    else
-		    {
-			    <div class="govuk-hint" data-testid="decision-extra-info">
-				    Review information before editing, going back to case overview or continuing to record decision outcome.
-			    </div>
-		    }
-	    }
+        <h1 class="govuk-heading-l" data-testid="decision-heading">
+            <span class="govuk-caption-m">Decision ID @Model.Decision.DecisionId</span>
+            Decision
+        </h1>
+        @if (Model.Decision.IsEditable)
+        {
+            if (Model.Decision.Outcome != null)
+            {
+                <div class="govuk-hint" data-testid="decision-extra-info">
+                    Review information before editing, returning back to case or continuing to close decision.
+                </div>
+            }
+            else
+            {
+                <div class="govuk-hint" data-testid="decision-extra-info">
+                    Review information before editing, going back to case overview or continuing to record decision outcome.
+                </div>
+            }
+        }
 
-	    <table class="govuk-table">
+        <table class="govuk-table">
             <tbody class="govuk-table__body">
+
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="decision-open-label">Date decision opened</th>
+                    <td class="govuk-table__cell" data-testid="decision-open-text">
+                        @{
+                            RenderValue(Model.Decision.CreatedDate);
+                        }
+                    </td>
+                </tr>
+
+                @if (!Model.Decision.IsEditable)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="decision-closed-label">Date decision closed</th>
+                        <td class="govuk-table__cell" data-testid="decision-closed-text">
+                            @{
+                                RenderValue(Model.Decision.ClosedDate);
+                            }
+                        </td>
+                    </tr>
+                }
 
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="crm-enquiry-label">CRM enquiry number</th>
@@ -89,50 +110,50 @@
                         }
                     </td>
                 </tr>
-            <tr class="govuk-table__row">
-	            <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="decision-type-label">Type of decision</th>
-	            <td class="govuk-table__cell" data-testid="decision-type-text">
-		            @{
-			            if (Model.Decision.DecisionTypes.Any())
-			            {
-				            <ul class="govuk-list govuk-list--bullet">
-					            @foreach (var decisionType in Model.Decision.DecisionTypes)
-					            {
-						            <li>
-							            @{
-								            RenderValue(decisionType);
-							            }
-						            </li>
-					            }
-				            </ul>
-			            }
-			            else
-			            {
-				            RenderEmptyLabel();
-			            }
-		            }
-	            </td>
-            </tr>
-            
-            <tr class="govuk-table__row">
-	            <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="supporting-notes-label">Supporting notes</th>
-	            <td class="govuk-table__cell" data-testid="supporting-notes-text">
-		            @{
-			            RenderTextAreaValue(Model.Decision.SupportingNotes);
-		            }
-	            </td>
-            </tr>
-        @if (Model.Decision.IsEditable)
-        {
-            <tr class="govuk-table__row">
-	            <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="edit-decision-label">Action</th>
-	            <td class="govuk-table__cell" data-testid="edit-decision-text">
-		            @{
-			            RenderLink("Edit information", "action", Model.Decision.EditLink);
-		            }
-	            </td>
-            </tr>
-        }
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="decision-type-label">Type of decision</th>
+                    <td class="govuk-table__cell" data-testid="decision-type-text">
+                        @{
+                            if (Model.Decision.DecisionTypes.Any())
+                            {
+                                <ul class="govuk-list govuk-list--bullet">
+                                    @foreach (var decisionType in Model.Decision.DecisionTypes)
+                                    {
+                                        <li>
+                                            @{
+                                                RenderValue(decisionType);
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                RenderEmptyLabel();
+                            }
+                        }
+                    </td>
+                </tr>
+
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="supporting-notes-label">Supporting notes</th>
+                    <td class="govuk-table__cell" data-testid="supporting-notes-text">
+                        @{
+                            RenderTextAreaValue(Model.Decision.SupportingNotes);
+                        }
+                    </td>
+                </tr>
+                @if (Model.Decision.IsEditable)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="edit-decision-label">Action</th>
+                        <td class="govuk-table__cell" data-testid="edit-decision-text">
+                            @{
+                                RenderLink("Edit information", "action", Model.Decision.EditLink);
+                            }
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
 
@@ -202,59 +223,58 @@
                             }
                         </td>
                     </tr>
-                <tr class="govuk-table__row">
-	                <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="authorised-by-label">Decision authorised by</th>
-	                <td class="govuk-table__cell" data-testid="authoriser-text">
-		                @{
-			                RenderValue(Model.Decision.Outcome.Authorizer);
-		                }
-	                </td>
-                </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="authorised-by-label">Decision authorised by</th>
+                        <td class="govuk-table__cell" data-testid="authoriser-text">
+                            @{
+                                RenderValue(Model.Decision.Outcome.Authorizer);
+                            }
+                        </td>
+                    </tr>
 
-	        @if (Model.Decision.IsEditable)
-	        {
-		        <tr class="govuk-table__row">
-			        <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="edit-decision-outcome-label">Action</th>
-			        <td class="govuk-table__cell" data-testid="edit-decision-outcome-text">
-				        @{
-					        RenderLink("Edit information", "action", Model.Decision.Outcome.EditLink);
-				        }
-			        </td>
-		        </tr>
-	        }
+                    @if (Model.Decision.IsEditable)
+                    {
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="edit-decision-outcome-label">Action</th>
+                            <td class="govuk-table__cell" data-testid="edit-decision-outcome-text">
+                                @{
+                                    RenderLink("Edit information", "action", Model.Decision.Outcome.EditLink);
+                                }
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         }
-	    @if (Model.Decision.IsEditable)
-	    {
-		    if (Model.Decision.Outcome == null)
-		    {
-			    <div class="govuk-button-group">
-				    <a data-prevent-double-click="true"
-				       class="govuk-button govuk-!-margin-top-6"
-				       data-module="govuk-button"
-				       role="button"
-				       data-testid="continue-record-decision-button"
-				       href="@Request.Path/outcome/addOrUpdate">
-					    Continue to record decision outcome
-				    </a>
-			    </div>
-		    }
-		    else
-		    {
-			    <div class="govuk-button-group">
-				    <a
-					    data-prevent-double-click="true"
-					    class="govuk-button govuk-!-margin-top-6"
-					    data-module="govuk-button"
-					    role="button"
-					    data-testid="close-decision-button"
-					    href="@Request.Path/close">
-					    Continue to close decision
-				    </a>
-			    </div>
-		    }
-	    }
+        @if (Model.Decision.IsEditable)
+        {
+            if (Model.Decision.Outcome == null)
+            {
+                <div class="govuk-button-group">
+                    <a data-prevent-double-click="true"
+                       class="govuk-button govuk-!-margin-top-6"
+                       data-module="govuk-button"
+                       role="button"
+                       data-testid="continue-record-decision-button"
+                       href="@Request.Path/outcome/addOrUpdate">
+                        Continue to record decision outcome
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="govuk-button-group">
+                    <a data-prevent-double-click="true"
+                       class="govuk-button govuk-!-margin-top-6"
+                       data-module="govuk-button"
+                       role="button"
+                       data-testid="close-decision-button"
+                       href="@Request.Path/close">
+                        Continue to close decision
+                    </a>
+                </div>
+            }
+        }
     }
 </div>
 

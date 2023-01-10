@@ -1,10 +1,5 @@
 using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.UseCases.CaseActions.NTI.NoticeToImprove;
-using ConcernsCaseWork.Data.Exceptions;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Net;
 
 namespace ConcernsCaseWork.API.Middleware;

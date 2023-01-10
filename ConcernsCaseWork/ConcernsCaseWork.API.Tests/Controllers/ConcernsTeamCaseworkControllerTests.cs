@@ -17,7 +17,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 {
     public class ConcernsTeamCaseworkControllerTests
     {
-        private Mock<ILogger<ConcernsTeamCaseworkController>> _mockLogger = new Mock<ILogger<ConcernsTeamCaseworkController>>();
+        private readonly Mock<ILogger<ConcernsTeamCaseworkController>> _mockLogger = new Mock<ILogger<ConcernsTeamCaseworkController>>();
 
         [Fact]
         public async Task Get_Returns200_When_Successfully_Fetched_Data()

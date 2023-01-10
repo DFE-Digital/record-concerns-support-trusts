@@ -54,7 +54,6 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			Assert.That(expectedCaseDto.Urn, Is.EqualTo(0));
 			Assert.That(createCaseDto.Issue, Is.EqualTo(expectedCaseDto.Issue));
 			Assert.That(createCaseDto.StatusId, Is.EqualTo(expectedCaseDto.StatusId));
-			Assert.That(createCaseDto.ClosedAt, Is.EqualTo(expectedCaseDto.ClosedAt));
 			Assert.That(createCaseDto.CreatedAt, Is.EqualTo(expectedCaseDto.CreatedAt));
 			Assert.That(createCaseDto.CreatedBy, Is.EqualTo(expectedCaseDto.CreatedBy));
 			Assert.That(createCaseDto.CrmEnquiry, Is.EqualTo(expectedCaseDto.CrmEnquiry));

@@ -23,7 +23,8 @@ namespace ConcernsCaseWork.Mappers
 				DateVisitStart = srmaDto.DateVisitStart,
 				Notes = srmaDto.Notes,
 				Reason = (Enums.SRMAReasonOffered)(srmaDto.Reason ?? SRMAReasonOffered.Unknown),
-				Status = (Enums.SRMAStatus)srmaDto.Status
+				Status = (Enums.SRMAStatus)srmaDto.Status,
+				UpdatedAt = srmaDto.UpdatedAt
 			};
 		}
 
@@ -34,6 +35,7 @@ namespace ConcernsCaseWork.Mappers
 				Id = Convert.ToInt32(srmaModel.Id),
 				CaseUrn = Convert.ToInt32(srmaModel.CaseUrn),
 				CreatedAt = srmaModel.CreatedAt,
+				CreatedBy = srmaModel.CreatedBy,
 				ClosedAt = srmaModel.ClosedAt,
 				DateAccepted = srmaModel.DateAccepted,
 				DateOffered = srmaModel.DateOffered,
@@ -43,6 +45,7 @@ namespace ConcernsCaseWork.Mappers
 				Notes = srmaModel.Notes,
 				Reason = (SRMAReasonOffered)srmaModel.Reason,
 				Status = (SRMAStatus)srmaModel.Status,
+				UpdatedAt = srmaModel.UpdatedAt
 			};
 		}
 
@@ -61,7 +64,9 @@ namespace ConcernsCaseWork.Mappers
 				Name = "SRMA",
 				OpenedDate = srmaModel.CreatedAt.ToDayMonthYear(),
 				RelativeUrl = relativeUrl,
-				StatusName = EnumHelper.GetEnumDescription(srmaModel.Status)
+				StatusName = EnumHelper.GetEnumDescription(srmaModel.Status),
+				RawOpenedDate = srmaModel.CreatedAt,
+				RawClosedDate = srmaModel.ClosedAt
 			};
 
 			return result;

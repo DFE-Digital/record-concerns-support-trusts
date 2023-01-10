@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Enums;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace ConcernsCaseWork.Service.Cases
 {
@@ -14,10 +13,7 @@ namespace ConcernsCaseWork.Service.Cases
 		
 		[JsonProperty("reviewAt")]
 		public DateTimeOffset ReviewAt { get; }
-		
-		[JsonProperty("closedAt")]
-		public DateTimeOffset ClosedAt { get; }
-		
+
 		[JsonProperty("createdBy")]
 		public string CreatedBy { get; }
 		
@@ -52,7 +48,7 @@ namespace ConcernsCaseWork.Service.Cases
 		public string CaseHistory { get; set; }
 		
 		[JsonProperty("territory")]
-		public TerritoryEnum? Territory { get; set; }
+		public Territory? Territory { get; set; }
 		
 		/// <summary>
 		/// Deteriorating, unchanged, improved
@@ -68,14 +64,14 @@ namespace ConcernsCaseWork.Service.Cases
 
 		[JsonConstructor]
 		public CreateCaseDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, 
-			DateTimeOffset closedAt, string createdBy, string crmEnquiry, string trustUkPrn, 
+			string createdBy, string crmEnquiry, string trustUkPrn, 
 			string reasonAtReview, DateTimeOffset deEscalation, string issue, string currentStatus, 
 			string nextSteps, string caseAim, string deEscalationPoint, string caseHistory, string directionOfTravel, long statusId,
-			long ratingId, TerritoryEnum? territory) => 
-			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, CreatedBy, CrmEnquiry, TrustUkPrn,
+			long ratingId, Territory? territory) => 
+			(CreatedAt, UpdatedAt, ReviewAt, CreatedBy, CrmEnquiry, TrustUkPrn,
 				ReasonAtReview, DeEscalation, Issue, CurrentStatus, NextSteps, CaseAim, DeEscalationPoint, CaseHistory, DirectionOfTravel, 
 				StatusId, RatingId, Territory) = 
-			(createdAt, updatedAt, reviewAt, closedAt, createdBy, crmEnquiry, trustUkPrn,
+			(createdAt, updatedAt, reviewAt, createdBy, crmEnquiry, trustUkPrn,
 				reasonAtReview, deEscalation, issue, currentStatus, nextSteps, caseAim, deEscalationPoint, caseHistory, directionOfTravel, 
 				statusId, ratingId, territory);
 	}

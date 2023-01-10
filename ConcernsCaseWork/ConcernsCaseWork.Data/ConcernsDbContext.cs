@@ -1,9 +1,9 @@
+using ConcernsCaseWork.Data.Conventions;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
 using ConcernsCaseWork.Data.Models.Concerns.TeamCasework;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.Contracts;
 using DecisionOutcomeStatus = ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeStatus;
 
 namespace ConcernsCaseWork.Data
@@ -60,6 +60,11 @@ namespace ConcernsCaseWork.Data
 	        {
 		        optionsBuilder.UseConcernsSqlServer("Data Source=127.0.0.1;Initial Catalog=local_trams_test_db;persist security info=True;User id=sa; Password=StrongPassword905");
 	        }
+        }
+        
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+	        configurationBuilder.Conventions.Add(_ => new BlankTriggerAddingConvention());
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -151,22 +156,6 @@ namespace ConcernsCaseWork.Data
                 entity.HasData(
                     new ConcernsType
                     {
-                        Id = 1,
-                        Name = "Compliance",
-                        Description = "Financial reporting",
-                        CreatedAt = new DateTime(2021, 11, 17),
-                        UpdatedAt = new DateTime(2021, 11, 17)
-                    },
-                    new ConcernsType
-                    {
-                        Id = 2,
-                        Name = "Compliance",
-                        Description = "Financial returns",
-                        CreatedAt = new DateTime(2021, 11, 17),
-                        UpdatedAt = new DateTime(2021, 11, 17)
-                    },
-                    new ConcernsType
-                    {
                         Id = 3,
                         Name = "Financial",
                         Description = "Deficit",
@@ -177,23 +166,7 @@ namespace ConcernsCaseWork.Data
                     {
                         Id = 4,
                         Name = "Financial",
-                        Description = "Projected deficit / Low future surplus",
-                        CreatedAt = new DateTime(2021, 11, 17),
-                        UpdatedAt = new DateTime(2021, 11, 17)
-                    },
-                    new ConcernsType
-                    {
-                        Id = 5,
-                        Name = "Financial",
-                        Description = "Cash flow shortfall",
-                        CreatedAt = new DateTime(2021, 11, 17),
-                        UpdatedAt = new DateTime(2021, 11, 17)
-                    },
-                    new ConcernsType
-                    {
-                        Id = 6,
-                        Name = "Financial",
-                        Description = "Clawback",
+                        Description = "Projected deficit",
                         CreatedAt = new DateTime(2021, 11, 17),
                         UpdatedAt = new DateTime(2021, 11, 17)
                     },
@@ -208,51 +181,43 @@ namespace ConcernsCaseWork.Data
                     new ConcernsType
                     {
                         Id = 8,
-                        Name = "Governance",
+                        Name = "Governance and compliance",
                         Description = "Governance",
                         CreatedAt = new DateTime(2021, 11, 17),
                         UpdatedAt = new DateTime(2021, 11, 17)
                     },
                     new ConcernsType
                     {
-                        Id = 9,
-                        Name = "Governance",
-                        Description = "Closure",
-                        CreatedAt = new DateTime(2021, 11, 17),
-                        UpdatedAt = new DateTime(2021, 11, 17)
+                        Id = 20,
+                        Name = "Financial",
+                        Description = "Viability",
+                        CreatedAt = new DateTime(2022, 12, 20),
+                        UpdatedAt = new DateTime(2022, 12, 20)
                     },
                     new ConcernsType
                     {
-                        Id = 10,
-                        Name = "Governance",
-                        Description = "Executive Pay",
-                        CreatedAt = new DateTime(2021, 11, 17),
-                        UpdatedAt = new DateTime(2021, 11, 17)
+	                    Id = 21,
+	                    Name = "Irregularity",
+	                    Description = "Irregularity",
+	                    CreatedAt = new DateTime(2022, 12, 20),
+	                    UpdatedAt = new DateTime(2022, 12, 20)
                     },
                     new ConcernsType
                     {
-                        Id = 11,
-                        Name = "Governance",
-                        Description = "Safeguarding",
-                        CreatedAt = new DateTime(2021, 11, 17),
-                        UpdatedAt = new DateTime(2021, 11, 17)
+	                    Id = 22,
+	                    Name = "Irregularity",
+	                    Description = "Suspected fraud",
+	                    CreatedAt = new DateTime(2022, 12, 20),
+	                    UpdatedAt = new DateTime(2022, 12, 20)
                     },
                     new ConcernsType
                     {
-                        Id = 12,
-                        Name = "Irregularity",
-                        Description = "Allegations and self reported concerns",
-                        CreatedAt = new DateTime(2021, 11, 17),
-                        UpdatedAt = new DateTime(2021, 11, 17)
-                    },
-                    new ConcernsType
-                    {
-                        Id = 13,
-                        Name = "Irregularity",
-                        Description = "Related party transactions - in year",
-                        CreatedAt = new DateTime(2021, 11, 17),
-                        UpdatedAt = new DateTime(2021, 11, 17)
-                    }
+	                    Id = 23,
+	                    Name = "Governance and compliance",
+	                    Description = "Compliance",
+	                    CreatedAt = new DateTime(2022, 12, 20),
+	                    UpdatedAt = new DateTime(2022, 12, 20)
+	                }
                 );
             });
             modelBuilder.Entity<ConcernsMeansOfReferral>(entity =>

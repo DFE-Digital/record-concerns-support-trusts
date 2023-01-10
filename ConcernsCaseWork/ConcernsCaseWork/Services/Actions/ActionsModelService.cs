@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Pages.Shared;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Service.Helpers;
 using ConcernsCaseWork.Services.Cases;
@@ -48,12 +47,14 @@ namespace ConcernsCaseWork.Services.Actions
 			_decisionModelService = decisionModelService;
 		}
 
-		public async Task<IList<ActionSummaryModel>> GetActionsSummary(long caseUrn)
+		public async Task<ActionSummaryBreakdownModel> GetActionsSummary(long caseUrn)
 		{
-			var caseActions = new List<ActionSummaryModel>();
-				
+			var result = new ActionSummaryBreakdownModel();
+
 			try
 			{
+				var caseActions = new List<ActionSummaryModel>();
+
 				caseActions.AddRange(await GetSrmas(caseUrn));
 				caseActions.AddRange(await GetFinancialPlans(caseUrn));
 				caseActions.AddRange(await GetNtisUnderConsideration(caseUrn));
@@ -61,7 +62,9 @@ namespace ConcernsCaseWork.Services.Actions
 				caseActions.AddRange(await GetNtisForCase(caseUrn));
 				caseActions.AddRange(await _decisionModelService.GetDecisionsByUrn(caseUrn));
 
-				return caseActions;
+				result = ActionSummaryMapping.ToActionSummaryBreakdown(caseActions);
+
+				return result;
 			}
 			catch (Exception ex)
 			{
@@ -69,7 +72,7 @@ namespace ConcernsCaseWork.Services.Actions
 					nameof(ActionsModelService), LoggingHelpers.EchoCallerName(), ex.Message);
 			}
 			
-			return caseActions;
+			return result;
 		}
 
 		private async Task<IEnumerable<ActionSummaryModel>> GetSrmas(long caseUrn)

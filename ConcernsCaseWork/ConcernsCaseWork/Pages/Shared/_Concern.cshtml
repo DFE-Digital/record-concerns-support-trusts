@@ -37,9 +37,18 @@
 							<div class="govuk-radios__item">
 								<input class="govuk-radios__input" id="sub-type-@subTypeIndex" name="sub-type" type="radio" 
 								       value="@subtype.Id:@subtype.SubType" checked="@subType.Equals(subtype.SubType)">
+								@if (key.ToLower().Contains(subtype.SubType.ToLower()))
+								{
+								<label class="govuk-label govuk-radios__label" for="sub-type-@subTypeIndex">
+									@subtype.SubType
+								</label>
+								}
+								else
+								{
 								<label class="govuk-label govuk-radios__label" for="sub-type-@subTypeIndex">
 									@key: @subtype.SubType
 								</label>
+								}
 							</div>
 
 							subTypeIndex++;

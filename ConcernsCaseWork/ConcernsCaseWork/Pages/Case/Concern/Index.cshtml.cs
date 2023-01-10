@@ -1,6 +1,5 @@
 ﻿using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
@@ -114,7 +113,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 						CreatedAt = currentDate,
 						ReviewAt = currentDate,
 						UpdatedAt = currentDate,
-						ClosedAt = currentDate,
 						CreatedBy = GetUserName(),
 						DeEscalation = currentDate,
 						RagRatingName = ragRatingName,
@@ -195,7 +193,6 @@ namespace ConcernsCaseWork.Pages.Case.Concern
 			if (string.IsNullOrEmpty(trustUkPrn))
 				throw new Exception("Cache TrustUkprn is null");
 		
-			CreateRecordsModel = userState.CreateCaseModel.CreateRecordsModel;
 			TrustAddress = await _trustModelService.GetTrustAddressByUkPrn(trustUkPrn);
 			CreateRecordsModel = new List<CreateRecordModel>();
 			RatingsModel = await _ratingModelService.GetRatingsModel();

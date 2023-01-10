@@ -18,7 +18,7 @@ namespace ConcernsCaseWork.Service.Records
 		public DateTimeOffset ReviewAt { get; }
 		
 		[JsonProperty("closedAt")]
-		public DateTimeOffset ClosedAt { get; }
+		public DateTimeOffset? ClosedAt { get; }
 		
 		[JsonProperty("name")]
 		public string Name { get; }
@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Service.Records
 		public long StatusId { get; }
 		
 		[JsonConstructor]
-		public RecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset closedAt, 
+		public RecordDto(DateTimeOffset createdAt, DateTimeOffset updatedAt, DateTimeOffset reviewAt, DateTimeOffset? closedAt, 
 			string name, string description, string reason, long caseUrn, long typeId, 
 			long ratingId, long id, long statusId) => 
 			(CreatedAt, UpdatedAt, ReviewAt, ClosedAt, Name, Description, Reason, CaseUrn, TypeId, RatingId, Id, StatusId) = 

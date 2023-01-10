@@ -1,11 +1,10 @@
 using ConcernsCaseWork.Models.CaseActions;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Actions
 {
 	public interface IActionsModelService
 	{
-		Task<IList<ActionSummaryModel>> GetActionsSummary(long caseUrn);
+		Task<ActionSummaryBreakdownModel> GetActionsSummary(long caseUrn);
 	}
 }

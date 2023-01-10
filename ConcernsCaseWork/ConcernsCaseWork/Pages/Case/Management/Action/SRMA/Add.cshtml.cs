@@ -145,6 +145,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			var dtr_year = Request.Form["dtr-year"];
 			var dtString = $"{dtr_day}-{dtr_month}-{dtr_year}";
 			var dateOffered = DateTimeHelper.ParseExact(dtString);
+			var now = DateTime.Now;
+			var createdBy = User.Identity.Name;
 
 			var srma = new SRMAModel(
 				0,
@@ -157,7 +159,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 				Enum.Parse<SRMAStatus>(status),
 				notes,
 				SRMAReasonOffered.Unknown,
-				DateTime.Now
+				now,
+				now,
+				createdBy
 				);
 
 			return srma;

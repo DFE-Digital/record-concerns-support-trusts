@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         private readonly Mock<IUseCase<int, SRMAResponse>> _mockGetSRMAById;
         private readonly Mock<IUseCase<PatchSRMARequest, SRMAResponse>> _mockPatchSRMAUseCase;
         private readonly SRMAController controllerSUT;
-        private string dtSerialisationFormat = "dd-MM-yyyy";
+        private readonly string dtSerialisationFormat = "dd-MM-yyyy";
 
         public SRMAControllerTests()
         {
@@ -45,12 +45,12 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         public void Create_ReturnsApiSingleResponseWithNewSRMA()
         {
             var status = SRMAStatus.Deployed;
-            var datetOffered = DateTime.Now.AddDays(-5);
+            var dateOffered = DateTime.Now.AddDays(-5);
 
             var response = Builder<SRMAResponse>
                 .CreateNew()
                 .With(r => r.Status = status)
-                .With(r => r.DateOffered = datetOffered)
+                .With(r => r.DateOffered = dateOffered)
                 .Build();
 
             var expectedResponse = new ApiSingleResponseV2<SRMAResponse>(response);
@@ -61,7 +61,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
             var result = controllerSUT.Create(new CreateSRMARequest
             {
-                DateOffered = datetOffered,
+                DateOffered = dateOffered,
                 Status = status
             });
 
@@ -368,10 +368,10 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                      updatedByDelegate = req.Delegate(srmaModel);
                  });
 
-            controllerSUT.UpdateDateClosed(srmaId, targetDateClosed.ToString(dtSerialisationFormat));
+            controllerSUT.UpdateDateClosed(srmaId);
 
             updatedByDelegate.Should().NotBeNull();
-            updatedByDelegate.ClosedAt.Should().Be(targetDateClosed);
+			updatedByDelegate.ClosedAt.Should().NotBeNull();
         }
     }
 }

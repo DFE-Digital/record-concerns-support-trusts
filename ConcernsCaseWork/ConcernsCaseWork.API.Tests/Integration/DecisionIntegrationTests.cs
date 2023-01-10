@@ -5,7 +5,6 @@ using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
-using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using FluentAssertions;
 using System;
@@ -17,27 +16,27 @@ using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Integration
 {
-	public class DecisionIntegrationTests : IClassFixture<ApiTestFixture>
+	[Collection(ApiTestCollection.ApiTestCollectionName)]
+	public class DecisionIntegrationTests
 	{
-		private HttpClient _client;
-		private Fixture _fixture;
-		private ConcernsDbContext _context;
+		private readonly HttpClient _client;
+		private readonly Fixture _autoFixture;
+		private readonly ApiTestFixture _testFixture;
 
-		private DateTimeOffset _decisionMadeDate = new DateTimeOffset(2022, 1, 1, 0, 0, 0, new TimeSpan());
-		private DateTimeOffset _decisionEffectiveDate = new DateTimeOffset(2022, 5, 5, 0, 0, 0, new TimeSpan());
+		private readonly DateTimeOffset _decisionMadeDate = new DateTimeOffset(2022, 1, 1, 0, 0, 0, new TimeSpan());
+		private readonly DateTimeOffset _decisionEffectiveDate = new DateTimeOffset(2022, 5, 5, 0, 0, 0, new TimeSpan());
 
 		public DecisionIntegrationTests(ApiTestFixture apiTestFixture)
 		{
 			_client = apiTestFixture.Client;
-			_context = apiTestFixture.DbContext;
-
-			_fixture = new();
+			_autoFixture = new();
+			_testFixture = apiTestFixture;
 		}
 
 		[Fact]
 		public async Task When_Get_HasNoOutcome_Returns_200()
 		{
-			var request = _fixture.Create<CreateDecisionRequest>();
+			var request = _autoFixture.Create<CreateDecisionRequest>();
 			request.TotalAmountRequested = 100;
 
 			var concernsCase = await CreateConcernsCase();
@@ -60,10 +59,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		[Fact]
 		public async Task When_Get_HasOutcome_Returns_200()
 		{
-			var decisionRequest = _fixture.Create<CreateDecisionRequest>();
+			var decisionRequest = _autoFixture.Create<CreateDecisionRequest>();
 			decisionRequest.TotalAmountRequested = 100;
 
-			var outcomeRequest = _fixture.Create<CreateDecisionOutcomeRequest>();
+			var outcomeRequest = _autoFixture.Create<CreateDecisionOutcomeRequest>();
 
 			var concernsCase = await CreateConcernsCase();
 			var concernsCaseId = concernsCase.Id;
@@ -107,8 +106,10 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				StatusId = 1
 			};
 
-			var result = _context.ConcernsCase.Add(toAdd);
-			await _context.SaveChangesAsync();
+			using var context = _testFixture.GetContext();
+
+			var result = context.ConcernsCase.Add(toAdd);
+			await context.SaveChangesAsync();
 
 			return result.Entity;
 		}

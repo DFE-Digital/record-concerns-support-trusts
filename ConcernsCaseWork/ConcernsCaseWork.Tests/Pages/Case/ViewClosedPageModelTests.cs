@@ -18,7 +18,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -107,16 +106,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
 
-			var allActions = new List<ActionSummaryModel>();
+			var actionBreakdown = new ActionSummaryBreakdownModel();
 
 			var openActions = _fixture
 				.Build<ActionSummaryModel>()
 				.Without(a => a.ClosedDate)
 				.CreateMany().ToList();
-			allActions.AddRange(openActions);
+
+			actionBreakdown.OpenActions = openActions;
 
 			var closedActions = _fixture.CreateMany<ActionSummaryModel>().ToList();
-			allActions.AddRange(closedActions);
+			actionBreakdown.ClosedActions = closedActions;
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
@@ -125,7 +125,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn( It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
 			mockActionsModelService.Setup(a => a.GetActionsSummary(It.IsAny<long>()))
-				.ReturnsAsync(allActions);
+				.ReturnsAsync(actionBreakdown);
 			mockStatusCachedService.Setup(a => a.GetStatusByName(StatusEnum.Close.ToString()))
 				.ReturnsAsync(new StatusDto("Closed", DateTimeOffset.Now, DateTimeOffset.Now, caseModel.StatusId));
 
@@ -224,7 +224,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			var caseModel = CaseFactory.BuildCaseModel();
 			var trustDetailsModel = TrustFactory.BuildTrustDetailsModel();
 			var recordsModel = RecordFactory.BuildListRecordModel();
-			var closedActions = ActionsSummaryFactory.BuildListOfActionSummaries();
+			var closedActions = ActionsSummaryFactory.BuildListOfActionSummaries().ToList();
+
+			var actionBreakdown = new ActionSummaryBreakdownModel()
+			{
+				ClosedActions = closedActions
+			};
 
 			mockCaseModelService.Setup(c => c.GetCaseByUrn(It.IsAny<long>()))
 				.ReturnsAsync(caseModel);
@@ -233,7 +238,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			mockRecordModelService.Setup(r => r.GetRecordsModelByCaseUrn( It.IsAny<long>()))
 				.ReturnsAsync(recordsModel);
 			mockActionsModelService.Setup(a => a.GetActionsSummary(It.IsAny<long>()))
-				.ReturnsAsync(closedActions);
+				.ReturnsAsync(actionBreakdown);
 			mockStatusCachedService.Setup(a => a.GetStatusByName(StatusEnum.Close.ToString()))
 				.ReturnsAsync(new StatusDto("Open", DateTimeOffset.Now, DateTimeOffset.Now, 99999));
 

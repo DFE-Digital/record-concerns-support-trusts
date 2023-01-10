@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.API.UseCases
 {
     public class IndexConcernsStatuses : IIndexConcernsStatuses
     {
-        private IConcernsStatusGateway _concernsStatusGateway;
+        private readonly IConcernsStatusGateway _concernsStatusGateway;
 
         public IndexConcernsStatuses(IConcernsStatusGateway concernsStatusGateway)
         {

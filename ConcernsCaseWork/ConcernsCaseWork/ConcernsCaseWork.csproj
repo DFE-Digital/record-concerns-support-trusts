@@ -1,241 +1,272 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
-    <UserSecretsId>ac20b61d-9280-4be5-bbad-ad27aaff2f24</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+		<UserSecretsId>ac20b61d-9280-4be5-bbad-ad27aaff2f24</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<Version>1.0.0</Version>
+		<AssemblyVersion>1.0.0</AssemblyVersion>
+		<FileVersion>1.0.*</FileVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
-    <PackageReference Include="AutoMapper" Version="12.0.0" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
-    <PackageReference Include="FluentAssertions" Version="6.8.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.11" />
-    <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.25.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.17.0" />
-    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" Version="0.17.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="Sentry.AspNetCore" Version="3.24.0" />
-    <PackageReference Include="Sentry.Serilog" Version="3.24.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.4.0" />
-  </ItemGroup>
+	<PropertyGroup Label="custom">
+		<BuildDateTime>$([System.DateTime]::UtcNow.ToString("s"))</BuildDateTime>
+		<BuildGuid>$([System.Guid]::NewGuid().ToString())</BuildGuid>
+		<CustomBuildMessage></CustomBuildMessage>
+	</PropertyGroup>
 
-  <ItemGroup>
-	  <ProjectReference Include="..\ConcernsCaseWork.API.Contracts\ConcernsCaseWork.API.Contracts.csproj" />
-	  <ProjectReference Include="..\ConcernsCaseWork.API\ConcernsCaseWork.API.csproj" />
-	  <ProjectReference Include="..\ConcernsCaseWork.CoreTypes\ConcernsCaseWork.CoreTypes.csproj" />
-	  <ProjectReference Include="..\ConcernsCaseWork.Service\ConcernsCaseWork.Service.csproj" />
-	  <ProjectReference Include="..\ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj" />
-	  <ProjectReference Include="..\ConcernsCaseWork.Redis\ConcernsCaseWork.Redis.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<AssemblyAttribute Include="ConcernsCaseWork.Attributes.BuildTimeAttribute">
+			<_Parameter1>"$(BuildDateTime)"</_Parameter1>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="ConcernsCaseWork.Attributes.BuildGuidAttribute">
+			<_Parameter1>"$(BuildGuid)"</_Parameter1>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="ConcernsCaseWork.Attributes.CustomBuildMessageAttribute">
+			<_Parameter1>"$(CustomBuildMessage)"</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\assets" />
-    <Folder Include="wwwroot\dist" />
-    <Folder Include="Pages\Case\Management\Action\Decision\Outcome\" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
+		<PackageReference Include="AutoMapper" Version="12.0.0" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+		<PackageReference Include="FluentAssertions" Version="6.8.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.11" />
+		<PackageReference Include="Microsoft.Identity.Web.UI" Version="1.25.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.17.0" />
+		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" Version="0.17.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="Sentry.AspNetCore" Version="3.24.0" />
+		<PackageReference Include="Sentry.Serilog" Version="3.24.0" />
+		<PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.4.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Update="wwwroot\files\Risk_Management_Framework.pdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ConcernsCaseWork.API.Contracts\ConcernsCaseWork.API.Contracts.csproj" />
+		<ProjectReference Include="..\ConcernsCaseWork.API\ConcernsCaseWork.API.csproj" />
+		<ProjectReference Include="..\ConcernsCaseWork.CoreTypes\ConcernsCaseWork.CoreTypes.csproj" />
+		<ProjectReference Include="..\ConcernsCaseWork.Service\ConcernsCaseWork.Service.csproj" />
+		<ProjectReference Include="..\ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj" />
+		<ProjectReference Include="..\ConcernsCaseWork.Redis\ConcernsCaseWork.Redis.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\bold-affa96571d-v2.woff" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\bold-b542beb274-v2.woff2" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\light-94a07e06a1-v2.woff2" />
-    <_ContentIncludedByDefault Remove="wwwroot\assets\fonts\light-f591b13f7d-v2.woff" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\accessible-autocomplete.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\accessible-autocomplete.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\accessible-autocomplete.js.map" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\lib\accessible-autocomplete.preact.min.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\lib\accessible-autocomplete.preact.min.js.map" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\lib\accessible-autocomplete.react.min.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\lib\accessible-autocomplete.react.min.js.map" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\all-ie8.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\all.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\all.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\govuk-logotype-crown.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-alert-information.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-alert-success.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-alert-warning.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-arrow-black-down.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-arrow-black-up.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-arrow-white-down.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-arrow-white-up.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-close-cross-black.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-document.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-document.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-progress-tick.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-progress-tick.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-search-black.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-search-blue.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-search-white.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-tag-remove-cross-white.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-tag-remove-cross.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-toggle-plus-minus.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-wysiwyg-bold.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-wysiwyg-italic.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-wysiwyg-ordered-list.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-wysiwyg-underline.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-wysiwyg-unordered-list.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\moj-logotype-crest.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\moj-logotype-crest.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\action-bar\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\action-bar\_action-bar.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\add-another\add-another.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\add-another\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\add-another\_add-another.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\badge\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\badge\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\badge\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\badge\_badge.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\banner\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\banner\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\banner\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\banner\_banner.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\button-menu\button-menu.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\button-menu\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\button-menu\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\button-menu\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\button-menu\_button-menu.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\cookie-banner\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\cookie-banner\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\cookie-banner\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\cookie-banner\_cookie-banner.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\currency-input\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\currency-input\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\currency-input\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\currency-input\_currency-input.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\filter-toggle-button\filter-toggle-button.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\filter-toggle-button\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\filter\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\filter\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\filter\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\filter\_filter.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\form-validator\form-validator.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\form-validator\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\header\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\header\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\header\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\header\_header.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\identity-bar\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\identity-bar\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\identity-bar\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\identity-bar\_identity-bar.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\messages\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\messages\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\messages\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\messages\_messages.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-file-upload\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-file-upload\multi-file-upload.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-file-upload\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-file-upload\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-file-upload\_multi-file-upload.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-select\multi-select.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-select\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-select\_multi-select.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\notification-badge\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\notification-badge\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\notification-badge\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\notification-badge\_notification-badge.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\organisation-switcher\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\organisation-switcher\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\organisation-switcher\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\organisation-switcher\_organisation-switcher.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\page-header-actions\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\page-header-actions\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\page-header-actions\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\page-header-actions\_page-header-actions.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\pagination\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\pagination\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\pagination\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\pagination\_pagination.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\password-reveal\password-reveal.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\password-reveal\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\password-reveal\_password-reveal.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\primary-navigation\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\primary-navigation\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\primary-navigation\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\primary-navigation\_primary-navigation.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\progress-bar\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\progress-bar\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\progress-bar\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\progress-bar\_progress-bar.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\rich-text-editor\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\rich-text-editor\rich-text-editor.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\rich-text-editor\_rich-text-editor.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\search-toggle\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\search-toggle\search-toggle.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\search-toggle\search-toggle.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\search\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\search\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\search\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\search\_search.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\side-navigation\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\side-navigation\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\side-navigation\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\side-navigation\_side-navigation.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\sortable-table\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\sortable-table\sortable-table.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\sortable-table\_sortable-table.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\sub-navigation\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\sub-navigation\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\sub-navigation\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\sub-navigation\_sub-navigation.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\tag\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\tag\_tag.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\task-list\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\task-list\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\task-list\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\task-list\_task-list.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\ticket-panel\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\ticket-panel\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\ticket-panel\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\ticket-panel\_ticket-panel.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\timeline\macro.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\timeline\README.md" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\timeline\template.njk" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\timeline\_timeline.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\_all.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\filters\all.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\helpers.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\helpers\_all.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\helpers\_hidden.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\namespace.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\objects\_all.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\objects\_filter-layout.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\objects\_scrollable-pane.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\objects\_width-container.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\settings\_all.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\settings\_assets.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\settings\_colours.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\settings\_measurements.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\utilities\_all.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\utilities\_hidden.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\utilities\_width-container.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\vendor\html5shiv.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\vendor\html5shiv.js.LICENSE.txt" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\vendor\jquery.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\moj\vendor\jquery.js.LICENSE.txt" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="wwwroot\assets" />
+		<Folder Include="wwwroot\dist" />
+		<Folder Include="Pages\Case\Management\Action\Decision\Outcome\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Pages\Case\Concern\Index.cshtml.cs">
-      <DependentUpon>Index.cshtml</DependentUpon>
-    </Compile>
-  </ItemGroup>
+	<ItemGroup>
+		<Content Update="wwwroot\files\Risk_Management_Framework.pdf">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Pages\Case\Management\Action\Decision\Outcome\" />
-  </ItemGroup>
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema=" " /></VisualStudio></ProjectExtensions>
+	<ItemGroup>
+		<_ContentIncludedByDefault Remove="wwwroot\assets\fonts\bold-affa96571d-v2.woff" />
+		<_ContentIncludedByDefault Remove="wwwroot\assets\fonts\bold-b542beb274-v2.woff2" />
+		<_ContentIncludedByDefault Remove="wwwroot\assets\fonts\light-94a07e06a1-v2.woff2" />
+		<_ContentIncludedByDefault Remove="wwwroot\assets\fonts\light-f591b13f7d-v2.woff" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\accessible-autocomplete.min.css" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\accessible-autocomplete.min.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\accessible-autocomplete.min.js.map" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\lib\accessible-autocomplete.preact.min.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\lib\accessible-autocomplete.preact.min.js.map" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\lib\accessible-autocomplete.react.min.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\autocomplete\lib\accessible-autocomplete.react.min.js.map" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\all-ie8.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\all.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\all.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\govuk-logotype-crown.png" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-alert-information.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-alert-success.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-alert-warning.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-arrow-black-down.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-arrow-black-up.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-arrow-white-down.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-arrow-white-up.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-close-cross-black.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-document.png" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-document.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-progress-tick.png" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-progress-tick.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-search-black.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-search-blue.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-search-white.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-tag-remove-cross-white.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-tag-remove-cross.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-toggle-plus-minus.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-wysiwyg-bold.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-wysiwyg-italic.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-wysiwyg-ordered-list.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-wysiwyg-underline.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\icon-wysiwyg-unordered-list.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\moj-logotype-crest.png" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\assets\images\moj-logotype-crest.svg" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\action-bar\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\action-bar\_action-bar.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\add-another\add-another.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\add-another\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\add-another\_add-another.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\badge\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\badge\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\badge\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\badge\_badge.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\banner\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\banner\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\banner\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\banner\_banner.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\button-menu\button-menu.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\button-menu\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\button-menu\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\button-menu\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\button-menu\_button-menu.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\cookie-banner\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\cookie-banner\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\cookie-banner\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\cookie-banner\_cookie-banner.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\currency-input\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\currency-input\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\currency-input\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\currency-input\_currency-input.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\filter-toggle-button\filter-toggle-button.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\filter-toggle-button\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\filter\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\filter\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\filter\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\filter\_filter.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\form-validator\form-validator.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\form-validator\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\header\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\header\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\header\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\header\_header.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\identity-bar\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\identity-bar\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\identity-bar\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\identity-bar\_identity-bar.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\messages\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\messages\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\messages\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\messages\_messages.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-file-upload\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-file-upload\multi-file-upload.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-file-upload\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-file-upload\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-file-upload\_multi-file-upload.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-select\multi-select.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-select\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\multi-select\_multi-select.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\notification-badge\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\notification-badge\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\notification-badge\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\notification-badge\_notification-badge.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\organisation-switcher\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\organisation-switcher\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\organisation-switcher\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\organisation-switcher\_organisation-switcher.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\page-header-actions\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\page-header-actions\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\page-header-actions\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\page-header-actions\_page-header-actions.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\pagination\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\pagination\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\pagination\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\pagination\_pagination.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\password-reveal\password-reveal.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\password-reveal\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\password-reveal\_password-reveal.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\primary-navigation\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\primary-navigation\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\primary-navigation\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\primary-navigation\_primary-navigation.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\progress-bar\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\progress-bar\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\progress-bar\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\progress-bar\_progress-bar.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\rich-text-editor\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\rich-text-editor\rich-text-editor.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\rich-text-editor\_rich-text-editor.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\search-toggle\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\search-toggle\search-toggle.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\search-toggle\search-toggle.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\search\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\search\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\search\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\search\_search.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\side-navigation\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\side-navigation\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\side-navigation\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\side-navigation\_side-navigation.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\sortable-table\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\sortable-table\sortable-table.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\sortable-table\_sortable-table.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\sub-navigation\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\sub-navigation\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\sub-navigation\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\sub-navigation\_sub-navigation.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\tag\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\tag\_tag.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\task-list\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\task-list\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\task-list\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\task-list\_task-list.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\ticket-panel\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\ticket-panel\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\ticket-panel\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\ticket-panel\_ticket-panel.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\timeline\macro.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\timeline\README.md" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\timeline\template.njk" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\timeline\_timeline.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\components\_all.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\filters\all.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\helpers.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\helpers\_all.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\helpers\_hidden.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\namespace.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\objects\_all.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\objects\_filter-layout.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\objects\_scrollable-pane.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\objects\_width-container.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\settings\_all.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\settings\_assets.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\settings\_colours.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\settings\_measurements.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\utilities\_all.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\utilities\_hidden.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\utilities\_width-container.scss" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\vendor\html5shiv.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\vendor\html5shiv.js.LICENSE.txt" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\vendor\jquery.js" />
+		<_ContentIncludedByDefault Remove="wwwroot\dist\moj\vendor\jquery.js.LICENSE.txt" />
+	</ItemGroup>
 
+	<ItemGroup>
+		<Compile Update="Pages\Case\Concern\Index.cshtml.cs">
+			<DependentUpon>Index.cshtml</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="Pages\Case\Management\Action\Decision\Outcome\" />
+	</ItemGroup>
+	<ProjectExtensions>
+		<VisualStudio>
+			<UserProperties appsettings_1json__JsonSchema=" " />
+		</VisualStudio>
+	</ProjectExtensions>
+
+	<Target Name="Date" BeforeTargets="BeforeBuild">
+		<WriteLinesToFile File="$(IntermediateOutputPath)gen.cs" Lines="static partial class Builtin { public static long CompileTime = $([System.DateTime]::UtcNow.Ticks) %3B }" Overwrite="true" />
+		<ItemGroup>
+			<Compile Include="$(IntermediateOutputPath)gen.cs" />
+		</ItemGroup>
+	</Target>
 </Project>

@@ -1,18 +1,15 @@
 using Ardalis.GuardClauses;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Cases.Create;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -113,6 +110,8 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 
 		private SRMAModel CreateSrma()
 		{
+			var now = DateTime.Now;
+			
 			var srma = new SRMAModel(
 				0,
 				0,
@@ -124,7 +123,9 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 				Status,
 				Notes,
 				SRMAReasonOffered.Unknown,
-				DateTime.Now
+				now,
+				now,
+				User.Identity.Name
 				);
 
 			return srma;

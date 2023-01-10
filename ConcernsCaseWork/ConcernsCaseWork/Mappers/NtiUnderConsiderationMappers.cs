@@ -3,7 +3,6 @@ using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace ConcernsCaseWork.Mappers
 {
@@ -33,7 +32,7 @@ namespace ConcernsCaseWork.Mappers
 				Id = ntiDto.Id,
 				CaseUrn = ntiDto.CaseUrn,
 				NtiReasonsForConsidering = ntiDto.Reasons?.Select(r => ToServiceModel(r)).ToArray(),	
-				CreatedAt = ntiDto.CreatedAt.Date,
+				CreatedAt = ntiDto.CreatedAt,
 				Notes = ntiDto.Notes,
 				UpdatedAt = ntiDto.UpdatedAt,
 				ClosedAt = ntiDto.ClosedAt,
@@ -75,7 +74,9 @@ namespace ConcernsCaseWork.Mappers
 				Name = "NTI Under Consideration",
 				OpenedDate = model.CreatedAt.ToDayMonthYear(),
 				RelativeUrl = $"/case/{model.CaseUrn}/management/action/ntiunderconsideration/{model.Id}",
-				StatusName = statusName
+				StatusName = statusName,
+				RawOpenedDate = model.CreatedAt,
+				RawClosedDate = model.ClosedAt
 			};
 
 			return result;

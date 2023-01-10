@@ -18,10 +18,11 @@ describe("User edits the trust risk on existing case", () => {
 
 		cy.selectConcernType();
 		cy.selectRiskToTrust();
+		cy.selectTerritory();
 		cy.enterConcernDetails();
 
 		cy.task(LogTask, "Navigating to the risk rating page");
-		cy.get('span[class="govuk-visually-hidden"]').contains('risk rating').parent().click();
+		cy.get('span[class="govuk-visually-hidden"]').contains('risk to trust').parent().click();
 		cy.editRiskToTrust("apply", "Amber");
 		cy.get('[class="govuk-table__cell govuk-label-wrapper"]').children()
 		.should('contain.text', 'Amber')
@@ -32,7 +33,7 @@ describe("User edits the trust risk on existing case", () => {
 		cy.get('[id="close-case-button"]').should('be.visible');
 
 		cy.log("Cancelled, navigating to the management page")
-		cy.get('span[class="govuk-visually-hidden"]').contains('risk rating').parent().click();
+		cy.get('span[class="govuk-visually-hidden"]').contains('risk to trust').parent().click();
 		cy.editRiskToTrust("cancel");
 		cy.get('*[name="caseID"]').should('be.visible');
 

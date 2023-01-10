@@ -13,8 +13,6 @@ namespace ConcernsCaseWork.Redis.Models
 
 		public DateTimeOffset ReviewAt { get; set; }
 
-		public DateTimeOffset ClosedAt { get; set; }
-
 		public string CreatedBy { get; set; }
 		
 		public string CrmEnquiry { get; set; }
@@ -48,7 +46,7 @@ namespace ConcernsCaseWork.Redis.Models
 
 		public IList<string> RagRatingCss { get; set; }
 		
-		public TerritoryEnum? Territory { get; set; }
+		public Territory? Territory { get; set; }
 
 		public IList<CreateRecordModel> CreateRecordsModel { get; set; } = new List<CreateRecordModel>();
 	}

@@ -10,7 +10,6 @@ using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Services.Decisions
 {
@@ -35,6 +34,8 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.ClosedDate.Should().Be("30-08-2024");
 			result.Name.Should().Be($"Decision: {apiDecision.Title}");
 			result.RelativeUrl.Should().Be($"/case/{apiDecision.ConcernsCaseUrn}/management/action/decision/{apiDecision.DecisionId}");
+			result.RawOpenedDate.Should().Be(apiDecision.CreatedAt);
+			result.RawClosedDate.Should().Be(apiDecision.ClosedAt);
 		}
 		
 		[Test]
@@ -52,17 +53,6 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			var result = DecisionMapping.ToActionSummary(apiDecision);
 
 			result.StatusName.Should().Be(expectedStatusName);
-		}
-				
-		[Test]
-		public void ToActionSummary_WhenClosedAtIsNull_ReturnsCorrectModel()
-		{
-			var apiDecision = _fixture.Create<DecisionSummaryResponse>();
-			apiDecision.ClosedAt = null;
-
-			var result = DecisionMapping.ToActionSummary(apiDecision);
-
-			result.ClosedDate.Should().BeNull();
 		}
 
 		[TestCase(null, "No")]
@@ -85,6 +75,8 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 				DecisionType.NoticeToImprove,
 				DecisionType.RepayableFinancialSupport
 			};
+			apiDecision.CreatedAt = new DateTimeOffset(2022, 12, 24, 0, 0, 0, new TimeSpan());
+			apiDecision.ClosedAt = new DateTimeOffset(2022, 12, 25, 0, 0, 0, new TimeSpan());
 
 			apiDecision.Outcome = new DecisionOutcome()
 			{
@@ -115,6 +107,8 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.SupportingNotes.Should().Be(apiDecision.SupportingNotes);
 			result.EditLink.Should().Be("/case/2/management/action/decision/addOrUpdate/10");
 			result.BackLink.Should().Be("/case/2/management");
+			result.CreatedDate.Should().Be("24 December 2022");
+			result.ClosedDate.Should().Be("25 December 2022");
 
 			result.Outcome.Status.Should().Be("Approved with conditions");
 			result.Outcome.Authorizer.Should().Be("Countersigning Deputy Director");
