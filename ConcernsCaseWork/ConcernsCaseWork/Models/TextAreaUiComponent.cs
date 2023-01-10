@@ -1,10 +1,7 @@
 namespace ConcernsCaseWork.Models;
 
-public record TextAreaUiComponent
+public record TextAreaUiComponent(string ElementRootId, string Name, string Heading) : BaseUiComponent(ElementRootId, Name, Heading)
 {
-	public string ElementRootId { get; set; }
 	public int MaxLength { get; set; }
-	public string Heading { get; set; }
-	public string Name { get; set; }
 	public string Contents { get; set; }
 }

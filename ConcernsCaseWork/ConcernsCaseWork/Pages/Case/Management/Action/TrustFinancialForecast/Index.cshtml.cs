@@ -22,13 +22,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 		[BindProperty]
 		public string Notes { get; set; }
 
-		public TextAreaUiComponent NotesTextArea = new()
+		public TextAreaUiComponent NotesTextArea = new("notes", nameof(Notes), "Notes (optional)")
 		{
-			ElementRootId = "notes",
-			Contents = string.Empty,
-			Heading = "Notes (optional)",
 			MaxLength = 2000,
-			Name = nameof(Notes)
 		};
 
 		public IndexPageModel(

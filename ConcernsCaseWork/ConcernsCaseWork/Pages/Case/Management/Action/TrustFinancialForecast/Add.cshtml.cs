@@ -27,47 +27,47 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 		//private readonly ITrustFinancialForecastService _trustFinancialForecastService;
 		private readonly ILogger<AddPageModel> _logger;
 		
+		[BindProperty(Name = "Urn", SupportsGet = true)] public int Urn { get; init; }
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case overview");
+		
 		[BindProperty] public string ForecastingToolRanAtSelected { get; set; }
-		[BindProperty] public OptionalDateTimeUiComponent SFSOInitialReviewHappenedAt { get; set; } = new(ElementRootId: "sfso-initial-review-happened-at", Name: nameof(SFSOInitialReviewHappenedAt));
-		[BindProperty] public OptionalDateTimeUiComponent TrustRespondedAt { get; set; } = new(ElementRootId: "trust-responded-at", Name: nameof(TrustRespondedAt));
-		[BindProperty(Name = "Urn", SupportsGet = true)] public int Urn { get; set; }
-		[BindProperty] public string Notes { get; set; }
+		[BindProperty] public OptionalDateTimeUiComponent SFSOInitialReviewHappenedAt { get; set; } =
+			new("sfso-initial-review-happened-at", nameof(SFSOInitialReviewHappenedAt), "When did SFSO initial review happen?");
+		[BindProperty] public OptionalDateTimeUiComponent TrustRespondedAt { get; set; } 
+			= new("trust-responded-at", nameof(TrustRespondedAt), "When did the trust respond?");
+		[BindProperty] public string NotesEntered { get; set; }
 		[BindProperty] public string WasTrustResponseSatisfactorySelected { get; set; }
 		[BindProperty] public string SRMAOfferedAfterTFFSelected { get; set; }
 
-		public TextAreaUiComponent NotesTextAreaComponent { get; } = new()
+		public TextAreaUiComponent NotesTextAreaComponent { get; } = new("notes", nameof(NotesEntered), "Notes (optional)")
 		{
-			ElementRootId = "notes",
-			Contents = string.Empty,
-			Heading = "Notes (optional)",
-			MaxLength = 2000,
-			Name = nameof(Notes)
+			MaxLength = 2000
 		};
 		
 		public RadioButtonsUiComponent WasTrustResponseSatisfactoryComponent { get; } =
-			new(ElementRootId: "trust-response-satisfactory", Name: nameof(WasTrustResponseSatisfactorySelected))
+			new("trust-response-satisfactory", nameof(WasTrustResponseSatisfactorySelected), "Was the trust result satisfactory?")
 			{
-				RadioItems = new List<RadioItem>()
+				RadioItems = new List<RadioItem>
 				{
 					new () { Text = "Satisfactory" },
 					new () { Text = "Not satisfactory" }
 				}
 			};
 		
-		public RadioButtonsUiComponent SRMAOfferedAfterTFFComponent  { get; } =
-			new(ElementRootId: "srma-offered-after-tff", Name: nameof(SRMAOfferedAfterTFFSelected))
+		public RadioButtonsUiComponent SRMAOfferedAfterTFFComponent { get; } =
+			new("srma-offered-after-tff",  nameof(SRMAOfferedAfterTFFSelected), "SRMA offered after TFF?")
 			{
-				RadioItems = new List<RadioItem>()
+				RadioItems = new List<RadioItem>
 				{
 					new () { Text = "Yes" },
 					new () { Text = "No" }
 				}
 			};
 		
-		public RadioButtonsUiComponent ForecastingToolRanAtComponent  { get; } =
-			new(ElementRootId: "forecasting-tool-ran-at", Name: nameof(ForecastingToolRanAtSelected))
+		public RadioButtonsUiComponent ForecastingToolRanAtComponent { get; } =
+			new(ElementRootId: "forecasting-tool-ran-at", Name: nameof(ForecastingToolRanAtSelected), "When was the forecasting tool run?")
 			{
-				RadioItems = new List<RadioItem>()
+				RadioItems = new List<RadioItem>
 				{
 					new () { Text = "Current year - Spring" },
 					new () { Text = "Current year - Summer" },
@@ -76,7 +76,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 				}
 			};
 		
-		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case overview");
 
 		public AddPageModel(
 			//ITrustFinancialForecastService trustFinancialForecastService, 
@@ -127,119 +126,15 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 			return Page();
 		}
 
-	// 	private void SetupPage(long caseUrn, long? trustFinancialForecastId)
-	// 	{
-	// 		ViewData[ViewDataConstants.Title] = trustFinancialForecastId.HasValue ? "Edit trustFinancialForecast" : "Add trustFinancialForecast";
-	//
-	// 		CaseUrn = (CaseUrn)caseUrn;
-	// 		TrustFinancialForecastId = trustFinancialForecastId;
-	//
-	// 		TrustFinancialForecastTypeCheckBoxes = BuildTrustFinancialForecastTypeCheckBoxes();
-	// 	}
-	//
-	// 	private async Task<CreateTrustFinancialForecastRequest> CreateTrustFinancialForecastModel(long caseUrn, long? trustFinancialForecastId)
-	// 	{
-	// 		var result = new CreateTrustFinancialForecastRequest();
-	//
-	// 		result.ConcernsCaseUrn = (int)caseUrn;
-	//
-	// 		if (trustFinancialForecastId.HasValue)
-	// 		{
-	// 			var apiTrustFinancialForecast = await _trustFinancialForecastService.GetTrustFinancialForecast(caseUrn, (int)trustFinancialForecastId);
-	//
-	// 			result = TrustFinancialForecastMapping.ToEditTrustFinancialForecastModel(apiTrustFinancialForecast);
-	// 		}
-	//
-	// 		return result;
-	// 	}
-	//
-	// 	private DateTime ParseDate(OptionalDateModel date)
-	// 	{
-	// 		if (date.IsEmpty())
-	// 		{
-	// 			return new DateTime();
-	// 		}
-	//
-	// 		var result = DateTimeHelper.ParseExact(date.ToString());
-	//
-	// 		return result;
-	// 	}
-	//
-	// 	private List<TrustFinancialForecastTypeCheckBox> BuildTrustFinancialForecastTypeCheckBoxes()
-	// 	{
-	// 		var result = new List<TrustFinancialForecastTypeCheckBox>()
-	// 		{
-	// 			new TrustFinancialForecastTypeCheckBox()
-	// 			{
-	// 				TrustFinancialForecastType = TrustFinancialForecastType.NoticeToImprove,
-	// 				Hint = "An NTI is an intervention tool. It's used to set out conditions that a trust must meet to act on area(s) of concern."
-	// 			},
-	// 			new TrustFinancialForecastTypeCheckBox()
-	// 			{
-	// 				TrustFinancialForecastType = TrustFinancialForecastType.Section128,
-	// 				Hint = "A section 128 direction gives the Secretary of State the power to block an individual from taking part in the management of an independent school (including academies and free schools)."
-	// 			},
-	// 			new TrustFinancialForecastTypeCheckBox()
-	// 			{
-	// 				TrustFinancialForecastType = TrustFinancialForecastType.QualifiedFloatingCharge,
-	// 				Hint = "A QFC helps us secure the repayment of funding we advance to an academy trust. This includes appointing an administrator, making sure the funding can be recovered and potentially disqualifying an unfit director."
-	// 			},
-	// 			new TrustFinancialForecastTypeCheckBox()
-	// 			{
-	// 				TrustFinancialForecastType = TrustFinancialForecastType.NonRepayableFinancialSupport,
-	// 				Hint = "Non-repayable grants are paid in exceptional circumstances to support a trust or academy financially."
-	// 			},
-	// 			new TrustFinancialForecastTypeCheckBox()
-	// 			{
-	// 				TrustFinancialForecastType = TrustFinancialForecastType.RepayableFinancialSupport,
-	// 				Hint = "Repayable funding are payments that trusts must repay in line with an agreed repayment plan, ideally within 3 years."
-	// 			},
-	// 			new TrustFinancialForecastTypeCheckBox()
-	// 			{
-	// 				TrustFinancialForecastType = TrustFinancialForecastType.ShortTermCashAdvance,
-	// 				Hint = "A short-term cash advance or a general annual grant (GAG) advance is given to help an academy manage its cash flow. This should be repaid within the same academy financial year."
-	// 			},
-	// 			new TrustFinancialForecastTypeCheckBox()
-	// 			{
-	// 				TrustFinancialForecastType = TrustFinancialForecastType.WriteOffRecoverableFunding,
-	// 				Hint = "A write-off can be considered if a trust cannot repay financial support previously received from us."
-	// 			},
-	// 			new TrustFinancialForecastTypeCheckBox()
-	// 			{
-	// 				TrustFinancialForecastType = TrustFinancialForecastType.OtherFinancialSupport,
-	// 				Hint = "All other types of financial support for exceptional circumstances. This includes exceptional annual grant (EAG), popular growth funding, restructuring support and start-up support."
-	// 			},
-	// 			new TrustFinancialForecastTypeCheckBox()
-	// 			{
-	// 				TrustFinancialForecastType = TrustFinancialForecastType.EstimatesFundingOrPupilNumberAdjustment,
-	// 				Hint = "Covers: a) agreements to move from lagged funding (based on pupil census data) to funding based on an estimate of the coming year’s pupil numbers, used when a school is growing; b) an adjustment to a trust's General Annual Grant (GAG) to funding based on estimated pupil numbers in line with actual pupil numbers, once these are confirmed (PNA). Also called an in-year adjustment."
-	// 			},
-	// 			new TrustFinancialForecastTypeCheckBox()
-	// 			{
-	// 				TrustFinancialForecastType = TrustFinancialForecastType.EsfaApproval,
-	// 				Hint = "Some versions of the funding agreement require trusts to seek approval from ESFA to spend or write off funds, such as severance pay or agreeing off-payroll arrangements for staff. Trusts going ahead with these trustFinancialForecasts or transactions would be in breach of their funding agreement. Also called transactions approval. This typically affects trusts under an NTI (Notice to Improve)."
-	// 			},
-	// 			new TrustFinancialForecastTypeCheckBox()
-	// 			{
-	// 				TrustFinancialForecastType = TrustFinancialForecastType.FreedomOfInformationExemptions,
-	// 				Hint = "If information qualifies as an exemption to the Freedom of Information Act, we can decline to release information. Some exemptions require ministerial approval. You must contact the FOI team if you think you need to apply an exemption to your FOI response or if you have any concerns about releasing information as part of a response."
-	// 			}
-	// 		};
-	//
-	// 		return result;
-	// 	}
-	// }
-	//
-	// public class TrustFinancialForecastTypeCheckBox
-	// {
-	// 	public TrustFinancialForecastType TrustFinancialForecastType { get; set; }
-	// 	public string Hint { get; set; }
 	}
 
 	public record CreateTrustFinancialForecastRequest
 	{
-		public DateTimeOffset ForecastingToolRunAt { get; set; }
+		public string ForecastingToolRunAt { get; set; }
 		public DateTimeOffset SFSOInitialReviewAt { get; set; }
 		public DateTimeOffset TrustRespondedAt { get; set; }
+		public string WasTrustResponseSatisfactory { get; set; }
+		public string SRMAOfferedAfterTFF { get; set; }
+		public string Notes { get; set; }
 	}
 }
