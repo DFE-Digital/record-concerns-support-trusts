@@ -22,61 +22,56 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+	[BindProperties]
 	public class AddPageModel : AbstractPageModel
 	{
 		//private readonly ITrustFinancialForecastService _trustFinancialForecastService;
 		private readonly ILogger<AddPageModel> _logger;
 		
-		[BindProperty(Name = "Urn", SupportsGet = true)] public int Urn { get; init; }
+		[BindProperty(SupportsGet = true)] public int Urn { get; init; }
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case overview");
-		
-		[BindProperty] public string ForecastingToolRanAtSelected { get; set; }
-		[BindProperty] public OptionalDateTimeUiComponent SFSOInitialReviewHappenedAt { get; set; } =
-			new("sfso-initial-review-happened-at", nameof(SFSOInitialReviewHappenedAt), "When did SFSO initial review happen?");
-		[BindProperty] public OptionalDateTimeUiComponent TrustRespondedAt { get; set; } 
-			= new("trust-responded-at", nameof(TrustRespondedAt), "When did the trust respond?");
-		[BindProperty] public string NotesEntered { get; set; }
-		[BindProperty] public string WasTrustResponseSatisfactorySelected { get; set; }
-		[BindProperty] public string SRMAOfferedAfterTFFSelected { get; set; }
+		public OptionalDateTimeUiComponent SFSOInitialReviewHappenedAt { get; set; } = new("sfso-initial-review-happened-at", nameof(SFSOInitialReviewHappenedAt), "When did SFSO initial review happen?");
+		public OptionalDateTimeUiComponent TrustRespondedAt { get; set; } = new("trust-responded-at", nameof(TrustRespondedAt), "When did the trust respond?");
 
-		public TextAreaUiComponent NotesTextAreaComponent { get; } = new("notes", nameof(NotesEntered), "Notes (optional)")
-		{
-			MaxLength = 2000
-		};
-		
-		public RadioButtonsUiComponent WasTrustResponseSatisfactoryComponent { get; } =
-			new("trust-response-satisfactory", nameof(WasTrustResponseSatisfactorySelected), "Was the trust result satisfactory?")
+		public TextAreaUiComponent Notes { get; set; } 
+			= new("notes", nameof(Notes), "Notes (optional)")
 			{
-				RadioItems = new List<RadioItem>
+				MaxLength = 2000
+			};
+		
+		public RadioButtonsUiComponent WasTrustResponseSatisfactory { get; set; } 
+			= new("trust-response-satisfactory", nameof(WasTrustResponseSatisfactory), "Was the trust result satisfactory?")
+			{
+				RadioItems = new List<SimpleRadioItem>
 				{
-					new () { Text = "Satisfactory" },
-					new () { Text = "Not satisfactory" }
+					new ("Satisfactory", "satisfactory"),
+					new ("Not satisfactory", "not-satisfactory")
+				},
+				SelectedId = "not-satisfactory"
+			};
+		
+		public RadioButtonsUiComponent SRMAOfferedAfterTFF { get; set; } 
+			= new("srma-offered-after-tff",  nameof(SRMAOfferedAfterTFF), "SRMA offered after TFF?")
+			{
+				RadioItems = new List<SimpleRadioItem>
+				{
+					new ("Yes", "yes"),
+					new ("No","no")
 				}
 			};
 		
-		public RadioButtonsUiComponent SRMAOfferedAfterTFFComponent { get; } =
-			new("srma-offered-after-tff",  nameof(SRMAOfferedAfterTFFSelected), "SRMA offered after TFF?")
+		public RadioButtonsUiComponent ForecastingToolRanAt { get; set; } 
+			= new(ElementRootId: "forecasting-tool-ran-at", Name: nameof(ForecastingToolRanAt), "When was the forecasting tool run?")
 			{
-				RadioItems = new List<RadioItem>
+				RadioItems = new List<SimpleRadioItem>
 				{
-					new () { Text = "Yes" },
-					new () { Text = "No" }
+					new ( "Current year - Spring" ,"Current-year---Spring"),
+					new ("Current year - Summer","Current-year---Summer"),
+					new ( "Previous year - Spring","Previous-year---Spring"),
+					new ("Previous year - Summer","Previous-year---Summer")
 				}
 			};
 		
-		public RadioButtonsUiComponent ForecastingToolRanAtComponent { get; } =
-			new(ElementRootId: "forecasting-tool-ran-at", Name: nameof(ForecastingToolRanAtSelected), "When was the forecasting tool run?")
-			{
-				RadioItems = new List<RadioItem>
-				{
-					new () { Text = "Current year - Spring" },
-					new () { Text = "Current year - Summer" },
-					new () { Text = "Previous year - Spring" },
-					new () { Text = "Previous year - Summer" }
-				}
-			};
-		
-
 		public AddPageModel(
 			//ITrustFinancialForecastService trustFinancialForecastService, 
 			ILogger<AddPageModel> logger)
@@ -91,25 +86,22 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 
 			try
 			{
-				//SetupPage(urn, trustFinancialForecastId);
-
-				// if (!ModelState.IsValid)
-				// {
-				// 	TempData["TrustFinancialForecast.Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-				// 	return Page();
-				// }
-				//
-				// TrustFinancialForecast.ReceivedRequestDate = ParseDate(ReceivedRequestDate);
-				//
-				// if (trustFinancialForecastId.HasValue)
-				// {
-				// 	var updateTrustFinancialForecastRequest = TrustFinancialForecastMapping.ToUpdateTrustFinancialForecast(TrustFinancialForecast);
-				// 	await _trustFinancialForecastService.PutTrustFinancialForecast(urn, (long)trustFinancialForecastId, updateTrustFinancialForecastRequest);
-				//
-				// 	return Redirect($"/case/{urn}/management/action/trustFinancialForecast/{trustFinancialForecastId}");
-				// }
-				//
-				// await _trustFinancialForecastService.PostTrustFinancialForecast(TrustFinancialForecast);
+				 if (!ModelState.IsValid)
+				 {
+				 	return Page();
+				 }
+				
+				 // TrustFinancialForecast.ReceivedRequestDate = ParseDate(ReceivedRequestDate);
+				 //
+				 // if (trustFinancialForecastId.HasValue)
+				 // {
+				 // 	var updateTrustFinancialForecastRequest = TrustFinancialForecastMapping.ToUpdateTrustFinancialForecast(TrustFinancialForecast);
+				 // 	await _trustFinancialForecastService.PutTrustFinancialForecast(urn, (long)trustFinancialForecastId, updateTrustFinancialForecastRequest);
+				 //
+				 // 	return Redirect($"/case/{urn}/management/action/trustFinancialForecast/{trustFinancialForecastId}");
+				 // }
+				 //
+				 // await _trustFinancialForecastService.PostTrustFinancialForecast(TrustFinancialForecast);
 
 				return Redirect($"/case/{Urn}/management");
 			}

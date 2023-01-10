@@ -25,7 +25,7 @@
 		}
 		else
 		{
-			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+			<partial name="_ValidationErrors" />
 
 			<h1 class="govuk-heading-l">
 				<span class="govuk-caption-m">Case ID @Model.Urn</span>
@@ -34,17 +34,17 @@
 
 			<form role="form" method="post" id="add-trust-financial-forecast-form" novalidate>
 				
-				<partial name="Components/_RadioList" model="Model.ForecastingToolRanAtComponent" />
+				<partial name="Components/_RadioList" model="Model.ForecastingToolRanAt" />
 
 				<partial name="Components/_DateTime" model="Model.SFSOInitialReviewHappenedAt" />
 				
 				<partial name="Components/_DateTime" model="Model.TrustRespondedAt" />
 				
-				<partial name="Components/_RadioList" model="Model.WasTrustResponseSatisfactoryComponent" />
+				<partial name="Components/_RadioList" model="Model.WasTrustResponseSatisfactory" />
 
-				<partial name="Components/_RadioList" model="Model.SRMAOfferedAfterTFFComponent" />
+				<partial name="Components/_RadioList" model="Model.SRMAOfferedAfterTFF" />
 
-				<partial name="Components/_TextArea" model="Model.NotesTextAreaComponent" />
+				<partial name="Components/_TextArea" model="Model.Notes" />
 				
 				<div class="govuk-button-group">
 					<button data-prevent-double-click="true" 
