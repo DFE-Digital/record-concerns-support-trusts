@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
@@ -14,6 +15,7 @@ using System.Net;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Pages.Base;
+using System.Linq;
 
 namespace ConcernsCaseWork.Pages.Trust
 {
@@ -26,8 +28,12 @@ namespace ConcernsCaseWork.Pages.Trust
 		private readonly ILogger<IndexPageModel> _logger;
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 
-		private const int SearchQueryMinLength = 3;
+		private const int _searchQueryMinLength = 3;
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
+
+
+		[BindProperty]
+		public FindTrustModel FindTrustModel { get; set; }
 
 		public IndexPageModel(ITrustModelService trustModelService, IUserStateCachedService userStateCache, ILogger<IndexPageModel> logger, IClaimsPrincipalHelper claimsPrincipalHelper)
 		{
@@ -35,55 +41,78 @@ namespace ConcernsCaseWork.Pages.Trust
 			_userStateCache = Guard.Against.Null(userStateCache);
 			_logger = Guard.Against.Null(logger);
 			_claimsPrincipalHelper = Guard.Against.Null(claimsPrincipalHelper);
+			FindTrustModel = new();
 		}
-		
-		public async Task<ActionResult> OnGetTrustsSearchResult(string searchQuery)
+
+		/// <summary>
+		/// This method takes a search query and returns the trusts that are (partial) matches, based on group name, ukPrn and companies house number
+		/// </summary>
+		/// <param name="searchQuery"></param>
+		/// <param name="nonce"></param>
+		/// <returns></returns>
+
+		public async Task<ActionResult> OnGetTrustsSearchResult(string searchQuery, string nonce)
 		{
 			try
 			{
-				_logger.LogInformation("Trust::IndexPageModel::OnGetTrustsPartial");
-				
+				_logger.LogMethodEntered();
+
+
 				// Double check search query.
-				if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < SearchQueryMinLength)
+				if (string.IsNullOrEmpty(searchQuery) || searchQuery.Length < _searchQueryMinLength)
 				{
-					return new JsonResult(Array.Empty<TrustSearchModel>());
+					_logger.LogInformationMsg($"Search rejected, searchQuery too short");
+					return new JsonResult(new TrustSearchResponse() { Nonce = nonce });
 				}
 
+				_logger.LogInformationMsg($"Entered trust search: searchQuery -'{searchQuery}', nonce-{nonce}");
 				var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);
 				var trustSearchResponse = await _trustModelService.GetTrustsBySearchCriteria(trustSearch);
 
-				return new JsonResult(trustSearchResponse);
+				return new JsonResult(new TrustSearchResponse() { Nonce = nonce, Data = trustSearchResponse });
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError("Trust::IndexPageModel::OnGetTrustsSearchResult::Exception - {Message}", ex.Message);
-				
+
 				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 			}
 		}
-		
-		public async Task<ActionResult> OnGetSelectedTrust(string trustUkPrn)
+
+
+		public async Task<ActionResult> OnPost()
 		{
+			_logger.LogMethodEntered();
+
+			if (!ModelState.IsValid)
+			{
+				TempData["Error.Message"] = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+				return Page();
+			}
+
 			try
 			{
-				_logger.LogInformation("Trust::IndexPageModel::OnGetSelectedTrust");
-				
-				// Double check selected trust.
-				if (string.IsNullOrEmpty(trustUkPrn) || trustUkPrn.Contains("-") || trustUkPrn.Length < SearchQueryMinLength)
-					throw new Exception($"Trust::IndexModel::OnGetSelectedTrust::Selected trust is incorrect - {trustUkPrn}");
-				
+				_logger.LogInformation("Trust::IndexPageModel::OnPost");
+
+				if (string.IsNullOrEmpty(FindTrustModel?.SelectedTrustUkprn) ||
+					FindTrustModel.SelectedTrustUkprn.Contains("-") ||
+					FindTrustModel.SelectedTrustUkprn.Length < _searchQueryMinLength)
+				{
+					throw new Exception($"Selected trust is incorrect - {FindTrustModel?.SelectedTrustUkprn}");
+				}
+
 				// Store CaseState into cache.
 				var userState = await _userStateCache.GetData(GetUserName()) ?? new UserState(GetUserName());
-				userState.TrustUkPrn = trustUkPrn;
+				userState.TrustUkPrn = FindTrustModel.SelectedTrustUkprn;
 				userState.CreateCaseModel = new CreateCaseModel();
 				await _userStateCache.StoreData(GetUserName(), userState);
 
-				return new JsonResult(new { redirectUrl = Url.Page("Overview", new { id = trustUkPrn }) });
+				return Redirect(Url.Page("Overview", new { id = FindTrustModel.SelectedTrustUkprn }));
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Trust::IndexPageModel::OnGetSelectedTrust::Exception - {Message}", ex.Message);
-					
+				_logger.LogError("Trust::IndexPageModel::OnPost::Exception - {Message}", ex.Message);
+
 				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 			}
 		}
