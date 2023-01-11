@@ -1,0 +1,5 @@
+namespace ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
+
+public record CreateTrustFinancialForecastRequest : BaseTrustFinancialForecastRequest
+{
+}

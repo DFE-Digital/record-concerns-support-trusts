@@ -1,0 +1,8 @@
+using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
+
+namespace ConcernsCaseWork.Service.TrustFinancialForecast;
+
+public interface ITrustFinancialForecastService
+{
+	Task<string> PostTrustFinancialForecast(CreateTrustFinancialForecastRequest trustFinancialForecast);
+}

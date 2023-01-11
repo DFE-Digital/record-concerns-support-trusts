@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -42,5 +43,7 @@ namespace ConcernsCaseWork.Models.Validatable
 		}
 
 		public override string ToString() => $"{Day}-{Month}-{Year}";
+
+		public DateTimeOffset ToDateTimeOffset() => DateTimeHelper.ParseExact(this.ToString());
 	}
 }

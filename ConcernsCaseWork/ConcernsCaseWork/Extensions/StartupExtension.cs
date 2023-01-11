@@ -54,8 +54,7 @@ using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Middleware;
-using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.PageHistory;
 
 namespace ConcernsCaseWork.Extensions
@@ -192,6 +191,7 @@ namespace ConcernsCaseWork.Extensions
             services.AddScoped<INtiConditionsService, NtiConditionsService>();
 			services.AddScoped<ITeamsService, TeamsService>();
 			services.AddScoped<IDecisionService, DecisionService>();
+			services.AddScoped<ITrustFinancialForecastService, TrustFinancialForecastService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
