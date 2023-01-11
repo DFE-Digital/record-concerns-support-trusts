@@ -7,7 +7,9 @@ using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using ConcernsCaseWork.Shared.Tests.MockHelpers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -16,8 +18,10 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Create
@@ -78,9 +82,53 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 		}
 
 		[Test]
+		[TestCase("")]
+		[TestCase("a-b")]
+		[TestCase("ab")]
+		public async Task When_OnPostSelectedTrust_With_TrustUkPrn_Invalid_Throws_Exception(string searchString)
+		{
+			var mockLogger = new Mock<ILogger<SelectTrustPageModel>>();
+			var mockTrustService = new Mock<ITrustModelService>();
+			var mockUserService = new Mock<IUserStateCachedService>();
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+
+			var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
+
+			// act
+			sut.FindTrustModel.SelectedTrustUkprn = searchString;
+
+			var result = await sut.OnPostSelectedTrust();
+
+			Assert.That(result, Is.TypeOf<ObjectResult>());
+			var objResult = (ObjectResult)result;
+			Assert.That(objResult.StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
+		}
+
+		[Test]
+		public async Task When_OnPostSelectedTrust_With_ModelState_Invalid_Returns_Error()
+		{
+			var mockLogger = new Mock<ILogger<SelectTrustPageModel>>();
+			var mockTrustService = new Mock<ITrustModelService>();
+			var mockUserService = new Mock<IUserStateCachedService>();
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+
+			var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
+			sut.ModelState.AddModelError("Error1", "error_message_1");
+
+			// act
+			sut.FindTrustModel.SelectedTrustUkprn = "abc";
+			var result = await sut.OnPostSelectedTrust();
+
+			IEnumerable<string> errorMsgs = (IEnumerable<string>) sut.TempData["Message"];
+			Assert.That(errorMsgs.Count(), Is.EqualTo(1));
+			Assert.That(errorMsgs.First(), Is.EqualTo("error_message_1"));
+			Assert.That(result, Is.TypeOf<PageResult>());
+		}
+
+		[Test]
 		[TestCase("abc")]
 		[TestCase("1234")]
-		public async Task WhenOnGetTrustsSearchResult_WithValidSearchQuery_ReturnsSearchResults(string searchString)
+		public async Task When_OnPost_WithValidSearchQuery_ReturnsSearchResults(string searchString)
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<SelectTrustPageModel>>();
@@ -96,46 +144,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 
 			var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
 
-			// act
-			sut.FindTrustModel.SelectedTrustUkprn = searchString;
-			var result = await sut.OnPostSelectedTrust();
+			var userName = sut.User.Identity.Name;
+			var userState = new UserState(userName);
+			mockUserService.Setup(x => x.GetData(It.IsAny<string>())).ReturnsAsync(userState);
+			mockUserService.Setup(x => x.StoreData(userName, userState)).Returns(Task.CompletedTask);
 
-			// assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(sut.TrustAddress, Is.Null);
-				Assert.That(sut.TempData["Error.Message"], Is.Null);
-
-				Assert.That(result, Is.TypeOf<JsonResult>());
-
-				var jsonResult = result as JsonResult;
-				Assert.That(jsonResult?.Value, Is.Not.Null);
-				Assert.That(jsonResult.Value, Is.TypeOf<List<TrustSearchModel>>());
-
-				var searchModelResult = jsonResult.Value as List<TrustSearchModel>;
-				Assert.That(searchModelResult, Is.Not.Null);
-				Assert.That(searchModelResult, Has.Count.EqualTo(searchResults.Count));
-			});
-
-			mockLogger.VerifyLogInformationWasCalled("OnGetTrustsSearchResult");
-			mockLogger.VerifyLogErrorWasNotCalled();
-			mockLogger.VerifyNoOtherCalls();
-		}
-
-		[Test]
-		[TestCase("ab")]
-		[TestCase("1")]
-		[TestCase("")]
-		[TestCase(null)]
-		public async Task WhenOnGetTrustsSearchResult_WithInvalidSearchQuery_DoesNotErrorAndReturnsEmptySearchResults(string searchString)
-		{
-			// arrange
-			var mockLogger = new Mock<ILogger<SelectTrustPageModel>>();
-			var mockTrustService = new Mock<ITrustModelService>();
-			var mockUserService = new Mock<IUserStateCachedService>();
-			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
-
-			var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
 
 			// act
 			sut.FindTrustModel.SelectedTrustUkprn = searchString;
@@ -145,170 +158,251 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 			Assert.Multiple(() =>
 			{
 				Assert.That(sut.TrustAddress, Is.Null);
-				Assert.That(sut.TempData["Error.Message"], Is.Null);
-				Assert.That(result, Is.TypeOf<JsonResult>());
+				Assert.That(sut.TempData["Message"], Is.Null);
+				Assert.That(result, Is.TypeOf<RedirectToPageResult>());
 
-				var jsonResult = result as JsonResult;
-				Assert.That(jsonResult?.Value, Is.Not.Null);
-				Assert.That(jsonResult.Value, Is.TypeOf<List<TrustSearchModel>>());
-
-				var searchModelResult = jsonResult.Value as List<TrustSearchModel>;
-				Assert.That(searchModelResult, Is.Not.Null);
-				Assert.That(searchModelResult, Has.Count.EqualTo(0));
 			});
 
-			mockLogger.VerifyLogInformationWasCalled("OnGetTrustsSearchResult");
+			mockUserService.Verify(x => x.StoreData(userName, userState), Times.Once);
+			mockLogger.VerifyLogInformationWasCalled("OnPostSelectedTrust");
 			mockLogger.VerifyLogErrorWasNotCalled();
 			mockLogger.VerifyNoOtherCalls();
 		}
 
-		[Test]
-		[TestCase("abc")]
-		[TestCase("123")]
-		public async Task WhenOnGetTrustsSearchResult_WithErrorThrownBySearchService_ReturnsErrorStatusCode(string searchString)
-		{
-			// arrange
-			var mockLogger = new Mock<ILogger<SelectTrustPageModel>>();
-			var mockTrustService = new Mock<ITrustModelService>();
-			var mockUserService = new Mock<IUserStateCachedService>();
-			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+		//[Test]
+		//[TestCase("abc")]
+		//[TestCase("1234")]
+		//public async Task WhenOnGetTrustsSearchResult_WithValidSearchQuery_ReturnsSearchResults(string searchString)
+		//{
+		//	// arrange
+		//	var mockLogger = new Mock<ILogger<SelectTrustPageModel>>();
+		//	var mockTrustService = new Mock<ITrustModelService>();
+		//	var mockUserService = new Mock<IUserStateCachedService>();
+		//	var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
-			var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
+		//	var searchResults = TrustFactory.BuildListTrustSummaryModel();
 
-			mockTrustService
-				.Setup(t => t.GetTrustsBySearchCriteria(It.Is<TrustSearch>(s => s.Ukprn == searchString && s.GroupName == searchString && s.CompaniesHouseNumber == searchString)))
-				.Throws(() => new Exception("some error message"));
+		//	mockTrustService
+		//		.Setup(t => t.GetTrustsBySearchCriteria(It.Is<TrustSearch>(s => s.Ukprn == searchString && s.GroupName == searchString && s.CompaniesHouseNumber == searchString)))
+		//		.ReturnsAsync(searchResults);
 
-			// act
-			sut.FindTrustModel.SelectedTrustUkprn = searchString;
-			var result = await sut.OnPostSelectedTrust();
+		//	var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
 
-			// assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(sut.TrustAddress, Is.Null);
-				Assert.That(sut.TempData["Error.Message"], Is.Null);
-				Assert.That(result, Is.TypeOf<ObjectResult>());
+		//	// act
+		//	sut.FindTrustModel.SelectedTrustUkprn = searchString;
+		//	var result = await sut.OnPostSelectedTrust();
 
-				Assert.That(result, Is.Not.Null);
-				Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo((int)HttpStatusCode.InternalServerError));
-			});
+		//	// assert
+		//	Assert.Multiple(() =>
+		//	{
+		//		Assert.That(sut.TrustAddress, Is.Null);
+		//		Assert.That(sut.TempData["Error.Message"], Is.Null);
 
-			mockLogger.VerifyLogInformationWasCalled("OnGetTrustsSearchResult");
-			mockLogger.VerifyLogErrorWasCalled("some error message");
-			mockLogger.VerifyNoOtherCalls();
-		}
+		//		Assert.That(result, Is.TypeOf<JsonResult>());
 
-		[Test]
-		[TestCase("abcdef")]
-		[TestCase("1234")]
-		public async Task WhenOnGetSelectedTrust_WithValidTrustUkPrn_CachesTrustAndRedirectsToNextStep(string trustUkPrn)
-		{
-			// arrange
-			var mockLogger = new Mock<ILogger<SelectTrustPageModel>>();
-			var mockTrustService = new Mock<ITrustModelService>();
-			var mockUserService = new Mock<IUserStateCachedService>();
-			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+		//		var jsonResult = result as JsonResult;
+		//		Assert.That(jsonResult?.Value, Is.Not.Null);
+		//		Assert.That(jsonResult.Value, Is.TypeOf<List<TrustSearchModel>>());
 
-			var userName = "some name of a user";
+		//		var searchModelResult = jsonResult.Value as List<TrustSearchModel>;
+		//		Assert.That(searchModelResult, Is.Not.Null);
+		//		Assert.That(searchModelResult, Has.Count.EqualTo(searchResults.Count));
+		//	});
 
-			mockUserService
-				.Setup(s => s.GetData(userName))
-				.ReturnsAsync(new UserState(userName){TrustUkPrn = trustUkPrn});
+		//	mockLogger.VerifyLogInformationWasCalled("OnGetTrustsSearchResult");
+		//	mockLogger.VerifyLogErrorWasNotCalled();
+		//	mockLogger.VerifyNoOtherCalls();
+		//}
 
-			mockUserService
-				.Setup(s => s.StoreData(It.IsAny<string>(), It.IsAny<UserState>()))
-				.Verifiable();
+		//[Test]
+		//[TestCase("ab")]
+		//[TestCase("1")]
+		//[TestCase("")]
+		//[TestCase(null)]
+		//public async Task WhenOnGetTrustsSearchResult_WithInvalidSearchQuery_DoesNotErrorAndReturnsEmptySearchResults(string searchString)
+		//{
+		//	// arrange
+		//	var mockLogger = new Mock<ILogger<SelectTrustPageModel>>();
+		//	var mockTrustService = new Mock<ITrustModelService>();
+		//	var mockUserService = new Mock<IUserStateCachedService>();
+		//	var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
-			mockClaimsPrincipalHelper
-				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
-				.Returns(userName);
+		//	var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
 
-			var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
+		//	// act
+		//	sut.FindTrustModel.SelectedTrustUkprn = searchString;
+		//	var result = await sut.OnPostSelectedTrust();
 
-			// act
-			sut.FindTrustModel.SelectedTrustUkprn = trustUkPrn;
-			var result = await sut.OnPostSelectedTrust();
+		//	// assert
+		//	Assert.Multiple(() =>
+		//	{
+		//		Assert.That(sut.TrustAddress, Is.Null);
+		//		Assert.That(sut.TempData["Error.Message"], Is.Null);
+		//		Assert.That(result, Is.TypeOf<JsonResult>());
 
-			// assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(sut.TrustAddress, Is.Null);
-				Assert.That(sut.TempData["Error.Message"], Is.Null);
+		//		var jsonResult = result as JsonResult;
+		//		Assert.That(jsonResult?.Value, Is.Not.Null);
+		//		Assert.That(jsonResult.Value, Is.TypeOf<List<TrustSearchModel>>());
 
-				Assert.That(result, Is.TypeOf<JsonResult>());
+		//		var searchModelResult = jsonResult.Value as List<TrustSearchModel>;
+		//		Assert.That(searchModelResult, Is.Not.Null);
+		//		Assert.That(searchModelResult, Has.Count.EqualTo(0));
+		//	});
 
-				var jsonResult = result as JsonResult;
-				Assert.That(jsonResult?.Value, Is.Not.Null);
-				Assert.That(jsonResult.Value?.ToString(), Is.EqualTo("{ redirectUrl = /case/create/type }"));
+		//	mockLogger.VerifyLogInformationWasCalled("OnGetTrustsSearchResult");
+		//	mockLogger.VerifyLogErrorWasNotCalled();
+		//	mockLogger.VerifyNoOtherCalls();
+		//}
 
-			});
+		//[Test]
+		//[TestCase("abc")]
+		//[TestCase("123")]
+		//public async Task WhenOnGetTrustsSearchResult_WithErrorThrownBySearchService_ReturnsErrorStatusCode(string searchString)
+		//{
+		//	// arrange
+		//	var mockLogger = new Mock<ILogger<SelectTrustPageModel>>();
+		//	var mockTrustService = new Mock<ITrustModelService>();
+		//	var mockUserService = new Mock<IUserStateCachedService>();
+		//	var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
-			mockUserService.Verify(s => s.StoreData(userName, It.Is<UserState>(us => us.TrustUkPrn == trustUkPrn)));
-			mockLogger.VerifyLogInformationWasCalled("OnGetSelectedTrust");
-			mockLogger.VerifyLogErrorWasNotCalled();
-			mockLogger.VerifyNoOtherCalls();
-		}
+		//	var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
 
-		[Test]
-		[TestCase(null)]
-		[TestCase("")]
-		[TestCase("12")]
-		[TestCase("1")]
-		[TestCase("contains-hyphen")]
-		public async Task WhenOnGetSelectedTrust_WithInvalidTrustUkPrn_Errors(string trustUkPrn)
-		{
-			// arrange
-			var mockLogger = new Mock<ILogger<SelectTrustPageModel>>();
-			var mockTrustService = new Mock<ITrustModelService>();
-			var mockUserService = new Mock<IUserStateCachedService>();
-			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+		//	mockTrustService
+		//		.Setup(t => t.GetTrustsBySearchCriteria(It.Is<TrustSearch>(s => s.Ukprn == searchString && s.GroupName == searchString && s.CompaniesHouseNumber == searchString)))
+		//		.Throws(() => new Exception("some error message"));
 
-			var userName = "some name of a user";
+		//	// act
+		//	sut.FindTrustModel.SelectedTrustUkprn = searchString;
+		//	var result = await sut.OnPostSelectedTrust();
 
-			mockUserService
-				.Setup(s => s.GetData(userName))
-				.ReturnsAsync(new UserState(userName){TrustUkPrn = trustUkPrn});
+		//	// assert
+		//	Assert.Multiple(() =>
+		//	{
+		//		Assert.That(sut.TrustAddress, Is.Null);
+		//		Assert.That(sut.TempData["Error.Message"], Is.Null);
+		//		Assert.That(result, Is.TypeOf<ObjectResult>());
 
-			mockUserService
-				.Setup(s => s.StoreData(It.IsAny<string>(), It.IsAny<UserState>()))
-				.Verifiable();
+		//		Assert.That(result, Is.Not.Null);
+		//		Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo((int)HttpStatusCode.InternalServerError));
+		//	});
 
-			mockClaimsPrincipalHelper
-				.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
-				.Returns(userName);
+		//	mockLogger.VerifyLogInformationWasCalled("OnGetTrustsSearchResult");
+		//	mockLogger.VerifyLogErrorWasCalled("some error message");
+		//	mockLogger.VerifyNoOtherCalls();
+		//}
 
-			var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
+		//[Test]
+		//[TestCase("abcdef")]
+		//[TestCase("1234")]
+		//public async Task WhenOnGetSelectedTrust_WithValidTrustUkPrn_CachesTrustAndRedirectsToNextStep(string trustUkPrn)
+		//{
+		//	// arrange
+		//	var mockLogger = new Mock<ILogger<SelectTrustPageModel>>();
+		//	var mockTrustService = new Mock<ITrustModelService>();
+		//	var mockUserService = new Mock<IUserStateCachedService>();
+		//	var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
-			// act
-			sut.FindTrustModel.SelectedTrustUkprn = trustUkPrn;
-			var result = await sut.OnPostSelectedTrust();
+		//	var userName = "some name of a user";
 
-			// assert
-			Assert.Multiple(() =>
-			{
-				Assert.That(sut.TrustAddress, Is.Null);
-				Assert.That(sut.TempData["Error.Message"], Is.Null);
-				Assert.That(result, Is.TypeOf<ObjectResult>());
+		//	mockUserService
+		//		.Setup(s => s.GetData(userName))
+		//		.ReturnsAsync(new UserState(userName){TrustUkPrn = trustUkPrn});
 
-				Assert.That(result, Is.Not.Null);
-				Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo((int)HttpStatusCode.InternalServerError));
-			});
+		//	mockUserService
+		//		.Setup(s => s.StoreData(It.IsAny<string>(), It.IsAny<UserState>()))
+		//		.Verifiable();
 
-			mockUserService.Verify(s => s.StoreData(userName, It.Is<UserState>(us => us.TrustUkPrn == trustUkPrn)),
-				Times.Never);
-			mockLogger.VerifyLogInformationWasCalled("OnGetSelectedTrust");
-			mockLogger.VerifyLogErrorWasCalled($"Selected trust is incorrect - {trustUkPrn}");
-			mockLogger.VerifyNoOtherCalls();
-		}
+		//	mockClaimsPrincipalHelper
+		//		.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
+		//		.Returns(userName);
+
+		//	var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
+
+		//	// act
+		//	sut.FindTrustModel.SelectedTrustUkprn = trustUkPrn;
+		//	var result = await sut.OnPostSelectedTrust();
+
+		//	// assert
+		//	Assert.Multiple(() =>
+		//	{
+		//		Assert.That(sut.TrustAddress, Is.Null);
+		//		Assert.That(sut.TempData["Error.Message"], Is.Null);
+
+		//		Assert.That(result, Is.TypeOf<JsonResult>());
+
+		//		var jsonResult = result as JsonResult;
+		//		Assert.That(jsonResult?.Value, Is.Not.Null);
+		//		Assert.That(jsonResult.Value?.ToString(), Is.EqualTo("{ redirectUrl = /case/create/type }"));
+
+		//	});
+
+		//	mockUserService.Verify(s => s.StoreData(userName, It.Is<UserState>(us => us.TrustUkPrn == trustUkPrn)));
+		//	mockLogger.VerifyLogInformationWasCalled("OnGetSelectedTrust");
+		//	mockLogger.VerifyLogErrorWasNotCalled();
+		//	mockLogger.VerifyNoOtherCalls();
+		//}
+
+		//[Test]
+		//[TestCase(null)]
+		//[TestCase("")]
+		//[TestCase("12")]
+		//[TestCase("1")]
+		//[TestCase("contains-hyphen")]
+		//public async Task WhenOnGetSelectedTrust_WithInvalidTrustUkPrn_Errors(string trustUkPrn)
+		//{
+		//	// arrange
+		//	var mockLogger = new Mock<ILogger<SelectTrustPageModel>>();
+		//	var mockTrustService = new Mock<ITrustModelService>();
+		//	var mockUserService = new Mock<IUserStateCachedService>();
+		//	var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+
+		//	var userName = "some name of a user";
+
+		//	mockUserService
+		//		.Setup(s => s.GetData(userName))
+		//		.ReturnsAsync(new UserState(userName){TrustUkPrn = trustUkPrn});
+
+		//	mockUserService
+		//		.Setup(s => s.StoreData(It.IsAny<string>(), It.IsAny<UserState>()))
+		//		.Verifiable();
+
+		//	mockClaimsPrincipalHelper
+		//		.Setup(t => t.GetPrincipalName(It.IsAny<ClaimsPrincipal>()))
+		//		.Returns(userName);
+
+		//	var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
+
+		//	// act
+		//	sut.FindTrustModel.SelectedTrustUkprn = trustUkPrn;
+		//	var result = await sut.OnPostSelectedTrust();
+
+		//	// assert
+		//	Assert.Multiple(() =>
+		//	{
+		//		Assert.That(sut.TrustAddress, Is.Null);
+		//		Assert.That(sut.TempData["Error.Message"], Is.Null);
+		//		Assert.That(result, Is.TypeOf<ObjectResult>());
+
+		//		Assert.That(result, Is.Not.Null);
+		//		Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo((int)HttpStatusCode.InternalServerError));
+		//	});
+
+		//	mockUserService.Verify(s => s.StoreData(userName, It.Is<UserState>(us => us.TrustUkPrn == trustUkPrn)),
+		//		Times.Never);
+		//	mockLogger.VerifyLogInformationWasCalled("OnGetSelectedTrust");
+		//	mockLogger.VerifyLogErrorWasCalled($"Selected trust is incorrect - {trustUkPrn}");
+		//	mockLogger.VerifyNoOtherCalls();
+		//}
 
 		private static SelectTrustPageModel SetupPageModel(
 			IMock<ILogger<SelectTrustPageModel>> mockLogger,
 			IMock<ITrustModelService> mockTrustService,
 			IMock<IUserStateCachedService> mockUserService,
-			IMock<IClaimsPrincipalHelper> mockClaimsHelper)
+			Mock<IClaimsPrincipalHelper> mockClaimsHelper)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(true);
+
+			mockClaimsHelper.Setup(x => x.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(pageContext.HttpContext.User.Identity.Name);
 
 			return new SelectTrustPageModel(mockTrustService.Object, mockUserService.Object, mockLogger.Object, mockClaimsHelper.Object)
 			{
