@@ -36,6 +36,6 @@ describe("User adds subsequent Concern to a case", () => {
 
 		cy.enterConcernDetails();
 
-		cy.contains("Financial: Deficit");
+		cy.contains("Financial: Viability");
 	});
 });

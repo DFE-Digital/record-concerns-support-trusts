@@ -12,12 +12,14 @@ using ConcernsCaseWork.Service.Trusts;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Pages.Base;
 
 namespace ConcernsCaseWork.Pages.Trust
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class IndexPageModel : PageModel
+	public class IndexPageModel : AbstractPageModel
 	{
 		private readonly ITrustModelService _trustModelService;
 		private readonly IUserStateCachedService _userStateCache;
@@ -25,7 +27,8 @@ namespace ConcernsCaseWork.Pages.Trust
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 
 		private const int SearchQueryMinLength = 3;
-		
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
+
 		public IndexPageModel(ITrustModelService trustModelService, IUserStateCachedService userStateCache, ILogger<IndexPageModel> logger, IClaimsPrincipalHelper claimsPrincipalHelper)
 		{
 			_trustModelService = Guard.Against.Null(trustModelService);
