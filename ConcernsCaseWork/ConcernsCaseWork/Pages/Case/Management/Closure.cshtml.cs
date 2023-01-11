@@ -20,6 +20,7 @@ using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Services.Decisions;
+using ConcernsCaseWork.Constants;
 
 namespace ConcernsCaseWork.Pages.Case.Management
 {
@@ -42,7 +43,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
-		
+
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
+
 		public ClosurePageModel(
 			ICaseModelService caseModelService, 
 			ITrustModelService trustModelService, 
