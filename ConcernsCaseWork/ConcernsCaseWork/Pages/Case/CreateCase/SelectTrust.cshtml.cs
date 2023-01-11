@@ -43,9 +43,6 @@ public class SelectTrustPageModel : AbstractPageModel
 	[BindProperty]
 	public FindTrustModel FindTrustModel { get; set; }
 
-	[BindProperty]
-	public CaseTypes CaseType { get; set; }
-
 	public SelectTrustPageModel(ITrustModelService trustModelService,
 		IUserStateCachedService cachedUserService,
 		ILogger<SelectTrustPageModel> logger,
@@ -83,67 +80,6 @@ public class SelectTrustPageModel : AbstractPageModel
 		return Page();
 	}
 
-	public async Task<IActionResult> OnPost()
-	{
-		_logger.LogMethodEntered();
-
-		try
-		{
-			if (CreateCaseStep != CreateCaseSteps.SearchForTrust)
-			{
-				await RestoreTrustUkprnFromCache();
-				if (!TrustUkPrnIsValid())
-				{
-					ModelState.AddModelError("trust", "A trust is required");
-					return Page();
-				}
-			}
-
-			if (CreateCaseStep != CreateCaseSteps.SelectCaseType)
-			{
-				throw new Exception();
-			}
-
-			await ResetUserState();
-
-			ActionResult result;
-			switch (CaseType)
-			{
-				case CaseTypes.Concern:
-					result = Redirect("/case/concern/index");
-					break;
-				case CaseTypes.NonConcern:
-					result = Redirect("/case/create/nonconcerns");
-					break;
-				case CaseTypes.NotSelected:
-				default:
-					ModelState.AddModelError(nameof(CaseType), "Invalid case type");
-					result = Page();
-					break;
-			}
-
-			return result;
-		}
-		catch (Exception ex)
-		{
-			_logger.LogErrorMsg(ex);
-
-			TempData["Error.Message"] = ErrorOnPostPage;
-		}
-
-		return Page();
-
-		async Task ResetUserState()
-		{
-			var userName = GetUserName();
-			var userState = await _cachedUserService.GetData(userName);
-			userState.CreateCaseModel = new CreateCaseModel();
-			await _cachedUserService.StoreData(userName, userState);
-		}
-
-
-	}
-
 	private void ResetCurrentStep()
 	{
 		CreateCaseStep = CreateCaseSteps.SearchForTrust;
@@ -169,13 +105,15 @@ public class SelectTrustPageModel : AbstractPageModel
 			}
 
 			if (!TrustUkPrnIsValid())
+			{
 				throw new Exception($"Selected trust is incorrect - {FindTrustModel.SelectedTrustUkprn}");
+			}
 
 			await CacheTrustUkPrn();
 
 			SetNextStep();
 
-			return RedirectToPage("CreateCase", new { step = CreateCaseSteps.SelectCaseType });
+			return RedirectToPage("SelectCaseType");
 		}
 		catch (Exception ex)
 		{
@@ -221,7 +159,7 @@ public class SelectTrustPageModel : AbstractPageModel
 
 		return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 	}
-	
+
 	private string GetUserName() => _claimsPrincipalHelper.GetPrincipalName(User);
 
 	async Task<UserState> GetUserState() => await _cachedUserService.GetData(GetUserName());
