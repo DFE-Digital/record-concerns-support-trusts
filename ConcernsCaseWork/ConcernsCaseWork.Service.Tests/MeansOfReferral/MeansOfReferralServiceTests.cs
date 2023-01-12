@@ -3,7 +3,6 @@ using ConcernsCaseWork.Service.MeansOfReferral;
 using ConcernsCaseWork.Service.Types;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;

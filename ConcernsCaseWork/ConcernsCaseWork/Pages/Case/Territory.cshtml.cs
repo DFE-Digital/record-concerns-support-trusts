@@ -32,7 +32,7 @@ namespace ConcernsCaseWork.Pages.Case
 		
 		[BindProperty]
 		[Required(ErrorMessage = "An SFSO Territory must be selected")]
-		public TerritoryEnum? Territory { get; set; }
+		public Territory? Territory { get; set; }
 
 		public SelectTerritoryPageModel(ITrustModelService trustModelService, 
 			IUserStateCachedService userStateCache,

@@ -1,6 +1,5 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models.Teams;
 using ConcernsCaseWork.Redis.Teams;
@@ -15,7 +14,7 @@ namespace ConcernsCaseWork.Services.Teams
 	{
 		private readonly ILogger<TeamsModelService> _logger;
 		private readonly IMapper _mapper;
-		private ITeamsCachedService _teamsServiceClient;
+		private readonly ITeamsCachedService _teamsServiceClient;
 
 		public TeamsModelService(ILogger<TeamsModelService> logger,
 			IMapper mapper,

@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace ConcernsCaseWork.API.Contracts.Enums;
 
-public enum TerritoryEnum
+public enum Territory
 {
 	[Description("Midlands and West - South West")]
 	Midlands_And_West__SouthWest,

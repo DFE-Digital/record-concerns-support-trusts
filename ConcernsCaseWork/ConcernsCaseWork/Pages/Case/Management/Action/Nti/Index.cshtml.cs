@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Pages.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using ConcernsCaseWork.Models.CaseActions;
 using System.Linq;
 using System.Collections.Generic;
 using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Services.Nti;
@@ -29,6 +31,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		public ICollection<NtiReasonDto> NtiReasons { get; private set; }
 		public ICollection<NtiStatusDto> NtiStatuses { get; set; }
 		public ICollection<NtiConditionDto> NtiConditions { get; private set; }
+		
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
 
 		public IndexPageModel(INtiModelService ntiModelService,
 			INtiReasonsCachedService ntiReasonsCachedService,
