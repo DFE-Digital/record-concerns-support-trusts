@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Helpers;
+using ConcernsCaseWork.Services.Context;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -10,7 +11,7 @@ namespace ConcernsCaseWork.Service.Nti
 	{
 		private readonly ILogger<NtiReasonsService> _logger;
 
-		public NtiReasonsService(IHttpClientFactory httpClientFactory, ILogger<NtiReasonsService> logger, ICorrelationContext correlationContext) : base(httpClientFactory, logger, correlationContext)
+		public NtiReasonsService(IHttpClientFactory httpClientFactory, ILogger<NtiReasonsService> logger, ICorrelationContext correlationContext, IUserContextService userContextService) : base(httpClientFactory, logger, correlationContext, userContextService)
 		{
 			_logger = logger;
 		}

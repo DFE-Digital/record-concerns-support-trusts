@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.Services.Context;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -11,7 +12,7 @@ namespace ConcernsCaseWork.Service.Records
 	{
 		private readonly ILogger<RecordService> _logger;
 		
-		public RecordService(IHttpClientFactory clientFactory, ILogger<RecordService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
+		public RecordService(IHttpClientFactory clientFactory, ILogger<RecordService> logger, ICorrelationContext correlationContext, IUserContextService userContextService) : base(clientFactory, logger, correlationContext, userContextService)
 		{
 			_logger = logger;
 		}

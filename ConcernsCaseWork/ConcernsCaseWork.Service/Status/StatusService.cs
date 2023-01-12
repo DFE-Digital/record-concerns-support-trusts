@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.Services.Context;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -9,7 +10,7 @@ namespace ConcernsCaseWork.Service.Status
 	{
 		private readonly ILogger<StatusService> _logger;
 		
-		public StatusService(IHttpClientFactory clientFactory, ILogger<StatusService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
+		public StatusService(IHttpClientFactory clientFactory, ILogger<StatusService> logger, ICorrelationContext correlationContext, IUserContextService userContextService) : base(clientFactory, logger, correlationContext, userContextService)
 		{
 			_logger = logger;
 		}

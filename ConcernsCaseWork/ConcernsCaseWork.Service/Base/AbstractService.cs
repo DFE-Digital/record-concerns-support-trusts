@@ -1,5 +1,7 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.Contracts.Context;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.Services.Context;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -16,16 +18,18 @@ namespace ConcernsCaseWork.Service.Base
 		private readonly ICorrelationContext _correlationContext;
 		private readonly IHttpClientFactory _clientFactory;
 		private readonly ILogger<AbstractService> _logger;
+		private readonly IUserContextService _userContextService;
 
 		internal string HttpClientName { get; init; } = "TramsClient"; // was "Default";
 		internal string EndpointsVersion { get; } = "v2";
 		internal string EndpointPrefix { get; } = "concerns-cases";
 
-		protected AbstractService(IHttpClientFactory clientFactory, ILogger<AbstractService> logger, ICorrelationContext correlationContext)
+		protected AbstractService(IHttpClientFactory clientFactory, ILogger<AbstractService> logger, ICorrelationContext correlationContext, IUserContextService userContextService)
 		{
 			_clientFactory = Guard.Against.Null(clientFactory);
 			_logger = Guard.Against.Null(logger);
 			_correlationContext = Guard.Against.Null(correlationContext);
+			_userContextService = Guard.Against.Null(userContextService);
 		}
 
 		public Task<T> Get<T>(string endpoint, bool treatNoContentAsError = false) where T : class
@@ -38,6 +42,8 @@ namespace ConcernsCaseWork.Service.Base
 				{
 					// Create a request
 					var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+
+					_userContextService.AddHeaders(request);
 
 					// Create http client
 					var client = CreateHttpClient();
@@ -336,7 +342,7 @@ namespace ConcernsCaseWork.Service.Base
 
 			return DoWork();
 		}
-		
+
 		/// <summary>
 		/// Sends a POST, with no result from response body. Ensures the response code is in the 200 range
 		/// </summary>

@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.Services.Context;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -9,7 +10,7 @@ namespace ConcernsCaseWork.Service.Types
 	{
 		private readonly ILogger<TypeService> _logger;
 		
-		public TypeService(IHttpClientFactory clientFactory, ILogger<TypeService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
+		public TypeService(IHttpClientFactory clientFactory, ILogger<TypeService> logger, ICorrelationContext correlationContext, IUserContextService userContextService) : base(clientFactory, logger, correlationContext, userContextService)
 		{
 			_logger = logger;
 		}

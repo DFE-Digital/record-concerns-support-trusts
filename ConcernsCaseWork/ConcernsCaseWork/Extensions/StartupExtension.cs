@@ -1,4 +1,5 @@
 using ConcernsCaseWork.API.StartupConfiguration;
+using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Base;
@@ -16,14 +17,32 @@ using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Redis.Types;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Security;
+using ConcernsCaseWork.Service.CaseActions;
+using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Service.Configuration;
+using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Service.FinancialPlan;
+using ConcernsCaseWork.Service.MeansOfReferral;
+using ConcernsCaseWork.Service.Nti;
+using ConcernsCaseWork.Service.NtiUnderConsideration;
+using ConcernsCaseWork.Service.NtiWarningLetter;
+using ConcernsCaseWork.Service.Ratings;
+using ConcernsCaseWork.Service.Records;
+using ConcernsCaseWork.Service.Status;
+using ConcernsCaseWork.Service.Teams;
+using ConcernsCaseWork.Service.Trusts;
+using ConcernsCaseWork.Service.Types;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Decisions;
 using ConcernsCaseWork.Services.Cases.Create;
+using ConcernsCaseWork.Services.Context;
+using ConcernsCaseWork.Services.Decisions;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.MeansOfReferral;
 using ConcernsCaseWork.Services.Nti;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiWarningLetter;
+using ConcernsCaseWork.Services.PageHistory;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Teams;
@@ -34,29 +53,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using Serilog;
-using ConcernsCaseWork.Service.Cases;
-using ConcernsCaseWork.Service.Configuration;
-using ConcernsCaseWork.Service.FinancialPlan;
-using ConcernsCaseWork.Service.Ratings;
-using ConcernsCaseWork.Service.Records;
-using ConcernsCaseWork.Service.Status;
-using ConcernsCaseWork.Service.Trusts;
-using ConcernsCaseWork.Service.Types;
 using StackExchange.Redis;
 using System;
 using System.Net.Mime;
-using ConcernsCaseWork.Service.CaseActions;
-using ConcernsCaseWork.Service.Decision;
-using ConcernsCaseWork.Service.NtiUnderConsideration;
-using ConcernsCaseWork.Service.NtiWarningLetter;
-using ConcernsCaseWork.Service.MeansOfReferral;
-using ConcernsCaseWork.Service.Nti;
-using ConcernsCaseWork.Service.Teams;
-using ConcernsCaseWork.Services.NtiUnderConsideration;
-using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Middleware;
-using ConcernsCaseWork.Pages.Base;
-using ConcernsCaseWork.Services.PageHistory;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -124,7 +123,7 @@ namespace ConcernsCaseWork.Extensions
 				client.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
 			});
 		}
-		
+
 		/// <summary>
 		/// HttpFactory for Concerns API
 		/// </summary>
@@ -187,9 +186,9 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<INtiWarningLetterService, NtiWarningLetterService>();
 			services.AddScoped<INtiWarningLetterConditionsService, NtiWarningLetterConditionsService>();
 			services.AddScoped<INtiService, NtiService>();
-            services.AddScoped<INtiStatusesService, NtiStatusesService>();
-            services.AddScoped<INtiReasonsService, NtiReasonsService>();
-            services.AddScoped<INtiConditionsService, NtiConditionsService>();
+			services.AddScoped<INtiStatusesService, NtiStatusesService>();
+			services.AddScoped<INtiReasonsService, NtiReasonsService>();
+			services.AddScoped<INtiConditionsService, NtiConditionsService>();
 			services.AddScoped<ITeamsService, TeamsService>();
 			services.AddScoped<IDecisionService, DecisionService>();
 
@@ -211,9 +210,9 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IMeansOfReferralCachedService, MeansOfReferralCachedService>();
 			services.AddScoped<INtiWarningLetterConditionsCachedService, NtiWarningLetterConditionsCachedServices>();
 			services.AddScoped<INtiCachedService, NtiCachedService>();
-            services.AddScoped<INtiStatusesCachedService, NtiStatusesCachedService>();
-            services.AddScoped<INtiReasonsCachedService, NtiReasonsCachedService>();
-            services.AddScoped<INtiConditionsCachedService, NtiConditionsCachedService>();
+			services.AddScoped<INtiStatusesCachedService, NtiStatusesCachedService>();
+			services.AddScoped<INtiReasonsCachedService, NtiReasonsCachedService>();
+			services.AddScoped<INtiConditionsCachedService, NtiConditionsCachedService>();
 			services.AddScoped<ITeamsCachedService, TeamsCachedService>();
 			services.AddScoped<ICaseSummaryService, CaseSummaryService>();
 
@@ -229,6 +228,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IRbacManager, RbacManager>();
 
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
+			services.AddScoped<IUserContextService, UserContextService>();
 			services.AddSingleton<IPageHistoryStorageHandler, SessionPageHistoryStorageHandler>();
 		}
 
