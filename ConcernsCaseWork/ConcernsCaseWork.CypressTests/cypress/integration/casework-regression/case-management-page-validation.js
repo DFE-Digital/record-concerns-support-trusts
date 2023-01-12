@@ -17,6 +17,7 @@ describe("User can manage cases from the case management page", () => {
 
         cy.randomSelectTrust();
         cy.get("#search__option--0").click();
+        cy.getById("continue").click();
 
         cy.selectConcernType();
 
@@ -27,8 +28,5 @@ describe("User can manage cases from the case management page", () => {
         cy.enterConcernDetails();
 
         cy.validateCaseManagPage();
-        
-
-      
     });
 });
