@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
+using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using Microsoft.Extensions.Logging;
@@ -15,20 +16,35 @@ public class TrustFinancialForecastService : ConcernsAbstractService, ITrustFina
 		_logger = Guard.Against.Null(logger);
 	}
 	
-	public async Task<string> PostTrustFinancialForecast(CreateTrustFinancialForecastRequest createTrustFinancialForecast)
+	public async Task<string> CreateTrustFinancialForecast(CreateTrustFinancialForecastRequest request)
 	{
 		_logger.LogMethodEntered();
 
-		_ = Guard.Against.Null(createTrustFinancialForecast);
+		_ = Guard.Against.Null(request);
 		
 		var response = await Post<CreateTrustFinancialForecastRequest, string>(
-			$"/{EndpointsVersion}/concerns-cases/{createTrustFinancialForecast.CaseUrn}/trustfinancialforecast", 
-			createTrustFinancialForecast);
+			$"/{EndpointsVersion}/concerns-cases/{request.CaseUrn}/trustfinancialforecast", 
+			request);
 
 		_logger.LogInformation("Trust Financial Forecast created. caseUrn: {CaseUrn}, Trust Financial Forecast Id:{TrustFinancialForecastId}", 
-			createTrustFinancialForecast.CaseUrn, response);
+			request.CaseUrn, response);
 		
 		return response;
+	}
+	
+	public async Task<TrustFinancialForecastResponse> GetTrustFinancialForecastById(GetTrustFinancialForecastRequest request)
+	{
+		_logger.LogMethodEntered();
+
+		return await Get<TrustFinancialForecastResponse>(
+			$"/{EndpointsVersion}/concerns-cases/{request.CaseUrn}/trustfinancialforecast/{request.TrustFinancialForecastId}");
+	}
+
+	public async Task UpdateTrustFinancialForecast(UpdateTrustFinancialForecastRequest request)
+	{
+		_logger.LogMethodEntered();
+
+		await Put<UpdateTrustFinancialForecastRequest, string>($"/{EndpointsVersion}/concerns-cases/{request.CaseUrn}/trustfinancialforecast/{request.TrustFinancialForecastId}", request);
 	}
 }
 

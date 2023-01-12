@@ -59,9 +59,7 @@ public static class TagOutputBuilder
 	public static void BuildEmptyTextTag(this TagHelperOutput output)
 	{
 		output.TagName = "span";
-		output.Attributes.SetAttribute("class", "govuk-tag");
-		output.Attributes.SetAttribute("class", "ragtag");
-		output.Attributes.SetAttribute("class", "ragtag__grey");
+		output.Attributes.SetAttribute("class", "govuk-tag ragtag ragtag__grey");
 		output.Content.SetContent("Empty");
 	}
 }

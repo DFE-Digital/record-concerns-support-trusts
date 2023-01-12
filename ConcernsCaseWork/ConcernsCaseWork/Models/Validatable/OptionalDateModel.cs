@@ -11,6 +11,15 @@ namespace ConcernsCaseWork.Models.Validatable
 		public string Month { get; set; }
 		public string Year { get; set; }
 
+		public OptionalDateModel() { }
+		
+		public OptionalDateModel(DateTimeOffset dateTimeOffset)
+		{
+			Day = dateTimeOffset.Day.ToString().PadLeft(2, '0');
+			Month = dateTimeOffset.Month.ToString().PadLeft(2, '0');
+			Year = dateTimeOffset.Year.ToString();
+		}
+
 		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{
 			var result = new List<ValidationResult>();

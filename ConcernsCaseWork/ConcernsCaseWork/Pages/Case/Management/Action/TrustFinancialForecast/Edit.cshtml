@@ -1,10 +1,10 @@
-﻿@page "/case/{urn:long}/management/action/trustFinancialForecast/add"
-@model ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast.AddPageModel;
+﻿@page "/case/{urn:int}/management/action/trustFinancialForecast/{id:int}/edit"
+@model ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast.EditPageModel;
 @using ConcernsCaseWork.Constants
 @using ConcernsCaseWork.TagHelpers
 @using Microsoft.AspNetCore.Mvc.TagHelpers;
 @{
-	ViewData[ViewDataConstants.Title] = "Create Trust Financial Forecast (TFF)";
+	ViewData[ViewDataConstants.Title] = "Edit Trust Financial Forecast (TFF)";
 }
 
 @section BeforeMain {
@@ -32,7 +32,7 @@
 				Trust Financial Forecast (TFF)
 			</h1>
 
-			<form role="form" method="post" id="add-trust-financial-forecast-form" novalidate>
+			<form role="form" method="post" id="edit-trust-financial-forecast-form" novalidate>
 				
 				<partial name="Components/_RadioList" model="Model.ForecastingToolRanAt" />
 
