@@ -1,6 +1,4 @@
-﻿using Azure;
-using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
-using ConcernsCaseWork.API.ResponseModels;
+﻿using ConcernsCaseWork.API.ResponseModels;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Json;

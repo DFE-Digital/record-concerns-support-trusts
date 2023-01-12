@@ -1,8 +1,6 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.CaseActions;
-using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
@@ -270,14 +268,14 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 		{
 			// Arrange
 			var visitStartDate = DateTime.Now.AddDays(-3);
-			var visistEndDate = DateTime.Now;
+			var visitEndDate = DateTime.Now;
 			var expectedSRMADto = new SRMADto
 			{
 				Id = 654,
 				Status = SRMAStatus.PreparingForDeployment,
 				Reason = SRMAReasonOffered.RDDIntervention,
 				DateVisitStart = visitStartDate,
-				DateVisitEnd = visistEndDate
+				DateVisitEnd = visitEndDate
 			};
 
 			var httpClientFactory = CreateMockFactory(expectedSRMADto);
@@ -287,7 +285,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
 
 			// Act
-			var response = sut.SetVisitDates(654, visitStartDate, visistEndDate).Result;
+			var response = sut.SetVisitDates(654, visitStartDate, visitEndDate).Result;
 
 			// Assert
 			Assert.AreEqual(expectedSRMADto.Id, response.Id);

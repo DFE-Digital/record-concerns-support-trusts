@@ -11,7 +11,6 @@ using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ConcernsCaseWork.Tests.Services.Decisions
 {

@@ -7,8 +7,6 @@
 
 @{
 	ViewData["Title"] = "SRMA";
-	ViewData["BackButtonLabel"] = "Back to case";
-	ViewData["BackButtonLink"] = $"/case/{Model.CaseUrn}/management";
 
 	var errorClass = "govuk-error-message";
 	var srmaValidationErrors = TempData["SRMA.Message"] as IEnumerable<string>;
@@ -21,7 +19,7 @@
 
 @section BeforeMain {
 	<div class="govuk-width-container">
-		<partial name="_BackLink"/>
+		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
 	</div>
 }
 
@@ -84,7 +82,7 @@
                 @* Status *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Status</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="status">
                         @{
                             var statusStr = Model.SRMAModel.Status == Enums.SRMAStatus.Unknown ? string.Empty
                             : @EnumHelper.GetEnumDescription(Model.SRMAModel.Status);
@@ -101,7 +99,7 @@
                 @* Date offered *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Date trust was contacted</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-trust-contacted">
                         @{
                             RenderValue(DateExtension.ToDayMonthYear(Model.SRMAModel.DateOffered));
                         }
@@ -118,7 +116,7 @@
                     <th scope="row" class="govuk-table-case-details__header">
                         <span class="@(reasonError ? errorClass : "")">Reason</span>
                     </th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="reason">
                         @{
                             var reasonStr = Model.SRMAModel.Reason == Enums.SRMAReasonOffered.Unknown ? string.Empty
                             : @EnumHelper.GetEnumDescription(Model.SRMAModel.Reason);
@@ -138,7 +136,7 @@
                     <th scope="row" class="govuk-table-case-details__header">
                         <span class="@(dateAcceptedError ? errorClass : "")">Date accepted</span>
                     </th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-accepted">
                         @{
                             if (Model.SRMAModel.DateAccepted.HasValue)
                             {
@@ -162,7 +160,7 @@
                     <th scope="row" class="govuk-table-case-details__header">
                         <span class="@(dateVisitError ? errorClass : "")">Dates of visit</span>
                     </th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-of-visit">
                         @{
                             if (IsEmpty(Model.SRMAModel.DateVisitStart))
                             {
@@ -192,7 +190,7 @@
                     <th scope="row" class="govuk-table-case-details__header">
                         <span class="@(dateReportSentError ? errorClass : "")">Date report sent to trust</span>
                     </th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-report-sent-to-trust">
                         @{
                             if (Model.SRMAModel.DateReportSentToTrust.HasValue)
                             {
@@ -214,7 +212,7 @@
                 @* Notes *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Notes</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="notes">
                         @{
                             RenderValue(Model.SRMAModel.Notes);
                         }
