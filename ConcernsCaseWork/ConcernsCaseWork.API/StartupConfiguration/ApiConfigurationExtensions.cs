@@ -28,6 +28,7 @@ public static class ApiConfigurationExtensions
 		});
 		services.AddVersionedApiExplorer(setup =>
 		{
+			// ReSharper disable once StringLiteralTypo
 			setup.GroupNameFormat = "'v'VVV";
 			setup.SubstituteApiVersionInUrl = true;
 		});

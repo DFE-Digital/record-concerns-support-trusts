@@ -22,6 +22,7 @@ declare global {
         interface Chainable {
             getByTestId(id: string): Chainable<Element>;
             getById(id: string): Chainable<Element>;
+            waitForJavascript(): Chainable<Element>;
             login(): Chainable<Element>;
             storeSessionData(): Chainable<Element>;
             selectMoR(): Chainable<Element>;
