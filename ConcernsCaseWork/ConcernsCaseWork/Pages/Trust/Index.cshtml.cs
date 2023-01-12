@@ -29,8 +29,6 @@ namespace ConcernsCaseWork.Pages.Trust
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 
 		private const int _searchQueryMinLength = 3;
-		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
-
 
 		[BindProperty]
 		public FindTrustModel FindTrustModel { get; set; }

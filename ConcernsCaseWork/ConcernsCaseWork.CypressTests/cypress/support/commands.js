@@ -452,7 +452,7 @@ Cypress.Commands.add('randomSelectTrust', () => {
 
     let num = Math.floor(Math.random() * searchTerm.length);
     console.log(searchTerm[num]);
-    cy.get("#search").type(searchTerm[num] + "{enter}");
+    cy.get("#search").type(searchTerm[num]);
 
     return cy.wrap(searchTerm[num]).as('term');
 });
@@ -488,9 +488,7 @@ Cypress.Commands.add('basicCreateCase', () => {
     cy.randomSelectTrust();
     cy.get("#search__option--0").click();
 
-    cy.get(".govuk-summary-list__value").then(($el) => {
-        expect($el.text()).to.match(/(school|england|academy|trust|West|East|North|South|([A-Z])\w+)/i)
-    });
+    cy.getById("continue").click();
 
     cy.selectConcernType();
     cy.selectRiskToTrust();
@@ -513,9 +511,7 @@ Cypress.Commands.add('createCase', () => {
     cy.randomSelectTrust();
     cy.get("#search__option--0").click();
 
-    cy.get(".govuk-summary-list__value").then(($el) => {
-        expect($el.text()).to.match(/(school|england|academy|trust|West|East|North|South|([A-Z])\w+)/i)
-    });
+    cy.getById("continue").click();
 
     cy.selectConcernType();
     cy.selectRiskToTrust();
