@@ -13,6 +13,7 @@ using ConcernsCaseWork.Service.Trusts;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Pages.Base;
 using System.Linq;
 
@@ -28,7 +29,6 @@ namespace ConcernsCaseWork.Pages.Trust
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 
 		private const int _searchQueryMinLength = 3;
-
 
 		[BindProperty]
 		public FindTrustModel FindTrustModel { get; set; }
