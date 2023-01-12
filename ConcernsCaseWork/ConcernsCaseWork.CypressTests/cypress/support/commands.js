@@ -29,6 +29,7 @@ import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
 import { AuthenticationComponent } from "../auth/authenticationComponent";
 import { LogTask } from './constants';
 import utils from "/cypress/support/utils";
+import 'cypress-axe';
 
 
 const concernsRgx = new RegExp(/(Compliance|Financial|Force majeure|Governance|Irregularity)/, 'i');
@@ -54,12 +55,31 @@ Cypress.Commands.add("login", () => {
     new AuthenticationComponent().login(username, password);
 
     cy.visit("/");
+	cy.injectAxe();
 })
 //example: /case/5880/management"
 Cypress.Commands.add("visitPage", (slug) => {
     cy.visit(Cypress.env('url') + slug, { timeout: 30000 });
     cy.saveLocalStorage();
 })
+
+Cypress.Commands.add('excuteAccessibilityTests', () => {
+	const wcagStandards = ["wcag22aa"];
+	const impactLevel = ["critical", "minor", "moderate", "serious"];
+	const continueOnFail = false;
+    cy.injectAxe();
+    cy.checkA11y(null, {
+        runOnly: {
+            type: 'tag',
+            values: wcagStandards
+        },
+        includedImpacts: impactLevel       
+    }, null, continueOnFail);
+})
+
+
+
+
 
 Cypress.Commands.add('storeSessionData', () => {
     Cypress.Cookies.preserveOnce('.ConcernsCasework.Login')
@@ -94,7 +114,7 @@ Cypress.Commands.add('enterConcernDetails', () => {
 
 Cypress.Commands.add('addConcernsDecisionsAddToCase',()=>{
     cy.visit(Cypress.env('url')+"/home");
-
+	cy.injectAxe();
     cy.basicCreateCase();
     cy.reload();
     CaseManagementPage.getAddToCaseBtn().click();

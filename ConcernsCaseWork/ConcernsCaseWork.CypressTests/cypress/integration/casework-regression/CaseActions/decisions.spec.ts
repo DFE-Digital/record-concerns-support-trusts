@@ -3,20 +3,34 @@ import { EditDecisionPage } from "../../../pages/caseActions/decision/editDecisi
 import { ViewDecisionPage } from "../../../pages/caseActions/decision/viewDecisionPage";
 import { CloseDecisionPage } from "../../../pages/caseActions/decision/closeDecisionPage";
 import { DecisionOutcomePage } from "../../../pages/caseActions/decision/decisionOutcomePage";
+const axe = require("axe-core");
+import "cypress-axe";
 
 describe("User can add case actions to an existing case", () => {
 	const viewDecisionPage = new ViewDecisionPage();
 	const editDecisionPage = new EditDecisionPage();
 	const closeDecisionPage = new CloseDecisionPage();
 	const decisionOutcomePage = new DecisionOutcomePage();
+	
 
 	beforeEach(() => {
 		cy.login();
+
+		
 	});
+
+
 
 	after(function () {
 		cy.clearLocalStorage();
 		cy.clearCookies();
+	});
+
+	describe("Accessibility Validation", () => {
+		it("should validate WCAG 2.2 AA compliance and lower", () => {
+			cy.addConcernsDecisionsAddToCase();
+	cy.excuteAccessibilityTests();
+		});
 	});
 
 	it("Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
@@ -104,8 +118,12 @@ describe("User can add case actions to an existing case", () => {
 			.hasTotalAmountRequested("£130,000")
 			.hasTypeOfDecision("Qualified Floating Charge (QFC)")
 			.hasSupportingNotes("Testing Supporting Notes");
+
+
 	});
 
+	
+			
 	it(" Concern Decision - Creating a case, then creating a Decision, validating data is visible for this decision then Close the decision", function () {
 		cy.addConcernsDecisionsAddToCase();
 
@@ -133,22 +151,22 @@ describe("User can add case actions to an existing case", () => {
 			.eq(-3)
 			.children("a")
 			.click();
-		
+
 		viewDecisionPage.createDecisionOutcome();
 
 		decisionOutcomePage
 			.withDecisionOutcomeStatus("ApprovedWithConditions")
 			.withTotalAmountApproved("50,000")
-            .withDateDecisionMadeDay("24")
-            .withDateDecisionMadeMonth("11")
-            .withDateDecisionMadeYear("2022")
-            .withDecisionTakeEffectDay("11")
-            .withDecisionTakeEffectMonth("12")
-            .withDecisionTakeEffectYear("2023")
-            .withDecisionAuthouriser("DeputyDirector")
-            .withBusinessArea("BusinessPartner")
-            .withBusinessArea("Capital")
-            .withBusinessArea("ProviderMarketOversight")
+			.withDateDecisionMadeDay("24")
+			.withDateDecisionMadeMonth("11")
+			.withDateDecisionMadeYear("2022")
+			.withDecisionTakeEffectDay("11")
+			.withDecisionTakeEffectMonth("12")
+			.withDecisionTakeEffectYear("2023")
+			.withDecisionAuthouriser("DeputyDirector")
+			.withBusinessArea("BusinessPartner")
+			.withBusinessArea("Capital")
+			.withBusinessArea("ProviderMarketOversight")
 			.saveDecisionOutcome();
 
 		cy.get("#open-case-actions td")
@@ -158,9 +176,8 @@ describe("User can add case actions to an existing case", () => {
 			.click();
 
 		Logger.Log("Selecting decision outcome, saving and closing decision");
-		viewDecisionPage
-			.closeDecision();
-			
+		viewDecisionPage.closeDecision();
+
 		Logger.Log("Validating notes can not exceed limits");
 		closeDecisionPage
 			.withSupportingNotesExceedingLimit()
@@ -171,7 +188,6 @@ describe("User can add case actions to an existing case", () => {
 		closeDecisionPage
 			.withFinaliseSupportingNotes("This is a test for closed decision")
 			.closeDecision();
-			
 
 		Logger.Log(
 			"Selecting Decision from closed cases and verifying that the finalise note matches the above"
@@ -194,13 +210,13 @@ describe("User can add case actions to an existing case", () => {
 			.hasTypeOfDecision("Section 128 (S128)")
 			.hasSupportingNotes("This is a test for closed decision")
 			.hasBusinessArea("Business Partner")
-            .hasBusinessArea("Capital")
-            .hasBusinessArea("Provider Market Oversight")
-            .hasDecisionOutcomeStatus("Approved with conditions")
-            .hasMadeDate("24-11-2022")
-            .hasEffectiveFromDate("11-12-2023")
-            .hasTotalAmountApproved("£50,000")
-            .hasAuthoriser("Deputy Director")
+			.hasBusinessArea("Capital")
+			.hasBusinessArea("Provider Market Oversight")
+			.hasDecisionOutcomeStatus("Approved with conditions")
+			.hasMadeDate("24-11-2022")
+			.hasEffectiveFromDate("11-12-2023")
+			.hasTotalAmountApproved("£50,000")
+			.hasAuthoriser("Deputy Director")
 			.cannotCreateAnotherDecisionOutcome()
 			.cannotCloseDecision()
 			.cannotEditDecision()
