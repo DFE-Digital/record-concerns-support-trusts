@@ -10,6 +10,12 @@
     var nonce = HttpContext.GetNonce();
 }
 
+@section BeforeMain {
+	<div class="govuk-width-container">
+		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+	</div>
+}
+
 <div class="govuk-width-container">
     <partial name="_BannerError" />
 
@@ -33,15 +39,30 @@
 
                     <!-- Concern -->
                     <div class="govuk-summary-list__row">
+	                    <dt class="dfe-width-30percent govuk-summary-list__key">
+		                    Concerns
+	                    </dt>
+	                    <dd class="govuk-summary-list__value">
+		                    @foreach (var recordModel in Model.CaseModel.RecordsModel)
+		                    {
+			                    <p class="govuk-body caseDetail_type">
+				                    @recordModel.TypeModel.TypeDisplay
+			                    </p>
+		                    }
+	                    </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
                         <dt class="dfe-width-30percent govuk-summary-list__key">
-                            Concerns
+                            SFSO territory
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            @foreach (var recordModel in Model.CaseModel.RecordsModel)
+                            @if (Model.CaseModel.Territory == null)
                             {
-                                <p class="govuk-body caseDetail_type">
-                                    @recordModel.TypeModel.TypeDisplay
-                                </p>
+                                <span class='govuk-tag ragtag ragtag__grey'>Empty</span>
+                            }
+                            else
+                            {
+                                @Model.CaseModel.Territory?.Description()
                             }
                         </dd>
                     </div>
@@ -66,15 +87,14 @@
                             Date closed
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            @DateTimeHelper.ParseToDisplayDate(Model.CaseModel.ClosedAt.Value)
+                            @DateTimeHelper.ParseToDisplayDate(Model.CaseModel.ClosedAt!.Value)
                         </dd>
                     </div>
                 </dl>
 
                 <!--Accordions-->
                 <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
-
-                    <div class="govuk-accordion__section">
+	                <div class="govuk-accordion__section">
                         <div class="govuk-accordion__section-header">
                             <h2 class="govuk-accordion__section-heading">
                                 <span class="govuk-accordion__section-button" id="accordion-default-heading-1">Issue</span>
@@ -82,7 +102,7 @@
                         </div>
                         <div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1">
                             <div class="govuk-body details govuk-body-accordion-limit">
-                                <p class="dfe-text-area-display">@Model.CaseModel.Issue</p>
+                                <span class="dfe-text-area-display">@Model.CaseModel.Issue</span>
                             </div>
                         </div>
                     </div>
@@ -95,7 +115,7 @@
                         </div>
                         <div aria-labelledby="accordion-default-heading-2" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-2">
                             <div class="govuk-body details govuk-body-accordion-limit">
-                                <p class="dfe-text-area-display">@Model.CaseModel.CurrentStatus</p>
+                                <span class="dfe-text-area-display">@Model.CaseModel.CurrentStatus</span>
                             </div>
                         </div>
                     </div>
@@ -108,7 +128,7 @@
                         </div>
                         <div aria-labelledby="accordion-default-heading-3" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-3">
                             <div class="govuk-body details govuk-body-accordion-limit">
-                                <p class="dfe-text-area-display">@Model.CaseModel.CaseAim</p>
+                                <span class="dfe-text-area-display">@Model.CaseModel.CaseAim</span>
                             </div>
                         </div>
                     </div>
@@ -121,7 +141,7 @@
                         </div>
                         <div aria-labelledby="accordion-default-heading-4" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-4">
                             <div class="govuk-body details govuk-body-accordion-limit">
-                                <p class="dfe-text-area-display">@Model.CaseModel.DeEscalationPoint</p>
+                                <span class="dfe-text-area-display">@Model.CaseModel.DeEscalationPoint</span>
                             </div>
                         </div>
                     </div>
@@ -134,7 +154,7 @@
                         </div>
                         <div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
                             <div class="govuk-body details govuk-body-accordion-limit">
-                                <p class="dfe-text-area-display">@Model.CaseModel.NextSteps</p>
+                                <span class="dfe-text-area-display">@Model.CaseModel.NextSteps</span>
                             </div>
                         </div>
                     </div>
@@ -147,7 +167,7 @@
                         </div>
                         <div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
                             <div class="govuk-body details govuk-body-accordion-limit">
-                                <p class="dfe-text-area-display">@Model.CaseModel.CaseHistory</p>
+                                <span class="dfe-text-area-display">@Model.CaseModel.CaseHistory</span>
                             </div>
                         </div>
                     </div>
@@ -160,20 +180,12 @@
                         </div>
                         <div aria-labelledby="accordion-default-heading-6" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-6">
                             <div class="govuk-body details govuk-body-accordion-limit">
-                                <p class="dfe-text-area-display">@Model.CaseModel.ReasonAtReview</p>
+                                <span class="dfe-text-area-display">@Model.CaseModel.ReasonAtReview</span>
                             </div>
                         </div>
                     </div>
 
                 </div>
-
-                <script type="application/javascript" nonce="@nonce">
-                    $(function () {
-                        $("button[id^='accordion-default-heading']").attr("aria-expanded", "true");
-                        $(".govuk-accordion__section").addClass("govuk-accordion__section--expanded");
-                    });
-                </script>
-
             }
         </div>
         <div>

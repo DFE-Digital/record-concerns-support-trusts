@@ -14,6 +14,7 @@ describe("The correct items are visible on the details page", () => {
 
 		cy.randomSelectTrust();
 		cy.get("#search__option--0").click();
+		cy.getById("continue").click();
 
 		cy.task(LogTask, "Concern type (Financial: Deficit)");
 		cy.get(".govuk-summary-list__value").then(($el) =>{

@@ -85,13 +85,13 @@ namespace ConcernsCaseWork.Tests.Services.Teams
 
 		private class TestFixture
 		{
-			public Fixture AutoFixture;
-			public Mock<ITeamsCachedService> MockCachedTeamsService;
-			public Mock<ILogger<TeamsModelService>> MockLogger;
+			public readonly Fixture AutoFixture;
+			public readonly Mock<ITeamsCachedService> MockCachedTeamsService;
+			public readonly Mock<ILogger<TeamsModelService>> MockLogger;
 
 			public string CurrentUserName { get; }
 
-			private Mapper _mapper;
+			private readonly Mapper _mapper;
 
 			public TestFixture()
 			{

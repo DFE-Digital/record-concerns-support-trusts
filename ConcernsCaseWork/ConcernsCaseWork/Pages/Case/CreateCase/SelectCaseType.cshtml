@@ -1,0 +1,77 @@
+@page "/case/create/type"
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model SelectCaseTypePageModel
+
+@{
+	ViewData["Title"] = "New Case";
+}
+
+@section BeforeMain {
+	<div class="govuk-width-container">
+		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+	</div>
+}
+
+<div class="govuk-width-container" id="choosecasetype">
+	
+	<partial name="_BannerError"/>
+	
+	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+	{
+		<partial name="_Error"/>
+	}
+	else
+	{
+		<form role="form" method="post" id="choose-case-type-form" novalidate>
+			<partial name="_ValidationErrors"/>
+			<h1 class="govuk-heading-l">Create case</h1>
+			<dl class="govuk-summary-list">
+				<div class="govuk-summary-list__row">
+					<dt class="govuk-summary-list__key">Trust</dt>
+					<dd class="govuk-summary-list__value">
+						@Model.TrustAddress.TrustName @Model.TrustAddress.County
+						<br/>
+						@Model.TrustAddress.DisplayAddress
+					</dd>
+				</div>
+			</dl>
+
+			<h2 class="govuk-heading-m">What are you recording?</h2>
+
+			<div class="govuk-radios" data-module="govuk-radios" id="@nameof(Model.CaseType)">
+				<div class="govuk-radios__item">
+					<input asp-for="CaseType" class="govuk-radios__input" id="concerncase-option" type="radio" value="@SelectCaseTypePageModel.CaseTypes.Concern">
+					<label asp-for="CaseType" class="govuk-label govuk-radios__label" for="concerncase-option">
+						A concern or multiple concerns
+					</label>
+					<div class="govuk-hint govuk-radios__hint">
+						This includes narrative, actions or decisions related to any new concern(s)
+					</div>
+				</div>
+				<div class="govuk-radios__item">
+					<input asp-for="CaseType" class="govuk-radios__input" id="non-concerncase-option" type="radio" value="@SelectCaseTypePageModel.CaseTypes.NonConcern">
+					<label asp-for="CaseType" class="govuk-label govuk-radios__label" for="non-concerncase-option">
+						Non-concern related action(s) or decision(s)
+					</label>
+					<div class="govuk-hint govuk-radios__hint">
+						For example, a proactive School Resource Management Adviser (SRMA)
+					</div>
+				</div>
+			</div>
+
+			<div class="govuk-button-group">
+				<button data-prevent-double-click="true"
+				        class="govuk-button govuk-!-margin-top-6"
+				        data-module="govuk-button"
+				        role="button"
+				        id="continue"
+				        name="action"
+				        value="continue">
+					Continue
+				</button>
+			</div>
+		</form>
+	}
+		</div>
+
+

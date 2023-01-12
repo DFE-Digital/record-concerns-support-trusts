@@ -66,7 +66,7 @@
                                 {
                                     var idStr = id++ == 0 ? "reason" : "reason-" + id;
                                     <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" id="@idStr" name="reason" type="checkbox" value="@reason.Id">
+                                        <input class="govuk-checkboxes__input" data-testid="reason-@reason.Text" id="@idStr" name="reason" type="checkbox" value="@reason.Id">
                                         <label class="govuk-label govuk-checkboxes__label" for="@idStr">
                                             @reason.Text
                                         </label>
