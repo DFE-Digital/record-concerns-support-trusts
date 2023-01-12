@@ -1,8 +1,10 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Pages.Case.Management.Action.Decision;
 using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -71,7 +73,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			var logger = new Mock<ILogger<IndexPageModel>>();
 
-			return new IndexPageModel(_mockDecision.Object, logger.Object)
+			var permissionsService = new Mock<ICasePermissionsService>();
+			permissionsService.Setup(m => m.GetCasePermissions(It.IsAny<long>())).ReturnsAsync(_fixture.Create<GetCasePermissionsResponse>());
+
+			return new IndexPageModel(_mockDecision.Object, permissionsService.Object, logger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
