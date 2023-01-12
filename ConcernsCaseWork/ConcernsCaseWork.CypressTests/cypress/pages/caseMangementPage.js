@@ -1,3 +1,5 @@
+import { Logger } from "../common/logger";
+
 class CaseManagementPage {
 
     //locators
@@ -136,12 +138,25 @@ class CaseManagementPage {
 
     editConcern()
     {
+        Logger.Log("Editing the concern");
         cy.getByTestId("edit-concern").click();
     }
 
     withRationaleForClosure(reason)
     {
+        Logger.Log(`With rationale for closure ${reason}`)
         cy.getById("case-outcomes").clear().type(reason);
+    }
+
+    withRationaleForClosureExceedingLimit()
+    {
+        Logger.Log(`With rationale for closure that exceeds the limit`)
+        cy.getById("case-outcomes").clear().invoke("val", "x1".repeat(200));
+    }
+
+    hasCloseCasePageValidationErrors(value) {
+        Logger.Log(`Has validation error ${value} on the case closure page`);
+        cy.getById("errorSummary").should("contain.text", value);
     }
 }
     export default new CaseManagementPage();
