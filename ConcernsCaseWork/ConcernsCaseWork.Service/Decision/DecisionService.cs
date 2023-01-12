@@ -4,7 +4,7 @@ using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
-using ConcernsCaseWork.Services.Context;
+using ConcernsCaseWork.Service.Context;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.Decision

@@ -1,7 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.API.Contracts.Context;
 using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Services.Context;
+using ConcernsCaseWork.Service.Context;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;

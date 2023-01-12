@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
-using ConcernsCaseWork.Services.Context;
+using ConcernsCaseWork.Service.Context;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -9,7 +9,7 @@ namespace ConcernsCaseWork.Service.Status
 	public sealed class StatusService : ConcernsAbstractService, IStatusService
 	{
 		private readonly ILogger<StatusService> _logger;
-		
+
 		public StatusService(IHttpClientFactory clientFactory, ILogger<StatusService> logger, ICorrelationContext correlationContext, IUserContextService userContextService) : base(clientFactory, logger, correlationContext, userContextService)
 		{
 			_logger = logger;
@@ -20,22 +20,22 @@ namespace ConcernsCaseWork.Service.Status
 			try
 			{
 				_logger.LogInformation("StatusService::GetStatuses");
-				
+
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/concerns-statuses");
-				
+
 				// Create http client
 				var client = CreateHttpClient();
-				
+
 				// Execute request
 				var response = await client.SendAsync(request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
-				
+
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
-				
+
 				// Deserialize content to POCO
 				var apiWrapperStatusesDto = JsonConvert.DeserializeObject<ApiListWrapper<StatusDto>>(content);
 

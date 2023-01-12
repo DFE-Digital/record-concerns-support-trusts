@@ -1,33 +1,32 @@
 ﻿using Ardalis.GuardClauses;
-using Microsoft.AspNetCore.Http;
+using ConcernsCaseWork.API.Contracts.Context;
+using System.Security.Claims;
 using System.Security.Principal;
 
-namespace ConcernsCaseWork.Services.Context
+namespace ConcernsCaseWork.Service.Context
 {
 	public class UserContextService : IUserContextService
 	{
-		private IPrincipal _principal;
+		private ClaimsPrincipal _claimsPrincipal;
 
-		public void SetPrincipal(IPrincipal principal)
+		public void SetPrincipal(ClaimsPrincipal claimsPrincipal)
 		{
-			_principal = principal;
-
-			var contextHeaderString = $"name:{GetPrincipalName(_principal)}";
+			_claimsPrincipal = claimsPrincipal;
 		}
 
 		public void AddHeaders(HttpRequestMessage request)
 		{
-			if (_principal != null)
+			var header = new UserContextHeader()
 			{
-				var contextHeaderString = $"name:{GetPrincipalName(_principal)}";
-				request.Headers.Add("x-user-context", contextHeaderString);
-			}
-			else
+				Name = GetPrincipalName(_claimsPrincipal),
+				Roles = _claimsPrincipal.FindAll(c => c.Value.StartsWith("concerns-casework.")).Select(x => x.Value).ToArray()
+			};
+
+			foreach (KeyValuePair<string, string> keyValuePair in header.ToHeadersKVP())
 			{
-				request.Headers.Add("x-user-context", string.Empty);
+				request.Headers.Add(keyValuePair.Key, keyValuePair.Value);
 			}
 		}
-
 
 		private string GetPrincipalName(IPrincipal principal)
 		{
@@ -35,16 +34,10 @@ namespace ConcernsCaseWork.Services.Context
 
 			if (principal?.Identity?.Name is null)
 			{
-				throw new ArgumentNullException(nameof(principal.Identity.Name));
+				return string.Empty;
 			}
 
 			return principal.Identity.Name;
 		}
-	}
-
-	public interface IUserContextService
-	{
-		void SetPrincipal(IPrincipal principal);
-		void AddHeaders(HttpRequestMessage request);
 	}
 }

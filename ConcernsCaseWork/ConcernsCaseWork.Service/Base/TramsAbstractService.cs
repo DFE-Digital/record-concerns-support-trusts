@@ -1,5 +1,5 @@
 using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Services.Context;
+using ConcernsCaseWork.Service.Context;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.Base;

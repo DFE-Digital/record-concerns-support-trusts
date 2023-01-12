@@ -1,5 +1,5 @@
 using Ardalis.GuardClauses;
-using ConcernsCaseWork.Services.Context;
+using ConcernsCaseWork.Service.Context;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
