@@ -12,6 +12,7 @@ using ConcernsCaseWork.Service.Trusts;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Base;
 
@@ -27,6 +28,8 @@ namespace ConcernsCaseWork.Pages.Case
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 
 		private const int _searchQueryMinLength = 3;
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
+
 
 
 		[BindProperty]
