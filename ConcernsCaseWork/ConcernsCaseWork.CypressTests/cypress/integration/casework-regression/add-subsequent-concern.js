@@ -21,6 +21,7 @@ describe("User adds subsequent Concern to a case", () => {
 			term = text;
 		});
 		cy.get("#search__option--0").click();
+		cy.getById("continue").click();
 
 		cy.get(".govuk-summary-list .govuk-summary-list__row:nth-of-type(1) .govuk-summary-list__value");
 		CreateCaseConcernsPage.selectConcernType();
