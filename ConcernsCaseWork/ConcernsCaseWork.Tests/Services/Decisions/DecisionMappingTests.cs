@@ -8,6 +8,7 @@ using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Services.Decisions;
 using FluentAssertions;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using System;
 using System.Collections.Generic;
 
