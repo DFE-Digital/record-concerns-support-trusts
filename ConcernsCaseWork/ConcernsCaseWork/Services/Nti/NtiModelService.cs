@@ -1,6 +1,7 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Redis.Nti;
+using ConcernsCaseWork.Service.Permissions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,16 @@ namespace ConcernsCaseWork.Services.Nti
 	{
 		private readonly INtiCachedService _ntiCachedService;
 		private readonly INtiStatusesCachedService _ntiStatusesCachedService;
+		private readonly ICasePermissionsService _casePermissionsService;
 
-		public NtiModelService(INtiCachedService ntiCachedService, INtiStatusesCachedService ntiStatusesCachedService)
+		public NtiModelService(
+			INtiCachedService ntiCachedService, 
+			INtiStatusesCachedService ntiStatusesCachedService,
+			ICasePermissionsService casePermissionsService)
 		{
 			_ntiCachedService = ntiCachedService;
 			_ntiStatusesCachedService = ntiStatusesCachedService;
+			_casePermissionsService = casePermissionsService;
 		}
 
 		public async Task<NtiModel> CreateNtiAsync(NtiModel ntiModel)
@@ -38,6 +44,17 @@ namespace ConcernsCaseWork.Services.Nti
 			var statuses = await _ntiStatusesCachedService.GetAllStatusesAsync();
 
 			return NtiMappers.ToServiceModel(dto, statuses);
+		}
+
+		public async Task<NtiModel> GetNtiViewModelAsync(long caseId, long ntiId)
+		{
+			var dto = await _ntiCachedService.GetNtiAsync(ntiId);
+			var statuses = await _ntiStatusesCachedService.GetAllStatusesAsync();
+			var permissions = await _casePermissionsService.GetCasePermissions(caseId);
+
+			var result = NtiMappers.ToServiceModel(dto, statuses, permissions);
+
+			return result;
 		}
 
 		public async Task<NtiModel> GetNtiByIdAsync(long ntiId)
