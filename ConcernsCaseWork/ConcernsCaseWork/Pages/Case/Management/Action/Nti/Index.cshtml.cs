@@ -50,15 +50,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		public async Task OnGetAsync()
 		{
 			long ntiId = 0;
+			long caseId = 0;
 
 			try
 			{
 				_logger.LogInformation("Case::Action::NTI::IndexPageModel::OnGetAsync");
 
 				
-				(_, ntiId) = GetRouteData();
+				(caseId, ntiId) = GetRouteData();
 
-				NtiModel = await GetNTIModel(ntiId);
+				NtiModel = await GetNTIModel(caseId, ntiId);
 
 				if (NtiModel == null)
 				{
@@ -72,9 +73,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			}
 		}
 
-		private async Task<NtiModel> GetNTIModel(long ntiId)
+		private async Task<NtiModel> GetNTIModel(long caseId, long ntiId)
 		{
-			var nti = await _ntiModelService.GetNtiByIdAsync(ntiId);
+			var nti = await _ntiModelService.GetNtiViewModelAsync(caseId, ntiId);
 
 			if (nti != null)
 			{
