@@ -175,7 +175,7 @@
         </table>
 
 
-        @if (Model.NtiWarningLetterModel.ClosedAt == null)
+        @if (Model.NtiWarningLetterModel.IsEditable)
         {
             <div class="govuk-button-group">
                 <a data-prevent-double-click="true" href="@Request.Path/edit" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-wl-button">
