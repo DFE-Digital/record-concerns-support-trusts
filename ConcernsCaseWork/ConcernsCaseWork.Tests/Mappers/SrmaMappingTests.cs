@@ -50,11 +50,9 @@ public class SrmaMappingTests
 	[Test]
 	public void WhenMapDtoToServiceModel_NotEditable_ReturnsCorrectModel()
 	{
-		//arrange
 		var dto = _fixture.Create<SRMADto>();
 		var permissionsResponse = new GetCasePermissionsResponse();
 
-		// act
 		var serviceModel = CaseActionsMapping.Map(dto, permissionsResponse);
 
 		serviceModel.IsEditable.Should().BeFalse();
