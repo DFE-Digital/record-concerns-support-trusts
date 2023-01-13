@@ -74,6 +74,20 @@ namespace ConcernsCaseWork.Tests.Mappers
 		}
 
 		[Test]
+		public void WhenMapDtoToServiceModel_NotEditable_ReturnsCorrectModel()
+		{
+			var statuses = _fixture.CreateMany<FinancialPlanStatusDto>().ToList();
+			var dto = _fixture.Create<FinancialPlanDto>();
+			dto.StatusId = statuses.First().Id;
+
+			var casePermission = new GetCasePermissionsResponse();
+
+			var serviceModel = FinancialPlanMapping.MapDtoToModel(dto, statuses, casePermission);
+
+			serviceModel.IsEditable.Should().BeFalse();
+		}
+
+		[Test]
 		public void WhenMapDtoListToDbModelList_ReturnsCorrectModelList()
 		{
 			//arrange
