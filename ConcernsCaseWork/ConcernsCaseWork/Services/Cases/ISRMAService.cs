@@ -11,6 +11,7 @@ namespace ConcernsCaseWork.Services.Cases
 		public Task SaveSRMA(SRMAModel srma);
 		public Task<IEnumerable<SRMAModel>> GetSRMAsForCase(long caseUrn);
 		public Task<SRMAModel> GetSRMAById(long srmaId);
+		public Task<SRMAModel> GetSRMAViewModel(long caseId, long srmaId);
 		public Task SetStatus(long srmaId, SRMAStatus status);
 		public Task SetReason(long srmaId, SRMAReasonOffered reason);
 		public Task SetOfferedDate(long srmaId, DateTime offeredDate);
