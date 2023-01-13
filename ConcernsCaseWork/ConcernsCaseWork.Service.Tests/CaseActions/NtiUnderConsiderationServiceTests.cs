@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.Service.Context;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -36,7 +37,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 
 			var httpClientFactory = CreateMockFactory(ntis);
 
-			var sut = new NtiUnderConsiderationService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
+			var sut = new NtiUnderConsiderationService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
 
 			// Act
 			var response = sut.GetNtisForCase(123).Result;
@@ -63,7 +64,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 
 			var logger = new Mock<ILogger<NtiUnderConsiderationService>>();
 
-			var sut = new NtiUnderConsiderationService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
+			var sut = new NtiUnderConsiderationService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
 
 			// Act
 			var response = sut.CreateNti(expectedNtiDto).Result;

@@ -16,10 +16,10 @@ namespace ConcernsCaseWork.Service.Context
 
 		public void AddHeaders(HttpRequestMessage request)
 		{
-			var header = new UserContextHeader()
+			var header = new UserContext()
 			{
 				Name = GetPrincipalName(_claimsPrincipal),
-				Roles = _claimsPrincipal.FindAll(c => c.Value.StartsWith("concerns-casework.")).Select(x => x.Value).ToArray()
+				Roles = UserContext.ParseRoleClaims(_claimsPrincipal.Claims.Select(x => x.Value).ToArray())
 			};
 
 			foreach (KeyValuePair<string, string> keyValuePair in header.ToHeadersKVP())

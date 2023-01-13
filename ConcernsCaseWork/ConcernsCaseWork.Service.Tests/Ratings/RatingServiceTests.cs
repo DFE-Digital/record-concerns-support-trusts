@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.Service.Context;
 using ConcernsCaseWork.Service.Ratings;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Logging;
@@ -36,7 +37,7 @@ namespace ConcernsCaseWork.Service.Tests.Ratings
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<RatingService>>();
-			var ratingService = new RatingService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
+			var ratingService = new RatingService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
 
 			// act
 			var ratings = await ratingService.GetRatings();
@@ -77,7 +78,7 @@ namespace ConcernsCaseWork.Service.Tests.Ratings
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<RatingService>>();
-			var ratingService = new RatingService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
+			var ratingService = new RatingService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
 
 			Assert.ThrowsAsync<HttpRequestException>(() => ratingService.GetRatings());
 		}
@@ -105,7 +106,7 @@ namespace ConcernsCaseWork.Service.Tests.Ratings
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<RatingService>>();
-			var ratingService = new RatingService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
+			var ratingService = new RatingService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
 			
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => ratingService.GetRatings());
