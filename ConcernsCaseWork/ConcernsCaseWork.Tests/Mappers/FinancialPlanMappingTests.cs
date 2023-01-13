@@ -7,6 +7,7 @@ using System.Linq;
 using AutoFixture;
 using FluentAssertions;
 using ConcernsCaseWork.Service.FinancialPlan;
+using ConcernsCaseWork.API.Contracts.Permissions;
 
 namespace ConcernsCaseWork.Tests.Mappers
 {
@@ -49,8 +50,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 				testData.Notes
 			);
 
+			var casePermission = new GetCasePermissionsResponse() { Permissions  = new List<CasePermission>() { CasePermission.Edit } };
+
 			// act
-			var serviceModel = FinancialPlanMapping.MapDtoToModel(dto, statuses);
+			var serviceModel = FinancialPlanMapping.MapDtoToModel(dto, statuses, casePermission);
 
 			// assert
 			Assert.That(serviceModel, Is.Not.Null);
@@ -66,6 +69,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				//Assert.That(serviceModel.UpdatedAt, Is.EqualTo(testData.UpdatedAt)); // TODO: This is not currently mapped. Check if this is correct behaviour
 				Assert.That(serviceModel.ClosedAt, Is.EqualTo(testData.ClosedAt));
 				Assert.That(serviceModel.CreatedAt, Is.EqualTo(testData.CreatedAt));
+				Assert.That(serviceModel.IsEditable, Is.True);
 			});
 		}
 
