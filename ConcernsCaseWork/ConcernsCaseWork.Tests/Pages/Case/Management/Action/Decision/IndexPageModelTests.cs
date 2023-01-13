@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
@@ -49,6 +50,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			pageModel.Decision.ConcernsCaseUrn.Should().Be(apiDecision.ConcernsCaseUrn);
 			pageModel.Decision.DecisionId.Should().Be(apiDecision.DecisionId);
+			pageModel.Decision.IsEditable.Should().BeTrue();
 			
 			pageModel.ViewData[ViewDataConstants.Title].Should().Be("Decision");
 		}
@@ -73,8 +75,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			var logger = new Mock<ILogger<IndexPageModel>>();
 
+			var casePermissions = new GetCasePermissionsResponse() { Permissions = new List<CasePermission>() { CasePermission.Edit } };
 			var permissionsService = new Mock<ICasePermissionsService>();
-			permissionsService.Setup(m => m.GetCasePermissions(It.IsAny<long>())).ReturnsAsync(_fixture.Create<GetCasePermissionsResponse>());
+			permissionsService.Setup(m => m.GetCasePermissions(It.IsAny<long>())).ReturnsAsync(casePermissions);
 
 			return new IndexPageModel(_mockDecision.Object, permissionsService.Object, logger.Object)
 			{
