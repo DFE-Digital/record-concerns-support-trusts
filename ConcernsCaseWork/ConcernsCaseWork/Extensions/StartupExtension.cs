@@ -20,7 +20,6 @@ using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Service.CaseActions;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Configuration;
-using ConcernsCaseWork.Service.Context;
 using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Service.FinancialPlan;
 using ConcernsCaseWork.Service.MeansOfReferral;
@@ -48,6 +47,7 @@ using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Teams;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
+using ConcernsCaseWork.UserContext;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -228,7 +228,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IRbacManager, RbacManager>();
 
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
-			services.AddScoped<IUserContextService, UserContextService>();
+			services.AddScoped<IUserInfoService, UserInfoService>();
 			services.AddSingleton<IPageHistoryStorageHandler, SessionPageHistoryStorageHandler>();
 		}
 

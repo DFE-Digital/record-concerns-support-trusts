@@ -1,7 +1,7 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.CaseActions;
-using ConcernsCaseWork.Service.Context;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 
 			var httpClientFactory = CreateMockFactory(srmas.ToList());
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
 
 			// Act
 			var response = sut.GetSRMAsForCase(123).Result;
@@ -73,7 +73,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
 
 			// Act
 			var response = sut.GetSRMAById(654).Result;
@@ -101,7 +101,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
 
 			// Act
 			var response = sut.SaveSRMA(expectedSRMADto).Result;
@@ -131,7 +131,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
 
 			// Act
 			var response = sut.SetDateAccepted(654, dateAccepted).Result;
@@ -162,7 +162,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
 
 			// Act
 			var response = sut.SetDateClosed(654).Result;
@@ -193,7 +193,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
 
 			// Act
 			var response = sut.SetDateReportSent(654, dateReportSent).Result;
@@ -223,7 +223,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
 
 			// Act
 			var response = sut.SetNotes(654, notes).Result;
@@ -252,7 +252,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
 
 			// Act
 			var response = sut.SetOfferedDate(654, offeredDate).Result;
@@ -283,7 +283,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
 
 			// Act
 			var response = sut.SetVisitDates(654, visitStartDate, visitEndDate).Result;
@@ -312,7 +312,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
 
 			// Act
 			var response = sut.SetStatus(654, status).Result;
@@ -339,7 +339,7 @@ namespace ConcernsCaseWork.Service.Tests.CaseActions
 
 			var logger = new Mock<ILogger<SRMAProvider>>();
 
-			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
+			var sut = new SRMAProvider(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
 
 			// Act
 			var response = sut.SetReason(654, reason).Result;

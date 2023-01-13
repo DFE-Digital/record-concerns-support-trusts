@@ -1,5 +1,5 @@
 ﻿using Ardalis.GuardClauses;
-using ConcernsCaseWork.API.Contracts.Context;
+using ConcernsCaseWork.UserContext;
 using System;
 using System.Security.Principal;
 
@@ -22,18 +22,18 @@ public class ClaimsPrincipalHelper : IClaimsPrincipalHelper
 	public bool IsCaseworker(IPrincipal principal)
 	{
 		Guard.Against.Null(principal);
-		return principal.IsInRole(UserContext.CaseWorkerRoleClaim);
+		return principal.IsInRole(UserInfo.CaseWorkerRoleClaim);
 	}
 
 	public bool IsTeamLeader(IPrincipal principal)
 	{
 		Guard.Against.Null(principal);
-		return principal.IsInRole(UserContext.TeamLeaderRoleClaim);
+		return principal.IsInRole(UserInfo.TeamLeaderRoleClaim);
 	}
 
 	public bool IsAdmin(IPrincipal principal)
 	{
 		Guard.Against.Null(principal);
-		return principal.IsInRole(UserContext.AdminRoleClaim);
+		return principal.IsInRole(UserInfo.AdminRoleClaim);
 	}
 }

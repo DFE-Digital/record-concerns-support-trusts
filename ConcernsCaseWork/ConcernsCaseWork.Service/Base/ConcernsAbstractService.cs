@@ -1,12 +1,12 @@
 using ConcernsCaseWork.Logging;
-using ConcernsCaseWork.Service.Context;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.Base
 {
 	public abstract class ConcernsAbstractService : AbstractService
 	{
-		protected ConcernsAbstractService(IHttpClientFactory clientFactory, ILogger<ConcernsAbstractService> logger, ICorrelationContext correlationContext, IUserContextService userContextService) : base(clientFactory, logger, correlationContext, userContextService)
+		protected ConcernsAbstractService(IHttpClientFactory clientFactory, ILogger<ConcernsAbstractService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			HttpClientName = "ConcernsClient";
 		}

@@ -1,14 +1,14 @@
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
-using ConcernsCaseWork.Service.Context;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.Cases;
 
 public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummaryService
 {
-	public ApiCaseSummaryService(ILogger<ApiCaseSummaryService> logger, ICorrelationContext correlationContext, IHttpClientFactory clientFactory, IUserContextService userContextService) :
-		base(clientFactory, logger, correlationContext, userContextService) { }
+	public ApiCaseSummaryService(ILogger<ApiCaseSummaryService> logger, ICorrelationContext correlationContext, IHttpClientFactory clientFactory, IUserInfoService userInfoService) :
+		base(clientFactory, logger, correlationContext, userInfoService) { }
 
 	public async Task<IEnumerable<ActiveCaseSummaryDto>> GetActiveCaseSummariesByCaseworker(string caseworker)
 		=> await Get<IEnumerable<ActiveCaseSummaryDto>>($"/{EndpointsVersion}/concerns-cases/summary/{caseworker}/active");

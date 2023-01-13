@@ -1,6 +1,6 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
-using ConcernsCaseWork.Service.Context;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Service.Ratings
 	{
 		private readonly ILogger<RatingService> _logger;
 		
-		public RatingService(IHttpClientFactory clientFactory, ILogger<RatingService> logger, ICorrelationContext correlationContext, IUserContextService userContextService) : base(clientFactory, logger, correlationContext, userContextService)
+		public RatingService(IHttpClientFactory clientFactory, ILogger<RatingService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}

@@ -1,8 +1,8 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
-using ConcernsCaseWork.Service.Context;
 using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Service.Tests.Status
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<StatusService>>();
-			var statusService = new StatusService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
+			var statusService = new StatusService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
 			
 			// act
 			var statuses = await statusService.GetStatuses();
@@ -80,7 +80,7 @@ namespace ConcernsCaseWork.Service.Tests.Status
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<StatusService>>();
-			var statusService = new StatusService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
+			var statusService = new StatusService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
 			
 			// act | assert
 			Assert.ThrowsAsync<Exception>(() => statusService.GetStatuses());
@@ -106,7 +106,7 @@ namespace ConcernsCaseWork.Service.Tests.Status
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<StatusService>>();
-			var statusService = new StatusService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserContextService>());
+			var statusService = new StatusService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
 			
 			// act | assert
 			Assert.ThrowsAsync<HttpRequestException>(() => statusService.GetStatuses());

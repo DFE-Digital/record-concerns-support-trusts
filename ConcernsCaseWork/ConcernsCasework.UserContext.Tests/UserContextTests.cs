@@ -1,4 +1,4 @@
-﻿using ConcernsCaseWork.API.Contracts.Context;
+﻿using ConcernsCaseWork.UserContext;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -13,13 +13,13 @@ namespace ConcernsCaseWork.API.Contracts.Tests.Context
 		[Fact]
 		public void ToHeadersKVP_When_NameSet_Returns_Name_Header()
 		{
-			var sut = new UserContext();
+			var sut = new UserInfo();
 			sut.Name = Guid.NewGuid().ToString();
 			sut.Roles = new[]
 			{
-				UserContext.CaseWorkerRoleClaim,
-				UserContext.TeamLeaderRoleClaim,
-				UserContext.AdminRoleClaim,
+				UserInfo.CaseWorkerRoleClaim,
+				UserInfo.TeamLeaderRoleClaim,
+				UserInfo.AdminRoleClaim,
 				"x-filtered-out-role"
 			};
 
@@ -31,13 +31,13 @@ namespace ConcernsCaseWork.API.Contracts.Tests.Context
 		[Fact]
 		public void ToHeadersKVP_When_Name_And_Roles_Set_Returns_Role_Headers()
 		{
-			var sut = new UserContext();
+			var sut = new UserInfo();
 			sut.Name = Guid.NewGuid().ToString();
 			sut.Roles = new[]
 			{
-				UserContext.CaseWorkerRoleClaim,
-				UserContext.TeamLeaderRoleClaim,
-				UserContext.AdminRoleClaim
+				UserInfo.CaseWorkerRoleClaim,
+				UserInfo.TeamLeaderRoleClaim,
+				UserInfo.AdminRoleClaim
 			};
 
 			var results = sut.ToHeadersKVP();
@@ -45,32 +45,32 @@ namespace ConcernsCaseWork.API.Contracts.Tests.Context
 			roleResults.Length.Should().Be(3);
 
 			roleResults[0].Key.Should().Be("x-userContext-role-0");
-			roleResults[0].Value.Should().Be(UserContext.CaseWorkerRoleClaim);
+			roleResults[0].Value.Should().Be(UserInfo.CaseWorkerRoleClaim);
 			roleResults[1].Key.Should().Be("x-userContext-role-1");
-			roleResults[1].Value.Should().Be(UserContext.TeamLeaderRoleClaim);
+			roleResults[1].Value.Should().Be(UserInfo.TeamLeaderRoleClaim);
 			roleResults[2].Key.Should().Be("x-userContext-role-2");
-			roleResults[2].Value.Should().Be(UserContext.AdminRoleClaim);
+			roleResults[2].Value.Should().Be(UserInfo.AdminRoleClaim);
 		}
 
 		[Fact]
 		public void ParseRoleClaims_When_Claims_Filters_To_Only_Concerns_Roles()
 		{
-			var sut = new UserContext();
+			var sut = new UserInfo();
 			sut.Name = Guid.NewGuid().ToString();
 			var claims = new[]
 			{
-				UserContext.CaseWorkerRoleClaim,
-				UserContext.TeamLeaderRoleClaim,
-				UserContext.AdminRoleClaim,
+				UserInfo.CaseWorkerRoleClaim,
+				UserInfo.TeamLeaderRoleClaim,
+				UserInfo.AdminRoleClaim,
 				"x-filtered-out-role"
 			};
 
-			var results = UserContext.ParseRoleClaims(claims);
+			var results = UserInfo.ParseRoleClaims(claims);
 			results.Length.Should().Be(3);
 
-			results[0].Should().Be(UserContext.CaseWorkerRoleClaim);
-			results[1].Should().Be(UserContext.TeamLeaderRoleClaim);
-			results[2].Should().Be(UserContext.AdminRoleClaim);
+			results[0].Should().Be(UserInfo.CaseWorkerRoleClaim);
+			results[1].Should().Be(UserInfo.TeamLeaderRoleClaim);
+			results[2].Should().Be(UserInfo.AdminRoleClaim);
 		}
 	}
 }

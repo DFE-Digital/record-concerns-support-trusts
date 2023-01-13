@@ -1,7 +1,7 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
-using ConcernsCaseWork.Service.Context;
 using ConcernsCaseWork.Service.Helpers;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 	{
 		private readonly ILogger<NtiWarningLetterStatusesService> _logger;
 
-		public NtiWarningLetterStatusesService(IHttpClientFactory clientFactory, ILogger<NtiWarningLetterStatusesService> logger, ICorrelationContext correlationContext, IUserContextService userContextService) : base(clientFactory, logger, correlationContext, userContextService)
+		public NtiWarningLetterStatusesService(IHttpClientFactory clientFactory, ILogger<NtiWarningLetterStatusesService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}

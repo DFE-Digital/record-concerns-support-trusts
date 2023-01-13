@@ -1,5 +1,5 @@
 using Ardalis.GuardClauses;
-using ConcernsCaseWork.Service.Context;
+using ConcernsCaseWork.UserContext;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
@@ -15,9 +15,9 @@ public class UserContextMiddleware
 		_logger = Guard.Against.Null(logger);
 	}
 
-	public Task Invoke(HttpContext httpContext, IUserContextService userContextService)
+	public Task Invoke(HttpContext httpContext, IUserInfoService userInfoService)
 	{
-		userContextService.SetPrincipal(httpContext.User);
+		userInfoService.SetPrincipal(httpContext.User);
 		return _next(httpContext);
 	}
 }

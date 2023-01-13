@@ -1,7 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
-using ConcernsCaseWork.Service.Context;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.Teams
@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Service.Teams
 	{
 		private readonly ILogger<TeamsService> _logger;
 
-		public TeamsService(IHttpClientFactory clientFactory, ILogger<TeamsService> logger, ICorrelationContext correlationContext, IUserContextService userContextService) : base(clientFactory, logger, correlationContext, userContextService)
+		public TeamsService(IHttpClientFactory clientFactory, ILogger<TeamsService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = Guard.Against.Null(logger);
 		}

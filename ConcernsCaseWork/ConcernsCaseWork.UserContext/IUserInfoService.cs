@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
 
-namespace ConcernsCaseWork.Service.Context;
+namespace ConcernsCaseWork.UserContext;
 
-public interface IUserContextService
+public interface IUserInfoService
 {
 	void SetPrincipal(ClaimsPrincipal claimsPrincipal);
 	void AddHeaders(HttpRequestMessage request);

@@ -27,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ConcernsCaseWork.API.Contracts\ConcernsCaseWork.API.Contracts.csproj" />
     <ProjectReference Include="..\ConcernsCaseWork.UserContext\ConcernsCaseWork.UserContext.csproj" />
   </ItemGroup>
 

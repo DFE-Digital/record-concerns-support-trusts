@@ -1,11 +1,10 @@
 ﻿using Ardalis.GuardClauses;
-using ConcernsCaseWork.API.Contracts.Context;
 using System.Security.Claims;
 using System.Security.Principal;
 
-namespace ConcernsCaseWork.Service.Context
+namespace ConcernsCaseWork.UserContext
 {
-	public class UserContextService : IUserContextService
+	public class UserInfoService : IUserInfoService
 	{
 		private ClaimsPrincipal _claimsPrincipal;
 
@@ -16,10 +15,10 @@ namespace ConcernsCaseWork.Service.Context
 
 		public void AddHeaders(HttpRequestMessage request)
 		{
-			var header = new UserContext()
+			var header = new UserInfo()
 			{
 				Name = GetPrincipalName(_claimsPrincipal),
-				Roles = UserContext.ParseRoleClaims(_claimsPrincipal.Claims.Select(x => x.Value).ToArray())
+				Roles = UserInfo.ParseRoleClaims(_claimsPrincipal.Claims.Select(x => x.Value).ToArray())
 			};
 
 			foreach (KeyValuePair<string, string> keyValuePair in header.ToHeadersKVP())
