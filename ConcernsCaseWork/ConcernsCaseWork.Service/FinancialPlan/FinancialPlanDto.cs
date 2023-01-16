@@ -20,7 +20,7 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 		public string CreatedBy { get; }
 
 		[JsonProperty("statusId")]
-		public long? StatusId { get; }
+		public long? StatusId { get; set; }
 
 		[JsonProperty("datePlanRequested")]
 		public DateTime? DatePlanRequested { get; }
