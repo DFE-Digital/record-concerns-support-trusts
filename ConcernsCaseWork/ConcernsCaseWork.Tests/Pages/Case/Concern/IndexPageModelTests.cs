@@ -282,7 +282,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var page = pageResponse as PageResult;
 			
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("There was an error and your changes were not saved. Refresh the page and if the problem continues, try again later. Email the Record concerns and support for trusts team at regionalservices.rg@education.gov.uk if this problem continues."));
 			Assert.That(page, Is.Not.Null);
 			
 			mockCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
@@ -390,7 +390,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var page = pageResponse as PageResult;
 			
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("There was an error and your changes were not saved. Refresh the page and if the problem continues, try again later. Email the Record concerns and support for trusts team at regionalservices.rg@education.gov.uk if this problem continues."));
 			Assert.That(page, Is.Not.Null);
 			
 			mockCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
