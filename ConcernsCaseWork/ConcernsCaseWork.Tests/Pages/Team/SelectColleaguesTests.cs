@@ -115,7 +115,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			Assert.IsEmpty(sut.SelectedColleagues);
 			Assert.IsEmpty(sut.Users);
 			Assert.IsNotEmpty(sut.TempData);
-			Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(sut.TempData["Error.Message"], Is.EqualTo("There was an error and your changes were not saved. Refresh the page and if the problem continues, try again later. Email the Record concerns and support for trusts team at regionalservices.rg@education.gov.uk if this problem continues."));
 
 			testFixture.VerifyMethodEntered(nameof(SelectColleaguesPageModel.OnPostSelectColleagues));
 		}
