@@ -13,6 +13,7 @@ using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 {
@@ -47,16 +48,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		public async Task OnGetAsync()
 		{
-			long caseUrn = 0;
+			long caseId = 0;
 			long ntiWarningLetterId = 0;
 
 			try
 			{
 				_logger.LogInformation("Case::Action::NTI-Warning letter::IndexPageModel::OnGetAsync");
 
-				(caseUrn, ntiWarningLetterId) = GetRouteData();
+				(caseId, ntiWarningLetterId) = GetRouteData();
 
-				NtiWarningLetterModel = await GetWarningLetterModel(ntiWarningLetterId);
+				NtiWarningLetterModel = await GetWarningLetterModel(caseId, ntiWarningLetterId);
 
 				if (NtiWarningLetterModel == null)
 				{
@@ -70,9 +71,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			}
 		}
 
-		private async Task<NtiWarningLetterModel> GetWarningLetterModel(long ntiWarningLetterId)
+		private async Task<NtiWarningLetterModel> GetWarningLetterModel(long caseId, long ntiWarningLetterId)
 		{
-			var wl = await _ntiWarningLetterModelService.GetNtiWarningLetterId(ntiWarningLetterId);
+			var wl = await _ntiWarningLetterModelService.GetNtiWarningLetterViewModel(caseId, ntiWarningLetterId);
 			NtiWarningLetterStatuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
 
 			if (wl != null)
