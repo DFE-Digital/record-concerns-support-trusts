@@ -1,4 +1,5 @@
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Pages.Case;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
@@ -107,7 +108,7 @@ public class SelectTerritoryPageModelTests
 			Assert.That(sut.TrustDetailsModel, Is.Null);
 			Assert.That(sut.CreateRecordsModel, Is.Null);
 			Assert.That(sut.TempData["Error.Message"], Is.Not.Null);
-			Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(sut.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		});
 			
 		mockUserStateCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
@@ -136,7 +137,7 @@ public class SelectTerritoryPageModelTests
 		await sut.OnGetAsync();
 		
 		// assert
-		Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+		Assert.That(sut.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		
 		mockLogger.VerifyLogInformationWasCalled("Territory");
 		mockLogger.VerifyLogErrorWasCalled("Could not retrieve cached new case data for user");

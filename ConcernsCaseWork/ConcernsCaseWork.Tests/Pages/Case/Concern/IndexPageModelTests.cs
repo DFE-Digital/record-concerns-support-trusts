@@ -128,7 +128,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 			
 			Assert.That(pageModel.TypeModel, Is.Null);
 		}
