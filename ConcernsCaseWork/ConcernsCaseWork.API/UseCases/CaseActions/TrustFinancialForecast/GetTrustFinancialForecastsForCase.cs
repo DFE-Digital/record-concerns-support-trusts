@@ -1,5 +1,6 @@
 using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
+using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.Data.Gateways;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast;
@@ -17,13 +18,31 @@ public class GetTrustFinancialForecastsForCase : IUseCaseAsync<GetTrustFinancial
 
 	public async Task<IEnumerable<TrustFinancialForecastResponse>> Execute(GetTrustFinancialForecastsForCaseRequest request, CancellationToken cancellationToken)
 	{
-		_ = request ?? throw new ArgumentNullException(nameof(request));
+		EnsureRequestIsValid(request);
 
-		if (! await _concernsCaseGateway.CaseExists(request.CaseUrn, cancellationToken))
-		{
-			throw new InvalidOperationException($"The case for urn {request.CaseUrn}, was not found");
-		}
+		await EnsureCaseExists(request.CaseUrn, cancellationToken);
             
 		return await _trustFinancialForecastGateway.GetAllForCase(request, cancellationToken);
+	}
+	
+	private static void EnsureRequestIsValid(GetTrustFinancialForecastsForCaseRequest request)
+	{
+		if (request is null)
+		{
+			throw new ArgumentNullException(nameof(request));
+		}
+		
+		if (!request.IsValid())
+		{
+			throw new ArgumentException("Request is not valid", nameof(request));
+		}
+	}
+
+	private async Task EnsureCaseExists(int caseUrn, CancellationToken cancellationToken)
+	{
+		if (! await _concernsCaseGateway.CaseExists(caseUrn, cancellationToken))
+		{
+			throw new NotFoundException($"Concerns Case {caseUrn} not found");
+		}
 	}
 }
