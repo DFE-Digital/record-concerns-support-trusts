@@ -1,9 +1,6 @@
 ﻿using AutoFixture;
-<<<<<<< HEAD
 using ConcernsCaseWork.Constants;
-=======
 using ConcernsCaseWork.API.Contracts.Permissions;
->>>>>>> 418b9cc1982b37f7b97d30b8e437f7b8c0d0dee3
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
