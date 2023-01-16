@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Pages.Case.Management.Action.Nti;
 using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Services.Nti;
@@ -159,7 +160,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("There was an error and your changes were not saved. Refresh the page and if the problem continues, try again later. Email the Record concerns and support for trusts team at regionalservices.rg@education.gov.uk if this problem continues."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 		}
 
 		private static AddPageModel SetupAddPageModel(Mock<INtiModelService> mockNtiModelService,

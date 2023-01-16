@@ -1,6 +1,7 @@
 using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -127,7 +128,7 @@ public class EditTerritoryPageModelTests
 			Assert.That(sut.Territory, Is.Null);
 			Assert.That(sut.TempData, Is.Not.Null);
 			Assert.That(sut.TempData["Error.Message"],
-				Is.EqualTo("There was an error and your changes were not saved. Refresh the page and if the problem continues, try again later. Email the Record concerns and support for trusts team at regionalservices.rg@education.gov.uk if this problem continues."));
+				Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 		});
 
 		mockCaseModelService.Verify(c =>

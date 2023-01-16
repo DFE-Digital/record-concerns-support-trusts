@@ -1,5 +1,6 @@
 using AutoFixture;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
@@ -352,7 +353,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("There was an error and your changes were not saved. Refresh the page and if the problem continues, try again later. Email the Record concerns and support for trusts team at regionalservices.rg@education.gov.uk if this problem continues."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			Assert.That(actionResult, Is.AssignableFrom<RedirectResult>());
 			Assert.That(redirectResult, Is.Not.Null);
 			Assert.That(redirectResult.Url, Is.EqualTo("closure"));
@@ -400,7 +401,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("There was an error and your changes were not saved. Refresh the page and if the problem continues, try again later. Email the Record concerns and support for trusts team at regionalservices.rg@education.gov.uk if this problem continues."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			Assert.That(actionResult, Is.AssignableFrom<RedirectResult>());
 			Assert.That(redirectResult, Is.Not.Null);
 			Assert.That(redirectResult.Url, Is.EqualTo("closure"));

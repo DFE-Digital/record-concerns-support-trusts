@@ -1,3 +1,4 @@
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit;
 using ConcernsCaseWork.Services.Cases;
@@ -143,7 +144,7 @@ public class EditSrmaStatusPageModelTests
 			Assert.IsNull(pageModel.SRMA);
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"],
-				Is.EqualTo("There was an error and your changes were not saved. Refresh the page and if the problem continues, try again later. Email the Record concerns and support for trusts team at regionalservices.rg@education.gov.uk if this problem continues."));
+				Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			
 			mockSrmaModelService.Verify(s =>
 				s.GetSRMAById(It.IsAny<long>()), Times.Never);
