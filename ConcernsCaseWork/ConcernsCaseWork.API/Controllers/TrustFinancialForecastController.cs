@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.API.Controllers
 	    private readonly ILogger<TrustFinancialForecastController> _logger;
 	    private readonly IUseCaseAsync<CreateTrustFinancialForecastRequest, int> _createTrustFinancialForecast;
 	    private readonly IUseCaseAsync<GetTrustFinancialForecastByIdRequest, TrustFinancialForecastResponse> _getTrustFinancialForecast;
-	    private readonly IUseCaseAsync<GetTrustFinancialForecastForCaseRequest, IEnumerable<TrustFinancialForecastResponse>> _getTrustFinancialForecastsForCase;
+	    private readonly IUseCaseAsync<GetTrustFinancialForecastsForCaseRequest, IEnumerable<TrustFinancialForecastResponse>> _getTrustFinancialForecastsForCase;
 	    private readonly IUseCaseAsync<UpdateTrustFinancialForecastRequest, int> _updateTrustFinancialForecast;
 	    private readonly IUseCaseAsync<CloseTrustFinancialForecastRequest, int> _closeFinancialTrustForecast;
 
@@ -29,7 +29,7 @@ namespace ConcernsCaseWork.API.Controllers
 		    IUseCaseAsync<GetTrustFinancialForecastByIdRequest, TrustFinancialForecastResponse> getTrustFinancialForecast,
 		    IUseCaseAsync<UpdateTrustFinancialForecastRequest, int>  updateTrustFinancialForecast, 
 		    IUseCaseAsync<CloseTrustFinancialForecastRequest, int> closeFinancialTrustForecast, 
-		    IUseCaseAsync<GetTrustFinancialForecastForCaseRequest, IEnumerable<TrustFinancialForecastResponse>> getTrustFinancialForecastsForCase)
+		    IUseCaseAsync<GetTrustFinancialForecastsForCaseRequest, IEnumerable<TrustFinancialForecastResponse>> getTrustFinancialForecastsForCase)
 	    {
 		    _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		    _createTrustFinancialForecast = createTrustFinancialForecast ?? throw new ArgumentNullException(nameof(createTrustFinancialForecast));
@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.API.Controllers
 	    {
 		    LogInfo($"Executing Create Trust Financial Forecast for Case Urn {caseUrn}");
 		    
-		    if (!ValidateIdHasValue(caseUrn, nameof(Create)) || !request.IsValid())
+		    if (request == null || !ValidateIdHasValue(caseUrn, nameof(Create)) || !request.IsValid())
 		    {
 			    LogInfo("Failed to create Trust Financial Forecast due to bad request");
 			    return BadRequest();
@@ -90,7 +90,7 @@ namespace ConcernsCaseWork.API.Controllers
 	    public async Task<ActionResult<ApiSingleResponseV2<IEnumerable<TrustFinancialForecastResponse>>>> GetAllForCase([FromRoute] int caseUrn, CancellationToken cancellationToken)
 	    {
 		    LogInfo($"Attempting to get Trust Financial Forecast by Urn {caseUrn}");
-		    var request = new GetTrustFinancialForecastForCaseRequest{ CaseUrn = caseUrn };
+		    var request = new GetTrustFinancialForecastsForCaseRequest{ CaseUrn = caseUrn };
             if (!request.IsValid())
             {
                 return BadRequest();

@@ -4,7 +4,7 @@ using ConcernsCaseWork.Data.Gateways;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast;
 
-public class GetTrustFinancialForecastsForCase : IUseCaseAsync<GetTrustFinancialForecastForCaseRequest, IEnumerable<TrustFinancialForecastResponse>>
+public class GetTrustFinancialForecastsForCase : IUseCaseAsync<GetTrustFinancialForecastsForCaseRequest, IEnumerable<TrustFinancialForecastResponse>>
 {
 	private readonly IConcernsCaseGateway _concernsCaseGateway;
 	private readonly ITrustFinancialForecastGateway _trustFinancialForecastGateway;
@@ -15,7 +15,7 @@ public class GetTrustFinancialForecastsForCase : IUseCaseAsync<GetTrustFinancial
 		_trustFinancialForecastGateway = trustFinancialForecastGateway ?? throw new ArgumentNullException(nameof(trustFinancialForecastGateway));
 	}
 
-	public async Task<IEnumerable<TrustFinancialForecastResponse>> Execute(GetTrustFinancialForecastForCaseRequest request, CancellationToken cancellationToken)
+	public async Task<IEnumerable<TrustFinancialForecastResponse>> Execute(GetTrustFinancialForecastsForCaseRequest request, CancellationToken cancellationToken)
 	{
 		_ = request ?? throw new ArgumentNullException(nameof(request));
 

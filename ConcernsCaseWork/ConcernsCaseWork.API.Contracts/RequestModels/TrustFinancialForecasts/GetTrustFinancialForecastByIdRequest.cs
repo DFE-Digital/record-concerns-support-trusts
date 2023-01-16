@@ -1,6 +1,6 @@
 namespace ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 
-public record GetTrustFinancialForecastByIdRequest : GetTrustFinancialForecastForCaseRequest
+public record GetTrustFinancialForecastByIdRequest : GetTrustFinancialForecastsForCaseRequest
 {
 	public int TrustFinancialForecastId { get; init; }
 	

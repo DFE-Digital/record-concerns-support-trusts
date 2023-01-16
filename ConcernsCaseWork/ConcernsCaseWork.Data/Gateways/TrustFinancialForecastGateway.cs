@@ -35,7 +35,7 @@ public class TrustFinancialForecastGateway : ITrustFinancialForecastGateway
 		return response.ToResponseModel();
 	}
 
-	public async Task<ICollection<TrustFinancialForecastResponse>> GetAllForCase(GetTrustFinancialForecastForCaseRequest request, CancellationToken cancellationToken = default)
+	public async Task<ICollection<TrustFinancialForecastResponse>> GetAllForCase(GetTrustFinancialForecastsForCaseRequest request, CancellationToken cancellationToken = default)
 	{
 		var query = _concernsDbContext.TrustFinancialForecasts
 			.Where(x => x.CaseUrn == request.CaseUrn)

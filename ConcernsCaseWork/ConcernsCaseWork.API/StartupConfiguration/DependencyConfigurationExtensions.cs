@@ -114,7 +114,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IUseCaseAsync<CreateTrustFinancialForecastRequest, int>, CreateTrustFinancialForecast>();
 			services.AddScoped<IUseCaseAsync<UpdateTrustFinancialForecastRequest, int>, UpdateTrustFinancialForecast>();
 			services.AddScoped<IUseCaseAsync<GetTrustFinancialForecastByIdRequest, TrustFinancialForecastResponse>, GetTrustFinancialForecastById>();
-			services.AddScoped<IUseCaseAsync<GetTrustFinancialForecastForCaseRequest, IEnumerable<TrustFinancialForecastResponse>>, GetTrustFinancialForecastsForCase>();
+			services.AddScoped<IUseCaseAsync<GetTrustFinancialForecastsForCaseRequest, IEnumerable<TrustFinancialForecastResponse>>, GetTrustFinancialForecastsForCase>();
 			services.AddScoped<IUseCaseAsync<CloseTrustFinancialForecastRequest, int>, CloseTrustFinancialForecast>();
 			services.AddScoped<ITrustFinancialForecastGateway, TrustFinancialForecastGateway>();
 

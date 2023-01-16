@@ -26,7 +26,7 @@ public static class TrustFinancialForecastMapping
 	{
 		var result = new TrustFinancialForecastSummaryModel()
 		{
-			Id = 0,
+			Id = response.TrustFinancialForecastId,
 			CaseUrn = response.CaseUrn,
 			CreatedAt = response.CreatedAt.DateTime,
 			UpdatedAt = response.UpdatedAt.DateTime,
