@@ -6,6 +6,8 @@ using FluentAssertions;
 using NUnit.Framework;
 using ConcernsCaseWork.Service.CaseActions;
 using System;
+using ConcernsCaseWork.API.Contracts.Permissions;
+using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Tests.Mappers;
 
@@ -20,8 +22,10 @@ public class SrmaMappingTests
 		//arrange
 		var dto = _fixture.Create<SRMADto>();
 
+		var permissionsResponse = new GetCasePermissionsResponse() { Permissions = new List<CasePermission>() { CasePermission.Edit } };
+
 		// act
-		var serviceModel = CaseActionsMapping.Map(dto);
+		var serviceModel = CaseActionsMapping.Map(dto, permissionsResponse);
 
 		// assert
 		Assert.That(serviceModel, Is.Not.Null);
@@ -39,7 +43,19 @@ public class SrmaMappingTests
 			Assert.That(serviceModel.ClosedAt, Is.EqualTo(dto.ClosedAt));
 			Assert.That(serviceModel.CreatedAt, Is.EqualTo(dto.CreatedAt));
 			Assert.That(serviceModel.UpdatedAt, Is.EqualTo(dto.UpdatedAt));
+			serviceModel.IsEditable.Should().BeTrue();
 		});
+	}
+
+	[Test]
+	public void WhenMapDtoToServiceModel_NotEditable_ReturnsCorrectModel()
+	{
+		var dto = _fixture.Create<SRMADto>();
+		var permissionsResponse = new GetCasePermissionsResponse();
+
+		var serviceModel = CaseActionsMapping.Map(dto, permissionsResponse);
+
+		serviceModel.IsEditable.Should().BeFalse();
 	}
 
 	[Test]

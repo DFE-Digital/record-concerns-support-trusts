@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 
 			var ntiUnderConsiderationModel = NTIUnderConsiderationFactory.BuildNTIUnderConsiderationModel();
 
-			mockNtiUnderConsiderationModelService.Setup(n => n.GetNtiUnderConsideration(ntiUnderConsiderationModel.Id))
+			mockNtiUnderConsiderationModelService.Setup(n => n.GetNtiUnderConsiderationViewModel(1, ntiUnderConsiderationModel.Id))
 				.ReturnsAsync(ntiUnderConsiderationModel);
 
 			var expectedModel = Copy(ntiUnderConsiderationModel);
@@ -81,7 +81,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			var ntiUnderConsiderationModel = NTIUnderConsiderationFactory.BuildClosedNTIUnderConsiderationModel();
 			var expectedModel = Copy(ntiUnderConsiderationModel);
 
-			mockNtiUnderConsiderationModelService.Setup(n => n.GetNtiUnderConsideration(ntiUnderConsiderationModel.Id))
+			mockNtiUnderConsiderationModelService.Setup(n => n.GetNtiUnderConsiderationViewModel(1, ntiUnderConsiderationModel.Id))
 				.ReturnsAsync(ntiUnderConsiderationModel);
 
 			var pageModel = SetupIndexPageModel(mockNtiUnderConsiderationModelService, mockLogger);

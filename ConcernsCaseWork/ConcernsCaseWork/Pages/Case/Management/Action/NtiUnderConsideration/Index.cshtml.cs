@@ -33,11 +33,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			try
 			{			
 				long ntiUnderConsiderationId;
+				long caseId;
 				_logger.LogInformation("Case::Action::NTI-UC::IndexPageModel::OnGetAsync");
 
-				(_, ntiUnderConsiderationId) = GetRouteData();
+				(caseId, ntiUnderConsiderationId) = GetRouteData();
 
-				NTIUnderConsiderationModel = await _ntiModelService.GetNtiUnderConsideration(ntiUnderConsiderationId);
+				NTIUnderConsiderationModel = await _ntiModelService.GetNtiUnderConsiderationViewModel(caseId, ntiUnderConsiderationId);
 
 				if (NTIUnderConsiderationModel == null)
 				{
