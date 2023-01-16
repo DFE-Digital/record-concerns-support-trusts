@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 
 namespace ConcernsCaseWork.UserContext
@@ -15,6 +16,8 @@ namespace ConcernsCaseWork.UserContext
 
 		public void AddHeaders(HttpRequestMessage request)
 		{
+			Guard.Against.Null(request);
+
 			var header = new UserInfo()
 			{
 				Name = GetPrincipalName(_claimsPrincipal),
@@ -37,6 +40,14 @@ namespace ConcernsCaseWork.UserContext
 			}
 
 			return principal.Identity.Name;
+		}
+
+		public UserInfo FromRequestHeaders(HttpRequestMessage request)
+		{
+			Guard.Against.Null(request);
+			return UserInfo.FromHeaders(request.Headers.Where(x => x.Key.StartsWith(UserInfo.RoleHeaderKeyPrefix))
+				.Select(X => new KeyValuePair<string,string>(X.Key, X.Value.First()))
+				.ToArray());
 		}
 	}
 }

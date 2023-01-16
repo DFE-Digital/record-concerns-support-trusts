@@ -30,15 +30,14 @@ namespace ConcernsCaseWork.UserContext
 			}
 		}
 
-		public UserInfo FromHeaders(IHeaderDictionary headers)
+		public static UserInfo FromHeaders(KeyValuePair<string,string>[] headers)
 		{
 
-			var name = headers.FirstOrDefault(x => x.Key == NameHeaderKey).Value[0];
+			var name = headers.FirstOrDefault(x => x.Key == NameHeaderKey).Value;
 
 			var roles = headers
-				.Where(x => x.Key.StartsWith(RoleHeaderKeyPrefix)
-				&& x.Value[0].StartsWith("concerns-casework."))
-				.Select(x => x.Value[0])
+				.Where(x => x.Key.StartsWith(RoleHeaderKeyPrefix) && x.Value.StartsWith("concerns-casework."))
+				.Select(x => x.Value)
 				.ToArray();
 
 			return new UserInfo() { Name = name, Roles = roles };

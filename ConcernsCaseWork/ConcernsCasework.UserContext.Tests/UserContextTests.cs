@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.UserContext;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,6 +72,25 @@ namespace ConcernsCaseWork.API.Contracts.Tests.Context
 			results[0].Should().Be(UserInfo.CaseWorkerRoleClaim);
 			results[1].Should().Be(UserInfo.TeamLeaderRoleClaim);
 			results[2].Should().Be(UserInfo.AdminRoleClaim);
+		}
+
+		[Fact]
+		public void FromHeaders_Returns_Populated_UserInfo()
+		{
+			var inputs = new KeyValuePair<string,string>[]
+			{
+				new("x-userContext-name" ,"John"),
+				new("x-userContext-role-0", UserInfo.CaseWorkerRoleClaim),
+				new("x-userContext-role-1", UserInfo.TeamLeaderRoleClaim),
+				new("x-userContext-role-2", UserInfo.AdminRoleClaim)
+			};
+
+			var sut = UserInfo.FromHeaders(inputs);
+
+			sut.Name.Should().Be("John");
+			sut.Roles.Should().Contain(UserInfo.CaseWorkerRoleClaim);
+			sut.Roles.Should().Contain(UserInfo.TeamLeaderRoleClaim);
+			sut.Roles.Should().Contain(UserInfo.AdminRoleClaim);
 		}
 	}
 }
