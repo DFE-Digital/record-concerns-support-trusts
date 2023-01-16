@@ -129,7 +129,7 @@
             </tbody>
         </table>
 
-        @if (Model.NTIUnderConsiderationModel.ClosedAt == null)
+        @if (Model.NTIUnderConsiderationModel.IsEditable)
         {
             <div class="govuk-button-group">
                 <a data-prevent-double-click="true" href="@Request.Path/edit" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-uc-button">
