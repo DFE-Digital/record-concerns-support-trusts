@@ -1,8 +1,8 @@
 namespace ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 
-public record UpdateTrustFinancialForecastRequest : CreateTrustFinancialForecastRequest
+public record GetTrustFinancialForecastByIdRequest : GetTrustFinancialForecastForCaseRequest
 {
-	public int TrustFinancialForecastId { get; set; }
+	public int TrustFinancialForecastId { get; init; }
 	
 	public override bool IsValid() => base.IsValid() 
 	                                  && TrustFinancialForecastId > 0;

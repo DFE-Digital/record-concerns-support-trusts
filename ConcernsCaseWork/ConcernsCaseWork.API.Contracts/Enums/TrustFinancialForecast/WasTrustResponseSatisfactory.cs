@@ -6,6 +6,6 @@ public enum WasTrustResponseSatisfactory
 {
 	[Description("Satisfactory")]
 	Satisfactory = 1,
-	[Description("Non-satisfactory")]
-	NonSatisfactory = 2,
+	[Description("Not satisfactory")]
+	NotSatisfactory = 2,
 }

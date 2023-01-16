@@ -22,55 +22,60 @@
 		    <span class="govuk-caption-m">Case ID @Model.Urn</span>
 		    Trust Financial Forecast (TFF)
 	    </h1>
-	    
-	    <div class="govuk-hint" id="financial-plan-hint">
-		    <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Trust%20financial%20forecasting.aspx" class="govuk-link" rel="noreferrer noopener">
-			    SFSO Knowledge: Trust financial forecast
-		    </a>
+
+	@if (Model.IsEditable)
+    {
+	    <div class="govuk-hint" data-testid="decision-extra-info">
+		    Review information before editing, leaving or continuing to closing trust financial forecast (TFF).
 	    </div>
-	    
+    }
+	    @if (Model.IsClosed)
+	    {
+		    <closed-label></closed-label>
+	    }
+
 	    <table class="govuk-table">
 		    <tbody class="govuk-table__body">
 		    <tr class="govuk-table__row">
-			    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-date-opened-label">Date opened</th>
+			    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-date-opened-label">Date TFF opened</th>
 			    <td class="govuk-table__cell" data-testid="trust-financial-forecast-date-opened">
 				    <single-line-text text="@Model.DateOpened"></single-line-text>
 			    </td>
 		    </tr>
 
-		    @if (Model.IsClosed)
-		    {
-			    <tr class="govuk-table__row">
-				    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-date-closed-label">Date closed</th>
-				    <td class="govuk-table__cell" data-testid="trust-financial-forecast-date-closed">
-					    <single-line-text text="@Model.DateClosed"></single-line-text>
-				    </td>
-			    </tr>
-		    }
+	    @if (Model.IsClosed)
+	    {
+		    <tr class="govuk-table__row">
+			    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-date-closed-label">Date TFF closed</th>
+			    <td class="govuk-table__cell" data-testid="trust-financial-forecast-date-closed">
+				    <single-line-text text="@Model.DateClosed"></single-line-text>
+			    </td>
+		    </tr>
+	    }
 
 		    <tr class="govuk-table__row">
-			    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-when-run-label">When was the forecasting tool run?</th>
+			    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-when-run-label">Forecasting tool run</th>
 			    <td class="govuk-table__cell" data-testid="trust-financial-forecast-when-run">
 				    <single-line-text text="@Model.ForecastingToolRanAt"></single-line-text>
 			    </td>
 		    </tr>
 
 		    <tr class="govuk-table__row">
-			    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-when-reviewed-label">When did SFSO initial review happen?</th>
+			    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-when-reviewed-label">SFSO initial review date</th>
 			    <td class="govuk-table__cell" data-testid="trust-financial-forecast-when-reviewed">
 				    <single-line-text text="@Model.SFSOInitialReviewHappenedAt"></single-line-text>
 			    </td>
 		    </tr>
 
 		    <tr class="govuk-table__row">
-			    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-when-responded-label">When did the trust respond?</th>
+			    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-when-responded-label">Trust response date</th>
 			    <td class="govuk-table__cell" data-testid="trust-financial-forecast-when-responded">
 				    <single-line-text text="@Model.TrustRespondedAt"></single-line-text>
 			    </td>
 		    </tr>
 
 		    <tr class="govuk-table__row">
-			    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-was-satisfactory-label">Was the trust response satisfactory?</th>
+			    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-was-satisfactory-label">Trust response satisfactory?</th>
 			    <td class="govuk-table__cell" data-testid="trust-financial-forecast-was-satisfactory">
 				    <single-line-text text="@Model.WasTrustResponseSatisfactory"></single-line-text>
 			    </td>
@@ -90,26 +95,25 @@
 			    </td>
 		    </tr>
 	        
-		    @if (Model.IsEditable)
-		    {
-			    <tr class="govuk-table__row">
-				    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-edit-button-label">Action</th>
-				    <td class="govuk-table__cell">
-					    <a data-prevent-double-click="true" href="@Request.Path/edit" id="trust-financial-forecast-edit-button">
-						    Edit information
-					    </a>
-				    </td>
-			    </tr>
-		
-		    }
+	    @if (Model.IsEditable)
+	    {
+		    <tr class="govuk-table__row">
+			    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="trust-financial-forecast-edit-button-label">Action</th>
+			    <td class="govuk-table__cell">
+				    <a data-prevent-double-click="true" href="@Request.Path/edit" id="trust-financial-forecast-edit-button">
+					    Edit information
+				    </a>
+			    </td>
+		    </tr>
+	    }
 		    </tbody>
 	    </table>
 	    
-        @if (Model.IsEditable)
-        {
-	        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="close">
-	            Continue to close financial trust forecast (TFF)
-	        </button>
-        }
+    @if (Model.IsEditable)
+    {
+	    <div class="govuk-button-group">
+		    <close-button url="@Request.Path/close" label="Continue to close financial trust forecast (TFF)"></close-button>
+	    </div>
+    }
     }
 </div>

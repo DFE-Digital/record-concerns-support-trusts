@@ -6,4 +6,7 @@
 	public class DecisionSummaryModel : CaseActionModel
 	{
 	}
+	public class TrustFinancialForecastSummaryModel : CaseActionModel
+	{
+	}
 }

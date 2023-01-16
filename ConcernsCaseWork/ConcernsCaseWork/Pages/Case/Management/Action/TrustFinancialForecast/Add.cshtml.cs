@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 			_trustFinancialForecastService = trustFinancialForecastService;
 			_logger = logger;
 		}
-		
+
 		public async Task<IActionResult> OnPostAsync()
 		{
 			_logger.LogMethodEntered();
@@ -44,11 +44,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 					ForecastingToolRanAt = (ForecastingToolRanAt?)ForecastingToolRanAt.SelectedId,
 					WasTrustResponseSatisfactory = (WasTrustResponseSatisfactory?)WasTrustResponseSatisfactory.SelectedId,
 					Notes = Notes.Contents,
-					SFSOInitialReviewHappenedAt = SFSOInitialReviewHappenedAt.Date?.ToDateTimeOffset(),
-					TrustRespondedAt = TrustRespondedAt.Date?.ToDateTimeOffset()
+					SFSOInitialReviewHappenedAt = !SFSOInitialReviewHappenedAt.Date?.IsEmpty() ?? false ? SFSOInitialReviewHappenedAt.Date?.ToDateTimeOffset() : null,
+					TrustRespondedAt = !TrustRespondedAt.Date?.IsEmpty() ?? false ? TrustRespondedAt.Date?.ToDateTimeOffset() : null
 				};
 
-				await _trustFinancialForecastService.CreateTrustFinancialForecast(trustFinancialForecast);
+				await _trustFinancialForecastService.Create(trustFinancialForecast);
 
 				return Redirect($"/case/{Urn}/management");
 			}

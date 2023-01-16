@@ -5,7 +5,9 @@ namespace ConcernsCaseWork.Service.TrustFinancialForecast;
 
 public interface ITrustFinancialForecastService
 {
-	Task<string> CreateTrustFinancialForecast(CreateTrustFinancialForecastRequest request);
-	Task<TrustFinancialForecastResponse> GetTrustFinancialForecastById(GetTrustFinancialForecastRequest request);
-	Task UpdateTrustFinancialForecast(UpdateTrustFinancialForecastRequest request);
+	Task<string> Create(CreateTrustFinancialForecastRequest request);
+	Task<TrustFinancialForecastResponse> GetById(GetTrustFinancialForecastByIdRequest request);
+	Task Update(UpdateTrustFinancialForecastRequest request);
+	Task<IEnumerable<TrustFinancialForecastResponse>> GetAllForCase(int caseUrn);
+	Task Close(CloseTrustFinancialForecastRequest request);
 }

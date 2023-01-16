@@ -16,7 +16,7 @@ public class TrustFinancialForecastService : ConcernsAbstractService, ITrustFina
 		_logger = Guard.Against.Null(logger);
 	}
 	
-	public async Task<string> CreateTrustFinancialForecast(CreateTrustFinancialForecastRequest request)
+	public async Task<string> Create(CreateTrustFinancialForecastRequest request)
 	{
 		_logger.LogMethodEntered();
 
@@ -32,7 +32,7 @@ public class TrustFinancialForecastService : ConcernsAbstractService, ITrustFina
 		return response;
 	}
 	
-	public async Task<TrustFinancialForecastResponse> GetTrustFinancialForecastById(GetTrustFinancialForecastRequest request)
+	public async Task<TrustFinancialForecastResponse> GetById(GetTrustFinancialForecastByIdRequest request)
 	{
 		_logger.LogMethodEntered();
 
@@ -40,11 +40,25 @@ public class TrustFinancialForecastService : ConcernsAbstractService, ITrustFina
 			$"/{EndpointsVersion}/concerns-cases/{request.CaseUrn}/trustfinancialforecast/{request.TrustFinancialForecastId}");
 	}
 
-	public async Task UpdateTrustFinancialForecast(UpdateTrustFinancialForecastRequest request)
+	public async Task Update(UpdateTrustFinancialForecastRequest request)
 	{
 		_logger.LogMethodEntered();
 
 		await Put<UpdateTrustFinancialForecastRequest, string>($"/{EndpointsVersion}/concerns-cases/{request.CaseUrn}/trustfinancialforecast/{request.TrustFinancialForecastId}", request);
+	}
+
+	public async Task<IEnumerable<TrustFinancialForecastResponse>> GetAllForCase(int caseUrn)
+	{
+		_logger.LogMethodEntered();
+
+		return await Get<IEnumerable<TrustFinancialForecastResponse>>($"/{EndpointsVersion}/concerns-cases/{caseUrn}/trustfinancialforecast");
+	}
+
+	public async Task Close(CloseTrustFinancialForecastRequest request)
+	{
+		_logger.LogMethodEntered();
+
+		await Patch<CloseTrustFinancialForecastRequest, string>($"/{EndpointsVersion}/concerns-cases/{request.CaseUrn}/trustfinancialforecast/{request.TrustFinancialForecastId}", request);
 	}
 }
 

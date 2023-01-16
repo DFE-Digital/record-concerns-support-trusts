@@ -1,4 +1,4 @@
-using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.API.Contracts.Constants;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Validatable;
@@ -18,6 +18,8 @@ public class EditableTrustFinancialForecastPageModel : AbstractPageModel
 	public RadioButtonsUiComponent WasTrustResponseSatisfactory { get; set; } = BuildWasTrustResponseSatisfactoryComponent();
 	public RadioButtonsUiComponent SRMAOfferedAfterTFF { get; set; } = BuildSRMAOfferedAfterTFFComponent();
 	public RadioButtonsUiComponent ForecastingToolRanAt { get; set; } = BuildForecastingToolRanAtComponent();
+	
+	[BindProperty(SupportsGet = true)] public string ReferenceDocUrl { get; } = "https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Trust%20financial%20forecasting.aspx";
 	
 	protected void ResetPageComponentsOnValidationError()
 	{
@@ -44,7 +46,7 @@ public class EditableTrustFinancialForecastPageModel : AbstractPageModel
 		};
 		
 	private static RadioButtonsUiComponent BuildSRMAOfferedAfterTFFComponent(int? selectedId = null) 
-		=> new("srma-offered-after-tff",  nameof(SRMAOfferedAfterTFF), "SRMA offered after TFF?")
+		=> new("srma-offered-after-tff",  nameof(SRMAOfferedAfterTFF), "SRMA offered after trust financial forecast (TFF)?")
 		{
 			RadioItems = new SimpleRadioItem[]
 			{
@@ -55,20 +57,20 @@ public class EditableTrustFinancialForecastPageModel : AbstractPageModel
 		};
 		
 	private static RadioButtonsUiComponent BuildWasTrustResponseSatisfactoryComponent(int? selectedId = null) 
-		=> new("trust-response-satisfactory", nameof(WasTrustResponseSatisfactory), "Was the trust result satisfactory?")
+		=> new("trust-response-satisfactory", nameof(WasTrustResponseSatisfactory), "Was the trust response satisfactory?")
 		{
 			RadioItems = new SimpleRadioItem[]
 			{
 				new (API.Contracts.Enums.TrustFinancialForecast.WasTrustResponseSatisfactory.Satisfactory.Description(), (int)API.Contracts.Enums.TrustFinancialForecast.WasTrustResponseSatisfactory.Satisfactory),
-				new (API.Contracts.Enums.TrustFinancialForecast.WasTrustResponseSatisfactory.NonSatisfactory.Description(),(int)API.Contracts.Enums.TrustFinancialForecast.WasTrustResponseSatisfactory.NonSatisfactory)
+				new (API.Contracts.Enums.TrustFinancialForecast.WasTrustResponseSatisfactory.NotSatisfactory.Description(),(int)API.Contracts.Enums.TrustFinancialForecast.WasTrustResponseSatisfactory.NotSatisfactory)
 			},
 			SelectedId = selectedId
 		};
 		
 	private static TextAreaUiComponent BuildNotesComponent(string contents = "")
-		=> new("notes", nameof(Notes), "Notes (optional)")
+		=> new("notes", nameof(Notes), "Supporting notes")
 		{
-			MaxLength = 2000,
+			MaxLength = TrustFinancialForecastConstants.MaxNotesLength,
 			Contents = contents
 		};
 		

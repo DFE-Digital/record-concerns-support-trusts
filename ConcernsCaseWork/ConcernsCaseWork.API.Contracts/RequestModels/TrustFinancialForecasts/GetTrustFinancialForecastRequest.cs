@@ -1,3 +1,0 @@
-namespace ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
-
-public record GetTrustFinancialForecastRequest(int CaseUrn, int TrustFinancialForecastId);

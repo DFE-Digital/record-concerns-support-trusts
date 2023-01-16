@@ -54,6 +54,7 @@ using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.PageHistory;
 
@@ -159,6 +160,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICaseActionValidationStrategy, NTIWarningLetterValidator>();
 			services.AddScoped<ICaseActionValidationStrategy, NTIValidator>();
 			services.AddScoped<ICaseActionValidationStrategy, DecisionValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, TrustFinancialForecastValidator>();
 			services.AddScoped<ICaseActionValidator, CaseActionValidator>();
 			services.AddScoped<IDecisionModelService, DecisionModelService>();
 			services.AddScoped<ICreateCaseService, CreateCaseService>();

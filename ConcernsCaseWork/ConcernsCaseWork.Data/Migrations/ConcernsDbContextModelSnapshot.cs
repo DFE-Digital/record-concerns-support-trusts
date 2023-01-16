@@ -2538,6 +2538,12 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<int>("CaseUrn")
                         .HasColumnType("int");
 
+                    b.Property<DateTimeOffset?>("ClosedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("ForecastingToolRanAt")
                         .HasColumnType("nvarchar(max)");
 
@@ -2551,6 +2557,9 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset?>("TrustRespondedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("WasTrustResponseSatisfactory")

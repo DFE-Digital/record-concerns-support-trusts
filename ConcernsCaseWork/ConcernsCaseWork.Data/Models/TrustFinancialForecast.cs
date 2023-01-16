@@ -15,5 +15,8 @@ public class TrustFinancialForecast
 	public WasTrustResponseSatisfactory? WasTrustResponseSatisfactory { get; set; }
 	public DateTimeOffset? SFSOInitialReviewHappenedAt { get; set; }
 	public DateTimeOffset? TrustRespondedAt { get; set; }
+	public DateTimeOffset CreatedAt { get; set; }
+	public DateTimeOffset UpdatedAt { get; set; }
+	public DateTimeOffset? ClosedAt { get; set; }
 	public string Notes { get; set; }
 }

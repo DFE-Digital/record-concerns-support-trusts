@@ -42,7 +42,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			var trustFinancialForecast = await _trustFinancialForecastService.GetTrustFinancialForecastById(new GetTrustFinancialForecastRequest(Urn, TrustFinancialForecastId));
+			var request = new GetTrustFinancialForecastByIdRequest{ CaseUrn = Urn, TrustFinancialForecastId = TrustFinancialForecastId };
+			if (!request.IsValid())
+			{
+				return Page();
+			}
+			
+			var trustFinancialForecast = await _trustFinancialForecastService.GetById(request);
 			if (trustFinancialForecast == default)
 			{
 				return Page();
@@ -55,6 +61,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 			ForecastingToolRanAt = trustFinancialForecast.ForecastingToolRanAt?.Description();
 			WasTrustResponseSatisfactory = trustFinancialForecast.WasTrustResponseSatisfactory?.Description();
 			Notes = trustFinancialForecast.Notes;
+			DateOpened = DateTimeHelper.ParseToDisplayDate(trustFinancialForecast.CreatedAt);
 			SFSOInitialReviewHappenedAt = trustFinancialForecast.SFSOInitialReviewHappenedAt.HasValue
 				? DateTimeHelper.ParseToDisplayDate(trustFinancialForecast.SFSOInitialReviewHappenedAt.Value)
 				: string.Empty;
@@ -64,7 +71,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 			DateClosed = trustFinancialForecast.ClosedAt.HasValue 
 				? DateTimeHelper.ParseToDisplayDate(trustFinancialForecast.ClosedAt.Value)
 				: string.Empty;
-
+			
 				return Page();
 		}
 	}

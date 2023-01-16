@@ -31,7 +31,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			var trustFinancialForecast = await _trustFinancialForecastService.GetTrustFinancialForecastById(new GetTrustFinancialForecastRequest(Urn, TrustFinancialForecastId));
+			var request = new GetTrustFinancialForecastByIdRequest{ CaseUrn = Urn, TrustFinancialForecastId = TrustFinancialForecastId };
+			if (!request.IsValid()) 
+			{
+				return Page();
+			}
+			
+			var trustFinancialForecast = await _trustFinancialForecastService.GetById(request);
 			if (trustFinancialForecast == default)
 			{
 				return Page();
@@ -62,8 +68,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 					ForecastingToolRanAt = (ForecastingToolRanAt?)ForecastingToolRanAt.SelectedId,
 					WasTrustResponseSatisfactory = (WasTrustResponseSatisfactory?)WasTrustResponseSatisfactory.SelectedId,
 					Notes = Notes.Contents,
-					SFSOInitialReviewHappenedAt = SFSOInitialReviewHappenedAt.Date?.ToDateTimeOffset(),
-					TrustRespondedAt = TrustRespondedAt.Date?.ToDateTimeOffset()
+					SFSOInitialReviewHappenedAt = !SFSOInitialReviewHappenedAt.Date?.IsEmpty() ?? false ? SFSOInitialReviewHappenedAt.Date?.ToDateTimeOffset() : null,
+					TrustRespondedAt = !TrustRespondedAt.Date?.IsEmpty() ?? false ? TrustRespondedAt.Date?.ToDateTimeOffset() : null
 				};
 
 				if (!request.IsValid())
@@ -71,7 +77,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 					return Page();
 				}
 				
-				await _trustFinancialForecastService.UpdateTrustFinancialForecast(request);
+				await _trustFinancialForecastService.Update(request);
 
 				return Redirect($"/case/{Urn}/management");
 				

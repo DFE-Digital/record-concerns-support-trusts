@@ -1,14 +1,22 @@
+@using Microsoft.AspNetCore.Mvc.ModelBinding
 @model ConcernsCaseWork.Models.OptionalDateTimeUiComponent
+@{
+	var errors = Model.Date?.Validate();
+	var errorClass = errors?.Any() ?? false ? " govuk-form-group--error" : string.Empty;
+}
 <div class="govuk-form-group">
 	<fieldset class="govuk-fieldset">
 		<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-			<h2 class="govuk-heading-m">
+			<h2 class="govuk-heading-m" id="@(Model.Name).Date.@Model.Heading">
 				@Model.Heading
 			</h2>
 		</legend>
+		
+		<partial name="Components/_ValidationErrorDetail" model="@errors" />
+		
 		<div class="govuk-date-input" id="dtr-@Model.ElementRootId">
 			<div class="govuk-date-input__item">
-				<div class="govuk-form-group">
+				<div class="govuk-form-group @errorClass">
 					<label class="govuk-label govuk-date-input__label" for="dtr-day-@Model.ElementRootId">
 						Day
 					</label>
@@ -55,7 +63,7 @@
 						name="@(Model.Name).Date.Year"/>
 				</div>
 			</div>
-
+			<input type="hidden" name="@(Model.Name).Date.DisplayName" value="@Model.Heading" />
 		</div>
 	</fieldset>
 </div>

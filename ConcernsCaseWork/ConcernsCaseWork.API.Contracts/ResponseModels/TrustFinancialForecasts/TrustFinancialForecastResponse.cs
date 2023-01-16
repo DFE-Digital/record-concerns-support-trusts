@@ -17,5 +17,7 @@ public record TrustFinancialForecastResponse
 	
 	public DateTimeOffset? TrustRespondedAt { get; set; }
 	
+	public DateTimeOffset CreatedAt { get; set; }
+	public DateTimeOffset UpdatedAt { get; set; }
 	public DateTimeOffset? ClosedAt { get; set; }
 }

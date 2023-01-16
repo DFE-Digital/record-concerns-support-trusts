@@ -29,8 +29,14 @@
 
 			<h1 class="govuk-heading-l">
 				<span class="govuk-caption-m">Case ID @Model.Urn</span>
-				Trust Financial Forecast (TFF)
+				Trust financial forecast (TFF)
 			</h1>
+			
+			<div class="govuk-hint" id="financial-plan-hint">
+				<a target="_blank" href="@Model.ReferenceDocUrl" class="govuk-link" rel="noreferrer noopener">
+					SFSO Knowledge: Trust financial forecast
+				</a>
+			</div>
 
 			<form role="form" method="post" id="add-trust-financial-forecast-form" novalidate>
 				
@@ -52,8 +58,11 @@
 					        data-module="govuk-button" 
 					        role="button" id="add-trust-financial-forecast-button" 
 					        name="action">
-						Continue
-					</button>
+						Save and return to case overview
+					</button>			
+					<a data-prevent-double-click="true" class="govuk-link" data-module="govuk-button" role="button" href="/case/@Model.Urn/management">
+                    	Cancel
+                    </a>
 				</div>
 			</form>
 		}

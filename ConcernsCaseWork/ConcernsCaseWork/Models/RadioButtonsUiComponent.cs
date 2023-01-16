@@ -7,5 +7,3 @@ public record RadioButtonsUiComponent(string ElementRootId, string Name, string 
 	public IEnumerable<SimpleRadioItem> RadioItems { get; set; } = new List<SimpleRadioItem>();
 	public int? SelectedId { get; set; }
 }
-
-public record struct SimpleRadioItem(string Label, int Id);

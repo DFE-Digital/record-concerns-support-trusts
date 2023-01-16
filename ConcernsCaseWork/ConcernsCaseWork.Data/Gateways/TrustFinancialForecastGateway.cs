@@ -17,6 +17,8 @@ public class TrustFinancialForecastGateway : ITrustFinancialForecastGateway
 	public async Task<int> Create(CreateTrustFinancialForecastRequest trustFinancialForecast, CancellationToken cancellationToken = default)
 	{
 		var newTrustFinancialForecast = trustFinancialForecast.ToDbModel();
+		newTrustFinancialForecast.CreatedAt = DateTimeOffset.Now;
+		newTrustFinancialForecast.UpdatedAt = DateTimeOffset.Now;
 		
 		_concernsDbContext.TrustFinancialForecasts.Add(newTrustFinancialForecast);
 		await _concernsDbContext.SaveChangesAsync(cancellationToken);
@@ -24,33 +26,52 @@ public class TrustFinancialForecastGateway : ITrustFinancialForecastGateway
 		return newTrustFinancialForecast.Id;
 	}
 
-	public async Task<TrustFinancialForecastResponse> GetById(int trustFinancialForecastId, CancellationToken cancellationToken = default)
+	public async Task<TrustFinancialForecastResponse> GetById(GetTrustFinancialForecastByIdRequest request, CancellationToken cancellationToken = default)
 	{
 		var response = await _concernsDbContext
 			.TrustFinancialForecasts
-			.SingleAsync(f => f.Id == trustFinancialForecastId, cancellationToken);
+			.SingleAsync(f => f.Id == request.TrustFinancialForecastId, cancellationToken);
 		
 		return response.ToResponseModel();
 	}
 
-	public Task<ICollection<TrustFinancialForecastResponse>> GetAllByCaseUrn(int caseUrn, CancellationToken cancellationToken = default)
+	public async Task<ICollection<TrustFinancialForecastResponse>> GetAllForCase(GetTrustFinancialForecastForCaseRequest request, CancellationToken cancellationToken = default)
 	{
-		throw new NotImplementedException();
+		var query = _concernsDbContext.TrustFinancialForecasts
+			.Where(x => x.CaseUrn == request.CaseUrn)
+			.Select(action => action.ToResponseModel());
+		
+		return await query.ToArrayAsync(cancellationToken);
 	}
 
-	public async Task<int> Update(UpdateTrustFinancialForecastRequest updatedTrustFinancialForecastRequest, CancellationToken cancellationToken = default)
+	public async Task<int> Update(UpdateTrustFinancialForecastRequest request, CancellationToken cancellationToken = default)
 	{
 		var trustFinancialForecast = await _concernsDbContext
 			.TrustFinancialForecasts
-			.SingleAsync(f => f.Id == updatedTrustFinancialForecastRequest.TrustFinancialForecastId, cancellationToken);
+			.SingleAsync(f => f.Id == request.TrustFinancialForecastId, cancellationToken);
 		
-		trustFinancialForecast.CaseUrn = updatedTrustFinancialForecastRequest.CaseUrn;
-		trustFinancialForecast.SRMAOfferedAfterTFF = updatedTrustFinancialForecastRequest.SRMAOfferedAfterTFF;
-		trustFinancialForecast.ForecastingToolRanAt = updatedTrustFinancialForecastRequest.ForecastingToolRanAt;
-		trustFinancialForecast.WasTrustResponseSatisfactory = updatedTrustFinancialForecastRequest.WasTrustResponseSatisfactory;
-		trustFinancialForecast.Notes = updatedTrustFinancialForecastRequest.Notes;
-		trustFinancialForecast.SFSOInitialReviewHappenedAt = updatedTrustFinancialForecastRequest.SFSOInitialReviewHappenedAt;
-		trustFinancialForecast.TrustRespondedAt = updatedTrustFinancialForecastRequest.TrustRespondedAt;
+		trustFinancialForecast.SRMAOfferedAfterTFF = request.SRMAOfferedAfterTFF;
+		trustFinancialForecast.ForecastingToolRanAt = request.ForecastingToolRanAt;
+		trustFinancialForecast.WasTrustResponseSatisfactory = request.WasTrustResponseSatisfactory;
+		trustFinancialForecast.Notes = request.Notes;
+		trustFinancialForecast.SFSOInitialReviewHappenedAt = request.SFSOInitialReviewHappenedAt;
+		trustFinancialForecast.TrustRespondedAt = request.TrustRespondedAt;
+		trustFinancialForecast.UpdatedAt = DateTimeOffset.Now;
+		
+		await _concernsDbContext.SaveChangesAsync(cancellationToken);
+		
+		return trustFinancialForecast.Id;
+	}
+
+	public async Task<int> Close(CloseTrustFinancialForecastRequest request, CancellationToken cancellationToken = default)
+	{
+		var trustFinancialForecast = await _concernsDbContext
+			.TrustFinancialForecasts
+			.SingleAsync(f => f.Id == request.TrustFinancialForecastId, cancellationToken);
+		
+		trustFinancialForecast.Notes = request.Notes;
+		trustFinancialForecast.ClosedAt = DateTimeOffset.Now;
+		trustFinancialForecast.UpdatedAt = DateTimeOffset.Now;
 		
 		await _concernsDbContext.SaveChangesAsync(cancellationToken);
 		
@@ -79,12 +100,16 @@ public static class TrustFinancialForecastExtensions
 		return new TrustFinancialForecastResponse
 		{
 			CaseUrn = trustFinancialForecast.CaseUrn,
-			SRMAOfferedAfterTFF = trustFinancialForecast.SRMAOfferedAfterTFF,
+			ClosedAt = trustFinancialForecast.ClosedAt,
+			CreatedAt = trustFinancialForecast.CreatedAt,
+			UpdatedAt = trustFinancialForecast.UpdatedAt,
 			ForecastingToolRanAt = trustFinancialForecast.ForecastingToolRanAt,
-			WasTrustResponseSatisfactory = trustFinancialForecast.WasTrustResponseSatisfactory,
 			Notes = trustFinancialForecast.Notes,
 			SFSOInitialReviewHappenedAt = trustFinancialForecast.SFSOInitialReviewHappenedAt,
-			TrustRespondedAt = trustFinancialForecast.TrustRespondedAt
+			SRMAOfferedAfterTFF = trustFinancialForecast.SRMAOfferedAfterTFF,
+			TrustRespondedAt = trustFinancialForecast.TrustRespondedAt,
+			TrustFinancialForecastId = trustFinancialForecast.Id,
+			WasTrustResponseSatisfactory = trustFinancialForecast.WasTrustResponseSatisfactory
 		};
 	}
 }

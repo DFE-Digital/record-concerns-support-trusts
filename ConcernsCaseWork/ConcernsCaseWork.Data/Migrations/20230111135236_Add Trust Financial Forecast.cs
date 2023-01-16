@@ -24,7 +24,10 @@ namespace ConcernsCaseWork.Data.Migrations
                     WasTrustResponseSatisfactory = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SFSOInitialReviewHappenedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     TrustRespondedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClosedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>
                 {

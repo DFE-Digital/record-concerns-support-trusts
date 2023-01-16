@@ -18,22 +18,25 @@ namespace ConcernsCaseWork.API.Controllers
     {
 	    private readonly ILogger<TrustFinancialForecastController> _logger;
 	    private readonly IUseCaseAsync<CreateTrustFinancialForecastRequest, int> _createTrustFinancialForecast;
-	    private readonly IUseCaseAsync<GetTrustFinancialForecastRequest, TrustFinancialForecastResponse> _getTrustFinancialForecast;
+	    private readonly IUseCaseAsync<GetTrustFinancialForecastByIdRequest, TrustFinancialForecastResponse> _getTrustFinancialForecast;
+	    private readonly IUseCaseAsync<GetTrustFinancialForecastForCaseRequest, IEnumerable<TrustFinancialForecastResponse>> _getTrustFinancialForecastsForCase;
 	    private readonly IUseCaseAsync<UpdateTrustFinancialForecastRequest, int> _updateTrustFinancialForecast;
-	    private readonly IUseCaseAsync<DecisionUseCaseRequestParams<CloseDecisionRequest>, CloseDecisionResponse> _closeDecisionUseCase;
+	    private readonly IUseCaseAsync<CloseTrustFinancialForecastRequest, int> _closeFinancialTrustForecast;
 
 	    public TrustFinancialForecastController(
 		    ILogger<TrustFinancialForecastController> logger,
 		    IUseCaseAsync<CreateTrustFinancialForecastRequest, int> createTrustFinancialForecast,
-		    IUseCaseAsync<GetTrustFinancialForecastRequest, TrustFinancialForecastResponse> getTrustFinancialForecast,
+		    IUseCaseAsync<GetTrustFinancialForecastByIdRequest, TrustFinancialForecastResponse> getTrustFinancialForecast,
 		    IUseCaseAsync<UpdateTrustFinancialForecastRequest, int>  updateTrustFinancialForecast, 
-		    IUseCaseAsync<DecisionUseCaseRequestParams<CloseDecisionRequest>, CloseDecisionResponse> closeDecisionUseCase)
+		    IUseCaseAsync<CloseTrustFinancialForecastRequest, int> closeFinancialTrustForecast, 
+		    IUseCaseAsync<GetTrustFinancialForecastForCaseRequest, IEnumerable<TrustFinancialForecastResponse>> getTrustFinancialForecastsForCase)
 	    {
 		    _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		    _createTrustFinancialForecast = createTrustFinancialForecast ?? throw new ArgumentNullException(nameof(createTrustFinancialForecast));
 		    _getTrustFinancialForecast = getTrustFinancialForecast ?? throw new ArgumentNullException(nameof(getTrustFinancialForecast));
 		    _updateTrustFinancialForecast = updateTrustFinancialForecast ?? throw new ArgumentNullException(nameof(updateTrustFinancialForecast));
-		    _closeDecisionUseCase = closeDecisionUseCase ?? throw new ArgumentNullException(nameof(closeDecisionUseCase));
+		    _closeFinancialTrustForecast = closeFinancialTrustForecast ?? throw new ArgumentNullException(nameof(closeFinancialTrustForecast));
+		    _getTrustFinancialForecastsForCase = getTrustFinancialForecastsForCase ?? throw new ArgumentNullException(nameof(getTrustFinancialForecastsForCase));
 	    }
 
 	    [HttpPost]
@@ -64,12 +67,13 @@ namespace ConcernsCaseWork.API.Controllers
 	    {
 		    LogInfo($"Attempting to get Trust Financial Forecast by Urn {caseUrn}, Id {id}");
 	    
-		    if (!ValidateIdHasValue(caseUrn, nameof(GetById)) || !ValidateIdHasValue(id, nameof(GetById)))
+		    var request = new GetTrustFinancialForecastByIdRequest{ CaseUrn = caseUrn, TrustFinancialForecastId = id};
+		    if (!request.IsValid())
 		    {
 			    return BadRequest();
 		    }
 	    
-		    var response = await _getTrustFinancialForecast.Execute(new GetTrustFinancialForecastRequest(caseUrn, id), cancellationToken);
+		    var response = await _getTrustFinancialForecast.Execute(request, cancellationToken);
 		    if (response == null)
 		    {
 			    return NotFound();
@@ -81,14 +85,37 @@ namespace ConcernsCaseWork.API.Controllers
 		    }
 	    }
 	    
+	    [HttpGet]
+	    [MapToApiVersion("2.0")]
+	    public async Task<ActionResult<ApiSingleResponseV2<IEnumerable<TrustFinancialForecastResponse>>>> GetAllForCase([FromRoute] int caseUrn, CancellationToken cancellationToken)
+	    {
+		    LogInfo($"Attempting to get Trust Financial Forecast by Urn {caseUrn}");
+		    var request = new GetTrustFinancialForecastForCaseRequest{ CaseUrn = caseUrn };
+            if (!request.IsValid())
+            {
+                return BadRequest();
+            }
+
+		    var response = await _getTrustFinancialForecastsForCase.Execute(request, cancellationToken);
+		    if (response == null)
+		    {
+			    return NotFound();
+		    }
+		    else
+		    {
+			    var actionResponse = new ApiSingleResponseV2<IEnumerable<TrustFinancialForecastResponse>>(response);
+			    return Ok(actionResponse);
+		    }
+	    }
+	    
 	    [HttpPut("{id:int}")]
 	    [MapToApiVersion("2.0")]
 	    public async Task<ActionResult<ApiSingleResponseV2<string>>> Update(int caseUrn, int id, UpdateTrustFinancialForecastRequest request, CancellationToken cancellationToken)
 	    {
 		    LogInfo($"Attempting to update Decision by Urn {caseUrn}, DecisionId {id}");
 	    
-		    if (!ValidateIdHasValue(caseUrn, nameof(GetById))
-		        || !ValidateIdHasValue(id, nameof(GetById))
+		    if (!ValidateIdHasValue(caseUrn, nameof(Update))
+		        || !ValidateIdHasValue(id, nameof(Update))
 		        || !request.IsValid())
 		    {
 			    return BadRequest();
@@ -98,28 +125,24 @@ namespace ConcernsCaseWork.API.Controllers
 		    var response = new ApiSingleResponseV2<string>(updatedId.ToString());
 		    return new OkObjectResult(response);
 	    }
-	    //
-	    // [HttpPatch("{decisionId:int}/close")]
-	    // [MapToApiVersion("2.0")]
-	    // public async Task<ActionResult<ApiSingleResponseV2<CloseDecisionResponse>>> CloseDecision(int urn, int decisionId, CloseDecisionRequest request, CancellationToken cancellationToken)
-	    // {
-		   //  LogInfo($"Attempting to update Decision by Urn {urn}, DecisionId {decisionId}");
-	    //
-		   //  if (!ValidateUrn(urn, nameof(CloseDecision))
-		   //      || !ValidateDecisionId(decisionId, nameof(CloseDecision))
-		   //      || !request.IsValid())
-		   //  {
-			  //   return BadRequest();
-		   //  }
-	    //
-		   //  var closeDecisionRequest = new DecisionUseCaseRequestParams<CloseDecisionRequest>(urn, decisionId, request);
-		   //  var result = await _closeDecisionUseCase.Execute(closeDecisionRequest, cancellationToken);
-		   //  var response = new ApiSingleResponseV2<CloseDecisionResponse>(result);
-	    //
-		   //  LogInfo($"Returning close decision response. Concerns Case Urn {result.CaseUrn}, DecisionId {result.DecisionId}");
-		   //  return new OkObjectResult(response);
-	    // }
-	    //
+	    
+	    [HttpPatch("{id:int}")]
+	    [MapToApiVersion("2.0")]
+	    public async Task<ActionResult<ApiSingleResponseV2<string>>> Close(int caseUrn, int id, CloseTrustFinancialForecastRequest request, CancellationToken cancellationToken)
+	    {
+		    LogInfo($"Attempting to update Decision by Urn {caseUrn}, DecisionId {id}");
+	    
+		    if (!ValidateIdHasValue(caseUrn, nameof(Close))
+		        || !ValidateIdHasValue(id, nameof(Close))
+		        || !request.IsValid())
+		    {
+			    return BadRequest();
+		    }
+	    
+		    var closedId = await _closeFinancialTrustForecast.Execute(request, cancellationToken);
+		    var response = new ApiSingleResponseV2<string>(closedId.ToString());
+		    return new OkObjectResult(response);
+	    }
 
 	    private bool ValidateIdHasValue(int id, string methodName)
 	    {
@@ -127,12 +150,11 @@ namespace ConcernsCaseWork.API.Controllers
 		    
 		    LogInfo($"{methodName} found invalid Id value");
 		    return false;
-
 	    }
 
 	    private void LogInfo(string msg, [CallerMemberName] string caller = "")
 	    {
-		    _logger.LogInformation($"{caller} {msg}");
+		    _logger.LogInformation("{Caller} {Msg}", caller, msg);
 	    }
     }
 }
