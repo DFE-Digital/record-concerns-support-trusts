@@ -29,6 +29,7 @@ import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
 import { AuthenticationComponent } from "../auth/authenticationComponent";
 import { LogTask } from './constants';
 import utils from "/cypress/support/utils";
+import { should } from "chai";
 
 
 const concernsRgx = new RegExp(/(Compliance|Financial|Force majeure|Governance|Irregularity)/, 'i');
@@ -408,9 +409,23 @@ Cypress.Commands.add('validateCaseManagPage', () => {
         expect($row.eq(3).text().trim()).to.contain('Concerns').and.to.match(concernsRgx).and.to.match(/(Add concern)/).and.to.match(/(Edit)/);
         expect($row.eq(5).text().trim()).to.contain('SFSO territory');
     })
+	cy.getById('show-all-sections').click();
 
+	
+			cy.getById('accordion-issue-content-edit').should('have.text', 'Edit');
+			cy.getById('accordion-status-heading-edit').should('have.text', 'Edit');
+			cy.getById('accordion-case-aim-heading-edit').should('have.text', 'Edit');
+			cy.getById('accordion-de-escalation-point-heading-edit').should('have.text', 'Edit');
+			cy.getById('accordion-next-steps-heading-edit').should('have.text', 'Edit');
+			cy.getById('accordion-case-history-heading-edit').should('have.text', 'Edit');
+			
 
 })
+
+
+
+
+
 
 Cypress.Commands.add('closeAllOpenConcerns', () => {
     const elem = '[data-testid*="edit-concern"]';
