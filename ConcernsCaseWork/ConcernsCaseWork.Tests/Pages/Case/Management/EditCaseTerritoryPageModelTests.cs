@@ -94,7 +94,7 @@ public class EditTerritoryPageModelTests
 			Assert.That(sut.Territory, Is.Null);
 			Assert.That(sut.TempData, Is.Not.Null);
 			Assert.That(sut.TempData["Error.Message"],
-				Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+				Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		});
 
 		mockCaseModelService.Verify(c =>

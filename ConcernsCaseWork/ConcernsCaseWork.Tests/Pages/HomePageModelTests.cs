@@ -1,5 +1,6 @@
 using AutoFixture;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Teams;
 using ConcernsCaseWork.Pages;
@@ -58,7 +59,7 @@ namespace ConcernsCaseWork.Tests.Pages
 			await sut.OnGetAsync();
 
 			Assert.That(sut.TempData, Is.Not.Null);
-			Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(sut.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]

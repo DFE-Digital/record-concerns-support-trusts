@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
@@ -66,7 +67,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 
 			_mockCaseModelService.Verify(c =>
 				c.GetCaseByUrn(It.IsAny<long>()), Times.Never);

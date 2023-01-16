@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
 
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 			Assert.That(pageModel.NtiModel, Is.Null);
 			Assert.That(pageModel.NTIStatuses, Is.Null);
 		}
@@ -70,7 +70,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
 
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 			Assert.That(pageModel.NtiModel, Is.Null);
 			Assert.That(pageModel.NTIStatuses, Is.Null);
 		}

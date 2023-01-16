@@ -40,7 +40,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"],
-				Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+				Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]

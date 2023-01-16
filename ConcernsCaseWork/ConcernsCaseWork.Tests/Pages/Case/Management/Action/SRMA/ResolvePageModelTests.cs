@@ -42,7 +42,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]
@@ -150,7 +150,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]
