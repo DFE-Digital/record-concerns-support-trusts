@@ -51,7 +51,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed);
 
-			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+			mockSrmaService.Setup(s => s.GetSRMAViewModel(1, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
 			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
@@ -90,7 +90,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed, closedAt: DateTime.Now);
 			
-			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+			mockSrmaService.Setup(s => s.GetSRMAViewModel(caseUrn, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
 			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
@@ -151,7 +151,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed, SRMAReasonOffered.OfferLinked);
 
-			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+			mockSrmaService.Setup(s => s.GetSRMAViewModel(1, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
 			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
@@ -181,7 +181,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed, SRMAReasonOffered.Unknown);
 
-			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+			mockSrmaService.Setup(s => s.GetSRMAViewModel(caseUrn, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
 			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
@@ -211,7 +211,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.TrustConsidering, SRMAReasonOffered.Unknown);
 
-			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+			mockSrmaService.Setup(s => s.GetSRMAViewModel(caseUrn, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
 			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
@@ -275,7 +275,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.Unknown);
 
-			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+			mockSrmaService.Setup(s => s.GetSRMAViewModel(caseUrn, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
 			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
@@ -302,7 +302,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.RegionsGroupIntervention);
 
-			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+			mockSrmaService.Setup(s => s.GetSRMAViewModel(1, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
 			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
