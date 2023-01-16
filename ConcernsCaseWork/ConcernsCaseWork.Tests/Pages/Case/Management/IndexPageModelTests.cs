@@ -1,11 +1,16 @@
 ﻿using AutoFixture;
+<<<<<<< HEAD
 using ConcernsCaseWork.Constants;
+=======
+using ConcernsCaseWork.API.Contracts.Permissions;
+>>>>>>> 418b9cc1982b37f7b97d30b8e437f7b8c0d0dee3
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
@@ -40,6 +45,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		private Mock<INtiUnderConsiderationStatusesCachedService> _mockNtiStatusesCachedService = null;
 		private Mock<IActionsModelService> _actionsModelService = null;
 		private Mock<ICaseSummaryService> _caseSummaryService = null;
+		private Mock<ICasePermissionsService> _casePermissionsService = null;
 
 		private readonly static Fixture _fixture = new();
 
@@ -55,6 +61,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			_mockNtiStatusesCachedService = new Mock<INtiUnderConsiderationStatusesCachedService>();
 			_actionsModelService = new Mock<IActionsModelService>();
 			_caseSummaryService = new Mock<ICaseSummaryService>();
+
+			_casePermissionsService = new Mock<ICasePermissionsService>();
+			_casePermissionsService.Setup(m => m.GetCasePermissions(It.IsAny<long>())).ReturnsAsync(new GetCasePermissionsResponse());
 		}
 
 		[Test]
@@ -209,6 +218,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			_mockStatusCachedService.Setup(s => s.GetStatusByName(It.IsAny<string>()))
 				.ReturnsAsync(closeStatusModel);
 
+			var permissionsResponse = new GetCasePermissionsResponse() { Permissions = new List<CasePermission>() { CasePermission.Edit } };
+			_casePermissionsService.Setup(m => m.GetCasePermissions(It.IsAny<long>())).ReturnsAsync(permissionsResponse);
+
 			var pageModel = SetupIndexPageModel(isAuthenticated: true);
 
 			var routeData = pageModel.RouteData.Values;
@@ -258,16 +270,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
-			
-			return new IndexPageModel(_mockCaseModelService.Object, 
-				_mockTrustModelService.Object, 
-				_mockRecordModelService.Object, 
-				_mockRatingModelService.Object, 
-				_mockStatusCachedService.Object, 
+
+			return new IndexPageModel(_mockCaseModelService.Object,
+				_mockTrustModelService.Object,
+				_mockRecordModelService.Object,
+				_mockRatingModelService.Object,
+				_mockStatusCachedService.Object,
 				_mockNtiStatusesCachedService.Object,
-				_mockLogger.Object, 
+				_mockLogger.Object,
 				_actionsModelService.Object,
-				_caseSummaryService.Object)
+				_caseSummaryService.Object,
+				_casePermissionsService.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

@@ -4,6 +4,7 @@ using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Service.Status;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
@@ -32,6 +33,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly IStatusCachedService _statusCachedService;
 		private readonly INtiUnderConsiderationStatusesCachedService _ntiStatusesCachedService;
 		private readonly IActionsModelService _actionsModelService;
+		private readonly ICasePermissionsService _casePermissionsService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
@@ -53,7 +55,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			INtiUnderConsiderationStatusesCachedService ntiUCStatusesCachedService,
 			ILogger<IndexPageModel> logger,
 			IActionsModelService actionsModelService,
-			ICaseSummaryService caseSummaryService
+			ICaseSummaryService caseSummaryService,
+			ICasePermissionsService casePermissionsService
 			)
 		{
 			_trustModelService = trustModelService;
@@ -65,6 +68,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_logger = logger;
 			_actionsModelService = actionsModelService;
 			_caseSummaryService = caseSummaryService;
+			_casePermissionsService = casePermissionsService;
 		}
 
 		public async Task<IActionResult> OnGetAsync()
@@ -86,7 +90,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				}
 
 				// Check if case is editable
-				IsEditableCase = await IsCaseEditable();
+				IsEditableCase = await IsCaseEditable(caseUrn);
 
 				// Map Case Rating
 				CaseModel.RatingModel = await _ratingModelService.GetRatingModelById(CaseModel.RatingId);
@@ -128,10 +132,10 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			ClosedCaseActions = caseActionsSummaryBreakdown.ClosedActions;
 		}
 
-		private bool UserHasEditCasePrivileges()
+		private async Task<bool> UserHasEditCasePrivileges(long caseId)
 		{
-			bool result = CaseModel.CreatedBy.Equals(User.Identity.Name, StringComparison.OrdinalIgnoreCase);
-			return result;
+			var permissionsResponse = await _casePermissionsService.GetCasePermissions(caseId);
+			return permissionsResponse.HasEditPermissions();
 		}
 
 		private async Task<bool> IsCaseClosed()
@@ -146,10 +150,10 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			return false;
 		}
 
-		private async Task<bool> IsCaseEditable()
+		private async Task<bool> IsCaseEditable(long caseId)
 		{
 			var isCaseClosed = await IsCaseClosed();
-			var userHasEditCasePrivileges = UserHasEditCasePrivileges();
+			var userHasEditCasePrivileges = await UserHasEditCasePrivileges(caseId);
 
 			if (!isCaseClosed && userHasEditCasePrivileges)
 			{

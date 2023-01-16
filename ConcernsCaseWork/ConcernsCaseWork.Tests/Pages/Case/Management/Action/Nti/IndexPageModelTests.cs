@@ -48,7 +48,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Nti
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 
 			var ntiModel = NTIFactory.BuildNTIModel();
-			mockNtiModelService.Setup(n => n.GetNtiByIdAsync(It.IsAny<long>())).ReturnsAsync(ntiModel);
+			mockNtiModelService.Setup(n => n.GetNtiViewModelAsync(1, It.IsAny<long>())).ReturnsAsync(ntiModel);
 
 			var pageModel = SetupIndexPageModel(mockNtiModelService, mockNtiReasonsService, mockNtiStatusesService, mockNtiConditionsService, mockLogger);
 

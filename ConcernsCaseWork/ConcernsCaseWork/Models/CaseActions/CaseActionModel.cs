@@ -13,5 +13,7 @@ namespace ConcernsCaseWork.Models.CaseActions
 		public bool IsOpen { get => !IsClosed; }
 
 		public bool IsClosed { get => ClosedAt.HasValue; }
+
+		public bool IsEditable { get; set; }
 	}
 }
