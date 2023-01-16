@@ -57,6 +57,7 @@ using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Middleware;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.PageHistory;
+using ConcernsCaseWork.Service.Permissions;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -192,6 +193,7 @@ namespace ConcernsCaseWork.Extensions
             services.AddScoped<INtiConditionsService, NtiConditionsService>();
 			services.AddScoped<ITeamsService, TeamsService>();
 			services.AddScoped<IDecisionService, DecisionService>();
+			services.AddScoped<ICasePermissionsService, CasePermissionsService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
