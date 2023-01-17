@@ -147,10 +147,6 @@ public class CreateTrustFinancialForecastTests
 			.Be("Value cannot be null. (Parameter 'request')");
 	}
 
-	private TrustFinancialForecastResponse CreateOpenTrustFinancialForecast() => _fixture.Build<TrustFinancialForecastResponse>().Without(x => x.ClosedAt).Create();
-	
-	private TrustFinancialForecastResponse CreateClosedTrustFinancialForecast() => _fixture.Create<TrustFinancialForecastResponse>();
-	
 	private CreateTrustFinancialForecastRequest CreateCreateTrustFinancialForecastRequest(int? caseUrn) 
 		=> _fixture.Build<CreateTrustFinancialForecastRequest>()
 			.With(x => x.CaseUrn, caseUrn)

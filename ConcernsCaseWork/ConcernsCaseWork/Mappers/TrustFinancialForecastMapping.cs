@@ -16,7 +16,7 @@ public static class TrustFinancialForecastMapping
 			RelativeUrl = $"/case/{model.CaseUrn}/management/action/trustfinancialforecast/{model.TrustFinancialForecastId}",
 			StatusName = (model.ClosedAt.HasValue) ? "Completed" : "In progress",
 			RawOpenedDate = model.CreatedAt,
-			RawClosedDate = model.ClosedAt,
+			RawClosedDate = model.ClosedAt
 		};
 
 		return result;
@@ -30,7 +30,7 @@ public static class TrustFinancialForecastMapping
 			CaseUrn = response.CaseUrn,
 			CreatedAt = response.CreatedAt.DateTime,
 			UpdatedAt = response.UpdatedAt.DateTime,
-			ClosedAt = response.ClosedAt?.DateTime,
+			ClosedAt = response.ClosedAt?.DateTime
 		};
 
 		return result;
