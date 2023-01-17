@@ -29,7 +29,7 @@ import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
 import { AuthenticationComponent } from "../auth/authenticationComponent";
 import { LogTask } from './constants';
 import utils from "/cypress/support/utils";
-import { should } from "chai";
+
 
 
 const concernsRgx = new RegExp(/(Compliance|Financial|Force majeure|Governance|Irregularity)/, 'i');
