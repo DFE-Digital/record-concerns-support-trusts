@@ -7,6 +7,7 @@ using ConcernsCaseWork.API.ResponseModels.CaseActions.SRMA;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.Data.Enums;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.UserContext;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -18,15 +19,21 @@ namespace ConcernsCaseWork.API.Controllers
 	[ApiController]
 	public class PermissionsController : Controller
 	{
+		private readonly ICaseActionPermissionStrategyRoot _caseActionPermissionStrategyRoot;
 		private readonly ILogger<ConcernsCaseController> _logger;
 		private readonly IGetConcernsCaseByUrn _getConcernsCaseByUrn;
+		private readonly IUserInfoService _userInfoService;
 
 		public PermissionsController(
 			ILogger<ConcernsCaseController> logger,
-			IGetConcernsCaseByUrn getConcernsCaseByUrn)
+			IGetConcernsCaseByUrn getConcernsCaseByUrn,
+			IUserInfoService userInfoService,
+			ICaseActionPermissionStrategyRoot caseActionPermissionStrategyRoot)
 		{
 			_logger = Guard.Against.Null(logger);
 			_getConcernsCaseByUrn = Guard.Against.Null(getConcernsCaseByUrn);
+			_userInfoService = Guard.Against.Null(userInfoService);
+			_caseActionPermissionStrategyRoot = Guard.Against.Null(caseActionPermissionStrategyRoot);
 		}
 
 		[HttpPost]
@@ -34,19 +41,39 @@ namespace ConcernsCaseWork.API.Controllers
 		public ActionResult<ApiSingleResponseV2<PermissionQueryResponse>> GetPermissions(PermissionQueryRequest request)
 		{
 			Guard.Against.Null(request);
+
 			_logger.LogMethodEntered();
+
+			if (_userInfoService.UserInfo == null)
+			{
+				throw new NullReferenceException("User information is null, cannot determined if current user owns cases or has permissions");
+			}
 
 			try
 			{
-				// TODO. Create strategies and validate correctly in another layer
-				var casePermissions = request.CaseIds.Select(x => new CasePermissionResponse
+				// TODO: Proper implementation
+
+
+
+				List<CasePermissionResponse> allCasePermissions = new(request.CaseIds.Length);
+				foreach (long caseId in request.CaseIds)
 				{
-					CaseId = x, Permissions = new CasePermission[] { CasePermission.View, CasePermission.Edit }
-				}).ToArray();
+					// Find each case. Return view only if case is close.
+					// Edit if case is not closed and owned by user.
+					// Edit if case is not closed and owned by another user + current user is admin
+
+
+					// TODO: shouldn't need to cast this to an int, incorrect types need to be sorted out.
+					// TODO: optimize query to get all cases requested in one db query
+					ConcernsCaseResponse @case = this._getConcernsCaseByUrn.Execute((int)caseId);
+
+					var permittedCaseActions = _caseActionPermissionStrategyRoot.GetPermittedCaseActions(@case, _userInfoService.UserInfo);
+					allCasePermissions.Add(new CasePermissionResponse() { CaseId = caseId, Permissions = permittedCaseActions });
+				}
 
 				var permissions = new PermissionQueryResponse()
 				{
-					CasePermissionResponses = casePermissions
+					CasePermissionResponses = allCasePermissions.ToArray()
 				};
 
 				var response = new ApiSingleResponseV2<PermissionQueryResponse>(permissions);

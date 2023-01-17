@@ -42,5 +42,21 @@ namespace ConcernsCaseWork.UserContext
 
 			return new UserInfo() { Name = name, Roles = roles };
 		}
+
+
+		public bool IsCaseworker()
+		{
+			return this.Roles.Contains(CaseWorkerRoleClaim);
+		}
+
+		public bool IsTeamLeader()
+		{
+			return this.Roles.Contains(TeamLeaderRoleClaim);
+		}
+
+		public bool IsAdmin()
+		{
+			return this.Roles.Contains(AdminRoleClaim);
+		}
 	}
 }

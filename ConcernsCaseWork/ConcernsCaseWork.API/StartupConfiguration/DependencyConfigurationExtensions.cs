@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 
 			return services;
 		}
-		
+
 		public static IServiceCollection AddUseCaseAsyncs(this IServiceCollection services)
 		{
 			var allTypes = typeof(IUseCaseAsync<,>).Assembly.GetTypes();
@@ -87,7 +87,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IGetConcernsCaseworkTeamOwners, GetConcernsCaseworkTeamOwners>();
 			services.AddScoped<IUpdateConcernsCaseworkTeam, UpdateConcernsCaseworkTeam>();
 			services.AddScoped<IConcernsTeamCaseworkGateway, ConcernsTeamCaseworkGateway>();
-			
+
 			services.AddScoped<ICaseSummaryGateway, CaseSummaryGateway>();
 
 			services.AddScoped<IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse>, CreateDecisionOutcome>();
@@ -107,6 +107,10 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IUpdateDecisionResponseFactory, UpdateDecisionResponseFactory>();
 			services.AddScoped<ICloseDecisionResponseFactory, CloseDecisionResponseFactory>();
 
+			// case action permission strategies
+			services.AddScoped<ICaseActionPermissionStrategyRoot, CaseActionPermissionStrategyRoot>();
+			services.AddScoped<ICaseActionPermissionStrategy, IsCaseViewableStrategy>();
+			services.AddScoped<ICaseActionPermissionStrategy, ICaseActionPermissionStrategy>();
 			return services;
 		}
 	}

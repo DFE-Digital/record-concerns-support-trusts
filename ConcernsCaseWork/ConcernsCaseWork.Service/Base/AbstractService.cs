@@ -96,7 +96,7 @@ namespace ConcernsCaseWork.Service.Base
 				_logger.LogWarning("Warning. Unable to add correlationId to request headers");
 			}
 
-			//_userInfoService.AddHeaders(client);
+			_userInfoService.AddRequestHeaders(client);
 
 			return client;
 		}

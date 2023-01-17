@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.API.Contracts.Tests.Context
 {
-	public class UserContextTests
+	public class UserInfoTests
 	{
 		[Fact]
 		public void ToHeadersKVP_When_NameSet_Returns_Name_Header()

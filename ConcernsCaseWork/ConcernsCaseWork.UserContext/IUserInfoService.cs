@@ -1,10 +1,14 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace ConcernsCaseWork.UserContext;
 
 public interface IUserInfoService
 {
 	void SetPrincipal(ClaimsPrincipal claimsPrincipal);
-	void AddHeaders(HttpRequestMessage request);
-	void AddHeaders(HttpClient client);
+
+	void AddRequestHeaders(HttpClient client);
+	void ReceiveRequestHeaders(IHeaderDictionary headers);
+
+	UserInfo? UserInfo { get; }
 }

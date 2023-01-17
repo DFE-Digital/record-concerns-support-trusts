@@ -1,50 +1,59 @@
 ﻿using Ardalis.GuardClauses;
+using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 
 namespace ConcernsCaseWork.UserContext
 {
 	public class UserInfoService : IUserInfoService
 	{
-		private ClaimsPrincipal _claimsPrincipal;
+		public UserInfo? UserInfo { get; private set; }
 
 		public void SetPrincipal(ClaimsPrincipal claimsPrincipal)
 		{
-			_claimsPrincipal = claimsPrincipal;
+			UserInfo = CreateUserInfo(claimsPrincipal);
 		}
 
 		public void AddHeaders(HttpRequestMessage request)
 		{
 			Guard.Against.Null(request);
 
-			UserInfo headers = CreateUserInfoHeaders();
-
-			foreach (KeyValuePair<string, string> keyValuePair in headers.ToHeadersKVP())
+			foreach (KeyValuePair<string, string> keyValuePair in UserInfo.ToHeadersKVP())
 			{
 				request.Headers.Add(keyValuePair.Key, keyValuePair.Value);
 			}
 		}
 
-		private UserInfo CreateUserInfoHeaders()
+		private UserInfo CreateUserInfo(ClaimsPrincipal claimsPrincipal)
 		{
 			return new UserInfo()
 			{
-				Name = GetPrincipalName(_claimsPrincipal),
-				Roles = UserInfo.ParseRoleClaims(_claimsPrincipal.Claims.Select(x => x.Value).ToArray())
+				Name = GetPrincipalName(claimsPrincipal),
+				Roles = UserInfo.ParseRoleClaims(claimsPrincipal.Claims.Select(x => x.Value).ToArray())
 			};
 		}
 
-		public void AddHeaders(HttpClient client)
+		public void AddRequestHeaders(HttpClient client)
 		{
 			Guard.Against.Null(client);
 
-			UserInfo headers = CreateUserInfoHeaders();
+			if (UserInfo == null)
+			{
+				return;
+			}
 
-			foreach (KeyValuePair<string, string> keyValuePair in headers.ToHeadersKVP())
+			foreach (KeyValuePair<string, string> keyValuePair in UserInfo.ToHeadersKVP())
 			{
 				client.DefaultRequestHeaders.TryAddWithoutValidation(keyValuePair.Key, keyValuePair.Value);
 			}
+		}
+
+		public void ReceiveRequestHeaders(IHeaderDictionary headers)
+		{
+			var simpleHeaders = headers.Where(x => x.Key.StartsWith(UserInfo.RoleHeaderKeyPrefix))
+				.Select(X => new KeyValuePair<string, string>(X.Key, X.Value.First()))
+				.ToArray();
+			UserInfo = UserInfo.FromHeaders(simpleHeaders);
 		}
 
 		private string GetPrincipalName(IPrincipal principal)
@@ -57,14 +66,6 @@ namespace ConcernsCaseWork.UserContext
 			}
 
 			return principal.Identity.Name;
-		}
-
-		public UserInfo FromRequestHeaders(HttpRequestMessage request)
-		{
-			Guard.Against.Null(request);
-			return UserInfo.FromHeaders(request.Headers.Where(x => x.Key.StartsWith(UserInfo.RoleHeaderKeyPrefix))
-				.Select(X => new KeyValuePair<string,string>(X.Key, X.Value.First()))
-				.ToArray());
 		}
 	}
 }
