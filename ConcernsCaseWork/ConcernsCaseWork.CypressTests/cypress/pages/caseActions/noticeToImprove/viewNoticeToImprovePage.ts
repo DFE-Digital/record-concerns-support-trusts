@@ -54,7 +54,25 @@ export class ViewNoticeToImprovePage {
     {
         Logger.Log("Editing Notice To Improve");
 
-        cy.getByTestId("edit-nti-button").click();
+        this.getEdit().click();
+
+        return this;
+    }
+
+    public canEdit(): this
+    {
+        Logger.Log("Can edit");
+
+        this.getEdit();
+
+        return this;
+    }
+
+    public cannotEdit(): this
+    {
+        Logger.Log("Cannot edit");
+
+        this.getEdit().should("not.exist");
 
         return this;
     }
@@ -63,7 +81,25 @@ export class ViewNoticeToImprovePage {
     {
         Logger.Log("Cancelling NTI");
 
-        cy.getByTestId("cancel-nti-button").click();
+        this.getCancel().click();
+
+        return this;
+    }
+
+    public canCancel(): this
+    {
+        Logger.Log("Can cancel");
+
+        this.getCancel();
+
+        return this;
+    }
+
+    public cannotCancel(): this
+    {
+        Logger.Log("Cannot cancel");
+
+        this.getCancel().should("not.exist");
 
         return this;
     }
@@ -71,7 +107,25 @@ export class ViewNoticeToImprovePage {
     public close(): this {
         Logger.Log("Closing Notice To Improve");
 
-        cy.getByTestId("close-nti-button").click();
+        this.getClose().click();
+
+        return this;
+    }
+
+    public canClose(): this
+    {
+        Logger.Log("Cannot close");
+
+        this.getClose();
+
+        return this;
+    }
+
+    public cannotClose(): this
+    {
+        Logger.Log("Cannot close");
+
+        this.getClose().should("not.exist");
 
         return this;
     }
@@ -79,44 +133,42 @@ export class ViewNoticeToImprovePage {
     public lift(): this {
         Logger.Log("Lifting Notice To Improve");
 
-        cy.getByTestId("lift-nti-button").click();
+        this.getLift().click();
 
         return this;
     }
 
-    public hasNoEditButton(): this
+    public canLift(): this
     {
-        Logger.Log("Has no edit button");
+        Logger.Log("Can lift");
 
-        cy.getByTestId("edit-nti-button").should("not.exist");
+        this.getLift();
 
         return this;
     }
 
-    public hasNoLiftButton(): this
+    public cannotLift(): this
     {
-        Logger.Log("Has no lift button");
+        Logger.Log("Cannot lift");
 
-        cy.getByTestId("lift-nti-button").should("not.exist");
+        this.getLift().should("not.exist");
 
         return this;
     }
 
-    public hasNoCancelButton(): this
-    {
-        Logger.Log("Has no cancel button");
-
-        cy.getByTestId("cancel-nti-button").should("not.exist");
-
-        return this;
+    private getEdit() {
+        return cy.getByTestId("edit-nti-button");
     }
 
-    public hasNoCloseButton(): this
-    {
-        Logger.Log("Has no close button");
+    private getCancel() {
+        return cy.getByTestId("cancel-nti-button");
+    }
 
-        cy.getByTestId("close-nti-button").should("not.exist");
+    private getClose() {
+        return cy.getByTestId("close-nti-button");
+    }
 
-        return this;
+    private getLift() {
+        return cy.getByTestId("lift-nti-button");
     }
 }
