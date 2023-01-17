@@ -172,19 +172,28 @@ export class ViewDecisionPage
 		return this;
 	}
 
-	public cannotCloseDecision(): this
-	{
-		Logger.Log("Checking we cannot close a decision without an outcome");
+	public editDecision(): this {
+		Logger.Log("Editing decision");
 
-		cy.getByTestId("close-decision-button").should("not.exist");
+		this.getEditDecision().children('a').click();
 
 		return this;
 	}
 
-	public editDecision(): this {
-		cy.task("log", `Edit Decision`);
+	public canEditDecision(): this
+	{
+		Logger.Log("Can edit decision");
 
-		cy.getByTestId("edit-decision-text").children('a').click();
+		this.getEditDecision();
+
+		return this;
+	}
+
+	public cannotEditDecision(): this
+	{
+		Logger.Log("Cannot edit decision");
+
+		this.getEditDecision().should("not.exist");
 
 		return this;
 	}
@@ -193,7 +202,7 @@ export class ViewDecisionPage
 	{
 		Logger.Log(`Edit decision outcome`);
 
-		cy.getByTestId("edit-decision-outcome-text")
+		this.getEditDecisionOutcome()
 			.children("a")
 			.should("contain.text", "Edit")
 			.click();
@@ -201,34 +210,66 @@ export class ViewDecisionPage
 		return this;
 	}
 
-	public createDecisionOutcome(): this{
+	public canEditDecisionOutcome(): this
+	{
+		Logger.Log("Cannot edit a decision outcome");
+
+		this.getEditDecisionOutcome();
+
+		return this;
+	}
+
+	public cannotEditDecisionOutcome(): this
+	{
+		Logger.Log("Cannot edit a decision outcome");
+
+		this.getEditDecisionOutcome().should("not.exist");
+
+		return this;
+	}
+
+	public createDecisionOutcome(): this {
+		Logger.Log("Creating decision outcome");
+
 		cy.getByTestId('continue-record-decision-button').click();
 
 		return this;
 	}
 
-	public cannotEditDecision(): this
-	{
-		cy.task("log", `Cannot edit decision`);
-
-		cy.getByTestId("edit-decision-text").should("not.exist");
-
-		return this;
-	}
-
-	
-	public cannotEditDecisionOutcome(): this
-	{
-		cy.task("log", `Cannot edit decision outcome`);
-
-		cy.getByTestId("edit-decision-outcome-text").should("not.exist");
-
-		return this;
-	}
-
 	public closeDecision(): this {
-		cy.getByTestId('close-decision-button').click();
+		Logger.Log("Closing decision");
+		this.getCloseDecision().click();
 
 		return this;
+	}
+
+	public canCloseDecision()
+	{
+		Logger.Log("Can close a decision");
+
+		this.getCloseDecision();
+
+		return this;
+	}
+
+	public cannotCloseDecision(): this
+	{
+		Logger.Log("Cannot close decision");
+
+		this.getCloseDecision().should("not.exist");
+
+		return this;
+	}
+
+	private getEditDecision() {
+		return cy.getByTestId("edit-decision-text");
+	}
+
+	private getEditDecisionOutcome() {
+		return cy.getByTestId("edit-decision-outcome-text");
+	}
+
+	private getCloseDecision() {
+		return cy.getByTestId('close-decision-button');
 	}
 }
