@@ -5,7 +5,25 @@ export class ViewSrmaPage {
     {
         Logger.Log("Adding status");
 
-        cy.getByTestId("SRMA status").click();
+        this.getAddStatus().click();
+
+        return this;
+    }
+
+    public canAddStatus()
+    {
+        Logger.Log("Can add status");
+
+        this.getAddStatus();
+
+        return this;
+    }
+
+    public cannotAddStatus()
+    {
+        Logger.Log("Cannot add status");
+
+        this.getAddStatus().should("not.exist");
 
         return this;
     }
@@ -14,7 +32,25 @@ export class ViewSrmaPage {
     {
         Logger.Log("Adding date trust was contacted");
 
-        cy.getByTestId("date trust was contacted about SRMA").click();
+        this.getAddDateTrustContacted().click();
+
+        return this;
+    }
+
+    public canAddDateTrustContacted(): this
+    {
+        Logger.Log("Can add the date trust was contacted");
+
+        this.getAddDateTrustContacted();
+
+        return this;
+    }
+
+    public cannotAddDateTrustContacted(): this
+    {
+        Logger.Log("Cannot add the date trust was contacted");
+
+        this.getAddDateTrustContacted().click();
 
         return this;
     }
@@ -22,7 +58,23 @@ export class ViewSrmaPage {
     public addReason(): this {
         Logger.Log("Adding reason");
 
-        cy.getByTestId("SRMA reason").click();
+        this.getAddReason().click();
+
+        return this;
+    }
+
+    public canAddReason(): this {
+        Logger.Log("Can add a reason");
+
+        this.getAddReason();
+
+        return this;
+    }
+
+    public cannotAddReason(): this {
+        Logger.Log("Cannot add a reason");
+
+        this.getAddReason().should("not.exist");
 
         return this;
     }
@@ -30,7 +82,23 @@ export class ViewSrmaPage {
     public addDateAccepted(): this {
         Logger.Log("Adding date accepted");
 
-        cy.getByTestId("SRMA date accepted").click();
+        this.getAddDateAccepted().click();
+
+        return this;
+    }
+
+    public canAddDateAccepted(): this {
+        Logger.Log("Can add date accepted");
+
+        this.getAddDateAccepted();
+
+        return this;
+    }
+
+    public cannotAddDateAccepted(): this {
+        Logger.Log("Cannot add date accepted");
+
+        this.getAddDateAccepted().should("not.exist");
 
         return this;
     }
@@ -38,7 +106,23 @@ export class ViewSrmaPage {
     public addDateOfVisit(): this {
         Logger.Log("Adding date accepted");
 
-        cy.getByTestId("SRMA dates of visit").click();
+        this.getAddDateOfVisit().click();
+
+        return this;
+    }
+
+    public canAddDateOfVisit(): this {
+        Logger.Log("Can add date accepted");
+
+        this.getAddDateOfVisit();
+
+        return this;
+    }
+
+    public cannotAddDateOfVisit(): this {
+        Logger.Log("Cannot add date accepted");
+
+        this.getAddDateOfVisit().should("not.exist");
 
         return this;
     }
@@ -46,7 +130,23 @@ export class ViewSrmaPage {
     public addDateReportSentToTrust(): this {
         Logger.Log("Adding date report sent to trust");
 
-        cy.getByTestId("date SRMA report sent to trust").click();
+        this.getAddDateReportSendToTrust().click();
+
+        return this;
+    }
+
+    public canAddDateReportSentToTrust(): this {
+        Logger.Log("Can add date report sent to trust");
+
+        this.getAddDateReportSendToTrust();
+
+        return this;
+    }
+
+    public cannotAddDateReportSentToTrust(): this {
+        Logger.Log("Cannot add date report sent to trust");
+
+        this.getAddDateReportSendToTrust().should("not.exist");
 
         return this;
     }
@@ -55,7 +155,25 @@ export class ViewSrmaPage {
     {
         Logger.Log("Adding notes");
 
-        cy.getByTestId("SRMA notes").click();
+        this.getAddNotes().click();
+
+        return this;
+    }
+
+    public canAddNotes(): this
+    {
+        Logger.Log("Can add notes");
+
+        this.getAddNotes();
+
+        return this;
+    }
+
+    public cannotAddNotes(): this
+    {
+        Logger.Log("Cannot add notes");
+
+        this.getAddNotes().should("not.exist");
 
         return this;
     }
@@ -136,7 +254,25 @@ export class ViewSrmaPage {
     public cancel(): this {
         Logger.Log("Cancelling SRMA");
 
-        cy.getByTestId("cancel-srma-button").click();
+        this.getCancel().click();
+
+        return this;
+    }
+
+    public canCancel()
+    {
+        Logger.Log("Can cancel SRMA");
+
+        this.getCancel();
+
+        return this;
+    }
+
+    public cannotCancel()
+    {
+        Logger.Log("Cannot cancel SRMA");
+
+        this.getCancel().should("not.exist");
 
         return this;
     }
@@ -145,7 +281,25 @@ export class ViewSrmaPage {
     {
         Logger.Log("Declining SRMA");
 
-        cy.getById("complete-decline-srma-button").click();
+        this.getDecline().click();
+
+        return this;
+    }
+
+    public canDecline()
+    {
+        Logger.Log("Can decline SRMA");
+
+        this.getDecline();
+
+        return this;
+    }
+
+    public cannotDecline()
+    {
+        Logger.Log("Cannot decline SRMA");
+
+        this.getDecline().should("not.exist");
 
         return this;
     }
@@ -156,5 +310,45 @@ export class ViewSrmaPage {
         cy.getById("add-srma-button").click();
 
         return this;
+    }
+
+    private getAddStatus()
+    {
+        return cy.getByTestId("SRMA status");
+    }
+
+    private getAddDateTrustContacted()
+    {
+        return cy.getByTestId("date trust was contacted about SRMA");
+    }
+
+    private getAddReason() {
+        return cy.getByTestId("SRMA reason")
+    }
+
+    private getAddDateAccepted()
+    {
+        return cy.getByTestId("SRMA date accepted");
+    }
+
+    private getAddDateOfVisit()
+    {
+        return cy.getByTestId("SRMA dates of visit");
+    }
+
+    private getAddDateReportSendToTrust() {
+        return cy.getByTestId("date SRMA report sent to trust");
+    }
+
+    private getAddNotes() {
+        return cy.getByTestId("SRMA notes");
+    }
+
+    private getCancel() {
+       return cy.getByTestId("cancel-srma-button"); 
+    }
+
+    private getDecline() {
+        return cy.getById("complete-decline-srma-button");
     }
 }
