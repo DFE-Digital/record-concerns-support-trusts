@@ -32,12 +32,14 @@ describe("Testing permissions on cases and case actions", () => {
     const viewDecisionPage = new ViewDecisionPage();
     const decisionOutcomePage = new DecisionOutcomePage();
 
+    let caseId: number;
+
     beforeEach(() => {
         cy.login();
 
         caseApi.post()
             .then((caseResponse) => {
-                const caseId = caseResponse.data.urn;
+                caseId = caseResponse.data.urn;
                 concernsApi.post(caseId);
 
                 cy.visit(`/case/${caseId}/management`);
@@ -63,6 +65,8 @@ describe("Testing permissions on cases and case actions", () => {
             .canAddCaseAction();
 
         Logger.Log("Check that we cannot edit if we did not create the case");
+        updateCaseOwner(caseId);
+
         caseMangementPage
             .showAllConcernDetails()
             .cannotEditConcern()
@@ -106,6 +110,8 @@ describe("Testing permissions on cases and case actions", () => {
             .canDecline();
 
         Logger.Log("Check that the user cannot edit an SRMA that they did not create");
+        updateCaseOwner(caseId);
+
         viewSrmaPage
             .cannotAddStatus()
             .cannotAddDateTrustContacted()
@@ -134,6 +140,7 @@ describe("Testing permissions on cases and case actions", () => {
             .canClose();
 
         Logger.Log("Check that the user cannot edit a financial plan that they did not create");
+        updateCaseOwner(caseId);
 
         viewFinancialPlanPage
             .cannotEdit()
@@ -158,6 +165,7 @@ describe("Testing permissions on cases and case actions", () => {
             .canLift();
 
         Logger.Log("Check that the user cannot edit an nti that they did not create");
+        updateCaseOwner(caseId);
 
         viewNtiPage
             .cannotEdit()
@@ -182,6 +190,7 @@ describe("Testing permissions on cases and case actions", () => {
             .canClose();
 
         Logger.Log("Check that the user cannot edit an nti warning letter that they did not create");
+        updateCaseOwner(caseId);
 
         viewNtiWarningLetterPage
             .cannotEdit()
@@ -204,6 +213,7 @@ describe("Testing permissions on cases and case actions", () => {
             .canClose();
 
         Logger.Log("Check that the user cannot edit an nti warning letter that they did not create");
+        updateCaseOwner(caseId);
         
         viewNtiUnderConsiderationPage
             .cannotEdit()
@@ -235,10 +245,21 @@ describe("Testing permissions on cases and case actions", () => {
             .canCloseDecision();
 
         Logger.Log("Check that the user cannot edit a decision that they did not create");
+        updateCaseOwner(caseId);
 
         viewDecisionPage
             .cannotEditDecision()
             .cannotEditDecisionOutcome()
             .cannotCloseDecision();
     });
+
+    function updateCaseOwner(caseId: number) {
+        caseApi.get(caseId)
+        .then((caseResponse) =>
+        {
+            caseResponse.data.createdBy = "Automation.User@education.gov.uk";
+            caseApi.patch(caseId, caseResponse.data);
+            cy.reload();
+        })
+    }
 });
