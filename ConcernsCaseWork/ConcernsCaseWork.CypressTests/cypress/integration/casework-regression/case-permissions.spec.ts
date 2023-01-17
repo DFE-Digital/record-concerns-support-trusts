@@ -1,6 +1,9 @@
 import caseApi from "../../api/caseApi";
 import concernsApi from "../../api/concernsApi";
 import { Logger } from "../../common/logger";
+import { DecisionOutcomePage } from "../../pages/caseActions/decision/decisionOutcomePage";
+import { EditDecisionPage } from "../../pages/caseActions/decision/editDecisionPage";
+import { ViewDecisionPage } from "../../pages/caseActions/decision/viewDecisionPage";
 import { ViewFinancialPlanPage } from "../../pages/caseActions/financialPlan/viewFinancialPlanPage";
 import { FinancialPlanPage } from "../../pages/caseActions/financialPlanPage";
 import { EditNoticeToImprovePage } from "../../pages/caseActions/noticeToImprove/editNoticeToImprovePage";
@@ -25,6 +28,9 @@ describe("Testing permissions on cases and case actions", () => {
     const viewNtiWarningLetterPage = new ViewNtiWarningLetterPage();
     const editNtiUnderConsiderationPage = new EditNtiUnderConsiderationPage();
     const viewNtiUnderConsiderationPage = new ViewNtiUnderConsiderationPage();
+    const editDecisionPage = new EditDecisionPage();
+    const viewDecisionPage = new ViewDecisionPage();
+    const decisionOutcomePage = new DecisionOutcomePage();
 
     beforeEach(() => {
         cy.login();
@@ -202,5 +208,37 @@ describe("Testing permissions on cases and case actions", () => {
         viewNtiUnderConsiderationPage
             .cannotEdit()
             .cannotClose();
+    });
+
+    it("Should not allow the user to edit a decision that they did not create", () =>
+    {
+        Logger.Log("Check that the user can edit an nti decision that they did create");
+        caseMangementPage
+            .addCaseAction("Decision");
+
+        editDecisionPage.save();
+
+        cy.get("#open-case-actions td")
+            .getByTestId("Decision: No Decision Types").click();
+
+        viewDecisionPage.createDecisionOutcome()
+        decisionOutcomePage
+            .withDecisionOutcomeStatus("Approved")
+            .saveDecisionOutcome();
+
+        cy.get("#open-case-actions td")
+            .getByTestId("Decision: No Decision Types").click();
+
+        viewDecisionPage
+            .canEditDecision()
+            .canEditDecisionOutcome()
+            .canCloseDecision();
+
+        Logger.Log("Check that the user cannot edit a decision that they did not create");
+
+        viewDecisionPage
+            .cannotEditDecision()
+            .cannotEditDecisionOutcome()
+            .cannotCloseDecision();
     });
 });
