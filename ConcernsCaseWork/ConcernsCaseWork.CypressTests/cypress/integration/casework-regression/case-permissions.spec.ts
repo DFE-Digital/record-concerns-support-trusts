@@ -37,14 +37,7 @@ describe("Testing permissions on cases and case actions", () => {
     beforeEach(() => {
         cy.login();
 
-        caseApi.post()
-            .then((caseResponse) => {
-                caseId = caseResponse.data.urn;
-                concernsApi.post(caseId);
-
-                cy.visit(`/case/${caseId}/management`);
-                cy.reload();
-            });
+        cy.basicCreateCase();
     });
 
     it("Should not allow a user to edit a case that they did not create", () => {
@@ -257,8 +250,8 @@ describe("Testing permissions on cases and case actions", () => {
         caseApi.get(caseId)
         .then((caseResponse) =>
         {
-            caseResponse.data.createdBy = "Automation.User@education.gov.uk";
-            caseApi.patch(caseId, caseResponse.data);
+            caseResponse.createdBy = "Automation.User@education.gov.uk";
+            caseApi.patch(caseId, caseResponse);
             cy.reload();
         })
     }

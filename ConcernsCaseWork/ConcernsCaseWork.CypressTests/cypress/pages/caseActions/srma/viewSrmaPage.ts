@@ -50,7 +50,7 @@ export class ViewSrmaPage {
     {
         Logger.Log("Cannot add the date trust was contacted");
 
-        this.getAddDateTrustContacted().click();
+        this.getAddDateTrustContacted().should("not.exist");
 
         return this;
     }
