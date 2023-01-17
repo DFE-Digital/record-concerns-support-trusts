@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Extensions;
+﻿using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.CaseActions;
@@ -26,6 +27,14 @@ namespace ConcernsCaseWork.Mappers
 				Status = (Enums.SRMAStatus)srmaDto.Status,
 				UpdatedAt = srmaDto.UpdatedAt
 			};
+		}
+
+		public static SRMAModel Map(SRMADto srmaDto, GetCasePermissionsResponse permissionsResponse)
+		{
+			var result = Map(srmaDto);
+			result.IsEditable = permissionsResponse.HasEditPermissions();
+
+			return result;
 		}
 
 		public static SRMADto Map(SRMAModel srmaModel)

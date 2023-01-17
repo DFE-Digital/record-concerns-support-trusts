@@ -1,6 +1,7 @@
 using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.Enums;
+using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Models.CaseActions;
@@ -8,7 +9,9 @@ using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Services.Decisions;
 using FluentAssertions;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Tests.Services.Decisions
@@ -93,7 +96,9 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 				}
 			};
 
-			var result = DecisionMapping.ToViewDecisionModel(apiDecision);
+			var casePermissions = new GetCasePermissionsResponse() { Permissions = new List<CasePermission> { CasePermission.Edit } };
+
+			var result = DecisionMapping.ToViewDecisionModel(apiDecision, casePermissions);
 
 			result.DecisionId.Should().Be(apiDecision.DecisionId);
 			result.ConcernsCaseUrn.Should().Be(apiDecision.ConcernsCaseUrn);
@@ -127,10 +132,23 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			var apiDecision = new GetDecisionResponse();
 			apiDecision.DecisionTypes = new DecisionType[] { };
 
-			var result = DecisionMapping.ToViewDecisionModel(apiDecision);
+			var result = DecisionMapping.ToViewDecisionModel(apiDecision, new GetCasePermissionsResponse());
 
 			result.EsfaReceivedRequestDate.Should().BeNull();
 			result.Outcome.Should().BeNull();
+		}
+
+		[TestCaseSource(nameof(DecisionPermissionTestCases))]
+		public void ToDecisionModel_WhenNotEditable_ReturnsCorrectModel(
+			bool isEditable,
+			GetCasePermissionsResponse casePermissionsResponse)
+		{
+			var apiDecision = _fixture.Create<GetDecisionResponse>();
+			apiDecision.IsEditable = isEditable;
+
+			var result = DecisionMapping.ToViewDecisionModel(apiDecision, casePermissionsResponse);
+
+			result.IsEditable.Should().BeFalse();
 		}
 
 		[Test]
@@ -311,6 +329,12 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			var result = DecisionMapping.ToDecisionSummaryModel(apiDecision);
 
 			result.ClosedAt.Should().Be(apiDecision.ClosedAt?.Date);
+		}
+
+		private static IEnumerable<TestCaseData> DecisionPermissionTestCases()
+		{
+			yield return new TestCaseData(false, new GetCasePermissionsResponse() { Permissions = new List<CasePermission>() { CasePermission.Edit } });
+			yield return new TestCaseData(true, new GetCasePermissionsResponse());
 		}
 	}
 }

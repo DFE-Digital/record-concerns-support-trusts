@@ -6,4 +6,5 @@ public interface IUserInfoService
 {
 	void SetPrincipal(ClaimsPrincipal claimsPrincipal);
 	void AddHeaders(HttpRequestMessage request);
+	void AddHeaders(HttpClient client);
 }

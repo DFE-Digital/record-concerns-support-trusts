@@ -18,15 +18,32 @@ namespace ConcernsCaseWork.UserContext
 		{
 			Guard.Against.Null(request);
 
-			var header = new UserInfo()
+			UserInfo headers = CreateUserInfoHeaders();
+
+			foreach (KeyValuePair<string, string> keyValuePair in headers.ToHeadersKVP())
+			{
+				request.Headers.Add(keyValuePair.Key, keyValuePair.Value);
+			}
+		}
+
+		private UserInfo CreateUserInfoHeaders()
+		{
+			return new UserInfo()
 			{
 				Name = GetPrincipalName(_claimsPrincipal),
 				Roles = UserInfo.ParseRoleClaims(_claimsPrincipal.Claims.Select(x => x.Value).ToArray())
 			};
+		}
 
-			foreach (KeyValuePair<string, string> keyValuePair in header.ToHeadersKVP())
+		public void AddHeaders(HttpClient client)
+		{
+			Guard.Against.Null(client);
+
+			UserInfo headers = CreateUserInfoHeaders();
+
+			foreach (KeyValuePair<string, string> keyValuePair in headers.ToHeadersKVP())
 			{
-				request.Headers.Add(keyValuePair.Key, keyValuePair.Value);
+				client.DefaultRequestHeaders.TryAddWithoutValidation(keyValuePair.Key, keyValuePair.Value);
 			}
 		}
 

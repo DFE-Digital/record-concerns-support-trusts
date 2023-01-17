@@ -42,8 +42,6 @@ namespace ConcernsCaseWork.Service.Base
 					// Create a request
 					var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
 
-					_userInfoService.AddHeaders(request);
-
 					// Create http client
 					var client = CreateHttpClient();
 
@@ -97,6 +95,8 @@ namespace ConcernsCaseWork.Service.Base
 			{
 				_logger.LogWarning("Warning. Unable to add correlationId to request headers");
 			}
+
+			//_userInfoService.AddHeaders(client);
 
 			return client;
 		}

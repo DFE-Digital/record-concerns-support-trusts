@@ -77,7 +77,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             resolveAllAllowedCaseActions();
 
             closeConcern();
-            closeCase();
+            closeCaseCheckingValidation();
         });
 
         it("Should raise a validation error for NTI warning letter and only close when the action resolved", () =>
@@ -234,12 +234,40 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             .confirmCloseConcern();
     }
 
+    function closeCaseCheckingValidation()
+    {
+        CaseManagementPage.getCaseIDText().then((caseId) =>
+        {
+            Logger.Log("Closing case");
+            CaseManagementPage.getCloseCaseBtn().click();
+
+            Logger.Log("Validating that a rationale for closure must be entered");
+            CaseManagementPage.getCloseCaseBtn().click();
+            CaseManagementPage.hasCloseCasePageValidationErrors("You have not recorded rationale for closure");
+            cy.waitForJavascript();
+
+            Logger.Log("Validating rationale for closure is 200 characters");
+            CaseManagementPage.withRationaleForClosureExceedingLimit();
+            CaseManagementPage.getCloseCaseBtn().click();
+            CaseManagementPage.hasCloseCasePageValidationErrors("Your rationale for closure contains too many characters");
+
+            CaseManagementPage.withRationaleForClosure("Closing case");
+            cy.waitForJavascript();
+            CaseManagementPage.getCloseCaseBtn().click();
+
+            Logger.Log("Viewing case is closed");
+            HomePage.getClosedCasesBtn().click();
+            ClosedCasePage.getClosedCase(caseId);
+        });
+    }
+
     function closeCase()
     {
         CaseManagementPage.getCaseIDText().then((caseId) =>
         {
             Logger.Log("Closing case");
             CaseManagementPage.getCloseCaseBtn().click();
+
             CaseManagementPage.withRationaleForClosure("Closing case");
             CaseManagementPage.getCloseCaseBtn().click();
 

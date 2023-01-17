@@ -26,6 +26,7 @@ using ConcernsCaseWork.Service.MeansOfReferral;
 using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
 using ConcernsCaseWork.Service.NtiWarningLetter;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Service.Ratings;
 using ConcernsCaseWork.Service.Records;
 using ConcernsCaseWork.Service.Status;
@@ -191,6 +192,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<INtiConditionsService, NtiConditionsService>();
 			services.AddScoped<ITeamsService, TeamsService>();
 			services.AddScoped<IDecisionService, DecisionService>();
+			services.AddScoped<ICasePermissionsService, CasePermissionsService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();

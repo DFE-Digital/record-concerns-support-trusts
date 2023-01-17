@@ -3,6 +3,7 @@ import { LogTask } from "../../support/constants";
 describe("User edits the trust risk on existing case", () => {
 	before(() => {
 		cy.login();
+		cy.basicCreateCase();
 	});
 
 	afterEach(() => {
@@ -10,17 +11,6 @@ describe("User edits the trust risk on existing case", () => {
 	});
 
 	it("Should allow the user to change an existing case", () => {
-		cy.get('[href="/case"]').click();
-		cy.get("#search").should("be.visible");
-
-		cy.randomSelectTrust();
-		cy.get("#search__option--0").click();
-
-		cy.selectConcernType();
-		cy.selectRiskToTrust();
-		cy.selectTerritory();
-		cy.enterConcernDetails();
-
 		cy.task(LogTask, "Navigating to the risk rating page");
 		cy.get('span[class="govuk-visually-hidden"]').contains('risk to trust').parent().click();
 		cy.editRiskToTrust("apply", "Amber");
