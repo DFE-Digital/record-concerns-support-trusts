@@ -11,8 +11,8 @@ public record CreateTrustFinancialForecastRequest
 	public ForecastingToolRanAt? ForecastingToolRanAt { get; set; }
 	public WasTrustResponseSatisfactory? WasTrustResponseSatisfactory { get; set; }
 	public string Notes { get; set; }
-	public DateTimeOffset? SFSOInitialReviewHappenedAt { get; set; }
-	public DateTimeOffset? TrustRespondedAt { get; set; }
+	public DateTime? SFSOInitialReviewHappenedAt { get; set; }
+	public DateTime? TrustRespondedAt { get; set; }
 
 	public virtual bool IsValid() => CaseUrn > 0 && (Notes?.Length ?? 0) <= TrustFinancialForecastConstants.MaxNotesLength;
 }

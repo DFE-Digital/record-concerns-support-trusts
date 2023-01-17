@@ -25,6 +25,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 			_logger = logger;
 		}
 
+		public IActionResult OnGet()
+		{
+			return Page();
+		}
+
 		public async Task<IActionResult> OnPostAsync()
 		{
 			_logger.LogMethodEntered();
@@ -39,18 +44,18 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 
 				var trustFinancialForecast = new CreateTrustFinancialForecastRequest
 				{
-					CaseUrn = Urn,
+					CaseUrn = CaseUrn,
 					SRMAOfferedAfterTFF = (SRMAOfferedAfterTFF?)SRMAOfferedAfterTFF.SelectedId,
 					ForecastingToolRanAt = (ForecastingToolRanAt?)ForecastingToolRanAt.SelectedId,
 					WasTrustResponseSatisfactory = (WasTrustResponseSatisfactory?)WasTrustResponseSatisfactory.SelectedId,
 					Notes = Notes.Contents,
-					SFSOInitialReviewHappenedAt = !SFSOInitialReviewHappenedAt.Date?.IsEmpty() ?? false ? SFSOInitialReviewHappenedAt.Date?.ToDateTimeOffset() : null,
-					TrustRespondedAt = !TrustRespondedAt.Date?.IsEmpty() ?? false ? TrustRespondedAt.Date?.ToDateTimeOffset() : null
+					SFSOInitialReviewHappenedAt = !SFSOInitialReviewHappenedAt.Date?.IsEmpty() ?? false ? SFSOInitialReviewHappenedAt.Date?.ToDateTime() : null,
+					TrustRespondedAt = !TrustRespondedAt.Date?.IsEmpty() ?? false ? TrustRespondedAt.Date?.ToDateTime() : null
 				};
 
 				await _trustFinancialForecastService.Create(trustFinancialForecast);
 
-				return Redirect($"/case/{Urn}/management");
+				return Redirect($"/case/{CaseUrn}/management");
 			}
 			catch (Exception ex)
 			{

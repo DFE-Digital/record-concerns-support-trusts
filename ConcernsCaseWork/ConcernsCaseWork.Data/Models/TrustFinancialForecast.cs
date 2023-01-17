@@ -13,8 +13,8 @@ public class TrustFinancialForecast
 	public SRMAOfferedAfterTFF? SRMAOfferedAfterTFF { get; set; }
 	public ForecastingToolRanAt? ForecastingToolRanAt { get; set; }
 	public WasTrustResponseSatisfactory? WasTrustResponseSatisfactory { get; set; }
-	public DateTimeOffset? SFSOInitialReviewHappenedAt { get; set; }
-	public DateTimeOffset? TrustRespondedAt { get; set; }
+	public DateTime? SFSOInitialReviewHappenedAt { get; set; }
+	public DateTime? TrustRespondedAt { get; set; }
 	public DateTimeOffset CreatedAt { get; set; }
 	public DateTimeOffset UpdatedAt { get; set; }
 	public DateTimeOffset? ClosedAt { get; set; }

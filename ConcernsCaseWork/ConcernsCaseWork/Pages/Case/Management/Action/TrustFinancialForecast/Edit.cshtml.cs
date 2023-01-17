@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 	{
 		private readonly ITrustFinancialForecastService _trustFinancialForecastService;
 		private readonly ILogger<EditPageModel> _logger;
-		[BindProperty(SupportsGet = true, Name="Id")] public int TrustFinancialForecastId { get; init; }
+		[BindProperty(SupportsGet = true, Name="Id")] public int TrustFinancialForecastId { get; set; }
 		
 		public EditPageModel(
 			ITrustFinancialForecastService trustFinancialForecastService, 
@@ -31,21 +31,36 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			var request = new GetTrustFinancialForecastByIdRequest{ CaseUrn = Urn, TrustFinancialForecastId = TrustFinancialForecastId };
-			if (!request.IsValid()) 
-			{
+			try{
+				var request = new GetTrustFinancialForecastByIdRequest{ CaseUrn = CaseUrn, TrustFinancialForecastId = TrustFinancialForecastId };
+				if (!request.IsValid()) 
+				{
+					return Page();
+				}
+				
+				var trustFinancialForecast = await _trustFinancialForecastService.GetById(request);
+				if (trustFinancialForecast == default)
+				{
+					SetErrorMessage(ErrorOnGetPage);
+					return Page();
+				}
+				
+				if (IsClosed(trustFinancialForecast))
+				{
+					return Redirect($"/case/{CaseUrn}/management/action/trustfinancialforecast/{TrustFinancialForecastId}/closed");
+				}
+
+				LoadPageComponents(trustFinancialForecast);
+
 				return Page();
 			}
-			
-			var trustFinancialForecast = await _trustFinancialForecastService.GetById(request);
-			if (trustFinancialForecast == default)
+			catch (Exception ex)
 			{
+				_logger.LogErrorMsg(ex);
+
+				SetErrorMessage(ErrorOnGetPage);
 				return Page();
 			}
-
-			LoadPageComponents(trustFinancialForecast);
-
-			return Page();
 		}
 
 		public async Task<IActionResult> OnPostAsync()
@@ -63,23 +78,24 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 				var request = new UpdateTrustFinancialForecastRequest
 				{
 					TrustFinancialForecastId = TrustFinancialForecastId,
-					CaseUrn = Urn,
+					CaseUrn = CaseUrn,
 					SRMAOfferedAfterTFF = (SRMAOfferedAfterTFF?)SRMAOfferedAfterTFF.SelectedId,
 					ForecastingToolRanAt = (ForecastingToolRanAt?)ForecastingToolRanAt.SelectedId,
 					WasTrustResponseSatisfactory = (WasTrustResponseSatisfactory?)WasTrustResponseSatisfactory.SelectedId,
 					Notes = Notes.Contents,
-					SFSOInitialReviewHappenedAt = !SFSOInitialReviewHappenedAt.Date?.IsEmpty() ?? false ? SFSOInitialReviewHappenedAt.Date?.ToDateTimeOffset() : null,
-					TrustRespondedAt = !TrustRespondedAt.Date?.IsEmpty() ?? false ? TrustRespondedAt.Date?.ToDateTimeOffset() : null
+					SFSOInitialReviewHappenedAt = !SFSOInitialReviewHappenedAt.Date?.IsEmpty() ?? false ? SFSOInitialReviewHappenedAt.Date?.ToDateTime() : null,
+					TrustRespondedAt = !TrustRespondedAt.Date?.IsEmpty() ?? false ? TrustRespondedAt.Date?.ToDateTime() : null
 				};
 
 				if (!request.IsValid())
 				{
+					SetErrorMessage(ErrorOnPostPage);
 					return Page();
 				}
 				
 				await _trustFinancialForecastService.Update(request);
 
-				return Redirect($"/case/{Urn}/management");
+				return Redirect($"/case/{CaseUrn}/management");
 				
 			}
 			catch (Exception ex)
@@ -94,10 +110,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 		private void LoadPageComponents(TrustFinancialForecastResponse trustFinancialForecast)
 		{
 			if (trustFinancialForecast.SFSOInitialReviewHappenedAt.HasValue) 
-				SFSOInitialReviewHappenedAt.Date = new OptionalDateModel((DateTimeOffset)trustFinancialForecast.SFSOInitialReviewHappenedAt);
+				SFSOInitialReviewHappenedAt.Date = new OptionalDateModel((DateTime)trustFinancialForecast.SFSOInitialReviewHappenedAt);
 				
 			if (trustFinancialForecast.TrustRespondedAt.HasValue) 
-				TrustRespondedAt.Date = new OptionalDateModel((DateTimeOffset)trustFinancialForecast.TrustRespondedAt);
+				TrustRespondedAt.Date = new OptionalDateModel((DateTime)trustFinancialForecast.TrustRespondedAt);
 				
 			if (trustFinancialForecast.ForecastingToolRanAt.HasValue) 
 				ForecastingToolRanAt.SelectedId = (int)trustFinancialForecast.ForecastingToolRanAt;
@@ -110,5 +126,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 
 			Notes.Contents = trustFinancialForecast.Notes;
 		}
+		
+		private static bool IsClosed(TrustFinancialForecastResponse trustFinancialForecast) => trustFinancialForecast.ClosedAt.HasValue;
+		private static bool IsEditable(TrustFinancialForecastResponse trustFinancialForecast) => !IsClosed(trustFinancialForecast);
 	}
 }

@@ -2,7 +2,6 @@ using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Enums.TrustFinancialForecast;
 using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
 using ConcernsCaseWork.Mappers;
-using ConcernsCaseWork.Models.CaseActions;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
@@ -27,8 +26,8 @@ public class TrustFinancialForecastMappingTests
 			ForecastingToolRanAt = _fixture.Create<ForecastingToolRanAt>(),
 			WasTrustResponseSatisfactory = _fixture.Create<WasTrustResponseSatisfactory>(),
 			Notes = _fixture.Create<string>(),
-			SFSOInitialReviewHappenedAt = _fixture.Create<DateTimeOffset>(),
-			TrustRespondedAt = _fixture.Create<DateTimeOffset>(),
+			SFSOInitialReviewHappenedAt = _fixture.Create<DateTime>(),
+			TrustRespondedAt = _fixture.Create<DateTime>(),
 			CreatedAt = _fixture.Create<DateTimeOffset>(),
 			UpdatedAt = _fixture.Create<DateTimeOffset>(),
 			ClosedAt = _fixture.Create<DateTimeOffset?>(),
@@ -78,8 +77,8 @@ public class TrustFinancialForecastMappingTests
 			ForecastingToolRanAt = _fixture.Create<ForecastingToolRanAt>(),
 			WasTrustResponseSatisfactory = _fixture.Create<WasTrustResponseSatisfactory>(),
 			Notes = _fixture.Create<string>(),
-			SFSOInitialReviewHappenedAt = _fixture.Create<DateTimeOffset>(),
-			TrustRespondedAt = _fixture.Create<DateTimeOffset>(),
+			SFSOInitialReviewHappenedAt = _fixture.Create<DateTime>(),
+			TrustRespondedAt = _fixture.Create<DateTime>(),
 			CreatedAt = _fixture.Create<DateTimeOffset>(),
 			UpdatedAt = _fixture.Create<DateTimeOffset>()
 		};

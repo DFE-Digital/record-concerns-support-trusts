@@ -50,17 +50,24 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 			{
 				if (!ModelState.IsValid)
 				{
+					SetErrorMessage(ErrorOnGetPage);
 					return Page();
 				}
 
 				var request = new GetTrustFinancialForecastByIdRequest{ CaseUrn = CaseUrn, TrustFinancialForecastId = TrustFinancialForecastId };
 				if (!request.IsValid())
 				{
+					SetErrorMessage(ErrorOnGetPage);
 					return Page();
 				}
 				
 				var trustFinancialForecast = await _trustFinancialForecastService.GetById(request);
 
+				if (IsClosed(trustFinancialForecast))
+				{
+					return Redirect($"/case/{CaseUrn}/management/action/trustfinancialforecast/{TrustFinancialForecastId}/closed");
+				}
+				
 				if (!IsEditable(trustFinancialForecast))
 				{
 					return Redirect($"/case/{CaseUrn}/management/action/trustFinancialForecast/{TrustFinancialForecastId}");

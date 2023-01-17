@@ -14,11 +14,11 @@ namespace ConcernsCaseWork.Models.Validatable
 
 		public OptionalDateModel() { }
 		
-		public OptionalDateModel(DateTimeOffset dateTimeOffset)
+		public OptionalDateModel(DateTime dateTime)
 		{
-			Day = dateTimeOffset.Day.ToString().PadLeft(2, '0');
-			Month = dateTimeOffset.Month.ToString().PadLeft(2, '0');
-			Year = dateTimeOffset.Year.ToString();
+			Day = dateTime.Day.ToString().PadLeft(2, '0');
+			Month = dateTime.Month.ToString().PadLeft(2, '0');
+			Year = dateTime.Year.ToString();
 		}
 		
 		public IEnumerable<ValidationResult> Validate() => Validate(DisplayName);
@@ -59,6 +59,6 @@ namespace ConcernsCaseWork.Models.Validatable
 
 		public override string ToString() => $"{Day}-{Month}-{Year}";
 
-		public DateTimeOffset ToDateTimeOffset() => DateTimeHelper.ParseExact(this.ToString());
+		public DateTime ToDateTime() => DateTimeHelper.ParseExact(this.ToString());
 	}
 }

@@ -45,12 +45,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 			var request = new GetTrustFinancialForecastByIdRequest{ CaseUrn = Urn, TrustFinancialForecastId = TrustFinancialForecastId };
 			if (!request.IsValid())
 			{
+				SetErrorMessage(ErrorOnGetPage);
 				return Page();
 			}
 			
 			var trustFinancialForecast = await _trustFinancialForecastService.GetById(request);
 			if (trustFinancialForecast == default)
 			{
+				SetErrorMessage(ErrorOnGetPage);
 				return Page();
 			}
 
