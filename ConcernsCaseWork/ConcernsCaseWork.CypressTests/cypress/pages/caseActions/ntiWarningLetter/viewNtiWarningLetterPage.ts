@@ -68,6 +68,24 @@ export class ViewNtiWarningLetterPage {
         return this;
     }
 
+    public canEdit()
+    {
+        Logger.Log("Can edit");
+
+        this.getEdit();
+
+        return this;
+    }
+
+    public cannotEdit()
+    {
+        Logger.Log("Cannot edit");
+
+        this.getEdit().should("not.exist");
+
+        return this;
+    }
+
     public close(): this {
         Logger.Log("Closing NTI warning letter");
 
@@ -76,18 +94,18 @@ export class ViewNtiWarningLetterPage {
         return this;
     }
 
-    public cannotEdit()
+    public canClose()
     {
-        Logger.Log("Ensure we cannot edit");
+        Logger.Log("Can close");
 
-        this.getEdit().should("not.exist");
+        this.getClose();
 
         return this;
     }
 
     public cannotClose()
     {
-        Logger.Log("Ensure we cannot close");
+        Logger.Log("Cannot close");
 
         this.getClose().should("not.exist");
 
