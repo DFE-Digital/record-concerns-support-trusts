@@ -13,18 +13,18 @@ describe("User can add case actions to an existing case", () => {
 	const decisionOutcomePage = new DecisionOutcomePage();
 	
 
-	// beforeEach(() => {
-	// 	cy.login();
+	beforeEach(() => {
+		cy.login();
 
 		
-	// });
+	});
 
 
 
-	// after(function () {
-	// 	cy.clearLocalStorage();
-	// 	cy.clearCookies();
-	// });
+	after(function () {
+		cy.clearLocalStorage();
+		cy.clearCookies();
+	});
 
 	// describe("Accessibility Validation", () => {
 	// 	it("should validate WCAG 2.2 AA compliance and lower", () => {
@@ -34,12 +34,12 @@ describe("User can add case actions to an existing case", () => {
 	// });
 
 
-	describe("Accessibility Validation", () => {
-		it.only("should validate WCAG 2.2 AA compliance and lower", () => {
-			cy.visit("https://alphagov.github.io/accessibility-tool-audit/test-cases.html");
-			cy.excuteAccessibilityTests();
-		});
-	});
+	// describe("Accessibility Validation", () => {
+	// 	it.only("should validate WCAG 2.2 AA compliance and lower", () => {
+	// 		cy.visit("https://alphagov.github.io/accessibility-tool-audit/test-cases.html");
+	// 		cy.excuteAccessibilityTests();
+	// 	});
+	// });
 
 	it("Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
 		cy.addConcernsDecisionsAddToCase();
