@@ -5,6 +5,10 @@ import { ViewFinancialPlanPage } from "../../pages/caseActions/financialPlan/vie
 import { FinancialPlanPage } from "../../pages/caseActions/financialPlanPage";
 import { EditNoticeToImprovePage } from "../../pages/caseActions/noticeToImprove/editNoticeToImprovePage";
 import { ViewNoticeToImprovePage } from "../../pages/caseActions/noticeToImprove/viewNoticeToImprovePage";
+import { EditNtiUnderConsiderationPage } from "../../pages/caseActions/ntiUnderConsideration/editNtiUnderConsiderationPage";
+import { ViewNtiUnderConsiderationPage } from "../../pages/caseActions/ntiUnderConsideration/viewNtiUnderConsiderationPage";
+import { EditNtiWarningLetterPage } from "../../pages/caseActions/ntiWarningLetter/editNtiWarningLetterPage";
+import { ViewNtiWarningLetterPage } from "../../pages/caseActions/ntiWarningLetter/viewNtiWarningLetterPage";
 import { EditSrmaPage } from "../../pages/caseActions/srma/editSrmaPage";
 import { ViewSrmaPage } from "../../pages/caseActions/srma/viewSrmaPage";
 import caseMangementPage from "../../pages/caseMangementPage";
@@ -17,6 +21,10 @@ describe("Testing permissions on cases and case actions", () => {
     const viewFinancialPlanPage = new ViewFinancialPlanPage();
     const editNtiPage = new EditNoticeToImprovePage();
     const viewNtiPage = new ViewNoticeToImprovePage();
+    const editNtiWarningLetterPage = new EditNtiWarningLetterPage();
+    const viewNtiWarningLetterPage = new ViewNtiWarningLetterPage();
+    const editNtiUnderConsiderationPage = new EditNtiUnderConsiderationPage();
+    const viewNtiUnderConsiderationPage = new ViewNtiUnderConsiderationPage();
 
     beforeEach(() => {
         cy.login();
@@ -150,5 +158,49 @@ describe("Testing permissions on cases and case actions", () => {
             .cannotCancel()
             .cannotClose()
             .cannotLift();
+    });
+
+    it("Should not allow the user to edit an nti warning letter that they did not create", () =>
+    {
+        Logger.Log("Check that the user can edit an nti warning letter that they did create");
+        caseMangementPage
+            .addCaseAction("NtiWarningLetter");
+
+        editNtiWarningLetterPage.save();
+
+        cy.get("#open-case-actions td")
+            .getByTestId("NTI Warning Letter").click();
+
+        viewNtiWarningLetterPage
+            .canEdit()
+            .canClose();
+
+        Logger.Log("Check that the user cannot edit an nti warning letter that they did not create");
+
+        viewNtiWarningLetterPage
+            .cannotEdit()
+            .cannotClose();
+    });
+
+    it("Should not allow the user to edit an nti under consideration that they did not create", () =>
+    {
+        Logger.Log("Check that the user can edit an nti warning letter that they did create");
+        caseMangementPage
+            .addCaseAction("NtiUnderConsideration");
+
+        editNtiUnderConsiderationPage.save();
+
+        cy.get("#open-case-actions td")
+            .getByTestId("NTI Under Consideration").click();
+
+        viewNtiUnderConsiderationPage
+            .canEdit()
+            .canClose();
+
+        Logger.Log("Check that the user cannot edit an nti warning letter that they did not create");
+        
+        viewNtiUnderConsiderationPage
+            .cannotEdit()
+            .cannotClose();
     });
 });
