@@ -1,9 +1,21 @@
 import { EnvApi, EnvApiKey, EnvUsername } from "../constants/cypressConstants";
 
-class CaseApi
-{
-    public post(): Cypress.Chainable
-    {
+class CaseApi {
+    public get(caseId: number): Cypress.Chainable {
+        return cy.request({
+            method: 'GET',
+            url: Cypress.env(EnvApi) + `/v2/concerns-cases/urn/${caseId}`,
+            headers: {
+                ApiKey: Cypress.env(EnvApiKey),
+                "Content-type": "application/json"
+            }
+        })
+            .then((response) => {
+                return response.body;
+            });
+    }
+
+    public post(): Cypress.Chainable {
         return cy.request({
             method: 'POST',
             url: Cypress.env(EnvApi) + "/v2/concerns-cases/",
@@ -29,10 +41,24 @@ class CaseApi
                 "territory": 1
             }
         })
-        .then(response =>
-        {
+        .then(response => {
             return response.body;
         });
+    }
+
+    public patch(caseId: number, request): Cypress.Chainable {
+        return cy.request({
+            method: 'PATCH',
+            url: Cypress.env(EnvApi) + `/v2/concerns-cases/${caseId}`,
+            headers: {
+                ApiKey: Cypress.env(EnvApiKey),
+                "Content-type": "application/json"
+            },
+            body: request
+        })
+        .then((response => {
+            return response.body;
+        }));
     }
 }
 
