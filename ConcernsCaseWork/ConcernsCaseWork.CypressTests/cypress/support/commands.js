@@ -409,7 +409,7 @@ Cypress.Commands.add('validateCaseManagPage', () => {
         expect($row.eq(3).text().trim()).to.contain('Concerns').and.to.match(concernsRgx).and.to.match(/(Add concern)/).and.to.match(/(Edit)/);
         expect($row.eq(5).text().trim()).to.contain('SFSO territory');
     })
-	cy.getById('show-all-sections').click();
+	cy.get('[class="govuk-accordion__show-all"]').click();
 
 	
 			cy.getById('accordion-issue-content-edit').should('have.text', 'Edit');
