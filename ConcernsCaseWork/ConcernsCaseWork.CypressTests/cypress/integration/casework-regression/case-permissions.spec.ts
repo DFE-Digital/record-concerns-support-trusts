@@ -3,6 +3,8 @@ import concernsApi from "../../api/concernsApi";
 import { Logger } from "../../common/logger";
 import { ViewFinancialPlanPage } from "../../pages/caseActions/financialPlan/viewFinancialPlanPage";
 import { FinancialPlanPage } from "../../pages/caseActions/financialPlanPage";
+import { EditNoticeToImprovePage } from "../../pages/caseActions/noticeToImprove/editNoticeToImprovePage";
+import { ViewNoticeToImprovePage } from "../../pages/caseActions/noticeToImprove/viewNoticeToImprovePage";
 import { EditSrmaPage } from "../../pages/caseActions/srma/editSrmaPage";
 import { ViewSrmaPage } from "../../pages/caseActions/srma/viewSrmaPage";
 import caseMangementPage from "../../pages/caseMangementPage";
@@ -13,6 +15,8 @@ describe("Testing permissions on cases and case actions", () => {
     const viewSrmaPage = new ViewSrmaPage();
     const editFinancialPlanPage = new FinancialPlanPage();
     const viewFinancialPlanPage = new ViewFinancialPlanPage();
+    const editNtiPage = new EditNoticeToImprovePage();
+    const viewNtiPage = new ViewNoticeToImprovePage();
 
     beforeEach(() => {
         cy.login();
@@ -120,5 +124,31 @@ describe("Testing permissions on cases and case actions", () => {
         viewFinancialPlanPage
             .cannotEdit()
             .cannotClose();
+    });
+
+    it("Should not allow the user to edit an nti that they did not create", () =>
+    {
+        Logger.Log("Check that the user can edit an nti that they did create");
+        caseMangementPage
+            .addCaseAction("Nti");
+
+        editNtiPage.save();
+
+        cy.get("#open-case-actions td")
+        .getByTestId("NTI").click();
+
+        viewNtiPage
+            .canEdit()
+            .canCancel()
+            .canClose()
+            .canLift();
+
+        Logger.Log("Check that the user cannot edit an nti that they did not create");
+
+        viewNtiPage
+            .cannotEdit()
+            .cannotCancel()
+            .cannotClose()
+            .cannotLift();
     });
 });
