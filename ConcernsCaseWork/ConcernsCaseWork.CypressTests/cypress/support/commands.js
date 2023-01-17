@@ -485,29 +485,12 @@ Cypress.Commands.add('basicCreateCase', () => {
 
     caseApi.post()
     .then((caseResponse) => {
-        const caseId = caseResponse.data.urn;
+        const caseId = caseResponse.urn;
         concernsApi.post(caseId);
 
         cy.visit(`/case/${caseId}/management`);
         cy.reload();
     });
-
-    // cy.get('[href="/case"]').click();
-    // cy.get("#search").should("be.visible");
-
-    // cy.randomSelectTrust();
-    // cy.get("#search__option--0").click();
-
-    // cy.getById("continue").click();
-
-    // cy.selectConcernType();
-    // cy.selectRiskToTrust();
-    // cy.selectTerritory();
-
-    // let date = new Date();
-    // cy.get("#issue").invoke("val", "Data entered at " + date);
-    // cy.get("#case-details-form  button").click();
-
 });
 
 //description: creates a new case from the case list (home) page
