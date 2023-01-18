@@ -22,11 +22,15 @@ public class UpdateTrustFinancialForecast : IUseCaseAsync<UpdateTrustFinancialFo
 
 		await EnsureCaseExists(request.CaseUrn, cancellationToken);
 
-		await EnsureTrustFinancialForecastCanBeEdited(request, cancellationToken);
+		var trustFinancialForecast = await GetTrustFinancialForecastToUpdate(request.TrustFinancialForecastId, cancellationToken);
+		
+		EnsureTrustFinancialForecastCanBeEdited(trustFinancialForecast);
+
+		UpdateTrustFinancialForecastValues(request, trustFinancialForecast);
             
-		return await _trustFinancialForecastGateway.Update(request, cancellationToken);
+		return await _trustFinancialForecastGateway.Update(trustFinancialForecast, cancellationToken);
 	}
-	
+
 	private static void EnsureRequestIsValid(UpdateTrustFinancialForecastRequest request)
 	{
 		if (request is null)
@@ -48,19 +52,35 @@ public class UpdateTrustFinancialForecast : IUseCaseAsync<UpdateTrustFinancialFo
 		}
 	}
 
-	private async Task EnsureTrustFinancialForecastCanBeEdited(UpdateTrustFinancialForecastRequest request, CancellationToken cancellationToken)
+	private static void EnsureTrustFinancialForecastCanBeEdited(Data.Models.TrustFinancialForecast trustFinancialForecast)
 	{
-		var getRequest = new GetTrustFinancialForecastByIdRequest { TrustFinancialForecastId = request.TrustFinancialForecastId, CaseUrn = request.CaseUrn };
-		var trustFinancialForecast = await _trustFinancialForecastGateway.GetById(getRequest, cancellationToken);
+		if (trustFinancialForecast.ClosedAt.HasValue)
+		{
+			throw new StateChangeNotAllowedException($"Cannot update Trust Financial Forecast with Id {trustFinancialForecast.Id} as it is closed.");
+		}
+	}
+	
+	private async Task<Data.Models.TrustFinancialForecast> GetTrustFinancialForecastToUpdate(int id, CancellationToken cancellationToken)
+	{
+		var trustFinancialForecast = await _trustFinancialForecastGateway.GetById(id, cancellationToken);
 
 		if (trustFinancialForecast is null)
 		{
-			throw new NotFoundException($"Trust Financial Forecast with Id {request.TrustFinancialForecastId} not found");
+			throw new NotFoundException($"Trust Financial Forecast with Id {id} not found");
 		}
 
-		if (trustFinancialForecast.ClosedAt.HasValue)
-		{
-			throw new StateChangeNotAllowedException($"Cannot update Trust Financial Forecast with Id {request.TrustFinancialForecastId} as it is closed.");
-		}
+		return trustFinancialForecast;
+	}
+
+	private static void UpdateTrustFinancialForecastValues(UpdateTrustFinancialForecastRequest request, Data.Models.TrustFinancialForecast trustFinancialForecast)
+	{
+		trustFinancialForecast.SRMAOfferedAfterTFF = request.SRMAOfferedAfterTFF;
+		trustFinancialForecast.ForecastingToolRanAt = request.ForecastingToolRanAt;
+		trustFinancialForecast.WasTrustResponseSatisfactory = request.WasTrustResponseSatisfactory;
+		trustFinancialForecast.Notes = request.Notes;
+		trustFinancialForecast.SFSOInitialReviewHappenedAt = request.SFSOInitialReviewHappenedAt;
+		trustFinancialForecast.TrustRespondedAt = request.TrustRespondedAt;
+		
+		trustFinancialForecast.UpdatedAt = DateTimeOffset.Now;
 	}
 }

@@ -23,9 +23,13 @@ public class CloseTrustFinancialForecast : IUseCaseAsync<CloseTrustFinancialFore
 		
 		await EnsureCaseExists(request.CaseUrn, cancellationToken);
 
-		await EnsureTrustFinancialForecastCanBeEdited(request, cancellationToken);
-			
-		return await _trustFinancialForecastGateway.Close(request, cancellationToken);
+		var trustFinancialForecast = await GetTrustFinancialForecastToUpdate(request.TrustFinancialForecastId, cancellationToken);
+		
+		EnsureTrustFinancialForecastCanBeClosed(trustFinancialForecast);
+
+		UpdateTrustFinancialForecastValues(request, trustFinancialForecast);
+            
+		return await _trustFinancialForecastGateway.Update(trustFinancialForecast, cancellationToken);
 	}
 
 	private static void EnsureRequestIsValid(CloseTrustFinancialForecastRequest request)
@@ -49,19 +53,32 @@ public class CloseTrustFinancialForecast : IUseCaseAsync<CloseTrustFinancialFore
         }
 	}
 
-	private async Task EnsureTrustFinancialForecastCanBeEdited(GetTrustFinancialForecastByIdRequest request, CancellationToken cancellationToken)
+	private static void EnsureTrustFinancialForecastCanBeClosed(Data.Models.TrustFinancialForecast trustFinancialForecast)
 	{
-		var trustFinancialForecast = await _trustFinancialForecastGateway
-			.GetById(request, cancellationToken);
+		if (trustFinancialForecast.ClosedAt.HasValue)
+		{
+			throw new StateChangeNotAllowedException($"Cannot close Trust Financial Forecast with Id {trustFinancialForecast.Id} as it is already closed.");
+		}
+	}
+	
+	private async Task<Data.Models.TrustFinancialForecast> GetTrustFinancialForecastToUpdate(int id, CancellationToken cancellationToken)
+	{
+		var trustFinancialForecast = await _trustFinancialForecastGateway.GetById(id, cancellationToken);
 
 		if (trustFinancialForecast is null)
 		{
-			throw new NotFoundException($"Trust Financial Forecast with Id {request.TrustFinancialForecastId} not found");
+			throw new NotFoundException($"Trust Financial Forecast with Id {id} not found");
 		}
 
-		if (trustFinancialForecast.ClosedAt.HasValue)
-		{
-			throw new StateChangeNotAllowedException($"Cannot close Trust Financial Forecast with Id {request.TrustFinancialForecastId} as it is already closed.");
-		}
+		return trustFinancialForecast;
+	}
+	
+	private static void UpdateTrustFinancialForecastValues(CloseTrustFinancialForecastRequest request, Data.Models.TrustFinancialForecast trustFinancialForecast)
+	{
+		trustFinancialForecast.Notes = request.Notes;
+
+		var now = DateTimeOffset.Now;
+		trustFinancialForecast.ClosedAt = now;
+		trustFinancialForecast.UpdatedAt = now;
 	}
 }

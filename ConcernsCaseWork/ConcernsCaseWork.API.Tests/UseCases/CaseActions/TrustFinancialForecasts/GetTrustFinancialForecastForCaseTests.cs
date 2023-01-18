@@ -108,15 +108,15 @@ public class GetTrustFinancialForecastsForCaseTests
 		var mockTrustFinancialForecastGateway = new Mock<ITrustFinancialForecastGateway>();
 		var mockCaseGateWay = new Mock<IConcernsCaseGateway>();
 
-		var trustFinancialForecast = new List<TrustFinancialForecastResponse> { CreateOpenTrustFinancialForecast() };
-		var caseUrn = trustFinancialForecast.First().CaseUrn;
+		var trustFinancialForecasts = new List<TrustFinancialForecast> { CreateOpenTrustFinancialForecast() };
+		var caseUrn = trustFinancialForecasts.First().CaseUrn;
 		
 		var request = new GetTrustFinancialForecastsForCaseRequest { CaseUrn = caseUrn };
 		mockTrustFinancialForecastGateway
 			.Setup(x => x.GetAllForCase(
-				It.Is<GetTrustFinancialForecastsForCaseRequest>(r => r.CaseUrn == caseUrn), 
+				It.Is<int>(r => r == caseUrn), 
 				It.IsAny<CancellationToken>()))
-			.ReturnsAsync(trustFinancialForecast);
+			.ReturnsAsync(trustFinancialForecasts);
 		
 		mockCaseGateWay.Setup(x => x.CaseExists(caseUrn, It.IsAny<CancellationToken>())).ReturnsAsync(true);
 
@@ -126,7 +126,7 @@ public class GetTrustFinancialForecastsForCaseTests
 		var result = await sut.Execute(request, CancellationToken.None);
 
 		// assert
-		result.Should().BeEquivalentTo(trustFinancialForecast);
+		result.Should().BeEquivalentTo(trustFinancialForecasts, options => options.ExcludingMissingMembers());
 	}
 
 	[Fact]
@@ -150,5 +150,5 @@ public class GetTrustFinancialForecastsForCaseTests
 			.Be("Value cannot be null. (Parameter 'request')");
 	}
 
-	private TrustFinancialForecastResponse CreateOpenTrustFinancialForecast() => _fixture.Build<TrustFinancialForecastResponse>().Without(x => x.ClosedAt).Create();
+	private TrustFinancialForecast CreateOpenTrustFinancialForecast() => _fixture.Build<TrustFinancialForecast>().Without(x => x.ClosedAt).Create();
 }

@@ -128,6 +128,5 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 		}
 		
 		private static bool IsClosed(TrustFinancialForecastResponse trustFinancialForecast) => trustFinancialForecast.ClosedAt.HasValue;
-		private static bool IsEditable(TrustFinancialForecastResponse trustFinancialForecast) => !IsClosed(trustFinancialForecast);
 	}
 }

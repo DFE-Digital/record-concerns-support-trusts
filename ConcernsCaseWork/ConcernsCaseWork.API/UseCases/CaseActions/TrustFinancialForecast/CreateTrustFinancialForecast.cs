@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Exceptions;
+using ConcernsCaseWork.API.Factories.CaseActionFactories;
 using ConcernsCaseWork.Data.Exceptions;
 using ConcernsCaseWork.Data.Gateways;
 
@@ -21,8 +22,10 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast
 	        EnsureRequestIsValid(request);
 		
 	        await EnsureCaseExists(request.CaseUrn, cancellationToken);
-            
-            return await _trustFinancialForecastGateway.Create(request, cancellationToken);
+
+	        var model = BuildTrustFinancialForecast(request);
+	        
+            return await _trustFinancialForecastGateway.Update(model, cancellationToken);
         }
         
         private static void EnsureRequestIsValid(CreateTrustFinancialForecastRequest request)
@@ -44,6 +47,25 @@ namespace ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast
 	        {
 		        throw new NotFoundException($"Concerns Case {caseUrn} not found");
 	        }
+        }
+
+        private static Data.Models.TrustFinancialForecast BuildTrustFinancialForecast(CreateTrustFinancialForecastRequest request)
+        {
+	        var now = DateTimeOffset.Now;
+	        
+	        return new Data.Models.TrustFinancialForecast
+	        {
+		        CaseUrn = request.CaseUrn,
+		        SRMAOfferedAfterTFF = request.SRMAOfferedAfterTFF,
+		        ForecastingToolRanAt = request.ForecastingToolRanAt,
+		        WasTrustResponseSatisfactory = request.WasTrustResponseSatisfactory,
+		        Notes = request.Notes,
+		        SFSOInitialReviewHappenedAt = request.SFSOInitialReviewHappenedAt,
+		        TrustRespondedAt = request.TrustRespondedAt,
+		        
+		        CreatedAt = now,
+		        UpdatedAt = now
+	        };
         }
     }
 }

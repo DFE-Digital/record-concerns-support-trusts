@@ -108,12 +108,12 @@ public class GetTrustFinancialForecastByIdTests
 
 		var trustFinancialForecast = CreateOpenTrustFinancialForecast();
 		var caseUrn = trustFinancialForecast.CaseUrn;
-		var trustFinancialForecastId = trustFinancialForecast.TrustFinancialForecastId;
+		var trustFinancialForecastId = trustFinancialForecast.Id;
 		
 		var request = new GetTrustFinancialForecastByIdRequest { CaseUrn = caseUrn, TrustFinancialForecastId = trustFinancialForecastId };
 		mockTrustFinancialForecastGateway
 			.Setup(x => x.GetById(
-				It.Is<GetTrustFinancialForecastByIdRequest>(r => r.TrustFinancialForecastId == trustFinancialForecastId && r.CaseUrn == caseUrn), 
+				It.Is<int>(r => r == trustFinancialForecastId), 
 				It.IsAny<CancellationToken>()))
 			.ReturnsAsync(trustFinancialForecast);
 		
@@ -125,7 +125,7 @@ public class GetTrustFinancialForecastByIdTests
 		var result = await sut.Execute(request, CancellationToken.None);
 
 		// assert
-		result.Should().BeEquivalentTo(trustFinancialForecast);
+		result.Should().BeEquivalentTo(trustFinancialForecast, options => options.ExcludingMissingMembers());
 	}
 
 	[Fact]
@@ -149,5 +149,5 @@ public class GetTrustFinancialForecastByIdTests
 			.Be("Value cannot be null. (Parameter 'request')");
 	}
 
-	private TrustFinancialForecastResponse CreateOpenTrustFinancialForecast() => _fixture.Build<TrustFinancialForecastResponse>().Without(x => x.ClosedAt).Create();
+	private TrustFinancialForecast CreateOpenTrustFinancialForecast() => _fixture.Build<TrustFinancialForecast>().Without(x => x.ClosedAt).Create();
 }

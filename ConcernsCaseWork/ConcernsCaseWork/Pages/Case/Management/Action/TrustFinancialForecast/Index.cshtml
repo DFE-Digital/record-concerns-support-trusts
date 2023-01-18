@@ -1,7 +1,12 @@
 ﻿@page "/case/{urn:int}/management/action/trustFinancialForecast/{id:int}"
 @model ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast.IndexPageModel
-
+@using ConcernsCaseWork.Constants
+@using ConcernsCaseWork.TagHelpers
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+	ViewData[ViewDataConstants.Title] = "View Trust Financial Forecast (TFF)";
+}
 
 @section BeforeMain {
 	<div class="govuk-width-container">

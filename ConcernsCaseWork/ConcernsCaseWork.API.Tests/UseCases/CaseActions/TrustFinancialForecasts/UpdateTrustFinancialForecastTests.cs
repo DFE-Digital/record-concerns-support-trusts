@@ -188,21 +188,20 @@ public class UpdateTrustFinancialForecastTests
 		var mockTrustFinancialForecastGateway = new Mock<ITrustFinancialForecastGateway>();
 		var mockCaseGateWay = new Mock<IConcernsCaseGateway>();
 
-		var trustFinancialForecast = CreateOpenTrustFinancialForecast();
-		
 		var caseUrn = _fixture.Create<int>();
-		var trustFinancialForecastId = trustFinancialForecast.TrustFinancialForecastId;
+		var id = _fixture.Create<int>();
+		var trustFinancialForecast = CreateOpenTrustFinancialForecast(caseUrn, id);
 		
-		var request = CreateUpdateTrustFinancialForecastRequest(caseUrn, trustFinancialForecastId);
+		var request = CreateUpdateTrustFinancialForecastRequest(caseUrn, id);
 		
 		mockCaseGateWay.Setup(x => x.CaseExists(caseUrn, It.IsAny<CancellationToken>())).ReturnsAsync(true);
 		mockTrustFinancialForecastGateway
 			.Setup(x => x.GetById(
-				It.Is<GetTrustFinancialForecastByIdRequest>(r => r.TrustFinancialForecastId == trustFinancialForecastId && r.CaseUrn == caseUrn), 
+				It.Is<int>(r => r == id), 
 				It.IsAny<CancellationToken>()))
 			.ReturnsAsync(trustFinancialForecast);
-		mockTrustFinancialForecastGateway.Setup(x => x.Update(request, It.IsAny<CancellationToken>()))
-			.ReturnsAsync(trustFinancialForecastId);
+		mockTrustFinancialForecastGateway.Setup(x => x.Update(It.IsAny<TrustFinancialForecast>(), It.IsAny<CancellationToken>()))
+			.ReturnsAsync(id);
 
 		var sut = new UpdateTrustFinancialForecast(mockCaseGateWay.Object, mockTrustFinancialForecastGateway.Object);
 		
@@ -210,7 +209,7 @@ public class UpdateTrustFinancialForecastTests
 		var result = await sut.Execute(request, CancellationToken.None);
 
 		// assert
-		result.Should().Be(trustFinancialForecastId);
+		result.Should().Be(id);
 	}
 
 	[Fact]
@@ -220,23 +219,22 @@ public class UpdateTrustFinancialForecastTests
 		var mockTrustFinancialForecastGateway = new Mock<ITrustFinancialForecastGateway>();
 		var mockCaseGateWay = new Mock<IConcernsCaseGateway>();
 
-		var trustFinancialForecast = CreateClosedTrustFinancialForecast();
-		
 		var caseUrn = _fixture.Create<int>();
-		var trustFinancialForecastId = trustFinancialForecast.TrustFinancialForecastId;
+		var id = _fixture.Create<int>();
+		var trustFinancialForecast = CreateClosedTrustFinancialForecast(caseUrn, id);
 		
-		var request = CreateUpdateTrustFinancialForecastRequest(caseUrn, trustFinancialForecastId);
+		var request = CreateUpdateTrustFinancialForecastRequest(caseUrn, id);
 		
 		mockCaseGateWay.Setup(x => x.CaseExists(caseUrn, It.IsAny<CancellationToken>())).ReturnsAsync(true);
 		
 		mockTrustFinancialForecastGateway
 			.Setup(x => x.GetById(
-				It.Is<GetTrustFinancialForecastByIdRequest>(r => r.TrustFinancialForecastId == trustFinancialForecastId && r.CaseUrn == caseUrn), 
+				It.Is<int>(r => r == id), 
 				It.IsAny<CancellationToken>()))
 			.ReturnsAsync(trustFinancialForecast);
 		
-		mockTrustFinancialForecastGateway.Setup(x => x.Update(request, It.IsAny<CancellationToken>()))
-			.ReturnsAsync(trustFinancialForecastId);
+		mockTrustFinancialForecastGateway.Setup(x => x.Update(It.IsAny<TrustFinancialForecast>(), It.IsAny<CancellationToken>()))
+			.ReturnsAsync(id);
 
 		var sut = new UpdateTrustFinancialForecast(mockCaseGateWay.Object, mockTrustFinancialForecastGateway.Object);
 		
@@ -245,7 +243,7 @@ public class UpdateTrustFinancialForecastTests
 
 		// assert
 		(await action.Should().ThrowAsync<StateChangeNotAllowedException>()).And.Message.Should()
-			.Be($"Cannot update Trust Financial Forecast with Id {trustFinancialForecastId} as it is closed.");
+			.Be($"Cannot update Trust Financial Forecast with Id {id} as it is closed.");
 	}
 
 	[Fact]
@@ -269,9 +267,19 @@ public class UpdateTrustFinancialForecastTests
 			.Be("Value cannot be null. (Parameter 'request')");
 	}
 
-	private TrustFinancialForecastResponse CreateOpenTrustFinancialForecast() => _fixture.Build<TrustFinancialForecastResponse>().Without(x => x.ClosedAt).Create();
+	private TrustFinancialForecast CreateOpenTrustFinancialForecast(int caseUrn, int id) 
+		=> _fixture
+			.Build<TrustFinancialForecast>()
+			.Without(x => x.ClosedAt)
+			.With(x => x.CaseUrn, caseUrn)
+			.With(x => x.Id, id)
+			.Create();
 	
-	private TrustFinancialForecastResponse CreateClosedTrustFinancialForecast() => _fixture.Create<TrustFinancialForecastResponse>();
+	private TrustFinancialForecast CreateClosedTrustFinancialForecast(int caseUrn, int id) 
+		=> _fixture.Build<TrustFinancialForecast>()
+			.With(x => x.CaseUrn, caseUrn)
+			.With(x => x.Id, id)
+			.Create();
 	
 	private UpdateTrustFinancialForecastRequest CreateUpdateTrustFinancialForecastRequest(int caseUrn, int trustFinancialForecastId) 
 		=> _fixture.Build<UpdateTrustFinancialForecastRequest>()
