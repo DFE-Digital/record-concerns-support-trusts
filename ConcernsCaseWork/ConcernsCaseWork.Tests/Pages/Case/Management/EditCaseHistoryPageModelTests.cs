@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -91,7 +92,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				Assert.That(sut.CaseHistory, Is.Null);
 				Assert.That(sut.TempData, Is.Not.Null);
 				Assert.That(sut.TempData["Error.Message"],
-					Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+					Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 			});
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
@@ -124,7 +125,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				Assert.That(sut.CaseHistory, Is.Null);
 				Assert.That(sut.TempData, Is.Not.Null);
 				Assert.That(sut.TempData["Error.Message"],
-					Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+					Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			});
 
 			mockCaseModelService.Verify(c =>
