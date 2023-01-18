@@ -29,6 +29,7 @@ import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
 import { AuthenticationComponent } from "../auth/authenticationComponent";
 import { LogTask } from "./constants";
 import utils from "/cypress/support/utils";
+import "cypress-axe";
 
 const concernsRgx = new RegExp(
 	/(Compliance|Financial|Force majeure|Governance|Irregularity)/,
@@ -67,6 +68,27 @@ Cypress.Commands.add("login", () => {
 
 	cy.visit("/");
 });
+
+//This line to excute accessibility, please make sure to add the link for the page you would like to test on accessibilitiesTestPages.json file.
+Cypress.Commands.add("excuteAccessibilityTests", () => {
+	const wcagStandards = ["wcag22aa"];
+	const impactLevel = ["critical", "minor", "moderate", "serious"];
+	const continueOnFail = false;
+	cy.injectAxe();
+	cy.checkA11y(
+		null,
+		{
+			runOnly: {
+				type: "tag",
+				values: wcagStandards,
+			},
+			includedImpacts: impactLevel,
+		},
+		null,
+		continueOnFail
+	);
+});
+
 //example: /case/5880/management"
 Cypress.Commands.add("visitPage", (slug) => {
 	cy.visit(Cypress.env("url") + slug, { timeout: 30000 });
