@@ -1,33 +1,31 @@
-import { LogTask } from '../../support/constants';
+import { LogTask } from "../../support/constants";
 
 describe("User can manage cases from the case management page", () => {
-    before(() => {
-        cy.login();
-    });
+	before(() => {
+		cy.login();
+	});
 
-    afterEach(() => {
-        cy.storeSessionData();
-    });
+	afterEach(() => {
+		cy.storeSessionData();
+	});
 
-    it("Should create a case and validate the concerns details", () => {
+	it("Should create a case and validate the concerns details", () => {
+		cy.task(LogTask, "Searching for trust");
+		cy.get('[href="/case"]').click();
+		cy.get("#search").should("be.visible");
 
-        cy.task(LogTask, "Searching for trust");
-        cy.get('[href="/case"]').click();
-        cy.get("#search").should("be.visible");
+		cy.randomSelectTrust();
+		cy.get("#search__option--0").click();
+		cy.getById("continue").click();
 
-        cy.randomSelectTrust();
-        cy.get("#search__option--0").click();
-        cy.getById("continue").click();
+		cy.selectConcernType();
 
-        cy.selectConcernType();
+		cy.selectRiskToTrust();
 
-        cy.selectRiskToTrust();
+		cy.selectTerritory();
 
-        cy.selectTerritory();
+		cy.enterConcernDetails();
 
-        cy.enterConcernDetails();
-
-        cy.validateCaseManagPage();
-		
-		    });
+		cy.validateCaseManagPage();
+	});
 });
