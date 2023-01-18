@@ -137,7 +137,13 @@ class CaseManagementPage {
     public showAllConcernDetails(): this {
         Logger.Log("Showing all concerns details");
 
-        cy.get(".govuk-accordion__show-all").click();
+        const id = ".govuk-accordion__show-all";
+
+        cy.get(id).invoke("text")
+            .then((text) => {
+                if (text === "Show all sections")
+                    cy.get(id).click();
+            });
 
         return this;
     }
