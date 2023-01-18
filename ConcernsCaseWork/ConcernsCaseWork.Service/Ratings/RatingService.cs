@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Service.Ratings
 	{
 		private readonly ILogger<RatingService> _logger;
 		
-		public RatingService(IHttpClientFactory clientFactory, ILogger<RatingService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public RatingService(IHttpClientFactory clientFactory, ILogger<RatingService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}

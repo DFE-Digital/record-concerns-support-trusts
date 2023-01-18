@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Service.Tests.Status
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<StatusService>>();
-			var statusService = new StatusService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
+			var statusService = new StatusService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
 			
 			// act
 			var statuses = await statusService.GetStatuses();
@@ -80,7 +80,7 @@ namespace ConcernsCaseWork.Service.Tests.Status
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<StatusService>>();
-			var statusService = new StatusService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
+			var statusService = new StatusService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
 			
 			// act | assert
 			Assert.ThrowsAsync<Exception>(() => statusService.GetStatuses());
@@ -106,7 +106,7 @@ namespace ConcernsCaseWork.Service.Tests.Status
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 			
 			var logger = new Mock<ILogger<StatusService>>();
-			var statusService = new StatusService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IUserInfoService>());
+			var statusService = new StatusService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
 			
 			// act | assert
 			Assert.ThrowsAsync<HttpRequestException>(() => statusService.GetStatuses());

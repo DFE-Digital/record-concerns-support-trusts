@@ -3,12 +3,16 @@ using System.Security.Claims;
 
 namespace ConcernsCaseWork.UserContext;
 
-public interface IUserInfoService
+public interface IClientUserInfoService
 {
 	void SetPrincipal(ClaimsPrincipal claimsPrincipal);
 
 	void AddRequestHeaders(HttpClient client);
-	void ReceiveRequestHeaders(IHeaderDictionary headers);
+	UserInfo? UserInfo { get; }
+}
 
+public interface IServerUserInfoService
+{
+	void ReceiveRequestHeaders(IHeaderDictionary headers);
 	UserInfo? UserInfo { get; }
 }

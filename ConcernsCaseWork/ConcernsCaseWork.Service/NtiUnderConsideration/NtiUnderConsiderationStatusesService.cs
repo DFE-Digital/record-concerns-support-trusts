@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 	{
 		private readonly ILogger<NtiUnderConsiderationReasonsService> _logger;
 
-		public NtiUnderConsiderationStatusesService(IHttpClientFactory clientFactory, ILogger<NtiUnderConsiderationReasonsService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public NtiUnderConsiderationStatusesService(IHttpClientFactory clientFactory, ILogger<NtiUnderConsiderationReasonsService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}

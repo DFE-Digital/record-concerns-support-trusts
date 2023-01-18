@@ -18,7 +18,7 @@ namespace ConcernsCaseWork.Service.Permissions
 			IHttpClientFactory clientFactory,
 			ILogger<CasePermissionsService> logger,
 			ICorrelationContext correlationContext,
-			IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+			IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}

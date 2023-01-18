@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 		private readonly ILogger<NtiUnderConsiderationService> _logger;
 		private const string Url = @"/v2/case-actions/nti-under-consideration";
 
-		public NtiUnderConsiderationService(IHttpClientFactory httpClientFactory, ILogger<NtiUnderConsiderationService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
+		public NtiUnderConsiderationService(IHttpClientFactory httpClientFactory, ILogger<NtiUnderConsiderationService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
 		{
 			_httpClientFactory = httpClientFactory;
 			_logger = logger;

@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Service.MeansOfReferral
 	{
 		private readonly ILogger<MeansOfReferralService> _logger;
 		
-		public MeansOfReferralService(IHttpClientFactory clientFactory, ILogger<MeansOfReferralService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public MeansOfReferralService(IHttpClientFactory clientFactory, ILogger<MeansOfReferralService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}

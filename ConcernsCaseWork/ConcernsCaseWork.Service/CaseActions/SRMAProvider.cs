@@ -13,7 +13,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly ILogger<SRMAProvider> _logger;
 		private const string Url = @"/v2/case-actions/srma";
-		public SRMAProvider(IHttpClientFactory httpClientFactory, ILogger<SRMAProvider> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
+		public SRMAProvider(IHttpClientFactory httpClientFactory, ILogger<SRMAProvider> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
 		{
 			_httpClientFactory = httpClientFactory;
 			_logger = logger;

@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 		private readonly ILogger<NtiWarningLetterService> _logger;
 		private const string _url = @"/v2/case-actions/nti-warning-letter";
 
-		public NtiWarningLetterService(IHttpClientFactory httpClientFactory, ILogger<NtiWarningLetterService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
+		public NtiWarningLetterService(IHttpClientFactory httpClientFactory, ILogger<NtiWarningLetterService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
 		{
 			_httpClientFactory = httpClientFactory;
 			_logger = logger;

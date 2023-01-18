@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 	{
 		private readonly ILogger<NtiWarningLetterStatusesService> _logger;
 
-		public NtiWarningLetterStatusesService(IHttpClientFactory clientFactory, ILogger<NtiWarningLetterStatusesService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public NtiWarningLetterStatusesService(IHttpClientFactory clientFactory, ILogger<NtiWarningLetterStatusesService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}

@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.Service.Nti
 	{
 		private readonly ILogger<NtiStatusesService> _logger;
 
-		public NtiStatusesService(IHttpClientFactory httpClientFactory, ILogger<NtiStatusesService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
+		public NtiStatusesService(IHttpClientFactory httpClientFactory, ILogger<NtiStatusesService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}

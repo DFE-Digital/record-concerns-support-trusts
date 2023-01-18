@@ -167,6 +167,7 @@ namespace ConcernsCaseWork
 			app.UseMiddleware<CorrelationIdMiddleware>();
 			app.UseMiddleware<NavigationHistoryMiddleware>();
 			app.UseMiddleware<UserContextMiddleware>();
+			app.UseMiddleware<UserContextReceiverMiddleware>();
 
 			app.UseConcernsCaseworkEndpoints();
 

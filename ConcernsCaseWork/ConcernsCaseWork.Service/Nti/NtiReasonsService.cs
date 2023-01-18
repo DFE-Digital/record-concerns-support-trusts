@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.Service.Nti
 	{
 		private readonly ILogger<NtiReasonsService> _logger;
 
-		public NtiReasonsService(IHttpClientFactory httpClientFactory, ILogger<NtiReasonsService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
+		public NtiReasonsService(IHttpClientFactory httpClientFactory, ILogger<NtiReasonsService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}

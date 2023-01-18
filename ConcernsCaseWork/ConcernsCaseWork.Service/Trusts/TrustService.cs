@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.Service.Trusts
 	{
 		private readonly ILogger<TrustService> _logger;
 
-		public TrustService(IHttpClientFactory clientFactory, ILogger<TrustService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public TrustService(IHttpClientFactory clientFactory, ILogger<TrustService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}

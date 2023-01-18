@@ -13,7 +13,7 @@ namespace ConcernsCaseWork.Service.Decision
 	{
 		private readonly ILogger<DecisionService> _logger;
 
-		public DecisionService(IHttpClientFactory clientFactory, ILogger<DecisionService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public DecisionService(IHttpClientFactory clientFactory, ILogger<DecisionService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = Guard.Against.Null(logger);
 		}

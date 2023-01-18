@@ -230,7 +230,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IRbacManager, RbacManager>();
 
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
-			services.AddScoped<IUserInfoService, UserInfoService>();
+			services.AddScoped<IClientUserInfoService, ClientUserInfoService>();
 			services.AddSingleton<IPageHistoryStorageHandler, SessionPageHistoryStorageHandler>();
 		}
 

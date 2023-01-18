@@ -12,7 +12,7 @@ namespace ConcernsCaseWork.Service.Records
 	{
 		private readonly ILogger<RecordService> _logger;
 		
-		public RecordService(IHttpClientFactory clientFactory, ILogger<RecordService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public RecordService(IHttpClientFactory clientFactory, ILogger<RecordService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}

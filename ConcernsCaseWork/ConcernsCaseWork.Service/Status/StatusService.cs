@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Service.Status
 	{
 		private readonly ILogger<StatusService> _logger;
 
-		public StatusService(IHttpClientFactory clientFactory, ILogger<StatusService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public StatusService(IHttpClientFactory clientFactory, ILogger<StatusService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}

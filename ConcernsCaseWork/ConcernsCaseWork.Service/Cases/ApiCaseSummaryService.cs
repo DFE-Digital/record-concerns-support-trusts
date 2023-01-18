@@ -7,7 +7,7 @@ namespace ConcernsCaseWork.Service.Cases;
 
 public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummaryService
 {
-	public ApiCaseSummaryService(ILogger<ApiCaseSummaryService> logger, ICorrelationContext correlationContext, IHttpClientFactory clientFactory, IUserInfoService userInfoService) :
+	public ApiCaseSummaryService(ILogger<ApiCaseSummaryService> logger, ICorrelationContext correlationContext, IHttpClientFactory clientFactory, IClientUserInfoService userInfoService) :
 		base(clientFactory, logger, correlationContext, userInfoService) { }
 
 	public async Task<IEnumerable<ActiveCaseSummaryDto>> GetActiveCaseSummariesByCaseworker(string caseworker)

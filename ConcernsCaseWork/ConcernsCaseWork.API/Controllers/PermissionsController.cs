@@ -22,12 +22,12 @@ namespace ConcernsCaseWork.API.Controllers
 		private readonly ICaseActionPermissionStrategyRoot _caseActionPermissionStrategyRoot;
 		private readonly ILogger<ConcernsCaseController> _logger;
 		private readonly IGetConcernsCaseByUrn _getConcernsCaseByUrn;
-		private readonly IUserInfoService _userInfoService;
+		private readonly IServerUserInfoService _userInfoService;
 
 		public PermissionsController(
 			ILogger<ConcernsCaseController> logger,
 			IGetConcernsCaseByUrn getConcernsCaseByUrn,
-			IUserInfoService userInfoService,
+			IServerUserInfoService userInfoService,
 			ICaseActionPermissionStrategyRoot caseActionPermissionStrategyRoot)
 		{
 			_logger = Guard.Against.Null(logger);
@@ -51,18 +51,9 @@ namespace ConcernsCaseWork.API.Controllers
 
 			try
 			{
-				// TODO: Proper implementation
-
-
-
 				List<CasePermissionResponse> allCasePermissions = new(request.CaseIds.Length);
 				foreach (long caseId in request.CaseIds)
 				{
-					// Find each case. Return view only if case is close.
-					// Edit if case is not closed and owned by user.
-					// Edit if case is not closed and owned by another user + current user is admin
-
-
 					// TODO: shouldn't need to cast this to an int, incorrect types need to be sorted out.
 					// TODO: optimize query to get all cases requested in one db query
 					ConcernsCaseResponse @case = this._getConcernsCaseByUrn.Execute((int)caseId);
@@ -71,18 +62,14 @@ namespace ConcernsCaseWork.API.Controllers
 					allCasePermissions.Add(new CasePermissionResponse() { CaseId = caseId, Permissions = permittedCaseActions });
 				}
 
-				var permissions = new PermissionQueryResponse()
-				{
-					CasePermissionResponses = allCasePermissions.ToArray()
-				};
-
-				var response = new ApiSingleResponseV2<PermissionQueryResponse>(permissions);
+				var response = new ApiSingleResponseV2<PermissionQueryResponse>(new PermissionQueryResponse(allCasePermissions));
 				return Ok(response);
 
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, "An exception occurred whilst calculating permissions for request");
+				throw;
 			}
 
 			return BadRequest();

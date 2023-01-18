@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.Service.Nti
 		private readonly ILogger<NtiService> _logger;
 		private const string Url = @"/v2/case-actions/notice-to-improve";
 
-		public NtiService(IHttpClientFactory httpClientFactory, ILogger<NtiService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
+		public NtiService(IHttpClientFactory httpClientFactory, ILogger<NtiService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}

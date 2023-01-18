@@ -12,7 +12,7 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 	{
 		private readonly ILogger<FinancialPlanService> _logger;
 
-		public FinancialPlanService(IHttpClientFactory clientFactory, ILogger<FinancialPlanService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public FinancialPlanService(IHttpClientFactory clientFactory, ILogger<FinancialPlanService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}

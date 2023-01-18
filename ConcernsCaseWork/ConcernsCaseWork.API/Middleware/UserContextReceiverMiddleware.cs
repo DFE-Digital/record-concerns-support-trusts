@@ -4,6 +4,7 @@ using ConcernsCaseWork.UserContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,26 +13,31 @@ namespace ConcernsCaseWork.API.Middleware
 	public class UserContextReceiverMiddleware
 	{
 		private readonly RequestDelegate _next;
-		private readonly IUserInfoService _userInfoService;
-		private readonly ILogger<UserContextReceiverMiddleware> _logger;
 
-		public UserContextReceiverMiddleware(RequestDelegate next, IUserInfoService userInfoService, ILogger<UserContextReceiverMiddleware> logger)
+		public UserContextReceiverMiddleware(RequestDelegate next)
 		{
 			_next = next;
-			_userInfoService = Guard.Against.Null(userInfoService);
-			_logger = Guard.Against.Null(logger);
 		}
 
-		public async Task InvokeAsync(HttpContext httpContext, ILogger<UserContextReceiverMiddleware> logger)
+		public async Task InvokeAsync(HttpContext httpContext, IServerUserInfoService userInfoService, ILogger<UserContextReceiverMiddleware> logger)
 		{
-			_userInfoService.ReceiveRequestHeaders(httpContext.Request.Headers);
-
-			if (_userInfoService.UserInfo == null)
+			Guard.Against.Null(userInfoService);
+			Guard.Against.Null(logger);
+			
+			if (IsPageRequest(httpContext.Request.Path))
 			{
-				_logger.LogWarningMsg($"Call to {httpContext.Request.Path}");
+				userInfoService.ReceiveRequestHeaders(httpContext.Request.Headers);
+
+				if (userInfoService.UserInfo == null)
+				{
+					logger.LogWarningMsg($"Call to {httpContext.Request.Path}");
+				}
 			}
 
 			await _next(httpContext);
 		}
+
+		private bool IsPageRequest(string path) => path.StartsWith("/v2/");
+
 	}
 }

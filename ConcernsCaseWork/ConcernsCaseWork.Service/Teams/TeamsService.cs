@@ -10,7 +10,7 @@ namespace ConcernsCaseWork.Service.Teams
 	{
 		private readonly ILogger<TeamsService> _logger;
 
-		public TeamsService(IHttpClientFactory clientFactory, ILogger<TeamsService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+		public TeamsService(IHttpClientFactory clientFactory, ILogger<TeamsService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = Guard.Against.Null(logger);
 		}

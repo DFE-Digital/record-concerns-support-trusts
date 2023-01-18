@@ -15,7 +15,7 @@ public class UserContextMiddleware
 		_logger = Guard.Against.Null(logger);
 	}
 
-	public Task Invoke(HttpContext httpContext, IUserInfoService userInfoService)
+	public Task Invoke(HttpContext httpContext, IClientUserInfoService userInfoService)
 	{
 		userInfoService.SetPrincipal(httpContext.User);
 		return _next(httpContext);

@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.Service.Base;
 
 public abstract class TramsAbstractService : AbstractService
 {
-	protected TramsAbstractService(IHttpClientFactory clientFactory, ILogger<TramsAbstractService> logger, ICorrelationContext correlationContext, IUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
+	protected TramsAbstractService(IHttpClientFactory clientFactory, ILogger<TramsAbstractService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 	{
 		HttpClientName = "TramsClient";
 	}

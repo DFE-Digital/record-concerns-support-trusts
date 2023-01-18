@@ -6,6 +6,7 @@ using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome;
 using ConcernsCaseWork.Data.Gateways;
+using ConcernsCaseWork.UserContext;
 
 namespace ConcernsCaseWork.API.StartupConfiguration
 {
@@ -108,9 +109,10 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<ICloseDecisionResponseFactory, CloseDecisionResponseFactory>();
 
 			// case action permission strategies
+			services.AddScoped<IServerUserInfoService, ServerUserInfoService>();
 			services.AddScoped<ICaseActionPermissionStrategyRoot, CaseActionPermissionStrategyRoot>();
 			services.AddScoped<ICaseActionPermissionStrategy, IsCaseViewableStrategy>();
-			services.AddScoped<ICaseActionPermissionStrategy, ICaseActionPermissionStrategy>();
+			services.AddScoped<ICaseActionPermissionStrategy, IsCaseEditableStrategy>();
 			return services;
 		}
 	}
