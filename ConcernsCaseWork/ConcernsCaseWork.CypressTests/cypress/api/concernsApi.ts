@@ -1,16 +1,14 @@
 import { EnvApi, EnvApiKey } from "../constants/cypressConstants";
+import { ApiBase } from "./apiBase";
 
-class ConcernsApi
+class ConcernsApi extends ApiBase
 {
     public post(caseId: number): Cypress.Chainable
     {
         return cy.request({
             method: 'POST',
             url: Cypress.env(EnvApi) + "/v2/concerns-records/",
-            headers: {
-                ApiKey: Cypress.env(EnvApiKey),
-                "Content-type": "application/json"
-            },
+            headers: this.getHeaders(),
             body: {
                 "createdAt": new Date().toISOString(),
                 "reviewAt": new Date().toISOString(),

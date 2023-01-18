@@ -195,7 +195,7 @@ describe("Testing permissions on cases and case actions", () => {
 
     it("Should not allow the user to edit an nti under consideration that they did not create", () =>
     {
-        Logger.Log("Check that the user can edit an nti warning letter that they did create");
+        Logger.Log("Check that the user can edit an nti under consideration that they did create");
         caseMangementPage
             .addCaseAction("NtiUnderConsideration");
 
@@ -208,7 +208,7 @@ describe("Testing permissions on cases and case actions", () => {
             .canEdit()
             .canClose();
 
-        Logger.Log("Check that the user cannot edit an nti warning letter that they did not create");
+        Logger.Log("Check that the user cannot edit an nti under consideration that they did not create");
         updateCaseOwner(caseId);
         
         viewNtiUnderConsiderationPage
