@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast;
 [BindProperties]
 public class EditableTrustFinancialForecastPageModel : AbstractPageModel
 {
-	[BindProperty(SupportsGet = true)] public int CaseUrn { get; set; }
+	[BindProperty(SupportsGet = true, Name="Urn")] public int CaseUrn { get; set; }
 	public OptionalDateTimeUiComponent SFSOInitialReviewHappenedAt { get; set; } = BuildSFSOInitialReviewHappenedAtComponent();
 	public OptionalDateTimeUiComponent TrustRespondedAt { get; set; } = BuildTrustRespondedAtComponent();
 	public TextAreaUiComponent Notes { get; set; } = BuildNotesComponent();
