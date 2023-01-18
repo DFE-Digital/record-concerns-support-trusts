@@ -1,5 +1,6 @@
 using AutoFixture;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Models.Validatable;
@@ -82,7 +83,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create.NonConcernsCase
 			// assert
 			Assert.Multiple(() =>
 			{
-				Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+				Assert.That(sut.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 				Assert.That(result, Is.TypeOf<PageResult>());
 			});
 			

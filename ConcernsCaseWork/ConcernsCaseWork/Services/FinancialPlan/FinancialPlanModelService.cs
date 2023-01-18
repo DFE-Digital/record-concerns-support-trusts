@@ -7,6 +7,7 @@ using ConcernsCaseWork.Service.FinancialPlan;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ConcernsCaseWork.Service.Permissions;
 
 namespace ConcernsCaseWork.Services.FinancialPlan
 {
@@ -14,12 +15,18 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 	{
 		private readonly IFinancialPlanService _financialPlanService;
 		private readonly IFinancialPlanStatusCachedService _financialPlanStatusCachedService;
+		private readonly ICasePermissionsService _casePermissionsService;
 		private readonly ILogger<FinancialPlanModelService> _logger;
 
-		public FinancialPlanModelService(IFinancialPlanService financialPlanCachedService, IFinancialPlanStatusCachedService financialPlanStatusCachedService, ILogger<FinancialPlanModelService> logger)
+		public FinancialPlanModelService(
+			IFinancialPlanService financialPlanCachedService, 
+			IFinancialPlanStatusCachedService financialPlanStatusCachedService,
+			ICasePermissionsService casePermissionsService,
+			ILogger<FinancialPlanModelService> logger)
 		{
 			_financialPlanService = financialPlanCachedService;
 			_financialPlanStatusCachedService = financialPlanStatusCachedService;
+			_casePermissionsService = casePermissionsService;
 			_logger = logger;
 		}
 
@@ -44,9 +51,10 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 			try
 			{
 				var statusesDto = await _financialPlanStatusCachedService.GetAllFinancialPlanStatusesAsync();
+				var permissions = await _casePermissionsService.GetCasePermissions(caseUrn);
 
 				var financialPlanDto = await _financialPlanService.GetFinancialPlansById(caseUrn, financialPlanId);
-				var financialPlanModel = FinancialPlanMapping.MapDtoToModel(financialPlanDto, statusesDto);
+				var financialPlanModel = FinancialPlanMapping.MapDtoToModel(financialPlanDto, statusesDto, permissions);
 
 				return financialPlanModel;
 			}

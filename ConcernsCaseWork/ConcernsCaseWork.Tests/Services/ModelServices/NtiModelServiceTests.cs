@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Service.Nti;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Services.Nti;
 using Moq;
 using NUnit.Framework;
@@ -22,10 +23,9 @@ namespace ConcernsCaseWork.Tests.Services.ModelServices
 			var ntiDto = NtiMappers.ToDBModel(ntiModel);
 
 			var mockModelService = new Mock<INtiCachedService>();
-			var mockStatusCachedService = new Mock<INtiStatusesCachedService>();
 			mockModelService.Setup(c => c.CreateNtiAsync(It.IsAny<NtiDto>())).ReturnsAsync(ntiDto);
 
-			var sut = new NtiModelService(mockModelService.Object, mockStatusCachedService.Object);
+			var sut = CreateNtiModelService(mockModelService.Object);
 
 			// act
 			await sut.CreateNtiAsync(ntiModel);
@@ -42,11 +42,9 @@ namespace ConcernsCaseWork.Tests.Services.ModelServices
 			var ntiDto = NtiMappers.ToDBModel(ntiModel);
 
 			var mockModelService = new Mock<INtiCachedService>();
-			var mockStatusCachedService = new Mock<INtiStatusesCachedService>();
-
 			mockModelService.Setup(c => c.GetNtiAsync(It.IsAny<string>())).ReturnsAsync(ntiDto);
 
-			var sut = new NtiModelService(mockModelService.Object, mockStatusCachedService.Object);
+			var sut = CreateNtiModelService(mockModelService.Object);
 
 			// act
 			await sut.GetNtiAsync(Guid.NewGuid().ToString());
@@ -63,11 +61,9 @@ namespace ConcernsCaseWork.Tests.Services.ModelServices
 			var ntiDto = NtiMappers.ToDBModel(ntiModel);
 
 			var mockModelService = new Mock<INtiCachedService>();
-			var mockStatusCachedService = new Mock<INtiStatusesCachedService>();
-
 			mockModelService.Setup(c => c.GetNtiAsync(ntiModel.Id)).ReturnsAsync(ntiDto);
 
-			var sut = new NtiModelService(mockModelService.Object, mockStatusCachedService.Object);
+			var sut = CreateNtiModelService(mockModelService.Object);
 
 			// act
 			await sut.GetNtiByIdAsync(ntiModel.Id);
@@ -84,11 +80,9 @@ namespace ConcernsCaseWork.Tests.Services.ModelServices
 			var ntiDto = NtiMappers.ToDBModel(ntiModel);
 
 			var mockModelService = new Mock<INtiCachedService>();
-			var mockStatusCachedService = new Mock<INtiStatusesCachedService>();
-
 			mockModelService.Setup(c => c.GetNtisForCaseAsync(ntiModel.CaseUrn)).ReturnsAsync(GetNtiDtoCollection());
 
-			var sut = new NtiModelService(mockModelService.Object, mockStatusCachedService.Object);
+			var sut = CreateNtiModelService(mockModelService.Object);
 
 			// act
 			await sut.GetNtisForCaseAsync(ntiModel.CaseUrn);
@@ -105,11 +99,9 @@ namespace ConcernsCaseWork.Tests.Services.ModelServices
 			var ntiDto = NtiMappers.ToDBModel(ntiModel);
 
 			var mockModelService = new Mock<INtiCachedService>();
-			var mockStatusCachedService = new Mock<INtiStatusesCachedService>();
-
 			mockModelService.Setup(c => c.PatchNtiAsync(It.IsAny<NtiDto>())).ReturnsAsync(ntiDto);
 
-			var sut = new NtiModelService(mockModelService.Object, mockStatusCachedService.Object);
+			var sut = CreateNtiModelService(mockModelService.Object);
 
 			// act
 			await sut.PatchNtiAsync(ntiModel);
@@ -127,15 +119,23 @@ namespace ConcernsCaseWork.Tests.Services.ModelServices
 			var continuationId = Guid.NewGuid().ToString();
 
 			var mockModelService = new Mock<INtiCachedService>();
-			var mockStatusCachedService = new Mock<INtiStatusesCachedService>();
-
-			var sut = new NtiModelService(mockModelService.Object, mockStatusCachedService.Object);
+			var sut = CreateNtiModelService(mockModelService.Object);
 
 			// act
 			await sut.StoreNtiAsync(ntiModel, continuationId);
 
 			// assert
 			mockModelService.Verify(ms => ms.SaveNtiAsync(It.IsAny<NtiDto>(), continuationId), Times.Once);
+		}
+
+		private NtiModelService CreateNtiModelService(INtiCachedService ntiService)
+		{
+			var mockStatusCachedService = new Mock<INtiStatusesCachedService>();
+			var permissionsService = new Mock<ICasePermissionsService>();
+
+			var result = new NtiModelService(ntiService, mockStatusCachedService.Object, permissionsService.Object);
+
+			return result;
 		}
 
 

@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -27,7 +28,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]
@@ -38,7 +39,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			var ntiWarningLetterModel = NTIWarningLetterFactory.BuildNTIWarningLetterModel();
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();	
 
-			mockNtiWarningLetterModelService.Setup(n => n.GetNtiWarningLetterId(It.IsAny<long>())).ReturnsAsync(ntiWarningLetterModel);
+			mockNtiWarningLetterModelService.Setup(n => n.GetNtiWarningLetterViewModel(1, It.IsAny<long>())).ReturnsAsync(ntiWarningLetterModel);
 
 			var pageModel = SetupIndexPageModel(mockModelService: mockNtiWarningLetterModelService, mockLogger: mockLogger);
 
@@ -77,7 +78,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiWL
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		private static IndexPageModel SetupIndexPageModel(
