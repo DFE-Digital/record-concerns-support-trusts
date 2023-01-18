@@ -16,7 +16,6 @@ export type CreateCaseRequest =
     deEscalationPoint: string,
     nextSteps: string,
     caseHistory: string,
-    urn: number,
     statusId: number,
     ratingId: number,
     territory: 1
