@@ -428,67 +428,49 @@ Cypress.Commands.add("validateCaseManagPage", () => {
 	cy.get('[class="govuk-accordion__show-all-text"]')
 		.invoke("text")
 		.then((text) => {
-			if (text === "Show all sections") {
+			if (text === "Hide all sections")
 				cy.get('[class="govuk-accordion__show-all-text"]').click();
-				cy.get('[class="govuk-accordion__show-all"]')
-					.eq(0)
-					.should("have.attr", "aria-expanded", "true");
-				cy.getById("accordion-issue-content-edit").should("be.visible");
-				cy.getById("accordion-status-heading-edit").should("be.visible");
-				cy.getById("accordion-case-aim-heading-edit").should("be.visible");
-				cy.getById("accordion-de-escalation-point-heading-edit").should(
-					"be.visible"
-				);
-				cy.getById("accordion-case-aim-heading-edit").should("be.visible");
-				cy.getById("accordion-de-escalation-point-heading-edit").should(
-					"be.visible"
-				);
-				cy.getById("accordion-next-steps-heading-edit").should("be.visible");
-				cy.getById("accordion-case-history-heading-edit").should("be.visible");
-			} else {
-				cy.get('[class="govuk-accordion__show-all-text"]').click();
-
-				cy.get('[class="govuk-accordion__show-all"]').should(
-					"have.attr",
-					"aria-expanded",
-					"false"
-				);
-			}
 		});
 
-	cy.get('[class="govuk-accordion__show-all-text"]')
-		.invoke("text")
-		.then((text) => {
-			if (text === "Hide all sections") {
-				cy.get('[class="govuk-accordion__show-all-text"]').click();
-				cy.get('[class="govuk-accordion__show-all"]')
-					.eq(0)
-					.should("have.attr", "aria-expanded", "false");
-				cy.getById("accordion-issue-content-edit").should("not.be.visible");
-				cy.getById("accordion-status-heading-edit").should("not.be.visible");
-				cy.getById("accordion-case-aim-heading-edit").should("not.be.visible");
-				cy.getById("accordion-de-escalation-point-heading-edit").should(
-					"not.be.visible"
-				);
-				cy.getById("accordion-case-aim-heading-edit").should("not.be.visible");
-				cy.getById("accordion-de-escalation-point-heading-edit").should(
-					"not.be.visible"
-				);
-				cy.getById("accordion-next-steps-heading-edit").should(
-					"not.be.visible"
-				);
-				cy.getById("accordion-case-history-heading-edit").should(
-					"not.be.visible"
-				);
-			} else {
-				cy.get('[class="govuk-accordion__show-all-text"]').click();
-				cy.get('[class="govuk-accordion__show-all"]').should(
-					"have.attr",
-					"aria-expanded",
-					"true"
-				);
-			}
-		});
+	cy.get('[class="govuk-accordion__show-all-text"]').should(
+		"have.text",
+		"Show all sections"
+	);
+
+	cy.get('[class="govuk-accordion__show-all-text"]').click();
+	cy.get('[class="govuk-accordion__show-all"]')
+		.eq(0)
+		.should("have.attr", "aria-expanded", "true");
+	cy.getById("accordion-issue-content-edit").should("be.visible");
+	cy.getById("accordion-status-heading-edit").should("be.visible");
+	cy.getById("accordion-case-aim-heading-edit").should("be.visible");
+	cy.getById("accordion-de-escalation-point-heading-edit").should("be.visible");
+	cy.getById("accordion-case-aim-heading-edit").should("be.visible");
+	cy.getById("accordion-de-escalation-point-heading-edit").should("be.visible");
+	cy.getById("accordion-next-steps-heading-edit").should("be.visible");
+	cy.getById("accordion-case-history-heading-edit").should("be.visible");
+
+	cy.get('[class="govuk-accordion__show-all-text"]').should(
+		"have.text",
+		"Hide all sections"
+	);
+
+	cy.get('[class="govuk-accordion__show-all-text"]').click();
+	cy.get('[class="govuk-accordion__show-all"]')
+		.eq(0)
+		.should("have.attr", "aria-expanded", "false");
+	cy.getById("accordion-issue-content-edit").should("not.be.visible");
+	cy.getById("accordion-status-heading-edit").should("not.be.visible");
+	cy.getById("accordion-case-aim-heading-edit").should("not.be.visible");
+	cy.getById("accordion-de-escalation-point-heading-edit").should(
+		"not.be.visible"
+	);
+	cy.getById("accordion-case-aim-heading-edit").should("not.be.visible");
+	cy.getById("accordion-de-escalation-point-heading-edit").should(
+		"not.be.visible"
+	);
+	cy.getById("accordion-next-steps-heading-edit").should("not.be.visible");
+	cy.getById("accordion-case-history-heading-edit").should("not.be.visible");
 });
 
 Cypress.Commands.add("closeAllOpenConcerns", () => {
