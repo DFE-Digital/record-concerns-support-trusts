@@ -1,5 +1,6 @@
 using AutoFixture;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
@@ -260,7 +261,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 
 			// Verify ILogger
 			mockLogger.Verify(
@@ -352,7 +353,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			Assert.That(actionResult, Is.AssignableFrom<RedirectResult>());
 			Assert.That(redirectResult, Is.Not.Null);
 			Assert.That(redirectResult.Url, Is.EqualTo("closure"));
@@ -400,7 +401,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			Assert.That(actionResult, Is.AssignableFrom<RedirectResult>());
 			Assert.That(redirectResult, Is.Not.Null);
 			Assert.That(redirectResult.Url, Is.EqualTo("closure"));

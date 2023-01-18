@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Pages.Case.Management.Action.SRMA;
 using ConcernsCaseWork.Services.Cases;
@@ -39,7 +40,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]
@@ -51,7 +52,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed);
 
-			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+			mockSrmaService.Setup(s => s.GetSRMAViewModel(1, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
 			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
@@ -90,7 +91,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed, closedAt: DateTime.Now);
 			
-			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+			mockSrmaService.Setup(s => s.GetSRMAViewModel(caseUrn, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
 			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
@@ -151,7 +152,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed, SRMAReasonOffered.OfferLinked);
 
-			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+			mockSrmaService.Setup(s => s.GetSRMAViewModel(1, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
 			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
@@ -181,7 +182,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.Deployed, SRMAReasonOffered.Unknown);
 
-			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+			mockSrmaService.Setup(s => s.GetSRMAViewModel(caseUrn, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
 			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
@@ -211,7 +212,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.TrustConsidering, SRMAReasonOffered.Unknown);
 
-			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+			mockSrmaService.Setup(s => s.GetSRMAViewModel(caseUrn, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
 			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
@@ -242,7 +243,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			await pageModel.OnGetDeclineComplete();
 
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]
@@ -260,7 +261,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			await pageModel.OnGetCancel();
 
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]
@@ -275,7 +276,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.Unknown);
 
-			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+			mockSrmaService.Setup(s => s.GetSRMAViewModel(caseUrn, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
 			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);
@@ -302,7 +303,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 
 			var srmaModel = SrmaFactory.BuildSrmaModel(SRMAStatus.PreparingForDeployment, SRMAReasonOffered.RegionsGroupIntervention);
 
-			mockSrmaService.Setup(s => s.GetSRMAById(It.IsAny<long>()))
+			mockSrmaService.Setup(s => s.GetSRMAViewModel(1, It.IsAny<long>()))
 				.ReturnsAsync(srmaModel);
 
 			var pageModel = SetupIndexPageModel(mockSrmaService.Object, mockLogger.Object);

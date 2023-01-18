@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
+using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Extensions;
@@ -29,7 +30,9 @@ namespace ConcernsCaseWork.Services.Decisions
 			return result;
 		}
 
-		public static ViewDecisionModel ToViewDecisionModel(GetDecisionResponse decisionResponse)
+		public static ViewDecisionModel ToViewDecisionModel(
+			GetDecisionResponse decisionResponse,
+			GetCasePermissionsResponse casePermissionsResponse)
 		{
 			var receivedRequestDate = GetEsfaReceivedRequestDate(decisionResponse);
 
@@ -48,7 +51,7 @@ namespace ConcernsCaseWork.Services.Decisions
 				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/addOrUpdate/{decisionResponse.DecisionId}",
 				BackLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management",
 				Outcome = ToViewDecisionOutcomeModel(decisionResponse),
-				IsEditable = decisionResponse.IsEditable,
+				IsEditable = decisionResponse.IsEditable && casePermissionsResponse.HasEditPermissions(),
 				CreatedDate = DateTimeHelper.ParseToDisplayDate(decisionResponse.CreatedAt),
 				ClosedDate = decisionResponse.ClosedAt.HasValue ? DateTimeHelper.ParseToDisplayDate(decisionResponse.ClosedAt.Value) : string.Empty
 			};

@@ -67,12 +67,6 @@ Cypress.Commands.add("login", () => {
 	new AuthenticationComponent().login(username, password);
 
 	cy.visit("/");
-	cy.injectAxe();
-});
-//example: /case/5880/management"
-Cypress.Commands.add("visitPage", (slug) => {
-	cy.visit(Cypress.env("url") + slug, { timeout: 30000 });
-	cy.saveLocalStorage();
 });
 
 //This line to excute accessibility, please make sure to add the link for the page you would like to test on accessibilitiesTestPages.json file.
@@ -93,6 +87,12 @@ Cypress.Commands.add("excuteAccessibilityTests", () => {
 		null,
 		continueOnFail
 	);
+});
+
+//example: /case/5880/management"
+Cypress.Commands.add("visitPage", (slug) => {
+	cy.visit(Cypress.env("url") + slug, { timeout: 30000 });
+	cy.saveLocalStorage();
 });
 
 Cypress.Commands.add("storeSessionData", () => {
@@ -127,7 +127,7 @@ Cypress.Commands.add("enterConcernDetails", () => {
 
 Cypress.Commands.add("addConcernsDecisionsAddToCase", () => {
 	cy.visit(Cypress.env("url") + "/home");
-	cy.injectAxe();
+
 	cy.basicCreateCase();
 	cy.reload();
 	CaseManagementPage.getAddToCaseBtn().click();
@@ -446,6 +446,53 @@ Cypress.Commands.add("validateCaseManagPage", () => {
 			.and.to.match(/(Edit)/);
 		expect($row.eq(5).text().trim()).to.contain("SFSO territory");
 	});
+
+	cy.get('[class="govuk-accordion__show-all-text"]')
+		.invoke("text")
+		.then((text) => {
+			if (text === "Hide all sections")
+				cy.get('[class="govuk-accordion__show-all-text"]').click();
+		});
+
+	cy.get('[class="govuk-accordion__show-all-text"]').should(
+		"have.text",
+		"Show all sections"
+	);
+
+	cy.get('[class="govuk-accordion__show-all-text"]').click();
+	cy.get('[class="govuk-accordion__show-all"]')
+		.eq(0)
+		.should("have.attr", "aria-expanded", "true");
+	cy.getById("accordion-issue-content-edit").should("be.visible");
+	cy.getById("accordion-status-heading-edit").should("be.visible");
+	cy.getById("accordion-case-aim-heading-edit").should("be.visible");
+	cy.getById("accordion-de-escalation-point-heading-edit").should("be.visible");
+	cy.getById("accordion-case-aim-heading-edit").should("be.visible");
+	cy.getById("accordion-de-escalation-point-heading-edit").should("be.visible");
+	cy.getById("accordion-next-steps-heading-edit").should("be.visible");
+	cy.getById("accordion-case-history-heading-edit").should("be.visible");
+
+	cy.get('[class="govuk-accordion__show-all-text"]').should(
+		"have.text",
+		"Hide all sections"
+	);
+
+	cy.get('[class="govuk-accordion__show-all-text"]').click();
+	cy.get('[class="govuk-accordion__show-all"]')
+		.eq(0)
+		.should("have.attr", "aria-expanded", "false");
+	cy.getById("accordion-issue-content-edit").should("not.be.visible");
+	cy.getById("accordion-status-heading-edit").should("not.be.visible");
+	cy.getById("accordion-case-aim-heading-edit").should("not.be.visible");
+	cy.getById("accordion-de-escalation-point-heading-edit").should(
+		"not.be.visible"
+	);
+	cy.getById("accordion-case-aim-heading-edit").should("not.be.visible");
+	cy.getById("accordion-de-escalation-point-heading-edit").should(
+		"not.be.visible"
+	);
+	cy.getById("accordion-next-steps-heading-edit").should("not.be.visible");
+	cy.getById("accordion-case-history-heading-edit").should("not.be.visible");
 });
 
 Cypress.Commands.add("closeAllOpenConcerns", () => {
