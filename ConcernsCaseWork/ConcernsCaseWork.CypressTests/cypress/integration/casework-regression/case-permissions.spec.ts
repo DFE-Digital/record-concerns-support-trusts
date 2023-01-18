@@ -1,5 +1,4 @@
 import caseApi from "../../api/caseApi";
-import concernsApi from "../../api/concernsApi";
 import { Logger } from "../../common/logger";
 import { DecisionOutcomePage } from "../../pages/caseActions/decision/decisionOutcomePage";
 import { EditDecisionPage } from "../../pages/caseActions/decision/editDecisionPage";
@@ -37,7 +36,11 @@ describe("Testing permissions on cases and case actions", () => {
     beforeEach(() => {
         cy.login();
 
-        cy.basicCreateCase();
+        cy.basicCreateCase()
+        .then((id =>
+        {
+            caseId = id;
+        }));
     });
 
     it("Should not allow a user to edit a case that they did not create", () => {
