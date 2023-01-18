@@ -30,6 +30,8 @@ import { AuthenticationComponent } from "../auth/authenticationComponent";
 import { LogTask } from "./constants";
 import "cypress-axe";
 import caseApi from "../api/caseApi";
+import concernsApi from "../api/concernsApi";
+import { Logger } from "cypress/common/logger";
 
 const concernsRgx = new RegExp(
 	/(Compliance|Financial|Force majeure|Governance|Irregularity)/,
@@ -629,6 +631,8 @@ Cypress.Commands.add("basicCreateCase", () => {
 
         cy.visit(`/case/${caseId}/management`);
         cy.reload();
+
+		return cy.wrap(caseResponse.urn);
     });
 });
 
