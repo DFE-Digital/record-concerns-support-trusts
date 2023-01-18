@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
@@ -47,7 +48,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
 
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 			Assert.That(pageModel.NtiModel, Is.Null);
 			Assert.That(pageModel.NTIStatuses, Is.Null);
 		}
@@ -69,7 +70,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
 
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 			Assert.That(pageModel.NtiModel, Is.Null);
 			Assert.That(pageModel.NTIStatuses, Is.Null);
 		}
@@ -91,7 +92,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
 
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			Assert.That(pageModel.NtiModel, Is.Null);
 			Assert.That(pageModel.NTIStatuses, Is.Null);
 		}
@@ -120,7 +121,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			Assert.That(pageResponse, Is.InstanceOf<PageResult>());
 
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			Assert.That(pageModel.NtiModel, Is.Null);
 			Assert.That(pageModel.NTIStatuses, Is.Null);
 		}

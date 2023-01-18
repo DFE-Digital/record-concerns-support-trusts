@@ -32,6 +32,7 @@ declare global {
             addActionItemToCase(): Chainable<Element>;
             selectRiskToTrust(): Chainable<Element>;
             enterConcernDetails(): Chainable<Element>;
+			excuteAccessibilityTests(): Chainable<Element>;
             visitPage(slug: string): Chainable<Element>;
             editRiskToTrust(cta: string, rag: string): Chainable<Element>;
             selectConcern(expectedNumberOfRagStatus: number, ragStatus: string): Chainable<number>;
@@ -47,4 +48,8 @@ declare global {
             checkForExistingCase(): Chainable<Element>;
         }
     }
+
+	
 }
+
+
