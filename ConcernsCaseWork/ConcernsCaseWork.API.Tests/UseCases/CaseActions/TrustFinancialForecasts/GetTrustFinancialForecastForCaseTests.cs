@@ -127,6 +127,7 @@ public class GetTrustFinancialForecastsForCaseTests
 
 		// assert
 		result.Should().BeEquivalentTo(trustFinancialForecasts, options => options.ExcludingMissingMembers());
+		result.Select(r => r.TrustFinancialForecastId).Should().BeEquivalentTo(trustFinancialForecasts.Select(f => f.Id));
 	}
 
 	[Fact]
