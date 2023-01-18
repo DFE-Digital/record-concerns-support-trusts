@@ -96,7 +96,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 				await _trustFinancialForecastService.Update(request);
 
 				return Redirect($"/case/{CaseUrn}/management");
-				
 			}
 			catch (Exception ex)
 			{

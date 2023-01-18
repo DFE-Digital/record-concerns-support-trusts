@@ -57,8 +57,8 @@ public class CreateTrustFinancialForecastTests
 		var action = () => sut.Execute(request, CancellationToken.None);
 
 		// assert
-		(await action.Should().ThrowAsync<NotFoundException>()).And.Message.Should()
-			.Be($"Concerns Case {caseUrn} not found");
+		(await action.Should().ThrowAsync<NotFoundException>())
+			.And.Message.Should().Be($"Concerns Case {caseUrn} not found");
 	}
 
 	[Fact]
@@ -76,8 +76,8 @@ public class CreateTrustFinancialForecastTests
 		var action = () => sut.Execute(request, CancellationToken.None);
 
 		// assert
-		(await action.Should().ThrowAsync<ArgumentException>()).And.Message.Should()
-			.Be("Request is not valid (Parameter 'request')");
+		(await action.Should().ThrowAsync<ArgumentException>())
+			.And.Message.Should().Be("Request is not valid (Parameter 'request')");
 	}
 				
 	[Fact]
@@ -97,8 +97,8 @@ public class CreateTrustFinancialForecastTests
 		var action = () => sut.Execute(request, CancellationToken.None);
 
 		// assert
-		(await action.Should().ThrowAsync<ArgumentException>()).And.Message.Should()
-			.Be("Request is not valid (Parameter 'request')");
+		(await action.Should().ThrowAsync<ArgumentException>())
+			.And.Message.Should().Be("Request is not valid (Parameter 'request')");
 	}
 
 	[Fact]
@@ -144,26 +144,12 @@ public class CreateTrustFinancialForecastTests
 		
 		var action = () => sut.Execute(null, CancellationToken.None);
 
-		(await action.Should().ThrowAsync<ArgumentNullException>()).And.Message.Should()
-			.Be("Value cannot be null. (Parameter 'request')");
+		(await action.Should().ThrowAsync<ArgumentNullException>())
+			.And.Message.Should().Be("Value cannot be null. (Parameter 'request')");
 	}
 
 	private CreateTrustFinancialForecastRequest CreateCreateTrustFinancialForecastRequest(int? caseUrn) 
 		=> _fixture.Build<CreateTrustFinancialForecastRequest>()
 			.With(x => x.CaseUrn, caseUrn)
-			.Create();
-	
-	private TrustFinancialForecast CreateOpenTrustFinancialForecast(int caseUrn, int id) 
-		=> _fixture
-			.Build<TrustFinancialForecast>()
-			.Without(x => x.ClosedAt)
-			.With(x => x.CaseUrn, caseUrn)
-			.With(x => x.Id, id)
-			.Create();
-	
-	private TrustFinancialForecast CreateClosedTrustFinancialForecast(int caseUrn, int id) 
-		=> _fixture.Build<TrustFinancialForecast>()
-			.With(x => x.CaseUrn, caseUrn)
-			.With(x => x.Id, id)
 			.Create();
 }

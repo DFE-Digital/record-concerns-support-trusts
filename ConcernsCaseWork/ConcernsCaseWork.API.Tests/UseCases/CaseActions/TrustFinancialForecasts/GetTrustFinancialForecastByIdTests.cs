@@ -57,8 +57,8 @@ public class GetTrustFinancialForecastByIdTests
 		var action = () => sut.Execute(request, CancellationToken.None);
 
 		// assert
-		(await action.Should().ThrowAsync<NotFoundException>()).And.Message.Should()
-			.Be($"Concerns Case {caseUrn} not found");
+		(await action.Should().ThrowAsync<NotFoundException>())
+			.And.Message.Should().Be($"Concerns Case {caseUrn} not found");
 	}
 
 	[Fact]
@@ -76,8 +76,8 @@ public class GetTrustFinancialForecastByIdTests
 		var action = () => sut.Execute(request, CancellationToken.None);
 
 		// assert
-		(await action.Should().ThrowAsync<ArgumentException>()).And.Message.Should()
-			.Be("Request is not valid (Parameter 'request')");
+		(await action.Should().ThrowAsync<ArgumentException>())
+			.And.Message.Should().Be("Request is not valid (Parameter 'request')");
 	}
 				
 	[Fact]
@@ -95,8 +95,8 @@ public class GetTrustFinancialForecastByIdTests
 		var action = () => sut.Execute(request, CancellationToken.None);
 
 		// assert
-		(await action.Should().ThrowAsync<ArgumentException>()).And.Message.Should()
-			.Be("Request is not valid (Parameter 'request')");
+		(await action.Should().ThrowAsync<ArgumentException>())
+			.And.Message.Should().Be("Request is not valid (Parameter 'request')");
 	}
 
 	[Fact]
@@ -145,8 +145,8 @@ public class GetTrustFinancialForecastByIdTests
 		
 		var action = () => sut.Execute(null, CancellationToken.None);
 
-		(await action.Should().ThrowAsync<ArgumentNullException>()).And.Message.Should()
-			.Be("Value cannot be null. (Parameter 'request')");
+		(await action.Should().ThrowAsync<ArgumentNullException>())
+			.And.Message.Should().Be("Value cannot be null. (Parameter 'request')");
 	}
 
 	private TrustFinancialForecast CreateOpenTrustFinancialForecast() => _fixture.Build<TrustFinancialForecast>().Without(x => x.ClosedAt).Create();

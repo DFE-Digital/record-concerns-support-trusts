@@ -2,7 +2,6 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
 using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
-using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast;
@@ -58,8 +57,8 @@ public class CloseTrustFinancialForecastTests
 		var action = () => sut.Execute(request, CancellationToken.None);
 
 		// assert
-		(await action.Should().ThrowAsync<NotFoundException>()).And.Message.Should()
-			.Be($"Concerns Case {caseUrn} not found");
+		(await action.Should().ThrowAsync<NotFoundException>())
+			.And.Message.Should().Be($"Concerns Case {caseUrn} not found");
 	}
 	
 	[Fact]
@@ -85,8 +84,8 @@ public class CloseTrustFinancialForecastTests
 		var action = () => sut.Execute(request, CancellationToken.None);
 
 		// assert
-		(await action.Should().ThrowAsync<NotFoundException>()).And.Message.Should()
-			.Be($"Trust Financial Forecast with Id {trustFinancialForecastId} not found");
+		(await action.Should().ThrowAsync<NotFoundException>())
+			.And.Message.Should().Be($"Trust Financial Forecast with Id {trustFinancialForecastId} not found");
 	}
 	
 	[Fact]
@@ -107,8 +106,8 @@ public class CloseTrustFinancialForecastTests
 		var action = () => sut.Execute(request, CancellationToken.None);
 
 		// assert
-		(await action.Should().ThrowAsync<ArgumentException>()).And.Message.Should()
-			.Be("Request is not valid (Parameter 'request')");
+		(await action.Should().ThrowAsync<ArgumentException>())
+			.And.Message.Should().Be("Request is not valid (Parameter 'request')");
 	}
 	
 	[Fact]
@@ -129,8 +128,8 @@ public class CloseTrustFinancialForecastTests
 		var action = () => sut.Execute(request, CancellationToken.None);
 
 		// assert
-		(await action.Should().ThrowAsync<ArgumentException>()).And.Message.Should()
-			.Be("Request is not valid (Parameter 'request')");
+		(await action.Should().ThrowAsync<ArgumentException>())
+			.And.Message.Should().Be("Request is not valid (Parameter 'request')");
 	}
 			
 	[Fact]
@@ -151,8 +150,8 @@ public class CloseTrustFinancialForecastTests
 		var action = () => sut.Execute(request, CancellationToken.None);
 
 		// assert
-		(await action.Should().ThrowAsync<ArgumentException>()).And.Message.Should()
-			.Be("Request is not valid (Parameter 'request')");
+		(await action.Should().ThrowAsync<ArgumentException>())
+			.And.Message.Should().Be("Request is not valid (Parameter 'request')");
 	}
 				
 	[Fact]
@@ -173,8 +172,8 @@ public class CloseTrustFinancialForecastTests
 		var action = () => sut.Execute(request, CancellationToken.None);
 
 		// assert
-		(await action.Should().ThrowAsync<ArgumentException>()).And.Message.Should()
-			.Be("Request is not valid (Parameter 'request')");
+		(await action.Should().ThrowAsync<ArgumentException>())
+			.And.Message.Should().Be("Request is not valid (Parameter 'request')");
 	}
 
 	[Fact]
@@ -200,10 +199,10 @@ public class CloseTrustFinancialForecastTests
 		
 		mockTrustFinancialForecastGateway
 			.Setup(x => x.Update(It.Is<TrustFinancialForecast>(f => 
-					 f.Id == id &&
-                     f.Notes == notes &&
-                     f.CaseUrn == caseUrn &&
-                     f.ClosedAt.HasValue
+				f.Id == id &&
+				f.Notes == notes &&
+				f.CaseUrn == caseUrn &&
+				f.ClosedAt.HasValue
 			), It.IsAny<CancellationToken>()))
 			.ReturnsAsync(id);
 
@@ -251,8 +250,8 @@ public class CloseTrustFinancialForecastTests
 		var action = () => sut.Execute(request, CancellationToken.None);
 
 		// assert
-		(await action.Should().ThrowAsync<StateChangeNotAllowedException>()).And.Message.Should()
-			.Be($"Cannot close Trust Financial Forecast with Id {id} as it is already closed.");
+		(await action.Should().ThrowAsync<StateChangeNotAllowedException>())
+			.And.Message.Should().Be($"Cannot close Trust Financial Forecast with Id {id} as it is already closed.");
 	}
 
 	[Fact]
@@ -272,8 +271,8 @@ public class CloseTrustFinancialForecastTests
 		
 		var action = () => sut.Execute(null, CancellationToken.None);
 
-		(await action.Should().ThrowAsync<ArgumentNullException>()).And.Message.Should()
-			.Be("Value cannot be null. (Parameter 'request')");
+		(await action.Should().ThrowAsync<ArgumentNullException>())
+			.And.Message.Should().Be("Value cannot be null. (Parameter 'request')");
 	}
 
 	private TrustFinancialForecast CreateOpenTrustFinancialForecast(int caseUrn, int id) 
