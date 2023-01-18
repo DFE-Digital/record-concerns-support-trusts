@@ -67,12 +67,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 				{
 					return Redirect($"/case/{CaseUrn}/management/action/trustfinancialforecast/{TrustFinancialForecastId}/closed");
 				}
-				
-				if (!IsEditable(trustFinancialForecast))
-				{
-					return Redirect($"/case/{CaseUrn}/management/action/trustFinancialForecast/{TrustFinancialForecastId}");
-				}
-				
+
 				Notes = BuildNotesComponent(trustFinancialForecast.Notes);
 				
 				return Page();
@@ -126,8 +121,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 			}
 			return Page();
 		}
-
-		private static bool IsEditable(TrustFinancialForecastResponse trustFinancialForecast) => !IsClosed(trustFinancialForecast);
+		
 		private static bool IsClosed(TrustFinancialForecastResponse trustFinancialForecast) => trustFinancialForecast.ClosedAt.HasValue;
 		
 		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
