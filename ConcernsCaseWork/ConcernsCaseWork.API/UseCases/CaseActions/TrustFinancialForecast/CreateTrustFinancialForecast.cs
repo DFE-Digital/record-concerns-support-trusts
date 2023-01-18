@@ -1,7 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Exceptions;
-using ConcernsCaseWork.API.Factories.CaseActionFactories;
-using ConcernsCaseWork.Data.Exceptions;
 using ConcernsCaseWork.Data.Gateways;
 
 namespace ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast

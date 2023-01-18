@@ -9,7 +9,6 @@ using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome;
 using ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast;
 using ConcernsCaseWork.Data.Gateways;
-using ConcernsCaseWork.Data.Models;
 
 namespace ConcernsCaseWork.API.StartupConfiguration
 {
