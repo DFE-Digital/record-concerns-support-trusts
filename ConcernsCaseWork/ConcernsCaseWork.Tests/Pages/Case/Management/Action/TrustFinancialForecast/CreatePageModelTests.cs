@@ -1,6 +1,7 @@
 using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Enums.TrustFinancialForecast;
 using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Validatable;
 using ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast;
@@ -206,7 +207,7 @@ public class CreatePageModelTests
 		Assert.Multiple(() =>
 		{
 			Assert.That(response, Is.InstanceOf<PageResult>());
-			Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(sut.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 		});
 	}
 	

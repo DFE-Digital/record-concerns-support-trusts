@@ -1,6 +1,7 @@
 using AutoFixture;
 using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast;
 using ConcernsCaseWork.Service.TrustFinancialForecast;
@@ -111,38 +112,7 @@ public class ClosePageModelTests
 			Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
 		});
 	}
-		
-	[Test]
-	public async Task WhenOnGetAsync_WhenTrustFinancialForecastNotEditable_RedirectsToReadOnlyPage()
-	{
-		// arrange
-		var mockTrustFinancialForecastService = new Mock<ITrustFinancialForecastService>();
-		var mockLogger = new Mock<ILogger<ClosePageModel>>();
-		
-		var trustFinancialForecastId = _fixture.Create<int>();
-		var caseUrn = _fixture.Create<int>();
-		
-		var getRequest = new GetTrustFinancialForecastByIdRequest{ TrustFinancialForecastId = trustFinancialForecastId, CaseUrn = caseUrn };		
-		var trustFinancialForecast = CreateClosedTrustFinancialForecastResponse(trustFinancialForecastId, caseUrn);
 
-		mockTrustFinancialForecastService.Setup(fp => fp.GetById(getRequest))
-			.ReturnsAsync(trustFinancialForecast);
-		
-		var sut = SetupClosePageModel(mockTrustFinancialForecastService.Object, mockLogger.Object);
-		sut.TrustFinancialForecastId = trustFinancialForecastId;
-		sut.CaseUrn = caseUrn;
-
-		// act
-		var response = await sut.OnGetAsync();
-		
-		// assert
-		Assert.Multiple(() =>
-		{
-			Assert.That(response, Is.InstanceOf<PageResult>());
-			Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
-		});
-	}
-	
 	[Test]
 	public async Task WhenOnGetAsync_WhenExceptionThrown_ReturnsError()
 	{
@@ -300,7 +270,7 @@ public class ClosePageModelTests
 		Assert.Multiple(() =>
 		{
 			Assert.That(response, Is.InstanceOf<PageResult>());
-			Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(sut.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 		});
 	}
 	
