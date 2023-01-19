@@ -27,7 +27,7 @@ public class IsCaseEditableStrategy: ICaseActionPermissionStrategy
 
 		Guard.Against.Null(userInfo);
 
-		if (@case.CreatedBy == userInfo.Name || userInfo.IsAdmin())
+		if (@case.CreatedBy.Equals(userInfo.Name, StringComparison.InvariantCultureIgnoreCase) || userInfo.IsAdmin())
 		{
 			return CasePermission.Edit;
 		}
