@@ -1,4 +1,5 @@
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Trusts;
@@ -82,13 +83,13 @@ public class CaseSummaryService : ICaseSummaryService
 					ActiveConcerns = GetSortedActiveConcerns(caseSummary.ActiveConcerns),
 					ActiveActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
 					CaseUrn = caseSummary.CaseUrn,
-					CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
+					CreatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CreatedAt),
 					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
 					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
 					Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
 					StatusName = caseSummary.StatusName,
 					TrustName = trustName,
-					UpdatedAt = caseSummary.UpdatedAt.ToDayMonthYear()
+					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt)
 				};
 			
 			sortedCaseSummaries.Add(summary);
@@ -112,9 +113,9 @@ public class CaseSummaryService : ICaseSummaryService
 				{
 					ClosedConcerns = GetSortedClosedConcerns(caseSummary.ClosedConcerns),
 					ClosedActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
-					ClosedAt = caseSummary.ClosedAt.ToDayMonthYear(),
+					ClosedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.ClosedAt),
 					CaseUrn = caseSummary.CaseUrn,
-					CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
+					CreatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CreatedAt),
 					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
 					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
 					StatusName = caseSummary.StatusName,
