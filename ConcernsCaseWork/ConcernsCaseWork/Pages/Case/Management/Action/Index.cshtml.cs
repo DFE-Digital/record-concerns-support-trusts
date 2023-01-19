@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Pages.Case.Management.Action.CaseActionCreateHelpers;
+using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.NtiWarningLetter;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
@@ -28,6 +29,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 		private readonly INtiUnderConsiderationModelService _ntiUnderConsiderationModelService;
 		private readonly INtiWarningLetterModelService _ntiWarningLetterModelService;
 		private readonly INtiModelService _ntiModelService;
+		private readonly ITrustFinancialForecastService _trustFinancialForecastService;
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
@@ -39,6 +41,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 			INtiUnderConsiderationModelService ntiUnderConsiderationModelService,
 			INtiWarningLetterModelService ntiWarningLetterModelService,
 			INtiModelService ntiModelService,
+			ITrustFinancialForecastService trustFinancialForecastService,
 			ILogger<IndexPageModel> logger)
 		{
 			_caseModelService = caseModelService;
@@ -47,6 +50,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 			_ntiUnderConsiderationModelService = ntiUnderConsiderationModelService;
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_ntiModelService = ntiModelService;
+			_trustFinancialForecastService = trustFinancialForecastService;
 			_logger = logger;
 		}
 
@@ -126,7 +130,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action
 				new SrmaCreateHelper(_srmaService),
 				new FinancialPlanCreateHelper(_financialPlanModelService),
 				new NtiCreateHelper(_ntiUnderConsiderationModelService, _ntiWarningLetterModelService, _ntiModelService),
-				new CaseDecisionCreateHelper()
+				new CaseDecisionCreateHelper(),
+				new TrustFinancialForecastCreateHelper(_trustFinancialForecastService)
 			};
 		}
 
