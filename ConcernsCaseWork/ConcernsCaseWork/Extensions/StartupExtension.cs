@@ -54,8 +54,7 @@ using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Service.Teams;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Authorization;
-using ConcernsCaseWork.Middleware;
-using ConcernsCaseWork.Pages.Base;
+using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.PageHistory;
 using ConcernsCaseWork.Service.Permissions;
 
@@ -161,6 +160,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICaseActionValidationStrategy, NTIWarningLetterValidator>();
 			services.AddScoped<ICaseActionValidationStrategy, NTIValidator>();
 			services.AddScoped<ICaseActionValidationStrategy, DecisionValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, TrustFinancialForecastValidator>();
 			services.AddScoped<ICaseActionValidator, CaseActionValidator>();
 			services.AddScoped<IDecisionModelService, DecisionModelService>();
 			services.AddScoped<ICreateCaseService, CreateCaseService>();
@@ -193,6 +193,7 @@ namespace ConcernsCaseWork.Extensions
             services.AddScoped<INtiConditionsService, NtiConditionsService>();
 			services.AddScoped<ITeamsService, TeamsService>();
 			services.AddScoped<IDecisionService, DecisionService>();
+			services.AddScoped<ITrustFinancialForecastService, TrustFinancialForecastService>();
 			services.AddScoped<ICasePermissionsService, CasePermissionsService>();
 
 			// Redis services
