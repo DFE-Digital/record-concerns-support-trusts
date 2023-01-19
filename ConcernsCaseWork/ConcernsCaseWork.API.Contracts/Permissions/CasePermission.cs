@@ -2,6 +2,8 @@
 {
 	public enum CasePermission
 	{
-		Edit = 1
+		None = 0,
+		View = 1,
+		Edit = 2
 	}
 }
