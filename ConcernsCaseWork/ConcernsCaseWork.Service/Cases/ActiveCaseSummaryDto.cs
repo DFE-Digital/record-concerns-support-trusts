@@ -17,6 +17,7 @@ public abstract record CaseSummaryDto
 	public IEnumerable<ActionDecisionSummaryDto> NtiWarningLetters { get; set; }
 	public IEnumerable<ActionDecisionSummaryDto> NtisUnderConsideration { get; set; }
 	public IEnumerable<ActionDecisionSummaryDto> SrmaCases { get; set; }
+	public IEnumerable<ActionDecisionSummaryDto> TrustFinancialForecasts { get; set; }
 	
 	public record ActionDecisionSummaryDto(DateTime CreatedAt, DateTime? ClosedAt, string Name);
 
