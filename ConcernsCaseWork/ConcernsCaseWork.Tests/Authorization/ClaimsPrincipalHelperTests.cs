@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using AutoFixture.Idioms;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.UserContext;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -42,7 +43,7 @@ namespace ConcernsCaseWork.Tests.Authorization
 			var fixture = new Fixture();
 			fixture.Register(Mock.Of<IPrincipal>);
 			var assertion = fixture.Create<GuardClauseAssertion>();
-   
+
 			// Act & Assert
 			assertion.Verify(typeof(ClaimsPrincipalHelper).GetConstructors());
 		}
@@ -58,14 +59,14 @@ namespace ConcernsCaseWork.Tests.Authorization
 			// Act & Assert
 			assertion.Verify(typeof(ClaimsPrincipalHelper).GetMethods());
 		}
-		
+
 		[Theory]
 		[TestCase(true)]
 		[TestCase(false)]
 		public void Given_CaseWorker_Role_When_IsCaseWorker_Then_Returns_Expectation(bool expectation)
 		{
 			var mockPrincipal = new Mock<IPrincipal>();
-			mockPrincipal.Setup(x => x.IsInRole(ClaimsPrincipalHelper.CaseWorkerRole)).Returns(expectation);
+			mockPrincipal.Setup(x => x.IsInRole(UserInfo.CaseWorkerRoleClaim)).Returns(expectation);
 
 			var sut = new ClaimsPrincipalHelper();
 			var actual = sut.IsCaseworker(mockPrincipal.Object);
@@ -79,7 +80,7 @@ namespace ConcernsCaseWork.Tests.Authorization
 		public void Given_IsTeamLeader_Role_When_IsCaseWorker_Then_Returns_Expectation(bool expectation)
 		{
 			var mockPrincipal = new Mock<IPrincipal>();
-			mockPrincipal.Setup(x => x.IsInRole(ClaimsPrincipalHelper.TeamLeaderRole)).Returns(expectation);
+			mockPrincipal.Setup(x => x.IsInRole(UserInfo.TeamLeaderRoleClaim)).Returns(expectation);
 
 			var sut = new ClaimsPrincipalHelper();
 			var actual = sut.IsTeamLeader(mockPrincipal.Object);
@@ -93,7 +94,7 @@ namespace ConcernsCaseWork.Tests.Authorization
 		public void Given_IsAdmin_Role_When_IsCaseWorker_Then_Returns_Expectation(bool expectation)
 		{
 			var mockPrincipal = new Mock<IPrincipal>();
-			mockPrincipal.Setup(x => x.IsInRole(ClaimsPrincipalHelper.AdminRole)).Returns(expectation);
+			mockPrincipal.Setup(x => x.IsInRole(UserInfo.AdminRoleClaim)).Returns(expectation);
 
 			var sut = new ClaimsPrincipalHelper();
 			var actual = sut.IsAdmin(mockPrincipal.Object);

@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
@@ -19,8 +21,8 @@ using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.Decisions;
-using ConcernsCaseWork.Constants;
 
 namespace ConcernsCaseWork.Pages.Case.Management
 {
@@ -39,11 +41,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		private readonly INtiModelService _ntiModelService;
 		private readonly IDecisionService _decisionService;
 		private readonly ICaseActionValidator _caseActionValidator;
+		private readonly ITrustFinancialForecastService _trustFinancialForecastService;
 		private readonly ILogger<ClosurePageModel> _logger;
 
 		public CaseModel CaseModel { get; private set; }
 		public TrustDetailsModel TrustDetailsModel { get; private set; }
-
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
 
 		public ClosurePageModel(
@@ -57,6 +59,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			INtiWarningLetterModelService ntiWarningLetterModelService, 
 			INtiModelService ntiModelService,
 			IDecisionService decisionService,
+			ITrustFinancialForecastService trustFinancialForecastService,
 			ICaseActionValidator caseActionValidator,
 			ILogger<ClosurePageModel> logger)
 		{
@@ -70,6 +73,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			_ntiWarningLetterModelService = ntiWarningLetterModelService;
 			_ntiModelService = ntiModelService;
 			_decisionService = decisionService;
+			_trustFinancialForecastService = trustFinancialForecastService;
 			_caseActionValidator = caseActionValidator;
 			_logger = logger;
 		}
@@ -175,6 +179,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			var ntiWarningLetterModelsTask = _ntiWarningLetterModelService.GetNtiWarningLettersForCase(caseUrn);
 			var ntiModelModelsTask = _ntiModelService.GetNtisForCaseAsync(caseUrn);
 			var decisionsTask = GetDecisions(caseUrn);
+			var trustFinancialForecastTask = _trustFinancialForecastService.GetAllForCase((int)caseUrn);
 
 			caseActionModels.AddRange(await srmaModelsTask);
 			caseActionModels.AddRange(await financialPlanModelsTask);
@@ -182,6 +187,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			caseActionModels.AddRange(await ntiWarningLetterModelsTask);
 			caseActionModels.AddRange(await ntiModelModelsTask);
 			caseActionModels.AddRange(await decisionsTask);
+			caseActionModels.AddRange((await trustFinancialForecastTask).Select(x => x.ToTrustFinancialForecastSummaryModel()));
 			var caseActionErrorMessages = _caseActionValidator.Validate(caseActionModels);
 
 			errorMessages.AddRange(caseActionErrorMessages);
