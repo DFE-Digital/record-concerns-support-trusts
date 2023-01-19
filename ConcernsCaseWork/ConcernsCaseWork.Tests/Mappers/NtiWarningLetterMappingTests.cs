@@ -7,6 +7,9 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.Service.Nti;
+using ConcernsCaseWork.Shared.Tests.Factory;
 
 namespace ConcernsCaseWork.Tests.Mappers
 {
@@ -43,7 +46,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Id = testData.Id,
 				CaseUrn = testData.CaseUrn,
 				CreatedAt = testData.CreatedAt,
-				ClosedAt = testData.ClosedAt,
+				ClosedAt = null,
 				Notes = testData.Notes,
 				DateLetterSent = testData.SentDate,
 				StatusId = testData.Status.Key,
@@ -52,8 +55,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 				ClosedStatusId = testData.ClosedStatus.Key
 			};
 
+			var permissionsResponse = new GetCasePermissionsResponse() { Permissions = new List<CasePermission>() { CasePermission.Edit } };
+
 			// act
-			var serviceModel = NtiWarningLetterMappers.ToServiceModel(ntiDto, statuses);
+			var serviceModel = NtiWarningLetterMappers.ToServiceModel(ntiDto, statuses, permissionsResponse);
 
 			// assert
 			Assert.That(serviceModel, Is.Not.Null);
@@ -66,6 +71,24 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(serviceModel.Status.Name, Is.EqualTo(testData.Status.Value));
 			Assert.That(serviceModel.ClosedStatus.Id, Is.EqualTo(testData.ClosedStatus.Key));
 			Assert.That(serviceModel.ClosedStatus.Name, Is.EqualTo(testData.ClosedStatus.Value));
+			serviceModel.IsEditable.Should().BeTrue();
+		}
+
+		[TestCaseSource(nameof(GetPermissionTestCases))]
+		public void WhenMapDtoToServiceModel_Not_Editable_ReturnsCorrectModel(
+			DateTime closedDate,
+			GetCasePermissionsResponse casePermissionsResponse)
+		{
+			var ntiDto = _fixture.Create<NtiDto>();
+			ntiDto.StatusId = null;
+			ntiDto.ClosedStatusId = null;
+			ntiDto.ClosedAt = closedDate;
+			var ntiStatuses = NTIStatusFactory.BuildListNTIStatusDto();
+
+			var serviceModel = NtiMappers.ToServiceModel(ntiDto, ntiStatuses, casePermissionsResponse);
+
+			serviceModel.IsEditable.Should().BeFalse();
+			serviceModel.ClosedAt.Should().Be(closedDate);
 		}
 
 		[Test]
@@ -209,6 +232,12 @@ namespace ConcernsCaseWork.Tests.Mappers
 		{
 			yield return new TestCaseData(null, "In progress");
 			yield return new TestCaseData(new NtiWarningLetterStatusModel() { Name = "Test"}, "Test");
+		}
+
+		private static IEnumerable<TestCaseData> GetPermissionTestCases()
+		{
+			yield return new TestCaseData(new DateTime(), new GetCasePermissionsResponse() { Permissions = new List<CasePermission>() { CasePermission.Edit } });
+			yield return new TestCaseData(null, new GetCasePermissionsResponse());
 		}
 	}
 }

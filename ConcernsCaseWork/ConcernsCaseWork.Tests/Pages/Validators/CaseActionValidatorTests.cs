@@ -1,7 +1,6 @@
 ﻿using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.AspNetCore.Components.Forms;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,7 @@ namespace ConcernsCaseWork.Tests.Pages.Validators
 	[Parallelizable(ParallelScope.All)]
 	public class CaseActionValidatorTests
 	{
-		private Fixture _fixture = new();
+		private readonly Fixture _fixture = new();
 
 		[Test]
 		public void When_Open_SRMA_Return_Error_Message()

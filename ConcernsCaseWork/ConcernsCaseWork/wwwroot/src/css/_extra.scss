@@ -210,11 +210,6 @@ span.summary-validation-symbol {
   font-size:19px;
 }
 
-.js-enabled .govuk-accordion__controls{
-  visibility: hidden;
-  height: 0;
-}
-
 .summary-list-margin-0 {
   margin-bottom: -1px;
 }
@@ -1593,15 +1588,19 @@ span.summary-validation-symbol {
   word-break: break-word;
 }
 
+.govuk-footer__meta-custom-padded {
+	padding-bottom: 45px !important;
+}
+
 /* ==========================================================================
    #Back button
    ========================================================================== */
 .govuk-back-link:hover {
-  text-decoration-thickness: calc(max(3px, .1875rem, .12em));
-  -webkit-text-decoration-skip-ink: none;
-  text-decoration-skip-ink: none;
-  -webkit-text-decoration-skip: none;
-  text-decoration-skip: none;
+	text-decoration-thickness: calc(max(3px, .1875rem, .12em));
+	-webkit-text-decoration-skip-ink: none;
+	text-decoration-skip-ink: none;
+	-webkit-text-decoration-skip: none;
+	text-decoration-skip: none;
 }
 
 .govuk-back-link {

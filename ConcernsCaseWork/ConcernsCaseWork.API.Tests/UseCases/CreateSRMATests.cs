@@ -19,25 +19,25 @@ namespace ConcernsCaseWork.API.Tests.UseCases
         public void CreateSRMA_ShouldCreateAndReturnSRMAResponse_WhenGivenCreateSRMARequest()
         {
 			var status = SRMAStatus.Deployed;
-			var datetOffered = DateTime.Now.AddDays(-5);
+			var dateOffered = DateTime.Now.AddDays(-5);
 			var updatedAt = DateTime.Now;
 
 			var createSRMARequest = Builder<CreateSRMARequest>
 	            .CreateNew()
 	            .With(r => r.Status = status)
-	            .With(r => r.DateOffered = datetOffered)
+	            .With(r => r.DateOffered = dateOffered)
 	            .Build();
 
 			var srmaDbModel = new SRMACase
 			{
 				StatusId = (int)status,
-				DateOffered = datetOffered,
+				DateOffered = dateOffered,
 				UpdatedAt = updatedAt
             };
 
             var expectedResult = new SRMAResponse
             {
-				DateOffered = datetOffered,
+				DateOffered = dateOffered,
 				Status = status,
 				UpdatedAt = updatedAt
 			};

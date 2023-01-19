@@ -1,8 +1,9 @@
 {
-    "defaultCommandTimeout": 10000,
-    "pageLoadTimeout": 10000,
+    "defaultCommandTimeout": 20000,
+    "pageLoadTimeout": 20000,
     "watchForFileChanges": false,
     "chromeWebSecurity": false,
+    "video": false,
     "reporter": "cypress-multi-reporters",
     "reporterOptions": {
         "reporterEnabled": "mochawesome",

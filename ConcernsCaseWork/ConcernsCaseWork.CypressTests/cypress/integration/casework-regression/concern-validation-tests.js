@@ -13,6 +13,7 @@ describe('Concern validation tests', () => {
 
 		cy.randomSelectTrust();
 		cy.get('#search__option--0').click();
+		cy.getById("continue").click();
 
 		cy.getByTestId('add-concern-button').click();
 		cy.get('.govuk-list.govuk-error-summary__list li:nth-of-type(1)')

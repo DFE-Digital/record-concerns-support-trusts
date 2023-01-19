@@ -20,8 +20,9 @@ describe("User creates and adds subsequent concern to a case", () => {
 		cy.get('[href="/case"]').click();
 		cy.get("#search").should("be.visible");
 
-		cy.get("#search").type(searchTerm + "{enter}");
+		cy.get("#search").type(searchTerm);
 		cy.get("#search__option--0").click();
+		cy.getById("continue").click();
 
 		cy.selectConcernType();
 		cy.selectRiskToTrust();

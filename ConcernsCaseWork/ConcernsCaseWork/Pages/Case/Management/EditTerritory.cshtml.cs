@@ -29,7 +29,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		
 		[BindProperty(Name="territory")]
 		[Required(ErrorMessage = "An SFSO territory must be selected")]
-		public TerritoryEnum? Territory { get; set; }
+		public Territory? Territory { get; set; }
 		
 		public EditTerritoryPageModel(ICaseModelService caseModelService, IClaimsPrincipalHelper claimsPrincipalHelper, ILogger<EditTerritoryPageModel> logger)
 		{

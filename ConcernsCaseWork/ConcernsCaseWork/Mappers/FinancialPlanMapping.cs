@@ -6,12 +6,16 @@ using System;
 using ConcernsCaseWork.Service.FinancialPlan;
 using System.Collections.Generic;
 using System.Linq;
+using ConcernsCaseWork.API.Contracts.Permissions;
 
 namespace ConcernsCaseWork.Mappers
 {
 	public static class FinancialPlanMapping
 	{
-		public static FinancialPlanModel MapDtoToModel(FinancialPlanDto financialPlanDto, IList<FinancialPlanStatusDto> statuses)
+		public static FinancialPlanModel MapDtoToModel(
+			FinancialPlanDto financialPlanDto, 
+			IList<FinancialPlanStatusDto> statuses,
+			GetCasePermissionsResponse casePermission)
 		{
 			var selectedStatus = statuses.FirstOrDefault(s => s.Id.CompareTo(financialPlanDto.StatusId) == 0);
 			var selectedStatusId = selectedStatus?.Id;
@@ -26,6 +30,8 @@ namespace ConcernsCaseWork.Mappers
 				FinancialPlanStatusMapping.MapDtoToModel(statuses, selectedStatusId),
 				financialPlanDto.ClosedAt
 				);
+
+			financialPlanModel.IsEditable = casePermission.HasEditPermissions();
 
 			return financialPlanModel;
 		}

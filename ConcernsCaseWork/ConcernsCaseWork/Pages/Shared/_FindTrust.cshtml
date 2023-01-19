@@ -1,28 +1,119 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NetEscapades.AspNetCore.SecurityHeaders
+@model ConcernsCaseWork.Models.FindTrustModel
+
+@{
+	if (String.IsNullOrWhiteSpace(Model.Nonce))
+	{
+		throw new InvalidOperationException("Nonce not provided by parent page");
+	}
+}
+
 <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-<form role="form" id="search-form" class="search-form" novalidate>
-	<div class="govuk-form-group">
-		<fieldset class="govuk-fieldset" data-required data-error="Search cannot be blank" aria-required="true">
+<div class="govuk-form-group">
+	<fieldset class="govuk-fieldset" data-required data-error="Search cannot be blank" aria-required="true">
 
-			<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-				<h2 class="govuk-fieldset__heading govuk-heading-m">
-					Find Trust
-				</h2>
-			</legend>
+		<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+			<h2 class="govuk-fieldset__heading govuk-heading-m">
+				Find Trust
+			</h2>
+		</legend>
 
-			<label class="govuk-hint" for="search" id="outgoing-trust-search-query-hint">
-				Search by name, trust reference number or companies house number
-			</label>
+		<label class="govuk-hint" for="search" id="outgoing-trust-search-query-hint">
+			Search by name, trust reference number or companies house number
+		</label>
 
-			<input class="govuk-input form-control" id="search" name="search" type="search" aria-valuetext="" aria-describedby="search-hint search-error" placeholder="Search Trusts">
-		</fieldset>
-	</div>
-	<input class="govuk-input form-control" id="search-icon" type="submit">
-</form>
+	</fieldset>
+</div>
 
-<div class="ccms-loader govuk-!-display-none"></div>
 <div id="autocomplete-container"></div>
+<div class="ccms-loader govuk-!-display-none"></div>
 <ul class="autocomplete__menu autocomplete__menu--inline autocomplete__menu--hidden" id="search__listbox" role="listbox">
 	<li class="autocomplete__option autocomplete__option--no-results">No results found.</li>
 </ul>
+<input type="hidden" id="selectedTrustUkprn" name="selectedTrustUkprn" required />
+
+<script type="application/javascript" nonce="@Model.Nonce">
+    $(document).ready(function () {
+
+         $(document).ajaxStart(function() {
+            showLoader();
+        })
+         $(document).ajaxStop(function() {
+            hideLoader();
+        })
+
+
+        const autocompleteContainer = document.getElementById("autocomplete-container");
+        const trustSearchDelay = 1000;
+        let trustSearchResults = undefined;
+        let selectedTrustUkprn = undefined;
+        let xhr = undefined;
+        let timeout = undefined;
+
+	    function generateNonce(length) {
+	        var text = "";
+	        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	        for(var i = 0; i < length; i++) {
+	            text += possible.charAt(Math.floor(Math.random() * possible.length));
+	        }
+	        return text;
+	    }
+
+        function cancelSearch() {
+            clearTimeout(timeout);
+	        if (xhr !== undefined) {
+	            xhr.abort();
+	        }
+            xhr = undefined;
+            trustSearchResults = undefined;
+            selectedTrustUkprn = undefined;
+        }
+
+        function searchForTrusts(queryStr, populateResults) {
+
+            cancelSearch();
+
+            var requestIfNotCancelled = () => {
+	            // use trust page for searching
+                xhr = $.get("/trust/TrustsSearchResult", { searchQuery: queryStr, nonce:generateNonce(20) })
+	                .done(function (response) {
+
+	                    let nonce = response.nonce;
+	                    let trusts = response.data;
+
+	                    if (trusts !== undefined) {
+	                        trustSearchResults = trusts;
+	                        populateResults(trusts.map(x => x.displayName));
+	                    }
+	                    else {
+	                        trustSearchResults = undefined;
+	                        populateResults();
+	                    }
+	                })
+	                .always(function() {
+	                    xhr = undefined;
+	                });
+            };
+
+            timeout = setTimeout(requestIfNotCancelled, trustSearchDelay);
+        }
+
+        accessibleAutocomplete({
+            element: autocompleteContainer,
+            id: "search",
+            name: "trustSearch",
+            source: searchForTrusts,
+            confirmOnBlur: false,
+            minLength: 3,
+            showNoOptonsFound: true,
+            onConfirm: (selected) => {
+                selectedTrustUkprn = trustSearchResults === undefined ? undefined : trustSearchResults.find(trust => trust.displayName === selected).ukPrn;
+                $('#selectedTrustUkprn').val(selectedTrustUkprn);
+            }
+        });
+    });
+
+</script>

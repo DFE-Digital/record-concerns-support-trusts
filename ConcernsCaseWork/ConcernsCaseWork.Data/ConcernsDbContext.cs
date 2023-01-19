@@ -1,10 +1,10 @@
+using ConcernsCaseWork.Data.Configurations;
 using ConcernsCaseWork.Data.Conventions;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
 using ConcernsCaseWork.Data.Models.Concerns.TeamCasework;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.Contracts;
 using DecisionOutcomeStatus = ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome.DecisionOutcomeStatus;
 
 namespace ConcernsCaseWork.Data
@@ -54,6 +54,8 @@ namespace ConcernsCaseWork.Data
         public virtual DbSet<ConcernsCaseworkTeamMember> ConcernsTeamCaseworkTeamMember { get; set; }
 		public virtual DbSet<DecisionOutcome> DecisionOutcomes { get; set; }
 		public virtual DbSet<Decision> Decisions { get; set; }
+		
+		public virtual DbSet<TrustFinancialForecast> TrustFinancialForecasts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {    
@@ -701,6 +703,8 @@ namespace ConcernsCaseWork.Data
 					.Cast<API.Contracts.Decisions.Outcomes.DecisionOutcomeBusinessArea>()
 					.Select(enm => new DecisionOutcomeBusinessArea() { Id = enm, Name = enm.ToString() }));
 			});
+			
+			new TrustFinancialForecastConfiguration().Configure(modelBuilder.Entity<TrustFinancialForecast>());
 		}
     }
 }

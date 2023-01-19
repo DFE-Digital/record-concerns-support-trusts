@@ -56,7 +56,7 @@
                                 {
                                     var idStr = id++ == 0 ? "status" : "status-" + id;
                                     <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="@idStr" name="status" type="radio" value="@status.Id" checked="@status.IsChecked">
+                                        <input class="govuk-radios__input" id="@idStr" data-testid="@status.Id" name="status" type="radio" value="@status.Id" checked="@status.IsChecked">
                                         <label class="govuk-label govuk-radios__label" for="@idStr">
                                             <span>
                                                 @status.Text

@@ -5,10 +5,13 @@ import utils from "/cypress/support/utils"
 describe("User can add case actions to an existing case", () => {
 	before(() => {
 		cy.login();
+		
 	});
 
 	afterEach(() => {
 		cy.storeSessionData();
+
+		
 	});
 
 	it("User enters the case page", () => {
