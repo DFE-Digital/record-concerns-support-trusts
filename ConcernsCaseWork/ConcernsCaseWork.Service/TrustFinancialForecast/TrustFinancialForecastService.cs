@@ -3,6 +3,7 @@ using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 
 namespace ConcernsCaseWork.Service.TrustFinancialForecast;
@@ -11,7 +12,7 @@ public class TrustFinancialForecastService : ConcernsAbstractService, ITrustFina
 {
 	private readonly ILogger<TrustFinancialForecastService> _logger;
 
-	public TrustFinancialForecastService(IHttpClientFactory clientFactory, ILogger<TrustFinancialForecastService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
+	public TrustFinancialForecastService(IHttpClientFactory clientFactory, ILogger<TrustFinancialForecastService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 	{
 		_logger = Guard.Against.Null(logger);
 	}
