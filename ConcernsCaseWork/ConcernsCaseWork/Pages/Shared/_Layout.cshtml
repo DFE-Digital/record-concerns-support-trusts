@@ -13,7 +13,7 @@
     bool.TryParse(Context.Request.Cookies[CookieConstants.CookieConsentName], out bool hasConsented);
 }
 <head>
-    @if (_env.IsProduction())
+    @if (_env.IsProduction() && hasConsented)
     {
         <!-- Google Tag Manager -->
         <script nonce="@nonce">
