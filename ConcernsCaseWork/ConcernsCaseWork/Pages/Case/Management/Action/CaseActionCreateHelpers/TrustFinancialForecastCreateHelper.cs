@@ -23,7 +23,7 @@ public class TrustFinancialForecastCreateHelper : CaseActionCreateHelper
 
 		var hasOpenCaseAction = trustFinancialForecasts.Any(f => !f.ClosedAt.HasValue);
 
-		return hasOpenCaseAction 
+		return hasOpenCaseAction
 			? throw new InvalidOperationException("There is already an open trust financial forecast action linked to this case. Please resolve that before opening another one.")
 			: true;
 	}
