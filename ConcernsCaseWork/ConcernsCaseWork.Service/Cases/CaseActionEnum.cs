@@ -12,7 +12,7 @@
 		Nti,
 		RecoveryPlan,
 		Srma,
-		Tff,
+		TrustFinancialForecast,
 		NtiUnderConsideration,
 		NtiWarningLetter
 	}

@@ -2527,6 +2527,53 @@ namespace ConcernsCaseWork.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.TrustFinancialForecast", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CaseUrn")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("ClosedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ForecastingToolRanAt")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("SFSOInitialReviewHappenedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("SRMAOfferedAfterTFF")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("TrustRespondedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("WasTrustResponseSatisfactory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id")
+                        .HasName("PK__TrustFinancialForecast");
+
+                    b.ToTable("TrustFinancialForecast", "concerns", t =>
+                        {
+                            t.HasTrigger("TrustFinancialForecast_Trigger");
+                        });
+                });
+
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Decision", b =>
                 {
                     b.HasOne("ConcernsCaseWork.Data.Models.ConcernsCase", null)
