@@ -3,6 +3,7 @@ using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Services.Decisions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 	public class IndexPageModel : AbstractPageModel
 	{
 		private IDecisionService _decisionService;
+		private ICasePermissionsService _casePermissionsService;
 		private ILogger _logger;
 
 		public ViewDecisionModel Decision { get; set; }
@@ -21,9 +23,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		public IndexPageModel(
 			IDecisionService decisionService,
+			ICasePermissionsService casePermisisionsService,
 			ILogger<IndexPageModel> logger)
 		{
 			_decisionService = decisionService;
+			_casePermissionsService = casePermisisionsService;
 			_logger = logger;
 		}
 
@@ -39,8 +43,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				TryGetRouteValueInt64("decisionId", out var decisionId);
 
 				var apiDecision = await _decisionService.GetDecision(urn, (int)decisionId);
+				var casePermissions = await _casePermissionsService.GetCasePermissions(urn);
 
-				Decision = DecisionMapping.ToViewDecisionModel(apiDecision);
+				Decision = DecisionMapping.ToViewDecisionModel(apiDecision, casePermissions);
 			}
 			catch (Exception ex)
 			{

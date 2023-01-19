@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases
     public class GetNTIWarningLetterByCaseUrnTests
     {
         [Fact]
-        public void GetNTIWarningLetteryCaseUrn_ShouldReturnNTIWarningLetterResponse_WhenGivenCaseUrn()
+        public void GetNTIWarningLetterByCaseUrn_ShouldReturnNTIWarningLetterResponse_WhenGivenCaseUrn()
         {
             var caseUrn = 123;
             var reasonMappings = new List<NTIWarningLetterReasonMapping>() { new NTIWarningLetterReasonMapping() { NTIWarningLetterReasonId = 1 } };

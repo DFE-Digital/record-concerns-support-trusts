@@ -1,9 +1,9 @@
-﻿using ConcernsCaseWork.Extensions;
+﻿using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace ConcernsCaseWork.Mappers
 {
@@ -40,6 +40,14 @@ namespace ConcernsCaseWork.Mappers
 				ClosedStatusId = ntiDto.ClosedStatusId,
 				ClosedStatusName = ntiDto.ClosedStatusName
 			};
+		}
+
+		public static NtiUnderConsiderationModel ToServiceModel(NtiUnderConsiderationDto ntiDto, GetCasePermissionsResponse permissionsResponse)
+		{
+			var result = ToServiceModel(ntiDto);
+			result.IsEditable = permissionsResponse.HasEditPermissions() && !result.ClosedAt.HasValue;
+
+			return result;
 		}
 
 		public static NtiUnderConsiderationReasonDto ToDBModel(NtiReasonForConsideringModel ntiReasonModel)

@@ -5,7 +5,6 @@ using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
-using ConcernsCaseWork.Data;
 using ConcernsCaseWork.Data.Models;
 using FluentAssertions;
 using System;
@@ -20,12 +19,12 @@ namespace ConcernsCaseWork.API.Tests.Integration
 	[Collection(ApiTestCollection.ApiTestCollectionName)]
 	public class DecisionIntegrationTests
 	{
-		private HttpClient _client;
-		private Fixture _autoFixture;
-		private ApiTestFixture _testFixture;
+		private readonly HttpClient _client;
+		private readonly Fixture _autoFixture;
+		private readonly ApiTestFixture _testFixture;
 
-		private DateTimeOffset _decisionMadeDate = new DateTimeOffset(2022, 1, 1, 0, 0, 0, new TimeSpan());
-		private DateTimeOffset _decisionEffectiveDate = new DateTimeOffset(2022, 5, 5, 0, 0, 0, new TimeSpan());
+		private readonly DateTimeOffset _decisionMadeDate = new DateTimeOffset(2022, 1, 1, 0, 0, 0, new TimeSpan());
+		private readonly DateTimeOffset _decisionEffectiveDate = new DateTimeOffset(2022, 5, 5, 0, 0, 0, new TimeSpan());
 
 		public DecisionIntegrationTests(ApiTestFixture apiTestFixture)
 		{

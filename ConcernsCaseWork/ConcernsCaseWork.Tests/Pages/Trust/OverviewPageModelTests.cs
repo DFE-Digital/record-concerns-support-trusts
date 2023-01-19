@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Extensions;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Pages.Trust;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Trusts;
@@ -11,7 +12,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Trust
@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]

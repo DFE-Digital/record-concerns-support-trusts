@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Extensions;
+﻿using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.Nti;
 using System;
@@ -28,6 +29,14 @@ namespace ConcernsCaseWork.Mappers
 				DateNTILifted = ntiModel.DateNTILifted,
 				DateNTIClosed = ntiModel.DateNTIClosed
 			};
+		}
+
+		public static NtiModel ToServiceModel(NtiDto ntiDto, ICollection<NtiStatusDto> statuses, GetCasePermissionsResponse permissionResponse)
+		{
+			var result = ToServiceModel(ntiDto, statuses);
+			result.IsEditable = permissionResponse.HasEditPermissions() && !ntiDto.ClosedAt.HasValue;
+
+			return result;
 		}
 
 		public static NtiModel ToServiceModel(NtiDto ntiDto, ICollection<NtiStatusDto> statuses)

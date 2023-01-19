@@ -4,8 +4,6 @@ using AutoFixture.Idioms;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Teams;
-using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
