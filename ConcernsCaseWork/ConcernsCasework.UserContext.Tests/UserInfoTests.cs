@@ -17,7 +17,7 @@ namespace ConcernsCaseWork.API.Contracts.Tests.Context
 			var sut = new UserInfo();
 			sut.Name = Guid.NewGuid().ToString();
 			sut.Roles = new[]
-			{
+			{ 
 				UserInfo.CaseWorkerRoleClaim,
 				UserInfo.TeamLeaderRoleClaim,
 				UserInfo.AdminRoleClaim,
