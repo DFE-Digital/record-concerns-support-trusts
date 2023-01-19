@@ -4,5 +4,5 @@ using ConcernsCaseWork.UserContext;
 
 public interface ICaseActionPermissionStrategyRoot
 {
-	CasePermission[] GetPermittedCaseActions(ConcernsCaseResponse @case, UserInfo userInfo);
+	CasePermission[] GetPermittedCaseActions(ConcernsCaseResponse concernsCase, UserInfo userInfo);
 }

@@ -11,25 +11,25 @@ public class CaseActionPermissionStrategyRoot : ICaseActionPermissionStrategyRoo
 	private readonly IEnumerable<ICaseActionPermissionStrategy> _caseActionsStrategies;
 	public CaseActionPermissionStrategyRoot(IEnumerable<ICaseActionPermissionStrategy> caseActionsStrategies)
 	{
-		_caseActionsStrategies = caseActionsStrategies;
+		_caseActionsStrategies = Guard.Against.Null(caseActionsStrategies);
 	}
 
 	/// <summary>
 	/// Inspects the case and user and returns all of the actions the user is permitted to invoke. If no permissions then an empty array will be returned.
 	/// </summary>
-	/// <param name="case"></param>
+	/// <param name="concernsCase"></param>
 	/// <param name="userInfo"></param>
 	/// <returns></returns>
-	public CasePermission[] GetPermittedCaseActions(ConcernsCaseResponse @case, UserInfo userInfo)
+	public CasePermission[] GetPermittedCaseActions(ConcernsCaseResponse concernsCase, UserInfo userInfo)
 	{
-		Guard.Against.Null(@case);
+		Guard.Against.Null(concernsCase);
 		Guard.Against.Null(userInfo);
 
 		List<CasePermission> permissions = new();
 
 		foreach (var strategy in _caseActionsStrategies)
 		{
-			var permission = strategy.GetAllowedActionPermission(@case, userInfo);
+			var permission = strategy.GetAllowedActionPermission(concernsCase, userInfo);
 			if (permission > CasePermission.None)
 			{
 				permissions.Add(permission);
