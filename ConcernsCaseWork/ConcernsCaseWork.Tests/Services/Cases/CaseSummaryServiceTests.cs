@@ -137,6 +137,7 @@ public class CaseSummaryServiceTests
 		data.NtisUnderConsideration = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 		data.NtiWarningLetters = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 		data.SrmaCases = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
+		data.TrustFinancialForecasts = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 
 		mockCaseSummaryService
 			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
@@ -616,6 +617,7 @@ public class CaseSummaryServiceTests
 		data.NtisUnderConsideration = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 		data.NtiWarningLetters = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 		data.SrmaCases = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
+		data.TrustFinancialForecasts = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 
 		mockCaseSummaryService
 			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName))
@@ -1185,6 +1187,7 @@ public class CaseSummaryServiceTests
 		dto.NtiWarningLetters = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 		dto.SrmaCases = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 		dto.FinancialPlanCases = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
+		dto.TrustFinancialForecasts = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 
 		return dto;
 	}
@@ -1207,6 +1210,7 @@ public class CaseSummaryServiceTests
 		dto.NtiWarningLetters = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 		dto.SrmaCases = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 		dto.FinancialPlanCases = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
+		dto.TrustFinancialForecasts = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 		
 		return dto;
 	}
