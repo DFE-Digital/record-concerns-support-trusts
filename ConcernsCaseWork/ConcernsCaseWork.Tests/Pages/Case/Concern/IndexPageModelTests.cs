@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Concern;
 using ConcernsCaseWork.Redis.Models;
@@ -127,7 +128,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 			
 			Assert.That(pageModel.TypeModel, Is.Null);
 		}
@@ -282,7 +283,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var page = pageResponse as PageResult;
 			
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			Assert.That(page, Is.Not.Null);
 			
 			mockCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);
@@ -390,7 +391,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Concern
 			var page = pageResponse as PageResult;
 			
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			Assert.That(page, Is.Not.Null);
 			
 			mockCachedService.Verify(c => c.GetData(It.IsAny<string>()), Times.Once);

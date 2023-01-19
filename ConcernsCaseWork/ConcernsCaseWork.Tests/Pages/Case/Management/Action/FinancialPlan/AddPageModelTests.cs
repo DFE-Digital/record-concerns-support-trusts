@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
 using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Redis.Models;
@@ -87,7 +88,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 		}
 
 		[Test]

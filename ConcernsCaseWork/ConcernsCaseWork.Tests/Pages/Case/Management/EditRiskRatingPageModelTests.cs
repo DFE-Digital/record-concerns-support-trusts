@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Pages.Case.Management;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Ratings;
@@ -82,7 +83,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(page, Is.Not.Null);
 			Assert.IsNull(pageModel.CaseModel);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 			
 			mockCaseModelService.Verify(c => 
 				c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
@@ -108,7 +109,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(page, Is.Not.Null);
 			Assert.IsNull(pageModel.CaseModel);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
 			mockRatingModelService.Verify(c => c.GetSelectedRatingsModelById(It.IsAny<long>()), Times.Never);
@@ -154,7 +155,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			Assert.That(pageModel.CaseModel, Is.Not.Null);
 			Assert.That(pageModel.RatingsModel, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Once);
 			mockRatingModelService.Verify(c => c.GetSelectedRatingsModelById(It.IsAny<long>()), Times.Once);

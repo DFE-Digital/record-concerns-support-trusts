@@ -56,6 +56,7 @@ using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.PageHistory;
+using ConcernsCaseWork.Service.Permissions;
 
 namespace ConcernsCaseWork.Extensions
 {
@@ -193,6 +194,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ITeamsService, TeamsService>();
 			services.AddScoped<IDecisionService, DecisionService>();
 			services.AddScoped<ITrustFinancialForecastService, TrustFinancialForecastService>();
+			services.AddScoped<ICasePermissionsService, CasePermissionsService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
