@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Pages.Case.Management.Action;
 using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.Nti;
@@ -255,13 +256,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			ILogger<IndexPageModel> mockLogger,
 			INtiWarningLetterModelService ntiWarningLetterModelService = null,
 			INtiModelService ntiModelService = null,
+			ITrustFinancialForecastService trustFinancialForecastService = null,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
 			return new IndexPageModel(mockCaseModelService, mockSrmaService, mockFinancialPlanModelService, ntiUnderConsiderationModelService
-				, ntiWarningLetterModelService ?? CreateMock<INtiWarningLetterModelService>()
-				, ntiModelService ?? CreateMock<INtiModelService>()
+				, ntiWarningLetterModelService ?? Mock.Of<INtiWarningLetterModelService>()
+				, ntiModelService ?? Mock.Of<INtiModelService>()
+				, trustFinancialForecastService ?? Mock.Of<ITrustFinancialForecastService>()
 				, mockLogger)
 			{
 				PageContext = pageContext,
@@ -269,12 +272,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 				Url = new UrlHelper(actionContext),
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
-		}
-
-		private static T CreateMock<T>() where T : class
-		{
-			var moq = new Mock<T>();
-			return moq.Object;
 		}
 	}
 

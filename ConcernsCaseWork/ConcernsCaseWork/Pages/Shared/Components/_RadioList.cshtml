@@ -1,0 +1,32 @@
+@model ConcernsCaseWork.Models.RadioButtonsUiComponent
+<div class="govuk-form-group">
+	<fieldset class="govuk-fieldset">
+		<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+			<h2 class="govuk-heading-m">
+				@Model.Heading
+			</h2>
+		</legend>
+		<div class="govuk-radios" data-module="govuk-radios">
+			@foreach (var radioItem in Model.RadioItems)
+			{
+				var isChecked = Model.SelectedId == radioItem.Id ? "checked" : "";
+				
+				<div class="govuk-radios__item">
+					<input class="govuk-radios__input" 
+					       id="@radioItem.Id" 
+					       name="@Model.Name.@nameof(Model.SelectedId)" 
+					       type="radio" 
+					       data-testid="@radioItem.Id" 
+					       value="@radioItem.Id"
+					       @isChecked />
+
+					<label class="govuk-label govuk-radios__label" for="@radioItem.Id">
+						<span>
+							@radioItem.Label
+						</span>
+					</label>
+				</div>
+			}
+		</div>
+	</fieldset>
+</div>
