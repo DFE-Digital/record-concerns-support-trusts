@@ -9,6 +9,7 @@ using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome;
 using ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast;
 using ConcernsCaseWork.Data.Gateways;
+using ConcernsCaseWork.UserContext;
 
 namespace ConcernsCaseWork.API.StartupConfiguration
 {
@@ -31,7 +32,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 
 			return services;
 		}
-		
+
 		public static IServiceCollection AddUseCaseAsyncs(this IServiceCollection services)
 		{
 			var allTypes = typeof(IUseCaseAsync<,>).Assembly.GetTypes();
@@ -90,7 +91,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IGetConcernsCaseworkTeamOwners, GetConcernsCaseworkTeamOwners>();
 			services.AddScoped<IUpdateConcernsCaseworkTeam, UpdateConcernsCaseworkTeam>();
 			services.AddScoped<IConcernsTeamCaseworkGateway, ConcernsTeamCaseworkGateway>();
-			
+
 			services.AddScoped<ICaseSummaryGateway, CaseSummaryGateway>();
 
 			services.AddScoped<IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse>, CreateDecisionOutcome>();
@@ -117,6 +118,11 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IUseCaseAsync<CloseTrustFinancialForecastRequest, int>, CloseTrustFinancialForecast>();
 			services.AddScoped<ITrustFinancialForecastGateway, TrustFinancialForecastGateway>();
 
+			// case action permission strategies
+			services.AddScoped<IServerUserInfoService, ServerUserInfoService>();
+			services.AddScoped<ICaseActionPermissionStrategyRoot, CaseActionPermissionStrategyRoot>();
+			services.AddScoped<ICaseActionPermissionStrategy, IsCaseViewableStrategy>();
+			services.AddScoped<ICaseActionPermissionStrategy, IsCaseEditableStrategy>();
 			return services;
 		}
 	}

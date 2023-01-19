@@ -17,6 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Shared.Tes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{50900C52-FEC1-481F-91C1-66B987E483CE}"
 	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
 		..\.editorconfig = ..\.editorconfig
 		..\Dockerfile = ..\Dockerfile
 	EndProjectSection
@@ -42,6 +43,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.API.Contracts.Tests", "ConcernsCaseWork.API.Contracts.Tests\ConcernsCaseWork.API.Contracts.Tests.csproj", "{56E4D701-66D5-4635-8D44-05BA26A2E74B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.Data.Tests", "ConcernsCaseWork.Data.Tests\ConcernsCaseWork.Data.Tests.csproj", "{F099C498-7FDC-47C3-BB7D-D36C71DEEE28}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{63BE1D3D-2F5A-4427-8E5D-09656B116BD2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCaseWork.UserContext", "ConcernsCaseWork.UserContext\ConcernsCaseWork.UserContext.csproj", "{2C171A6B-1B1B-4B81-9D03-8473C4A9BCDC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConcernsCasework.UserContext.Tests", "ConcernsCasework.UserContext.Tests\ConcernsCasework.UserContext.Tests.csproj", "{CE84113F-049F-42B2-BD9B-F5F45243BA32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,9 +124,20 @@ Global
 		{F099C498-7FDC-47C3-BB7D-D36C71DEEE28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F099C498-7FDC-47C3-BB7D-D36C71DEEE28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F099C498-7FDC-47C3-BB7D-D36C71DEEE28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C171A6B-1B1B-4B81-9D03-8473C4A9BCDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C171A6B-1B1B-4B81-9D03-8473C4A9BCDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C171A6B-1B1B-4B81-9D03-8473C4A9BCDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C171A6B-1B1B-4B81-9D03-8473C4A9BCDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE84113F-049F-42B2-BD9B-F5F45243BA32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE84113F-049F-42B2-BD9B-F5F45243BA32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE84113F-049F-42B2-BD9B-F5F45243BA32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE84113F-049F-42B2-BD9B-F5F45243BA32}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CE84113F-049F-42B2-BD9B-F5F45243BA32} = {63BE1D3D-2F5A-4427-8E5D-09656B116BD2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5BEA9A4B-6448-415F-BBF7-A04C205256E5}
