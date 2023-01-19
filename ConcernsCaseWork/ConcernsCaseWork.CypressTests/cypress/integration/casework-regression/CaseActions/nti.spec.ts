@@ -327,9 +327,9 @@ describe("Testing case action NTI", () =>
                 .hasConditions("Trustee contact details")
                 .hasConditions("Qualified Floating Charge (QFC)")
                 .hasNotes("This is my final notes")
-                .hasNoEditButton()
-                .hasNoCloseButton()
-                .hasNoCancelButton()
-                .hasNoLiftButton();
+                .cannotEdit()
+                .cannotClose()
+                .cannotCancel()
+                .cannotLift();
     }
 });

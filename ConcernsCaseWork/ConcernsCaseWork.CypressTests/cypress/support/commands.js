@@ -28,8 +28,10 @@ import CaseManagementPage from "/cypress/pages/caseMangementPage";
 import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
 import { AuthenticationComponent } from "../auth/authenticationComponent";
 import { LogTask } from "./constants";
-import utils from "/cypress/support/utils";
 import "cypress-axe";
+import caseApi from "../api/caseApi";
+import concernsApi from "../api/concernsApi";
+import { Logger } from "cypress/common/logger";
 
 const concernsRgx = new RegExp(
 	/(Compliance|Financial|Force majeure|Governance|Irregularity)/,
@@ -622,21 +624,16 @@ Cypress.Commands.add("checkForExistingCase", function (forceCreate) {
 });
 
 Cypress.Commands.add("basicCreateCase", () => {
-	cy.get('[href="/case"]').click();
-	cy.get("#search").should("be.visible");
+    caseApi.post()
+    .then((caseResponse) => {
+        const caseId = caseResponse.urn;
+        concernsApi.post(caseId);
 
-	cy.randomSelectTrust();
-	cy.get("#search__option--0").click();
+        cy.visit(`/case/${caseId}/management`);
+        cy.reload();
 
-	cy.getById("continue").click();
-
-	cy.selectConcernType();
-	cy.selectRiskToTrust();
-	cy.selectTerritory();
-
-	let date = new Date();
-	cy.get("#issue").invoke("val", "Data entered at " + date);
-	cy.get("#case-details-form  button").click();
+		return cy.wrap(caseResponse.urn);
+    });
 });
 
 //description: creates a new case from the case list (home) page
