@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -8,8 +9,8 @@ namespace ConcernsCaseWork.Service.Types
 	public sealed class TypeService : ConcernsAbstractService, ITypeService
 	{
 		private readonly ILogger<TypeService> _logger;
-		
-		public TypeService(IHttpClientFactory clientFactory, ILogger<TypeService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
+
+		public TypeService(IHttpClientFactory clientFactory, ILogger<TypeService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}
@@ -19,22 +20,22 @@ namespace ConcernsCaseWork.Service.Types
 			try
 			{
 				_logger.LogInformation("TypeService::GetTypes");
-				
+
 				// Create a request
 				var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/concerns-types");
-				
+
 				// Create http client
 				var client = CreateHttpClient();
-				
+
 				// Execute request
 				var response = await client.SendAsync(request);
 
 				// Check status code
 				response.EnsureSuccessStatusCode();
-				
+
 				// Read response content
 				var content = await response.Content.ReadAsStringAsync();
-				
+
 				// Deserialize content to POCO
 				var apiListWrapperTypesDto = JsonConvert.DeserializeObject<ApiListWrapper<TypeDto>>(content);
 

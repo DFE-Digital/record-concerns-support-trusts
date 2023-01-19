@@ -1,4 +1,5 @@
 using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
@@ -16,24 +17,24 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 	{
 		private IDecisionService _decisionService;
 		private ICasePermissionsService _casePermissionsService;
-		private ILogger _logger;
+		private ILogger<IndexPageModel> _logger;
 
 		public ViewDecisionModel Decision { get; set; }
 		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case overview");
 
 		public IndexPageModel(
 			IDecisionService decisionService,
-			ICasePermissionsService casePermisisionsService,
+			ICasePermissionsService casePermissionsService,
 			ILogger<IndexPageModel> logger)
 		{
 			_decisionService = decisionService;
-			_casePermissionsService = casePermisisionsService;
+			_casePermissionsService = casePermissionsService;
 			_logger = logger;
 		}
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			_logger.LogInformation("Case::Action::Decision::IndexPageModel::OnGetAsync");
+			_logger.LogMethodEntered();
 
 			ViewData[ViewDataConstants.Title] = "Decision";
 
@@ -43,7 +44,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				TryGetRouteValueInt64("decisionId", out var decisionId);
 
 				var apiDecision = await _decisionService.GetDecision(urn, (int)decisionId);
-				var casePermissions = await _casePermissionsService.GetCasePermissions(urn);
+				var casePermissions = await _casePermissionsService.GetCasePermissions((int)urn);
 
 				Decision = DecisionMapping.ToViewDecisionModel(apiDecision, casePermissions);
 			}

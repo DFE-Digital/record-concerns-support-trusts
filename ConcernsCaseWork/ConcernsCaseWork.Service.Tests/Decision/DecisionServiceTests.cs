@@ -7,6 +7,7 @@ using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.UserContext;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -65,7 +66,7 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{expectedInputDto.ConcernsCaseUrn}/decisions", responseWrapper);
 			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
 
-			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>());
+			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
 			var result = await sut.PostDecision(expectedInputDto);
 
 			Assert.That(result, Is.Not.Null);
@@ -85,7 +86,7 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{urn}/decisions", responseWrapper);
 			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
 
-			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>());
+			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
 			var result = await sut.GetDecisionsByCaseUrn(urn);
 
 			result.Should().BeEquivalentTo(expectedResponseDto);
@@ -103,7 +104,7 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{1}/decisions/{2}", responseWrapper);
 			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
 
-			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>());
+			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
 			var result = await sut.PutDecision(1, 2, request);
 
 			result.ConcernsCaseUrn.Should().Be(response.ConcernsCaseUrn);
@@ -125,7 +126,7 @@ namespace ConcernsCaseWork.Service.Tests.Decision
 			var mockMessageHandler = SetupMessageHandler($"/concerns-cases/{caseUrn}/decisions/{decisionId}", responseWrapper);
 			var httpClientFactory = CreateHttpClientFactory(mockMessageHandler);
 
-			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>());
+			var sut = new DecisionService(httpClientFactory.Object, Mock.Of<ILogger<DecisionService>>(), Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
 			var result = await sut.PostDecisionOutcome(caseUrn, decisionId, expectedInputDto);
 
 			Assert.That(result, Is.Not.Null);
