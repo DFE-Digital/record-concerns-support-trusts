@@ -35,7 +35,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		[BindProperty(Name = "Urn", SupportsGet = true)]
 		public long CaseUrn { get; set; }
 		
-		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage);
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
 
 		public IndexPageModel(ISRMAService srmaService, ILogger<IndexPageModel> logger)
 		{
