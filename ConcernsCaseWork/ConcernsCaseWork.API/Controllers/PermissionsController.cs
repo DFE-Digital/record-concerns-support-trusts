@@ -22,22 +22,16 @@ namespace ConcernsCaseWork.API.Controllers
 	public class PermissionsController : Controller
 	{
 		private readonly IGetCasePermissionsUseCase _getCasePermissionsUseCase;
-		private readonly ICaseActionPermissionStrategyRoot _caseActionPermissionStrategyRoot;
-		private readonly ILogger<ConcernsCaseController> _logger;
-		private readonly IGetConcernsCaseByUrn _getConcernsCaseByUrn;
+		private readonly ILogger<PermissionsController> _logger;
 		private readonly IServerUserInfoService _userInfoService;
 
 		public PermissionsController(
-			ILogger<ConcernsCaseController> logger,
-			IGetConcernsCaseByUrn getConcernsCaseByUrn,
+			ILogger<PermissionsController> logger,
 			IServerUserInfoService userInfoService,
-			ICaseActionPermissionStrategyRoot caseActionPermissionStrategyRoot,
 			IGetCasePermissionsUseCase getCasePermissionsUseCase)
 		{
 			_logger = Guard.Against.Null(logger);
-			_getConcernsCaseByUrn = Guard.Against.Null(getConcernsCaseByUrn);
 			_userInfoService = Guard.Against.Null(userInfoService);
-			_caseActionPermissionStrategyRoot = Guard.Against.Null(caseActionPermissionStrategyRoot);
 			_getCasePermissionsUseCase = Guard.Against.Null(getCasePermissionsUseCase);
 		}
 
@@ -51,7 +45,8 @@ namespace ConcernsCaseWork.API.Controllers
 
 			if (_userInfoService.UserInfo == null)
 			{
-				throw new NullReferenceException("User information is null, cannot determined if current user owns cases or has permissions");
+				_logger.LogError("User information is null, cannot determined if current user owns cases or has permissions");
+				return BadRequest("User information is null, cannot determined if current user owns cases or has permissions");
 			}
 
 			try
