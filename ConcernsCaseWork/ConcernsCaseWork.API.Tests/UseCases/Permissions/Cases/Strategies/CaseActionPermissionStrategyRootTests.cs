@@ -2,7 +2,8 @@
 using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
 using ConcernsCaseWork.API.Contracts.Permissions;
-using ConcernsCaseWork.API.ResponseModels;
+using ConcernsCaseWork.API.UseCases.Permissions.Cases.Strategies;
+using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.UserContext;
 using FluentAssertions;
 using Moq;
@@ -10,7 +11,7 @@ using System;
 using System.Linq;
 using Xunit;
 
-namespace ConcernsCaseWork.API.Tests.Permissions.Cases
+namespace ConcernsCaseWork.API.Tests.UseCases.Permissions.Cases.Strategies
 {
 	public class CaseActionPermissionStrategyRootTests
 	{
@@ -24,7 +25,7 @@ namespace ConcernsCaseWork.API.Tests.Permissions.Cases
 		[Fact]
 		public void GetPermittedCaseActions_Calls_All_Strategies()
 		{
-			var fakeCase = new ConcernsCaseResponse();
+			var fakeCase = new ConcernsCase();
 			var fakeUser = new UserInfo();
 
 			var mockStrategies = new ICaseActionPermissionStrategy[]
@@ -44,7 +45,7 @@ namespace ConcernsCaseWork.API.Tests.Permissions.Cases
 		[Fact]
 		public void GetPermittedCaseActions_Returns_Only_Positive_Results()
 		{
-			var fakeCase = new ConcernsCaseResponse();
+			var fakeCase = new ConcernsCase();
 			var fakeUser = new UserInfo();
 
 			var mockStrategies = new ICaseActionPermissionStrategy[]
@@ -64,6 +65,25 @@ namespace ConcernsCaseWork.API.Tests.Permissions.Cases
 		}
 
 		[Fact]
+		public void GetPermittedCaseActions_If_Duplicate_Permissions_Detected_Throws_Exception()
+		{
+			var fakeCase = new ConcernsCase();
+			var fakeUser = new UserInfo();
+
+			var mockStrategies = new ICaseActionPermissionStrategy[]
+			{
+				Mock.Of<ICaseActionPermissionStrategy>(x => x.GetAllowedActionPermission(fakeCase, fakeUser) == CasePermission.View),
+				Mock.Of<ICaseActionPermissionStrategy>(x => x.GetAllowedActionPermission(fakeCase, fakeUser) == CasePermission.View),
+			};
+
+			var sut = new CaseActionPermissionStrategyRoot(mockStrategies);
+
+			Action act = () => sut.GetPermittedCaseActions(fakeCase, fakeUser);
+
+			act.Should().Throw<InvalidOperationException>().And.Message.Should().Be("One or more strategies returned a duplicate permission. Check that strategies are not being called multiple times and that strategies return unique permissions.");
+		}
+
+		[Fact]
 		public void Constructors_Guard_Against_Null_Arguments()
 		{
 			var fixture = new Fixture();
@@ -77,6 +97,9 @@ namespace ConcernsCaseWork.API.Tests.Permissions.Cases
 		{
 			var fixture = new Fixture();
 			fixture.Customize(new AutoMoqCustomization());
+			fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
+				.ForEach(b => fixture.Behaviors.Remove(b));
+			fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 			var assertion = fixture.Create<GuardClauseAssertion>();
 			assertion.Verify(typeof(CaseActionPermissionStrategyRoot).GetMethods());
 		}
