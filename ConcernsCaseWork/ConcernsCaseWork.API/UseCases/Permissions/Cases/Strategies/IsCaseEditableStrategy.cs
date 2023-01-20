@@ -35,6 +35,5 @@ public class IsCaseEditableStrategy: ICaseActionPermissionStrategy
 		}
 
 		return CasePermission.None;
-
 	}
 }

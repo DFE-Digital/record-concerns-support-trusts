@@ -1,21 +1,18 @@
-﻿using AutoFixture.AutoMoq;
+﻿using AutoFixture;
+using AutoFixture.AutoMoq;
 using AutoFixture.Idioms;
-using AutoFixture;
 using ConcernsCaseWork.API.Contracts.Permissions;
-using ConcernsCaseWork.API.UseCases.Permissions.Cases.Strategies;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
 using ConcernsCaseWork.API.UseCases.Permissions.Cases;
+using ConcernsCaseWork.API.UseCases.Permissions.Cases.Strategies;
+using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.UserContext;
 using FluentAssertions;
 using Moq;
+using System.Linq;
 using System.Threading;
-using ConcernsCaseWork.Data.Gateways;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.UseCases.Permissions.Cases
 {
@@ -45,7 +42,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases.Permissions.Cases
 			var userInfo = new UserInfo() { Name = "John.Smith@Dfe.gov.uk", Roles = new[] { Claims.CaseWorkerRoleClaim } };
 
 			var mockRootStrategy = fixture.Freeze<Mock<ICaseActionPermissionStrategyRoot>>();
-			mockRootStrategy.Setup(x => x.GetPermittedCaseActions(It.IsAny<ConcernsCase>(), userInfo)).Returns(() => new [] { CasePermission.View });
+			mockRootStrategy.Setup(x => x.GetPermittedCaseActions(It.IsAny<ConcernsCase>(), userInfo)).Returns(() => new[] { CasePermission.View });
 
 			var mockGateway = fixture.Freeze<Mock<IConcernsCaseGateway>>();
 			foreach (long caseId in caseIds)
