@@ -1,3 +1,5 @@
+import { Logger } from "cypress/common/logger";
+
 class HomePage {
 
     //locators
@@ -29,15 +31,18 @@ class HomePage {
         return cy.get('.govuk-table__body tr');
     }
     
-
     //methods
-
     clickFirstActiveCase() {
         this.getfirstActiveCase().click();
     }
 
+    public createCase(): this
+    {
+        Logger.Log("Creating case");
+        cy.getByTestId("create-case").click();
 
+        return this;
+    }
 }
 
-    
-    export default new HomePage();
+export default new HomePage();
