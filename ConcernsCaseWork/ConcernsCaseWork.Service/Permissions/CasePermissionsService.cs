@@ -9,6 +9,7 @@ using System.Collections.Immutable;
 
 namespace ConcernsCaseWork.Service.Permissions
 {
+	// TODO: Rename this service to 'PermissionsService'
 	public class CasePermissionsService : ConcernsAbstractService, ICasePermissionsService
 	{
 		private readonly ILogger<CasePermissionsService> _logger;
