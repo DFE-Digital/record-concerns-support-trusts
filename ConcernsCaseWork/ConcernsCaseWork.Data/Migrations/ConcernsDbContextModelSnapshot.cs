@@ -2550,14 +2550,14 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset?>("SFSOInitialReviewHappenedAt")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime?>("SFSOInitialReviewHappenedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SRMAOfferedAfterTFF")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset?>("TrustRespondedAt")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime?>("TrustRespondedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("datetimeoffset");

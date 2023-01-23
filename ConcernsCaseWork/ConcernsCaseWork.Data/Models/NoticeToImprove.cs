@@ -3,12 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConcernsCaseWork.Data.Models
 {
-    [Table("NoticeToImproveCase", Schema = "concerns")]
-    public class NoticeToImprove
+	public class NoticeToImprove
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+	    public long Id { get; set; }
         public int CaseUrn { get; set; }
         public int? StatusId { get; set; }
         public DateTime? DateStarted { get; set; }

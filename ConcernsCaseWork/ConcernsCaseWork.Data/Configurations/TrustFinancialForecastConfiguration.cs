@@ -12,8 +12,7 @@ public class TrustFinancialForecastConfiguration : IEntityTypeConfiguration<Trus
 		
 		builder.HasKey(e => e.Id)
 				.HasName("PK__TrustFinancialForecast");
-		
-		
+
 		builder.Property(e => e.ForecastingToolRanAt)
 			.HasConversion<string>();
 		
