@@ -13,5 +13,7 @@ public class NTIUnderConsiderationCaseConfiguration : IEntityTypeConfiguration<N
 		builder.HasKey(e => e.Id);
 
 		builder.HasOne(x => x.ClosedStatus);
+		
+		builder.HasIndex(x => new {x.CaseUrn, x.CreatedAt}).IsUnique();
 	}
 }

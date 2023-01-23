@@ -11,5 +11,7 @@ public class FinancialPlanCaseConfiguration : IEntityTypeConfiguration<Financial
 		builder.ToTable("FinancialPlanCase", "concerns");
 		
 		builder.HasKey(e => e.Id);
+		
+		builder.HasIndex(x => new {x.CaseUrn, x.CreatedAt}).IsUnique();
 	}
 }

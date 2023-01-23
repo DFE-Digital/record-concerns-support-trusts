@@ -21,5 +21,7 @@ public class TrustFinancialForecastConfiguration : IEntityTypeConfiguration<Trus
 		
 		builder.Property(e => e.SRMAOfferedAfterTFF)
 			.HasConversion<string>();
+
+		builder.HasIndex(x => new {x.CaseUrn, x.CreatedAt}).IsUnique();
 	}
 }

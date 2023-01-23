@@ -13,5 +13,6 @@ public class DecisionConfiguration : IEntityTypeConfiguration<Decision>
 		builder.Property(x => x.TotalAmountRequested).HasColumnType("money");
 		builder.HasMany(x => x.DecisionTypes).WithOne();
 		builder.HasOne(x => x.Outcome);
+		builder.HasIndex(x => new {x.ConcernsCaseId, x.CreatedAt}).IsUnique();
 	}
 }

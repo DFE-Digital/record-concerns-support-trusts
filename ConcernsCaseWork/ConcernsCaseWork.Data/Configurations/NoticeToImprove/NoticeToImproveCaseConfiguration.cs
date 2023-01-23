@@ -10,5 +10,7 @@ public class NoticeToImproveCaseConfiguration : IEntityTypeConfiguration<Models.
 		builder.ToTable("NoticeToImproveCase", "concerns");
 
 		builder.HasKey(e => e.Id);
+		
+		builder.HasIndex(x => new {x.CaseUrn, x.CreatedAt}).IsUnique();
 	}
 }

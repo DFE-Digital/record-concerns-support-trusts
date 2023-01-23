@@ -32,5 +32,7 @@ public class ConcernsRecordConfiguration : IEntityTypeConfiguration<ConcernsReco
 			.WithMany(e => e.FkConcernsRecord)
 			.HasForeignKey(e => e.MeansOfReferralId)
 			.HasConstraintName("FK__ConcernsRecord_ConcernsMeansOfReferral");
+		
+		builder.HasIndex(x => new {x.CaseId, x.CreatedAt}).IsUnique();
 	}
 }

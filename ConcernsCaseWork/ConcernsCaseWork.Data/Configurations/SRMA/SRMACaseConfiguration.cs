@@ -11,5 +11,7 @@ public class SRMACaseConfiguration : IEntityTypeConfiguration<SRMACase>
 		builder.ToTable("SRMACase", "concerns");
 
 		builder.HasKey(e => e.Id);
+		
+		builder.HasIndex(x => new {x.CaseUrn, x.CreatedAt}).IsUnique();
 	}
 }
