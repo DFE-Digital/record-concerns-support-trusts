@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public long? CaseUrn { get; set; }
 		
 		[BindProperty(Name="case-history")]
-		[MaxLength(4000, ErrorMessage = "Case history must be 4000 characters or less")]
+		[MaxLength(4300, ErrorMessage = "Case history must be 4300 characters or less")]
 		public string CaseHistory { get; set; }
 		
 		public EditCaseHistoryPageModel(ICaseModelService caseModelService, IClaimsPrincipalHelper claimsPrincipalHelper, ILogger<EditCaseHistoryPageModel> logger)

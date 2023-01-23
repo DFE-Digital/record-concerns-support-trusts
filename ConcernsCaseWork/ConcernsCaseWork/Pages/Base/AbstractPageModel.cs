@@ -1,9 +1,7 @@
 ﻿using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Middleware;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.PageHistory;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Linq;
 

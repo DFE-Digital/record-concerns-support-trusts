@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -9,7 +10,7 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 	{
 		private readonly ILogger<NtiUnderConsiderationReasonsService> _logger;
 
-		public NtiUnderConsiderationStatusesService(IHttpClientFactory clientFactory, ILogger<NtiUnderConsiderationReasonsService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
+		public NtiUnderConsiderationStatusesService(IHttpClientFactory clientFactory, ILogger<NtiUnderConsiderationReasonsService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}

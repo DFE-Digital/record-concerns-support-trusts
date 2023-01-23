@@ -42,6 +42,7 @@ public class CaseSummaryResponseFactoryTests
 		result.NoticesToImprove.Should().BeEmpty();
 		result.NtiWarningLetters.Should().BeEmpty();
 		result.SrmaCases.Should().BeEmpty();
+		result.TrustFinancialForecasts.Should().BeEmpty();
 	}
 
 	[Fact]
@@ -58,6 +59,7 @@ public class CaseSummaryResponseFactoryTests
 		caseSummaryVm.NtiWarningLetters = BuildListActions();
 		caseSummaryVm.NtisUnderConsideration = BuildListActions();
 		caseSummaryVm.SrmaCases = BuildListActions();
+		caseSummaryVm.TrustFinancialForecasts = BuildListActions();
 
 		// act
 		var result = CaseSummaryResponseFactory.Create(caseSummaryVm);
@@ -77,6 +79,7 @@ public class CaseSummaryResponseFactoryTests
 		result.NoticesToImprove.Should().NotBeEmpty();
 		result.NtiWarningLetters.Should().NotBeEmpty();
 		result.SrmaCases.Should().NotBeEmpty();
+		result.TrustFinancialForecasts.Should().NotBeEmpty();
 		
 		result.ActiveConcerns.Count().Should().Be(caseSummaryVm.ActiveConcerns.Count());
 		result.Decisions.Count().Should().Be(caseSummaryVm.Decisions.Count());
@@ -85,13 +88,13 @@ public class CaseSummaryResponseFactoryTests
 		result.NoticesToImprove.Count().Should().Be(caseSummaryVm.NoticesToImprove.Count());
 		result.NtiWarningLetters.Count().Should().Be(caseSummaryVm.NtiWarningLetters.Count());
 		result.SrmaCases.Count().Should().Be(caseSummaryVm.SrmaCases.Count());
+		result.TrustFinancialForecasts.Count().Should().Be(caseSummaryVm.TrustFinancialForecasts.Count());
 	}
 	
 	[Fact]
 	public void ReturnsClosedCaseSummaryResponse_WhenGivenAClosedCaseSummaryVmWithNoConcernsOrActionsOrDecisions()
 	{
 		// arrange
-		var ratingName = _fixture.Create<string>();
 		var caseSummaryVm = Builder<ClosedCaseSummaryVm>.CreateNew().Build();
 
 		// act
@@ -112,13 +115,13 @@ public class CaseSummaryResponseFactoryTests
 		result.NoticesToImprove.Should().BeEmpty();
 		result.NtiWarningLetters.Should().BeEmpty();
 		result.SrmaCases.Should().BeEmpty();
+		result.TrustFinancialForecasts.Should().BeEmpty();
 	}
 
 	[Fact]
 	public void ReturnsClosedCaseSummaryResponse_WhenGivenAClosedCaseSummaryVmWithConcernsAndActionsAndDecisions()
 	{
 		// arrange
-		var ratingName = _fixture.Create<string>();
 		var caseSummaryVm = Builder<ClosedCaseSummaryVm>.CreateNew().Build();
 		caseSummaryVm.ClosedConcerns = BuildListConcerns();
 		caseSummaryVm.Decisions = BuildListDecisions();
@@ -127,6 +130,7 @@ public class CaseSummaryResponseFactoryTests
 		caseSummaryVm.NtiWarningLetters = BuildListActions();
 		caseSummaryVm.NtisUnderConsideration = BuildListActions();
 		caseSummaryVm.SrmaCases = BuildListActions();
+		caseSummaryVm.TrustFinancialForecasts = BuildListActions();
 
 		// act
 		var result = CaseSummaryResponseFactory.Create(caseSummaryVm);
@@ -145,6 +149,7 @@ public class CaseSummaryResponseFactoryTests
 		result.NoticesToImprove.Should().NotBeEmpty();
 		result.NtiWarningLetters.Should().NotBeEmpty();
 		result.SrmaCases.Should().NotBeEmpty();
+		result.TrustFinancialForecasts.Should().NotBeEmpty();
 		
 		result.ClosedConcerns.Count().Should().Be(caseSummaryVm.ClosedConcerns.Count());
 		result.Decisions.Count().Should().Be(caseSummaryVm.Decisions.Count());
@@ -153,6 +158,7 @@ public class CaseSummaryResponseFactoryTests
 		result.NoticesToImprove.Count().Should().Be(caseSummaryVm.NoticesToImprove.Count());
 		result.NtiWarningLetters.Count().Should().Be(caseSummaryVm.NtiWarningLetters.Count());
 		result.SrmaCases.Count().Should().Be(caseSummaryVm.SrmaCases.Count());
+		result.TrustFinancialForecasts.Count().Should().Be(caseSummaryVm.TrustFinancialForecasts.Count());
 	}
 
 	private List<CaseSummaryVm.Concern> BuildListConcerns()
@@ -182,7 +188,7 @@ public class CaseSummaryResponseFactoryTests
 			submissionRequired: _fixture.Create<bool>(),
 			submissionDocumentLink: new string(_fixture.CreateMany<char>(Decision.MaxUrlLength).ToArray()),
 			receivedRequestDate: DateTimeOffset.Now,
-			decisionTypes: new DecisionType[] { new DecisionType(Data.Enums.Concerns.DecisionType.NoticeToImprove) },
+			decisionTypes: new DecisionType[] { new (Data.Enums.Concerns.DecisionType.NoticeToImprove) },
 			totalAmountRequested: _fixture.Create<decimal>(),
 			supportingNotes: new string(_fixture.CreateMany<char>(Decision.MaxSupportingNotesLength).ToArray()),
 			DateTimeOffset.Now

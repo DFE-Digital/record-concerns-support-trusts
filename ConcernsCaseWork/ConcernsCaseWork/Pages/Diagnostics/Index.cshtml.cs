@@ -39,7 +39,7 @@ namespace ConcernsCaseWork.Pages.Diagnostics
 		{
 			this.ReleaseTag = _configuration["ConcernsCasework:ReleaseTag"];
 
-
+			var r = Request;
 
 			switch (_env.IsDevelopment())
 			{

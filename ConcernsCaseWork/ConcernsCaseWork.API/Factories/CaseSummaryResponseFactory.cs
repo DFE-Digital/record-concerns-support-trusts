@@ -21,6 +21,7 @@ public static class CaseSummaryResponseFactory
 			NoticesToImprove = Create(caseSummary.NoticesToImprove),
 			Rating = ConcernsRatingResponseFactory.Create(caseSummary.Rating),
 			SrmaCases = Create(caseSummary.SrmaCases),
+			TrustFinancialForecasts = Create(caseSummary.TrustFinancialForecasts),
 			StatusName = caseSummary.StatusName,
 			TrustUkPrn = caseSummary.TrustUkPrn,
 			UpdatedAt = caseSummary.UpdatedAt
@@ -42,6 +43,7 @@ public static class CaseSummaryResponseFactory
 			NtisUnderConsideration = Create(caseSummary.NtisUnderConsideration),
 			NoticesToImprove = Create(caseSummary.NoticesToImprove),
 			SrmaCases = Create(caseSummary.SrmaCases),
+			TrustFinancialForecasts = Create(caseSummary.TrustFinancialForecasts),
 			StatusName = caseSummary.StatusName,
 			TrustUkPrn = caseSummary.TrustUkPrn,
 			UpdatedAt = caseSummary.UpdatedAt
