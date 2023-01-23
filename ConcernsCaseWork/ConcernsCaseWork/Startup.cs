@@ -161,7 +161,11 @@ namespace ConcernsCaseWork
 			app.UseRouting();
 
 			// Enable Sentry middleware for performance monitoring
-			app.UseSentryTracing();
+			if (!env.IsDevelopment())
+			{
+				app.UseSentryTracing();
+			}
+
 			app.UseAuthentication();
 			app.UseAuthorization();
 			app.UseMiddleware<CorrelationIdMiddleware>();

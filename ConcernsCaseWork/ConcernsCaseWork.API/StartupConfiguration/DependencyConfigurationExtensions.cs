@@ -8,6 +8,7 @@ using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome;
 using ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast;
+using ConcernsCaseWork.API.UseCases.Permissions.Cases.Strategies;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.UserContext;
 
