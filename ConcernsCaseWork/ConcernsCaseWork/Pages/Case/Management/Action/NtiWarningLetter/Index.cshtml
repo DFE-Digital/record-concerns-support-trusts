@@ -100,7 +100,7 @@
                     <td class="govuk-table__cell" data-testid="nti-date-sent">
                         @if (@Model.NtiWarningLetterModel.SentDate.HasValue)
                         {
-                            RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiWarningLetterModel.SentDate.Value));
+                            RenderValue(DateTimeHelper.ParseToDisplayDate(Model.NtiWarningLetterModel.SentDate));
                         }
                         else
                         {

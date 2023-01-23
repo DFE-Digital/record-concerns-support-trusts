@@ -1,5 +1,6 @@
 using AutoFixture;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Ratings;
@@ -206,7 +207,7 @@ public class CaseSummaryServiceTests
 		// assert
 		result.Count.Should().Be(data.Count);
 		var sortedData = data.OrderByDescending(d => d.CreatedAt);
-		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => r.CreatedAt.ToDayMonthYear()));
+		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => DateTimeHelper.ParseToDisplayDate(r.CreatedAt)));
 	}
 		
 	[Test]
@@ -445,7 +446,7 @@ public class CaseSummaryServiceTests
 		// assert
 		result.Count.Should().Be(data.Count);
 		var sortedData = data.OrderByDescending(d => d.CreatedAt);
-		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => r.CreatedAt.ToDayMonthYear()));
+		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => DateTimeHelper.ParseToDisplayDate(r.CreatedAt)));
 	}
 		
 	[Test]
@@ -685,7 +686,7 @@ public class CaseSummaryServiceTests
 		// assert
 		result.Count.Should().Be(data.Count);
 		var sortedData = data.OrderByDescending(d => d.CreatedAt);
-		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => r.CreatedAt.ToDayMonthYear()));
+		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => DateTimeHelper.ParseToDisplayDate(r.CreatedAt)));
 	}
 
 	[Test]
@@ -886,7 +887,7 @@ public class CaseSummaryServiceTests
 		// assert
 		result.Count.Should().Be(data.Count);
 		var sortedData = data.OrderByDescending(d => d.CreatedAt);
-		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => r.CreatedAt.ToDayMonthYear()));
+		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => DateTimeHelper.ParseToDisplayDate(r.CreatedAt)));
 	}
 
 	[Test]
@@ -1086,7 +1087,7 @@ public class CaseSummaryServiceTests
 		// assert
 		result.Count.Should().Be(data.Count);
 		var sortedData = data.OrderByDescending(d => d.CreatedAt);
-		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => r.CreatedAt.ToDayMonthYear()));
+		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => DateTimeHelper.ParseToDisplayDate(r.CreatedAt)));
 	}
 	
 	[Test]
