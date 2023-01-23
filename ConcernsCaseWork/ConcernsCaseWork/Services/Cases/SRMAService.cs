@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Services.Cases
 
 		public async Task SetDateAccepted(long srmaId, DateTime? acceptedDate)
 		{
-			await _cachedSrmaProvider.SetDateAccepted(srmaId, acceptedDate);	
+			await _cachedSrmaProvider.SetDateAccepted(srmaId, acceptedDate);
 		}
 
 		public async Task SetDateClosed(long srmaId)
@@ -70,12 +70,12 @@ namespace ConcernsCaseWork.Services.Cases
 
 		public async Task SetOfferedDate(long srmaId, DateTime offeredDate)
 		{
-			await _cachedSrmaProvider.SetOfferedDate(srmaId, offeredDate);	
+			await _cachedSrmaProvider.SetOfferedDate(srmaId, offeredDate);
 		}
 
 		public async Task SetReason(long srmaId, SRMAReasonOffered reason)
 		{
-			await _cachedSrmaProvider.SetReason(srmaId, (ConcernsCaseWork.Service.CaseActions.SRMAReasonOffered)reason);	
+			await _cachedSrmaProvider.SetReason(srmaId, (ConcernsCaseWork.Service.CaseActions.SRMAReasonOffered)reason);
 		}
 
 		public async Task SetStatus(long srmaId, SRMAStatus status)

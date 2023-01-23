@@ -139,6 +139,7 @@ public class CaseSummaryService : ICaseSummaryService
 		allActionsAndDecisions.AddRange(caseSummary.NtisUnderConsideration);
 		allActionsAndDecisions.AddRange(caseSummary.NtiWarningLetters);
 		allActionsAndDecisions.AddRange(caseSummary.SrmaCases);
+		allActionsAndDecisions.AddRange(caseSummary.TrustFinancialForecasts);
 
 		return allActionsAndDecisions
 			.OrderBy(action => action.CreatedAt)

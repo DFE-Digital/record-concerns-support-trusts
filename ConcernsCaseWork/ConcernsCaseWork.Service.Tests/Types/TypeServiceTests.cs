@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
@@ -36,7 +37,7 @@ namespace ConcernsCaseWork.Service.Tests.Types
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<TypeService>>();
-			var typeService = new TypeService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
+			var typeService = new TypeService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
 
 			// act
 			var types = await typeService.GetTypes();
@@ -78,7 +79,7 @@ namespace ConcernsCaseWork.Service.Tests.Types
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<TypeService>>();
-			var typeService = new TypeService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
+			var typeService = new TypeService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
 
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => typeService.GetTypes());
@@ -106,7 +107,7 @@ namespace ConcernsCaseWork.Service.Tests.Types
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
 			var logger = new Mock<ILogger<TypeService>>();
-			var typeService = new TypeService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
+			var typeService = new TypeService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
 
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => typeService.GetTypes());

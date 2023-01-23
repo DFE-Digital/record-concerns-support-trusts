@@ -1,11 +1,16 @@
 ﻿using ConcernsCaseWork.API.Contracts.Decisions.Outcomes;
 using ConcernsCaseWork.API.Contracts.RequestModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.RequestModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
 using ConcernsCaseWork.API.Factories.Concerns.Decisions;
 using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome;
+using ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast;
+using ConcernsCaseWork.API.UseCases.Permissions.Cases.Strategies;
 using ConcernsCaseWork.Data.Gateways;
+using ConcernsCaseWork.UserContext;
 
 namespace ConcernsCaseWork.API.StartupConfiguration
 {
@@ -28,7 +33,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 
 			return services;
 		}
-		
+
 		public static IServiceCollection AddUseCaseAsyncs(this IServiceCollection services)
 		{
 			var allTypes = typeof(IUseCaseAsync<,>).Assembly.GetTypes();
@@ -87,7 +92,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IGetConcernsCaseworkTeamOwners, GetConcernsCaseworkTeamOwners>();
 			services.AddScoped<IUpdateConcernsCaseworkTeam, UpdateConcernsCaseworkTeam>();
 			services.AddScoped<IConcernsTeamCaseworkGateway, ConcernsTeamCaseworkGateway>();
-			
+
 			services.AddScoped<ICaseSummaryGateway, CaseSummaryGateway>();
 
 			services.AddScoped<IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse>, CreateDecisionOutcome>();
@@ -106,7 +111,19 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IUseCaseAsync<(int urn, int decisionId, UpdateDecisionRequest details), UpdateDecisionResponse>, UpdateDecision>();
 			services.AddScoped<IUpdateDecisionResponseFactory, UpdateDecisionResponseFactory>();
 			services.AddScoped<ICloseDecisionResponseFactory, CloseDecisionResponseFactory>();
+			
+			services.AddScoped<IUseCaseAsync<CreateTrustFinancialForecastRequest, int>, CreateTrustFinancialForecast>();
+			services.AddScoped<IUseCaseAsync<UpdateTrustFinancialForecastRequest, int>, UpdateTrustFinancialForecast>();
+			services.AddScoped<IUseCaseAsync<GetTrustFinancialForecastByIdRequest, TrustFinancialForecastResponse>, GetTrustFinancialForecastById>();
+			services.AddScoped<IUseCaseAsync<GetTrustFinancialForecastsForCaseRequest, IEnumerable<TrustFinancialForecastResponse>>, GetTrustFinancialForecastsForCase>();
+			services.AddScoped<IUseCaseAsync<CloseTrustFinancialForecastRequest, int>, CloseTrustFinancialForecast>();
+			services.AddScoped<ITrustFinancialForecastGateway, TrustFinancialForecastGateway>();
 
+			// case action permission strategies
+			services.AddScoped<IServerUserInfoService, ServerUserInfoService>();
+			services.AddScoped<ICaseActionPermissionStrategyRoot, CaseActionPermissionStrategyRoot>();
+			services.AddScoped<ICaseActionPermissionStrategy, IsCaseViewableStrategy>();
+			services.AddScoped<ICaseActionPermissionStrategy, IsCaseEditableStrategy>();
 			return services;
 		}
 	}
