@@ -36,7 +36,14 @@ namespace ConcernsCaseWork.UserContext
 				.Select(x => x.Value)
 				.ToArray();
 
-			return new UserInfo() { Name = name, Roles = roles };
+			if (string.IsNullOrWhiteSpace(name))
+			{
+				return null;
+			}
+			else
+			{
+				return new UserInfo() { Name = name, Roles = roles };
+			}
 		}
 
 

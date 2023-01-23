@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.UserContext
 		{
 
 		}
-		public UserInfo? UserInfo { get; private set; }
+		public UserInfo UserInfo { get; private set; }
 
 		public void SetPrincipal(ClaimsPrincipal claimsPrincipal)
 		{
