@@ -36,7 +36,7 @@ namespace ConcernsCaseWork.UserContext
 				.Select(x => x.Value)
 				.ToArray();
 
-			if (string.IsNullOrWhiteSpace(name))
+			if (string.IsNullOrWhiteSpace(name) || roles.Length==0)
 			{
 				return null;
 			}
