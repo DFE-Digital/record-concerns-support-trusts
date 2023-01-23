@@ -128,7 +128,23 @@ class CaseManagementPage {
         });
     }
 
-    public hasValidationError(value: string): this {
+    public createCase(): this
+    {
+        Logger.Log("Creating case");
+
+        cy.getByTestId("create-case-button").click();
+
+        return this;
+    }
+
+    public hasCaseHistory(value: string): this {
+        Logger.Log(`Has case history ${value}`);
+        cy.getByTestId("case-history").should("contain.text", value);
+
+        return this;
+    }
+
+    public hasClosedCaseValidationError(value: string): this {
         cy.getByTestId("case-closure-validation-errors").should("contain.text", value);
 
         return this;
@@ -382,8 +398,8 @@ class CaseManagementPage {
         return this;
     }
 
-    public hasCloseCasePageValidationErrors(value: string): this {
-        Logger.Log(`Has validation error ${value} on the case closure page`);
+    public hasValidationError(value: string): this {
+        Logger.Log(`Has validation error ${value}`);
         cy.getById("errorSummary").should("contain.text", value);
 
         return this;
