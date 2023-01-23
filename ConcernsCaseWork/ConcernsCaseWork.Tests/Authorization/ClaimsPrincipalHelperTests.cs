@@ -66,7 +66,7 @@ namespace ConcernsCaseWork.Tests.Authorization
 		public void Given_CaseWorker_Role_When_IsCaseWorker_Then_Returns_Expectation(bool expectation)
 		{
 			var mockPrincipal = new Mock<IPrincipal>();
-			mockPrincipal.Setup(x => x.IsInRole(UserInfo.CaseWorkerRoleClaim)).Returns(expectation);
+			mockPrincipal.Setup(x => x.IsInRole(Claims.CaseWorkerRoleClaim)).Returns(expectation);
 
 			var sut = new ClaimsPrincipalHelper();
 			var actual = sut.IsCaseworker(mockPrincipal.Object);
@@ -80,7 +80,7 @@ namespace ConcernsCaseWork.Tests.Authorization
 		public void Given_IsTeamLeader_Role_When_IsCaseWorker_Then_Returns_Expectation(bool expectation)
 		{
 			var mockPrincipal = new Mock<IPrincipal>();
-			mockPrincipal.Setup(x => x.IsInRole(UserInfo.TeamLeaderRoleClaim)).Returns(expectation);
+			mockPrincipal.Setup(x => x.IsInRole(Claims.TeamLeaderRoleClaim)).Returns(expectation);
 
 			var sut = new ClaimsPrincipalHelper();
 			var actual = sut.IsTeamLeader(mockPrincipal.Object);
@@ -94,7 +94,7 @@ namespace ConcernsCaseWork.Tests.Authorization
 		public void Given_IsAdmin_Role_When_IsCaseWorker_Then_Returns_Expectation(bool expectation)
 		{
 			var mockPrincipal = new Mock<IPrincipal>();
-			mockPrincipal.Setup(x => x.IsInRole(UserInfo.AdminRoleClaim)).Returns(expectation);
+			mockPrincipal.Setup(x => x.IsInRole(Claims.AdminRoleClaim)).Returns(expectation);
 
 			var sut = new ClaimsPrincipalHelper();
 			var actual = sut.IsAdmin(mockPrincipal.Object);
