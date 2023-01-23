@@ -22,18 +22,18 @@ public class ClaimsPrincipalHelper : IClaimsPrincipalHelper
 	public bool IsCaseworker(IPrincipal principal)
 	{
 		Guard.Against.Null(principal);
-		return principal.IsInRole(UserInfo.CaseWorkerRoleClaim);
+		return principal.IsInRole(Claims.CaseWorkerRoleClaim);
 	}
 
 	public bool IsTeamLeader(IPrincipal principal)
 	{
 		Guard.Against.Null(principal);
-		return principal.IsInRole(UserInfo.TeamLeaderRoleClaim);
+		return principal.IsInRole(Claims.TeamLeaderRoleClaim);
 	}
 
 	public bool IsAdmin(IPrincipal principal)
 	{
 		Guard.Against.Null(principal);
-		return principal.IsInRole(UserInfo.AdminRoleClaim);
+		return principal.IsInRole(Claims.AdminRoleClaim);
 	}
 }
