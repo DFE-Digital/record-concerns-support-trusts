@@ -39,7 +39,7 @@ namespace ConcernsCaseWork.API.RequestModels
         [StringLength(4000)]
         public string NextSteps { get; set; }
         
-        [StringLength(4000)]
+        [StringLength(4300)]
         public string CaseHistory { get; set; }
         
         [StringLength(100)]

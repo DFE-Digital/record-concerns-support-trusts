@@ -29,19 +29,19 @@
 				
 				<form role="form" asp-page-handler="CaseHistory" method="post" id="case-history-form" novalidate>
 
-					<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="4000">
+					<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="4300">
 						<div class="govuk-form-group">
 							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-history" name="case-history" rows="3" aria-describedby="case-history">@Model.CaseHistory</textarea>
 						</div>
 
 						<div id="case-history-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-							You can enter up to 4000 characters
+							You can enter up to 4300 characters
 						</div>
 					</div>
 
 					<!--Button group-->
 					<div class="govuk-button-group">
-						<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
+						<button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" data-testid="save-case">
 							Apply
 						</button>
 						<partial name="_Cancel"/>
