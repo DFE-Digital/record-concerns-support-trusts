@@ -96,7 +96,12 @@ namespace ConcernsCaseWork.Service.Base
 				_logger.LogWarning("Warning. Unable to add correlationId to request headers");
 			}
 
-			_userInfoService.AddRequestHeaders(client);
+			var userInfoHeadersAdded = _userInfoService.AddUserInfoRequestHeaders(client);
+
+			if (!userInfoHeadersAdded)
+			{
+				_logger.LogWarning("Warning. Attempt to call api without user info headers");
+			}
 
 			return client;
 		}

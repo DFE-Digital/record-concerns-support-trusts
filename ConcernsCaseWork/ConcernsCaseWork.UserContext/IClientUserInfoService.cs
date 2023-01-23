@@ -6,6 +6,6 @@ public interface IClientUserInfoService
 {
 	void SetPrincipal(ClaimsPrincipal claimsPrincipal);
 
-	void AddRequestHeaders(HttpClient client);
+	bool AddUserInfoRequestHeaders(HttpClient client);
 	UserInfo UserInfo { get; }
 }
