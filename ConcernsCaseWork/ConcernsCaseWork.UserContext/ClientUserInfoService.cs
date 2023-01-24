@@ -11,7 +11,7 @@ namespace ConcernsCaseWork.UserContext
 		{
 
 		}
-		public UserInfo? UserInfo { get; private set; }
+		public UserInfo UserInfo { get; private set; }
 
 		public void SetPrincipal(ClaimsPrincipal claimsPrincipal)
 		{
@@ -27,19 +27,20 @@ namespace ConcernsCaseWork.UserContext
 			};
 		}
 
-		public void AddRequestHeaders(HttpClient client)
+		public bool AddUserInfoRequestHeaders(HttpClient client)
 		{
 			Guard.Against.Null(client);
 
 			if (UserInfo == null)
 			{
-				return;
+				return false;
 			}
 
 			foreach (KeyValuePair<string, string> keyValuePair in UserInfo.ToHeadersKVP())
 			{
 				client.DefaultRequestHeaders.TryAddWithoutValidation(keyValuePair.Key, keyValuePair.Value);
 			}
+			return true;
 		}
 
 		private string GetPrincipalName(IPrincipal principal)

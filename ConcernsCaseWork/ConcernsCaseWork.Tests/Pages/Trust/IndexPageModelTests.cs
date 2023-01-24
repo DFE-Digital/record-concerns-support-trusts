@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Trust
@@ -270,7 +271,7 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 		private static IndexPageModel SetupIndexModel(ITrustModelService mockTrustModelService, IUserStateCachedService mockUSerStateCachedService, ILogger<IndexPageModel> mockLogger, bool isAuthenticated = false)
 		{
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
-			mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<ClaimsPrincipal>())).Returns("Tester");
+			mockClaimsPrincipalHelper.Setup(x => x.GetPrincipalName(It.IsAny<IPrincipal>())).Returns("Tester");
 
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
