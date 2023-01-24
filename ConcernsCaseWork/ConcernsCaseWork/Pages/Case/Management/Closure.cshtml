@@ -7,11 +7,10 @@
 	ViewData["Title"] = "Case closure";
 	var nonce = HttpContext.GetNonce();
 }
-
 @section BeforeMain {
-    <div class="govuk-width-container">
-        <back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
-    </div>
+	<div class="govuk-width-container">
+		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+	</div>
 }
 
 <div class="govuk-width-container">

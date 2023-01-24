@@ -44,10 +44,10 @@ namespace ConcernsCaseWork
 				options.Conventions.AddPageRoute("/case/management/action/NtiWarningLetter/addConditions", "/case/{urn:long}/management/action/NtiWarningLetter/conditions");
 				options.Conventions.AddPageRoute("/case/management/action/Nti/add", "/case/{urn:long}/management/action/nti/add");
 				options.Conventions.AddPageRoute("/case/management/action/Nti/addConditions", "/case/{urn:long}/management/action/nti/conditions");
-				
-				
 
-				// TODO: 
+
+
+				// TODO:
 				// Consider adding: options.Conventions.AuthorizeFolder("/");
 			}).AddViewOptions(options =>
 			{
@@ -117,9 +117,9 @@ namespace ConcernsCaseWork
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
 		{
 			AbstractPageModel.PageHistoryStorageHandler = app.ApplicationServices.GetService<IPageHistoryStorageHandler>();
-			
+
 			app.UseConcernsCaseworkSwagger(provider);
-			
+
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
@@ -130,10 +130,10 @@ namespace ConcernsCaseWork
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
 			}
-			
+
 			app.UseMiddleware<ExceptionHandlerMiddleware>();
 			app.UseMiddleware<ApiKeyMiddleware>();
-			
+
 			// Security headers
 			app.UseSecurityHeaders(
 				SecurityHeadersDefinitions.GetHeaderPolicyCollection(env.IsDevelopment()));
@@ -161,14 +161,20 @@ namespace ConcernsCaseWork
 			app.UseRouting();
 
 			// Enable Sentry middleware for performance monitoring
-			app.UseSentryTracing();
+			if (!env.IsDevelopment())
+			{
+				app.UseSentryTracing();
+			}
+
 			app.UseAuthentication();
 			app.UseAuthorization();
 			app.UseMiddleware<CorrelationIdMiddleware>();
 			app.UseMiddleware<NavigationHistoryMiddleware>();
+			app.UseMiddleware<UserContextMiddleware>();
+			app.UseMiddleware<UserContextReceiverMiddleware>();
 
 			app.UseConcernsCaseworkEndpoints();
-			
+
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapRazorPages();

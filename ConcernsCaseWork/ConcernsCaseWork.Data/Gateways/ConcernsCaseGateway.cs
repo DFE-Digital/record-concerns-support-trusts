@@ -99,5 +99,8 @@ namespace ConcernsCaseWork.Data.Gateways
             _concernsDbContext.SaveChanges();
             return entity.Entity;
         }
+        
+        public async Task<bool> CaseExists(int urn, CancellationToken cancellationToken = default) 
+	        => await _concernsDbContext.ConcernsCase.AnyAsync(c => c.Urn == urn, cancellationToken);
     }
 }

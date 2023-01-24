@@ -8,6 +8,7 @@
 	
 	<ItemGroup>
 		<PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 	</ItemGroup>
@@ -15,5 +16,10 @@
     <ItemGroup>
       <ProjectReference Include="..\ConcernsCaseWork.API.Contracts\ConcernsCaseWork.API.Contracts.csproj" />
       <ProjectReference Include="..\ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj" />
+      <ProjectReference Include="..\ConcernsCaseWork.UserContext\ConcernsCaseWork.UserContext.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Context\" />
     </ItemGroup>
 </Project>

@@ -1,0 +1,75 @@
+﻿@page "/case/{urn:int}/management/action/trustFinancialForecast/{id:int}/edit"
+@model ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast.EditPageModel;
+@using ConcernsCaseWork.Constants
+@using ConcernsCaseWork.TagHelpers
+@using Microsoft.AspNetCore.Mvc.TagHelpers;
+@{
+	ViewData[ViewDataConstants.Title] = "Edit Trust Financial Forecast (TFF)";
+}
+
+@section BeforeMain {
+	<div class="govuk-width-container">
+		<back-link url="/case/@Model.CaseUrn/management" label="Back to case overview"></back-link>
+	</div>
+}
+
+<div class="govuk-width-container">
+	<partial name="_BannerError" />
+
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+
+		@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+		{
+			<partial name="_Error" />
+		}
+		else
+		{
+			<partial name="_ValidationErrors" />
+
+			<h1 class="govuk-heading-l">
+				<span class="govuk-caption-m">Case ID @Model.CaseUrn</span>
+				Trust Financial Forecast (TFF)
+			</h1>
+			
+			<div class="govuk-hint" id="financial-plan-hint">
+				<a target="_blank" href="@Model.ReferenceDocUrl" class="govuk-link" rel="noreferrer noopener">
+					SFSO Knowledge: Trust financial forecast
+				</a>
+			</div>
+
+			<form role="form" method="post" id="edit-trust-financial-forecast-form" novalidate>
+
+				<partial name="Components/_RadioList" model="Model.ForecastingToolRanAt"/>
+
+				<partial name="Components/_DateTime" model="Model.SFSOInitialReviewHappenedAt"/>
+
+				<partial name="Components/_DateTime" model="Model.TrustRespondedAt"/>
+
+				<partial name="Components/_RadioList" model="Model.WasTrustResponseSatisfactory"/>
+
+				<partial name="Components/_RadioList" model="Model.SRMAOfferedAfterTFF"/>
+
+				<partial name="Components/_TextArea" model="Model.Notes"/>
+
+				<div class="govuk-button-group">
+					<button data-prevent-double-click="true"
+					        class="govuk-button"
+					        data-module="govuk-button"
+					        role="button"
+					        id="save-trust-financial-forecast-button"
+					        name="action">
+						Save and return to case overview
+					</button>	
+					<a data-prevent-double-click="true" class="govuk-link" data-module="govuk-button" role="button" href="/case/@Model.CaseUrn/management">
+						Cancel
+					</a>
+				</div>
+				
+								
+			</form>
+		}
+
+		</div>
+	</div>
+</div>
