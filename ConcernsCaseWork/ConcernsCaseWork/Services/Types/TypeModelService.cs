@@ -6,6 +6,7 @@ using ConcernsCaseWork.Service.Types;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace ConcernsCaseWork.Services.Types
 {
@@ -31,9 +32,12 @@ namespace ConcernsCaseWork.Services.Types
 			
 			var typesDto = await GetTypes();
 
+			// Safeguarding is not an allowed type to select
+			var writeableTypes = typesDto.Where(t => !t.Name.Equals("Safeguarding", StringComparison.InvariantCultureIgnoreCase));
+
 			var typesDictionary = new Dictionary<string, IList<TypeModel.TypeValueModel>>();
 			
-			foreach (var typeDto in typesDto)
+			foreach (var typeDto in writeableTypes)
 			{
 				if (typesDictionary.ContainsKey(typeDto.Name) && typesDictionary.TryGetValue(typeDto.Name, out var subTypes))
 				{
