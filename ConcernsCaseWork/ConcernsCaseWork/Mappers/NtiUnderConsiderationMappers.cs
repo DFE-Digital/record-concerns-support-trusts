@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.NtiUnderConsideration;
 using System.Collections.Generic;
@@ -79,9 +80,9 @@ namespace ConcernsCaseWork.Mappers
 
 			var result = new ActionSummaryModel
 			{
-				ClosedDate = model.ClosedAt?.ToDayMonthYear(),
+				ClosedDate = DateTimeHelper.ParseToDisplayDate(model.ClosedAt),
 				Name = "NTI Under Consideration",
-				OpenedDate = model.CreatedAt.ToDayMonthYear(),
+				OpenedDate = DateTimeHelper.ParseToDisplayDate(model.CreatedAt),
 				RelativeUrl = $"/case/{model.CaseUrn}/management/action/ntiunderconsideration/{model.Id}",
 				StatusName = statusName,
 				RawOpenedDate = model.CreatedAt,
