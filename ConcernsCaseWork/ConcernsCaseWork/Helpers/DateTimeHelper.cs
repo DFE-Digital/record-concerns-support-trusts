@@ -19,9 +19,9 @@ namespace ConcernsCaseWork.Helpers
 			return DateTime.ParseExact(value, allowedFormats, dateTimeFormatInfo, dateTimeStyle);
 		}
 
-		public static string ParseToDisplayDate(DateTimeOffset date)
+		public static string ParseToDisplayDate(DateTimeOffset? date)
 		{
-			var result = date.ToString("dd MMMM yyy");
+			var result = date.HasValue ? date.Value.ToString("dd MMMM yyy") : string.Empty;
 
 			return result;
 		}
