@@ -229,7 +229,7 @@ namespace ConcernsCaseWork.Data
 						CreatedAt = new DateTime(2023, 1, 24),
 						UpdatedAt = new DateTime(2023, 1, 24)
 					}
-                );
+				);
             });
             modelBuilder.Entity<ConcernsMeansOfReferral>(entity =>
             {
