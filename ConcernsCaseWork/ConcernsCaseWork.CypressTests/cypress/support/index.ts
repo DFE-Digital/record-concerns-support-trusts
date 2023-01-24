@@ -31,6 +31,7 @@ declare global {
             selectConcernType(): Chainable<Element>;
             addActionItemToCase(): Chainable<Element>;
             selectRiskToTrust(): Chainable<Element>;
+            selectTerritory(): Chainable<Element>;
             enterConcernDetails(): Chainable<Element>;
 			excuteAccessibilityTests(): Chainable<Element>;
             visitPage(slug: string): Chainable<Element>;
@@ -44,7 +45,7 @@ declare global {
             checkForExistingCase(force: boolean): Chainable<Element>;
             createSRMA(): Chainable<Element>;
             addConcernsDecisionsAddToCase(): Chainable<Element>;
-            basicCreateCase(): Chainable<Element>;
+            basicCreateCase(): Chainable<number>;
             checkForExistingCase(): Chainable<Element>;
         }
     }

@@ -1,16 +1,9 @@
-﻿using ConcernsCaseWork.Mappers;
-using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Redis.Nti;
-using ConcernsCaseWork.Service.Nti;
-using ConcernsCaseWork.Services.Nti;
-using ConcernsCaseWork.Services.PageHistory;
+﻿using ConcernsCaseWork.Services.PageHistory;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Services.PageHistoryManagerTests
 {

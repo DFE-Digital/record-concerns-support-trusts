@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Logging;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -12,7 +13,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly ILogger<SRMAProvider> _logger;
 		private const string Url = @"/v2/case-actions/srma";
-		public SRMAProvider(IHttpClientFactory httpClientFactory, ILogger<SRMAProvider> logger, ICorrelationContext correlationContext) : base(httpClientFactory, logger, correlationContext)
+		public SRMAProvider(IHttpClientFactory httpClientFactory, ILogger<SRMAProvider> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
 		{
 			_httpClientFactory = httpClientFactory;
 			_logger = logger;
