@@ -19,16 +19,17 @@ namespace ConcernsCaseWork.Service.Base
 		private readonly ILogger<AbstractService> _logger;
 		private readonly IClientUserInfoService _userInfoService;
 
-		internal string HttpClientName { get; init; } = "TramsClient"; // was "Default";
+		private string HttpClientName { get; init; } = "TramsClient"; // was "Default";
 		internal string EndpointsVersion { get; } = "v2";
 		internal string EndpointPrefix { get; } = "concerns-cases";
 
-		protected AbstractService(IHttpClientFactory clientFactory, ILogger<AbstractService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService)
+		protected AbstractService(IHttpClientFactory clientFactory, ILogger<AbstractService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, string httpClientName)
 		{
 			_clientFactory = Guard.Against.Null(clientFactory);
 			_logger = Guard.Against.Null(logger);
 			_correlationContext = Guard.Against.Null(correlationContext);
 			_userInfoService = Guard.Against.Null(userInfoService);
+			HttpClientName = httpClientName;
 		}
 
 		public Task<T> Get<T>(string endpoint, bool treatNoContentAsError = false) where T : class
