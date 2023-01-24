@@ -1,3 +1,5 @@
+import concernsApi from "./concernsApi";
+
 export type ResponseWrapper<T> =
 {
     data: T;
@@ -36,4 +38,9 @@ export type PatchCaseRequest =
 export type PatchCaseResponse =
 {
 
+}
+
+export type GetConcernResponse =
+{
+    meansOfReferralId: number;
 }

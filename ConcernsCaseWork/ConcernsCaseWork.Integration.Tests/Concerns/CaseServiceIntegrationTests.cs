@@ -1,7 +1,9 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
+using ConcernsCaseWork.Integration.Tests.Helpers;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -25,14 +27,14 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 		/// Future work can be to delete the records from the SQLServer.
 		/// </summary>
 		private const string CaseWorker = "case.service.integration";
-		
+
 		[OneTimeSetUp]
 		public void OneTimeSetup()
 		{
 			_configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			_factory = new WebAppFactory(_configuration);
 		}
-		
+
 		[OneTimeTearDown]
 		public void OneTimeTearDown()
 		{
@@ -44,6 +46,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 		{
 			// arrange
 			using var serviceScope = _factory.Services.CreateScope();
+			serviceScope.ServiceProvider.GetService<IClientUserInfoService>().SetPrincipal(ClaimsPrincipalTestHelper.CreateCaseWorkerPrincipal());
 			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();
 			var trustSummaryDto = await FetchRandomTrust(serviceScope, "Senior");
 
@@ -63,6 +66,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 		{
 			// arrange
 			using var serviceScope = _factory.Services.CreateScope();
+			serviceScope.ServiceProvider.GetService<IClientUserInfoService>().SetPrincipal(ClaimsPrincipalTestHelper.CreateCaseWorkerPrincipal());
 			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();
 			var trustSummaryDto = await FetchRandomTrust(serviceScope, "Senior");
 
@@ -76,12 +80,13 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			Assert.That(postCaseDto, Is.Not.Null);
 			Assert.That(caseDto, Is.Not.Null);
 		}
-		
+
 		[Test]
 		public async Task WhenGetCasesByTrustUkPrn_ReturnsApiWrapperCaseDto()
 		{
 			// arrange
 			using var serviceScope = _factory.Services.CreateScope();
+			serviceScope.ServiceProvider.GetService<IClientUserInfoService>().SetPrincipal(ClaimsPrincipalTestHelper.CreateCaseWorkerPrincipal());
 			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();
 			var trustSummaryDto = await FetchRandomTrust(serviceScope, "Senior");
 
@@ -103,6 +108,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 		{
 			// arrange
 			using var serviceScope = _factory.Services.CreateScope();
+			serviceScope.ServiceProvider.GetService<IClientUserInfoService>().SetPrincipal(ClaimsPrincipalTestHelper.CreateCaseWorkerPrincipal());
 			var caseService = serviceScope.ServiceProvider.GetRequiredService<ICaseService>();
 
 			var trustSummaryDto = await FetchRandomTrust(serviceScope, "Senior");
@@ -167,10 +173,10 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustService>();
 			var apiWrapperTrusts= await trustService.GetTrustsByPagination(
 				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
-			
+
 			Assert.That(apiWrapperTrusts, Is.Not.Null);
 			Assert.That(apiWrapperTrusts.Data, Is.Not.Null);
-			
+
 			var random = new Random();
 			int index = random.Next(apiWrapperTrusts.Data.Count);
 
