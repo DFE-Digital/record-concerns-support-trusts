@@ -37,7 +37,7 @@ describe("Testing the NTI warning letter action", () =>
 
         viewNtiWarningLetterPage
             .hasStatus("Sent to trust")
-            .hasDateSent("22-10-2022")
+            .hasDateSent("22 October 2022")
             .hasReason("Cash flow problems")
             .hasReason("Risk of insolvency")
             .hasCondition("Trust financial plan")
@@ -89,7 +89,7 @@ describe("Testing the NTI warning letter action", () =>
 
         viewNtiWarningLetterPage
             .hasStatus("Preparing warning letter")
-            .hasDateSent("10-02-2020")
+            .hasDateSent("10 February 2020")
             .hasReasonCount(1)
             .hasReason("Governance concerns")
             .hasConditionCount(1)
@@ -145,7 +145,7 @@ describe("Testing the NTI warning letter action", () =>
 
         viewNtiWarningLetterPage
             .hasStatus("Conditions met")
-            .hasDateSent("22-10-2022")
+            .hasDateSent("22 October 2022")
             .hasReason("Cash flow problems")
             .hasReason("Risk of insolvency")
             .hasCondition("Trust financial plan")

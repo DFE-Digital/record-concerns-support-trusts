@@ -33,8 +33,8 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			var result = DecisionMapping.ToActionSummary(apiDecision);
 
 			result.StatusName.Should().Be("In progress");
-			result.OpenedDate.Should().Be("05-09-2021");
-			result.ClosedDate.Should().Be("30-08-2024");
+			result.OpenedDate.Should().Be("05 September 2021");
+			result.ClosedDate.Should().Be("30 August 2024");
 			result.Name.Should().Be($"Decision: {apiDecision.Title}");
 			result.RelativeUrl.Should().Be($"/case/{apiDecision.ConcernsCaseUrn}/management/action/decision/{apiDecision.DecisionId}");
 			result.RawOpenedDate.Should().Be(apiDecision.CreatedAt);
@@ -106,7 +106,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.RetrospectiveApproval.Should().Be(booleanResolvedValue);
 			result.SubmissionRequired.Should().Be(booleanResolvedValue);
 			result.SubmissionLink.Should().Be(apiDecision.SubmissionDocumentLink);
-			result.EsfaReceivedRequestDate.Should().Be("04-01-2023");
+			result.EsfaReceivedRequestDate.Should().Be("04 January 2023");
 			result.TotalAmountRequested.Should().Be("£150,000.00");
 			result.DecisionTypes.Should().BeEquivalentTo(new List<string>() { "Notice to Improve (NTI)", "Repayable financial support" });
 			result.SupportingNotes.Should().Be(apiDecision.SupportingNotes);
@@ -118,8 +118,8 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.Outcome.Status.Should().Be("Approved with conditions");
 			result.Outcome.Authorizer.Should().Be("Countersigning Deputy Director");
 			result.Outcome.TotalAmount.Should().Be("£15,000.00");
-			result.Outcome.DecisionMadeDate.Should().Be("07-05-2023");
-			result.Outcome.DecisionEffectiveFromDate.Should().Be("13-12-2023");
+			result.Outcome.DecisionMadeDate.Should().Be("07 May 2023");
+			result.Outcome.DecisionEffectiveFromDate.Should().Be("13 December 2023");
 
 			result.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(new List<string>() { "Capital", "Schools Financial Support and Oversight (SFSO)" });
 			result.Outcome.EditLink.Should().Be("/case/2/management/action/decision/10/outcome/addOrUpdate/10007");
@@ -134,7 +134,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 
 			var result = DecisionMapping.ToViewDecisionModel(apiDecision, new GetCasePermissionsResponse());
 
-			result.EsfaReceivedRequestDate.Should().BeNull();
+			result.EsfaReceivedRequestDate.Should().BeEmpty();
 			result.Outcome.Should().BeNull();
 		}
 

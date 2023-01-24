@@ -138,8 +138,8 @@ public class SrmaMappingTests
 		Assert.Multiple(() =>
 		{
 			Assert.That(actionSummary.Name, Is.EqualTo("SRMA"));
-			Assert.That(actionSummary.ClosedDate, Is.EqualTo(testData.ClosedAt.GetFormattedDate()));
-			Assert.That(actionSummary.OpenedDate, Is.EqualTo(testData.CreatedAt.GetFormattedDate()));
+			Assert.That(actionSummary.ClosedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.ClosedAt)));
+			Assert.That(actionSummary.OpenedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.CreatedAt)));
 			Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/srma/{testData.Id}/closed"));
 			Assert.That(actionSummary.StatusName, Is.EqualTo(EnumHelper.GetEnumDescription(testData.Status)));
 		});
@@ -157,6 +157,6 @@ public class SrmaMappingTests
 		var result = srma.ToActionSummary();
 
 		result.RelativeUrl.Should().Be($"/case/{srma.CaseUrn}/management/action/srma/{srma.Id}");
-		result.ClosedDate.Should().BeNull();
+		result.ClosedDate.Should().BeEmpty();
 	}
 }
