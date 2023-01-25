@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.API.Middleware
 			Guard.Against.Null(userInfoService);
 			Guard.Against.Null(logger);
 
-			if (IsPageRequest(httpContext.Request.Path))
+			if (IsApiRequest(httpContext.Request.Path))
 			{
 				userInfoService.ReceiveRequestHeaders(httpContext.Request.Headers);
 
@@ -44,7 +44,7 @@ namespace ConcernsCaseWork.API.Middleware
 			return sb.ToString();
 		}
 
-		private bool IsPageRequest(string path) => path.StartsWith("/v2/") && !path.Contains("swagger");
+		private bool IsApiRequest(string path) => path.StartsWith("/v2/") && !path.Contains("swagger");
 
 	}
 }
