@@ -259,7 +259,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsTypeResponse>>();
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            content.Data.Count().Should().Be(8);
+            content.Data.Count().Should().Be(9);
         }
 
         [Fact]
