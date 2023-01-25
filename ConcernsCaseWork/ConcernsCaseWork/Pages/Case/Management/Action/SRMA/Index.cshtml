@@ -101,7 +101,7 @@
                     <th scope="row" class="govuk-table-case-details__header">Date trust was contacted</th>
                     <td class="govuk-table__cell" data-testid="date-trust-contacted">
                         @{
-                            RenderValue(DateExtension.ToDayMonthYear(Model.SRMAModel.DateOffered));
+                            RenderValue(DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateOffered));
                         }
                     </td>
                     <td class="govuk-table__cell govuk-table__header__right">
@@ -140,7 +140,7 @@
                         @{
                             if (Model.SRMAModel.DateAccepted.HasValue)
                             {
-                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.SRMAModel.DateAccepted.Value));
+                                RenderValue(DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateAccepted));
                             }
                             else
                             {
@@ -168,11 +168,11 @@
                             }
                             else
                             {
-                                @DateExtension.ToDayMonthYear(Model.SRMAModel.DateVisitStart.Value)
+                                @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitStart)
                                 if (!IsEmpty(Model.SRMAModel.DateVisitEnd))
                                 {
                                     <text> - </text>
-                                    @DateExtension.ToDayMonthYear(Model.SRMAModel.DateVisitEnd.Value)
+                                    @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitEnd)
                                 }
                             }
                         }
@@ -194,7 +194,7 @@
                         @{
                             if (Model.SRMAModel.DateReportSentToTrust.HasValue)
                             {
-                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.SRMAModel.DateReportSentToTrust.Value));
+                                RenderValue(DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateReportSentToTrust));
                             }
                             else
                             {

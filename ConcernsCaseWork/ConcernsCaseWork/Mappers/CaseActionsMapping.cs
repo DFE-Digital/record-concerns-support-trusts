@@ -69,9 +69,9 @@ namespace ConcernsCaseWork.Mappers
 
 			var result = new ActionSummaryModel()
 			{
-				ClosedDate = srmaModel.ClosedAt.ToDayMonthYear(),
+				ClosedDate = DateTimeHelper.ParseToDisplayDate(srmaModel.ClosedAt),
 				Name = "SRMA",
-				OpenedDate = srmaModel.CreatedAt.ToDayMonthYear(),
+				OpenedDate = DateTimeHelper.ParseToDisplayDate(srmaModel.CreatedAt),
 				RelativeUrl = relativeUrl,
 				StatusName = EnumHelper.GetEnumDescription(srmaModel.Status),
 				RawOpenedDate = srmaModel.CreatedAt,

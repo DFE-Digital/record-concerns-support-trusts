@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 
 		public async Task<SRMADto> GetSRMAById(long srmaId)
 		{
-			var client = _httpClientFactory.CreateClient(HttpClientName);
+			var client = CreateHttpClient();
 			var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}?srmaId={srmaId}");
 
 			try
@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}/case/{caseUrn}");
 
 				var response = await client.SendAsync(request);
@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Post, $"{Url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(srma),
@@ -84,7 +84,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-date-accepted?acceptedDate={SerialiseDateTime(acceptedDate)}");
 
 				var response = await client.SendAsync(request); 
@@ -103,7 +103,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-closed-date");
 
 				var response = await client.SendAsync(request);
@@ -122,7 +122,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-date-report-sent?dateReportSent={SerialiseDateTime(reportSentDate)}");
 
 				var response = await client.SendAsync(request);
@@ -141,7 +141,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-notes?notes={notes ?? String.Empty}");
 
 				var response = await client.SendAsync(request);
@@ -160,7 +160,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-offered-date?offeredDate={SerialiseDateTime(offeredDate)}");
 
 				var response = await client.SendAsync(request);
@@ -179,7 +179,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-reason?reason={(int)reason}");
 
 				var response = await client.SendAsync(request);
@@ -198,7 +198,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-status?status={(int)status}");
 
 				var response = await client.SendAsync(request);
@@ -217,7 +217,7 @@ namespace ConcernsCaseWork.Service.CaseActions
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}/{srmaId}/update-visit-dates?startDate={SerialiseDateTime(startDate)}&endDate={SerialiseDateTime(endDate)}");
 
 				var response = await client.SendAsync(request);

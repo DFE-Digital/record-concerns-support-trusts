@@ -119,7 +119,7 @@
                         @{
                             if (Model.NtiModel.DateStarted.HasValue)
                             {
-                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.DateStarted.Value));
+                                RenderValue(DateTimeHelper.ParseToDisplayDate(Model.NtiModel.DateStarted));
                             }
                             else
                             {
@@ -140,7 +140,7 @@
                                     <th scope="row" class="govuk-table-case-details__header">Date NTI cancelled</th>
                                     <td class="govuk-table__cell">
                                         @{
-                                            RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.ClosedAt.Value));
+                                            RenderValue(DateTimeHelper.ParseToDisplayDate(Model.NtiModel.ClosedAt));
                                         }
                                     </td>
                                     break;
@@ -151,7 +151,7 @@
 
                                             if (Model.NtiModel.DateNTILifted.HasValue)
                                             {
-                                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.DateNTILifted.Value));
+                                                RenderValue(DateTimeHelper.ParseToDisplayDate(Model.NtiModel.DateNTILifted));
                                             }
                                             else
                                             {
@@ -167,7 +167,7 @@
 
                                             if (Model.NtiModel.DateNTIClosed.HasValue)
                                             {
-                                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.DateNTIClosed.Value));
+                                                RenderValue(DateTimeHelper.ParseToDisplayDate(Model.NtiModel.DateNTIClosed));
                                             }
                                             else
                                             {

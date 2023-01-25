@@ -8,6 +8,7 @@ using AutoFixture;
 using FluentAssertions;
 using ConcernsCaseWork.Service.FinancialPlan;
 using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.Helpers;
 
 namespace ConcernsCaseWork.Tests.Mappers
 {
@@ -343,8 +344,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.Multiple(() =>
 			{
 				Assert.That(actionSummary.Name, Is.EqualTo("Financial Plan"));
-				Assert.That(actionSummary.ClosedDate, Is.EqualTo(testData.ClosedAt.GetFormattedDate()));
-				Assert.That(actionSummary.OpenedDate, Is.EqualTo(testData.CreatedAt.GetFormattedDate()));
+				Assert.That(actionSummary.ClosedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.ClosedAt)));
+				Assert.That(actionSummary.OpenedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.CreatedAt)));
 				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/financialplan/{testData.Id}/closed"));
 				Assert.That(actionSummary.StatusName, Is.EqualTo("Awaiting plan"));
 			});
@@ -363,7 +364,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var result = financialPlan.ToActionSummary();
 			result.RelativeUrl.Should().Be($"/case/{financialPlan.CaseUrn}/management/action/financialplan/{financialPlan.Id}");
 			result.StatusName.Should().Be("In progress");
-			result.ClosedDate.Should().BeNull();
+			result.ClosedDate.Should().BeEmpty();
 		}
 	}
 }

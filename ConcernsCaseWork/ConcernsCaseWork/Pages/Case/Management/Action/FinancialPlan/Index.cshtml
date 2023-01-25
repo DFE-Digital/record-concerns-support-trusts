@@ -89,7 +89,7 @@
                         @{
                             if (Model.FinancialPlanModel.DatePlanRequested.HasValue)
                             {
-                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.FinancialPlanModel.DatePlanRequested.Value));
+                                RenderValue(DateTimeHelper.ParseToDisplayDate(Model.FinancialPlanModel.DatePlanRequested));
                             }
                             else
                             {
@@ -106,7 +106,7 @@
                         @{
                             if (Model.FinancialPlanModel.DateViablePlanReceived.HasValue)
                             {
-                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.FinancialPlanModel.DateViablePlanReceived.Value));
+                                RenderValue(DateTimeHelper.ParseToDisplayDate(Model.FinancialPlanModel.DateViablePlanReceived));
                             }
                             else
                             {
