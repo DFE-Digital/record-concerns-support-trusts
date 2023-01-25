@@ -7,6 +7,10 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.Service.Nti;
+using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.Helpers;
 
 namespace ConcernsCaseWork.Tests.Mappers
 {
@@ -24,7 +28,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Id = 1L,
 				CaseUrn = 123L,
 				CreatedAt = DateTime.Now.AddDays(-5),
-				ClosedAt = DateTime.Now,
+				ClosedAt = null,
 				ClosedStatusId = 1,
 				ClosedStatusName = "SomeStatusName",
 				Notes = "Test notes",
@@ -37,8 +41,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 				UpdatedAt = DateTime.Now.AddDays(-5)
 			};
 
+			var permissionsResponse = new GetCasePermissionsResponse() { Permissions = new List<CasePermission>() { CasePermission.Edit } };
+
 			// act
-			var serviceModel = NtiUnderConsiderationMappers.ToServiceModel(ntiDto);
+			var serviceModel = NtiUnderConsiderationMappers.ToServiceModel(ntiDto, permissionsResponse);
 
 			// assert
 			Assert.That(serviceModel, Is.Not.Null);
@@ -46,7 +52,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(serviceModel.Id, Is.EqualTo(ntiDto.Id));
 			Assert.That(serviceModel.ClosedStatusId, Is.EqualTo(ntiDto.ClosedStatusId));
 			Assert.That(serviceModel.ClosedStatusName, Is.EqualTo(ntiDto.ClosedStatusName));
-			Assert.That(serviceModel.ClosedAt, Is.EqualTo(ntiDto.ClosedAt.Value));
 			Assert.That(serviceModel.CreatedAt, Is.EqualTo(ntiDto.CreatedAt));
 			Assert.That(serviceModel.Notes, Is.EqualTo(ntiDto.Notes));
 			Assert.That(serviceModel.NtiReasonsForConsidering, Is.Not.Null);
@@ -54,6 +59,24 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(serviceModel.NtiReasonsForConsidering.Count, Is.EqualTo(ntiDto.Reasons.Count));
 			Assert.That(serviceModel.NtiReasonsForConsidering.ElementAt(0).Id, Is.EqualTo(ntiDto.Reasons.ElementAt(0).Id));
 			Assert.That(serviceModel.NtiReasonsForConsidering.ElementAt(1).Id, Is.EqualTo(ntiDto.Reasons.ElementAt(1).Id));
+			serviceModel.IsEditable.Should().BeTrue();
+		}
+
+		[TestCaseSource(nameof(GetPermissionTestCases))]
+		public void WhenMapDtoToServiceModel_Not_Editable_ReturnsCorrectModel(
+			DateTime closedDate,
+			GetCasePermissionsResponse casePermissionsResponse)
+		{
+			var ntiDto = _fixture.Create<NtiDto>();
+			ntiDto.StatusId = null;
+			ntiDto.ClosedStatusId = null;
+			ntiDto.ClosedAt = closedDate;
+			var ntiStatuses = NTIStatusFactory.BuildListNTIStatusDto();
+
+			var serviceModel = NtiMappers.ToServiceModel(ntiDto, ntiStatuses, casePermissionsResponse);
+
+			serviceModel.IsEditable.Should().BeFalse();
+			serviceModel.ClosedAt.Should().Be(closedDate);
 		}
 
 		[Test]
@@ -131,8 +154,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.Multiple(() =>
 			{
 				Assert.That(actionSummary.Name, Is.EqualTo("NTI Under Consideration"));
-				Assert.That(actionSummary.ClosedDate, Is.EqualTo(testData.ClosedAt.GetFormattedDate()));
-				Assert.That(actionSummary.OpenedDate, Is.EqualTo(testData.CreatedAt.GetFormattedDate()));
+				Assert.That(actionSummary.ClosedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.ClosedAt)));
+				Assert.That(actionSummary.OpenedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.CreatedAt)));
 				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/ntiunderconsideration/{testData.Id}"));
 				Assert.That(actionSummary.StatusName, Is.EqualTo(testData.ClosedStatus.Name));
 			});
@@ -164,6 +187,12 @@ namespace ConcernsCaseWork.Tests.Mappers
 				new NtiUnderConsiderationStatusDto() { Id = 1, Name="Test" },
 			}, "Test");
 			yield return new TestCaseData(null, new List<NtiUnderConsiderationStatusDto>(), "In progress");
+		}
+
+		private static IEnumerable<TestCaseData> GetPermissionTestCases()
+		{
+			yield return new TestCaseData(new DateTime(), new GetCasePermissionsResponse() { Permissions = new List<CasePermission>() { CasePermission.Edit } });
+			yield return new TestCaseData(null, new GetCasePermissionsResponse());
 		}
 	}
 }

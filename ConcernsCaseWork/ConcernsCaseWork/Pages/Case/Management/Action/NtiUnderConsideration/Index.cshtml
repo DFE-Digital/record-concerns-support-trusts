@@ -110,7 +110,7 @@
 
                 @* Notes *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Notes</th>
+                    <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
                     <td class="govuk-table__cell" data-testid="nti-notes">
                         @{
 
@@ -129,7 +129,7 @@
             </tbody>
         </table>
 
-        @if (Model.NTIUnderConsiderationModel.ClosedAt == null)
+        @if (Model.NTIUnderConsiderationModel.IsEditable)
         {
             <div class="govuk-button-group">
                 <a data-prevent-double-click="true" href="@Request.Path/edit" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-nti-uc-button">

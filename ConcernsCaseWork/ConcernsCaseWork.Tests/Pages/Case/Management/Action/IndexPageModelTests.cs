@@ -1,6 +1,8 @@
-﻿using ConcernsCaseWork.Enums;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Pages.Case.Management.Action;
 using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.Nti;
@@ -42,7 +44,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]
@@ -102,7 +104,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 
 			mockLogger.Verify(
 				m => m.Log(
@@ -142,7 +144,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			// assert
 			Assert.That(pageResponse, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 		}
 
 		[Test]
@@ -209,7 +211,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			// assert
 			Assert.That(pageResponse, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 		}
 
 		[Test]
@@ -254,13 +256,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 			ILogger<IndexPageModel> mockLogger,
 			INtiWarningLetterModelService ntiWarningLetterModelService = null,
 			INtiModelService ntiModelService = null,
+			ITrustFinancialForecastService trustFinancialForecastService = null,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
 			return new IndexPageModel(mockCaseModelService, mockSrmaService, mockFinancialPlanModelService, ntiUnderConsiderationModelService
-				, ntiWarningLetterModelService ?? CreateMock<INtiWarningLetterModelService>()
-				, ntiModelService ?? CreateMock<INtiModelService>()
+				, ntiWarningLetterModelService ?? Mock.Of<INtiWarningLetterModelService>()
+				, ntiModelService ?? Mock.Of<INtiModelService>()
+				, trustFinancialForecastService ?? Mock.Of<ITrustFinancialForecastService>()
 				, mockLogger)
 			{
 				PageContext = pageContext,
@@ -268,12 +272,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action
 				Url = new UrlHelper(actionContext),
 				MetadataProvider = pageContext.ViewData.ModelMetadata
 			};
-		}
-
-		private static T CreateMock<T>() where T : class
-		{
-			var moq = new Mock<T>();
-			return moq.Object;
 		}
 	}
 

@@ -6,67 +6,67 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-	ViewData["Title"] = "SRMA";
+    ViewData["Title"] = "SRMA";
 
-	var errorClass = "govuk-error-message";
-	var srmaValidationErrors = TempData["SRMA.Message"] as IEnumerable<string>;
+    var errorClass = "govuk-error-message";
+    var srmaValidationErrors = TempData["SRMA.Message"] as IEnumerable<string>;
 
-	var reasonError = false;
-	var dateAcceptedError = false;
-	var dateVisitError = false;
-	var dateReportSentError = false;
+    var reasonError = false;
+    var dateAcceptedError = false;
+    var dateVisitError = false;
+    var dateReportSentError = false;
 }
 
 @section BeforeMain {
-	<div class="govuk-width-container">
-		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
-	</div>
+    <div class="govuk-width-container">
+        <back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+    </div>
 }
 
 <div class="govuk-width-container">
-	<partial name="_BannerError" />
+    <partial name="_BannerError" />
 
-	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-	{
-		<partial name="_Error" />
-	}
-	else
-	{
+    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+    {
+        <partial name="_Error" />
+    }
+    else
+    {
 
-		@if (TempData["SRMA.Message"] != null)
-		{
-			reasonError = srmaValidationErrors.Contains(Model.ReasonErrorMessage);
-			dateAcceptedError = srmaValidationErrors.Contains(Model.DateAcceptedErrorMessage);
-			dateVisitError = srmaValidationErrors.Contains(Model.DateVisitErrorMessage);
-			dateReportSentError = srmaValidationErrors.Contains(Model.DateReportErrorMessage);
+        @if (TempData["SRMA.Message"] != null)
+        {
+            reasonError = srmaValidationErrors.Contains(Model.ReasonErrorMessage);
+            dateAcceptedError = srmaValidationErrors.Contains(Model.DateAcceptedErrorMessage);
+            dateVisitError = srmaValidationErrors.Contains(Model.DateVisitErrorMessage);
+            dateReportSentError = srmaValidationErrors.Contains(Model.DateReportErrorMessage);
 
-			<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
-				<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
-				<div class="govuk-error-summary__body">
-					<ul class="govuk-list govuk-error-summary__list">
-						@foreach (var msg in srmaValidationErrors)
-						{
-							<li class="govuk-error-message">@msg</li>
-						}
-					</ul>
-				</div>
-			</div>
-		}
+            <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
+                <h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
+                <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list">
+                        @foreach (var msg in srmaValidationErrors)
+                        {
+                            <li class="govuk-error-message">@msg</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
 
-		<h1 class="govuk-heading-l">
-			<span class="govuk-caption-m">Case ID @Model.SRMAModel.CaseUrn</span>
-			School Resource Management Adviser (SRMA)
-		</h1>
+        <h1 class="govuk-heading-l">
+            <span class="govuk-caption-m">Case ID @Model.SRMAModel.CaseUrn</span>
+            School Resource Management Adviser (SRMA)
+        </h1>
 
-		<table class="govuk-table">
-			<caption class="govuk-table__caption govuk-table__caption--m"></caption>
-			<thead>
-				<tr>
-					<th scope="col"></th>
-					<th scope="col"></th>
-					<th scope="col"></th>
-				</tr>
-			</thead>
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m"></caption>
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
             <tbody class="govuk-table__body">
 
                 @* Date Opened *@
@@ -101,7 +101,7 @@
                     <th scope="row" class="govuk-table-case-details__header">Date trust was contacted</th>
                     <td class="govuk-table__cell" data-testid="date-trust-contacted">
                         @{
-                            RenderValue(DateExtension.ToDayMonthYear(Model.SRMAModel.DateOffered));
+                            RenderValue(DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateOffered));
                         }
                     </td>
                     <td class="govuk-table__cell govuk-table__header__right">
@@ -140,7 +140,7 @@
                         @{
                             if (Model.SRMAModel.DateAccepted.HasValue)
                             {
-                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.SRMAModel.DateAccepted.Value));
+                                RenderValue(DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateAccepted));
                             }
                             else
                             {
@@ -168,11 +168,11 @@
                             }
                             else
                             {
-                                @DateExtension.ToDayMonthYear(Model.SRMAModel.DateVisitStart.Value)
+                                @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitStart)
                                 if (!IsEmpty(Model.SRMAModel.DateVisitEnd))
                                 {
                                     <text> - </text>
-                                    @DateExtension.ToDayMonthYear(Model.SRMAModel.DateVisitEnd.Value)
+                                    @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitEnd)
                                 }
                             }
                         }
@@ -194,7 +194,7 @@
                         @{
                             if (Model.SRMAModel.DateReportSentToTrust.HasValue)
                             {
-                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.SRMAModel.DateReportSentToTrust.Value));
+                                RenderValue(DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateReportSentToTrust));
                             }
                             else
                             {
@@ -211,7 +211,7 @@
 
                 @* Notes *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Notes</th>
+                    <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
                     <td class="govuk-table__cell" data-testid="notes">
                         @{
                             RenderValue(Model.SRMAModel.Notes);
@@ -224,17 +224,19 @@
                     </td>
                 </tr>
             </tbody>
-		</table>
-
-		<div class="govuk-button-group">
-			<a data-prevent-double-click="true" asp-page-handler="DeclineComplete" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="complete-decline-srma-button">
-				@Model.DeclineCompleteButtonLabel
-			</a>
-			<a data-prevent-double-click="true" asp-page-handler="Cancel" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" data-testid="cancel-srma-button">
-				SRMA cancelled
-			</a>
-		</div>
-	}
+        </table>
+        if (Model.SRMAModel.IsEditable)
+        {
+            <div class="govuk-button-group">
+                <a data-prevent-double-click="true" asp-page-handler="DeclineComplete" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="complete-decline-srma-button">
+                    @Model.DeclineCompleteButtonLabel
+                </a>
+                <a data-prevent-double-click="true" asp-page-handler="Cancel" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" data-testid="cancel-srma-button">
+                    SRMA cancelled
+                </a>
+            </div>
+        }
+    }
 </div>
 
 @functions {
@@ -252,11 +254,14 @@
 
     private void RenderLink<T>(T value, string fieldName, string url)
     {
-	    var ariaLabel = "Change " + fieldName;
-        <a class="govuk-link" href="@url" aria-label="@ariaLabel" data-testid="@fieldName">
-            @(IsEmpty(value) ? "Add" : "Edit")
-            <span class="govuk-visually-hidden">@fieldName</span>
-        </a>
+        if (Model.SRMAModel.IsEditable)
+        {
+            var ariaLabel = "Change " + fieldName;
+            <a class="govuk-link" href="@url" aria-label="@ariaLabel" data-testid="@fieldName">
+                @(IsEmpty(value) ? "Add" : "Edit")
+                <span class="govuk-visually-hidden">@fieldName</span>
+            </a>
+        }
     }
 
     private bool IsEmpty<T>(T value)

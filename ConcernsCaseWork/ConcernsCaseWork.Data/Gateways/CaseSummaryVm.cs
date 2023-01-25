@@ -17,6 +17,7 @@ public abstract record CaseSummaryVm
 	public IEnumerable<Action> NtiWarningLetters { get; set; }
 	public IEnumerable<Action> NtisUnderConsideration { get; set; }
 	public IEnumerable<Action> SrmaCases { get; set; }
+	public IEnumerable<Action> TrustFinancialForecasts { get; set; }
 	
 	public record Action(DateTime CreatedAt, DateTime? ClosedAt, string Name);
 	public record Concern(string Name, ConcernsRating Rating, DateTime CreatedAt);

@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -13,7 +14,7 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 		private readonly ILogger<NtiWarningLetterService> _logger;
 		private const string _url = @"/v2/case-actions/nti-warning-letter";
 
-		public NtiWarningLetterService(IHttpClientFactory httpClientFactory, ILogger<NtiWarningLetterService> logger, ICorrelationContext correlationContext) : base(httpClientFactory, logger, correlationContext)
+		public NtiWarningLetterService(IHttpClientFactory httpClientFactory, ILogger<NtiWarningLetterService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(httpClientFactory, logger, correlationContext, userInfoService)
 		{
 			_httpClientFactory = httpClientFactory;
 			_logger = logger;
@@ -23,7 +24,7 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Post, $"{_url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(newNtiWarningLetter),
@@ -74,7 +75,7 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Get, $"{_url}/case/{caseUrn}");
 
 				var response = await client.SendAsync(request);
@@ -93,7 +94,7 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(ntiWarningLetter),

@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -9,7 +10,7 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 	{
 		private readonly ILogger<FinancialPlanStatusService> _logger;
 
-		public FinancialPlanStatusService(IHttpClientFactory clientFactory, ILogger<FinancialPlanStatusService> logger, ICorrelationContext correlationContext) : base(clientFactory, logger, correlationContext)
+		public FinancialPlanStatusService(IHttpClientFactory clientFactory, ILogger<FinancialPlanStatusService> logger, ICorrelationContext correlationContext, IClientUserInfoService userInfoService) : base(clientFactory, logger, correlationContext, userInfoService)
 		{
 			_logger = logger;
 		}
