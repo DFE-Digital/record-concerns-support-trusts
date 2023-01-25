@@ -10,6 +10,8 @@ locals {
   container_secret_environment_variables  = var.container_secret_environment_variables
   enable_mssql_database                   = var.enable_mssql_database
   enable_redis_cache                      = var.enable_redis_cache
+  redis_cache_sku                         = var.redis_cache_sku
+  redis_cache_capacity                    = var.redis_cache_capacity
   enable_cdn_frontdoor                    = var.enable_cdn_frontdoor
   enable_dns_zone                         = var.enable_dns_zone
   dns_zone_domain_name                    = var.dns_zone_domain_name
