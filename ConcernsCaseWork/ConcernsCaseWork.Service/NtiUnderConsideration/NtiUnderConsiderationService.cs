@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Post, $"{Url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(ntiDto),
@@ -46,7 +46,7 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Get, $"{Url}/case/{caseUrn}");
 
 				var response = await client.SendAsync(request);
@@ -97,7 +97,7 @@ namespace ConcernsCaseWork.Service.NtiUnderConsideration
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Patch, $"{Url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(ntiDto),

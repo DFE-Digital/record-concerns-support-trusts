@@ -1,6 +1,8 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
+using ConcernsCaseWork.Integration.Tests.Helpers;
 using ConcernsCaseWork.Service.Ratings;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -41,6 +43,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 		{
 			// arrange
 			using var serviceScope = _factory.Services.CreateScope();
+			serviceScope.ServiceProvider.GetService<IClientUserInfoService>().SetPrincipal(ClaimsPrincipalTestHelper.CreateCaseWorkerPrincipal());
 			var ratingService = serviceScope.ServiceProvider.GetRequiredService<IRatingService>();
 
 			//act 

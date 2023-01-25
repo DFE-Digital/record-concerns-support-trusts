@@ -1,5 +1,6 @@
 ﻿using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.NtiWarningLetter;
 using System;
@@ -104,9 +105,9 @@ namespace ConcernsCaseWork.Mappers
 
 			var result = new ActionSummaryModel()
 			{
-				ClosedDate = model.ClosedAt?.ToDayMonthYear(),
+				ClosedDate = DateTimeHelper.ParseToDisplayDate(model.ClosedAt),
 				Name = "NTI Warning Letter",
-				OpenedDate = model.CreatedAt.ToDayMonthYear(),
+				OpenedDate = DateTimeHelper.ParseToDisplayDate(model.CreatedAt),
 				RelativeUrl = $"/case/{model.CaseUrn}/management/action/ntiwarningletter/{model.Id}",
 				StatusName = status,
 				RawOpenedDate = model.CreatedAt,

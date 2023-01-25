@@ -153,11 +153,11 @@ describe("Testing the SRMA case action", () =>
 
         viewSrmaPage
             .hasStatus("Trust considering")
-            .hasDateTrustContacted("22-10-2022")
+            .hasDateTrustContacted("22 October 2022")
             .hasReason("Regions Group (RG) Intervention")
-            .hasDateAccepted("22-05-2020")
-            .hasDateOfVisit("22-07-2021 - 15-08-2021")
-            .hasDateReportSentToTrust("05-12-2021")
+            .hasDateAccepted("22 May 2020")
+            .hasDateOfVisit("22 July 2021 - 15 August 2021")
+            .hasDateReportSentToTrust("05 December 2021")
             .hasNotes("This is my notes");
     });
 
@@ -175,7 +175,7 @@ describe("Testing the SRMA case action", () =>
 
         viewSrmaPage
             .hasStatus("Trust considering")
-            .hasDateTrustContacted("22-10-2022")
+            .hasDateTrustContacted("22 October 2022")
             .hasReason("Empty")
             .hasDateAccepted("Empty")
             .hasDateOfVisit("Empty")
@@ -270,11 +270,11 @@ describe("Testing the SRMA case action", () =>
 
         viewSrmaPage
             .hasStatus("Preparing for deployment")
-            .hasDateTrustContacted("11-05-2021")
+            .hasDateTrustContacted("11 May 2021")
             .hasReason("Offer linked with grant funding or other offer of support")
-            .hasDateAccepted("17-06-2021")
-            .hasDateOfVisit("23-09-2022 - 27-10-2022")
-            .hasDateReportSentToTrust("16-08-2022")
+            .hasDateAccepted("17 June 2021")
+            .hasDateOfVisit("23 September 2022 - 27 October 2022")
+            .hasDateReportSentToTrust("16 August 2022")
             .hasNotes("Editing the notes field");
     });
 
@@ -314,10 +314,10 @@ describe("Testing the SRMA case action", () =>
 
             viewSrmaPage
                 .hasStatus("SRMA Complete")
-                .hasDateTrustContacted("22-10-2022")
+                .hasDateTrustContacted("22 October 2022")
                 .hasReason("Regions Group (RG) Intervention")
-                .hasDateAccepted("22-05-2020")
-                .hasDateOfVisit("22-07-2021 - 15-08-2021")
+                .hasDateAccepted("22 May 2020")
+                .hasDateOfVisit("22 July 2021 - 15 August 2021")
                 .hasDateReportSentToTrust("05-12-2021")
                 .hasNotes("Resolved notes");
         });
@@ -347,7 +347,7 @@ describe("Testing the SRMA case action", () =>
 
             viewSrmaPage
                 .hasStatus("SRMA Canceled")
-                .hasDateTrustContacted("22-10-2022")
+                .hasDateTrustContacted("22 October 2022")
                 .hasReason("Regions Group (RG) Intervention")
                 .hasDateAccepted("")
                 .hasDateOfVisit("")
@@ -379,7 +379,7 @@ describe("Testing the SRMA case action", () =>
 
             viewSrmaPage
                 .hasStatus("SRMA Declined")
-                .hasDateTrustContacted("22-10-2022")
+                .hasDateTrustContacted("22 October 2022")
                 .hasReason("Regions Group (RG) Intervention")
                 .hasDateAccepted("")
                 .hasDateOfVisit("")
