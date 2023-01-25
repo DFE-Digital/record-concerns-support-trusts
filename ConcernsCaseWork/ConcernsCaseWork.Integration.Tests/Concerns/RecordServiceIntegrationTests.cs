@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
+using ConcernsCaseWork.Integration.Tests.Helpers;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.MeansOfReferral;
 using ConcernsCaseWork.Service.Ratings;
@@ -6,6 +7,7 @@ using ConcernsCaseWork.Service.Records;
 using ConcernsCaseWork.Service.Trusts;
 using ConcernsCaseWork.Service.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -50,6 +52,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 		{
 			// arrange
 			using var serviceScope = _factory.Services.CreateScope();
+			serviceScope.ServiceProvider.GetService<IClientUserInfoService>().SetPrincipal(ClaimsPrincipalTestHelper.CreateCaseWorkerPrincipal());
 			var startTime = DateTime.UtcNow;
 			var recordService = serviceScope.ServiceProvider.GetRequiredService<IRecordService>();
 			var caseUrn = await FetchRandomCaseUrn(serviceScope);
@@ -85,6 +88,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 		{
 			// arrange 
 			using var serviceScope = _factory.Services.CreateScope();
+			serviceScope.ServiceProvider.GetService<IClientUserInfoService>().SetPrincipal(ClaimsPrincipalTestHelper.CreateCaseWorkerPrincipal());
 			var recordService = serviceScope.ServiceProvider.GetRequiredService<IRecordService>();
 			var caseUrn = await FetchRandomCaseUrn(serviceScope);
 			var typeId = await FetchRandomTypeId(serviceScope);

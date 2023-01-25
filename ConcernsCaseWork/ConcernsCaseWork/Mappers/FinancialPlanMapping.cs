@@ -103,9 +103,9 @@ namespace ConcernsCaseWork.Mappers
 
 			var result = new ActionSummaryModel()
 			{
-				ClosedDate = model.ClosedAt.ToDayMonthYear(),
+				ClosedDate = DateTimeHelper.ParseToDisplayDate(model.ClosedAt),
 				Name = "Financial Plan",
-				OpenedDate = model.CreatedAt.ToDayMonthYear(),
+				OpenedDate = DateTimeHelper.ParseToDisplayDate(model.CreatedAt),
 				RelativeUrl = relativeUrl,
 				StatusName = status,
 				RawOpenedDate = model.CreatedAt,
