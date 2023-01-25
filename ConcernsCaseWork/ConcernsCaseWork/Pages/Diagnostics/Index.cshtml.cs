@@ -1,4 +1,5 @@
 using ConcernsCaseWork.Attributes;
+using ConcernsCaseWork.UserContext;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace ConcernsCaseWork.Pages.Diagnostics
 {
@@ -17,6 +19,7 @@ namespace ConcernsCaseWork.Pages.Diagnostics
 	{
 		private readonly IConfiguration _configuration;
 		private readonly IWebHostEnvironment _env;
+		private readonly IClientUserInfoService _userInfoService;
 		public string Env { get; set; }
 		public string ReleaseTag { get; set; }
 
@@ -29,10 +32,11 @@ namespace ConcernsCaseWork.Pages.Diagnostics
 		public string BuildMode { get; set; }
 		public string BuildMessage { get; set; }
 
-		public IndexModel(IConfiguration configuration, IWebHostEnvironment env)
+		public IndexModel(IConfiguration configuration, IWebHostEnvironment env, IClientUserInfoService userInfoService)
 		{
 			_configuration = configuration;
 			_env = env;
+			_userInfoService = userInfoService;
 		}
 
 		public void OnGet()
@@ -60,9 +64,11 @@ namespace ConcernsCaseWork.Pages.Diagnostics
 			this.BuildTime = assembly.GetCustomAttribute<BuildTimeAttribute>().BuildTime;
 			this.BuildGuid = assembly.GetCustomAttribute<BuildGuidAttribute>().BuildGuid;
 			this.BuildMessage = assembly.GetCustomAttribute<CustomBuildMessageAttribute>().CustomBuildMessage;
+
+			this.Roles = _userInfoService.UserInfo.Roles;
 		}
 
-
+		public string[] Roles { get; set; }
 
 		private string GetBuildMode()
 		{

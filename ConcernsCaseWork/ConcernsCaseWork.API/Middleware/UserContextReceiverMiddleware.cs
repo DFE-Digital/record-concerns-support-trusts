@@ -1,12 +1,7 @@
 ﻿using Ardalis.GuardClauses;
-using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.UserContext;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.API.Middleware
 {
@@ -23,21 +18,33 @@ namespace ConcernsCaseWork.API.Middleware
 		{
 			Guard.Against.Null(userInfoService);
 			Guard.Against.Null(logger);
-			
-			if (IsPageRequest(httpContext.Request.Path))
+
+			if (IsApiRequest(httpContext.Request.Path))
 			{
 				userInfoService.ReceiveRequestHeaders(httpContext.Request.Headers);
 
 				if (userInfoService.UserInfo == null)
 				{
-					logger.LogWarningMsg($"Call to {httpContext.Request.Path}");
+					logger.LogError($"Call to {httpContext.Request.Path} received without user information headers. Responding with unauthorized request. Headers:{HeadersToStrings(httpContext.Request)}");
+					httpContext.Response.Clear();
+					httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+					await httpContext.Response.WriteAsync($"Unauthorized. Requests must supply user-context information. Requested path: {httpContext.Request.Path}, Headers:{HeadersToStrings(httpContext.Request)}");
+					return;
 				}
 			}
 
 			await _next(httpContext);
 		}
 
-		private bool IsPageRequest(string path) => path.StartsWith("/v2/");
+		private string HeadersToStrings(HttpRequest httpContextRequest)
+		{
+			var sb = new StringBuilder();
+			var headerStrings = httpContextRequest.Headers.Select(x => $"Key:{x.Key}, Value'{x.Value.ToString()}'; ").ToArray();
+			sb.AppendJoin(';', headerStrings);
+			return sb.ToString();
+		}
+
+		private bool IsApiRequest(string path) => path.StartsWith("/v2/") && !path.Contains("swagger");
 
 	}
 }
