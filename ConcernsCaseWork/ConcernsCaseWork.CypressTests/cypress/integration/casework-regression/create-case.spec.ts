@@ -15,7 +15,8 @@ describe("Creating a case", () =>
         cy.randomSelectTrust();
         cy.get("#search__option--0").click();
 		cy.getById("continue").click();
-        
+
+        editCaseManagementPage.hasNoConcernType("Safeguarding");
         
 		cy.selectConcernType();
 		cy.selectRiskToTrust();
