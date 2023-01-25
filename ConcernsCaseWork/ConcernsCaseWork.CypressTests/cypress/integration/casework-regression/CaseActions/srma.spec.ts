@@ -318,7 +318,7 @@ describe("Testing the SRMA case action", () =>
                 .hasReason("Regions Group (RG) Intervention")
                 .hasDateAccepted("22 May 2020")
                 .hasDateOfVisit("22 July 2021 - 15 August 2021")
-                .hasDateReportSentToTrust("05-12-2021")
+                .hasDateReportSentToTrust("05 December 2021")
                 .hasNotes("Resolved notes");
         });
 
