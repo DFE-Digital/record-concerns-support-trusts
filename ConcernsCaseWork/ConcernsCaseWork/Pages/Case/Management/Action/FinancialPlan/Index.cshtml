@@ -89,7 +89,7 @@
                         @{
                             if (Model.FinancialPlanModel.DatePlanRequested.HasValue)
                             {
-                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.FinancialPlanModel.DatePlanRequested.Value));
+                                RenderValue(DateTimeHelper.ParseToDisplayDate(Model.FinancialPlanModel.DatePlanRequested));
                             }
                             else
                             {
@@ -106,7 +106,7 @@
                         @{
                             if (Model.FinancialPlanModel.DateViablePlanReceived.HasValue)
                             {
-                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.FinancialPlanModel.DateViablePlanReceived.Value));
+                                RenderValue(DateTimeHelper.ParseToDisplayDate(Model.FinancialPlanModel.DateViablePlanReceived));
                             }
                             else
                             {
@@ -118,7 +118,7 @@
 
                 @* Notes *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Notes</th>
+                    <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
                     <td class="govuk-table__cell" data-testid="notes-text">
                         @{
                             if (!string.IsNullOrEmpty(Model.FinancialPlanModel.Notes))

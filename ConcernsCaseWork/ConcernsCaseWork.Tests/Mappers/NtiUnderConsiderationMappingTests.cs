@@ -10,6 +10,7 @@ using System.Linq;
 using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.Helpers;
 
 namespace ConcernsCaseWork.Tests.Mappers
 {
@@ -153,8 +154,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.Multiple(() =>
 			{
 				Assert.That(actionSummary.Name, Is.EqualTo("NTI Under Consideration"));
-				Assert.That(actionSummary.ClosedDate, Is.EqualTo(testData.ClosedAt.GetFormattedDate()));
-				Assert.That(actionSummary.OpenedDate, Is.EqualTo(testData.CreatedAt.GetFormattedDate()));
+				Assert.That(actionSummary.ClosedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.ClosedAt)));
+				Assert.That(actionSummary.OpenedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.CreatedAt)));
 				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/ntiunderconsideration/{testData.Id}"));
 				Assert.That(actionSummary.StatusName, Is.EqualTo(testData.ClosedStatus.Name));
 			});

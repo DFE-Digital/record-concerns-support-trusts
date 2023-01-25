@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Post, $"{_url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(newNtiWarningLetter),
@@ -75,7 +75,7 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Get, $"{_url}/case/{caseUrn}");
 
 				var response = await client.SendAsync(request);
@@ -94,7 +94,7 @@ namespace ConcernsCaseWork.Service.NtiWarningLetter
 		{
 			try
 			{
-				var client = _httpClientFactory.CreateClient(HttpClientName);
+				var client = CreateHttpClient();
 				var request = new HttpRequestMessage(HttpMethod.Patch, $"{_url}");
 
 				request.Content = new StringContent(JsonConvert.SerializeObject(ntiWarningLetter),
