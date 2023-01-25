@@ -27,6 +27,19 @@
             <div>Build Time: @Model.BuildTime</div>
             <div>Build GUID: @Model.BuildGuid</div>
             <div>Build Message: @Model.BuildMessage</div>
+            <hr />
+
+            <div>
+                <p>Your Roles</p>
+                <ul>
+                    @{
+                        foreach (var role in Model.Roles)
+                        {
+                            <li>@role</li>
+                        }
+                    }
+                </ul>
+            </div>
         </div>
     </div>
 </div>
