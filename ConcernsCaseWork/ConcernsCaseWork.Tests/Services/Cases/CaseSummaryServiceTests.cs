@@ -1,6 +1,5 @@
 using AutoFixture;
 using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Ratings;
@@ -208,7 +207,7 @@ public class CaseSummaryServiceTests
 		// assert
 		result.Count.Should().Be(data.Count);
 		var sortedData = data.OrderByDescending(d => d.CreatedAt);
-		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => DateTimeHelper.ParseToDisplayDate(r.CreatedAt)));
+		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => r.CreatedAt.ToDayMonthYear()));
 	}
 		
 	[Test]
@@ -285,57 +284,57 @@ public class CaseSummaryServiceTests
 	
 	#endregion
 	
-	#region Active by Caseworkers
+	#region Active by Caseworker's team members
 	[Test]
-	public async Task GetActiveCaseSummariesByCaseworkers_WhenNoCases_ReturnsEmptyList()
+	public async Task GetActiveCaseSummariesForTeamMembers_WhenNoCases_ReturnsEmptyList()
 	{
 		// arrange
 		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
 		var trustCachedService = new Mock<ITrustCachedService>();
 
-		var userNames = _fixture.Create<string[]>();
+		var userName = _fixture.Create<string>();
 
-		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userNames[0])).ReturnsAsync(new List<ActiveCaseSummaryDto>());
+		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName)).ReturnsAsync(new List<ActiveCaseSummaryDto>());
 		
 		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesByCaseworkers(userNames);
+		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
 
 		// assert
 		result.Should().BeEmpty();
 	}
 	
 	[Test]
-	public async Task GetActiveCaseSummariesByCaseworkers_WhenCases_ReturnsList()
+	public async Task GetActiveCaseSummariesForTeamMembers_WhenCases_ReturnsList()
 	{
 		// arrange
 		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
 		var trustCachedService = new Mock<ITrustCachedService>();
 
-		var userNames = _fixture.Create<string[]>();
+		var userName = _fixture.Create<string>();
 
 		var data = BuildListActiveCaseSummaryDtos();
-		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userNames[0])).ReturnsAsync(data);
+		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName)).ReturnsAsync(data);
 		
 		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesByCaseworkers(userNames);
+		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
 
 		// assert
 		result.Should().HaveCount(data.Count);
 	}
 		
 	[Test]
-	public async Task GetActiveCaseSummariesByCaseworkers_WhenCasesWithMoreThan3DecisionsAndActions_ReturnsListWithIsMoreActionsAndDecisionsTrue()
+	public async Task GetActiveCaseSummariesForTeamMembers_WhenCasesWithMoreThan3DecisionsAndActions_ReturnsListWithIsMoreActionsAndDecisionsTrue()
 	{
 		// arrange
 		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
 		var trustCachedService = new Mock<ITrustCachedService>();
 
-		var userNames = _fixture.Create<string[]>();
-		var data = BuildActiveCaseSummaryDto(userNames[0], emptyActionsAndDecisions: true);
+		var userName = _fixture.Create<string>();
+		var data = BuildActiveCaseSummaryDto(userName, emptyActionsAndDecisions: true);
 		data.FinancialPlanCases = new List<CaseSummaryDto.ActionDecisionSummaryDto>
 		{
 			new(DateTime.Now, null, "some name 1"), 
@@ -345,27 +344,27 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userNames[0]))
+			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{data});
 		
 		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesByCaseworkers(userNames);
+		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
 
 		// assert
 		result.Single().IsMoreActionsAndDecisions.Should().BeTrue();
 	}
 	
 	[Test]
-	public async Task GetActiveCaseSummariesByCaseworkers_WhenCasesWith3OrFewerDecisionsAndActions_ReturnsListWithIsMoreActionsAndDecisionsFalse()
+	public async Task GetActiveCaseSummariesForTeamMembers_WhenCasesWith3OrFewerDecisionsAndActions_ReturnsListWithIsMoreActionsAndDecisionsFalse()
 	{
 		// arrange
 		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
 		var trustCachedService = new Mock<ITrustCachedService>();
 
-		var userNames = _fixture.Create<string[]>();
-		var data = BuildActiveCaseSummaryDto(userNames[0], emptyActionsAndDecisions: true);
+		var userName = _fixture.Create<string>();
+		var data = BuildActiveCaseSummaryDto(userName, emptyActionsAndDecisions: true);
 		data.Decisions = new List<CaseSummaryDto.ActionDecisionSummaryDto>
 		{
 			new(DateTime.Now, null, "some name 1"),
@@ -380,27 +379,27 @@ public class CaseSummaryServiceTests
 		data.SrmaCases = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userNames[0]))
+			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{data});
 		
 		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesByCaseworkers(userNames);
+		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
 
 		// assert
 		result.Single().IsMoreActionsAndDecisions.Should().BeFalse();
 	}
 
 	[Test]
-	public async Task GetActiveCaseSummariesByCaseworkers_WhenCasesWithMoreThan3DecisionsAndActions_ReturnsNoMoreThan3ActionsAndDecisionsInCreatedDateOrder()
+	public async Task GetActiveCaseSummariesForTeamMembers_WhenCasesWithMoreThan3DecisionsAndActions_ReturnsNoMoreThan3ActionsAndDecisionsInCreatedDateOrder()
 	{
 		// arrange
 		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
 		var trustCachedService = new Mock<ITrustCachedService>();
 
-		var userNames = _fixture.Create<string[]>();
-		var data = BuildActiveCaseSummaryDto(userNames[0], emptyActionsAndDecisions: true);
+		var userName = _fixture.Create<string>();
+		var data = BuildActiveCaseSummaryDto(userName, emptyActionsAndDecisions: true);
 		data.Decisions = new CaseSummaryDto.ActionDecisionSummaryDto[]
 		{
 			new(DateTime.Now.AddDays(-3), null, "1"),
@@ -410,13 +409,13 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userNames[0]))
+			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{data});
 		
 		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesByCaseworkers(userNames);
+		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
 
 		// assert
 		result.Single().ActiveActionsAndDecisions.Length.Should().Be(3);
@@ -426,39 +425,39 @@ public class CaseSummaryServiceTests
 	}
 	
 	[Test]
-	public async Task GetActiveCaseSummariesByCaseworkers_ReturnsCasesSortedByCreatedDateDescending()
+	public async Task GetActiveCaseSummariesForTeamMembers_ReturnsCasesSortedByCreatedDateDescending()
 	{
 		// arrange
 		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
 		var trustCachedService = new Mock<ITrustCachedService>();
 
-		var userNames = _fixture.Create<string[]>();
+		var userName = _fixture.Create<string>();
 		var data = BuildListActiveCaseSummaryDtos();
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userNames[0]))
+			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(data);
 		
 		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesByCaseworkers(userNames);
+		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
 
 		// assert
 		result.Count.Should().Be(data.Count);
 		var sortedData = data.OrderByDescending(d => d.CreatedAt);
-		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => DateTimeHelper.ParseToDisplayDate(r.CreatedAt)));
+		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => r.CreatedAt.ToDayMonthYear()));
 	}
 		
 	[Test]
-	public async Task GetActiveCaseSummariesByCaseworkers_ReturnsCasesWithConcernsSortedByRagRating()
+	public async Task GetActiveCaseSummariesForTeamMembers_ReturnsCasesWithConcernsSortedByRagRating()
 	{
 		// arrange
 		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
 		var trustCachedService = new Mock<ITrustCachedService>();
 
-		var userNames = _fixture.Create<string[]>();
-		var data = BuildActiveCaseSummaryDto(userNames[0]);
+		var userName = _fixture.Create<string>();
+		var data = BuildActiveCaseSummaryDto(userName);
 		data.ActiveConcerns = new List<CaseSummaryDto.ConcernSummaryDto> { 
 			new("4", new RatingDto("Amber", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now),
 			new("2", new RatingDto("Red", DateTimeOffset.Now, DateTimeOffset.Now, 1), DateTime.Now),
@@ -469,13 +468,13 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userNames[0]))
+			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{ data });
 		
 		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesByCaseworkers(userNames);
+		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
 
 		// assert
 		result.Count.Should().Be(1);
@@ -489,14 +488,14 @@ public class CaseSummaryServiceTests
 	[TestCase("Amber-Green")]
 	[TestCase("Red-Plus")]
 	[TestCase("Green")]
-	public async Task GetActiveCaseSummariesByCaseworkers_ReturnsCasesWithConcernsSortedByCreatedAtOldestFirstWhenRagRatingsTheSame(string ragRating)
+	public async Task GetActiveCaseSummariesForTeamMembers_ReturnsCasesWithConcernsSortedByCreatedAtOldestFirstWhenRagRatingsTheSame(string ragRating)
 	{
 		// arrange
 		var mockCaseSummaryService = new Mock<IApiCaseSummaryService>();
 		var trustCachedService = new Mock<ITrustCachedService>();
 
-		var userNames = _fixture.Create<string[]>();
-		var data1 = BuildActiveCaseSummaryDto(userNames[0]);
+		var userName = _fixture.Create<string>();
+		var data1 = BuildActiveCaseSummaryDto(userName);
 		var ratingDto = new RatingDto(ragRating, DateTimeOffset.Now, DateTimeOffset.Now, 1);
 		data1.ActiveConcerns = new List<CaseSummaryDto.ConcernSummaryDto>
 		{
@@ -509,13 +508,13 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userNames[0]))
+			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{ data1 });
 		
 		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesByCaseworkers(userNames);
+		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
 
 		// assert
 		result.Count.Should().Be(1);
@@ -688,7 +687,7 @@ public class CaseSummaryServiceTests
 		// assert
 		result.Count.Should().Be(data.Count);
 		var sortedData = data.OrderByDescending(d => d.CreatedAt);
-		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => DateTimeHelper.ParseToDisplayDate(r.CreatedAt)));
+		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => r.CreatedAt.ToDayMonthYear()));
 	}
 
 	[Test]
@@ -889,7 +888,7 @@ public class CaseSummaryServiceTests
 		// assert
 		result.Count.Should().Be(data.Count);
 		var sortedData = data.OrderByDescending(d => d.CreatedAt);
-		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => DateTimeHelper.ParseToDisplayDate(r.CreatedAt)));
+		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => r.CreatedAt.ToDayMonthYear()));
 	}
 
 	[Test]
@@ -1089,7 +1088,7 @@ public class CaseSummaryServiceTests
 		// assert
 		result.Count.Should().Be(data.Count);
 		var sortedData = data.OrderByDescending(d => d.CreatedAt);
-		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => DateTimeHelper.ParseToDisplayDate(r.CreatedAt)));
+		result.Select(r => r.CreatedAt).Should().ContainInConsecutiveOrder(sortedData.Select(r => r.CreatedAt.ToDayMonthYear()));
 	}
 	
 	[Test]

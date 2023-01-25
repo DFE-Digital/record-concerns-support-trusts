@@ -62,7 +62,7 @@ namespace ConcernsCaseWork.Pages
 				// get any team members defined
 				var team = await _teamsService.GetCaseworkTeam(GetUserName());
 
-				var teamActiveCases = _caseSummaryService.GetActiveCaseSummariesByCaseworkers(team.TeamMembers);
+				var teamActiveCases = _caseSummaryService.GetActiveCaseSummariesForTeamMembers(GetUserName());
 
 				var recordUserSignedTask = RecordUserSignIn(team);
 

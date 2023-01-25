@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -98,8 +99,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null, 
                 getConcernsCaseByUrn.Object, 
                 null,
-                null, 
                 null,
+                null, 
                 null,
                 null,
                 null,
@@ -252,13 +253,13 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         }
         
         [Fact]
-        public async Task GetActiveConcernsCaseSummariesByOwnerId_ReturnsCaseSummaryResponses_WhenConcernsCasesAreFound()
+        public async Task GetActiveConcernsCaseSummariesByTeamMemberId_ReturnsCaseSummaryResponses_WhenConcernsCasesAreFound()
         {
-	        var mockService = new Mock<IGetActiveConcernsCaseSummariesByOwner>();
+	        var mockService = new Mock<IGetActiveConcernsCaseSummariesByTeamMember>();
 	        var ownerId = "some.user";
 	        var data = Builder<ActiveCaseSummaryResponse>.CreateListOfSize(4).Build();
 
-	        mockService.Setup(a => a.Execute(ownerId))
+	        mockService.Setup(a => a.Execute(ownerId, It.IsAny<CancellationToken>()))
 		        .ReturnsAsync(data);
 
 	        var controller = new ConcernsCaseController(
@@ -268,25 +269,25 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null,
 		        null,
-		        mockService.Object,
 		        null,
 		        null,
-		        null
+		        null,
+		        mockService.Object
 	        );
-	        var response = await controller.GetActiveSummariesByOwnerId(ownerId);
+	        var response = await controller.GetActiveSummariesForUser(ownerId, CancellationToken.None);
   
 	        var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
                 
         [Fact]
-        public async Task GetActiveConcernsCaseSummariesByOwnerId_ReturnsEmptyList_WhenNoConcernsCasesAreFound()
+        public async Task GetActiveConcernsCaseSummariesByTeamMemberId_ReturnsEmptyList_WhenNoConcernsCasesAreFound()
         {
-	        var mockService = new Mock<IGetActiveConcernsCaseSummariesByOwner>();
+	        var mockService = new Mock<IGetActiveConcernsCaseSummariesByTeamMember>();
 	        var ownerId = "some.user";
 	        var data = new List<ActiveCaseSummaryResponse>();
 
-	        mockService.Setup(a => a.Execute(ownerId))
+	        mockService.Setup(a => a.Execute(ownerId, It.IsAny<CancellationToken>()))
 		        .ReturnsAsync(data);
 
 	        var controller = new ConcernsCaseController(
@@ -296,12 +297,12 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null,
 		        null,
-		        mockService.Object,
 		        null,
 		        null,
-		        null
+		        null,
+		        mockService.Object
 	        );
-	        var response = await controller.GetActiveSummariesByOwnerId(ownerId);
+	        var response = await controller.GetActiveSummariesForUser(ownerId, CancellationToken.None);
   
 	        var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
@@ -325,9 +326,9 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null,
 		        null,
-		        null,
 		        mockService.Object,
-		        null
+		        null,
+				null
 	        );
 	        var response = await controller.GetActiveSummariesByTrust(trustPrn);
   
@@ -353,8 +354,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null,
 		        null,
-		        null,
 		        mockService.Object,
+		        null,
 		        null
 	        );
 	        var response = await controller.GetActiveSummariesByTrust(trustPrn);
@@ -378,10 +379,9 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null, 
 		        null, 
 		        null,
-		        null,
-		        null,
-		        null,
+		        null,null,
 		        mockService.Object,
+		        null,
 		        null,
 		        null
 	        );
@@ -408,8 +408,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null,
 		        null,
-		        null,
 		        mockService.Object,
+		        null,
 		        null,
 		        null
 	        );
@@ -438,8 +438,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null,
 		        null,
-		        null,
-		        mockService.Object
+		        mockService.Object,
+		        null
 	        );
 	        var response = await controller.GetClosedSummariesByTrust(trustPrn);
   
@@ -466,8 +466,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null,
 		        null,
-		        null,
-		        mockService.Object
+		        mockService.Object,
+		        null
 	        );
 	        var response = await controller.GetClosedSummariesByTrust(ownerId);
   
