@@ -47,7 +47,7 @@ describe("Testing case action NTI", () =>
 
         viewNtiPage
             .hasStatus("Progress on track")
-            .hasDateIssued("22-10-2022")
+            .hasDateIssued("22 October 2022")
             .hasReasonIssued("Cash flow problems")
             .hasReasonIssued("Risk of insolvency")
             .hasConditions("Audit and risk committee")
@@ -127,7 +127,7 @@ describe("Testing case action NTI", () =>
 
         viewNtiPage
             .hasStatus("Issued NTI")
-            .hasDateIssued("11-05-2021")
+            .hasDateIssued("11 May 2021")
             .hasReasonIssued("Governance concerns")
             .hasReasonIssued("Safeguarding")
             .hasConditions("National deals for schools")
@@ -314,7 +314,7 @@ describe("Testing case action NTI", () =>
             .getByTestId("NTI").click();
 
             viewNtiPage
-                .hasDateIssued("22-10-2022")
+                .hasDateIssued("22 October 2022")
                 .hasReasonIssued("Cash flow problems")
                 .hasReasonIssued("Risk of insolvency")
                 .hasConditions("Audit and risk committee")
@@ -327,9 +327,9 @@ describe("Testing case action NTI", () =>
                 .hasConditions("Trustee contact details")
                 .hasConditions("Qualified Floating Charge (QFC)")
                 .hasNotes("This is my final notes")
-                .hasNoEditButton()
-                .hasNoCloseButton()
-                .hasNoCancelButton()
-                .hasNoLiftButton();
+                .cannotEdit()
+                .cannotClose()
+                .cannotCancel()
+                .cannotLift();
     }
 });

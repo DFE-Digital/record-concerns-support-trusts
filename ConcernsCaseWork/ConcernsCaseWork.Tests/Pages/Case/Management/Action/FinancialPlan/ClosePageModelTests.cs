@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
 using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Service.FinancialPlan;
@@ -39,7 +40,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"],
-				Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+				Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]
@@ -177,7 +178,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"],
-				Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+				Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			
 			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>()), Times.Never);
 		}

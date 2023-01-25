@@ -50,7 +50,7 @@
                     </td>
                 </tr>
 
-                @if (!Model.Decision.IsEditable)
+                @if (Model.Decision.ClosedDate != string.Empty)
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="decision-closed-label">Date decision closed</th>
@@ -136,7 +136,7 @@
                 </tr>
 
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="supporting-notes-label">Supporting notes</th>
+                    <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="supporting-notes-label">Supporting notes (optional)</th>
                     <td class="govuk-table__cell" data-testid="supporting-notes-text">
                         @{
                             RenderTextAreaValue(Model.Decision.SupportingNotes);

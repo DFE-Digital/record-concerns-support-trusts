@@ -126,9 +126,9 @@ window.addCaseAimValidator = function(validator) {
 window.addCaseHistoryValidator = function (validator) {
 	validator.addValidator('case-history', [{
 		method: function (field) {
-			return field.value.trim().length <= 4000;
+			return field.value.trim().length <= 4300;
 		},
-		message: 'Case history must be 4000 characters or less'
+		message: 'Case history must be 4300 characters or less'
 	}]);
 }
 window.addDirectionOfTravelValidator = function(validator) {
