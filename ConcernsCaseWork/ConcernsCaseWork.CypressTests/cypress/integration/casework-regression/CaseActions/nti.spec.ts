@@ -266,7 +266,7 @@ describe("Testing case action NTI", () =>
 
         viewNtiPage
             .hasStatus("Closed")
-            .hasDateClosed("15-12-2020");
+            .hasDateClosed("15 December 2020");
     });
 
     function addNtiToCase()
