@@ -1,9 +1,9 @@
 USE [DaRT_Sandbox]
 GO
-/****** Object:  Schema [dartmigration]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  Schema [dartmigration]    Script Date: 25/01/2023 11:17:25 ******/
 CREATE SCHEMA [dartmigration]
 GO
-/****** Object:  UserDefinedTableType [dartmigration].[CaseUrnTableType]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  UserDefinedTableType [dartmigration].[CaseUrnTableType]    Script Date: 25/01/2023 11:17:25 ******/
 CREATE TYPE [dartmigration].[CaseUrnTableType] AS TABLE(
 	[CaseUrn] [int] NOT NULL,
 	PRIMARY KEY CLUSTERED 
@@ -12,7 +12,7 @@ CREATE TYPE [dartmigration].[CaseUrnTableType] AS TABLE(
 )WITH (IGNORE_DUP_KEY = OFF)
 )
 GO
-/****** Object:  UserDefinedFunction [dartmigration].[AddLabelAndValueLineIfNotNull]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  UserDefinedFunction [dartmigration].[AddLabelAndValueLineIfNotNull]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -37,7 +37,7 @@ BEGIN
 	RETURN CONCAT(ISNULL(@OriginalString,''), @Label, @Value, Char(10), Char(13))
 END
 GO
-/****** Object:  UserDefinedFunction [dartmigration].[GetCaseHistory]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  UserDefinedFunction [dartmigration].[GetCaseHistory]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -87,7 +87,7 @@ BEGIN
 	RETURN @Result
 END
 GO
-/****** Object:  UserDefinedFunction [dartmigration].[GetConcernCaseStatusId]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  UserDefinedFunction [dartmigration].[GetConcernCaseStatusId]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -117,7 +117,7 @@ BEGIN
 	RETURN 3;
 END
 GO
-/****** Object:  UserDefinedFunction [dartmigration].[GetConcernRatingId]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  UserDefinedFunction [dartmigration].[GetConcernRatingId]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -149,7 +149,7 @@ BEGIN
 	RETURN 5;
 END
 GO
-/****** Object:  UserDefinedFunction [dartmigration].[GetConcernRecordStatusId]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  UserDefinedFunction [dartmigration].[GetConcernRecordStatusId]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -180,7 +180,7 @@ BEGIN
 	RETURN 3;
 END
 GO
-/****** Object:  UserDefinedFunction [dartmigration].[GetConcernsCaseClosedDate]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  UserDefinedFunction [dartmigration].[GetConcernsCaseClosedDate]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -205,11 +205,12 @@ BEGIN
 	RETURN @DateTime
 END
 GO
-/****** Object:  UserDefinedFunction [dartmigration].[GetConcernTypeId]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  UserDefinedFunction [dartmigration].[GetConcernTypeId]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 -- =============================================
@@ -253,13 +254,14 @@ BEGIN
 	ELSE IF @DaRTConcernTypeName = 'Governance + Compliance - Governance'	RETURN 8; --SELECT @ConcernsTypeUrn = [Urn] FROM dartmigration.[ConcernType] WHERE [Name] = 'Governance and compliance' AND [Description] = 'Governance'
 	ELSE IF @DaRTConcernTypeName = 'Irregularity - Irregularity'			RETURN 21; --SELECT @ConcernsTypeUrn = [Urn] FROM dartmigration.[ConcernType] WHERE [Name] = 'Irregularity' AND [Description] = 'Irregularity'
 	ELSE IF @DaRTConcernTypeName = 'Irregularity - Suspected Fraud'			RETURN 22; --SELECT @ConcernsTypeUrn = [Urn] FROM dartmigration.[ConcernType] WHERE [Name] = 'Irregularity' AND [Description] = 'Suspected fraud'
+	ELSE IF @DaRTConcernTypeName = 'Governance + Compliance - Safeguarding' RETURN 24;
 	--ELSE IF @DaRTConcernTypeName = 'Proactive Engagement â€“ SRMA support'	SELECT @ConcernsTypeUrn = [Urn] FROM dartmigration.[ConcernType] WHERE [Name] = '??'
 
 	RETURN NULL; 
 
 END
 GO
-/****** Object:  UserDefinedFunction [dartmigration].[GetDateOrMinimumIfNull]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  UserDefinedFunction [dartmigration].[GetDateOrMinimumIfNull]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -281,7 +283,7 @@ BEGIN
 	RETURN @DateTime
 END
 GO
-/****** Object:  UserDefinedFunction [dartmigration].[GetMeansOfReferralId]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  UserDefinedFunction [dartmigration].[GetMeansOfReferralId]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -329,7 +331,7 @@ BEGIN
 	RETURN NULL;
 END
 GO
-/****** Object:  UserDefinedFunction [dartmigration].[GetTerritory]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  UserDefinedFunction [dartmigration].[GetTerritory]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -362,7 +364,7 @@ BEGIN
 	RETURN NULL
 END
 GO
-/****** Object:  UserDefinedFunction [dartmigration].[GetTrustUkPrn]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  UserDefinedFunction [dartmigration].[GetTrustUkPrn]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -386,7 +388,7 @@ BEGIN
 	RETURN @UkPrn
 END
 GO
-/****** Object:  Table [dartmigration].[dart extract]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  Table [dartmigration].[dart extract]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -583,7 +585,7 @@ CREATE TABLE [dartmigration].[dart extract](
 	[Missing] [tinyint] NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  View [dartmigration].[vwConcernCaseRaw]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  View [dartmigration].[vwConcernCaseRaw]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -599,7 +601,7 @@ SELECT        Case_Id, Concern_Level, Main_Reason_for_ESFA_Concern, Issue, Conce
 FROM            dartmigration.[dart extract]
 WHERE        (Case_Type = 'Concern')
 GO
-/****** Object:  Table [dartmigration].[DartUsers]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  Table [dartmigration].[DartUsers]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -609,7 +611,7 @@ CREATE TABLE [dartmigration].[DartUsers](
 	[DaRTName] [nvarchar](300) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  View [dartmigration].[vwConcernsCaseTransformed]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  View [dartmigration].[vwConcernsCaseTransformed]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -650,7 +652,7 @@ SELECT
 FROM    dartmigration.vwConcernCaseRaw
 LEFT OUTER JOIN dartmigration.DartUsers du on Case_Owner = du.DartName
 GO
-/****** Object:  View [dartmigration].[vwConcernsRecordRaw]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  View [dartmigration].[vwConcernsRecordRaw]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -661,7 +663,7 @@ SELECT        Case_Id, Concern_Level, Status, Case_create_date, Date_Last_Update
 FROM            dartmigration.[dart extract]
 WHERE        (Case_Type = 'Concern')
 GO
-/****** Object:  View [dartmigration].[vwConcernsRecordTransformed]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  View [dartmigration].[vwConcernsRecordTransformed]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -688,7 +690,7 @@ SELECT
 FROM            
 	dartmigration.vwConcernsRecordRaw
 GO
-/****** Object:  Table [dartmigration].[CaseIdsToBeImported]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  Table [dartmigration].[CaseIdsToBeImported]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -702,7 +704,7 @@ CREATE TABLE [dartmigration].[CaseIdsToBeImported](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dartmigration].[giasgroup]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  Table [dartmigration].[giasgroup]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -712,7 +714,7 @@ CREATE TABLE [dartmigration].[giasgroup](
 	[Companies House Number] [nvarchar](100) NOT NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  StoredProcedure [dartmigration].[uspExportDartExtractToConcerns_TestData_Step1-Cases]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  StoredProcedure [dartmigration].[uspExportDartExtractToConcerns_TestData_Step1-Cases]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -806,7 +808,7 @@ BEGIN
 		SET IDENTITY_INSERT [sip].[concerns].[ConcernsCase] OFF
  END
 GO
-/****** Object:  StoredProcedure [dartmigration].[uspExportDartExtractToConcerns_TestData_Step2-Records]    Script Date: 23/01/2023 16:35:30 ******/
+/****** Object:  StoredProcedure [dartmigration].[uspExportDartExtractToConcerns_TestData_Step2-Records]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
