@@ -17,7 +17,16 @@ public class UserContextMiddleware
 
 	public Task Invoke(HttpContext httpContext, IClientUserInfoService userInfoService)
 	{
-		userInfoService.SetPrincipal(httpContext.User);
-		return _next(httpContext);
+		if (httpContext.User.Identity != null && IsPageRequest(httpContext.Request.Path))
+		{
+			userInfoService.SetPrincipal(httpContext.User);
+			return _next(httpContext);
+		}
+		else
+		{
+			return _next(httpContext);
+		}
 	}
+
+	private bool IsPageRequest(string path) => !path.StartsWith("/v2/");
 }

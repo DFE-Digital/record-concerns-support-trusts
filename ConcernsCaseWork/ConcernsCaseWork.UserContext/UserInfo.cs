@@ -8,8 +8,8 @@ namespace ConcernsCaseWork.UserContext
 		public string Name { get; set; }
 		public string[] Roles { get; set; }
 
-		private const string NameHeaderKey = "x-userContext-name";
-		private const string RoleHeaderKeyPrefix = "x-userContext-role-";
+		private const string NameHeaderKey = "x-user-context-name";
+		private const string RoleHeaderKeyPrefix = "x-user-context-role-";
 
 		public static string[] ParseRoleClaims(string[] claims)
 		{
@@ -29,14 +29,21 @@ namespace ConcernsCaseWork.UserContext
 		public static UserInfo FromHeaders(KeyValuePair<string,string>[] headers)
 		{
 
-			var name = headers.FirstOrDefault(x => x.Key == NameHeaderKey).Value;
+			var name = headers.FirstOrDefault(x => x.Key.Equals(NameHeaderKey, StringComparison.InvariantCultureIgnoreCase)).Value;
 
 			var roles = headers
-				.Where(x => x.Key.StartsWith(RoleHeaderKeyPrefix) && x.Value.StartsWith(Claims.ClaimPrefix, StringComparison.InvariantCultureIgnoreCase))
+				.Where(x => x.Key.StartsWith(RoleHeaderKeyPrefix, StringComparison.InvariantCultureIgnoreCase) && x.Value.StartsWith(Claims.ClaimPrefix, StringComparison.InvariantCultureIgnoreCase))
 				.Select(x => x.Value)
 				.ToArray();
 
-			return new UserInfo() { Name = name, Roles = roles };
+			if (string.IsNullOrWhiteSpace(name) || roles.Length == 0)
+			{
+				return null;
+			}
+			else
+			{
+				return new UserInfo() { Name = name, Roles = roles };
+			}
 		}
 
 

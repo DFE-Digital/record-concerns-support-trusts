@@ -1,6 +1,8 @@
 ﻿using ConcernsCaseWork.Integration.Tests.Factory;
+using ConcernsCaseWork.Integration.Tests.Helpers;
 using ConcernsCaseWork.Service.Types;
 using ConcernsCaseWork.Shared.Tests.Factory;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -20,14 +22,14 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 		/// Variables for caseworker and trustukprn, creates cases on Academies API.
 		/// Future work can be to delete the records from the SQLServer.
 		/// </summary>
-		
+
 		[OneTimeSetUp]
 		public void OneTimeSetup()
 		{
 			_configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			_factory = new WebAppFactory(_configuration);
 		}
-		
+
 		[OneTimeTearDown]
 		public void OneTimeTearDown()
 		{
@@ -39,9 +41,10 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 		{
 			// arrange
 			using var serviceScope = _factory.Services.CreateScope();
+			serviceScope.ServiceProvider.GetService<IClientUserInfoService>().SetPrincipal(ClaimsPrincipalTestHelper.CreateCaseWorkerPrincipal());
 			var typeService = serviceScope.ServiceProvider.GetRequiredService<ITypeService>();
 
-			//act 
+			//act
 			var typesDto = await typeService.GetTypes();
 
 			// assert

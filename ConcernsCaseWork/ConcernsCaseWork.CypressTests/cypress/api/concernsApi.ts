@@ -1,8 +1,22 @@
-import { EnvApi, EnvApiKey } from "../constants/cypressConstants";
+import { EnvApi } from "../constants/cypressConstants";
 import { ApiBase } from "./apiBase";
+import { GetConcernResponse, ResponseWrapper } from "./apiDomain";
 
 class ConcernsApi extends ApiBase
 {
+    public get(caseId: number): Cypress.Chainable<Array<GetConcernResponse>>
+    {
+        return cy.request<ResponseWrapper<Array<GetConcernResponse>>>({
+            method: 'GET',
+            url: Cypress.env(EnvApi) + `/v2/concerns-records/case/urn/${caseId}`,
+            headers: this.getHeaders(),
+        })
+        .then(response =>
+        {
+            return response.body.data;
+        });
+    }
+
     public post(caseId: number): Cypress.Chainable
     {
         return cy.request({
