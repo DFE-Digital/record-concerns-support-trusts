@@ -18,12 +18,12 @@
             <div class="govuk-tabs govuk-!-margin-top-6" data-module="govuk-tabs">
                 <ul class="govuk-tabs__list">
                     <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
-                        <a class="govuk-tabs__tab" href="#your-casework">
+                        <a class="govuk-tabs__tab" asp-page="/Home" role="button">
                             Your Casework
                         </a>
                     </li>
                     <li class="govuk-tabs__list-item">
-                        <a class="govuk-tabs__tab" href="#team-casework">
+                        <a class="govuk-tabs__tab" asp-page="/TeamCasework" role="button">
                             Team Casework
                         </a>
                     </li>
@@ -44,16 +44,6 @@
 
                     <!-- Active casework -->
                     <partial name="_CasesActive" model="Model.ActiveCases" />
-                </div>
-
-                <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="team-casework">
-                    <div class="govuk-button-group flexalign__right">
-                        <a class="govuk-button govuk-button--secondary" asp-page="/team/selectColleagues" role="button">
-                            Select Colleagues
-                        </a>
-                    </div>
-                    <!-- Team casework -->
-                    <partial name="_CasesTeamActive" model="Model.ActiveTeamCases" />
                 </div>
             </div>
         </div>

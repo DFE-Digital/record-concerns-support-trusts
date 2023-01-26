@@ -57,7 +57,7 @@ namespace ConcernsCaseWork.Pages.Team
 				Guard.Against.Null(SelectedColleagues);
 
 				await _teamsService.UpdateCaseworkTeam(new Models.Teams.ConcernsTeamCaseworkModel(_CurrentUserName, SelectedColleagues.ToArray()));
-				return Redirect("/#team-casework");
+				return Redirect("/TeamCasework");
 			}
 			catch (Exception ex)
 			{

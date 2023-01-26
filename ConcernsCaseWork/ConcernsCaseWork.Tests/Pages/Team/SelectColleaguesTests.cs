@@ -76,7 +76,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 		{
 			// arrange
 			const string NewUsernameSelection = "Fred.Flintstone";
-			const string ExpectedRedirectUrl = "/#team-casework";
+			const string ExpectedRedirectUrl = "/TeamCasework";
 
 			var testFixture = new TestFixture()
 				.WithPreviouslySelectedUser("Mr.Bean");
