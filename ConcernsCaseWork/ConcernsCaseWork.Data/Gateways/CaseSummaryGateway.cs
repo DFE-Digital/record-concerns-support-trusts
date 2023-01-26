@@ -11,7 +11,7 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 		_concernsDbContext = concernsDbContext;
 	}
 	
-	public async Task<IList<ActiveCaseSummaryVm>> GetActiveCaseSummariesByTeamMember(string[] teamMemberIds)
+	public async Task<IList<ActiveCaseSummaryVm>> GetActiveCaseSummariesByTeamMembers(string[] teamMemberIds)
 	{
 		var query = _concernsDbContext.ConcernsCase
 			.Include(cases => cases.Rating)

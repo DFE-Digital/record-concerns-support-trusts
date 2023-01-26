@@ -33,7 +33,7 @@ public class GetActiveConcernsCaseSummariesForUsersTeam : IGetActiveConcernsCase
 			return new List<ActiveCaseSummaryResponse>();
 		}
 		
-		var caseSummaries = await _caseSummaryGateway.GetActiveCaseSummariesByTeamMember(teamMembers);
+		var caseSummaries = await _caseSummaryGateway.GetActiveCaseSummariesByTeamMembers(teamMembers);
 		
 		return caseSummaries.Select(CaseSummaryResponseFactory.Create).ToList();
 	}
