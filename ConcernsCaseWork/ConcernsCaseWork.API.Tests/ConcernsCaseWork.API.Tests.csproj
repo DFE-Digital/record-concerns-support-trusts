@@ -45,8 +45,4 @@
         </Content>
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Remove="UseCases\GetActiveConcernsCaseSummariesByTeamMemberTests.cs" />
-    </ItemGroup>
-
 </Project>
