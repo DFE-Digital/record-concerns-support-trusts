@@ -137,7 +137,10 @@ describe("Testing the NTI warning letter action", () =>
         closeNtiWarningLetterPage
             .withReason("Conditions met")
             .withNotes("This is my final notes")
-            .close();
+
+        cy.waitForJavascript();
+        
+        closeNtiWarningLetterPage.close();
 
         Logger.Log("Validate the Closed NTI warning letter on the view page");
         cy.get("#close-case-actions td")

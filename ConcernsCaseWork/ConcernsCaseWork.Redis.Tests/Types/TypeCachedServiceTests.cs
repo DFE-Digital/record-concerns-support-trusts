@@ -45,7 +45,7 @@ namespace ConcernsCaseWork.Redis.Tests.Types
 			
 			// assert
 			Assert.That(actualType, Is.Not.Null);
-			Assert.That(actualType.Count, Is.EqualTo(8));
+			Assert.That(actualType.Count, Is.EqualTo(9));
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<IList<TypeDto>>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<IList<TypeDto>>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Once);
@@ -70,7 +70,7 @@ namespace ConcernsCaseWork.Redis.Tests.Types
 			
 			// assert
 			Assert.That(actualType, Is.Not.Null);
-			Assert.That(actualType.Count, Is.EqualTo(8));
+			Assert.That(actualType.Count, Is.EqualTo(9));
 			
 			mockCacheProvider.Verify(c => c.GetFromCache<IList<TypeDto>>(It.IsAny<string>()), Times.Once);
 			mockCacheProvider.Verify(c => c.SetCache(It.IsAny<string>(), It.IsAny<IList<TypeDto>>(), It.IsAny<DistributedCacheEntryOptions>()), Times.Never);
