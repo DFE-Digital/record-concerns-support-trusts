@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages
@@ -25,8 +26,6 @@ namespace ConcernsCaseWork.Pages
 		private readonly ICaseSummaryService _caseSummaryService;
 		private readonly ILogger<HomePageModel> _logger;
 		private readonly ITeamsModelService _teamsService;
-
-		public List<ActiveCaseSummaryModel> ActiveTeamCases { get; private set; }
 		
 		public List<ActiveCaseSummaryModel> ActiveCases { get; private set; }
 
@@ -57,20 +56,12 @@ namespace ConcernsCaseWork.Pages
 				// And get all live cases for each caseworker
 
 				// cases belonging to this user
-				var currentUserActiveCases = _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName());
-
 				// get any team members defined
 				var team = await _teamsService.GetCaseworkTeam(GetUserName());
 
-				var teamActiveCases = _caseSummaryService.GetActiveCaseSummariesForTeamMembers(GetUserName());
+				await RecordUserSignIn(team);
 
-				var recordUserSignedTask = RecordUserSignIn(team);
-
-				await Task.WhenAll(currentUserActiveCases, teamActiveCases, recordUserSignedTask);
-
-				// Assign responses to UI public properties
-				ActiveCases = currentUserActiveCases.Result;
-				ActiveTeamCases = teamActiveCases.Result;
+				ActiveCases = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName());
 			}
 			catch (Exception ex)
 			{

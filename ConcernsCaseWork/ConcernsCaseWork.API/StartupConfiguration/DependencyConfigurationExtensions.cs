@@ -81,6 +81,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IGetActiveConcernsCaseSummariesByTrust, GetActiveConcernsCaseSummariesByTrust>();
 			services.AddScoped<IGetClosedConcernsCaseSummariesByTrust, GetClosedConcernsCaseSummariesByTrust>();
 			services.AddScoped<IGetActiveConcernsCaseSummariesByTeamMember, GetActiveConcernsCaseSummariesByTeamMember>(); 
+			services.AddScoped<IGetActiveConcernsCaseSummariesByOwner, GetActiveConcernsCaseSummariesByOwner>(); 
 
 			services.AddScoped<ISRMAGateway, SRMAGateway>();
 			services.AddScoped<IFinancialPlanGateway, FinancialPlanGateway>();

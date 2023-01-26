@@ -19,6 +19,7 @@ namespace ConcernsCaseWork.API.Controllers
         private readonly IUpdateConcernsCase _updateConcernsCase;
         private readonly IGetConcernsCasesByOwnerId _getConcernsCasesByOwnerId;
         private readonly IGetActiveConcernsCaseSummariesByTeamMember _getActiveConcernsCaseSummariesByTeamMember;
+        private readonly IGetActiveConcernsCaseSummariesByOwner _getActiveConcernsCaseSummariesByOwner;
         private readonly IGetClosedConcernsCaseSummariesByOwner _getClosedConcernsCaseSummariesByOwner;
         private readonly IGetActiveConcernsCaseSummariesByTrust _getActiveConcernsCaseSummariesByTrust;
         private readonly IGetClosedConcernsCaseSummariesByTrust _getClosedConcernsCaseSummariesByTrust;
@@ -33,7 +34,8 @@ namespace ConcernsCaseWork.API.Controllers
             IGetClosedConcernsCaseSummariesByOwner getClosedConcernsCaseSummaries, 
             IGetActiveConcernsCaseSummariesByTrust getActiveConcernsCaseSummariesByTrust, 
             IGetClosedConcernsCaseSummariesByTrust getClosedConcernsCaseSummariesByTrust, 
-            IGetActiveConcernsCaseSummariesByTeamMember getActiveConcernsCaseSummariesByTeamMember)
+            IGetActiveConcernsCaseSummariesByTeamMember getActiveConcernsCaseSummariesByTeamMember, 
+            IGetActiveConcernsCaseSummariesByOwner getActiveConcernsCaseSummariesByOwner)
         {
             _logger = logger;
             _createConcernsCase = createConcernsCase;
@@ -45,6 +47,7 @@ namespace ConcernsCaseWork.API.Controllers
             _getActiveConcernsCaseSummariesByTrust = getActiveConcernsCaseSummariesByTrust;
             _getClosedConcernsCaseSummariesByTrust = getClosedConcernsCaseSummariesByTrust;
             _getActiveConcernsCaseSummariesByTeamMember = getActiveConcernsCaseSummariesByTeamMember;
+            _getActiveConcernsCaseSummariesByOwner = getActiveConcernsCaseSummariesByOwner;
         }
 
         [HttpPost]
@@ -146,6 +149,20 @@ namespace ConcernsCaseWork.API.Controllers
         [Route("summary/{userId}/active")]
         [MapToApiVersion("2.0")]
         public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesForUser(string userId, CancellationToken cancellationToken)
+        {
+	        _logger.LogInformation("Attempting to get active Concerns Case summaries for User Id {UserId}", userId);
+	        var caseSummaries = await _getActiveConcernsCaseSummariesByOwner.Execute(userId);
+
+	        _logger.LogInformation("Returning active Concerns cases for User Id {UserId}", userId);
+	        var response = new ApiResponseV2<ActiveCaseSummaryResponse>(caseSummaries, null);
+            
+	        return Ok(response);
+        }
+        
+        [HttpGet]
+        [Route("summary/{userId}/active/team")]
+        [MapToApiVersion("2.0")]
+        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesForUsersTeam(string userId, CancellationToken cancellationToken)
         {
 	        _logger.LogInformation("Attempting to get active Concerns Case summaries for User Id {UserId}", userId);
 	        var caseSummaries = await _getActiveConcernsCaseSummariesByTeamMember.Execute(userId, cancellationToken);

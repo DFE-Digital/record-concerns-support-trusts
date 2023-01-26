@@ -1,5 +1,6 @@
 using AutoFixture;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Ratings;
@@ -31,7 +32,7 @@ public class CaseSummaryServiceTests
 
 		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName)).ReturnsAsync(new List<ActiveCaseSummaryDto>());
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByCaseworker(userName);
@@ -52,7 +53,7 @@ public class CaseSummaryServiceTests
 		var data = BuildListActiveCaseSummaryDtos(userName);
 		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName)).ReturnsAsync(data);
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByCaseworker(userName);
@@ -76,7 +77,7 @@ public class CaseSummaryServiceTests
 		var data = BuildListActiveCaseSummaryDtos(userName);
 		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName)).ReturnsAsync(data);
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByCaseworker(userName);
@@ -107,7 +108,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{data});
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByCaseworker(userName);
@@ -143,7 +144,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{data});
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByCaseworker(userName);
@@ -173,7 +174,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{data});
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByCaseworker(userName);
@@ -199,7 +200,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(data);
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByCaseworker(userName);
@@ -232,7 +233,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{ data });
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByCaseworker(userName);
@@ -272,7 +273,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{ data });
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByCaseworker(userName);
@@ -294,9 +295,9 @@ public class CaseSummaryServiceTests
 
 		var userName = _fixture.Create<string>();
 
-		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName)).ReturnsAsync(new List<ActiveCaseSummaryDto>());
+		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesForTeam(userName)).ReturnsAsync(new List<ActiveCaseSummaryDto>());
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
@@ -315,9 +316,9 @@ public class CaseSummaryServiceTests
 		var userName = _fixture.Create<string>();
 
 		var data = BuildListActiveCaseSummaryDtos();
-		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName)).ReturnsAsync(data);
+		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesForTeam(userName)).ReturnsAsync(data);
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
@@ -344,10 +345,10 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
+			.Setup(s => s.GetActiveCaseSummariesForTeam(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{data});
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
@@ -379,10 +380,10 @@ public class CaseSummaryServiceTests
 		data.SrmaCases = new List<CaseSummaryDto.ActionDecisionSummaryDto>();
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
+			.Setup(s => s.GetActiveCaseSummariesForTeam(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{data});
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
@@ -409,10 +410,10 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
+			.Setup(s => s.GetActiveCaseSummariesForTeam(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{data});
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
@@ -435,10 +436,10 @@ public class CaseSummaryServiceTests
 		var data = BuildListActiveCaseSummaryDtos();
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
+			.Setup(s => s.GetActiveCaseSummariesForTeam(userName))
 			.ReturnsAsync(data);
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
@@ -468,10 +469,10 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
+			.Setup(s => s.GetActiveCaseSummariesForTeam(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{ data });
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
@@ -508,10 +509,10 @@ public class CaseSummaryServiceTests
 		};
 
 		mockCaseSummaryService
-			.Setup(s => s.GetActiveCaseSummariesByCaseworker(userName))
+			.Setup(s => s.GetActiveCaseSummariesForTeam(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{ data1 });
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
@@ -535,7 +536,7 @@ public class CaseSummaryServiceTests
 
 		mockCaseSummaryService.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName)).ReturnsAsync(new List<ClosedCaseSummaryDto>());
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetClosedCaseSummariesByCaseworker(userName);
@@ -557,7 +558,7 @@ public class CaseSummaryServiceTests
 		var data = BuildListClosedCaseSummaryDtos();
 		mockCaseSummaryService.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName)).ReturnsAsync(data);
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetClosedCaseSummariesByCaseworker(userName);
@@ -587,7 +588,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(new List<ClosedCaseSummaryDto>{data});
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetClosedCaseSummariesByCaseworker(userName);
@@ -623,7 +624,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(new List<ClosedCaseSummaryDto>{data});
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetClosedCaseSummariesByCaseworker(userName);
@@ -653,7 +654,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(new List<ClosedCaseSummaryDto>{data});
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetClosedCaseSummariesByCaseworker(userName);
@@ -679,7 +680,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(data);
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetClosedCaseSummariesByCaseworker(userName);
@@ -713,7 +714,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetClosedCaseSummariesByCaseworker(userName))
 			.ReturnsAsync(new List<ClosedCaseSummaryDto>{ data });
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetClosedCaseSummariesByCaseworker(userName);
@@ -737,7 +738,7 @@ public class CaseSummaryServiceTests
 
 		mockCaseSummaryService.Setup(s => s.GetClosedCaseSummariesByTrust(userName)).ReturnsAsync(new List<ClosedCaseSummaryDto>());
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetClosedCaseSummariesByTrust(userName);
@@ -759,7 +760,7 @@ public class CaseSummaryServiceTests
 		var data = BuildListClosedCaseSummaryDtos();
 		mockCaseSummaryService.Setup(s => s.GetClosedCaseSummariesByTrust(userName)).ReturnsAsync(data);
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetClosedCaseSummariesByTrust(userName);
@@ -789,7 +790,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetClosedCaseSummariesByTrust(userName))
 			.ReturnsAsync(new List<ClosedCaseSummaryDto>{data});
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetClosedCaseSummariesByTrust(userName);
@@ -824,7 +825,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetClosedCaseSummariesByTrust(userName))
 			.ReturnsAsync(new List<ClosedCaseSummaryDto>{data});
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetClosedCaseSummariesByTrust(userName);
@@ -854,7 +855,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetClosedCaseSummariesByTrust(userName))
 			.ReturnsAsync(new List<ClosedCaseSummaryDto>{data});
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetClosedCaseSummariesByTrust(userName);
@@ -880,7 +881,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetClosedCaseSummariesByTrust(userName))
 			.ReturnsAsync(data);
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetClosedCaseSummariesByTrust(userName);
@@ -914,7 +915,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetClosedCaseSummariesByTrust(userName))
 			.ReturnsAsync(new List<ClosedCaseSummaryDto>{ data });
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetClosedCaseSummariesByTrust(userName);
@@ -938,7 +939,7 @@ public class CaseSummaryServiceTests
 
 		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByTrust(userName)).ReturnsAsync(new List<ActiveCaseSummaryDto>());
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByTrust(userName);
@@ -959,7 +960,7 @@ public class CaseSummaryServiceTests
 		var data = BuildListActiveCaseSummaryDtos();
 		mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByTrust(userName)).ReturnsAsync(data);
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByTrust(userName);
@@ -989,7 +990,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetActiveCaseSummariesByTrust(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{data});
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByTrust(userName);
@@ -1024,7 +1025,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetActiveCaseSummariesByTrust(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{data});
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByTrust(userName);
@@ -1054,7 +1055,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetActiveCaseSummariesByTrust(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{data});
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByTrust(userName);
@@ -1080,7 +1081,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetActiveCaseSummariesByTrust(userName))
 			.ReturnsAsync(data);
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByTrust(userName);
@@ -1113,7 +1114,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetActiveCaseSummariesByTrust(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{ data });
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByTrust(userName);
@@ -1153,7 +1154,7 @@ public class CaseSummaryServiceTests
 			.Setup(s => s.GetActiveCaseSummariesByTrust(userName))
 			.ReturnsAsync(new List<ActiveCaseSummaryDto>{ data });
 		
-		var sut = new CaseSummaryService(mockCaseSummaryService.Object, trustCachedService.Object);
+		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
 		var result = await sut.GetActiveCaseSummariesByTrust(userName);

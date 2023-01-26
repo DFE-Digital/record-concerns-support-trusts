@@ -1,6 +1,7 @@
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Service.Cases;
 using System.Collections.Generic;
@@ -9,10 +10,11 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Cases;
 
-public class CaseSummaryService : ICaseSummaryService
+public class CaseSummaryService : CachedService, ICaseSummaryService
 {	
 	private readonly IApiCaseSummaryService _caseSummaryService;
 	private readonly ITrustCachedService _trustCachedService;
+	
 	private const int _maxNumberActionsAndDecisionsToReturn = 3;
 	private static IEnumerable<string> SortedRags
 		=> new[]
@@ -26,7 +28,7 @@ public class CaseSummaryService : ICaseSummaryService
 			""
 		};
 	
-	public CaseSummaryService(IApiCaseSummaryService caseSummaryService, ITrustCachedService trustCachedService)
+	public CaseSummaryService(ICacheProvider cacheProvider, IApiCaseSummaryService caseSummaryService, ITrustCachedService trustCachedService) : base(cacheProvider)
 	{
 		_caseSummaryService = caseSummaryService;
 		_trustCachedService = trustCachedService;
@@ -40,7 +42,7 @@ public class CaseSummaryService : ICaseSummaryService
 
 	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesForTeamMembers(string caseworker)
 	{
-		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(caseworker);
+		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesForTeam(caseworker);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 

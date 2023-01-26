@@ -79,7 +79,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			var teamUserNames = activeTeamCases.Select(t => t.CreatedBy).Distinct().ToArray();
 			
 			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(currentUserName)).ReturnsAsync(activeCases);
-			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesForTeamMembers(currentUserName)).ReturnsAsync(activeTeamCases);
 			mockClaimsPrincipalHelper.Setup(s => s.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(currentUserName);
 			mockTeamService.Setup(x => x.GetCaseworkTeam(currentUserName))
 				.ReturnsAsync(new ConcernsTeamCaseworkModel(currentUserName, teamUserNames));
@@ -93,7 +92,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.Multiple(() =>
 			{
 				Assert.That(sut.ActiveCases, Is.EquivalentTo(activeCases));
-				Assert.That(sut.ActiveTeamCases, Is.EquivalentTo(activeTeamCases));
 			});
 
 			mockLogger.VerifyLogInformationWasCalled("HomePageModel");
