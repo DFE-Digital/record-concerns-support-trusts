@@ -77,6 +77,14 @@ public class ConcernsTypeConfiguration : IEntityTypeConfiguration<ConcernsType>
 				Description = "Compliance",
 				CreatedAt = new DateTime(2022, 12, 20),
 				UpdatedAt = new DateTime(2022, 12, 20)
+			},
+			new ConcernsType
+			{
+				Id = 24,
+				Name = "Safeguarding",
+				Description = null,
+				CreatedAt = new DateTime(2023, 1, 24),
+				UpdatedAt = new DateTime(2023, 1, 24)
 			}
 		);
 	}
