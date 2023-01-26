@@ -300,7 +300,7 @@ public class CaseSummaryServiceTests
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
+		var result = await sut.GetActiveCaseSummariesForUsersTeam(userName);
 
 		// assert
 		result.Should().BeEmpty();
@@ -321,7 +321,7 @@ public class CaseSummaryServiceTests
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
+		var result = await sut.GetActiveCaseSummariesForUsersTeam(userName);
 
 		// assert
 		result.Should().HaveCount(data.Count);
@@ -351,7 +351,7 @@ public class CaseSummaryServiceTests
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
+		var result = await sut.GetActiveCaseSummariesForUsersTeam(userName);
 
 		// assert
 		result.Single().IsMoreActionsAndDecisions.Should().BeTrue();
@@ -386,7 +386,7 @@ public class CaseSummaryServiceTests
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
+		var result = await sut.GetActiveCaseSummariesForUsersTeam(userName);
 
 		// assert
 		result.Single().IsMoreActionsAndDecisions.Should().BeFalse();
@@ -416,7 +416,7 @@ public class CaseSummaryServiceTests
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
+		var result = await sut.GetActiveCaseSummariesForUsersTeam(userName);
 
 		// assert
 		result.Single().ActiveActionsAndDecisions.Length.Should().Be(3);
@@ -442,7 +442,7 @@ public class CaseSummaryServiceTests
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
+		var result = await sut.GetActiveCaseSummariesForUsersTeam(userName);
 
 		// assert
 		result.Count.Should().Be(data.Count);
@@ -475,7 +475,7 @@ public class CaseSummaryServiceTests
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
+		var result = await sut.GetActiveCaseSummariesForUsersTeam(userName);
 
 		// assert
 		result.Count.Should().Be(1);
@@ -515,7 +515,7 @@ public class CaseSummaryServiceTests
 		var sut = new CaseSummaryService(Mock.Of<ICacheProvider>(), mockCaseSummaryService.Object, trustCachedService.Object);
 
 		// act
-		var result = await sut.GetActiveCaseSummariesForTeamMembers(userName);
+		var result = await sut.GetActiveCaseSummariesForUsersTeam(userName);
 
 		// assert
 		result.Count.Should().Be(1);

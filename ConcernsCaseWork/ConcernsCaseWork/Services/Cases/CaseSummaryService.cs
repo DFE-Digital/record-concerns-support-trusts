@@ -40,7 +40,7 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 
-	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesForTeamMembers(string caseworker)
+	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesForUsersTeam(string caseworker)
 	{
 		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesForTeam(caseworker);
 		return await BuildActiveCaseSummaryModel(caseSummaries);

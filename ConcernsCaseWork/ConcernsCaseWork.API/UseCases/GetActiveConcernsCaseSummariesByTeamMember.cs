@@ -4,12 +4,12 @@ using ConcernsCaseWork.Data.Gateways;
 
 namespace ConcernsCaseWork.API.UseCases;
 
-public class GetActiveConcernsCaseSummariesByTeamMember : IGetActiveConcernsCaseSummariesByTeamMember
+public class GetActiveConcernsCaseSummariesForUsersTeam : IGetActiveConcernsCaseSummariesForUsersTeam
 {
 	private readonly ICaseSummaryGateway _caseSummaryGateway;
 	private readonly IConcernsTeamCaseworkGateway _teamCaseworkGateway;
 
-	public GetActiveConcernsCaseSummariesByTeamMember(
+	public GetActiveConcernsCaseSummariesForUsersTeam(
 		ICaseSummaryGateway caseSummaryGateway, 
 		IConcernsTeamCaseworkGateway teamCaseworkGateway)
 	{

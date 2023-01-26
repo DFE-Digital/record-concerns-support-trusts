@@ -80,7 +80,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IGetClosedConcernsCaseSummariesByOwner, GetClosedConcernsCaseSummariesByOwner>();
 			services.AddScoped<IGetActiveConcernsCaseSummariesByTrust, GetActiveConcernsCaseSummariesByTrust>();
 			services.AddScoped<IGetClosedConcernsCaseSummariesByTrust, GetClosedConcernsCaseSummariesByTrust>();
-			services.AddScoped<IGetActiveConcernsCaseSummariesByTeamMember, GetActiveConcernsCaseSummariesByTeamMember>(); 
+			services.AddScoped<IGetActiveConcernsCaseSummariesForUsersTeam, GetActiveConcernsCaseSummariesForUsersTeam>(); 
 			services.AddScoped<IGetActiveConcernsCaseSummariesByOwner, GetActiveConcernsCaseSummariesByOwner>(); 
 
 			services.AddScoped<ISRMAGateway, SRMAGateway>();

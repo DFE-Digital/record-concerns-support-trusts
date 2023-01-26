@@ -8,11 +8,9 @@ using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Teams;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages

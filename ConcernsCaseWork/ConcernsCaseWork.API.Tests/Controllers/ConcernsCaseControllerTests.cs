@@ -262,7 +262,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         [Fact]
         public async Task GetActiveConcernsCaseSummariesByTeamMemberId_ReturnsCaseSummaryResponses_WhenConcernsCasesAreFound()
         {
-	        var mockService = new Mock<IGetActiveConcernsCaseSummariesByTeamMember>();
+	        var mockService = new Mock<IGetActiveConcernsCaseSummariesForUsersTeam>();
 	        var ownerId = "some.user";
 	        var data = Builder<ActiveCaseSummaryResponse>.CreateListOfSize(4).Build();
 
@@ -291,7 +291,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         [Fact]
         public async Task GetActiveConcernsCaseSummariesByTeamMemberId_ReturnsEmptyList_WhenNoConcernsCasesAreFound()
         {
-	        var mockService = new Mock<IGetActiveConcernsCaseSummariesByTeamMember>();
+	        var mockService = new Mock<IGetActiveConcernsCaseSummariesForUsersTeam>();
 	        var ownerId = "some.user";
 	        var data = new List<ActiveCaseSummaryResponse>();
 
