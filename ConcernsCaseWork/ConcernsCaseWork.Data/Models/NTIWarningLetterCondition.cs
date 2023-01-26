@@ -1,13 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace ConcernsCaseWork.Data.Models
+﻿namespace ConcernsCaseWork.Data.Models
 {
-    [Table("NTIWarningLetterCondition", Schema = "concerns")]
-    public class NTIWarningLetterCondition
+	public class NTIWarningLetterCondition
     {
-        [Key]
-        public int Id { get; set; }
+	    public int Id { get; set; }
         public string Name { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
