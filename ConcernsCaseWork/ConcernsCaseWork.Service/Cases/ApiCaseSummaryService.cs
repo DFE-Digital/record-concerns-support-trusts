@@ -9,7 +9,7 @@ public class ApiCaseSummaryService : ConcernsAbstractService, IApiCaseSummarySer
 {
 	public ApiCaseSummaryService(ILogger<ApiCaseSummaryService> logger, ICorrelationContext correlationContext, IHttpClientFactory clientFactory, IClientUserInfoService userInfoService) :
 		base(clientFactory, logger, correlationContext, userInfoService) { }
-	public async Task<IEnumerable<ActiveCaseSummaryDto>> GetActiveCaseSummariesForTeam(string caseworker)
+	public async Task<IEnumerable<ActiveCaseSummaryDto>> GetActiveCaseSummariesForUsersTeam(string caseworker)
 		=> await Get<IEnumerable<ActiveCaseSummaryDto>>($"/{EndpointsVersion}/concerns-cases/summary/{caseworker}/active/team");
 	
 	public async Task<IEnumerable<ActiveCaseSummaryDto>> GetActiveCaseSummariesByCaseworker(string caseworker)
