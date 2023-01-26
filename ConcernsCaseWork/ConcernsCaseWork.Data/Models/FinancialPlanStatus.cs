@@ -1,13 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConcernsCaseWork.Data.Models
 {
-    [Table("FinancialPlanStatus", Schema = "concerns")]
-    public class FinancialPlanStatus
+	public class FinancialPlanStatus
     {
-        [Key]
-        public long Id { get; set;  }
+	    public long Id { get; set;  }
         [StringLength(255)]
         public string Name { get; set; }
         public string Description { get; set; }

@@ -3,12 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConcernsCaseWork.Data.Models
 {
-    [Table("SRMACase", Schema = "concerns")]
-    public class SRMACase
+	public class SRMACase
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+	    public int Id { get; set; }
         public int CaseUrn { get; set; }
         public int StatusId { get; set; }
         public int? CloseStatusId { get; set; }

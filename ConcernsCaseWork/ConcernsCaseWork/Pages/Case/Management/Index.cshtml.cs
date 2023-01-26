@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
@@ -43,6 +44,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
 		public bool IsConcernsCase { get; set; }
 		public bool IsEditableCase { get; private set; }
+		public Hyperlink BackLink => BuildBackLinkFromHistory(label: "Back to casework", fallbackUrl: PageRoutes.YourCaseworkHomePage);
 
 		public List<ActionSummaryModel> OpenCaseActions { get; set; }
 		public List<ActionSummaryModel> ClosedCaseActions { get; set; }
