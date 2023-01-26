@@ -8,6 +8,8 @@ using ConcernsCaseWork.API.UseCases;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions;
 using ConcernsCaseWork.API.UseCases.CaseActions.Decisions.Outcome;
 using ConcernsCaseWork.API.UseCases.CaseActions.TrustFinancialForecast;
+using ConcernsCaseWork.API.UseCases.Permissions.Cases;
+using ConcernsCaseWork.API.UseCases.Permissions.Cases.Strategies;
 using ConcernsCaseWork.Data.Gateways;
 using ConcernsCaseWork.UserContext;
 
@@ -123,6 +125,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<ICaseActionPermissionStrategyRoot, CaseActionPermissionStrategyRoot>();
 			services.AddScoped<ICaseActionPermissionStrategy, IsCaseViewableStrategy>();
 			services.AddScoped<ICaseActionPermissionStrategy, IsCaseEditableStrategy>();
+			services.AddScoped<IGetCasePermissionsUseCase, GetCasePermissionsUseCase>();
 			return services;
 		}
 	}

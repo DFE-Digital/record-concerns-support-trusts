@@ -1,4 +1,4 @@
-import { EnvApiKey } from "cypress/constants/cypressConstants";
+import { EnvApiKey, EnvUsername, CaseworkerClaim } from "cypress/constants/cypressConstants";
 
 export class ApiBase
 {
@@ -6,9 +6,10 @@ export class ApiBase
     {
         const result = {
             ApiKey: Cypress.env(EnvApiKey),
-            "Content-type": "application/json"
+            "Content-type": "application/json",
+            "x-user-context-role-0" : CaseworkerClaim,
+            "x-user-context-name" : Cypress.env(EnvUsername)
         };
-
         return result;
     }
 }

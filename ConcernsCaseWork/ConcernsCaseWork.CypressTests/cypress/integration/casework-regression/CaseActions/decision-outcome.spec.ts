@@ -95,8 +95,8 @@ describe("Testing decision outcome", () =>{
             .hasBusinessArea("Capital")
             .hasBusinessArea("Provider Market Oversight")
             .hasDecisionOutcomeStatus("Approved with conditions")
-            .hasMadeDate("24-11-2022")
-            .hasEffectiveFromDate("11-12-2023")
+            .hasMadeDate("24 November 2022")
+            .hasEffectiveFromDate("11 December 2023")
             .hasTotalAmountApproved("£50,000")
             .hasAuthoriser("Deputy Director")
             .cannotCreateAnotherDecisionOutcome();
@@ -210,8 +210,8 @@ describe("Testing decision outcome", () =>{
             viewDecisionPage
                 .hasDecisionOutcomeStatus("Approved")
                 .hasTotalAmountApproved("1,000,000")
-                .hasMadeDate("12-11-2023")
-                .hasEffectiveFromDate("14-01-2024")
+                .hasMadeDate("12 November 2023")
+                .hasEffectiveFromDate("14 January 2024")
                 .hasAuthoriser("Minister")
                 .hasBusinessArea("Business Partner")
                 .hasBusinessArea("Capital")

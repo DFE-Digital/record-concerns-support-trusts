@@ -17,15 +17,15 @@ namespace ConcernsCaseWork.API.Contracts.Tests.Context
 			var sut = new UserInfo();
 			sut.Name = Guid.NewGuid().ToString();
 			sut.Roles = new[]
-			{ 
-				UserInfo.CaseWorkerRoleClaim,
-				UserInfo.TeamLeaderRoleClaim,
-				UserInfo.AdminRoleClaim,
+			{
+				Claims.CaseWorkerRoleClaim,
+				Claims.TeamLeaderRoleClaim,
+				Claims.AdminRoleClaim,
 				"x-filtered-out-role"
 			};
 
 			var results = sut.ToHeadersKVP();
-			var nameResult = results.FirstOrDefault(x => x.Key == "x-userContext-name");
+			var nameResult = results.FirstOrDefault(x => string.Equals(x.Key, "x-user-context-name", StringComparison.InvariantCultureIgnoreCase));
 			nameResult.Value.Should().Be(sut.Name);
 		}
 
@@ -36,21 +36,21 @@ namespace ConcernsCaseWork.API.Contracts.Tests.Context
 			sut.Name = Guid.NewGuid().ToString();
 			sut.Roles = new[]
 			{
-				UserInfo.CaseWorkerRoleClaim,
-				UserInfo.TeamLeaderRoleClaim,
-				UserInfo.AdminRoleClaim
+				Claims.CaseWorkerRoleClaim,
+				Claims.TeamLeaderRoleClaim,
+				Claims.AdminRoleClaim
 			};
 
 			var results = sut.ToHeadersKVP();
-			var roleResults = results.Where(x => x.Key.StartsWith("x-userContext-role-")).ToArray();
+			var roleResults = results.Where(x => x.Key.StartsWith("x-user-context-role-", StringComparison.InvariantCultureIgnoreCase)).ToArray();
 			roleResults.Length.Should().Be(3);
 
-			roleResults[0].Key.Should().Be("x-userContext-role-0");
-			roleResults[0].Value.Should().Be(UserInfo.CaseWorkerRoleClaim);
-			roleResults[1].Key.Should().Be("x-userContext-role-1");
-			roleResults[1].Value.Should().Be(UserInfo.TeamLeaderRoleClaim);
-			roleResults[2].Key.Should().Be("x-userContext-role-2");
-			roleResults[2].Value.Should().Be(UserInfo.AdminRoleClaim);
+			roleResults[0].Key.Should().Be("x-user-context-role-0");
+			roleResults[0].Value.Should().Be(Claims.CaseWorkerRoleClaim);
+			roleResults[1].Key.Should().Be("x-user-context-role-1");
+			roleResults[1].Value.Should().Be(Claims.TeamLeaderRoleClaim);
+			roleResults[2].Key.Should().Be("x-user-context-role-2");
+			roleResults[2].Value.Should().Be(Claims.AdminRoleClaim);
 		}
 
 		[Fact]
@@ -60,37 +60,75 @@ namespace ConcernsCaseWork.API.Contracts.Tests.Context
 			sut.Name = Guid.NewGuid().ToString();
 			var claims = new[]
 			{
-				UserInfo.CaseWorkerRoleClaim,
-				UserInfo.TeamLeaderRoleClaim,
-				UserInfo.AdminRoleClaim,
+				Claims.CaseWorkerRoleClaim,
+				Claims.TeamLeaderRoleClaim,
+				Claims.AdminRoleClaim,
 				"x-filtered-out-role"
 			};
 
 			var results = UserInfo.ParseRoleClaims(claims);
 			results.Length.Should().Be(3);
 
-			results[0].Should().Be(UserInfo.CaseWorkerRoleClaim);
-			results[1].Should().Be(UserInfo.TeamLeaderRoleClaim);
-			results[2].Should().Be(UserInfo.AdminRoleClaim);
+			results[0].Should().Be(Claims.CaseWorkerRoleClaim);
+			results[1].Should().Be(Claims.TeamLeaderRoleClaim);
+			results[2].Should().Be(Claims.AdminRoleClaim);
 		}
 
-		[Fact]
-		public void FromHeaders_Returns_Populated_UserInfo()
+		[Theory]
+		[InlineData("x-user-context-name", "x-user-context-role-0", "x-user-context-role-1", "x-user-context-role-2")]
+		[InlineData("X-USER-CONTEXT-NAME", "X-USER-CONTEXT-ROLE-0", "X-USER-CONTEXT-ROLE-1", "X-USER-CONTEXT-ROLE-2")]
+		[InlineData("X-user-CONTEXT-NAME", "X-user-CONTEXT-ROLE-0", "X-user-CONTEXT-ROLE-1", "X-user-CONTEXT-ROLE-2")]
+		public void FromHeaders_Is_Case_Insensitive_And_Returns_Populated_UserInfo(string nameHeader, string roleHeader1, string roleHeader2, string roleHeader3)
 		{
 			var inputs = new KeyValuePair<string,string>[]
 			{
-				new("x-userContext-name" ,"John"),
-				new("x-userContext-role-0", UserInfo.CaseWorkerRoleClaim),
-				new("x-userContext-role-1", UserInfo.TeamLeaderRoleClaim),
-				new("x-userContext-role-2", UserInfo.AdminRoleClaim)
+				new(nameHeader ,"John"),
+				new(roleHeader1, Claims.CaseWorkerRoleClaim),
+				new(roleHeader2, Claims.TeamLeaderRoleClaim),
+				new(roleHeader3, Claims.AdminRoleClaim)
 			};
 
 			var sut = UserInfo.FromHeaders(inputs);
 
 			sut.Name.Should().Be("John");
-			sut.Roles.Should().Contain(UserInfo.CaseWorkerRoleClaim);
-			sut.Roles.Should().Contain(UserInfo.TeamLeaderRoleClaim);
-			sut.Roles.Should().Contain(UserInfo.AdminRoleClaim);
+			sut.Roles.Should().Contain(Claims.CaseWorkerRoleClaim);
+			sut.Roles.Should().Contain(Claims.TeamLeaderRoleClaim);
+			sut.Roles.Should().Contain(Claims.AdminRoleClaim);
+		}
+
+		[Theory]
+		[InlineData("x-user-context-role-0", "x-user-context-role-1", "x-user-context-role-2")]
+		[InlineData("X-USER-CONTEXT-ROLE-0", "X-USER-CONTEXT-ROLE-1", "X-USER-CONTEXT-ROLE-2")]
+		[InlineData("X-user-CONTEXT-ROLE-0", "X-user-CONTEXT-ROLE-1", "X-user-CONTEXT-ROLE-2")]
+		public void FromHeaders_Without_Name_Returns_Null(string roleHeader1, string roleHeader2, string roleHeader3)
+		{
+			var inputs = new KeyValuePair<string,string>[]
+			{
+				new("invalid-header" ,"John"),
+				new(roleHeader1, Claims.CaseWorkerRoleClaim),
+				new(roleHeader2, Claims.TeamLeaderRoleClaim),
+				new(roleHeader3, Claims.AdminRoleClaim)
+			};
+
+			var sut = UserInfo.FromHeaders(inputs);
+			sut.Should().BeNull();
+		}
+
+		[Theory]
+		[InlineData("x-user-context-name")]
+		[InlineData("X-USER-CONTEXT-NAME")]
+		[InlineData("X-user-CONTEXT-NAME")]
+		public void FromHeaders_Without_Roles_Returns_Null(string nameHeader)
+		{
+			var inputs = new KeyValuePair<string,string>[]
+			{
+				new(nameHeader ,"John"),
+				new("x-invalid-header-role-0", Claims.CaseWorkerRoleClaim),
+			};
+
+
+			var sut = UserInfo.FromHeaders(inputs);
+			sut.Should().BeNull();
 		}
 	}
 }

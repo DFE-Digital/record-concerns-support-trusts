@@ -18,8 +18,8 @@ namespace ConcernsCaseWork.Services.Decisions
 		{
 			var result = new ActionSummaryModel()
 			{
-				OpenedDate = decisionSummary.CreatedAt.ToDayMonthYear(),
-				ClosedDate = decisionSummary.ClosedAt?.ToDayMonthYear(),
+				OpenedDate = DateTimeHelper.ParseToDisplayDate(decisionSummary.CreatedAt),
+				ClosedDate = DateTimeHelper.ParseToDisplayDate(decisionSummary.ClosedAt),
 				Name = $"Decision: {decisionSummary.Title}",
 				StatusName = decisionSummary.Outcome.HasValue ? EnumHelper.GetEnumDescription(decisionSummary.Outcome) : EnumHelper.GetEnumDescription(decisionSummary.Status),
 				RelativeUrl = $"/case/{decisionSummary.ConcernsCaseUrn}/management/action/decision/{decisionSummary.DecisionId}",
@@ -44,7 +44,7 @@ namespace ConcernsCaseWork.Services.Decisions
 				RetrospectiveApproval = decisionResponse.RetrospectiveApproval != true ? "No" : "Yes",
 				SubmissionRequired = decisionResponse.SubmissionRequired != true ? "No" : "Yes",
 				SubmissionLink = decisionResponse.SubmissionDocumentLink,
-				EsfaReceivedRequestDate = receivedRequestDate?.ToDayMonthYear(),
+				EsfaReceivedRequestDate = DateTimeHelper.ParseToDisplayDate(receivedRequestDate),
 				TotalAmountRequested = ToCurrencyField(decisionResponse.TotalAmountRequested),
 				DecisionTypes = decisionResponse.DecisionTypes.Select(d => EnumHelper.GetEnumDescription(d)).ToList(),
 				SupportingNotes = decisionResponse.SupportingNotes,
@@ -70,8 +70,8 @@ namespace ConcernsCaseWork.Services.Decisions
 				Status = EnumHelper.GetEnumDescription(decisionOutcomeResponse.Status),
 				Authorizer = EnumHelper.GetEnumDescription(decisionOutcomeResponse.Authorizer),
 				TotalAmount = ToCurrencyField(decisionOutcomeResponse.TotalAmount),
-				DecisionMadeDate = decisionOutcomeResponse.DecisionMadeDate?.ToDayMonthYear(),
-				DecisionEffectiveFromDate = decisionOutcomeResponse.DecisionEffectiveFromDate?.ToDayMonthYear(),
+				DecisionMadeDate = DateTimeHelper.ParseToDisplayDate(decisionOutcomeResponse.DecisionMadeDate),
+				DecisionEffectiveFromDate = DateTimeHelper.ParseToDisplayDate(decisionOutcomeResponse.DecisionEffectiveFromDate),
 				BusinessAreasConsulted = decisionOutcomeResponse.BusinessAreasConsulted.Select(b => EnumHelper.GetEnumDescription(b)).ToList(),
 				EditLink = $"/case/{decisionResponse.ConcernsCaseUrn}/management/action/decision/{decisionResponse.DecisionId}/outcome/addOrUpdate/{decisionOutcomeResponse.DecisionOutcomeId}",
 			};

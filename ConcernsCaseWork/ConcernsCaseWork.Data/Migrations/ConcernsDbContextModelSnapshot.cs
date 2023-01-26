@@ -839,6 +839,13 @@ namespace ConcernsCaseWork.Data.Migrations
                             Description = "Compliance",
                             Name = "Governance and compliance",
                             UpdatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CreatedAt = new DateTime(2023, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Safeguarding",
+                            UpdatedAt = new DateTime(2023, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
