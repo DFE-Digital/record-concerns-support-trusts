@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models;
+﻿using ConcernsCaseWork.API.Contracts.Concerns;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Service.Types;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				new TypeDto("Irregularity", "Irregularity: Irregularity", currentDate, 
 					currentDate, 21),
 				new TypeDto("Irregularity", "Irregularity: Suspected fraud", currentDate, 
-					currentDate, 22)
+					currentDate, 22),
+				new TypeDto("Safeguarding", null, currentDate, currentDate, (long)ConcernType.Safeguarding)
 			};
 		}
 
