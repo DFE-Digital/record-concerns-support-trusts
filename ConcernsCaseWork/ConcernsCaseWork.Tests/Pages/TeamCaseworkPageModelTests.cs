@@ -30,8 +30,7 @@ namespace ConcernsCaseWork.Tests.Pages
 	public class TeamCaseworkPageModelTests
 	{
 		private readonly IFixture _fixture = new Fixture();
-
-
+		
 		[Test]
 		public async Task WhenOnGetAsync_ThrowsException_ReturnsPage()
 		{
@@ -63,7 +62,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 
 		[Test]
-		public async Task WhenInstanceOfHomePageOnGetAsync_ReturnCases()
+		public async Task WhenInstanceOfTeamCaseworkTeamOnGetAsync_ReturnCases()
 		{
 			// arrange
 			var currentUserName = _fixture.Create<string>();
@@ -100,7 +99,7 @@ namespace ConcernsCaseWork.Tests.Pages
 		}
 
 		[Test]
-		public async Task WhenInstanceOfHomePageOnGetAsync_ReturnEmptyCases()
+		public async Task WhenInstanceOfTeamCaseworkTeamOnGetAsync_ReturnEmptyCases()
 		{
 			// arrange
 			var mockLogger = new Mock<ILogger<TeamCaseworkPageModel>>();
