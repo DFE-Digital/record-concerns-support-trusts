@@ -22,9 +22,9 @@
     else
     {
         <div class="buttons-topOfPage">
-			<div class="govuk-width-container">
-				<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
-			</div>
+            <a href="/" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+                Back to casework
+            </a>
             @if (Model.IsEditableCase)
             {
                 <a href="@Request.Path/closure" role="button" class="govuk-button govuk-button--warning float__right" id="close-case-button" data-module="govuk-button">
