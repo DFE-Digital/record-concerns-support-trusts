@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Data.Tests.DbGateways;
 using ConcernsCaseWork.Data.Tests.Helpers;
 using FizzWare.NBuilder;
@@ -45,8 +46,16 @@ public class CaseKpiTests : DatabaseTestFixture
 		directionOfTravelKpi.Operation.Should().Be("Update");
 		directionOfTravelKpi.OldValue.Should().BeEmpty();
 		directionOfTravelKpi.NewValue.Should().Be(createdCase.DirectionOfTravel);
+		
+		var territoryKpi = results.Single(r => r.DataItemChanged == "Territory");
+		territoryKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
+		territoryKpi.DataItemChanged.Should().Be("Territory");
+		territoryKpi.Operation.Should().Be("Update");
+		territoryKpi.OldValue.Should().BeEmpty();
+		territoryKpi.NewValue.Should().Be(createdCase.Territory.ToString());
 
-		results.Count.Should().Be(3);
+
+		results.Count.Should().Be(4);
 	}
 
 	[Test]
@@ -104,6 +113,35 @@ public class CaseKpiTests : DatabaseTestFixture
 		riskToTrustKpi.Operation.Should().Be("Update");
 		riskToTrustKpi.OldValue.Should().Be(originalDirectionOfTravel);
 		riskToTrustKpi.NewValue.Should().Be(createdCase.DirectionOfTravel);
+
+		results.Count.Should().Be(1);
+	}
+	
+	[Test]
+	public void UpdateCase_Territory_CreatesKpiEntries()
+	{
+		// arrange
+		var createdCase = _gateway.GenerateTestOpenCase();
+		var maxKpiIdAfterCreate = GetMaxKpiIdForCase(createdCase.Id);
+		var originalTerritory = createdCase.Territory;
+		
+		using var context = CreateContext();
+		createdCase.UpdatedAt = _randomGenerator.DateTime();
+		createdCase.Territory = _randomGenerator.Enumeration<Territory>();
+
+		// act
+		context.ConcernsCase.Update(createdCase);
+		context.SaveChanges();
+		
+		// assert
+		var results = GetKpiResults(createdCase.Id, maxKpiIdAfterCreate);
+
+		var riskToTrustKpi = results.First(r => r.DataItemChanged == "Territory");
+		riskToTrustKpi.DateTimeOfChange.Should().Be(createdCase.UpdatedAt);
+		riskToTrustKpi.DataItemChanged.Should().Be("Territory");
+		riskToTrustKpi.Operation.Should().Be("Update");
+		riskToTrustKpi.OldValue.Should().Be(originalTerritory.ToString());
+		riskToTrustKpi.NewValue.Should().Be(createdCase.Territory.ToString());
 
 		results.Count.Should().Be(1);
 	}
