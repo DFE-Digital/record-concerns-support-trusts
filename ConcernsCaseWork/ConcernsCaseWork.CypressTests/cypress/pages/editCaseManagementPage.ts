@@ -44,7 +44,7 @@ class EditCaseManagementPage
 
         return this;
     }
-
+    
     public hasValidationError(value: string): this {
         Logger.Log(`Has validation error ${value}`);
         cy.getById("errorSummary").should("contain.text", value);
