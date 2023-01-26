@@ -45,6 +45,5 @@ namespace ConcernsCaseWork.API.Middleware
 		}
 
 		private bool IsApiRequest(string path) => path.StartsWith("/v2/") && !path.Contains("swagger");
-
 	}
 }

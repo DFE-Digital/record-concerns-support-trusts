@@ -14,13 +14,13 @@ describe("Creating a case", () =>
         homePage.createCase();
         cy.randomSelectTrust();
         cy.get("#search__option--0").click();
-		cy.getById("continue").click();
+		    cy.getById("continue").click();
         
         editCaseManagementPage.hasNoConcernType("Safeguarding");
         
-		cy.selectConcernType();
-		cy.selectRiskToTrust();
-		cy.selectTerritory();
+		    cy.selectConcernType();
+		    cy.selectRiskToTrust();
+		    cy.selectTerritory();
 
         Logger.Log("Validating concern details");
 
