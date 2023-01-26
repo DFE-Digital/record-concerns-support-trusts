@@ -35,6 +35,16 @@ class EditCaseManagementPage
         return this;
     }
 
+    public hasNoConcernType(value: string): this {
+        Logger.Log(`Has no concern type for ${value}`);
+
+        cy
+        .getByTestId("concern-type-container")
+        .contains(value).should("not.exist");
+
+        return this;
+    }
+    
     public hasValidationError(value: string): this {
         Logger.Log(`Has validation error ${value}`);
         cy.getById("errorSummary").should("contain.text", value);
