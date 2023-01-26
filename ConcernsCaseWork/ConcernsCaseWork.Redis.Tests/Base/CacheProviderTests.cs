@@ -2,6 +2,7 @@ using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Redis.Configuration;
 using ConcernsCaseWork.Redis.Security;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
@@ -33,7 +34,7 @@ namespace ConcernsCaseWork.Redis.Tests.Base
 			mockCache.Setup(c => c.GetAsync(It.IsAny<string>(), CancellationToken.None)).
 				Returns(Task.FromResult(Encoding.UTF8.GetBytes(userClaimsSerialize)));
 
-			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
+			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object, Mock.Of<ILogger<CacheProvider>>());
 			
 			// act
 			var cachedUser = await cacheProvider.GetFromCache<Claims>(userClaims.Email);
@@ -56,7 +57,7 @@ namespace ConcernsCaseWork.Redis.Tests.Base
 			mockCache.Setup(c => c.GetAsync(It.IsAny<string>(), CancellationToken.None)).
 				Returns(Task.FromResult<byte[]>(null));
 
-			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
+			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object, Mock.Of<ILogger<CacheProvider>>());
 			
 			// act
 			var cachedUser = await cacheProvider.GetFromCache<Claims>("test@email.com");
@@ -86,7 +87,7 @@ namespace ConcernsCaseWork.Redis.Tests.Base
 					c.SetAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<DistributedCacheEntryOptions>(), CancellationToken.None)).
 				Returns(Task.FromResult<object>(null));
 			
-			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
+			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object, Mock.Of<ILogger<CacheProvider>>());
 			
 			// act
 			await cacheProvider.SetCache(userClaims.Email, userClaims, cacheEntryOptions);
@@ -104,7 +105,7 @@ namespace ConcernsCaseWork.Redis.Tests.Base
 			var cacheEntryOptions = new DistributedCacheEntryOptions()
 				.SetSlidingExpiration(TimeSpan.FromSeconds(cacheTimeToLive));
 			
-			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
+			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object, Mock.Of<ILogger<CacheProvider>>());
 			
 			// act, assert
 			Assert.ThrowsAsync<ArgumentNullException>(() => cacheProvider.SetCache(null, default(object), cacheEntryOptions));
@@ -122,7 +123,7 @@ namespace ConcernsCaseWork.Redis.Tests.Base
 					c.RemoveAsync(It.IsAny<string>(), CancellationToken.None)).
 				Returns(Task.FromResult<object>(null));
 			
-			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
+			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object, Mock.Of<ILogger<CacheProvider>>());
 			
 			// act
 			await cacheProvider.ClearCache("test@email.com");
@@ -140,7 +141,7 @@ namespace ConcernsCaseWork.Redis.Tests.Base
 					c.RemoveAsync(It.IsAny<string>(), CancellationToken.None)).
 				Returns(Task.FromResult<object>(null));
 			
-			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
+			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object, Mock.Of<ILogger<CacheProvider>>());
 			
 			// act
 			Assert.ThrowsAsync<ArgumentNullException>(() => cacheProvider.ClearCache(null));
@@ -156,7 +157,7 @@ namespace ConcernsCaseWork.Redis.Tests.Base
 			mockIOptionsCache.Setup(o => o.Value).Returns(new CacheOptions { TimeToLive = 24});
 			
 			// act
-			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object);
+			var cacheProvider = new CacheProvider(mockCache.Object, mockIOptionsCache.Object, Mock.Of<ILogger<CacheProvider>>());
 			var cacheTtl = cacheProvider.CacheTimeToLive();
 
 			// assert
