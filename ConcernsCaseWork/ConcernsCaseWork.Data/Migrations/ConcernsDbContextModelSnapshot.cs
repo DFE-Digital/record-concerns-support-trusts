@@ -71,7 +71,8 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("DecisionId");
 
-                    b.HasIndex("ConcernsCaseId");
+                    b.HasIndex("ConcernsCaseId", "CreatedAt")
+                        .IsUnique();
 
                     b.ToTable("ConcernsDecision", "concerns", t =>
                         {
@@ -455,7 +456,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CrmEnquiry")
                         .HasColumnType("nvarchar(max)");
@@ -497,7 +498,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TrustUkprn")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -513,6 +514,10 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasIndex("RatingId");
 
                     b.HasIndex("StatusId");
+
+                    b.HasIndex("TrustUkprn", "CreatedAt", "CreatedBy")
+                        .IsUnique()
+                        .HasFilter("[TrustUkprn] IS NOT NULL AND [CreatedBy] IS NOT NULL");
 
                     b.ToTable("ConcernsCase", "concerns", t =>
                         {
@@ -677,8 +682,6 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasKey("Id")
                         .HasName("PK__CRecord");
 
-                    b.HasIndex("CaseId");
-
                     b.HasIndex("MeansOfReferralId");
 
                     b.HasIndex("RatingId");
@@ -686,6 +689,9 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasIndex("StatusId");
 
                     b.HasIndex("TypeId");
+
+                    b.HasIndex("CaseId", "CreatedAt")
+                        .IsUnique();
 
                     b.ToTable("ConcernsRecord", "concerns", t =>
                         {
@@ -885,6 +891,9 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("StatusId");
 
+                    b.HasIndex("CaseUrn", "CreatedAt")
+                        .IsUnique();
+
                     b.ToTable("FinancialPlanCase", "concerns", t =>
                         {
                             t.HasTrigger("FinancialPlanCase_Trigger");
@@ -994,6 +1003,9 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClosedStatusId");
+
+                    b.HasIndex("CaseUrn", "CreatedAt")
+                        .IsUnique();
 
                     b.ToTable("NTIUnderConsiderationCase", "concerns", t =>
                         {
@@ -1196,6 +1208,9 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasIndex("ClosedStatusId");
 
                     b.HasIndex("StatusId");
+
+                    b.HasIndex("CaseUrn", "CreatedAt")
+                        .IsUnique();
 
                     b.ToTable("NTIWarningLetterCase", "concerns", t =>
                         {
@@ -1632,6 +1647,9 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasIndex("ClosedStatusId");
 
                     b.HasIndex("StatusId");
+
+                    b.HasIndex("CaseUrn", "CreatedAt")
+                        .IsUnique();
 
                     b.ToTable("NoticeToImproveCase", "concerns", t =>
                         {
@@ -2411,6 +2429,9 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("ReasonId");
 
+                    b.HasIndex("CaseUrn", "CreatedAt")
+                        .IsUnique();
+
                     b.ToTable("SRMACase", "concerns", t =>
                         {
                             t.HasTrigger("SRMACase_Trigger");
@@ -2574,6 +2595,9 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("Id")
                         .HasName("PK__TrustFinancialForecast");
+
+                    b.HasIndex("CaseUrn", "CreatedAt")
+                        .IsUnique();
 
                     b.ToTable("TrustFinancialForecast", "concerns", t =>
                         {

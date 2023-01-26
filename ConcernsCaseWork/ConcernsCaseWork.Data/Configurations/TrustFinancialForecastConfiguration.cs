@@ -12,8 +12,7 @@ public class TrustFinancialForecastConfiguration : IEntityTypeConfiguration<Trus
 		
 		builder.HasKey(e => e.Id)
 				.HasName("PK__TrustFinancialForecast");
-		
-		
+
 		builder.Property(e => e.ForecastingToolRanAt)
 			.HasConversion<string>();
 		
@@ -22,5 +21,7 @@ public class TrustFinancialForecastConfiguration : IEntityTypeConfiguration<Trus
 		
 		builder.Property(e => e.SRMAOfferedAfterTFF)
 			.HasConversion<string>();
+
+		builder.HasIndex(x => new {x.CaseUrn, x.CreatedAt}).IsUnique();
 	}
 }
