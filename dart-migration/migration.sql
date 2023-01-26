@@ -3,6 +3,7 @@ GO
 /****** Object:  Schema [dartmigration]    Script Date: 25/01/2023 11:17:25 ******/
 CREATE SCHEMA [dartmigration]
 GO
+
 /****** Object:  UserDefinedTableType [dartmigration].[CaseUrnTableType]    Script Date: 25/01/2023 11:17:25 ******/
 CREATE TYPE [dartmigration].[CaseUrnTableType] AS TABLE(
 	[CaseUrn] [int] NOT NULL,
@@ -12,6 +13,7 @@ CREATE TYPE [dartmigration].[CaseUrnTableType] AS TABLE(
 )WITH (IGNORE_DUP_KEY = OFF)
 )
 GO
+
 /****** Object:  UserDefinedFunction [dartmigration].[AddLabelAndValueLineIfNotNull]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
@@ -37,6 +39,7 @@ BEGIN
 	RETURN CONCAT(ISNULL(@OriginalString,''), @Label, @Value, Char(10), Char(13))
 END
 GO
+
 /****** Object:  UserDefinedFunction [dartmigration].[GetCaseHistory]    Script Date: 25/01/2023 11:17:25 ******/
 SET ANSI_NULLS ON
 GO
