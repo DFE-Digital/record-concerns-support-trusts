@@ -18,9 +18,9 @@ public class ConcernsMeansOfReferralConfiguration : IEntityTypeConfiguration<Con
 			{
 				Id = 1,
 				Name = "Internal",
-				Description = "ESFA activity, TFFT or other departmental activity",
+				Description = "ESFA activity, TFF or other departmental activity",
 				CreatedAt = new DateTime(2022, 7, 28),
-				UpdatedAt = new DateTime(2022, 7, 28)
+				UpdatedAt = new DateTime(2023, 1, 27)
 			},
 			new ConcernsMeansOfReferral()
 			{
