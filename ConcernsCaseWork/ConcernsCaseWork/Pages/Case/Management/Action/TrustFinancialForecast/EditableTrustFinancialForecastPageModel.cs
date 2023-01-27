@@ -29,7 +29,7 @@ public class EditableTrustFinancialForecastPageModel : AbstractPageModel
 
 		SFSOInitialReviewHappenedAt = BuildSFSOInitialReviewHappenedAtComponent(SFSOInitialReviewHappenedAt.Date);
 		TrustRespondedAt = BuildTrustRespondedAtComponent(TrustRespondedAt.Date);
-		Notes = BuildNotesComponent(Notes.Contents);
+		Notes = BuildNotesComponent(Notes.Text.StringContents);
 	}
 		
 	private static RadioButtonsUiComponent BuildForecastingToolRanAtComponent(int? selectedId = null) 
@@ -70,8 +70,12 @@ public class EditableTrustFinancialForecastPageModel : AbstractPageModel
 	private static TextAreaUiComponent BuildNotesComponent(string contents = "")
 		=> new("notes", nameof(Notes), "Supporting notes")
 		{
-			MaxLength = TrustFinancialForecastConstants.MaxNotesLength,
-			Contents = contents
+			Text = new ValidateableString()
+			{
+				MaxLength = TrustFinancialForecastConstants.MaxNotesLength,
+				StringContents = contents,
+				DisplayName = "Supporting notes"
+			}
 		};
 		
 	private static OptionalDateTimeUiComponent BuildTrustRespondedAtComponent([CanBeNull] OptionalDateModel selectedDate = default)

@@ -189,7 +189,7 @@ public class ClosePageModelTests
 		sut.CaseUrn = urn;
 		sut.TrustFinancialForecastId = trustFinancialForecastId;
 		
-		sut.Notes = new TextAreaUiComponent("","",""){Contents = notes};
+		sut.Notes = new TextAreaUiComponent("","",""){ Text = new ValidateableString(){StringContents = notes}};
 		
 		// act
 		var pageResponse = await sut.OnPostAsync();
