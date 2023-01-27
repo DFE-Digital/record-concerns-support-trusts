@@ -472,6 +472,50 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			Assert.IsNotNull(pageResponse);
 			Assert.IsNull(pageModel.TempData["Error.Message"]);
 		}
+				
+		[Test]
+		public async Task WhenOnPostAsync_ValidRequest_SetsUpdatedAt()
+		{
+			// arrange
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
+			var mockLogger = new Mock<ILogger<EditPageModel>>();
+
+			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
+			var caseUrn = 1L;
+			var financialPlanId = 2L;
+			
+			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn, statuses.First().Name);
+			
+			mockFinancialPlanModelService
+				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
+				.ReturnsAsync(existingFinancialPlanModel);
+			
+			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
+
+			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+			routeData.Add("financialplanid", financialPlanId);
+
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "status", statuses.First().Name }
+				});
+
+			// act
+			var pageResponse = await pageModel.OnPostAsync();
+
+			// assert
+			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
+				fpm.UpdatedAt > DateTime.Now.AddMinutes(-1) && fpm.UpdatedAt <= DateTime.Now)), Times.Once);
+			
+			Assert.IsNotNull(pageResponse);
+			Assert.IsNull(pageModel.TempData["Error.Message"]);
+		}
+
 
 		private static EditPageModel SetupEditPageModel(
 			IFinancialPlanModelService mockFinancialPlanModelService,
