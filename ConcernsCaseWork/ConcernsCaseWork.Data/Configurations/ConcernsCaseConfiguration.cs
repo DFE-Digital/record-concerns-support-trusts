@@ -22,6 +22,6 @@ public class ConcernsCaseConfiguration : IEntityTypeConfiguration<ConcernsCase>
 		builder.Property(e => e.Territory)
 			.HasConversion<string>();
 		
-		builder.HasIndex(x => new {x.TrustUkprn, x.CreatedAt, x.CreatedBy, x.UpdatedAt}).IsUnique();
+		builder.HasIndex(x => new {x.TrustUkprn, x.CreatedAt, x.CreatedBy}).IsUnique();
 	}
 }
