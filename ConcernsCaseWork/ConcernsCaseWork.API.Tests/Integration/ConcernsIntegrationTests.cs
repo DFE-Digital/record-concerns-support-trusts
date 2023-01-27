@@ -858,7 +858,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             content.Data.Count().Should().Be(2);
 
             content.Data.First().Name.Should().Be("Internal");
-            content.Data.First().Description.Should().Be("ESFA activity, TFFT or other departmental activity");
+            content.Data.First().Description.Should().Be("ESFA activity, TFF or other departmental activity");
             content.Data.First().Id.Should().BeGreaterThan(0);
 
             content.Data.Last().Name.Should().Be("External");
