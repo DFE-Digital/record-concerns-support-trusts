@@ -1,12 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace ConcernsCaseWork.Data.Models
+﻿namespace ConcernsCaseWork.Data.Models
 {
-    [Table("NTIWarningLetterReasonMapping", Schema = "concerns")]
 	public class NTIWarningLetterReasonMapping
 	{
-		[Key]
 		public int Id { get; set; }
 
         public long NTIWarningLetterId { get; set; }
