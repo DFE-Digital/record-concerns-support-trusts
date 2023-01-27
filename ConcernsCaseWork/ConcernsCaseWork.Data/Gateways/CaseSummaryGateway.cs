@@ -176,8 +176,8 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 			.Include(cases => cases.Status)
 			.Include(cases => cases.Decisions).ThenInclude(d => d.DecisionTypes)
 			.Where(cases => cases.TrustUkprn == trustUkPrn && cases.Status.Name == "Close")
-			.Select (cases => new ClosedCaseSummaryVm
-			{	
+			.Select(cases => new ClosedCaseSummaryVm
+			{
 				CaseUrn = cases.Urn,
 				ClosedAt = cases.ClosedAt.Value,
 				CreatedAt = cases.CreatedAt,
@@ -185,8 +185,10 @@ public class CaseSummaryGateway : ICaseSummaryGateway
 				StatusName = cases.Status.Name,
 				TrustUkPrn = cases.TrustUkprn,
 				UpdatedAt = cases.UpdatedAt,
-					
-				ClosedConcerns = from concerns in cases.ConcernsRecords where concerns.StatusId == 3 select new CaseSummaryVm.Concern(concerns.ConcernsType.ToString(), concerns.ConcernsRating, concerns.CreatedAt),
+				ClosedConcerns =
+					from concerns in cases.ConcernsRecords
+					where concerns.StatusId == 3
+					select new CaseSummaryVm.Concern(concerns.ConcernsType.ToString(), concerns.ConcernsRating, concerns.CreatedAt),
 				Decisions = from decisions in cases.Decisions select decisions,
 				FinancialPlanCases = _concernsDbContext.FinancialPlanCases
 					.Where(x => x.CaseUrn == cases.Urn)

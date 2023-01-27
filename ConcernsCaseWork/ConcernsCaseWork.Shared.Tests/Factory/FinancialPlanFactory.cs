@@ -20,7 +20,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<DateTime>(),
 				Fixture.Create<string>(),
 				new FinancialPlanStatusModel(Fixture.Create<string>(), Fixture.Create<long>(), true),
-				closedAt
+				closedAt,
+				Fixture.Create<DateTime>()
 			);
 
 			return model;
@@ -36,7 +37,8 @@ namespace ConcernsCaseWork.Shared.Tests.Factory
 				Fixture.Create<DateTime>(),
 				Fixture.Create<string>(),
 				new FinancialPlanStatusModel(Fixture.Create<string>(), Fixture.Create<long>(), false),
-				null
+				null,
+				Fixture.Create<DateTime>()
 			);
 			return model;
 		} 
