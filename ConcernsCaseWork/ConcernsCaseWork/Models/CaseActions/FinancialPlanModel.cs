@@ -14,8 +14,9 @@ namespace ConcernsCaseWork.Models.CaseActions
 			Status = new FinancialPlanStatusModel();
 		}
 
-		public FinancialPlanModel(long id, long caseUrn, DateTime createdAt, DateTime? datePlanRequested, DateTime? dateViablePlanReceived, string notes, FinancialPlanStatusModel status, DateTime? closedAt) =>
-			(Id, CaseUrn, CreatedAt, DatePlanRequested, DateViablePlanReceived, Notes, Status, ClosedAt) =
-			(id, caseUrn, createdAt, datePlanRequested, dateViablePlanReceived, notes, status, closedAt);
+		public FinancialPlanModel(long id, long caseUrn, DateTime createdAt, DateTime? datePlanRequested, DateTime? dateViablePlanReceived, 
+			string notes, FinancialPlanStatusModel status, DateTime? closedAt, DateTime updatedAt) =>
+			(Id, CaseUrn, CreatedAt, DatePlanRequested, DateViablePlanReceived, Notes, Status, ClosedAt, UpdatedAt) =
+			(id, caseUrn, createdAt, datePlanRequested, dateViablePlanReceived, notes, status, closedAt, updatedAt);
 	}
 }

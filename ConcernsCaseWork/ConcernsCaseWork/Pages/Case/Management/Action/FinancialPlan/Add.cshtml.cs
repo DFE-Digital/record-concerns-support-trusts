@@ -57,10 +57,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				var viablePlanReceivedDate = GetRequestedViablePlanReceivedDate();
 				var currentUser = GetLoggedInUserName();
 
+				var now = DateTime.Now;
 				var model = new CreateFinancialPlanModel
 				{
 					CaseUrn = caseUrn,
-					CreatedAt = DateTime.Now,
+					CreatedAt = now,
+					UpdatedAt = now,
 					DatePlanRequested = planRequestedDate,
 					DateViablePlanReceived = viablePlanReceivedDate,
 					StatusId = FinancialPlanModel.Status?.Id,

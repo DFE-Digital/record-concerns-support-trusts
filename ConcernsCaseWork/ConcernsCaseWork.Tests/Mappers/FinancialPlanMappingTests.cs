@@ -48,7 +48,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 				testData.Status.Id,
 				testData.DatePlanRequested,
 				testData.DatePlanReceived,
-				testData.Notes
+				testData.Notes,
+				testData.UpdatedAt
 			);
 
 			var casePermission = new GetCasePermissionsResponse() { Permissions  = new List<CasePermission>() { CasePermission.Edit } };
@@ -67,7 +68,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Assert.That(serviceModel.Notes, Is.EqualTo(testData.Notes));
 				Assert.That(serviceModel.DatePlanRequested, Is.EqualTo(testData.DatePlanRequested));
 				Assert.That(serviceModel.DateViablePlanReceived, Is.EqualTo(testData.DatePlanReceived));
-				//Assert.That(serviceModel.UpdatedAt, Is.EqualTo(testData.UpdatedAt)); // TODO: This is not currently mapped. Check if this is correct behaviour
+				Assert.That(serviceModel.UpdatedAt, Is.EqualTo(testData.UpdatedAt));
 				Assert.That(serviceModel.ClosedAt, Is.EqualTo(testData.ClosedAt));
 				Assert.That(serviceModel.CreatedAt, Is.EqualTo(testData.CreatedAt));
 				Assert.That(serviceModel.IsEditable, Is.True);
@@ -121,7 +122,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 					testData.Status.Id,
 					testData.DatePlanRequested,
 					testData.DatePlanReceived,
-					testData.Notes
+					testData.Notes,
+					testData.UpdatedAt
 				)
 			};
 
@@ -140,7 +142,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Assert.That(serviceModel.Single().Notes, Is.EqualTo(testData.Notes));
 				Assert.That(serviceModel.Single().DatePlanRequested, Is.EqualTo(testData.DatePlanRequested));
 				Assert.That(serviceModel.Single().DateViablePlanReceived, Is.EqualTo(testData.DatePlanReceived));
-				//Assert.That(serviceModel.Single().UpdatedAt, Is.EqualTo(testData.UpdatedAt)); // TODO: This is not currently mapped. Check if this is correct behaviour
+				Assert.That(serviceModel.Single().UpdatedAt, Is.EqualTo(testData.UpdatedAt));
 				Assert.That(serviceModel.Single().ClosedAt, Is.EqualTo(testData.ClosedAt));
 				Assert.That(serviceModel.Single().CreatedAt, Is.EqualTo(testData.CreatedAt));
 			});
@@ -209,7 +211,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 				_fixture.Create<int>(),
 				_fixture.Create<DateTime>(),
 				_fixture.Create<DateTime>(),
-				_fixture.Create<string>()
+				_fixture.Create<string>(),
+				_fixture.Create<DateTime>()
 			);
 
 			var model = new PatchFinancialPlanModel
@@ -274,7 +277,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 				originalData.Status.Id,
 				originalData.DatePlanRequested,
 				originalData.DatePlanReceived,
-				originalData.Notes
+				originalData.Notes,
+				originalData.UpdatedAt
 			);
 
 			var patchModel = new PatchFinancialPlanModel
@@ -333,7 +337,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 				testData.DatePlanReceived,
 				testData.Notes,
 				testData.Status,
-				testData.ClosedAt
+				testData.ClosedAt,
+				testData.UpdatedAt
 			)
 			{ UpdatedAt = testData.UpdatedAt };
 

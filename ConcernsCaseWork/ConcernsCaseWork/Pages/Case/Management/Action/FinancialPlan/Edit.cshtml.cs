@@ -76,7 +76,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					StatusId = FinancialPlanModel.Status?.Id,
 					DatePlanRequested = GetRequestedPlanRequestedDate(),
 					DateViablePlanReceived = GetRequestedViablePlanReceivedDate(),
-					Notes = FinancialPlanModel.Notes
+					Notes = FinancialPlanModel.Notes,
+					UpdatedAt = DateTime.Now
 				};
 
 				await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel);

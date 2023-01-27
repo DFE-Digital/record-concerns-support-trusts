@@ -3,12 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConcernsCaseWork.Data.Models
 {
-    [Table("NTIUnderConsiderationCase", Schema = "concerns")]
-    public class NTIUnderConsideration
+	public class NTIUnderConsideration
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+	    public long Id { get; set; }
         public int CaseUrn { get; set; }
 
         [StringLength(2000)]

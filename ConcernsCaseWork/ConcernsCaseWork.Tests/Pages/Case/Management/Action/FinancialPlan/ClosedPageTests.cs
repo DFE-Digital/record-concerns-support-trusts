@@ -110,7 +110,8 @@ public class ClosedPageTests
 			null,
 			String.Empty,
 			new FinancialPlanStatusModel(statusName, 1, false),
-			null);
+			null,
+			DateTime.Now);
 
 	private static ClosedPageModel SetupIndexPageModel(
 		IFinancialPlanModelService mockFinancialPlanModelService,

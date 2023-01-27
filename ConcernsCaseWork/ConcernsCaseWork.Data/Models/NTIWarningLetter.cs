@@ -3,12 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConcernsCaseWork.Data.Models
 {
-    [Table("NTIWarningLetterCase", Schema = "concerns")]
-    public class NTIWarningLetter
+	public class NTIWarningLetter
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+	    public long Id { get; set; }
         public int CaseUrn { get; set; }
         public DateTime? DateLetterSent { get; set; }
         public int? StatusId { get; set; }

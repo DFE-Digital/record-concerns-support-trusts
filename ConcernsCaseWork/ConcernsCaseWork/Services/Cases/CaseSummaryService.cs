@@ -1,7 +1,7 @@
 using ConcernsCaseWork.Extensions;
-using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Redis.Base;
 using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Service.Cases;
 using System.Collections.Generic;
@@ -10,10 +10,11 @@ using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Services.Cases;
 
-public class CaseSummaryService : ICaseSummaryService
+public class CaseSummaryService : CachedService, ICaseSummaryService
 {	
 	private readonly IApiCaseSummaryService _caseSummaryService;
 	private readonly ITrustCachedService _trustCachedService;
+	
 	private const int _maxNumberActionsAndDecisionsToReturn = 3;
 	private static IEnumerable<string> SortedRags
 		=> new[]
@@ -27,7 +28,7 @@ public class CaseSummaryService : ICaseSummaryService
 			""
 		};
 	
-	public CaseSummaryService(IApiCaseSummaryService caseSummaryService, ITrustCachedService trustCachedService)
+	public CaseSummaryService(ICacheProvider cacheProvider, IApiCaseSummaryService caseSummaryService, ITrustCachedService trustCachedService) : base(cacheProvider)
 	{
 		_caseSummaryService = caseSummaryService;
 		_trustCachedService = trustCachedService;
@@ -38,14 +39,10 @@ public class CaseSummaryService : ICaseSummaryService
 		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(caseworker);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
-	
-	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesByCaseworkers(IEnumerable<string> caseWorkers)
-	{
-		var getSummaryTasks = caseWorkers
-			.Select(caseworker => _caseSummaryService.GetActiveCaseSummariesByCaseworker(caseworker))
-			.ToArray();
 
-		var caseSummaries = (await Task.WhenAll(getSummaryTasks)).SelectMany(t => t);
+	public async Task<List<ActiveCaseSummaryModel>> GetActiveCaseSummariesForUsersTeam(string caseworker)
+	{
+		var caseSummaries = await _caseSummaryService.GetActiveCaseSummariesForUsersTeam(caseworker);
 		return await BuildActiveCaseSummaryModel(caseSummaries);
 	}
 
@@ -69,12 +66,14 @@ public class CaseSummaryService : ICaseSummaryService
 
 	private async Task<List<ActiveCaseSummaryModel>> BuildActiveCaseSummaryModel(IEnumerable<ActiveCaseSummaryDto> caseSummaries)
 	{
-		var sortedCaseSummaries = new List<ActiveCaseSummaryModel>();
+		IEnumerable<ActiveCaseSummaryDto> activeCaseSummaryDtos = caseSummaries as ActiveCaseSummaryDto[] ?? caseSummaries.ToArray();
+		
+		var getTrustNameTasks = activeCaseSummaryDtos.DistinctBy(x => x.TrustUkPrn).Select(x => GetTrust(x.TrustUkPrn));
+		var trusts = await Task.WhenAll(getTrustNameTasks);
 
-		foreach (var caseSummary in caseSummaries.OrderByDescending(cs => cs.CreatedAt))
+		var sortedCaseSummaries = new List<ActiveCaseSummaryModel>();
+		foreach (var caseSummary in activeCaseSummaryDtos.OrderByDescending(cs => cs.CreatedAt))
 		{
-			var trustName = await GetTrustName(caseSummary.TrustUkPrn);
-			
 			var sortedActionAndDecisionNames = GetSortedActionAndDecisionNames(caseSummary);
 			
 			var summary = 
@@ -83,13 +82,13 @@ public class CaseSummaryService : ICaseSummaryService
 					ActiveConcerns = GetSortedActiveConcerns(caseSummary.ActiveConcerns),
 					ActiveActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
 					CaseUrn = caseSummary.CaseUrn,
-					CreatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CreatedAt),
+					CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
 					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
 					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
 					Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
 					StatusName = caseSummary.StatusName,
-					TrustName = trustName,
-					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt)
+					TrustName = trusts.Single(x => x.Key == caseSummary.TrustUkPrn).Value,
+					UpdatedAt = caseSummary.UpdatedAt.ToDayMonthYear()
 				};
 			
 			sortedCaseSummaries.Add(summary);
@@ -113,9 +112,9 @@ public class CaseSummaryService : ICaseSummaryService
 				{
 					ClosedConcerns = GetSortedClosedConcerns(caseSummary.ClosedConcerns),
 					ClosedActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
-					ClosedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.ClosedAt),
+					ClosedAt = caseSummary.ClosedAt.ToDayMonthYear(),
 					CaseUrn = caseSummary.CaseUrn,
-					CreatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CreatedAt),
+					CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
 					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
 					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
 					StatusName = caseSummary.StatusName,
@@ -200,6 +199,21 @@ public class CaseSummaryService : ICaseSummaryService
 		catch
 		{
 			return $"Error getting Trust with UkPrn {trustUkPrn}";
+		}
+	}
+	
+	private async Task<KeyValuePair<string, string>> GetTrust(string trustUkPrn)
+	{
+		try
+		{
+			var trust = await _trustCachedService.GetTrustSummaryByUkPrn(trustUkPrn);
+			return trust?.TrustName != null ?
+				KeyValuePair.Create(trustUkPrn,  trust.TrustName) :
+				KeyValuePair.Create(trustUkPrn, "Unknown");
+		}
+		catch
+		{
+			return KeyValuePair.Create(trustUkPrn, "Unknown");
 		}
 	}
 

@@ -69,6 +69,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				var status = await GetRequiredStatusByNameAsync(statusName);
 				var notes = GetRequestedNotes();
 
+				var now = DateTime.Now;
 				var patchFinancialPlanModel = new PatchFinancialPlanModel
 				{
 					Id = financialPlanId,
@@ -76,7 +77,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					StatusId = status.Id,
 					Notes = notes,
 					// todo: closed date is currently set to server date across the system. This should ideally be converted to UTC
-					ClosedAt = DateTime.Now
+					ClosedAt = now,
+					UpdatedAt = now
 				};
 
 				await _financialPlanModelService.PatchFinancialById(patchFinancialPlanModel);

@@ -7,7 +7,9 @@ using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Moq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using StackExchange.Redis;
@@ -23,33 +25,33 @@ namespace ConcernsCaseWork.Integration.Tests.Redis
 		/// startup is configured to use Redis with session storage.
 		private IConfigurationRoot _configuration;
 		private WebAppFactory _factory;
-		
+
 		[OneTimeSetUp]
 		public void OneTimeSetup()
 		{
 			_configuration = new ConfigurationBuilder().ConfigurationJsonFile().ConfigurationUserSecretsBuilder().Build();
 			_factory = new WebAppFactory(_configuration);
 		}
-		
+
 		[OneTimeTearDown]
 		public void OneTimeTearDown()
 		{
 			_factory.Dispose();
 		}
-		
+
 		[Test]
 		public async Task WhenGetFromCache_IsSuccessful()
 		{
 			// arrange
 			const int cacheTimeToLive = 120;
-			
+
 			var cacheTtl = _configuration.GetSection(CacheOptions.Cache).Get<CacheOptions>();
 			Assert.NotNull(cacheTtl);
-			
+
 			var vCapConfiguration = JObject.Parse(_configuration["VCAP_SERVICES"]);
 			var redisCredentials = vCapConfiguration["redis"]?[0]?["credentials"];
 			Assert.NotNull(redisCredentials);
-			
+
 			var password = (string)redisCredentials["password"];
 			var host = (string)redisCredentials["host"];
 			var port = (string)redisCredentials["port"];
@@ -63,17 +65,17 @@ namespace ConcernsCaseWork.Integration.Tests.Redis
 			};
 			var redisCacheOptions = new RedisCacheOptions { ConfigurationOptions = redisConfigurationOptions };
 			var redisCache = new RedisCache(redisCacheOptions);
-			var cacheProvider = new CacheProvider(redisCache, Options.Create(cacheTtl));
+			var cacheProvider = new CacheProvider(redisCache, Options.Create(cacheTtl), Mock.Of<ILogger<CacheProvider>>());
 
 			var cacheEntryOptions = new DistributedCacheEntryOptions()
 				.SetSlidingExpiration(TimeSpan.FromSeconds(cacheTimeToLive));
-			
+
 			var userClaims = new Claims
 			{
-				Email = "test@email.com", 
+				Email = "test@email.com",
 				Id = "test"
 			};
-			
+
 			// act
 			await cacheProvider.SetCache(userClaims.Email, userClaims, cacheEntryOptions);
 			var cachedUserClaim = await cacheProvider.GetFromCache<Claims>(userClaims.Email);
@@ -83,27 +85,27 @@ namespace ConcernsCaseWork.Integration.Tests.Redis
 			Assert.That(cachedUserClaim, Is.InstanceOf<Claims>());
 			Assert.That(cachedUserClaim.Email, Is.EqualTo(userClaims.Email));
 			Assert.That(cachedUserClaim.Id, Is.EqualTo(userClaims.Id));
-			
+
 			// clean up
 			await cacheProvider.ClearCache(cachedUserClaim.Email);
 			cachedUserClaim = await cacheProvider.GetFromCache<Claims>(userClaims.Email);
-			  
+
 			Assert.That(cachedUserClaim, Is.Null);
 		}
-		
+
 		[Test]
 		public async Task WhenGetCasesStateDataFromCache_IsSuccessful()
 		{
 			// arrange
 			const int cacheTimeToLive = 120;
-			
+
 			var cacheTtl = _configuration.GetSection(CacheOptions.Cache).Get<CacheOptions>();
 			Assert.NotNull(cacheTtl);
-			
+
 			var vCapConfiguration = JObject.Parse(_configuration["VCAP_SERVICES"]);
 			var redisCredentials = vCapConfiguration["redis"]?[0]?["credentials"];
 			Assert.NotNull(redisCredentials);
-			
+
 			var password = (string)redisCredentials["password"];
 			var host = (string)redisCredentials["host"];
 			var port = (string)redisCredentials["port"];
@@ -117,16 +119,16 @@ namespace ConcernsCaseWork.Integration.Tests.Redis
 			};
 			var redisCacheOptions = new RedisCacheOptions { ConfigurationOptions = redisConfigurationOptions };
 			var redisCache = new RedisCache(redisCacheOptions);
-			var cacheProvider = new CacheProvider(redisCache, Options.Create(cacheTtl));
+			var cacheProvider = new CacheProvider(redisCache, Options.Create(cacheTtl), Mock.Of<ILogger<CacheProvider>>());
 
 			var cacheEntryOptions = new DistributedCacheEntryOptions()
 				.SetSlidingExpiration(TimeSpan.FromSeconds(cacheTimeToLive));
-			
+
 			var caseStateData = new UserState("test@email.com")
 			{
 				TrustUkPrn = "999999"
 			};
-			
+
 			// act
 			await cacheProvider.SetCache("test@email.com", caseStateData, cacheEntryOptions);
 			var cachedCaseStateData = await cacheProvider.GetFromCache<UserState>("test@email.com");
@@ -139,7 +141,7 @@ namespace ConcernsCaseWork.Integration.Tests.Redis
 			// clean up
 			await cacheProvider.ClearCache("test@email.com");
 			cachedCaseStateData = await cacheProvider.GetFromCache<UserState>("test@email.com");
-			
+
 			Assert.That(cachedCaseStateData, Is.Null);
 		}
 	}
