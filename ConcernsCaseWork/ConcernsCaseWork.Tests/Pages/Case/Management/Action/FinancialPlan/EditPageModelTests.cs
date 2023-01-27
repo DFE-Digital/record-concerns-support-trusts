@@ -502,7 +502,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				null, 
 				String.Empty, 
 				new FinancialPlanStatusModel(statusName, 1, false), 
-				null);
+				null,
+				DateTime.Now);
 		
 		private static List<FinancialPlanStatusDto> GetListValidStatuses() => FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto().ToList();
 	}

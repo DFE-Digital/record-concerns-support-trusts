@@ -1,5 +1,4 @@
 ﻿using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using System;
@@ -28,7 +27,8 @@ namespace ConcernsCaseWork.Mappers
 				financialPlanDto.DateViablePlanReceived,
 				financialPlanDto.Notes,
 				FinancialPlanStatusMapping.MapDtoToModel(statuses, selectedStatusId),
-				financialPlanDto.ClosedAt
+				financialPlanDto.ClosedAt,
+				financialPlanDto.UpdatedAt
 				);
 
 			financialPlanModel.IsEditable = casePermission.HasEditPermissions();
@@ -55,7 +55,8 @@ namespace ConcernsCaseWork.Mappers
 					financialPlanDto.DateViablePlanReceived,
 					financialPlanDto.Notes,
 					FinancialPlanStatusMapping.MapDtoToModel(statuses, financialPlanDto.StatusId),
-					financialPlanDto.ClosedAt);
+					financialPlanDto.ClosedAt, 
+					financialPlanDto.UpdatedAt);
 
 				return financialPlanModel;
 			}
@@ -79,7 +80,8 @@ namespace ConcernsCaseWork.Mappers
 				selectedStatusId ?? financialPlanDto.StatusId,
 				patchFinancialPlanModel?.DatePlanRequested ?? financialPlanDto.DatePlanRequested,
 				patchFinancialPlanModel?.DateViablePlanReceived ?? financialPlanDto.DateViablePlanReceived,
-				patchFinancialPlanModel?.Notes ?? financialPlanDto.Notes);
+				patchFinancialPlanModel?.Notes ?? financialPlanDto.Notes, 
+				patchFinancialPlanModel?.UpdatedAt ?? DateTime.Now);
 
 			return updatedFinancialPlanDto;
 		}
