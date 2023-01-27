@@ -13,7 +13,7 @@ namespace ConcernsCaseWork.Redis.Base
 		{
 			_cacheProvider = cacheProvider;
 		}
-		
+
 		// Todo. scope these methods?
 
 		public Task StoreData<T>(string key, T data, int expirationTimeInHours = 24) where T : class
@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Redis.Base
 			}
 			return DoWork();
 		}
-		
+
 		public Task<T> GetData<T>(string key) where T : class
 		{
 			Guard.Against.NullOrWhiteSpace(key);

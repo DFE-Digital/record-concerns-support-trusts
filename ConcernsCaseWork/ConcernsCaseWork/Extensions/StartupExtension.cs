@@ -57,14 +57,16 @@ using Newtonsoft.Json.Linq;
 using Serilog;
 using StackExchange.Redis;
 using System;
+using System.Configuration;
 using System.Net.Mime;
+using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Extensions
 {
 	public static class StartupExtension
 	{
-		private static readonly IRedisMultiplexer _redisMultiplexer = new RedisMultiplexer();
-		public static IRedisMultiplexer RedisMultiplexerImplementation { private get; set; } = _redisMultiplexer;
+		private static IConnectionMultiplexer _redisConnectionMultiplexer;
+
 
 		public static void AddRedis(this IServiceCollection services, IConfiguration configuration)
 		{
@@ -81,19 +83,26 @@ namespace ConcernsCaseWork.Extensions
 				Log.Information("Starting Redis Server Port - {Port}", port);
 				Log.Information("Starting Redis Server TLS - {Tls}", tls);
 
-				var redisConfigurationOptions = new ConfigurationOptions { Password = password, EndPoints = { $"{host}:{port}" }, Ssl = tls, AsyncTimeout = 15000 };
-				var redisConnection = RedisMultiplexerImplementation.Connect(redisConfigurationOptions);
+				var redisConfigurationOptions = new ConfigurationOptions { Password = password, EndPoints = { $"{host}:{port}" }, Ssl = tls, AsyncTimeout = 15000, SyncTimeout = 15000 };
+
+				var preventThreadTheftStr = configuration["PreventRedisThreadTheft"] ?? "false";
+				if (bool.TryParse(preventThreadTheftStr, out bool preventThreadTheft) && preventThreadTheft)
+				{
+					// https://stackexchange.github.io/StackExchange.Redis/ThreadTheft.html
+					ConnectionMultiplexer.SetFeatureFlag("preventthreadtheft", true);
+				}
+
+				_redisConnectionMultiplexer = ConnectionMultiplexer.Connect(redisConfigurationOptions);
+				services.AddDataProtection().PersistKeysToStackExchangeRedis(_redisConnectionMultiplexer, "DataProtectionKeys");
 
 				services.AddStackExchangeRedisCache(
 					options =>
 					{
 						options.ConfigurationOptions = redisConfigurationOptions;
 						options.InstanceName = $"Redis-{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}";
+						options.ConnectionMultiplexerFactory = () => Task.FromResult(_redisConnectionMultiplexer);
 					});
 
-				services.AddDataProtection().PersistKeysToStackExchangeRedis(redisConnection, "DataProtectionKeys");
-
-				services.AddSingleton<IConnectionMultiplexer>(redisConnection);
 			}
 			catch (Exception ex)
 			{
