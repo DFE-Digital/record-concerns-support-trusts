@@ -7,6 +7,7 @@ namespace ConcernsCaseWork.Redis.Models
 	{
 		public long CaseUrn { get; set; }
 		public DateTime CreatedAt { get; set; }
+		public DateTime UpdatedAt { get; set; }
 		public DateTime? DatePlanRequested { get; set; }
 		public DateTime? DateViablePlanReceived { get; set; }
 		public long? StatusId { get; set; }

@@ -304,6 +304,48 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			Assert.IsNotNull(pageResponse);
 			Assert.IsNull(pageModel.TempData["Error.Message"]);
 		}
+		
+				
+		[Test]
+		public async Task WhenOnPostAsync_SetsUpdatedAtValue_Succeeds()
+		{
+			// arrange
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
+			var mockLogger = new Mock<ILogger<AddPageModel>>();
+
+			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
+			var caseUrn = 1L;
+			
+			var pageModel = SetupAddPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "dtr-day-viable-plan", "28" },
+					{ "dtr-month-viable-plan", "12" },
+					{ "dtr-year-viable-plan", "2024" }
+				});
+			
+			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+
+			// act
+			var pageResponse = await pageModel.OnPostAsync();
+
+			// assert
+			mockFinancialPlanModelService.Verify(f => 
+				f.PostFinancialPlanByCaseUrn(It.Is<CreateFinancialPlanModel>(fpm => 
+					fpm.UpdatedAt > DateTime.Now.AddMinutes(-1) && fpm.UpdatedAt <= DateTime.Now)), Times.Once);
+			
+			Assert.Multiple(() =>
+			{
+				Assert.That(pageResponse, Is.Not.Null);
+				Assert.That(pageModel.TempData["Error.Message"], Is.Null);
+			});
+		}
 
 		private static AddPageModel SetupAddPageModel(
 			IFinancialPlanModelService mockFinancialPlanModelService, 
