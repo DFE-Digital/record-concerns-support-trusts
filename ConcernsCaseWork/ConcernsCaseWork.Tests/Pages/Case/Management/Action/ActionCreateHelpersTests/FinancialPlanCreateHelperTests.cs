@@ -14,7 +14,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 	public class FinancialPlanCreateHelperTests
 	{
 		[Test]
-		public async Task FinancialPlanCreateHelper_CanHandle_RespondsCorrectly()
+		public void FinancialPlanCreateHelper_CanHandle_RespondsCorrectly()
 		{
 			// arrange
 			var mockFinancialPlanService = new Mock<IFinancialPlanModelService>();
@@ -30,16 +30,16 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 		}
 
 		[Test]
-		public async Task FinancialPlanCreateHelper_NewCaseActionAllowed_ClearToAdd()
+		public void FinancialPlanCreateHelper_NewCaseActionAllowed_ClearToAdd()
 		{
 			// arrange
 			var mockFinancialPlanService = new Mock<IFinancialPlanModelService>();
 			var sut = new FinancialPlanCreateHelper(mockFinancialPlanService.Object);
 
 			IList<FinancialPlanModel> caseActions = new List<FinancialPlanModel> {
-				new FinancialPlanModel (123, 888, DateTime.Now.AddDays(-15), null, null, string.Empty, null, DateTime.Now.AddDays(-10)),
-				new FinancialPlanModel (123, 888, DateTime.Now.AddDays(-25), null, null, string.Empty, null, DateTime.Now.AddDays(-10)),
-				new FinancialPlanModel (123, 888, DateTime.Now.AddDays(-11), null, null, string.Empty, null, DateTime.Now.AddDays(-10))
+				new FinancialPlanModel (123, 888, DateTime.Now.AddDays(-15), null, null, string.Empty, null, DateTime.Now.AddDays(-10), DateTime.Now.AddDays(-9)),
+				new FinancialPlanModel (123, 888, DateTime.Now.AddDays(-25), null, null, string.Empty, null, DateTime.Now.AddDays(-10), DateTime.Now.AddDays(-9)),
+				new FinancialPlanModel (123, 888, DateTime.Now.AddDays(-11), null, null, string.Empty, null, DateTime.Now.AddDays(-10), DateTime.Now.AddDays(-9))
 			};
 
 			mockFinancialPlanService.Setup(svc => svc.GetFinancialPlansModelByCaseUrn(888)).Returns(Task.FromResult(caseActions));
@@ -52,16 +52,16 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.ActionCreateHelper
 		}
 
 		[Test]
-		public async Task SrmaCreateHelper_NewCaseActionAllowed_NotClearToAdd()
+		public void FinancialPlanCreateHelper_NewCaseActionAllowed_NotClearToAdd()
 		{
 			// arrange
 			var mockFinancialPlanService = new Mock<IFinancialPlanModelService>();
 			var sut = new FinancialPlanCreateHelper(mockFinancialPlanService.Object);
 
 			IList<FinancialPlanModel> caseActions = new List<FinancialPlanModel> {
-				new FinancialPlanModel (123, 888, DateTime.Now.AddDays(-15), null, null, string.Empty, null, DateTime.Now.AddDays(-10)),
-				new FinancialPlanModel (123, 888, DateTime.Now.AddDays(-25), null, null, string.Empty, null, closedAt: null),
-				new FinancialPlanModel (123, 888, DateTime.Now.AddDays(-11), null, null, string.Empty, null, DateTime.Now.AddDays(-10))
+				new FinancialPlanModel (123, 888, DateTime.Now.AddDays(-15), null, null, string.Empty, null, DateTime.Now.AddDays(-10), DateTime.Now.AddDays(-9)),
+				new FinancialPlanModel (123, 888, DateTime.Now.AddDays(-25), null, null, string.Empty, null, closedAt: null, updatedAt: DateTime.Now.AddDays(-9)),
+				new FinancialPlanModel (123, 888, DateTime.Now.AddDays(-11), null, null, string.Empty, null, DateTime.Now.AddDays(-10), DateTime.Now.AddDays(-9))
 			};
 
 			mockFinancialPlanService.Setup(svc => svc.GetFinancialPlansModelByCaseUrn(888)).Returns(Task.FromResult(caseActions));
