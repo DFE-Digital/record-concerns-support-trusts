@@ -97,7 +97,8 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 					createFinancialPlanModel.StatusId,
 					createFinancialPlanModel.DatePlanRequested,
 					createFinancialPlanModel.DateViablePlanReceived,
-					createFinancialPlanModel.Notes);
+					createFinancialPlanModel.Notes,
+					createFinancialPlanModel.UpdatedAt);
 
 				var financialPlanDto = await _financialPlanService.PostFinancialPlanByCaseUrn(createFinancialPlanDto);
 
