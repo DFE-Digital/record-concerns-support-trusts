@@ -30,7 +30,10 @@ describe("Testing case action NTI", () =>
             .clearDateFields()
             .withDayIssued("22")
             .save()
-            .hasValidationError("Please enter a complete date (DD MM YYYY)");
+            .hasValidationError("Please enter a complete date (DD MM YYYY)")
+        
+        editNtiPage.clearDateFields();
+        cy.waitForJavascript();
 
         Logger.Log("Notes Exceeding allowed limit")
         editNtiPage
