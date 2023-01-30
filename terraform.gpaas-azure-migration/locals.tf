@@ -23,4 +23,5 @@ locals {
   enable_event_hub                        = var.enable_event_hub
   enable_monitoring                       = var.enable_monitoring
   monitor_email_receivers                 = var.monitor_email_receivers
+  monitor_endpoint_healthcheck            = var.monitor_endpoint_healthcheck
 }

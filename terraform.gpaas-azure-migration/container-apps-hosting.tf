@@ -30,6 +30,7 @@ module "azure_container_apps_hosting" {
 
   enable_event_hub = local.enable_event_hub
 
-  enable_monitoring       = local.enable_monitoring
-  monitor_email_receivers = local.monitor_email_receivers
+  enable_monitoring            = local.enable_monitoring
+  monitor_email_receivers      = local.monitor_email_receivers
+  monitor_endpoint_healthcheck = local.monitor_endpoint_healthcheck
 }

@@ -122,3 +122,8 @@ variable "enable_event_hub" {
   description = "Send Azure Container App logs to an Event Hub sink"
   type        = bool
 }
+
+variable "monitor_endpoint_healthcheck" {
+  description = "Specify a route that should be monitored for a 200 OK status"
+  type        = string
+}
