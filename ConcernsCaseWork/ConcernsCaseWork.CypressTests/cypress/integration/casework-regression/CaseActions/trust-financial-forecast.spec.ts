@@ -17,7 +17,7 @@ describe(("User can add trust financial forecast to an existing case"), () => {
     beforeEach(() => {
 		cy.login();
 		cy.basicCreateCase();
-		//addTFFToCase();
+		addTFFToCase();
 	});
 
     after(function () {
@@ -26,22 +26,13 @@ describe(("User can add trust financial forecast to an existing case"), () => {
 	});
 
 
-	it("Concern TFF - Creating a TFF with all values", function () {
-		
-
-	});
-
-
-	/*
-
-
     it("Concern TFF - Creating a TFF with all values", function () {
 		
 		Logger.Log("Notes Exceeding allowed limit")
         editTFFPage
             .withNotesExceedingLimit()
             .save()
-            .hasValidationError("Notes must be 2000 characters or less");
+            .hasValidationError("Supporting notes: Exceeds maximum allowed length (2000 characters).");
 		
 		Logger.Log("Create a TFF will all values");
 		editTFFPage
@@ -163,13 +154,12 @@ describe(("User can add trust financial forecast to an existing case"), () => {
 			.hasNotes("TFF Closed");
 
 	});
-	*/
 
 	function addTFFToCase()
     {
         Logger.Log("Adding Trust Financial Forecasr");
         CaseManagementPage.getAddToCaseBtn().click();
-       //	AddToCasePage.addToCase('TrustFinancialForecast')
-    	//AddToCasePage.getAddToCaseBtn().click();
+       	AddToCasePage.addToCase('TrustFinancialForecast')
+    	AddToCasePage.getAddToCaseBtn().click();
     }
 });
