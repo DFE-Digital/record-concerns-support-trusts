@@ -12,7 +12,7 @@ class HomePage {
     }
 
     getTeamCaseworkBtn() {
-        return cy.get('[id="tab_team-casework"]');
+        return cy.getByTestId("team-casework-tab");
     }
 
     getYourCaseworkBtn() {
