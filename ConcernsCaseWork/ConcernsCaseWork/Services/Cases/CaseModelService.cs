@@ -269,9 +269,9 @@ namespace ConcernsCaseWork.Services.Cases
 				var newCase = await _caseService.PostCase(CaseMapping.Map(createCaseModel));
 
 				// Create records
-				var currentDate = DateTimeOffset.Now;
 				var recordTasks = createCaseModel.CreateRecordsModel.Select(recordModel => 
 				{
+					var currentDate = DateTimeOffset.Now;
 					var createRecordDto = new CreateRecordDto(
 						currentDate, 
 						currentDate,
