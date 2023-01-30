@@ -1,0 +1,11 @@
+@model IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult>
+
+@{
+	if (Model != null && Model.Any())
+	{
+		foreach (var errors in Model)
+		{
+			<span class="govuk-error-message">@errors.ErrorMessage?.Replace(string.Join(",", errors.MemberNames) + ": ", "")</span>
+		}
+	}
+}

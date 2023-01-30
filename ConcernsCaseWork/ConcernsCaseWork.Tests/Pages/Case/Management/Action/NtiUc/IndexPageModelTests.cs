@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -31,7 +32,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]
@@ -43,7 +44,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 
 			var ntiUnderConsiderationModel = NTIUnderConsiderationFactory.BuildNTIUnderConsiderationModel();
 
-			mockNtiUnderConsiderationModelService.Setup(n => n.GetNtiUnderConsideration(ntiUnderConsiderationModel.Id))
+			mockNtiUnderConsiderationModelService.Setup(n => n.GetNtiUnderConsiderationViewModel(1, ntiUnderConsiderationModel.Id))
 				.ReturnsAsync(ntiUnderConsiderationModel);
 
 			var expectedModel = Copy(ntiUnderConsiderationModel);
@@ -81,7 +82,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			var ntiUnderConsiderationModel = NTIUnderConsiderationFactory.BuildClosedNTIUnderConsiderationModel();
 			var expectedModel = Copy(ntiUnderConsiderationModel);
 
-			mockNtiUnderConsiderationModelService.Setup(n => n.GetNtiUnderConsideration(ntiUnderConsiderationModel.Id))
+			mockNtiUnderConsiderationModelService.Setup(n => n.GetNtiUnderConsiderationViewModel(1, ntiUnderConsiderationModel.Id))
 				.ReturnsAsync(ntiUnderConsiderationModel);
 
 			var pageModel = SetupIndexPageModel(mockNtiUnderConsiderationModelService, mockLogger);
@@ -125,7 +126,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 

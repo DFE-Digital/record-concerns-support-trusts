@@ -1,12 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace ConcernsCaseWork.Data.Models
+﻿namespace ConcernsCaseWork.Data.Models
 {
-    [Table("NTIUnderConsiderationReasonMapping", Schema = "concerns")]
 	public class NTIUnderConsiderationReasonMapping
 	{
-		[Key]
 		public int Id { get; set; }
 
         public long NTIUnderConsiderationId { get; set; }

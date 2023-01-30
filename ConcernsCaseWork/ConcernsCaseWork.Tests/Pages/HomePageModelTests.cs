@@ -1,5 +1,6 @@
 using AutoFixture;
 using ConcernsCaseWork.Authorization;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.Teams;
 using ConcernsCaseWork.Pages;
@@ -29,7 +30,38 @@ namespace ConcernsCaseWork.Tests.Pages
 	public class HomePageModelTests
 	{
 		private readonly IFixture _fixture = new Fixture();
-		
+
+
+		[Test]
+		public async Task WhenOnGetAsync_ThrowsException_ReturnsPage()
+		{
+			// arrange
+			var currentUserName = _fixture.Create<string>();
+
+			var mockLogger = new Mock<ILogger<HomePageModel>>();
+			var mockUserStateCache = new Mock<IUserStateCachedService>();
+			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
+			var mockCaseSummaryService = new Mock<ICaseSummaryService>();
+			var mockTeamService = new Mock<ITeamsModelService>();
+
+			var activeTeamCases = _fixture.CreateMany<ActiveCaseSummaryModel>().ToList();
+			var teamUserNames = activeTeamCases.Select(t => t.CreatedBy).Distinct().ToArray();
+
+			mockClaimsPrincipalHelper.Setup(s => s.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(currentUserName);
+			mockTeamService.Setup(x => x.GetCaseworkTeam(currentUserName))
+				.ReturnsAsync(new ConcernsTeamCaseworkModel(currentUserName, teamUserNames));
+
+			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(currentUserName)).Throws(new Exception("Bad request"));
+			
+			var sut = SetupHomePageModel(mockLogger.Object, mockTeamService.Object, mockUserStateCache.Object, mockCaseSummaryService.Object, mockClaimsPrincipalHelper.Object);
+
+			// act
+			await sut.OnGetAsync();
+
+			Assert.That(sut.TempData, Is.Not.Null);
+			Assert.That(sut.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
+		}
+
 		[Test]
 		public async Task WhenInstanceOfHomePageOnGetAsync_ReturnCases()
 		{
@@ -47,7 +79,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			var teamUserNames = activeTeamCases.Select(t => t.CreatedBy).Distinct().ToArray();
 			
 			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworker(currentUserName)).ReturnsAsync(activeCases);
-			mockCaseSummaryService.Setup(s => s.GetActiveCaseSummariesByCaseworkers(teamUserNames)).ReturnsAsync(activeTeamCases);
 			mockClaimsPrincipalHelper.Setup(s => s.GetPrincipalName(It.IsAny<IPrincipal>())).Returns(currentUserName);
 			mockTeamService.Setup(x => x.GetCaseworkTeam(currentUserName))
 				.ReturnsAsync(new ConcernsTeamCaseworkModel(currentUserName, teamUserNames));
@@ -61,7 +92,6 @@ namespace ConcernsCaseWork.Tests.Pages
 			Assert.Multiple(() =>
 			{
 				Assert.That(sut.ActiveCases, Is.EquivalentTo(activeCases));
-				Assert.That(sut.ActiveTeamCases, Is.EquivalentTo(activeTeamCases));
 			});
 
 			mockLogger.VerifyLogInformationWasCalled("HomePageModel");

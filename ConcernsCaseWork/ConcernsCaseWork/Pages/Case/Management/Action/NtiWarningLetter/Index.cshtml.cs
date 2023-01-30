@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Pages.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,7 +11,9 @@ using ConcernsCaseWork.Services.NtiWarningLetter;
 using System.Collections.Generic;
 using ConcernsCaseWork.Service.NtiWarningLetter;
 using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.NtiWarningLetter;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 {
@@ -28,6 +31,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 		public ICollection<NtiWarningLetterStatusDto> NtiWarningLetterStatuses { get; set; }
 		public ICollection<NtiWarningLetterReasonDto> NtiWarningLetterReasons { get; private set; }
 		public ICollection<NtiWarningLetterConditionDto> NtiWarningLetterConditions { get; private set; }
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
 
 		public IndexPageModel(INtiWarningLetterStatusesCachedService ntiWarningLetterStatusesCachedService,
 			INtiWarningLetterReasonsCachedService ntiWarningLetterReasonsCachedService,
@@ -44,16 +48,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 		public async Task OnGetAsync()
 		{
-			long caseUrn = 0;
+			long caseId = 0;
 			long ntiWarningLetterId = 0;
 
 			try
 			{
 				_logger.LogInformation("Case::Action::NTI-Warning letter::IndexPageModel::OnGetAsync");
 
-				(caseUrn, ntiWarningLetterId) = GetRouteData();
+				(caseId, ntiWarningLetterId) = GetRouteData();
 
-				NtiWarningLetterModel = await GetWarningLetterModel(ntiWarningLetterId);
+				NtiWarningLetterModel = await GetWarningLetterModel(caseId, ntiWarningLetterId);
 
 				if (NtiWarningLetterModel == null)
 				{
@@ -67,9 +71,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 			}
 		}
 
-		private async Task<NtiWarningLetterModel> GetWarningLetterModel(long ntiWarningLetterId)
+		private async Task<NtiWarningLetterModel> GetWarningLetterModel(long caseId, long ntiWarningLetterId)
 		{
-			var wl = await _ntiWarningLetterModelService.GetNtiWarningLetterId(ntiWarningLetterId);
+			var wl = await _ntiWarningLetterModelService.GetNtiWarningLetterViewModel(caseId, ntiWarningLetterId);
 			NtiWarningLetterStatuses = await _ntiWarningLetterStatusesCachedService.GetAllStatusesAsync();
 
 			if (wl != null)

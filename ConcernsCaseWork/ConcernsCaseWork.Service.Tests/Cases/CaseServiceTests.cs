@@ -2,7 +2,7 @@ using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Shared.Tests.Factory;
-using Microsoft.Extensions.Configuration;
+using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var expectedCases = CaseFactory.BuildListCaseDto();
 			var expectedApiListWrapper = new ApiListWrapper<CaseDto>(expectedCases, null);
 			var concernsApiEndpoint = "https://localhost";
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -35,17 +35,17 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+
 			// act
 			var cases = await caseService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch("caseworker", 1));
 
 			// assert
 			Assert.That(cases, Is.Not.Null);
 			Assert.That(cases.Data.Count, Is.EqualTo(expectedCases.Count));
-			
+
 			foreach (var caseDto in cases.Data)
 			{
 				foreach (var expectedCase in expectedCases.Where(expectedCase => caseDto.Urn == expectedCase.Urn))
@@ -72,13 +72,13 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 				}
 			}
 		}
-		
+
 		[Test]
 		public void WhenGetCasesByCaseworker_ThrowsException_ReturnsEmptyCases()
 		{
 			// arrange
 			var concernsApiEndpoint = "https://localhost";
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -91,14 +91,14 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+
 			// act | assert
 			Assert.ThrowsAsync<HttpRequestException>(() => caseService.GetCasesByCaseworkerAndStatus(new CaseCaseWorkerSearch("caseworker", 1)));
 		}
-		
+
 		[Test]
 		public async Task WhenGetCaseByUrn_ReturnsCase()
 		{
@@ -106,7 +106,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var expectedCase = CaseFactory.BuildCaseDto();
 			var expectedCaseWrap = new ApiWrapper<CaseDto>(expectedCase);
 			var concernsApiEndpoint = "https://localhost";
-			
+
 			var logger = new Mock<ILogger<CaseService>>();
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -121,9 +121,9 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+
 			// act
 			var actualCase = await caseService.GetCaseByUrn(1);
 
@@ -149,13 +149,13 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			Assert.That(actualCase.ReasonAtReview, Is.EqualTo(expectedCase.ReasonAtReview));
 			Assert.That(actualCase.TrustUkPrn, Is.EqualTo(expectedCase.TrustUkPrn));
 		}
-		
+
 		[Test]
 		public void WhenGetCaseByUrn_ReturnsException()
 		{
 			// arrange
 			var concernsApiEndpoint = "https://localhost";
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -168,21 +168,21 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => caseService.GetCaseByUrn(1));
 		}
-		
+
 		[Test]
 		public void WhenGetCaseByUrn_UnwrapResponse_ReturnsException()
 		{
 			// arrange
 			var expectedCaseWrap = new ApiListWrapper<CaseDto>(null, null);
 			var concernsApiEndpoint = "https://localhost";
-			
+
 			var logger = new Mock<ILogger<CaseService>>();
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -197,23 +197,23 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => caseService.GetCaseByUrn(1));
-		}		
-		
+		}
+
 		[Test]
 		public async Task WhenGetCasesByTrustUkPrn_ReturnsCases()
 		{
 			// arrange
 			var expectedCases = CaseFactory.BuildListCaseDto();
 			var expectedCaseWrap = new ApiListWrapper<CaseDto>(
-				expectedCases, 
+				expectedCases,
 				new ApiListWrapper<CaseDto>.Pagination(1, 1, string.Empty));
 			var concernsApiEndpoint = "https://localhost";
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -227,10 +227,10 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+
 			// act
 			var apiWrapperCasesDto = await caseService.GetCasesByTrustUkPrn(new CaseTrustSearch("trust-ukprn"));
 
@@ -242,7 +242,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			Assert.That(apiWrapperCasesDto.Paging.Page, Is.EqualTo(1));
 			Assert.That(apiWrapperCasesDto.Paging.RecordCount, Is.EqualTo(1));
 			Assert.That(apiWrapperCasesDto.Paging.NextPageUrl, Is.EqualTo(string.Empty));
-			
+
 			foreach (var caseDto in apiWrapperCasesDto.Data)
 			{
 				foreach (var expectedCase in expectedCases.Where(expectedCase => caseDto.Urn == expectedCase.Urn))
@@ -269,13 +269,13 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 				}
 			}
 		}
-		
+
 		[Test]
 		public void WhenGetCasesByTrustUkPrn_ThrowsException()
 		{
 			// arrange
 			var concernsApiEndpoint = "https://localhost";
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -288,14 +288,14 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+
 			// act
 			Assert.ThrowsAsync<HttpRequestException>(() => caseService.GetCasesByTrustUkPrn(new CaseTrustSearch("trust-ukprn")));
 		}
-		
+
 		[Test]
 		public async Task WhenGetCasesByPagination_ReturnsCases()
 		{
@@ -303,7 +303,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var expectedCases = CaseFactory.BuildListCaseDto();
 			var expectedApiListWrapperCases = new ApiListWrapper<CaseDto>(expectedCases, null);
 			var concernsApiEndpoint = "https://localhost";
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -317,10 +317,10 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+
 			// act
 			var cases = await caseService.GetCases(new PageSearch());
 
@@ -328,7 +328,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			Assert.That(cases, Is.Not.Null);
 			Assert.That(cases.Data, Is.Not.Null);
 			Assert.That(cases.Data.Count, Is.EqualTo(expectedCases.Count));
-			
+
 			foreach (var caseDto in cases.Data)
 			{
 				foreach (var expectedCase in expectedCases.Where(expectedCase => caseDto.Urn == expectedCase.Urn))
@@ -355,13 +355,13 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 				}
 			}
 		}
-		
+
 		[Test]
 		public void WhenGetCasesByPagination_ThrowsException()
 		{
 			// arrange
 			var concernsApiEndpoint = "https://localhost";
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -374,23 +374,23 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+
 			// act | assert
 			Assert.ThrowsAsync<HttpRequestException>(() => caseService.GetCases(new PageSearch()));
 		}
-		
+
 		[Test]
 		public async Task WhenPostCase_ReturnsCase()
 		{
 			// arrange
 			var expectedCase = CaseFactory.BuildCaseDto();
 			var expectedCaseWrap = new ApiWrapper<CaseDto>(expectedCase);
-			
+
 			var concernsApiEndpoint = "https://localhost";
-			
+
 			var logger = new Mock<ILogger<CaseService>>();
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -405,9 +405,9 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+
 			// act
 			var actualCase = await caseService.PostCase(CaseFactory.BuildCreateCaseDto());
 
@@ -433,13 +433,13 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			Assert.That(actualCase.ReasonAtReview, Is.EqualTo(expectedCase.ReasonAtReview));
 			Assert.That(actualCase.TrustUkPrn, Is.EqualTo(expectedCase.TrustUkPrn));
 		}
-		
+
 		[Test]
 		public void WhenPostCase_ReturnsException()
 		{
 			// arrange
 			var concernsApiEndpoint = "https://localhost";
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -452,22 +452,22 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+
 			// act
 			Assert.ThrowsAsync<HttpRequestException>(() => caseService.PostCase(CaseFactory.BuildCreateCaseDto()));
 		}
-		
+
 		[Test]
 		public void WhenPostCase_UnwrapResponse_ReturnsException()
 		{
 			// arrange
 			var expectedCaseWrap = new ApiWrapper<CaseDto>(null);
-			
+
 			var concernsApiEndpoint = "https://localhost";
-			
+
 			var logger = new Mock<ILogger<CaseService>>();
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
@@ -482,13 +482,13 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+
 			// act
 			Assert.ThrowsAsync<Exception>(() => caseService.PostCase(CaseFactory.BuildCreateCaseDto()));
 		}
-		
+
 		[Test]
 		public async Task WhenPatchCaseByUrn_ReturnsCase()
 		{
@@ -496,7 +496,7 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var expectedCase = CaseFactory.BuildCaseDto();
 			var expectedApiWrapperCase = new ApiWrapper<CaseDto>(expectedCase);
 			var concernsApiEndpoint = "https://localhost";
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -510,10 +510,10 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+
 			// act
 			var actualCase = await caseService.PatchCaseByUrn(CaseFactory.BuildCaseDto());
 
@@ -539,13 +539,13 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			Assert.That(actualCase.ReasonAtReview, Is.EqualTo(expectedCase.ReasonAtReview));
 			Assert.That(actualCase.TrustUkPrn, Is.EqualTo(expectedCase.TrustUkPrn));
 		}
-		
+
 		[Test]
 		public void WhenPatchCaseByUrn_ReturnsException()
 		{
 			// arrange
 			var concernsApiEndpoint = "https://localhost";
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -558,10 +558,10 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => caseService.PatchCaseByUrn(CaseFactory.BuildCaseDto()));
 		}
@@ -571,9 +571,9 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 		{
 			// arrange
 			var concernsApiEndpoint = "https://localhost";
-			
+
 			var expectedApiWrapperCase = new ApiWrapper<CaseDto>(null);
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -587,14 +587,14 @@ namespace ConcernsCaseWork.Service.Tests.Cases
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(concernsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<CaseService>>();
-			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>());
-			
+			var caseService = new CaseService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
+
 			// act / assert
 			Assert.ThrowsAsync<Exception>(() => caseService.PatchCaseByUrn(CaseFactory.BuildCaseDto()));
 		}
-		
+
 		[Test]
 		public void WhenCaseSearchIncrements_ReturnsNextPage()
 		{

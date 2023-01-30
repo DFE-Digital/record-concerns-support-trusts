@@ -1,4 +1,6 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.Nti;
@@ -25,7 +27,6 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Id = 1L,
 				CaseUrn = 123,
 				CreatedAt = DateTime.Now.AddDays(-5),
-				ClosedAt = DateTime.Now,
 				Notes = "Test notes",
 				Reasons = new KeyValuePair<int, string>[] { new KeyValuePair<int, string>(1, "Reason1") },
 				DateStarted = DateTime.Now.AddDays(-1),
@@ -42,7 +43,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Id = testData.Id,
 				CaseUrn = testData.CaseUrn,
 				CreatedAt = testData.CreatedAt,
-				ClosedAt = testData.ClosedAt,
+				ClosedAt = null,
 				Notes = testData.Notes,
 				DateStarted = testData.DateStarted,
 				StatusId = testData.Status.Key,
@@ -53,10 +54,11 @@ namespace ConcernsCaseWork.Tests.Mappers
 				DateNTILifted = testData.DateNTILifted
 			};
 
-			var ntiStatuses = NTIStatusFactory.BuildListNTIStatusDto();
+			var casePermissionsResponse = new GetCasePermissionsResponse() { Permissions = new List<CasePermission>() { CasePermission.Edit } };
 
+			var ntiStatuses = NTIStatusFactory.BuildListNTIStatusDto();
 			// act
-			var serviceModel = NtiMappers.ToServiceModel(ntiDto, ntiStatuses);
+			var serviceModel = NtiMappers.ToServiceModel(ntiDto, ntiStatuses, casePermissionsResponse);
 
 			// assert
 			Assert.That(serviceModel, Is.Not.Null);
@@ -69,6 +71,25 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(serviceModel.SumissionDecisionId, Is.EqualTo(testData.SumissionDecisionId));
 			Assert.That(serviceModel.DateNTILifted, Is.EqualTo(testData.DateNTILifted));
 			Assert.That(serviceModel.DateNTIClosed, Is.EqualTo(testData.DateNTIClosed));
+
+			serviceModel.IsEditable.Should().BeTrue();
+		}
+
+		[TestCaseSource(nameof(GetPermissionTestCases))]
+		public void WhenMapDtoToServiceModel_Not_Editable_ReturnsCorrectModel(
+			DateTime closedDate,
+			GetCasePermissionsResponse casePermissionsResponse)
+		{
+			var ntiDto = _fixture.Create<NtiDto>();
+			ntiDto.StatusId = null;
+			ntiDto.ClosedStatusId = null;
+			ntiDto.ClosedAt = closedDate;
+			var ntiStatuses = NTIStatusFactory.BuildListNTIStatusDto();
+
+			var serviceModel = NtiMappers.ToServiceModel(ntiDto, ntiStatuses, casePermissionsResponse);
+
+			serviceModel.IsEditable.Should().BeFalse();
+			serviceModel.ClosedAt.Should().Be(closedDate);
 		}
 
 		[Test]
@@ -192,8 +213,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.Multiple(() =>
 			{
 				Assert.That(actionSummary.Name, Is.EqualTo("NTI"));
-				Assert.That(actionSummary.ClosedDate, Is.EqualTo(testData.ClosedAt.GetFormattedDate()));
-				Assert.That(actionSummary.OpenedDate, Is.EqualTo(testData.CreatedAt.GetFormattedDate()));
+				Assert.That(actionSummary.ClosedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.ClosedAt)));
+				Assert.That(actionSummary.OpenedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.CreatedAt)));
 				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/nti/{testData.Id}"));
 				Assert.That(actionSummary.StatusName, Is.EqualTo(testData.ClosedStatus.Value));
 			});
@@ -220,6 +241,12 @@ namespace ConcernsCaseWork.Tests.Mappers
 		{
 			yield return new TestCaseData(null, "In progress");
 			 yield return new TestCaseData(new NtiStatusModel() { Name = "Test" }, "Test");
+		}
+
+		private static IEnumerable<TestCaseData> GetPermissionTestCases()
+		{
+			yield return new TestCaseData(new DateTime(), new GetCasePermissionsResponse() { Permissions = new List<CasePermission>() { CasePermission.Edit } });
+			yield return new TestCaseData(null, new GetCasePermissionsResponse());
 		}
 	}
 }

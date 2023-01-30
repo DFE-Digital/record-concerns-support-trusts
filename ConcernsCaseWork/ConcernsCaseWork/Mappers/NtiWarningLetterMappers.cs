@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Extensions;
+﻿using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Service.NtiWarningLetter;
 using System;
@@ -27,7 +29,7 @@ namespace ConcernsCaseWork.Mappers
 			};
 		}
 
-		public static NtiWarningLetterModel ToServiceModel(NtiWarningLetterDto ntiDto, ICollection<NtiWarningLetterStatusDto> statuses )
+		public static NtiWarningLetterModel ToServiceModel(NtiWarningLetterDto ntiDto, ICollection<NtiWarningLetterStatusDto> statuses)
 		{
 			return new NtiWarningLetterModel
 			{
@@ -44,6 +46,17 @@ namespace ConcernsCaseWork.Mappers
 				ClosedStatus = ntiDto.ClosedStatusId.HasValue ? ToServiceModel(statuses.FirstOrDefault(s => s.Id == ntiDto.ClosedStatusId)) : null,
 				ClosedAt = ntiDto.ClosedAt
 			};
+		}
+
+		public static NtiWarningLetterModel ToServiceModel(
+			NtiWarningLetterDto ntiDto, 
+			ICollection<NtiWarningLetterStatusDto> statuses, 
+			GetCasePermissionsResponse permissionsResponse)
+		{
+			var result = ToServiceModel(ntiDto, statuses);
+			result.IsEditable = permissionsResponse.HasEditPermissions() && !result.ClosedAt.HasValue;
+
+			return result;
 		}
 
 		public static NtiWarningLetterConditionModel ToServiceModel(NtiWarningLetterConditionDto ntiConditionDto)
@@ -92,9 +105,9 @@ namespace ConcernsCaseWork.Mappers
 
 			var result = new ActionSummaryModel()
 			{
-				ClosedDate = model.ClosedAt?.ToDayMonthYear(),
+				ClosedDate = DateTimeHelper.ParseToDisplayDate(model.ClosedAt),
 				Name = "NTI Warning Letter",
-				OpenedDate = model.CreatedAt.ToDayMonthYear(),
+				OpenedDate = DateTimeHelper.ParseToDisplayDate(model.CreatedAt),
 				RelativeUrl = $"/case/{model.CaseUrn}/management/action/ntiwarningletter/{model.Id}",
 				StatusName = status,
 				RawOpenedDate = model.CreatedAt,

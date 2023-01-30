@@ -2,14 +2,9 @@
 using ConcernsCaseWork.API.RequestModels.CaseActions.FinancialPlan;
 using ConcernsCaseWork.API.Tests.Fixtures;
 using ConcernsCaseWork.API.Tests.Helpers;
-using ConcernsCaseWork.Data.Models;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -18,8 +13,8 @@ namespace ConcernsCaseWork.API.Tests.Integration
 	[Collection(ApiTestCollection.ApiTestCollectionName)]
 	public class FinancialPlanIntegrationTests
 	{
-		private Fixture _fixture;
-		private HttpClient _client;
+		private readonly Fixture _fixture;
+		private readonly HttpClient _client;
 
 		public FinancialPlanIntegrationTests(ApiTestFixture apiTestFixture)
 		{

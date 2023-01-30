@@ -42,7 +42,25 @@ export class ViewFinancialPlanPage
     {
         Logger.Log("Edit financial plan");
 
-        cy.getById("edit-financialplan-button").click();
+        this.getEdit().click();
+
+        return this;
+    }
+
+    public canEdit()
+    {
+        Logger.Log("Can edit financial plan");
+
+        this.getEdit();
+
+        return this;
+    }
+
+    public cannotEdit()
+    {
+        Logger.Log("Cannot edit financial plan");
+
+        this.getEdit().should("not.exist");
 
         return this;
     }
@@ -51,8 +69,35 @@ export class ViewFinancialPlanPage
     {
         Logger.Log("Closing financial plan");
 
-        cy.getByTestId("close-financialplan-button").click();
+        this.getClose().click();
 
         return this;
+    }
+
+    public canClose(): this
+    {
+        Logger.Log("Can close financial plan");
+
+        this.getClose();
+
+        return this;
+    }
+
+    public cannotClose(): this
+    {
+        Logger.Log("Cannot close financial plan");
+
+        this.getClose().should("not.exist");
+
+        return this;
+    }
+
+    private getEdit()
+    {
+        return cy.getById("edit-financialplan-button");
+    }
+
+    private getClose() {
+        return cy.getByTestId("close-financialplan-button");
     }
 }

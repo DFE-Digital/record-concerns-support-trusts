@@ -6,7 +6,7 @@ namespace ConcernsCaseWork.API.UseCases
 {
     public class IndexConcernsTypes : IIndexConcernsTypes
     {
-        private IConcernsTypeGateway _concernsTypeGateway;
+        private readonly IConcernsTypeGateway _concernsTypeGateway;
 
         public IndexConcernsTypes(IConcernsTypeGateway concernsTypeGateway)
         {

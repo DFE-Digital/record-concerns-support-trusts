@@ -49,8 +49,8 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
         viewFinancialPlanPage
             .hasStatus("Awaiting plan")
-            .hasPlanRequestedDate("06-07-2022")
-            .hasPlanReceivedDate("22-10-2022")
+            .hasPlanRequestedDate("06 July 2022")
+            .hasPlanReceivedDate("22 October 2022")
             .hasNotes("Notes!");
     });
 
@@ -135,8 +135,8 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
         viewFinancialPlanPage
             .hasStatus("Return to trust for further work")
-            .hasPlanRequestedDate("01-02-2007")
-            .hasPlanReceivedDate("05-07-2008")
+            .hasPlanRequestedDate("01 February 2007")
+            .hasPlanReceivedDate("05 July 2008")
             .hasNotes("Editing notes");
 
         viewFinancialPlanPage.edit();

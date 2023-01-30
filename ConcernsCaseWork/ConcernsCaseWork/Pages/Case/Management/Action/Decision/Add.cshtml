@@ -1,6 +1,5 @@
 ﻿@page "/case/{urn:long}/management/action/decision/addOrUpdate/{decisionId:long?}"
 @model ConcernsCaseWork.Pages.Case.Management.Action.Decision.AddPageModel;
-@using ConcernsCaseWork.API.Contracts.Enums;
 @using Microsoft.AspNetCore.Mvc.TagHelpers;
 @using NetEscapades.AspNetCore.SecurityHeaders;
 @using ConcernsCaseWork.Helpers;
@@ -13,9 +12,7 @@
 
 @section BeforeMain {
 	<div class="govuk-width-container">
-		<a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
-			Back to case
-		</a>
+		<back-link url="/case/@RouteData.Values["urn"]/management" label="Back to case"></back-link>
 	</div>
 }
 
@@ -277,10 +274,11 @@
 
 					@* Notes *@
 					<div class="govuk-character-count govuk-!-margin-top-9" data-module="govuk-character-count" data-maxlength="@Model.NotesMaxLength">
-						<div class="govuk-form-group">
-							<h2 class="govuk-heading-m">Supporting notes</h2>
-							<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-decision-notes" name="Decision.SupportingNotes" rows="3" aria-describedby="case-decision-notes-info">@Model.Decision.SupportingNotes</textarea>
-						</div>
+                        <div class="govuk-form-group">
+                            <h2 class="govuk-heading-m">Supporting notes (optional)</h2>
+                            <div class="govuk-hint">Case owners can record any information they want that feels relevant to the action</div>
+                            <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="case-decision-notes" name="Decision.SupportingNotes" rows="3" aria-describedby="case-decision-notes-info">@Model.Decision.SupportingNotes</textarea>
+                        </div>
 						<div id="case-decision-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
 							You can enter up to @Model.NotesMaxLength characters
 						</div>

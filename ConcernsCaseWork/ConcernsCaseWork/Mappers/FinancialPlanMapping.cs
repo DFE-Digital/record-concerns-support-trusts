@@ -1,17 +1,20 @@
 ﻿using ConcernsCaseWork.Enums;
-using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 using System;
 using ConcernsCaseWork.Service.FinancialPlan;
 using System.Collections.Generic;
 using System.Linq;
+using ConcernsCaseWork.API.Contracts.Permissions;
 
 namespace ConcernsCaseWork.Mappers
 {
 	public static class FinancialPlanMapping
 	{
-		public static FinancialPlanModel MapDtoToModel(FinancialPlanDto financialPlanDto, IList<FinancialPlanStatusDto> statuses)
+		public static FinancialPlanModel MapDtoToModel(
+			FinancialPlanDto financialPlanDto, 
+			IList<FinancialPlanStatusDto> statuses,
+			GetCasePermissionsResponse casePermission)
 		{
 			var selectedStatus = statuses.FirstOrDefault(s => s.Id.CompareTo(financialPlanDto.StatusId) == 0);
 			var selectedStatusId = selectedStatus?.Id;
@@ -24,8 +27,11 @@ namespace ConcernsCaseWork.Mappers
 				financialPlanDto.DateViablePlanReceived,
 				financialPlanDto.Notes,
 				FinancialPlanStatusMapping.MapDtoToModel(statuses, selectedStatusId),
-				financialPlanDto.ClosedAt
+				financialPlanDto.ClosedAt,
+				financialPlanDto.UpdatedAt
 				);
+
+			financialPlanModel.IsEditable = casePermission.HasEditPermissions();
 
 			return financialPlanModel;
 		}
@@ -49,7 +55,8 @@ namespace ConcernsCaseWork.Mappers
 					financialPlanDto.DateViablePlanReceived,
 					financialPlanDto.Notes,
 					FinancialPlanStatusMapping.MapDtoToModel(statuses, financialPlanDto.StatusId),
-					financialPlanDto.ClosedAt);
+					financialPlanDto.ClosedAt, 
+					financialPlanDto.UpdatedAt);
 
 				return financialPlanModel;
 			}
@@ -73,7 +80,8 @@ namespace ConcernsCaseWork.Mappers
 				selectedStatusId ?? financialPlanDto.StatusId,
 				patchFinancialPlanModel?.DatePlanRequested ?? financialPlanDto.DatePlanRequested,
 				patchFinancialPlanModel?.DateViablePlanReceived ?? financialPlanDto.DateViablePlanReceived,
-				patchFinancialPlanModel?.Notes ?? financialPlanDto.Notes);
+				patchFinancialPlanModel?.Notes ?? financialPlanDto.Notes, 
+				patchFinancialPlanModel?.UpdatedAt ?? DateTime.Now);
 
 			return updatedFinancialPlanDto;
 		}
@@ -97,9 +105,9 @@ namespace ConcernsCaseWork.Mappers
 
 			var result = new ActionSummaryModel()
 			{
-				ClosedDate = model.ClosedAt.ToDayMonthYear(),
+				ClosedDate = DateTimeHelper.ParseToDisplayDate(model.ClosedAt),
 				Name = "Financial Plan",
-				OpenedDate = model.CreatedAt.ToDayMonthYear(),
+				OpenedDate = DateTimeHelper.ParseToDisplayDate(model.CreatedAt),
 				RelativeUrl = relativeUrl,
 				StatusName = status,
 				RawOpenedDate = model.CreatedAt,

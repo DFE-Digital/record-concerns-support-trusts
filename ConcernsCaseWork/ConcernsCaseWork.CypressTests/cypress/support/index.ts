@@ -22,6 +22,7 @@ declare global {
         interface Chainable {
             getByTestId(id: string): Chainable<Element>;
             getById(id: string): Chainable<Element>;
+            waitForJavascript(): Chainable<Element>;
             login(): Chainable<Element>;
             storeSessionData(): Chainable<Element>;
             selectMoR(): Chainable<Element>;
@@ -30,7 +31,9 @@ declare global {
             selectConcernType(): Chainable<Element>;
             addActionItemToCase(): Chainable<Element>;
             selectRiskToTrust(): Chainable<Element>;
+            selectTerritory(): Chainable<Element>;
             enterConcernDetails(): Chainable<Element>;
+			excuteAccessibilityTests(): Chainable<Element>;
             visitPage(slug: string): Chainable<Element>;
             editRiskToTrust(cta: string, rag: string): Chainable<Element>;
             selectConcern(expectedNumberOfRagStatus: number, ragStatus: string): Chainable<number>;
@@ -42,8 +45,12 @@ declare global {
             checkForExistingCase(force: boolean): Chainable<Element>;
             createSRMA(): Chainable<Element>;
             addConcernsDecisionsAddToCase(): Chainable<Element>;
-            basicCreateCase(): Chainable<Element>;
+            basicCreateCase(): Chainable<number>;
             checkForExistingCase(): Chainable<Element>;
         }
     }
+
+	
 }
+
+

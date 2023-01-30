@@ -27,7 +27,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases
 			var reasons = new List<int>() { 1, 3 };
 			var conditions = new List<int>() { 1, 3 };
 
-			var createWarningLetterequest = Builder<CreateNTIWarningLetterRequest>
+			var createWarningLetterRequest = Builder<CreateNTIWarningLetterRequest>
 	            .CreateNew()
 	            .With(r => r.CaseUrn = caseUrn)
 	            .With(r => r.StatusId = statusId)
@@ -79,7 +79,7 @@ namespace ConcernsCaseWork.API.Tests.UseCases
             
             var useCase = new CreateNTIWarningLetter(mockGateway.Object);
             
-            var result = useCase.Execute(createWarningLetterequest);
+            var result = useCase.Execute(createWarningLetterRequest);
 
             result.Should().NotBeNull();
             result.Should().BeEquivalentTo(expectedResult);

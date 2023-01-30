@@ -52,6 +52,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
             };
             options.AddSecurityDefinition(ApiKeyName, securityScheme);
             options.OperationFilter<AuthenticationHeaderOperationFilter>();
+            options.OperationFilter<UserContextOperationFilter>();
         }
     }
 }

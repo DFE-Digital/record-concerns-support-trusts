@@ -1,6 +1,9 @@
 ﻿using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Services.PageHistory;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Linq;
 
 namespace ConcernsCaseWork.Pages.Base
 {
@@ -8,7 +11,10 @@ namespace ConcernsCaseWork.Pages.Base
 	{
 		public const string ErrorOnGetPage = ErrorConstants.ErrorOnGetPage;
 		public const string ErrorOnPostPage = ErrorConstants.ErrorOnPostPage;
-
+		
+		// Configured in startup
+		public static IPageHistoryStorageHandler PageHistoryStorageHandler { get; set; }
+		
 		protected bool TryGetRouteValueInt64(string routeKey, out long value)
 		{
 			value = default(long);
@@ -31,5 +37,8 @@ namespace ConcernsCaseWork.Pages.Base
 		protected string GetFormValue(string propertyName) => Request.Form[propertyName].ToString().GetValueOrNullIfWhitespace();
 		
 		protected string GetRouteValue(string propertyName) => RouteData.Values[propertyName]?.ToString().GetValueOrNullIfWhitespace();
+
+		protected string GetPreviousPage() => PageHistoryManager.GetPreviousPage(PageHistoryStorageHandler.GetPageHistory(HttpContext).ToList());
+		protected Hyperlink BuildBackLinkFromHistory(string fallbackUrl, string label = "Back") => new (label, GetPreviousPage() ?? fallbackUrl);
 	}
 }

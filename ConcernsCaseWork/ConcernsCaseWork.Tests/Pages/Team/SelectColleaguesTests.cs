@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models.Teams;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models.Teams;
 using ConcernsCaseWork.Pages.Team;
 using ConcernsCaseWork.Security;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -75,7 +76,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 		{
 			// arrange
 			const string NewUsernameSelection = "Fred.Flintstone";
-			const string ExpectedRedirectUrl = "/#team-casework";
+			const string ExpectedRedirectUrl = "/TeamCasework";
 
 			var testFixture = new TestFixture()
 				.WithPreviouslySelectedUser("Mr.Bean");
@@ -115,7 +116,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			Assert.IsEmpty(sut.SelectedColleagues);
 			Assert.IsEmpty(sut.Users);
 			Assert.IsNotEmpty(sut.TempData);
-			Assert.That(sut.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(sut.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 
 			testFixture.VerifyMethodEntered(nameof(SelectColleaguesPageModel.OnPostSelectColleagues));
 		}

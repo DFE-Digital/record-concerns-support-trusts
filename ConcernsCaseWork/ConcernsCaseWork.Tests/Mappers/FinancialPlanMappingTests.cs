@@ -7,6 +7,8 @@ using System.Linq;
 using AutoFixture;
 using FluentAssertions;
 using ConcernsCaseWork.Service.FinancialPlan;
+using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.Helpers;
 
 namespace ConcernsCaseWork.Tests.Mappers
 {
@@ -46,11 +48,14 @@ namespace ConcernsCaseWork.Tests.Mappers
 				testData.Status.Id,
 				testData.DatePlanRequested,
 				testData.DatePlanReceived,
-				testData.Notes
+				testData.Notes,
+				testData.UpdatedAt
 			);
 
+			var casePermission = new GetCasePermissionsResponse() { Permissions  = new List<CasePermission>() { CasePermission.Edit } };
+
 			// act
-			var serviceModel = FinancialPlanMapping.MapDtoToModel(dto, statuses);
+			var serviceModel = FinancialPlanMapping.MapDtoToModel(dto, statuses, casePermission);
 
 			// assert
 			Assert.That(serviceModel, Is.Not.Null);
@@ -63,10 +68,25 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Assert.That(serviceModel.Notes, Is.EqualTo(testData.Notes));
 				Assert.That(serviceModel.DatePlanRequested, Is.EqualTo(testData.DatePlanRequested));
 				Assert.That(serviceModel.DateViablePlanReceived, Is.EqualTo(testData.DatePlanReceived));
-				//Assert.That(serviceModel.UpdatedAt, Is.EqualTo(testData.UpdatedAt)); // TODO: This is not currently mapped. Check if this is correct behaviour
+				Assert.That(serviceModel.UpdatedAt, Is.EqualTo(testData.UpdatedAt));
 				Assert.That(serviceModel.ClosedAt, Is.EqualTo(testData.ClosedAt));
 				Assert.That(serviceModel.CreatedAt, Is.EqualTo(testData.CreatedAt));
+				Assert.That(serviceModel.IsEditable, Is.True);
 			});
+		}
+
+		[Test]
+		public void WhenMapDtoToServiceModel_NotEditable_ReturnsCorrectModel()
+		{
+			var statuses = _fixture.CreateMany<FinancialPlanStatusDto>().ToList();
+			var dto = _fixture.Create<FinancialPlanDto>();
+			dto.StatusId = statuses.First().Id;
+
+			var casePermission = new GetCasePermissionsResponse();
+
+			var serviceModel = FinancialPlanMapping.MapDtoToModel(dto, statuses, casePermission);
+
+			serviceModel.IsEditable.Should().BeFalse();
 		}
 
 		[Test]
@@ -102,7 +122,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 					testData.Status.Id,
 					testData.DatePlanRequested,
 					testData.DatePlanReceived,
-					testData.Notes
+					testData.Notes,
+					testData.UpdatedAt
 				)
 			};
 
@@ -121,7 +142,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 				Assert.That(serviceModel.Single().Notes, Is.EqualTo(testData.Notes));
 				Assert.That(serviceModel.Single().DatePlanRequested, Is.EqualTo(testData.DatePlanRequested));
 				Assert.That(serviceModel.Single().DateViablePlanReceived, Is.EqualTo(testData.DatePlanReceived));
-				//Assert.That(serviceModel.Single().UpdatedAt, Is.EqualTo(testData.UpdatedAt)); // TODO: This is not currently mapped. Check if this is correct behaviour
+				Assert.That(serviceModel.Single().UpdatedAt, Is.EqualTo(testData.UpdatedAt));
 				Assert.That(serviceModel.Single().ClosedAt, Is.EqualTo(testData.ClosedAt));
 				Assert.That(serviceModel.Single().CreatedAt, Is.EqualTo(testData.CreatedAt));
 			});
@@ -190,7 +211,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 				_fixture.Create<int>(),
 				_fixture.Create<DateTime>(),
 				_fixture.Create<DateTime>(),
-				_fixture.Create<string>()
+				_fixture.Create<string>(),
+				_fixture.Create<DateTime>()
 			);
 
 			var model = new PatchFinancialPlanModel
@@ -255,7 +277,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 				originalData.Status.Id,
 				originalData.DatePlanRequested,
 				originalData.DatePlanReceived,
-				originalData.Notes
+				originalData.Notes,
+				originalData.UpdatedAt
 			);
 
 			var patchModel = new PatchFinancialPlanModel
@@ -314,7 +337,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 				testData.DatePlanReceived,
 				testData.Notes,
 				testData.Status,
-				testData.ClosedAt
+				testData.ClosedAt,
+				testData.UpdatedAt
 			)
 			{ UpdatedAt = testData.UpdatedAt };
 
@@ -325,8 +349,8 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.Multiple(() =>
 			{
 				Assert.That(actionSummary.Name, Is.EqualTo("Financial Plan"));
-				Assert.That(actionSummary.ClosedDate, Is.EqualTo(testData.ClosedAt.GetFormattedDate()));
-				Assert.That(actionSummary.OpenedDate, Is.EqualTo(testData.CreatedAt.GetFormattedDate()));
+				Assert.That(actionSummary.ClosedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.ClosedAt)));
+				Assert.That(actionSummary.OpenedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.CreatedAt)));
 				Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/financialplan/{testData.Id}/closed"));
 				Assert.That(actionSummary.StatusName, Is.EqualTo("Awaiting plan"));
 			});
@@ -345,7 +369,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var result = financialPlan.ToActionSummary();
 			result.RelativeUrl.Should().Be($"/case/{financialPlan.CaseUrn}/management/action/financialplan/{financialPlan.Id}");
 			result.StatusName.Should().Be("In progress");
-			result.ClosedDate.Should().BeNull();
+			result.ClosedDate.Should().BeEmpty();
 		}
 	}
 }
