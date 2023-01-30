@@ -25,7 +25,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
         private readonly HttpClient _client;
         private readonly Fixture _autoFixture;
         private readonly RandomGenerator _randomGenerator;
-		private ApiTestFixture _testFixture;
+		private readonly ApiTestFixture _testFixture;
 
 		private List<ConcernsCase> CasesToBeDisposedAtEndOfTests { get; } = new List<ConcernsCase>();
         private List<ConcernsRecord> RecordsToBeDisposedAtEndOfTests { get; } = new List<ConcernsRecord>();
@@ -95,7 +95,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			request.CurrentStatus = new string('a', 4001);
 			request.DeEscalationPoint = new string('a', 1001);
 			request.NextSteps = new string('a', 4001);
-			request.CaseHistory = new string('a', 4001);
+			request.CaseHistory = new string('a', 4301);
 			request.DirectionOfTravel = new string('a', 101);
 
 			var result = await _client.PostAsync($"/v2/concerns-cases", request.ConvertToJson());
@@ -108,7 +108,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			error.Should().Contain("The field CurrentStatus must be a string with a maximum length of 4000.");
 			error.Should().Contain("The field DeEscalationPoint must be a string with a maximum length of 1000.");
 			error.Should().Contain("The field NextSteps must be a string with a maximum length of 4000.");
-			error.Should().Contain("The field CaseHistory must be a string with a maximum length of 4000.");
+			error.Should().Contain("The field CaseHistory must be a string with a maximum length of 4300.");
 			error.Should().Contain("The field DirectionOfTravel must be a string with a maximum length of 100.");
 		}
 
@@ -259,7 +259,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             var content = await response.Content.ReadFromJsonAsync<ApiResponseV2<ConcernsTypeResponse>>();
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            content.Data.Count().Should().Be(8);
+            content.Data.Count().Should().Be(9);
         }
 
         [Fact]
@@ -284,7 +284,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 NextSteps = _randomGenerator.NextString(3, 10),
                 CaseHistory = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                Territory = TerritoryEnum.Midlands_And_West__SouthWest,
+                Territory = Territory.Midlands_And_West__SouthWest,
                 StatusId = 2,
                 RatingId =  1
             };
@@ -326,7 +326,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			request.CurrentStatus = new string('a', 4001);
 			request.DeEscalationPoint = new string('a', 1001);
 			request.NextSteps = new string('a', 4001);
-			request.CaseHistory = new string('a', 4001);
+			request.CaseHistory = new string('a', 4301);
 			request.DirectionOfTravel = new string('a', 101);
 			request.ReasonAtReview = new string('a', 201);
 
@@ -340,7 +340,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			error.Should().Contain("The field CurrentStatus must be a string with a maximum length of 4000.");
 			error.Should().Contain("The field DeEscalationPoint must be a string with a maximum length of 1000.");
 			error.Should().Contain("The field NextSteps must be a string with a maximum length of 4000.");
-			error.Should().Contain("The field CaseHistory must be a string with a maximum length of 4000.");
+			error.Should().Contain("The field CaseHistory must be a string with a maximum length of 4300.");
 			error.Should().Contain("The field DirectionOfTravel must be a string with a maximum length of 100.");
 			error.Should().Contain("The field ReasonAtReview must be a string with a maximum length of 200.");
 		}
@@ -371,7 +371,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 NextSteps = _randomGenerator.NextString(3, 10),
                 CaseHistory = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                Territory = TerritoryEnum.North_And_Utc__Yorkshire_And_Humber,
+                Territory = Territory.North_And_Utc__Yorkshire_And_Humber,
                 StatusId = 2,
                 RatingId = caseRating.Id
             };
@@ -450,7 +450,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 NextSteps = _randomGenerator.NextString(3, 10),
                 CaseHistory = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                Territory = TerritoryEnum.Midlands_And_West__West_Midlands,
+                Territory = Territory.Midlands_And_West__West_Midlands,
                 StatusId = 2,
                 RatingId = 3
             };
@@ -547,7 +547,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 NextSteps = _randomGenerator.NextString(3, 10),
                 CaseHistory = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                Territory = TerritoryEnum.North_And_Utc__Yorkshire_And_Humber,
+                Territory = Territory.North_And_Utc__Yorkshire_And_Humber,
                 StatusId = 2,
                 RatingId = 3
             };
@@ -632,7 +632,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                 NextSteps = _randomGenerator.NextString(3, 10),
                 CaseHistory = _randomGenerator.NextString(3, 10),
                 DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                Territory = TerritoryEnum.North_And_Utc__North_West,
+                Territory = Territory.North_And_Utc__North_West,
                 StatusId = 2,
                 RatingId = 4
             };
@@ -751,7 +751,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     NextSteps = _randomGenerator.NextString(3, 10),
                     CaseHistory = _randomGenerator.NextString(3, 10),
                     DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                    Territory = TerritoryEnum.North_And_Utc__Utc,
+                    Territory = Territory.North_And_Utc__Utc,
                     StatusId = 2,
                     RatingId = 1
                 };
@@ -781,7 +781,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     NextSteps = _randomGenerator.NextString(3, 10),
                     CaseHistory = _randomGenerator.NextString(3, 10),
                     DirectionOfTravel = _randomGenerator.NextString(3, 10),
-                    Territory = TerritoryEnum.South_And_South_East__East_Of_England,
+                    Territory = Territory.South_And_South_East__East_Of_England,
                     StatusId = 3,
                     RatingId = 3
                 };
@@ -830,7 +830,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
                     NextSteps = _randomGenerator.NextString(3, 10),
                     DirectionOfTravel = _randomGenerator.NextString(3, 10),
                     CaseHistory = _randomGenerator.NextString(3, 10),
-                    Territory = TerritoryEnum.Midlands_And_West__East_Midlands,
+                    Territory = Territory.Midlands_And_West__East_Midlands,
                     StatusId = 2,
                     RatingId = 3
                 };
@@ -858,7 +858,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
             content.Data.Count().Should().Be(2);
 
             content.Data.First().Name.Should().Be("Internal");
-            content.Data.First().Description.Should().Be("ESFA activity, TFFT or other departmental activity");
+            content.Data.First().Description.Should().Be("ESFA activity, TFF or other departmental activity");
             content.Data.First().Id.Should().BeGreaterThan(0);
 
             content.Data.Last().Name.Should().Be("External");

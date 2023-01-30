@@ -28,7 +28,7 @@ namespace ConcernsCaseWork.Data.Models
         public int StatusId { get; set; }
         public int RatingId { get; set; }
         
-        public TerritoryEnum? Territory { get; set; }
+        public Territory? Territory { get; set; }
 
         public virtual ConcernsStatus Status { get; set; }
         public virtual ConcernsRating Rating { get; set; }

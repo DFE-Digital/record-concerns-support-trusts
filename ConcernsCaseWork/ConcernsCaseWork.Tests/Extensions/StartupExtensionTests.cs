@@ -44,32 +44,6 @@ namespace ConcernsCaseWork.Tests.Extensions
 		}
 
 		[Test]
-		public void WhenAddRedis_Configuration_Success()
-		{
-			// arrange
-			var serviceCollection = new ServiceCollection();
-
-			var initialData = new Dictionary<string, string>
-			{
-				{ "VCAP_SERVICES", "{'redis': [{'credentials': {'host': '127.0.0.1', 'port': '6379', 'tls_enabled': 'false', password: 'pa55word'}}]}" }
-			};
-			var configuration = new ConfigurationBuilder().ConfigurationInMemoryBuilder(initialData).Build();
-
-			var mockConnectionMultiplexer = new Mock<IConnectionMultiplexer>();
-			var mockMultiplexer = new Mock<IRedisMultiplexer>();
-			mockMultiplexer.Setup(m => m.Connect(It.IsAny<ConfigurationOptions>())).Returns(mockConnectionMultiplexer.Object);
-
-			// Inject the mock so that it is used by the extension methods
-			StartupExtension.RedisMultiplexerImplementation = mockMultiplexer.Object;
-
-			// act
-			serviceCollection.AddRedis(configuration);
-
-			// assert
-			Assert.That(serviceCollection, Is.Not.Null);
-		}
-
-		[Test]
 		public void WhenAddTramsApi_MissingConfiguration_ThrowException()
 		{
 			// arrange

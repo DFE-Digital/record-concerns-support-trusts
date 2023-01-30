@@ -40,9 +40,9 @@
 		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.17.0" />
 		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" Version="0.17.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-		<PackageReference Include="Sentry.AspNetCore" Version="3.24.0" />
-		<PackageReference Include="Sentry.Serilog" Version="3.24.0" />
-		<PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+		<PackageReference Include="Sentry.AspNetCore" Version="3.26.1" />
+		<PackageReference Include="Sentry.Serilog" Version="3.26.1" />
+		<PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.4.0" />
 	</ItemGroup>
@@ -54,6 +54,7 @@
 		<ProjectReference Include="..\ConcernsCaseWork.Service\ConcernsCaseWork.Service.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.Redis\ConcernsCaseWork.Redis.csproj" />
+		<ProjectReference Include="..\ConcernsCaseWork.UserContext\ConcernsCaseWork.UserContext.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

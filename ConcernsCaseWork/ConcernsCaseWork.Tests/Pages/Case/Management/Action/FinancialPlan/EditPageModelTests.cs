@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
 using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Service.FinancialPlan;
@@ -156,7 +157,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"],
-				Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+				Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 				
 			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>()), Times.Never);
 		}
@@ -471,6 +472,50 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			Assert.IsNotNull(pageResponse);
 			Assert.IsNull(pageModel.TempData["Error.Message"]);
 		}
+				
+		[Test]
+		public async Task WhenOnPostAsync_ValidRequest_SetsUpdatedAt()
+		{
+			// arrange
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
+			var mockLogger = new Mock<ILogger<EditPageModel>>();
+
+			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
+			var caseUrn = 1L;
+			var financialPlanId = 2L;
+			
+			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn, statuses.First().Name);
+			
+			mockFinancialPlanModelService
+				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
+				.ReturnsAsync(existingFinancialPlanModel);
+			
+			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
+
+			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+			routeData.Add("financialplanid", financialPlanId);
+
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "status", statuses.First().Name }
+				});
+
+			// act
+			var pageResponse = await pageModel.OnPostAsync();
+
+			// assert
+			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
+				fpm.UpdatedAt > DateTime.Now.AddMinutes(-1) && fpm.UpdatedAt <= DateTime.Now)), Times.Once);
+			
+			Assert.IsNotNull(pageResponse);
+			Assert.IsNull(pageModel.TempData["Error.Message"]);
+		}
+
 
 		private static EditPageModel SetupEditPageModel(
 			IFinancialPlanModelService mockFinancialPlanModelService,
@@ -501,7 +546,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				null, 
 				String.Empty, 
 				new FinancialPlanStatusModel(statusName, 1, false), 
-				null);
+				null,
+				DateTime.Now);
 		
 		private static List<FinancialPlanStatusDto> GetListValidStatuses() => FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto().ToList();
 	}

@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Pages.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using ConcernsCaseWork.Models.CaseActions;
 using System.Linq;
 using System.Collections.Generic;
 using ConcernsCaseWork.Mappers;
+using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Nti;
 using ConcernsCaseWork.Service.Nti;
 using ConcernsCaseWork.Services.Nti;
@@ -29,6 +31,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		public ICollection<NtiReasonDto> NtiReasons { get; private set; }
 		public ICollection<NtiStatusDto> NtiStatuses { get; set; }
 		public ICollection<NtiConditionDto> NtiConditions { get; private set; }
+		
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
 
 		public IndexPageModel(INtiModelService ntiModelService,
 			INtiReasonsCachedService ntiReasonsCachedService,
@@ -46,15 +50,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 		public async Task OnGetAsync()
 		{
 			long ntiId = 0;
+			long caseId = 0;
 
 			try
 			{
 				_logger.LogInformation("Case::Action::NTI::IndexPageModel::OnGetAsync");
 
 				
-				(_, ntiId) = GetRouteData();
+				(caseId, ntiId) = GetRouteData();
 
-				NtiModel = await GetNTIModel(ntiId);
+				NtiModel = await GetNTIModel(caseId, ntiId);
 
 				if (NtiModel == null)
 				{
@@ -68,9 +73,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Nti
 			}
 		}
 
-		private async Task<NtiModel> GetNTIModel(long ntiId)
+		private async Task<NtiModel> GetNTIModel(long caseId, long ntiId)
 		{
-			var nti = await _ntiModelService.GetNtiByIdAsync(ntiId);
+			var nti = await _ntiModelService.GetNtiViewModelAsync(caseId, ntiId);
 
 			if (nti != null)
 			{

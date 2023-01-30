@@ -4,19 +4,15 @@
 @using ConcernsCaseWork.Helpers;
 @using ConcernsCaseWork.Extensions;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@using NetEscapades.AspNetCore.SecurityHeaders
 
 @{
 	ViewData["Title"] = "SRMA";
-	var nonce = HttpContext.GetNonce();
 }
 
 @section BeforeMain {
-<div class="govuk-width-container">
-    <a id="back-to-case-link" class="govuk-back-link" href="/case/@RouteData.Values["urn"]/management">
-        Back to case
-    </a>
-</div>
+	<div class="govuk-width-container">
+		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+	</div>
 }
 
 <div class="govuk-width-container">
@@ -64,7 +60,7 @@
                 @* Status *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Status</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="status">
                         @EnumHelper.GetEnumDescription(Model.SRMAModel.Status)
                     </td>
                 </tr>
@@ -72,8 +68,8 @@
                 @* Date offered *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Date trust was contacted</th>
-                    <td class="govuk-table__cell">
-                        @DateExtension.ToDayMonthYear(Model.SRMAModel.DateOffered)
+                    <td class="govuk-table__cell" data-testid="date-trust-contacted">
+                        @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateOffered)
                     </td>
                 </tr>
 
@@ -82,7 +78,7 @@
                     <th scope="row" class="govuk-table-case-details__header">
                         Reason
                     </th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="reason">
                         @EnumHelper.GetEnumDescription(Model.SRMAModel.Reason)
                     </td>
                 </tr>
@@ -92,10 +88,10 @@
                     <th scope="row" class="govuk-table-case-details__header">
                         Date accepted
                     </th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-accepted">
                         @if (Model.SRMAModel.DateAccepted.HasValue)
                         {
-                            @DateExtension.ToDayMonthYearWithDefault(Model.SRMAModel.DateAccepted.Value)
+                            @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateAccepted.Value)
                         }
                     </td>
                 </tr>
@@ -105,10 +101,10 @@
                     <th scope="row" class="govuk-table-case-details__header">
                         Dates of visit
                     </th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-of-visit">
                         @if (Model.SRMAModel.DateVisitStart.HasValue && Model.SRMAModel.DateVisitEnd.HasValue)
                         {
-                            @DateExtension.ToDayMonthYear(Model.SRMAModel.DateVisitStart.Value) <text> - </text> @DateExtension.ToDayMonthYear(Model.SRMAModel.DateVisitEnd.Value)
+                            @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitStart.Value) <text> - </text> @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateVisitEnd.Value)
                         }
                     </td>
                 </tr>
@@ -119,18 +115,18 @@
                     <th scope="row" class="govuk-table-case-details__header">
                         Date report sent to trust
                     </th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-report-sent-to-trust">
                         @if (Model.SRMAModel.DateReportSentToTrust.HasValue)
                         {
-                            @DateExtension.ToDayMonthYearWithDefault(Model.SRMAModel.DateReportSentToTrust.Value)
+                            @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.DateReportSentToTrust.Value)
                         }
                     </td>
                 </tr>
 
                 @* Notes *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Notes</th>
-                    <td class="govuk-table__cell">
+                    <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
+                    <td class="govuk-table__cell" data-testid="notes">
                         @Model.SRMAModel.Notes
                     </td>
                 </tr>

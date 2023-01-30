@@ -1,5 +1,6 @@
 using AutoFixture;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Models.CaseActions;
@@ -8,8 +9,8 @@ using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Status;
 using ConcernsCaseWork.Service.Decision;
 using ConcernsCaseWork.Service.Status;
+using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Decisions;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.Nti;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
@@ -52,6 +53,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
 			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockCaseActionValidator = new Mock<ICaseActionValidator>();
+			var mockTrustFinancialForecastService = new Mock<ITrustFinancialForecastService>();
 
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
@@ -103,7 +105,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockCaseActionValidator.Setup(v => v.Validate(It.IsAny<IEnumerable<CaseActionModel>>()))
 				.Returns(new List<string>());
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockCaseActionValidator.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockTrustFinancialForecastService.Object, mockCaseActionValidator.Object, mockLogger.Object, true);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -173,6 +175,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
 			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockCaseActionValidator = new Mock<ICaseActionValidator>();
+			var mockTrustFinancialForecastService = new Mock<ITrustFinancialForecastService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var openRecordModel = RecordFactory.BuildRecordModel();
@@ -207,7 +210,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			mockCaseActionValidator.Setup(v => v.Validate(It.IsAny<IEnumerable<CaseActionModel>>()))
 				.Returns(new List<string>());
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockCaseActionValidator.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockTrustFinancialForecastService.Object, mockCaseActionValidator.Object, mockLogger.Object, true);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -252,16 +255,17 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
 			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockCaseActionValidator = new Mock<ICaseActionValidator>();
+			var mockTrustFinancialForecastService = new Mock<ITrustFinancialForecastService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockCaseActionValidator.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockTrustFinancialForecastService.Object, mockCaseActionValidator.Object, mockLogger.Object, true);
 
 			// act
 			await pageModel.OnGetAsync();
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 
 			// Verify ILogger
 			mockLogger.Verify(
@@ -288,6 +292,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
 			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockCaseActionValidator = new Mock<ICaseActionValidator>();
+			var mockTrustFinancialForecastService = new Mock<ITrustFinancialForecastService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
 			var closedRecordModel = RecordFactory.BuildRecordModel(3);
@@ -296,7 +301,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			mockCaseModelService.Setup(c => c.PatchClosure(It.IsAny<PatchCaseModel>()));
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockCaseActionValidator.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockTrustFinancialForecastService.Object, mockCaseActionValidator.Object, mockLogger.Object, true);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -343,9 +348,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
 			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockCaseActionValidator = new Mock<ICaseActionValidator>();
+			var mockTrustFinancialForecastService = new Mock<ITrustFinancialForecastService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockCaseActionValidator.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockTrustFinancialForecastService.Object, mockCaseActionValidator.Object, mockLogger.Object, true);
 
 			// act
 			var actionResult = await pageModel.OnPostCloseCase();
@@ -353,7 +359,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			Assert.That(actionResult, Is.AssignableFrom<RedirectResult>());
 			Assert.That(redirectResult, Is.Not.Null);
 			Assert.That(redirectResult.Url, Is.EqualTo("closure"));
@@ -383,9 +389,10 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var mockNTIWarningLetterModelService = new Mock<INtiWarningLetterModelService>();
 			var mockNTIModelService = new Mock<INtiModelService>();
 			var mockCaseActionValidator = new Mock<ICaseActionValidator>();
+			var mockTrustFinancialForecastService = new Mock<ITrustFinancialForecastService>();
 			var mockLogger = new Mock<ILogger<ClosurePageModel>>();
 
-			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockCaseActionValidator.Object, mockLogger.Object, true);
+			var pageModel = SetupClosurePageModel(mockCaseModelService.Object, mockTrustModelService.Object, mockRecordModelService.Object, mockStatusCachedService.Object, mockSRMAModelService.Object, mockFinancialPlanModelService.Object, mockNTIUnderConsiderationModelService.Object, mockNTIWarningLetterModelService.Object, mockNTIModelService.Object, mockTrustFinancialForecastService.Object, mockCaseActionValidator.Object, mockLogger.Object, true);
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
 			
@@ -401,7 +408,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.Not.Null);
-			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			Assert.That(actionResult, Is.AssignableFrom<RedirectResult>());
 			Assert.That(redirectResult, Is.Not.Null);
 			Assert.That(redirectResult.Url, Is.EqualTo("closure"));
@@ -418,7 +425,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 		}
 
 		private static ClosurePageModel SetupClosurePageModel(
-			ICaseModelService mockCaseModelService, ITrustModelService mockTrustModelService, IRecordModelService mockRecordModelService, IStatusCachedService mockStatusCachedService, ISRMAService mockSRMAModelService, IFinancialPlanModelService mockFinancialPlanModelService, INtiUnderConsiderationModelService mockNTIUnderConsiderationService, INtiWarningLetterModelService mockNTIWarningLetterModelService, INtiModelService mockNTIModelService, ICaseActionValidator mockCaseActionValidator, ILogger<ClosurePageModel> mockLogger, bool isAuthenticated = false)
+			ICaseModelService mockCaseModelService, ITrustModelService mockTrustModelService, IRecordModelService mockRecordModelService, 
+			IStatusCachedService mockStatusCachedService, ISRMAService mockSRMAModelService, IFinancialPlanModelService mockFinancialPlanModelService, 
+			INtiUnderConsiderationModelService mockNTIUnderConsiderationService, INtiWarningLetterModelService mockNTIWarningLetterModelService, 
+			INtiModelService mockNTIModelService, ITrustFinancialForecastService mockTrustFinancialForecastService, ICaseActionValidator mockCaseActionValidator, 
+			ILogger<ClosurePageModel> mockLogger, bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
@@ -437,6 +448,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 				mockNTIWarningLetterModelService, 
 				mockNTIModelService,
 				mockDecisionService.Object,
+				mockTrustFinancialForecastService,
 				mockCaseActionValidator, 
 				mockLogger)
 			{

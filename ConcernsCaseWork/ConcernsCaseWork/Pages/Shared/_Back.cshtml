@@ -1,7 +1,0 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
-@if (BackPageModel.CanRender(Context.Request.Path.Value)) {
-	var cssClass = BackPageModel.IsExtraWidthContainer ? "govuk-extra-width-container" : "govuk-width-container";
-	<div class="@cssClass">
-		<partial name="_BackLink" />
-	</div>
-}

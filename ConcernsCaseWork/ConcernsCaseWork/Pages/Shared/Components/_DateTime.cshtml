@@ -1,0 +1,68 @@
+@model ConcernsCaseWork.Models.OptionalDateTimeUiComponent
+@{
+	var errors = Model.Date?.Validate();
+	var errorClass = errors?.Any() ?? false ? " govuk-form-group--error" : string.Empty;
+}
+<div class="govuk-form-group">
+	<fieldset class="govuk-fieldset">
+		<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+			<h2 class="govuk-heading-m" id="@(Model.Name).Date.@Model.Heading">
+				@Model.Heading
+			</h2>
+		</legend>
+		
+		<partial name="Components/_ValidationErrorDetail" model="@errors" />
+		
+		<div class="govuk-date-input" id="dtr-@Model.ElementRootId">
+			<div class="govuk-date-input__item">
+				<div class="govuk-form-group @errorClass">
+					<label class="govuk-label govuk-date-input__label" for="dtr-day-@Model.ElementRootId">
+						Day
+					</label>
+					<input
+						class="govuk-input govuk-date-input__input govuk-input--width-4" 
+						id="dtr-day-@Model.ElementRootId"
+						data-test-id="dtr-day-@Model.ElementRootId"
+						type="text" 
+						maxlength="2" 
+						inputmode="numeric"
+						value="@Model.Date?.Day"
+						name="@(Model.Name).Date.Day"/>
+				</div>
+			</div>
+			<div class="govuk-date-input__item">
+				<div class="govuk-form-group">
+					<label class="govuk-label govuk-date-input__label" for="dtr-month-@Model.ElementRootId">
+						Month
+					</label>
+					<input 
+						class="govuk-input govuk-date-input__input govuk-input--width-4" 
+						id="dtr-month-@Model.ElementRootId"
+						data-test-id="dtr-month-@Model.ElementRootId"
+						type="text" 
+						maxlength="2" 
+						inputmode="numeric"
+						value="@Model.Date?.Month"
+						name="@(Model.Name).Date.Month" />
+				</div>
+			</div>
+			<div class="govuk-date-input__item">
+				<div class="govuk-form-group">
+					<label class="govuk-label govuk-date-input__label" for="dtr-year-@Model.ElementRootId">
+						Year
+					</label>
+					<input
+						class="govuk-input govuk-date-input__input govuk-input--width-4" 
+						id="dtr-year-@Model.ElementRootId"
+						data-test-id="dtr-year-@Model.ElementRootId"
+						type="text" 
+						maxlength="4" 
+						inputmode="numeric"
+						value="@Model.Date?.Year"
+						name="@(Model.Name).Date.Year"/>
+				</div>
+			</div>
+			<input type="hidden" name="@(Model.Name).Date.DisplayName" value="@Model.Heading" />
+		</div>
+	</fieldset>
+</div>

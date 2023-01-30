@@ -1,0 +1,62 @@
+@page "/case/create/nonconcerns"
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model SelectActionOrDecisionPageModel
+
+@{
+	ViewData["Title"] = "Add to Case";
+}
+
+@section BeforeMain {
+	<div class="govuk-width-container">
+		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+	</div>
+}
+
+<div class="govuk-width-container" id="actionordecision">
+	
+	<partial name="_BannerError"/>
+	
+	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+	{
+		<partial name="_Error"/>
+	}
+	else
+	{
+		<form role="form" method="post" id="choose-case-type-form" novalidate>
+			<partial name="_ValidationErrors"/>
+			<h1 class="govuk-heading-l">Add to case</h1>
+
+			<h2 class="govuk-heading-m">Are you recording an action or decision?</h2>
+
+			<div class="govuk-radios" data-module="govuk-radios" id="@nameof(Model.SelectedActionOrDecision)">
+				<div class="govuk-radios__item">
+					<input asp-for="SelectedActionOrDecision" class="govuk-radios__input" id="action-option" type="radio" value="@SelectActionOrDecisionPageModel.Options.Action">
+					<label class="govuk-label govuk-radios__label" for="action-option">
+						Action
+					</label>
+				</div>
+				<div class="govuk-radios__item">
+					<input asp-for="SelectedActionOrDecision" class="govuk-radios__input" id="decision-option" type="radio" value="@SelectActionOrDecisionPageModel.Options.Decision">
+					<label class="govuk-label govuk-radios__label" for="decision-option">
+						Decision
+					</label>
+				</div>
+			</div>
+
+			<div class="govuk-button-group">
+				<button data-prevent-double-click="true"
+				        class="govuk-button govuk-!-margin-top-6"
+				        data-module="govuk-button"
+				        role="button"
+				        id="continue"
+				        name="action"
+				        value="continue">
+					Continue
+				</button>
+			</div>
+
+		</form>
+	}
+	</div>
+
+

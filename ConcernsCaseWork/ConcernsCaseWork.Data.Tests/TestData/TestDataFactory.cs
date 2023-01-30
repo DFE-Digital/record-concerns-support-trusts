@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Data.Models;
 using FizzWare.NBuilder;
 
@@ -14,6 +15,7 @@ public class TestDataFactory
 			UpdatedAt = _randomGenerator.DateTime(),
 			CreatedBy = _randomGenerator.NextString(3, 10),
 			DirectionOfTravel = _randomGenerator.NextString(3, 10),
+			Territory = _randomGenerator.Enumeration<Territory>(),
 			StatusId = statusId,
 			RatingId = ratingId
 		};

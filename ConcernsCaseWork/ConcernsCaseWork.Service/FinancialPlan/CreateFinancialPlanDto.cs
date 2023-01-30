@@ -24,10 +24,13 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 
 		[JsonProperty("notes")]
 		public string Notes { get; }
+		
+		[JsonProperty("updatedAt")]
+		public DateTime UpdatedAt { get; set; }
 
 		[JsonConstructor]
-		public CreateFinancialPlanDto(long caseUrn, DateTime createdAt, string createdBy, long? statusId, DateTime? datePlanRequested, DateTime? dateViablePlanReceived, string notes) =>
-			(CaseUrn, CreatedAt, CreatedBy, StatusId, DatePlanRequested, DateViablePlanReceived, Notes) =
-			(caseUrn, createdAt, createdBy, statusId, datePlanRequested, dateViablePlanReceived, notes);
+		public CreateFinancialPlanDto(long caseUrn, DateTime createdAt, string createdBy, long? statusId, DateTime? datePlanRequested, DateTime? dateViablePlanReceived, string notes, DateTime updatedAt) =>
+			(CaseUrn, CreatedAt, CreatedBy, StatusId, DatePlanRequested, DateViablePlanReceived, Notes, UpdatedAt) =
+			(caseUrn, createdAt, createdBy, statusId, datePlanRequested, dateViablePlanReceived, notes, updatedAt);
 	}
 }

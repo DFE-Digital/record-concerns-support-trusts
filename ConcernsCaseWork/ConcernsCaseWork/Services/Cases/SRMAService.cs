@@ -6,16 +6,21 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using ConcernsCaseWork.Service.Permissions;
 
 namespace ConcernsCaseWork.Services.Cases
 {
 	public class SRMAService : ISRMAService
 	{
 		private readonly CachedSRMAProvider _cachedSrmaProvider;
+		private readonly ICasePermissionsService _casePermissionsService;
 
-		public SRMAService(CachedSRMAProvider cachedSrmaProvider)
+		public SRMAService(
+			CachedSRMAProvider cachedSrmaProvider,
+			ICasePermissionsService casePermissionsService)
 		{
 			_cachedSrmaProvider = cachedSrmaProvider;
+			_casePermissionsService = casePermissionsService;
 		}
 
 		public async Task<SRMAModel> GetSRMAById(long srmaId)
@@ -24,9 +29,17 @@ namespace ConcernsCaseWork.Services.Cases
 			return CaseActionsMapping.Map(srmaDto);
 		}
 
+		public async Task<SRMAModel> GetSRMAViewModel(long caseId, long srmaId)
+		{
+			var srmaDto = await _cachedSrmaProvider.GetSRMAById(srmaId);
+			var permissionsResponse = await _casePermissionsService.GetCasePermissions(caseId);
+
+			return CaseActionsMapping.Map(srmaDto, permissionsResponse);
+		}
+
 		public async Task SaveSRMA(SRMAModel srma)
 		{
-			var savedSRMA = await _cachedSrmaProvider.SaveSRMA(CaseActionsMapping.Map(srma));
+			await _cachedSrmaProvider.SaveSRMA(CaseActionsMapping.Map(srma));
 		}
 
 		public async Task<IEnumerable<SRMAModel>> GetSRMAsForCase(long caseUrn)
@@ -37,7 +50,7 @@ namespace ConcernsCaseWork.Services.Cases
 
 		public async Task SetDateAccepted(long srmaId, DateTime? acceptedDate)
 		{
-			await _cachedSrmaProvider.SetDateAccepted(srmaId, acceptedDate);	
+			await _cachedSrmaProvider.SetDateAccepted(srmaId, acceptedDate);
 		}
 
 		public async Task SetDateClosed(long srmaId)
@@ -57,12 +70,12 @@ namespace ConcernsCaseWork.Services.Cases
 
 		public async Task SetOfferedDate(long srmaId, DateTime offeredDate)
 		{
-			await _cachedSrmaProvider.SetOfferedDate(srmaId, offeredDate);	
+			await _cachedSrmaProvider.SetOfferedDate(srmaId, offeredDate);
 		}
 
 		public async Task SetReason(long srmaId, SRMAReasonOffered reason)
 		{
-			await _cachedSrmaProvider.SetReason(srmaId, (ConcernsCaseWork.Service.CaseActions.SRMAReasonOffered)reason);	
+			await _cachedSrmaProvider.SetReason(srmaId, (ConcernsCaseWork.Service.CaseActions.SRMAReasonOffered)reason);
 		}
 
 		public async Task SetStatus(long srmaId, SRMAStatus status)

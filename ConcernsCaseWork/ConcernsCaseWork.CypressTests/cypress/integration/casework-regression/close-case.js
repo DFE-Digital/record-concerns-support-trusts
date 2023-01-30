@@ -15,6 +15,7 @@ describe("User closes a case", () => {
 		})
 
 		cy.get("#search__option--0").click();
+		cy.getById("continue").click();
 		cy.selectConcernType();
 		cy.selectRiskToTrust();
 		cy.selectTerritory();
@@ -57,8 +58,9 @@ describe("User closes a case", () => {
 
 		cy.task(LogTask, "The Trust page should contain a closed cases table");
 		cy.visitPage('/trust')
-		cy.get("#search").type(ukprn + "{enter}");
+		cy.get("#search").type(ukprn);
 		cy.get("#search__option--0").click();
+		cy.getById("continue").click();
 		cy.get('table:nth-child(6) > caption').scrollIntoView();
 		cy.get('table:nth-child(6) > caption').should(($titl) => {
 			expect($titl.text().trim()).equal("Closed cases");

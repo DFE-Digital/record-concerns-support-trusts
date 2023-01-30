@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Pages.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,6 +19,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 		private readonly ILogger<IndexPageModel> _logger;
 
 		public NtiUnderConsiderationModel NTIUnderConsiderationModel { get; set; }
+		
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
 
 		public IndexPageModel(INtiUnderConsiderationModelService ntiModelService, ILogger<IndexPageModel> logger)
 		{
@@ -29,11 +33,12 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			try
 			{			
 				long ntiUnderConsiderationId;
+				long caseId;
 				_logger.LogInformation("Case::Action::NTI-UC::IndexPageModel::OnGetAsync");
 
-				(_, ntiUnderConsiderationId) = GetRouteData();
+				(caseId, ntiUnderConsiderationId) = GetRouteData();
 
-				NTIUnderConsiderationModel = await _ntiModelService.GetNtiUnderConsideration(ntiUnderConsiderationId);
+				NTIUnderConsiderationModel = await _ntiModelService.GetNtiUnderConsiderationViewModel(caseId, ntiUnderConsiderationId);
 
 				if (NTIUnderConsiderationModel == null)
 				{

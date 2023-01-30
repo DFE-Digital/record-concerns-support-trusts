@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Pages.Base;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Models;
 using JetBrains.Annotations;
 using System.Collections.Generic;
 
@@ -32,6 +34,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		
 		[BindProperty(Name = "Urn", SupportsGet = true)]
 		public long CaseUrn { get; set; }
+		
+		public Hyperlink BackLink => BuildBackLinkFromHistory(fallbackUrl: PageRoutes.YourCaseworkHomePage, "Back to case");
 
 		public IndexPageModel(ISRMAService srmaService, ILogger<IndexPageModel> logger)
 		{
@@ -73,10 +77,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		{
 			try
 			{
-				(long caseUrn, long srmaId) = GetRouteData();
+				(long caseId, long srmaId) = GetRouteData();
 
-				await SetPageData(caseUrn, srmaId);
-				var srmaIndexPage = $"/case/{caseUrn}/management/action/srma/{srmaId}";
+				await SetPageData(caseId, srmaId);
+				var srmaIndexPage = $"/case/{caseId}/management/action/srma/{srmaId}";
 
 				if (SRMAModel.Status.Equals(SRMAStatus.Deployed))
 				{
@@ -150,10 +154,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			return (caseUrn, srmaId);
 		}
 	
-		private async Task SetPageData(long caseUrn, long srmaId)
+		private async Task SetPageData(long caseId, long srmaId)
 		{
 			// TODO - get SRMA by case ID and SRMA ID
-			SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
+			SRMAModel = await _srmaModelService.GetSRMAViewModel(caseId, srmaId);
 
 			if (SRMAModel == null)
 			{

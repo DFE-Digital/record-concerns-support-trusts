@@ -3,12 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConcernsCaseWork.Data.Models
 {
-    [Table("FinancialPlanCase", Schema = "concerns")]
-    public class FinancialPlanCase
+	public class FinancialPlanCase
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set;  }
+	    public long Id { get; set;  }
         public int CaseUrn { get; set; }
         public string Name { get; set;  }
         public long? StatusId { get; set; }

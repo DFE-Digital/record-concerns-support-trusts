@@ -30,7 +30,10 @@ describe("Testing case action NTI", () =>
             .clearDateFields()
             .withDayIssued("22")
             .save()
-            .hasValidationError("Please enter a complete date (DD MM YYYY)");
+            .hasValidationError("Please enter a complete date (DD MM YYYY)")
+        
+        editNtiPage.clearDateFields();
+        cy.waitForJavascript();
 
         Logger.Log("Notes Exceeding allowed limit")
         editNtiPage
@@ -47,7 +50,7 @@ describe("Testing case action NTI", () =>
 
         viewNtiPage
             .hasStatus("Progress on track")
-            .hasDateIssued("22-10-2022")
+            .hasDateIssued("22 October 2022")
             .hasReasonIssued("Cash flow problems")
             .hasReasonIssued("Risk of insolvency")
             .hasConditions("Audit and risk committee")
@@ -127,7 +130,7 @@ describe("Testing case action NTI", () =>
 
         viewNtiPage
             .hasStatus("Issued NTI")
-            .hasDateIssued("11-05-2021")
+            .hasDateIssued("11 May 2021")
             .hasReasonIssued("Governance concerns")
             .hasReasonIssued("Safeguarding")
             .hasConditions("National deals for schools")
@@ -266,7 +269,7 @@ describe("Testing case action NTI", () =>
 
         viewNtiPage
             .hasStatus("Closed")
-            .hasDateClosed("15-12-2020");
+            .hasDateClosed("15 December 2020");
     });
 
     function addNtiToCase()
@@ -314,7 +317,7 @@ describe("Testing case action NTI", () =>
             .getByTestId("NTI").click();
 
             viewNtiPage
-                .hasDateIssued("22-10-2022")
+                .hasDateIssued("22 October 2022")
                 .hasReasonIssued("Cash flow problems")
                 .hasReasonIssued("Risk of insolvency")
                 .hasConditions("Audit and risk committee")
@@ -327,9 +330,9 @@ describe("Testing case action NTI", () =>
                 .hasConditions("Trustee contact details")
                 .hasConditions("Qualified Floating Charge (QFC)")
                 .hasNotes("This is my final notes")
-                .hasNoEditButton()
-                .hasNoCloseButton()
-                .hasNoCancelButton()
-                .hasNoLiftButton();
+                .cannotEdit()
+                .cannotClose()
+                .cannotCancel()
+                .cannotLift();
     }
 });

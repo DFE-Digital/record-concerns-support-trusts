@@ -8,14 +8,12 @@
 
 @{
     ViewData["Title"] = "NTI";
-    ViewData["BackButtonLabel"] = "Back to case";
-    ViewData["BackButtonLink"] = $"/case/{@RouteData.Values["urn"]}/management";
 }
 
 @section BeforeMain {
-    <div class="govuk-width-container">
-        <partial name="_BackLink" />
-    </div>
+	<div class="govuk-width-container">
+		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
+	</div>
 }
 
 <div class="govuk-width-container">
@@ -121,7 +119,7 @@
                         @{
                             if (Model.NtiModel.DateStarted.HasValue)
                             {
-                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.DateStarted.Value));
+                                RenderValue(DateTimeHelper.ParseToDisplayDate(Model.NtiModel.DateStarted));
                             }
                             else
                             {
@@ -142,7 +140,7 @@
                                     <th scope="row" class="govuk-table-case-details__header">Date NTI cancelled</th>
                                     <td class="govuk-table__cell">
                                         @{
-                                            RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.ClosedAt.Value));
+                                            RenderValue(DateTimeHelper.ParseToDisplayDate(Model.NtiModel.ClosedAt));
                                         }
                                     </td>
                                     break;
@@ -153,7 +151,7 @@
 
                                             if (Model.NtiModel.DateNTILifted.HasValue)
                                             {
-                                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.DateNTILifted.Value));
+                                                RenderValue(DateTimeHelper.ParseToDisplayDate(Model.NtiModel.DateNTILifted));
                                             }
                                             else
                                             {
@@ -169,7 +167,7 @@
 
                                             if (Model.NtiModel.DateNTIClosed.HasValue)
                                             {
-                                                RenderValue(DateExtension.ToDayMonthYearWithDefault(Model.NtiModel.DateNTIClosed.Value));
+                                                RenderValue(DateTimeHelper.ParseToDisplayDate(Model.NtiModel.DateNTIClosed));
                                             }
                                             else
                                             {
@@ -233,7 +231,7 @@
 
                 @* Notes *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Notes</th>
+                    <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
                     <td class="govuk-table__cell" data-testid="notes-text">
                         @{
 
@@ -253,7 +251,7 @@
         </table>
 
 
-        @if (Model.NtiModel.ClosedAt == null)
+        @if (Model.NtiModel.IsEditable)
         {
             <div class="govuk-button-group">
                 <ul class="govuk-list">

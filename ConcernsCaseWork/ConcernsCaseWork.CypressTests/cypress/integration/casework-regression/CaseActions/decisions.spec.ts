@@ -3,6 +3,8 @@ import { EditDecisionPage } from "../../../pages/caseActions/decision/editDecisi
 import { ViewDecisionPage } from "../../../pages/caseActions/decision/viewDecisionPage";
 import { CloseDecisionPage } from "../../../pages/caseActions/decision/closeDecisionPage";
 import { DecisionOutcomePage } from "../../../pages/caseActions/decision/decisionOutcomePage";
+const axe = require("axe-core");
+import "cypress-axe";
 
 describe("User can add case actions to an existing case", () => {
 	const viewDecisionPage = new ViewDecisionPage();
@@ -71,7 +73,7 @@ describe("User can add case actions to an existing case", () => {
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("Yes")
 			.hasSubmissionLink("www.gov.uk")
-			.hasDateESFAReceivedRequest("21-04-2022")
+			.hasDateESFAReceivedRequest("21 April 2022")
 			.hasTotalAmountRequested("£140,000")
 			.hasTypeOfDecision("Notice to Improve (NTI)")
 			.hasTypeOfDecision("Section 128 (S128)")
@@ -100,7 +102,7 @@ describe("User can add case actions to an existing case", () => {
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("Yes")
 			.hasSubmissionLink("www.google.uk")
-			.hasDateESFAReceivedRequest("22-03-2022")
+			.hasDateESFAReceivedRequest("22 March 2022")
 			.hasTotalAmountRequested("£130,000")
 			.hasTypeOfDecision("Qualified Floating Charge (QFC)")
 			.hasSupportingNotes("Testing Supporting Notes");
@@ -133,22 +135,22 @@ describe("User can add case actions to an existing case", () => {
 			.eq(-3)
 			.children("a")
 			.click();
-		
+
 		viewDecisionPage.createDecisionOutcome();
 
 		decisionOutcomePage
 			.withDecisionOutcomeStatus("ApprovedWithConditions")
 			.withTotalAmountApproved("50,000")
-            .withDateDecisionMadeDay("24")
-            .withDateDecisionMadeMonth("11")
-            .withDateDecisionMadeYear("2022")
-            .withDecisionTakeEffectDay("11")
-            .withDecisionTakeEffectMonth("12")
-            .withDecisionTakeEffectYear("2023")
-            .withDecisionAuthouriser("DeputyDirector")
-            .withBusinessArea("BusinessPartner")
-            .withBusinessArea("Capital")
-            .withBusinessArea("ProviderMarketOversight")
+			.withDateDecisionMadeDay("24")
+			.withDateDecisionMadeMonth("11")
+			.withDateDecisionMadeYear("2022")
+			.withDecisionTakeEffectDay("11")
+			.withDecisionTakeEffectMonth("12")
+			.withDecisionTakeEffectYear("2023")
+			.withDecisionAuthouriser("DeputyDirector")
+			.withBusinessArea("BusinessPartner")
+			.withBusinessArea("Capital")
+			.withBusinessArea("ProviderMarketOversight")
 			.saveDecisionOutcome();
 
 		cy.get("#open-case-actions td")
@@ -158,9 +160,8 @@ describe("User can add case actions to an existing case", () => {
 			.click();
 
 		Logger.Log("Selecting decision outcome, saving and closing decision");
-		viewDecisionPage
-			.closeDecision();
-			
+		viewDecisionPage.closeDecision();
+
 		Logger.Log("Validating notes can not exceed limits");
 		closeDecisionPage
 			.withSupportingNotesExceedingLimit()
@@ -171,7 +172,6 @@ describe("User can add case actions to an existing case", () => {
 		closeDecisionPage
 			.withFinaliseSupportingNotes("This is a test for closed decision")
 			.closeDecision();
-			
 
 		Logger.Log(
 			"Selecting Decision from closed cases and verifying that the finalise note matches the above"
@@ -188,19 +188,19 @@ describe("User can add case actions to an existing case", () => {
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("Yes")
 			.hasSubmissionLink("www.gov.uk")
-			.hasDateESFAReceivedRequest("21-04-2022")
+			.hasDateESFAReceivedRequest("21 April 2022")
 			.hasTotalAmountRequested("£140,000")
 			.hasTypeOfDecision("Notice to Improve (NTI)")
 			.hasTypeOfDecision("Section 128 (S128)")
 			.hasSupportingNotes("This is a test for closed decision")
 			.hasBusinessArea("Business Partner")
-            .hasBusinessArea("Capital")
-            .hasBusinessArea("Provider Market Oversight")
-            .hasDecisionOutcomeStatus("Approved with conditions")
-            .hasMadeDate("24-11-2022")
-            .hasEffectiveFromDate("11-12-2023")
-            .hasTotalAmountApproved("£50,000")
-            .hasAuthoriser("Deputy Director")
+			.hasBusinessArea("Capital")
+			.hasBusinessArea("Provider Market Oversight")
+			.hasDecisionOutcomeStatus("Approved with conditions")
+			.hasMadeDate("24 November 2022")
+			.hasEffectiveFromDate("11 December 2023")
+			.hasTotalAmountApproved("£50,000")
+			.hasAuthoriser("Deputy Director")
 			.cannotCreateAnotherDecisionOutcome()
 			.cannotCloseDecision()
 			.cannotEditDecision()

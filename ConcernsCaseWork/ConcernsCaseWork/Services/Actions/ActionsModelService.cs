@@ -1,8 +1,8 @@
 ﻿using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
-using ConcernsCaseWork.Pages.Shared;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Service.Helpers;
+using ConcernsCaseWork.Service.TrustFinancialForecast;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Decisions;
 using ConcernsCaseWork.Services.FinancialPlan;
@@ -26,6 +26,7 @@ namespace ConcernsCaseWork.Services.Actions
 		private readonly INtiModelService _ntiModelService;
 		private readonly INtiUnderConsiderationStatusesCachedService _ntiUcStatusesCachedService;
 		private readonly IDecisionModelService _decisionModelService;
+		private readonly ITrustFinancialForecastService _trustFinancialForecastService;
 		private readonly ILogger<ActionsModelService> _logger;
 
 		public ActionsModelService(
@@ -36,7 +37,8 @@ namespace ConcernsCaseWork.Services.Actions
 			INtiModelService ntiModelService,
 			ILogger<ActionsModelService> logger, 
 			INtiUnderConsiderationStatusesCachedService ntiUcStatusesCachedService,
-			IDecisionModelService decisionModelService)
+			IDecisionModelService decisionModelService, 
+			ITrustFinancialForecastService trustFinancialForecastService)
 		{
 			_srmaService = srmaService;
 			_financialPlanModelService = financialPlanModelService;
@@ -46,6 +48,7 @@ namespace ConcernsCaseWork.Services.Actions
 			_logger = logger;
 			_ntiUcStatusesCachedService = ntiUcStatusesCachedService;
 			_decisionModelService = decisionModelService;
+			_trustFinancialForecastService = trustFinancialForecastService;
 		}
 
 		public async Task<ActionSummaryBreakdownModel> GetActionsSummary(long caseUrn)
@@ -62,6 +65,7 @@ namespace ConcernsCaseWork.Services.Actions
 				caseActions.AddRange(await GetNtiWarningLettersForCase(caseUrn));
 				caseActions.AddRange(await GetNtisForCase(caseUrn));
 				caseActions.AddRange(await _decisionModelService.GetDecisionsByUrn(caseUrn));
+				caseActions.AddRange(await GetTrustFinancialForecastsForCase(caseUrn));
 
 				result = ActionSummaryMapping.ToActionSummaryBreakdown(caseActions);
 
@@ -99,6 +103,10 @@ namespace ConcernsCaseWork.Services.Actions
 								
 		private async Task<IEnumerable<ActionSummaryModel>> GetNtisForCase(long caseUrn)
 			=> (await _ntiModelService.GetNtisForCaseAsync(caseUrn))
+				.Select(a => a.ToActionSummary());
+		
+		private async Task<IEnumerable<ActionSummaryModel>> GetTrustFinancialForecastsForCase(long caseUrn)
+			=> (await _trustFinancialForecastService.GetAllForCase((int)caseUrn))
 				.Select(a => a.ToActionSummary());
 	}
 }

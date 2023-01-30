@@ -12,11 +12,11 @@ public static class ApiConfigurationExtensions
 		if (string.IsNullOrEmpty(concernsApiEndpoint) || string.IsNullOrEmpty(concernsApiKey))
 			throw new Exception("AddConcernsApi::missing configuration");
 
-		services.AddHttpClient("ConcernsClient", client =>
+		services.AddHttpClient("ConcernsClient", config =>
 		{
-			client.BaseAddress = new Uri(concernsApiEndpoint);
-			client.DefaultRequestHeaders.Add("ApiKey", concernsApiKey);
-			client.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
+			config.BaseAddress = new Uri(concernsApiEndpoint);
+			config.DefaultRequestHeaders.Add("ApiKey", concernsApiKey);
+			config.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
 		});
 
 		services.AddControllers();
@@ -28,6 +28,7 @@ public static class ApiConfigurationExtensions
 		});
 		services.AddVersionedApiExplorer(setup =>
 		{
+			// ReSharper disable once StringLiteralTypo
 			setup.GroupNameFormat = "'v'VVV";
 			setup.SubstituteApiVersionInUrl = true;
 		});

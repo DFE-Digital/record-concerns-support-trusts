@@ -92,3 +92,18 @@ variable "cdn_frontdoor_host_redirects" {
   type        = list(map(string))
   default     = []
 }
+
+variable "cdn_frontdoor_host_add_response_headers" {
+  description = "List of response headers to add at the CDN Front Door `[{ \"name\" = \"Strict-Transport-Security\", \"value\" = \"max-age=31536000\" }]`"
+  type        = list(map(string))
+}
+
+variable "redis_cache_sku" {
+  description = "Redis Cache SKU"
+  type        = string
+}
+
+variable "redis_cache_capacity" {
+  description = "Redis Cache Capacity"
+  type        = number
+}

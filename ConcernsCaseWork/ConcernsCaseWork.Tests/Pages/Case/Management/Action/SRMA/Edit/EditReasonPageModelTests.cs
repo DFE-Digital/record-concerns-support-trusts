@@ -1,3 +1,4 @@
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Enums;
 using ConcernsCaseWork.Pages.Case.Management.Action.SRMA.Edit;
 using ConcernsCaseWork.Services.Cases;
@@ -138,7 +139,7 @@ public class EditSRMAReasonOfferedPageModelTests
 			Assert.IsNull(pageModel.SRMA);
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"],
-				Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+				Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 
 			mockSRMAModelService.Verify(s =>
 				s.GetSRMAById(It.IsAny<long>()), Times.Never);

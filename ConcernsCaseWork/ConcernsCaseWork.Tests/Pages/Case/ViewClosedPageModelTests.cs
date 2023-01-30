@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case;
@@ -18,7 +19,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -50,7 +50,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			mockLogger.VerifyLogErrorWasCalled("ViewClosedPageModel::OnGetAsync::Exception - CaseUrn is null or invalid to parse");
 
 			Assert.That(pageModel.TempData["Error.Message"],
-				Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+				Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Never);
 			mockTrustModelService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);
@@ -85,7 +85,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case
 			mockLogger.VerifyLogErrorWasCalled("ViewClosedPageModel::OnGetAsync::Exception - Exception of type 'System.Exception' was thrown.");
 
 			Assert.That(pageModel.TempData["Error.Message"],
-				Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+				Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 
 			mockCaseModelService.Verify(c => c.GetCaseByUrn(It.IsAny<long>()), Times.Once);
 			mockTrustModelService.Verify(c => c.GetTrustByUkPrn(It.IsAny<string>()), Times.Never);

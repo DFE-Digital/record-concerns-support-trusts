@@ -1,4 +1,5 @@
 using ConcernsCaseWork.API.StartupConfiguration;
+using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Base;
@@ -16,51 +17,56 @@ using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Redis.Types;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Security;
+using ConcernsCaseWork.Service.CaseActions;
+using ConcernsCaseWork.Service.Cases;
+using ConcernsCaseWork.Service.Configuration;
+using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Service.FinancialPlan;
+using ConcernsCaseWork.Service.MeansOfReferral;
+using ConcernsCaseWork.Service.Nti;
+using ConcernsCaseWork.Service.NtiUnderConsideration;
+using ConcernsCaseWork.Service.NtiWarningLetter;
+using ConcernsCaseWork.Service.Permissions;
+using ConcernsCaseWork.Service.Ratings;
+using ConcernsCaseWork.Service.Records;
+using ConcernsCaseWork.Service.Status;
+using ConcernsCaseWork.Service.Teams;
+using ConcernsCaseWork.Service.TrustFinancialForecast;
+using ConcernsCaseWork.Service.Trusts;
+using ConcernsCaseWork.Service.Types;
 using ConcernsCaseWork.Services.Actions;
 using ConcernsCaseWork.Services.Cases;
-using ConcernsCaseWork.Services.Decisions;
 using ConcernsCaseWork.Services.Cases.Create;
+using ConcernsCaseWork.Services.Decisions;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Services.MeansOfReferral;
 using ConcernsCaseWork.Services.Nti;
+using ConcernsCaseWork.Services.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiWarningLetter;
+using ConcernsCaseWork.Services.PageHistory;
 using ConcernsCaseWork.Services.Ratings;
 using ConcernsCaseWork.Services.Records;
 using ConcernsCaseWork.Services.Teams;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
+using ConcernsCaseWork.UserContext;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using Serilog;
-using ConcernsCaseWork.Service.Cases;
-using ConcernsCaseWork.Service.Configuration;
-using ConcernsCaseWork.Service.FinancialPlan;
-using ConcernsCaseWork.Service.Ratings;
-using ConcernsCaseWork.Service.Records;
-using ConcernsCaseWork.Service.Status;
-using ConcernsCaseWork.Service.Trusts;
-using ConcernsCaseWork.Service.Types;
 using StackExchange.Redis;
 using System;
+using System.Configuration;
 using System.Net.Mime;
-using ConcernsCaseWork.Service.CaseActions;
-using ConcernsCaseWork.Service.Decision;
-using ConcernsCaseWork.Service.NtiUnderConsideration;
-using ConcernsCaseWork.Service.NtiWarningLetter;
-using ConcernsCaseWork.Service.MeansOfReferral;
-using ConcernsCaseWork.Service.Nti;
-using ConcernsCaseWork.Service.Teams;
-using ConcernsCaseWork.Services.NtiUnderConsideration;
-using ConcernsCaseWork.Authorization;
+using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Extensions
 {
 	public static class StartupExtension
 	{
-		private static readonly IRedisMultiplexer _redisMultiplexer = new RedisMultiplexer();
-		public static IRedisMultiplexer RedisMultiplexerImplementation { private get; set; } = _redisMultiplexer;
+		private static IConnectionMultiplexer _redisConnectionMultiplexer;
+
 
 		public static void AddRedis(this IServiceCollection services, IConfiguration configuration)
 		{
@@ -77,19 +83,26 @@ namespace ConcernsCaseWork.Extensions
 				Log.Information("Starting Redis Server Port - {Port}", port);
 				Log.Information("Starting Redis Server TLS - {Tls}", tls);
 
-				var redisConfigurationOptions = new ConfigurationOptions { Password = password, EndPoints = { $"{host}:{port}" }, Ssl = tls, AsyncTimeout = 15000 };
-				var redisConnection = RedisMultiplexerImplementation.Connect(redisConfigurationOptions);
+				var redisConfigurationOptions = new ConfigurationOptions { Password = password, EndPoints = { $"{host}:{port}" }, Ssl = tls, AsyncTimeout = 15000, SyncTimeout = 15000 };
+
+				var preventThreadTheftStr = configuration["PreventRedisThreadTheft"] ?? "false";
+				if (bool.TryParse(preventThreadTheftStr, out bool preventThreadTheft) && preventThreadTheft)
+				{
+					// https://stackexchange.github.io/StackExchange.Redis/ThreadTheft.html
+					ConnectionMultiplexer.SetFeatureFlag("preventthreadtheft", true);
+				}
+
+				_redisConnectionMultiplexer = ConnectionMultiplexer.Connect(redisConfigurationOptions);
+				services.AddDataProtection().PersistKeysToStackExchangeRedis(_redisConnectionMultiplexer, "DataProtectionKeys");
 
 				services.AddStackExchangeRedisCache(
 					options =>
 					{
 						options.ConfigurationOptions = redisConfigurationOptions;
 						options.InstanceName = $"Redis-{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}";
+						options.ConnectionMultiplexerFactory = () => Task.FromResult(_redisConnectionMultiplexer);
 					});
 
-				services.AddDataProtection().PersistKeysToStackExchangeRedis(redisConnection, "DataProtectionKeys");
-
-				services.AddSingleton<IConnectionMultiplexer>(redisConnection);
 			}
 			catch (Exception ex)
 			{
@@ -121,7 +134,7 @@ namespace ConcernsCaseWork.Extensions
 				client.DefaultRequestHeaders.Add("ContentType", MediaTypeNames.Application.Json);
 			});
 		}
-		
+
 		/// <summary>
 		/// HttpFactory for Concerns API
 		/// </summary>
@@ -157,6 +170,7 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ICaseActionValidationStrategy, NTIWarningLetterValidator>();
 			services.AddScoped<ICaseActionValidationStrategy, NTIValidator>();
 			services.AddScoped<ICaseActionValidationStrategy, DecisionValidator>();
+			services.AddScoped<ICaseActionValidationStrategy, TrustFinancialForecastValidator>();
 			services.AddScoped<ICaseActionValidator, CaseActionValidator>();
 			services.AddScoped<IDecisionModelService, DecisionModelService>();
 			services.AddScoped<ICreateCaseService, CreateCaseService>();
@@ -184,11 +198,13 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<INtiWarningLetterService, NtiWarningLetterService>();
 			services.AddScoped<INtiWarningLetterConditionsService, NtiWarningLetterConditionsService>();
 			services.AddScoped<INtiService, NtiService>();
-            services.AddScoped<INtiStatusesService, NtiStatusesService>();
-            services.AddScoped<INtiReasonsService, NtiReasonsService>();
-            services.AddScoped<INtiConditionsService, NtiConditionsService>();
+			services.AddScoped<INtiStatusesService, NtiStatusesService>();
+			services.AddScoped<INtiReasonsService, NtiReasonsService>();
+			services.AddScoped<INtiConditionsService, NtiConditionsService>();
 			services.AddScoped<ITeamsService, TeamsService>();
 			services.AddScoped<IDecisionService, DecisionService>();
+			services.AddScoped<ITrustFinancialForecastService, TrustFinancialForecastService>();
+			services.AddScoped<ICasePermissionsService, CasePermissionsService>();
 
 			// Redis services
 			services.AddSingleton<ICacheProvider, CacheProvider>();
@@ -208,9 +224,9 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IMeansOfReferralCachedService, MeansOfReferralCachedService>();
 			services.AddScoped<INtiWarningLetterConditionsCachedService, NtiWarningLetterConditionsCachedServices>();
 			services.AddScoped<INtiCachedService, NtiCachedService>();
-            services.AddScoped<INtiStatusesCachedService, NtiStatusesCachedService>();
-            services.AddScoped<INtiReasonsCachedService, NtiReasonsCachedService>();
-            services.AddScoped<INtiConditionsCachedService, NtiConditionsCachedService>();
+			services.AddScoped<INtiStatusesCachedService, NtiStatusesCachedService>();
+			services.AddScoped<INtiReasonsCachedService, NtiReasonsCachedService>();
+			services.AddScoped<INtiConditionsCachedService, NtiConditionsCachedService>();
 			services.AddScoped<ITeamsCachedService, TeamsCachedService>();
 			services.AddScoped<ICaseSummaryService, CaseSummaryService>();
 
@@ -226,6 +242,8 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IRbacManager, RbacManager>();
 
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
+			services.AddScoped<IClientUserInfoService, ClientUserInfoService>();
+			services.AddSingleton<IPageHistoryStorageHandler, SessionPageHistoryStorageHandler>();
 		}
 
 		public static void AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)

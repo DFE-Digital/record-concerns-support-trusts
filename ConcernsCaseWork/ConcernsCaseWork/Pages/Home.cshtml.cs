@@ -1,13 +1,13 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Redis.Models;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Services.Cases;
 using ConcernsCaseWork.Services.Teams;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -17,15 +17,13 @@ namespace ConcernsCaseWork.Pages
 {
 	[Authorize]
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public class HomePageModel : PageModel
+	public class HomePageModel : AbstractPageModel
 	{
 		private readonly IClaimsPrincipalHelper _claimsPrincipalHelper;
 		private readonly IUserStateCachedService _userStateCache;
 		private readonly ICaseSummaryService _caseSummaryService;
 		private readonly ILogger<HomePageModel> _logger;
 		private readonly ITeamsModelService _teamsService;
-
-		public List<ActiveCaseSummaryModel> ActiveTeamCases { get; private set; }
 		
 		public List<ActiveCaseSummaryModel> ActiveCases { get; private set; }
 
@@ -43,31 +41,32 @@ namespace ConcernsCaseWork.Pages
 			_caseSummaryService = Guard.Against.Null(caseSummaryService);
 		}
 
-		public async Task OnGetAsync()
+		public async Task<ActionResult> OnGetAsync()
 		{
 			_logger.LogInformation("HomePageModel::OnGetAsync executed");
 
-			// Display all live cases for the current user.
-			// And in addition display live cases belonging to other users that the current user has expressed an interest in seeing.
+			try
+			{
+				// Display all live cases for the current user.
+				// And in addition display live cases belonging to other users that the current user has expressed an interest in seeing.
 
-			// Check if logged user as role leader
-			// And get all live cases for each caseworker
+				// Check if logged user as role leader
+				// And get all live cases for each caseworker
 
-			// cases belonging to this user
-			var currentUserActiveCases = _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName());
+				// cases belonging to this user
+				// get any team members defined
+				var team = await _teamsService.GetCaseworkTeam(GetUserName());
 
-			// get any team members defined
-			var team = await _teamsService.GetCaseworkTeam(GetUserName());
+				await RecordUserSignIn(team);
 
-			var teamActiveCases = _caseSummaryService.GetActiveCaseSummariesByCaseworkers(team.TeamMembers);
+				ActiveCases = await _caseSummaryService.GetActiveCaseSummariesByCaseworker(GetUserName());
+			}
+			catch (Exception ex)
+			{
+				TempData["Error.Message"] = ErrorOnGetPage;
+			}
 
-			var recordUserSignedTask = RecordUserSignIn(team);
-
-			await Task.WhenAll(currentUserActiveCases, teamActiveCases, recordUserSignedTask);
-
-			// Assign responses to UI public properties
-			ActiveCases = currentUserActiveCases.Result;
-			ActiveTeamCases = teamActiveCases.Result;
+			return Page();
 		}
 
 		/// <summary>

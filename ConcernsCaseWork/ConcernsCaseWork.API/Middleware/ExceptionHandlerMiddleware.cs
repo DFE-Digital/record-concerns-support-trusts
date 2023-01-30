@@ -1,11 +1,7 @@
 using ConcernsCaseWork.API.Exceptions;
 using ConcernsCaseWork.API.ResponseModels;
-using ConcernsCaseWork.API.UseCases.CaseActions.NTI.NoticeToImprove;
-using ConcernsCaseWork.Data.Exceptions;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Net;
+using System.Text;
 
 namespace ConcernsCaseWork.API.Middleware;
 
@@ -21,7 +17,21 @@ public class ExceptionHandlerMiddleware
 	{
 		try
 		{
+			bool captureBadRequestsWithBodyAsWarnings = (logger.IsEnabled(LogLevel.Warning) && IsApiRequest(httpContext.Request.Path));
+			if (captureBadRequestsWithBodyAsWarnings)
+			{
+				httpContext.Request.EnableBuffering();
+			}
+
 			await _next(httpContext);
+
+			// if non-success and warnings are enabled, log it.
+
+			if (captureBadRequestsWithBodyAsWarnings && httpContext.Response.StatusCode >= (int)HttpStatusCode.BadRequest)
+			{
+				var bodyString = await GetRawBodyAsync(httpContext.Request);
+				logger.LogWarning($"Returning bad request for path:{httpContext.Request.Path}. Request body:{bodyString}");
+			}
 		}
 		catch (Exception ex)
 		{
@@ -40,6 +50,35 @@ public class ExceptionHandlerMiddleware
 		}
 	}
 
+	private bool IsApiRequest(string path) => path.StartsWith("/v2/");
+
+	private async Task<string> BodyToString(Stream requestBody)
+	{
+		var sr = new StreamReader(requestBody);
+		return await sr.ReadToEndAsync();
+	}
+
+	public async Task<string> GetRawBodyAsync(HttpRequest request, Encoding encoding = null)
+	{
+		if (!request.Body.CanSeek)
+		{
+			// We only do this if the stream isn't *already* seekable,
+			// as EnableBuffering will create a new stream instance
+			// each time it's called
+			request.EnableBuffering();
+		}
+
+		request.Body.Position = 0;
+
+		var reader = new StreamReader(request.Body, encoding ?? Encoding.UTF8);
+
+		var body = await reader.ReadToEndAsync().ConfigureAwait(false);
+
+		request.Body.Position = 0;
+
+		return body;
+	}
+
 	private async Task HandleHttpException(HttpExceptionParams parameters)
 	{
 		parameters.Logger.LogError($"{parameters.MessagePrefix}: {parameters.Exception}");
@@ -48,6 +87,9 @@ public class ExceptionHandlerMiddleware
 		parameters.Logger.LogError(parameters.Exception.StackTrace);
 		parameters.Context.Response.ContentType = "application/json";
 		parameters.Context.Response.StatusCode = (int)parameters.StatusCode;
+
+
+
 		await parameters.Context.Response.WriteAsync(new ErrorResponse()
 		{
 			StatusCode = parameters.Context.Response.StatusCode,

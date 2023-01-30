@@ -43,6 +43,24 @@ export class ViewNtiUnderConsiderationPage
         return this;
     }
 
+    public canEdit(): this
+    {
+        Logger.Log("Can edit");
+
+        this.getEdit();
+
+        return this;
+    }
+
+    public cannotEdit(): this
+    {
+        Logger.Log("Cannot edit");
+
+        this.getEdit().should("not.exist");
+
+        return this;
+    }
+
     public close(): this
     {
         Logger.Log("Closing NTI under consideration");
@@ -52,18 +70,18 @@ export class ViewNtiUnderConsiderationPage
         return this;
     }
 
-    public cannotEdit(): this
+    public canClose(): this
     {
-        Logger.Log("Ensure that we cannot edit");
+        Logger.Log("Can close");
 
-        this.getEdit().should("not.exist");
+        this.getClose();
 
         return this;
     }
 
     public cannotClose(): this
     {
-        Logger.Log("Ensure that we cannot close");
+        Logger.Log("Cannot close");
 
         this.getClose().should("not.exist");
 

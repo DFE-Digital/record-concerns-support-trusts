@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.UserContext;
 using System;
 using System.Security.Principal;
 
@@ -6,10 +7,6 @@ namespace ConcernsCaseWork.Authorization;
 
 public class ClaimsPrincipalHelper : IClaimsPrincipalHelper
 {
-	public const string CaseWorkerRole = "concerns-casework.caseworker";
-	public const string TeamLeaderRole = "concerns-casework.teamleader";
-	public const string AdminRole = "concerns-casework.admin";
-
 	public string GetPrincipalName(IPrincipal principal)
 	{
 		Guard.Against.Null(principal);
@@ -18,25 +15,25 @@ public class ClaimsPrincipalHelper : IClaimsPrincipalHelper
 		{
 			throw new ArgumentNullException(nameof(principal.Identity.Name));
 		}
-		
+
 		return principal.Identity.Name;
 	}
 
 	public bool IsCaseworker(IPrincipal principal)
-	{		
+	{
 		Guard.Against.Null(principal);
-		return principal.IsInRole(CaseWorkerRole);
+		return principal.IsInRole(Claims.CaseWorkerRoleClaim);
 	}
 
 	public bool IsTeamLeader(IPrincipal principal)
 	{
 		Guard.Against.Null(principal);
-		return principal.IsInRole(TeamLeaderRole);
+		return principal.IsInRole(Claims.TeamLeaderRoleClaim);
 	}
 
 	public bool IsAdmin(IPrincipal principal)
 	{
 		Guard.Against.Null(principal);
-		return principal.IsInRole(AdminRole);
+		return principal.IsInRole(Claims.AdminRoleClaim);
 	}
 }

@@ -71,7 +71,8 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasKey("DecisionId");
 
-                    b.HasIndex("ConcernsCaseId");
+                    b.HasIndex("ConcernsCaseId", "CreatedAt")
+                        .IsUnique();
 
                     b.ToTable("ConcernsDecision", "concerns", t =>
                         {
@@ -455,7 +456,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CrmEnquiry")
                         .HasColumnType("nvarchar(max)");
@@ -497,7 +498,7 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TrustUkprn")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -513,6 +514,10 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasIndex("RatingId");
 
                     b.HasIndex("StatusId");
+
+                    b.HasIndex("TrustUkprn", "CreatedAt", "CreatedBy")
+                        .IsUnique()
+                        .HasFilter("[TrustUkprn] IS NOT NULL AND [CreatedBy] IS NOT NULL");
 
                     b.ToTable("ConcernsCase", "concerns", t =>
                         {
@@ -553,9 +558,9 @@ namespace ConcernsCaseWork.Data.Migrations
                         {
                             Id = 1,
                             CreatedAt = new DateTime(2022, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "ESFA activity, TFFT or other departmental activity",
+                            Description = "ESFA activity, TFF or other departmental activity",
                             Name = "Internal",
-                            UpdatedAt = new DateTime(2022, 7, 28, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2023, 1, 27, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -677,8 +682,6 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasKey("Id")
                         .HasName("PK__CRecord");
 
-                    b.HasIndex("CaseId");
-
                     b.HasIndex("MeansOfReferralId");
 
                     b.HasIndex("RatingId");
@@ -686,6 +689,9 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasIndex("StatusId");
 
                     b.HasIndex("TypeId");
+
+                    b.HasIndex("CaseId", "CreatedAt")
+                        .IsUnique();
 
                     b.ToTable("ConcernsRecord", "concerns", t =>
                         {
@@ -833,6 +839,13 @@ namespace ConcernsCaseWork.Data.Migrations
                             Description = "Compliance",
                             Name = "Governance and compliance",
                             UpdatedAt = new DateTime(2022, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CreatedAt = new DateTime(2023, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Safeguarding",
+                            UpdatedAt = new DateTime(2023, 1, 24, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -877,6 +890,9 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("StatusId");
+
+                    b.HasIndex("CaseUrn", "CreatedAt")
+                        .IsUnique();
 
                     b.ToTable("FinancialPlanCase", "concerns", t =>
                         {
@@ -987,6 +1003,9 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClosedStatusId");
+
+                    b.HasIndex("CaseUrn", "CreatedAt")
+                        .IsUnique();
 
                     b.ToTable("NTIUnderConsiderationCase", "concerns", t =>
                         {
@@ -1189,6 +1208,9 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasIndex("ClosedStatusId");
 
                     b.HasIndex("StatusId");
+
+                    b.HasIndex("CaseUrn", "CreatedAt")
+                        .IsUnique();
 
                     b.ToTable("NTIWarningLetterCase", "concerns", t =>
                         {
@@ -1625,6 +1647,9 @@ namespace ConcernsCaseWork.Data.Migrations
                     b.HasIndex("ClosedStatusId");
 
                     b.HasIndex("StatusId");
+
+                    b.HasIndex("CaseUrn", "CreatedAt")
+                        .IsUnique();
 
                     b.ToTable("NoticeToImproveCase", "concerns", t =>
                         {
@@ -2404,6 +2429,9 @@ namespace ConcernsCaseWork.Data.Migrations
 
                     b.HasIndex("ReasonId");
 
+                    b.HasIndex("CaseUrn", "CreatedAt")
+                        .IsUnique();
+
                     b.ToTable("SRMACase", "concerns", t =>
                         {
                             t.HasTrigger("SRMACase_Trigger");
@@ -2524,6 +2552,56 @@ namespace ConcernsCaseWork.Data.Migrations
                             CreatedAt = new DateTime(2022, 5, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Complete",
                             UpdatedAt = new DateTime(2022, 5, 6, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.TrustFinancialForecast", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CaseUrn")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("ClosedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ForecastingToolRanAt")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("SFSOInitialReviewHappenedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SRMAOfferedAfterTFF")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("TrustRespondedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("WasTrustResponseSatisfactory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id")
+                        .HasName("PK__TrustFinancialForecast");
+
+                    b.HasIndex("CaseUrn", "CreatedAt")
+                        .IsUnique();
+
+                    b.ToTable("TrustFinancialForecast", "concerns", t =>
+                        {
+                            t.HasTrigger("TrustFinancialForecast_Trigger");
                         });
                 });
 

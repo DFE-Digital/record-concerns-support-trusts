@@ -1,6 +1,7 @@
 import CaseManagementPage from "/cypress/pages/caseMangementPage";
 import CreateCaseDetailsPage from "/cypress/pages/createCase/createCaseDetailsPage"
 import { LogTask } from "../../support/constants";
+import concernsApi from "cypress/api/concernsApi";
 
 let apiKey = Cypress.env('apiKey');
 let api = Cypress.env('api');
@@ -22,6 +23,7 @@ describe("The correct items are visible on the details page", () => {
 
         cy.randomSelectTrust();
         cy.get("#search__option--0").click();
+        cy.getById("continue").click();
 
         cy.task(LogTask, "Select concern type (Financial: Deficit)")
         cy.get(".govuk-summary-list__value").then(($el) => {
@@ -42,21 +44,12 @@ describe("The correct items are visible on the details page", () => {
             .scrollIntoView().click();
 
         cy.task(LogTask, "GET Means of Referral by Case ID");
-        CaseManagementPage.getCaseIDText().then((returnedVal) => {
+        CaseManagementPage.getCaseIDText().then((caseId) => {
 
-            cy.request({
-                method: 'GET',
-                failOnStatusCode: false,
-                url: api + "/v2/concerns-records/case/urn/" + returnedVal,
-                headers: {
-                    ApiKey: apiKey,
-                    "Content-type": "application/json"
-                }
-            })
-            .then((response) => {
-                expect(response.status).to.eq(200);
-                expect(response.body.data[0].meansOfReferralId).to.eq(1);
-            })
+            concernsApi.get(caseId)
+                .then(response => {
+                    expect(response[0].meansOfReferralId).to.eq(1);
+                });
         });
     });
 });

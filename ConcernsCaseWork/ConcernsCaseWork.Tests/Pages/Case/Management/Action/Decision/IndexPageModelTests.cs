@@ -1,8 +1,10 @@
 ﻿using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.Concerns.Decisions;
 using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Pages.Case.Management.Action.Decision;
 using ConcernsCaseWork.Service.Decision;
+using ConcernsCaseWork.Service.Permissions;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
@@ -47,9 +50,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			pageModel.Decision.ConcernsCaseUrn.Should().Be(apiDecision.ConcernsCaseUrn);
 			pageModel.Decision.DecisionId.Should().Be(apiDecision.DecisionId);
-
-			pageModel.ViewData[ViewDataConstants.BackButtonLink].Should().Be($"/case/1/management");
-			pageModel.ViewData[ViewDataConstants.BackButtonLabel].Should().Be("Back to case overview");
+			pageModel.Decision.IsEditable.Should().BeTrue();
+			
 			pageModel.ViewData[ViewDataConstants.Title].Should().Be("Decision");
 		}
 
@@ -73,7 +75,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			var logger = new Mock<ILogger<IndexPageModel>>();
 
-			return new IndexPageModel(_mockDecision.Object, logger.Object)
+			var casePermissions = new GetCasePermissionsResponse() { Permissions = new List<CasePermission>() { CasePermission.Edit } };
+			var permissionsService = new Mock<ICasePermissionsService>();
+			permissionsService.Setup(m => m.GetCasePermissions(It.IsAny<long>())).ReturnsAsync(casePermissions);
+
+			return new IndexPageModel(_mockDecision.Object, permissionsService.Object, logger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,

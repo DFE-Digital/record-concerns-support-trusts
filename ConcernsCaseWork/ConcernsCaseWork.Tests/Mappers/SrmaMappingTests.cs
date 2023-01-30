@@ -6,6 +6,8 @@ using FluentAssertions;
 using NUnit.Framework;
 using ConcernsCaseWork.Service.CaseActions;
 using System;
+using ConcernsCaseWork.API.Contracts.Permissions;
+using System.Collections.Generic;
 
 namespace ConcernsCaseWork.Tests.Mappers;
 
@@ -20,8 +22,10 @@ public class SrmaMappingTests
 		//arrange
 		var dto = _fixture.Create<SRMADto>();
 
+		var permissionsResponse = new GetCasePermissionsResponse() { Permissions = new List<CasePermission>() { CasePermission.Edit } };
+
 		// act
-		var serviceModel = CaseActionsMapping.Map(dto);
+		var serviceModel = CaseActionsMapping.Map(dto, permissionsResponse);
 
 		// assert
 		Assert.That(serviceModel, Is.Not.Null);
@@ -39,7 +43,19 @@ public class SrmaMappingTests
 			Assert.That(serviceModel.ClosedAt, Is.EqualTo(dto.ClosedAt));
 			Assert.That(serviceModel.CreatedAt, Is.EqualTo(dto.CreatedAt));
 			Assert.That(serviceModel.UpdatedAt, Is.EqualTo(dto.UpdatedAt));
+			serviceModel.IsEditable.Should().BeTrue();
 		});
+	}
+
+	[Test]
+	public void WhenMapDtoToServiceModel_NotEditable_ReturnsCorrectModel()
+	{
+		var dto = _fixture.Create<SRMADto>();
+		var permissionsResponse = new GetCasePermissionsResponse();
+
+		var serviceModel = CaseActionsMapping.Map(dto, permissionsResponse);
+
+		serviceModel.IsEditable.Should().BeFalse();
 	}
 
 	[Test]
@@ -122,8 +138,8 @@ public class SrmaMappingTests
 		Assert.Multiple(() =>
 		{
 			Assert.That(actionSummary.Name, Is.EqualTo("SRMA"));
-			Assert.That(actionSummary.ClosedDate, Is.EqualTo(testData.ClosedAt.GetFormattedDate()));
-			Assert.That(actionSummary.OpenedDate, Is.EqualTo(testData.CreatedAt.GetFormattedDate()));
+			Assert.That(actionSummary.ClosedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.ClosedAt)));
+			Assert.That(actionSummary.OpenedDate, Is.EqualTo(DateTimeHelper.ParseToDisplayDate(testData.CreatedAt)));
 			Assert.That(actionSummary.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/srma/{testData.Id}/closed"));
 			Assert.That(actionSummary.StatusName, Is.EqualTo(EnumHelper.GetEnumDescription(testData.Status)));
 		});
@@ -141,6 +157,6 @@ public class SrmaMappingTests
 		var result = srma.ToActionSummary();
 
 		result.RelativeUrl.Should().Be($"/case/{srma.CaseUrn}/management/action/srma/{srma.Id}");
-		result.ClosedDate.Should().BeNull();
+		result.ClosedDate.Should().BeEmpty();
 	}
 }

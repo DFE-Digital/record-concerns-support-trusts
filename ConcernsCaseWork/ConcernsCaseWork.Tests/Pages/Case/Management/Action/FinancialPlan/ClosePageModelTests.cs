@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Models.CaseActions;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan;
 using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Service.FinancialPlan;
@@ -39,7 +40,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"],
-				Is.EqualTo("An error occurred loading the page, please try again. If the error persists contact the service administrator."));
+				Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]
@@ -177,7 +178,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			Assert.That(page, Is.Not.Null);
 			Assert.That(pageModel.TempData, Is.Not.Null);
 			Assert.That(pageModel.TempData["Error.Message"],
-				Is.EqualTo("An error occurred posting the form, please try again. If the error persists contact the service administrator."));
+				Is.EqualTo(ErrorConstants.ErrorOnPostPage));
 			
 			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.IsAny<PatchFinancialPlanModel>()), Times.Never);
 		}
@@ -222,6 +223,46 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
 				fpm.ClosedAt != null)), Times.Once);
 		}
+		[Test]
+		public async Task WhenOnPostAsync_Valid_SetsUpdatedAt()
+		{
+			// arrange
+			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
+			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
+			var mockLogger = new Mock<ILogger<ClosePageModel>>();
+			
+			mockFinancialPlanStatusService.Setup(fp => fp.GetClosureFinancialPlansStatusesAsync())
+				.ReturnsAsync(GetListValidStatuses());
+
+			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+
+			pageModel.HttpContext.Request.Form = new FormCollection(
+				new Dictionary<string, StringValues>
+				{
+					{ "status", GetListValidStatusNames().First()}
+				});
+			
+			var caseUrn = 1;
+			var routeData = pageModel.RouteData.Values;
+			routeData.Add("urn", caseUrn);
+			routeData.Add("financialplanid", 2);
+
+			// act
+			var pageResponse = await pageModel.OnPostAsync();
+
+			// assert
+			Assert.That(pageResponse, Is.InstanceOf<RedirectResult>());
+			var result = pageResponse as RedirectResult;
+
+			Assert.That(result, Is.Not.Null);
+			Assert.That(result.Url, Is.EqualTo($"/case/{caseUrn}/management"));
+			Assert.That(pageModel.TempData, Is.Not.Null);
+			Assert.That(pageModel.TempData["Error.Message"], Is.Null);
+			
+			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
+				fpm.UpdatedAt > DateTime.Now.AddMinutes(-1) && fpm.UpdatedAt <= DateTime.Now)), Times.Once);
+		}
+		
 		
 		[Test]
 		public async Task WhenOnPostAsync_WithEmptyStatus_ReturnsError()
@@ -292,6 +333,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				null, 
 				String.Empty, 
 				new FinancialPlanStatusModel(statusName, 1, false), 
-				null);
+				null,
+				DateTime.Now);
 	} 
 }
