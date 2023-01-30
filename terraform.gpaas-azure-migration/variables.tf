@@ -107,3 +107,18 @@ variable "redis_cache_capacity" {
   description = "Redis Cache Capacity"
   type        = number
 }
+
+variable "enable_monitoring" {
+  description = "Create App Insights monitoring groups for the container app"
+  type        = bool
+}
+
+variable "monitor_email_receivers" {
+  description = "A list of email addresses that will receive alerts from App Insights"
+  type        = list(string)
+}
+
+variable "enable_event_hub" {
+  description = "Send Azure Container App logs to an Event Hub sink"
+  type        = bool
+}
