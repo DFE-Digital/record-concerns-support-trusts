@@ -16,7 +16,6 @@ public class GetClosedConcernsCaseSummariesByTrust : IGetClosedConcernsCaseSumma
 	public async Task<IList<ClosedCaseSummaryResponse>> Execute(string trustUkPrn)
 	{
 		var caseSummaries = await _gateway.GetClosedCaseSummariesByTrust(trustUkPrn);
-		
 		return caseSummaries.Select(CaseSummaryResponseFactory.Create).ToList();
 	}
 }
