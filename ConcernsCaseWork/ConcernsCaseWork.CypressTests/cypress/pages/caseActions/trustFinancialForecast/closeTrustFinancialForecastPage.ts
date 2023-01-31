@@ -19,6 +19,14 @@ export class CloseTrustFinancialForecastPage
         return this;
     }
 
+    public hasNotes(notes: string): this {
+        Logger.Log(`Has Notes ${notes}`);
+
+        cy.getByTestId(`notes`).should("contain.text", notes);
+
+        return this;
+    }
+
     public hasValidationError(value: string): this {
         Logger.Log(`Has validation error ${value}`);
 
