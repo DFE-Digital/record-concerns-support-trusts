@@ -1,8 +1,12 @@
 using ConcernsCaseWork.Attributes;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Reflection;
+using static Sentry.MeasurementUnit;
+
 namespace ConcernsCaseWork.Pages
 {
+	[ResponseCache(NoStore = true, Duration = 0)]
 	public class HealthModel : PageModel
 	{
 		public string BuildGuid { get; set; }

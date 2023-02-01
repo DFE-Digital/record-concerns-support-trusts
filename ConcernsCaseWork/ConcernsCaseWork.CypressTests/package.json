@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "cy:open": "cypress open",
-    "cy:run": "cypress run",
+    "cy:open": "cypress open --browser edge",
+    "cy:run": "cypress run --browser edge",
     "clean:reports": "rm -rf mochawesome-report/",
     "combine:reports": "mochawesome-merge  cypress/reports/mocha/*.json> cypress/reports/report.json",
     "create:html:report": "marge  ./cypress/reports/report.json -f report -o mochareports",
