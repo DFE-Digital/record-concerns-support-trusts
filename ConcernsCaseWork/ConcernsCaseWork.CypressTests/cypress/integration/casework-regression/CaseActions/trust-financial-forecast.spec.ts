@@ -25,15 +25,23 @@ describe(("User can add trust financial forecast to an existing case"), () => {
 		cy.clearCookies();
 	});
 
+    it("Concern TFF - Creatiion of a TFF", function () {
+		
+		Logger.Log("Create a TFF with invalid values - Shows validation errors");
+		editTFFPage
+			.withForecastingTool("Current year - Spring")
+			.withDayReviewHappened("90")
+			.withMonthReviewHappened("60")
+			.withYearReviewHappened("2023")
+			.withDayTrustResponded("270")
+			.withMonthTrustResponded("30")
+			.withYearTrustResponded("2024")
+			.withNotesExceedingLimit()
+			.save()
+			.hasValidationError("Supporting notes: Exceeds maximum allowed length (2000 characters).")
+			.hasValidationError("When did the trust respond?: 27-30-2024 is an invalid date")
+			.hasValidationError("When did SFSO initial review happen?: 90-60-2023 is an invalid date"); 
 
-    it("Concern TFF - Creating a TFF with all values", function () {
-		
-		Logger.Log("Notes Exceeding allowed limit")
-        editTFFPage
-            .withNotesExceedingLimit()
-            .save()
-            .hasValidationError("Supporting notes: Exceeds maximum allowed length (2000 characters).");
-		
 		Logger.Log("Create a TFF will all values");
 		editTFFPage
 			.withForecastingTool("Current year - Spring")
@@ -62,9 +70,8 @@ describe(("User can add trust financial forecast to an existing case"), () => {
 			.hasNotes("Supporting notes");
 	});
 
-
 	it("Concern TFF - Creating a TFF with empty values", function () {
-		Logger.Log("Create a TFF will empty values");
+		Logger.Log("Create a TFF with empty values");
 		editTFFPage
 			.save();
 
@@ -130,8 +137,18 @@ describe(("User can add trust financial forecast to an existing case"), () => {
 	});
 
 	it("Concern TFF - Close a TFF", function () {
-		Logger.Log("Create a TFF will empty values");
+		Logger.Log("Create a TFF with populated values");
 		editTFFPage
+			.withForecastingTool("Previous year - Spring")
+			.withDayReviewHappened("14")
+			.withMonthReviewHappened("02")
+			.withYearReviewHappened("2022")
+			.withDayTrustResponded("15")
+			.withMonthTrustResponded("03")
+			.withYearTrustResponded("2024")
+			.withTrustResponseSatisfactory("Not satisfactory")
+			.withSRMAOffered("No")
+			.withNotes("very important notes")
 			.save();
 
 		Logger.Log("Validate the TFF on the view page");
@@ -141,9 +158,10 @@ describe(("User can add trust financial forecast to an existing case"), () => {
 		Logger.Log("Continue to close the TFF");
 		cy.getById("trust-financial-forecast-close-button").click();
 
-		Logger.Log("Close the TFF");
+		Logger.Log("Check notes has expected values then close the TFF");
 		closeTFFPage
-			.withNotes("TFF Closed")
+			.hasNotes("very important notes")
+			.withNotes("Even more important notes")
 			.close();
 
 		Logger.Log("Validate the closed TFF on the view page");
@@ -151,7 +169,12 @@ describe(("User can add trust financial forecast to an existing case"), () => {
 			.getByTestId("Trust Financial Forecast (TFF)").click();
 
 		viewTFFPage
-			.hasNotes("TFF Closed");
+			.hasForecastingTool("Previous year - Spring")
+			.hasInitialReviewDate("14 February 2022")
+			.hasTrustRespondedDate("15 March 2024")
+			.hasTrustResponse("Not satisfactory")
+			.hasSRMABeenOffered("No")
+			.hasNotes("Even more important notes");
 
 	});
 
