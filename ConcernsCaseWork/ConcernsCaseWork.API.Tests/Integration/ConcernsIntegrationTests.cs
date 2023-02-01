@@ -89,7 +89,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		public async Task When_PostInvalidConcernCaseRequest_Returns_ValidationErrors()
 		{
 			var request = _autoFixture.Create<ConcernCaseRequest>();
-			request.TrustUkprn = new string('a', 51);
+			request.TrustUkprn = new string('a', 13);
 			request.Issue = new string('a', 2001);
 			request.CaseAim = new string('a', 1001);
 			request.CurrentStatus = new string('a', 4001);
@@ -102,7 +102,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
 			var error = await result.Content.ReadAsStringAsync();
-			error.Should().Contain("The field TrustUkprn must be a string with a maximum length of 50.");
+			error.Should().Contain("The field TrustUkprn must be a string with a maximum length of 12.");
 			error.Should().Contain("The field Issue must be a string with a maximum length of 2000.");
 			error.Should().Contain("The field CaseAim must be a string with a maximum length of 1000.");
 			error.Should().Contain("The field CurrentStatus must be a string with a maximum length of 4000.");
@@ -320,7 +320,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 		public async Task When_PatchInvalidConcernCaseRequest_Returns_ValidationErrors()
 		{
 			var request = _autoFixture.Create<ConcernCaseRequest>();
-			request.TrustUkprn = new string('a', 51);
+			request.TrustUkprn = new string('a', 13);
 			request.Issue = new string('a', 2001);
 			request.CaseAim = new string('a', 1001);
 			request.CurrentStatus = new string('a', 4001);
@@ -334,7 +334,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 			result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
 			var error = await result.Content.ReadAsStringAsync();
-			error.Should().Contain("The field TrustUkprn must be a string with a maximum length of 50.");
+			error.Should().Contain("The field TrustUkprn must be a string with a maximum length of 12.");
 			error.Should().Contain("The field Issue must be a string with a maximum length of 2000.");
 			error.Should().Contain("The field CaseAim must be a string with a maximum length of 1000.");
 			error.Should().Contain("The field CurrentStatus must be a string with a maximum length of 4000.");
