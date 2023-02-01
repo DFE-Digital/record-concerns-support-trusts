@@ -16,6 +16,8 @@ public class ConcernsCaseConfiguration : IEntityTypeConfiguration<ConcernsCase>
 		builder.Property(e => e.Urn)
 			.HasComputedColumnSql("[Id]");
 
+		builder.Property(e => e.CreatedBy).HasMaxLength(254);
+
 		builder.HasMany(x => x.Decisions)
 			.WithOne();
 
