@@ -1,4 +1,5 @@
 ﻿@page "/case/{urn:long}/management/record/{recordId:long}/edit_rating"
+@using ConcernsCaseWork.Constants;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Pages.Case.Management.Concern.EditRatingPageModel
@@ -59,7 +60,7 @@
 
 				<div class="govuk-hint" id="case-issue-hint">
 					Use the
-					<a target="_blank" href="@Url.Page("../../../FileResource", "DownloadRiskManagementPdf")" class="govuk-link" rel="noreferrer noopener">
+                    <a target="_blank" href="@ResourceConstants.RiskManagementFrameworkLink" class="govuk-link" rel="noreferrer noopener">
 						Risk Management Framework (opens in new tab)
 					</a> to assess the type of Concern
 				</div>

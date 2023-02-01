@@ -16,11 +16,15 @@ public class ConcernsCaseConfiguration : IEntityTypeConfiguration<ConcernsCase>
 		builder.Property(e => e.Urn)
 			.HasComputedColumnSql("[Id]");
 
+		builder.Property(e => e.CreatedBy).HasMaxLength(254);
+
 		builder.HasMany(x => x.Decisions)
 			.WithOne();
 
 		builder.Property(e => e.Territory)
 			.HasConversion<string>();
+
+		builder.Property(e => e.TrustUkprn).HasMaxLength(12);
 		
 		builder.HasIndex(x => new {x.TrustUkprn, x.CreatedAt, x.CreatedBy}).IsUnique();
 	}
