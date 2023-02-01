@@ -21,6 +21,8 @@ public class ConcernsCaseConfiguration : IEntityTypeConfiguration<ConcernsCase>
 
 		builder.Property(e => e.Territory)
 			.HasConversion<string>();
+
+		builder.Property(e => e.TrustUkprn).HasMaxLength(12);
 		
 		builder.HasIndex(x => new {x.TrustUkprn, x.CreatedAt, x.CreatedBy}).IsUnique();
 	}
