@@ -17,7 +17,7 @@ namespace ConcernsCaseWork.API.RequestModels
         [StringLength(500)] // not used. re-purposed for dart import. tech debt. Should be fully removed from app (but not db)
         public string CrmEnquiry { get; set; }
 
-        [StringLength(50)]
+        [StringLength(12)]
         public string TrustUkprn { get; set; }
 
         [StringLength(200)]
