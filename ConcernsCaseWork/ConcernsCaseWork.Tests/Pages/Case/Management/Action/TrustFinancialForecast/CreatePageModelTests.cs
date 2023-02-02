@@ -108,7 +108,7 @@ public class CreatePageModelTests
 		sut.SRMAOfferedAfterTFF = new RadioButtonsUiComponent("","","") { SelectedId = (int)srmaOfferedAfterTFF };
 		sut.ForecastingToolRanAt = new RadioButtonsUiComponent("","","") { SelectedId = (int)forecastingToolRanAt };
 		sut.WasTrustResponseSatisfactory = new RadioButtonsUiComponent("","","") { SelectedId = (int)wasTrustResponseSatisfactory };
-		sut.Notes = new TextAreaUiComponent("","",""){ Contents = notes };
+		sut.Notes = new TextAreaUiComponent("","",""){ Text = new ValidateableString(){StringContents = notes}};
 		sut.SFSOInitialReviewHappenedAt = new OptionalDateTimeUiComponent("","",""){ Date = new OptionalDateModel(sfsoInitialReviewHappenedAt) };
 		sut.TrustRespondedAt = new OptionalDateTimeUiComponent("","",""){ Date = new OptionalDateModel(trustRespondedAt) };
 		
@@ -157,7 +157,7 @@ public class CreatePageModelTests
 		sut.SRMAOfferedAfterTFF = new RadioButtonsUiComponent("","","") { SelectedId = (int)srmaOfferedAfterTFF };
 		sut.ForecastingToolRanAt = new RadioButtonsUiComponent("","","") { SelectedId = (int)forecastingToolRanAt };
 		sut.WasTrustResponseSatisfactory = new RadioButtonsUiComponent("","","") { SelectedId = (int)wasTrustResponseSatisfactory };
-		sut.Notes = new TextAreaUiComponent("","",""){Contents = notes};
+		sut.Notes = new TextAreaUiComponent("","",""){ Text = new ValidateableString(){StringContents = notes}};
 		sut.SFSOInitialReviewHappenedAt = new OptionalDateTimeUiComponent("","",""){ Date = new OptionalDateModel(sfsoInitialReviewHappenedAt)};
 		sut.TrustRespondedAt = new OptionalDateTimeUiComponent("","",""){ Date = new OptionalDateModel(trustRespondedAt)};
 		
