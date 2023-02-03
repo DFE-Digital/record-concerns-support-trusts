@@ -1,24 +1,28 @@
-using ConcernsCaseWork.Data.Configurations;
-using ConcernsCaseWork.Data.Configurations.Decisions;
-using ConcernsCaseWork.Data.Configurations.Decisions.DecisionOutcome;
+using Ardalis.GuardClauses;
 using ConcernsCaseWork.Data.Conventions;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome;
 using ConcernsCaseWork.Data.Models.Concerns.TeamCasework;
+using ConcernsCaseWork.UserContext;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace ConcernsCaseWork.Data
 {
     public partial class ConcernsDbContext : DbContext
     {
-        public ConcernsDbContext()
+	    private readonly IServerUserInfoService _userInfoService;
+
+	    public ConcernsDbContext()
         {
         }
 
-        public ConcernsDbContext(DbContextOptions<ConcernsDbContext> options)
+        public ConcernsDbContext(DbContextOptions<ConcernsDbContext> options, IServerUserInfoService userInfoService)
             : base(options)
         {
+	        Guard.Against.Null(userInfoService);
+	        _userInfoService = userInfoService;
         }
 
         public virtual DbSet<ConcernsCase> ConcernsCase { get; set; }
@@ -54,17 +58,19 @@ namespace ConcernsCaseWork.Data
         public virtual DbSet<ConcernsCaseworkTeamMember> ConcernsTeamCaseworkTeamMember { get; set; }
 		public virtual DbSet<DecisionOutcome> DecisionOutcomes { get; set; }
 		public virtual DbSet<Decision> Decisions { get; set; }
-		
+
 		public virtual DbSet<TrustFinancialForecast> TrustFinancialForecasts { get; set; }
 
+		public virtual DbSet<Audit> Audits { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {    
+        {
 	        if (!optionsBuilder.IsConfigured)
 	        {
 		        optionsBuilder.UseConcernsSqlServer("Data Source=127.0.0.1;Initial Catalog=local_trams_test_db;persist security info=True;User id=sa; Password=StrongPassword905");
 	        }
         }
-        
+
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
 	        configurationBuilder.Conventions.Add(_ => new BlankTriggerAddingConvention());
@@ -76,5 +82,50 @@ namespace ConcernsCaseWork.Data
 
 	        base.OnModelCreating(modelBuilder);
         }
+
+        public override int SaveChanges()
+        {
+	        this.ChangeTracker.DetectChanges();
+
+	        if (string.IsNullOrWhiteSpace(_userInfoService.UserInfo?.Name) && Debugger.IsAttached)
+	        {
+				Debugger.Break();
+	        }
+
+	        var userName = _userInfoService.UserInfo?.Name ?? "Unknown";
+
+	        var added = this.ChangeTracker.Entries()
+		        .Where(t => t.State == EntityState.Added)
+		        .Select(t => t.Entity)
+		        .ToArray();
+
+	        foreach (var entity in added)
+	        {
+		        if (entity is IAuditable auditable)
+		        {
+			        var audit = BuildAudit(auditable, userName, AuditChangeType.INSERT);
+			        this.Audits.Add(audit);
+		        }
+	        }
+
+	        var modified = this.ChangeTracker.Entries()
+		        .Where(t => t.State == EntityState.Modified)
+		        .Select(t => t.Entity)
+		        .ToArray();
+
+	        foreach (var entity in modified)
+	        {
+		        if (entity is IAuditable auditable)
+		        {
+			        var audit = BuildAudit(auditable, userName, AuditChangeType.UPDATE);
+			        this.Audits.Add(audit);
+		        }
+	        }
+
+	        return base.SaveChanges();
+        }
+
+        private static Audit BuildAudit(IAuditable entity, string userName, AuditChangeType changeType)
+	        => new Audit(entity.GetType().Name, userName, DateTimeOffset.Now, changeType, entity.Serialise());
     }
 }
