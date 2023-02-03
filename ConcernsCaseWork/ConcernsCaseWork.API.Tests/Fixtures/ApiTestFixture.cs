@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.API.Tests.Fixtures
 {
 	public class ApiTestFixture : IDisposable
 	{
-		private readonly WebApplicationFactory<Startup> _application;
+		private readonly WebApplicationFactory<ConcernsCaseWork.API.Startup> _application;
 
 		public HttpClient Client { get; init; }
 
