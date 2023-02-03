@@ -6,11 +6,13 @@ namespace ConcernsCaseWork.UserContext;
 
 public class ServerUserInfoService : IServerUserInfoService
 {
+	public Guid InstanceId { get; }
 	public ServerUserInfoService()
 	{
-
+		InstanceId = Guid.NewGuid();
 	}
-	public UserInfo? UserInfo { get; private set; }
+
+	public UserInfo? UserInfo { get; set; }
 
 
 	public void ReceiveRequestHeaders(IHeaderDictionary headers)

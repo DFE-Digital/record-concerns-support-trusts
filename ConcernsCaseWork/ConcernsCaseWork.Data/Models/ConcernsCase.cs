@@ -1,10 +1,11 @@
 using ConcernsCaseWork.API.Contracts.Enums;
 using ConcernsCaseWork.Data.Exceptions;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
+using System.Text.Json;
 
 namespace ConcernsCaseWork.Data.Models
 {
-    public class ConcernsCase
+    public class ConcernsCase : IAuditable
     {
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -84,5 +85,7 @@ namespace ConcernsCaseWork.Data.Models
 	        
 	        currentDecision.Close(notes, now);
         }
+
+        public string Serialise() => JsonSerializer.Serialize(this);
     }
 }

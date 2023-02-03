@@ -16,6 +16,7 @@ namespace ConcernsCaseWork.Middleware
 	{
 		private readonly RequestDelegate _next;
 		private readonly ILogger<CorrelationIdMiddleware> _logger;
+		private const string _applicationName = "ConcernsCasework";
 
 		public CorrelationIdMiddleware(RequestDelegate next, ILogger<CorrelationIdMiddleware> logger)
 		{
@@ -38,12 +39,12 @@ namespace ConcernsCaseWork.Middleware
 			{
 				thisCorrelationId = Guid.NewGuid().ToString();
 			}
-			
+
 			httpContext.Request.Headers[correlationContext.HeaderKey] = thisCorrelationId;
 
 			correlationContext.SetContext(thisCorrelationId);
-			
-			using (LogContext.PushProperty("ApplicationId", ApplicationContext.ApplicationName))
+
+			using (LogContext.PushProperty("ApplicationId", _applicationName))
 			using (LogContext.PushProperty("CorrelationId", correlationContext.CorrelationId))
 			{
 				httpContext.Response.Headers[correlationContext.HeaderKey] = thisCorrelationId;
