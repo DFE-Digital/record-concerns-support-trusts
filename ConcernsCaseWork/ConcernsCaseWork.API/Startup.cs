@@ -1,12 +1,13 @@
 using ConcernsCaseWork.API.Extensions;
 using ConcernsCaseWork.API.Middleware;
 using ConcernsCaseWork.API.StartupConfiguration;
+using ConcernsCaseWork.Middleware;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 namespace ConcernsCaseWork.API
 {
 	/// <summary>
-	/// THIS STARTUP ISN'T USED WHEN API IS HOSTED THROUGH WEBSITE.
+	/// THIS STARTUP ISN'T USED WHEN API IS HOSTED THROUGH WEBSITE. It is used when running API tests
 	/// </summary>
     public class Startup
     {
@@ -34,7 +35,8 @@ namespace ConcernsCaseWork.API
             app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.UseMiddleware<ApiKeyMiddleware>();
             app.UseMiddleware<UrlDecoderMiddleware>();
-            //app.UseMiddleware<UserContextReceiverMiddleware>();
+            app.UseMiddleware<CorrelationIdMiddleware>();
+			app.UseMiddleware<UserContextReceiverMiddleware>();
 
             app.UseHttpsRedirection();
 

@@ -35,6 +35,7 @@
     <ItemGroup>
       <ProjectReference Include="..\ConcernsCaseWork.API\ConcernsCaseWork.API.csproj" />
       <ProjectReference Include="..\ConcernsCaseWork.Service\ConcernsCaseWork.Service.csproj" />
+      <ProjectReference Include="..\ConcernsCaseWork\ConcernsCaseWork.csproj" />
     </ItemGroup>
 
     <ItemGroup>
