@@ -180,9 +180,12 @@
 
 				<script type="application/javascript" nonce="@nonce">
 					$(function () {
-						let validator = formValidator($("#add-financial-plan-form")[0]);
+                        let validator = formValidator($("#add-financial-plan-form")[0]);
 						addFinancialPlanNotesValidator(validator);
 						autoResizer();
+
+                        var submitButton = $('#add-financial-plan-button')[0];
+                        disableOnSubmitWithJsValidationCheck(validator, submitButton);
 					});
 				</script>
 			}
