@@ -1,3 +1,4 @@
+using ConcernsCaseWork.UserContext;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -54,9 +55,11 @@ public class DatabaseTestFixture
 
 	protected ConcernsDbContext CreateContext()
 	{
-		return new ConcernsDbContext(
-			new DbContextOptionsBuilder<ConcernsDbContext>()
-				.UseSqlServer(_connectionString)
-				.Options);
+		var userInfoService = new ServerUserInfoService()
+		{
+			UserInfo = new UserInfo() { Name = "Data.Tests@test.gov.uk", Roles = new[] { Claims.CaseWorkerRoleClaim } }
+		};
+
+		return new ConcernsDbContext(new DbContextOptionsBuilder<ConcernsDbContext>().UseSqlServer(_connectionString).Options, userInfoService);
 	}
 }
