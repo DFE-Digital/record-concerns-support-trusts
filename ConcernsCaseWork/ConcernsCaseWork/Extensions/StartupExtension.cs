@@ -240,8 +240,6 @@ namespace ConcernsCaseWork.Extensions
 
 			services.AddHttpContextAccessor();
 			services.AddScoped<IRbacManager, RbacManager>();
-
-			services.AddScoped<ICorrelationContext, CorrelationContext>();
 			services.AddScoped<IClientUserInfoService, ClientUserInfoService>();
 			services.AddSingleton<IPageHistoryStorageHandler, SessionPageHistoryStorageHandler>();
 		}
