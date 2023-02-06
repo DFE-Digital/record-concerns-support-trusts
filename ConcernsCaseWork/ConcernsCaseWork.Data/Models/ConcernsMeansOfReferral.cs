@@ -1,6 +1,6 @@
 namespace ConcernsCaseWork.Data.Models
 {
-    public class ConcernsMeansOfReferral
+    public class ConcernsMeansOfReferral: IAuditable
     {
         public int Id { get; set; }
         public string Name { get; set; }
