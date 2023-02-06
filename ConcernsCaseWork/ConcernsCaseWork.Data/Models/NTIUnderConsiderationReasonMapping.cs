@@ -1,6 +1,6 @@
 ﻿namespace ConcernsCaseWork.Data.Models
 {
-	public class NTIUnderConsiderationReasonMapping
+	public class NTIUnderConsiderationReasonMapping: IAuditable
 	{
 		public int Id { get; set; }
 

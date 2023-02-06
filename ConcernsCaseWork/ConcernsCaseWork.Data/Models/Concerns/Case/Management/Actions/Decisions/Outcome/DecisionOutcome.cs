@@ -2,7 +2,7 @@
 
 namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Outcome
 {
-	public record DecisionOutcome
+	public record DecisionOutcome: IAuditable
 	{
 		public DecisionOutcome()
 		{
