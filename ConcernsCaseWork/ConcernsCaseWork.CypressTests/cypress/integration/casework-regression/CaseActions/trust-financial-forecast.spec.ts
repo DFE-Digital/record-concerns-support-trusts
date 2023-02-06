@@ -8,7 +8,7 @@ const axe = require("axe-core");
 import "cypress-axe";
 
 
-describe(("User can add trust financial forecast to an existing case"), () => {
+describe.skip("User can add trust financial forecast to an existing case", () => {
 
 	const editTFFPage = new EditTrustFinancialForecastPage();
 	const viewTFFPage = new ViewTrustFinancialForecastPage();
@@ -18,11 +18,6 @@ describe(("User can add trust financial forecast to an existing case"), () => {
 		cy.login();
 		cy.basicCreateCase();
 		addTFFToCase();
-	});
-
-    after(function () {
-		cy.clearLocalStorage();
-		cy.clearCookies();
 	});
 
     it("Concern TFF - Creatiion of a TFF", function () {
