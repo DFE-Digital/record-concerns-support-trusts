@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+using ConcernsCaseWork.Data.Auditing;
 using ConcernsCaseWork.Data.Conventions;
 using ConcernsCaseWork.Data.Models;
 using ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions;
@@ -129,8 +130,16 @@ namespace ConcernsCaseWork.Data
 			base.OnModelCreating(modelBuilder);
 		}
 
-		private Audit BuildAudit(IAuditable entity, string userName, AuditChangeType changeType)
-			=> new Audit(entity.GetType().Name, userName, DateTimeOffset.Now, changeType, Serialise(entity));
+
+		/// <summary>
+		/// Takes an IAuditable and coverts it into an Audit entity that can be added to the db context.
+		/// </summary>
+		/// <param name="entity"></param>
+		/// <param name="userName"></param>
+		/// <param name="changeType"></param>
+		/// <returns></returns>
+		private Audit BuildAudit(IAuditable entity, string userName, AuditChangeType changeType) => new Audit(entity.GetType().Name, userName, DateTimeOffset.Now, changeType, Serialise(entity));
+
 
 		/// <summary>
 		/// Returns the audits needed - audit type and the entity being audited
@@ -141,11 +150,8 @@ namespace ConcernsCaseWork.Data
 			this.ChangeTracker.DetectChanges();
 
 			var auditsNeeded = this.ChangeTracker.Entries()
-					.Where(t => (t.State == EntityState.Added || t.State == EntityState.Modified) && t.Entity is IAuditable)
-					.Select(t =>
-						t.State == EntityState.Added
-						? (AuditChangeType.INSERT, t.Entity)
-						: (AuditChangeType.UPDATE, t.Entity))
+					.Where(t => EntityStateToAuditChangeTypeMap.IsSupported(t.State) && t.Entity is IAuditable)
+					.Select(t => (EntityStateToAuditChangeTypeMap.Map(t.State), t.Entity))
 					.ToList();
 			return auditsNeeded;
 		}
