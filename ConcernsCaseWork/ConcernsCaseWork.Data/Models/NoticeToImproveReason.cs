@@ -1,6 +1,6 @@
 ﻿namespace ConcernsCaseWork.Data.Models
 {
-	public class NoticeToImproveReason
+	public class NoticeToImproveReason: IAuditable
     {
 	    public int Id { get; set; }
         public string Name { get; set; }

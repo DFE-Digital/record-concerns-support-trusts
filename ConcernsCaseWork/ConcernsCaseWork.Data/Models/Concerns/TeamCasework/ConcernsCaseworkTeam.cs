@@ -1,6 +1,8 @@
-﻿namespace ConcernsCaseWork.Data.Models.Concerns.TeamCasework
+﻿using System.Text.Json;
+
+namespace ConcernsCaseWork.Data.Models.Concerns.TeamCasework
 {
-	public class ConcernsCaseworkTeam
+	public class ConcernsCaseworkTeam: IAuditable
     {
         public string Id { get; set; }
 

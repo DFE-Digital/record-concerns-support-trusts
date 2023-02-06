@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions
 {
-    public class Decision
+    public class Decision: IAuditable
     {
         private Decision()
         {
