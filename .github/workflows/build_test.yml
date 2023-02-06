@@ -73,6 +73,9 @@ jobs:
         run: dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore        
 
       - name: Test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}      
         run: dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --filter "FullyQualifiedName!~ConcernsCaseWork.API.Tests.Integration&FullyQualifiedName!~ConcernsCaseWork.Integration.Tests" --no-build --verbosity diagnostic          
 
       - name: Collect coverage and run SonarCloud scanner
