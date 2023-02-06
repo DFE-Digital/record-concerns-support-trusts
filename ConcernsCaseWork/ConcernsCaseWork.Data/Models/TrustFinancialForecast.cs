@@ -2,7 +2,7 @@ using ConcernsCaseWork.API.Contracts.Enums.TrustFinancialForecast;
 
 namespace ConcernsCaseWork.Data.Models;
 
-public class TrustFinancialForecast
+public class TrustFinancialForecast: IAuditable
 {
 	public int Id { get; set;  }
 	public int CaseUrn { get; set; }
