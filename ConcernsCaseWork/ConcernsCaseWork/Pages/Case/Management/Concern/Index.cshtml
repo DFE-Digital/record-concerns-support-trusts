@@ -79,7 +79,7 @@
 			</div>
 
 			<div class="govuk-button-group">
-				<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" data-testid="add-concern-button">
+                <button id="add-concern-button" data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" data-testid="add-concern-button">
 					Add concern
 				</button>
 				<a data-prevent-double-click="true" class="govuk-link" href="@Model.PreviousUrl" data-module="govuk-button" role="button">
@@ -95,6 +95,9 @@
 				addConcernValidator(validator);
 				addRatingValidator(validator);
 				addMeansOfReferralValidator(validator);
+
+                var submitButton = $('#add-concern-button')[0];
+                disableOnSubmitWithJsValidationCheck(validator, submitButton);
 			});
 		</script>
 	}
