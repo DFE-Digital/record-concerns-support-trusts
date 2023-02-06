@@ -245,7 +245,7 @@
                                     <div><a id="accordion-issue-content-edit" data-testid="edit-issue" class="govuk-link float__right" href="@Request.Path/edit_issue" aria-label="Change issue">Edit</a></div>
                                 }
                                 <div class="govuk-!-width-three-quarters">
-                                    <span class="govuk-body dfe-text-area-display">@Model.CaseModel.Issue</span>
+                                    <span class="govuk-body dfe-text-area-display" data-testid="issue">@Model.CaseModel.Issue</span>
                                 </div>
                             </div>
                         </div>
@@ -266,7 +266,7 @@
                                     <div><a id="accordion-status-heading-edit" data-testid="edit-current-status" class="govuk-link float__right" href="@Request.Path/edit_current_status" aria-label="Change status">Edit</a></div>
                                 }
                                 <div class="govuk-!-width-three-quarters">
-                                    <span class="govuk-body dfe-text-area-display">@Model.CaseModel.CurrentStatus</span>
+                                    <span class="govuk-body dfe-text-area-display" data-testid="status">@Model.CaseModel.CurrentStatus</span>
                                 </div>
                             </div>
                         </div>
@@ -288,7 +288,7 @@
                                 }
 
                                 <div class="govuk-!-width-three-quarters">
-                                    <span class="govuk-body dfe-text-area-display">@Model.CaseModel.CaseAim</span>
+                                    <span class="govuk-body dfe-text-area-display" data-testid="case-aim">@Model.CaseModel.CaseAim</span>
                                 </div>
                             </div>
                         </div>
@@ -310,7 +310,7 @@
                                 }
 
                                 <div class="govuk-!-width-three-quarters">
-                                    <span class="govuk-body dfe-text-area-display">@Model.CaseModel.DeEscalationPoint</span>
+                                    <span class="govuk-body dfe-text-area-display" data-testid="de-escalation-point">@Model.CaseModel.DeEscalationPoint</span>
                                 </div>
                             </div>
                         </div>
@@ -332,7 +332,7 @@
                                 }
 
                                 <div class="govuk-!-width-three-quarters">
-                                    <span class="govuk-body dfe-text-area-display">@Model.CaseModel.NextSteps</span>
+                                    <span class="govuk-body dfe-text-area-display" data-testid="next-steps">@Model.CaseModel.NextSteps</span>
                                 </div>
                             </div>
                         </div>
@@ -351,7 +351,7 @@
                                 }
 
                                 <div class="govuk-!-width-three-quarters">
-                                    <span class="govuk-body dfe-text-area-display " data-testid="case-history">@Model.CaseModel.CaseHistory</span>
+                                    <span class="govuk-body dfe-text-area-display" data-testid="case-history">@Model.CaseModel.CaseHistory</span>
                                 </div>
                             </div>
                         </div>
