@@ -203,6 +203,9 @@
                             return missingValuesCount == 0 || missingValuesCount == 3; @* the date should be either empty or valid *@
                         }
 
+                        var submitButton = $('#add-nti-wl-button')[0];
+                        disableOnSubmitWithJsValidationCheck(validator, submitButton);
+
                         autoResizer();
                     });
                 </script>

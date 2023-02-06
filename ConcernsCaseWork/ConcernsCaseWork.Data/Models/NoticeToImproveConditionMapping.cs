@@ -1,6 +1,6 @@
 ﻿namespace ConcernsCaseWork.Data.Models
 {
-	public class NoticeToImproveConditionMapping
+	public class NoticeToImproveConditionMapping: IAuditable
     {
 	    public int Id { get; set; }
 

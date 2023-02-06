@@ -20,6 +20,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using System;
 using System.Security.Claims;
+using System.Threading;
 
 namespace ConcernsCaseWork
 {
@@ -179,6 +180,16 @@ namespace ConcernsCaseWork
 			{
 				endpoints.MapRazorPages();
 			});
+
+			// If our application gets hit really hard, then threads need to be spawned
+			// By default the number of threads that exist in the threadpool is the amount of CPUs (1)
+			// Each time we have to spawn a new thread it gets delayed by 500ms
+			// Setting the min higher means there will not be that delay in creating threads up to the min
+			// Re-evaluate this based on performance tests
+			// Found because redis kept timing out because it was delayed too long waiting for a thread to execute
+			int workerThreads, completionPortThreads;
+			ThreadPool.GetMinThreads(out workerThreads, out completionPortThreads);
+			ThreadPool.SetMinThreads(200, completionPortThreads);
 		}
 
 		/// <summary>
