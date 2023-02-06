@@ -2,7 +2,7 @@
 
 namespace ConcernsCaseWork.Data.Models
 {
-	public class FinancialPlanStatus
+	public class FinancialPlanStatus: IAuditable
     {
 	    public long Id { get; set;  }
         [StringLength(255)]

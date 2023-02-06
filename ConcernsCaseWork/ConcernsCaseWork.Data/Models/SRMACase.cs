@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConcernsCaseWork.Data.Models
 {
-	public class SRMACase
+	public class SRMACase: IAuditable
     {
 	    public int Id { get; set; }
         public int CaseUrn { get; set; }
