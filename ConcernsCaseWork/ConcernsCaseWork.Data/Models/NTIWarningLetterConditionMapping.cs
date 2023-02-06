@@ -1,6 +1,6 @@
 ﻿namespace ConcernsCaseWork.Data.Models
 {
-	public class NTIWarningLetterConditionMapping
+	public class NTIWarningLetterConditionMapping: IAuditable
 	{
 		public int Id { get; set; }
 
