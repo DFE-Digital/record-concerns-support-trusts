@@ -81,7 +81,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 
 			result.Outcome.Status.Should().Be(outcomeRequest.Status);
 			result.Outcome.Authorizer.Should().Be(outcomeRequest.Authorizer);
-			result.Outcome.TotalAmount.Should().Be(100);
+			result.Outcome.TotalAmount.Should().Be(200);
 			result.Outcome.DecisionMadeDate.Should().Be(_decisionMadeDate);
 			result.Outcome.DecisionEffectiveFromDate.Should().Be(_decisionEffectiveDate);
 
