@@ -1,6 +1,6 @@
 ﻿namespace ConcernsCaseWork.Data.Models
 {
-	public class NTIUnderConsiderationStatus
+	public class NTIUnderConsiderationStatus: IAuditable
     {
 	    public int Id { get; set; }
         public string Name { get; set; }

@@ -1,6 +1,6 @@
 namespace ConcernsCaseWork.Data.Models
 {
-    public class ConcernsRecord
+    public class ConcernsRecord: IAuditable
     {
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }

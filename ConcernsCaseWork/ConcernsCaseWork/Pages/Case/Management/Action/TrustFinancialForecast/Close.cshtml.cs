@@ -90,6 +90,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 			{
 				if (!ModelState.IsValid)
 				{
+					ResetPageComponentsOnValidationError();
 					return Page();
 				}
 
@@ -97,7 +98,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 				{
 					CaseUrn = CaseUrn,
 					TrustFinancialForecastId = TrustFinancialForecastId,
-					Notes = Notes.Contents
+					Notes = Notes.Text.StringContents
 				};
 
 				if (!closeTrustFinancialForecastRequest.IsValid())
@@ -127,8 +128,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.TrustFinancialForecast
 		private static TextAreaUiComponent BuildNotesComponent(string contents = "")
 			=> new("notes", nameof(Notes), "Finalise notes")
 			{
-				MaxLength = TrustFinancialForecastConstants.MaxNotesLength,
-				Contents = contents
+				Text = new ValidateableString()
+				{
+					MaxLength = TrustFinancialForecastConstants.MaxNotesLength,
+					StringContents = contents,
+					DisplayName = "Finalise notes"
+				}
 			};
+		
+		protected void ResetPageComponentsOnValidationError()
+		{
+			Notes = BuildNotesComponent(Notes.Text.StringContents);
+		}
 	}
 }

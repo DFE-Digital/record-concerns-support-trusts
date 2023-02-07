@@ -1,6 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.UserContext;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net.Mime;
@@ -91,20 +92,26 @@ namespace ConcernsCaseWork.Service.Base
 		{
 			var client = _clientFactory.CreateClient(HttpClientName);
 
-			var headerAdded = client.DefaultRequestHeaders.TryAddWithoutValidation(_correlationContext.HeaderKey, _correlationContext.CorrelationId);
+			AddDefaultRequestHeaders(client, _correlationContext, _userInfoService, _logger);
+
+			return client;
+		}
+
+		public static void AddDefaultRequestHeaders(HttpClient httpClient, ICorrelationContext correlationContext, IClientUserInfoService userInfoService, [CanBeNull] ILogger<AbstractService> logger)
+		{
+			var headerAdded = httpClient.DefaultRequestHeaders.TryAddWithoutValidation(correlationContext.HeaderKey, correlationContext.CorrelationId);
 			if (!headerAdded)
 			{
-				_logger.LogWarning("Warning. Unable to add correlationId to request headers");
+				logger?.LogWarning("Warning. Unable to add correlationId to request headers");
 			}
 
-			var userInfoHeadersAdded = _userInfoService.AddUserInfoRequestHeaders(client);
+			var userInfoHeadersAdded = userInfoService.AddUserInfoRequestHeaders(httpClient);
 
 			if (!userInfoHeadersAdded)
 			{
-				_logger.LogWarning("Warning. Attempt to call api without user info headers");
+				logger?.LogWarning("Warning. Attempt to call api without user info headers");
 			}
 
-			return client;
 		}
 
 		public Task<ApiListWrapper<T>> GetByPagination<T>(string endpoint, bool treatNoContentAsError = false) where T : class
