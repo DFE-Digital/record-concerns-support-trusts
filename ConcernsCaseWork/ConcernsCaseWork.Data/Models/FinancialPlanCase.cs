@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConcernsCaseWork.Data.Models
 {
-	public class FinancialPlanCase
+	public class FinancialPlanCase: IAuditable
     {
 	    public long Id { get; set;  }
         public int CaseUrn { get; set; }

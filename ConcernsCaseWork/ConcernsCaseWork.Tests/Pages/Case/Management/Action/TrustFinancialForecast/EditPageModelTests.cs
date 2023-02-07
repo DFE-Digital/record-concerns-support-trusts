@@ -17,6 +17,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.TrustFinancialForecast;
@@ -204,7 +205,7 @@ public class EditPageModelTests
 		sut.SRMAOfferedAfterTFF = new RadioButtonsUiComponent("","","") { SelectedId = (int)srmaOfferedAfterTFF };
 		sut.ForecastingToolRanAt = new RadioButtonsUiComponent("","","") { SelectedId = (int)forecastingToolRanAt };
 		sut.WasTrustResponseSatisfactory = new RadioButtonsUiComponent("","","") { SelectedId = (int)wasTrustResponseSatisfactory };
-		sut.Notes = new TextAreaUiComponent("","",""){Contents = notes};
+		sut.Notes = new TextAreaUiComponent("","",""){ Text = new ValidateableString(){ StringContents = notes } };
 		sut.SFSOInitialReviewHappenedAt = new OptionalDateTimeUiComponent("","",""){ Date = new OptionalDateModel(sfsoInitialReviewHappenedAt)};
 		sut.TrustRespondedAt = new OptionalDateTimeUiComponent("","",""){ Date = new OptionalDateModel(trustRespondedAt)};
 		

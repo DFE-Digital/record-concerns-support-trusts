@@ -107,3 +107,33 @@ variable "redis_cache_capacity" {
   description = "Redis Cache Capacity"
   type        = number
 }
+
+variable "enable_monitoring" {
+  description = "Create App Insights monitoring groups for the container app"
+  type        = bool
+}
+
+variable "monitor_email_receivers" {
+  description = "A list of email addresses that will receive alerts from App Insights"
+  type        = list(string)
+}
+
+variable "enable_event_hub" {
+  description = "Send Azure Container App logs to an Event Hub sink"
+  type        = bool
+}
+
+variable "monitor_endpoint_healthcheck" {
+  description = "Specify a route that should be monitored for a 200 OK status"
+  type        = string
+}
+
+variable "container_health_probe_path" {
+  description = "Specifies the path that is used to determine the liveness of the Container"
+  type        = string
+}
+
+variable "cdn_frontdoor_health_probe_path" {
+  description = "Specifies the path relative to the origin that is used to determine the health of the origin."
+  type        = string
+}

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConcernsCaseWork.Data.Models
 {
-	public class NTIUnderConsiderationReason
+	public class NTIUnderConsiderationReason: IAuditable
     {
 	    public int Id { get; set; } 
         public string Name { get; set; }

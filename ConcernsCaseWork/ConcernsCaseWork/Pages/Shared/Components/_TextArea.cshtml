@@ -5,16 +5,18 @@
 }
 <div class="govuk-form-group">
 	<fieldset class="govuk-fieldset">
-		<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.MaxLength">
-			<div class="govuk-form-group">
+		<div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.Text.MaxLength">
+			<div class="govuk-form-group" id="@(Model.Name).Text.@Model.Heading">
 				<h2 class="govuk-heading-m">@Model.Heading</h2>
-				<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="@Model.ElementRootId" name="@Model.Name.@nameof(Model.Contents)" rows="3" aria-describedby="@Model.ElementRootId-info">@Model.Contents</textarea>
+				<textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="@Model.ElementRootId" data-testid="@Model.ElementRootId" name="@(Model.Name).Text.StringContents" rows="3" aria-describedby="@Model.ElementRootId-info">@Model.Text.StringContents</textarea>
 			</div>
 			<div id="@Model.ElementRootId-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-				You can enter up to @Model.MaxLength characters
+				You can enter up to @Model.Text.MaxLength characters
 			</div>
 		</div>
 	</fieldset>
+	<input type="hidden" name="@(Model.Name).Text.DisplayName" value="@Model.Heading" />
+	<input type="hidden" name="@(Model.Name).Text.MaxLength" value="@Model.Text.MaxLength" />
 </div>
 
 <script type="application/javascript" nonce="@nonce">

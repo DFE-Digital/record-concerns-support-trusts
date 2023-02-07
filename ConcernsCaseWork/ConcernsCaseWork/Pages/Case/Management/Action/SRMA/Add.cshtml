@@ -173,6 +173,9 @@
 								&& date.day.value >= 1 && date.month.value <= 31;
 						}
 
+                        var submitButton = $('#add-srma-button')[0];
+                        disableOnSubmitWithJsValidationCheck(validator, submitButton);
+
 						autoResizer();
 					});
 				</script>
