@@ -68,7 +68,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
             result.Result.Should().BeEquivalentTo(new ObjectResult(expectedResponse) { StatusCode = StatusCodes.Status201Created });
 
-			Assert.False(true, "TEST FAIL TO SEE WHAT HAPPENS"
+			Assert.False(true, "TEST FAIL TO SEE WHAT HAPPENS");
         }
 
         [Fact]
