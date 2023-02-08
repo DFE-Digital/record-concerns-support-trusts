@@ -21,7 +21,7 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
 			var expectedApiWrapperTrust = new ApiListWrapper<TrustSearchDto>(expectedTrusts, null);
 			var tramsApiEndpoint = "https://localhost";
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -35,12 +35,12 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<TrustService>>();
 			var trustService = new TrustService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
-			
+
 			// act
-			var apiWrapperTrusts = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch());
+			var apiWrapperTrusts = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(), expectedTrusts.Count);
 
 			// assert
 			Assert.That(apiWrapperTrusts, Is.Not.Null);
@@ -69,13 +69,15 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 				}
 			}
 		}
-		
+
 		[Test]
 		public void WhenGetTrustsByPagination_ThrowsException()
 		{
+			// TODO: Work out what this test is supposed to actualyly do
+
 			// arrange
 			var tramsApiEndpoint = "https://localhost";
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -88,19 +90,19 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<TrustService>>();
 			var trustService = new TrustService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
-			
+
 			// act | assert
-			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch()));
+			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(), 100));
 		}
-		
-		[TestCase("", "", "", "page%3d1")]
-		[TestCase("group-name", "", "", "groupName%3dgroup-name%26page%3d1")]
-		[TestCase("", "ukprn", "", "ukprn%3dukprn%26page%3d1")]
-		[TestCase("", "", "companies-house-number", "companiesHouseNumber%3dcompanies-house-number%26page%3d1")]
-		[TestCase("group-name", "ukprn", "", "groupName%3dgroup-name%26ukprn%3dukprn%26page%3d1")]
+
+		[TestCase("", "", "", "page%3d1%26count%3d45")]
+		[TestCase("group-name", "", "", "groupName%3dgroup-name%26page%3d1%26count%3d45")]
+		[TestCase("", "ukprn", "", "ukprn%3dukprn%26page%3d1%26count%3d45")]
+		[TestCase("", "", "companies-house-number", "companiesHouseNumber%3dcompanies-house-number%26page%3d1%26count%3d45")]
+		[TestCase("group-name", "ukprn", "", "groupName%3dgroup-name%26ukprn%3dukprn%26page%3d1%26count%3d45")]
 		public void WhenBuildRequestUri_ReturnsRequestUrl(string groupName, string ukprn, string companiesHouseNumber, string expectedRequestUri)
 		{
 			// arrange
@@ -108,7 +110,7 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			var trustSearch = TrustFactory.BuildTrustSearch(groupName, ukprn, companiesHouseNumber);
 
 			// act
-			var requestUri = trustService.BuildRequestUri(trustSearch);
+			var requestUri = trustService.BuildRequestUri(trustSearch, 45);
 
 			// assert
 			Assert.That(requestUri, Is.Not.Null);
@@ -122,7 +124,7 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			var expectedTrust = TrustFactory.BuildTrustDetailsDto();
 			var expectedApiWrapperTrust = new ApiWrapper<TrustDetailsDto>(expectedTrust);
 			var tramsApiEndpoint = "https://localhost";
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -136,10 +138,10 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<TrustService>>();
 			var trustService = new TrustService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
-			
+
 			// act
 			var trustDetailDto = await trustService.GetTrustByUkPrn("999999");
 
@@ -159,13 +161,13 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			Assert.That(trustDetailDto.GiasData.GroupContactAddress.Town, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress.Town));
 			Assert.That(trustDetailDto.GiasData.GroupContactAddress.AdditionalLine, Is.EqualTo(expectedTrust.GiasData.GroupContactAddress.AdditionalLine));
 		}
-		
+
 		[Test]
 		public void WhenGetTrustByUkPrn_ThrowsException()
 		{
 			// arrange
 			var tramsApiEndpoint = "https://localhost";
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -178,21 +180,21 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<TrustService>>();
 			var trustService = new TrustService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
-			
+
 			// act / assert
 			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustByUkPrn("9999999"));
 		}
-		
+
 		[Test]
 		public void WhenGetTrustByUkPrn_ApiWrapperResponseData_IsNull_ThrowsException()
 		{
 			// arrange
 			var expectedApiWrapperTrust = new ApiListWrapper<TrustDetailsDto>(null, null);
 			var tramsApiEndpoint = "https://localhost";
-			
+
 			var httpClientFactory = new Mock<IHttpClientFactory>();
 			var mockMessageHandler = new Mock<HttpMessageHandler>();
 			mockMessageHandler.Protected()
@@ -206,10 +208,10 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			var httpClient = new HttpClient(mockMessageHandler.Object);
 			httpClient.BaseAddress = new Uri(tramsApiEndpoint);
 			httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);
-			
+
 			var logger = new Mock<ILogger<TrustService>>();
 			var trustService = new TrustService(httpClientFactory.Object, logger.Object, Mock.Of<ICorrelationContext>(), Mock.Of<IClientUserInfoService>());
-			
+
 			// act | assert
 			Assert.ThrowsAsync<Exception>(() => trustService.GetTrustByUkPrn("9999999"));
 		}

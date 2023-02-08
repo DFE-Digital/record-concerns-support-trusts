@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			
 			// act
 			var apiWrapperTrustsSummaryDto = await trustService.GetTrustsByPagination(
-				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
+				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter), 1);
 
 			// assert
 			Assert.That(apiWrapperTrustsSummaryDto, Is.Not.Null);
@@ -77,7 +77,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			const string searchParameter = "Northwood";
 			
 			// act
-			var apiWrapperTrustsSummaryDto = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
+			var apiWrapperTrustsSummaryDto = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter), 1);
 
 			// assert
 			Assert.That(apiWrapperTrustsSummaryDto, Is.Not.Null);

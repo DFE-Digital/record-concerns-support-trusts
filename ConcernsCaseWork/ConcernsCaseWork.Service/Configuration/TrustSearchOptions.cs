@@ -5,5 +5,7 @@
 		public const string Cache = "TramsApi";
 
 		public int TrustsLimitByPage { get; set; }
+
+		public int TrustsPerPage { get; set;}
 	}
 }

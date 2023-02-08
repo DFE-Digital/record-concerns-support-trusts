@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Logging;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Base;
 using ConcernsCaseWork.UserContext;
 using Microsoft.Extensions.Logging;
@@ -16,14 +17,17 @@ namespace ConcernsCaseWork.Service.Trusts
 			_logger = logger;
 		}
 
-		public async Task<ApiListWrapper<TrustSearchDto>> GetTrustsByPagination(TrustSearch trustSearch)
+		public async Task<ApiListWrapper<TrustSearchDto>> GetTrustsByPagination(TrustSearch trustSearch, int maxRecordsPerPage)
 		{
+			Guard.Against.Null(trustSearch);
+			Guard.Against.NegativeOrZero(maxRecordsPerPage);
+
 			try
 			{
 				_logger.LogInformation("TrustService::GetTrustsByPagination");
 
 				// Create a request
-				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/trusts?{BuildRequestUri(trustSearch)}");
+				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/trusts?{BuildRequestUri(trustSearch, maxRecordsPerPage)}");
 
 				// Create http client
 				var client = CreateHttpClient();
@@ -89,7 +93,7 @@ namespace ConcernsCaseWork.Service.Trusts
 			}
 		}
 
-		public string BuildRequestUri(TrustSearch trustSearch)
+		public string BuildRequestUri(TrustSearch trustSearch, int maxRecordsPerPage)
 		{
 			var queryParams = HttpUtility.ParseQueryString(string.Empty);
 			if (!string.IsNullOrEmpty(trustSearch.GroupName))
@@ -105,6 +109,7 @@ namespace ConcernsCaseWork.Service.Trusts
 				queryParams.Add("companiesHouseNumber", trustSearch.CompaniesHouseNumber);
 			}
 			queryParams.Add("page", trustSearch.Page.ToString());
+			queryParams.Add("count", maxRecordsPerPage.ToString());
 
 			return HttpUtility.UrlEncode(queryParams.ToString());
 		}
