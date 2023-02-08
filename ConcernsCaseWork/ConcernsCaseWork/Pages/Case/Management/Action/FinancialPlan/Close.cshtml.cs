@@ -65,9 +65,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			{
 				var caseUrn = GetRequestedCaseUrn();
 				var financialPlanId = GetRequestedFinancialPlanId();
+
+				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId);
+
 				var statusName = GetRequestedStatus();
 				var status = await GetRequiredStatusByNameAsync(statusName);
 				var notes = GetRequestedNotes();
+				var planRequested = FinancialPlanModel?.DatePlanRequested;
+				var planReceived = GetRequestedViablePlanReceivedDate();
 
 				var now = DateTime.Now;
 				var patchFinancialPlanModel = new PatchFinancialPlanModel
@@ -76,6 +81,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					CaseUrn = caseUrn,
 					StatusId = status.Id,
 					Notes = notes,
+					DatePlanRequested = planRequested,
+					DateViablePlanReceived = planReceived,
 					// todo: closed date is currently set to server date across the system. This should ideally be converted to UTC
 					ClosedAt = now,
 					UpdatedAt = now
