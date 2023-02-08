@@ -17,7 +17,7 @@ namespace ConcernsCaseWork.Service.Trusts
 			_logger = logger;
 		}
 
-		public async Task<ApiListWrapper<TrustSearchDto>> GetTrustsByPagination(TrustSearch trustSearch, int maxRecordsPerPage)
+		public async Task<TrustSearchResponseDto> GetTrustsByPagination(TrustSearch trustSearch, int maxRecordsPerPage)
 		{
 			Guard.Against.Null(trustSearch);
 			Guard.Against.NegativeOrZero(maxRecordsPerPage);
@@ -27,24 +27,11 @@ namespace ConcernsCaseWork.Service.Trusts
 				_logger.LogInformation("TrustService::GetTrustsByPagination");
 
 				// Create a request
-				using var request = new HttpRequestMessage(HttpMethod.Get, $"/{EndpointsVersion}/trusts?{BuildRequestUri(trustSearch, maxRecordsPerPage)}");
+				var endpoint = $"/{EndpointsVersion}/trusts?{BuildRequestUri(trustSearch, maxRecordsPerPage)}";
 
-				// Create http client
-				var client = CreateHttpClient();
+				var response = await GetByPagination<TrustSearchDto>(endpoint);
 
-				// Execute request
-				var response = await client.SendAsync(request);
-
-				// Check status code
-				response.EnsureSuccessStatusCode();
-
-				// Read response content
-				var content = await response.Content.ReadAsStringAsync();
-
-				// Deserialize content to POCO
-				var apiWrapperTrusts = JsonConvert.DeserializeObject<ApiListWrapper<TrustSearchDto>>(content);
-
-				return apiWrapperTrusts;
+				return new TrustSearchResponseDto {NumberOfMatches = response.Paging.RecordCount, Trusts = response.Data };
 			}
 			catch (Exception ex)
 			{

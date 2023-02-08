@@ -19,7 +19,7 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 		{
 			// arrange
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
-			var expectedApiWrapperTrust = new ApiListWrapper<TrustSearchDto>(expectedTrusts, null);
+			var expectedApiWrapperTrust = new ApiListWrapper<TrustSearchDto>(expectedTrusts, new ApiListWrapper<TrustSearchDto>.Pagination(1, expectedTrusts.Count, string.Empty));
 			var tramsApiEndpoint = "https://localhost";
 
 			var httpClientFactory = new Mock<IHttpClientFactory>();
@@ -44,10 +44,10 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 
 			// assert
 			Assert.That(apiWrapperTrusts, Is.Not.Null);
-			Assert.That(apiWrapperTrusts.Data, Is.Not.Null);
-			Assert.That(apiWrapperTrusts.Data.Count, Is.EqualTo(expectedTrusts.Count));
+			Assert.That(apiWrapperTrusts.Trusts, Is.Not.Null);
+			Assert.That(apiWrapperTrusts.Trusts.Count, Is.EqualTo(expectedTrusts.Count));
 
-			foreach (var trust in apiWrapperTrusts.Data)
+			foreach (var trust in apiWrapperTrusts.Trusts)
 			{
 				foreach (var expectedTrust in expectedTrusts)
 				{
