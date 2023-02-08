@@ -17,28 +17,25 @@ namespace ConcernsCaseWork.Service.Trusts
 			_logger = logger;
 		}
 
-		public async Task<TrustSearchResponseDto> GetTrustsByPagination(TrustSearch trustSearch, int maxRecordsPerPage)
+		public string BuildRequestUri(TrustSearch trustSearch, int maxRecordsPerPage)
 		{
-			Guard.Against.Null(trustSearch);
-			Guard.Against.NegativeOrZero(maxRecordsPerPage);
-
-			try
+			var queryParams = HttpUtility.ParseQueryString(string.Empty);
+			if (!string.IsNullOrEmpty(trustSearch.GroupName))
 			{
-				_logger.LogInformation("TrustService::GetTrustsByPagination");
-
-				// Create a request
-				var endpoint = $"/{EndpointsVersion}/trusts?{BuildRequestUri(trustSearch, maxRecordsPerPage)}";
-
-				var response = await GetByPagination<TrustSearchDto>(endpoint);
-
-				return new TrustSearchResponseDto {NumberOfMatches = response.Paging.RecordCount, Trusts = response.Data };
+				queryParams.Add("groupName", trustSearch.GroupName);
 			}
-			catch (Exception ex)
+			if (!string.IsNullOrEmpty(trustSearch.Ukprn))
 			{
-				_logger.LogError("TrustService::GetTrustsByPagination::Exception message::{Message}", ex.Message);
-
-				throw;
+				queryParams.Add("ukprn", trustSearch.Ukprn);
 			}
+			if (!string.IsNullOrEmpty(trustSearch.CompaniesHouseNumber))
+			{
+				queryParams.Add("companiesHouseNumber", trustSearch.CompaniesHouseNumber);
+			}
+			queryParams.Add("page", trustSearch.Page.ToString());
+			queryParams.Add("count", maxRecordsPerPage.ToString());
+
+			return HttpUtility.UrlEncode(queryParams.ToString());
 		}
 
 		public async Task<TrustDetailsDto> GetTrustByUkPrn(string ukPrn)
@@ -80,25 +77,28 @@ namespace ConcernsCaseWork.Service.Trusts
 			}
 		}
 
-		public string BuildRequestUri(TrustSearch trustSearch, int maxRecordsPerPage)
+		public async Task<TrustSearchResponseDto> GetTrustsByPagination(TrustSearch trustSearch, int maxRecordsPerPage)
 		{
-			var queryParams = HttpUtility.ParseQueryString(string.Empty);
-			if (!string.IsNullOrEmpty(trustSearch.GroupName))
-			{
-				queryParams.Add("groupName", trustSearch.GroupName);
-			}
-			if (!string.IsNullOrEmpty(trustSearch.Ukprn))
-			{
-				queryParams.Add("ukprn", trustSearch.Ukprn);
-			}
-			if (!string.IsNullOrEmpty(trustSearch.CompaniesHouseNumber))
-			{
-				queryParams.Add("companiesHouseNumber", trustSearch.CompaniesHouseNumber);
-			}
-			queryParams.Add("page", trustSearch.Page.ToString());
-			queryParams.Add("count", maxRecordsPerPage.ToString());
+			Guard.Against.Null(trustSearch);
+			Guard.Against.NegativeOrZero(maxRecordsPerPage);
 
-			return HttpUtility.UrlEncode(queryParams.ToString());
+			try
+			{
+				_logger.LogInformation("TrustService::GetTrustsByPagination");
+
+				// Create a request
+				var endpoint = $"/{EndpointsVersion}/trusts?{BuildRequestUri(trustSearch, maxRecordsPerPage)}";
+
+				var response = await GetByPagination<TrustSearchDto>(endpoint);
+
+				return new TrustSearchResponseDto { NumberOfMatches = response.Paging.RecordCount, Trusts = response.Data };
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError("TrustService::GetTrustsByPagination::Exception message::{Message}", ex.Message);
+
+				throw;
+			}
 		}
 	}
 }
