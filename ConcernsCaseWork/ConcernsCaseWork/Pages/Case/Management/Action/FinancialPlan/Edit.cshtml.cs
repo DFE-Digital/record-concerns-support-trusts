@@ -17,13 +17,11 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 	{
 		private readonly ILogger<EditPageModel> _logger;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
-		private readonly IFinancialPlanStatusCachedService _financialPlanStatusCachedService;
 
 		public EditPageModel(
-			IFinancialPlanModelService financialPlanModelService, IFinancialPlanStatusCachedService financialPlanStatusService, ILogger<EditPageModel> logger)
+			IFinancialPlanModelService financialPlanModelService, ILogger<EditPageModel> logger)
 		{
 			_financialPlanModelService = financialPlanModelService;
-			_financialPlanStatusCachedService = financialPlanStatusService;
 			_logger = logger;
 		}
 
@@ -42,13 +40,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 				{
 					return Redirect($"/case/{caseUrn}/management/action/financialplan/{financialPlanId}/closed");
 				}
-				
-				FinancialPlanStatuses = await GetStatusOptionsAsync(FinancialPlanModel.Status?.Name);
 			}
 			catch (InvalidOperationException ex)
 			{
 				TempData["FinancialPlan.Message"] = ex.Message;
-				FinancialPlanStatuses = await GetStatusOptionsAsync();
 			}
 			catch (Exception ex)
 			{
@@ -75,7 +70,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					CaseUrn = caseUrn,
 					StatusId = FinancialPlanModel.Status?.Id,
 					DatePlanRequested = GetRequestedPlanRequestedDate(),
-					DateViablePlanReceived = GetRequestedViablePlanReceivedDate(),
 					Notes = FinancialPlanModel.Notes,
 					UpdatedAt = DateTime.Now
 				};
@@ -88,7 +82,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			{
 				TempData["FinancialPlan.Message"] = ex.Message;
 				
-				FinancialPlanStatuses = await GetStatusOptionsAsync();
 			}
 			catch (Exception ex)
 			{
@@ -99,8 +92,5 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 
 			return Page();
 		}
-		
-		protected override async Task<IList<FinancialPlanStatusDto>> GetAvailableStatusesAsync()
-			=> await _financialPlanStatusCachedService.GetOpenFinancialPlansStatusesAsync();
 	}
 }
