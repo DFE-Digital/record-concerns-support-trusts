@@ -30,7 +30,7 @@ namespace ConcernsCaseWork.Service.Trusts
 			var matchingTrusts = new List<TrustSearchDto>();
 			var numberOfRequests = 0;
 			var numberOfMatches = 0;
-			ApiListWrapper<TrustSearchDto> pageOfResults;
+			TrustSearchResponseDto pageOfResults;
 
 			var stopwatch = Stopwatch.StartNew();
 
@@ -41,12 +41,12 @@ namespace ConcernsCaseWork.Service.Trusts
 
 				if (numberOfRequests == 1)
 				{
-					numberOfMatches = pageOfResults.Paging.RecordCount;
+					numberOfMatches = pageOfResults.NumberOfMatches;
 				}
 
-				if (pageOfResults.Data.Any())
+				if (!PageOfResultsIsEmpty(pageOfResults))
 				{
-					matchingTrusts.AddRange(pageOfResults.Data);
+					matchingTrusts.AddRange(pageOfResults.Trusts);
 					searchCriteria.PageIncrement();
 				}
 
@@ -61,12 +61,12 @@ namespace ConcernsCaseWork.Service.Trusts
 
 		}
 
-		private bool PageOfResultsIsEmpty(ApiListWrapper<TrustSearchDto> pageOfResults)
+		private bool PageOfResultsIsEmpty(TrustSearchResponseDto pageOfResults)
 		{
-			return pageOfResults == null || (pageOfResults.Data == null || pageOfResults.Data.Count == 0);
+			return pageOfResults == null || (pageOfResults.Trusts == null || pageOfResults.Trusts.Count == 0);
 		}
 
-		private async Task<ApiListWrapper<TrustSearchDto>> RequestPage(TrustSearch searchCriteria)
+		private async Task<TrustSearchResponseDto> RequestPage(TrustSearch searchCriteria)
 		{
 			try
 			{

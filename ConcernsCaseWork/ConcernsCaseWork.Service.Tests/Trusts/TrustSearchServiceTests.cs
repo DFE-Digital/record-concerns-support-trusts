@@ -22,10 +22,10 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
 			IList<TrustSearchDto> emptyList = Array.Empty<TrustSearchDto>();
 
-			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
+			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10, TrustsPerPage = expectedTrusts.Count });
 			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>(), It.IsAny<int>()))
-				.ReturnsAsync(new ApiListWrapper<TrustSearchDto>(expectedTrusts, null))
-				.ReturnsAsync(new ApiListWrapper<TrustSearchDto>(emptyList, null));
+				.ReturnsAsync(new TrustSearchResponseDto { Trusts = expectedTrusts, NumberOfMatches = expectedTrusts.Count })
+				.ReturnsAsync(new TrustSearchResponseDto { Trusts = emptyList, NumberOfMatches = 0 });
 
 			var trustSearchService = new TrustSearchService(mockTrustService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
@@ -68,23 +68,21 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			var mockLogger = new Mock<ILogger<TrustSearchService>>();
 
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
-			var expectedApiWrapper = new ApiListWrapper<TrustSearchDto>(
-				expectedTrusts,
-				new ApiListWrapper<TrustSearchDto>.Pagination(1, 10, "next-page-url"));
+			var expectedResponseDto = new TrustSearchResponseDto() { Trusts = expectedTrusts, NumberOfMatches = 10 };
 
-			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
+			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10, TrustsPerPage = expectedTrusts.Count });
 			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>(), expectedTrusts.Count))
-				.ReturnsAsync(expectedApiWrapper)
-				.ReturnsAsync(expectedApiWrapper)
-				.ReturnsAsync(expectedApiWrapper)
-				.ReturnsAsync(expectedApiWrapper)
-				.ReturnsAsync(expectedApiWrapper)
-				.ReturnsAsync(expectedApiWrapper)
-				.ReturnsAsync(expectedApiWrapper)
-				.ReturnsAsync(expectedApiWrapper)
-				.ReturnsAsync(expectedApiWrapper)
-				.ReturnsAsync(expectedApiWrapper)
-				.ReturnsAsync(expectedApiWrapper);
+				.ReturnsAsync(expectedResponseDto)
+				.ReturnsAsync(expectedResponseDto)
+				.ReturnsAsync(expectedResponseDto)
+				.ReturnsAsync(expectedResponseDto)
+				.ReturnsAsync(expectedResponseDto)
+				.ReturnsAsync(expectedResponseDto)
+				.ReturnsAsync(expectedResponseDto)
+				.ReturnsAsync(expectedResponseDto)
+				.ReturnsAsync(expectedResponseDto)
+				.ReturnsAsync(expectedResponseDto)
+				.ReturnsAsync(expectedResponseDto);
 
 			var trustSearchService = new TrustSearchService(mockTrustService.Object, mockIOptionsTrustSearch.Object, mockLogger.Object);
 
@@ -93,7 +91,7 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 
 			// assert
 			Assert.That(results, Is.Not.Null);
-			Assert.That(results.Trusts.Count, Is.EqualTo(expectedTrusts.Count * 11));
+			Assert.That(results.Trusts.Count, Is.EqualTo(expectedTrusts.Count * 10));
 		}
 
 		[Test]
@@ -105,16 +103,12 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			var mockLogger = new Mock<ILogger<TrustSearchService>>();
 
 			var expectedTrusts = TrustFactory.BuildListTrustSummaryDto();
-			var expectedApiWrapper = new ApiListWrapper<TrustSearchDto>(
-				expectedTrusts,
-				new ApiListWrapper<TrustSearchDto>.Pagination(1, 10, "next-page-url"));
-			var expectedEmptyApiWrapper = new ApiListWrapper<TrustSearchDto>(
-				null,
-				new ApiListWrapper<TrustSearchDto>.Pagination(1, 10, "next-page-url"));
+			var expectedApiWrapper = new TrustSearchResponseDto { Trusts = expectedTrusts, NumberOfMatches = 10 };
+			var expectedEmptyApiWrapper = new TrustSearchResponseDto { Trusts = null, NumberOfMatches = 0 };
 
 
-			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10});
-			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>(), expectedApiWrapper.Paging.RecordCount))
+			mockIOptionsTrustSearch.Setup(o => o.Value).Returns(new TrustSearchOptions { TrustsLimitByPage = 10 });
+			mockTrustService.SetupSequence(t => t.GetTrustsByPagination(It.IsAny<TrustSearch>(), It.IsAny<int>()))
 				.ReturnsAsync(expectedApiWrapper)
 				.ReturnsAsync(expectedApiWrapper)
 				.ReturnsAsync(expectedEmptyApiWrapper);
