@@ -144,7 +144,7 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 			const string searchParameter = "Senior";
 			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustService>();
 			var apiWrapperTrusts = await trustService.GetTrustsByPagination(
-				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
+				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter), 1);
 
 			Assert.That(apiWrapperTrusts, Is.Not.Null);
 			Assert.That(apiWrapperTrusts.Data, Is.Not.Null);

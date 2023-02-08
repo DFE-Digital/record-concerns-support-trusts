@@ -2,6 +2,6 @@
 {
 	public interface ITrustSearchService
 	{
-		Task<IList<TrustSearchDto>> GetTrustsBySearchCriteria(TrustSearch trustSearch);
+		Task<TrustSearchResponseDto> GetTrustsBySearchCriteria(TrustSearch trustSearch);
 	}
 }
