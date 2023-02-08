@@ -4,81 +4,91 @@
 @model ResolvePageModel
 
 @{
-	ViewData["Title"] = "Resolve srma";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Resolve srma";
+    var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
-	<partial name="_BannerError" />
+    <partial name="_BannerError" />
 
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
 
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-			{
-				<partial name="_Error" />
-			}
-			else
-			{
-				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+                <partial name="_Error" />
+            }
+            else
+            {
+                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-				<h1 class="govuk-heading-l">
-					Resolve SRMA
-				</h1>
+                <h1 class="govuk-heading-l">
+                    Resolve SRMA action
+                </h1>
 
-				<form role="form" method="post" id="resolve-srma-form">
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        This action cannot be reopened. Check the details are correct, especially dates, before resolving.
+                    </strong>
+                </div>
 
-					<div class="govuk-form-group">
-						<div class="govuk-checkboxes" data-module="govuk-checkboxes">
-							<div class="govuk-checkboxes__item">
-								<input class="govuk-checkboxes__input" id="confirmChk" name="confirmChk" type="checkbox">
-								<label class="govuk-label govuk-checkboxes__label" for="confirmChk">
-									@Model.ConfirmText
-								</label>
-							</div>
-						</div>
-					</div>
+                <form role="form" method="post" id="resolve-srma-form">
 
-					<div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="2000">
+                    <div class="govuk-form-group">
+                        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="confirmChk" name="confirmChk" type="checkbox">
+                                <label class="govuk-label govuk-checkboxes__label" for="confirmChk">
+                                    @Model.ConfirmText
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="govuk-character-count govuk-!-margin-top-6" data-module="govuk-character-count" data-maxlength="2000">
                         <div class="govuk-form-group">
-                            <h2 class="govuk-heading-m">Notes (optional)</h2>
+                            <h2 class="govuk-heading-m">Finalise notes (optional)</h2>
                             <div class="govuk-hint">Case owners can record any information they want that feels relevant to the action</div>
                             <textarea class="govuk-textarea govuk-js-character-count concern-auto-resize" id="srma-notes" name="srma-notes" rows="3" aria-describedby="srma-notes-info">@Model.SRMAModel.Notes</textarea>
                         </div>
-						<div id="srma-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
-							You can enter up to 2000 characters
-						</div>
-					</div>
+                        <div id="srma-notes-info" class="govuk-hint govuk-character-count__message" aria-live="polite">
+                            You can enter up to 2000 characters
+                        </div>
+                    </div>
 
-					<div class="govuk-button-group">
-						<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
-							Resolve SRMA
-						</button>
-						<partial name="_Cancel" />
-					</div>
+                    <p class="govuk-body">Do you still want to resolve this SRMA action?</p>
 
-				</form>
+                    <div class="govuk-button-group">
+                        <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
+                            Resolve SRMA action
+                        </button>
+                        <partial name="_Cancel" />
+                    </div>
 
-				<script type="application/javascript" nonce="@nonce">
-					$(function () {
+                </form>
 
-						let validator = formValidator($("#resolve-srma-form")[0]);
+                <script type="application/javascript" nonce="@nonce">
+                    $(function () {
 
-						validator.addValidator('confirmChk', [{
-							method: function() {
-								let checkbox = $('input[name="confirmChk"]:checked');
-								return checkbox.length > 0;
-							},
-							message: '@Model.ConfirmText'
-						}]);
+                        let validator = formValidator($("#resolve-srma-form")[0]);
+
+                        validator.addValidator('confirmChk', [{
+                            method: function() {
+                                let checkbox = $('input[name="confirmChk"]:checked');
+                                return checkbox.length > 0;
+                            },
+                            message: '@Model.ConfirmText'
+                        }]);
 
                         addSRMANotesValidator(validator);
 
-						autoResizer();
-					});
-				</script>
-			}
+                        autoResizer();
+                    });
+                </script>
+            }
 
-		</div>
-	</div>
+        </div>
+    </div>
 </div>
