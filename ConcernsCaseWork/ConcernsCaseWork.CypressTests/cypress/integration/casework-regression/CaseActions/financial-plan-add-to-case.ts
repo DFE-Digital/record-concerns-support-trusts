@@ -22,18 +22,12 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
     it("Should add a financial plan", () => 
     {
-        checkFormValidation();
-
         Logger.Log("Configuring a valid financial plan");
 
         editFinancialPlanPage
-            .withStatus("Awaiting Plan")
             .withPlanRequestedDay("06")
             .withPlanRequestedMonth("07")
             .withPlanRequestedYear("2022")
-            .withPlanReceivedDay("22")
-            .withPlanReceivedMonth("10")
-            .withPlanReceivedYear("2022")
             .withNotes("Notes!")
             .save();
 
@@ -48,9 +42,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
         Logger.Log("Checking Financial Plan values");
 
         viewFinancialPlanPage
-            .hasStatus("Awaiting plan")
             .hasPlanRequestedDate("06 July 2022")
-            .hasPlanReceivedDate("22 October 2022")
             .hasNotes("Notes!");
     });
 
@@ -69,7 +61,6 @@ describe("User can add Financial Plan case action to an existing case", () => {
         viewFinancialPlanPage
             .hasStatus("In progress")
             .hasPlanRequestedDate("Empty")
-            .hasPlanReceivedDate("Empty")
             .hasNotes("Empty");
     });
 
@@ -78,13 +69,9 @@ describe("User can add Financial Plan case action to an existing case", () => {
         Logger.Log("Configuring initial financial plan");
 
         editFinancialPlanPage
-            .withStatus("Awaiting Plan")
             .withPlanRequestedDay("06")
             .withPlanRequestedMonth("07")
             .withPlanRequestedYear("2022")
-            .withPlanReceivedDay("22")
-            .withPlanReceivedMonth("10")
-            .withPlanReceivedYear("2022")
             .withNotes("Notes!")
             .save();
 
@@ -101,25 +88,17 @@ describe("User can add Financial Plan case action to an existing case", () => {
         viewFinancialPlanPage.edit();
 
         editFinancialPlanPage
-            .hasStatus("Awaiting Plan")
             .hasPlanRequestedDay("06")
             .hasPlanRequestedMonth("07")
             .hasPlanRequestedYear("2022")
-            .hasPlanReceivedDay("22")
-            .hasPlanReceivedMonth("10")
-            .hasPlanReceivedYear("2022")
             .hasNotes("Notes!");
 
         Logger.Log("Changing the financial plan");
 
         editFinancialPlanPage
-            .withStatus("Return To Trust")
             .withPlanRequestedDay("01")
             .withPlanRequestedMonth("02")
             .withPlanRequestedYear("2007")
-            .withPlanReceivedDay("05")
-            .withPlanReceivedMonth("07")
-            .withPlanReceivedYear("2008")
             .withNotes("Editing notes")
             .save();
 
@@ -134,9 +113,8 @@ describe("User can add Financial Plan case action to an existing case", () => {
         Logger.Log("Viewing edited Financial Plan values");
 
         viewFinancialPlanPage
-            .hasStatus("Return to trust for further work")
+            .hasStatus("In progress")
             .hasPlanRequestedDate("01 February 2007")
-            .hasPlanReceivedDate("05 July 2008")
             .hasNotes("Editing notes");
 
         viewFinancialPlanPage.edit();
@@ -162,7 +140,6 @@ describe("User can add Financial Plan case action to an existing case", () => {
         Logger.Log("Incomplete plan requested date");
 
         editFinancialPlanPage
-            .withStatus("Return To Trust")
             .withNotes("Notes for validation")
             .clearPlanRequestedDate()
             .withPlanRequestedDay("06")
@@ -172,7 +149,6 @@ describe("User can add Financial Plan case action to an existing case", () => {
         Logger.Log("Check fields were not cleared on error");
 
         editFinancialPlanPage
-            .hasStatus("Return To Trust")
             .hasNotes("Notes for validation");
 
         Logger.Log("Invalid plan requested date");
@@ -184,24 +160,6 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .withPlanRequestedYear("22")
             .save()
             .hasValidationError("Plan requested 06-22-22 is an invalid date");
-
-        Logger.Log("Incomplete plan received date");
-
-        editFinancialPlanPage
-            .clearPlanReceivedDate()
-            .withPlanReceivedDay("08")
-            .save()
-            .hasValidationError("Viable plan 08-- is an invalid date");
-
-        Logger.Log("Invalid plan received date");
-
-        editFinancialPlanPage
-            .clearPlanReceivedDate()
-            .withPlanReceivedDay("08")
-            .withPlanReceivedMonth("33")
-            .withPlanReceivedYear("33")
-            .save()
-            .hasValidationError("Viable plan 08-33-33 is an invalid date");
 
         Logger.Log("Notes exceeding character limit");
 
