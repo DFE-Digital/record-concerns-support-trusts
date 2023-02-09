@@ -34,7 +34,7 @@ namespace ConcernsCaseWork.Services.Trusts
 			var trustsSearchDto = await _trustSearchService.GetTrustsBySearchCriteria(trustSearch);
 			
 			// Map trusts dto to model
-			var trustsSummary = _mapper.Map<IList<TrustSearchModel>>(trustsSearchDto);
+			var trustsSummary = _mapper.Map<IList<TrustSearchModel>>(trustsSearchDto.Trusts);
 
 			// Filter trusts that haven't correct properties and sort
 			var trustsSummaryOrderedFiltered = from t in trustsSummary 
