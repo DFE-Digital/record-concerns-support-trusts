@@ -52,7 +52,7 @@ namespace ConcernsCaseWork.Service.Trusts
 
 			stopwatch.Stop();
 			Debug.WriteLine($"{nameof(GetTrustsBySearchCriteria)} execution time {stopwatch.ElapsedMilliseconds} ms. Number of requests: {numberOfRequests}");
-			_logger.LogInformation("TrustSearchService::GetTrustsBySearchCriteria execution time {ElapsedMilliseconds} ms. Number of requests: {nrRequests}", stopwatch.ElapsedMilliseconds);
+			_logger.LogInformation("TrustSearchService::GetTrustsBySearchCriteria execution time {ElapsedMilliseconds} ms. Number of requests: {nrRequests}", stopwatch.ElapsedMilliseconds, numberOfRequests);
 
 			return new TrustSearchResponseDto { NumberOfMatches = numberOfMatches, Trusts = matchingTrusts };
 		}

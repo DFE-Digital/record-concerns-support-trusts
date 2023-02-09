@@ -8,6 +8,9 @@ public class TrustSearchResponse
 	{
 		Data = new List<TrustSearchModel>();
 	}
-	public string Nonce { get; set; }
+
 	public IList<TrustSearchModel> Data { get; set; }
+	public bool IsMoreDataOnServer { get; set; }
+	public string Nonce { get; set; }
+	public int TotalMatchesFromApi { get; set; }
 }

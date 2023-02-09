@@ -1,7 +1,11 @@
-﻿@using Microsoft.AspNetCore.Http
+﻿@using ConcernsCaseWork.Service.Configuration;
+@using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.Extensions.Options;
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Models.FindTrustModel
+
+@inject IOptions<TrustSearchOptions> trustSearchOptions
 
 @{
 	if (String.IsNullOrWhiteSpace(Model.Nonce))
@@ -23,6 +27,10 @@
 
 		<label class="govuk-hint" for="search" id="outgoing-trust-search-query-hint">
 			Search by name, trust reference number or companies house number
+            <br /><text>(enter at least @trustSearchOptions.Value.MinCharsRequiredToSeach characters)</text>
+            <div id="tooManyResultsWarning" style="display:none;">
+                <p>There are too many results for this search. Try a more specific search term.</p>
+            </div>
 		</label>
 
 	</fieldset>
@@ -47,7 +55,7 @@
 
 
         const autocompleteContainer = document.getElementById("autocomplete-container");
-        const trustSearchDelay = 1000;
+        const trustSearchDelay = @trustSearchOptions.Value.MilliSecondPauseBeforeSeach;
         let trustSearchResults = undefined;
         let selectedTrustUkprn = undefined;
         let xhr = undefined;
@@ -74,12 +82,16 @@
 
         function searchForTrusts(queryStr, populateResults) {
 
+            let showWarningWhenTooManyResults = @trustSearchOptions.Value.ShowWarningWhenTooManySearchResults;
             cancelSearch();
 
             var requestIfNotCancelled = () => {
+                $("#tooManyResultsWarning").hide();
 	            // use trust page for searching
                 xhr = $.get("/trust/TrustsSearchResult", { searchQuery: queryStr, nonce:generateNonce(20) })
 	                .done(function (response) {
+
+                        console.log(JSON.stringify(response));
 
 	                    let nonce = response.nonce;
 	                    let trusts = response.data;
@@ -87,6 +99,13 @@
 	                    if (trusts !== undefined) {
 	                        trustSearchResults = trusts;
 	                        populateResults(trusts.map(x => x.displayName));
+
+                            console.log('total matches on api = ' + response.totalMatchesFromApi);
+                            console.log('isMoreDataOnServer = ' + response.isMoreDataOnServer);
+                            console.log(JSON.stringify(trusts));
+                            if (response.isMoreDataOnServer && showWarningWhenTooManyResults === true) {
+                                $("#tooManyResultsWarning").show();
+                            }
 	                    }
 	                    else {
 	                        trustSearchResults = undefined;
@@ -107,7 +126,7 @@
             name: "trustSearch",
             source: searchForTrusts,
             confirmOnBlur: false,
-            minLength: 3,
+            minLength: @trustSearchOptions.Value.MinCharsRequiredToSeach,
             showNoOptonsFound: true,
             onConfirm: (selected) => {
                 selectedTrustUkprn = trustSearchResults === undefined ? undefined : trustSearchResults.find(trust => trust.displayName === selected).ukPrn;
