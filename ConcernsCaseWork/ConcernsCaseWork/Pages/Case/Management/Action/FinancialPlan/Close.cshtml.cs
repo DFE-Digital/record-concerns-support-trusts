@@ -8,6 +8,9 @@ using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Services.FinancialPlan;
 using ConcernsCaseWork.Service.FinancialPlan;
+using ConcernsCaseWork.Mappers;
+using System.Linq;
+using ConcernsCaseWork.Models;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
@@ -65,9 +68,14 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			{
 				var caseUrn = GetRequestedCaseUrn();
 				var financialPlanId = GetRequestedFinancialPlanId();
+
+				FinancialPlanModel = await _financialPlanModelService.GetFinancialPlansModelById(caseUrn, financialPlanId);
+
 				var statusName = GetRequestedStatus();
 				var status = await GetRequiredStatusByNameAsync(statusName);
 				var notes = GetRequestedNotes();
+				var planRequested = FinancialPlanModel?.DatePlanRequested;
+				var planReceived = GetRequestedViablePlanReceivedDate();
 
 				var now = DateTime.Now;
 				var patchFinancialPlanModel = new PatchFinancialPlanModel
@@ -76,6 +84,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					CaseUrn = caseUrn,
 					StatusId = status.Id,
 					Notes = notes,
+					DatePlanRequested = planRequested,
+					DateViablePlanReceived = planReceived,
 					// todo: closed date is currently set to server date across the system. This should ideally be converted to UTC
 					ClosedAt = now,
 					UpdatedAt = now
@@ -104,7 +114,34 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			return Page();
 		}
 		
-		protected override async Task<IList<FinancialPlanStatusDto>> GetAvailableStatusesAsync()
-			=> await _financialPlanStatusCachedService.GetClosureFinancialPlansStatusesAsync();
+
+
+		protected async Task<IList<FinancialPlanStatusDto>> GetAvailableStatusesAsync()
+		{
+			return await _financialPlanStatusCachedService.GetClosureFinancialPlansStatusesAsync();
+		}
+
+		protected virtual async Task<FinancialPlanStatusModel> GetOptionalStatusByNameAsync(string statusName)
+		{
+			var status = (await GetAvailableStatusesAsync())
+				.FirstOrDefault(s => s.Name.Equals(statusName));
+
+			return status is null ? null : FinancialPlanStatusMapping.MapDtoToModel(status);
+		}
+
+		protected async Task<IEnumerable<RadioItem>> GetStatusOptionsAsync(string selectedStatusName = null)
+			=> (await GetAvailableStatusesAsync())
+				.Select(s => new RadioItem
+				{
+					Id = s.Name,
+					Text = s.Description,
+					IsChecked = selectedStatusName == s.Name
+				});
+
+		protected async Task<FinancialPlanStatusModel> GetRequiredStatusByNameAsync(string statusName)
+		{
+			var status = await GetOptionalStatusByNameAsync(statusName);
+			return status ?? throw new InvalidOperationException($"Please select a reason for closing the Financial Plan");
+		}
 	}
 }
