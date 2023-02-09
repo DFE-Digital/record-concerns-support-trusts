@@ -1,4 +1,6 @@
-﻿using ConcernsCaseWork.Enums;
+﻿using ConcernsCaseWork.Constants;
+using ConcernsCaseWork.Enums;
+using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Services.Cases;
@@ -18,11 +20,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 		private readonly ILogger<ResolvePageModel> _logger;
 		private readonly ISRMAService _srmaModelService;
 
-		private const string ResolutionComplete = "complete";
-		private const string ResolutionCanceled = "cancel";
-		private const string ResolutionDeclined = "decline";
-
-		public string ConfirmText { get; set; }
+		public SrmaCloseTextModel CloseTextModel { get; set; }
 
 		public SRMAModel SRMAModel { get; set; }
 
@@ -42,26 +40,13 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 
 				// TODO - get SRMA by case ID and SRMA ID
 				SRMAModel = await _srmaModelService.GetSRMAById(srmaId);
-				
+
 				if (SRMAModel.IsClosed)
 				{
 					return Redirect($"/case/{caseUrn}/management/action/srma/{srmaId}");
 				}
 
-				switch (resolution)
-				{
-					case ResolutionCanceled:
-						ConfirmText = "Confirm SRMA was cancelled";
-						break;
-					case ResolutionDeclined:
-						ConfirmText = "Confirm SRMA was declined by trust";
-						break;
-					case ResolutionComplete:
-						ConfirmText = "Confirm SRMA is complete";
-						break;
-					default:
-						throw new Exception("resolution value is null or invalid to parse");
-				}
+				SetupPage(resolution);
 			}
 			catch (Exception ex)
 			{
@@ -79,17 +64,19 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			{
 				(long caseUrn, long srmaId, string resolution) = GetRouteData();
 
+				SetupPage(resolution);
+
 				SRMAStatus resolvedStatus;
 
 				switch (resolution)
 				{
-					case ResolutionComplete:
+					case SrmaConstants.ResolutionComplete:
 						resolvedStatus = SRMAStatus.Complete;
 						break;
-					case ResolutionCanceled:
+					case SrmaConstants.ResolutionCancelled:
 						resolvedStatus = SRMAStatus.Canceled;
 						break;
-					case ResolutionDeclined:
+					case SrmaConstants.ResolutionDeclined:
 						resolvedStatus = SRMAStatus.Declined;
 						break;
 					default:
@@ -104,7 +91,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 						throw new Exception("Notes provided exceed maximum allowed length 2000 characters).");
 					}
 				}
-				
+
 				await _srmaModelService.SetNotes(srmaId, srmaNotes);
 				await _srmaModelService.SetStatus(srmaId, resolvedStatus);
 				await _srmaModelService.SetDateClosed(srmaId);
@@ -130,15 +117,21 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 			if (srmaIdValue == null || !long.TryParse(srmaIdValue.ToString(), out long srmaId) || srmaId == 0)
 				throw new Exception("srmaId is null or invalid to parse");
 
-			var validResolutions = new List<string>() { ResolutionComplete, ResolutionDeclined, ResolutionCanceled };
+			var validResolutions = new List<string>() { SrmaConstants.ResolutionComplete, SrmaConstants.ResolutionDeclined, SrmaConstants.ResolutionCancelled };
 			var resolutionValue = RouteData.Values["resolution"]?.ToString();
 
-			if (string.IsNullOrEmpty(resolutionValue) || !validResolutions.Contains(resolutionValue) )
+			if (string.IsNullOrEmpty(resolutionValue) || !validResolutions.Contains(resolutionValue))
 			{
 				throw new Exception("resolution value is null or invalid to parse");
 			}
 
 			return (caseUrn, srmaId, resolutionValue);
+		}
+
+		private void SetupPage(string resolution)
+		{
+			CloseTextModel = CaseActionsMapping.ToSrmaCloseText(resolution);
+			ViewData[ViewDataConstants.Title] = CloseTextModel.Title;
 		}
 	}
 }
