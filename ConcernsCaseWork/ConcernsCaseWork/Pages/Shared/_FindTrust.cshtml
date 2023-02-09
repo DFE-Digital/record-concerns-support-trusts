@@ -1,7 +1,11 @@
-﻿@using Microsoft.AspNetCore.Http
+﻿@using ConcernsCaseWork.Service.Configuration;
+@using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.Extensions.Options;
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Models.FindTrustModel
+
+@inject IOptions<TrustSearchOptions> trustSearchOptions
 
 @{
 	if (String.IsNullOrWhiteSpace(Model.Nonce))
@@ -23,6 +27,10 @@
 
 		<label class="govuk-hint" for="search" id="outgoing-trust-search-query-hint">
 			Search by name, trust reference number or companies house number
+            @if(true)
+            {
+                <br /> <text>(enter at least @trustSearchOptions.Value.MinCharsRequiredToSeach characters)</text>
+            }
 		</label>
 
 	</fieldset>
@@ -47,7 +55,7 @@
 
 
         const autocompleteContainer = document.getElementById("autocomplete-container");
-        const trustSearchDelay = 1000;
+        const trustSearchDelay = @trustSearchOptions.Value.MilliSecondPauseBeforeSeach;
         let trustSearchResults = undefined;
         let selectedTrustUkprn = undefined;
         let xhr = undefined;
@@ -107,7 +115,7 @@
             name: "trustSearch",
             source: searchForTrusts,
             confirmOnBlur: false,
-            minLength: 3,
+            minLength: @trustSearchOptions.Value.MinCharsRequiredToSeach,
             showNoOptonsFound: true,
             onConfirm: (selected) => {
                 selectedTrustUkprn = trustSearchResults === undefined ? undefined : trustSearchResults.find(trust => trust.displayName === selected).ukPrn;
