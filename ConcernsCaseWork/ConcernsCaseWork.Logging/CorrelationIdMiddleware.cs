@@ -2,9 +2,7 @@
 using ConcernsCaseWork.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Serilog.Context;
-using System;
-using System.Threading.Tasks;
+
 
 namespace ConcernsCaseWork.Middleware
 {
@@ -44,12 +42,11 @@ namespace ConcernsCaseWork.Middleware
 
 			correlationContext.SetContext(thisCorrelationId);
 
-			using (LogContext.PushProperty("ApplicationId", _applicationName))
-			using (LogContext.PushProperty("CorrelationId", correlationContext.CorrelationId))
-			{
-				httpContext.Response.Headers[correlationContext.HeaderKey] = thisCorrelationId;
-				return _next(httpContext);
-			}
+			_logger.LogInformation($"ApplicationId : {_applicationName}");
+			_logger.LogInformation($"CorrelationId : {correlationContext.CorrelationId}");
+			httpContext.Response.Headers[correlationContext.HeaderKey] = thisCorrelationId;
+			return _next(httpContext);
+			
 		}
 	}
 }
