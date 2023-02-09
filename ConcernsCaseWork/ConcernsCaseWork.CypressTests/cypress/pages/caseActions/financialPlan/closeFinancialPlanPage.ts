@@ -40,6 +40,23 @@ export class CloseFinancialPlanPage
         return this;
     }
 
+    public withNotes(notes: string): this
+    {
+        Logger.Log(`With notes ${notes}`);
+
+        cy.getById("financial-plan-notes").clear().type(notes);
+
+        return this;
+    }
+
+    public withNotesExceedingLimit(): this {
+		Logger.Log("With notes exceeding the limit");
+
+		cy.getById("financial-plan-notes").clear().invoke("val", "x".repeat(2001));
+
+		return this;
+	}
+
     public clearPlanReceivedDate(): this
     {
         Logger.Log("Clearing plan received date");
@@ -59,4 +76,12 @@ export class CloseFinancialPlanPage
 
         return this;
     }
+
+    public hasValidationError(value: string): this {
+        Logger.Log(`Has validation error ${value}`);
+        cy.getById("errorSummary").should("contain.text", value);
+
+        return this;
+    }
+
 }

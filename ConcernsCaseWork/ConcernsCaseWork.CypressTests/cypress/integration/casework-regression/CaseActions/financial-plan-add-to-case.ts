@@ -2,11 +2,15 @@ import { Logger } from "../../../common/logger";
 import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import { EditFinancialPlanPage } from "../../../pages/caseActions/financialPlan/editFinancialPlanPage";
 import { ViewFinancialPlanPage } from "../../../pages/caseActions/financialPlan/viewFinancialPlanPage";
+import { CloseFinancialPlanPage } from "../../../pages/caseActions/financialPlan/closeFinancialPlanPage";
+import { ClosedFinancialPlanPage } from "../../../pages/caseActions/financialPlan/closedFinancialPlanPage";
 import CaseManagementPage from "../../../pages/caseMangementPage";
 
 describe("User can add Financial Plan case action to an existing case", () => {
     let viewFinancialPlanPage = new ViewFinancialPlanPage();
     let editFinancialPlanPage = new EditFinancialPlanPage();
+    let closeFinancialPlanPage = new CloseFinancialPlanPage();
+    let closedFinancialPlanPage = new ClosedFinancialPlanPage();
     
     beforeEach(() => {
         cy.login();
@@ -23,7 +27,7 @@ describe("User can add Financial Plan case action to an existing case", () => {
     it("Should add a financial plan", () => 
     {
         checkFormValidation();
-        
+
         Logger.Log("Configuring a valid financial plan");
 
         editFinancialPlanPage
@@ -122,6 +126,70 @@ describe("User can add Financial Plan case action to an existing case", () => {
         viewFinancialPlanPage.edit();
 
         checkFormValidation();
+    });
+
+    it("Should close a financial plan", () => 
+    {
+        Logger.Log("creating a financial plan");
+        editFinancialPlanPage
+            .withPlanRequestedDay("09")
+            .withPlanRequestedMonth("02")
+            .withPlanRequestedYear("2023")
+            .withNotes("Initial Notes!")
+            .save();
+
+        Logger.Log("Selecting Financial Plan from open actions");
+        cy.get("#open-case-actions td")
+            .should("contain.text", "Financial Plan")
+            .eq(-3)
+            .children("a")
+            .click();
+
+        Logger.Log("Closing the financial plan");
+        viewFinancialPlanPage
+            .close();
+
+        Logger.Log("Ensure user must select a reason for closing the financial plan");
+        closeFinancialPlanPage
+            .close()
+            .hasValidationError("Please select a reason for closing the Financial Plan");
+
+        Logger.Log("Ensure notes cannot exceed 2000 characters");
+        closeFinancialPlanPage
+            .withReasonForClosure("Abandoned")
+            .withNotesExceedingLimit()
+            .close()
+            .hasValidationError("Notes must be 2000 characters or less")
+
+        Logger.Log("Ensure a valid date must be entered");
+        closeFinancialPlanPage
+            .withReasonForClosure("Abandoned")
+            .withPlanReceivedDay("32")
+            .withPlanReceivedMonth("13")
+            .withPlanReceivedYear("2020")
+            .withNotes("Edited Notes!")
+            .close()
+            .hasValidationError("Viable plan 32-13-2020 is an invalid date")
+
+        Logger.Log("Close a valid financial plan");
+        closeFinancialPlanPage
+            .withReasonForClosure("Abandoned")
+            .withPlanReceivedDay("10")
+            .withPlanReceivedMonth("02")
+            .withPlanReceivedYear("2023")
+            .withNotes("Edited Notes!")
+            .close();
+
+        Logger.Log("Selecting Financial Plan from close actions");
+        cy.get("#close-case-actions td")
+            .getByTestId("Financial Plan").click();
+
+        Logger.Log("Ensure values are displayed correctly");
+        closedFinancialPlanPage
+            .hasStatus("Abandoned")
+            .hasPlanRequestedDate("09 February 2023")
+            .hasPlanReceivedDate("10 February 2023")
+            .hasNotes("Edited Notes!");
     });
 
     it("Should only let one financial plan be created per case", () => 
