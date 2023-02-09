@@ -92,7 +92,7 @@ namespace ConcernsCaseWork.Mappers
 				case SrmaConstants.ResolutionCancelled:
 					return new SrmaCloseTextModel()
 					{
-						ConfirmText = "Confirm SRMA was cancelled",
+						ConfirmText = "Confirm SRMA action was cancelled",
 						WarningMessage = string.Format(warningMessageTemplate, "cancelling"),
 						Header = "Cancel SRMA action",
 						Title = "Cancel SRMA",
@@ -103,7 +103,7 @@ namespace ConcernsCaseWork.Mappers
 				case SrmaConstants.ResolutionDeclined:
 					return new SrmaCloseTextModel()
 					{
-						ConfirmText = "Confirm SRMA was declined by trust",
+						ConfirmText = "Confirm SRMA action was declined by trust",
 						WarningMessage = string.Format(warningMessageTemplate, "declining"),
 						Header = "SRMA action declined",
 						Title = "Decline SRMA",
@@ -114,7 +114,7 @@ namespace ConcernsCaseWork.Mappers
 				case SrmaConstants.ResolutionComplete:
 					return new SrmaCloseTextModel()
 					{
-						ConfirmText = "Confirm SRMA is complete",
+						ConfirmText = "Confirm SRMA action is complete",
 						WarningMessage = string.Format(warningMessageTemplate, "completing"),
 						Header = "Complete SRMA action",
 						Title = "Complete SRMA",

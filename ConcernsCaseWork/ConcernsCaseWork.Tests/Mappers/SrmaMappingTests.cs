@@ -183,7 +183,7 @@ public class SrmaMappingTests
 			"cancel",
 			new SrmaCloseTextModel()
 			{
-				ConfirmText = "Confirm SRMA was cancelled",
+				ConfirmText = "Confirm SRMA action was cancelled",
 				WarningMessage = "This action cannot be reopened. Check the details are correct, especially dates, before cancelling.",
 				Header = "Cancel SRMA action",
 				Title = "Cancel SRMA",
@@ -195,7 +195,7 @@ public class SrmaMappingTests
 			"decline",
 			new SrmaCloseTextModel()
 			{
-				ConfirmText = "Confirm SRMA was declined by trust",
+				ConfirmText = "Confirm SRMA action was declined by trust",
 				WarningMessage = "This action cannot be reopened. Check the details are correct, especially dates, before declining.",
 				Header = "SRMA action declined",
 				Title = "Decline SRMA",
@@ -207,7 +207,7 @@ public class SrmaMappingTests
 			"complete",
 			new SrmaCloseTextModel()
 			{
-				ConfirmText = "Confirm SRMA is complete",
+				ConfirmText = "Confirm SRMA action is complete",
 				WarningMessage = "This action cannot be reopened. Check the details are correct, especially dates, before completing.",
 				Header = "Complete SRMA action",
 				Title = "Complete SRMA",
