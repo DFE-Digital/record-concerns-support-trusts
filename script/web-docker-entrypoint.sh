@@ -15,7 +15,7 @@ do
 done
 
 echo "Running database migrations ..."
-until /opt/mssql-tools18/bin/sqlcmd -S "${mysqlconn[Server]}" -U "${mysqlconn[UserId]}" -P "${mysqlconn[Password]}" -d "${mysqlconn[Database]}" -C -i /app/SQL/DbMigrationScript.sql -o /app/SQL/DbMigrationScriptOutput.txt
+until /opt/mssql-tools18/bin/sqlcmd -S "${mysqlconn[Server]}" -U "${mysqlconn[UserId]}" -P "${mysqlconn[Password]}" -d "${mysqlconn[Database]}" -C -I -i /app/SQL/DbMigrationScript.sql -o /app/SQL/DbMigrationScriptOutput.txt
 do
   cat /app/SQL/DbMigrationScriptOutput.txt
   echo "Retrying database migrations ..."
