@@ -178,7 +178,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.ConfirmText, Is.EqualTo("Confirm SRMA is complete"));
+			Assert.That(pageModel.CloseTextModel.ConfirmText, Is.EqualTo("Confirm SRMA is complete"));
+			Assert.That(pageModel.ViewData[ViewDataConstants.Title], Is.EqualTo("Complete SRMA"));
 		}
 
 		[Test]
@@ -206,7 +207,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.ConfirmText, Is.EqualTo("Confirm SRMA was cancelled"));
+			Assert.That(pageModel.CloseTextModel.ConfirmText, Is.EqualTo("Confirm SRMA was cancelled"));
+			Assert.That(pageModel.ViewData[ViewDataConstants.Title], Is.EqualTo("Cancel SRMA"));
 		}
 
 		[Test]
@@ -234,7 +236,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.SRMA
 			await pageModel.OnGetAsync();
 
 			// assert
-			Assert.That(pageModel.ConfirmText, Is.EqualTo("Confirm SRMA was declined by trust"));
+			Assert.That(pageModel.CloseTextModel.ConfirmText, Is.EqualTo("Confirm SRMA was declined by trust"));
+			Assert.That(pageModel.ViewData[ViewDataConstants.Title], Is.EqualTo("Decline SRMA"));
 		}
 
 		[Test]
