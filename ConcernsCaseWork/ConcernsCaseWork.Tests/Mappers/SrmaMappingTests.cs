@@ -8,6 +8,7 @@ using ConcernsCaseWork.Service.CaseActions;
 using System;
 using ConcernsCaseWork.API.Contracts.Permissions;
 using System.Collections.Generic;
+using System.Reflection.PortableExecutable;
 
 namespace ConcernsCaseWork.Tests.Mappers;
 
@@ -158,5 +159,60 @@ public class SrmaMappingTests
 
 		result.RelativeUrl.Should().Be($"/case/{srma.CaseUrn}/management/action/srma/{srma.Id}");
 		result.ClosedDate.Should().BeEmpty();
+	}
+
+	[TestCaseSource(nameof(GetCloseTextCases))]
+	public void When_ToSrmaCloseText_Returns_CorrectModel(string resolution, SrmaCloseTextModel expected)
+	{
+		var result = CaseActionsMapping.ToSrmaCloseText(resolution);
+
+		result.Should().BeEquivalentTo(expected);
+	}
+
+	[Test]
+	public void When_ToSrmaCloseText_InvalidResolution_ThrowsException()
+	{
+		var func = () => CaseActionsMapping.ToSrmaCloseText("Invalid");
+
+		func.Should().Throw<Exception>().WithMessage("Unrecognised SRMA resolution status Invalid");
+	}
+
+	private static IEnumerable<TestCaseData> GetCloseTextCases()
+	{
+		yield return new TestCaseData(
+			"cancel",
+			new SrmaCloseTextModel()
+			{
+				ConfirmText = "Confirm SRMA was cancelled",
+				WarningMessage = "This action cannot be reopened. Check the details are correct, especially dates, before cancelling.",
+				Header = "Cancel SRMA action",
+				Title = "Cancel SRMA",
+				ButtonHint = "Do you still want to cancel this SRMA action?",
+				ButtonText = "Cancel SRMA action"
+			});
+
+		yield return new TestCaseData(
+			"decline",
+			new SrmaCloseTextModel()
+			{
+				ConfirmText = "Confirm SRMA was declined by trust",
+				WarningMessage = "This action cannot be reopened. Check the details are correct, especially dates, before declining.",
+				Header = "SRMA action declined",
+				Title = "Decline SRMA",
+				ButtonHint = "Do you still want to decline this SRMA action?",
+				ButtonText = "SRMA action declined"
+			});
+
+		yield return new TestCaseData(
+			"complete",
+			new SrmaCloseTextModel()
+			{
+				ConfirmText = "Confirm SRMA is complete",
+				WarningMessage = "This action cannot be reopened. Check the details are correct, especially dates, before completing.",
+				Header = "Complete SRMA action",
+				Title = "Complete SRMA",
+				ButtonHint = "Do you still want to complete this SRMA action?",
+				ButtonText = "Complete SRMA action"
+			});
 	}
 }

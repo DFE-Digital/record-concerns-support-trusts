@@ -4,7 +4,6 @@
 @model ResolvePageModel
 
 @{
-    ViewData["Title"] = "Close srma";
     var nonce = HttpContext.GetNonce();
 }
 
@@ -23,14 +22,14 @@
                 <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
                 <h1 class="govuk-heading-l">
-                    Close SRMA action
+                    @Model.CloseTextModel.Header
                 </h1>
 
                 <div class="govuk-warning-text">
                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                     <strong class="govuk-warning-text__text">
                         <span class="govuk-warning-text__assistive">Warning</span>
-                        This action cannot be reopened. Check the details are correct, especially dates, before closing.
+                        @Model.CloseTextModel.WarningMessage
                     </strong>
                 </div>
 
@@ -41,7 +40,7 @@
                             <div class="govuk-checkboxes__item">
                                 <input class="govuk-checkboxes__input" id="confirmChk" name="confirmChk" type="checkbox">
                                 <label class="govuk-label govuk-checkboxes__label" for="confirmChk">
-                                    @Model.ConfirmText
+                                    @Model.CloseTextModel.ConfirmText
                                 </label>
                             </div>
                         </div>
@@ -58,11 +57,11 @@
                         </div>
                     </div>
 
-                    <p class="govuk-body">Do you still want to close this SRMA action?</p>
+                    <p class="govuk-body">@Model.CloseTextModel.ButtonHint</p>
 
                     <div class="govuk-button-group">
                         <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-srma-button">
-                            Close SRMA action
+                            @Model.CloseTextModel.ButtonText
                         </button>
                         <partial name="_Cancel" />
                     </div>
@@ -79,7 +78,7 @@
                                 let checkbox = $('input[name="confirmChk"]:checked');
                                 return checkbox.length > 0;
                             },
-                            message: '@Model.ConfirmText'
+                            message: '@Model.CloseTextModel.ConfirmText'
                         }]);
 
                         addSRMANotesValidator(validator);
