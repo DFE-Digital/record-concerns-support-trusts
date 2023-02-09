@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			var mapper = config.CreateMapper();
 			var trustSummaryDto = TrustFactory.BuildListTrustSummaryDto();
 
-			mockTrustSearchService.Setup(ts => ts.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(trustSummaryDto);
+			mockTrustSearchService.Setup(ts => ts.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(new TrustSearchResponseDto {NumberOfMatches = trustSummaryDto.Count, Trusts = trustSummaryDto });
 
 			// act
 			var trustModelService = new TrustModelService(mockTrustSearchService.Object, mockTrustCachedService.Object, mapper, mockLogger.Object);
@@ -85,7 +85,7 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
 			var mapper = config.CreateMapper();
 
-			mockTrustSearchService.Setup(ts => ts.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(Array.Empty<TrustSearchDto>());
+			mockTrustSearchService.Setup(ts => ts.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(new TrustSearchResponseDto {NumberOfMatches = 0, Trusts = Array.Empty<TrustSearchDto>() });
 
 			// act
 			var trustModelService = new TrustModelService(mockTrustSearchService.Object, mockTrustCachedService.Object, mapper, mockLogger.Object);
