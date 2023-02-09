@@ -4,43 +4,51 @@
 @model ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan.ClosePageModel
 
 @{
-	ViewData["Title"] = "Close Finance Plan";
-	ViewData["CancelBackLink"] = $"/case/{@RouteData.Values["urn"]}/management";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Close Finance Plan";
+    ViewData["CancelBackLink"] = $"/case/{@RouteData.Values["urn"]}/management";
+    var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
-	<partial name="_BannerError" />
+    <partial name="_BannerError" />
 
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
 
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-			{
-				<partial name="_Error" />
-			}
-			else
-			{
-				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            {
+                <partial name="_Error" />
+            }
+            else
+            {
+                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-				@if (!string.IsNullOrEmpty((string)TempData.Peek("FinancialPlan.Message")))
-				{
-					<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
-						<h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
-						<div class="govuk-error-summary__body">
-							<ul class="govuk-list govuk-error-summary__list">
-								<li>
-									<a href="">@TempData["FinancialPlan.Message"]</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-				}
+                @if (!string.IsNullOrEmpty((string)TempData.Peek("FinancialPlan.Message")))
+                {
+                    <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
+                        <h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
+                        <div class="govuk-error-summary__body">
+                            <ul class="govuk-list govuk-error-summary__list">
+                                <li>
+                                    <a href="">@TempData["FinancialPlan.Message"]</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                }
 
-				<h1 class="govuk-heading-l">
-					<span class="govuk-caption-m">Case ID: @RouteData.Values["urn"]</span>
-					Financial Plan
-				</h1>
+                <h1 class="govuk-heading-l">
+                    <span class="govuk-caption-m">Case ID: @RouteData.Values["urn"]</span>
+                    Financial Plan
+                </h1>
+
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        This action cannot be reopened. Check the details are correct, especially dates, before closing.
+                    </strong>
+                </div>
 
 
                 <form role="form" method="post" id="close-financial-plan-form" novalidate>
@@ -89,7 +97,7 @@
                                             Day
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-day-viable-plan"
-                                               name="dtr-day-viable-plan" type="text" maxlength="2" inputmode="numeric" />
+                                           name="dtr-day-viable-plan" type="text" maxlength="2" inputmode="numeric" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -98,7 +106,7 @@
                                             Month
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="dtr-month-viable-plan"
-                                               name="dtr-month-viable-plan" type="text" maxlength="2" inputmode="numeric" />
+                                           name="dtr-month-viable-plan" type="text" maxlength="2" inputmode="numeric" />
                                     </div>
                                 </div>
                                 <div class="govuk-date-input__item">
@@ -107,7 +115,7 @@
                                             Year
                                         </label>
                                         <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="dtr-year-viable-plan"
-                                               name="dtr-year-viable-plan" type="text" maxlength="4" inputmode="numeric" />
+                                           name="dtr-year-viable-plan" type="text" maxlength="4" inputmode="numeric" />
                                     </div>
                                 </div>
                             </div>
@@ -127,25 +135,27 @@
                         </div>
                     </div>
 
+                    <p class="govuk-body">Do you still want to close this financial plan?</p>
+
                     <div class="govuk-button-group">
                         <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-financial-plan-button">
-                            Close
+                            Close financial plan
                         </button>
                         <partial name="_Cancel" />
                     </div>
 
                 </form>
 
-				<script type="application/javascript" nonce="@nonce">
-					$(function () {
-						let validator = formValidator($("#close-financial-plan-form")[0]);
-						addFinancialPlanNotesValidator(validator);
-						autoResizer();
-					});
-				</script>
-			}
+                <script type="application/javascript" nonce="@nonce">
+                    $(function () {
+                        let validator = formValidator($("#close-financial-plan-form")[0]);
+                        addFinancialPlanNotesValidator(validator);
+                        autoResizer();
+                    });
+                </script>
+            }
 
-		</div>
-	</div>
+        </div>
+    </div>
 </div>
 
