@@ -18,12 +18,10 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 	{
 		private readonly ILogger<AddPageModel> _logger;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
-		private readonly IFinancialPlanStatusCachedService _financialPlanStatusCachedService;
 
-		public AddPageModel(IFinancialPlanModelService financialPlanModelService, IFinancialPlanStatusCachedService financialPlanStatusService, ILogger<AddPageModel> logger)
+		public AddPageModel(IFinancialPlanModelService financialPlanModelService, ILogger<AddPageModel> logger)
 		{
 			_financialPlanModelService = financialPlanModelService;
-			_financialPlanStatusCachedService = financialPlanStatusService;
 			_logger = logger;
 		}
 
@@ -35,8 +33,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			{
 				FinancialPlanModel = new FinancialPlanModel();
 
-				FinancialPlanStatuses = await GetStatusOptionsAsync();
-				
 				return Page();
 			}
 			catch (Exception ex)
@@ -54,7 +50,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			{
 				var caseUrn = GetRequestedCaseUrn();
 				var planRequestedDate = GetRequestedPlanRequestedDate();
-				var viablePlanReceivedDate = GetRequestedViablePlanReceivedDate();
 				var currentUser = GetLoggedInUserName();
 
 				var now = DateTime.Now;
@@ -64,8 +59,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 					CreatedAt = now,
 					UpdatedAt = now,
 					DatePlanRequested = planRequestedDate,
-					DateViablePlanReceived = viablePlanReceivedDate,
-					StatusId = FinancialPlanModel.Status?.Id,
 					CreatedBy = currentUser,
 					Notes = FinancialPlanModel.Notes
 				};
@@ -77,7 +70,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			catch (InvalidOperationException ex)
 			{
 				TempData["FinancialPlan.Message"] = ex.Message;
-				FinancialPlanStatuses = await GetStatusOptionsAsync();
 			}
 			catch (Exception ex)
 			{
@@ -88,8 +80,5 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 			
 			return Page();
 		}
-
-		protected override async Task<IList<FinancialPlanStatusDto>> GetAvailableStatusesAsync()
-			=> await _financialPlanStatusCachedService.GetOpenFinancialPlansStatusesAsync();
 	}
 }

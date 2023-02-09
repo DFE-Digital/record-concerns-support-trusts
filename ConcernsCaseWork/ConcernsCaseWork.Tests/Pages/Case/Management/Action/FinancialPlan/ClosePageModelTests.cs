@@ -191,13 +191,20 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
 			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<ClosePageModel>>();
-			
+
+			var caseUrn = 1;
+			var financialPlanId = 1;
+
+			var financialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn, null);
+
 			mockFinancialPlanStatusService.Setup(fp => fp.GetClosureFinancialPlansStatusesAsync())
 				.ReturnsAsync(GetListValidStatuses());
 
+			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
+				.ReturnsAsync(financialPlanModel);
+
 			var pageModel = SetupClosePageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
 
-			var caseUrn = 1;
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseUrn);
 			routeData.Add("financialplanid", 2);
