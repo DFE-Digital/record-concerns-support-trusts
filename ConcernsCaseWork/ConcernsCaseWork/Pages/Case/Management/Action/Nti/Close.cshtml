@@ -41,6 +41,14 @@
                     Close NTI
                 </h1>
 
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        This action cannot be reopened. Check the details are correct before closing
+                    </strong>
+                </div>
+
                 <form role="form" method="post" id="close-nti-form" novalidate>
 
                     @* date *@
@@ -101,6 +109,8 @@
                             You can enter up to @Model.NotesMaxLength characters
                         </div>
                     </div>
+
+                    <p class="govuk-body">Do you still want to close this NTI: Notice to Improve?</p>
 
                     <div class="govuk-button-group">
                         <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-nti-wl-button">
