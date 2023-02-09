@@ -37,7 +37,6 @@ describe("Testing case action NTI", () =>
 
         Logger.Log("Notes Exceeding allowed limit")
         editNtiPage
-            .clearDateFields()
             .withNotesExceedingLimit()
             .save()
             .hasValidationError("Notes must be 2000 characters or less");
@@ -188,7 +187,7 @@ describe("Testing case action NTI", () =>
             .cancel()
             .hasValidationError("Notes must be 2000 characters or less");
 
-        cy.wait(500);
+        cy.waitForJavascript();
 
         cancelNtiPage
             .withNotes("This is my final notes")
@@ -217,6 +216,7 @@ describe("Testing case action NTI", () =>
             .hasValidationError("Please enter a complete date (DD MM YYYY)");
 
         liftNtiPage.clearDateFields();
+        cy.waitForJavascript();
 
         liftNtiPage
             .withNotesExceedingLimit()
@@ -252,6 +252,7 @@ describe("Testing case action NTI", () =>
             .hasValidationError("Please enter a complete date (DD MM YYYY)");
 
         closeNtiPage.clearDateFields();
+        cy.waitForJavascript();
 
         closeNtiPage
             .withNotesExceedingLimit()
