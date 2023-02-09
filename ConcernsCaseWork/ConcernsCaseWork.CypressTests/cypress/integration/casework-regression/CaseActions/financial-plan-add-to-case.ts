@@ -22,6 +22,8 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
     it("Should add a financial plan", () => 
     {
+        checkFormValidation();
+        
         Logger.Log("Configuring a valid financial plan");
 
         editFinancialPlanPage
