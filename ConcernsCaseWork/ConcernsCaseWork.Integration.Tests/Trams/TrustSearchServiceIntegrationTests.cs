@@ -17,14 +17,14 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		/// </summary>
 		private IConfigurationRoot _configuration;
 		private WebAppFactory _factory;
-		
+
 		[OneTimeSetUp]
 		public void OneTimeSetup()
 		{
 			_configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			_factory = new WebAppFactory(_configuration);
 		}
-		
+
 		[OneTimeTearDown]
 		public void OneTimeTearDown()
 		{
@@ -38,15 +38,15 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			using var serviceScope = _factory.Services.CreateScope();
 			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustSearchService>();
 			const string searchParameter = "Northwood";
-			
+
 			// act
-			var trusts = await trustService.GetTrustsBySearchCriteria(TrustFactory.BuildTrustSearch(searchParameter));
+			var results = await trustService.GetTrustsBySearchCriteria(TrustFactory.BuildTrustSearch(searchParameter));
 
 			// assert
-			Assert.That(trusts, Is.Not.Null);
-			Assert.That(trusts.Count, Is.GreaterThanOrEqualTo(1));
+			Assert.That(results, Is.Not.Null);
+			Assert.That(results.Trusts.Count, Is.GreaterThanOrEqualTo(1));
 		}
-		
+
 		[Test]
 		public async Task WhenGetTrustsCachedWithSearchByGroupNameAndUkPrn_ReturnsTrustsFromTrams()
 		{
@@ -54,15 +54,15 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			using var serviceScope = _factory.Services.CreateScope();
 			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustSearchService>();
 			const string searchParameter = "Northwood";
-			
+
 			// act
-			var trusts = await trustService.GetTrustsBySearchCriteria(TrustFactory.BuildTrustSearch(searchParameter, searchParameter));
+			var results = await trustService.GetTrustsBySearchCriteria(TrustFactory.BuildTrustSearch(searchParameter, searchParameter));
 
 			// assert
-			Assert.That(trusts, Is.Not.Null);
-			Assert.That(trusts.Count, Is.GreaterThanOrEqualTo(1));
+			Assert.That(results, Is.Not.Null);
+			Assert.That(results.Trusts.Count, Is.GreaterThanOrEqualTo(1));
 		}
-		
+
 		[Test]
 		public async Task WhenGetTrustsCachedWithSearchByGroupNameAndUkPrnAndCompaniesHouseNumber_ReturnsTrustsFromTrams()
 		{
@@ -70,13 +70,13 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			using var serviceScope = _factory.Services.CreateScope();
 			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustSearchService>();
 			const string searchParameter = "Northwood";
-			
+
 			// act
-			var trusts = await trustService.GetTrustsBySearchCriteria(TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
+			var results = await trustService.GetTrustsBySearchCriteria(TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
 
 			// assert
-			Assert.That(trusts, Is.Not.Null);
-			Assert.That(trusts.Count, Is.GreaterThanOrEqualTo(1));
+			Assert.That(results, Is.Not.Null);
+			Assert.That(results.Trusts.Count, Is.GreaterThanOrEqualTo(1));
 		}
 	}
 }
