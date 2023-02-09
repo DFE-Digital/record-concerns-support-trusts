@@ -119,7 +119,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 			sut.FindTrustModel.SelectedTrustUkprn = "abc";
 			var result = await sut.OnPostSelectedTrust();
 
-			IEnumerable<string> errorMsgs = (IEnumerable<string>) sut.TempData["Message"];
+			IEnumerable<string> errorMsgs = (IEnumerable<string>)sut.TempData["Message"];
 			Assert.That(errorMsgs.Count(), Is.EqualTo(1));
 			Assert.That(errorMsgs.First(), Is.EqualTo("error_message_1"));
 			Assert.That(result, Is.TypeOf<PageResult>());
@@ -137,10 +137,11 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Create
 			var mockClaimsPrincipalHelper = new Mock<IClaimsPrincipalHelper>();
 
 			var searchResults = TrustFactory.BuildListTrustSummaryModel();
+			var searchResultsPageData = new TrustSearchModelPageResponseData { IsMoreDataOnServer = false, TotalMatchesFromApi = searchResults.Count };
 
 			mockTrustService
 				.Setup(t => t.GetTrustsBySearchCriteria(It.Is<TrustSearch>(s => s.Ukprn == searchString && s.GroupName == searchString && s.CompaniesHouseNumber == searchString)))
-				.ReturnsAsync(searchResults);
+				.ReturnsAsync((searchResultsPageData, searchResults));
 
 			var sut = SetupPageModel(mockLogger, mockTrustService, mockUserService, mockClaimsPrincipalHelper);
 

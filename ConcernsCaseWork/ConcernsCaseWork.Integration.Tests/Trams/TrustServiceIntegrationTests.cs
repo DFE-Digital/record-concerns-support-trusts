@@ -64,8 +64,8 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
 
 			// assert
-			Assert.That(trustsSummaryModel, Is.Not.Null);
-			Assert.That(trustsSummaryModel.Count, Is.GreaterThanOrEqualTo(1));
+			Assert.That(trustsSummaryModel.Data, Is.Not.Null);
+			Assert.That(trustsSummaryModel.Data.Count, Is.GreaterThanOrEqualTo(1));
 		}
 
 		[Test]
@@ -109,11 +109,13 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
 
 			// assert
-			Assert.That(trustsSummaryModel, Is.Not.Null);
-			Assert.That(trustsSummaryModel.Count, Is.GreaterThanOrEqualTo(1));
+			Assert.That(trustsSummaryModel.Data, Is.Not.Null);
+			Assert.That(trustsSummaryModel.Data.Count, Is.GreaterThanOrEqualTo(1));
+			Assert.That(trustsSummaryModel.PageData.TotalMatchesFromApi, Is.EqualTo(1));
+			Assert.That(trustsSummaryModel.PageData.IsMoreDataOnServer, Is.EqualTo(false));
 
 			// arrange
-			var ukPrn = trustsSummaryModel.Where(t => t.UkPrn != null).Select(t => t.UkPrn).FirstOrDefault();
+			var ukPrn = trustsSummaryModel.Data.Where(t => t.UkPrn != null).Select(t => t.UkPrn).FirstOrDefault();
 
 			// act
 			var trustDetailsModel = await trustModelService.GetTrustByUkPrn(ukPrn);
