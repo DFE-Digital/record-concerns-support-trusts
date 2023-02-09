@@ -2,7 +2,7 @@ using ConcernsCaseWork.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Reflection;
-using static Sentry.MeasurementUnit;
+
 
 namespace ConcernsCaseWork.Pages
 {
