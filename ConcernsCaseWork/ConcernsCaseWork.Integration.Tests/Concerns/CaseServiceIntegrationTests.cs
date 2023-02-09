@@ -172,15 +172,15 @@ namespace ConcernsCaseWork.Integration.Tests.Concerns
 		{
 			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustService>();
 			var apiWrapperTrusts= await trustService.GetTrustsByPagination(
-				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
+				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter), 1);
 
 			Assert.That(apiWrapperTrusts, Is.Not.Null);
-			Assert.That(apiWrapperTrusts.Data, Is.Not.Null);
+			Assert.That(apiWrapperTrusts.Trusts, Is.Not.Null);
 
 			var random = new Random();
-			int index = random.Next(apiWrapperTrusts.Data.Count);
+			int index = random.Next(apiWrapperTrusts.Trusts.Count);
 
-			return apiWrapperTrusts.Data[index];
+			return apiWrapperTrusts.Trusts[index];
 		}
 	}
 }
