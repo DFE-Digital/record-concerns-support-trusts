@@ -99,23 +99,6 @@
                     </td>
                 </tr>
 
-                @* Date viable plan received *@
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Date viable plan received</th>
-                    <td class="govuk-table__cell" data-testid="date-plan-received-text">
-                        @{
-                            if (Model.FinancialPlanModel.DateViablePlanReceived.HasValue)
-                            {
-                                RenderValue(DateTimeHelper.ParseToDisplayDate(Model.FinancialPlanModel.DateViablePlanReceived));
-                            }
-                            else
-                            {
-                                RenderEmptyLabel();
-                            }
-                        }
-                    </td>
-                </tr>
-
                 @* Notes *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
