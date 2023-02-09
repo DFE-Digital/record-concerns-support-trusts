@@ -19,14 +19,14 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 		/// </summary>
 		private IConfigurationRoot _configuration;
 		private WebAppFactory _factory;
-		
+
 		[OneTimeSetUp]
 		public void OneTimeSetup()
 		{
 			_configuration = new ConfigurationBuilder().ConfigurationUserSecretsBuilder().Build();
 			_factory = new WebAppFactory(_configuration);
 		}
-		
+
 		[OneTimeTearDown]
 		public void OneTimeTearDown()
 		{
@@ -40,17 +40,17 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			using var serviceScope = _factory.Services.CreateScope();
 			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustService>();
 			const string searchParameter = "Northwood";
-			
+
 			// act
 			var apiWrapperTrustsSummaryDto = await trustService.GetTrustsByPagination(
-				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
+				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter), 1);
 
 			// assert
 			Assert.That(apiWrapperTrustsSummaryDto, Is.Not.Null);
-			Assert.That(apiWrapperTrustsSummaryDto.Data, Is.Not.Null);
-			Assert.That(apiWrapperTrustsSummaryDto.Data.Count, Is.GreaterThanOrEqualTo(1));
+			Assert.That(apiWrapperTrustsSummaryDto.Trusts, Is.Not.Null);
+			Assert.That(apiWrapperTrustsSummaryDto.Trusts.Count, Is.GreaterThanOrEqualTo(1));
 		}
-		
+
 		[Test]
 		public async Task WhenRequestTrusts_ReturnsTrustsModelWithPagination()
 		{
@@ -58,7 +58,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			using var serviceScope = _factory.Services.CreateScope();
 			var trustModelService = serviceScope.ServiceProvider.GetRequiredService<ITrustModelService>();
 			const string searchParameter = "Northwood";
-			
+
 			// act
 			var trustsSummaryModel = await trustModelService.GetTrustsBySearchCriteria(
 				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
@@ -67,7 +67,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			Assert.That(trustsSummaryModel, Is.Not.Null);
 			Assert.That(trustsSummaryModel.Count, Is.GreaterThanOrEqualTo(1));
 		}
-		
+
 		[Test]
 		public async Task WhenRequestTrustByUkPrn_ReturnsTrustDetailsDto()
 		{
@@ -75,18 +75,18 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			using var serviceScope = _factory.Services.CreateScope();
 			var trustService = serviceScope.ServiceProvider.GetRequiredService<ITrustService>();
 			const string searchParameter = "Northwood";
-			
+
 			// act
-			var apiWrapperTrustsSummaryDto = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
+			var apiWrapperTrustsSummaryDto = await trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter), 1);
 
 			// assert
 			Assert.That(apiWrapperTrustsSummaryDto, Is.Not.Null);
-			Assert.That(apiWrapperTrustsSummaryDto.Data, Is.Not.Null);
-			Assert.That(apiWrapperTrustsSummaryDto.Data.Count, Is.GreaterThanOrEqualTo(1));
+			Assert.That(apiWrapperTrustsSummaryDto.Trusts, Is.Not.Null);
+			Assert.That(apiWrapperTrustsSummaryDto.Trusts.Count, Is.GreaterThanOrEqualTo(1));
 
 			// arrange
-			var ukPrn = apiWrapperTrustsSummaryDto.Data.Where(t => t.UkPrn != null).Select(t => t.UkPrn).FirstOrDefault();
-			
+			var ukPrn = apiWrapperTrustsSummaryDto.Trusts.Where(t => t.UkPrn != null).Select(t => t.UkPrn).FirstOrDefault();
+
 			// act
 			var trustDetailsDto = await trustService.GetTrustByUkPrn(ukPrn);
 
@@ -95,7 +95,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			Assert.That(trustDetailsDto.GiasData, Is.Not.Null);
 			Assert.That(trustDetailsDto.GiasData.GroupContactAddress, Is.Not.Null);
 		}
-		
+
 		[Test]
 		public async Task WhenRequestTrustByUkPrn_ReturnsTrustDetailsModel()
 		{
@@ -103,7 +103,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 			using var serviceScope = _factory.Services.CreateScope();
 			var trustModelService = serviceScope.ServiceProvider.GetRequiredService<ITrustModelService>();
 			const string searchParameter = "Northwood";
-			
+
 			// act
 			var trustsSummaryModel = await trustModelService.GetTrustsBySearchCriteria(
 				TrustFactory.BuildTrustSearch(searchParameter, searchParameter, searchParameter));
@@ -114,7 +114,7 @@ namespace ConcernsCaseWork.Integration.Tests.Trams
 
 			// arrange
 			var ukPrn = trustsSummaryModel.Where(t => t.UkPrn != null).Select(t => t.UkPrn).FirstOrDefault();
-			
+
 			// act
 			var trustDetailsModel = await trustModelService.GetTrustByUkPrn(ukPrn);
 
