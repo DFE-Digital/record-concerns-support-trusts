@@ -3,8 +3,8 @@ import { check, sleep } from 'k6';
 import getConfig from '../getConfig.js';
 
 export const options = {
-    vus: 1,
-    duration: '1s',
+    vus: 200,
+    duration: '30s',
     // httpDebug: 'full',
 };
 
@@ -18,7 +18,9 @@ export default function () {
         }
     });
 
-    check(managementResponse.status, 200);
+    check(managementResponse, {
+        "Mangement page succeeded": (res) => res.status === 200
+    });
 
     sleep(1);
 }
