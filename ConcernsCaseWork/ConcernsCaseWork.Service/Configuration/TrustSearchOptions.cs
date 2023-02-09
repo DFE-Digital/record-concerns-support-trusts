@@ -9,5 +9,7 @@
 		public int TrustsLimitByPage { get; set; }
 
 		public int TrustsPerPage { get; set; }
+
+		public string ShowWarningWhenTooManySearchResults { get; set; }
 	}
 }
