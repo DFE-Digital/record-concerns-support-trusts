@@ -5,6 +5,12 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>disable</Nullable>
     </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="Context\**" />
+      <EmbeddedResource Remove="Context\**" />
+      <None Remove="Context\**" />
+    </ItemGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
@@ -17,9 +23,5 @@
       <ProjectReference Include="..\ConcernsCaseWork.API.Contracts\ConcernsCaseWork.API.Contracts.csproj" />
       <ProjectReference Include="..\ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj" />
       <ProjectReference Include="..\ConcernsCaseWork.UserContext\ConcernsCaseWork.UserContext.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Context\" />
     </ItemGroup>
 </Project>
