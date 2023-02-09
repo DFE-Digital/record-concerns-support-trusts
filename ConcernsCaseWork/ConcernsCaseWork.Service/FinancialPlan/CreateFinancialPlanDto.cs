@@ -19,9 +19,6 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 		[JsonProperty("datePlanRequested")]
 		public DateTime? DatePlanRequested { get; }
 
-		[JsonProperty("dateViablePlanReceived")]
-		public DateTime? DateViablePlanReceived { get; }
-
 		[JsonProperty("notes")]
 		public string Notes { get; }
 		
@@ -29,8 +26,8 @@ namespace ConcernsCaseWork.Service.FinancialPlan
 		public DateTime UpdatedAt { get; set; }
 
 		[JsonConstructor]
-		public CreateFinancialPlanDto(long caseUrn, DateTime createdAt, string createdBy, long? statusId, DateTime? datePlanRequested, DateTime? dateViablePlanReceived, string notes, DateTime updatedAt) =>
-			(CaseUrn, CreatedAt, CreatedBy, StatusId, DatePlanRequested, DateViablePlanReceived, Notes, UpdatedAt) =
-			(caseUrn, createdAt, createdBy, statusId, datePlanRequested, dateViablePlanReceived, notes, updatedAt);
+		public CreateFinancialPlanDto(long caseUrn, DateTime createdAt, string createdBy, long? statusId, DateTime? datePlanRequested, string notes, DateTime updatedAt) =>
+			(CaseUrn, CreatedAt, CreatedBy, StatusId, DatePlanRequested, Notes, UpdatedAt) =
+			(caseUrn, createdAt, createdBy, statusId, datePlanRequested, notes, updatedAt);
 	}
 }
