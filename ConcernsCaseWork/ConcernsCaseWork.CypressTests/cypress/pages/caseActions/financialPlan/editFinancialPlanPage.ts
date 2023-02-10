@@ -11,17 +11,6 @@ export class EditFinancialPlanPage
         return this;
     }
 
-    public withStatus(status: string): this
-    {
-        Logger.Log(`With status ${status}`);
-
-        var selector = `status-${status.split(" ").join("")}`;
-
-        cy.getByTestId(selector).click();
-
-        return this;
-    }
-
     public withPlanRequestedDay(day: string): this
     {
         Logger.Log(`With plan requested day ${day}`);
@@ -60,43 +49,7 @@ export class EditFinancialPlanPage
         return this;
     }
 
-    public withPlanReceivedDay(day: string): this
-    {
-        Logger.Log(`With plan received day ${day}`);
 
-        cy.getById("dtr-day-viable-plan").clear().type(day);
-
-        return this;
-    }
-
-    public withPlanReceivedMonth(month: string): this
-    {
-        Logger.Log(`With plan received month ${month}`);
-
-        cy.getById("dtr-month-viable-plan").clear().type(month);
-
-        return this;
-    }
-
-    public withPlanReceivedYear(year: string): this
-    {
-        Logger.Log(`With plan received year ${year}`);
-
-        cy.getById("dtr-year-viable-plan").clear().type(year);
-
-        return this;
-    }
-
-    public clearPlanReceivedDate(): this
-    {
-        Logger.Log("Clearing plan received date");
-
-        cy.getById("dtr-day-viable-plan").clear();
-        cy.getById("dtr-month-viable-plan").clear();
-        cy.getById("dtr-year-viable-plan").clear();
-
-        return this;
-    }
 
     public withNotes(notes: string): this
     {

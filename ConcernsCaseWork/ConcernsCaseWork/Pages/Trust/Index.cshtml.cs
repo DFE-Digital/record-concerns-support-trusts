@@ -67,7 +67,7 @@ namespace ConcernsCaseWork.Pages.Trust
 				var trustSearch = new TrustSearch(searchQuery, searchQuery, searchQuery);
 				var trustSearchResponse = await _trustModelService.GetTrustsBySearchCriteria(trustSearch);
 
-				return new JsonResult(new TrustSearchResponse() { Nonce = nonce, Data = trustSearchResponse });
+				return new JsonResult(new TrustSearchResponse() { Nonce = nonce, Data = trustSearchResponse.Data, TotalMatchesFromApi = trustSearchResponse.PageData.TotalMatchesFromApi, IsMoreDataOnServer = trustSearchResponse.PageData.IsMoreDataOnServer });
 			}
 			catch (Exception ex)
 			{
