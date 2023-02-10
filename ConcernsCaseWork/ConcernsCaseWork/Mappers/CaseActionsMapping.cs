@@ -1,4 +1,5 @@
 ﻿using ConcernsCaseWork.API.Contracts.Permissions;
+using ConcernsCaseWork.Constants;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
@@ -79,6 +80,52 @@ namespace ConcernsCaseWork.Mappers
 			};
 
 			return result;
+		}
+
+		public static SrmaCloseTextModel ToSrmaCloseText(string resolution)
+		{
+			var warningMessageTemplate = "This action cannot be reopened. Check the details are correct, especially dates, before {0}.";
+			var buttonHintTemplate = "Do you still want to {0} this SRMA action?";
+
+			switch (resolution)
+			{
+				case SrmaConstants.ResolutionCancelled:
+					return new SrmaCloseTextModel()
+					{
+						ConfirmText = "Confirm SRMA action was cancelled",
+						WarningMessage = string.Format(warningMessageTemplate, "cancelling"),
+						Header = "Cancel SRMA action",
+						Title = "Cancel SRMA",
+						ButtonHint = string.Format(buttonHintTemplate, "cancel"),
+						ButtonText = "Cancel SRMA action"
+					};
+
+				case SrmaConstants.ResolutionDeclined:
+					return new SrmaCloseTextModel()
+					{
+						ConfirmText = "Confirm SRMA action was declined by trust",
+						WarningMessage = string.Format(warningMessageTemplate, "declining"),
+						Header = "SRMA action declined",
+						Title = "Decline SRMA",
+						ButtonHint = string.Format(buttonHintTemplate, "decline"),
+						ButtonText = "SRMA action declined"
+					};
+
+				case SrmaConstants.ResolutionComplete:
+					return new SrmaCloseTextModel()
+					{
+						ConfirmText = "Confirm SRMA action is complete",
+						WarningMessage = string.Format(warningMessageTemplate, "completing"),
+						Header = "Complete SRMA action",
+						Title = "Complete SRMA",
+						ButtonHint = string.Format(buttonHintTemplate, "complete"),
+						ButtonText = "Complete SRMA action"
+					};
+
+				default:
+					throw new Exception($"Unrecognised SRMA resolution status {resolution}");
+
+			}
 		}
 	}
 }

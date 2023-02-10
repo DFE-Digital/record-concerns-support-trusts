@@ -29,10 +29,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
-			
-			var validStatuses = GetListValidStatuses();
 			
 			var caseUrn = 4;
 			var financialPlanId = 6;
@@ -40,10 +37,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn, null));
 			
-			mockFinancialPlanStatusService.Setup(fp => fp.GetOpenFinancialPlansStatusesAsync())
-				.ReturnsAsync(validStatuses);
-			
-			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseUrn);
@@ -67,18 +61,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			Assert.AreEqual(pageModel.FinancialPlanModel.Id, financialPlanId);
 			Assert.AreEqual(pageModel.FinancialPlanModel.CaseUrn, caseUrn);			
 			
-			Assert.IsNotNull(pageModel.FinancialPlanStatuses);
-			Assert.AreEqual(2, pageModel.FinancialPlanStatuses.Count());
-			Assert.IsFalse(pageModel.FinancialPlanStatuses.Any(s => s.IsChecked));
-
-			var testStatus1 = pageModel.FinancialPlanStatuses.First();
-			Assert.IsTrue(validStatuses.Select(s => s.Description).Contains(testStatus1.Text));
-			Assert.IsTrue(validStatuses.Select(s => s.Name).Contains(testStatus1.Id));
-			
-			var testStatus2 = pageModel.FinancialPlanStatuses.Last();
-			Assert.IsTrue(validStatuses.Select(s => s.Description).Contains(testStatus2.Text));
-			Assert.IsTrue(validStatuses.Select(s => s.Name).Contains(testStatus2.Id));
-			
 			Assert.IsNull(pageModel.TempData["Error.Message"]);
 		}
 		
@@ -87,10 +69,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
-			
-			var validStatuses = GetListValidStatuses();
 			
 			var caseUrn = 4;
 			var financialPlanId = 6;			
@@ -100,10 +79,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			mockFinancialPlanModelService.Setup(fp => fp.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(financialPlan);
 			
-			mockFinancialPlanStatusService.Setup(fp => fp.GetOpenFinancialPlansStatusesAsync())
-				.ReturnsAsync(validStatuses);
-			
-			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 			
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseUrn);
@@ -138,10 +114,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
 
-			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 				
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", urn);
@@ -167,11 +142,8 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
 
-			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
-			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
 			
 			var caseUrn = 1L;
 			var financialPlanId = 2L;
@@ -180,7 +152,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn));
 				
-			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseUrn);
@@ -209,11 +181,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
-			
-			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
-			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
 			
 			var caseUrn = 1L;
 			var financialPlanId = 2L;
@@ -222,7 +190,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn));
 			
-			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseUrn);
@@ -246,109 +214,22 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		}
 		
 		[Test]
-		public async Task WhenOnPostAsync_Invalid_DatePlanReceived_FormData_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
-			var mockLogger = new Mock<ILogger<EditPageModel>>();
-
-			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
-			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
-			
-			var caseUrn = 1L;
-			var financialPlanId = 2L;
-			
-			mockFinancialPlanModelService
-				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
-				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn));
-				
-			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("financialplanid", financialPlanId);
-			routeData.Add("editMode", "edit");
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "dtr-day-viable-plan", new StringValues("00") },
-					{ "dtr-month-viable-plan", new StringValues("00") },
-					{ "dtr-year-viable-plan", new StringValues("0000") },
-				});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["FinancialPlan.Message"], Is.EqualTo("Viable plan 00-00-0000 is an invalid date"));
-		}
-
-		[Test]
-		public async Task WhenOnPostAsync_Partial_DatePlanReceived_FormData_ThrowsException_ReturnsPage()
-		{
-			// arrange
-			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
-			var mockLogger = new Mock<ILogger<EditPageModel>>();
-			
-			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
-			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
-			
-			var caseUrn = 1L;
-			var financialPlanId = 2L;
-			
-			mockFinancialPlanModelService
-				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
-				.ReturnsAsync(SetupFinancialPlanModel(financialPlanId, caseUrn));
-			
-			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
-
-			var routeData = pageModel.RouteData.Values;
-			routeData.Add("urn", caseUrn);
-			routeData.Add("financialplanid", financialPlanId);
-			routeData.Add("editMode", "edit");
-
-			pageModel.HttpContext.Request.Form = new FormCollection(
-				new Dictionary<string, StringValues>
-				{
-					{ "dtr-day-viable-plan", new StringValues("02") },
-					{ "dtr-month-viable-plan", new StringValues("04") },
-				});
-
-			// act
-			var pageResponse = await pageModel.OnPostAsync();
-
-			// assert
-			Assert.That(pageResponse, Is.Not.Null);
-			Assert.That(pageModel.TempData, Is.Not.Null);
-			Assert.That(pageModel.TempData["FinancialPlan.Message"], Is.EqualTo("Viable plan 02-04- is an invalid date"));
-		}
-
-		[Test]
 		public async Task WhenOnPostAsync_WithValidDatePlanRequested_Succeeds()
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
 
-			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
 			var caseUrn = 1L;
 			var financialPlanId = 2L;
 			
-			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn, statuses.First().Name);
+			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn);
 			
 			mockFinancialPlanModelService
 				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(existingFinancialPlanModel);
 			
-			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
-
-			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseUrn);
@@ -384,7 +265,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
 
 			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
@@ -397,9 +277,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(existingFinancialPlanModel);
 			
-			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
-
-			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseUrn);
@@ -423,7 +301,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			// assert
 			mockFinancialPlanModelService.Verify(f => f.PatchFinancialById(It.Is<PatchFinancialPlanModel>(fpm =>
 				fpm.ClosedAt == null && 
-				fpm.DateViablePlanReceived == new DateTime(year, month, day) &&
 				fpm.DatePlanRequested == null)), Times.Once);
 			
 			Assert.IsNotNull(pageResponse);
@@ -435,22 +312,19 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
 
 			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
 			var caseUrn = 1L;
 			var financialPlanId = 2L;
 			
-			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn, statuses.First().Name);
+			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn);
 			
 			mockFinancialPlanModelService
 				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(existingFinancialPlanModel);
 			
-			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
-
-			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseUrn);
@@ -478,22 +352,19 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 		{
 			// arrange
 			var mockFinancialPlanModelService = new Mock<IFinancialPlanModelService>();
-			var mockFinancialPlanStatusService = new Mock<IFinancialPlanStatusCachedService>();
 			var mockLogger = new Mock<ILogger<EditPageModel>>();
 
-			var statuses = FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto();
 			var caseUrn = 1L;
 			var financialPlanId = 2L;
 			
-			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn, statuses.First().Name);
+			var existingFinancialPlanModel = SetupFinancialPlanModel(financialPlanId, caseUrn);
 			
 			mockFinancialPlanModelService
 				.Setup(m => m.GetFinancialPlansModelById(caseUrn, financialPlanId))
 				.ReturnsAsync(existingFinancialPlanModel);
 			
-			mockFinancialPlanStatusService.Setup(s => s.GetOpenFinancialPlansStatusesAsync()).ReturnsAsync(statuses);
 
-			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockFinancialPlanStatusService.Object, mockLogger.Object);
+			var pageModel = SetupEditPageModel(mockFinancialPlanModelService.Object, mockLogger.Object);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseUrn);
@@ -502,7 +373,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 			pageModel.HttpContext.Request.Form = new FormCollection(
 				new Dictionary<string, StringValues>
 				{
-					{ "status", statuses.First().Name }
+					{ "notes", "Notes" }
 				});
 
 			// act
@@ -519,13 +390,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 
 		private static EditPageModel SetupEditPageModel(
 			IFinancialPlanModelService mockFinancialPlanModelService,
-			IFinancialPlanStatusCachedService mockFinancialPlanStatusService,
 			ILogger<EditPageModel> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			var result = new EditPageModel(mockFinancialPlanModelService, mockFinancialPlanStatusService, mockLogger)
+			var result = new EditPageModel(mockFinancialPlanModelService, mockLogger)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
@@ -548,7 +418,5 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.FinancialPlan
 				new FinancialPlanStatusModel(statusName, 1, false), 
 				null,
 				DateTime.Now);
-		
-		private static List<FinancialPlanStatusDto> GetListValidStatuses() => FinancialPlanStatusFactory.BuildListOpenFinancialPlanStatusDto().ToList();
 	}
 }

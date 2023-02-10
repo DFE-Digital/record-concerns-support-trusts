@@ -21,31 +21,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		public FinancialPlanModel FinancialPlanModel { get; set; }
 		public IEnumerable<RadioItem> FinancialPlanStatuses { get; set; } = new List<RadioItem>();
 		
-		protected abstract Task<IList<FinancialPlanStatusDto>> GetAvailableStatusesAsync();
-		
-		protected virtual async Task<FinancialPlanStatusModel> GetOptionalStatusByNameAsync(string statusName)
-		{
-			var status = (await GetAvailableStatusesAsync())
-				.FirstOrDefault(s => s.Name.Equals(statusName));
-			
-			return status is null ? null : FinancialPlanStatusMapping.MapDtoToModel(status);
-		}
-				
-		protected async Task<IEnumerable<RadioItem>> GetStatusOptionsAsync(string selectedStatusName = null)
-			=> (await GetAvailableStatusesAsync())
-				.Select(s => new RadioItem
-				{
-					Id = s.Name, 
-					Text = s.Description,
-					IsChecked = selectedStatusName == s.Name
-				});
-		
-		protected async Task<FinancialPlanStatusModel> GetRequiredStatusByNameAsync(string statusName)
-		{
-			var status = await GetOptionalStatusByNameAsync(statusName);
-			return status ?? throw new InvalidOperationException($"Please select a reason for closing the Financial Plan");
-		}
-
 		protected string GetRequestedStatus() => GetFormValue("status");
 		
 		protected string GetRequestedNotes() => GetFormValue("financial-plan-notes");
