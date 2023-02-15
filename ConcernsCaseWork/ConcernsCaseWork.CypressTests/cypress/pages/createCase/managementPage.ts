@@ -22,7 +22,6 @@ export default class CaseManagementPage {
         return this;
     }
 
-
     public hasConcerns(value: string): this
     {
         Logger.Log(`Has concerns ${value}`);
@@ -31,7 +30,6 @@ export default class CaseManagementPage {
 
         return this;
     }
-
 
     public hasTerritory(value: string): this
     {
@@ -96,4 +94,40 @@ export default class CaseManagementPage {
         return this;
     }
 
+    public hasEmptyCurrentStatus(): this
+    {
+        this.hasCurrentStatus("");
+
+        return this;
+    }
+
+    public hasEmptyCaseAim(): this
+    {
+
+        this.hasCaseAim("");
+
+        return this;
+    }
+
+    public hasEmptyDeEscalationPoint(): this
+    {
+        this.hasDeEscalationPoint("");
+
+        return this;
+    }
+
+    public hasEmptyNextSteps(): this
+    {
+
+        this.hasNextSteps("");
+
+        return this;
+    }
+
+    public hasEmptyCaseHistory(): this
+    {
+        this.hasCaseHistory("");
+
+        return this;
+    }
 }

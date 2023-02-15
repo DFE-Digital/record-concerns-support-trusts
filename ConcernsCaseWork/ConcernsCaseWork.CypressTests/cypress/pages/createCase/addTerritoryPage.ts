@@ -35,7 +35,6 @@ export default class AddTerritoryPage {
         return this;
     }
 
-
     public hasConcernType(value: string): this
     {
         Logger.Log(`Has Concern Type ${value}`);
