@@ -47,18 +47,18 @@ export default class AddTerritoryPage {
         return this;
     }
 
-    public hasRiskToTrust(index:number, value: string): this
+    public hasRiskToTrust(value: string): this
     {
         Logger.Log(`Has Risk to trust ${value}`);
 
-        cy.getByTestId(`risk-to-trust-${index}`).should(
+        cy.getByTestId(`risk-to-trust`).should(
 			"contain.text",
 			value
 		);
         return this;
     }
 
-    public clickNextStepButton(): this
+    public nextStep(): this
     {
         Logger.Log("Click next step button");
         cy.getByTestId("next-step-button").click();

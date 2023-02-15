@@ -38,11 +38,11 @@ export default class AddConcernDetailsPage {
         return this;
     }
 
-    public hasRiskToTrust(index:number, value: string): this
+    public hasRiskToTrust(value: string): this
     {
         Logger.Log(`Has Risk to trust ${value}`);
 
-        cy.getByTestId(`risk-to-trust-${index}`).should(
+        cy.getByTestId(`risk-to-trust`).should(
 			"contain.text",
 			value
 		);
@@ -61,9 +61,55 @@ export default class AddConcernDetailsPage {
     }
 
 
+    public withIssueExceedingLimit(): this {
+        Logger.Log(`With exceeding issue limit`);
+
+        this.withExceedingTextLimit("issue", 2001);
+
+        return this;
+    }
+
+    public withCurrentStatusExceedingLimit(): this {
+        Logger.Log(`With exceeding current status limit`);
+
+        this.withExceedingTextLimit("current-status", 4001);
+
+        return this;
+    }
+
+    public withCaseAimExceedingLimit(): this {
+        Logger.Log(`With exceeding case aim limit`);
+
+        this.withExceedingTextLimit("case-aim", 1001);
+
+        return this;
+    }
+
+    public withDeEscalationPointExceedingLimit(): this {
+        Logger.Log(`With exceeding deescalation point limit`);
+
+        this.withExceedingTextLimit("de-escalation-point", 1001);
+
+        return this;
+    }
+
+    public withNextStepsExceedingLimit(): this {
+        Logger.Log(`With exceeding next steps limit`);
+
+        this.withExceedingTextLimit("next-steps", 4001);
+
+        return this;
+    }
+
+    public withCaseHistoryExceedingLimit(): this {
+        Logger.Log(`With exceeding case history limit`);
+
+        this.withExceedingTextLimit("case-history", 4300);
+
+        return this;
+    }
 
     public withExceedingTextLimit(field: string, limit: number): this {
-        Logger.Log(`With ${field} exceeding limit`);
 
         cy.getByTestId(field).clear().invoke("val", "x 1".repeat(limit));
 
@@ -118,7 +164,7 @@ export default class AddConcernDetailsPage {
         return this;
     }
 
-    public clickCreateCaseButton(): this
+    public createCase(): this
     {
         Logger.Log("Creating case");
         cy.getByTestId("create-case-button").click();

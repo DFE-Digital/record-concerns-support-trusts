@@ -27,7 +27,7 @@ export class CreateCasePage
         return this;
     }
 
-    public clickFirstOption(): this
+    public selectOption(): this
     {
         Logger.Log("Click first result");
         cy.get("#search__option--0").click();
@@ -35,7 +35,7 @@ export class CreateCasePage
         return this;
     }
 
-    public clickConfirmOptionButton(): this
+    public confirmOption(): this
     {
         Logger.Log("Click continue button");
         cy.getById("continue").click();

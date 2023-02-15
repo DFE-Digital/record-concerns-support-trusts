@@ -3,6 +3,45 @@ import { Logger } from "../../common/logger";
 
 export default class CaseManagementPage {
 
+
+    public hasTrust(value: string): this
+    {
+        Logger.Log(`Has trust ${value}`);
+
+        cy.getByTestId(`trust_Field`).should("contain.text", value);
+
+        return this;
+    }
+
+    public hasRiskToTrust(value: string): this
+    {
+        Logger.Log(`Has risk to trust ${value}`);
+
+        cy.getByTestId(`risk_to_trust_Field`).should("contain.text", value);
+
+        return this;
+    }
+
+
+    public hasConcerns(value: string): this
+    {
+        Logger.Log(`Has concerns ${value}`);
+
+        cy.getByTestId(`concerns_Field`).should("contain.text", value);
+
+        return this;
+    }
+
+
+    public hasTerritory(value: string): this
+    {
+        Logger.Log(`Has territort ${value}`);
+
+        cy.getByTestId(`territory_Field`).should("contain.text", value);
+
+        return this;
+    }
+
     public hasIssue(value: string): this
     {
         Logger.Log(`Has issue ${value}`);
