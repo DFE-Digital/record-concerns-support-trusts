@@ -185,7 +185,7 @@ namespace ConcernsCaseWork
 			// Setting the min higher means there will not be that delay in creating threads up to the min
 			// Re-evaluate this based on performance tests
 			// Found because redis kept timing out because it was delayed too long waiting for a thread to execute
-			ThreadPool.SetMinThreads(200, 200);
+			ThreadPool.SetMinThreads(400, 400);
 		}
 
 		/// <summary>
