@@ -28,7 +28,6 @@ describe("Creating a case", () =>
             .selectOption()
             .confirmOption();
 
-
         Logger.Log("Attempt to create an invalid concern");
         createConcernPage
             .hasTrustSummaryDetails("Ashton West End Primary Academy")
@@ -38,7 +37,17 @@ describe("Creating a case", () =>
             .hasValidationError("Select means of referral");
 
         cy.waitForJavascript();
-        
+
+        Logger.Log("Attempt to create a concern without a concern type");
+        createConcernPage
+            .withConcernType("Financial")
+            .withRating("Red-Amber")
+            .withMeansOfRefferal("External")
+            .addConcern()
+            .hasValidationError("Select concern sub type");
+
+        cy.waitForJavascript();
+
         Logger.Log("Create a valid concern");
         createConcernPage
             .withConcernType("Financial")
@@ -47,13 +56,11 @@ describe("Creating a case", () =>
             .withMeansOfRefferal("External")
             .addConcern();
 
-
         Logger.Log("Check Concern details are correctly populated");
         createConcernPage
             .hasTrustSummaryDetails("Ashton West End Primary Academy")
             .hasConcernType("Financial: Deficit")
             .nextStep();
-
 
         Logger.Log("Check unpopulated risk to trust throws validation error");
         addDetailsPage
@@ -67,7 +74,6 @@ describe("Creating a case", () =>
             .withRating("Red-Plus")
             .nextStep();
 
-
         Logger.Log("Check Trust, concern and risk to trust details are correctly populated");
         addTerritoryPage
             .hasTrustSummaryDetails("Ashton West End Primary Academy")
@@ -78,7 +84,6 @@ describe("Creating a case", () =>
         addTerritoryPage
             .nextStep()
             .hasValidationError("An SFSO Territory must be selected");
-
 
         Logger.Log("Populate territory");
         addTerritoryPage
@@ -132,5 +137,70 @@ describe("Creating a case", () =>
             .hasDeEscalationPoint("This is the de-escalation point")
             .hasNextSteps("This is the next steps")
             .hasCaseHistory("This is the case history");
+    });
+
+    it(("Should create a case with only required fields"), () => {
+        Logger.Log("Create a case");
+        createCasePage
+            .clickCreateCaseButton()
+            .withTrustName("Ashton West End Primary Academy")
+            .selectOption()
+            .confirmOption();
+
+        Logger.Log("Create a valid concern");
+        createConcernPage
+            .hasTrustSummaryDetails("Ashton West End Primary Academy")
+            .withConcernType("Financial")
+            .withSubConcernType("Financial: Deficit")
+            .withRating("Red-Amber")
+            .withMeansOfRefferal("External")
+            .addConcern();
+
+        Logger.Log("Check Concern details are correctly populated");
+        createConcernPage
+            .hasTrustSummaryDetails("Ashton West End Primary Academy")
+            .hasConcernType("Financial: Deficit")
+            .nextStep();
+
+        Logger.Log("Populate risk to trust");
+        addDetailsPage
+            .withRating("Red-Plus")
+            .nextStep();
+
+        Logger.Log("Check Trust, concern and risk to trust details are correctly populated");
+        addTerritoryPage
+            .hasTrustSummaryDetails("Ashton West End Primary Academy")
+            .hasConcernType("Financial: Deficit")
+            .hasRiskToTrust("Red Plus")
+
+        Logger.Log("Populate territory");
+        addTerritoryPage
+            .withTerritory("North and UTC - North East")
+            .nextStep();
+
+        Logger.Log("Check Trust, concern, risk to trust details and territory are correctly populated");
+        addConcernDetailsPage
+            .hasTrustSummaryDetails("Ashton West End Primary Academy")
+            .hasConcernType("Financial: Deficit")
+            .hasRiskToTrust("Red Plus")
+            .hasTerritory("North and UTC - North East");
+
+        Logger.Log("Add concern details with valid text limit");
+        addConcernDetailsPage
+            .withIssue("This is an issue")
+            .createCase();
+
+        Logger.Log("Verify case details");
+        caseManagementPage
+            .hasTrust("Ashton West End Primary Academy")
+            .hasRiskToTrust("Red Plus")
+            .hasConcerns("Financial: Deficit")
+            .hasTerritory("North and UTC - North East")
+            .hasIssue("This is an issue")
+            .hasEmptyCurrentStatus()
+            .hasEmptyCaseAim()
+            .hasEmptyDeEscalationPoint()
+            .hasEmptyNextSteps()
+            .hasEmptyCaseHistory();
     });
 });
