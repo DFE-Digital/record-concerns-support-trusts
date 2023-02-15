@@ -24,7 +24,7 @@ export default class AddDetailsPage {
 		return this;
 	}
 
-    public clickNextStepButton(): this
+    public nextStep(): this
     {
         Logger.Log("Click next step button");
         cy.getByTestId("next-step-button").click();

@@ -25,19 +25,19 @@ describe("Creating a case", () =>
         createCasePage
             .clickCreateCaseButton()
             .withTrustName("Ashton West End Primary Academy")
-            .clickFirstOption()
-            .clickConfirmOptionButton();
+            .selectOption()
+            .confirmOption();
 
 
         Logger.Log("Attempt to create an invalid concern");
         createConcernPage
             .hasTrustSummaryDetails("Ashton West End Primary Academy")
-            .clickAddConcernButton()
+            .addConcern()
             .hasValidationError("Select concern type")
             .hasValidationError("Select risk rating")
             .hasValidationError("Select means of referral");
 
-        cy.reload();
+        cy.waitForJavascript();
         
         Logger.Log("Create a valid concern");
         createConcernPage
@@ -45,65 +45,63 @@ describe("Creating a case", () =>
             .withSubConcernType("Financial: Deficit")
             .withRating("Red-Amber")
             .withMeansOfRefferal("External")
-            .clickAddConcernButton();
+            .addConcern();
 
 
         Logger.Log("Check Concern details are correctly populated");
         createConcernPage
             .hasTrustSummaryDetails("Ashton West End Primary Academy")
             .hasConcernType("Financial: Deficit")
-            .clickNextStepButton();
+            .nextStep();
 
 
         Logger.Log("Check unpopulated risk to trust throws validation error");
         addDetailsPage
-            .clickNextStepButton()
+            .nextStep()
             .hasValidationError("Select risk rating");
-
         
-        cy.reload();
+        cy.waitForJavascript();
         
         Logger.Log("Populate risk to trust");
         addDetailsPage
             .withRating("Red-Plus")
-            .clickNextStepButton();
+            .nextStep();
 
 
         Logger.Log("Check Trust, concern and risk to trust details are correctly populated");
         addTerritoryPage
             .hasTrustSummaryDetails("Ashton West End Primary Academy")
             .hasConcernType("Financial: Deficit")
-            .hasRiskToTrust(0,"Red Plus")
+            .hasRiskToTrust("Red Plus")
 
         Logger.Log("Check unpopulated territory throws validation error");
         addTerritoryPage
-            .clickNextStepButton()
+            .nextStep()
             .hasValidationError("An SFSO Territory must be selected");
 
 
         Logger.Log("Populate territory");
         addTerritoryPage
             .withTerritory("North and UTC - North East")
-            .clickNextStepButton();
+            .nextStep();
 
         Logger.Log("Check Trust, concern, risk to trust details and territory are correctly populated");
         addConcernDetailsPage
             .hasTrustSummaryDetails("Ashton West End Primary Academy")
             .hasConcernType("Financial: Deficit")
-            .hasRiskToTrust(0,"Red Plus")
+            .hasRiskToTrust("Red Plus")
             .hasTerritory("North and UTC - North East");
 
-        //
 
         Logger.Log("Validate unpopulated concern details");
         addConcernDetailsPage
-            .withExceedingTextLimit("issue", 2001)
-            .withExceedingTextLimit("current-status", 4001)
-            .withExceedingTextLimit("case-aim", 1001)
-            .withExceedingTextLimit("de-escalation-point", 1001)
-            .withExceedingTextLimit("next-steps", 4001)
-            .withExceedingTextLimit("case-history", 4300)
-            .clickCreateCaseButton()
+            .withIssueExceedingLimit()
+            .withCurrentStatusExceedingLimit()
+            .withCaseAimExceedingLimit()
+            .withDeEscalationPointExceedingLimit()
+            .withNextStepsExceedingLimit()
+            .withCaseHistoryExceedingLimit()
+            .createCase()
             .hasValidationError("Issue must be 2000 characters or less")
             .hasValidationError("Current status must be 4000 characters or less")
             .hasValidationError("Next steps must be 4000 characters or less")
@@ -119,11 +117,15 @@ describe("Creating a case", () =>
             .withDeEscalationPoint("This is the de-escalation point")
             .withNextSteps("This is the next steps")
             .withCaseHistory("This is the case history")
-            .clickCreateCaseButton();
+            .createCase();
 
 
         Logger.Log("Verify case details");
         caseManagementPage
+            .hasTrust("Ashton West End Primary Academy")
+            .hasRiskToTrust("Red Plus")
+            .hasConcerns("Financial: Deficit")
+            .hasTerritory("North and UTC - North East")
             .hasIssue("This is an issue")
             .hasCurrentStatus("This is the current status")
             .hasCaseAim("This is the case aim")

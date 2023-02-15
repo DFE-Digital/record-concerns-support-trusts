@@ -79,7 +79,7 @@ export default class CreateConcernPage {
 		return this;
 	}
 
-    public clickAddConcernButton(): this
+    public addConcern(): this
     {
         Logger.Log("Click add concern button");
         cy.getByTestId("add-concern-button").click();
@@ -87,7 +87,7 @@ export default class CreateConcernPage {
         return this;
     }
 
-    public clickNextStepButton(): this
+    public nextStep(): this
     {
         Logger.Log("Click next step button");
         cy.getByTestId("next-step-button").click();
