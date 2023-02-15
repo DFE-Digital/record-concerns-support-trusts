@@ -15,6 +15,53 @@ export default class AddConcernDetailsPage {
 		return this;
 	}
 
+    public hasTrustSummaryDetails(value: string): this
+    {
+        Logger.Log(`Has Trust summary details ${value}`);
+
+        cy.getByTestId("trust-summary").should(
+			"contain.text",
+			value
+		);
+        return this;
+    }
+
+
+    public hasConcernType(value: string): this
+    {
+        Logger.Log(`Has Concern Type ${value}`);
+
+        cy.getByTestId("concern-type").should(
+			"contain.text",
+			value
+		);
+        return this;
+    }
+
+    public hasRiskToTrust(index:number, value: string): this
+    {
+        Logger.Log(`Has Risk to trust ${value}`);
+
+        cy.getByTestId(`risk-to-trust-${index}`).should(
+			"contain.text",
+			value
+		);
+        return this;
+    }
+
+    public hasTerritory(value: string): this
+    {
+        Logger.Log(`Has Territory ${value}`);
+
+        cy.getByTestId(`territory`).should(
+			"contain.text",
+			value
+		);
+        return this;
+    }
+
+
+
     public withExceedingTextLimit(field: string, limit: number): this {
         Logger.Log(`With ${field} exceeding limit`);
 
