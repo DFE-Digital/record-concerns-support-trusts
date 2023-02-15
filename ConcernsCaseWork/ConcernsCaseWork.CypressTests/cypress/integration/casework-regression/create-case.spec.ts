@@ -19,7 +19,7 @@ describe("Creating a case", () =>
 		cy.login();
 	});
 
-    it("Should validate unpopulated concern values", () =>
+    it("Should validate adding a case", () =>
     {
         Logger.Log("Create a case");
         createCasePage
@@ -29,34 +29,16 @@ describe("Creating a case", () =>
             .clickConfirmOptionButton();
 
 
-        //TODO: Check that trust field is correctly populated
-
         Logger.Log("Attempt to create an invalid concern");
         createConcernPage
+            .hasTrustSummaryDetails("Ashton West End Primary Academy")
             .clickAddConcernButton()
             .hasValidationError("Select concern type")
             .hasValidationError("Select risk rating")
             .hasValidationError("Select means of referral");
 
-        Logger.Log("Create a valid concern");
-        createConcernPage
-            .withConcernType("Financial")
-            .withSubConcernType("Financial: Deficit")
-            .withRating("Red-Amber")
-            .withMeansOfRefferal("External")
-            .clickAddConcernButton();
-
-    });
-
-    it("Should create a valid concern", () =>
-    {
-        Logger.Log("Create a case");
-        createCasePage
-            .clickCreateCaseButton()
-            .withTrustName("Ashton West End Primary Academy")
-            .clickFirstOption()
-            .clickConfirmOptionButton();
-
+        cy.reload();
+        
         Logger.Log("Create a valid concern");
         createConcernPage
             .withConcernType("Financial")
@@ -66,99 +48,52 @@ describe("Creating a case", () =>
             .clickAddConcernButton();
 
 
-        //TODO: Check that trust and concerns field is correctly populated
-
-    });
-
-    it("Should validate adding risk to trust", () =>
-    {
-        Logger.Log("Create a case");
-        createCasePage
-            .clickCreateCaseButton()
-            .withTrustName("Ashton West End Primary Academy")
-            .clickFirstOption()
-            .clickConfirmOptionButton();
-
-        Logger.Log("Create a valid concern");
+        Logger.Log("Check Concern details are correctly populated");
         createConcernPage
-            .withConcernType("Financial")
-            .withSubConcernType("Financial: Deficit")
-            .withRating("Red-Amber")
-            .withMeansOfRefferal("External")
-            .clickAddConcernButton()
+            .hasTrustSummaryDetails("Ashton West End Primary Academy")
+            .hasConcernType("Financial: Deficit")
             .clickNextStepButton();
+
 
         Logger.Log("Check unpopulated risk to trust throws validation error");
         addDetailsPage
             .clickNextStepButton()
             .hasValidationError("Select risk rating");
-    });
 
-    it("Should validate adding territory", () =>
-    {
-        Logger.Log("Create a case");
-        createCasePage
-            .clickCreateCaseButton()
-            .withTrustName("Ashton West End Primary Academy")
-            .clickFirstOption()
-            .clickConfirmOptionButton();
-
-        Logger.Log("Create a valid concern");
-        createConcernPage
-            .withConcernType("Financial")
-            .withSubConcernType("Financial: Deficit")
-            .withRating("Red-Amber")
-            .withMeansOfRefferal("External")
-            .clickAddConcernButton()
-            .clickNextStepButton();
-
-        //TODO: Check the risk to trust filed is correctly populated
-
+        
+        cy.reload();
+        
         Logger.Log("Populate risk to trust");
         addDetailsPage
             .withRating("Red-Plus")
             .clickNextStepButton();
+
+
+        Logger.Log("Check Trust, concern and risk to trust details are correctly populated");
+        addTerritoryPage
+            .hasTrustSummaryDetails("Ashton West End Primary Academy")
+            .hasConcernType("Financial: Deficit")
+            .hasRiskToTrust(0,"Red Plus")
 
         Logger.Log("Check unpopulated territory throws validation error");
         addTerritoryPage
             .clickNextStepButton()
             .hasValidationError("An SFSO Territory must be selected");
 
-        Logger.Log("Populate territory");
-        addTerritoryPage
-            .withTerritory("North and UTC - North East")
-            .clickNextStepButton();
-    });
-
-    it("Should add concern details", () =>
-    {
-        Logger.Log("Create a case");
-        createCasePage
-            .clickCreateCaseButton()
-            .withTrustName("Ashton West End Primary Academy")
-            .clickFirstOption()
-            .clickConfirmOptionButton();
-
-        Logger.Log("Create a valid concern");
-        createConcernPage
-            .withConcernType("Financial")
-            .withSubConcernType("Financial: Deficit")
-            .withRating("Red-Amber")
-            .withMeansOfRefferal("External")
-            .clickAddConcernButton()
-            .clickNextStepButton();
-
-        //TODO: Check the risk the territory field is correctly populated
-
-        Logger.Log("Populate risk to trust");
-        addDetailsPage
-            .withRating("Red-Plus")
-            .clickNextStepButton();
 
         Logger.Log("Populate territory");
         addTerritoryPage
             .withTerritory("North and UTC - North East")
             .clickNextStepButton();
+
+        Logger.Log("Check Trust, concern, risk to trust details and territory are correctly populated");
+        addConcernDetailsPage
+            .hasTrustSummaryDetails("Ashton West End Primary Academy")
+            .hasConcernType("Financial: Deficit")
+            .hasRiskToTrust(0,"Red Plus")
+            .hasTerritory("North and UTC - North East");
+
+        //
 
         Logger.Log("Validate unpopulated concern details");
         addConcernDetailsPage
@@ -176,24 +111,24 @@ describe("Creating a case", () =>
             .hasValidationError("Case aim must be 1000 characters or less")
             .hasValidationError("Case history must be 4300 characters or less");
 
-            Logger.Log("Add concern details with valid text limit");
-            addConcernDetailsPage
-                .withIssue("This is an issue")
-                .withCurrentStatus("This is the current status")
-                .withCaseAim("This is the case aim")
-                .withDeEscalationPoint("This is the de-escalation point")
-                .withNextSteps("This is the next steps")
-                .withCaseHistory("This is the case history")
-                .clickCreateCaseButton();
+        Logger.Log("Add concern details with valid text limit");
+        addConcernDetailsPage
+            .withIssue("This is an issue")
+            .withCurrentStatus("This is the current status")
+            .withCaseAim("This is the case aim")
+            .withDeEscalationPoint("This is the de-escalation point")
+            .withNextSteps("This is the next steps")
+            .withCaseHistory("This is the case history")
+            .clickCreateCaseButton();
 
-            
-            Logger.Log("Verify case details");
-            caseManagementPage
-                .hasIssue("This is an issue")
-                .hasCurrentStatus("This is the current status")
-                .hasCaseAim("This is the case aim")
-                .hasDeEscalationPoint("This is the de-escalation point")
-                .hasNextSteps("This is the next steps")
-                .hasCaseHistory("This is the case history");
+
+        Logger.Log("Verify case details");
+        caseManagementPage
+            .hasIssue("This is an issue")
+            .hasCurrentStatus("This is the current status")
+            .hasCaseAim("This is the case aim")
+            .hasDeEscalationPoint("This is the de-escalation point")
+            .hasNextSteps("This is the next steps")
+            .hasCaseHistory("This is the case history");
     });
 });

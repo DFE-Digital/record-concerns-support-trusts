@@ -41,6 +41,32 @@ export default class CreateConcernPage {
         return this;
     }
 
+    public hasTrustSummaryDetails(value: string): this
+    {
+        Logger.Log(`Has Trust summary details ${value}`);
+
+        cy.getByTestId("trust-summary").should(
+			"contain.text",
+			value
+		);
+        return this;
+    }
+
+
+    public hasConcernType(value: string): this
+    {
+        Logger.Log(`Has Concern Type ${value}`);
+
+        cy.getByTestId("concern-type").should(
+			"contain.text",
+			value
+		);
+        return this;
+    }
+
+
+    
+
 
     public hasValidationError(message: string): this {
 		cy.task("log", `Has Validation error ${message}`);

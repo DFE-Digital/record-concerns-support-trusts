@@ -6,7 +6,7 @@
 		<div class="govuk-!-display-inline govuk-label-wrapper govuk-grid-column-two-third">
         	@for (var index = 0; index < Model.RagRating.Item2.Count; ++index)
         	{
-        		<span class="govuk-tag ragtag @Model.RagRatingCss.ElementAt(index)">
+        		<span class="govuk-tag ragtag @Model.RagRatingCss.ElementAt(index)" data-testid="risk-to-trust-@index">
         			@Model.RagRating.Item2.ElementAt(index)
         		</span>
         	}
