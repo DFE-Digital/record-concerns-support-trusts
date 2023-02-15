@@ -1,4 +1,5 @@
 ﻿@page "/case/{urn:long}/management/action/financialplan/{financialplanid:long}/close"
+@using ConcernsCaseWork.Helpers;
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using NetEscapades.AspNetCore.SecurityHeaders
 @model ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan.ClosePageModel
@@ -69,15 +70,14 @@
                                 @{
                                     int id = 0;
                                 }
-                                @foreach (var status in Model.FinancialPlanStatuses)
+                                @foreach (var status in Model.FinancialPlanRadios)
                                 {
                                     var idStr = id++ == 0 ? "status" : "status-" + id;
-                                    var checkedStr = status.IsChecked ? "checked" : "";
                                     <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="@idStr" data-testid="@status.Id" name="status" type="radio" value="@status.Id" @checkedStr>
+                                        <input class="govuk-radios__input" id="@idStr" data-testid="@status" name="FinancialPlanModel.Status" type="radio" value="@status">
                                         <label class="govuk-label govuk-radios__label" for="@idStr">
                                             <span>
-                                                @status.Text
+                                                @EnumHelper.GetEnumDescription(status)
                                             </span>
                                         </label>
                                     </div>

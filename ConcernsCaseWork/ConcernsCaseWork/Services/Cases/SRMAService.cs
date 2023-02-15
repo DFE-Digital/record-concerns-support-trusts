@@ -12,26 +12,26 @@ namespace ConcernsCaseWork.Services.Cases
 {
 	public class SRMAService : ISRMAService
 	{
-		private readonly CachedSRMAProvider _cachedSrmaProvider;
+		private readonly Service.CaseActions.SRMAProvider _srmaProvider;
 		private readonly ICasePermissionsService _casePermissionsService;
 
 		public SRMAService(
-			CachedSRMAProvider cachedSrmaProvider,
+			Service.CaseActions.SRMAProvider srmaProvider,
 			ICasePermissionsService casePermissionsService)
 		{
-			_cachedSrmaProvider = cachedSrmaProvider;
+			_srmaProvider = srmaProvider;
 			_casePermissionsService = casePermissionsService;
 		}
 
 		public async Task<SRMAModel> GetSRMAById(long srmaId)
 		{
-			var srmaDto = await _cachedSrmaProvider.GetSRMAById(srmaId);
+			var srmaDto = await _srmaProvider.GetSRMAById(srmaId);
 			return CaseActionsMapping.Map(srmaDto);
 		}
 
 		public async Task<SRMAModel> GetSRMAViewModel(long caseId, long srmaId)
 		{
-			var srmaDto = await _cachedSrmaProvider.GetSRMAById(srmaId);
+			var srmaDto = await _srmaProvider.GetSRMAById(srmaId);
 			var permissionsResponse = await _casePermissionsService.GetCasePermissions(caseId);
 
 			return CaseActionsMapping.Map(srmaDto, permissionsResponse);
@@ -39,53 +39,53 @@ namespace ConcernsCaseWork.Services.Cases
 
 		public async Task SaveSRMA(SRMAModel srma)
 		{
-			await _cachedSrmaProvider.SaveSRMA(CaseActionsMapping.Map(srma));
+			await _srmaProvider.SaveSRMA(CaseActionsMapping.Map(srma));
 		}
 
 		public async Task<IEnumerable<SRMAModel>> GetSRMAsForCase(long caseUrn)
 		{
-			var srmas = await _cachedSrmaProvider.GetSRMAsForCase(caseUrn);
+			var srmas = await _srmaProvider.GetSRMAsForCase(caseUrn);
 			return srmas?.Select(dto => CaseActionsMapping.Map(dto));
 		}
 
 		public async Task SetDateAccepted(long srmaId, DateTime? acceptedDate)
 		{
-			await _cachedSrmaProvider.SetDateAccepted(srmaId, acceptedDate);
+			await _srmaProvider.SetDateAccepted(srmaId, acceptedDate);
 		}
 
 		public async Task SetDateClosed(long srmaId)
 		{
-			await _cachedSrmaProvider.SetDateClosed(srmaId);
+			await _srmaProvider.SetDateClosed(srmaId);
 		}
 
 		public async Task SetDateReportSent(long srmaId, DateTime? reportSentDate)
 		{
-			await _cachedSrmaProvider.SetDateReportSent(srmaId, reportSentDate);
+			await _srmaProvider.SetDateReportSent(srmaId, reportSentDate);
 		}
 
 		public async Task SetNotes(long srmaId, string notes)
 		{
-			await _cachedSrmaProvider.SetNotes(srmaId, notes);
+			await _srmaProvider.SetNotes(srmaId, notes);
 		}
 
 		public async Task SetOfferedDate(long srmaId, DateTime offeredDate)
 		{
-			await _cachedSrmaProvider.SetOfferedDate(srmaId, offeredDate);
+			await _srmaProvider.SetOfferedDate(srmaId, offeredDate);
 		}
 
 		public async Task SetReason(long srmaId, SRMAReasonOffered reason)
 		{
-			await _cachedSrmaProvider.SetReason(srmaId, (ConcernsCaseWork.Service.CaseActions.SRMAReasonOffered)reason);
+			await _srmaProvider.SetReason(srmaId, (ConcernsCaseWork.Service.CaseActions.SRMAReasonOffered)reason);
 		}
 
 		public async Task SetStatus(long srmaId, SRMAStatus status)
 		{
-			await _cachedSrmaProvider.SetStatus(srmaId, (ConcernsCaseWork.Service.CaseActions.SRMAStatus)status);
+			await _srmaProvider.SetStatus(srmaId, (ConcernsCaseWork.Service.CaseActions.SRMAStatus)status);
 		}
 
 		public async Task SetVisitDates(long srmaId, DateTime startDate, DateTime? endDate)
 		{
-			await _cachedSrmaProvider.SetVisitDates(srmaId, startDate, endDate);
+			await _srmaProvider.SetVisitDates(srmaId, startDate, endDate);
 		}
 	}
 }

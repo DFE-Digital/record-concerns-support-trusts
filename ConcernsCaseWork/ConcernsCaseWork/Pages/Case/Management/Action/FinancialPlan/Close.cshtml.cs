@@ -11,6 +11,7 @@ using ConcernsCaseWork.Service.FinancialPlan;
 using ConcernsCaseWork.Mappers;
 using System.Linq;
 using ConcernsCaseWork.Models;
+using ConcernsCaseWork.API.Contracts.FinancialPlans;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 {
@@ -21,6 +22,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan
 		private readonly ILogger<ClosePageModel> _logger;
 		private readonly IFinancialPlanModelService _financialPlanModelService;
 		private readonly IFinancialPlanStatusCachedService _financialPlanStatusCachedService;
+		public List<FinancialPlanStatus> FinancialPlanRadios => Enum.GetValues<FinancialPlanStatus>().ToList();
+
+
 
 		public ClosePageModel(
 			IFinancialPlanModelService financialPlanModelService, IFinancialPlanStatusCachedService financialPlanStatusService, ILogger<ClosePageModel> logger)
