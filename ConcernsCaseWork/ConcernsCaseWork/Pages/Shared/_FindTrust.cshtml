@@ -25,17 +25,17 @@
 			</h2>
 		</legend>
 
-		<label class="govuk-hint" for="search" id="outgoing-trust-search-query-hint">
-			<text>Enter at least @trustSearchOptions.Value.MinCharsRequiredToSeach characters of a trust name, trust reference number (UKPRN) or companies house number.</text>
-            <div id="tooManyResultsWarning" style="display:none;">
-                <p aria-label ="There are a large number of search results. Try a more specific search term">There are a large number of search results, Try a more specific search term.</p>
-            </div>
+        <label class="govuk-hint" for="search" id="outgoing-trust-search-query-hint">
+            <text>Enter at least @trustSearchOptions.Value.MinCharsRequiredToSeach characters of a trust name, trust reference number (UKPRN) or companies house number.</text>
 		</label>
+        <div id="tooManyResultsWarning" style="display:none;">
+            <p class="govuk-heading-s govuk-!-margin-top-3" aria-label="There are a large number of search results. Try a more specific search term">There are a large number of search results. Try a more specific search term.</p>
+        </div>
 
 	</fieldset>
 </div>
 
-<div id="autocomplete-container"></div>
+<div id="autocomplete-container" class="govuk-!-margin-top-3"></div>
 <div class="ccms-loader govuk-!-display-none"></div>
 <ul class="autocomplete__menu autocomplete__menu--inline autocomplete__menu--hidden" id="trustsearch__listbox" role="listbox">
 	<li class="autocomplete__option autocomplete__option--no-results">No results found.</li>
