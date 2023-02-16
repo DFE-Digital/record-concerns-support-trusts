@@ -27,7 +27,7 @@ describe("User interactions via Find Trust route", () => {
 
 		Logger.Log("It should display an error when the user does not enter a trust");
 		cy.get("#search").type(searchTerm .substring(0,1)+'{enter}');
-        cy.get('.govuk-list.govuk-error-summary__list a').should('contain.text', 'A trust is required')
+        cy.get('.govuk-list.govuk-error-summary__list a').should('contain.text', 'Select a trust')
 
 	});
 });
