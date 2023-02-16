@@ -17,9 +17,11 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Web;
 using System;
 using System.Security.Claims;
+using System.Threading;
 
 namespace ConcernsCaseWork
 {
@@ -111,7 +113,8 @@ namespace ConcernsCaseWork
 			{
 				options.ConstraintMap.Add("fpEditModes", typeof(FinancialPlanEditModeConstraint));
 			});
-		}
+            services.AddApplicationInsightsTelemetry(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
+        }
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
@@ -160,11 +163,7 @@ namespace ConcernsCaseWork
 
 			app.UseRouting();
 
-			// Enable Sentry middleware for performance monitoring
-			if (!env.IsDevelopment())
-			{
-				app.UseSentryTracing();
-			}
+			
 
 			app.UseAuthentication();
 			app.UseAuthorization();
@@ -179,6 +178,14 @@ namespace ConcernsCaseWork
 			{
 				endpoints.MapRazorPages();
 			});
+
+			// If our application gets hit really hard, then threads need to be spawned
+			// By default the number of threads that exist in the threadpool is the amount of CPUs (1)
+			// Each time we have to spawn a new thread it gets delayed by 500ms
+			// Setting the min higher means there will not be that delay in creating threads up to the min
+			// Re-evaluate this based on performance tests
+			// Found because redis kept timing out because it was delayed too long waiting for a thread to execute
+			ThreadPool.SetMinThreads(400, 400);
 		}
 
 		/// <summary>

@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.Service.Base;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Service.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -6,56 +7,86 @@ using System.Diagnostics;
 
 namespace ConcernsCaseWork.Service.Trusts
 {
-	public sealed class TrustSearchService : ITrustSearchService
+	public class TrustSearchService : ITrustSearchService
 	{
 		private readonly ITrustService _trustService;
-		private readonly ILogger<TrustSearchService> _logger;
-		private readonly int _hardLimitTrustsByPagination;
+		private ILogger<TrustSearchService> _logger;
+		private TrustSearchOptions _options;
 
 		public TrustSearchService(ITrustService trustService, IOptions<TrustSearchOptions> options, ILogger<TrustSearchService> logger)
 		{
-			_trustService = trustService;
-			_logger = logger;
-			_hardLimitTrustsByPagination = options.Value.TrustsLimitByPage;
+			_logger = Guard.Against.Null(logger);
+			_options = Guard.Against.Null(options.Value);
+			_trustService = Guard.Against.Null(trustService);
 		}
-		
-		public async Task<IList<TrustSearchDto>> GetTrustsBySearchCriteria(TrustSearch trustSearch)
+
+		public async Task<TrustSearchResponseDto> GetTrustsBySearchCriteria(TrustSearch searchCriteria)
 		{
-			_logger.LogInformation("TrustSearchService::GetTrustsBySearchCriteria execution");
-			
+			_logger.LogMethodEntered();
+
+			Guard.Against.Null(searchCriteria);
+
+			var matchingTrusts = new List<TrustSearchDto>();
+			var numberOfRequests = 0;
+			var numberOfMatches = 0;
+			TrustSearchResponseDto pageOfResults;
+
 			var stopwatch = Stopwatch.StartNew();
-			var trustList = new List<TrustSearchDto>();
-			
+
+			do
+			{
+				numberOfRequests++;
+				pageOfResults = await RequestPage(searchCriteria);
+
+				if (numberOfRequests == 1)
+				{
+					numberOfMatches = pageOfResults.NumberOfMatches;
+				}
+
+				if (PageOfResultsHasData(pageOfResults))
+				{
+					matchingTrusts.AddRange(pageOfResults.Trusts);
+					searchCriteria.PageIncrement();
+				}
+			} while (numberOfRequests < _options.TrustsLimitByPage && PageOfResultsHasData(pageOfResults));
+
+			stopwatch.Stop();
+			Debug.WriteLine($"{nameof(GetTrustsBySearchCriteria)} execution time {stopwatch.ElapsedMilliseconds} ms. Number of requests: {numberOfRequests}");
+			_logger.LogInformation("TrustSearchService::GetTrustsBySearchCriteria execution time {ElapsedMilliseconds} ms. Number of requests: {nrRequests}", stopwatch.ElapsedMilliseconds, numberOfRequests);
+
+			return new TrustSearchResponseDto { NumberOfMatches = numberOfMatches, Trusts = matchingTrusts };
+		}
+
+		private bool PageOfResultsHasData(TrustSearchResponseDto pageOfResults)
+		{
+			return pageOfResults?.Trusts != null && pageOfResults.Trusts.Count > 0;
+		}
+
+		private async Task<TrustSearchResponseDto> RequestPage(TrustSearch searchCriteria)
+		{
 			try
 			{
-				ApiListWrapper<TrustSearchDto> apiListWrapperTrusts;
-				var nrRequests = 0;
-				
-				do
-				{
-					apiListWrapperTrusts = await _trustService.GetTrustsByPagination(trustSearch);
-					
-					// The following condition will break the loop.
-					if (apiListWrapperTrusts?.Data is null || !apiListWrapperTrusts.Data.Any()) continue;
-					
-					trustList.AddRange(apiListWrapperTrusts.Data);
-					trustSearch.PageIncrement();
-					
-					// Safe guard in case we have more than 10 pages.
-					// We don't have a scenario at the moment, but feels like we need a limit.
-					if ((nrRequests = Interlocked.Increment(ref nrRequests)) > _hardLimitTrustsByPagination)
-					{
-						break;
-					}
-				} while (apiListWrapperTrusts?.Data != null && apiListWrapperTrusts.Data.Any() && apiListWrapperTrusts.Paging?.NextPageUrl != null);
-			}
-			finally
-			{
+				_logger.LogMethodEntered();
+
+				var stopwatch = Stopwatch.StartNew();
+				var response = await _trustService.GetTrustsByPagination(searchCriteria, _options.TrustsPerPage);
 				stopwatch.Stop();
-				_logger.LogInformation("TrustSearchService::GetTrustsBySearchCriteria execution time {ElapsedMilliseconds} ms", stopwatch.ElapsedMilliseconds);
+
+				Debug.WriteLine($"{nameof(RequestPage)} api call execution time {stopwatch.ElapsedMilliseconds} ms.");
+
+				return response;
 			}
-			
-			return trustList;
+			catch (Exception ex)
+			{
+				_logger.LogErrorMsg(ex);
+
+				throw;
+			}
+		}
+
+		private class SearchResult
+		{
+			public string NumberOfMatches { get; set; }
 		}
 	}
 }

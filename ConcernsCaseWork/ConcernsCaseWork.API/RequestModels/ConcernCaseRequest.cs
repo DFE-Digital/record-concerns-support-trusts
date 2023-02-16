@@ -9,6 +9,8 @@ namespace ConcernsCaseWork.API.RequestModels
         public DateTime UpdatedAt { get; set; }
         public DateTime ReviewAt { get; set; }
         public DateTime? ClosedAt { get; set; }
+
+		[StringLength(254)]
         public string CreatedBy { get; set; }
 
         [StringLength(1000)] // not used. re-purposed for dart import. tech debt. Should be fully removed from app (but not db)
@@ -17,7 +19,7 @@ namespace ConcernsCaseWork.API.RequestModels
         [StringLength(500)] // not used. re-purposed for dart import. tech debt. Should be fully removed from app (but not db)
         public string CrmEnquiry { get; set; }
 
-        [StringLength(50)]
+        [StringLength(12)]
         public string TrustUkprn { get; set; }
 
         [StringLength(200)]

@@ -7,7 +7,7 @@ namespace ConcernsCaseWork.Services.Trusts
 {
 	public interface ITrustModelService
 	{
-		Task<IList<TrustSearchModel>> GetTrustsBySearchCriteria(TrustSearch trustSearch);
+		Task<(TrustSearchModelPageResponseData PageData, IList<TrustSearchModel> Data)> GetTrustsBySearchCriteria(TrustSearch trustSearch);
 		Task<TrustDetailsModel> GetTrustByUkPrn(string ukPrn);
 		Task<TrustAddressModel> GetTrustAddressByUkPrn(string ukPrn);
 	}

@@ -71,9 +71,11 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			var mockLogger = new Mock<ILogger<IndexPageModel>>();
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
-			var trustSummaryModel = TrustFactory.BuildListTrustSummaryModel();
 
-			mockTrustModelService.Setup(t => t.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(trustSummaryModel);
+			var trustSummaryModel = TrustFactory.BuildListTrustSummaryModel();
+			var searchResultsPageData = new TrustSearchModelPageResponseData { IsMoreDataOnServer = false, TotalMatchesFromApi = trustSummaryModel.Count };
+
+			mockTrustModelService.Setup(t => t.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync((searchResultsPageData, trustSummaryModel));
 			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockUserStateCachedService.Object, mockLogger.Object, true);
 
 			// act
@@ -110,6 +112,8 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 				}
 			}
 
+			Assert.That(((TrustSearchResponse)partialPage.Value).TotalMatchesFromApi, Is.EqualTo(trustSummaryModel.Count));
+
 			// Verify ILogger
 			mockLogger.Verify(
 				m => m.Log(
@@ -129,8 +133,9 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			var mockTrustModelService = new Mock<ITrustModelService>();
 			var mockUserStateCachedService = new Mock<IUserStateCachedService>();
 			var trustSummaryModel = TrustFactory.BuildListTrustSummaryModel();
+			var searchResultsPageData = new TrustSearchModelPageResponseData { IsMoreDataOnServer = false, TotalMatchesFromApi = trustSummaryModel.Count };
 
-			mockTrustModelService.Setup(t => t.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync(trustSummaryModel);
+			mockTrustModelService.Setup(t => t.GetTrustsBySearchCriteria(It.IsAny<TrustSearch>())).ReturnsAsync((searchResultsPageData, trustSummaryModel));
 			var pageModel = SetupIndexModel(mockTrustModelService.Object, mockUserStateCachedService.Object, mockLogger.Object, true);
 
 			// act

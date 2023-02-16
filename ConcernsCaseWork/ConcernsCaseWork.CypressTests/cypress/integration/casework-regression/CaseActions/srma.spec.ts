@@ -290,7 +290,7 @@ describe("Testing the SRMA case action", () =>
 
             editSrmaPage
                 .save()
-                .hasValidationError("Confirm SRMA is complete");
+                .hasValidationError("Confirm SRMA action is complete");
 
             editSrmaPage
                 .confirmComplete();
@@ -332,7 +332,7 @@ describe("Testing the SRMA case action", () =>
 
             editSrmaPage
                 .save()
-                .hasValidationError("Confirm SRMA was cancelled");
+                .hasValidationError("Confirm SRMA action was cancelled");
             
             cy.waitForJavascript();
 
@@ -364,7 +364,7 @@ describe("Testing the SRMA case action", () =>
 
             editSrmaPage
                 .save()
-                .hasValidationError("Confirm SRMA was declined by trust");
+                .hasValidationError("Confirm SRMA action was declined by trust");
             
             cy.waitForJavascript();
 

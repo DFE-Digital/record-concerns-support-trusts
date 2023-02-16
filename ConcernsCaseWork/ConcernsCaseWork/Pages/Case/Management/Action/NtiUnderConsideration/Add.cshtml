@@ -101,6 +101,9 @@
             <script type="application/javascript" nonce="@nonce">
                     $(function () {
                         autoResizer();
+
+                        var submitButton = $('#add-nti-uc-button')[0];
+                        disableOnSubmit(submitButton);
                     });
             </script>
 

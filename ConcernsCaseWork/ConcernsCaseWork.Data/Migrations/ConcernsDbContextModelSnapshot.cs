@@ -22,6 +22,39 @@ namespace ConcernsCaseWork.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ConcernsCaseWork.Data.Models.Audit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ChangeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EntityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NewValues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("TimeOfChange")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id")
+                        .HasName("PK__AuditLog");
+
+                    b.ToTable("AuditLog", "concerns", t =>
+                        {
+                            t.HasTrigger("AuditLog_Trigger");
+                        });
+                });
+
             modelBuilder.Entity("ConcernsCaseWork.Data.Models.Concerns.Case.Management.Actions.Decisions.Decision", b =>
                 {
                     b.Property<int>("DecisionId")
@@ -456,7 +489,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(254)
+                        .HasColumnType("nvarchar(254)");
 
                     b.Property<string>("CrmEnquiry")
                         .HasColumnType("nvarchar(max)");
@@ -498,7 +532,8 @@ namespace ConcernsCaseWork.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TrustUkprn")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");

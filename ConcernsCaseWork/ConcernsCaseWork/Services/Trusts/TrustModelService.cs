@@ -25,48 +25,54 @@ namespace ConcernsCaseWork.Services.Trusts
 			_mapper = mapper;
 			_logger = logger;
 		}
-		
-		public async Task<IList<TrustSearchModel>> GetTrustsBySearchCriteria(TrustSearch trustSearch)
+
+		public async Task<(TrustSearchModelPageResponseData PageData, IList<TrustSearchModel> Data)> GetTrustsBySearchCriteria(TrustSearch trustSearch)
 		{
 			_logger.LogInformation("TrustModelService::GetTrustsBySearchCriteria");
-			
+
 			// Fetch trusts by criteria
-			var trustsSearchDto = await _trustSearchService.GetTrustsBySearchCriteria(trustSearch);
-			
+			var unfilteredResults = await _trustSearchService.GetTrustsBySearchCriteria(trustSearch);
+
 			// Map trusts dto to model
-			var trustsSummary = _mapper.Map<IList<TrustSearchModel>>(trustsSearchDto);
+			var searchModelResults = _mapper.Map<IList<TrustSearchModel>>(unfilteredResults.Trusts);
 
 			// Filter trusts that haven't correct properties and sort
-			var trustsSummaryOrderedFiltered = from t in trustsSummary 
-				where (t.GroupName != null && t.UkPrn != null) 
-				orderby t.GroupName select t;
+			var filteredSearchResults = searchModelResults
+				.Where(x => ! string.IsNullOrWhiteSpace(x.GroupName) && !string.IsNullOrWhiteSpace(x.UkPrn))
+				.OrderBy(x => x.GroupName).ToList();
 
-			return trustsSummaryOrderedFiltered.ToList();
+			var pageData = new TrustSearchModelPageResponseData
+			{
+				IsMoreDataOnServer = unfilteredResults.NumberOfMatches > unfilteredResults.Trusts.Count,
+				TotalMatchesFromApi = unfilteredResults.NumberOfMatches
+			};
+
+			return (pageData, filteredSearchResults.ToList());
 		}
 
 		public async Task<TrustDetailsModel> GetTrustByUkPrn(string ukPrn)
 		{
 			_logger.LogInformation("TrustModelService::GetTrustByUkPrn");
-			
+
 			// Fetch trust by ukprn
 			var trustDetailsDto = await _trustCachedService.GetTrustByUkPrn(ukPrn);
-			
+
 			// Map trust dto to model
 			var trustDetailsModel = _mapper.Map<TrustDetailsModel>(trustDetailsDto);
 
 			return trustDetailsModel;
 		}
-		
+
 		public async Task<TrustAddressModel> GetTrustAddressByUkPrn(string ukPrn)
 		{
 			_logger.LogMethodEntered();
-			
+
 			var trustDetailsDto = await _trustCachedService.GetTrustByUkPrn(ukPrn);
 			if (trustDetailsDto is null)
 			{
 				throw new Exception();
 			}
-			
+
 			var trustDetailsModel = _mapper.Map<TrustDetailsModel>(trustDetailsDto);
 
 			var trustDetailsAddress = new TrustAddressModel(

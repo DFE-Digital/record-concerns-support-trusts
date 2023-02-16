@@ -181,6 +181,7 @@ window.addFinancialPlanNotesValidator = function (validator) {
 		message: 'Notes must be 2000 characters or less'
 	}]);
 }
+
 window.addNTINotesValidator = function (validator) {
 	validator.addValidator('nti-notes', [{
 		method: function (field) {
@@ -188,6 +189,35 @@ window.addNTINotesValidator = function (validator) {
 		},
 		message: 'Notes must be 2000 characters or less'
 	}]);
+}
+
+window.disableOnSubmit = function (buttonToDisable) {
+	buttonToDisable.onclick = function () {
+		setTimeout(() => {
+			buttonToDisable.disabled = true;
+		}, 0);
+
+		// Renable the button a long period of time without action
+		setTimeout(() => {
+			buttonToDisable.disabled = false;
+		}, 30000);
+	}
+}
+
+window.disableOnSubmitWithJsValidationCheck = function(validator, buttonToDisable) {
+	buttonToDisable.onclick = function () {
+		setTimeout(() => {
+			var isValid = validator.validate();
+			if (isValid) {
+				buttonToDisable.disabled = true;
+			}
+		}, 0);
+
+		// Renable the button a long period of time without action
+		setTimeout(() => {
+			buttonToDisable.disabled = false;
+		}, 30000);
+	}
 }
 
 
