@@ -40,7 +40,8 @@
 <ul class="autocomplete__menu autocomplete__menu--inline autocomplete__menu--hidden" id="trustsearch__listbox" role="listbox">
 	<li class="autocomplete__option autocomplete__option--no-results">No results found.</li>
 </ul>
-<input type="hidden" id="selectedTrustUkprn" name="selectedTrustUkprn" required />
+<input type="hidden" id="selectedTrustUkprn" name="selectedTrustUkprn" />
+<input type="hidden" id="selectedCompaniesHouseNumber" name="selectedCompaniesHouseNumber" />
 
 <script type="application/javascript" nonce="@Model.Nonce">
     $(document).ready(function () {
@@ -52,11 +53,9 @@
             hideLoader();
         })
 
-
         const autocompleteContainer = document.getElementById("autocomplete-container");
         const trustSearchDelay = @trustSearchOptions.Value.MilliSecondPauseBeforeSeach;
         let trustSearchResults = undefined;
-        let selectedTrustUkprn = undefined;
         let xhr = undefined;
         let timeout = undefined;
 
@@ -75,8 +74,7 @@
 	            xhr.abort();
 	        }
             xhr = undefined;
-            trustSearchResults = undefined;
-            selectedTrustUkprn = undefined;
+            trustSearchResults = undefined;        
         }
 
         function searchForTrusts(queryStr, populateResults) {
@@ -128,8 +126,19 @@
             minLength: @trustSearchOptions.Value.MinCharsRequiredToSeach,
             showNoOptonsFound: true,
             onConfirm: (selected) => {
-                selectedTrustUkprn = trustSearchResults === undefined ? undefined : trustSearchResults.find(trust => trust.displayName === selected).ukPrn;
-                $('#selectedTrustUkprn').val(selectedTrustUkprn);
+
+                let selectedTrustUkPrn;
+                let selectedCompaniesHouseNumber;
+
+                let matchingResult = trustSearchResults === undefined ? undefined : trustSearchResults.find(trust => trust.displayName === selected);
+
+                if (matchingResult) {
+                    selectedTrustUkPrn = matchingResult.ukPrn;
+                    selectedCompaniesHouseNumber = matchingResult.companiesHouseNumber;
+                }
+
+                $('#selectedTrustUkprn').val(selectedTrustUkPrn);
+                $('#selectedCompaniesHouseNumber').val(selectedCompaniesHouseNumber);
             }
         });
     });

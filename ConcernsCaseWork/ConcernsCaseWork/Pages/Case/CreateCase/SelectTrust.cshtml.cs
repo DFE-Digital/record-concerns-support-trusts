@@ -85,13 +85,6 @@ public class SelectTrustPageModel : AbstractPageModel
 		CreateCaseStep = CreateCaseSteps.SearchForTrust;
 	}
 
-	private async Task RestoreTrustUkprnFromCache()
-	{
-		ModelState.ClearValidationState(nameof(FindTrustModel.SelectedTrustUkprn));
-		FindTrustModel.SelectedTrustUkprn = (await GetUserState()).TrustUkPrn;
-		ModelState.SetModelValue(nameof(FindTrustModel.SelectedTrustUkprn), new ValueProviderResult(FindTrustModel.SelectedTrustUkprn));
-	}
-
 	public async Task<ActionResult> OnPostSelectedTrust()
 	{
 		_logger.LogMethodEntered();
