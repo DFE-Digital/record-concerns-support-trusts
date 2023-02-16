@@ -24,6 +24,8 @@ locals {
   cdn_frontdoor_host_redirects                  = var.cdn_frontdoor_host_redirects
   cdn_frontdoor_host_add_response_headers       = var.cdn_frontdoor_host_add_response_headers
   cdn_frontdoor_health_probe_path               = var.cdn_frontdoor_health_probe_path
+  cdn_frontdoor_enable_rate_limiting            = var.cdn_frontdoor_enable_rate_limiting
+  cdn_frontdoor_rate_limiting_threshold         = var.cdn_frontdoor_rate_limiting_threshold
   key_vault_access_users                        = toset(var.key_vault_access_users)
   tfvars_filename                               = var.tfvars_filename
   enable_event_hub                              = var.enable_event_hub
