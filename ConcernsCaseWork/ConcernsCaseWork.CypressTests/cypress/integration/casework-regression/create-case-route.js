@@ -8,6 +8,7 @@ describe("User interactions via Create Case route", () => {
 	const searchTerm =
 		"Accrington St Christopher's Church Of England High School";
 		let term = ""
+	const searchTermForSchool = "school";
 
 	it("User searches for a valid Trust and selects it", () => {
 		cy.get('[href="/case"]').click();
@@ -29,6 +30,14 @@ describe("User interactions via Create Case route", () => {
 		cy.get('[href="/case"]').click();
 		cy.get("#search").should("be.visible");
 		cy.get("#search").type(searchTerm .substring(0,1)+'{enter}');
-        cy.get('.govuk-list.govuk-error-summary__list a').should('contain.text', 'A trust is required')
+        cy.get('.govuk-list.govuk-error-summary__list a').should('contain.text', 'Select a trust')
+    });
+
+	it('Should display a warning if too many results', () => {
+		cy.get('[href="/case"]').click();
+		cy.get("#search").should("be.visible");
+		cy.get("#search").type(searchTermForSchool);
+		cy.get('.ccms-loader').should('not.be.visible');
+        cy.get("#tooManyResultsWarning").should('be.visible').should('contain.text', 'There are a large number of search results. Try a more specific search term.')
     });
 });
