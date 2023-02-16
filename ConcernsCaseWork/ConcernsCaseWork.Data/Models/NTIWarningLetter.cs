@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConcernsCaseWork.Data.Models
 {
-	public class NTIWarningLetter
+	public class NTIWarningLetter: IAuditable
     {
 	    public long Id { get; set; }
         public int CaseUrn { get; set; }

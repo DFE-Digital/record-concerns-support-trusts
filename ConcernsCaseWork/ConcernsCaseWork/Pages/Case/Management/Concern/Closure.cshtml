@@ -3,84 +3,80 @@
 @model ConcernsCaseWork.Pages.Case.Management.Concern.ClosurePageModel
 
 @{
-	ViewData["Title"] = "Concern closure";
+    ViewData["Title"] = "Concern closure";
 }
 
 <div class="govuk-width-container">
-	<partial name="_BannerError"/>
+    <partial name="_BannerError" />
 
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column">
 
-			<h1 class="govuk-heading-l">
-				<span class="govuk-caption-l">Case ID @Model.CaseModel.Urn</span>
-				Edit Concern
-			</h1>
+            <h1 class="govuk-heading-l">
+                <span class="govuk-caption-l">Case ID @Model.CaseModel.Urn</span>
+                Close Concern
+            </h1>
 
-			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    This concern cannot be reopened
+                </strong>
+            </div>
+
+            @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
             {
-            	<partial name="_Error"/>
+                <partial name="_Error" />
             }
-			else
-			{
+            else
+            {
 
-				<dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-6">
+                <dl class="govuk-summary-list summary-list-margin-0 govuk-!-margin-top-6">
 
-					<!-- Trust -->
-					<div class="govuk-summary-list__row">
-						<dt class="govuk-summary-list__key">
-							Trust
-						</dt>
-						<dd class="govuk-summary-list__value">
-							@Model.TrustDetailsModel.GiasData.GroupName
-						</dd>
-						<dd class="govuk-summary-list__actions"></dd>
-					</div>
+                    <!-- Trust -->
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Trust
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.TrustDetailsModel.GiasData.GroupName
+                        </dd>
+                        <dd class="govuk-summary-list__actions"></dd>
+                    </div>
 
-					<!-- Concern -->
-					<div class="govuk-summary-list__row">
-						<dt class="govuk-summary-list__key">
-							Concern
-						</dt>
-						<dd class="govuk-summary-list__value">
-							@Model.TypeModel.TypeDisplay
-						</dd>
-						<dd class="govuk-summary-list__actions"></dd>
-					</div>
-				</dl>
+                    <!-- Concern -->
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Concern
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.TypeModel.TypeDisplay
+                        </dd>
+                        <dd class="govuk-summary-list__actions"></dd>
+                    </div>
+                </dl>
 
-				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
+                <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-				<div class="govuk-form-group govuk-!-margin-top-9">
-					<div class="govuk-warning-text">
-						<span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-						<strong class="govuk-warning-text__text">
-							<span class="govuk-warning-text__assistive">Warning</span>
-							Closed concerns cannot be reopened
-						</strong>
-					</div>
-					<fieldset class="govuk-fieldset">
-						<legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
-							Do you still want to close this concern?
-						</legend>
-					</fieldset>
+                <div class="govuk-form-group govuk-!-margin-top-9">
+                    <p class="govuk-body">Do you still want to close this concern?</p>
 
-					<div class="govuk-button-group">
-						<a 
-                            data-prevent-double-click="true" 
-                            class="govuk-button govuk-button--warning govuk-!-margin-top-6" 
-                            asp-page-handler="CloseConcern" 
-                            data-module="govuk-button" 
-                            role="button"
-                            data-testid="close-concern-button">
-							Close concern
-						</a>
-						<a data-prevent-double-click="true" class="govuk-link" asp-page-handler="Cancel" data-module="govuk-button" role="button">
-							No, do not close concern
-						</a>
-					</div>
-				</div>
-			}
-		</div>
-	</div>
+                    <div class="govuk-button-group">
+                        <a data-prevent-double-click="true"
+                       class="govuk-button govuk-!-margin-top-6"
+                       asp-page-handler="CloseConcern"
+                       data-module="govuk-button"
+                       role="button"
+                       data-testid="close-concern-button">
+                            Close concern
+                        </a>
+                        <a data-prevent-double-click="true" class="govuk-link" asp-page-handler="Cancel" data-module="govuk-button" role="button">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>

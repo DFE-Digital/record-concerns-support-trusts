@@ -6,6 +6,6 @@ public class FindTrustModel
 {
 	public string Nonce { get; set; }
 
-	[Required(ErrorMessage = "A trust is required", AllowEmptyStrings = false)]
+	[Required(ErrorMessage = "Select a trust", AllowEmptyStrings = false)]
 	public string SelectedTrustUkprn { get; set; }
 }

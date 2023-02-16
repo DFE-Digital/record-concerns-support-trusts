@@ -17,34 +17,37 @@
 }
 
 <div class="govuk-width-container">
-	<partial name="_BannerError" />
+    <partial name="_BannerError" />
 
-	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-	{
-		<partial name="_Error" />
-	}
-	else
-	{
+    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+    {
+        <partial name="_Error" />
+    }
+    else
+    {
 
-		<h1 class="govuk-heading-l">
-			<span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
-			Financial Plan
-		</h1>
+        <h1 class="govuk-heading-l">
+            <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
+            Financial Plan
+            <div>
+                <span class="govuk-tag ragtag ragtag__grey">Closed</span>
+            </div>
+        </h1>
 
-		<div class="govuk-hint" id="financial-plan-hint">
-			<a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Trust%20financial%20plans.aspx" class="govuk-link" rel="noreferrer noopener">
-				SFSO Knowledge: Financial Plan
-			</a>
-		</div>
+        <div class="govuk-hint" id="financial-plan-hint">
+            <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Trust%20financial%20plans.aspx" class="govuk-link" rel="noreferrer noopener">
+                SFSO Knowledge: Financial Plan
+            </a>
+        </div>
 
-		<table class="govuk-table">
-			<caption class="govuk-table__caption govuk-table__caption--m"></caption>
-			<thead>
-				<tr>
-					<th scope="col"></th>
-					<th scope="col"></th>
-				</tr>
-			</thead>
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m"></caption>
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
             <tbody class="govuk-table__body">
 
                 @* Date opened *@
@@ -52,7 +55,7 @@
                     <th scope="row" class="govuk-table-case-details__header">Date financial plan opened</th>
                     <td class="govuk-table__cell" data-testid="date-opened">
                         @{
-							RenderValue(DateTimeHelper.ParseToDisplayDate(Model.FinancialPlanModel.CreatedAt));
+                            RenderValue(DateTimeHelper.ParseToDisplayDate(Model.FinancialPlanModel.CreatedAt));
                         }
                     </td>
                 </tr>
@@ -62,7 +65,7 @@
                     <th scope="row" class="govuk-table-case-details__header">Date financial plan closed</th>
                     <td class="govuk-table__cell" data-testid="date-opened">
                         @{
-							RenderValue(DateTimeHelper.ParseToDisplayDate(Model.FinancialPlanModel.ClosedAt.Value));
+                            RenderValue(DateTimeHelper.ParseToDisplayDate(Model.FinancialPlanModel.ClosedAt.Value));
                         }
                     </td>
                 </tr>
@@ -70,10 +73,10 @@
                 @* Status *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Status when closed</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="status">
                         @{
 
-                                                    if (Model.FinancialPlanModel.Status != null)
+                            if (Model.FinancialPlanModel.Status != null)
                             {
                                 var statusName = Model.FinancialPlanModel.Status.Name;
                                 var statusEnum = (FinancialPlanStatus)@Enum.Parse(typeof(FinancialPlanStatus), statusName);
@@ -91,7 +94,7 @@
                 @* Date plan requested *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Date plan requested</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-requested">
                         @{
                             if (Model.FinancialPlanModel.DatePlanRequested.HasValue)
                             {
@@ -108,7 +111,7 @@
                 @* Date viable plan received *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Date viable plan received</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-received">
                         @{
                             if (Model.FinancialPlanModel.DateViablePlanReceived.HasValue)
                             {
@@ -125,7 +128,7 @@
                 @* Notes *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="notes">
                         @{
                             if (!string.IsNullOrEmpty(Model.FinancialPlanModel.Notes))
                             {
@@ -139,8 +142,8 @@
                     </td>
                 </tr>
             </tbody>
-		</table>
-	}
+        </table>
+    }
 </div>
 
 @functions {

@@ -53,8 +53,8 @@ using ConcernsCaseWork.UserContext;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using Serilog;
 using StackExchange.Redis;
 using System;
 using System.Configuration;
@@ -66,10 +66,12 @@ namespace ConcernsCaseWork.Extensions
 	public static class StartupExtension
 	{
 		private static IConnectionMultiplexer _redisConnectionMultiplexer;
+		//private static ILogger _logger;
 
 
 		public static void AddRedis(this IServiceCollection services, IConfiguration configuration)
 		{
+		
 			try
 			{
 				var vCapConfiguration = JObject.Parse(configuration["VCAP_SERVICES"]) ?? throw new Exception("AddRedis::VCAP_SERVICES missing");
@@ -79,9 +81,9 @@ namespace ConcernsCaseWork.Extensions
 				var port = (string)redisCredentials["port"] ?? throw new Exception("AddRedis::Credentials::port missing");
 				var tls = (bool)redisCredentials["tls_enabled"];
 
-				Log.Information("Starting Redis Server Host - {Host}", host);
-				Log.Information("Starting Redis Server Port - {Port}", port);
-				Log.Information("Starting Redis Server TLS - {Tls}", tls);
+				/*_logger.LogInformation("Starting Redis Server Host - {Host}", host);
+				_logger.LogInformation("Starting Redis Server Port - {Port}", port);
+				_logger.LogInformation("Starting Redis Server TLS - {Tls}", tls);*/
 
 				var redisConfigurationOptions = new ConfigurationOptions { Password = password, EndPoints = { $"{host}:{port}" }, Ssl = tls, AsyncTimeout = 15000, SyncTimeout = 15000 };
 
@@ -106,7 +108,7 @@ namespace ConcernsCaseWork.Extensions
 			}
 			catch (Exception ex)
 			{
-				Log.Error("AddRedis::Exception::{Message}", ex.Message);
+				// _logger.LogError("AddRedis::Exception::{Message}", ex.Message);
 				throw new Exception($"AddRedis::Exception::{ex.Message}");
 			}
 		}
@@ -125,7 +127,7 @@ namespace ConcernsCaseWork.Extensions
 			if (string.IsNullOrEmpty(tramsApiEndpoint) || string.IsNullOrEmpty(tramsApiKey))
 				throw new Exception("AddTramsApi::missing configuration");
 
-			Log.Information("Starting Trams API Endpoint - {TramsApiEndpoint}", tramsApiEndpoint);
+			//_logger.LogInformation("Starting Trams API Endpoint - {TramsApiEndpoint}", tramsApiEndpoint);
 
 			services.AddHttpClient("TramsClient", client =>
 			{
@@ -240,8 +242,6 @@ namespace ConcernsCaseWork.Extensions
 
 			services.AddHttpContextAccessor();
 			services.AddScoped<IRbacManager, RbacManager>();
-
-			services.AddScoped<ICorrelationContext, CorrelationContext>();
 			services.AddScoped<IClientUserInfoService, ClientUserInfoService>();
 			services.AddSingleton<IPageHistoryStorageHandler, SessionPageHistoryStorageHandler>();
 		}

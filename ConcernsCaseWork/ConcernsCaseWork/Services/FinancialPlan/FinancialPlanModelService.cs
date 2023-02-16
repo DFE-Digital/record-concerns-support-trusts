@@ -96,7 +96,6 @@ namespace ConcernsCaseWork.Services.FinancialPlan
 					createFinancialPlanModel.CreatedBy,
 					createFinancialPlanModel.StatusId,
 					createFinancialPlanModel.DatePlanRequested,
-					createFinancialPlanModel.DateViablePlanReceived,
 					createFinancialPlanModel.Notes,
 					createFinancialPlanModel.UpdatedAt);
 

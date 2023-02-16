@@ -205,6 +205,9 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
         viewFinancialPlanPage.close();
         closeFinancialPlanPage
+            .withPlanReceivedDay("05")
+            .withPlanReceivedMonth("06")
+            .withPlanReceivedYear("2022")
             .withReasonForClosure("Viable Plan Received")
             .close();
 

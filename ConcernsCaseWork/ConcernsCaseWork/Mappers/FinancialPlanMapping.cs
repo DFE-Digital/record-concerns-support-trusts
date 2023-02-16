@@ -75,12 +75,12 @@ namespace ConcernsCaseWork.Mappers
 				financialPlanDto.Id,
 				financialPlanDto.CaseUrn,
 				financialPlanDto.CreatedAt,
-				patchFinancialPlanModel?.ClosedAt ?? financialPlanDto.ClosedAt,
+				patchFinancialPlanModel?.ClosedAt,
 				financialPlanDto.CreatedBy,
 				selectedStatusId ?? financialPlanDto.StatusId,
-				patchFinancialPlanModel?.DatePlanRequested ?? financialPlanDto.DatePlanRequested,
-				patchFinancialPlanModel?.DateViablePlanReceived ?? financialPlanDto.DateViablePlanReceived,
-				patchFinancialPlanModel?.Notes ?? financialPlanDto.Notes, 
+				patchFinancialPlanModel?.DatePlanRequested,
+				patchFinancialPlanModel?.DateViablePlanReceived,
+				patchFinancialPlanModel?.Notes, 
 				patchFinancialPlanModel?.UpdatedAt ?? DateTime.Now);
 
 			return updatedFinancialPlanDto;
