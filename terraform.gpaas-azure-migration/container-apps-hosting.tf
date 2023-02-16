@@ -30,6 +30,8 @@ module "azure_container_apps_hosting" {
   cdn_frontdoor_host_redirects            = local.cdn_frontdoor_host_redirects
   cdn_frontdoor_host_add_response_headers = local.cdn_frontdoor_host_add_response_headers
   cdn_frontdoor_health_probe_path         = local.cdn_frontdoor_health_probe_path
+  cdn_frontdoor_enable_rate_limiting      = local.cdn_frontdoor_enable_rate_limiting
+  cdn_frontdoor_rate_limiting_threshold   = local.cdn_frontdoor_rate_limiting_threshold
 
   enable_dns_zone      = local.enable_dns_zone
   dns_zone_domain_name = local.dns_zone_domain_name

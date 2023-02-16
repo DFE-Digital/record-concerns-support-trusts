@@ -157,3 +157,13 @@ variable "container_scale_rule_concurrent_request_count" {
   description = "Maximum number of concurrent HTTP requests before a new replica is created"
   type        = number
 }
+
+variable "cdn_frontdoor_enable_rate_limiting" {
+  description = "Enable CDN Front Door Rate Limiting. This will create a WAF policy, and CDN security policy. For pricing reasons, there will only be one WAF policy created."
+  type        = bool
+}
+
+variable "cdn_frontdoor_rate_limiting_threshold" {
+  description = "Number of connection requests per minute threshold for the CDN Rate Limiting policy"
+  type        = number
+}
