@@ -73,7 +73,7 @@ describe("User can add case actions to an existing case", () => {
 
 		Logger.Log("Viewing Decision");
 		viewDecisionPage
-			.hasDateDecisionOpened(toDisplayDate(now))
+			.hasDateOpened(toDisplayDate(now))
 			.hasCrmEnquiry("444")
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("Yes")
@@ -199,8 +199,8 @@ describe("User can add case actions to an existing case", () => {
 			});
 
 		viewDecisionPage
-			.hasDateDecisionOpened(toDisplayDate(now))
-			.hasDateDecisionClosed(toDisplayDate(now))
+			.hasDateOpened(toDisplayDate(now))
+			.hasDateClosed(toDisplayDate(now))
 			.hasCrmEnquiry("444")
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("Yes")
@@ -243,7 +243,7 @@ describe("User can add case actions to an existing case", () => {
 
 		Logger.Log("Viewing Empty Decision");
 		viewDecisionPage
-			.hasDateDecisionOpened(toDisplayDate(now))
+			.hasDateOpened(toDisplayDate(now))
 			.hasCrmEnquiry("Empty")
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("No")
