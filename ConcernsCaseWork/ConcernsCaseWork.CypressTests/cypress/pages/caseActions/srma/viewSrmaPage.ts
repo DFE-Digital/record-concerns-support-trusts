@@ -178,6 +178,22 @@ export class ViewSrmaPage {
         return this;
     }
 
+    public hasDateOpened(value: string) : this {
+        Logger.Log(`Has date opened ${value}`);
+
+        cy.getByTestId("date-opened-text").should("contain.text", value);
+
+        return this;
+    }
+
+    public hasDateClosed(value: string) : this {
+        Logger.Log(`Has date closed ${value}`);
+
+        cy.getByTestId("date-closed-text").should("contain.text", value);
+
+        return this;
+    }
+
     public hasStatus(value: string): this {
         Logger.Log(`Has status ${value}`);
 
