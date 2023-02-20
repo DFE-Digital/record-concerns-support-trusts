@@ -2,6 +2,24 @@ import { Logger } from "../../../common/logger";
 
 export class ViewNtiUnderConsiderationPage
 {
+    public hasDateOpened(value: string): this {
+
+        Logger.Log(`Has date opened ${value}`);
+
+        cy.getByTestId("date-opened-text").should("contain.text", value); 
+
+        return this;
+    }
+
+    public hasDateClosed(value: string): this {
+
+        Logger.Log(`Has date closed ${value}`);
+
+        cy.getByTestId("date-closed-text").should("contain.text", value); 
+
+        return this;
+    }
+
     public hasReason(value: string): this {
         Logger.Log(`Has reason ${value}`);
 
