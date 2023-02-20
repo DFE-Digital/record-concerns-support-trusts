@@ -2,6 +2,22 @@ import { Logger } from "../../../common/logger";
 
 export class ViewDecisionPage
 {
+	public hasDateDecisionOpened(value: string): this {
+		Logger.Log(`Has date decision opened ${value}`);
+
+		cy.getByTestId("decision-open-text").should("contain.text", value);
+
+		return this;
+	}
+
+	public hasDateDecisionClosed(value: string): this {
+		Logger.Log(`Has date decision closed ${value}`);
+
+		cy.getByTestId("decision-closed-text").should("contain.text", value);
+
+		return this;
+	}
+
     public hasCrmEnquiry(crmNumber: string): this {
 		cy.task("log", `Has CRM enquiry ${crmNumber}`);
 

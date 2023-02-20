@@ -4,6 +4,8 @@ import { ViewDecisionPage } from "../../../pages/caseActions/decision/viewDecisi
 import { CloseDecisionPage } from "../../../pages/caseActions/decision/closeDecisionPage";
 import { DecisionOutcomePage } from "../../../pages/caseActions/decision/decisionOutcomePage";
 import "cypress-axe";
+import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
+import { toDisplayDate } from "cypress/support/formatDate";
 
 describe("User can add case actions to an existing case", () => {
 	const viewDecisionPage = new ViewDecisionPage();
@@ -11,8 +13,11 @@ describe("User can add case actions to an existing case", () => {
 	const closeDecisionPage = new CloseDecisionPage();
 	const decisionOutcomePage = new DecisionOutcomePage();
 
+	let now;
+	
 	beforeEach(() => {
 		cy.login();
+		now = new Date();
 	});
 
 	it("Concern Decision - Creating a Decision and validating data is visible for this decision", function () {
@@ -56,13 +61,19 @@ describe("User can add case actions to an existing case", () => {
 			.save();
 
 		Logger.Log("Selecting Decision from open actions");
-		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: Multiple Decision Types")
-			.eq(-3)
-			.click();
+		actionSummaryTable
+			.getOpenAction("Decision: Multiple Decision Types")
+			.then(row =>
+			{
+				row.hasName("Decision: Multiple Decision Types")
+				row.hasStatus("In progress")
+				row.hasCreatedDate(toDisplayDate(now))
+				row.select();
+			});
 
 		Logger.Log("Viewing Decision");
 		viewDecisionPage
+			.hasDateDecisionOpened(toDisplayDate(now))
 			.hasCrmEnquiry("444")
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("Yes")
@@ -124,11 +135,13 @@ describe("User can add case actions to an existing case", () => {
 			"Selecting the Decision from open cases and validating it before closing it"
 		);
 
-		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: Multiple Decision Types")
-			.eq(-3)
-			.children("a")
-			.click();
+		Logger.Log("Selecting Decision from open actions");
+		actionSummaryTable
+			.getOpenAction("Decision: Multiple Decision Types")
+			.then(row =>
+			{
+				row.select();
+			});
 
 		viewDecisionPage.createDecisionOutcome();
 
@@ -147,11 +160,13 @@ describe("User can add case actions to an existing case", () => {
 			.withBusinessArea("ProviderMarketOversight")
 			.saveDecisionOutcome();
 
-		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: Multiple Decision Types")
-			.eq(-3)
-			.children("a")
-			.click();
+		Logger.Log("Selecting Decision from open actions");
+		actionSummaryTable
+			.getOpenAction("Decision: Multiple Decision Types")
+			.then(row =>
+			{
+				row.select();
+			});
 
 		Logger.Log("Selecting decision outcome, saving and closing decision");
 		viewDecisionPage.closeDecision();
@@ -171,13 +186,21 @@ describe("User can add case actions to an existing case", () => {
 			"Selecting Decision from closed cases and verifying that the finalise note matches the above"
 		);
 
-		cy.get("#close-case-actions td")
-			.should("contain.text", "Decision: Multiple Decision Types")
-			.eq(-4)
-			.children("a")
-			.click();
+		Logger.Log("Selecting Decision from closed actions");
+		actionSummaryTable
+			.getClosedAction("Decision: Multiple Decision Types")
+			.then(row =>
+			{
+				row.hasName("Decision: Multiple Decision Types")
+				row.hasStatus("Approved with conditions")
+				row.hasCreatedDate(toDisplayDate(now))
+				row.hasClosedDate(toDisplayDate(now))
+				row.select();
+			});
 
 		viewDecisionPage
+			.hasDateDecisionOpened(toDisplayDate(now))
+			.hasDateDecisionClosed(toDisplayDate(now))
 			.hasCrmEnquiry("444")
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("Yes")
@@ -207,13 +230,20 @@ describe("User can add case actions to an existing case", () => {
 
 		editDecisionPage.save();
 
-		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: No Decision Types")
-			.eq(-3)
-			.click();
+		Logger.Log("Selecting Decision from open actions");
+		actionSummaryTable
+			.getOpenAction("Decision: No Decision Types")
+			.then(row =>
+			{
+				row.hasName("Decision: No Decision Types")
+				row.hasStatus("In progress")
+				row.hasCreatedDate(toDisplayDate(now))
+				row.select();
+			});
 
 		Logger.Log("Viewing Empty Decision");
 		viewDecisionPage
+			.hasDateDecisionOpened(toDisplayDate(now))
 			.hasCrmEnquiry("Empty")
 			.hasRetrospectiveRequest("No")
 			.hasSubmissionRequired("No")
@@ -231,10 +261,12 @@ describe("User can add case actions to an existing case", () => {
 		editDecisionPage
 			.save();
 
-		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: No Decision Types")
-			.eq(-3)
-			.click();
+		actionSummaryTable
+			.getOpenAction("Decision: No Decision Types")
+			.then(row =>
+			{
+				row.select();
+			});
 
 		viewDecisionPage
 			.createDecisionOutcome();
@@ -255,10 +287,12 @@ describe("User can add case actions to an existing case", () => {
 			.withBusinessArea("ProviderMarketOversight")
 			.saveDecisionOutcome();
 
-		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: No Decision Types")
-			.eq(-3)
-			.click();
+		actionSummaryTable
+			.getOpenAction("Decision: No Decision Types")
+			.then(row =>
+			{
+				row.select();
+			});
 
 		viewDecisionPage
 			.editDecisionOutcome();
@@ -313,10 +347,12 @@ describe("User can add case actions to an existing case", () => {
 		editDecisionPage
 			.save();
 
-		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: No Decision Types")
-			.eq(-3)
-			.click();
+		actionSummaryTable
+			.getOpenAction("Decision: No Decision Types")
+			.then(row =>
+			{
+				row.select();
+			});
 
 		Logger.Log("Creating a decision outcome");
 		viewDecisionPage
@@ -369,11 +405,12 @@ describe("User can add case actions to an existing case", () => {
 			.withBusinessArea("ProviderMarketOversight")
 			.saveDecisionOutcome();
 
-		Logger.Log("Select created decision")
-		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: No Decision Types")
-			.eq(-3)
-			.click();
+		actionSummaryTable
+			.getOpenAction("Decision: No Decision Types")
+			.then(row =>
+			{
+				row.select();
+			});
 
 		Logger.Log("View decision outcome")
 
@@ -396,10 +433,12 @@ describe("User can add case actions to an existing case", () => {
 		editDecisionPage
 			.save();
 
-		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: No Decision Types")
-			.eq(-3)
-			.click();
+		actionSummaryTable
+			.getOpenAction("Decision: No Decision Types")
+			.then(row =>
+			{
+				row.select();
+			});
 
 		viewDecisionPage
 			.createDecisionOutcome();
@@ -409,10 +448,12 @@ describe("User can add case actions to an existing case", () => {
 			.withDecisionOutcomeStatus("Withdrawn")
 			.saveDecisionOutcome();
 
-		cy.get("#open-case-actions td")
-			.should("contain.text", "Decision: No Decision Types")
-			.eq(-3)
-			.click();
+		actionSummaryTable
+			.getOpenAction("Decision: No Decision Types")
+			.then(row =>
+			{
+				row.select();
+			});
 
 		viewDecisionPage
 			.hasBusinessArea("Empty")
