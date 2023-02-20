@@ -2,16 +2,16 @@ import { Logger } from "../../../common/logger";
 
 export class ViewDecisionPage
 {
-	public hasDateDecisionOpened(value: string): this {
-		Logger.Log(`Has date decision opened ${value}`);
+	public hasDateOpened(value: string): this {
+		Logger.Log(`Has date opened ${value}`);
 
 		cy.getByTestId("decision-open-text").should("contain.text", value);
 
 		return this;
 	}
 
-	public hasDateDecisionClosed(value: string): this {
-		Logger.Log(`Has date decision closed ${value}`);
+	public hasDateClosed(value: string): this {
+		Logger.Log(`Has date closed ${value}`);
 
 		cy.getByTestId("decision-closed-text").should("contain.text", value);
 
