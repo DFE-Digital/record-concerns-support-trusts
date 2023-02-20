@@ -38,7 +38,10 @@ module "azure_container_apps_hosting" {
 
   enable_event_hub = local.enable_event_hub
 
-  enable_monitoring            = local.enable_monitoring
-  monitor_email_receivers      = local.monitor_email_receivers
-  monitor_endpoint_healthcheck = local.monitor_endpoint_healthcheck
+  enable_monitoring              = local.enable_monitoring
+  monitor_email_receivers        = local.monitor_email_receivers
+  monitor_endpoint_healthcheck   = local.monitor_endpoint_healthcheck
+  monitor_enable_slack_webhook   = local.monitor_enable_slack_webhook
+  monitor_slack_webhook_receiver = local.monitor_slack_webhook_receiver
+  monitor_slack_channel          = local.monitor_slack_channel
 }
