@@ -4,15 +4,19 @@ import CaseManagementPage from "../../../pages/caseMangementPage";
 import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import { ViewNtiWarningLetterPage } from "../../../pages/caseActions/ntiWarningLetter/viewNtiWarningLetterPage";
 import { CloseNtiWarningLetterPage } from "../../../pages/caseActions/ntiWarningLetter/closeNtiWarningLetterPage";
+import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
+import { toDisplayDate } from "cypress/support/formatDate";
 
 describe("Testing the NTI warning letter action", () =>
 {
     const editNtiWarningLetterPage = new EditNtiWarningLetterPage();
     const viewNtiWarningLetterPage = new ViewNtiWarningLetterPage();
     const closeNtiWarningLetterPage = new CloseNtiWarningLetterPage();
+    let now;
 
     beforeEach(() => {
 		cy.login();
+        now = new Date();
 
         cy.basicCreateCase();
 
@@ -31,9 +35,15 @@ describe("Testing the NTI warning letter action", () =>
 
         createConfiguredNtiWarningLetter();
 
-        Logger.Log("Validate the NTI warning letter on the view page");
-        cy.get("#open-case-actions td")
-            .getByTestId("NTI Warning Letter").click();
+		actionSummaryTable
+			.getOpenAction("NTI Warning Letter")
+			.then(row =>
+			{
+				row.hasName("NTI Warning Letter")
+				row.hasStatus("Sent to trust")
+				row.hasCreatedDate(toDisplayDate(now))
+				row.select();
+			});
 
         viewNtiWarningLetterPage
             .hasStatus("Sent to trust")
@@ -84,10 +94,16 @@ describe("Testing the NTI warning letter action", () =>
         editNtiWarningLetterPage.save();
 
         Logger.Log("Validate the NTI warning letter on the view page");
-        cy.get("#open-case-actions td")
-            .getByTestId("NTI Warning Letter").click();
+		actionSummaryTable
+			.getOpenAction("NTI Warning Letter")
+			.then(row =>
+			{
+				row.hasStatus("Preparing warning letter")
+				row.select();
+			});
 
         viewNtiWarningLetterPage
+            .hasOpenedDate(toDisplayDate(now))
             .hasStatus("Preparing warning letter")
             .hasDateSent("10 February 2020")
             .hasReasonCount(1)
@@ -103,10 +119,16 @@ describe("Testing the NTI warning letter action", () =>
             .save();
 
         Logger.Log("Validate the NTI warning letter on the view page");
-        cy.get("#open-case-actions td")
-            .getByTestId("NTI Warning Letter").click();
+		actionSummaryTable
+			.getOpenAction("NTI Warning Letter")
+			.then(row =>
+			{
+				row.hasStatus("In progress")
+				row.select();
+			});
 
         viewNtiWarningLetterPage
+            .hasOpenedDate(toDisplayDate(now))
             .hasStatus("Empty")
             .hasDateSent("Empty")
             .hasReason("Empty")
@@ -119,8 +141,12 @@ describe("Testing the NTI warning letter action", () =>
         createConfiguredNtiWarningLetter();
 
         Logger.Log("Closing the NTI warning letter");
-        cy.get("#open-case-actions td")
-            .getByTestId("NTI Warning Letter").click();
+		actionSummaryTable
+			.getOpenAction("NTI Warning Letter")
+			.then(row =>
+			{
+				row.select();
+			});
 
         viewNtiWarningLetterPage.close();
 
@@ -143,10 +169,20 @@ describe("Testing the NTI warning letter action", () =>
         closeNtiWarningLetterPage.close();
 
         Logger.Log("Validate the Closed NTI warning letter on the view page");
-        cy.get("#close-case-actions td")
-            .getByTestId("NTI Warning Letter").click();
+		actionSummaryTable
+			.getClosedAction("NTI Warning Letter")
+			.then(row =>
+			{
+				row.hasName("NTI Warning Letter")
+				row.hasStatus("Conditions met")
+				row.hasCreatedDate(toDisplayDate(now))
+                row.hasClosedDate(toDisplayDate(now))
+				row.select();
+			});
 
         viewNtiWarningLetterPage
+            .hasOpenedDate(toDisplayDate(now))
+            .hasClosedDate(toDisplayDate(now))
             .hasStatus("Conditions met")
             .hasDateSent("22 October 2022")
             .hasReason("Cash flow problems")
