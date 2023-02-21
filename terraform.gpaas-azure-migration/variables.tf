@@ -167,3 +167,18 @@ variable "cdn_frontdoor_rate_limiting_threshold" {
   description = "Number of connection requests per minute threshold for the CDN Rate Limiting policy"
   type        = number
 }
+
+variable "monitor_enable_slack_webhook" {
+  description = "Enable slack webhooks to send monitoring notifications to a channel"
+  type        = bool
+}
+
+variable "monitor_slack_webhook_receiver" {
+  description = "A Slack App webhook URL"
+  type        = string
+}
+
+variable "monitor_slack_channel" {
+  description = "Slack channel name/id to send messages to"
+  type        = string
+}
