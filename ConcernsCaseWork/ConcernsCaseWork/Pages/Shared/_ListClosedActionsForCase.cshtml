@@ -30,19 +30,19 @@
     
         @foreach (ActionSummaryModel actionSummary in Model)
         {
-            <tr class="govuk-table__row">
+            <tr class="govuk-table__row" data-testid="row-@actionSummary.Name">
                 <td class="govuk-table__cell">
                     <a href="@actionSummary.RelativeUrl" class="govuk-link govuk-link-no-visited-state" data-testid="@actionSummary.Name">
                         @actionSummary.Name
                     </a>
                 </td>
-                <td class="govuk-table__cell">
+                <td class="govuk-table__cell" data-testid="status">
                     @actionSummary.StatusName
                 </td>
-                <td class="govuk-table__cell">
+                <td class="govuk-table__cell" data-testid="opened-date">
                     @actionSummary.OpenedDate
                 </td>
-                <td class="govuk-table__cell govuk-table__header__right">
+                <td class="govuk-table__cell govuk-table__header__right" data-testid="closed-date">
                     @actionSummary.ClosedDate
                 </td>
             </tr>

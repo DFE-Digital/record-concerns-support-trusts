@@ -2,6 +2,22 @@ import { Logger } from "../../../common/logger";
 
 export class ViewFinancialPlanPage
 {
+    public hasDateOpened(value: string): this {
+        Logger.Log(`Has date opened ${value}`);
+
+        cy.getByTestId("date-opened").should("contain.text", value);
+
+        return this;
+    }
+
+    public hasDateClosed(value: string): this {
+        Logger.Log(`Has date closed ${value}`);
+
+        cy.getByTestId("date-closed").should("contain.text", value);
+
+        return this;
+    }
+
     public hasStatus(status: string): this
     {
         Logger.Log(`Has status ${status}`);

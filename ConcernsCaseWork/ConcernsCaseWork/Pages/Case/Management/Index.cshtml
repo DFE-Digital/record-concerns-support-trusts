@@ -392,16 +392,16 @@
 
                         @foreach (ActionSummaryModel action in Model.OpenCaseActions)
                         {
-                            <tr class="govuk-table__row">
+                            <tr class="govuk-table__row" data-testid="row-@action.Name">
                                 <td class="govuk-table__cell">
                                     <a data-testid="@action.Name" href="@action.RelativeUrl" class="govuk-link govuk-link-no-visited-state">
                                         <span>@action.Name</span>
                                     </a>
                                 </td>
-                                <td class="govuk-table__cell">
+                                <td class="govuk-table__cell" data-testid="status">
                                     <span>@action.StatusName</span>
                                 </td>
-                                <td class="govuk-table__cell govuk-table__header__right">
+                                <td class="govuk-table__cell govuk-table__header__right" data-testid="opened-date">
                                     @action.OpenedDate
                                 </td>
                             </tr>

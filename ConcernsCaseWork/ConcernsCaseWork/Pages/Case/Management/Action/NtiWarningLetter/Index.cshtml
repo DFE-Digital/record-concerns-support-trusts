@@ -51,7 +51,7 @@
                 @{
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table-case-details__header">Date NTI: Warning letter opened</th>
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell" data-testid="date-opened-text">
                             <div class="govuk-!-padding-bottom-2">
                                 <span>@DateTimeHelper.ParseToDisplayDate(Model.NtiWarningLetterModel.CreatedAt)</span>
                             </div>
@@ -63,7 +63,7 @@
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table-case-details__header">Date NTI: Warning letter completed</th>
-                        <td class="govuk-table__cell">
+                        <td class="govuk-table__cell" data-testid="date-closed-text">
                             <div class="govuk-!-padding-bottom-2">
                                 <span>@DateTimeHelper.ParseToDisplayDate(Model.NtiWarningLetterModel.ClosedAt.Value)</span>
                             </div>
