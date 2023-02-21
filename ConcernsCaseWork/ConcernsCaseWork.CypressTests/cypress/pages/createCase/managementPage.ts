@@ -13,6 +13,10 @@ export default class CaseManagementPage {
         return this;
     }
 
+    public getTrust(): Cypress.Chainable<string> {
+        return cy.getByTestId(`trust_Field`).invoke('text');
+    }
+
     public hasRiskToTrust(value: string): this
     {
         Logger.Log(`Has risk to trust ${value}`);
