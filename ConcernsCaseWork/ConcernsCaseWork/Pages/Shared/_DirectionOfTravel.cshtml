@@ -4,7 +4,7 @@
 <div class="govuk-radios" data-module="govuk-radios">
 
 	<div class="govuk-radios__item">
-		<input class="govuk-radios__input" data-aria-controls="direction-of-travel" id="direction-of-travel" 
+		<input class="govuk-radios__input" data-aria-controls="direction-of-travel" id="direction-of-travel" data-testid="Deteriorating" 
 		       name="direction-of-travel" type="radio" value="Deteriorating" 
 		       checked="@Model.Equals("deteriorating", StringComparison.OrdinalIgnoreCase)">
 		<label class="govuk-label govuk-radios__label" for="direction-of-travel">
@@ -13,7 +13,7 @@
 	</div>
 
 	<div class="govuk-radios__item">
-		<input class="govuk-radios__input" data-aria-controls="directionOfTravel-1" id="direction-of-travel-1" 
+		<input class="govuk-radios__input" data-aria-controls="directionOfTravel-1" id="direction-of-travel-1" data-testid="Unchanged" 
 		       name="direction-of-travel" type="radio" value="Unchanged"
 		       checked="@Model.Equals("unchanged", StringComparison.OrdinalIgnoreCase)">
 		<label class="govuk-label govuk-radios__label" for="direction-of-travel-1">
@@ -22,7 +22,7 @@
 	</div>
 
 	<div class="govuk-radios__item">
-		<input class="govuk-radios__input" data-aria-controls="directionOfTravel-2" id="direction-of-travel-2" 
+		<input class="govuk-radios__input" data-aria-controls="directionOfTravel-2" id="direction-of-travel-2" data-testid="Improving"  
 		       name="direction-of-travel" type="radio" value="Improving"
 		       checked="@Model.Equals("improving", StringComparison.OrdinalIgnoreCase)">
 		<label class="govuk-label govuk-radios__label" for="direction-of-travel-2">
