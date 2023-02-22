@@ -34,6 +34,7 @@ namespace ConcernsCaseWork.Service.Trusts
 			}
 			queryParams.Add("page", trustSearch.Page.ToString());
 			queryParams.Add("count", maxRecordsPerPage.ToString());
+			queryParams.Add("includeEstablishments", false.ToString());
 
 			return HttpUtility.UrlEncode(queryParams.ToString());
 		}

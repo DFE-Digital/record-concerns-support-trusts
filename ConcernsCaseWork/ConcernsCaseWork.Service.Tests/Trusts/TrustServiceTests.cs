@@ -51,21 +51,10 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			{
 				foreach (var expectedTrust in expectedTrusts)
 				{
-					Assert.That(trust.Establishments.Count, Is.EqualTo(expectedTrust.Establishments.Count));
 					Assert.That(trust.Urn, Is.EqualTo(expectedTrust.Urn));
 					Assert.That(trust.GroupName, Is.EqualTo(expectedTrust.GroupName));
 					Assert.That(trust.UkPrn, Is.EqualTo(expectedTrust.UkPrn));
 					Assert.That(trust.CompaniesHouseNumber, Is.EqualTo(expectedTrust.CompaniesHouseNumber));
-
-					foreach (var establishment in trust.Establishments)
-					{
-						foreach (var expectedEstablishment in expectedTrust.Establishments)
-						{
-							Assert.That(establishment.Name, Is.EqualTo(expectedEstablishment.Name));
-							Assert.That(establishment.Urn, Is.EqualTo(expectedEstablishment.Urn));
-							Assert.That(establishment.UkPrn, Is.EqualTo(expectedEstablishment.UkPrn));
-						}
-					}
 				}
 			}
 		}
@@ -98,11 +87,11 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			Assert.ThrowsAsync<HttpRequestException>(() => trustService.GetTrustsByPagination(TrustFactory.BuildTrustSearch(), 100));
 		}
 
-		[TestCase("", "", "", "page%3d1%26count%3d45")]
-		[TestCase("group-name", "", "", "groupName%3dgroup-name%26page%3d1%26count%3d45")]
-		[TestCase("", "ukprn", "", "ukprn%3dukprn%26page%3d1%26count%3d45")]
-		[TestCase("", "", "companies-house-number", "companiesHouseNumber%3dcompanies-house-number%26page%3d1%26count%3d45")]
-		[TestCase("group-name", "ukprn", "", "groupName%3dgroup-name%26ukprn%3dukprn%26page%3d1%26count%3d45")]
+		[TestCase("", "", "", "page%3d1%26count%3d45%26includeEstablishments%3dFalse")]
+		[TestCase("group-name", "", "", "groupName%3dgroup-name%26page%3d1%26count%3d45%26includeEstablishments%3dFalse")]
+		[TestCase("", "ukprn", "", "ukprn%3dukprn%26page%3d1%26count%3d45%26includeEstablishments%3dFalse")]
+		[TestCase("", "", "companies-house-number", "companiesHouseNumber%3dcompanies-house-number%26page%3d1%26count%3d45%26includeEstablishments%3dFalse")]
+		[TestCase("group-name", "ukprn", "", "groupName%3dgroup-name%26ukprn%3dukprn%26page%3d1%26count%3d45%26includeEstablishments%3dFalse")]
 		public void WhenBuildRequestUri_ReturnsRequestUrl(string groupName, string ukprn, string companiesHouseNumber, string expectedRequestUri)
 		{
 			// arrange

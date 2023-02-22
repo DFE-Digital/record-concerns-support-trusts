@@ -1,3 +1,4 @@
+using AutoMapper;
 using ConcernsCaseWork.API.Extensions;
 using ConcernsCaseWork.API.Middleware;
 using ConcernsCaseWork.Constraints;
@@ -20,6 +21,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Web;
 using System;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading;
 
@@ -82,7 +84,8 @@ namespace ConcernsCaseWork
 			services.AddConcernsApi(Configuration);
 
 			// AutoMapper
-			services.AddAutoMapper(typeof(Startup));
+			services.ConfigureAndAddAutoMapper();
+
 
 			// Route options
 			services.Configure<RouteOptions>(options => { options.LowercaseUrls = true; });
@@ -117,7 +120,7 @@ namespace ConcernsCaseWork
         }
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider, IMapper mapper)
 		{
 			AbstractPageModel.PageHistoryStorageHandler = app.ApplicationServices.GetService<IPageHistoryStorageHandler>();
 
@@ -163,7 +166,7 @@ namespace ConcernsCaseWork
 
 			app.UseRouting();
 
-			
+
 
 			app.UseAuthentication();
 			app.UseAuthorization();
@@ -178,6 +181,8 @@ namespace ConcernsCaseWork
 			{
 				endpoints.MapRazorPages();
 			});
+
+			mapper.CompileAndValidate();
 
 			// If our application gets hit really hard, then threads need to be spawned
 			// By default the number of threads that exist in the threadpool is the amount of CPUs (1)
