@@ -89,9 +89,11 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 
 		[TestCase("", "", "", "page%3d1%26count%3d45%26includeEstablishments%3dFalse")]
 		[TestCase("group-name", "", "", "groupName%3dgroup-name%26page%3d1%26count%3d45%26includeEstablishments%3dFalse")]
-		[TestCase("", "ukprn", "", "ukprn%3dukprn%26page%3d1%26count%3d45%26includeEstablishments%3dFalse")]
+		[TestCase("", "ukprn", "", "page%3d1%26count%3d45%26includeEstablishments%3dFalse")]
+		[TestCase("", "1234", "", "ukprn%3d1234%26page%3d1%26count%3d45%26includeEstablishments%3dFalse")]
 		[TestCase("", "", "companies-house-number", "companiesHouseNumber%3dcompanies-house-number%26page%3d1%26count%3d45%26includeEstablishments%3dFalse")]
-		[TestCase("group-name", "ukprn", "", "groupName%3dgroup-name%26ukprn%3dukprn%26page%3d1%26count%3d45%26includeEstablishments%3dFalse")]
+		[TestCase("group-name", "ukprn", "", "groupName%3dgroup-name%26page%3d1%26count%3d45%26includeEstablishments%3dFalse")]
+		[TestCase("group-name", "1234", "", "groupName%3dgroup-name%26ukprn%3d1234%26page%3d1%26count%3d45%26includeEstablishments%3dFalse")]
 		public void WhenBuildRequestUri_ReturnsRequestUrl(string groupName, string ukprn, string companiesHouseNumber, string expectedRequestUri)
 		{
 			// arrange
