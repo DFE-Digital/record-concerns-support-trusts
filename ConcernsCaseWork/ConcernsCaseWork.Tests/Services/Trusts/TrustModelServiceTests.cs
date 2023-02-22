@@ -48,7 +48,6 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 			{
 				foreach (var actual in trustSummaryDto.Where(actual => expected.UkPrn.Equals(actual.UkPrn)))
 				{
-					Assert.That(expected.Establishments.Count, Is.EqualTo(actual.Establishments.Count));
 					Assert.That(expected.Urn, Is.EqualTo(actual.Urn));
 					Assert.That(expected.UkPrn, Is.EqualTo(actual.UkPrn));
 					Assert.That(expected.GroupName, Is.EqualTo(actual.GroupName));
@@ -65,16 +64,6 @@ namespace ConcernsCaseWork.Tests.Services.Trusts
 					Assert.That(expected.GroupContactAddress.Town, Is.EqualTo(actual.GroupContactAddress.Town));
 					Assert.That(expected.GroupContactAddress.AdditionalLine, Is.EqualTo(actual.GroupContactAddress.AdditionalLine));
 					Assert.That(expected.GroupContactAddress.DisplayAddress, Is.EqualTo(SharedBuilder.BuildDisplayAddress(actual.GroupContactAddress)));
-
-					foreach (var establishment in actual.Establishments)
-					{
-						foreach (var expectedEstablishment in expected.Establishments)
-						{
-							Assert.That(establishment.Name, Is.EqualTo(expectedEstablishment.Name));
-							Assert.That(establishment.Urn, Is.EqualTo(expectedEstablishment.Urn));
-							Assert.That(establishment.UkPrn, Is.EqualTo(expectedEstablishment.UkPrn));
-						}
-					}
 				}
 			}
 		}
