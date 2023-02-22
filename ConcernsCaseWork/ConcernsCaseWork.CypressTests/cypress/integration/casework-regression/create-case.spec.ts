@@ -4,7 +4,7 @@ import AddTerritoryPage from "cypress/pages/createCase/addTerritoryPage";
 import { CreateCasePage } from "cypress/pages/createCase/createCasePage";
 import CreateConcernPage from "cypress/pages/createCase/createConcernPage";
 import AddConcernDetailsPage from "cypress/pages/createCase/addConcernDetailsPage";
-import CaseManagementPage from "cypress/pages/createCase/managementPage";
+import caseManagementPage from "cypress/pages/caseMangementPage";
 
 describe("Creating a case", () =>
 {
@@ -13,7 +13,7 @@ describe("Creating a case", () =>
     const addDetailsPage = new AddDetailsPage();
     const addTerritoryPage = new AddTerritoryPage();
     const addConcernDetailsPage = new AddConcernDetailsPage();
-    const caseManagementPage = new CaseManagementPage();
+    // const caseManagementPage = new CaseManagementPage();
     
 	beforeEach(() => {
 		cy.login();
@@ -23,7 +23,7 @@ describe("Creating a case", () =>
     {
         Logger.Log("Create a case");
         createCasePage
-            .clickCreateCaseButton()
+            .createCase()
             .withTrustName("Ashton West End Primary Academy")
             .selectOption()
             .confirmOption();
@@ -142,7 +142,7 @@ describe("Creating a case", () =>
     it(("Should create a case with only required fields"), () => {
         Logger.Log("Create a case");
         createCasePage
-            .clickCreateCaseButton()
+            .createCase()
             .withTrustName("Ashton West End Primary Academy")
             .selectOption()
             .confirmOption();
