@@ -1,6 +1,23 @@
 import { Logger } from "../../../common/logger";
 
 export class ViewNtiWarningLetterPage {
+
+    public hasOpenedDate(value: string): this {
+        Logger.Log(`Has opened date ${value}`);
+
+        cy.getByTestId("date-opened-text").should("contain.text", value);
+
+        return this;
+    }
+
+    public hasClosedDate(value: string): this {
+        Logger.Log(`Has closed date ${value}`);
+
+        cy.getByTestId("date-closed-text").should("contain.text", value);
+
+        return this;
+    }
+
     public hasStatus(value: string): this {
         Logger.Log(`Has status ${value}`);
 
