@@ -94,7 +94,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiWarningLetter
 
 				Statuses = await GetStatuses();
 				Reasons = await GetReasons();
-			
+
 				CancelLinkUrl = WarningLetterId.HasValue ? @$"/case/{CaseUrn}/management/action/ntiwarningletter/{WarningLetterId.Value}" 
 														 : @$"/case/{CaseUrn}/management/action";
 
