@@ -24,7 +24,7 @@ namespace ConcernsCaseWork.Service.Trusts
 			{
 				queryParams.Add("groupName", trustSearch.GroupName);
 			}
-			if (!string.IsNullOrEmpty(trustSearch.Ukprn))
+			if (IsNumeric(trustSearch.Ukprn))
 			{
 				queryParams.Add("ukprn", trustSearch.Ukprn);
 			}
@@ -100,6 +100,11 @@ namespace ConcernsCaseWork.Service.Trusts
 
 				throw;
 			}
+		}
+
+		private bool IsNumeric(string input)
+		{
+			return int.TryParse(input, out _ );
 		}
 	}
 }
