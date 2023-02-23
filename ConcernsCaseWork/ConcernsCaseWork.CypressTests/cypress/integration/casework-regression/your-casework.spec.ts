@@ -1,12 +1,11 @@
 import activeCaseworkTable from "../../pages/yourCasework/activeCaseworkTable";
-import CaseManagementPage from "../../pages/createCase/managementPage";
 import { toDisplayDate } from "../../support/formatDate";
+import CaseManagementPage from "../../pages/caseMangementPage";
 
 describe("Your casework tests", () =>
 {
     let caseId: string;
     let trustName: string;
-    let caseManagementPage = new CaseManagementPage();
     let now: Date;
 
     beforeEach(() => {
@@ -16,7 +15,7 @@ describe("Your casework tests", () =>
         cy.basicCreateCase()
         .then((id: number) => {
             caseId = id + "";
-            return caseManagementPage.getTrust()
+            return CaseManagementPage.getTrust()
         })
         .then((trust: string) =>
         {
