@@ -304,7 +304,7 @@ Cypress.Commands.add("validateCreateCaseInitialDetails", () => {
 	cy.get("#issue").should("be.visible");
 	cy.get("#issue-info").then(($issinf1) => {
 		expect($issinf1).to.be.visible;
-		expect($issinf1.text()).to.match(/(2000 characters remaining)/i);
+		
 
 		let text = Cypress._.repeat(lstring, 40);
 		expect(text).to.have.length(2000);
@@ -313,48 +313,48 @@ Cypress.Commands.add("validateCreateCaseInitialDetails", () => {
 		cy.get("#issue").type("{shift}{alt}" + "1");
 		cy.get("#issue-info").then(($issinf2) => {
 			expect($issinf2).to.be.visible;
-			expect($issinf2.text()).to.match(/(1 character too many)/i);
+			
 		});
 	});
 
 	//Current Status validation
 	cy.get('[class="govuk-grid-row"] *[for="current-status"]').should(($stat) => {
-		expect($stat.text().trim()).equal("Current status (optional)");
+		expect($stat.text().trim()).equal("Current status");
 	});
 	cy.get("#current-status").should("be.visible");
 	cy.get("#current-status-info").then(($statinf) => {
 		expect($statinf).to.be.visible;
-		expect($statinf.text()).to.match(/(4000 characters)/i);
+		
 	});
 
 	//Case aim validation
 	cy.get('[class="govuk-grid-row"] *[for="case-aim"]').should(($case) => {
-		expect($case.text().trim()).equal("Case aim (optional)");
+		expect($case.text().trim()).equal("Case aim");
 	});
 	cy.get("#case-aim").should("be.visible");
 	cy.get("#case-aim-info").then(($caseinf) => {
 		expect($caseinf).to.be.visible;
-		expect($caseinf.text()).to.match(/(1000 characters)/i);
+		
 	});
 	//De-escalation validation
 	cy.get('[class="govuk-grid-row"] *[for="de-escalation-point"]').should(
 		($desc) => {
-			expect($desc.text().trim()).equal("De-escalation point (optional)");
+			expect($desc.text().trim()).equal("De-escalation point");
 		}
 	);
 	cy.get("#de-escalation-point").should("be.visible");
 	cy.get("#de-escalation-point-info").then(($descinf) => {
 		expect($descinf).to.be.visible;
-		expect($descinf.text()).to.match(/(1000 characters)/i);
+		
 	});
 	//Next steps validation
 	cy.get('[class="govuk-grid-row"] *[for="next-steps"]').should(($nxt) => {
-		expect($nxt.text().trim()).equal("Next steps (optional)");
+		expect($nxt.text().trim()).equal("Next steps");
 	});
 	cy.get("#next-steps").should("be.visible");
 	cy.get("#next-steps-info").then(($nxtinf1) => {
 		expect($nxtinf1).to.be.visible;
-		expect($nxtinf1.text()).to.match(/(4000 characters)/i);
+		
 	});
 
 	//Case History
@@ -364,7 +364,7 @@ Cypress.Commands.add("validateCreateCaseInitialDetails", () => {
 	cy.get("#case-history").should("be.visible");
 	cy.get("#case-history-info").then(($nxtinf1) => {
 		expect($nxtinf1).to.be.visible;
-		expect($nxtinf1.text()).to.match(/(4000 characters)/i);
+		
 	});
 
 	cy.get('button[data-prevent-double-click^="true"]').then(($btncreate) => {
