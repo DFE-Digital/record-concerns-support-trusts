@@ -41,7 +41,7 @@ window.addIssueValidator = function(validator) {
 	},
 	{
 		method: function(field) {
-			return field.value.trim().length <= 2000;
+			return getFieldLengthWithNewLines(field.value.trim()) <= 2000;
 		},
 		message: 'Issue must be 2000 characters or less'
 	}]);
@@ -94,7 +94,7 @@ window.addConcernValidator = function(validator) {
 window.addCurrentStatusValidator = function(validator) {
 	validator.addValidator('current-status', [{
 		method: function(field) {
-			return field.value.trim().length <= 4000;
+			return getFieldLengthWithNewLines(field.value.trim()) <= 4000;
 		},
 		message: 'Current status must be 4000 characters or less'
 	}]);
@@ -102,7 +102,7 @@ window.addCurrentStatusValidator = function(validator) {
 window.addNextStepsValidator = function(validator) {
 	validator.addValidator('next-steps', [{
 		method: function(field) {
-			return field.value.trim().length <= 4000;
+			return getFieldLengthWithNewLines(field.value.trim()) <= 4000;
 		},
 		message: 'Next steps must be 4000 characters or less'
 	}]);
@@ -110,7 +110,7 @@ window.addNextStepsValidator = function(validator) {
 window.addDeEscalationPointValidator = function(validator) {
 	validator.addValidator('de-escalation-point', [{
 		method: function(field) {
-			return field.value.trim().length <= 1000;
+			return getFieldLengthWithNewLines(field.value.trim()) <= 1000;
 		},
 		message: 'De-escalation point must be 1000 characters or less'
 	}]);
@@ -118,7 +118,7 @@ window.addDeEscalationPointValidator = function(validator) {
 window.addCaseAimValidator = function(validator) {
 	validator.addValidator('case-aim', [{
 		method: function(field) {
-			return field.value.trim().length <= 1000;
+			return getFieldLengthWithNewLines(field.value.trim()) <= 1000;
 		},
 		message: 'Case aim must be 1000 characters or less'
 	}]);
@@ -126,7 +126,7 @@ window.addCaseAimValidator = function(validator) {
 window.addCaseHistoryValidator = function (validator) {
 	validator.addValidator('case-history', [{
 		method: function (field) {
-			return field.value.trim().length <= 4300;
+			return getFieldLengthWithNewLines(field.value.trim()) <= 4300;
 		},
 		message: 'Case history must be 4300 characters or less'
 	}]);
@@ -168,7 +168,7 @@ window.addUsersValidator = function(validator) {
 window.addSRMANotesValidator = function (validator) {
 	validator.addValidator('srma-notes', [{
 		method: function (field) {
-			return field.value.trim().length <= 2000;
+			return getFieldLengthWithNewLines(field.value.trim()) <= 2000;
 		},
 		message: 'Notes must be 2000 characters or less'
 	}]);
@@ -176,7 +176,7 @@ window.addSRMANotesValidator = function (validator) {
 window.addFinancialPlanNotesValidator = function (validator) {
 	validator.addValidator('financial-plan-notes', [{
 		method: function (field) {
-			return field.value.trim().length <= 2000;
+			return getFieldLengthWithNewLines(field.value.trim()) <= 2000;
 		},
 		message: 'Notes must be 2000 characters or less'
 	}]);
@@ -185,7 +185,7 @@ window.addFinancialPlanNotesValidator = function (validator) {
 window.addNTINotesValidator = function (validator) {
 	validator.addValidator('nti-notes', [{
 		method: function (field) {
-			return field.value.trim().length <= 2000;
+			return getFieldLengthWithNewLines(field.value.trim()) <= 2000;
 		},
 		message: 'Notes must be 2000 characters or less'
 	}]);
@@ -242,4 +242,19 @@ window.autoResizer = function() {
 			this.style.borderColor="black";
 		}
 	}
+}
+
+window.getFieldLengthWithNewLines = function(field) {
+	// JS and C# treat new lines differently
+	// JS treats a new line as one character \n
+	// C# treats a new line has two characters \r\n
+	// Since we use two different languages, we need to make sure they are counting correctly
+	// This code switches javascript to count like C# (\r and \n)
+
+	let numberOfNewLines = (field.match(/\n/g) || []).length;
+
+	console.log("Detected new lines " + numberOfNewLines);
+
+	// Add the \r for each \n
+	return field.length + numberOfNewLines;
 }
