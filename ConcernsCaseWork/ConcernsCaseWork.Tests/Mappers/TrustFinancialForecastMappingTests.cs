@@ -28,9 +28,9 @@ public class TrustFinancialForecastMappingTests
 			Notes = _fixture.Create<string>(),
 			SFSOInitialReviewHappenedAt = _fixture.Create<DateTime>(),
 			TrustRespondedAt = _fixture.Create<DateTime>(),
-			CreatedAt = _fixture.Create<DateTimeOffset>(),
 			UpdatedAt = _fixture.Create<DateTimeOffset>(),
-			ClosedAt = _fixture.Create<DateTimeOffset?>(),
+			CreatedAt = new DateTimeOffset(2021, 9, 5, 0, 0, 0, new TimeSpan()),
+			ClosedAt = new DateTimeOffset(2024, 8, 30, 0, 0, 0, new TimeSpan())
 		};
 
 		var serviceModel = new TrustFinancialForecastResponse
@@ -45,7 +45,7 @@ public class TrustFinancialForecastMappingTests
 			TrustRespondedAt = testData.TrustRespondedAt,
 			CreatedAt = testData.CreatedAt,
 			UpdatedAt = testData.UpdatedAt,
-			ClosedAt = testData.ClosedAt
+			ClosedAt = testData.ClosedAt,
 		};
 
 		// act
@@ -55,8 +55,8 @@ public class TrustFinancialForecastMappingTests
 		Assert.Multiple(() =>
 		{
 			Assert.That(result.Name, Is.EqualTo("Trust Financial Forecast (TFF)"));
-			Assert.That(result.ClosedDate, Is.EqualTo(testData.ClosedAt?.DateTime.GetFormattedDate()));
-			Assert.That(result.OpenedDate, Is.EqualTo(testData.CreatedAt.DateTime.GetFormattedDate()));
+			Assert.That(result.ClosedDate, Is.EqualTo("30 August 2024"));
+			Assert.That(result.OpenedDate, Is.EqualTo("05 September 2021"));
 			Assert.That(result.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/trustfinancialforecast/{testData.Id}"));
 			Assert.That(result.StatusName, Is.EqualTo("Completed"));
 		});
