@@ -182,3 +182,13 @@ variable "monitor_slack_channel" {
   description = "Slack channel name/id to send messages to"
   type        = string
 }
+
+variable "existing_network_watcher_name" {
+  description = "Use an existing network watcher to add flow logs."
+  type        = string
+}
+
+variable "existing_network_watcher_resource_group_name" {
+  description = "Existing network watcher resource group."
+  type        = string
+}
