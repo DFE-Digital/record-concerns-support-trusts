@@ -3,6 +3,11 @@
 
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 
+@{
+
+    var isClosed = Model.Decision.ClosedDate != string.Empty;
+}
+
 @section BeforeMain {
 	<div class="govuk-width-container">
 		<back-link url="@Model.BackLink.Url" label="@Model.BackLink.Label"></back-link>
@@ -22,6 +27,12 @@
             <span class="govuk-caption-m">Decision ID @Model.Decision.DecisionId</span>
             Decision
         </h1>
+
+        @if (isClosed)
+        {
+            <span class="govuk-tag ragtag ragtag__grey govuk-!-margin-bottom-3">Closed</span>
+        }
+
         @if (Model.Decision.IsEditable)
         {
             if (Model.Decision.Outcome != null)
@@ -50,7 +61,7 @@
                     </td>
                 </tr>
 
-                @if (Model.Decision.ClosedDate != string.Empty)
+                @if (isClosed)
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header govuk-table__header__width_15" data-testid="decision-closed-label">Date decision closed</th>
