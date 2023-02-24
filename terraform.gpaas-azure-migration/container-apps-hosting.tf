@@ -44,4 +44,7 @@ module "azure_container_apps_hosting" {
   monitor_enable_slack_webhook   = local.monitor_enable_slack_webhook
   monitor_slack_webhook_receiver = local.monitor_slack_webhook_receiver
   monitor_slack_channel          = local.monitor_slack_channel
+
+  existing_network_watcher_name                = local.existing_network_watcher_name
+  existing_network_watcher_resource_group_name = local.existing_network_watcher_resource_group_name
 }
