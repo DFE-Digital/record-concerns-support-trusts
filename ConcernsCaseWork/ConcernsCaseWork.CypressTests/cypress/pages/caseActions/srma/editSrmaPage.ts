@@ -41,8 +41,8 @@ export class EditSrmaPage {
         return this;
     }
 
-    public withNotesWithNewLines() {
-        Logger.Log(`With notes that has a new line.`);
+    public withNotesWithLines() {
+        Logger.Log(`With notes that has lines`);
         cy.getById('srma-notes').clear().invoke("val", "x 1 \n".repeat(400));
         return this;
     }
