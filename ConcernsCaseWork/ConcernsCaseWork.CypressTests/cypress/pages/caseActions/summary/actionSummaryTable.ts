@@ -6,28 +6,22 @@ export class ActionSummaryTable {
         Logger.Log(`Getting open action summary row ${value}`);
 
         return cy.getById("open-case-actions")
-        .within(() =>
-        {
-            cy.getByTestId(`row-${value}`);
-        })
-        .then((el) =>
-        {
-            return new ActionSummaryRow(el);
-        });
+            .find(`[data-testid='row-${value}']`)
+            .then((el) =>
+            {
+                return new ActionSummaryRow(el);
+            });
     }
 
     public getClosedAction(value: string): Cypress.Chainable<ActionSummaryRow> {
         Logger.Log(`Getting closed action summary row ${value}`);
 
         return cy.getById("close-case-actions")
-        .within(() =>
-        {
-            cy.getByTestId(`row-${value}`);
-        })
-        .then((el) =>
-        {
-            return new ActionSummaryRow(el);
-        });
+            .find(`[data-testid='row-${value}']`)
+            .then((el) =>
+            {
+                return new ActionSummaryRow(el);
+            });
     }
 }
 
