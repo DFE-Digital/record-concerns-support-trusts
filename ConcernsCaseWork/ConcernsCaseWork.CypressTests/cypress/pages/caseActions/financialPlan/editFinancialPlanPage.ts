@@ -68,6 +68,14 @@ export class EditFinancialPlanPage
 		return this;
 	}
 
+    public withNotesWithLines(): this {
+		cy.task("log", `With Notes that has lines`);
+
+		cy.getById("financial-plan-notes").clear().invoke("val", "x1 \n".repeat(400));
+
+		return this;
+	}
+
     public save(): this
     {
         Logger.Log("Save financial plan");

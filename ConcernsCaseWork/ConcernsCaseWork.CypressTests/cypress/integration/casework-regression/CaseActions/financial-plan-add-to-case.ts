@@ -237,6 +237,15 @@ describe("User can add Financial Plan case action to an existing case", () => {
                 .withNotesExceedingLimit()
                 .save()
                 .hasValidationError("Notes must be 2000 characters or less");
+        
+        Logger.Log("Filling out the NTI form with new lines and validating it");
+
+                editFinancialPlanPage
+                        .withNotesWithLines()
+                        .save()
+                        .hasValidationError("Notes must be 2000 characters or less");  
+                        
+                       
     }
 
     function addFinancialPlanToCase()

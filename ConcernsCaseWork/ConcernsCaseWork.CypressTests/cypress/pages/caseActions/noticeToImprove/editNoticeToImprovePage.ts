@@ -50,6 +50,14 @@ export class EditNoticeToImprovePage {
         return this;
     }
 
+    public withNotesWithLines(): this {
+        Logger.Log(`With notes that has a new line`);
+
+        cy.getById('nti-notes').clear().invoke("val", "x 1 \n".repeat(400));
+
+        return this;
+    }
+
     public withNotesExceedingLimit(): this {
         Logger.Log(`With notes exceeding limit`);
 
