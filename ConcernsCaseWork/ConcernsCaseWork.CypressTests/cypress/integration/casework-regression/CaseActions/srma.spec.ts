@@ -22,20 +22,10 @@ describe("Testing the SRMA case action", () =>
     {
         Logger.Log("Checking SRMA validation");
         editSrmaPage
-            .withNotesExceedingLimit()
+            .withNotesWithLines()
             .save()
             .hasValidationError("Select status")
             .hasValidationError("Enter a valid date")
-            .hasValidationError("Notes must be 2000 characters or less");
-            
-        Logger.Log("Filling out the SRMA form with new lines");
-        editSrmaPage
-            .withStatus("Trust Considering")
-            .withDayTrustContacted("22")
-            .withMonthTrustContacted("10")
-            .withYearTrustContacted("2022")
-            .withNotesWithNewLines()
-            .save()
             .hasValidationError("Notes must be 2000 characters or less");
 
         Logger.Log("Filling out the SRMA form");
