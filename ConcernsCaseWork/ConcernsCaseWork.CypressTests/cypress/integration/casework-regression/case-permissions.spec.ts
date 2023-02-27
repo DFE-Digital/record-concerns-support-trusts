@@ -1,4 +1,7 @@
 import { EditFinancialPlanPage } from "cypress/pages/caseActions/financialPlan/editFinancialPlanPage";
+import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
+import { EditTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/editTrustFinancialForecastPage";
+import { ViewTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/viewTrustFinancialForecastPage";
 import caseApi from "../../api/caseApi";
 import { Logger } from "../../common/logger";
 import { DecisionOutcomePage } from "../../pages/caseActions/decision/decisionOutcomePage";
@@ -30,6 +33,8 @@ describe("Testing permissions on cases and case actions", () => {
     const editDecisionPage = new EditDecisionPage();
     const viewDecisionPage = new ViewDecisionPage();
     const decisionOutcomePage = new DecisionOutcomePage();
+    const editTffPage = new EditTrustFinancialForecastPage();
+    const viewTffPage = new ViewTrustFinancialForecastPage();
 
     let caseId: number;
 
@@ -247,6 +252,32 @@ describe("Testing permissions on cases and case actions", () => {
             .cannotEditDecision()
             .cannotEditDecisionOutcome()
             .cannotCloseDecision();
+    });
+
+    it("Should not allow the user to edit a trust financial forecast that they did not create", () => {
+        Logger.Log("Check that the user can edit a trust financial forecast that they did create");
+        caseMangementPage
+            .addCaseAction("TrustFinancialForecast");
+
+        editTffPage.save();
+
+        actionSummaryTable
+            .getOpenAction("Trust Financial Forecast (TFF)")
+            .then((row) =>
+            {
+                row.select();
+            })
+
+        viewTffPage
+            .canEdit()
+            .canClose();
+
+        Logger.Log("Check that the user cannot edit a trust financial forecast that they did not create");
+        updateCaseOwner(caseId);
+
+        viewTffPage
+            .cannotEdit()
+            .cannotClose();
     });
 
     function updateCaseOwner(caseId: number) {
