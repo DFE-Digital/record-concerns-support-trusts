@@ -79,7 +79,7 @@ public class TrustFinancialForecastMappingTests
 			Notes = _fixture.Create<string>(),
 			SFSOInitialReviewHappenedAt = _fixture.Create<DateTime>(),
 			TrustRespondedAt = _fixture.Create<DateTime>(),
-			CreatedAt = _fixture.Create<DateTimeOffset>(),
+			CreatedAt = new DateTimeOffset(2021, 9, 5, 0, 0, 0, new TimeSpan()),
 			UpdatedAt = _fixture.Create<DateTimeOffset>()
 		};
 
@@ -105,8 +105,8 @@ public class TrustFinancialForecastMappingTests
 		Assert.Multiple(() =>
 		{
 			Assert.That(result.Name, Is.EqualTo("Trust Financial Forecast (TFF)"));
-			Assert.That(result.ClosedDate, Is.Null);
-			Assert.That(result.OpenedDate, Is.EqualTo(testData.CreatedAt.DateTime.GetFormattedDate()));
+			Assert.That(result.ClosedDate, Is.EqualTo(""));
+			Assert.That(result.OpenedDate, Is.EqualTo("05 September 2021"));
 			Assert.That(result.RelativeUrl, Is.EqualTo($"/case/{testData.CaseUrn}/management/action/trustfinancialforecast/{testData.Id}"));
 			Assert.That(result.StatusName, Is.EqualTo("In progress"));
 		});
