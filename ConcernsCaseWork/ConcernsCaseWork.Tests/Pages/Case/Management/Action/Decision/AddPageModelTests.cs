@@ -65,6 +65,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 
 			sut.CaseUrn.Should().Be(expectedUrn);
 			sut.DecisionTypeCheckBoxes.Should().NotBeEmpty();
+			sut.SaveAndContinueButtonText.Should().Be("Save and return to case overview");
 		}
 
 		[Test]
@@ -102,6 +103,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision
 			sut.ReceivedRequestDate.Day.Should().Be("02");
 			sut.ReceivedRequestDate.Month.Should().Be("05");
 			sut.ReceivedRequestDate.Year.Should().Be("2022");
+			sut.SaveAndContinueButtonText.Should().Be("Save and return to decision");
 		}
 
 		[Test]
