@@ -66,6 +66,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 
 		Logger.Log("View the created TFF with expected values");
 		viewTFFPage
+			.hasDateOpened(toDisplayDate(now))
 			.hasForecastingTool("Current year - Spring")
 			.hasInitialReviewDate("26 January 2023")
 			.hasTrustRespondedDate("27 February 2024")
@@ -101,6 +102,7 @@ describe("User can add trust financial forecast to an existing case", () => {
 
 		Logger.Log("View the created TFF with expected values");
 		viewTFFPage
+			.hasDateOpened(toDisplayDate(now))
 			.hasForecastingTool("Empty")
 			.hasInitialReviewDate("Empty")
 			.hasTrustRespondedDate("Empty")
@@ -222,6 +224,8 @@ describe("User can add trust financial forecast to an existing case", () => {
 
 		Logger.Log("Check the close trust financial forecast");
 		viewTFFPage
+			.hasDateOpened(toDisplayDate(now))
+			.hasDateClosed(toDisplayDate(now))
 			.hasForecastingTool("Previous year - Spring")
 			.hasInitialReviewDate("14 February 2022")
 			.hasTrustRespondedDate("15 March 2024")
