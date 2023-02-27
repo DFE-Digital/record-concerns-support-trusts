@@ -486,6 +486,10 @@ class CaseManagementPage {
         return cy.getByTestId("add-case-action");
     }
 
+    public getTrust(): Cypress.Chainable<string> {
+        return cy.getByTestId(`trust_Field`).invoke('text');
+    }
+
     // has methods
     public hasTrust(value: string): this
     {

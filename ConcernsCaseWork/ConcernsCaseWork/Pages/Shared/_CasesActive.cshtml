@@ -36,17 +36,17 @@
 	{
 		foreach (var activeCase in Model)
 		{
-			<tr class="govuk-table__row tr__large">
-				<td class="govuk-table__cell">
+			<tr class="govuk-table__row tr__large" data-testid="row-@activeCase.CaseUrn">
+				<td class="govuk-table__cell" data-testid="case-id">
 					<a class="govuk-link" href="case/@activeCase.CaseUrn/management">@activeCase.CaseUrn</a>
 				</td>
-				<td class="govuk-table__cell">
+				<td class="govuk-table__cell" data-testid="updated-at">
 					@activeCase.UpdatedAt
 				</td>
-				<td class="govuk-table__cell">
+				<td class="govuk-table__cell" data-testid="created-at">
 					@activeCase.CreatedAt
 				</td>
-				<td class="govuk-table__cell">
+				<td class="govuk-table__cell" data-testid="trust-name">
 					@activeCase.TrustName
 				</td>
 			
@@ -83,11 +83,11 @@
 					<ul class="govuk-list govuk-list--bullet">
 						@foreach (var concern in activeCase.ActiveConcerns)
 						{
-							<li>@concern</li>
+							<li data-testid="concern">@concern</li>
 						}
 					</ul>
 					<div class="concerns-secondary-text-colour">Risk to trust</div>
-					<div class="govuk-label-wrapper">
+                    <div class="govuk-label-wrapper" data-testid="risk-to-trust-list">
 						@for (var index = 0; index < activeCase.Rating.RagRating.Item2.Count; ++index)
 						{
 							<span class="govuk-tag ragtag @activeCase.Rating.RagRatingCss.ElementAt(index)">
