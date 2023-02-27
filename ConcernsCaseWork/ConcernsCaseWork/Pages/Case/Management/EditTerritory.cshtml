@@ -41,7 +41,7 @@
 								{
 									var isChecked = Model.Territory == territory ? "checked" : "";
 									<div class="govuk-radios__item">
-										<input class="govuk-radios__input" id="territory-@territory" name="territory" type="radio" value="@territory" @isChecked>
+										<input class="govuk-radios__input" id="territory-@territory" name="territory" type="radio" value="@territory" @isChecked data-testid="@territory">
 										<label class="govuk-label govuk-radios__label" for="territory-@territory">
 											@territory.Description()
 										</label>
