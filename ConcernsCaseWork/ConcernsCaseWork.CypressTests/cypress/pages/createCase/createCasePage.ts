@@ -2,7 +2,7 @@ import { Logger } from "../../common/logger";
 
 export class CreateCasePage
 {
-    public clickCreateCaseButton(): this
+    public createCase(): this
     {
         Logger.Log("Creating case");
         cy.getByTestId("create-case-button").click();
