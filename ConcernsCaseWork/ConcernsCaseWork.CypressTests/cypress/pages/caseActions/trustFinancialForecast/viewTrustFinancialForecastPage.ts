@@ -3,6 +3,14 @@ import { Logger } from "../../../common/logger";
 
 export class ViewTrustFinancialForecastPage
 {
+    public hasDateOpened(value: string) {
+        Logger.Log(`Has date opened ${value}`);
+
+        cy.getByTestId("trust-financial-forecast-date-opened").should("contain.text", value);
+
+        return this;
+    }
+
     public hasForecastingTool(forecastingTool: string): this {
         Logger.Log(`Has forecasting tool ${forecastingTool}`);
 
@@ -47,6 +55,14 @@ export class ViewTrustFinancialForecastPage
         Logger.Log(`Has notes ${notes}`);
 
         cy.getByTestId(`trust-financial-forecast-notes`).should("contain.text", notes);
+
+        return this;
+    }
+
+    public hasDateClosed(value: string) {
+        Logger.Log(`Has date closed ${value}`);
+
+        cy.getByTestId("trust-financial-forecast-date-closed").should("contain.text", value);
 
         return this;
     }
