@@ -45,6 +45,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 
 		public List<DecisionTypeCheckBox> DecisionTypeCheckBoxes { get; set; }
 
+		public string SaveAndContinueButtonText { get; set; }
+
 		public AddPageModel(IDecisionService decisionService, ILogger<AddPageModel> logger)
 		{
 			_decisionService = decisionService;
@@ -124,6 +126,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 		private void SetupPage(long caseUrn, long? decisionId)
 		{
 			ViewData[ViewDataConstants.Title] = decisionId.HasValue ? "Edit decision" : "Add decision";
+			SaveAndContinueButtonText = decisionId.HasValue ? "Save and return to decision" : "Save and return to case overview";
 
 			CaseUrn = (CaseUrn)caseUrn;
 			DecisionId = decisionId;
