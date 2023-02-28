@@ -22,7 +22,7 @@ describe("Testing the SRMA case action", () =>
     {
         Logger.Log("Checking SRMA validation");
         editSrmaPage
-            .withNotesExceedingLimit()
+            .withNotesWithLines()
             .save()
             .hasValidationError("Select status")
             .hasValidationError("Enter a valid date")

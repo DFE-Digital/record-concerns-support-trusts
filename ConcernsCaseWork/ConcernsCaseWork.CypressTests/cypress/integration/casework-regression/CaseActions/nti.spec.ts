@@ -37,10 +37,10 @@ describe("Testing case action NTI", () =>
 
         Logger.Log("Notes Exceeding allowed limit")
         editNtiPage
-            .withNotesExceedingLimit()
+            .withNotesWithLines()
             .save()
             .hasValidationError("Notes must be 2000 characters or less");
-
+          
         configureNtiWithConditions();
 
         Logger.Log("Validate the NTI on the view page");

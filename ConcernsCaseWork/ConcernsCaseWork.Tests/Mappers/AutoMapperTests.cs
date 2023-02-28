@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Shared.Tests.Factory;
@@ -20,10 +21,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var mapper = config.CreateMapper();
 
 			var trustsDto = TrustFactory.BuildListTrustSummaryDto();
-			
+
 			// act
 			var trustsModel = mapper.Map<IList<TrustSearchModel>>(trustsDto);
-			
+
 			// assert
 			Assert.IsAssignableFrom<List<TrustSearchModel>>(trustsModel);
 			Assert.That(trustsModel.Count, Is.EqualTo(trustsDto.Count));
@@ -31,25 +32,14 @@ namespace ConcernsCaseWork.Tests.Mappers
 			{
 				foreach (var actual in trustsDto.Where(actual => expected.UkPrn.Equals(actual.UkPrn)))
 				{
-					Assert.That(expected.Establishments.Count, Is.EqualTo(actual.Establishments.Count));
 					Assert.That(expected.Urn, Is.EqualTo(actual.Urn));
 					Assert.That(expected.UkPrn, Is.EqualTo(actual.UkPrn));
 					Assert.That(expected.GroupName, Is.EqualTo(actual.GroupName));
 					Assert.That(expected.CompaniesHouseNumber, Is.EqualTo(actual.CompaniesHouseNumber));
-					
-					foreach (var establishment in actual.Establishments)
-					{
-						foreach (var expectedEstablishment in expected.Establishments)
-						{
-							Assert.That(establishment.Name, Is.EqualTo(expectedEstablishment.Name));
-							Assert.That(establishment.Urn, Is.EqualTo(expectedEstablishment.Urn));
-							Assert.That(establishment.UkPrn, Is.EqualTo(expectedEstablishment.UkPrn));
-						}
-					}
 				}
 			}
 		}
-		
+
 		[Test]
 		public void ConvertFrom_TrustDetailsDto_To_TrustsDetailsModel_IsValid()
 		{
@@ -58,10 +48,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var mapper = config.CreateMapper();
 
 			var trustDetailsDto = TrustFactory.BuildTrustDetailsDto();
-			
+
 			// act
 			var trustDetailsModel = mapper.Map<TrustDetailsModel>(trustDetailsDto);
-			
+
 			// assert
 			Assert.IsAssignableFrom<TrustDetailsModel>(trustDetailsModel);
 			Assert.That(trustDetailsModel.GiasData, Is.Not.Null);
@@ -77,7 +67,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.Town, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.Town));
 			Assert.That(trustDetailsModel.GiasData.GroupContactAddress.AdditionalLine, Is.EqualTo(trustDetailsDto.GiasData.GroupContactAddress.AdditionalLine));
 		}
-		
+
 		[Test]
 		public void ConvertFrom_EstablishmentSummaryDto_To_EstablishmentSummaryModel_IsValid()
 		{
@@ -86,17 +76,17 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var mapper = config.CreateMapper();
 
 			var establishmentSummaryDto = EstablishmentFactory.BuildEstablishmentSummaryDto();
-			
+
 			// act
 			var establishmentSummaryModel = mapper.Map<EstablishmentSummaryModel>(establishmentSummaryDto);
-			
+
 			// assert
 			Assert.IsAssignableFrom<EstablishmentSummaryModel>(establishmentSummaryModel);
 			Assert.That(establishmentSummaryModel.Name, Is.EqualTo(establishmentSummaryDto.Name));
 			Assert.That(establishmentSummaryModel.Urn, Is.EqualTo(establishmentSummaryDto.Urn));
 			Assert.That(establishmentSummaryModel.UkPrn, Is.EqualTo(establishmentSummaryDto.UkPrn));
 		}
-		
+
 		[Test]
 		public void ConvertFrom_GiasDataDto_To_GiasDataModel_IsValid()
 		{
@@ -105,10 +95,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var mapper = config.CreateMapper();
 
 			var giasDataDto = GiasDataFactory.BuildGiasDataDto();
-			
+
 			// act
 			var giasDataModel = mapper.Map<GiasDataModel>(giasDataDto);
-			
+
 			// assert
 			Assert.IsAssignableFrom<GiasDataModel>(giasDataModel);
 			Assert.That(giasDataModel, Is.Not.Null);
@@ -125,7 +115,7 @@ namespace ConcernsCaseWork.Tests.Mappers
 			Assert.That(giasDataModel.GroupContactAddress.AdditionalLine, Is.EqualTo(giasDataDto.GroupContactAddress.AdditionalLine));
 			Assert.That(giasDataModel.CompaniesHouseWebsite, Is.EqualTo($"https://find-and-update.company-information.service.gov.uk/company/{giasDataDto.CompaniesHouseNumber}"));
 		}
-		
+
 		[Test]
 		public void ConvertFrom_EstablishmentDto_To_EstablishmentModel_IsValid()
 		{
@@ -134,10 +124,10 @@ namespace ConcernsCaseWork.Tests.Mappers
 			var mapper = config.CreateMapper();
 
 			var establishmentDto = EstablishmentFactory.BuildEstablishmentDto();
-			
+
 			// act
 			var establishmentModel = mapper.Map<EstablishmentModel>(establishmentDto);
-			
+
 			// assert
 			Assert.IsAssignableFrom<EstablishmentModel>(establishmentModel);
 			Assert.That(establishmentModel.Urn, Is.EqualTo(establishmentDto.Urn));
@@ -157,8 +147,9 @@ namespace ConcernsCaseWork.Tests.Mappers
 		public void Assert_MappingConfiguration_Is_Valid()
 		{
 			// Auto mapper includes functionality to check that config is valid for you.
-			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());			
-			config.AssertConfigurationIsValid();
+			var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapping>());
+			var mapper = new Mapper(config);
+			mapper.CompileAndValidate();
 		}
 	}
 }
