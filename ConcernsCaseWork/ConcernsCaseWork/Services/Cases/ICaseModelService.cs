@@ -19,6 +19,7 @@ namespace ConcernsCaseWork.Services.Cases
 		Task PatchNextSteps(PatchCaseModel patchCaseModel);
 		Task PatchCaseHistory(long caseUrn, string userName, string caseHistory);
 		Task PatchTerritory(int caseUrn, string userName, Territory? territory);
+		Task PatchOwner(int caseUrn, string owner);
 		Task<long> PostCase(CreateCaseModel createCaseModel);
 	}
 }

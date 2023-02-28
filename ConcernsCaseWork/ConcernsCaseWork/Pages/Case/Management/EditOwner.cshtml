@@ -1,0 +1,56 @@
+﻿@page "/case/{urn:long}/management/edit-case-owner"
+@using NetEscapades.AspNetCore.SecurityHeaders;
+@model ConcernsCaseWork.Pages.Case.Management.EditOwnerPageModel
+@{
+    var nonce = HttpContext.GetNonce();
+}
+<form role="form" method="post" id="select-trust-form" novalidate>
+    <div class="govuk-width-container">
+        <h1 class="govuk-heading-l">
+            Change case owner
+        </h1>
+
+        <div id="autocomplete-container" class="govuk-!-margin-top-3"></div>
+        <div class="ccms-loader govuk-!-display-none"></div>
+        <ul class="autocomplete__menu autocomplete__menu--inline autocomplete__menu--hidden" id="case-owner-options" role="listbox">
+            <li class="autocomplete__option autocomplete__option--no-results">No results found.</li>
+        </ul>
+
+        <input type="hidden" id="selected-owner" name="selectedOwner" required />
+        <input type="hidden" id="current-owner" value="@Model.CurrentCaseOwner" />
+
+        <!--Button group-->
+        <div class="govuk-button-group govuk-!-margin-top-3">
+            <button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" data-testid="apply">
+                Apply
+            </button>
+            <partial name="_Cancel" />
+        </div>
+    </div>
+</form>
+
+<script type="application/javascript" nonce="@nonce">
+    $(document).ready(function () {
+
+        let autocompleteContainer = document.getElementById('autocomplete-container');
+        let currentCaseOwner = document.getElementById("current-owner").value;
+
+        $.get('?handler=TeamList')
+        .done((result) =>
+        {
+            accessibleAutocomplete({
+                element: autocompleteContainer,
+                id: "case-owner-input",
+                name: "case-owner",
+                defaultValue: currentCaseOwner,
+                source: result,
+                confirmOnBlur: false,
+                showNoOptonsFound: true,
+                onConfirm: (selected) => {
+                    document.getElementById('selected-owner').value = selected;
+                }
+            });
+        });
+    });
+
+</script>

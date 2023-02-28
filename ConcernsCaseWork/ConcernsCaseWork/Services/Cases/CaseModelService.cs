@@ -257,6 +257,24 @@ namespace ConcernsCaseWork.Services.Cases
 			}
 		}
 
+		public async Task PatchOwner(int caseUrn, string owner)
+		{
+			try
+			{
+				var caseDto = await _caseService.GetCaseByUrn(caseUrn);
+
+				var newCaseDto = caseDto with { UpdatedAt = DateTimeOffset.Now, CreatedBy = owner };
+
+				await _caseService.PatchCaseByUrn(newCaseDto);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogErrorMsg(ex);
+
+				throw;
+			}
+		}
+
 		public async Task<long> PostCase(CreateCaseModel createCaseModel)
 		{
 			try

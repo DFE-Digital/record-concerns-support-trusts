@@ -206,7 +206,11 @@
                             <td class="govuk-table__cell">
                                 @Model.CaseModel.CreatedBy.FromEmailToFullName()
                             </td>
-                            <td class="govuk-table__cell govuk-table__header__right"></td>
+                            <td class="govuk-table__cell govuk-table__header__right">
+                                <a class="govuk-link" data-testid="edit-case-owner" href="@Request.Path/edit-case-owner" aria-label="Change case owner">
+                                    Edit<span class="govuk-visually-hidden">Case owner</span>
+                                </a>
+                            </td>
                         </tr>
 
                         <tr class="govuk-table__row">
