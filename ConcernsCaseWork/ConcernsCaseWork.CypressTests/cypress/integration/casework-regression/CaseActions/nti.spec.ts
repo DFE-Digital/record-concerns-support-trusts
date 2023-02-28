@@ -6,6 +6,8 @@ import { ViewNoticeToImprovePage } from "../../../pages/caseActions/noticeToImpr
 import { CancelNoticeToImprovePage } from "../../../pages/caseActions/noticeToImprove/cancelNoticeToImprovePage";
 import { LiftNoticeToImprovePage } from "../../../pages/caseActions/noticeToImprove/liftNoticeToImprovePage";
 import { CloseNoticeToImprovePage } from "../../../pages/caseActions/noticeToImprove/closeNoticeToImprovePage";
+import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
+import { toDisplayDate } from "cypress/support/formatDate";
 
 describe("Testing case action NTI", () =>
 {
@@ -14,9 +16,11 @@ describe("Testing case action NTI", () =>
     const cancelNtiPage = new CancelNoticeToImprovePage();
     const liftNtiPage = new LiftNoticeToImprovePage();
     const closeNtiPage = new CloseNoticeToImprovePage();
+    let now;
 
     beforeEach(() => {
 		cy.login();
+        now = new Date();
 
         cy.basicCreateCase();
 
@@ -44,10 +48,18 @@ describe("Testing case action NTI", () =>
         configureNtiWithConditions();
 
         Logger.Log("Validate the NTI on the view page");
-        cy.get("#open-case-actions td")
-            .getByTestId("NTI").click();
+		actionSummaryTable
+			.getOpenAction("NTI")
+			.then(row =>
+			{
+				row.hasName("NTI")
+				row.hasStatus("Progress on track")
+				row.hasCreatedDate(toDisplayDate(now))
+				row.select();
+			});
 
         viewNtiPage
+            .hasDateOpened(toDisplayDate(now))
             .hasStatus("Progress on track")
             .hasDateIssued("22 October 2022")
             .hasReasonIssued("Cash flow problems")
@@ -69,8 +81,12 @@ describe("Testing case action NTI", () =>
         configureNtiWithConditions();
 
         Logger.Log("Validate the NTI on the view page");
-        cy.get("#open-case-actions td")
-            .getByTestId("NTI").click();
+		actionSummaryTable
+			.getOpenAction("NTI")
+			.then(row =>
+			{
+				row.select();
+			});
 
         viewNtiPage.edit();
 
@@ -124,8 +140,12 @@ describe("Testing case action NTI", () =>
         editNtiPage.save();
 
         Logger.Log("Validate the changes on the view page");
-        cy.get("#open-case-actions td")
-            .getByTestId("NTI").click();
+		actionSummaryTable
+			.getOpenAction("NTI")
+			.then(row =>
+			{
+				row.select();
+			});
 
         viewNtiPage
             .hasStatus("Issued NTI")
@@ -148,10 +168,15 @@ describe("Testing case action NTI", () =>
         editNtiPage.save();
 
         Logger.Log("Validate the NTI on the view page");
-        cy.get("#open-case-actions td")
-            .getByTestId("NTI").click();
+		actionSummaryTable
+			.getOpenAction("NTI")
+			.then(row =>
+			{
+				row.select();
+			});
 
         viewNtiPage
+            .hasDateOpened(toDisplayDate(now))
             .hasStatus("Empty")
             .hasDateIssued("Empty")
             .hasReasonIssued("Empty")
@@ -175,8 +200,12 @@ describe("Testing case action NTI", () =>
     {
         configureNtiWithConditions();
 
-        cy.get("#open-case-actions td")
-            .getByTestId("NTI").click();
+		actionSummaryTable
+			.getOpenAction("NTI")
+			.then(row =>
+			{
+				row.select();
+			});
 
         viewNtiPage.cancel();
 
@@ -193,17 +222,19 @@ describe("Testing case action NTI", () =>
             .withNotes("This is my final notes")
             .cancel();
 
-        assertClosedNti();
-
-        viewNtiPage.hasStatus("Cancelled");
+        assertClosedNti("Cancelled");
     });
 
     it("Should be able to lift an NTI", () =>
     {
         configureNtiWithConditions();
 
-        cy.get("#open-case-actions td")
-            .getByTestId("NTI").click();
+		actionSummaryTable
+			.getOpenAction("NTI")
+			.then(row =>
+			{
+				row.select();
+			});
 
         viewNtiPage.lift();
 
@@ -232,17 +263,19 @@ describe("Testing case action NTI", () =>
             .withNotes("This is my final notes")
             .lift();
 
-        assertClosedNti();
-
-        viewNtiPage.hasStatus("Lifted");
+        assertClosedNti("Lifted");
     });
 
     it("Should be able to close an NTI", () =>
     {
         configureNtiWithConditions();
 
-        cy.get("#open-case-actions td")
-            .getByTestId("NTI").click();
+		actionSummaryTable
+			.getOpenAction("NTI")
+			.then(row =>
+			{
+				row.select();
+			});
 
         viewNtiPage.close();
 
@@ -266,10 +299,9 @@ describe("Testing case action NTI", () =>
             .withNotes("This is my final notes")
             .close();
 
-        assertClosedNti();
+        assertClosedNti("Closed");
 
         viewNtiPage
-            .hasStatus("Closed")
             .hasDateClosed("15 December 2020");
     });
 
@@ -310,17 +342,27 @@ describe("Testing case action NTI", () =>
         editNtiPage.save();
     }
 
-    function assertClosedNti()
+    function assertClosedNti(expectedStatus: string)
     {
         Logger.Log("Viewing the closed NTI");
-
-        cy.get("#close-case-actions td")
-            .getByTestId("NTI").click();
+		actionSummaryTable
+			.getClosedAction("NTI")
+			.then(row =>
+			{
+				row.hasName("NTI")
+				row.hasStatus(expectedStatus)
+				row.hasCreatedDate(toDisplayDate(now))
+                row.hasClosedDate(toDisplayDate(now))
+				row.select();
+			});
 
             viewNtiPage
+                .hasDateOpened(toDisplayDate(now))
+                .hasDateCompleted(toDisplayDate(now))
                 .hasDateIssued("22 October 2022")
                 .hasReasonIssued("Cash flow problems")
                 .hasReasonIssued("Risk of insolvency")
+                .hasStatus(expectedStatus)
                 .hasConditions("Audit and risk committee")
                 .hasConditions("Trust financial plan")
                 .hasConditions("Action plan")

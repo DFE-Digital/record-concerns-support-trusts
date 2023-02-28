@@ -27,6 +27,14 @@ export class CloseTrustFinancialForecastPage
         return this;
     }
 
+    public withNotesExceedingLimit(): this {
+        Logger.Log(`With notes exceeding limit`);
+
+        cy.getByTestId('notes').clear().invoke("val", "x 1".repeat(1001));
+
+        return this;
+    }
+
     public hasValidationError(value: string): this {
         Logger.Log(`Has validation error ${value}`);
 

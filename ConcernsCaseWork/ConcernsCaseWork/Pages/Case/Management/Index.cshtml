@@ -69,7 +69,7 @@
                     <tbody class="govuk-table__body">
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table-case-details__header">Trust</th>
-                            <td class="govuk-table__cell">
+                            <td class="govuk-table__cell" data-testid="trust_Field">
                                 @Model.TrustDetailsModel.GiasData.GroupName
                             </td>
                             <td class="govuk-table__cell govuk-table__header__right"></td>
@@ -79,7 +79,7 @@
                         {
                             <tr class="govuk-table__row">
                                 <th scope="row" class="govuk-table-case-details__header">Risk to trust</th>
-                                <td class="govuk-table__cell govuk-label-wrapper">
+                                <td class="govuk-table__cell govuk-label-wrapper" data-testid="risk_to_trust_Field">
                                     @for (var index = 0; index < Model.CaseModel?.RatingModel?.RagRating?.Item2?.Count; ++index)
                                     {
                                         <span class="govuk-tag ragtag @Model.CaseModel?.RatingModel?.RagRatingCss?.ElementAt(index)">
@@ -98,7 +98,7 @@
                             </tr>
                             <tr class="govuk-table__row">
                                 <th scope="row" class="govuk-table-case-details__header">Direction of travel</th>
-                                <td class="govuk-table__cell">
+                                <td class="govuk-table__cell" data-testid="direction-of-travel">
                                     @Model.CaseModel.DirectionOfTravel
                                 </td>
                                 <td class="govuk-table__cell govuk-table__header__right">
@@ -113,7 +113,7 @@
                         }
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table-case-details__header">Concerns</th>
-                            <td colspan="2" class="govuk-table__cell">
+                            <td colspan="2" class="govuk-table__cell" data-testid="concerns_Field">
                                 @if (Model.CaseModel.RecordsModel.Any())
                                 {
                                     <table class="govuk-table">
@@ -244,11 +244,11 @@
                                     <div><a id="accordion-issue-content-edit" data-testid="edit-issue" class="govuk-link float__right" href="@Request.Path/edit_issue" aria-label="Change issue">Edit</a></div>
                                 }
                                 <div class="govuk-!-width-three-quarters">
-                                    <span class="govuk-body dfe-text-area-display">@Model.CaseModel.Issue</span>
+                                    <span class="govuk-body dfe-text-area-display" data-testid="issue">@Model.CaseModel.Issue</span>
                                 </div>
                             </div>
                         </div>
-
+                        
                         @* Status *@
                         <div class="govuk-accordion__section">
                             <div class="govuk-accordion__section-header">
@@ -265,7 +265,7 @@
                                     <div><a id="accordion-status-heading-edit" data-testid="edit-current-status" class="govuk-link float__right" href="@Request.Path/edit_current_status" aria-label="Change status">Edit</a></div>
                                 }
                                 <div class="govuk-!-width-three-quarters">
-                                    <span class="govuk-body dfe-text-area-display">@Model.CaseModel.CurrentStatus</span>
+                                    <span class="govuk-body dfe-text-area-display" data-testid="status">@Model.CaseModel.CurrentStatus</span>
                                 </div>
                             </div>
                         </div>
@@ -287,7 +287,7 @@
                                 }
 
                                 <div class="govuk-!-width-three-quarters">
-                                    <span class="govuk-body dfe-text-area-display">@Model.CaseModel.CaseAim</span>
+                                    <span class="govuk-body dfe-text-area-display" data-testid="case-aim">@Model.CaseModel.CaseAim</span>
                                 </div>
                             </div>
                         </div>
@@ -309,7 +309,7 @@
                                 }
 
                                 <div class="govuk-!-width-three-quarters">
-                                    <span class="govuk-body dfe-text-area-display">@Model.CaseModel.DeEscalationPoint</span>
+                                    <span class="govuk-body dfe-text-area-display" data-testid="de-escalation-point">@Model.CaseModel.DeEscalationPoint</span>
                                 </div>
                             </div>
                         </div>
@@ -331,7 +331,7 @@
                                 }
 
                                 <div class="govuk-!-width-three-quarters">
-                                    <span class="govuk-body dfe-text-area-display">@Model.CaseModel.NextSteps</span>
+                                    <span class="govuk-body dfe-text-area-display" data-testid="next-steps">@Model.CaseModel.NextSteps</span>
                                 </div>
                             </div>
                         </div>
@@ -350,7 +350,7 @@
                                 }
 
                                 <div class="govuk-!-width-three-quarters">
-                                    <span class="govuk-body dfe-text-area-display " data-testid="case-history">@Model.CaseModel.CaseHistory</span>
+                                    <span class="govuk-body dfe-text-area-display" data-testid="case-history">@Model.CaseModel.CaseHistory</span>
                                 </div>
                             </div>
                         </div>
@@ -392,16 +392,16 @@
 
                         @foreach (ActionSummaryModel action in Model.OpenCaseActions)
                         {
-                            <tr class="govuk-table__row">
+                            <tr class="govuk-table__row" data-testid="row-@action.Name">
                                 <td class="govuk-table__cell">
                                     <a data-testid="@action.Name" href="@action.RelativeUrl" class="govuk-link govuk-link-no-visited-state">
                                         <span>@action.Name</span>
                                     </a>
                                 </td>
-                                <td class="govuk-table__cell">
+                                <td class="govuk-table__cell" data-testid="status">
                                     <span>@action.StatusName</span>
                                 </td>
-                                <td class="govuk-table__cell govuk-table__header__right">
+                                <td class="govuk-table__cell govuk-table__header__right" data-testid="opened-date">
                                     @action.OpenedDate
                                 </td>
                             </tr>

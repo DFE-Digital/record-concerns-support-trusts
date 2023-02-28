@@ -4,15 +4,19 @@ import { Logger } from "../../../common/logger";
 import { EditNtiUnderConsiderationPage } from "../../../pages/caseActions/ntiUnderConsideration/editNtiUnderConsiderationPage";
 import { ViewNtiUnderConsiderationPage } from "../../../pages/caseActions/ntiUnderConsideration/viewNtiUnderConsiderationPage";
 import { CloseNtiUnderConsiderationPage } from "../../../pages/caseActions/ntiUnderConsideration/closeNtiUnderConsiderationPage";
+import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
+import { toDisplayDate } from "cypress/support/formatDate";
 
 describe("Testing the NTI under consideration", () =>
 {
     const editNtiUnderConsiderationPage = new EditNtiUnderConsiderationPage();
     const viewNtiUnderConsiderationPage = new ViewNtiUnderConsiderationPage();
     const closeNtiUnderConsiderationPage = new CloseNtiUnderConsiderationPage();
+    let now: Date;
 
     beforeEach(() => {
 		cy.login();
+        now = new Date();
 
         cy.basicCreateCase();
 
@@ -36,8 +40,15 @@ describe("Testing the NTI under consideration", () =>
                 .save();
 
             Logger.Log("Validate the NTI on the view page");
-                cy.get("#open-case-actions td")
-                    .getByTestId("NTI Under Consideration").click();
+            actionSummaryTable
+			.getOpenAction("NTI Under Consideration")
+			.then(row =>
+			{
+				row.hasName("NTI Under Consideration")
+				row.hasStatus("In progress")
+				row.hasCreatedDate(toDisplayDate(now))
+				row.select();
+			});
 
             viewNtiUnderConsiderationPage
                 .hasReason("Cash flow problems")
@@ -65,6 +76,7 @@ describe("Testing the NTI under consideration", () =>
                 .save();
 
             viewNtiUnderConsiderationPage
+                .hasDateOpened(toDisplayDate(now))
                 .hasReasonCount(2)
                 .hasReason("Governance concerns")
                 .hasReason("Risk of insolvency")
@@ -80,10 +92,16 @@ describe("Testing the NTI under consideration", () =>
                 .save();
 
             Logger.Log("Validate the NTI on the view page");
-            cy.get("#open-case-actions td")
-                .getByTestId("NTI Under Consideration").click();
+            actionSummaryTable
+			.getOpenAction("NTI Under Consideration")
+			.then(row =>
+			{
+				row.hasStatus("In progress")
+				row.select();
+			});
 
             viewNtiUnderConsiderationPage
+                .hasDateOpened(toDisplayDate(now))
                 .hasReason("Empty")
                 .hasNotes("Empty");   
         });
@@ -100,8 +118,12 @@ describe("Testing the NTI under consideration", () =>
                 .save();
 
             Logger.Log("Close NTI on the view page");
-            cy.get("#open-case-actions td")
-                .getByTestId("NTI Under Consideration").click();
+            actionSummaryTable
+			.getOpenAction("NTI Under Consideration")
+			.then(row =>
+			{
+				row.select();
+			});
 
             viewNtiUnderConsiderationPage.close();
 
@@ -126,10 +148,20 @@ describe("Testing the NTI under consideration", () =>
                 .close();
 
             Logger.Log("Review the closed NTI under consideration");
-                cy.get("#close-case-actions td")
-                    .getByTestId("NTI Under Consideration").click();
+            actionSummaryTable
+			.getClosedAction("NTI Under Consideration")
+			.then(row =>
+			{
+				row.hasName("NTI Under Consideration")
+				row.hasStatus("No further action being taken")
+				row.hasCreatedDate(toDisplayDate(now))
+                row.hasClosedDate(toDisplayDate(now))
+				row.select();
+			});
 
             viewNtiUnderConsiderationPage
+                .hasDateOpened(toDisplayDate(now))
+                .hasDateClosed(toDisplayDate(now))
                 .hasReason("Cash flow problems")
                 .hasReason("Safeguarding")
                 .hasStatus("No further action being taken")
