@@ -41,6 +41,12 @@ export class EditSrmaPage {
         return this;
     }
 
+    public withNotesWithLines() {
+        Logger.Log(`With notes that has lines`);
+        cy.getById('srma-notes').clear().invoke("val", "x 1 \n".repeat(400));
+        return this;
+    }
+
     public withNotesExceedingLimit(): this {
         Logger.Log(`With notes exceeding limit`);
 

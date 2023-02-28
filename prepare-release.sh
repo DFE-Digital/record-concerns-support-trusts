@@ -46,22 +46,22 @@ echo
 
 if [ $branch_name != "main" ]
 then
-    echo "git checkout main \"
-    echo "git pull \"
+    echo "git checkout main"
+    echo "git pull"
 fi
 
-echo "git checkout $branch_name \"
-echo "git pull \"
+echo "git checkout $branch_name"
+echo "git pull"
 
 # tag the sha with the release number + environment
 if [ $environment == "s" ]
 then
-    echo "git tag -a -m \"release $release_num\" $release_num $commit_sha \"
+    echo "git tag -a -m \"release $release_num\" $release_num $commit_sha"
 fi
 
 if [ $environment == "p" ]
 then
-    echo "git tag -a -m \"release $release_num\" $release_num $commit_sha \"
+    echo "git tag -a -m \"release $release_num\" $release_num $commit_sha"
 fi
 # push tags to server
 echo "git push --tags"
