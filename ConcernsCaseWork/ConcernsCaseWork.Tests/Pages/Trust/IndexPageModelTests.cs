@@ -93,22 +93,11 @@ namespace ConcernsCaseWork.Tests.Pages.Trust
 			{
 				foreach (var actual in trustSummaryModel.Where(actual => expected.UkPrn.Equals(actual.UkPrn)))
 				{
-					Assert.That(expected.Establishments.Count, Is.EqualTo(actual.Establishments.Count));
 					Assert.That(expected.Urn, Is.EqualTo(actual.Urn));
 					Assert.That(expected.UkPrn, Is.EqualTo(actual.UkPrn));
 					Assert.That(expected.GroupName, Is.EqualTo(actual.GroupName));
 					Assert.That(expected.CompaniesHouseNumber, Is.EqualTo(actual.CompaniesHouseNumber));
 					Assert.That(expected.DisplayName, Is.EqualTo(SharedBuilder.BuildDisplayName(actual)));
-
-					foreach (var establishment in actual.Establishments)
-					{
-						foreach (var expectedEstablishment in expected.Establishments)
-						{
-							Assert.That(establishment.Name, Is.EqualTo(expectedEstablishment.Name));
-							Assert.That(establishment.Urn, Is.EqualTo(expectedEstablishment.Urn));
-							Assert.That(establishment.UkPrn, Is.EqualTo(expectedEstablishment.UkPrn));
-						}
-					}
 				}
 			}
 

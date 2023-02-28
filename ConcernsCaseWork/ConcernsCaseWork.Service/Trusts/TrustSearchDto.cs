@@ -21,15 +21,11 @@ namespace ConcernsCaseWork.Service.Trusts
 		
 		[JsonProperty("trustAddress")]
 		public GroupContactAddressDto GroupContactAddress { get; }
-		
-		[JsonProperty("establishments")]
-		public List<EstablishmentSummaryDto> Establishments { get; }
 
 		[JsonConstructor]
 		public TrustSearchDto(string ukprn, string urn, string groupName, 
-			string companiesHouseNumber, string trustType, GroupContactAddressDto groupContactAddress,
-			List<EstablishmentSummaryDto> establishments) => 
-			(UkPrn, Urn, GroupName, CompaniesHouseNumber, TrustType, GroupContactAddress, Establishments) = 
-			(ukprn, urn, groupName, companiesHouseNumber, trustType, groupContactAddress, establishments);
+			string companiesHouseNumber, string trustType, GroupContactAddressDto groupContactAddress) => 
+			(UkPrn, Urn, GroupName, CompaniesHouseNumber, TrustType, GroupContactAddress) = 
+			(ukprn, urn, groupName, companiesHouseNumber, trustType, groupContactAddress);
 	}
 }
