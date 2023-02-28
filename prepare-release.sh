@@ -32,7 +32,8 @@ read environment
 clear
 
 echo
-echo "--------------- SCRIPT OUTPUT ---------------"
+echo "-------------------------------- SCRIPT OUTPUT -------------------------------"
+echo "--------------- Check this script is correct BEFORE you run it ---------------"
 echo
 echo
 
