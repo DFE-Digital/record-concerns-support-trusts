@@ -3,25 +3,23 @@ import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import { EditFinancialPlanPage } from "../../../pages/caseActions/financialPlan/editFinancialPlanPage";
 import { ViewFinancialPlanPage } from "../../../pages/caseActions/financialPlan/viewFinancialPlanPage";
 import { CloseFinancialPlanPage } from "../../../pages/caseActions/financialPlan/closeFinancialPlanPage";
-import { ClosedFinancialPlanPage } from "../../../pages/caseActions/financialPlan/closedFinancialPlanPage";
 import CaseManagementPage from "../../../pages/caseMangementPage";
+import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
+import { toDisplayDate } from "cypress/support/formatDate";
 
 describe("User can add Financial Plan case action to an existing case", () => {
     let viewFinancialPlanPage = new ViewFinancialPlanPage();
     let editFinancialPlanPage = new EditFinancialPlanPage();
     let closeFinancialPlanPage = new CloseFinancialPlanPage();
-    let closedFinancialPlanPage = new ClosedFinancialPlanPage();
+    let now: Date;
     
     beforeEach(() => {
         cy.login();
 
+        now = new Date();
         Logger.Log("Given a case");
         cy.basicCreateCase();
         addFinancialPlanToCase();
-    });
-
-    afterEach(() => {
-        cy.storeSessionData();
     });
 
     it("Should add a financial plan", () => 
@@ -38,16 +36,20 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .save();
 
         Logger.Log("Selecting Financial Plan from open actions");
-
-        cy.get("#open-case-actions td")
-            .should("contain.text", "Financial Plan")
-            .eq(-3)
-            .children("a")
-            .click();
+		actionSummaryTable
+			.getOpenAction("Financial Plan")
+			.then(row =>
+			{
+				row.hasName("Financial Plan")
+				row.hasStatus("In progress")
+				row.hasCreatedDate(toDisplayDate(now))
+				row.select();
+			});
 
         Logger.Log("Checking Financial Plan values");
 
         viewFinancialPlanPage
+            .hasDateOpened(toDisplayDate(now))
             .hasPlanRequestedDate("06 July 2022")
             .hasNotes("Notes!");
     });
@@ -58,13 +60,15 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
         Logger.Log("Selecting Financial Plan from open actions");
 
-        cy.get("#open-case-actions td")
-            .should("contain.text", "Financial Plan")
-            .eq(-3)
-            .children("a")
-            .click();
+		actionSummaryTable
+			.getOpenAction("Financial Plan")
+			.then(row =>
+			{
+				row.select();
+			});
 
         viewFinancialPlanPage
+            .hasDateOpened(toDisplayDate(now))
             .hasStatus("In progress")
             .hasPlanRequestedDate("Empty")
             .hasNotes("Empty");
@@ -83,11 +87,12 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
         Logger.Log("Selecting Financial Plan from open actions");
 
-        cy.get("#open-case-actions td")
-            .should("contain.text", "Financial Plan")
-            .eq(-3)
-            .children("a")
-            .click();
+		actionSummaryTable
+			.getOpenAction("Financial Plan")
+			.then(row =>
+			{
+				row.select();
+			});
 
         Logger.Log("Ensure values are displayed correctly");
 
@@ -110,11 +115,12 @@ describe("User can add Financial Plan case action to an existing case", () => {
 
         Logger.Log("Selecting Financial Plan from open actions");
 
-        cy.get("#open-case-actions td")
-            .should("contain.text", "Financial Plan")
-            .eq(-3)
-            .children("a")
-            .click();
+		actionSummaryTable
+			.getOpenAction("Financial Plan")
+			.then(row =>
+			{
+				row.select();
+			});
 
         Logger.Log("Viewing edited Financial Plan values");
 
@@ -139,11 +145,12 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .save();
 
         Logger.Log("Selecting Financial Plan from open actions");
-        cy.get("#open-case-actions td")
-            .should("contain.text", "Financial Plan")
-            .eq(-3)
-            .children("a")
-            .click();
+		actionSummaryTable
+			.getOpenAction("Financial Plan")
+			.then(row =>
+			{
+				row.select();
+			});
 
         Logger.Log("Closing the financial plan");
         viewFinancialPlanPage
@@ -181,11 +188,21 @@ describe("User can add Financial Plan case action to an existing case", () => {
             .close();
 
         Logger.Log("Selecting Financial Plan from close actions");
-        cy.get("#close-case-actions td")
-            .getByTestId("Financial Plan").click();
+		actionSummaryTable
+			.getClosedAction("Financial Plan")
+			.then(row =>
+			{
+				row.hasName("Financial Plan");
+				row.hasStatus("Abandoned");
+				row.hasCreatedDate(toDisplayDate(now));
+                row.hasClosedDate(toDisplayDate(now));
+				row.select();
+			});
 
         Logger.Log("Ensure values are displayed correctly");
-        closedFinancialPlanPage
+        viewFinancialPlanPage
+            .hasDateOpened(toDisplayDate(now))
+            .hasDateClosed(toDisplayDate(now))
             .hasStatus("Abandoned")
             .hasPlanRequestedDate("09 February 2023")
             .hasPlanReceivedDate("10 February 2023")
