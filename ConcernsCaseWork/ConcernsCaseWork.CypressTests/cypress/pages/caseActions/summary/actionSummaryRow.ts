@@ -9,7 +9,11 @@ export class ActionSummaryRow {
     public hasName(value: string): this {
         Logger.Log(`Has name ${value}`);
 
-        cy.wrap(this.element).getByTestId(value).should("contain.text", value);
+        cy.wrap(this.element)
+        .within(() => 
+        {
+            cy.getByTestId(value).should("contain.text", value);
+        })
 
         return this;
     }
@@ -17,7 +21,10 @@ export class ActionSummaryRow {
     public hasStatus(value: string): this {
         Logger.Log(`Has status ${value}`);
 
-        cy.wrap(this.element).getByTestId("status").should("contain.text", value);
+        cy.wrap(this.element)
+        .within(() => {
+            cy.getByTestId("status").should("contain.text", value);
+        })
 
         return this;
     }
@@ -25,7 +32,10 @@ export class ActionSummaryRow {
     public hasCreatedDate(value: string): this {
         Logger.Log(`Has created date ${value}`);
 
-        cy.wrap(this.element).getByTestId("opened-date").should("contain.text", value);
+        cy.wrap(this.element)
+        .within(() => {
+            cy.getByTestId("opened-date").should("contain.text", value);
+        })
 
         return this;
     }
@@ -33,7 +43,10 @@ export class ActionSummaryRow {
     public hasClosedDate(value: string): this {
         Logger.Log(`Has closed date ${value}`);
 
-        cy.wrap(this.element).getByTestId("closed-date").should("contain.text", value);
+        cy.wrap(this.element)
+        .within(() => {
+            cy.getByTestId("closed-date").should("contain.text", value);
+        })
 
         return this;
     }

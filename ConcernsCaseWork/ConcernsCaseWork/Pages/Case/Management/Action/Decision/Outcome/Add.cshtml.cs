@@ -35,6 +35,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 
 		public long? OutcomeId { get; set; }
 
+		public string SaveAndContinueButtonText { get; set; }
+
 		public List<DecisionOutcomeBusinessArea> BusinessAreaCheckBoxes => Enum.GetValues<DecisionOutcomeBusinessArea>().ToList();
 		public List<DecisionOutcomeStatus> DecisionOutcomesCheckBoxes => Enum.GetValues<DecisionOutcomeStatus>().ToList();
 		public List<DecisionOutcomeAuthorizer> AuthoriserCheckBoxes => Enum.GetValues<DecisionOutcomeAuthorizer>().ToList();
@@ -111,6 +113,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision.Outcome
 		private void SetupPage(long urn, long decisionId, long? outcomeId)
 		{
 			ViewData[ViewDataConstants.Title] = outcomeId.HasValue ? "Edit outcome" : "Add outcome";
+			SaveAndContinueButtonText = outcomeId.HasValue ? "Save and return to decision" : "Save and return to case overview";
 
 			CaseUrn = (CaseUrn)urn;
 			DecisionId = decisionId;
