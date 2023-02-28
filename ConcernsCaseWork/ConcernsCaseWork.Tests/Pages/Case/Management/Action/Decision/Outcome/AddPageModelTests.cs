@@ -59,6 +59,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 			sut.DecisionOutcomesCheckBoxes.Should().NotBeEmpty();
 			sut.BusinessAreaCheckBoxes.Should().NotBeEmpty();
 			sut.AuthoriserCheckBoxes.Should().NotBeEmpty();
+			sut.SaveAndContinueButtonText.Should().Be("Save and return to case overview");
 		}
 
 		[Test]
@@ -101,6 +102,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.Decision.Outcome
 			sut.DecisionOutcome.DecisionEffectiveFromDate.Day.Should().Be("16");
 			sut.DecisionOutcome.DecisionEffectiveFromDate.Month.Should().Be("6");
 			sut.DecisionOutcome.DecisionEffectiveFromDate.Year.Should().Be("2022");
+			sut.SaveAndContinueButtonText.Should().Be("Save and return to decision");
 		}
 
 		[Test]

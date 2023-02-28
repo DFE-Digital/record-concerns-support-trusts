@@ -26,6 +26,10 @@ import { ViewClosedCasePage } from "cypress/pages/createCase/viewClosedCasePage"
 import caseworkTable from "cypress/pages/caseRows/caseworkTable";
 import actionTable from "cypress/pages/caseRows/caseActionTable";
 import { toDisplayDate } from "cypress/support/formatDate";
+import { EditTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/editTrustFinancialForecastPage";
+import { ViewTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/viewTrustFinancialForecastPage";
+import { CloseTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/closeTrustFinancialForecastPage";
+import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
 
 describe("Testing closing of cases when there are case actions and concerns", () =>
 {
@@ -56,6 +60,10 @@ describe("Testing closing of cases when there are case actions and concerns", ()
     const editNtiPage = new EditNoticeToImprovePage();
     const viewNtiPage = new ViewNoticeToImprovePage();
     const closeNtiPage =  new CloseNoticeToImprovePage();
+
+    const editTffPage = new EditTrustFinancialForecastPage();
+    const viewTffPage = new ViewTrustFinancialForecastPage();
+    const closeTffPage = new CloseTrustFinancialForecastPage();
 
     const viewClosedCasePage = new ViewClosedCasePage();
 
@@ -89,7 +97,8 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                 .hasClosedCaseValidationError("Resolve SRMA")
                 .hasClosedCaseValidationError("Resolve NTI Under Consideration")
                 .hasClosedCaseValidationError("Resolve Decision")
-                .hasClosedCaseValidationError("Resolve Concerns");
+                .hasClosedCaseValidationError("Resolve Concerns")
+                .hasClosedCaseValidationError("Resolve Trust Financial Forecast");
 
             CaseManagementPage.getBackBtn().click();
 
@@ -146,8 +155,16 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                         .hasOpenedDate(toDisplayDate(now))
                         .hasClosedDate(toDisplayDate(now))
                 })
-                
 
+            actionTable
+                .getRowByAction("Trust Financial Forecast (TFF)")
+                .then((row) =>
+                {
+                    row
+                        .hasStatus("Completed")
+                        .hasOpenedDate(toDisplayDate(now))
+                        .hasClosedDate(toDisplayDate(now))
+                })
         });
 
         it("Should raise a validation error for NTI warning letter and only close when the action resolved", () =>
@@ -165,8 +182,12 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             CaseManagementPage.getBackBtn().click();
 
             Logger.Log("Completing NTI Warning Letter");
-            cy.get("#open-case-actions td")
-                .getByTestId("NTI Warning Letter").click();
+            actionSummaryTable
+            .getOpenAction("NTI Warning Letter")
+            .then(row =>
+            {
+                row.select();
+            });
 
             viewNtiWarningLetterPage.close();
             closeNtiWarningLetterPage
@@ -207,8 +228,12 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             CaseManagementPage.getBackBtn().click();
 
             Logger.Log("Completing Notice To Improve");
-            cy.get("#open-case-actions td")
-                .getByTestId("NTI").click();
+            actionSummaryTable
+                .getOpenAction("NTI")
+                .then(row =>
+                {
+                    row.select();
+                });
 
             viewNtiPage.close();
             closeNtiPage.close();
@@ -236,27 +261,31 @@ describe("Testing closing of cases when there are case actions and concerns", ()
     {
         Logger.Log("Adding all allowed case actions");
 
-        // Financial plan
+        Logger.Log("Creating a financial plan");
         CaseManagementPage.getAddToCaseBtn().click();
         AddToCasePage.addToCase('FinancialPlan')
         AddToCasePage.getAddToCaseBtn().click();
         editFinancialPlanPage.save();
 
-        // Decision
+        Logger.Log("Creating a decision");
         CaseManagementPage.getAddToCaseBtn().click();
         AddToCasePage.addToCase('Decision')
         AddToCasePage.getAddToCaseBtn().click();
         editDecisionPage.save();
 
-        cy.get("#open-case-actions td")
-            .getByTestId("Decision: No Decision Types").click();
+        actionSummaryTable
+            .getOpenAction("Decision: No Decision Types")
+            .then(row =>
+            {
+                row.select();
+            });
 
         viewDecisionPage.createDecisionOutcome()
         decisionOutcomePage
             .withDecisionOutcomeStatus("Approved")
             .saveDecisionOutcome();
 
-        // SRMA
+        Logger.Log("Creating an SRMA");
         CaseManagementPage.getAddToCaseBtn().click();
         AddToCasePage.addToCase('Srma')
         AddToCasePage.getAddToCaseBtn().click();
@@ -268,12 +297,19 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             .withYearTrustContacted("2022")
             .save();
 
-        // NTI warning letter
+        Logger.Log("Creating NTI under consideration");
         CaseManagementPage.getAddToCaseBtn().click();
         AddToCasePage.addToCase('NtiUnderConsideration');
         AddToCasePage.getAddToCaseBtn().click();
 
         editNtiUnderConsiderationPage.save();
+
+        Logger.Log("Creating Trust Financial Forecast(TFF)");
+        CaseManagementPage.getAddToCaseBtn().click();
+        AddToCasePage.addToCase("TrustFinancialForecast");
+        AddToCasePage.getAddToCaseBtn().click();
+
+        editTffPage.save();
     }
 
     function resolveAllAllowedCaseActions()
@@ -281,8 +317,12 @@ describe("Testing closing of cases when there are case actions and concerns", ()
         Logger.Log("Resolving all actions");
 
         Logger.Log("Completing SRMA");
-        cy.get("#open-case-actions td")
-            .getByTestId("SRMA").click();
+        actionSummaryTable
+            .getOpenAction("SRMA")
+            .then(row =>
+            {
+                row.select();
+            });
 
         viewSrmaPage
             .addReason()
@@ -299,8 +339,12 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             .save();
 
         Logger.Log("Completing Financial Plan");
-        cy.get("#open-case-actions td")
-            .getByTestId("Financial Plan").click()
+        actionSummaryTable
+            .getOpenAction("Financial Plan")
+            .then(row =>
+            {
+                row.select();
+            });
 
         viewFinancialPlanPage.close();
         closeFinancialPlanPage
@@ -311,8 +355,12 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             .close();
 
         Logger.Log("Completing NTI Under Consideration");
-        cy.get("#open-case-actions td")
-            .getByTestId("NTI Under Consideration").click();
+        actionSummaryTable
+            .getOpenAction("NTI Under Consideration")
+            .then(row =>
+            {
+                row.select();
+            });
 
         viewNtiUnderConsiderationPage.close();
         closeNtiUnderConsiderationPage
@@ -320,11 +368,26 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             .close();
 
         Logger.Log("Completing decision");
-        cy.get("#open-case-actions td")
-            .getByTestId("Decision: No Decision Types").click();
+        actionSummaryTable
+            .getOpenAction("Decision: No Decision Types")
+            .then(row =>
+            {
+                row.select();
+            });
 
         viewDecisionPage.closeDecision();
         closeDecisionPage.closeDecision();
+
+        Logger.Log("Completing Trust financial forecast");
+        actionSummaryTable
+        .getOpenAction("Trust Financial Forecast (TFF)")
+        .then(row =>
+        {
+            row.select();
+        });
+
+        viewTffPage.close();
+        closeTffPage.close();
     }
 
     function closeConcern()
