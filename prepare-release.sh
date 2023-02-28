@@ -2,9 +2,16 @@ clear
 echo "Concerns Casework GitHub Release Utility"
 echo "********************************************"
 echo
+echo "Before you begin, note down the following..."
+echo "...The commit sha that should be tagged"
+echo "...The release number you are going to use"
+echo "...The branch you are tagging"
+echo
+echo "When choosing a release number use the format 'Major.Minor.Revision'" 
+echo "If deploying to staging use a '-beta-xxx' suffix (and find out what the next beta number is first)"
+
+echo
 echo "Enter the release number being tagged."
-echo "* Use the format 'Major.Minor.Revision'" 
-echo "* If deploying to staging use a '-beta-xxx' suffix"
 read release_num
 clear
 
@@ -39,22 +46,22 @@ echo
 
 if [ $branch_name != "main" ]
 then
-    echo "git checkout main \\"
-    echo "git pull \\"
+    echo "git checkout main \"
+    echo "git pull \"
 fi
 
-echo "git checkout $branch_name \\"
-echo "git pull \\"
+echo "git checkout $branch_name \"
+echo "git pull \"
 
 # tag the sha with the release number + environment
 if [ $environment == "s" ]
 then
-    echo "git tag -a -m \"release $release_num\" $release_num $commit_sha \\"
+    echo "git tag -a -m \"release $release_num\" $release_num $commit_sha \"
 fi
 
 if [ $environment == "p" ]
 then
-    echo "git tag -a -m \"release $release_num\" $release_num $commit_sha \\"
+    echo "git tag -a -m \"release $release_num\" $release_num $commit_sha \"
 fi
 # push tags to server
 echo "git push --tags"
@@ -65,10 +72,12 @@ echo
 
 if [ $environment == "s" ]
 then
-    echo "Update '.github\workflows\build-and-push-image-test.yml' and set it to deploy tag '$release_num'"
+    echo "ON THE MAIN BRANCH: Update '.github\workflows\build-and-push-image-test.yml' and set it to deploy tag '$release_num'"
+    echo "https://github.com/DFE-Digital/amsd-casework/blob/main/.github/workflows/build-and-push-image-test.yml"
 fi
 
 if [ $environment == "p" ]
 then
-    echo "Update '.github\workflows\build-and-push-image-production.yml' and set it to deploy tag '$release_num'"
+    echo "ON THE MAIN BRANCH: Update '.github\workflows\build-and-push-image-production.yml' and set it to deploy tag '$release_num'"
+    echo "https://github.com/DFE-Digital/amsd-casework/blob/main/.github/workflows/build-and-push-image-production.yml"
 fi
