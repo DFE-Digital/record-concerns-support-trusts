@@ -84,7 +84,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
     describe("When we have case actions and concerns that have not been closed", () =>
     {
-        it.only("Should raise a validation error for each case action that has not been closed and only allow a case to be closed when they are resolved", () =>
+        it("Should raise a validation error for each case action that has not been closed and only allow a case to be closed when they are resolved", () =>
         {
             addAllAllowedCaseActions();
 
