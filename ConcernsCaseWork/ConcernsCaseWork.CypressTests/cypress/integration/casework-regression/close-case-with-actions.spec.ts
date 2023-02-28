@@ -30,6 +30,7 @@ import { EditTrustFinancialForecastPage } from "cypress/pages/caseActions/trustF
 import { ViewTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/viewTrustFinancialForecastPage";
 import { CloseTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/closeTrustFinancialForecastPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
+import caseActionTable from "cypress/pages/caseRows/caseActionTable";
 
 describe("Testing closing of cases when there are case actions and concerns", () =>
 {
@@ -121,6 +122,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                 .then((row) =>
                 {
                     row
+                        .hasName("SRMA")
                         .hasStatus("SRMA Canceled")
                         .hasOpenedDate(toDisplayDate(now))
                         .hasClosedDate(toDisplayDate(now))
@@ -131,6 +133,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                 .then((row) =>
                 {
                     row
+                        .hasName("Financial Plan")
                         .hasStatus("Viable plan received")
                         .hasOpenedDate(toDisplayDate(now))
                         .hasClosedDate(toDisplayDate(now))
@@ -141,6 +144,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                 .then((row) =>
                 {
                     row
+                        .hasName("NTI Under Consideration")
                         .hasStatus("No further action being taken")
                         .hasOpenedDate(toDisplayDate(now))
                         .hasClosedDate(toDisplayDate(now))
@@ -151,6 +155,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                 .then((row) =>
                 {
                     row
+                        .hasName("Decision: No Decision Types")
                         .hasStatus("Approved")
                         .hasOpenedDate(toDisplayDate(now))
                         .hasClosedDate(toDisplayDate(now))
@@ -161,6 +166,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                 .then((row) =>
                 {
                     row
+                        .hasName("Trust Financial Forecast (TFF)")
                         .hasStatus("Completed")
                         .hasOpenedDate(toDisplayDate(now))
                         .hasClosedDate(toDisplayDate(now))
@@ -199,15 +205,12 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             verifyClosedCaseDetails();
 
             Logger.Log("Verifying the closed case action is displayed");
-            viewClosedCasePage
-                .hasClosedCaseAction("NTI Warning Letter")
-
-            Logger.Log("Verifying the closed case action is displayed");
             actionTable
                 .getRowByAction("NTI Warning Letter")
                 .then((row) =>
                 {
                     row
+                        .hasName("NTI Warning Letter")
                         .hasStatus("Cancelled")
                         .hasOpenedDate(toDisplayDate(now))
                         .hasClosedDate(toDisplayDate(now))
@@ -243,13 +246,12 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             verifyClosedCaseDetails();
 
             Logger.Log("Verifying the closed case action is displayed");
-            viewClosedCasePage
-                .hasClosedCaseAction("NTI")
             actionTable
                 .getRowByAction("NTI")
                 .then((row) =>
                 {
                     row
+                        .hasName("NTI")
                         .hasStatus("Closed")
                         .hasOpenedDate(toDisplayDate(now))
                         .hasClosedDate(toDisplayDate(now))
@@ -457,8 +459,11 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                         .hasConcern("Governance and compliance: Compliance")
                 })
 
+        caseworkTable
+                .selectCase(caseId)
+        
+
         Logger.Log("Validate Closed Case has correct details");
-        ClosedCasePage.getClosedCase(caseId).click();
         viewClosedCasePage
             .hasConcerns("Governance and compliance: Compliance")
             .hasTerritory("Midlands and West - West Midlands")

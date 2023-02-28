@@ -6,6 +6,16 @@ export class ActionRow {
 
     }
 
+    public hasName(value: string): this
+    {
+        Logger.Log(`Has closed case action`);
+
+        this.containsText(value, value);
+
+        return this;
+
+    }
+
     public hasCreatedDate(value: string): this {
         Logger.Log(`Has created date ${value}`);
 

@@ -11,6 +11,13 @@ class CaseworkTable {
             return new CaseRow(el);
         });
     }
+
+    public selectCase(caseId: string) {
+        Logger.Log(`Selecting case ${caseId}`);
+
+        return cy.get('a[href="/case/'+caseId+'/closed"]')
+        .click();
+    }
 }
 
 const caseworkTable = new CaseworkTable();

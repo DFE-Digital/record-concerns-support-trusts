@@ -6,7 +6,7 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has concerns ${value}`);
 
-        cy.getByTestId(`concerns_field`);
+        cy.getByTestId(`concerns_field`).should(`contain.text`, value);
 
         return this;
     }
@@ -15,7 +15,7 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has territory ${value}`);
 
-        cy.getByTestId(`territory_field`);
+        cy.getByTestId(`territory_field`).should(`contain.text`, value);
 
         return this;
     }
@@ -24,7 +24,7 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has Issue ${value}`);
 
-        cy.getByTestId(`issue_field`);
+        cy.getByTestId(`issue_field`).should(`contain.text`, value);
 
         return this;
     }
@@ -33,7 +33,7 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has currentStatus ${value}`);
 
-        cy.getByTestId(`status_field`);
+        cy.getByTestId(`status_field`).should(`contain.text`, value);
 
         return this;
     }
@@ -42,7 +42,7 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has caseAim ${value}`);
 
-        cy.getByTestId(`case_aim_field`);
+        cy.getByTestId(`case_aim_field`).should(`contain.text`, value);
 
         return this;
     }
@@ -51,7 +51,7 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has deEscalationPoint ${value}`);
 
-        cy.getByTestId(`deescalation_point_field`);
+        cy.getByTestId(`deescalation_point_field`).should(`contain.text`, value);
 
         return this;
     }
@@ -60,7 +60,7 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has nextSteps ${value}`);
 
-        cy.getByTestId(`next_step_field`);
+        cy.getByTestId(`next_step_field`).should(`contain.text`, value);
 
         return this;
     }
@@ -69,7 +69,7 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has caseHistory ${value}`);
 
-        cy.getByTestId(`case_history_field`);
+        cy.getByTestId(`case_history_field`).should(`contain.text`, value);
 
         return this;
     }
@@ -78,7 +78,7 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has rationaleForClosure ${value}`);
 
-        cy.getByTestId(`rational_for_closure_field`);
+        cy.getByTestId(`rational_for_closure_field`).should(`contain.text`, value);
 
         return this;
     }
@@ -87,8 +87,11 @@ export class ViewClosedCasePage
     {
         Logger.Log(`Has closed case action`);
 
-        cy.get("#close-case-actions td")
-                .contains(value)
+        // cy.get("#close-case-actions td")
+        //         .contains(value)
+
+                cy.get("#close-case-actions td")
+                .should(`contain.text`, value)
 
 
         return this;
