@@ -42,7 +42,7 @@
 	                    <dt class="dfe-width-30percent govuk-summary-list__key">
 		                    Concerns
 	                    </dt>
-	                    <dd class="govuk-summary-list__value">
+	                    <dd class="govuk-summary-list__value" data-testid="concerns_field">
 		                    @foreach (var recordModel in Model.CaseModel.RecordsModel)
 		                    {
 			                    <p class="govuk-body caseDetail_type">
@@ -55,7 +55,7 @@
                         <dt class="dfe-width-30percent govuk-summary-list__key">
                             SFSO territory
                         </dt>
-                        <dd class="govuk-summary-list__value">
+                        <dd class="govuk-summary-list__value" data-testid="territory_field">
                             @if (Model.CaseModel.Territory == null)
                             {
                                 <span class='govuk-tag ragtag ragtag__grey'>Empty</span>
@@ -101,7 +101,7 @@
                                 <span class="govuk-accordion__section-button" id="accordion-default-heading-1">Issue</span>
                             </h2>
                         </div>
-                        <div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1">
+                        <div aria-labelledby="accordion-default-heading-1" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-1" data-testid="issue_field">
                             <div class="govuk-body details govuk-body-accordion-limit">
                                 <span class="dfe-text-area-display">@Model.CaseModel.Issue</span>
                             </div>
@@ -114,7 +114,7 @@
                                 <span class="govuk-accordion__section-button" id="accordion-default-heading-2">Current status</span>
                             </h2>
                         </div>
-                        <div aria-labelledby="accordion-default-heading-2" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-2">
+                        <div aria-labelledby="accordion-default-heading-2" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-2" data-testid="status_field">
                             <div class="govuk-body details govuk-body-accordion-limit">
                                 <span class="dfe-text-area-display">@Model.CaseModel.CurrentStatus</span>
                             </div>
@@ -127,7 +127,7 @@
                                 <span class="govuk-accordion__section-button" id="accordion-default-heading-3">Case aim</span>
                             </h2>
                         </div>
-                        <div aria-labelledby="accordion-default-heading-3" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-3">
+                        <div aria-labelledby="accordion-default-heading-3" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-3" data-testid="case_aim_field">
                             <div class="govuk-body details govuk-body-accordion-limit">
                                 <span class="dfe-text-area-display">@Model.CaseModel.CaseAim</span>
                             </div>
@@ -140,7 +140,7 @@
                                 <span class="govuk-accordion__section-button" id="accordion-default-heading-4">De-escalation point</span>
                             </h2>
                         </div>
-                        <div aria-labelledby="accordion-default-heading-4" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-4">
+                        <div aria-labelledby="accordion-default-heading-4" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-4" data-testid="deescalation_point_field">
                             <div class="govuk-body details govuk-body-accordion-limit">
                                 <span class="dfe-text-area-display">@Model.CaseModel.DeEscalationPoint</span>
                             </div>
@@ -153,7 +153,7 @@
                                 <span class="govuk-accordion__section-button" id="accordion-default-heading-5">Next steps</span>
                             </h2>
                         </div>
-                        <div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
+                        <div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5" data-testid="next_step_field">
                             <div class="govuk-body details govuk-body-accordion-limit">
                                 <span class="dfe-text-area-display">@Model.CaseModel.NextSteps</span>
                             </div>
@@ -166,7 +166,7 @@
                                 <span class="govuk-accordion__section-button" id="accordion-default-heading-5">Case History</span>
                             </h2>
                         </div>
-                        <div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5">
+                        <div aria-labelledby="accordion-default-heading-5" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-5" data-testid="case_history_field">
                             <div class="govuk-body details govuk-body-accordion-limit">
                                 <span class="dfe-text-area-display">@Model.CaseModel.CaseHistory</span>
                             </div>
@@ -179,7 +179,7 @@
                                 <span class="govuk-accordion__section-button" id="accordion-default-heading-6">Rationale for closure</span>
                             </h2>
                         </div>
-                        <div aria-labelledby="accordion-default-heading-6" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-6">
+                        <div aria-labelledby="accordion-default-heading-6" class="govuk-accordion__section-content govuk-!-margin-top-3 govuk-!-margin-bottom-6" id="accordion-default-content-6" data-testid="rational_for_closure_field">
                             <div class="govuk-body details govuk-body-accordion-limit">
                                 <span class="dfe-text-area-display">@Model.CaseModel.ReasonAtReview</span>
                             </div>

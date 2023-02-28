@@ -13,7 +13,6 @@ describe("Creating a case", () =>
     const addDetailsPage = new AddDetailsPage();
     const addTerritoryPage = new AddTerritoryPage();
     const addConcernDetailsPage = new AddConcernDetailsPage();
-    // const caseManagementPage = new CaseManagementPage();
     
 	beforeEach(() => {
 		cy.login();
