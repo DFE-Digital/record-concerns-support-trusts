@@ -54,6 +54,18 @@ export class CaseRow {
         return this;
     }
 
+    public select(): this {
+        Logger.Log(`Selecting case`);
+
+        cy.wrap(this.element)
+        .within(() =>
+        {
+            cy.get('a').click();
+        })
+
+        return this;
+    }
+
     private containsText(id: string, value: string) {
         cy.wrap(this.element)
         .within(() => 
