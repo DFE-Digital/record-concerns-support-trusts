@@ -457,10 +457,10 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                         .hasClosedDate(toDisplayDate(now))
                         .hasTrust(trustName)
                         .hasConcern("Governance and compliance: Compliance")
+                        .select();
                 })
 
-        caseworkTable
-                .selectCase(caseId)
+
         
 
         Logger.Log("Validate Closed Case has correct details");
