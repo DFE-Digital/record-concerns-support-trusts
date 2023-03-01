@@ -5,6 +5,7 @@
 
 @{
     ViewData["Title"] = "NTI Under Consideration";
+    var isClosed = Model.NTIUnderConsiderationModel.ClosedAt.HasValue;
 }
 
 @section BeforeMain {
@@ -27,6 +28,11 @@
             <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
             NTI: Under consideration
         </h1>
+
+        @if (isClosed)
+        {
+            <span class="govuk-tag ragtag ragtag__grey govuk-!-margin-bottom-3">Closed</span>
+        }
 
         <div class="govuk-hint" id="nti-underconsideration-hint">
             <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Financial%20Notices%20to%20Improve.aspx" class="govuk-link" rel="noreferrer noopener">
@@ -56,7 +62,7 @@
                     </tr>
                 }
 
-                @if (Model.NTIUnderConsiderationModel.ClosedAt.HasValue)
+                @if (isClosed)
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table-case-details__header">Date NTI: Under consideration completed</th>
