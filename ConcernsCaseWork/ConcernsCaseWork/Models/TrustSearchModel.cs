@@ -10,21 +10,19 @@ namespace ConcernsCaseWork.Models
 	public sealed class TrustSearchModel
 	{
 		private readonly string _isNullOrEmpty = "-".PadRight(2);
-		
+
 		public string UkPrn { get; }
-		
+
 		public string Urn { get; }
-		
+
 		public string GroupName { get; }
-		
+
 		public string CompaniesHouseNumber { get; }
-		
+
 		public string TrustType { get; }
-		
+
 		public GroupContactAddressModel GroupContactAddress { get; }
-		
-		public List<EstablishmentSummaryModel> Establishments { get; }
-		
+
 		public string DisplayName
 		{
 			get
@@ -37,15 +35,14 @@ namespace ConcernsCaseWork.Models
 				sb.Append(string.IsNullOrEmpty(CompaniesHouseNumber) ? _isNullOrEmpty : CompaniesHouseNumber);
 				sb.Append(" ");
 				sb.Append(string.IsNullOrEmpty(GroupContactAddress?.Town) ? _isNullOrEmpty : $"({GroupContactAddress.Town})");
-				
+
 				return sb.ToString();
 			}
 		}
 
-		public TrustSearchModel(string ukprn, string urn, string groupName, 
-			string companiesHouseNumber, string trustType, GroupContactAddressModel groupContactAddress, 
-			List<EstablishmentSummaryModel> establishments) 
-			=> (UkPrn, Urn, GroupName, CompaniesHouseNumber, TrustType, GroupContactAddress, Establishments) = 
-				(ukprn, urn, groupName, companiesHouseNumber, trustType, groupContactAddress, establishments);
+		public TrustSearchModel(string ukprn, string urn, string groupName,
+			string companiesHouseNumber, string trustType, GroupContactAddressModel groupContactAddress)
+			=> (UkPrn, Urn, GroupName, CompaniesHouseNumber, TrustType, GroupContactAddress) =
+				(ukprn, urn, groupName, companiesHouseNumber, trustType, groupContactAddress);
 	}
 }
