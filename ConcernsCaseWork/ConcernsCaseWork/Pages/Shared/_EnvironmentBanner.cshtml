@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNetCore.Hosting
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.Extensions.Hosting
+
+@inject IWebHostEnvironment _env
+
+@if (!_env.IsProduction())
+{
+    <div id="environment-banner" aria-label="environment banner" role="complementary">
+        @if (_env.IsDevelopment())
+        {
+            <strong class="govuk-tag govuk-tag--turquoise environment-banner environment-name">Development environment</strong>
+
+        }
+        else if (_env.IsStaging())
+        {
+            <strong class="govuk-tag govuk-tag--orange environment-banner environment-name">Test environment</strong>
+        }
+        else
+        {
+            <strong class="govuk-tag govuk-tag--red environment-banner environment-name">@_env.EnvironmentName environment</strong>
+        }
+    </div>
+}
