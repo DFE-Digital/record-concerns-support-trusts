@@ -490,6 +490,14 @@ class CaseManagementPage {
         return cy.getByTestId(`trust_Field`).invoke('text');
     }
 
+    public viewTrustOverview(): this {
+        Logger.Log("Viewing trust overview");
+
+        this.getTrustOverviewTab().click();
+
+        return this;
+    }
+
     // has methods
     public hasTrust(value: string): this
     {
@@ -617,6 +625,88 @@ class CaseManagementPage {
 
         return this;
     }
+
+    public trustTypeIsNotEmpty(): this
+    {
+        Logger.Log(`Trust type is not empty`);
+
+        cy.getByTestId(`trust-type`).should('not.be.empty')
+
+        return this;
+    }
+
+    public trustAddressIsNotEmpty(): this
+    {
+        Logger.Log(`Trust address is not empty`);
+
+        cy.getByTestId(`trust-address`).should('not.be.empty')
+
+        return this;
+    }
+
+    public trustAcademiesIsNotEmpty(): this
+    {
+        Logger.Log(`Trust academies is not empty`);
+
+        cy.getByTestId(`trust-academies`).should('not.be.empty')
+
+        return this;
+    }
+
+    public trustPupilCapacityIsNotEmpty(): this
+    {
+        Logger.Log(`Trust pupil capacity is not empty`);
+
+        cy.getByTestId(`trust-pupil-capacity`).should('not.be.empty');
+
+        return this;
+    }
+
+    public trustPupilNumbersIsNotEmpty(): this
+    {
+        Logger.Log(`Trust pupil numbers is not empty`);
+
+        cy.getByTestId(`trust-number-of-pupils`).should('not.be.empty')
+
+        return this;
+    }
+
+    public trustGroupIdIsNotEmpty(): this
+    {
+        Logger.Log(`Trust group id is not empty`);
+
+        cy.getByTestId(`trust-group-id`).should('not.be.empty')
+
+        return this;
+    }
+
+    public trustUKPRNIsNotEmpty(): this
+    {
+        Logger.Log(`Trust UKPRN is not empty`);
+
+        cy.getByTestId(`trust-UKPRN`).should('not.be.empty')
+
+        return this;
+    }
+
+    public trustPhoneNumberIsNotEmpty(): this
+    {
+        Logger.Log(`Trust phone number is not empty`);
+
+        cy.getByTestId(`trust-phone-number`).should('not.be.empty')
+
+        return this;
+    }
+
+    public trustCompanyHouseNumberIsNotEmpty(): this
+    {
+        Logger.Log(`Trust company house number is not empty`);
+
+        cy.getByTestId(`trust-company-house-number`).should('not.be.empty')
+
+        return this;
+    }
+
 }
 
 export default new CaseManagementPage();
