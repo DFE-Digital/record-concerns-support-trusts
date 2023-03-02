@@ -13,7 +13,8 @@ describe("Testing the SRMA case action", () =>
     let now: Date;
 
     beforeEach(() => {
-		cy.login();
+		//cy.login();
+		cy.visit("/");
         now = new Date();
 
         cy.basicCreateCase();

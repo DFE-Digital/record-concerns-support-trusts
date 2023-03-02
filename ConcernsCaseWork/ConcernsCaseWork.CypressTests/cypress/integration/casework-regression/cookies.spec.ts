@@ -9,7 +9,8 @@ describe("Testing cookies on the site", () =>
 
     beforeEach(() =>
     {
-        cy.login();
+        //cy.login();
+cy.visit("/");
     });
 
     it("Should accept the cookies on the banner then decline them afterwards", () =>

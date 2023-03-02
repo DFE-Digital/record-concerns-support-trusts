@@ -15,7 +15,8 @@ describe("Testing the NTI warning letter action", () =>
     let now;
 
     beforeEach(() => {
-		cy.login();
+		//cy.login();
+		cy.visit("/");
         now = new Date();
 
         cy.basicCreateCase();

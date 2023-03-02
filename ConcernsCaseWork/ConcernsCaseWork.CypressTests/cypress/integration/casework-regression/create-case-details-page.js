@@ -4,7 +4,8 @@ import { Logger } from "../../common/logger";
 
 describe("The correct items are visible on the details page", () => {
 	beforeEach(() => {
-		cy.login();
+		//cy.login();
+cy.visit("/");
 	});
 
 	it("Should validate the case and Territory details", () => {

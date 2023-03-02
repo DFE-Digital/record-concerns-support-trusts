@@ -16,7 +16,8 @@ describe("User can add trust financial forecast to an existing case", () => {
 	let now: Date;
 
     beforeEach(() => {
-		cy.login();
+		//cy.login();
+cy.visit("/");
 		now = new Date();
 		cy.basicCreateCase();
 		addTFFToCase();

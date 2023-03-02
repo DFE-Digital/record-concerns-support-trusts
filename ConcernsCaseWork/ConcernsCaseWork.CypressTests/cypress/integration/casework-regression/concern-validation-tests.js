@@ -1,6 +1,7 @@
 describe('Concern validation tests', () => {
 	before(() => {
-		cy.login();
+		//cy.login();
+cy.visit("/");
 	});
 
 	afterEach(() => {

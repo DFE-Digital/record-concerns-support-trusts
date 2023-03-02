@@ -9,7 +9,8 @@ import { LogTask } from "../../support/constants";
 
 describe('User can view and navigate Closed cases', () => {
     before(() => {
-		cy.login();
+		//cy.login();
+cy.visit("/");
 	});
 
 	afterEach(() => {

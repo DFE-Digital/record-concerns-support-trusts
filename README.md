@@ -246,7 +246,8 @@ Which you can access in your tests like so:
 
 ```
 before(function () {
-	cy.login();
+	//cy.login();
+cy.visit("/");
 });
 ```
 

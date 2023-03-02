@@ -9,7 +9,8 @@ describe("Your casework tests", () =>
     let now: Date;
 
     beforeEach(() => {
-		cy.login();
+		//cy.login();
+cy.visit("/");
         now = new Date();
 
         cy.basicCreateCase()

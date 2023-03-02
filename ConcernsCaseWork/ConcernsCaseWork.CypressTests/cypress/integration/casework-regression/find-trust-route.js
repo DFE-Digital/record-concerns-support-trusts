@@ -2,7 +2,8 @@ const { Logger } = require("../../common/logger");
 
 describe("User interactions via Find Trust route", () => {
 	before(() => {
-		cy.login();
+		//cy.login();
+cy.visit("/");
 	});
 
     const searchTerm =
