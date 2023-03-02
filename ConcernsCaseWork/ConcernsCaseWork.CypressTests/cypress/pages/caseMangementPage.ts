@@ -630,7 +630,7 @@ class CaseManagementPage {
     {
         Logger.Log(`Trust type is not empty`);
 
-        cy.getByTestId(`trust-type`).should('not.be.empty')
+        cy.getByTestId(`trust-type`).invoke("text").should("have.length.above", 1);
 
         return this;
     }
@@ -639,7 +639,7 @@ class CaseManagementPage {
     {
         Logger.Log(`Trust address is not empty`);
 
-        cy.getByTestId(`trust-address`).should('not.be.empty')
+        cy.getByTestId(`trust-address`).invoke("text").should("have.length.above", 1);
 
         return this;
     }
@@ -648,7 +648,7 @@ class CaseManagementPage {
     {
         Logger.Log(`Trust academies is not empty`);
 
-        cy.getByTestId(`trust-academies`).should('not.be.empty')
+        cy.getByTestId(`trust-academies`).invoke("text").should("have.length.above", 1);
 
         return this;
     }
@@ -657,7 +657,7 @@ class CaseManagementPage {
     {
         Logger.Log(`Trust pupil capacity is not empty`);
 
-        cy.getByTestId(`trust-pupil-capacity`).should('not.be.empty');
+        cy.getByTestId(`trust-pupil-capacity`).invoke("text").should("have.length.above", 1);
 
         return this;
     }
@@ -666,7 +666,7 @@ class CaseManagementPage {
     {
         Logger.Log(`Trust pupil numbers is not empty`);
 
-        cy.getByTestId(`trust-number-of-pupils`).should('not.be.empty')
+        cy.getByTestId(`trust-number-of-pupils`).invoke("text").should("have.length.above", 1);
 
         return this;
     }
@@ -675,7 +675,7 @@ class CaseManagementPage {
     {
         Logger.Log(`Trust group id is not empty`);
 
-        cy.getByTestId(`trust-group-id`).should('not.be.empty')
+        cy.getByTestId(`trust-group-id`).invoke("text").should("have.length.above", 1);
 
         return this;
     }
@@ -684,7 +684,7 @@ class CaseManagementPage {
     {
         Logger.Log(`Trust UKPRN is not empty`);
 
-        cy.getByTestId(`trust-UKPRN`).should('not.be.empty')
+        cy.getByTestId(`trust-UKPRN`).invoke("text").should("have.length.above", 1);
 
         return this;
     }
@@ -693,7 +693,7 @@ class CaseManagementPage {
     {
         Logger.Log(`Trust phone number is not empty`);
 
-        cy.getByTestId(`trust-phone-number`).should('not.be.empty')
+        cy.getByTestId(`trust-phone-number`).invoke("text").should("have.length.above", 1);
 
         return this;
     }
@@ -702,7 +702,7 @@ class CaseManagementPage {
     {
         Logger.Log(`Trust company house number is not empty`);
 
-        cy.getByTestId(`trust-company-house-number`).should('not.be.empty')
+        cy.getByTestId(`trust-company-house-number`).invoke("text").should("have.length.above", 1);
 
         return this;
     }
