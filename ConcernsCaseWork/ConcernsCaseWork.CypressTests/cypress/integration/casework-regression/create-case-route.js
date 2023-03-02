@@ -2,7 +2,8 @@ const { Logger } = require("../../common/logger");
 
 describe("User interactions via Create Case route", () => {
 	beforeEach(() => {
-		cy.login();
+		//cy.login();
+cy.visit("/");
 	});
 
 	const searchTerm =

@@ -4,7 +4,8 @@ import { LogTask } from "../../support/constants";
 
 describe("User creates and adds subsequent concern to a case", () => {
 	before(() => {
-		cy.login();
+		//cy.login();
+cy.visit("/");
 	});
 
 	afterEach(() => {

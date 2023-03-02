@@ -58,7 +58,8 @@ describe("Testing closing of cases when there are case actions and concerns", ()
     const closeTffPage = new CloseTrustFinancialForecastPage();
 
     beforeEach(() => {
-		cy.login();
+		//cy.login();
+cy.visit("/");
 
         cy.basicCreateCase();
 	});

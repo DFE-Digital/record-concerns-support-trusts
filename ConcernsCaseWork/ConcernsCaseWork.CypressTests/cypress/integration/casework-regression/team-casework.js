@@ -4,7 +4,8 @@ import { Logger } from "cypress/common/logger";
 
 describe("User interactions via Create Case route", () => {
 	beforeEach(() => {
-		cy.login();
+		//cy.login();
+cy.visit("/");
 	});
 
 	it("Should allow you to select a list of colleagues on team casework", () =>

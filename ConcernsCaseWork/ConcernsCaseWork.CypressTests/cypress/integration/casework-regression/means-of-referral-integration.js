@@ -10,7 +10,8 @@ var caseid = "null";
 
 describe("The correct items are visible on the details page", () => {
     before(() => {
-        cy.login();
+        //cy.login();
+cy.visit("/");
     });
 
     afterEach(() => {

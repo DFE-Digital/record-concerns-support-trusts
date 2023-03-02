@@ -4,8 +4,8 @@ import utils from "/cypress/support/utils"
 
 describe("User can add case actions to an existing case", () => {
 	before(() => {
-		cy.login();
-		
+		//cy.login();
+		cy.visit("/");
 	});
 
 	afterEach(() => {

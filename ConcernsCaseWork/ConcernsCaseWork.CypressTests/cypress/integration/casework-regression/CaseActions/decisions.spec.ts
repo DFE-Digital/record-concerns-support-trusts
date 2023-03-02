@@ -16,7 +16,8 @@ describe("User can add case actions to an existing case", () => {
 	let now;
 	
 	beforeEach(() => {
-		cy.login();
+		//cy.login();
+		cy.visit("/");
 		now = new Date();
 	});
 

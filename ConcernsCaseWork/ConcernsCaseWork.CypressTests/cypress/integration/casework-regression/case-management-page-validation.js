@@ -2,7 +2,8 @@ import { LogTask } from "../../support/constants";
 
 describe("User can manage cases from the case management page", () => {
 	before(() => {
-		cy.login();
+		//cy.login();
+cy.visit("/");
 	});
 
 	afterEach(() => {

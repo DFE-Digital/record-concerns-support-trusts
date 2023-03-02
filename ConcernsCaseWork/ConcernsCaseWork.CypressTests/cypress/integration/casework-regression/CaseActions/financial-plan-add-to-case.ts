@@ -14,8 +14,8 @@ describe("User can add Financial Plan case action to an existing case", () => {
     let now: Date;
     
     beforeEach(() => {
-        cy.login();
-
+        //cy.login();
+		cy.visit("/");
         now = new Date();
         Logger.Log("Given a case");
         cy.basicCreateCase();
