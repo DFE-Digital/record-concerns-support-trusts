@@ -74,4 +74,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity normal --collect "XPlat Code Coverage" --environment "${{env.CONNECTION_STRING_KEY}}"="${{env.CONNECTION_STRING}}"
+          dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity normal
