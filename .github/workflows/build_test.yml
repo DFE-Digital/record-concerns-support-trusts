@@ -74,4 +74,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
+          dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
           dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build
