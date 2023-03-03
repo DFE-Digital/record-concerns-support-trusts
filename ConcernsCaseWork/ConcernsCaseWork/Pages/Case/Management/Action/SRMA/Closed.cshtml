@@ -43,7 +43,7 @@
                 @* Date Opened *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Date SRMA open</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-opened-text">
                         @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.CreatedAt)
                     </td>
                     <td class="govuk-table__cell govuk-table__header__right"></td>
@@ -52,7 +52,7 @@
                 @* Date Closed *@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Date SRMA closed</th>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell" data-testid="date-closed-text">
                         @DateTimeHelper.ParseToDisplayDate(Model.SRMAModel.ClosedAt.Value)
                     </td>
                     <td class="govuk-table__cell govuk-table__header__right"></td>
@@ -128,7 +128,7 @@
                 <tr class="govuk-table__row">
                     <th scope="row" class="govuk-table-case-details__header">Notes (optional)</th>
                     <td class="govuk-table__cell" data-testid="notes">
-                        @Model.SRMAModel.Notes
+                        <span class="dfe-text-area-display">@Model.SRMAModel.Notes</span>
                     </td>
                 </tr>
             </tbody>

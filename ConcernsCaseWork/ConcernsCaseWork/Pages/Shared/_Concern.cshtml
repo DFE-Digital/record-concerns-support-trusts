@@ -21,7 +21,7 @@
 			
 			<div class="govuk-radios__item">
 				<input class="govuk-radios__input" id="@strIdType" name="type"
-				       type="radio" value="@typeValue" checked="@type.Equals(key)" data-aria-controls="conditional-@strIdType">
+				       type="radio" value="@typeValue" checked="@type.Equals(key)" data-aria-controls="conditional-@strIdType" data-testid="@key">
 				<label class="govuk-label govuk-radios__label" for="@strIdType">
 					@key
 				</label>
@@ -36,7 +36,7 @@
 						{
 							<div class="govuk-radios__item">
 								<input class="govuk-radios__input" id="sub-type-@subTypeIndex" name="sub-type" type="radio" 
-								       value="@subtype.Id:@subtype.SubType" checked="@subType.Equals(subtype.SubType)">
+								       value="@subtype.Id:@subtype.SubType" checked="@subType.Equals(subtype.SubType)" data-testid="@key: @subtype.SubType">
 								@if (key.ToLower().Contains(subtype.SubType.ToLower()))
 								{
 								<label class="govuk-label govuk-radios__label" for="sub-type-@subTypeIndex">

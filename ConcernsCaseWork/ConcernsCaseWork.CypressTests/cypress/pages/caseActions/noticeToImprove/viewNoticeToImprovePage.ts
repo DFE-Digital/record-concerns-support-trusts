@@ -1,6 +1,23 @@
 import { Logger } from "../../../common/logger";
 
 export class ViewNoticeToImprovePage {
+
+    public hasDateOpened(value: string) {
+        Logger.Log(`Has date opened ${value}`);
+
+        cy.getByTestId("date-opened-text").should("contain.text", value);
+
+        return this;
+    }
+
+    public hasDateCompleted(value: string) {
+        Logger.Log(`Has date completed ${value}`);
+
+        cy.getByTestId("date-completed-text").should("contain.text", value);
+
+        return this;
+    }
+
     public hasStatus(value: string): this {
         Logger.Log(`Has status ${value}`);
 

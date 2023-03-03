@@ -3,14 +3,18 @@ import { EditSrmaPage } from "../../../pages/caseActions/srma/editSrmaPage";
 import CaseManagementPage from "../../../pages/caseMangementPage";
 import AddToCasePage from "../../../pages/caseActions/addToCasePage";
 import { ViewSrmaPage } from "../../../pages/caseActions/srma/viewSrmaPage";
+import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
+import { toDisplayDate } from "cypress/support/formatDate";
 
 describe("Testing the SRMA case action", () =>
 {
     const editSrmaPage = new EditSrmaPage();
     const viewSrmaPage = new ViewSrmaPage();
+    let now: Date;
 
     beforeEach(() => {
 		cy.login();
+        now = new Date();
 
         cy.basicCreateCase();
 
@@ -38,8 +42,15 @@ describe("Testing the SRMA case action", () =>
             .save();
         
         Logger.Log("Add optional SRMA fields on the view page");
-        cy.get("#open-case-actions td")
-            .getByTestId("SRMA").click();
+		actionSummaryTable
+			.getOpenAction("SRMA")
+			.then(row =>
+			{
+				row.hasName("SRMA")
+				row.hasStatus("Trust considering")
+				row.hasCreatedDate(toDisplayDate(now))
+				row.select();
+			});
 
         Logger.Log("Should not allow progression without a reason");
 
@@ -152,6 +163,7 @@ describe("Testing the SRMA case action", () =>
             .save();
 
         viewSrmaPage
+            .hasDateOpened(toDisplayDate(now))
             .hasStatus("Trust considering")
             .hasDateTrustContacted("22 October 2022")
             .hasReason("Regions Group (RG) Intervention")
@@ -170,10 +182,17 @@ describe("Testing the SRMA case action", () =>
             .withYearTrustContacted("2022")
             .save();
 
-        cy.get("#open-case-actions td")
-            .getByTestId("SRMA").click();
+            actionSummaryTable
+			.getOpenAction("SRMA")
+			.then(row =>
+			{
+				row.hasStatus("Trust considering");
+                row.hasCreatedDate(toDisplayDate(now))
+				row.select();
+			});
 
         viewSrmaPage
+            .hasDateOpened(toDisplayDate(now))
             .hasStatus("Trust considering")
             .hasDateTrustContacted("22 October 2022")
             .hasReason("Empty")
@@ -309,10 +328,20 @@ describe("Testing the SRMA case action", () =>
                 .save();
 
             Logger.Log("View resolved SRMA");
-            cy.get("#close-case-actions td")
-                .getByTestId("SRMA").click();
+            actionSummaryTable
+			.getClosedAction("SRMA")
+			.then(row =>
+			{
+				row.hasName("SRMA")
+				row.hasStatus("SRMA Complete")
+				row.hasCreatedDate(toDisplayDate(now))
+                row.hasClosedDate(toDisplayDate(now))
+				row.select();
+			});
 
             viewSrmaPage
+                .hasDateOpened(toDisplayDate(now))
+                .hasDateClosed(toDisplayDate(now))
                 .hasStatus("SRMA Complete")
                 .hasDateTrustContacted("22 October 2022")
                 .hasReason("Regions Group (RG) Intervention")
@@ -342,10 +371,20 @@ describe("Testing the SRMA case action", () =>
                 .save();
 
             Logger.Log("View cancelled SRMA");
-            cy.get("#close-case-actions td")
-                .getByTestId("SRMA").click();
+            actionSummaryTable
+			.getClosedAction("SRMA")
+			.then(row =>
+			{
+				row.hasName("SRMA")
+				row.hasStatus("SRMA Canceled")
+				row.hasCreatedDate(toDisplayDate(now))
+                row.hasClosedDate(toDisplayDate(now))
+				row.select();
+			});
 
             viewSrmaPage
+                .hasDateOpened(toDisplayDate(now))
+                .hasDateClosed(toDisplayDate(now))
                 .hasStatus("SRMA Canceled")
                 .hasDateTrustContacted("22 October 2022")
                 .hasReason("Regions Group (RG) Intervention")
@@ -374,10 +413,20 @@ describe("Testing the SRMA case action", () =>
                 .save();
 
             Logger.Log("View declined SRMA");
-            cy.get("#close-case-actions td")
-                .getByTestId("SRMA").click();
+            actionSummaryTable
+			.getClosedAction("SRMA")
+			.then(row =>
+			{
+				row.hasName("SRMA")
+				row.hasStatus("SRMA Declined")
+				row.hasCreatedDate(toDisplayDate(now))
+                row.hasClosedDate(toDisplayDate(now))
+				row.select();
+			});
 
             viewSrmaPage
+                .hasDateOpened(toDisplayDate(now))
+                .hasDateClosed(toDisplayDate(now))
                 .hasStatus("SRMA Declined")
                 .hasDateTrustContacted("22 October 2022")
                 .hasReason("Regions Group (RG) Intervention")
@@ -416,8 +465,12 @@ describe("Testing the SRMA case action", () =>
             .save();
 
         Logger.Log("Add optional SRMA fields on the view page");
-        cy.get("#open-case-actions td")
-            .getByTestId("SRMA").click();
+		actionSummaryTable
+			.getOpenAction("SRMA")
+			.then(row =>
+			{
+				row.select();
+			});
 
         Logger.Log("Configure reason");
         viewSrmaPage.addReason();

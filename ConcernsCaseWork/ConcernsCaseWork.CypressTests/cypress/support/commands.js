@@ -285,7 +285,7 @@ Cypress.Commands.add("validateCreateCaseDetailsComponent", () => {
 Cypress.Commands.add("validateCreateTerritory", () => {
 	cy.task(LogTask, "Validating terrirtory error message when not selected");
 
-	cy.get('[data-testid="next-button-territory"]').click();
+	cy.get('[data-testid="next-step-button"]').click();
 	cy.get("#errorSummary").should(
 		"contain.text",
 		"An SFSO Territory must be selected"
@@ -657,7 +657,7 @@ Cypress.Commands.add("createCase", () => {
 
 Cypress.Commands.add("selectTerritory", () => {
 	cy.get("#territory-Midlands_And_West__SouthWest").click();
-	cy.get('[data-testid="next-button-territory"]').click();
+	cy.get('[data-testid="next-step-button"]').click();
 });
 
 //description: selects an action item from the add to case page

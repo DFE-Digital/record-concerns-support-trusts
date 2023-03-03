@@ -54,11 +54,6 @@ variable "container_secret_environment_variables" {
   sensitive   = true
 }
 
-variable "enable_mssql_database" {
-  description = "Set to true to create an Azure SQL server/database, with aprivate endpoint within the virtual network"
-  type        = bool
-}
-
 variable "enable_redis_cache" {
   description = "Set to true to create a Redis Cache"
   type        = bool
@@ -135,5 +130,65 @@ variable "container_health_probe_path" {
 
 variable "cdn_frontdoor_health_probe_path" {
   description = "Specifies the path relative to the origin that is used to determine the health of the origin."
+  type        = string
+}
+
+variable "container_cpu" {
+  description = "Number of container CPU cores"
+  type        = number
+}
+
+variable "container_memory" {
+  description = "Container memory in GB"
+  type        = number
+}
+
+variable "container_min_replicas" {
+  description = "Container min replicas"
+  type        = number
+}
+
+variable "container_max_replicas" {
+  description = "Container max replicas"
+  type        = number
+}
+
+variable "container_scale_rule_concurrent_request_count" {
+  description = "Maximum number of concurrent HTTP requests before a new replica is created"
+  type        = number
+}
+
+variable "cdn_frontdoor_enable_rate_limiting" {
+  description = "Enable CDN Front Door Rate Limiting. This will create a WAF policy, and CDN security policy. For pricing reasons, there will only be one WAF policy created."
+  type        = bool
+}
+
+variable "cdn_frontdoor_rate_limiting_threshold" {
+  description = "Number of connection requests per minute threshold for the CDN Rate Limiting policy"
+  type        = number
+}
+
+variable "monitor_enable_slack_webhook" {
+  description = "Enable slack webhooks to send monitoring notifications to a channel"
+  type        = bool
+}
+
+variable "monitor_slack_webhook_receiver" {
+  description = "A Slack App webhook URL"
+  type        = string
+}
+
+variable "monitor_slack_channel" {
+  description = "Slack channel name/id to send messages to"
+  type        = string
+}
+
+variable "existing_network_watcher_name" {
+  description = "Use an existing network watcher to add flow logs."
+  type        = string
+}
+
+variable "existing_network_watcher_resource_group_name" {
+  description = "Existing network watcher resource group."
   type        = string
 }
