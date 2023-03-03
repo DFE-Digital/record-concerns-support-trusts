@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace ConcernsCaseWork.Helpers
 {
-	public class DateTimeHelper
+	public static class DateTimeHelper
 	{
 		private static readonly string[] allowedFormats = new string[] { "dd-MM-yyyy", "dd/MM/yyyy", "d-M-yyyy", "d/M/yyyy" };
 		private static readonly DateTimeFormatInfo dateTimeFormatInfo = CultureInfo.InvariantCulture.DateTimeFormat;

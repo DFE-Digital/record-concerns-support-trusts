@@ -1,4 +1,5 @@
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Mappers;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Redis.Base;
@@ -82,13 +83,13 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 					ActiveConcerns = GetSortedActiveConcerns(caseSummary.ActiveConcerns),
 					ActiveActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
 					CaseUrn = caseSummary.CaseUrn,
-					CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
+					CreatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CreatedAt),
 					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
 					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
 					Rating = RatingMapping.MapDtoToModel(caseSummary.Rating),
 					StatusName = caseSummary.StatusName,
 					TrustName = trusts.Single(x => x.Key == caseSummary.TrustUkPrn).Value,
-					UpdatedAt = caseSummary.UpdatedAt.ToDayMonthYear()
+					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt)
 				};
 			
 			sortedCaseSummaries.Add(summary);

@@ -1,10 +1,10 @@
+import { EditFinancialPlanPage } from "cypress/pages/caseActions/financialPlan/editFinancialPlanPage";
 import caseApi from "../../api/caseApi";
 import { Logger } from "../../common/logger";
 import { DecisionOutcomePage } from "../../pages/caseActions/decision/decisionOutcomePage";
 import { EditDecisionPage } from "../../pages/caseActions/decision/editDecisionPage";
 import { ViewDecisionPage } from "../../pages/caseActions/decision/viewDecisionPage";
 import { ViewFinancialPlanPage } from "../../pages/caseActions/financialPlan/viewFinancialPlanPage";
-import { FinancialPlanPage } from "../../pages/caseActions/financialPlanPage";
 import { EditNoticeToImprovePage } from "../../pages/caseActions/noticeToImprove/editNoticeToImprovePage";
 import { ViewNoticeToImprovePage } from "../../pages/caseActions/noticeToImprove/viewNoticeToImprovePage";
 import { EditNtiUnderConsiderationPage } from "../../pages/caseActions/ntiUnderConsideration/editNtiUnderConsiderationPage";
@@ -19,7 +19,7 @@ describe("Testing permissions on cases and case actions", () => {
 
     const editSrmaPage = new EditSrmaPage();
     const viewSrmaPage = new ViewSrmaPage();
-    const editFinancialPlanPage = new FinancialPlanPage();
+    const editFinancialPlanPage = new EditFinancialPlanPage();
     const viewFinancialPlanPage = new ViewFinancialPlanPage();
     const editNtiPage = new EditNoticeToImprovePage();
     const viewNtiPage = new ViewNoticeToImprovePage();

@@ -1,5 +1,6 @@
 using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
 using ConcernsCaseWork.Extensions;
+using ConcernsCaseWork.Helpers;
 using ConcernsCaseWork.Models.CaseActions;
 
 namespace ConcernsCaseWork.Mappers;
@@ -10,9 +11,9 @@ public static class TrustFinancialForecastMapping
 	{
 		var result = new ActionSummaryModel()
 		{
-			ClosedDate = model.ClosedAt?.ToDayMonthYear(),
+			ClosedDate = DateTimeHelper.ParseToDisplayDate(model.ClosedAt),
 			Name = "Trust Financial Forecast (TFF)",
-			OpenedDate = model.CreatedAt.ToDayMonthYear(),
+			OpenedDate = DateTimeHelper.ParseToDisplayDate(model.CreatedAt),
 			RelativeUrl = $"/case/{model.CaseUrn}/management/action/trustfinancialforecast/{model.TrustFinancialForecastId}",
 			StatusName = (model.ClosedAt.HasValue) ? "Completed" : "In progress",
 			RawOpenedDate = model.CreatedAt,
