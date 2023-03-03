@@ -100,7 +100,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 			return reasonValues.Select(r => new RadioItem
 			{
-				Id = Convert.ToString(r),
+				Id = Convert.ToString((int)r),
 				Text = EnumHelper.GetEnumDescription(r)
 			});
 		}
