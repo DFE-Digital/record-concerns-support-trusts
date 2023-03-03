@@ -52,6 +52,7 @@
 		<ProjectReference Include="..\ConcernsCaseWork.API.Contracts\ConcernsCaseWork.API.Contracts.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.API\ConcernsCaseWork.API.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.CoreTypes\ConcernsCaseWork.CoreTypes.csproj" />
+		<ProjectReference Include="..\ConcernsCaseWork.Service.AzureAd\ConcernsCaseWork.Service.AzureAd.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.Service\ConcernsCaseWork.Service.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.Redis\ConcernsCaseWork.Redis.csproj" />

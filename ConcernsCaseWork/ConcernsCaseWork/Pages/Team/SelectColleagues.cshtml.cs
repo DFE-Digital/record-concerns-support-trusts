@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Base;
 using ConcernsCaseWork.Security;
+using ConcernsCaseWork.Service.AzureAd;
 using ConcernsCaseWork.Services.Teams;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,16 +21,18 @@ namespace ConcernsCaseWork.Pages.Team
 		private readonly IRbacManager _rbacManager;
 		private readonly ILogger<SelectColleaguesPageModel> _logger;
 		private readonly ITeamsModelService _teamsService;
+		private readonly IGraphManager _graphManager;
 
 		[BindProperty]
 		public IList<string> SelectedColleagues { get; set; }
 		public string[] Users { get; set; }
 
-		public SelectColleaguesPageModel(IRbacManager rbacManager, ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService)
+		public SelectColleaguesPageModel(IRbacManager rbacManager, ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService, IGraphManager graphManager)
 		{
 			_rbacManager = Guard.Against.Null(rbacManager);
 			_logger = Guard.Against.Null(logger);
 			_teamsService = Guard.Against.Null(teamsService);
+			_graphManager = Guard.Against.Null(graphManager);
 		}
 
 		public async Task<ActionResult> OnGetAsync()
@@ -75,6 +78,7 @@ namespace ConcernsCaseWork.Pages.Team
 			{
 				try
 				{
+					var allUsers = _graphManager.GetAllUsers();
 					var teamMembers = _teamsService.GetCaseworkTeam(_CurrentUserName);
 					var users = _rbacManager.GetSystemUsers(excludes: _CurrentUserName);
 
