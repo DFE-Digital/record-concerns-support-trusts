@@ -3,7 +3,6 @@ using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Base;
-using ConcernsCaseWork.Redis.CaseActions;
 using ConcernsCaseWork.Redis.Configuration;
 using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Redis.MeansOfReferral;
@@ -216,7 +215,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IRatingCachedService, RatingCachedService>();
 			services.AddScoped<ITrustCachedService, TrustCachedService>();
 			services.AddScoped<IFinancialPlanStatusCachedService, FinancialPlanStatusCachedService>();
-			services.AddScoped<CachedSRMAProvider, CachedSRMAProvider>();
 			services.AddScoped<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
 			services.AddScoped<INtiUnderConsiderationStatusesCachedService, NtiUnderConsiderationStatusesCachedService>();
 			services.AddScoped<INtiUnderConsiderationCachedService, NtiUnderConsiderationCachedService>();
