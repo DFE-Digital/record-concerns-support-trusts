@@ -21,8 +21,6 @@ public record GraphClientSettings : IGraphClientSettings
 		TeamLeaderGroupId = configuration["AzureAdGroups:TeamleaderGroupId"];
 		AdminGroupId = configuration["AzureAdGroups:AdminGroupId"];
 		GraphEndpointScope = configuration["AzureAdGroups:GraphEndpointScope"];
-
-		;
 	}
 }
 // 	public GraphManager()
