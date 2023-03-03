@@ -1,72 +1,15 @@
-﻿using Azure.Identity;
-using Microsoft.Graph;
+﻿namespace ConcernsCaseWork.Service.AzureAd;
 
-namespace ConcernsCaseWork.Service.AzureAd;
-
-public class GraphManager : IGraphManager
+public interface IGraphClientSettings
 {
-	private readonly IGraphClientSettings _configuration;
-
-	public GraphManager(IGraphClientSettings configuration)
-	{
-		_configuration = configuration;
-	}
-
-	public async Task GetAllUsers()
-	{
-		var graphClient = this.CreateGraphClient();
-
-		await this.GetCaseWorkers(graphClient);
-	}
-
-	private async Task GetCaseWorkers(GraphServiceClient graphClient)
-	{
-		var users = new List<Microsoft.Graph.User>();
-
-		var queryOptions = new List<QueryOption>() { new QueryOption("$count", "true"), new QueryOption("$top", "999") };
-		var members = await graphClient.Groups[_configuration.CaseWorkerGroupId].Members
-			.Request(queryOptions)
-			.Header("ConsistencyLevel", "eventual")
-			.Select("givenName,surname,id,mail,displayName")
-			.GetAsync();
-
-		users.AddRange(members.Cast<Microsoft.Graph.User>());
-
-		;
-	}
-
-	private GraphServiceClient CreateGraphClient()
-	{
-		// settings for graph client
-
-		// The client credentials flow requires that you request the
-		// /.default scope, and preconfigure your permissions on the
-		// app registration in Azure. An administrator must grant consent
-		// to those permissions beforehand.
-		var scopes = new[] { _configuration.GraphEndpointScope };
-
-		// using Azure.Identity;
-		var options = new TokenCredentialOptions { AuthorityHost = AzureAuthorityHosts.AzurePublicCloud };
-
-		// https://learn.microsoft.com/dotnet/api/azure.identity.clientsecretcredential
-		var clientSecretCredential = new ClientSecretCredential(_configuration.TenantId, _configuration.ClientId, _configuration.ClientSecret, options);
-
-		return new GraphServiceClient(clientSecretCredential, scopes);
-	}
+	public string AdminGroupId { get; init; }
+	public string CaseWorkerGroupId { get; init; }
+	public string ClientId { get; init; }
+	public string ClientSecret { get; init; }
+	string GraphEndpointScope { get; init; }
+	public string TeamLeaderGroupId { get; init; }
+	public string TenantId { get; init; }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // 	public GraphManager()
 // 	{

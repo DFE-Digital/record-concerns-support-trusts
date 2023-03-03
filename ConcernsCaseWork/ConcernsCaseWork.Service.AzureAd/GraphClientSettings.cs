@@ -1,73 +1,30 @@
-﻿using Azure.Identity;
-using Microsoft.Graph;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace ConcernsCaseWork.Service.AzureAd;
 
-public class GraphManager : IGraphManager
-{
-	private readonly IGraphClientSettings _configuration;
+public record GraphClientSettings : IGraphClientSettings
+{	public string TeamLeaderGroupId {get; init;}
+	public string AdminGroupId {get; init;}
+	public string GraphEndpointScope {get; init; }
+	public string ClientSecret {get; init; }
+	public string ClientId {get; init; }
+	public string TenantId {get; init; }
+	public string CaseWorkerGroupId {get; init; }
 
-	public GraphManager(IGraphClientSettings configuration)
+	public GraphClientSettings(IConfiguration configuration)
 	{
-		_configuration = configuration;
-	}
+		ClientSecret = configuration["AzureAd:ClientSecret"];
+		ClientId = configuration["AzureAd:ClientId"];
+		TenantId = configuration["AzureAd:TenantId"];
 
-	public async Task GetAllUsers()
-	{
-		var graphClient = this.CreateGraphClient();
-
-		await this.GetCaseWorkers(graphClient);
-	}
-
-	private async Task GetCaseWorkers(GraphServiceClient graphClient)
-	{
-		var users = new List<Microsoft.Graph.User>();
-
-		var queryOptions = new List<QueryOption>() { new QueryOption("$count", "true"), new QueryOption("$top", "999") };
-		var members = await graphClient.Groups[_configuration.CaseWorkerGroupId].Members
-			.Request(queryOptions)
-			.Header("ConsistencyLevel", "eventual")
-			.Select("givenName,surname,id,mail,displayName")
-			.GetAsync();
-
-		users.AddRange(members.Cast<Microsoft.Graph.User>());
+		CaseWorkerGroupId = configuration["AzureAdGroups:CaseWorkerGroupId"];
+		TeamLeaderGroupId = configuration["AzureAdGroups:TeamleaderGroupId"];
+		AdminGroupId = configuration["AzureAdGroups:AdminGroupId"];
+		GraphEndpointScope = configuration["AzureAdGroups:GraphEndpointScope"];
 
 		;
 	}
-
-	private GraphServiceClient CreateGraphClient()
-	{
-		// settings for graph client
-
-		// The client credentials flow requires that you request the
-		// /.default scope, and preconfigure your permissions on the
-		// app registration in Azure. An administrator must grant consent
-		// to those permissions beforehand.
-		var scopes = new[] { _configuration.GraphEndpointScope };
-
-		// using Azure.Identity;
-		var options = new TokenCredentialOptions { AuthorityHost = AzureAuthorityHosts.AzurePublicCloud };
-
-		// https://learn.microsoft.com/dotnet/api/azure.identity.clientsecretcredential
-		var clientSecretCredential = new ClientSecretCredential(_configuration.TenantId, _configuration.ClientId, _configuration.ClientSecret, options);
-
-		return new GraphServiceClient(clientSecretCredential, scopes);
-	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // 	public GraphManager()
 // 	{
 // var configSettings = Settings.LoadSettings();

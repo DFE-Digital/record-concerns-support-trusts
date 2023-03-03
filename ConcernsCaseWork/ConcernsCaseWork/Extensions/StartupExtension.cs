@@ -17,6 +17,7 @@ using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Redis.Types;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Security;
+using ConcernsCaseWork.Service.AzureAd;
 using ConcernsCaseWork.Service.CaseActions;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Configuration;
@@ -237,6 +238,8 @@ namespace ConcernsCaseWork.Extensions
 
 			// AD Integration
 			services.AddScoped<IRbacManager, RbacManager>();
+			services.AddSingleton<IGraphManager, GraphManager>();
+			services.AddSingleton<IGraphClientSettings, GraphClientSettings>();
 
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
 
