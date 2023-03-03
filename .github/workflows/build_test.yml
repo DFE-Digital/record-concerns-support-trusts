@@ -75,4 +75,4 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           dotnet build ConcernsCaseWork/ConcernsCaseWork.sln --no-restore
-          dotnet test ConcernsCaseWork/ConcernsCaseWork.sln --no-build
+          ConcernsCaseWork/ConcernsCaseWork.sln --no-build --verbosity normal --collect:"XPlat Code Coverage" --environment "${{env.CONNECTION_STRING_KEY}}"="${{env.CONNECTION_STRING}}" --filter "FullyQualifiedName!~ConcernsCaseWork.Integration.Tests"
