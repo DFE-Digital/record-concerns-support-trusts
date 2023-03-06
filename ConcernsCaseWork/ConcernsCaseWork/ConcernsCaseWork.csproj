@@ -250,6 +250,9 @@
 		<Compile Update="Pages\Case\Concern\Index.cshtml.cs">
 			<DependentUpon>Index.cshtml</DependentUpon>
 		</Compile>
+		<Compile Update="Pages\Case\Management\EditOwner.chtml.cs">
+		  <DependentUpon>EditOwner.cshtml</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
