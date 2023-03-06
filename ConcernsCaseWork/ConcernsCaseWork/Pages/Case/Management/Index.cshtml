@@ -202,11 +202,19 @@
                         </tr>
 
                         <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">Caseworker</th>
-                            <td class="govuk-table__cell">
+                            <th scope="row" class="govuk-table-case-details__header">Case owner</th>
+                            <td class="govuk-table__cell" data-testid="case owner_field">
                                 @Model.CaseModel.CreatedBy.FromEmailToFullName()
                             </td>
-                            <td class="govuk-table__cell govuk-table__header__right"></td>
+	                       
+	                        <td class="govuk-table__cell govuk-table__header__right">
+		                        @if (Model.IsEditableCase)
+		                        {
+			                        <a class="govuk-link" data-testid="edit-case-owner" href="@Request.Path/edit-case-owner" aria-label="Change case owner">
+				                        Edit<span class="govuk-visually-hidden">Case owner</span>
+			                        </a>
+		                        }
+	                        </td>
                         </tr>
 
                         <tr class="govuk-table__row">
