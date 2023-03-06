@@ -284,12 +284,16 @@
 						</div>
 					</div>
 
-					<div class="govuk-button-group">
+                    <div class="govuk-button-group">
                         <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" id="add-decision-button" name="action">
                             @Model.SaveAndContinueButtonText
                         </button>
-					</div>
+
+                        <partial name="_Cancel" />
+                    </div>
 				</form>
+
+
 
 
 				<script type="application/javascript" nonce="@nonce">
