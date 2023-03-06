@@ -202,7 +202,7 @@
                         </tr>
 
                         <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">Caseworker</th>
+                            <th scope="row" class="govuk-table-case-details__header">Case owner</th>
                             <td class="govuk-table__cell">
                                 @Model.CaseModel.CreatedBy.FromEmailToFullName()
                             </td>
@@ -210,7 +210,7 @@
                         </tr>
 
                         <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">Date Created</th>
+                            <th scope="row" class="govuk-table-case-details__header">Date created</th>
                             <td class="govuk-table__cell">
                                 @DateTimeHelper.ParseToDisplayDate(Model.CaseModel.CreatedAt)
                             </td>
