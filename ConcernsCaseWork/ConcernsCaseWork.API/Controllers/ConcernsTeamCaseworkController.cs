@@ -1,4 +1,5 @@
-﻿using ConcernsCaseWork.API.RequestModels.Concerns.TeamCasework;
+﻿using Ardalis.GuardClauses;
+using ConcernsCaseWork.API.RequestModels.Concerns.TeamCasework;
 using ConcernsCaseWork.API.ResponseModels;
 using ConcernsCaseWork.API.ResponseModels.Concerns.TeamCasework;
 using ConcernsCaseWork.API.UseCases;
@@ -18,16 +19,19 @@ namespace ConcernsCaseWork.API.Controllers
         private readonly IGetConcernsCaseworkTeam _getCommand;
         private readonly IGetConcernsCaseworkTeamOwners _getTeamOwnersCommand;
         private readonly IUpdateConcernsCaseworkTeam _updateCommand;
+        private readonly IGetOwnersOfOpenCases _getOwnersOfOpenCases;
 
         public ConcernsTeamCaseworkController(ILogger<ConcernsTeamCaseworkController> logger, 
             IGetConcernsCaseworkTeam getTeamCommand,
             IGetConcernsCaseworkTeamOwners getTeamOwnersCommand,
-            IUpdateConcernsCaseworkTeam updateCommand)
+            IUpdateConcernsCaseworkTeam updateCommand,
+            IGetOwnersOfOpenCases getOwnersOfOpenCases)
         {
             _logger=logger ?? throw new ArgumentNullException(nameof(logger));
             _getCommand = getTeamCommand ?? throw new ArgumentNullException(nameof(getTeamCommand));
             _getTeamOwnersCommand = getTeamOwnersCommand ?? throw  new ArgumentNullException(nameof(getTeamOwnersCommand));
             _updateCommand = updateCommand ?? throw new ArgumentNullException(nameof(updateCommand));
+            _getOwnersOfOpenCases = Guard.Against.Null(getOwnersOfOpenCases);
         }
 
         [HttpGet("owners/{ownerId}")]
@@ -63,6 +67,17 @@ namespace ConcernsCaseWork.API.Controllers
                 var responseData = new ApiSingleResponseV2<string[]>(result);
                 return Ok(responseData);
             });
+        }
+
+        [HttpGet("owners/open-cases")]
+        [MapToApiVersion("2.0")]
+        public async Task<ActionResult<ApiSingleResponseV2<string[]>>> GetOwnersOfOpenCases(CancellationToken cancellationToken)
+        {
+	        return await LogAndInvoke(async () =>
+	        {
+		        var results = await _getOwnersOfOpenCases.Execute(cancellationToken);
+		        return Ok(new ApiSingleResponseV2<string[]>(results));
+	        });
         }
 
         [HttpPut("owners/{ownerId}")]

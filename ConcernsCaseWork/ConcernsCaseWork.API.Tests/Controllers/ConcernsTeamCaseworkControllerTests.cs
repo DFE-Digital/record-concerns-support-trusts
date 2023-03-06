@@ -29,15 +29,16 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             var getTeamCommand = new Mock<IGetConcernsCaseworkTeam>();
             getTeamCommand.Setup(x => x.Execute(expectedOwnerId, It.IsAny<CancellationToken>())).ReturnsAsync(expectedData);
 
-            var getTeamOwnersCommand = new Mock<IGetConcernsCaseworkTeamOwners>();
-
-            var updateCommand = new Mock<IUpdateConcernsCaseworkTeam>();
+            var getTeamOwnersCommand = Mock.Of<IGetConcernsCaseworkTeamOwners>();
+            var updateCommand = Mock.Of<IUpdateConcernsCaseworkTeam>();
+            var getOwnersOfOpenCasesCommand = Mock.Of<IGetOwnersOfOpenCases>();
 
             var controller = new ConcernsTeamCaseworkController(
                 _mockLogger.Object,
                 getTeamCommand.Object,
-                getTeamOwnersCommand.Object,
-                updateCommand.Object
+                getTeamOwnersCommand,
+                updateCommand,
+                getOwnersOfOpenCasesCommand
             );
 
             // act
@@ -64,12 +65,14 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             var getTeamOwnersCommand = new Mock<IGetConcernsCaseworkTeamOwners>();
 
             var updateCommand = new Mock<IUpdateConcernsCaseworkTeam>();
+            var getOwnersOfOpenCasesCommand = Mock.Of<IGetOwnersOfOpenCases>();
 
             var controller = new ConcernsTeamCaseworkController(
                 _mockLogger.Object,
                 getTeamCommand.Object,
                 getTeamOwnersCommand.Object,
-                updateCommand.Object
+                updateCommand.Object,
+                getOwnersOfOpenCasesCommand
             );
 
             // act
@@ -85,15 +88,16 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
             var getTeamOwnersCommand = new Mock<IGetConcernsCaseworkTeamOwners>();
             getTeamOwnersCommand.Setup(x => x.Execute(CancellationToken.None)).ReturnsAsync(expectedData);
-
-
+            
             var updateCommand = new Mock<IUpdateConcernsCaseworkTeam>();
+            var getOwnersOfOpenCasesCommand = Mock.Of<IGetOwnersOfOpenCases>();
 
             var controller = new ConcernsTeamCaseworkController(
                 _mockLogger.Object,
                 Mock.Of<IGetConcernsCaseworkTeam>(),
                 getTeamOwnersCommand.Object,
-                updateCommand.Object
+                updateCommand.Object,
+                getOwnersOfOpenCasesCommand
             );
 
             // act
@@ -113,12 +117,14 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             getTeamOwnersCommand.Setup(x => x.Execute(CancellationToken.None)).ReturnsAsync(default(string[]));
 
             var updateCommand = new Mock<IUpdateConcernsCaseworkTeam>();
+            var getOwnersOfOpenCasesCommand = Mock.Of<IGetOwnersOfOpenCases>();
 
             var controller = new ConcernsTeamCaseworkController(
                 _mockLogger.Object,
                 Mock.Of<IGetConcernsCaseworkTeam>(),
                 getTeamOwnersCommand.Object,
-                updateCommand.Object
+                updateCommand.Object,
+                getOwnersOfOpenCasesCommand
             );
 
             // act
@@ -137,12 +143,14 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             var getTeamCommand = new Mock<IGetConcernsCaseworkTeam>();
             var updateTeamCommand = new Mock<IUpdateConcernsCaseworkTeam>();
             var getTeamOwnersCommand = new Mock<IGetConcernsCaseworkTeamOwners>();
+            var getOwnersOfOpenCasesCommand = Mock.Of<IGetOwnersOfOpenCases>();
 
             var controller = new ConcernsTeamCaseworkController(
                 _mockLogger.Object,
                 getTeamCommand.Object,
                 getTeamOwnersCommand.Object,
-                updateTeamCommand.Object
+                updateTeamCommand.Object,
+                getOwnersOfOpenCasesCommand                
             );
 
             var updateModel = new ConcernsCaseworkTeamUpdateRequest
@@ -163,12 +171,14 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             var getTeamCommand = new Mock<IGetConcernsCaseworkTeam>();
             var updateTeamCommand = new Mock<IUpdateConcernsCaseworkTeam>();
             var getTeamOwnersCommand = new Mock<IGetConcernsCaseworkTeamOwners>();
+            var getOwnersOfOpenCasesCommand = Mock.Of<IGetOwnersOfOpenCases>();
 
             var controller = new ConcernsTeamCaseworkController(
                 _mockLogger.Object,
                 getTeamCommand.Object,
                 getTeamOwnersCommand.Object,
-                updateTeamCommand.Object
+                updateTeamCommand.Object,
+                getOwnersOfOpenCasesCommand
             );
 
             // act
@@ -186,6 +196,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             var getTeamCommand = new Mock<IGetConcernsCaseworkTeam>();
             var updateTeamCommand = new Mock<IUpdateConcernsCaseworkTeam>();
             var getTeamOwnersCommand = new Mock<IGetConcernsCaseworkTeamOwners>();
+            var getOwnersOfOpenCasesCommand = Mock.Of<IGetOwnersOfOpenCases>();
 
             updateTeamCommand.Setup(x => x.Execute(expectedModel, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new ConcernsCaseworkTeamResponse { OwnerId = expectedModel.OwnerId, TeamMembers = expectedModel.TeamMembers });
@@ -194,7 +205,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 _mockLogger.Object,
                 getTeamCommand.Object,
                 getTeamOwnersCommand.Object,
-                updateTeamCommand.Object
+                updateTeamCommand.Object,
+                getOwnersOfOpenCasesCommand
             );
 
             // act

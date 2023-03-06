@@ -37,5 +37,10 @@ namespace ConcernsCaseWork.Service.Teams
 		{
 			return await Get<string[]>($"/{EndpointsVersion}/concerns-team-casework/owners", false) ?? Array.Empty<string>();
 		}
+
+		public async Task<string[]> GetOwnersOfOpenCases()
+		{
+			return await Get<string[]>($"/{EndpointsVersion}/concerns-team-casework/owners/open-cases", false) ?? Array.Empty<string>();
+		}
 	}
 }

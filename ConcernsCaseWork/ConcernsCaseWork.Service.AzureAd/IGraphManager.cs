@@ -2,5 +2,5 @@
 
 public interface IGraphManager
 {
-	Task GetAllUsers();
+	Task<ConcernsCaseWorkAdUser[]> GetAllUsers(CancellationToken cancellationToken);
 }
