@@ -2,6 +2,7 @@
 using ConcernsCaseWork.Models.Teams;
 using ConcernsCaseWork.Pages.Team;
 using ConcernsCaseWork.Security;
+using ConcernsCaseWork.Service.AzureAd;
 using ConcernsCaseWork.Shared.Tests.Factory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,6 +14,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ITeamsModelService = ConcernsCaseWork.Services.Teams.ITeamsModelService;
 
@@ -32,7 +34,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			var sut = testFixture.BuildSut(authenticatedPage: true);
 
 			// act
-			var pageResponse = await sut.OnGetAsync();
+			var pageResponse = await sut.OnGetAsync(CancellationToken.None);
 
 			// assert
 			Assert.That(pageResponse, Is.Not.Null);
@@ -59,7 +61,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 				.BuildSut(authenticatedPage: true);
 
 			// act
-			var pageResponse = await sut.OnGetAsync();
+			var pageResponse = await sut.OnGetAsync(CancellationToken.None);
 
 			// assert
 			Assert.That(pageResponse, Is.Not.Null);
@@ -85,7 +87,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 
 			// act
 			pageModel.SelectedColleagues = new List<string> { NewUsernameSelection };
-			var pageResponse = await pageModel.OnPostSelectColleagues();
+			var pageResponse = await pageModel.OnPostSelectColleagues(CancellationToken.None);
 
 			// assert
 			var page = pageResponse as RedirectResult;
@@ -108,7 +110,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 				.WithNoCurrentUser();
 			// act
 			var sut = testFixture.BuildSut(authenticatedPage: false);
-			var pageResponse = await sut.OnPostSelectColleagues();
+			var pageResponse = await sut.OnPostSelectColleagues(CancellationToken.None);
 
 			// assert
 			var page = pageResponse as PageResult;
@@ -120,20 +122,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 
 			testFixture.VerifyMethodEntered(nameof(SelectColleaguesPageModel.OnPostSelectColleagues));
 		}
-
-		private static SelectColleaguesPageModel BuildPageModel(IRbacManager rbacManager, ILogger<SelectColleaguesPageModel> logger, ITeamsModelService teamsService, bool isAuthenticated, string userName = "Tester")
-		{
-			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated, userName);
-
-			return new SelectColleaguesPageModel(rbacManager, logger, teamsService)
-			{
-				PageContext = pageContext,
-				TempData = tempData,
-				Url = new UrlHelper(actionContext),
-				MetadataProvider = pageContext.ViewData.ModelMetadata
-			};
-		}
-
+		
 		private class TestFixture
 		{
 			public TestFixture()
@@ -142,6 +131,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 				MockLogger = new Mock<ILogger<SelectColleaguesPageModel>>();
 				MockTeamsService = new Mock<ITeamsModelService>();
 				MockRbacManager = new Mock<IRbacManager>();
+				MockGraphManager = new Mock<IGraphManager>();
 			}
 
 			public string CurrentUserName { get; private set; }
@@ -149,11 +139,13 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 			public Mock<ITeamsModelService> MockTeamsService { get; }
 			public Mock<IRbacManager> MockRbacManager { get; }
 
+			public Mock<IGraphManager> MockGraphManager { get; }
+			
 			internal SelectColleaguesPageModel BuildSut(bool authenticatedPage = true)
 			{
 				(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(authenticatedPage, CurrentUserName);
 
-				return new SelectColleaguesPageModel(MockRbacManager.Object, MockLogger.Object, MockTeamsService.Object)
+				return new SelectColleaguesPageModel(MockRbacManager.Object, MockLogger.Object, MockTeamsService.Object, MockGraphManager.Object)
 				{
 					PageContext = pageContext,
 					TempData = tempData,

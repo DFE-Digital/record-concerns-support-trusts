@@ -102,5 +102,13 @@ namespace ConcernsCaseWork.Data.Gateways
         
         public async Task<bool> CaseExists(int urn, CancellationToken cancellationToken = default) 
 	        => await _concernsDbContext.ConcernsCase.AnyAsync(c => c.Urn == urn, cancellationToken);
+
+        public async Task<string[]> GetOwnersOfOpenCases(CancellationToken cancellationToken = default)
+        {
+	        return await _concernsDbContext.ConcernsCase.Where(x => x.StatusId == 1 || x.StatusId == 2)
+		        .Select(x => x.CreatedBy)
+		        .Distinct()
+		        .ToArrayAsync(cancellationToken);
+        }
     }
 }

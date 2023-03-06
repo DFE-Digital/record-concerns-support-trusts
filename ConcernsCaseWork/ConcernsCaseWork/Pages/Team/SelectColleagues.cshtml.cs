@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Team
@@ -35,12 +36,12 @@ namespace ConcernsCaseWork.Pages.Team
 			_graphManager = Guard.Against.Null(graphManager);
 		}
 
-		public async Task<ActionResult> OnGetAsync()
+		public async Task<ActionResult> OnGetAsync(CancellationToken cancellationToken)
 		{
 			try
 			{
 				_logger.LogMethodEntered();
-				await LoadPage();
+				await LoadPage(cancellationToken);
 			}
 			catch (Exception ex)
 			{
@@ -51,7 +52,7 @@ namespace ConcernsCaseWork.Pages.Team
 			return Page();
 		}
 
-		public async Task<ActionResult> OnPostSelectColleagues()
+		public async Task<ActionResult> OnPostSelectColleagues(CancellationToken cancellationToken)
 		{
 			try
 			{
@@ -67,18 +68,19 @@ namespace ConcernsCaseWork.Pages.Team
 				_logger.LogErrorMsg(ex);
 				TempData["Error.Message"] = ErrorOnPostPage;
 
-				await LoadPage();
+				await LoadPage(cancellationToken);
 				return Page();
 			}
 		}
 
-		private async Task LoadPage()
+		private async Task LoadPage(CancellationToken cancellationToken)
 		{
 			if (!string.IsNullOrWhiteSpace(_CurrentUserName))
 			{
 				try
 				{
-					var allUsers = _graphManager.GetAllUsers();
+					var CrossRefUsers = await this.CrossReferenceAzureAdUsersWithCaseOwners(cancellationToken);
+				
 					var teamMembers = _teamsService.GetCaseworkTeam(_CurrentUserName);
 					var users = _rbacManager.GetSystemUsers(excludes: _CurrentUserName);
 
@@ -108,6 +110,28 @@ namespace ConcernsCaseWork.Pages.Team
 			}
 		}
 
+		private async Task<CrossReferencedUser[]> CrossReferenceAzureAdUsersWithCaseOwners(CancellationToken cancellationToken)
+		{
+			var graphUsersTask = _graphManager.GetAllUsers(cancellationToken);
+			var systemUsersTask = _teamsService.GetOwnersOfOpenCases();
+			
+			var graphUsers = await graphUsersTask;
+			var systemUsers = await systemUsersTask;
+			
+			//Task.WaitAll(new Task[]{graphUsersTask, systemUsersTask}, cancellationToken);
+			
+			// tasks completed now, get results
+
+			return Array.Empty<CrossReferencedUser>();
+		}
+
 		private string _CurrentUserName { get => this.User.Identity.Name; }
+		
+		private struct CrossReferencedUser
+		{
+			public string AzureAdName { get; init; }
+			public string SystemName { get; init; }
+			private bool IsDeleted => string.IsNullOrWhiteSpace(AzureAdName) && !string.IsNullOrEmpty(SystemName);
+		}
 	}
 }
