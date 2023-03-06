@@ -13,10 +13,6 @@ describe("User can see case actions displayed in closed cases", () => {
 		
     });
 
-    afterEach(() => {
-        cy.storeSessionData();
-    });
-
     let stText = "null";
 
     it("Should display the closed actions for a closed case", () => {

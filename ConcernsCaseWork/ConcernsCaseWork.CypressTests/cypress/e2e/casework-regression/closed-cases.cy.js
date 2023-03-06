@@ -12,11 +12,7 @@ describe('User can view and navigate Closed cases', () => {
 		cy.login();
 	});
 
-	afterEach(() => {
-		cy.storeSessionData();
-	});
-
-    it("Testing closed case functionality", () => {
+	it("Testing closed case functionality", () => {
 
         cy.task(LogTask, "User clicks Closed Case button and is taken to closed case page")
         homePage.getClosedCasesBtn().click();
