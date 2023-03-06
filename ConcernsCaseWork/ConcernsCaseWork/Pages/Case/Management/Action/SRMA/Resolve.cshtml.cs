@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.SRMA
 						resolvedStatus = SRMAStatus.Complete;
 						break;
 					case SrmaConstants.ResolutionCancelled:
-						resolvedStatus = SRMAStatus.Canceled;
+						resolvedStatus = SRMAStatus.Cancelled;
 						break;
 					case SrmaConstants.ResolutionDeclined:
 						resolvedStatus = SRMAStatus.Declined;

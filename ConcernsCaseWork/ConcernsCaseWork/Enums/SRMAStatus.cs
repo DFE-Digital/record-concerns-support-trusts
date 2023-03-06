@@ -18,8 +18,8 @@ namespace ConcernsCaseWork.Enums
 		[Description("SRMA Declined")]
 		Declined = 4,
 
-		[Description("SRMA Canceled")]
-		Canceled = 5,
+		[Description("SRMA cancelled")]
+		Cancelled = 5,
 
 		[Description("SRMA Complete")]
 		Complete = 6

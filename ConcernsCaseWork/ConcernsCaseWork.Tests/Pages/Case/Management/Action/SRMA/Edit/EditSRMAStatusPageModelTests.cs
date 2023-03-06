@@ -152,7 +152,7 @@ public class EditSrmaStatusPageModelTests
 	}
 
 	[Test]
-	[TestCase(SRMAStatus.Canceled)]
+	[TestCase(SRMAStatus.Cancelled)]
 	[TestCase(SRMAStatus.Complete)]
 	[TestCase(SRMAStatus.Declined)]
 	[TestCase(SRMAStatus.Deployed)]
