@@ -4,10 +4,6 @@ describe('Footer links direct to the correct pages from Active Casework page', (
 		cy.login();
 	});
 
-	afterEach(() => {
-		cy.storeSessionData();
-	});
-
     it('Should open Accessibility link and verify the title', () => {
         cy.wait(300);
         cy.fixture('footer-links-fixture').then((footerLinkData) =>{

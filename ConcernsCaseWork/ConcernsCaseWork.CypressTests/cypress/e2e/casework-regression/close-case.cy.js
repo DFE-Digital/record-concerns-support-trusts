@@ -31,10 +31,6 @@ describe("User closes a case", () => {
 		cy.get('#your-casework tr:nth-child(1) td:nth-child(1) a').click();
 	});
 
-	afterEach(() => {
-		cy.storeSessionData();
-	});
-
 	it("Should allow a user to close a case", () => {
 		cy.task(LogTask, "User can close an open concern");
 		cy.closeAllOpenConcerns();
