@@ -1,4 +1,4 @@
-name: Continuous integration
+name: Terraform security scan
 on:
   pull_request:
 jobs:
