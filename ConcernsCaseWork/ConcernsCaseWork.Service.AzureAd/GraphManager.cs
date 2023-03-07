@@ -1,25 +1,26 @@
-﻿using Azure.Identity;
+﻿using Ardalis.GuardClauses;
+using Azure.Identity;
 using Microsoft.Graph;
 
 namespace ConcernsCaseWork.Service.AzureAd;
 
 public class GraphManager : IGraphManager
 {
+	private readonly IGraphClient _graphClient;
 	private readonly IGraphClientSettings _configuration;
 
-	public GraphManager(IGraphClientSettings configuration)
+	public GraphManager(IGraphClient graphClient, IGraphClientSettings configuration)
 	{
-		_configuration = configuration;
+		_graphClient = Guard.Against.Null(graphClient);
+		_configuration = Guard.Against.Null(configuration);
 	}
 
 	public async Task<ConcernsCaseWorkAdUser[]> GetAllUsers(CancellationToken cancellationToken)
 	{
-		GraphServiceClient graphClient = CreateGraphClient();
-
 		Dictionary<string, ConcernsCaseWorkAdUser> results = new();
-		var caseWorkers = await GetCaseWorkers(graphClient, cancellationToken);
-		var teamLeaders = await GetTeamLeaders(graphClient, cancellationToken);
-		var admins = await GetAdmins(graphClient, cancellationToken);
+		ConcernsCaseWorkAdUser[] caseWorkers = await GetCaseWorkers(cancellationToken);
+		ConcernsCaseWorkAdUser[] teamLeaders = await GetTeamLeaders(cancellationToken);
+		ConcernsCaseWorkAdUser[] admins = await GetAdministrators(cancellationToken);
 
 		results = AppendResults(results, caseWorkers);
 		results = AppendResults(results, admins);
@@ -28,9 +29,43 @@ public class GraphManager : IGraphManager
 		return results.Values.ToArray();
 	}
 
-	private Dictionary<string, ConcernsCaseWorkAdUser> AppendResults(Dictionary<string, ConcernsCaseWorkAdUser> results, List<ConcernsCaseWorkAdUser> newResults)
+	public async Task<ConcernsCaseWorkAdUser[]> GetAdministrators(CancellationToken cancellationToken)
 	{
-		foreach (var user in newResults)
+		var results = await this._graphClient.GetCaseWorkersByGroupId(_configuration.AdminGroupId, cancellationToken);
+		foreach (var result in results)
+		{
+			result.IsAdmin = true;
+		}
+
+		return results;
+	}
+
+	public async Task<ConcernsCaseWorkAdUser[]> GetCaseWorkers(CancellationToken cancellationToken)
+	{
+		var results = await _graphClient.GetCaseWorkersByGroupId(_configuration.CaseWorkerGroupId, cancellationToken);
+		foreach (var result in results)
+		{
+			result.IsCaseworker = true;
+		}
+
+		return results;
+	}
+
+	public async Task<ConcernsCaseWorkAdUser[]> GetTeamLeaders(CancellationToken cancellationToken)
+	{
+		var results = await _graphClient.GetCaseWorkersByGroupId(_configuration.TeamLeaderGroupId, cancellationToken);
+
+		foreach (var result in results)
+		{
+			result.IsTeamLeader = true;
+		}
+		
+		return results;
+	}
+
+	private Dictionary<string, ConcernsCaseWorkAdUser> AppendResults(Dictionary<string, ConcernsCaseWorkAdUser> results, IEnumerable<ConcernsCaseWorkAdUser> newResults)
+	{
+		foreach (ConcernsCaseWorkAdUser user in newResults)
 		{
 			if (results.ContainsKey(user.Email))
 			{
@@ -45,54 +80,5 @@ public class GraphManager : IGraphManager
 		}
 
 		return results;
-	}
-
-	private Task<List<ConcernsCaseWorkAdUser>> GetCaseWorkers(GraphServiceClient graphClient, CancellationToken cancellationToken)
-	{
-		return this.GetCaseWorkersByGroupId(_configuration.CaseWorkerGroupId, graphClient, true, false, false, cancellationToken);
-	}
-
-	private Task<List<ConcernsCaseWorkAdUser>> GetTeamLeaders(GraphServiceClient graphClient, CancellationToken cancellationToken)
-	{
-		return this.GetCaseWorkersByGroupId(_configuration.TeamLeaderGroupId, graphClient, false, true, false, cancellationToken);
-	}
-
-	private Task<List<ConcernsCaseWorkAdUser>> GetAdmins(GraphServiceClient graphClient, CancellationToken cancellationToken)
-	{
-		return this.GetCaseWorkersByGroupId(_configuration.AdminGroupId, graphClient, false, false, true, cancellationToken);
-	}
-
-	private async Task<List<ConcernsCaseWorkAdUser>> GetCaseWorkersByGroupId(string groupId, GraphServiceClient graphClient, bool isCaseWorker, bool isTeamLeader, bool isAdmin,  CancellationToken cancellationToken)
-	{
-		List<QueryOption> queryOptions = new() { new("$count", "true"), new("$top", "999") };
-		IGroupMembersCollectionWithReferencesPage? members = await graphClient.Groups[groupId].Members
-			.Request(queryOptions)
-			.Header("ConsistencyLevel", "eventual")
-			.Select("givenName,surname,id,mail")
-			.GetAsync(cancellationToken);
-
-		return members.Cast<User>()
-			.Where(x => !string.IsNullOrWhiteSpace(x.Mail))
-			.Select(x => new ConcernsCaseWorkAdUser() { FirstName = x.GivenName, Surname = x.Surname, Email = x.Mail, IsCaseworker = isCaseWorker, IsTeamLeader = isTeamLeader, IsAdmin = isAdmin})
-			.ToList();
-	}
-
-	private GraphServiceClient CreateGraphClient()
-	{
-		// settings for graph client
-
-		// The client credentials flow requires that you request the
-		// /.default scope, and preconfigure your permissions on the
-		// app registration in Azure. An administrator must grant consent
-		// to those permissions beforehand.
-		string[] scopes = { _configuration.GraphEndpointScope };
-
-		// using Azure.Identity;
-		TokenCredentialOptions options = new() { AuthorityHost = AzureAuthorityHosts.AzurePublicCloud };
-
-		// https://learn.microsoft.com/dotnet/api/azure.identity.clientsecretcredential
-		ClientSecretCredential clientSecretCredential = new(_configuration.TenantId, _configuration.ClientId, _configuration.ClientSecret, options);
-
-		return new GraphServiceClient(clientSecretCredential, scopes);
 	}
 }
