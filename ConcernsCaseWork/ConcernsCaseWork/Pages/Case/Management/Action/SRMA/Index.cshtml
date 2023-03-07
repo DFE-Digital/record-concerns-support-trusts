@@ -270,7 +270,7 @@
         {
             var ariaLabel = "Change " + fieldName;
             <a class="govuk-link" href="@url" aria-label="@ariaLabel" data-testid="@fieldName">
-                @(IsEmpty(value) ? "Add" : "Edit")
+                @(IsEmpty(value) ? "Add" : "Change")
                 <span class="govuk-visually-hidden">@fieldName</span>
             </a>
         }
