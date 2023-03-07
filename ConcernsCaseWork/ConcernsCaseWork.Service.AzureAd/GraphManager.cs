@@ -34,7 +34,9 @@ public class GraphManager : IGraphManager
 		{
 			if (results.ContainsKey(user.Email))
 			{
-				results[user.Email].Groups.AddRange(user.Groups);
+				results[user.Email].IsCaseworker |= user.IsCaseworker;
+				results[user.Email].IsTeamLeader |= user.IsTeamLeader;
+				results[user.Email].IsAdmin |= user.IsAdmin;
 			}
 			else
 			{
@@ -47,20 +49,20 @@ public class GraphManager : IGraphManager
 
 	private Task<List<ConcernsCaseWorkAdUser>> GetCaseWorkers(GraphServiceClient graphClient, CancellationToken cancellationToken)
 	{
-		return this.GetCaseWorkersByGroupId(_configuration.CaseWorkerGroupId, "CaseWorker", graphClient, cancellationToken);
+		return this.GetCaseWorkersByGroupId(_configuration.CaseWorkerGroupId, graphClient, true, false, false, cancellationToken);
 	}
 
 	private Task<List<ConcernsCaseWorkAdUser>> GetTeamLeaders(GraphServiceClient graphClient, CancellationToken cancellationToken)
 	{
-		return this.GetCaseWorkersByGroupId(_configuration.TeamLeaderGroupId, "TeamLeader", graphClient, cancellationToken);
+		return this.GetCaseWorkersByGroupId(_configuration.TeamLeaderGroupId, graphClient, false, true, false, cancellationToken);
 	}
 
 	private Task<List<ConcernsCaseWorkAdUser>> GetAdmins(GraphServiceClient graphClient, CancellationToken cancellationToken)
 	{
-		return this.GetCaseWorkersByGroupId(_configuration.AdminGroupId, "Admin", graphClient, cancellationToken);
+		return this.GetCaseWorkersByGroupId(_configuration.AdminGroupId, graphClient, false, false, true, cancellationToken);
 	}
 
-	private async Task<List<ConcernsCaseWorkAdUser>> GetCaseWorkersByGroupId(string groupId, string groupName, GraphServiceClient graphClient, CancellationToken cancellationToken)
+	private async Task<List<ConcernsCaseWorkAdUser>> GetCaseWorkersByGroupId(string groupId, GraphServiceClient graphClient, bool isCaseWorker, bool isTeamLeader, bool isAdmin,  CancellationToken cancellationToken)
 	{
 		List<QueryOption> queryOptions = new() { new("$count", "true"), new("$top", "999") };
 		IGroupMembersCollectionWithReferencesPage? members = await graphClient.Groups[groupId].Members
@@ -71,7 +73,7 @@ public class GraphManager : IGraphManager
 
 		return members.Cast<User>()
 			.Where(x => !string.IsNullOrWhiteSpace(x.Mail))
-			.Select(x => new ConcernsCaseWorkAdUser() { FirstName = x.GivenName, Surname = x.Surname, Email = x.Mail, Groups = new List<string>{groupName} })
+			.Select(x => new ConcernsCaseWorkAdUser() { FirstName = x.GivenName, Surname = x.Surname, Email = x.Mail, IsCaseworker = isCaseWorker, IsTeamLeader = isTeamLeader, IsAdmin = isAdmin})
 			.ToList();
 	}
 
