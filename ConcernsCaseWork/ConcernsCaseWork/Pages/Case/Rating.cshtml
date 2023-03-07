@@ -12,7 +12,7 @@
 	<partial name="_BannerError"/>
 	
 	<span class="govuk-caption-l">Create case</span>
-	<h1 class="govuk-heading-l">Trust risk</h1>
+	<h1 class="govuk-heading-l">Risk to trust</h1>
 
 	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
 	{
@@ -35,9 +35,7 @@
 			<div class="govuk-form-group govuk-!-margin-top-6">
 				<fieldset class="govuk-fieldset">
 
-					<legend class="govuk-fieldset__legend govuk-!-font-weight-bold">
-						What is the risk to the trust?
-					</legend>
+                    <h2 class="govuk-heading-m">What is the risk to the trust?</h2>
 					<div class="govuk-hint">
 						Use your judgement to choose an overall risk rating for the case. For example, if that case has more than one concern, 
 						the risk to trust rating should reflect this. This is not related to the Risk Management Framework (RMF).
