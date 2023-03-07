@@ -239,6 +239,7 @@ namespace ConcernsCaseWork.Extensions
 			// AD Integration
 			services.AddScoped<IRbacManager, RbacManager>();
 			services.AddSingleton<IGraphManager, GraphManager>();
+			services.AddSingleton<IGraphClient, GraphClient>();
 			services.AddSingleton<IGraphClientSettings, GraphClientSettings>();
 
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
