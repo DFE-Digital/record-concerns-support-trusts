@@ -8,12 +8,6 @@ describe("User can add case actions to an existing case", () => {
 		
 	});
 
-	afterEach(() => {
-		cy.storeSessionData();
-
-		
-	});
-
 	it("User enters the case page", () => {
 		cy.checkForExistingCase();
 	});
