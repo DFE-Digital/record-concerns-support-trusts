@@ -193,7 +193,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management
 			var showEditActions = pageModel.IsEditableCase;
 
 			// assert
-			Assert.True(showEditActions);
+			Assert.False(showEditActions);
 		}
 
 		[Test]
