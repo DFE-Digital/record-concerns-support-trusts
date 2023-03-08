@@ -5,10 +5,6 @@ describe("User can manage cases from the case management page", () => {
 		cy.login();
 	});
 
-	afterEach(() => {
-		cy.storeSessionData();
-	});
-
 	it("Should create a case and validate the concerns details", () => {
 		cy.task(LogTask, "Searching for trust");
 		cy.get('[href="/case"]').click();

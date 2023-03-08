@@ -17,11 +17,14 @@
     {
         <!-- Google Tag Manager -->
         <script nonce="@nonce">
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});let f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-NGC8DRV');
+            (function (w, d, s, l, i) {
+                w[l] = w[l] || []; w[l].push({
+                    'gtm.start':
+                        new Date().getTime(), event: 'gtm.js'
+                }); let f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-NGC8DRV');
         </script>
         <!-- End Google Tag Manager -->
     }
@@ -42,8 +45,8 @@
     <link rel="stylesheet" href="~/dist/css/site.css" />
 
     <title>@ViewData["Title"] - Record concerns and support for trusts - GOV.UK</title>
-	@Html.Raw(JavaScriptSnippet.FullScript)
-    
+    @Html.Raw(JavaScriptSnippet.FullScript)
+
 </head>
 <body class="govuk-template__body ">
     <!-- Google Tag Manager (noscript) -->
@@ -54,8 +57,8 @@
     <script src="~/dist/vendor/jquery.min.js" nonce="@nonce"></script>
     <script nonce="@nonce">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
+    <partial name="_EnvironmentBanner" />
     <partial name="_CookiesBanner" />
-
     <header class="moj-header " role="banner">
         <div class="govuk-width-container">
             <div class="govuk-grid-row moj-header__container">
@@ -91,7 +94,7 @@
             </p>
         </div>
     </div>
-    
+
     @await RenderSectionAsync("Scripts", required: false)
     @await RenderSectionAsync("BeforeMain", required: false)
 

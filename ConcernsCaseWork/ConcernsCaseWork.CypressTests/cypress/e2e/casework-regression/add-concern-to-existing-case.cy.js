@@ -7,10 +7,6 @@ describe("User creates and adds subsequent concern to a case", () => {
 		cy.login();
 	});
 
-	afterEach(() => {
-		cy.storeSessionData();
-	});
-
 	const searchTerm =
 		"Accrington St Christopher's Church Of England High School";
 

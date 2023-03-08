@@ -13,10 +13,6 @@ describe("The correct items are visible on the details page", () => {
         cy.login();
     });
 
-    afterEach(() => {
-        cy.storeSessionData();
-    });
-
     it("Should show the correct information on the means of referral", () => {
         cy.get('[href="/case"]').click();
         cy.get("#search").should("be.visible");

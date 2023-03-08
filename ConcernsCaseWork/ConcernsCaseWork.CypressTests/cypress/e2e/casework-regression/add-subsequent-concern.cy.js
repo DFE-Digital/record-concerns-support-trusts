@@ -6,10 +6,6 @@ describe("User adds subsequent Concern to a case", () => {
 		cy.login();
 	});
 
-	afterEach(() => {
-		cy.storeSessionData();
-	});
-
 	let term = "";
 
 	it("Should add the subsequent concern to the case", () => {
