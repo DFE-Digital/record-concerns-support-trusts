@@ -4,8 +4,7 @@ import accessibilitiesTestPages from '../../../fixtures/accessibilitiesTestPages
 
 	describe('Check accessibility of the different pages', function () {
 		beforeEach(() => {
-			//cy.login();
-            cy.visit("/")
+			cy.login();
 		});
         accessibilitiesTestPages.forEach((link) => {
          it(`Validate accessibility on ${link}`, function () {
