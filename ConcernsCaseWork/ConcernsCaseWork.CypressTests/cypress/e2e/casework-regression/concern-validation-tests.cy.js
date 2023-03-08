@@ -3,10 +3,6 @@ describe('Concern validation tests', () => {
 		cy.login();
 	});
 
-	afterEach(() => {
-		cy.storeSessionData();
-	});
-
 	it('Error messages should be displayed when user omits data', () => {
 		cy.get('[href="/case"]').click();
 		cy.get('#search').should('be.visible');
