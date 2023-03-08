@@ -22,13 +22,22 @@ import { CloseNoticeToImprovePage } from "../../pages/caseActions/noticeToImprov
 import { ViewDecisionPage } from "../../pages/caseActions/decision/viewDecisionPage";
 import { CloseDecisionPage } from "../../pages/caseActions/decision/closeDecisionPage";
 import { DecisionOutcomePage } from "../../pages/caseActions/decision/decisionOutcomePage";
+import { ViewClosedCasePage } from "cypress/pages/createCase/viewClosedCasePage";
+import caseworkTable from "cypress/pages/caseRows/caseworkTable";
+import actionTable from "cypress/pages/caseRows/caseActionTable";
+import { toDisplayDate } from "cypress/support/formatDate";
 import { EditTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/editTrustFinancialForecastPage";
 import { ViewTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/viewTrustFinancialForecastPage";
 import { CloseTrustFinancialForecastPage } from "cypress/pages/caseActions/trustFinancialForecast/closeTrustFinancialForecastPage";
 import actionSummaryTable from "cypress/pages/caseActions/summary/actionSummaryTable";
+import caseActionTable from "cypress/pages/caseRows/caseActionTable";
 
 describe("Testing closing of cases when there are case actions and concerns", () =>
 {
+    let caseId: string;
+    let trustName: string;
+    let now: Date;
+
     const editFinancialPlanPage = new EditFinancialPlanPage();
     const viewFinancialPlanPage = new ViewFinancialPlanPage();
     const closeFinancialPlanPage = new CloseFinancialPlanPage();
@@ -57,10 +66,21 @@ describe("Testing closing of cases when there are case actions and concerns", ()
     const viewTffPage = new ViewTrustFinancialForecastPage();
     const closeTffPage = new CloseTrustFinancialForecastPage();
 
+    const viewClosedCasePage = new ViewClosedCasePage();
+
     beforeEach(() => {
 		cy.login();
+        now = new Date();
 
-        cy.basicCreateCase();
+        cy.basicCreateCase()
+            .then((id: number) => {
+                caseId = id + "";
+                return CaseManagementPage.getTrust()
+            })
+            .then((trust: string) =>
+            {
+                trustName = trust.trim();
+            });
 	});
 
     describe("When we have case actions and concerns that have not been closed", () =>
@@ -87,6 +107,70 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             closeConcern();
             closeCaseCheckingValidation();
+            verifyClosedCaseDetails();
+
+            Logger.Log("Verifying the closed case action is displayed");
+            viewClosedCasePage
+                .hasClosedCaseAction("SRMA")
+                .hasClosedCaseAction("Financial Plan")
+                .hasClosedCaseAction("NTI Under Consideration")
+                .hasClosedCaseAction("Decision: No Decision Types")
+
+            Logger.Log("Verifying the closed case actions details are displayed");
+            actionTable
+                .getRowByAction("SRMA")
+                .then((row) =>
+                {
+                    row
+                        .hasName("SRMA")
+                        .hasStatus("SRMA Canceled")
+                        .hasOpenedDate(toDisplayDate(now))
+                        .hasClosedDate(toDisplayDate(now))
+                })
+
+            actionTable
+                .getRowByAction("Financial Plan")
+                .then((row) =>
+                {
+                    row
+                        .hasName("Financial Plan")
+                        .hasStatus("Viable plan received")
+                        .hasOpenedDate(toDisplayDate(now))
+                        .hasClosedDate(toDisplayDate(now))
+                })
+
+            actionTable
+                .getRowByAction("NTI Under Consideration")
+                .then((row) =>
+                {
+                    row
+                        .hasName("NTI Under Consideration")
+                        .hasStatus("No further action being taken")
+                        .hasOpenedDate(toDisplayDate(now))
+                        .hasClosedDate(toDisplayDate(now))
+                })
+
+            actionTable
+                .getRowByAction("Decision: No Decision Types")
+                .then((row) =>
+                {
+                    row
+                        .hasName("Decision: No Decision Types")
+                        .hasStatus("Approved")
+                        .hasOpenedDate(toDisplayDate(now))
+                        .hasClosedDate(toDisplayDate(now))
+                })
+
+            actionTable
+                .getRowByAction("Trust Financial Forecast (TFF)")
+                .then((row) =>
+                {
+                    row
+                        .hasName("Trust Financial Forecast (TFF)")
+                        .hasStatus("Completed")
+                        .hasOpenedDate(toDisplayDate(now))
+                        .hasClosedDate(toDisplayDate(now))
+                })
         });
 
         it("Should raise a validation error for NTI warning letter and only close when the action resolved", () =>
@@ -118,6 +202,19 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             closeConcern();
             closeCase();
+            verifyClosedCaseDetails();
+
+            Logger.Log("Verifying the closed case action is displayed");
+            actionTable
+                .getRowByAction("NTI Warning Letter")
+                .then((row) =>
+                {
+                    row
+                        .hasName("NTI Warning Letter")
+                        .hasStatus("Cancelled")
+                        .hasOpenedDate(toDisplayDate(now))
+                        .hasClosedDate(toDisplayDate(now))
+                })
         });
 
         it("Should raise a validation error for Notice To Improve and only close when the action is resolved", () =>
@@ -127,7 +224,6 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             AddToCasePage.addToCase('Nti')
             AddToCasePage.getAddToCaseBtn().click();
             editNtiPage.save();
-
 
             Logger.Log("Validating an error is displayed for Notice To Improve when case is closed");
             CaseManagementPage.getCloseCaseBtn().click();
@@ -147,6 +243,19 @@ describe("Testing closing of cases when there are case actions and concerns", ()
 
             closeConcern();
             closeCase();
+            verifyClosedCaseDetails();
+
+            Logger.Log("Verifying the closed case action is displayed");
+            actionTable
+                .getRowByAction("NTI")
+                .then((row) =>
+                {
+                    row
+                        .hasName("NTI")
+                        .hasStatus("Closed")
+                        .hasOpenedDate(toDisplayDate(now))
+                        .hasClosedDate(toDisplayDate(now))
+                })
         });
     });
 
@@ -333,5 +442,37 @@ describe("Testing closing of cases when there are case actions and concerns", ()
             HomePage.getClosedCasesBtn().click();
             ClosedCasePage.getClosedCase(caseId);
         });
+    }
+
+    function verifyClosedCaseDetails()
+    {
+        Logger.Log("Validate Closed Case row has correct details");
+        caseworkTable
+                .getRowByCaseId(caseId)
+                .then((row) =>
+                {
+                    row
+                        .hasCaseId(caseId)
+                        .hasCreatedDate(toDisplayDate(now))
+                        .hasClosedDate(toDisplayDate(now))
+                        .hasTrust(trustName)
+                        .hasConcern("Governance and compliance: Compliance")
+                        .select();
+                })
+
+
+        
+
+        Logger.Log("Validate Closed Case has correct details");
+        viewClosedCasePage
+            .hasConcerns("Governance and compliance: Compliance")
+            .hasTerritory("Midlands and West - West Midlands")
+            .hasIssue("test")
+            .hasCurrentStatus("current status")
+            .hasCaseAim("case aim")
+            .hasDeEscalationPoint("de-escalation point")
+            .hasNextSteps("next steps")
+            .hasCaseHistory("case history")
+            .hasRationaleForClosure("Closing case");
     }
 });
