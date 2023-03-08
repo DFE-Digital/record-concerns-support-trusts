@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace ConcernsCaseWork.Pages.Case.Management
@@ -22,6 +23,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 
 		public string CurrentCaseOwner { get; set; }
 		public string CaseNumber { get; set; }
+		public bool ShowValidationMessage { get; set; }
 
 		public EditOwnerPageModel(
 			ICaseModelService caseModelService,
@@ -53,23 +55,50 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			return Page();
 		}
 
-		public async Task<ActionResult> OnPost(string selectedOwner,string currentOwner)
+		public async Task<ActionResult> OnPost(string selectedOwner,string currentOwner,bool valuePicked)
 		{
 			_logger.LogMethodEntered();
-			if (selectedOwner != CurrentCaseOwner)
+			var isValid = true;
+			if (selectedOwner == currentOwner)
 			{
-				try
-				{
-					await _caseModelService.PatchOwner(Urn, selectedOwner);
-					return Redirect($"/case/{Urn}/management");
-				}
-				catch (Exception ex)
-				{
-					_logger.LogErrorMsg(ex);
-				}
+				return Redirect($"/case/{Urn}/management");
 			}
+			if (valuePicked)
+			{
+				if (string.IsNullOrEmpty(selectedOwner))
+				{
+					isValid = false;
+				}
 
+				if (string.IsNullOrWhiteSpace(selectedOwner))
+				{
+					isValid = false;
+				}
+				if (isValid)
+                {
+                	return await UpdateCaseOwner(selectedOwner);
+                }
+			}
+			var caseModel = await _caseModelService.GetCaseByUrn(Urn);
+			CurrentCaseOwner = caseModel.CreatedBy;
+			CaseNumber = caseModel.Urn.ToString();
+			ShowValidationMessage = true;
 			return Page();
+			
+		}
+
+		private async Task<ActionResult> UpdateCaseOwner(string selectedOwner)
+		{
+			try
+			{
+				await _caseModelService.PatchOwner(Urn, selectedOwner);
+				return Redirect($"/case/{Urn}/management");
+			}
+			catch (Exception ex)
+			{
+				_logger.LogErrorMsg(ex);
+			}
+			return Redirect($"/case/{Urn}/management");
 		}
 
 		public async Task<ActionResult> OnGetTeamList()
