@@ -53,18 +53,20 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			return Page();
 		}
 
-		public async Task<ActionResult> OnPost(string selectedOwner)
+		public async Task<ActionResult> OnPost(string selectedOwner,string currentOwner)
 		{
 			_logger.LogMethodEntered();
-
-			try
+			if (selectedOwner != CurrentCaseOwner)
 			{
-				await _caseModelService.PatchOwner(Urn, selectedOwner);
-				return Redirect($"/case/{Urn}/management");
-			}
-			catch (Exception ex)
-			{
-				_logger.LogErrorMsg(ex);
+				try
+				{
+					await _caseModelService.PatchOwner(Urn, selectedOwner);
+					return Redirect($"/case/{Urn}/management");
+				}
+				catch (Exception ex)
+				{
+					_logger.LogErrorMsg(ex);
+				}
 			}
 
 			return Page();
