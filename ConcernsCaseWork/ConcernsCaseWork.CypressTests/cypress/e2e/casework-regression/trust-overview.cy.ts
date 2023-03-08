@@ -1,7 +1,7 @@
-import activeCaseworkTable from "../../pages/yourCasework/activeCaseworkTable";
 import { toDisplayDate } from "../../support/formatDate";
 import CaseManagementPage from "../../pages/caseMangementPage";
 import { Logger } from "cypress/common/logger";
+import caseworkTable from "cypress/pages/caseRows/caseworkTable";
 
 describe("Trust overview ", () =>
 {
@@ -38,7 +38,7 @@ describe("Trust overview ", () =>
 
             
             Logger.Log("Checking case details are present on the trust overview page");
-            activeCaseworkTable
+            caseworkTable
                 .getRowByCaseId(caseId)
                 .then((row) =>
                 {
