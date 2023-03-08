@@ -19,8 +19,7 @@ describe("Testing case action NTI", () =>
     let now;
 
     beforeEach(() => {
-		//cy.login();
-		cy.visit("/");
+		cy.login();
         now = new Date();
 
         cy.basicCreateCase();

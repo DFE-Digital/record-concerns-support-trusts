@@ -32,8 +32,7 @@ describe("Editing a case", () =>
     const editCaseHistoryPage = new EditCaseHistoryPage();
     
 	beforeEach(() => {
-		//cy.login();
-cy.visit("/");
+		cy.login();
 	});
 
     it(("Should create a case with only required fields"), () => {

@@ -34,8 +34,7 @@ describe("Testing permissions on cases and case actions", () => {
     let caseId: number;
 
     beforeEach(() => {
-        //cy.login();
-cy.visit("/");
+        cy.login();
 
         cy.basicCreateCase()
         .then((id =>
