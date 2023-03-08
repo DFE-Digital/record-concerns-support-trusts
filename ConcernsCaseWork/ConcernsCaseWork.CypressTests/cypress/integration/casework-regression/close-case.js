@@ -5,8 +5,7 @@ describe("User closes a case", () => {
 	let closedCaseId = "";
 	
 	before(() => {
-		//cy.login();
-cy.visit("/");
+		cy.login();
 
 		cy.task(LogTask, "User creates a case");
 		cy.get('[href="/case"]').click();

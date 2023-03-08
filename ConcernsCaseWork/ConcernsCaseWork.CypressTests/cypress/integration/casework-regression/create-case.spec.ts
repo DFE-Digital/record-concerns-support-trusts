@@ -16,8 +16,7 @@ describe("Creating a case", () =>
     // const caseManagementPage = new CaseManagementPage();
     
 	beforeEach(() => {
-		//cy.login();
-cy.visit("/");
+		cy.login();
 	});
 
     it("Should validate adding a case", () =>
