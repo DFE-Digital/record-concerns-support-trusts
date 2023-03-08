@@ -1,4 +1,4 @@
-import activeCaseworkTable from "../../pages/yourCasework/activeCaseworkTable";
+import caseworkTable from "../../pages/caseRows/caseworkTable";
 import { toDisplayDate } from "../../support/formatDate";
 import CaseManagementPage from "../../pages/caseMangementPage";
 
@@ -28,7 +28,7 @@ describe("Your casework tests", () =>
     {
         it("Should appear in the your casework section", () =>
         {
-            activeCaseworkTable
+            caseworkTable
                 .getRowByCaseId(caseId)
                 .then((row) =>
                 {

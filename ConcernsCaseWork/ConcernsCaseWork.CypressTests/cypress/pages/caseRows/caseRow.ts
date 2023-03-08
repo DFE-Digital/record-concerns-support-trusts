@@ -1,6 +1,6 @@
 import { Logger } from "cypress/common/logger";
 
-export class ActiveCaseRow {
+export class CaseRow {
     constructor(private element: Element)
     {
 
@@ -18,6 +18,14 @@ export class ActiveCaseRow {
         Logger.Log(`Has created date ${value}`);
 
         this.containsText("created-at", value);
+
+        return this;
+    }
+
+    public hasClosedDate(value: string): this {
+        Logger.Log(`Has closed date ${value}`);
+
+        this.containsText("closed-at", value);
 
         return this;
     }
@@ -42,6 +50,18 @@ export class ActiveCaseRow {
         Logger.Log(`Has risk to trust ${value}`);
 
         this.containsText("risk-to-trust-list", value);
+
+        return this;
+    }
+
+    public select(): this {
+        Logger.Log(`Selecting case`);
+
+        cy.wrap(this.element)
+        .within(() =>
+        {
+            cy.get('a').click();
+        })
 
         return this;
     }
