@@ -2,8 +2,7 @@ name: Continuous delivery
 
 on:
   push:
-    branches:
-      - main
+    branches: [main, release/**]
 
 jobs:
   set-test-release-version:
@@ -14,7 +13,7 @@ jobs:
       version: ${{steps.release-version.outputs.version}}
     steps:
       - id: release-version
-        run: echo "version=release-17" >> $GITHUB_OUTPUT
+        run: echo "version=17.0.2" >> $GITHUB_OUTPUT
 
   build-and-push-image-test:
     name: Build and push image test

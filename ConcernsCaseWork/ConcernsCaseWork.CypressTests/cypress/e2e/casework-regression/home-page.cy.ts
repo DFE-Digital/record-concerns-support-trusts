@@ -10,10 +10,6 @@ describe("Home page tests", () => {
 		cy.clearCookies();
 	});
 
-	afterEach(() => {
-		cy.storeSessionData();
-	});
-
 	it("Should be able to navigate back and forth from the home page", () =>
 	{
 		Logger.Log("Create, Find and Closed Case buttons should be displayed");
