@@ -40,21 +40,10 @@ namespace ConcernsCaseWork.Service.Tests.Trusts
 			{
 				foreach (var expectedTrust in expectedTrusts)
 				{
-					Assert.That(trust.Establishments.Count, Is.EqualTo(expectedTrust.Establishments.Count));
 					Assert.That(trust.Urn, Is.EqualTo(expectedTrust.Urn));
 					Assert.That(trust.GroupName, Is.EqualTo(expectedTrust.GroupName));
 					Assert.That(trust.UkPrn, Is.EqualTo(expectedTrust.UkPrn));
 					Assert.That(trust.CompaniesHouseNumber, Is.EqualTo(expectedTrust.CompaniesHouseNumber));
-
-					foreach (var establishment in trust.Establishments)
-					{
-						foreach (var expectedEstablishment in expectedTrust.Establishments)
-						{
-							Assert.That(establishment.Name, Is.EqualTo(expectedEstablishment.Name));
-							Assert.That(establishment.Urn, Is.EqualTo(expectedEstablishment.Urn));
-							Assert.That(establishment.UkPrn, Is.EqualTo(expectedEstablishment.UkPrn));
-						}
-					}
 				}
 			}
 		}

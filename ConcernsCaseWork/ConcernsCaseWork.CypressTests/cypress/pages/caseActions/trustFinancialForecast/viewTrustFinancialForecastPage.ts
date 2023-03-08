@@ -67,10 +67,26 @@ export class ViewTrustFinancialForecastPage
         return this;
     }
 
+    public canEdit(): this {
+        Logger.Log("Can edit");
+        
+        this.getEdit();
+
+        return this;
+    }
+
     public cannotEdit(): this {
         Logger.Log("Cannot edit");
 
         this.getEdit().should("not.exist");
+
+        return this;
+    }
+
+    public canClose(): this {
+        Logger.Log("Can close");
+
+        this.getClose();
 
         return this;
     }
