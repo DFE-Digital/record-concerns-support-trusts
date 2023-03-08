@@ -6,10 +6,6 @@ describe("User edits the trust risk on existing case", () => {
 		cy.basicCreateCase();
 	});
 
-	afterEach(() => {
-		cy.storeSessionData();
-	});
-
 	it("Should allow the user to change an existing case", () => {
 		cy.task(LogTask, "Navigating to the risk rating page");
 		cy.get('span[class="govuk-visually-hidden"]').contains('risk to trust').parent().click();

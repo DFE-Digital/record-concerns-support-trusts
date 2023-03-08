@@ -221,7 +221,7 @@ npm run cy:run -- --env apiKey='APIKEY',api='TRAMS_BASE_URL',username='USERNAME'
 ### Useful tips
 
 #### Maintaining sessions
-Each 'it' block usually runs the test with a clear cache. For our purposes, we may need to maintain the user session to test various scenarios. This can be achieved by adding the following code to your tests:
+Each 'it' block usually runs the test with a clear cache. For our purposes, we may need to maintain the user session to test various scenarios. This can be achieved by adding the following code to your tests (THIS FUNCTION WILL BE REMOVED AS IT IS NO LONGER NEEDED FOR VERSION 12.7.0):
 
 ```
 afterEach(() => {
