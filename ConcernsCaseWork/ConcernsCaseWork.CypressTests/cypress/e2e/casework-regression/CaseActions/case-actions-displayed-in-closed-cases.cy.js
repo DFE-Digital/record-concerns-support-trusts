@@ -56,7 +56,7 @@ describe("User can see case actions displayed in closed cases", () => {
         //status set
         cy.log("setStatusSelect ").then(() => {
             cy.log(CaseActionsBasePage.setStatusSelect("random")).then((returnedVal) => {
-                cy.wrap(returnedVal.trim()).as("stText").then(() => {
+                cy.wrap(returnedVal).as("stText").then(() => {
                     stText = returnedVal;
                     cy.log("logging the result " + stText)
                 });
@@ -84,7 +84,7 @@ describe("User can see case actions displayed in closed cases", () => {
         cy.log("setConditionSelect ").then(() => {
             cy.log("EXECUTED TEST ")
             cy.log(ntiAddPage.setConditionSelect("0")).then((returnedVal) => {
-                cy.wrap(returnedVal.trim()).as("stText").then(() => {
+                cy.wrap(returnedVal).as("stText").then(() => {
                     stText = returnedVal;
                     cy.log("logging the result " + stText)
                 });
@@ -117,7 +117,7 @@ describe("User can see case actions displayed in closed cases", () => {
 
         cy.log("setCloseStatus ").then(() => {
             cy.log(ntiAddPage.setCloseStatus(0)).then((returnedVal) => {
-                cy.wrap(returnedVal.trim()).as("stText").then(() => {
+                cy.wrap(returnedVal).as("stText").then(() => {
                     stText = returnedVal;
                     cy.log("logging the result " + stText)
                 });
