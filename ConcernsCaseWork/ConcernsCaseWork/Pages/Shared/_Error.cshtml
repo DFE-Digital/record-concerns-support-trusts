@@ -2,7 +2,7 @@
 @{
     var nonce = Context.GetNonce();
     <div class="govuk-heading-l moj-banner__message">
-        <p class="govuk-body">@TempData["Error.Message"]</p>
+        <p style="white-space: pre-line" class="govuk-body">@TempData["Error.Message"]</p>
     </div>
 
     @* supports details either as a string or a collection of strings *@
