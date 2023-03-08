@@ -13,7 +13,7 @@ jobs:
       version: ${{steps.release-version.outputs.version}}
     steps:
       - id: release-version
-        run: echo "version=17.0.1" >> $GITHUB_OUTPUT
+        run: echo "version=17.0.2" >> $GITHUB_OUTPUT
 
   build-and-push-image-production:
     name: Build and push image prodcution
