@@ -63,10 +63,10 @@ Cypress.Commands.add("login", () => {
 	cy.clearCookies();
 	cy.clearLocalStorage();
 
-	const username = Cypress.env("username");
-	const password = Cypress.env("password");
+	// const username = Cypress.env("username");
+	// const password = Cypress.env("password");
 
-	new AuthenticationComponent().login(username, password);
+	// new AuthenticationComponent().login(username, password);
 
 	cy.visit("/");
 });

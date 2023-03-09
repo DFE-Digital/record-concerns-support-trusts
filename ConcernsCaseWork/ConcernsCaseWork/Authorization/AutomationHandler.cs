@@ -22,7 +22,7 @@ namespace ConcernsCaseWork.Authorization
 
 			var secret = configuration.GetValue<string>("CypressTestSecret");
 
-			if (string.IsNullOrWhiteSpace(authHeader) || string.IsNullOrWhiteSpace(secret))
+			if (string.IsNullOrWhiteSpace(secret))
 			{
 				return false;
 			}

@@ -3,7 +3,7 @@ import CaseManagementPage from "/cypress/pages/caseMangementPage";
 import utils from "/cypress/support/utils"
 
 describe("User can add case actions to an existing case", () => {
-	before(() => {
+	beforeEach(() => {
 		cy.login();
 		
 	});
