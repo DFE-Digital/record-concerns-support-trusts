@@ -13,7 +13,7 @@
 	<partial name="_BannerError"/>
 	
 	<span class="govuk-caption-l">Create case</span>
-	<h1 class="govuk-heading-l">Concerns</h1>
+	<h1 class="govuk-heading-l">Add concern</h1>
 
 	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
 	{
@@ -49,7 +49,7 @@
 						Use the
                         <a target="_blank" href="@ResourceConstants.RiskManagementFrameworkLink" class="govuk-link" rel="noreferrer noopener">
 							Risk Management Framework (opens in new tab)
-						</a> to assess the type of Concern
+						</a> to assess the type of concern
 					</div>
 
 					<partial name="_Concern" model="@Model.TypeModel" />

@@ -5,7 +5,7 @@
 @model ConcernsCaseWork.Pages.Case.Management.Concern.EditRatingPageModel
 
 @{
-	ViewData["Title"] = "Edit Risk rating";
+	ViewData["Title"] = "Edit concern";
 	var nonce = HttpContext.GetNonce();
 }
 
@@ -63,7 +63,7 @@
 					Use the
                     <a target="_blank" href="@ResourceConstants.RiskManagementFrameworkLink" class="govuk-link" rel="noreferrer noopener">
 						Risk Management Framework (opens in new tab)
-					</a> to assess the type of Concern
+					</a> to assess the type of concern
 				</div>
 
 				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
