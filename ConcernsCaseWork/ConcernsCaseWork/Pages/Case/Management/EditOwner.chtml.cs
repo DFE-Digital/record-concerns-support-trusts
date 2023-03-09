@@ -24,6 +24,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public string CurrentCaseOwner { get; set; }
 		public string CaseNumber { get; set; }
 		public bool ShowValidationMessage { get; set; }
+		[TempData]
+		public bool CaseOwnerChanged { get; set; }
 
 		public EditOwnerPageModel(
 			ICaseModelService caseModelService,
@@ -97,7 +99,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			try
 			{
 				await _caseModelService.PatchOwner(Urn, selectedOwner);
-				return  Redirect($"/case/{Urn}/management?caseOwnerChange = true"); //,"CaseOwnerChange",new {caseOwnerChange = true}); 
+				CaseOwnerChanged = true;
+				return  Redirect($"/case/{Urn}/management"); 
 			}
 			catch (Exception ex)
 			{
