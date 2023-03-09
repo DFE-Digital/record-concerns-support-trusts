@@ -17,7 +17,7 @@
 			    <div class="govuk-error-summary__body">
 				    <ul class="govuk-list govuk-error-summary__list" data-testid="nti-validation-errors">
 					    <li>
-						    <p>Case owner must be selected</p>
+						    <p>A valid case owner must be selected</p>
 					    </li>
 				    </ul>
 			    </div>
@@ -39,6 +39,7 @@
         <input type="hidden" id="selected-owner" name="selectedOwner" required />
         <input type="hidden" id="current-owner" name ="currentOwner" value="@Model.CurrentCaseOwner" />
 	    <input type="hidden" id="owner-selected" name ="valuePicked" value="false" />
+	     <input type="hidden" id="in-list" name ="valueInList" value="-1" />
 	    
         <!--Button group-->
         <div class="govuk-button-group govuk-!-margin-top-3">
@@ -53,6 +54,7 @@
 <script type="application/javascript" nonce="@nonce">
     $(document).ready(function () {
         let autocompleteContainer = document.getElementById('autocomplete-container');
+		let results = null;
 		document.getElementById('selected-owner').value = document.getElementById("current-owner").value;
         let currentCaseOwner = document.getElementById("current-owner").value;
         $.get('?handler=TeamList')
@@ -67,11 +69,27 @@
                 confirmOnBlur: false,
                 showNoOptonsFound: true,
                 onConfirm: (selected) => {
-                    document.getElementById('selected-owner').value = selected;
-					 document.getElementById('value-picked').value = true;
+					document.getElementById('selected-owner').value = selected;
+					document.getElementById('owner-selected').value = true;
+					results = result;
+					
                 }
             });
         });
 		
+		 $( "body" ).on('change','#case-owner-input',function() {
+           	document.getElementById('selected-owner').value =  document.getElementById("case-owner-input").value;
+		   	document.getElementById('owner-selected').value = true;
+			document.getElementById('in-list').value = jQuery.inArray(document.getElementById('selected-owner').value, results);
+         });
     });
+	
+	function updateOwner(selected)
+	{
+		
+		 document.getElementById('value-picked').value = true;
+		 return selected;
+                         
+	}
+		
 </script>
