@@ -97,7 +97,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			try
 			{
 				await _caseModelService.PatchOwner(Urn, selectedOwner);
-				return Redirect($"/case/{Urn}/management");
+				return  Redirect($"/case/{Urn}/management?caseOwnerChange = true"); //,"CaseOwnerChange",new {caseOwnerChange = true}); 
 			}
 			catch (Exception ex)
 			{
