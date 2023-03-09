@@ -14,8 +14,7 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import { CaseworkerClaim, EnvApiKey, EnvUsername } from 'cypress/constants/cypressConstants';
-import { Logger } from '../common/logger';
+import { CaseworkerClaim, EnvApiKey, EnvAuthKey, EnvUrl, EnvUsername } from 'cypress/constants/cypressConstants';
 import './commands'
 import './utils'
 
@@ -55,25 +54,22 @@ declare global {
 	
 }
 
-before(() => {
-	const url = Cypress.env('url');
-
+beforeEach(() => {
 	cy.intercept(
 		{
-			url: url + "/**",
-			middleware: true
+			url: Cypress.env(EnvUrl) + "/**",
+			middleware: true,
 		},
 		(req) =>
 		{
 			// Set an auth header on every request made by the browser
-			req.headers['Authorization'] = `Bearer ec6e49d6-4f9a-498b-a1c3-ccac46d514e9`;
+			req.headers['Authorization'] = `Bearer ${Cypress.env(EnvAuthKey)}`;
             req.headers = {
                 ...req.headers,
                 "ApiKey": Cypress.env(EnvApiKey),
-                "Content-type": "application/json",
                 "x-user-context-role-0" : CaseworkerClaim,
                 "x-user-context-name" : Cypress.env(EnvUsername)
-            }
+            };
 		}
 	)
 })

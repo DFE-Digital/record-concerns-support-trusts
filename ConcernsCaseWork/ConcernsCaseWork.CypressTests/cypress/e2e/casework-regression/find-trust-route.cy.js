@@ -1,7 +1,7 @@
 const { Logger } = require("../../common/logger");
 
 describe("User interactions via Find Trust route", () => {
-	before(() => {
+	beforeEach(() => {
 		cy.login();
 	});
 
