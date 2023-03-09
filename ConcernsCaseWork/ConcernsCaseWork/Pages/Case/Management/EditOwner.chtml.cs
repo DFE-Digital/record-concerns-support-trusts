@@ -55,7 +55,7 @@ namespace ConcernsCaseWork.Pages.Case.Management
 			return Page();
 		}
 
-		public async Task<ActionResult> OnPost(string selectedOwner,string currentOwner,bool valuePicked)
+		public async Task<ActionResult> OnPost(string selectedOwner,string currentOwner,bool valuePicked,int valueInList)
 		{
 			_logger.LogMethodEntered();
 			var isValid = true;
@@ -71,6 +71,11 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				}
 
 				if (string.IsNullOrWhiteSpace(selectedOwner))
+				{
+					isValid = false;
+				}
+
+				if (valueInList == -1)
 				{
 					isValid = false;
 				}
