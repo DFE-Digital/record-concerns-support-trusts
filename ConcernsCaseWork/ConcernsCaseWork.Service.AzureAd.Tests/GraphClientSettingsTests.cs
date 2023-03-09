@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using ConcernsCaseWork.Service.AzureAd.Client;
+using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 
 namespace ConcernsCaseWork.Service.AzureAd.Tests
@@ -8,9 +9,6 @@ namespace ConcernsCaseWork.Service.AzureAd.Tests
 		[Fact]
 		public void Can_Populate_Settings_From_IConfiguation()
 		{
-			var expectedCaseWorkerGroupId = Guid.NewGuid().ToString();
-			var expectedTeamLeaderGroupId = Guid.NewGuid().ToString();
-			var expectedAdminGroupId = Guid.NewGuid().ToString();
 			var expectedGraphEndpointScope = $"random-string: {Guid.NewGuid()}";
 
 			var expectedTenantId = Guid.NewGuid().ToString();
@@ -18,9 +16,6 @@ namespace ConcernsCaseWork.Service.AzureAd.Tests
 			var expectedClientSecret = Guid.NewGuid().ToString();
 
 			var fakeSettings = new Dictionary<string, string> {
-			  { "AzureAdGroups:CaseWorkerGroupId", expectedCaseWorkerGroupId},
-			  { "AzureAdGroups:TeamleaderGroupId", expectedTeamLeaderGroupId},
-			  { "AzureAdGroups:AdminGroupId", expectedAdminGroupId},
 			  { "AzureAdGroups:GraphEndpointScope", expectedGraphEndpointScope},
 			  { "AzureAd:TenantId", expectedTenantId },
 			  { "AzureAd:ClientId", expectedClientId },
@@ -37,9 +32,6 @@ namespace ConcernsCaseWork.Service.AzureAd.Tests
 			sut.ClientId.Should().Be(expectedClientId);
 			sut.ClientSecret.Should().Be(expectedClientSecret);
 			sut.GraphEndpointScope.Should().Be(expectedGraphEndpointScope);
-			sut.CaseWorkerGroupId.Should().Be(expectedCaseWorkerGroupId);
-			sut.TeamLeaderGroupId.Should().Be(expectedTeamLeaderGroupId);
-			sut.AdminGroupId.Should().Be(expectedAdminGroupId);
 		}
 
 		[Fact]

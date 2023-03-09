@@ -1,6 +1,6 @@
 ﻿namespace ConcernsCaseWork.Service.AzureAd;
 
-public interface IGraphManager
+public interface IAdUserService
 {
 	/// <summary>
 	/// Returns all users associated with the active directory groups used by the application.
