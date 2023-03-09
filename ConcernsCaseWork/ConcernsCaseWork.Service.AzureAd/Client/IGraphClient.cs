@@ -1,4 +1,4 @@
-﻿namespace ConcernsCaseWork.Service.AzureAd;
+﻿namespace ConcernsCaseWork.Service.AzureAd.Client;
 
 public interface IGraphClient
 {

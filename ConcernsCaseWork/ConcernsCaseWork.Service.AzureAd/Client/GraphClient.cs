@@ -2,9 +2,9 @@
 using Azure.Identity;
 using Microsoft.Graph;
 
-namespace ConcernsCaseWork.Service.AzureAd;
+namespace ConcernsCaseWork.Service.AzureAd.Client;
 
-public class GraphClient : IGraphClient
+internal class GraphClient : IGraphClient
 {
 	private readonly IGraphClientSettings _configuration;
 
@@ -23,12 +23,7 @@ public class GraphClient : IGraphClient
 		List<ConcernsCaseWorkAdUser> results = new();
 		Action<IEnumerable<User>> addUsersToResults = azureAdUser => results.AddRange(
 			azureAdUser.Where(m => !string.IsNullOrWhiteSpace(m.Mail))
-				.Select(x => new ConcernsCaseWorkAdUser
-				{
-					FirstName = x.GivenName,
-					Surname = x.Surname,
-					Email = x.Mail
-				}));
+				.Select(x => new ConcernsCaseWorkAdUser { FirstName = x.GivenName, Surname = x.Surname, Email = x.Mail }));
 
 		List<QueryOption> queryOptions = new() { new QueryOption("$count", "true"), new QueryOption("$top", MaxPageSize) };
 

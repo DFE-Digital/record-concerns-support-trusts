@@ -1,15 +1,16 @@
 ﻿using Ardalis.GuardClauses;
 using Azure.Identity;
+using ConcernsCaseWork.Service.AzureAd.Client;
 using Microsoft.Graph;
 
 namespace ConcernsCaseWork.Service.AzureAd;
 
-public class GraphManager : IGraphManager
+public class AdUserService : IAdUserService
 {
 	private readonly IGraphClient _graphClient;
-	private readonly IGraphClientSettings _configuration;
+	private readonly IGraphGroupIdSettings _configuration;
 
-	public GraphManager(IGraphClient graphClient, IGraphClientSettings configuration)
+	public AdUserService(IGraphClient graphClient, IGraphGroupIdSettings configuration)
 	{
 		_graphClient = Guard.Against.Null(graphClient);
 		_configuration = Guard.Against.Null(configuration);
