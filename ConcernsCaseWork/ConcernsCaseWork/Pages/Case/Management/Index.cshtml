@@ -1,4 +1,4 @@
-﻿@page "/case/{urn:long}/management/{caseOwnerChange?}"
+﻿@page "/case/{urn:long}/management"
 @model ConcernsCaseWork.Pages.Case.Management.IndexPageModel
 @using ConcernsCaseWork.Extensions
 @using ConcernsCaseWork.Models.CaseActions
@@ -32,7 +32,7 @@
                 </a>
             }
         </div>
-		@if (@Model.ShowCaseOwnerChange)
+		@if (@Model.CaseOwnerChanged)
 		{
 			<div class="govuk-notification-banner govuk-notification-banner--success" role="alert"
 			     aria-labelledby="govuk-notification-banner-title"

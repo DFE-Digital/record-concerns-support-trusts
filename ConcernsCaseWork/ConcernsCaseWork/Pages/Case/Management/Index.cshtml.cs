@@ -46,7 +46,8 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public bool IsConcernsCase { get; set; }
 		public bool IsEditableCase { get; private set; }
 		
-		public bool ShowCaseOwnerChange { get; set; } 
+		[TempData]
+		public bool CaseOwnerChanged { get; set; } 
 
 		public List<ActionSummaryModel> OpenCaseActions { get; set; }
 		public List<ActionSummaryModel> ClosedCaseActions { get; set; }
@@ -82,11 +83,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				_logger.LogInformation("Case::ManagementPageModel::OnGetAsync");
 
 				var caseUrnValue = RouteData.Values["urn"];
-				var caseOwnerChangeValue = Request.Query["caseOwnerChange"];
 				if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
 					throw new Exception("CaseUrn is null or invalid to parse");
-				if (caseOwnerChangeValue.Count >0)
-					ShowCaseOwnerChange=  Convert.ToBoolean(caseOwnerChangeValue.ToString());
+				
 				// Get Case
 				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
 			
