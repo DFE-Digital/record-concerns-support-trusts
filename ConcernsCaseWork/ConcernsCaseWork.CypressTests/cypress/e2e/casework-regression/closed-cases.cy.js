@@ -1,14 +1,10 @@
-import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
 import CaseManagementPage from "/cypress/pages/caseMangementPage";
-import utils from "/cypress/support/utils"
-import ntiAddPage from "/cypress/pages/caseActions/ntiAddPage";
-import CaseActionsBasePage from "/cypress/pages/caseActions/caseActionsBasePage";
 import homePage from "cypress/pages/homePage";
 import closedCasePage from "/cypress/pages/closedCasePage.js";
 import { LogTask } from "../../support/constants";
 
 describe('User can view and navigate Closed cases', () => {
-    before(() => {
+    beforeEach(() => {
 		cy.login();
 	});
 

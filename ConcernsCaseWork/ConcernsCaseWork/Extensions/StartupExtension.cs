@@ -50,6 +50,7 @@ using ConcernsCaseWork.Services.Teams;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.UserContext;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -150,6 +151,8 @@ namespace ConcernsCaseWork.Extensions
 
 		public static void AddInternalServices(this IServiceCollection services)
 		{
+			services.AddSingleton<IAuthorizationHandler, HeaderRequirementHandler>();
+			services.AddSingleton<IAuthorizationHandler, ClaimsRequirementHandler>();
 			// Web application services
 			services.AddScoped<ICaseModelService, CaseModelService>();
 			services.AddScoped<ITrustModelService, TrustModelService>();
