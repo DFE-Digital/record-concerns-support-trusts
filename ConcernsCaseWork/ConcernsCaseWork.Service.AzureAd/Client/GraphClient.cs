@@ -1,11 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using Azure.Identity;
 using Microsoft.Graph;
-using Microsoft.Graph.Users;
-using Microsoft.Graph.Groups;
-using Microsoft.Graph.GroupSettings;
 using Microsoft.Graph.Models;
-using Microsoft.Graph.Me.GetMemberGroups;
 
 namespace ConcernsCaseWork.Service.AzureAd.Client;
 
@@ -21,40 +17,43 @@ internal class GraphClient : IGraphClient
 
 	private Lazy<GraphServiceClient> _graphClient;
 
+	private void AddUserToResults(User user, List<ConcernsCaseWorkAdUser> results)
+	{
+		if (!string.IsNullOrWhiteSpace(user.Mail))
+		{
+			results.Add(new ConcernsCaseWorkAdUser { FirstName = user.GivenName, Surname = user.Surname, Email = user.Mail });
+		}
+	}
+
 	public async Task<ConcernsCaseWorkAdUser[]> GetCaseWorkersByGroupId(string groupId, CancellationToken cancellationToken)
 	{
-		const int MaxPageSize = 999;
-
+		const int maxPageSize = 999;
+		var client = _graphClient.Value;
 		List<ConcernsCaseWorkAdUser> results = new();
-		Action<User> addUserToResults = user =>
-		{
-			if (!string.IsNullOrWhiteSpace(user.Mail))
-			{
-				results.Add(new ConcernsCaseWorkAdUser { FirstName = user.GivenName, Surname = user.Surname, Email = user.Mail });
-			}
-		};
-		
-		var response = await _graphClient.Value
+
+		var members = await client
 			.Groups[groupId].Members
 			.GetAsync(rc =>
 			{
-				rc.QueryParameters.Top = MaxPageSize;
+				rc.QueryParameters.Top = maxPageSize;
 				rc.QueryParameters.Count = true;
-				rc.QueryParameters.Select = new[] {"givenName, surname, id, mail"};
+				rc.QueryParameters.Select = new[] { "givenName, surname, id, mail" };
 				rc.Headers.Add("ConsistencyLevel", "eventual");
 			}, cancellationToken);
 
-		if (response != null)
-		{
-			var pageIterator = PageIterator<User, DirectoryObjectCollectionResponse>
-				.CreatePageIterator(_graphClient.Value, response, (user) =>
-				{
-					addUserToResults(user);
-					return true;
-				});
+		var pageIterator = PageIterator<DirectoryObject, DirectoryObjectCollectionResponse?>.CreatePageIterator(client, members,
+			(member) =>
+			{
+				AddUserToResults((User)member, results);
+				return true;
+			},
+			(req) =>
+			{
+				req.Headers.Add("ConsistencyLevel", "eventual");
+				return req;
+			});
 
-			await pageIterator.IterateAsync(cancellationToken);
-		}
+		await pageIterator.IterateAsync(cancellationToken);
 
 		return results.ToArray();
 	}
