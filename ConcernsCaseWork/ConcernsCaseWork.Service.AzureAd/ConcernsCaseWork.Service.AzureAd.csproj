@@ -11,7 +11,7 @@
       <PackageReference Include="Azure.Identity" Version="1.6.0" />
       <PackageReference Include="Microsoft.Azure.ActiveDirectory.GraphClient" Version="2.1.1" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Graph" Version="4.54.0" />
+      <PackageReference Include="Microsoft.Graph" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>

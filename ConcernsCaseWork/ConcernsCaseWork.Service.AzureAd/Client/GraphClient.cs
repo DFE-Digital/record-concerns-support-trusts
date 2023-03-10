@@ -1,6 +1,11 @@
 ﻿using Ardalis.GuardClauses;
 using Azure.Identity;
 using Microsoft.Graph;
+using Microsoft.Graph.Users;
+using Microsoft.Graph.Groups;
+using Microsoft.Graph.GroupSettings;
+using Microsoft.Graph.Models;
+using Microsoft.Graph.Me.GetMemberGroups;
 
 namespace ConcernsCaseWork.Service.AzureAd.Client;
 
@@ -11,33 +16,44 @@ internal class GraphClient : IGraphClient
 	public GraphClient(IGraphClientSettings configuration)
 	{
 		_configuration = Guard.Against.Null(configuration);
-		_GraphClient = new Lazy<GraphServiceClient>(CreateGraphClient);
+		_graphClient = new Lazy<GraphServiceClient>(CreateGraphClient);
 	}
 
-	private Lazy<GraphServiceClient> _GraphClient { get; }
+	private Lazy<GraphServiceClient> _graphClient;
 
 	public async Task<ConcernsCaseWorkAdUser[]> GetCaseWorkersByGroupId(string groupId, CancellationToken cancellationToken)
 	{
-		const string MaxPageSize = "999";
+		const int MaxPageSize = 999;
 
 		List<ConcernsCaseWorkAdUser> results = new();
-		Action<IEnumerable<User>> addUsersToResults = azureAdUser => results.AddRange(
-			azureAdUser.Where(m => !string.IsNullOrWhiteSpace(m.Mail))
-				.Select(x => new ConcernsCaseWorkAdUser { FirstName = x.GivenName, Surname = x.Surname, Email = x.Mail }));
-
-		List<QueryOption> queryOptions = new() { new QueryOption("$count", "true"), new QueryOption("$top", MaxPageSize) };
-
-		IGroupMembersCollectionWithReferencesPage? members = await _GraphClient.Value.Groups[groupId].Members
-			.Request(queryOptions)
-			.Header("ConsistencyLevel", "eventual")
-			.Select("givenName,surname,id,mail")
-			.GetAsync(cancellationToken);
-
-		addUsersToResults(members.CurrentPage.Cast<User>());
-		while (members.NextPageRequest != null)
+		Action<User> addUserToResults = user =>
 		{
-			members = await members.NextPageRequest.GetAsync();
-			addUsersToResults(members.CurrentPage.Cast<User>());
+			if (!string.IsNullOrWhiteSpace(user.Mail))
+			{
+				results.Add(new ConcernsCaseWorkAdUser { FirstName = user.GivenName, Surname = user.Surname, Email = user.Mail });
+			}
+		};
+		
+		var response = await _graphClient.Value
+			.Groups[groupId].Members
+			.GetAsync(rc =>
+			{
+				rc.QueryParameters.Top = MaxPageSize;
+				rc.QueryParameters.Count = true;
+				rc.QueryParameters.Select = new[] {"givenName, surname, id, mail"};
+				rc.Headers.Add("ConsistencyLevel", "eventual");
+			}, cancellationToken);
+
+		if (response != null)
+		{
+			var pageIterator = PageIterator<User, DirectoryObjectCollectionResponse>
+				.CreatePageIterator(_graphClient.Value, response, (user) =>
+				{
+					addUserToResults(user);
+					return true;
+				});
+
+			await pageIterator.IterateAsync(cancellationToken);
 		}
 
 		return results.ToArray();
