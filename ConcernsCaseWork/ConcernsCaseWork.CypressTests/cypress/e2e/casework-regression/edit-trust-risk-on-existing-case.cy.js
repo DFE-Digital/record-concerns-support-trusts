@@ -1,7 +1,7 @@
 import { LogTask } from "../../support/constants";
 
 describe("User edits the trust risk on existing case", () => {
-	before(() => {
+	beforeEach(() => {
 		cy.login();
 		cy.basicCreateCase();
 	});
