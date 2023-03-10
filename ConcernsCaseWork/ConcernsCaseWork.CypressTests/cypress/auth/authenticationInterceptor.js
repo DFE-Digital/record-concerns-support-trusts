@@ -1,4 +1,4 @@
-import { EnvUrl, EnvAuthKey, CaseworkerClaim, EnvUsername, EnvApiKey } from "../constants/cypressConstants";
+import { EnvUrl, EnvAuthKey, CaseworkerClaim, EnvUsername } from "../constants/cypressConstants";
 
 export class AuthenticationInterceptor {
 
@@ -11,12 +11,11 @@ export class AuthenticationInterceptor {
             (req) =>
             {
                 // Set an auth header on every request made by the browser
-                req.headers['Authorization'] = `Bearer ${Cypress.env(EnvAuthKey)}`;
                 req.headers = {
                     ...req.headers,
-                    "ApiKey": Cypress.env(EnvApiKey),
-                    "x-user-context-role-0" : CaseworkerClaim,
-                    "x-user-context-name" : Cypress.env(EnvUsername)
+                    'Authorization': `Bearer ${Cypress.env(EnvAuthKey)}`,
+                    "x-user-context-role-0": CaseworkerClaim,
+                    "x-user-context-name": Cypress.env(EnvUsername)
                 };
             }
         ).as("AuthInterceptor");
