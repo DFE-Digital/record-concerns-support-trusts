@@ -9,20 +9,12 @@ internal class GraphClient : IGraphClient
 {
 	private readonly IGraphClientSettings _configuration;
 
+	private Lazy<GraphServiceClient> _graphClient;
+
 	public GraphClient(IGraphClientSettings configuration)
 	{
 		_configuration = Guard.Against.Null(configuration);
 		_graphClient = new Lazy<GraphServiceClient>(CreateGraphClient);
-	}
-
-	private Lazy<GraphServiceClient> _graphClient;
-
-	private void AddUserToResults(User user, List<ConcernsCaseWorkAdUser> results)
-	{
-		if (!string.IsNullOrWhiteSpace(user.Mail))
-		{
-			results.Add(new ConcernsCaseWorkAdUser { FirstName = user.GivenName, Surname = user.Surname, Email = user.Mail });
-		}
 	}
 
 	public async Task<ConcernsCaseWorkAdUser[]> GetCaseWorkersByGroupId(string groupId, CancellationToken cancellationToken)
@@ -56,6 +48,49 @@ internal class GraphClient : IGraphClient
 		await pageIterator.IterateAsync(cancellationToken);
 
 		return results.ToArray();
+	}
+
+	public async Task<ConcernsCaseWorkAdUser> GetUserByEmailAddress(string emailAddress, CancellationToken cancellationToken)
+	{
+		Guard.Against.Null(emailAddress);
+		var user  = await _graphClient.Value
+			.Users[emailAddress]
+			.GetAsync(rc =>
+			{
+				rc.QueryParameters.Select = new[] { "givenName, surname, id, mail" };
+				rc.Headers.Add("ConsistencyLevel", "eventual");
+			}, cancellationToken);
+
+		return new ConcernsCaseWorkAdUser() { FirstName = user.GivenName, Surname = user.Surname, Email = user.Mail };
+	}
+
+	public async Task<string[]> GetUserMemberShips(string emailAddress, CancellationToken cancellationToken)
+	{
+		var membership = await _graphClient.Value
+			.Users[emailAddress]
+			.MemberOf
+			.GetAsync(rc =>
+			{
+				rc.QueryParameters.Select = new[] { "givenName, surname, id, mail" };
+				rc.Headers.Add("ConsistencyLevel", "eventual");
+		}, cancellationToken);
+
+		if (membership != null && membership.Value != null)
+		{
+			return membership.Value.Select(x => x.Id).ToArray();
+		}
+		else
+		{
+			return Array.Empty<string>();
+		}
+	}
+
+	private void AddUserToResults(User user, List<ConcernsCaseWorkAdUser> results)
+	{
+		if (!string.IsNullOrWhiteSpace(user.Mail))
+		{
+			results.Add(new ConcernsCaseWorkAdUser { FirstName = user.GivenName, Surname = user.Surname, Email = user.Mail });
+		}
 	}
 
 	private GraphServiceClient CreateGraphClient()
