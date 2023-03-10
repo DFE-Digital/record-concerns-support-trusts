@@ -2,7 +2,7 @@ import CreateCaseConcernsPage from "/cypress/pages/createCase/createCaseConcerns
 import { LogTask } from "../../support/constants";
 
 describe("User adds subsequent Concern to a case", () => {
-	before(() => {
+	beforeEach(() => {
 		cy.login();
 	});
 

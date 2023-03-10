@@ -26,12 +26,11 @@
 import "cypress-localstorage-commands";
 import CaseManagementPage from "/cypress/pages/caseMangementPage";
 import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
-import { AuthenticationComponent } from "../auth/authenticationComponent";
 import { LogTask } from "./constants";
 import "cypress-axe";
 import caseApi from "../api/caseApi";
 import concernsApi from "../api/concernsApi";
-import { Logger } from "cypress/common/logger";
+import { AuthenticationInterceptor } from "../auth/authenticationInterceptor";
 
 const concernsRgx = new RegExp(
 	/(Compliance|Financial|Force majeure|Governance|Irregularity)/,
@@ -63,10 +62,14 @@ Cypress.Commands.add("login", () => {
 	cy.clearCookies();
 	cy.clearLocalStorage();
 
-	const username = Cypress.env("username");
-	const password = Cypress.env("password");
+	// Intercept all browser requests and add our special auth header
+	// Means we don't have to use azure to authenticate 
+	new AuthenticationInterceptor().register();
 
-	new AuthenticationComponent().login(username, password);
+	// Old method of using azure to login
+	// const username = Cypress.env("username");
+	// const password = Cypress.env("password");
+	// new AuthenticationComponent().login(username, password);
 
 	cy.visit("/");
 });
