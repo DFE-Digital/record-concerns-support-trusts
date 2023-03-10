@@ -1,13 +1,8 @@
 import { Logger } from "../../common/logger";
 
 describe("Home page tests", () => {
-	before(() => {
+	beforeEach(() => {
 		cy.login();
-	});
-
-	after(function () {
-		cy.clearLocalStorage();
-		cy.clearCookies();
 	});
 
 	it("Should be able to navigate back and forth from the home page", () =>

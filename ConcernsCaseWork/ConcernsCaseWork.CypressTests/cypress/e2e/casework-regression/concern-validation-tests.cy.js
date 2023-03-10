@@ -1,5 +1,5 @@
 describe('Concern validation tests', () => {
-	before(() => {
+	beforeEach(() => {
 		cy.login();
 	});
 
