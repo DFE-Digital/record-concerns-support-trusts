@@ -8,7 +8,7 @@ import closedCasePage from "/cypress/pages/closedCasePage.js";
 import { LogTask } from "../../../support/constants";
 
 describe("User can see case actions displayed in closed cases", () => {
-    before(() => {
+    beforeEach(() => {
         cy.login();
 		
     });

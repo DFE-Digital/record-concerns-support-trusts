@@ -4,7 +4,7 @@ describe("User closes a case", () => {
 	let ukprn = "";
 	let closedCaseId = "";
 	
-	before(() => {
+	beforeEach(() => {
 		cy.login();
 
 		cy.task(LogTask, "User creates a case");
