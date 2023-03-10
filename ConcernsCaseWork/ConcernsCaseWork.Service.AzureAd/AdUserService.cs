@@ -60,8 +60,20 @@ public class AdUserService : IAdUserService
 		{
 			result.IsTeamLeader = true;
 		}
-		
+
 		return results;
+	}
+
+	public async Task<ConcernsCaseWorkAdUser> GetUserByEmailAddress(string emailAddress, CancellationToken cancellationToken)
+	{
+		var user = await _graphClient.GetUserByEmailAddress(emailAddress, cancellationToken);
+		var memberships = await _graphClient.GetUserMemberShips(emailAddress, cancellationToken);
+
+		user.IsCaseworker= memberships.Contains(_configuration.CaseWorkerGroupId);
+		user.IsTeamLeader = memberships.Contains(_configuration.TeamLeaderGroupId);
+		user.IsAdmin = memberships.Contains(_configuration.AdminGroupId);
+
+		return user;
 	}
 
 	private Dictionary<string, ConcernsCaseWorkAdUser> AppendResults(Dictionary<string, ConcernsCaseWorkAdUser> results, IEnumerable<ConcernsCaseWorkAdUser> newResults)
