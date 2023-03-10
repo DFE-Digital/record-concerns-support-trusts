@@ -14,6 +14,7 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
+import { CaseworkerClaim, EnvApiKey, EnvAuthKey, EnvUrl, EnvUsername } from 'cypress/constants/cypressConstants';
 import './commands'
 import './utils'
 
@@ -52,5 +53,3 @@ declare global {
 
 	
 }
-
-
