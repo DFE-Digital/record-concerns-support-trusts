@@ -115,16 +115,25 @@
                         }
                     </td>
                 </tr>
+                @if (Model.FinancialPlanModel.IsEditable)
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header govuk-table__header__width_15">Action</th>
+                        <td class="govuk-table__cell">
+                            <a class="govuk-link" href="@Request.Path/edit" id="edit-financialplan-button">
+                                Edit information
+                                <span class="govuk-visually-hidden">action</span>
+                            </a>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
         if (Model.FinancialPlanModel.IsEditable)
         {
             <div class="govuk-button-group">
-                <a data-prevent-double-click="true" href="@Request.Path/edit" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" id="edit-financialplan-button">
-                    Edit Information
-                </a>
-                <a data-prevent-double-click="true" asp-page-handler="Close" class="govuk-button govuk-button--secondary" data-module="govuk-button" role="button" data-testid="close-financialplan-button">
-                    Close Financial Plan
+                <a data-prevent-double-click="true" asp-page-handler="Close" class="govuk-button" data-module="govuk-button" role="button" data-testid="close-financialplan-button">
+                    Continue to record closure details
                 </a>
             </div>
         }

@@ -189,7 +189,7 @@ span.summary-validation-symbol {
   &__amber {
 	background-color: #f89360;
   }
-  
+
   &__green {
 	background-color:#2bbf7a;
   }
@@ -1644,7 +1644,7 @@ span.summary-validation-symbol {
 }
 
 .govuk-oneline-row {
-  overflow:hidden; 
+  overflow:hidden;
   white-space:nowrap;
   padding:0;
 }
@@ -1733,4 +1733,12 @@ label.govuk-label .govuk-tag {
 
 .concerns-secondary-text-colour {
   color: #505a5f;
+}
+
+/* ==========================================================================
+   #Environment Banners
+   ========================================================================== */
+.environment-name {
+	display: block;
+	text-transform: unset;
 }
