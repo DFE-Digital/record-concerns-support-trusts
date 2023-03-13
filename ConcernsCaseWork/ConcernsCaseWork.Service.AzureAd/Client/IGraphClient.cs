@@ -1,4 +1,6 @@
-﻿namespace ConcernsCaseWork.Service.AzureAd.Client;
+﻿using ConcernsCaseWork.API.Contracts.Users;
+
+namespace ConcernsCaseWork.Service.AzureAd.Client;
 
 public interface IGraphClient
 {

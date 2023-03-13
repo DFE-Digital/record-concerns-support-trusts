@@ -1,4 +1,5 @@
 using AutoFixture;
+using ConcernsCaseWork.API.Contracts.Users;
 using ConcernsCaseWork.Service.AzureAd.Client;
 using FluentAssertions;
 using Moq;

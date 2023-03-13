@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using Azure.Identity;
+using ConcernsCaseWork.API.Contracts.Users;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 
