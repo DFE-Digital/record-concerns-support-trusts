@@ -1,7 +1,6 @@
 ﻿using Ardalis.GuardClauses;
-using Azure.Identity;
+using ConcernsCaseWork.API.Contracts.Users;
 using ConcernsCaseWork.Service.AzureAd.Client;
-using Microsoft.Graph;
 
 namespace ConcernsCaseWork.Service.AzureAd;
 

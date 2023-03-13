@@ -1,4 +1,6 @@
-﻿namespace ConcernsCaseWork.Service.AzureAd;
+﻿using ConcernsCaseWork.API.Contracts.Users;
+
+namespace ConcernsCaseWork.Service.AzureAd;
 
 public interface IAdUserService
 {

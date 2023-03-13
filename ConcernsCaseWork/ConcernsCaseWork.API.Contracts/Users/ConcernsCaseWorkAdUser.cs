@@ -1,4 +1,4 @@
-﻿namespace ConcernsCaseWork.Service.AzureAd;
+﻿namespace ConcernsCaseWork.API.Contracts.Users;
 
 /// <summary>
 /// Represents a user as known to Azure Active Directory
