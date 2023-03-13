@@ -15,6 +15,9 @@ locals {
   container_max_replicas                        = var.container_max_replicas
   container_scale_rule_concurrent_request_count = var.container_scale_rule_concurrent_request_count
   enable_redis_cache                            = var.enable_redis_cache
+  enable_mssql_database                         = var.enable_mssql_database
+  mssql_server_admin_password                   = var.mssql_server_admin_password
+  mssql_database_name                           = var.mssql_database_name
   redis_cache_sku                               = var.redis_cache_sku
   redis_cache_capacity                          = var.redis_cache_capacity
   enable_cdn_frontdoor                          = var.enable_cdn_frontdoor

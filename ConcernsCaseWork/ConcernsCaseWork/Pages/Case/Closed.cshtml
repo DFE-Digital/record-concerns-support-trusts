@@ -62,17 +62,17 @@
 				{
 					foreach (var closedCase in Model.ClosedCases)
 					{
-						<tr class="govuk-table__row tr__large">
-							<td class="govuk-table__cell">
+						<tr class="govuk-table__row tr__large" data-testid="row-@closedCase.CaseUrn">
+							<td class="govuk-table__cell" data-testid="case-id">
 								<a class="govuk-link" href="/case/@closedCase.CaseUrn/closed">@closedCase.CaseUrn</a>
 							</td>
-							<td class="govuk-table__cell">
+							<td class="govuk-table__cell" data-testid="created-at">
 								@closedCase.CreatedAt
 							</td>
-							<td class="govuk-table__cell">
+							<td class="govuk-table__cell" data-testid="closed-at">
 								@closedCase.ClosedAt
 							</td>
-							<td class="govuk-table__cell">
+							<td class="govuk-table__cell" data-testid="trust-name">
 								@closedCase.TrustName
 							</td>
 						
@@ -109,7 +109,7 @@
 								<ul class="govuk-list govuk-list--bullet">
 									@foreach (var concern in closedCase.ClosedConcerns)
 									{
-										<li>@concern</li>
+										<li data-testid="concern">@concern</li>
 									}
 								</ul>
 							</td>
