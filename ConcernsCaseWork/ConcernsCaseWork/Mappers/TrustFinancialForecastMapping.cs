@@ -1,3 +1,4 @@
+using ConcernsCaseWork.API.Contracts.Permissions;
 using ConcernsCaseWork.API.Contracts.ResponseModels.TrustFinancialForecasts;
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Helpers;
@@ -32,6 +33,27 @@ public static class TrustFinancialForecastMapping
 			CreatedAt = response.CreatedAt.DateTime,
 			UpdatedAt = response.UpdatedAt.DateTime,
 			ClosedAt = response.ClosedAt?.DateTime
+		};
+
+		return result;
+	}
+
+	public static ViewTrustFinancialForecastModel ToViewModel(TrustFinancialForecastResponse response, GetCasePermissionsResponse permissionsResponse)
+	{
+		var isClosed = response.ClosedAt.HasValue;
+
+		var result = new ViewTrustFinancialForecastModel()
+		{
+			IsClosed = response.ClosedAt.HasValue,
+			IsEditable = !isClosed && permissionsResponse.HasEditPermissions(),
+			SRMAOfferedAfterTFF = response.SRMAOfferedAfterTFF?.Description(),
+			ForecastingToolRanAt = response.ForecastingToolRanAt?.Description(),
+			WasTrustResponseSatisfactory = response.WasTrustResponseSatisfactory?.Description(),
+			Notes = response.Notes,
+			DateOpened = DateTimeHelper.ParseToDisplayDate(response.CreatedAt),
+			DateClosed = DateTimeHelper.ParseToDisplayDate(response.ClosedAt),
+			SFSOInitialReviewHappenedAt = DateTimeHelper.ParseToDisplayDate(response.SFSOInitialReviewHappenedAt),
+			TrustRespondedAt = DateTimeHelper.ParseToDisplayDate(response.TrustRespondedAt)
 		};
 
 		return result;
