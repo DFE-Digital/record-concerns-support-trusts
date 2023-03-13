@@ -12,34 +12,39 @@ describe("User can add case actions to an existing case", () => {
 		cy.checkForExistingCase();
 	});
 
-	it("User on the Case Actions Add to Case page is warned when proceeding without selecting an action", () => {
+	// Commented out because Fahad has advised that the test is going to be removed
+	// TODO: FAHAD
+	// it("User on the Case Actions Add to Case page is warned when proceeding without selecting an action", () => {
 
-		CaseManagementPage.getAddToCaseBtn().click();
-		utils.getGovErrorSummaryList().should('not.exist');
-		AddToCasePage.getAddToCaseBtn().click();
-		utils.getGovErrorSummaryList().should('exist');
-		utils.getGovErrorSummaryList().should('contain', 'Please select an action');
-		cy.reload();
-	});
+	// 	CaseManagementPage.getAddToCaseBtn().click();
+	// 	utils.getGovErrorSummaryList().should('not.exist');
+	// 	AddToCasePage.getAddToCaseBtn().click();
+	// 	utils.getGovErrorSummaryList().should('exist');
+	// 	utils.getGovErrorSummaryList().should('contain', 'Please select an action');
+	// 	cy.reload();
+	// });
 
+	// Commented out because Fahad has advised that the test is going to be removed
+	// TODO: FAHAD
+	// it("User can Cancel and is returned to the Case ID Page", () => {
 
-	it("User can Cancel and is returned to the Case ID Page", () => {
+	// 	AddToCasePage.getCancelBtn().scrollIntoView();
+	// 	AddToCasePage.getCancelBtn().click();
 
-		AddToCasePage.getCancelBtn().scrollIntoView();
-		AddToCasePage.getCancelBtn().click();
+	// 	CaseManagementPage.getHeadingText().then(($heading) =>{
+	// 		expect($heading).to.be.visible
+	// 		expect($heading.text()).to.match(/(Case ID)/i);
+	// 	});
+	// });
 
-		CaseManagementPage.getHeadingText().then(($heading) =>{
-			expect($heading).to.be.visible
-			expect($heading.text()).to.match(/(Case ID)/i);
-		});
-	});
-
-	it("User has option to add Case Action to a case", () => {
-		cy.reload();
-		CaseManagementPage.getAddToCaseBtn().click();
-		AddToCasePage.addToCase('Srma')
-		AddToCasePage.getCaseActionRadio('Srma').siblings().should('contain.text', AddToCasePage.actionOptions[8]);
-	});
+	// TODO: FAHAD
+	// Commented out because Fahad has advised that the test is going to be removed
+	// it("User has option to add Case Action to a case", () => {
+	// 	cy.reload();
+	// 	CaseManagementPage.getAddToCaseBtn().click();
+	// 	AddToCasePage.addToCase('Srma')
+	// 	AddToCasePage.getCaseActionRadio('Srma').siblings().should('contain.text', AddToCasePage.actionOptions[8]);
+	// });
 
 
 	after(function () {
