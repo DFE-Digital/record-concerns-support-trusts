@@ -23,38 +23,36 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 	public class AddPageModelTests
 	{
 		[Test]
-		public async Task WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
+		public void WhenOnGetAsync_MissingCaseUrn_ThrowsException_ReturnPage()
 		{
 			// arrange
 
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<INtiUnderConsiderationReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<AddPageModel>> mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsCachedService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			// act
-			await pageModel.OnGetAsync();
+			pageModel.OnGet();
 
 			// assert
 			Assert.That(pageModel.TempData["Error.Message"], Is.EqualTo(ErrorConstants.ErrorOnGetPage));
 		}
 
 		[Test]
-		public async Task WhenOnGetAsync_ReturnsPageModel()
+		public void WhenOnGetAsync_ReturnsPageModel()
 		{
 			// arrange
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<INtiUnderConsiderationReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<AddPageModel>> mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsCachedService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
 
 			// act
-			await pageModel.OnGetAsync();
+			pageModel.OnGet();
 
 			// assert
 			mockLogger.Verify(
@@ -72,10 +70,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<INtiUnderConsiderationReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<AddPageModel>> mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsCachedService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -98,10 +95,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<INtiUnderConsiderationReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<AddPageModel>> mockLogger = new Mock<ILogger<AddPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsCachedService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
@@ -149,13 +145,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 
 		private static AddPageModel SetupAddPageModel(
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService,
-			Mock<INtiUnderConsiderationReasonsCachedService> mockNtiReasonsCachedService,
 			Mock<ILogger<AddPageModel>> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new AddPageModel(mockNtiModelService.Object, mockNtiReasonsCachedService.Object, mockLogger.Object)
+			return new AddPageModel(mockNtiModelService.Object, mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
