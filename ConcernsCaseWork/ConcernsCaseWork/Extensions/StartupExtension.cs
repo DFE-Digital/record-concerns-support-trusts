@@ -3,7 +3,6 @@ using ConcernsCaseWork.Authorization;
 using ConcernsCaseWork.Logging;
 using ConcernsCaseWork.Pages.Validators;
 using ConcernsCaseWork.Redis.Base;
-using ConcernsCaseWork.Redis.CaseActions;
 using ConcernsCaseWork.Redis.Configuration;
 using ConcernsCaseWork.Redis.FinancialPlan;
 using ConcernsCaseWork.Redis.MeansOfReferral;
@@ -50,6 +49,7 @@ using ConcernsCaseWork.Services.Teams;
 using ConcernsCaseWork.Services.Trusts;
 using ConcernsCaseWork.Services.Types;
 using ConcernsCaseWork.UserContext;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -150,6 +150,8 @@ namespace ConcernsCaseWork.Extensions
 
 		public static void AddInternalServices(this IServiceCollection services)
 		{
+			services.AddSingleton<IAuthorizationHandler, HeaderRequirementHandler>();
+			services.AddSingleton<IAuthorizationHandler, ClaimsRequirementHandler>();
 			// Web application services
 			services.AddScoped<ICaseModelService, CaseModelService>();
 			services.AddScoped<ITrustModelService, TrustModelService>();
@@ -216,7 +218,6 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<IRatingCachedService, RatingCachedService>();
 			services.AddScoped<ITrustCachedService, TrustCachedService>();
 			services.AddScoped<IFinancialPlanStatusCachedService, FinancialPlanStatusCachedService>();
-			services.AddScoped<CachedSRMAProvider, CachedSRMAProvider>();
 			services.AddScoped<INtiUnderConsiderationReasonsCachedService, NtiUnderConsiderationReasonsCachedService>();
 			services.AddScoped<INtiUnderConsiderationStatusesCachedService, NtiUnderConsiderationStatusesCachedService>();
 			services.AddScoped<INtiUnderConsiderationCachedService, NtiUnderConsiderationCachedService>();

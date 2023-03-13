@@ -192,3 +192,19 @@ variable "existing_network_watcher_resource_group_name" {
   description = "Existing network watcher resource group."
   type        = string
 }
+
+variable "enable_mssql_database" {
+  description = "Set to true to create an Azure SQL server/database, with a private endpoint within the virtual network"
+  type        = bool
+}
+
+variable "mssql_server_admin_password" {
+  description = "The administrator password for the MSSQL server. Must be set if `enable_mssql_database` is true"
+  type        = string
+  sensitive   = true
+}
+
+variable "mssql_database_name" {
+  description = "The name of the MSSQL database to create. Must be set if `enable_mssql_database` is true"
+  type        = string
+}
