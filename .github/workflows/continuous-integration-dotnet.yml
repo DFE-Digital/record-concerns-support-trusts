@@ -1,4 +1,4 @@
-﻿name: Build and Test
+﻿name: .NET Build and Test
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
   pull_request:
     branches: [ main, develop, release/** ]
     types: [ opened, synchronize, reopened ]
- 
+
 jobs:
   build-test:
     runs-on: ubuntu-latest
@@ -36,13 +36,13 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-        
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0 # Shallow clones disabled for a better relevancy of SC analysis
-        
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
