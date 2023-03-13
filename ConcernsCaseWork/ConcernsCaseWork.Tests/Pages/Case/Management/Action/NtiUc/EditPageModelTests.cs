@@ -30,10 +30,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<INtiUnderConsiderationReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<EditPageModel>> mockLogger = new Mock<ILogger<EditPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsCachedService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			// act
 			await pageModel.OnGetAsync();
@@ -50,18 +49,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			var caseUrn = 234;
 			
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<INtiUnderConsiderationReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<EditPageModel>> mockLogger = new Mock<ILogger<EditPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsCachedService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 			
 			var ntiUcModel = new NtiUnderConsiderationModel();
 			
 			mockNtiModelService
 				.Setup(fp => fp.GetNtiUnderConsideration(ntiUcId))
 				.ReturnsAsync(ntiUcModel);
-
-			mockNtiReasonsCachedService.Setup(s => s.GetAllReasons()).ReturnsAsync(new List<NtiUnderConsiderationReasonDto>());
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseUrn);
@@ -91,18 +87,15 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			var caseUrn = 234;
 			
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<INtiUnderConsiderationReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<EditPageModel>> mockLogger = new Mock<ILogger<EditPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsCachedService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			var ntiUcModel = new NtiUnderConsiderationModel(){ ClosedAt = DateTime.Now };
 			
 			mockNtiModelService
 				.Setup(fp => fp.GetNtiUnderConsideration(ntiUcId))
 				.ReturnsAsync(ntiUcModel);
-
-			mockNtiReasonsCachedService.Setup(s => s.GetAllReasons()).ReturnsAsync(new List<NtiUnderConsiderationReasonDto>());
 
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", caseUrn);
@@ -134,10 +127,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<INtiUnderConsiderationReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<EditPageModel>> mockLogger = new Mock<ILogger<EditPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsCachedService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -156,10 +148,9 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 		{
 			// arrange
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<INtiUnderConsiderationReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<EditPageModel>> mockLogger = new Mock<ILogger<EditPageModel>>();
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsCachedService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 
 			// act
 			var pageResponse = await pageModel.OnPostAsync();
@@ -183,7 +174,6 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 			// arrange
 			var ntiId = 123;
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService = new Mock<INtiUnderConsiderationModelService>();
-			Mock<INtiUnderConsiderationReasonsCachedService> mockNtiReasonsCachedService = new Mock<INtiUnderConsiderationReasonsCachedService>();
 			Mock<ILogger<EditPageModel>> mockLogger = new Mock<ILogger<EditPageModel>>();
 
 			mockNtiModelService.Setup(ms => ms.GetNtiUnderConsideration(It.IsAny<long>()))
@@ -198,7 +188,7 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 				Id = ntiId
 			});
 
-			var pageModel = SetupAddPageModel(mockNtiModelService, mockNtiReasonsCachedService, mockLogger);
+			var pageModel = SetupAddPageModel(mockNtiModelService, mockLogger);
 			var routeData = pageModel.RouteData.Values;
 			routeData.Add("urn", 1);
 			routeData.Add("ntiUCId", ntiId);
@@ -246,13 +236,12 @@ namespace ConcernsCaseWork.Tests.Pages.Case.Management.Action.NtiUc
 
 		private static EditPageModel SetupAddPageModel(
 			Mock<INtiUnderConsiderationModelService> mockNtiModelService,
-			Mock<INtiUnderConsiderationReasonsCachedService> mockNtiReasonsCachedService,
 			Mock<ILogger<EditPageModel>> mockLogger,
 			bool isAuthenticated = false)
 		{
 			(PageContext pageContext, TempDataDictionary tempData, ActionContext actionContext) = PageContextFactory.PageContextBuilder(isAuthenticated);
 
-			return new EditPageModel(mockNtiModelService.Object, mockNtiReasonsCachedService.Object, mockLogger.Object)
+			return new EditPageModel(mockNtiModelService.Object, mockLogger.Object)
 			{
 				PageContext = pageContext,
 				TempData = tempData,
