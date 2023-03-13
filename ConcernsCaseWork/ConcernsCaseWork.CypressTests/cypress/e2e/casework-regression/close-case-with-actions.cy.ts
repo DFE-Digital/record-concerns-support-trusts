@@ -123,7 +123,7 @@ describe("Testing closing of cases when there are case actions and concerns", ()
                 {
                     row
                         .hasName("SRMA")
-                        .hasStatus("SRMA Canceled")
+                        .hasStatus("SRMA cancelled")
                         .hasOpenedDate(toDisplayDate(now))
                         .hasClosedDate(toDisplayDate(now))
                 })
