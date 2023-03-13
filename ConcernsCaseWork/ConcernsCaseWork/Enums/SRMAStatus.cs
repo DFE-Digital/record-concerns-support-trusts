@@ -15,13 +15,13 @@ namespace ConcernsCaseWork.Enums
 		[Description("Deployed")]
 		Deployed = 3,
 
-		[Description("SRMA Declined")]
+		[Description("SRMA declined")]
 		Declined = 4,
 
 		[Description("SRMA cancelled")]
 		Cancelled = 5,
 
-		[Description("SRMA Complete")]
+		[Description("SRMA complete")]
 		Complete = 6
 	}
 }
