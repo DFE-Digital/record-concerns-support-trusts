@@ -113,14 +113,14 @@ public class CaseSummaryService : CachedService, ICaseSummaryService
 				{
 					ClosedConcerns = GetSortedClosedConcerns(caseSummary.ClosedConcerns),
 					ClosedActionsAndDecisions = sortedActionAndDecisionNames.Take(_maxNumberActionsAndDecisionsToReturn).ToArray(),
-					ClosedAt = caseSummary.ClosedAt.ToDayMonthYear(),
+					ClosedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.ClosedAt),
 					CaseUrn = caseSummary.CaseUrn,
-					CreatedAt = caseSummary.CreatedAt.ToDayMonthYear(),
+					CreatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.CreatedAt),
 					CreatedBy = GetDisplayUserName(caseSummary.CreatedBy),
 					IsMoreActionsAndDecisions = sortedActionAndDecisionNames.Length > _maxNumberActionsAndDecisionsToReturn,
 					StatusName = caseSummary.StatusName,
 					TrustName = trustName,
-					UpdatedAt = caseSummary.UpdatedAt.ToDayMonthYear()
+					UpdatedAt = DateTimeHelper.ParseToDisplayDate(caseSummary.UpdatedAt)
 				};
 			
 			sortedCaseSummaries.Add(summary);

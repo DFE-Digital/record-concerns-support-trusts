@@ -2,11 +2,13 @@
 using ConcernsCaseWork.Extensions;
 using ConcernsCaseWork.Models;
 using ConcernsCaseWork.Services.PageHistory;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Linq;
 
 namespace ConcernsCaseWork.Pages.Base
 {
+	[Authorize]
 	public class AbstractPageModel : PageModel
 	{
 		public const string ErrorOnGetPage = ErrorConstants.ErrorOnGetPage;
