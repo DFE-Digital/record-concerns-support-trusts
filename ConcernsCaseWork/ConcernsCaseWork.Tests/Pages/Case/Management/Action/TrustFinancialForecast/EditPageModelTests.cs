@@ -107,12 +107,12 @@ public class EditPageModelTests
 
 		// act
 		var response = await sut.OnGetAsync();
-		
+
 		// assert
 		Assert.Multiple(() =>
 		{
 			Assert.That(response, Is.InstanceOf<PageResult>());
-			Assert.That(sut.TempData["Error.Message"], Is.EqualTo("There was an error. Refresh the page or try again later.\n\nIf the problem still continues, email the Record concerns and support for trusts team at regionalservices.rg@education.go.uk"));
+			Assert.That(sut.TempData["Error.Message"], Is.EqualTo("There was an error loading the page. Refresh the page or try again later.\n\nIf the problem still continues, email the Record concerns and support for trusts team at regionalservices.rg@education.go.uk"));
 		});
 	}
 	
@@ -140,7 +140,7 @@ public class EditPageModelTests
 		Assert.Multiple(() =>
 		{
 			Assert.That(response, Is.InstanceOf<PageResult>());
-			Assert.That(sut.TempData["Error.Message"], Is.EqualTo("There was an error. Refresh the page or try again later.\n\nIf the problem still continues, email the Record concerns and support for trusts team at regionalservices.rg@education.go.uk"));
+			Assert.That(sut.TempData["Error.Message"], Is.EqualTo("There was an error loading the page. Refresh the page or try again later.\n\nIf the problem still continues, email the Record concerns and support for trusts team at regionalservices.rg@education.go.uk"));
 		});
 	}
 	
