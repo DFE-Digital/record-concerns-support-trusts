@@ -11,6 +11,8 @@ using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Exceptions;
 using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
+using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
+using ConcernsCaseWork.Helpers;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -19,9 +21,8 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	public class AddPageModel : AbstractPageModel
 	{
 		private readonly INtiUnderConsiderationModelService _ntiModelService;
-		private readonly INtiUnderConsiderationReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<AddPageModel> _logger;
-		
+
 
 		public const int NotesMaxLength = 2000;
 		public IEnumerable<RadioItem> NTIReasonsToConsider;
@@ -30,32 +31,29 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 		public AddPageModel(
 			INtiUnderConsiderationModelService ntiModelService,
-			INtiUnderConsiderationReasonsCachedService ntiReasonsCachedService,
 			ILogger<AddPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
-			_ntiReasonsCachedService = ntiReasonsCachedService;
 			_logger = logger;
 		}
 
-		public async Task<IActionResult> OnGetAsync()
+		public IActionResult OnGet()
 		{
 			_logger.LogInformation("Case::Action::NTI-UC::AddPageModel::OnGetAsync");
 
 			try
 			{
-				NTIReasonsToConsider = await GetReasons();
+				NTIReasonsToConsider = GetReasons();
 				ExtractCaseUrnFromRoute();
-
-				return Page();
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Case::NTI-UC::AddPageModel::OnGetAsync::Exception - {Message}", ex.Message);
+				_logger.LogError("Case::NTI-UC::AddPageModel::OnGet::Exception - {Message}", ex.Message);
 
 				TempData["Error.Message"] = ErrorOnGetPage;
-				return Page();
 			}
+
+			return Page();
 		}
 
 		public async Task<IActionResult> OnPostAsync()
@@ -70,7 +68,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 				return Redirect($"/case/{CaseUrn}/management");
 			}
-			catch(InvalidUserInputException ex)
+			catch (InvalidUserInputException ex)
 			{
 				TempData["NTI-UC.Message"] = ex.Message;
 				return RedirectToPage();
@@ -96,20 +94,21 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 		}
 
-		private async Task<IEnumerable<RadioItem>> GetReasons()
+		private IEnumerable<RadioItem> GetReasons()
 		{
-			var reasons = await _ntiReasonsCachedService.GetAllReasons();
-			return reasons.Select(r => new RadioItem
-						   {
-							   Id = Convert.ToString(r.Id),
-							   Text = r.Name
-						   });
+			var reasonValues = Enum.GetValues<NtiUnderConsiderationReason>().ToList();
+
+			return reasonValues.Select(r => new RadioItem
+			{
+				Id = Convert.ToString((int)r),
+				Text = EnumHelper.GetEnumDescription(r)
+			});
 		}
 
 		private NtiUnderConsiderationModel PopulateNtiFromRequest()
 		{
 			var reasons = Request.Form["reason"];
-			
+
 			var nti = new NtiUnderConsiderationModel() { CaseUrn = CaseUrn };
 			nti.NtiReasonsForConsidering = reasons.Select(r => new NtiReasonForConsideringModel { Id = int.Parse(r) }).ToArray();
 
