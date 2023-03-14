@@ -5,5 +5,6 @@
 		public Task<ConcernsCaseworkTeamDto> GetTeam(string ownerId);
 		public Task PutTeam(ConcernsCaseworkTeamDto team);
 		public Task<string[]> GetTeamOwners();
+		public Task<string[]> GetOwnersOfOpenCases();
 	}
 }
