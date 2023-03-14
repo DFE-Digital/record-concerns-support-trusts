@@ -15,6 +15,7 @@ using ConcernsCaseWork.Services.Trusts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,9 @@ namespace ConcernsCaseWork.Pages.Case.Management
 		public List<NtiUnderConsiderationStatusDto> NtiStatuses { get; set; }
 		public bool IsConcernsCase { get; set; }
 		public bool IsEditableCase { get; private set; }
+		
+		[TempData]
+		public bool CaseOwnerChanged { get; set; } 
 
 		public List<ActionSummaryModel> OpenCaseActions { get; set; }
 		public List<ActionSummaryModel> ClosedCaseActions { get; set; }
@@ -81,10 +85,10 @@ namespace ConcernsCaseWork.Pages.Case.Management
 				var caseUrnValue = RouteData.Values["urn"];
 				if (caseUrnValue is null || !long.TryParse(caseUrnValue.ToString(), out var caseUrn) || caseUrn == 0)
 					throw new Exception("CaseUrn is null or invalid to parse");
-
+				
 				// Get Case
 				CaseModel = await _caseModelService.GetCaseByUrn(caseUrn);
-
+			
 				if (await IsCaseClosed())
 				{
 					return Redirect($"/case/{CaseModel.Urn}/closed");
