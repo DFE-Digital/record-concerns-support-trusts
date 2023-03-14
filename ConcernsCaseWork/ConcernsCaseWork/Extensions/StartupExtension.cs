@@ -16,6 +16,9 @@ using ConcernsCaseWork.Redis.Trusts;
 using ConcernsCaseWork.Redis.Types;
 using ConcernsCaseWork.Redis.Users;
 using ConcernsCaseWork.Security;
+using ConcernsCaseWork.Service.AzureAd;
+using ConcernsCaseWork.Service.AzureAd.Client;
+using ConcernsCaseWork.Service.AzureAd.IoC;
 using ConcernsCaseWork.Service.CaseActions;
 using ConcernsCaseWork.Service.Cases;
 using ConcernsCaseWork.Service.Configuration;
@@ -233,12 +236,12 @@ namespace ConcernsCaseWork.Extensions
 			services.AddScoped<ITeamsCachedService, TeamsCachedService>();
 			services.AddScoped<ICaseSummaryService, CaseSummaryService>();
 
-			// Redis Sequence
-			// TODO. This class looks very temporary. What's it for and how are we going to replace it.
-
 			// AD Integration
 			services.AddScoped<IRbacManager, RbacManager>();
-
+			
+			// Azure Ad Service (for retrieving users)
+			services.AddAzureAdService();
+			
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
 
 			services.AddHttpContextAccessor();
