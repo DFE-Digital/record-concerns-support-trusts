@@ -4,7 +4,7 @@ namespace ConcernsCaseWork.API.Contracts.Decisions.Outcomes
 {
 	public enum DecisionOutcomeBusinessArea
 	{
-		[Description("Schools Financial Support and Oversight (SFSO)")]
+		[Description("SFSO (Schools Financial Support and Oversight)")]
 		SchoolsFinancialSupportAndOversight = 1,
 
 		[Description("Business Partner")]
@@ -16,10 +16,10 @@ namespace ConcernsCaseWork.API.Contracts.Decisions.Outcomes
 		[Description("Funding")]
 		Funding = 4,
 
-		[Description("Provider Market Oversight (PMO)")]
-		ProviderMarketOversight = 5,
+		[Description("FPMO (Financial Provider Market Oversight)")]
+		FinancialProviderMarketOversight = 5,
 
-		[Description("Regions Group (RG)")]
+		[Description("RG (Regions Group)")]
 		RegionsGroup = 6
 	}
 }

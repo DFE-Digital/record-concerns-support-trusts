@@ -157,7 +157,7 @@ describe("User can add case actions to an existing case", () => {
 			.withDecisionAuthouriser("DeputyDirector")
 			.withBusinessArea("BusinessPartner")
 			.withBusinessArea("Capital")
-			.withBusinessArea("ProviderMarketOversight")
+			.withBusinessArea("FinancialProviderMarketOversight")
 			.saveDecisionOutcome();
 
 		Logger.Log("Selecting Decision from open actions");
@@ -212,7 +212,7 @@ describe("User can add case actions to an existing case", () => {
 			.hasSupportingNotes("This is a test for closed decision")
 			.hasBusinessArea("Business Partner")
 			.hasBusinessArea("Capital")
-			.hasBusinessArea("Provider Market Oversight")
+			.hasBusinessArea("FPMO (Financial Provider Market Oversight)")
 			.hasDecisionOutcomeStatus("Approved with conditions")
 			.hasMadeDate("24 November 2022")
 			.hasEffectiveFromDate("11 December 2023")
@@ -284,7 +284,7 @@ describe("User can add case actions to an existing case", () => {
 			.withDecisionAuthouriser("DeputyDirector")
 			.withBusinessArea("BusinessPartner")
 			.withBusinessArea("Capital")
-			.withBusinessArea("ProviderMarketOversight")
+			.withBusinessArea("FinancialProviderMarketOversight")
 			.saveDecisionOutcome();
 
 		actionSummaryTable
@@ -310,7 +310,7 @@ describe("User can add case actions to an existing case", () => {
 			.hasDecisionAuthouriser("DeputyDirector")
 			.hasBusinessArea("BusinessPartner")
 			.hasBusinessArea("Capital")
-			.hasBusinessArea("ProviderMarketOversight");
+			.hasBusinessArea("FinancialProviderMarketOversight");
 
 
 		Logger.Log("Edit Decision Outcome");
@@ -336,7 +336,7 @@ describe("User can add case actions to an existing case", () => {
 			.hasAuthoriser("Minister")
 			.hasBusinessArea("Business Partner")
 			.hasBusinessArea("Capital")
-			.hasBusinessArea("Provider Market Oversight (PMO)");
+			.hasBusinessArea("FPMO (Financial Provider Market Oversight)");
 
 	})
 
@@ -402,7 +402,7 @@ describe("User can add case actions to an existing case", () => {
 			.withDecisionAuthouriser("DeputyDirector")
 			.withBusinessArea("BusinessPartner")
 			.withBusinessArea("Capital")
-			.withBusinessArea("ProviderMarketOversight")
+			.withBusinessArea("FinancialProviderMarketOversight")
 			.saveDecisionOutcome();
 
 		actionSummaryTable
@@ -417,7 +417,7 @@ describe("User can add case actions to an existing case", () => {
 		viewDecisionPage
 			.hasBusinessArea("Business Partner")
 			.hasBusinessArea("Capital")
-			.hasBusinessArea("Provider Market Oversight")
+			.hasBusinessArea("FPMO (Financial Provider Market Oversight)")
 			.hasDecisionOutcomeStatus("Approved with conditions")
 			.hasMadeDate("24 November 2022")
 			.hasEffectiveFromDate("11 December 2023")

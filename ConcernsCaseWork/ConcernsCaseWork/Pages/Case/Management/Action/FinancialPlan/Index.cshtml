@@ -30,12 +30,12 @@
 
         <h1 class="govuk-heading-l">
             <span class="govuk-caption-m">Case ID @RouteData.Values["urn"]</span>
-            Financial Plan
+            Financial plan
         </h1>
 
         <div class="govuk-hint" id="financial-plan-hint">
             <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lveefa00003/SitePages/Trust%20financial%20plans.aspx" class="govuk-link" rel="noreferrer noopener">
-                SFSO Knowledge: Financial Plan
+                SFSO Knowledge: Financial plan
             </a>
         </div>
 
@@ -62,7 +62,7 @@
 
                 @* Status *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Current Status</th>
+                    <th scope="row" class="govuk-table-case-details__header">Current status</th>
                     <td class="govuk-table__cell" data-testid="status-text">
                         @{
 
@@ -84,7 +84,7 @@
 
                 @* Date plan requested *@
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table-case-details__header">Date plan requested</th>
+                    <th scope="row" class="govuk-table-case-details__header">Date financial plan requested</th>
                     <td class="govuk-table__cell" data-testid="date-plan-requested-text">
                         @{
                             if (Model.FinancialPlanModel.DatePlanRequested.HasValue)

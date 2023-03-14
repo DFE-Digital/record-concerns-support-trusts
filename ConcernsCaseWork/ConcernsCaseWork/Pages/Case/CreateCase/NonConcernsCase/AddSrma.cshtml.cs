@@ -100,7 +100,7 @@ namespace ConcernsCaseWork.Pages.Case.CreateCase.NonConcernsCase
 		private static IEnumerable<RadioItem> GetStatuses()
 		{
 			var statuses = (SRMAStatus[])Enum.GetValues(typeof(SRMAStatus));
-			return statuses.Where(s => s != SRMAStatus.Unknown && s != SRMAStatus.Declined && s != SRMAStatus.Canceled && s != SRMAStatus.Complete)
+			return statuses.Where(s => s != SRMAStatus.Unknown && s != SRMAStatus.Declined && s != SRMAStatus.Cancelled && s != SRMAStatus.Complete)
 						   .Select(s => new RadioItem
 						   {
 							   Id = s.ToString(),

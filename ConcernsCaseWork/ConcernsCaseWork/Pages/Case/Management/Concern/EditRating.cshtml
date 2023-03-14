@@ -5,7 +5,7 @@
 @model ConcernsCaseWork.Pages.Case.Management.Concern.EditRatingPageModel
 
 @{
-	ViewData["Title"] = "Edit Risk rating";
+	ViewData["Title"] = "Edit concern";
 	var nonce = HttpContext.GetNonce();
 }
 
@@ -17,7 +17,7 @@
 
 			<h1 class="govuk-heading-l">
 				<span class="govuk-caption-l">Case ID @Model.CaseModel.Urn</span>
-				Edit Concern
+				Edit concern
 			</h1>
 
 			@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
@@ -52,17 +52,18 @@
 					</div>
 				</dl>
 
-				<h2 class="govuk-heading-m govuk-!-margin-top-6">Concern risk rating
+                <h2 class="govuk-heading-m govuk-!-margin-top-6">
+                    Change concern risk rating
                     <a href="@Request.Path/closure" data-testid="close-concern-button" role="button" class="govuk-button govuk-button--secondary govuk-!-font-weight-bold float__right" data-module="govuk-button">
-						Close concern
-					</a>
-				</h2>
+                        Close concern
+                    </a>
+                </h2>
 
 				<div class="govuk-hint" id="case-issue-hint">
 					Use the
                     <a target="_blank" href="@ResourceConstants.RiskManagementFrameworkLink" class="govuk-link" rel="noreferrer noopener">
 						Risk Management Framework (opens in new tab)
-					</a> to assess the type of Concern
+					</a> to assess the type of concern
 				</div>
 
 				<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>

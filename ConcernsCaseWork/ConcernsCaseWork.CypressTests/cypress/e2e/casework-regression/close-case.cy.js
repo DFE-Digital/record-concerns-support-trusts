@@ -59,7 +59,7 @@ describe("User closes a case", () => {
 		cy.getById("continue").click();
 		cy.get('table:nth-child(6) > caption').scrollIntoView();
 		cy.get('table:nth-child(6) > caption').should(($titl) => {
-			expect($titl.text().trim()).equal("Closed cases");
+			expect($titl.text().trim()).equal("Your closed cases");
 		});
 
 		cy.task(LogTask, "Case should be visible in the Trust page under closed cases");
