@@ -333,7 +333,7 @@ describe("Testing the SRMA case action", () =>
 			.then(row =>
 			{
 				row.hasName("SRMA")
-				row.hasStatus("SRMA Complete")
+				row.hasStatus("SRMA complete")
 				row.hasCreatedDate(toDisplayDate(now))
                 row.hasClosedDate(toDisplayDate(now))
 				row.select();
@@ -342,7 +342,7 @@ describe("Testing the SRMA case action", () =>
             viewSrmaPage
                 .hasDateOpened(toDisplayDate(now))
                 .hasDateClosed(toDisplayDate(now))
-                .hasStatus("SRMA Complete")
+                .hasStatus("SRMA complete")
                 .hasDateTrustContacted("22 October 2022")
                 .hasReason("Regions Group (RG) Intervention")
                 .hasDateAccepted("22 May 2020")
@@ -376,7 +376,7 @@ describe("Testing the SRMA case action", () =>
 			.then(row =>
 			{
 				row.hasName("SRMA")
-				row.hasStatus("SRMA Canceled")
+				row.hasStatus("SRMA cancelled")
 				row.hasCreatedDate(toDisplayDate(now))
                 row.hasClosedDate(toDisplayDate(now))
 				row.select();
@@ -385,7 +385,7 @@ describe("Testing the SRMA case action", () =>
             viewSrmaPage
                 .hasDateOpened(toDisplayDate(now))
                 .hasDateClosed(toDisplayDate(now))
-                .hasStatus("SRMA Canceled")
+                .hasStatus("SRMA cancelled")
                 .hasDateTrustContacted("22 October 2022")
                 .hasReason("Regions Group (RG) Intervention")
                 .hasDateAccepted("")
@@ -418,7 +418,7 @@ describe("Testing the SRMA case action", () =>
 			.then(row =>
 			{
 				row.hasName("SRMA")
-				row.hasStatus("SRMA Declined")
+				row.hasStatus("SRMA declined")
 				row.hasCreatedDate(toDisplayDate(now))
                 row.hasClosedDate(toDisplayDate(now))
 				row.select();
@@ -427,7 +427,7 @@ describe("Testing the SRMA case action", () =>
             viewSrmaPage
                 .hasDateOpened(toDisplayDate(now))
                 .hasDateClosed(toDisplayDate(now))
-                .hasStatus("SRMA Declined")
+                .hasStatus("SRMA declined")
                 .hasDateTrustContacted("22 October 2022")
                 .hasReason("Regions Group (RG) Intervention")
                 .hasDateAccepted("")
