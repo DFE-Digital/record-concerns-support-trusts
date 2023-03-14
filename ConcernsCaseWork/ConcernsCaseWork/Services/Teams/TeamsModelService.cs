@@ -52,5 +52,11 @@ namespace ConcernsCaseWork.Services.Teams
 			}
 			return DoWork();
 		}
+
+		public Task<string[]> GetOwnersOfOpenCases()
+		{
+			_logger.LogMethodEntered();
+			return _teamsServiceClient.GetOwnersOfOpenCases();
+		}
 	}
 }

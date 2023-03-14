@@ -103,7 +103,7 @@ namespace ConcernsCaseWork.Tests.Pages.Team
 		[Test]
 		public async Task WhenOnPostSelectColleagues_WithException_ErrorOnPage()
 		{
-			// arrange			
+			// arrange
 			var testFixture = new TestFixture()
 				.WithNoCurrentUser();
 			// act
