@@ -3,10 +3,12 @@ using Azure.Identity;
 using ConcernsCaseWork.API.Contracts.Users;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 [assembly:InternalsVisibleTo("ConcernsCaseWork.Service.AzureAd.Tests")]
 namespace ConcernsCaseWork.Service.AzureAd.Client;
+[ExcludeFromCodeCoverage] // excluded because this is a boundary service - it 
 internal class GraphClient : IGraphClient
 {
 	private readonly IGraphClientSettings _configuration;
