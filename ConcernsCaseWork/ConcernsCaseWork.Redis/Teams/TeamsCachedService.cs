@@ -84,6 +84,12 @@ namespace ConcernsCaseWork.Redis.Teams
 			return _teamsService.GetTeamOwners();
 		}
 
+		public Task<string[]> GetOwnersOfOpenCases()
+		{
+			// Not cached..
+			return _teamsService.GetOwnersOfOpenCases();
+		}
+
 		private string GetCacheKey(string ownerId) => $"{_cacheKeyPrefix}.{ownerId}";
 
 		public new Task ClearData(string ownerId)
