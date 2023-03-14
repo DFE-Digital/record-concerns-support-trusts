@@ -3,9 +3,10 @@ using Azure.Identity;
 using ConcernsCaseWork.API.Contracts.Users;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
+using System.Runtime.CompilerServices;
 
+[assembly:InternalsVisibleTo("ConcernsCaseWork.Service.AzureAd.Tests")]
 namespace ConcernsCaseWork.Service.AzureAd.Client;
-
 internal class GraphClient : IGraphClient
 {
 	private readonly IGraphClientSettings _configuration;
