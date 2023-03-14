@@ -1,0 +1,95 @@
+﻿@page "/case/{urn:long}/management/edit-case-owner"
+@using NetEscapades.AspNetCore.SecurityHeaders;
+@model ConcernsCaseWork.Pages.Case.Management.EditOwnerPageModel
+@{
+    var nonce = HttpContext.GetNonce();
+}
+<form role="form" method="post" id="select-trust-form" novalidate>
+    <div class="govuk-width-container">
+	    <h1 class="govuk-heading-l" name="caseID">
+		    <span class="govuk-caption-m">Case ID</span>
+		    @Model.CaseNumber
+	    </h1>
+	    @if (@Model.ShowValidationMessage)
+	    {
+		    <div id="errorSummary" class="govuk-error-summary" data-module="error-summary" aria-labelledby="errorSummary-heading">
+			    <h2 id="error-summary-title" class="govuk-error-summary__title">There is a problem</h2>
+			    <div class="govuk-error-summary__body">
+				    <ul class="govuk-list govuk-error-summary__list" data-testid="nti-validation-errors">
+					    <li>
+						    <p class="govuk govuk-error-message">A valid case owner must be selected</p>
+					    </li>
+				    </ul>
+			    </div>
+		    </div>
+		   
+	    }
+        <h1 class="govuk-heading-l">
+            Change case owner
+        </h1>
+		<p class="govuk-!-margin-bottom-0">Enter the name or email address of the person you want to assign the case to</p>
+        <div id="autocomplete-container" class="govuk-!-margin-top-0"></div>
+		  
+        <div class="ccms-loader govuk-!-display-none"></div>
+       
+        <ul class="autocomplete__menu autocomplete__menu--inline autocomplete__menu--hidden" id="case-owner-options" role="listbox">
+            <li class="autocomplete__option autocomplete__option--no-results">No results found.</li>
+        </ul>
+
+        <input type="hidden" id="selected-owner" name="selectedOwner" required />
+        <input type="hidden" id="current-owner" name ="currentOwner" value="@Model.CurrentCaseOwner" />
+	    <input type="hidden" id="owner-selected" name ="valuePicked" value="false" />
+	     <input type="hidden" id="in-list" name ="valueInList" value="-1" />
+	    
+        <!--Button group-->
+        <div class="govuk-button-group govuk-!-margin-top-3">
+            <button data-prevent-double-click="true" class="govuk-button" data-module="govuk-button" data-testid="continue">
+                Continue
+            </button>
+            <partial name="_Cancel" />
+        </div>
+    </div>
+</form>
+
+<script type="application/javascript" nonce="@nonce">
+    $(document).ready(function () {
+        let autocompleteContainer = document.getElementById('autocomplete-container');
+		let results = null;
+		document.getElementById('selected-owner').value = document.getElementById("current-owner").value;
+        let currentCaseOwner = document.getElementById("current-owner").value;
+        $.get('?handler=TeamList')
+        .done((result) =>
+        {
+            accessibleAutocomplete({
+                element: autocompleteContainer,
+                id: "case-owner-input",
+                name: "case-owner",
+                defaultValue:currentCaseOwner,
+                source: result,
+                confirmOnBlur: false,
+                showNoOptonsFound: true,
+                onConfirm: (selected) => {
+					document.getElementById('selected-owner').value = selected;
+					document.getElementById('owner-selected').value = true;
+					results = result;
+					
+                }
+            });
+        });
+		
+		 $( "body" ).on('change','#case-owner-input',function() {
+           	document.getElementById('selected-owner').value =  document.getElementById("case-owner-input").value;
+		   	document.getElementById('owner-selected').value = true;
+			document.getElementById('in-list').value = jQuery.inArray(document.getElementById('selected-owner').value, results);
+         });
+    });
+	
+	function updateOwner(selected)
+	{
+		
+		 document.getElementById('value-picked').value = true;
+		 return selected;
+                         
+	}
+		
+</script>
