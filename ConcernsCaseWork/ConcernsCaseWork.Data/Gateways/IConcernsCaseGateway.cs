@@ -12,5 +12,6 @@ namespace ConcernsCaseWork.Data.Gateways
         IList<ConcernsCase> GetConcernsCasesByOwnerId(string ownerId, int? statusId, int page, int count);
         Task<ConcernsCase> UpdateExistingAsync(ConcernsCase concernsCase);
         Task<bool> CaseExists(int urn, CancellationToken cancellationToken = default);
+        Task<string[]> GetOwnersOfOpenCases(CancellationToken cancellationToken = default);
     }
 }
