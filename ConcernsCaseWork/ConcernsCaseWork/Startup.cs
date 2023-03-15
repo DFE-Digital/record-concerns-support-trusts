@@ -124,6 +124,8 @@ namespace ConcernsCaseWork
 		{
 			AbstractPageModel.PageHistoryStorageHandler = app.ApplicationServices.GetService<IPageHistoryStorageHandler>();
 
+			app.UseApplicationInsightsRequestTelemetry();
+
 			app.UseConcernsCaseworkSwagger(provider);
 
 			if (env.IsDevelopment())
@@ -136,6 +138,8 @@ namespace ConcernsCaseWork
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
 			}
+
+			app.UseApplicationInsightsExceptionTelemetry();
 
 			app.UseMiddleware<ExceptionHandlerMiddleware>();
 			app.UseMiddleware<ApiKeyMiddleware>();

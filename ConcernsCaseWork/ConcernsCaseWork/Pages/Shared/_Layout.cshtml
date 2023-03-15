@@ -5,7 +5,7 @@
 @using NetEscapades.AspNetCore.SecurityHeaders
 
 @inject IWebHostEnvironment _env
-
+@inject Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration TelemetryConfiguration
 <!DOCTYPE html>
 <html class="govuk-template" lang="en">
 @{
@@ -45,8 +45,8 @@
     <link rel="stylesheet" href="~/dist/css/site.css" />
 
     <title>@ViewData["Title"] - Record concerns and support for trusts - GOV.UK</title>
+    @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
     @Html.Raw(JavaScriptSnippet.FullScript)
-
 </head>
 <body class="govuk-template__body ">
     <!-- Google Tag Manager (noscript) -->
