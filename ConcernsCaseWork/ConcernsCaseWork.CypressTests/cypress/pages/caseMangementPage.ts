@@ -252,6 +252,32 @@ class CaseManagementPage {
         return this;
     }
 
+    public editCaseOwner(): this
+    {
+        Logger.Log("Editing case owner");
+
+        this.getEditCaseOwner().click();
+
+        return this;
+    }
+
+    public canEditCaseOwner(): this
+    {
+        Logger.Log("Can edit case owner");
+
+        this.getEditCaseOwner();
+
+        return this;
+    }
+
+    public cannotEditCaseOwner(): this
+    {
+        Logger.Log("Cannot edit case owner");
+        this.getEditCaseOwner().should("not.exist");
+
+        return this;
+    }
+
     public editIssue(): this
     {
         Logger.Log("Editing the issue");
@@ -449,6 +475,11 @@ class CaseManagementPage {
     private getEditTerritory()
     {
         return cy.getByTestId("edit_Button_SFSO");
+    }
+
+    private getEditCaseOwner()
+    {
+        return cy.getByTestId("edit-case-owner");
     }
 
     private getEditIssue()
