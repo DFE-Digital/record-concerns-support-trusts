@@ -58,13 +58,13 @@ Cypress.Commands.add("waitForJavascript", () => {
 	cy.wait(1000);
 });
 
-Cypress.Commands.add("login", () => {
+Cypress.Commands.add("login", (params) => {
 	cy.clearCookies();
 	cy.clearLocalStorage();
 
 	// Intercept all browser requests and add our special auth header
 	// Means we don't have to use azure to authenticate 
-	new AuthenticationInterceptor().register();
+	new AuthenticationInterceptor().register(params);
 
 	// Old method of using azure to login
 	// const username = Cypress.env("username");
