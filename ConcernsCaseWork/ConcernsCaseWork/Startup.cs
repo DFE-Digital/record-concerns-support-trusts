@@ -116,8 +116,9 @@ namespace ConcernsCaseWork
 			{
 				options.ConstraintMap.Add("fpEditModes", typeof(FinancialPlanEditModeConstraint));
 			});
-            services.AddApplicationInsightsTelemetry(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
-        }
+
+			services.AddApplicationInsightsTelemetry(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
+		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider, IMapper mapper)
