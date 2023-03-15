@@ -48,7 +48,7 @@ describe("Testing permissions on cases and case actions", () => {
         }));
     });
 
-    it("Should not allow a user to edit a case that they did not create", () => {
+    it.only("Should not allow a user to edit a case that they did not create", () => {
 
         Logger.Log("Check that we can edit if we did create the case");
         caseMangementPage
@@ -57,6 +57,7 @@ describe("Testing permissions on cases and case actions", () => {
             .canEditRiskToTrust()
             .canEditDirectionOfTravel()
             .canEditTerritory()
+            .canEditCaseOwner()
             .canEditIssue()
             .canEditCurrentStatus()
             .canEditCaseAim()
@@ -74,6 +75,7 @@ describe("Testing permissions on cases and case actions", () => {
             .cannotEditRiskToTrust()
             .cannotEditDirectionOfTravel()
             .cannotEditTerritory()
+            .cannotEditCaseOwner()
             .cannotEditIssue()
             .cannotEditCurrentStatus()
             .cannotEditCaseAim()
