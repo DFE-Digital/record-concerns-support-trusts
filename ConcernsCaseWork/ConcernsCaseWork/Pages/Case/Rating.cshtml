@@ -4,65 +4,60 @@
 @model ConcernsCaseWork.Pages.Case.RatingPageModel
 
 @{
-	ViewData["Title"] = "Add Case Rating";
-	var nonce = HttpContext.GetNonce();
+    ViewData["Title"] = "Add Case Rating";
+    var nonce = HttpContext.GetNonce();
 }
 
 <div class="govuk-width-container">
-	<partial name="_BannerError"/>
-	
-	<span class="govuk-caption-l">Create case</span>
-	<h1 class="govuk-heading-l">Trust risk</h1>
+    <partial name="_BannerError" />
 
-	@if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
-	{
-		<partial name="_Error" />
-	}
-	else
-	{
-		<!-- Trust details -->
-		<dl class="govuk-summary-list">
-			<partial name="_TrustSummary" model="Model.TrustDetailsModel"/>
-			<partial name="_RecordsSummary" model="Model.CreateRecordsModel"/>
-		</dl>
-		
-		<div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
-		
-		<!-- FORM -->
-		<form role="form" method="post" id="case-rating-form" novalidate>
-			
-			<!-- Q Risk rating -->
-			<div class="govuk-form-group govuk-!-margin-top-6">
-				<fieldset class="govuk-fieldset">
+    <span class="govuk-caption-l">Create case</span>
+    <h1 class="govuk-heading-l">Risk to trust</h1>
 
-					<legend class="govuk-fieldset__legend govuk-!-font-weight-bold">
-						What is the risk to the trust?
-					</legend>
-					<div class="govuk-hint">
-						Use your judgement to choose an overall risk rating for the case. For example, if that case has more than one concern, 
-						the risk to trust rating should reflect this. This is not related to the Risk Management Framework (RMF).
-					</div>
-					<partial name="_Rating" model="@Model.RatingsModel" />
+    @if (!string.IsNullOrEmpty((string)TempData.Peek("Error.Message")))
+    {
+        <partial name="_Error" />
+    }
+    else
+    {
+        <!-- Trust details -->
+        <dl class="govuk-summary-list">
+            <partial name="_TrustSummary" model="Model.TrustDetailsModel" />
+            <partial name="_RecordsSummary" model="Model.CreateRecordsModel" />
+        </dl>
 
-				</fieldset>
-			</div>
+        <div tabindex="-1" role="group" id="errorSummary" class="govuk-error-summary moj-hidden" aria-labelledby="error-summary-title" data-module="error-summary"></div>
 
-			<div class="govuk-button-group">
-				<button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" data-testId="next-step-button">
-					Next step
-				</button>
-				<a data-prevent-double-click="true" class="govuk-link" asp-page-handler="Cancel" data-module="govuk-button" role="button">
-					Cancel
-				</a>
-			</div>
+        <!-- FORM -->
+        <form role="form" method="post" id="case-rating-form" novalidate>
 
-		</form>
-		
-		<script type="application/javascript" nonce="@nonce">
-			$(function () {
-				let validator = formValidator($("#case-rating-form")[0]);
-				addRatingValidator(validator);
-			});
-		</script>
-	}
+            <!-- Q Risk rating -->
+            <div class="govuk-form-group govuk-!-margin-top-6">
+                <fieldset class="govuk-fieldset">
+
+                    <h2 class="govuk-heading-m">What is the risk to the trust?</h2>
+                    <partial name="_RiskToTrustDetails" />
+                    <partial name="_Rating" model="@Model.RatingsModel" />
+
+                </fieldset>
+            </div>
+
+            <div class="govuk-button-group">
+                <button data-prevent-double-click="true" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" role="button" data-testId="next-step-button">
+                    Next step
+                </button>
+                <a data-prevent-double-click="true" class="govuk-link" asp-page-handler="Cancel" data-module="govuk-button" role="button">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+        <script type="application/javascript" nonce="@nonce">
+            $(function () {
+                let validator = formValidator($("#case-rating-form")[0]);
+                addRatingValidator(validator);
+            });
+        </script>
+    }
 </div>

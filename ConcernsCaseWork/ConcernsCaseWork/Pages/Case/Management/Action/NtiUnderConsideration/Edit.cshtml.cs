@@ -9,8 +9,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using ConcernsCaseWork.Models.CaseActions;
 using ConcernsCaseWork.Exceptions;
-using ConcernsCaseWork.Redis.NtiUnderConsideration;
 using ConcernsCaseWork.Services.NtiUnderConsideration;
+using ConcernsCaseWork.API.Contracts.NtiUnderConsideration;
+using ConcernsCaseWork.Helpers;
 
 namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 {
@@ -19,7 +20,6 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 	public class EditPageModel : AbstractPageModel
 	{
 		private readonly INtiUnderConsiderationModelService _ntiModelService;
-		private readonly INtiUnderConsiderationReasonsCachedService _ntiReasonsCachedService;
 		private readonly ILogger<EditPageModel> _logger;
 		
 		public const int NotesMaxLength = 2000;
@@ -30,11 +30,9 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 
 		public EditPageModel(
 			INtiUnderConsiderationModelService ntiModelService,
-			INtiUnderConsiderationReasonsCachedService ntiReasonsCachedService,
 			ILogger<EditPageModel> logger)
 		{
 			_ntiModelService = ntiModelService;
-			_ntiReasonsCachedService = ntiReasonsCachedService;
 			_logger = logger;
 		}
 
@@ -54,7 +52,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 					return Redirect($"/case/{CaseUrn}/management/action/ntiunderconsideration/{ntiUcId}");
 				}
 
-				NTIReasonsToConsiderForUI = await GetReasonsForUI(NtiModel);
+				NTIReasonsToConsiderForUI = GetReasonsForUI(NtiModel);
 
 				return Page();
 			}
@@ -122,15 +120,16 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.NtiUnderConsideration
 			}
 		}
 
-		private async Task<IEnumerable<RadioItem>> GetReasonsForUI(NtiUnderConsiderationModel ntiModel)
+		private IEnumerable<RadioItem> GetReasonsForUI(NtiUnderConsiderationModel ntiModel)
 		{
-			var reasons = await _ntiReasonsCachedService.GetAllReasons();
-			return reasons.Select(r => new RadioItem
-						   {
-							   Id = Convert.ToString(r.Id),
-							   Text = r.Name,
-							   IsChecked = ntiModel?.NtiReasonsForConsidering?.Any(ntiR => ntiR.Id == r.Id) == true,	
-						   });
+			var reasonValues = Enum.GetValues<NtiUnderConsiderationReason>().ToList();
+
+			return reasonValues.Select(r => new RadioItem
+			{
+				Id = Convert.ToString((int)r),
+				Text = EnumHelper.GetEnumDescription(r),
+				IsChecked = ntiModel?.NtiReasonsForConsidering?.Any(ntiR => ntiR.Id == (int)r) == true,
+			});
 		}
 
 		private NtiUnderConsiderationModel PopulateNtiFromRequest()

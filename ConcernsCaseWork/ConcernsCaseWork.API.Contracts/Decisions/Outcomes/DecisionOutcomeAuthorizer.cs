@@ -4,13 +4,13 @@ namespace ConcernsCaseWork.API.Contracts.Decisions.Outcomes
 {
 	public enum DecisionOutcomeAuthorizer
 	{
-		[Description("G7")]
+		[Description("Grade 7")]
 		G7 = 1,
 
-		[Description("G6")]
+		[Description("Grade 6")]
 		G6 = 2,
 
-		[Description("Regional Director (RD)")]
+		[Description("Regional Director")]
 		RegionalDirector = 3,
 
 		[Description("Deputy Director")]

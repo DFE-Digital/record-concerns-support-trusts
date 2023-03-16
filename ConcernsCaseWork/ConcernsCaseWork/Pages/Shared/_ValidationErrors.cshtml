@@ -11,7 +11,7 @@
 					.Where(s => s.Value?.ValidationState == ModelValidationState.Invalid)
 					.Select(e => new { e.Key, Msg = string.Join("<br />", e.Value.Errors.Select(errs => errs?.ErrorMessage)) }))
 				{
-					<li><a href="#@error.Key">@error.Msg</a></li>			
+					<li><p class="govuk govuk-error-message">@error.Msg</p></li>			
 				}
 			</ul>
 		</div>

@@ -121,7 +121,7 @@ namespace ConcernsCaseWork.Tests.Services.Decisions
 			result.Outcome.DecisionMadeDate.Should().Be("07 May 2023");
 			result.Outcome.DecisionEffectiveFromDate.Should().Be("13 December 2023");
 
-			result.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(new List<string>() { "Capital", "Schools Financial Support and Oversight (SFSO)" });
+			result.Outcome.BusinessAreasConsulted.Should().BeEquivalentTo(new List<string>() { "Capital", "SFSO (Schools Financial Support and Oversight)" });
 			result.Outcome.EditLink.Should().Be("/case/2/management/action/decision/10/outcome/addOrUpdate/10007");
 			result.IsEditable.Should().BeTrue();
 		}

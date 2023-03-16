@@ -189,7 +189,7 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				new DecisionTypeCheckBox()
 				{
 					DecisionType = DecisionType.RepayableFinancialSupport,
-					Hint = "Repayable funding are payments that trusts must repay in line with an agreed repayment plan, ideally within 3 years."
+					Hint = "Repayable funding are payments that trusts must repay in line with an agreed repayment plan, ideally within 3 years. Select this decision type for decisions related to existing repayable financial support, such as change to repayment schedule or drawdown of previously agreed funding."
 				},
 				new DecisionTypeCheckBox()
 				{
@@ -204,17 +204,17 @@ namespace ConcernsCaseWork.Pages.Case.Management.Action.Decision
 				new DecisionTypeCheckBox()
 				{
 					DecisionType = DecisionType.OtherFinancialSupport,
-					Hint = "All other types of financial support for exceptional circumstances. This includes exceptional annual grant (EAG), popular growth funding, restructuring support and start-up support."
+					Hint = "All other types of financial support for exceptional circumstances. This includes exceptional annual grant (EAG), general annual grant (GAG) protection, popular growth funding, restructuring support and start-up support."
 				},
 				new DecisionTypeCheckBox()
 				{
 					DecisionType = DecisionType.EstimatesFundingOrPupilNumberAdjustment,
-					Hint = "Covers: a) agreements to move from lagged funding (based on pupil census data) to funding based on an estimate of the coming year’s pupil numbers, used when a school is growing; b) an adjustment to a trust's General Annual Grant (GAG) to funding based on estimated pupil numbers in line with actual pupil numbers, once these are confirmed (PNA). Also called an in-year adjustment."
+					Hint = "Covers: a) agreements to move from lagged funding (based on pupil census data) to funding based on an estimate of the coming year’s pupil numbers, used when a school is growing; b) an adjustment to a trust's General Annual Grant (GAG) to funding based on estimated pupil numbers in line with actual pupil numbers, once these are confirmed (PNA). Also called an in-year adjustment or change in funding methodology."
 				},
 				new DecisionTypeCheckBox()
 				{
 					DecisionType = DecisionType.EsfaApproval,
-					Hint = "Some versions of the funding agreement require trusts to seek approval from ESFA to spend or write off funds, such as severance pay or agreeing off-payroll arrangements for staff. Trusts going ahead with these decisions or transactions would be in breach of their funding agreement. Also called transactions approval. This typically affects trusts under an NTI (Notice to Improve)."
+					Hint = "Some versions of the funding agreement require trusts to seek approval from ESFA to spend or write off funds (also called transactions approval). Examples include as severance pay, compromise agreements or ex gratia payments; agreeing off-payroll arrangements for staff; entering into a finance lease or operating lease; or carrying forward large reserves. Trusts going ahead with these decisions or transactions without ESFA approval could be in breach of their funding agreement. This typically affects trusts under an NTI (Notice to Improve), where ESFA approval can be a condition of the NTI."
 				},
 				new DecisionTypeCheckBox()
 				{

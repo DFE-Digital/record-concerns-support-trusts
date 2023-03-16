@@ -199,7 +199,7 @@ namespace ConcernsCaseWork.API.Tests.Integration
 				BusinessAreasConsulted = new System.Collections.Generic.List<DecisionOutcomeBusinessArea>()
 				{
 					DecisionOutcomeBusinessArea.Capital,
-					DecisionOutcomeBusinessArea.ProviderMarketOversight
+					DecisionOutcomeBusinessArea.FinancialProviderMarketOversight
 				}
 			};
 

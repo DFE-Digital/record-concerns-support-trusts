@@ -22,9 +22,9 @@
     else
     {
         <div class="buttons-topOfPage">
-            <a href="/" role="button" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-                Back to casework
-            </a>
+            <div class="govuk-width-container">
+                <back-link url="/" label="Back to casework"></back-link>
+            </div>
             @if (Model.IsEditableCase)
             {
                 <a href="@Request.Path/closure" role="button" class="govuk-button govuk-button--warning float__right" id="close-case-button" data-module="govuk-button">
@@ -32,7 +32,24 @@
                 </a>
             }
         </div>
-
+		@if (@Model.CaseOwnerChanged)
+		{
+			<div class="govuk-notification-banner govuk-notification-banner--success" role="alert"
+			     aria-labelledby="govuk-notification-banner-title"
+			     data-module="govuk-notification-banner">
+				<div class="govuk-notification-banner__header">
+					<h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+						Success
+					</h2>
+				</div>
+				<div class="govuk-notification-banner__content">
+					<h3 class="govuk-notification-banner__heading">
+						Case has been reassigned
+					</h3>
+				
+				</div>
+			</div>
+		}
         <h1 class="govuk-heading-l" name="caseID">
             <span class="govuk-caption-m">Case ID</span>
             @Model.CaseModel.Urn
@@ -45,12 +62,12 @@
             <ul class="govuk-tabs__list">
                 <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
                     <a class="govuk-tabs__tab" href="#case-details">
-                        Case Details
+                        Case overview
                     </a>
                 </li>
                 <li class="govuk-tabs__list-item">
                     <a class="govuk-tabs__tab" href="#trust-overview">
-                        Trust Overview
+                        Trust overview
                     </a>
                 </li>
             </ul>
@@ -91,7 +108,7 @@
                                     @if (Model.IsEditableCase)
                                     {
                                         <a data-testid="edit-risk-to-trust" class="govuk-link" href="@Request.Path/edit_rating" aria-label="Change risk to trust rating">
-                                            Edit<span class="govuk-visually-hidden"> risk to trust rating</span>
+                                            Change<span class="govuk-visually-hidden"> risk to trust rating</span>
                                         </a>
                                     }
                                 </td>
@@ -105,7 +122,7 @@
                                     @if (Model.IsEditableCase)
                                     {
                                         <a data-testid="edit-direction-of-travel" class="govuk-link" href="@Request.Path/edit_directionoftravel" aria-label="Change direction of travel">
-                                            Edit<span class="govuk-visually-hidden"> direction of travel</span>
+                                            Change<span class="govuk-visually-hidden"> direction of travel</span>
                                         </a>
                                     }
                                 </td>
@@ -156,7 +173,7 @@
                                                                 <div class="govuk-!-padding-bottom-1">
                                                                     @if (Model.IsEditableCase)
                                                                     {
-                                                                        <a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/edit_rating" aria-label="Change @concern.TypeModel.TypeDisplay rating" data-testid="edit-concern">Edit</a>
+                                                                        <a class="govuk-link govuk-link-no-visited-state" href="@Request.Path/record/@concern.Id/edit_rating" aria-label="Change @concern.TypeModel.TypeDisplay rating" data-testid="edit-concern">Change</a>
                                                                     }
                                                                 </div>
                                                             }
@@ -195,22 +212,30 @@
                                 @if (Model.IsEditableCase)
                                 {
                                     <a class="govuk-link" data-testid="edit_Button_SFSO" href="@Request.Path/edit-territory" aria-label="Change SFSO territory">
-                                        Edit<span class="govuk-visually-hidden"> SFSO territory</span>
+                                        Change<span class="govuk-visually-hidden"> SFSO territory</span>
                                     </a>
                                 }
                             </td>
                         </tr>
 
                         <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">Caseworker</th>
-                            <td class="govuk-table__cell">
+                            <th scope="row" class="govuk-table-case-details__header">Case owner</th>
+                            <td class="govuk-table__cell" data-testid="case owner_field">
                                 @Model.CaseModel.CreatedBy.FromEmailToFullName()
                             </td>
-                            <td class="govuk-table__cell govuk-table__header__right"></td>
+	                       
+	                        <td class="govuk-table__cell govuk-table__header__right">
+		                        @if (Model.IsEditableCase)
+		                        {
+			                        <a class="govuk-link" data-testid="edit-case-owner" href="@Request.Path/edit-case-owner" aria-label="Change case owner">
+				                        Edit<span class="govuk-visually-hidden">Case owner</span>
+			                        </a>
+		                        }
+	                        </td>
                         </tr>
 
                         <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table-case-details__header">Date Created</th>
+                            <th scope="row" class="govuk-table-case-details__header">Date created</th>
                             <td class="govuk-table__cell">
                                 @DateTimeHelper.ParseToDisplayDate(Model.CaseModel.CreatedAt)
                             </td>
@@ -222,33 +247,33 @@
 
                 @if (Model.IsConcernsCase)
                 {
-                    <h2 class="govuk-heading-m">Concern details</h2>
+                    <h2 class="govuk-heading-m">Concern case details</h2>
 
                     <div class="govuk-accordion" data-module="govuk-accordion" id="accordion">
 
                         @* Issue *@
                         <div class="govuk-accordion__section">
                             <div class="govuk-accordion__section-header">
-	                            <h2 class="govuk-accordion__section-heading">
-		                            <span class="govuk-accordion__section-button" id="accordion-issue-heading">
-			                            Issue
-		                            </span>
-	                            </h2>
+                                <h2 class="govuk-accordion__section-heading">
+                                    <span class="govuk-accordion__section-button" id="accordion-issue-heading">
+                                        Issue
+                                    </span>
+                                </h2>
                                 <div class="govuk-accordion__section-summary govuk-hint" id="accordion-issue-heading-hint">
-	                                This information can be used in Stage 1 and Stage 2 meetings.
-	                            </div>
+                                    This information can be used in Stage 1 and Stage 2 meetings.
+                                </div>
                             </div>
                             <div id="accordion-issue-content" class="govuk-accordion__section-content" aria-labelledby="accordion-issue-heading">
                                 @if (Model.IsEditableCase)
                                 {
-                                    <div><a id="accordion-issue-content-edit" data-testid="edit-issue" class="govuk-link float__right" href="@Request.Path/edit_issue" aria-label="Change issue">Edit</a></div>
+                                    <div><a id="accordion-issue-content-edit" data-testid="edit-issue" class="govuk-link float__right" href="@Request.Path/edit_issue" aria-label="Change issue">Change</a></div>
                                 }
                                 <div class="govuk-!-width-three-quarters">
                                     <span class="govuk-body dfe-text-area-display" data-testid="issue">@Model.CaseModel.Issue</span>
                                 </div>
                             </div>
                         </div>
-                        
+
                         @* Status *@
                         <div class="govuk-accordion__section">
                             <div class="govuk-accordion__section-header">
@@ -256,13 +281,13 @@
                                     <span class="govuk-accordion__section-button" id="accordion-status-heading">Current status</span>
                                 </h2>
                                 <div class="govuk-accordion__section-summary govuk-hint" id="accordion-status-heading-hint">
-	                                This information can be used in Stage 1 and Stage 2 meetings.
-	                            </div>
+                                    This information can be used in Stage 1 and Stage 2 meetings.
+                                </div>
                             </div>
                             <div id="accordion-status-content" class="govuk-accordion__section-content" aria-labelledby="accordion-status-heading">
                                 @if (Model.IsEditableCase)
                                 {
-                                    <div><a id="accordion-status-heading-edit" data-testid="edit-current-status" class="govuk-link float__right" href="@Request.Path/edit_current_status" aria-label="Change status">Edit</a></div>
+                                    <div><a id="accordion-status-heading-edit" data-testid="edit-current-status" class="govuk-link float__right" href="@Request.Path/edit_current_status" aria-label="Change status">Change</a></div>
                                 }
                                 <div class="govuk-!-width-three-quarters">
                                     <span class="govuk-body dfe-text-area-display" data-testid="status">@Model.CaseModel.CurrentStatus</span>
@@ -277,13 +302,13 @@
                                     <span class="govuk-accordion__section-button" id="accordion-case-aim-heading">Case aim</span>
                                 </h2>
                                 <div class="govuk-accordion__section-summary govuk-hint" id="accordion-case-aim-heading-hint">
-	                                This information can be used in Stage 1 and Stage 2 meetings.
-	                            </div>
+                                    This information can be used in Stage 1 and Stage 2 meetings.
+                                </div>
                             </div>
                             <div id="accordion-case-aim-content" class="govuk-accordion__section-content" aria-labelledby="accordion-case-aim-heading">
                                 @if (Model.IsEditableCase)
                                 {
-                                    <div><a id="accordion-case-aim-heading-edit" data-testid="edit-case-aim" class="govuk-link float__right" href="@Request.Path/edit_case_aim" aria-label="Change case aim">Edit</a></div>
+                                    <div><a id="accordion-case-aim-heading-edit" data-testid="edit-case-aim" class="govuk-link float__right" href="@Request.Path/edit_case_aim" aria-label="Change case aim">Change</a></div>
                                 }
 
                                 <div class="govuk-!-width-three-quarters">
@@ -299,13 +324,13 @@
                                     <span class="govuk-accordion__section-button" id="accordion-de-escalation-point-heading">De-escalation point</span>
                                 </h2>
                                 <div class="govuk-accordion__section-summary govuk-hint" id="accordion-de-escalation-point-heading-hint">
-	                                This information can be used in Stage 1 and Stage 2 meetings.
-	                            </div>
+                                    This information can be used in Stage 1 and Stage 2 meetings.
+                                </div>
                             </div>
                             <div id="accordion-de-escalation-point-content" class="govuk-accordion__section-content" aria-labelledby="accordion-de-escalation-point-heading">
                                 @if (Model.IsEditableCase)
                                 {
-                                    <div><a id="accordion-de-escalation-point-heading-edit" data-testid="edit-de-escalation-point" class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point" aria-label="Change de-escalation point">Edit</a></div>
+                                    <div><a id="accordion-de-escalation-point-heading-edit" data-testid="edit-de-escalation-point" class="govuk-link float__right" href="@Request.Path/edit_de_escalation_point" aria-label="Change de-escalation point">Change</a></div>
                                 }
 
                                 <div class="govuk-!-width-three-quarters">
@@ -321,13 +346,13 @@
                                     <span class="govuk-accordion__section-button" id="accordion-next-steps-heading">Next steps</span>
                                 </h2>
                                 <div class="govuk-accordion__section-summary govuk-hint" id="accordion-next-steps-heading-hint">
-	                                This information can be used in Stage 1 and Stage 2 meetings.
-	                            </div>
+                                    This information can be used in Stage 1 and Stage 2 meetings.
+                                </div>
                             </div>
                             <div id="accordion-next-steps-content" class="govuk-accordion__section-content" aria-labelledby="accordion-next-steps-heading">
                                 @if (Model.IsEditableCase)
                                 {
-                                    <div><a id="accordion-next-steps-heading-edit" data-testid="edit-next-steps" class="govuk-link float__right" href="@Request.Path/edit_next_steps" aria-label="Change next steps">Edit</a></div>
+                                    <div><a id="accordion-next-steps-heading-edit" data-testid="edit-next-steps" class="govuk-link float__right" href="@Request.Path/edit_next_steps" aria-label="Change next steps">Change</a></div>
                                 }
 
                                 <div class="govuk-!-width-three-quarters">
@@ -346,7 +371,7 @@
                             <div id="accordion-case-history-content" class="govuk-accordion__section-content" aria-labelledby="accordion-case-history-heading">
                                 @if (Model.IsEditableCase)
                                 {
-                                    <div><a id="accordion-case-history-heading-edit" data-testid="edit-case-history" class="govuk-link float__right" href="@Request.Path/casehistory" aria-label="Change case history">Edit</a></div>
+                                    <div><a id="accordion-case-history-heading-edit" data-testid="edit-case-history" class="govuk-link float__right" href="@Request.Path/casehistory" aria-label="Change case history">Change</a></div>
                                 }
 
                                 <div class="govuk-!-width-three-quarters">
@@ -385,7 +410,7 @@
                         {
                             <tr class="govuk-table__row">
                                 <td class="govuk-table__cell" colspan="3">
-                                    There are no open actions or decisions added to this case.
+                                    There are no active actions or decisions added to this case.
                                 </td>
                             </tr>
                         }
@@ -424,7 +449,7 @@
                 </table>
                 <table class="govuk-table  govuk-!-margin-top-9">
                     <caption class="govuk-table__caption govuk-table__caption--m">
-                        Closed cases
+                        Your closed cases
                     </caption>
                     <partial name="_TrustClosedCases" model="@Model.ClosedCases" />
                 </table>

@@ -55,7 +55,7 @@
 
         <h1 class="govuk-heading-l">
             <span class="govuk-caption-m">Case ID @Model.SRMAModel.CaseUrn</span>
-            School Resource Management Adviser (SRMA)
+            SRMA (School Resource Management Adviser)
         </h1>
 
         <table class="govuk-table">
@@ -270,7 +270,7 @@
         {
             var ariaLabel = "Change " + fieldName;
             <a class="govuk-link" href="@url" aria-label="@ariaLabel" data-testid="@fieldName">
-                @(IsEmpty(value) ? "Add" : "Edit")
+                @(IsEmpty(value) ? "Add" : "Change")
                 <span class="govuk-visually-hidden">@fieldName</span>
             </a>
         }

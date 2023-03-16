@@ -20,8 +20,8 @@
   "license": "ISC",
   "devDependencies": {
     "axe-core": "^4.6.1",
-    "cypress": "^9.7.0",
-    "cypress-axe": "^0.14.0",
+    "cypress": "^12.7.0",
+    "cypress-axe": "^1.4.0",
     "cypress-localstorage-commands": "^1.6.1",
     "cypress-multi-reporters": "^1.5.0",
     "mocha": "^9.2.2",
