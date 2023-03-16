@@ -1,0 +1,53 @@
+name: Run UI automation
+
+on:
+  push:
+    branches:
+    - develop
+  pull_request:
+    branches: [ develop ]
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  cypress-tests:
+      runs-on: ubuntu-latest
+      environment: dev
+      defaults:
+        run:
+          working-directory: ConcernsCaseWork/ConcernsCaseWork.CypressTests
+      steps:
+        - uses: actions/checkout@v3
+          with:
+            ref: ${{ github.ref }}
+
+        - name: Setup node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: ${{ env.NODE_VERSION }}
+
+        - name: Npm install
+          run: npm install
+
+        - name: Run cypress
+          run: npm run cy:run -- --spec=ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/e2e/casework-regression/homepage.cy.ts --env username='${{ secrets.USERNAME }},password=${{ secrets.PASSWORD }},url=${{ secrets.AZURE_ENDPOINT }},api=${{ secrets.AZURE_ENDPOINT }},apiKey=${{ secrets.AZURE_API_KEY }}',authKey=${{secrets.CYPRESS_TEST_SECRET}}
+
+        - name: Upload screenshots
+          if: ${{ failure() }}
+          uses: actions/upload-artifact@v1
+          with:
+            name: screenshots-dev
+            path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots
+
+        - name: Generate report
+          if: always()
+          run: npm run generate:html:report
+
+        - name: Upload report
+          uses: actions/upload-artifact@v1
+          with:
+            name: reports-dev
+            path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
+
+        - name: Report results
+          if: always()
+          run: npm run cypress-slack-reporter
