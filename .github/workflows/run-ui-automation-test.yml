@@ -51,4 +51,5 @@ jobs:
         - name: Report results
           if: always()
           run: npm run cy:notify
-          env: SLACK_WEBHOOK_URL: '${{ secrets.SLACK_WEBHOOK_URL }}' 
+          env: 
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
