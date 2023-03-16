@@ -47,7 +47,7 @@ jobs:
           uses: actions/upload-artifact@v1
           with:
             name: reports-dev
-            path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/reports
+            path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
 
         - name: Report results
           if: always()
