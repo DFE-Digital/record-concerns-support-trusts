@@ -13,275 +13,258 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
 {
-    public class NoticeToImproveControllerTests
-    {
-        private readonly Mock<ILogger<NoticeToImproveController>> _mockLogger;
-        private readonly Mock<IUseCase<CreateNoticeToImproveRequest, NoticeToImproveResponse>> _mockCreateNoticeToImproveUseCase;
-        private readonly Mock<IUseCase<long, NoticeToImproveResponse>> _mockGetNoticeToImproveByIdUseCase;
-        private readonly Mock<IUseCase<int, List<NoticeToImproveResponse>>> _mockGetNoticeToImproveByCaseUrnUseCase;
-        private readonly Mock<IUseCase<PatchNoticeToImproveRequest, NoticeToImproveResponse>> _mockPatchNoticeToImproveUseCase;
-        private readonly Mock<IUseCase<object, List<NoticeToImproveStatus>>> _mockGetAllStatuses;
-        private readonly Mock<IUseCase<object, List<NoticeToImproveReason>>> _mockGetAllReasons;
-        private readonly Mock<IUseCase<object, List<NoticeToImproveCondition>>> _mockGetAllCondition;
-        private readonly Mock<IUseCase<object, List<NoticeToImproveConditionType>>> _mockGetAllConditionType;
+	public class NoticeToImproveControllerTests
+	{
+		private readonly Mock<ILogger<NoticeToImproveController>> _mockLogger;
+		private readonly Mock<IUseCase<CreateNoticeToImproveRequest, NoticeToImproveResponse>> _mockCreateNoticeToImproveUseCase;
+		private readonly Mock<IUseCase<long, NoticeToImproveResponse>> _mockGetNoticeToImproveByIdUseCase;
+		private readonly Mock<IUseCase<int, List<NoticeToImproveResponse>>> _mockGetNoticeToImproveByCaseUrnUseCase;
+		private readonly Mock<IUseCase<PatchNoticeToImproveRequest, NoticeToImproveResponse>> _mockPatchNoticeToImproveUseCase;
+		private readonly Mock<IUseCase<object, List<NoticeToImproveStatus>>> _mockGetAllStatuses;
+		private readonly Mock<IUseCase<object, List<NoticeToImproveReason>>> _mockGetAllReasons;
+		private readonly Mock<IUseCase<object, List<NoticeToImproveCondition>>> _mockGetAllCondition;
+		private readonly Mock<IUseCase<object, List<NoticeToImproveConditionType>>> _mockGetAllConditionType;
 
-        private readonly NoticeToImproveController controllerSUT;
+		private readonly NoticeToImproveController controllerSUT;
 
-        public NoticeToImproveControllerTests()
-        {
-            _mockLogger = new Mock<ILogger<NoticeToImproveController>>();
-            _mockCreateNoticeToImproveUseCase = new Mock<IUseCase<CreateNoticeToImproveRequest, NoticeToImproveResponse>>();
-            _mockGetNoticeToImproveByIdUseCase = new Mock<IUseCase<long, NoticeToImproveResponse>>();
-            _mockGetNoticeToImproveByCaseUrnUseCase = new Mock<IUseCase<int, List<NoticeToImproveResponse>>>();
-            _mockPatchNoticeToImproveUseCase = new Mock<IUseCase<PatchNoticeToImproveRequest, NoticeToImproveResponse>>();
-            _mockGetAllStatuses = new Mock<IUseCase<object, List<NoticeToImproveStatus>>>();
-            _mockGetAllReasons = new Mock<IUseCase<object, List<NoticeToImproveReason>>>();
-            _mockGetAllCondition = new Mock<IUseCase<object, List<NoticeToImproveCondition>>>();
-            _mockGetAllConditionType = new Mock<IUseCase<object, List<NoticeToImproveConditionType>>>();
+		public NoticeToImproveControllerTests()
+		{
+			_mockLogger = new Mock<ILogger<NoticeToImproveController>>();
+			_mockCreateNoticeToImproveUseCase = new Mock<IUseCase<CreateNoticeToImproveRequest, NoticeToImproveResponse>>();
+			_mockGetNoticeToImproveByIdUseCase = new Mock<IUseCase<long, NoticeToImproveResponse>>();
+			_mockGetNoticeToImproveByCaseUrnUseCase = new Mock<IUseCase<int, List<NoticeToImproveResponse>>>();
+			_mockPatchNoticeToImproveUseCase = new Mock<IUseCase<PatchNoticeToImproveRequest, NoticeToImproveResponse>>();
+			_mockGetAllStatuses = new Mock<IUseCase<object, List<NoticeToImproveStatus>>>();
+			_mockGetAllReasons = new Mock<IUseCase<object, List<NoticeToImproveReason>>>();
+			_mockGetAllCondition = new Mock<IUseCase<object, List<NoticeToImproveCondition>>>();
+			_mockGetAllConditionType = new Mock<IUseCase<object, List<NoticeToImproveConditionType>>>();
 
-            controllerSUT = new NoticeToImproveController(_mockLogger.Object, _mockCreateNoticeToImproveUseCase.Object, _mockGetNoticeToImproveByIdUseCase.Object,
-                _mockGetNoticeToImproveByCaseUrnUseCase.Object, _mockPatchNoticeToImproveUseCase.Object, _mockGetAllStatuses.Object, _mockGetAllReasons.Object, _mockGetAllCondition.Object, _mockGetAllConditionType.Object);
-        }
+			controllerSUT = new NoticeToImproveController(_mockLogger.Object, _mockCreateNoticeToImproveUseCase.Object, _mockGetNoticeToImproveByIdUseCase.Object,
+				_mockGetNoticeToImproveByCaseUrnUseCase.Object, _mockPatchNoticeToImproveUseCase.Object, _mockGetAllStatuses.Object, _mockGetAllReasons.Object,
+				_mockGetAllCondition.Object, _mockGetAllConditionType.Object);
+		}
 
-        [Fact]
-        public void Create_ReturnsApiSingleResponseWithNewNoticeToImprove()
-        {
-            var createdAt = DateTime.Now;
-            var caseUrn = 544;
+		[Fact]
+		public void Create_ReturnsApiSingleResponseWithNewNoticeToImprove()
+		{
+			var createdAt = DateTime.Now;
+			var caseUrn = 544;
 
-            var response = Builder<NoticeToImproveResponse>
-               .CreateNew()
-               .With(r => r.CreatedAt = createdAt)
-               .Build();
+			var response = Builder<NoticeToImproveResponse>
+				.CreateNew()
+				.With(r => r.CreatedAt = createdAt)
+				.Build();
 
-            var expectedResponse = new ApiSingleResponseV2<NoticeToImproveResponse>(response);
+			var expectedResponse = new ApiSingleResponseV2<NoticeToImproveResponse>(response);
 
-            _mockCreateNoticeToImproveUseCase
-                .Setup(x => x.Execute(It.IsAny<CreateNoticeToImproveRequest>()))
-                .Returns(response);
+			_mockCreateNoticeToImproveUseCase
+				.Setup(x => x.Execute(It.IsAny<CreateNoticeToImproveRequest>()))
+				.Returns(response);
 
-            var result = controllerSUT.Create(new CreateNoticeToImproveRequest
-            {
-                CaseUrn = caseUrn,
-                CreatedAt = createdAt
-            });
+			var result = controllerSUT.Create(new CreateNoticeToImproveRequest { CaseUrn = caseUrn, CreatedAt = createdAt });
 
-            result.Result.Should().BeEquivalentTo(new ObjectResult(expectedResponse) { StatusCode = StatusCodes.Status201Created });
-        }
+			result.Result.Should().BeEquivalentTo(new ObjectResult(expectedResponse) { StatusCode = StatusCodes.Status201Created });
+		}
 
-        [Fact]
-        public void GetAllStatuses_ReturnsAllStatuses()
-        {
-            var noOfStatuses = 5;
+		[Fact]
+		public async Task GetAllStatuses_ReturnsAllStatuses()
+		{
+			var noOfStatuses = 5;
 
-            var statuses = Builder<NoticeToImproveStatus>
-                .CreateListOfSize(noOfStatuses)
-                .Build()
-                .ToList();
+			var statuses = Builder<NoticeToImproveStatus>
+				.CreateListOfSize(noOfStatuses)
+				.Build()
+				.ToList();
 
-            _mockGetAllStatuses
-                .Setup(x => x.Execute(null))
-                .Returns(statuses);
+			_mockGetAllStatuses
+				.Setup(x => x.Execute(null))
+				.Returns(statuses);
 
-            OkObjectResult controllerResponse = controllerSUT.GetAllStatuses().Result as OkObjectResult;
+			// todo: chris review
+			var controllerResponse = await controllerSUT.GetAllStatuses(); //.Result as OkObjectResult;
 
-            var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveStatus>>;
+			var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveStatus>>;
 
-            actualResult.Data.Should().NotBeNull();
-            actualResult.Data.Count.Should().Be(noOfStatuses);
-            actualResult.Data.First().Name.Should().Be(statuses.First().Name);
-        }
+			actualResult.Data.Should().NotBeNull();
+			actualResult.Data.Count.Should().Be(noOfStatuses);
+			actualResult.Data.First().Name.Should().Be(statuses.First().Name);
+		}
 
-        [Fact]
-        public void GetAllReasons_ReturnsAllReasons()
-        {
-            var noOfReasons = 8;
+		[Fact]
+		public async Task GetAllReasons_ReturnsAllReasons()
+		{
+			var noOfReasons = 8;
 
-            var reasons = Builder<NoticeToImproveReason>
-                .CreateListOfSize(noOfReasons)
-                .Build()
-                .ToList();
+			var reasons = Builder<NoticeToImproveReason>
+				.CreateListOfSize(noOfReasons)
+				.Build()
+				.ToList();
 
-            _mockGetAllReasons
-                .Setup(x => x.Execute(null))
-                .Returns(reasons);
+			_mockGetAllReasons
+				.Setup(x => x.Execute(null))
+				.Returns(reasons);
+			
+			// todo: chris review
+			var controllerResponse = await controllerSUT.GetAllReasons(); //.Result as OkObjectResult;
 
-            OkObjectResult controllerResponse = controllerSUT.GetAllReasons().Result as OkObjectResult;
+			var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveReason>>;
 
-            var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveReason>>;
+			actualResult.Data.Should().NotBeNull();
+			actualResult.Data.Count.Should().Be(noOfReasons);
+			actualResult.Data.First().Name.Should().Be(reasons.First().Name);
+		}
 
-            actualResult.Data.Should().NotBeNull();
-            actualResult.Data.Count.Should().Be(noOfReasons);
-            actualResult.Data.First().Name.Should().Be(reasons.First().Name);
-        }
+		[Fact]
+		public async Task GetAllConditions_ReturnsAllConditions()
+		{
+			var noOfConditions = 7;
 
-        [Fact]
-        public void GetAllConditions_ReturnsAllConditions()
-        {
-            var noOfConditions = 7;
+			var conditions = Builder<NoticeToImproveCondition>
+				.CreateListOfSize(noOfConditions)
+				.Build()
+				.ToList();
 
-            var conditions = Builder<NoticeToImproveCondition>
-                .CreateListOfSize(noOfConditions)
-                .Build()
-                .ToList();
+			_mockGetAllCondition
+				.Setup(x => x.Execute(null))
+				.Returns(conditions);
 
-            _mockGetAllCondition
-                .Setup(x => x.Execute(null))
-                .Returns(conditions);
+			// todo: chris review
+			var controllerResponse = await controllerSUT.GetAllConditions(); //.Result as OkObjectResult;
 
-            OkObjectResult controllerResponse = controllerSUT.GetAllConditions().Result as OkObjectResult;
+			var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveCondition>>;
 
-            var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveCondition>>;
+			actualResult.Data.Should().NotBeNull();
+			actualResult.Data.Count.Should().Be(noOfConditions);
+			actualResult.Data.First().Name.Should().Be(conditions.First().Name);
+		}
 
-            actualResult.Data.Should().NotBeNull();
-            actualResult.Data.Count.Should().Be(noOfConditions);
-            actualResult.Data.First().Name.Should().Be(conditions.First().Name);
-        }
+		[Fact]
+		public async Task GetAllConditionTypes_ReturnsAllConditionTypes()
+		{
+			var noOfConditionTypes = 4;
 
-        [Fact]
-        public void GetAllConditionTypes_ReturnsAllConditionTypes()
-        {
-            var noOfConditionTypes = 4;
+			var conditionTypes = Builder<NoticeToImproveConditionType>
+				.CreateListOfSize(noOfConditionTypes)
+				.Build()
+				.ToList();
 
-            var conditionTypes = Builder<NoticeToImproveConditionType>
-                .CreateListOfSize(noOfConditionTypes)
-                .Build()
-                .ToList();
+			_mockGetAllConditionType
+				.Setup(x => x.Execute(null))
+				.Returns(conditionTypes);
 
-            _mockGetAllConditionType
-                .Setup(x => x.Execute(null))
-                .Returns(conditionTypes);
+			// todo: chris review
+			var controllerResponse = await controllerSUT.GetAllConditionTypes(); //.Result as OkObjectResult;
 
-            OkObjectResult controllerResponse = controllerSUT.GetAllConditionTypes().Result as OkObjectResult;
+			var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveConditionType>>;
 
-            var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveConditionType>>;
+			actualResult.Data.Should().NotBeNull();
+			actualResult.Data.Count.Should().Be(noOfConditionTypes);
+			actualResult.Data.First().Name.Should().Be(conditionTypes.First().Name);
+		}
 
-            actualResult.Data.Should().NotBeNull();
-            actualResult.Data.Count.Should().Be(noOfConditionTypes);
-            actualResult.Data.First().Name.Should().Be(conditionTypes.First().Name);
-        }
+		[Fact]
+		public async Task GetNoticeToImproveByCaseUrn_ReturnsMatchingNoticeToImprove_WhenGivenCaseUrn()
+		{
+			var caseUrn = 544;
 
-        [Fact]
-        public void GetNoticeToImproveByCaseUrn_ReturnsMatchingNoticeToImprove_WhenGivenCaseUrn()
-        {
-            var caseUrn = 544;
+			var matchingNoticeToImprove = new NoticeToImprove { CaseUrn = caseUrn, Notes = "Match" };
 
-            var matchingNoticeToImprove = new NoticeToImprove
-            {
-                CaseUrn = caseUrn,
-                Notes = "Match"
-            };
+			var noticesToImprove = new List<NoticeToImprove>
+			{
+				matchingNoticeToImprove,
+				new NoticeToImprove { CaseUrn = 123, Notes = "Notice To Improve 1" },
+				new NoticeToImprove { CaseUrn = 456, Notes = "Notice To Improve 2" },
+			};
 
-            var noticesToImprove = new List<NoticeToImprove>
-            {
-                matchingNoticeToImprove,
-                new NoticeToImprove
-                {
-                    CaseUrn = 123,
-                    Notes = "Notice To Improve 1"
-                },
-                new NoticeToImprove
-                {
-                    CaseUrn = 456,
-                    Notes = "Notice To Improve 2"
-                },
-            };
+			var noticeToImproveResponse = Builder<NoticeToImproveResponse>
+				.CreateNew()
+				.With(r => r.CaseUrn = matchingNoticeToImprove.CaseUrn)
+				.With(r => r.Notes = matchingNoticeToImprove.Notes)
+				.Build();
 
-            var noticeToImproveResponse = Builder<NoticeToImproveResponse>
-              .CreateNew()
-              .With(r => r.CaseUrn = matchingNoticeToImprove.CaseUrn)
-              .With(r => r.Notes = matchingNoticeToImprove.Notes)
-              .Build();
+			var collection = new List<NoticeToImproveResponse> { noticeToImproveResponse };
 
-            var collection = new List<NoticeToImproveResponse> { noticeToImproveResponse };
+			_mockGetNoticeToImproveByCaseUrnUseCase
+				.Setup(x => x.Execute(caseUrn))
+				.Returns(collection);
 
-            _mockGetNoticeToImproveByCaseUrnUseCase
-                .Setup(x => x.Execute(caseUrn))
-                .Returns(collection);
+			// todo: chris review
+			var controllerResponse = await controllerSUT.GetNoticesToImproveByCaseUrn(caseUrn); //.Result as OkObjectResult;
 
-            OkObjectResult controllerResponse = controllerSUT.GetNoticesToImproveByCaseUrn(caseUrn).Result as OkObjectResult;
+			var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveResponse>>;
 
-            var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveResponse>>;
+			actualResult.Data.Should().NotBeNull();
+			actualResult.Data.Count.Should().Be(1);
+			actualResult.Data.First().CaseUrn.Should().Be(caseUrn);
+		}
 
-            actualResult.Data.Should().NotBeNull();
-            actualResult.Data.Count.Should().Be(1);
-            actualResult.Data.First().CaseUrn.Should().Be(caseUrn);
-        }
+		[Fact]
+		public void GetNoticeToImproveByID_ReturnsMatchingNoticeToImprove_WhenGivenId()
+		{
+			var noticeToImproveId = 455;
 
-        [Fact]
-        public void GetNoticeToImproveByID_ReturnsMatchingNoticeToImprove_WhenGivenId()
-        {
-            var noticeToImproveId = 455;
+			var matchingNoticeToImprove = new NoticeToImprove { Id = noticeToImproveId, Notes = "Match" };
 
-            var matchingNoticeToImprove = new NoticeToImprove
-            {
-                Id = noticeToImproveId,
-                Notes = "Match"
-            };
+			var noticeToImproveResponse = Builder<NoticeToImproveResponse>
+				.CreateNew()
+				.With(r => r.Id = matchingNoticeToImprove.Id)
+				.With(r => r.Notes = matchingNoticeToImprove.Notes)
+				.Build();
 
-            var noticeToImproveResponse = Builder<NoticeToImproveResponse>
-              .CreateNew()
-              .With(r => r.Id = matchingNoticeToImprove.Id)
-              .With(r => r.Notes = matchingNoticeToImprove.Notes)
-              .Build();
-
-            _mockGetNoticeToImproveByIdUseCase
-                .Setup(x => x.Execute(noticeToImproveId))
-                .Returns(noticeToImproveResponse);
+			_mockGetNoticeToImproveByIdUseCase
+				.Setup(x => x.Execute(noticeToImproveId))
+				.Returns(noticeToImproveResponse);
 
 
-            OkObjectResult controllerResponse = controllerSUT.GetNoticeToImproveById(noticeToImproveId).Result as OkObjectResult;
+			OkObjectResult controllerResponse = controllerSUT.GetNoticeToImproveById(noticeToImproveId).Result as OkObjectResult;
 
 
-            var actualResult = controllerResponse.Value as ApiSingleResponseV2<NoticeToImproveResponse>;
+			var actualResult = controllerResponse.Value as ApiSingleResponseV2<NoticeToImproveResponse>;
 
-            actualResult.Data.Should().NotBeNull();
-            actualResult.Data.Id.Should().Be(noticeToImproveId);
-        }
+			actualResult.Data.Should().NotBeNull();
+			actualResult.Data.Id.Should().Be(noticeToImproveId);
+		}
 
-        [Fact]
-        public void PatchNoticeToImprove_ReturnsUpdatedNoticeToImprove()
-        {
-            var noticeToImproveId = 544;
-            var newNotes = "updated notes";
-            var newClosedStatusId = 2;
+		[Fact]
+		public void PatchNoticeToImprove_ReturnsUpdatedNoticeToImprove()
+		{
+			var noticeToImproveId = 544;
+			var newNotes = "updated notes";
+			var newClosedStatusId = 2;
 
-            var originalNTI = new NoticeToImprove()
-            {
-                Id = noticeToImproveId,
-                Notes = "original note"
-            };
+			var originalNTI = new NoticeToImprove() { Id = noticeToImproveId, Notes = "original note" };
 
-            var request = Builder<PatchNoticeToImproveRequest>
-                .CreateNew()
-                .With(r => r.Id = originalNTI.Id)
-                .With(r => r.Notes = newNotes)
-                .With(r => r.ClosedStatusId = newClosedStatusId)
-                .Build();
+			var request = Builder<PatchNoticeToImproveRequest>
+				.CreateNew()
+				.With(r => r.Id = originalNTI.Id)
+				.With(r => r.Notes = newNotes)
+				.With(r => r.ClosedStatusId = newClosedStatusId)
+				.Build();
 
-            var response = Builder<NoticeToImproveResponse>
-                .CreateNew()
-                .With(r => r.Id = request.Id)
-                .With(r => r.Notes = request.Notes)
-                .With(r => r.ClosedStatusId = request.ClosedStatusId)
-                .Build();
+			var response = Builder<NoticeToImproveResponse>
+				.CreateNew()
+				.With(r => r.Id = request.Id)
+				.With(r => r.Notes = request.Notes)
+				.With(r => r.ClosedStatusId = request.ClosedStatusId)
+				.Build();
 
-            _mockPatchNoticeToImproveUseCase
-                .Setup(x => x.Execute(request))
-                .Returns(response);
+			_mockPatchNoticeToImproveUseCase
+				.Setup(x => x.Execute(request))
+				.Returns(response);
 
-            OkObjectResult controllerResponse = controllerSUT.Patch(request).Result as OkObjectResult;
+			OkObjectResult controllerResponse = controllerSUT.Patch(request).Result as OkObjectResult;
 
-            var actualResult = controllerResponse.Value as ApiSingleResponseV2<NoticeToImproveResponse>;
+			var actualResult = controllerResponse.Value as ApiSingleResponseV2<NoticeToImproveResponse>;
 
-            actualResult.Data.Should().NotBeNull();
-            actualResult.Data.Id.Should().Be(noticeToImproveId);
-            actualResult.Data.Notes.Should().Be(newNotes);
-            actualResult.Data.ClosedStatusId.Should().Be(newClosedStatusId);
-        }
-    }
+			actualResult.Data.Should().NotBeNull();
+			actualResult.Data.Id.Should().Be(noticeToImproveId);
+			actualResult.Data.Notes.Should().Be(newNotes);
+			actualResult.Data.ClosedStatusId.Should().Be(newClosedStatusId);
+		}
+	}
 }

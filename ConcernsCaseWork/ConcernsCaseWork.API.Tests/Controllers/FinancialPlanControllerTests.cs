@@ -13,232 +13,221 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
 {
-    public class FinancialPlanControllerTests
-    {
-        private readonly Mock<ILogger<FinancialPlanController>> _mockLogger;
-        private readonly Mock<IUseCase<CreateFinancialPlanRequest, FinancialPlanResponse>> _mockCreateFinancialPlanUseCase;
-        private readonly Mock<IUseCase<long, FinancialPlanResponse>> _mockGetFinancialPlanByIdUseCase;
-        private readonly Mock<IUseCase<int, List<FinancialPlanResponse>>> _mockGetFinancialPlansByCaseUseCase;
-        private readonly Mock<IUseCase<PatchFinancialPlanRequest, FinancialPlanResponse>> _mockPatchFinancialPlanUseCase;
-        private readonly Mock<IUseCase<object, List<FinancialPlanStatus>>> _mockGetAllStatuses;
+	public class FinancialPlanControllerTests
+	{
+		private readonly Mock<ILogger<FinancialPlanController>> _mockLogger;
+		private readonly Mock<IUseCase<CreateFinancialPlanRequest, FinancialPlanResponse>> _mockCreateFinancialPlanUseCase;
+		private readonly Mock<IUseCase<long, FinancialPlanResponse>> _mockGetFinancialPlanByIdUseCase;
+		private readonly Mock<IUseCase<int, List<FinancialPlanResponse>>> _mockGetFinancialPlansByCaseUseCase;
+		private readonly Mock<IUseCase<PatchFinancialPlanRequest, FinancialPlanResponse>> _mockPatchFinancialPlanUseCase;
+		private readonly Mock<IUseCase<object, List<FinancialPlanStatus>>> _mockGetAllStatuses;
 
-        private readonly FinancialPlanController _controllerSut;
+		private readonly FinancialPlanController _controllerSut;
 
-        public FinancialPlanControllerTests()
-        {
-            _mockLogger = new Mock<ILogger<FinancialPlanController>>();
-            _mockCreateFinancialPlanUseCase = new Mock<IUseCase<CreateFinancialPlanRequest, FinancialPlanResponse>>();
-            _mockGetFinancialPlanByIdUseCase = new Mock<IUseCase<long, FinancialPlanResponse>>();
-            _mockGetFinancialPlansByCaseUseCase = new Mock<IUseCase<int, List<FinancialPlanResponse>>>();
-            _mockPatchFinancialPlanUseCase = new Mock<IUseCase<PatchFinancialPlanRequest, FinancialPlanResponse>>();
-            _mockGetAllStatuses = new Mock<IUseCase<object, List<FinancialPlanStatus>>>();
+		public FinancialPlanControllerTests()
+		{
+			_mockLogger = new Mock<ILogger<FinancialPlanController>>();
+			_mockCreateFinancialPlanUseCase = new Mock<IUseCase<CreateFinancialPlanRequest, FinancialPlanResponse>>();
+			_mockGetFinancialPlanByIdUseCase = new Mock<IUseCase<long, FinancialPlanResponse>>();
+			_mockGetFinancialPlansByCaseUseCase = new Mock<IUseCase<int, List<FinancialPlanResponse>>>();
+			_mockPatchFinancialPlanUseCase = new Mock<IUseCase<PatchFinancialPlanRequest, FinancialPlanResponse>>();
+			_mockGetAllStatuses = new Mock<IUseCase<object, List<FinancialPlanStatus>>>();
 
-            _controllerSut = new FinancialPlanController(_mockLogger.Object, _mockCreateFinancialPlanUseCase.Object, _mockGetFinancialPlanByIdUseCase.Object,
-                _mockGetFinancialPlansByCaseUseCase.Object, _mockPatchFinancialPlanUseCase.Object, _mockGetAllStatuses.Object);
-        }
+			_controllerSut = new FinancialPlanController(_mockLogger.Object, _mockCreateFinancialPlanUseCase.Object, _mockGetFinancialPlanByIdUseCase.Object,
+				_mockGetFinancialPlansByCaseUseCase.Object, _mockPatchFinancialPlanUseCase.Object, _mockGetAllStatuses.Object);
+		}
 
-        [Fact]
-        public void Create_ReturnsApiSingleResponseWithNewFinancialPlan()
-        {
-            var status = 2;
-            var createdAt = DateTime.Now.AddDays(-5);
-            var caseUrn = 223;
+		[Fact]
+		public void Create_ReturnsApiSingleResponseWithNewFinancialPlan()
+		{
+			var status = 2;
+			var createdAt = DateTime.Now.AddDays(-5);
+			var caseUrn = 223;
 
-            var response = Builder<FinancialPlanResponse>
-                .CreateNew()
-                .With(r => r.StatusId = status)
-                .With(r => r.CreatedAt = createdAt)
-                .Build();
+			var response = Builder<FinancialPlanResponse>
+				.CreateNew()
+				.With(r => r.StatusId = status)
+				.With(r => r.CreatedAt = createdAt)
+				.Build();
 
-            var expectedResponse = new ApiSingleResponseV2<FinancialPlanResponse>(response);
+			var expectedResponse = new ApiSingleResponseV2<FinancialPlanResponse>(response);
 
-            _mockCreateFinancialPlanUseCase
-                .Setup(x => x.Execute(It.IsAny<CreateFinancialPlanRequest>()))
-                .Returns(response);
+			_mockCreateFinancialPlanUseCase
+				.Setup(x => x.Execute(It.IsAny<CreateFinancialPlanRequest>()))
+				.Returns(response);
 
-            var result = _controllerSut.Create(new CreateFinancialPlanRequest
-            {
-                StatusId = status,
-                CaseUrn = caseUrn,
-                CreatedAt = createdAt,
-            });
+			var result = _controllerSut.Create(new CreateFinancialPlanRequest { StatusId = status, CaseUrn = caseUrn, CreatedAt = createdAt, });
 
-            result.Result.Should().BeEquivalentTo(new ObjectResult(expectedResponse) { StatusCode = StatusCodes.Status201Created });
-        }
+			result.Result.Should().BeEquivalentTo(new ObjectResult(expectedResponse) { StatusCode = StatusCodes.Status201Created });
+		}
 
-        [Fact]
-        public void GetFinancialPlansByCaseId_ReturnsMatchingFinancialPlan_WhenGivenCaseId()
-        {
-            var caseUrn = 123;
+		[Fact]
+		public async Task GetFinancialPlansByCaseId_ReturnsMatchingFinancialPlan_WhenGivenCaseId()
+		{
+			var caseUrn = 123;
 
-            var matchingFinancialPlan = new FinancialPlanCase
-            {
-                CaseUrn = caseUrn,
-                Notes = "match"
-            };
+			var matchingFinancialPlan = new FinancialPlanCase { CaseUrn = caseUrn, Notes = "match" };
 
-            var fpResponse = Builder<FinancialPlanResponse>
-                .CreateNew()
-                .With(r => r.CaseUrn = matchingFinancialPlan.CaseUrn)
-                .With(r => r.Notes = matchingFinancialPlan.Notes)
-                .Build();
+			var fpResponse = Builder<FinancialPlanResponse>
+				.CreateNew()
+				.With(r => r.CaseUrn = matchingFinancialPlan.CaseUrn)
+				.With(r => r.Notes = matchingFinancialPlan.Notes)
+				.Build();
 
-            var collection = new List<FinancialPlanResponse> { fpResponse };
+			var collection = new List<FinancialPlanResponse> { fpResponse };
 
-            _mockGetFinancialPlansByCaseUseCase
-                .Setup(x => x.Execute(caseUrn))
-                .Returns(collection);
+			_mockGetFinancialPlansByCaseUseCase
+				.Setup(x => x.Execute(caseUrn))
+				.Returns(collection);
 
-            OkObjectResult controllerResponse = _controllerSut.GetFinancialPlansByCaseId(caseUrn).Result as OkObjectResult;
+			// todo: chris review
+			var controllerResponse = (await _controllerSut.GetFinancialPlansByCaseId(caseUrn)); // as OkObjectResult;
 
-            var actualResult = controllerResponse?.Value as ApiSingleResponseV2<List<FinancialPlanResponse>>;
+			var actualResult = controllerResponse?.Value as ApiSingleResponseV2<List<FinancialPlanResponse>>;
 
-            actualResult?.Data.Should().NotBeNull();
-            actualResult?.Data.Count.Should().Be(1);
-            actualResult?.Data.First().CaseUrn.Should().Be(caseUrn);
-        }
+			actualResult?.Data.Should().NotBeNull();
+			actualResult?.Data.Count.Should().Be(1);
+			actualResult?.Data.First().CaseUrn.Should().Be(caseUrn);
+		}
 
-        [Fact]
-        public void GetFinancialPlansById_ReturnsMatchingFinancialPlan_WhenGivenId()
-        {
-            var fpId = 444;
+		[Fact]
+		public async Task GetFinancialPlansById_ReturnsMatchingFinancialPlan_WhenGivenId()
+		{
+			var fpId = 444;
 
-            var matchingFinancialPlan = new FinancialPlanCase
-            {
-                Id = fpId,
-                Notes = "match"
-            };
+			var matchingFinancialPlan = new FinancialPlanCase { Id = fpId, Notes = "match" };
 
-            var fpResponse = Builder<FinancialPlanResponse>
-                .CreateNew()
-                .With(r => r.Id = matchingFinancialPlan.Id)
-                .With(r => r.Notes = matchingFinancialPlan.Notes)
-                .Build();
+			var fpResponse = Builder<FinancialPlanResponse>
+				.CreateNew()
+				.With(r => r.Id = matchingFinancialPlan.Id)
+				.With(r => r.Notes = matchingFinancialPlan.Notes)
+				.Build();
 
-            _mockGetFinancialPlanByIdUseCase
-                .Setup(x => x.Execute(fpId))
-                .Returns(fpResponse);
+			_mockGetFinancialPlanByIdUseCase
+				.Setup(x => x.Execute(fpId))
+				.Returns(fpResponse);
 
-            OkObjectResult controllerResponse = _controllerSut.GetFinancialPlanById(fpId).Result as OkObjectResult;
+			// todo: chris review
+			var controllerResponse = await _controllerSut.GetFinancialPlanById(fpId); //.Result as OkObjectResult;
 
-            var actualResult = controllerResponse?.Value as ApiSingleResponseV2<FinancialPlanResponse>;
+			var actualResult = controllerResponse?.Value as ApiSingleResponseV2<FinancialPlanResponse>;
 
-            actualResult?.Data.Should().NotBeNull();
-            actualResult?.Data.Id.Should().Be(fpId);
-        }
+			actualResult?.Data.Should().NotBeNull();
+			actualResult?.Data.Id.Should().Be(fpId);
+		}
 
-        [Fact]
-        public void PatchFinancialPlan_ReturnsUpdatedFinancialPlan()
-        {
-            var fpId = 444;
-            var newNotes = "new notes xyz";
-            var newStatusId = 3;
+		[Fact]
+		public async Task PatchFinancialPlan_ReturnsUpdatedFinancialPlan()
+		{
+			var fpId = 444;
+			var newNotes = "new notes xyz";
+			var newStatusId = 3;
 
-            var fp = new FinancialPlanCase
-            {
-                Id = fpId,
-                Notes = "Original notes",
-                StatusId = 1
-            };
+			var fp = new FinancialPlanCase { Id = fpId, Notes = "Original notes", StatusId = 1 };
 
-            var request = Builder<PatchFinancialPlanRequest>
-                .CreateNew()
-                .With(r => r.Id = fp.Id)
-                .With(r => r.StatusId = newStatusId)
-                .With(r => r.Notes = newNotes)
-                .Build();
+			var request = Builder<PatchFinancialPlanRequest>
+				.CreateNew()
+				.With(r => r.Id = fp.Id)
+				.With(r => r.StatusId = newStatusId)
+				.With(r => r.Notes = newNotes)
+				.Build();
 
-            var fpResponse = Builder<FinancialPlanResponse>
-                .CreateNew()
-                .With(r => r.Id = request.Id)
-                .With(r => r.Notes = request.Notes)
-                .With(r => r.StatusId = request.StatusId)
-                .Build();
+			var fpResponse = Builder<FinancialPlanResponse>
+				.CreateNew()
+				.With(r => r.Id = request.Id)
+				.With(r => r.Notes = request.Notes)
+				.With(r => r.StatusId = request.StatusId)
+				.Build();
 
-            _mockPatchFinancialPlanUseCase
-                .Setup(x => x.Execute(request))
-                .Returns(fpResponse);
+			_mockPatchFinancialPlanUseCase
+				.Setup(x => x.Execute(request))
+				.Returns(fpResponse);
 
-            OkObjectResult controllerResponse = _controllerSut.Patch(request).Result as OkObjectResult;
+			// todo: chris review
+			var controllerResponse = await _controllerSut.Patch(request); //.Result as OkObjectResult;
 
-            var actualResult = controllerResponse?.Value as ApiSingleResponseV2<FinancialPlanResponse>;
+			var actualResult = controllerResponse?.Value as ApiSingleResponseV2<FinancialPlanResponse>;
 
-            actualResult?.Data.Should().NotBeNull();
-            actualResult?.Data.Id.Should().Be(fpId);
-        }
+			actualResult?.Data.Should().NotBeNull();
+			actualResult?.Data.Id.Should().Be(fpId);
+		}
 
-        [Fact]
-        public void GetAllStatuses_ReturnsAllStatuses()
-        {
-            var noOfStatuses = 4;
+		[Fact]
+		public async Task GetAllStatuses_ReturnsAllStatuses()
+		{
+			var noOfStatuses = 4;
 
-            var statuses = Builder<FinancialPlanStatus>
-                .CreateListOfSize(noOfStatuses)
-                .Build()
-                .ToList();
+			var statuses = Builder<FinancialPlanStatus>
+				.CreateListOfSize(noOfStatuses)
+				.Build()
+				.ToList();
 
-            _mockGetAllStatuses
-                .Setup(x => x.Execute(null))
-                .Returns(statuses);
+			_mockGetAllStatuses
+				.Setup(x => x.Execute(null))
+				.Returns(statuses);
 
-            var controllerResponse = _controllerSut.GetAllStatuses().Result as OkObjectResult;
+			// todo: chris review
+			var controllerResponse = await _controllerSut.GetAllStatuses(); // .Result as OkObjectResult;
 
-            var actualResult = controllerResponse!.Value as ApiSingleResponseV2<List<FinancialPlanStatus>>;
+			var actualResult = controllerResponse!.Value as ApiSingleResponseV2<List<FinancialPlanStatus>>;
 
-            actualResult?.Data.Should().NotBeNull();
-            actualResult?.Data.Should().BeEquivalentTo(statuses);
-        }
-        
-        [Fact]
-        public void GetOpenStatuses_ReturnsListOfStatusesApplicableToOpenFinancialPlanActions()
-        {
-            var noOfStatusesToCreate = 4;
+			actualResult?.Data.Should().NotBeNull();
+			actualResult?.Data.Should().BeEquivalentTo(statuses);
+		}
 
-            var statuses = Builder<FinancialPlanStatus>
-                .CreateListOfSize(noOfStatusesToCreate)
-                .Build()
-                .ToList();
+		[Fact]
+		public async Task GetOpenStatuses_ReturnsListOfStatusesApplicableToOpenFinancialPlanActions()
+		{
+			var noOfStatusesToCreate = 4;
 
-            var expectedStatuses = statuses.Where(s => !s.IsClosedStatus).ToList();
+			var statuses = Builder<FinancialPlanStatus>
+				.CreateListOfSize(noOfStatusesToCreate)
+				.Build()
+				.ToList();
 
-            _mockGetAllStatuses
-                .Setup(x => x.Execute(null))
-                .Returns(statuses);
+			var expectedStatuses = statuses.Where(s => !s.IsClosedStatus).ToList();
 
-            var controllerResponse = _controllerSut.GetOpenStatuses().Result as OkObjectResult;
+			_mockGetAllStatuses
+				.Setup(x => x.Execute(null))
+				.Returns(statuses);
 
-            var actualResult = controllerResponse!.Value as ApiSingleResponseV2<List<FinancialPlanStatus>>;
+			// todo: chris review
+			var controllerResponse = await _controllerSut.GetOpenStatuses(); //.Result as OkObjectResult;
 
-            actualResult?.Data.Should().NotBeNull();
-            actualResult?.Data.Should().BeEquivalentTo(expectedStatuses);
-        }
-                
-        [Fact]
-        public void GetClosedStatuses_ReturnsListOfStatusesApplicableToClosedFinancialPlanActions()
-        {
-            var noOfStatusesToCreate = 4;
+			var actualResult = controllerResponse!.Value as ApiSingleResponseV2<List<FinancialPlanStatus>>;
 
-            var statuses = Builder<FinancialPlanStatus>
-                .CreateListOfSize(noOfStatusesToCreate)
-                .Build()
-                .ToList();
+			actualResult?.Data.Should().NotBeNull();
+			actualResult?.Data.Should().BeEquivalentTo(expectedStatuses);
+		}
 
-            var expectedStatuses = statuses.Where(s => s.IsClosedStatus).ToList();
+		[Fact]
+		public async Task GetClosedStatuses_ReturnsListOfStatusesApplicableToClosedFinancialPlanActions()
+		{
+			var noOfStatusesToCreate = 4;
 
-            _mockGetAllStatuses
-                .Setup(x => x.Execute(null))
-                .Returns(statuses);
+			var statuses = Builder<FinancialPlanStatus>
+				.CreateListOfSize(noOfStatusesToCreate)
+				.Build()
+				.ToList();
 
-            var controllerResponse = _controllerSut.GetClosureStatuses().Result as OkObjectResult;
+			var expectedStatuses = statuses.Where(s => s.IsClosedStatus).ToList();
 
-            var actualResult = controllerResponse!.Value as ApiSingleResponseV2<List<FinancialPlanStatus>>;
+			_mockGetAllStatuses
+				.Setup(x => x.Execute(null))
+				.Returns(statuses);
 
-            actualResult?.Data.Should().NotBeNull();
-            actualResult?.Data.Should().BeEquivalentTo(expectedStatuses);
-        }
-    }
+			// todo: chris review
+			var controllerResponse = await _controllerSut.GetClosureStatuses(); //.Result as OkObjectResult;
+
+			var actualResult = controllerResponse!.Value as ApiSingleResponseV2<List<FinancialPlanStatus>>;
+
+			actualResult?.Data.Should().NotBeNull();
+			actualResult?.Data.Should().BeEquivalentTo(expectedStatuses);
+		}
+	}
 }

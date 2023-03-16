@@ -52,7 +52,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPost]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>> Create(ConcernCaseRequest request)
+        public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>>> Create(ConcernCaseRequest request, CancellationToken cancellationToken = default)
         {
             var validator = new ConcernsCaseRequestValidator();
             if (validator.Validate(request).IsValid)
@@ -69,7 +69,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("urn/{urn}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>> GetByUrn(int urn)
+        public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>>> GetByUrn(int urn, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"Attempting to get Concerns Case by Urn {urn}");
             var concernsCase = _getConcernsCaseByUrn.Execute(urn);
@@ -90,7 +90,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("ukprn/{trustUkprn}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiResponseV2<ConcernsCaseResponse>> GetByTrustUkprn(string trustUkprn, int page = 1, int count = 50)
+        public async Task<ActionResult<ApiResponseV2<ConcernsCaseResponse>>> GetByTrustUkprn(string trustUkprn, int page = 1, int count = 50, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"Attempting to get Concerns Cases by Trust Ukprn {trustUkprn}, page {page}, count {count}");
             var concernsCases = _getConcernsCaseByTrustUkprn.Execute(trustUkprn, page, count);
@@ -105,7 +105,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPatch("{urn}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>> Update(int urn, ConcernCaseRequest request)
+        public async Task<ActionResult<ApiSingleResponseV2<ConcernsCaseResponse>>> Update(int urn, ConcernCaseRequest request, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"Attempting to update Concerns Case {urn}");
             var validator = new ConcernsCaseRequestValidator();
@@ -132,7 +132,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("owner/{ownerId}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiResponseV2<ConcernsCaseResponse>> GetByOwnerId(string ownerId, int? status = null, int page = 1, int count = 50)
+        public async Task<ActionResult<ApiResponseV2<ConcernsCaseResponse>>> GetByOwnerId(string ownerId, int? status = null, int page = 1, int count = 50, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"Attempting to get Concerns Cases by Owner Id {ownerId}, page {page}, count {count}");
             var concernsCases = _getConcernsCasesByOwnerId.Execute(ownerId, status, page, count);
@@ -148,7 +148,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("summary/{userId}/active")]
         [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesForUser(string userId, CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesForUser(string userId, CancellationToken cancellationToken = default)
         {
 	        _logger.LogInformation("Attempting to get active Concerns Case summaries for User Id {UserId}", userId);
 	        var caseSummaries = await _getActiveConcernsCaseSummariesByOwner.Execute(userId);
@@ -162,7 +162,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("summary/{userId}/active/team")]
         [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesForUsersTeam(string userId, CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesForUsersTeam(string userId, CancellationToken cancellationToken = default)
         {
 	        _logger.LogInformation("Attempting to get active Concerns Case summaries for User Id {UserId}", userId);
 	        var caseSummaries = await _getActiveConcernsCaseSummariesForUsersTeam.Execute(userId, cancellationToken);
@@ -176,7 +176,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("summary/{ownerId}/closed")]
         [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByOwnerId(string ownerId)
+        public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByOwnerId(string ownerId, CancellationToken cancellationToken = default)
         {
 	        _logger.LogInformation($"Attempting to get closed Concerns Case summaries by Owner Id {ownerId}");
 	        var caseSummaries = await _getClosedConcernsCaseSummariesByOwner.Execute(ownerId);
@@ -190,7 +190,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("summary/bytrust/{trustukprn}/active")]
         [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesByTrust(string trustukprn)
+        public async Task<ActionResult<ApiResponseV2<ActiveCaseSummaryResponse>>> GetActiveSummariesByTrust(string trustukprn, CancellationToken cancellationToken = default)
         {
 	        _logger.LogInformation($"Attempting to get active Concerns Case summaries by Trust {trustukprn}");
 	        var caseSummaries = await _getActiveConcernsCaseSummariesByTrust.Execute(trustukprn);
@@ -204,7 +204,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("summary/bytrust/{trustukprn}/closed")]
         [MapToApiVersion("2.0")]
-        public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByTrust(string trustukprn)
+        public async Task<ActionResult<ApiResponseV2<ClosedCaseSummaryResponse>>> GetClosedSummariesByTrust(string trustukprn, CancellationToken cancellationToken = default)
         {
 	        _logger.LogInformation($"Attempting to get closed Concerns Case summaries by Trust {trustukprn}");
 	        var caseSummaries = await _getClosedConcernsCaseSummariesByTrust.Execute(trustukprn);
