@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ConcernsCaseWork.API.Tests.Controllers
@@ -74,7 +75,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         }
 
         [Fact]
-        public void GetAllStatuses_ReturnsAllStatuses()
+        public async Task GetAllStatuses_ReturnsAllStatuses()
         {
             var noOfStatuses = 5;
 
@@ -87,7 +88,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(null))
                 .Returns(statuses);
 
-            OkObjectResult controllerResponse = controllerSUT.GetAllStatuses().Result as OkObjectResult;
+            // todo: chris review
+            var controllerResponse = await controllerSUT.GetAllStatuses(); //.Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NTIWarningLetterStatus>>;
 
@@ -97,7 +99,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
         }
 
         [Fact]
-        public void GetAllReasons_ReturnsAllReasons()
+        public async Task GetAllReasons_ReturnsAllReasons()
         {
             var noOfReasons = 8;
 
@@ -110,7 +112,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(null))
                 .Returns(reasons);
 
-            OkObjectResult controllerResponse = controllerSUT.GetAllReasons().Result as OkObjectResult;
+            // todo: chris review
+            var controllerResponse = await controllerSUT.GetAllReasons(); //.Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NTIWarningLetterReason>>;
 

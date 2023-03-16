@@ -398,7 +398,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 		        null
 	        );
-	        var response = await controller.GetActiveSummariesByTrust(trustPrn);
+	        var response = await controller.GetActiveSummariesByTrust(trustPrn, CancellationToken.None);
   
 	        var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
@@ -427,7 +427,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null
 	        );
-	        var response = await controller.GetActiveSummariesByTrust(trustPrn);
+	        var response = await controller.GetActiveSummariesByTrust(trustPrn, CancellationToken.None);
   
 	        var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
@@ -455,7 +455,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null
 	        );
-	        var response = await controller.GetClosedSummariesByOwnerId(ownerId);
+	        var response = await controller.GetClosedSummariesByOwnerId(ownerId, CancellationToken.None);
   
 	        var expected = new ApiResponseV2<ClosedCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
@@ -484,7 +484,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null
 	        );
-	        var response = await controller.GetClosedSummariesByOwnerId(ownerId);
+	        var response = await controller.GetClosedSummariesByOwnerId(ownerId, CancellationToken.None);
   
 	        var expected = new ApiResponseV2<ClosedCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
@@ -513,7 +513,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null
 	        );
-	        var response = await controller.GetClosedSummariesByTrust(trustPrn);
+	        var response = await controller.GetClosedSummariesByTrust(trustPrn, CancellationToken.None);
   
 	        var expected = new ApiResponseV2<ClosedCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
@@ -542,7 +542,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null
 	        );
-	        var response = await controller.GetClosedSummariesByTrust(ownerId);
+	        var response = await controller.GetClosedSummariesByTrust(ownerId, CancellationToken.None);
   
 	        var expected = new ApiResponseV2<ClosedCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));

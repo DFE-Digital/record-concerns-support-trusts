@@ -41,7 +41,7 @@ namespace ConcernsCaseWork.API.Controllers
   
         [HttpPost]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<NTIUnderConsiderationResponse>> Create(CreateNTIUnderConsiderationRequest request)
+        public async Task<ActionResult<ApiSingleResponseV2<NTIUnderConsiderationResponse>>> Create(CreateNTIUnderConsiderationRequest request, CancellationToken cancellationToken = default)
         {
             var createdConsideration = _createNtiUnderConsiderationUseCase.Execute(request);
             var response = new ApiSingleResponseV2<NTIUnderConsiderationResponse>(createdConsideration);
@@ -52,7 +52,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("{underConsiderationId}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<NTIUnderConsiderationResponse>> GetNTIUnderConsiderationById(long underConsiderationId)
+        public async Task<ActionResult<ApiSingleResponseV2<NTIUnderConsiderationResponse>>> GetNTIUnderConsiderationById(long underConsiderationId, CancellationToken cancellationToken = default)
         {
             var consideration = _getNtiUnderConsiderationByIdUseCase.Execute(underConsiderationId);
             var response = new ApiSingleResponseV2<NTIUnderConsiderationResponse>(consideration);
@@ -63,7 +63,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("case/{caseUrn}")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<NTIUnderConsiderationResponse>>> GetNtiUnderConsiderationByCaseUrn(int caseUrn)
+        public async Task<ActionResult<ApiSingleResponseV2<List<NTIUnderConsiderationResponse>>>> GetNtiUnderConsiderationByCaseUrn(int caseUrn, CancellationToken cancellationToken = default)
         {
             var considerations = _getNtiUnderConsiderationByCaseUrnUseCase.Execute(caseUrn);
             var response = new ApiSingleResponseV2<List<NTIUnderConsiderationResponse>>(considerations);
@@ -74,7 +74,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("all-statuses")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<NTIUnderConsiderationStatus>>> GetAllStatuses()
+        public async Task<ActionResult<ApiSingleResponseV2<List<NTIUnderConsiderationStatus>>>> GetAllStatuses(CancellationToken cancellationToken = default)
         {
             var statuses = _getAllStatuses.Execute(null);
             var response = new ApiSingleResponseV2<List<NTIUnderConsiderationStatus>>(statuses);
@@ -85,7 +85,7 @@ namespace ConcernsCaseWork.API.Controllers
         [HttpGet]
         [Route("all-reasons")]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<List<NTIUnderConsiderationReason>>> GetAllReasons()
+        public async Task<ActionResult<ApiSingleResponseV2<List<NTIUnderConsiderationReason>>>> GetAllReasons(CancellationToken cancellationToken = default)
         {
             var reasons = _getAllReasons.Execute(null);
             var response = new ApiSingleResponseV2<List<NTIUnderConsiderationReason>>(reasons);
@@ -95,7 +95,7 @@ namespace ConcernsCaseWork.API.Controllers
 
         [HttpPatch]
         [MapToApiVersion("2.0")]
-        public ActionResult<ApiSingleResponseV2<NTIUnderConsiderationResponse>> Patch(PatchNTIUnderConsiderationRequest request)
+        public async Task<ActionResult<ApiSingleResponseV2<NTIUnderConsiderationResponse>>> Patch(PatchNTIUnderConsiderationRequest request, CancellationToken cancellationToken = default)
         {
             var createdConsideration = _patchNTIUnderConsiderationUseCase.Execute(request);
             var response = new ApiSingleResponseV2<NTIUnderConsiderationResponse>(createdConsideration);
