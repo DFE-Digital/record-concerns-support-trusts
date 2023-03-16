@@ -6,7 +6,7 @@
   "scripts": {
     "cy:open": "cypress open --browser edge",
     "cy:run": "npm run clean:reports && cypress run --browser edge",
-    "cy:run:ci": "npm run cy:run --env username='${{ secrets.USERNAME }},password=${{ secrets.PASSWORD }},url=${{ secrets.AZURE_ENDPOINT }},api=${{ secrets.TRAMS_API_ENDPOINT }},apiKey=${{ secrets.TRAMS_API_KEY }}',authKey=${{secrets.CYPRESS_TEST_SECRET}}",
+    "cy:run:ci": "npm run cy:run --env username=${{ secrets.USERNAME }},password=${{ secrets.PASSWORD }},url=${{ secrets.AZURE_ENDPOINT }},api=${{ secrets.TRAMS_API_ENDPOINT }},apiKey=${{ secrets.TRAMS_API_KEY }}',authKey=${{secrets.CYPRESS_TEST_SECRET}}",
     "clean:reports": "rm -rf cypress/reports/mocha/*.json",
     "combine:reports": "mochawesome-merge  cypress/reports/mocha/*.json> cypress/reports/report.json",
     "create:html:report": "marge  ./cypress/reports/report.json -f report -o mochareports",
