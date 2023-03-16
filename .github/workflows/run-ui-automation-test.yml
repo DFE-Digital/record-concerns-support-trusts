@@ -50,4 +50,4 @@ jobs:
 
         - name: Report results
           if: always()
-          run: npm run cypress-slack-reporter
+          run: npm run cy:notify
