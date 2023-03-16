@@ -1,4 +1,4 @@
-name: Run UI automation
+name: Test cypress on pipeline
 
 on:
   push:
