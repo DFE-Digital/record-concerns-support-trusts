@@ -8,7 +8,7 @@ namespace ConcernsCaseWork.Security
 		{
 			var policy = new HeaderPolicyCollection()
 				.AddFrameOptionsDeny()
-				.AddXssProtectionBlock()
+				.AddCustomHeader("X-XSS-Protection", "0")
 				.AddContentTypeOptionsNoSniff()
 				.AddReferrerPolicyStrictOriginWhenCrossOrigin()
 				.RemoveServerHeader()
