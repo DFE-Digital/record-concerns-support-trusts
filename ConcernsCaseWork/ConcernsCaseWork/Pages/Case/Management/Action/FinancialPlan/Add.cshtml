@@ -5,7 +5,7 @@
 @model ConcernsCaseWork.Pages.Case.Management.Action.FinancialPlan.AddPageModel
 
 @{
-	ViewData["Title"] = "Add Financial Plan";
+	ViewData["Title"] = "Add Financial plan";
 	ViewData["CancelBackLink"] = $"/case/{@RouteData.Values["urn"]}/management";
 	var nonce = HttpContext.GetNonce();
 }
@@ -40,7 +40,7 @@
 
 				<h1 class="govuk-heading-l">
 					<span class="govuk-caption-m">Case ID: @RouteData.Values["urn"]</span>
-					Financial Plan
+					Financial plan
 				</h1>
 
 
@@ -55,7 +55,7 @@
 					@* date plan requested *@
 					<div class="govuk-form-group govuk-!-margin-top-9">
 						<fieldset class="govuk-fieldset">
-							<h2 class="govuk-heading-m">Date plan requested</h2>
+                            <h2 class="govuk-heading-m">Date financial plan requested</h2>
 							<div class="govuk-date-input" id="dtr-plan-requested">
 								<div class="govuk-date-input__item">
 									<div class="govuk-form-group">

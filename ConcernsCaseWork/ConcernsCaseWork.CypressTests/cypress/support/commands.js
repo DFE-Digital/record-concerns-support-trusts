@@ -26,12 +26,11 @@
 import "cypress-localstorage-commands";
 import CaseManagementPage from "/cypress/pages/caseMangementPage";
 import AddToCasePage from "/cypress/pages/caseActions/addToCasePage";
-import { AuthenticationComponent } from "../auth/authenticationComponent";
 import { LogTask } from "./constants";
 import "cypress-axe";
 import caseApi from "../api/caseApi";
 import concernsApi from "../api/concernsApi";
-import { Logger } from "cypress/common/logger";
+import { AuthenticationInterceptor } from "../auth/authenticationInterceptor";
 
 const concernsRgx = new RegExp(
 	/(Compliance|Financial|Force majeure|Governance|Irregularity)/,
@@ -63,10 +62,14 @@ Cypress.Commands.add("login", () => {
 	cy.clearCookies();
 	cy.clearLocalStorage();
 
-	const username = Cypress.env("username");
-	const password = Cypress.env("password");
+	// Intercept all browser requests and add our special auth header
+	// Means we don't have to use azure to authenticate 
+	new AuthenticationInterceptor().register();
 
-	new AuthenticationComponent().login(username, password);
+	// Old method of using azure to login
+	// const username = Cypress.env("username");
+	// const password = Cypress.env("password");
+	// new AuthenticationComponent().login(username, password);
 
 	cy.visit("/");
 });
@@ -386,7 +389,7 @@ Cypress.Commands.add("validateCaseManagPage", () => {
 	cy.task(LogTask, "Validating case management page");
 
 	cy.get(
-		'[class="buttons-topOfPage"] [class="govuk-button govuk-button--secondary"]'
+		'[class="buttons-topOfPage"] [class="govuk-back-link"]'
 	).should(($backcasw) => {
 		expect($backcasw).to.be.visible;
 		expect($backcasw.text().trim()).equal("Back to casework");
@@ -416,12 +419,12 @@ Cypress.Commands.add("validateCaseManagPage", () => {
 
 	cy.get('[id="tab_case-details"]').should(($tabcd) => {
 		expect($tabcd).to.be.visible;
-		expect($tabcd.text().trim()).equal("Case Details");
+		expect($tabcd.text().trim()).equal("Case overview");
 	});
 
 	cy.get('[id="tab_trust-overview"]').should(($tabto) => {
 		expect($tabto).to.be.visible;
-		expect($tabto.text().trim()).equal("Trust Overview");
+		expect($tabto.text().trim()).equal("Trust overview");
 	});
 
 	cy.get('[class="govuk-table-case-details__header"]')
@@ -436,16 +439,16 @@ Cypress.Commands.add("validateCaseManagPage", () => {
 		expect($row.eq(1).text().trim())
 			.to.contain("Risk to trust")
 			.and.to.match(ragRgx)
-			.and.to.match(/(Edit risk to trust rating)/);
+			.and.to.match(/(Change risk to trust rating)/);
 		expect($row.eq(2).text().trim())
 			.to.contain("Direction of travel")
 			.and.to.match(dotRgx)
-			.and.to.match(/(Edit direction of travel)/);
+			.and.to.match(/(Change direction of travel)/);
 		expect($row.eq(3).text().trim())
 			.to.contain("Concerns")
 			.and.to.match(concernsRgx)
 			.and.to.match(/(Add concern)/)
-			.and.to.match(/(Edit)/);
+			.and.to.match(/(Change)/);
 		expect($row.eq(5).text().trim()).to.contain("SFSO territory");
 	});
 
