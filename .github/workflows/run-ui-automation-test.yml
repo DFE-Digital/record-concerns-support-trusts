@@ -29,7 +29,7 @@ jobs:
           run: npm install
 
         - name: Run cypress
-          run: npm run cy:run -- --env username='${{ secrets.USERNAME }},password=${{ secrets.PASSWORD }},url=${{ secrets.AZURE_ENDPOINT }},api=${{ secrets.TRAMS_API_ENDPOINT }},apiKey=${{ secrets.TRAMS_API_KEY }}',authKey=${{secrets.CYPRESS_TEST_SECRET}}
+          run: npm run cy:run:ci
 
         - name: Upload screenshots
           if: ${{ failure() }}
