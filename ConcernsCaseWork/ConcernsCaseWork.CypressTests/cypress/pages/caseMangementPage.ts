@@ -252,6 +252,61 @@ class CaseManagementPage {
         return this;
     }
 
+    public hasCaseOwner(value: string): this {
+        Logger.Log(`Has case owner ${value}`);
+
+        // Can be improved later
+        // Currently its driven by the casing of the email when the user logs in
+        // We can't control this, so safer to ignore case for now
+        cy.getByTestId("case owner_field").contains(value, { matchCase: false });
+
+        return this;
+    }
+
+    public editCaseOwner(): this
+    {
+        Logger.Log("Editing case owner");
+
+        this.getEditCaseOwner().click();
+
+        return this;
+    }
+
+    public canEditCaseOwner(): this
+    {
+        Logger.Log("Can edit case owner");
+
+        this.getEditCaseOwner();
+
+        return this;
+    }
+
+    public cannotEditCaseOwner(): this
+    {
+        Logger.Log("Cannot edit case owner");
+        this.getEditCaseOwner().should("not.exist");
+
+        return this;
+    }
+
+    public hasCaseOwnerReassignedBanner(): this
+    {
+        Logger.Log("Has case reassigned banner");
+
+        this.getCaseOwnerReassignedBanner().should("contain.text", "Case has been reassigned");
+
+        return this;
+    }
+
+    public hasNoCaseOwnerReassignedBanner(): this
+    {
+        Logger.Log("Has no case reassigned banner");
+
+        this.getCaseOwnerReassignedBanner().should("not.exist");
+
+        return this;
+    }
+
     public editIssue(): this
     {
         Logger.Log("Editing the issue");
@@ -449,6 +504,16 @@ class CaseManagementPage {
     private getEditTerritory()
     {
         return cy.getByTestId("edit_Button_SFSO");
+    }
+
+    private getEditCaseOwner()
+    {
+        return cy.getByTestId("edit-case-owner");
+    }
+
+    private getCaseOwnerReassignedBanner()
+    {
+        return cy.getByTestId("case-reassigned-success");
     }
 
     private getEditIssue()
