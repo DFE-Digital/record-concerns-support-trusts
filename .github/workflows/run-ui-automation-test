@@ -35,7 +35,7 @@ jobs:
           if: ${{ failure() }}
           uses: actions/upload-artifact@v1
           with:
-            name: screenshots-${{ needs.set-env.outputs.environment }}
+            name: screenshots-dev
             path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/cypress/screenshots
 
         - name: Generate report
@@ -45,5 +45,5 @@ jobs:
         - name: Upload report
           uses: actions/upload-artifact@v1
           with:
-            name: reports-${{ needs.set-env.outputs.environment }}
+            name: reports-dev
             path: ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
