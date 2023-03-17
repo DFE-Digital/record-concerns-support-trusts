@@ -14,6 +14,7 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
+import { AuthenticationInterceptorParams } from 'cypress/auth/authenticationInterceptor';
 import { CaseworkerClaim, EnvApiKey, EnvAuthKey, EnvUrl, EnvUsername } from 'cypress/constants/cypressConstants';
 import './commands'
 import './utils'
@@ -24,7 +25,7 @@ declare global {
             getByTestId(id: string): Chainable<Element>;
             getById(id: string): Chainable<Element>;
             waitForJavascript(): Chainable<Element>;
-            login(): Chainable<Element>;
+            login(params?: AuthenticationInterceptorParams): Chainable<Element>;
             storeSessionData(): Chainable<Element>;
             selectMoR(): Chainable<Element>;
             createCase(): Chainable<Element>;
