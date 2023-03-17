@@ -3,7 +3,6 @@ name: Deploy to environment
 on:
   push:
     branches:
-      - main
       - develop
   workflow_dispatch:
     inputs:
@@ -13,7 +12,7 @@ on:
         required: true
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.inputs.environment }}
 
 env:
   DOCKER_IMAGE: amsd-app
