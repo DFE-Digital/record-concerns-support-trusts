@@ -41,8 +41,8 @@ jobs:
         - name: Generate report
           if: always()
           run: | 
-          mkdir ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
-          npm run generate:html:report
+            mkdir ConcernsCaseWork/ConcernsCaseWork.CypressTests/mochareports
+            npm run generate:html:report
 
         - name: Upload report
           if: always()
