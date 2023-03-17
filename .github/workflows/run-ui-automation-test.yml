@@ -53,6 +53,6 @@ jobs:
 
         - name: Report results
           if: always()
-          run: npm run cy:notify -- --ci-provider=custom --custom-url=https://github.com --custom-text="Hello world!"
+          run: npm run cy:notify -- --custom-text="Hello world!"
           env: 
             SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
