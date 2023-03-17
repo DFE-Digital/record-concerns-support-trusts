@@ -94,29 +94,6 @@ Cypress.Commands.add("excuteAccessibilityTests", () => {
 	);
 });
 
-//example: /case/5880/management"
-Cypress.Commands.add("visitPage", (slug) => {
-	cy.visit(Cypress.env("url") + slug, { timeout: 30000 });
-	cy.saveLocalStorage();
-});
-
-Cypress.Commands.add("storeSessionData", () => {
-	Cypress.Cookies.preserveOnce(".ConcernsCasework.Login");
-	let str = [];
-	cy.getCookies().then((cookie) => {
-		cy.log(cookie);
-		for (let l = 0; l < cookie.length; l++) {
-			if (cookie.length > 0 && l == 0) {
-				str[l] = cookie[l].name;
-				Cypress.Cookies.preserveOnce(str[l]);
-			} else if (cookie.length > 1 && l > 1) {
-				str[l] = cookie[l].name;
-				Cypress.Cookies.preserveOnce(str[l]);
-			}
-		}
-	});
-});
-
 Cypress.Commands.add("enterConcernDetails", () => {
 	cy.task(LogTask, "Enter concern details");
 
@@ -156,13 +133,6 @@ Cypress.Commands.add("selectRiskToTrust", () => {
 		});
 
 	cy.get("#case-rating-form > div.govuk-button-group > button").click();
-});
-
-Cypress.Commands.add("editRiskToTrust", (cta, rag) => {
-	cy.task(LogTask, "Editing risk to trust");
-
-	selectRagRating(rag);
-	clickApplyOrCancel(cta);
 });
 
 function clickApplyOrCancel(cta) {
@@ -383,150 +353,6 @@ Cypress.Commands.add("validateCreateCaseInitialDetails", () => {
 	});
 });
 
-//TODO:
-//Break these out into 2 or 3 separate commands per component (not page)
-Cypress.Commands.add("validateCaseManagPage", () => {
-	cy.task(LogTask, "Validating case management page");
-
-	cy.get(
-		'[class="buttons-topOfPage"] [class="govuk-back-link"]'
-	).should(($backcasw) => {
-		expect($backcasw).to.be.visible;
-		expect($backcasw.text().trim()).equal("Back to casework");
-	});
-
-	cy.get('[id="close-case-button"]').should(($clscse) => {
-		expect($clscse).to.be.visible;
-		expect($clscse.text().trim()).equal("Close case");
-	});
-
-	cy.get('[name="caseID"]')
-		.children()
-		.should(($casid) => {
-			expect($casid).to.be.visible;
-			expect($casid.text().trim()).equal("Case ID");
-			expect($casid.text()).to.match(/(Case ID)/gi);
-		});
-
-	cy.get('[name="caseID"]').then(($test) => {
-		expect($test.text()).to.match(/(\n(\d*))/gi); //matches any case number on a new line
-	});
-
-	cy.get('[class="govuk-heading-m"]').should(($tradd) => {
-		expect($tradd).to.be.visible;
-		expect($tradd.text()).to.match(trustRgx);
-	});
-
-	cy.get('[id="tab_case-details"]').should(($tabcd) => {
-		expect($tabcd).to.be.visible;
-		expect($tabcd.text().trim()).equal("Case overview");
-	});
-
-	cy.get('[id="tab_trust-overview"]').should(($tabto) => {
-		expect($tabto).to.be.visible;
-		expect($tabto.text().trim()).equal("Trust overview");
-	});
-
-	cy.get('[class="govuk-table-case-details__header"]')
-		.contains("Trust")
-		.should(($tru) => {
-			expect($tru.text().trim()).equal("Trust");
-		});
-
-	cy.get("tr[class=govuk-table__row]").should(($row) => {
-		expect($row).to.have.lengthOf.at.least(4);
-		expect($row.eq(0).text().trim()).to.contain("Trust").and.to.match(trustRgx);
-		expect($row.eq(1).text().trim())
-			.to.contain("Risk to trust")
-			.and.to.match(ragRgx)
-			.and.to.match(/(Change risk to trust rating)/);
-		expect($row.eq(2).text().trim())
-			.to.contain("Direction of travel")
-			.and.to.match(dotRgx)
-			.and.to.match(/(Change direction of travel)/);
-		expect($row.eq(3).text().trim())
-			.to.contain("Concerns")
-			.and.to.match(concernsRgx)
-			.and.to.match(/(Add concern)/)
-			.and.to.match(/(Change)/);
-		expect($row.eq(5).text().trim()).to.contain("SFSO territory");
-	});
-
-	cy.get('[class="govuk-accordion__show-all-text"]')
-		.invoke("text")
-		.then((text) => {
-			if (text === "Hide all sections")
-				cy.get('[class="govuk-accordion__show-all-text"]').click();
-		});
-
-	cy.get('[class="govuk-accordion__show-all-text"]').should(
-		"have.text",
-		"Show all sections"
-	);
-
-	cy.get('[class="govuk-accordion__show-all-text"]').click();
-	cy.get('[class="govuk-accordion__show-all"]')
-		.eq(0)
-		.should("have.attr", "aria-expanded", "true");
-	cy.getById("accordion-issue-content-edit").should("be.visible");
-	cy.getById("accordion-status-heading-edit").should("be.visible");
-	cy.getById("accordion-case-aim-heading-edit").should("be.visible");
-	cy.getById("accordion-de-escalation-point-heading-edit").should("be.visible");
-	cy.getById("accordion-case-aim-heading-edit").should("be.visible");
-	cy.getById("accordion-de-escalation-point-heading-edit").should("be.visible");
-	cy.getById("accordion-next-steps-heading-edit").should("be.visible");
-	cy.getById("accordion-case-history-heading-edit").should("be.visible");
-
-	cy.get('[class="govuk-accordion__show-all-text"]').should(
-		"have.text",
-		"Hide all sections"
-	);
-
-	cy.get('[class="govuk-accordion__show-all-text"]').click();
-	cy.get('[class="govuk-accordion__show-all"]')
-		.eq(0)
-		.should("have.attr", "aria-expanded", "false");
-	cy.getById("accordion-issue-content-edit").should("not.be.visible");
-	cy.getById("accordion-status-heading-edit").should("not.be.visible");
-	cy.getById("accordion-case-aim-heading-edit").should("not.be.visible");
-	cy.getById("accordion-de-escalation-point-heading-edit").should(
-		"not.be.visible"
-	);
-	cy.getById("accordion-case-aim-heading-edit").should("not.be.visible");
-	cy.getById("accordion-de-escalation-point-heading-edit").should(
-		"not.be.visible"
-	);
-	cy.getById("accordion-next-steps-heading-edit").should("not.be.visible");
-	cy.getById("accordion-case-history-heading-edit").should("not.be.visible");
-});
-
-Cypress.Commands.add("closeAllOpenConcerns", () => {
-	const elem = '[data-testid*="edit-concern"]';
-	if (Cypress.$(elem).length > 0) {
-		//Cypress.$ needed to handle element missing exception
-
-		cy.getByTestId("edit-concern")
-			.its("length")
-			.then(($elLen) => {
-				cy.log($elLen);
-
-				while ($elLen > 0) {
-					cy.getByTestId("edit-concern")
-						.eq($elLen - 1)
-						.click();
-					cy.get('[href*="closure"]').click();
-					cy.get(
-						'.govuk-button-group [href*="edit_rating/closure"]:nth-of-type(1)'
-					).click();
-					$elLen = $elLen - 1;
-					cy.log($elLen + " more open concerns");
-				}
-			});
-	} else {
-		cy.log("All concerns closed");
-	}
-});
-
 Cypress.Commands.add("randomSelectTrust", () => {
 	cy.task(LogTask, "Select random trust");
 
@@ -604,28 +430,6 @@ Cypress.Commands.add("randomSelectTrust", () => {
 	return cy.wrap(searchTerm[num]).as("term");
 });
 
-Cypress.Commands.add("checkForExistingCase", function (forceCreate) {
-	cy.task(LogTask, "Checking for an existing case");
-
-	let caseExists = false;
-	const elem = '.govuk-link[href^="case"]';
-
-	cy.log(elem.length);
-	if (Cypress.$(elem).length > 1) {
-		//Cypress.$ needed to handle element missing exception
-		caseExists = true;
-		if (forceCreate == true) {
-			cy.log("Force Create set, start case creation");
-			cy.createCase();
-		} else {
-			cy.get('.govuk-link[href^="case"]').eq(0).click();
-		}
-	} else {
-		cy.log("No cases present, start case creation");
-		cy.createCase();
-	}
-});
-
 Cypress.Commands.add("basicCreateCase", () => {
     caseApi.post()
     .then((caseResponse) => {
@@ -661,75 +465,6 @@ Cypress.Commands.add("createCase", () => {
 Cypress.Commands.add("selectTerritory", () => {
 	cy.get("#territory-Midlands_And_West__SouthWest").click();
 	cy.get('[data-testid="next-step-button"]').click();
-});
-
-//description: selects an action item from the add to case page
-//Location used: case/6325/management/action
-//parameters: takes a string args from the value attribute eg: value="srma"
-Cypress.Commands.add("addActionItemToCase", (option, textToVerify) => {
-	AddToCasePage.getHeadingText().should("contain.text", "Add to case");
-	AddToCasePage.getSubHeadingText().should(
-		"contain.text",
-		"What action are you taking?"
-	);
-	AddToCasePage.getCaseActionRadio(option).click();
-	AddToCasePage.getCaseActionRadio(option)
-		.siblings()
-		.should("contain.text", textToVerify);
-
-	cy.get('[value="' + option + '"]')
-		.siblings()
-		.should(($text) => {
-			expect($text.text().trim()).equal(textToVerify);
-		});
-});
-
-Cypress.Commands.add("closeSRMA", function () {
-	let SRMAExists = false;
-
-	const elem = "table:nth-child(4) > tbody > tr > td:nth-child(1)";
-
-	cy.log(elem.length);
-	if (Cypress.$(elem).length > 0) {
-		//Cypress.$ needed to handle element missing exception
-
-		cy.get("table:nth-child(4) > tbody > tr > td:nth-child(1) > a")
-			.eq(0)
-			.scrollIntoView();
-		cy.get("table:nth-child(4) > tbody > tr > td:nth-child(1) > a")
-			.eq(0)
-			.click();
-		cy.wait(500);
-
-		// Sets status to Trust Considering
-		cy.get('[class="govuk-link"]').eq(0).click();
-		cy.get('[id*="status"]').eq(0).click();
-		cy.get('[id="add-srma-button"]').click();
-		cy.get('[class="govuk-link"]').eq(2).click();
-
-		let rand = Math.floor(Math.random() * 2);
-		cy.get('[id^="reason"]').eq(rand).click();
-		cy.get('[id="add-srma-button"]').click();
-		cy.get('[id="complete-decline-srma-button"]').click();
-		cy.get('[id="confirmChk"]').click();
-		cy.get('[id="add-srma-button"]').click();
-	} else {
-		cy.log("No SRMA present");
-	}
-});
-
-Cypress.Commands.add("createSRMA", function () {
-	cy.get('[class="govuk-button"][role="button"]').click();
-	cy.addActionItemToCase("Srma", "School Resource Management Adviser (SRMA)");
-	cy.get('button[data-prevent-double-click*="true"]').click();
-
-	//User sets SRMA status
-	cy.get('[id*="status"]').eq(0).click();
-	cy.get("label.govuk-label.govuk-radios__label").eq(0);
-	cy.get('[id="dtr-day"]').type(Math.floor(Math.random() * 21) + 10);
-	cy.get('[id="dtr-month"]').type(Math.floor(Math.random() * 3) + 10);
-	cy.get('[id="dtr-year"]').type("2022");
-	cy.get('[id="add-srma-button"]').click();
 });
 
 Cypress.Commands.add("selectMoR", function () {
