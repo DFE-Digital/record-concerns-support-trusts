@@ -2,27 +2,27 @@ class AddToCasePage {
 
     constructor() {
         this.actionOptions = ["DfE support", "Financial forecast", "Financial plan",
-                            "Financial returns", "Financial support", "Forced termination",
-                            "NTI: Notice to improve", "Recovery plan", "School Resource Management Adviser (SRMA)", "NTI: Under consideration", "NTI: Warning letter", "Decision"];
+            "Financial returns", "Financial support", "Forced termination",
+            "NTI: Notice to improve", "Recovery plan", "School Resource Management Adviser (SRMA)", "NTI: Under consideration", "NTI: Warning letter", "Decision"];
 
     }
 
 
     //locators
     getHeadingText() {
-        return     cy.get('h1[class="govuk-heading-l"]');
+        return cy.get('h1[class="govuk-heading-l"]');
     }
 
     getSubHeadingText() {
-        return     cy.get('h2[class="govuk-heading-m"]');
+        return cy.get('h2[class="govuk-heading-m"]');
     }
 
     getCancelBtn() {
-        return     cy.get('[id="cancel-link"]', { timeout: 30000 });
+        return cy.get('[id="cancel-link"]', { timeout: 30000 });
     }
 
     getAddToCaseBtn() {
-        return     cy.get('[data-prevent-double-click="true"]', { timeout: 30000 }).contains('Add to case');
+        return cy.get('[data-prevent-double-click="true"]', { timeout: 30000 }).contains('Add to case');
     }
 
     //current status
@@ -30,42 +30,47 @@ class AddToCasePage {
     //Option accepts the following args: DfESupport | FinancialForecast | FinancialPlan | FinancialReturns |
     //FinancialSupport| ForcedTermination | NtiUnderConsideration| RecoveryPlan | Srma | Tff |
     getCaseActionRadio(option) {
-        return     cy.get('[value="'+option+'"]');
-    }    
-   
+        return cy.get('[value="' + option + '"]');
+    }
+
     getDayDateField() {
-        return      cy.get('#dtr-day-request-received');
-    }    
+        return cy.get('#dtr-day-request-received');
+    }
 
     getMonthDateField() {
-        return      cy.get('#dtr-month-request-received');
-    }  
+        return cy.get('#dtr-month-request-received');
+    }
 
     getYearDateField() {
-        return      cy.get('#dtr-year-request-received');
-    }  
-    
+        return cy.get('#dtr-year-request-received');
+    }
+
     getNoticeToImproveBtn() {
 
-        return      cy.get('#NoticeToImprove');
+        return cy.get('#NoticeToImprove');
     }
-    
+
     getDecisionButton() {
-        return      cy.get('#add-decision-button');
-    }   
-   
-	
-		
+        return cy.get('#add-decision-button');
+    }
+
+
+
 
     //Methods
 
     addToCase(option) {
 
-            this.getHeadingText().should('contain.text', 'Add to case');
-            
-            this.getCaseActionRadio(option).click();
-        }
-        
+        this.getHeadingText().should('contain.text', 'Add to case');
+
+        this.getCaseActionRadio(option).click();
     }
-    
-    export default new AddToCasePage();
+
+    hasValidationError(value) {
+        cy.getById("errorSummary").should("contain.text", value);
+
+        return this;
+    }
+}
+
+export default new AddToCasePage();
