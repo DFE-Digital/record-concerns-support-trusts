@@ -1,3 +1,9 @@
+## 19.0.0
+
+[To be completed]
+
+---
+
 ## 18.0.1
 * CSS styling fix on the Re-Assign page.
 * Changed 'Edit' link to 'Change' on the Case/Management/Index page
