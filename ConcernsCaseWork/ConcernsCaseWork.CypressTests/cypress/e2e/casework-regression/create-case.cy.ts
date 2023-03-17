@@ -126,7 +126,7 @@ describe("Creating a case", () =>
 
         Logger.Log("Verify case details");
         caseManagementPage
-            .hasTrust("Ashton West End Primary Academy")
+            .hasTrust("Ashton West End Primary Academz")
             .hasRiskToTrust("Red Plus")
             .hasConcerns("Financial: Deficit")
             .hasTerritory("North and UTC - North East")
@@ -195,7 +195,7 @@ describe("Creating a case", () =>
             .hasRiskToTrust("Red Plus")
             .hasConcerns("Financial: Deficit")
             .hasTerritory("North and UTC - North East")
-            .hasIssue("This is an issue")
+            .hasIssue("This is an issut")
             .hasEmptyCurrentStatus()
             .hasEmptyCaseAim()
             .hasEmptyDeEscalationPoint()
