@@ -29,7 +29,7 @@ jobs:
           run: npm install
 
         - name: Run cypress
-          run: npm run cy:run -- --spec=./cypress/e2e/casework-regression/create-case.cy.ts --env username='${{ secrets.USERNAME }},password=${{ secrets.PASSWORD }},url=${{ secrets.AZURE_ENDPOINT }},api=${{ secrets.AZURE_ENDPOINT }},apiKey=${{ secrets.AZURE_API_KEY }}',authKey=${{secrets.CYPRESS_TEST_SECRET}}
+          run: npm run cy:run -- --env username='${{ secrets.USERNAME }},password=${{ secrets.PASSWORD }},url=${{ secrets.AZURE_ENDPOINT }},api=${{ secrets.AZURE_ENDPOINT }},apiKey=${{ secrets.AZURE_API_KEY }}',authKey=${{secrets.CYPRESS_TEST_SECRET}}
 
         - name: Upload screenshots
           if: ${{ failure() }}
