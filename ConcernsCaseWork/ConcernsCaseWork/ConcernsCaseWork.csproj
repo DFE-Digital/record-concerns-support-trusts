@@ -5,7 +5,7 @@
 		<CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
 		<UserSecretsId>ac20b61d-9280-4be5-bbad-ad27aaff2f24</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<Version>18.0.0</Version>
+		<Version>18.0.1</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Label="custom">
