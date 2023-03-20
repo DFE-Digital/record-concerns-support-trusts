@@ -84,7 +84,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(null))
                 .Returns(statuses);
 
-            // todo: chris review
             var controllerResponse = (await controllerSUT.GetAllStatuses()).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NTIUnderConsiderationStatus>>;
@@ -108,7 +107,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(null))
                 .Returns(reasons);
 
-            // todo: chris review
             var controllerResponse = (await controllerSUT.GetAllReasons()).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NTIUnderConsiderationReason>>;
@@ -156,7 +154,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(caseUrn))
                 .Returns(collection);
 
-			// todo: chris review
 			var controllerResponse = (await controllerSUT.GetNtiUnderConsiderationByCaseUrn(caseUrn)).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NTIUnderConsiderationResponse>>;
@@ -187,7 +184,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(considerationId))
                 .Returns(considerationResponse);
 
-            // todo: chris review
             var controllerResponse = (await controllerSUT.GetNTIUnderConsiderationById(considerationId)).Result as OkObjectResult;
 
 
