@@ -65,5 +65,9 @@ namespace ConcernsCaseWork.Models
 		public string CaseHistory { get; set; }
 		
 		public Territory? Territory { get; set; }
+		
+		public bool ShowUpdateMessage { get; set; }
+		
+		public bool ShowValidationMessage { get; set; }
 	}
 }

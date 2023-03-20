@@ -32,7 +32,28 @@
                 </a>
             }
         </div>
+        @if (@Model.CaseOwnerChanged)
+        {
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+              <div class="govuk-notification-banner govuk-notification-banner--success" role="alert"
+                   aria-labelledby="govuk-notification-banner-title"
+                   data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                  <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                    Success
+                  </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                  <h3 class="govuk-notification-banner__heading">
+                    Case has been reassigned
+                  </h3>
 
+                </div>
+              </div>
+            </div>
+          </div>
+        }
         <h1 class="govuk-heading-l" name="caseID">
             <span class="govuk-caption-m">Case ID</span>
             @Model.CaseModel.Urn
@@ -203,10 +224,18 @@
 
                         <tr class="govuk-table__row">
                             <th scope="row" class="govuk-table-case-details__header">Case owner</th>
-                            <td class="govuk-table__cell">
+                            <td class="govuk-table__cell" data-testid="case owner_field">
                                 @Model.CaseModel.CreatedBy.FromEmailToFullName()
                             </td>
-                            <td class="govuk-table__cell govuk-table__header__right"></td>
+	                       
+	                        <td class="govuk-table__cell govuk-table__header__right">
+		                        @if (Model.IsEditableCase)
+		                        {
+			                        <a class="govuk-link" data-testid="edit-case-owner" href="@Request.Path/edit-case-owner" aria-label="Change case owner">
+				                        Change<span class="govuk-visually-hidden">Case owner</span>
+			                        </a>
+		                        }
+	                        </td>
                         </tr>
 
                         <tr class="govuk-table__row">

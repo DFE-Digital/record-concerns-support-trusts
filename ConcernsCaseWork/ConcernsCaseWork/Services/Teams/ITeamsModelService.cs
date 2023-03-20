@@ -7,5 +7,6 @@ namespace ConcernsCaseWork.Services.Teams
 	{
 		public Task<ConcernsTeamCaseworkModel> GetCaseworkTeam(string ownerId);
 		public Task UpdateCaseworkTeam(ConcernsTeamCaseworkModel teamCaseworkModel);
+		public Task<string[]> GetOwnersOfOpenCases();
 	}
 }
