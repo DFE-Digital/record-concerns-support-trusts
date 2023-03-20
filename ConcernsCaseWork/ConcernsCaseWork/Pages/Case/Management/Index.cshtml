@@ -32,24 +32,28 @@
                 </a>
             }
         </div>
-		@if (@Model.CaseOwnerChanged)
-		{
-			<div class="govuk-notification-banner govuk-notification-banner--success" role="alert"
-			     aria-labelledby="govuk-notification-banner-title"
-                 data-module="govuk-notification-banner">
-				<div class="govuk-notification-banner__header">
-					<h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-						Success
-					</h2>
-				</div>
-				<div class="govuk-notification-banner__content">
-                    <h3 class="govuk-notification-banner__heading" data-testid="case-reassigned-success">
-						Case has been reassigned
-					</h3>
-				
-				</div>
-			</div>
-		}
+        @if (@Model.CaseOwnerChanged)
+        {
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+              <div class="govuk-notification-banner govuk-notification-banner--success" role="alert"
+                   aria-labelledby="govuk-notification-banner-title"
+                   data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                  <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                    Success
+                  </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                  <h3 class="govuk-notification-banner__heading">
+                    Case has been reassigned
+                  </h3>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        }
         <h1 class="govuk-heading-l" name="caseID">
             <span class="govuk-caption-m">Case ID</span>
             @Model.CaseModel.Urn
@@ -228,7 +232,7 @@
 		                        @if (Model.IsEditableCase)
 		                        {
 			                        <a class="govuk-link" data-testid="edit-case-owner" href="@Request.Path/edit-case-owner" aria-label="Change case owner">
-				                        Edit<span class="govuk-visually-hidden">Case owner</span>
+				                        Change<span class="govuk-visually-hidden">Case owner</span>
 			                        </a>
 		                        }
 	                        </td>
@@ -449,7 +453,7 @@
                 </table>
                 <table class="govuk-table  govuk-!-margin-top-9">
                     <caption class="govuk-table__caption govuk-table__caption--m">
-                        Your closed cases
+                        Closed cases
                     </caption>
                     <partial name="_TrustClosedCases" model="@Model.ClosedCases" />
                 </table>

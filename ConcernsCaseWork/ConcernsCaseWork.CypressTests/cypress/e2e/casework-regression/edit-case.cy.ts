@@ -13,6 +13,8 @@ import EditCaseAimPage from "cypress/pages/createCase/editCaseAimPage";
 import EditDeEscalationPointPage from "cypress/pages/createCase/editDeescalationPointPage";
 import EditNextStepsPage from "cypress/pages/createCase/editNextStepsPage";
 import EditCaseHistoryPage from "cypress/pages/createCase/editCaseHistoryPage";
+import CaseManagementPage from "../../pages/caseMangementPage";
+import AddToCasePage from "../../pages/caseActions/addToCasePage";
 
 describe("Editing a case", () =>
 {
@@ -21,7 +23,6 @@ describe("Editing a case", () =>
     const addDetailsPage = new AddDetailsPage();
     const addTerritoryPage = new AddTerritoryPage();
     const addConcernDetailsPage = new AddConcernDetailsPage();
-    // const caseManagementPage = new CaseManagementPage();
     const editRiskToTrust = new EditRiskToTrustPage();
     const editDirectionOfTravel = new EditDirectionOfTravelPage();
     const editIssuePage = new EditIssuePage();
@@ -236,5 +237,14 @@ describe("Editing a case", () =>
             .hasDeEscalationPoint("New de-descalation point")  
             .hasNextSteps("New next step")
             .hasCaseHistory("New case history");
+    });
+
+    it("Should raise a validation error if do not select a case action", () => 
+    {
+        cy.basicCreateCase();
+
+        CaseManagementPage.getAddToCaseBtn().click();
+        AddToCasePage.getAddToCaseBtn().click();
+        AddToCasePage.hasValidationError("Please select an action to add.");
     });
 });
