@@ -5,7 +5,7 @@
 		<CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
 		<UserSecretsId>ac20b61d-9280-4be5-bbad-ad27aaff2f24</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<Version>18.0.0</Version>
+		<Version>19.0.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Label="custom">
@@ -41,6 +41,7 @@
 		<PackageReference Include="Microsoft.Identity.Web.UI" Version="1.25.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+		<PackageReference Include="morelinq" Version="3.4.0" />
 		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.17.0" />
 		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" Version="0.17.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
@@ -52,6 +53,7 @@
 		<ProjectReference Include="..\ConcernsCaseWork.API.Contracts\ConcernsCaseWork.API.Contracts.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.API\ConcernsCaseWork.API.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.CoreTypes\ConcernsCaseWork.CoreTypes.csproj" />
+		<ProjectReference Include="..\ConcernsCaseWork.Service.AzureAd\ConcernsCaseWork.Service.AzureAd.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.Service\ConcernsCaseWork.Service.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.Logging\ConcernsCaseWork.Logging.csproj" />
 		<ProjectReference Include="..\ConcernsCaseWork.Redis\ConcernsCaseWork.Redis.csproj" />
@@ -247,6 +249,9 @@
 	<ItemGroup>
 		<Compile Update="Pages\Case\Concern\Index.cshtml.cs">
 			<DependentUpon>Index.cshtml</DependentUpon>
+		</Compile>
+		<Compile Update="Pages\Case\Management\EditOwner.chtml.cs">
+		  <DependentUpon>EditOwner.cshtml</DependentUpon>
 		</Compile>
 	</ItemGroup>
 

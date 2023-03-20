@@ -54,7 +54,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			return services;
 		}
 
-		public static IServiceCollection AddDependencies(this IServiceCollection services)
+		public static IServiceCollection AddApiDependencies(this IServiceCollection services)
 		{
 			services.AddScoped<ICreateConcernsCase, CreateConcernsCase>();
 			services.AddScoped<IConcernsCaseGateway, ConcernsCaseGateway>();
@@ -95,7 +95,8 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<IGetConcernsCaseworkTeamOwners, GetConcernsCaseworkTeamOwners>();
 			services.AddScoped<IUpdateConcernsCaseworkTeam, UpdateConcernsCaseworkTeam>();
 			services.AddScoped<IConcernsTeamCaseworkGateway, ConcernsTeamCaseworkGateway>();
-
+			services.AddScoped<IGetOwnersOfOpenCases, GetOwnersOfOpenCases>();
+			
 			services.AddScoped<ICaseSummaryGateway, CaseSummaryGateway>();
 
 			services.AddScoped<IUseCaseAsync<CreateDecisionOutcomeUseCaseParams, CreateDecisionOutcomeResponse>, CreateDecisionOutcome>();
@@ -128,8 +129,7 @@ namespace ConcernsCaseWork.API.StartupConfiguration
 			services.AddScoped<ICaseActionPermissionStrategy, IsCaseViewableStrategy>();
 			services.AddScoped<ICaseActionPermissionStrategy, IsCaseEditableStrategy>();
 			services.AddScoped<IGetCasePermissionsUseCase, GetCasePermissionsUseCase>();
-
-		
+			
 			services.AddScoped<ICorrelationContext, CorrelationContext>();
 
 			return services;

@@ -4,7 +4,7 @@ public static class StartupConfigurationExtensions
 {
 	public static IServiceCollection AddConcernsApiProject(this IServiceCollection services, IConfiguration configuration)
 	{
-		services.AddDependencies();
+		services.AddApiDependencies();
 		services.AddDatabase(configuration);
 		services.AddApi(configuration);
 		services.AddUseCases();
