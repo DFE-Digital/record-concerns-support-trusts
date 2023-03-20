@@ -85,7 +85,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(null))
 				.Returns(statuses);
 
-			// todo: chris review
 			var controllerResponse = (await controllerSUT.GetAllStatuses()).Result as OkObjectResult;
 
 			var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveStatus>>;
@@ -109,7 +108,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(null))
 				.Returns(reasons);
 
-			// todo: chris review
 			var controllerResponse = (await controllerSUT.GetAllReasons()).Result as OkObjectResult;
 
 			var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveReason>>;
@@ -133,7 +131,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(null))
 				.Returns(conditions);
 
-			// todo: chris review
 			var controllerResponse = (await controllerSUT.GetAllConditions()).Result as OkObjectResult;
 
 			var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveCondition>>;
@@ -157,7 +154,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(null))
 				.Returns(conditionTypes);
 
-			// todo: chris review
 			var controllerResponse = (await controllerSUT.GetAllConditionTypes()).Result as OkObjectResult;
 
 			var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveConditionType>>;
@@ -193,7 +189,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(caseUrn))
 				.Returns(collection);
 
-			// todo: chris review
 			var controllerResponse = (await controllerSUT.GetNoticesToImproveByCaseUrn(caseUrn)).Result as OkObjectResult;
 
 			var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NoticeToImproveResponse>>;

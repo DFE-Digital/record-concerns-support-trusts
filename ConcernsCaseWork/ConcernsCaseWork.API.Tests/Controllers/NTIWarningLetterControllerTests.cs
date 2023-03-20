@@ -88,7 +88,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(null))
                 .Returns(statuses);
 
-            // todo: chris review
             var controllerResponse = (await controllerSUT.GetAllStatuses()).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NTIWarningLetterStatus>>;
@@ -112,7 +111,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 .Setup(x => x.Execute(null))
                 .Returns(reasons);
 
-            // todo: chris review
             var controllerResponse = (await controllerSUT.GetAllReasons()).Result as OkObjectResult;
 
             var actualResult = controllerResponse.Value as ApiSingleResponseV2<List<NTIWarningLetterReason>>;

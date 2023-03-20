@@ -85,7 +85,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(caseUrn))
 				.Returns(collection);
 
-			// todo: chris review
 			var controllerResponse = (await _controllerSut.GetFinancialPlansByCaseId(caseUrn)); // as OkObjectResult;
 
 			var actualResult = controllerResponse?.Value as ApiSingleResponseV2<List<FinancialPlanResponse>>;
@@ -112,7 +111,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(fpId))
 				.Returns(fpResponse);
 
-			// todo: chris review
 			var controllerResponse = await _controllerSut.GetFinancialPlanById(fpId); //.Result as OkObjectResult;
 
 			var actualResult = controllerResponse?.Value as ApiSingleResponseV2<FinancialPlanResponse>;
@@ -148,7 +146,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(request))
 				.Returns(fpResponse);
 
-			// todo: chris review
 			var controllerResponse = await _controllerSut.Patch(request); //.Result as OkObjectResult;
 
 			var actualResult = controllerResponse?.Value as ApiSingleResponseV2<FinancialPlanResponse>;
@@ -171,7 +168,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(null))
 				.Returns(statuses);
 
-			// todo: chris review
 			var controllerResponse = await _controllerSut.GetAllStatuses(); // .Result as OkObjectResult;
 
 			var actualResult = controllerResponse!.Value as ApiSingleResponseV2<List<FinancialPlanStatus>>;
@@ -196,7 +192,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(null))
 				.Returns(statuses);
 
-			// todo: chris review
 			var controllerResponse = await _controllerSut.GetOpenStatuses(); //.Result as OkObjectResult;
 
 			var actualResult = controllerResponse!.Value as ApiSingleResponseV2<List<FinancialPlanStatus>>;
@@ -221,7 +216,6 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(null))
 				.Returns(statuses);
 
-			// todo: chris review
 			var controllerResponse = await _controllerSut.GetClosureStatuses(); //.Result as OkObjectResult;
 
 			var actualResult = controllerResponse!.Value as ApiSingleResponseV2<List<FinancialPlanStatus>>;
