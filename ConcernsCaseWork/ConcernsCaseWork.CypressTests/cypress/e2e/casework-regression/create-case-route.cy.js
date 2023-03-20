@@ -30,7 +30,7 @@ describe("User interactions via Create Case route", () => {
 		cy.get('[href="/case"]').click();
 		cy.get("#search").should("be.visible");
 		cy.get("#search").type(searchTerm .substring(0,1)+'{enter}');
-        cy.get('.govuk-list.govuk-error-summary__list a').should('contain.text', 'Select a trust')
+		cy.getById("errorSummary").should("contain.text", 'Select a trust');
     });
 
 	it('Should display a warning if too many results', () => {

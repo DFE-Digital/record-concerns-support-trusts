@@ -2,6 +2,39 @@ import { Logger } from "cypress/common/logger";
 
 class EditCaseManagementPage
 {
+    public withCaseOwner(value: string): this
+    {
+        Logger.Log(`With case owner ${value}`);
+
+        cy.getById("case-owner-input").clear().type(value);
+
+        return this;
+    }
+
+    public hasNoCaseOwnerResults(): this {
+        Logger.Log("Has case owner option");
+        cy.get(".autocomplete__option").should("contain.text", "No results found");
+
+        return this;
+    }
+
+    public selectCaseOwnerOption(): this
+    {
+        Logger.Log("Selecting first case owner option");
+        cy.get(".autocomplete__option").first().click();
+
+        return this;
+    }
+    
+    public clearCaseOwner(): this
+    {
+        Logger.Log(`Clearing the case owner`);
+
+        cy.getById("case-owner-input").clear();
+
+        return this;
+    }
+
     public withIssue(value: string): this
     {
         Logger.Log(`With issue ${value}`);
@@ -24,6 +57,22 @@ class EditCaseManagementPage
         Logger.Log(`With case history exceeding limit`);
 
         cy.getById('case-history').clear().invoke("val", "x 1".repeat(2001));
+
+        return this;
+    }
+
+    public hasCaseOwner(value: string): this {
+        Logger.Log(`Has case owner ${value}`);
+
+        // Can be improved later
+        // Currently its driven by the casing of the email when the user logs in
+        // We can't control this, so safer to ignore case for now
+        cy.getById("case-owner-input")
+            .then((element: any) =>
+            {
+                expect(element.val().toLowerCase()).eq(value.toLowerCase());
+            });
+
 
         return this;
     }
