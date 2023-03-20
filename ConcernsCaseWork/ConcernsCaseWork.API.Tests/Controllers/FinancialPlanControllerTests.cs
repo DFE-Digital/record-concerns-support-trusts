@@ -43,7 +43,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		}
 
 		[Fact]
-		public void Create_ReturnsApiSingleResponseWithNewFinancialPlan()
+		public async Task Create_ReturnsApiSingleResponseWithNewFinancialPlan()
 		{
 			var status = 2;
 			var createdAt = DateTime.Now.AddDays(-5);
@@ -61,7 +61,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				.Setup(x => x.Execute(It.IsAny<CreateFinancialPlanRequest>()))
 				.Returns(response);
 
-			var result = _controllerSut.Create(new CreateFinancialPlanRequest { StatusId = status, CaseUrn = caseUrn, CreatedAt = createdAt, });
+			var result = await _controllerSut.Create(new CreateFinancialPlanRequest { StatusId = status, CaseUrn = caseUrn, CreatedAt = createdAt, });
 
 			result.Result.Should().BeEquivalentTo(new ObjectResult(expectedResponse) { StatusCode = StatusCodes.Status201Created });
 		}
