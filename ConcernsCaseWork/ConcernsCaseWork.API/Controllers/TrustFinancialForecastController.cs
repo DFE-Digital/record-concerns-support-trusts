@@ -41,7 +41,7 @@ namespace ConcernsCaseWork.API.Controllers
 	    public async Task<ActionResult<ApiSingleResponseV2<string>>> Create(
 		    [FromRoute] int caseUrn, 
 		    [Required] CreateTrustFinancialForecastRequest request, 
-		    CancellationToken cancellationToken)
+		    CancellationToken cancellationToken = default)
 	    {
 		    LogInfo($"Executing Create Trust Financial Forecast for Case Urn {caseUrn}");
 		    
@@ -60,7 +60,7 @@ namespace ConcernsCaseWork.API.Controllers
 
 	    [HttpGet("{id:int}")]
 	    [MapToApiVersion("2.0")]
-	    public async Task<ActionResult<ApiSingleResponseV2<TrustFinancialForecastResponse>>> GetById([FromRoute] int caseUrn, [FromRoute] int id, CancellationToken cancellationToken)
+	    public async Task<ActionResult<ApiSingleResponseV2<TrustFinancialForecastResponse>>> GetById([FromRoute] int caseUrn, [FromRoute] int id, CancellationToken cancellationToken = default)
 	    {
 		    LogInfo($"Attempting to get Trust Financial Forecast by Urn {caseUrn}, Id {id}");
 	    
@@ -84,7 +84,7 @@ namespace ConcernsCaseWork.API.Controllers
 	    
 	    [HttpGet]
 	    [MapToApiVersion("2.0")]
-	    public async Task<ActionResult<ApiSingleResponseV2<IEnumerable<TrustFinancialForecastResponse>>>> GetAllForCase([FromRoute] int caseUrn, CancellationToken cancellationToken)
+	    public async Task<ActionResult<ApiSingleResponseV2<IEnumerable<TrustFinancialForecastResponse>>>> GetAllForCase([FromRoute] int caseUrn, CancellationToken cancellationToken = default)
 	    {
 		    LogInfo($"Attempting to get Trust Financial Forecast by Urn {caseUrn}");
 		    var request = new GetTrustFinancialForecastsForCaseRequest{ CaseUrn = caseUrn };
@@ -107,7 +107,7 @@ namespace ConcernsCaseWork.API.Controllers
 	    
 	    [HttpPut("{id:int}")]
 	    [MapToApiVersion("2.0")]
-	    public async Task<ActionResult<ApiSingleResponseV2<string>>> Update(int caseUrn, int id, UpdateTrustFinancialForecastRequest request, CancellationToken cancellationToken)
+	    public async Task<ActionResult<ApiSingleResponseV2<string>>> Update(int caseUrn, int id, UpdateTrustFinancialForecastRequest request, CancellationToken cancellationToken = default)
 	    {
 		    LogInfo($"Attempting to update Decision by Urn {caseUrn}, DecisionId {id}");
 	    
@@ -125,7 +125,7 @@ namespace ConcernsCaseWork.API.Controllers
 	    
 	    [HttpPatch("{id:int}")]
 	    [MapToApiVersion("2.0")]
-	    public async Task<ActionResult<ApiSingleResponseV2<string>>> Close(int caseUrn, int id, CloseTrustFinancialForecastRequest request, CancellationToken cancellationToken)
+	    public async Task<ActionResult<ApiSingleResponseV2<string>>> Close(int caseUrn, int id, CloseTrustFinancialForecastRequest request, CancellationToken cancellationToken = default)
 	    {
 		    LogInfo($"Attempting to update Decision by Urn {caseUrn}, DecisionId {id}");
 	    

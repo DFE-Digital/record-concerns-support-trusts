@@ -37,7 +37,7 @@ namespace ConcernsCaseWork.API.Controllers
 
 		[HttpPost]
 		[MapToApiVersion("2.0")]
-		public async Task<ActionResult<ApiSingleResponseV2<PermissionQueryResponse>>> GetPermissions(PermissionQueryRequest request, CancellationToken cancellationToken)
+		public async Task<ActionResult<ApiSingleResponseV2<PermissionQueryResponse>>> GetPermissions(PermissionQueryRequest request, CancellationToken cancellationToken = default)
 		{
 			Guard.Against.Null(request);
 

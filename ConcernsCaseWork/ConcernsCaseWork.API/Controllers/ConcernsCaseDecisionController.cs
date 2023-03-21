@@ -38,7 +38,7 @@ namespace ConcernsCaseWork.API.Controllers
 
 	    [HttpPost]
 	    [MapToApiVersion("2.0")]
-	    public async Task<ActionResult<ApiSingleResponseV2<CreateDecisionResponse>>> Create(int urn, CreateDecisionRequest request, CancellationToken cancellationToken)
+	    public async Task<ActionResult<ApiSingleResponseV2<CreateDecisionResponse>>> Create(int urn, CreateDecisionRequest request, CancellationToken cancellationToken = default)
 	    {
 		    LogInfo($"Executing Create. Urn {urn}");
 
@@ -67,7 +67,7 @@ namespace ConcernsCaseWork.API.Controllers
 
 	    [HttpGet("{decisionId:int}")]
 	    [MapToApiVersion("2.0")]
-	    public async Task<ActionResult<ApiSingleResponseV2<GetDecisionResponse>>> GetById(int urn, int decisionId, CancellationToken cancellationToken)
+	    public async Task<ActionResult<ApiSingleResponseV2<GetDecisionResponse>>> GetById(int urn, int decisionId, CancellationToken cancellationToken = default)
 	    {
 		    LogInfo($"Attempting to get Concerns Decision by Urn {urn}, DecisionId {decisionId}");
 
@@ -92,7 +92,7 @@ namespace ConcernsCaseWork.API.Controllers
 
 	    [HttpPut("{decisionId:int}")]
 	    [MapToApiVersion("2.0")]
-	    public async Task<ActionResult<ApiSingleResponseV2<UpdateDecisionResponse>>> UpdateDecision(int urn, int decisionId, UpdateDecisionRequest request, CancellationToken cancellationToken)
+	    public async Task<ActionResult<ApiSingleResponseV2<UpdateDecisionResponse>>> UpdateDecision(int urn, int decisionId, UpdateDecisionRequest request, CancellationToken cancellationToken = default)
 	    {
 		    LogInfo($"Attempting to update Decision by Urn {urn}, DecisionId {decisionId}");
 
@@ -112,7 +112,7 @@ namespace ConcernsCaseWork.API.Controllers
 	    
 	    [HttpPatch("{decisionId:int}/close")]
 	    [MapToApiVersion("2.0")]
-	    public async Task<ActionResult<ApiSingleResponseV2<CloseDecisionResponse>>> CloseDecision(int urn, int decisionId, CloseDecisionRequest request, CancellationToken cancellationToken)
+	    public async Task<ActionResult<ApiSingleResponseV2<CloseDecisionResponse>>> CloseDecision(int urn, int decisionId, CloseDecisionRequest request, CancellationToken cancellationToken = default)
 	    {
 		    LogInfo($"Attempting to update Decision by Urn {urn}, DecisionId {decisionId}");
 
@@ -133,7 +133,7 @@ namespace ConcernsCaseWork.API.Controllers
 
 	    [HttpGet()]
 	    [MapToApiVersion("2.0")]
-	    public async Task<ActionResult<ApiSingleResponseV2<DecisionSummaryResponse[]>>> GetDecisions(int urn, CancellationToken cancellationToken)
+	    public async Task<ActionResult<ApiSingleResponseV2<DecisionSummaryResponse[]>>> GetDecisions(int urn, CancellationToken cancellationToken = default)
 	    {
 		    LogInfo($"Entered {nameof(GetDecisions)}, Urn {urn}");
 
