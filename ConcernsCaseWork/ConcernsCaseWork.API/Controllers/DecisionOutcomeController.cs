@@ -31,7 +31,7 @@ namespace ConcernsCaseWork.API.Controllers
 			int caseId, 
 			int decisionId, 
 			CreateDecisionOutcomeRequest request, 
-			CancellationToken cancellationToken)
+			CancellationToken cancellationToken = default)
 		{
 			_logger.LogInformation($"Creating decision outcome for case {caseId}, decision {decisionId}");
 
@@ -57,7 +57,7 @@ namespace ConcernsCaseWork.API.Controllers
 			int caseId, 
 			int decisionId, 
 			UpdateDecisionOutcomeRequest request, 
-			CancellationToken cancellationToken)
+			CancellationToken cancellationToken = default)
 		{
 			_logger.LogInformation($"Updating decision outcome for case {caseId}, decision {decisionId}");
 

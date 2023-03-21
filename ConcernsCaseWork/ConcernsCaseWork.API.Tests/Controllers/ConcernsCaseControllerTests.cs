@@ -18,9 +18,9 @@ namespace ConcernsCaseWork.API.Tests.Controllers
     public class ConcernsCaseControllerTests
     {
         private readonly Mock<ILogger<ConcernsCaseController>> mockLogger = new Mock<ILogger<ConcernsCaseController>>();
-        
+
         [Fact]
-        public void CreateConcernsCase_Returns201WhenSuccessfullyCreatesAConcernsCase()
+        public async Task CreateConcernsCase_Returns201WhenSuccessfullyCreatesAConcernsCase()
         {
             var createConcernsCase = new Mock<ICreateConcernsCase>();
             var createConcernsCaseRequest = Builder<ConcernCaseRequest>
@@ -36,9 +36,9 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
             var controller = new ConcernsCaseController(
                 mockLogger.Object,
-                createConcernsCase.Object, 
-                null, 
-                null, 
+                createConcernsCase.Object,
+                null,
+                null,
                 null,
                 null,
                 null,
@@ -47,29 +47,29 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null,
                 null
             );
-            
-            var result = controller.Create(createConcernsCaseRequest);
-            
+
+            var result = await controller.Create(createConcernsCaseRequest);
+
             var expected = new ApiSingleResponseV2<ConcernsCaseResponse>(concernsCaseResponse);
-            
+
             result.Result.Should().BeEquivalentTo(new ObjectResult(expected) {StatusCode = StatusCodes.Status201Created});
         }
-        
+
         [Fact]
-        public void GetConcernsCaseByUrn_ReturnsNotFound_WhenConcernsCaseIsNotFound()
+        public async Task GetConcernsCaseByUrn_ReturnsNotFound_WhenConcernsCaseIsNotFound()
         {
             var urn = 100;
-            
+
             var getConcernsCaseByUrn = new Mock<IGetConcernsCaseByUrn>();
-            
+
 
             getConcernsCaseByUrn.Setup(a => a.Execute(urn))
                 .Returns(() => null);
 
             var controller = new ConcernsCaseController(
                 mockLogger.Object,
-                null, 
-                getConcernsCaseByUrn.Object, 
+                null,
+                getConcernsCaseByUrn.Object,
                 null,
                 null,
                 null,
@@ -79,13 +79,13 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null,
                 null
             );
-            
-            var result = controller.GetByUrn(urn);
+
+            var result = await controller.GetByUrn(urn);
             result.Result.Should().BeEquivalentTo(new NotFoundResult());
         }
-        
+
         [Fact]
-        public void GetConcernsCaseByUrn_Returns200AndTheFoundConcernsCase_WhenSuccessfullyGetsAConcernsCaseByUrn()
+        public async Task GetConcernsCaseByUrn_Returns200AndTheFoundConcernsCase_WhenSuccessfullyGetsAConcernsCaseByUrn()
         {
             var getConcernsCaseByUrn = new Mock<IGetConcernsCaseByUrn>();
             var urn = 123;
@@ -98,27 +98,27 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
             var controller = new ConcernsCaseController(
                 mockLogger.Object,
-                null, 
-                getConcernsCaseByUrn.Object, 
+                null,
+                getConcernsCaseByUrn.Object,
                 null,
                 null,
-                null, 
+                null,
                 null,
                 null,
                 null,
                 null,
                 null
             );
-            
-            var result = controller.GetByUrn(urn);
-            
+
+            var result = await controller.GetByUrn(urn);
+
             var expected = new ApiSingleResponseV2<ConcernsCaseResponse>(concernsCaseResponse);
-            
+
             result.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
 
         [Fact]
-        public void GetConcernsCaseByTrustUkprn_Returns200AndTheFoundConcernsCase_WhenSuccessfullyGetsAConcernsCaseByTrustUkprn()
+        public async Task GetConcernsCaseByTrustUkprn_Returns200AndTheFoundConcernsCase_WhenSuccessfullyGetsAConcernsCaseByTrustUkprn()
         {
             var getConcernsCaseByTrustUkprn = new Mock<IGetConcernsCaseByTrustUkprn>();
             var trustUkprn = "100008";
@@ -131,8 +131,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
             var controller = new ConcernsCaseController(
                 mockLogger.Object,
-                null, 
-                null, 
+                null,
+                null,
                 getConcernsCaseByTrustUkprn.Object,
                 null,
                 null,
@@ -142,8 +142,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null,
                 null
             );
-            
-            var result = controller.GetByTrustUkprn(trustUkprn, 1, 10);
+
+            var result = await controller.GetByTrustUkprn(trustUkprn, 1, 10);
             var expectedPagingResponse = new PagingResponse
             {
                 Page = 1,
@@ -151,19 +151,19 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 NextPageUrl = null
             };
             var expected = new ApiResponseV2<ConcernsCaseResponse>(new List<ConcernsCaseResponse>{concernsCaseResponse}, expectedPagingResponse);
-            
+
             result.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
-        
+
         [Fact]
-        public void UpdateConcernsCase_Returns200AndTheUpdatedConcernsCase_WhenSuccessfullyGetsAConcernsCase()
+        public async Task UpdateConcernsCase_Returns200AndTheUpdatedConcernsCase_WhenSuccessfullyGetsAConcernsCase()
         {
             var updateConcernsCase = new Mock<IUpdateConcernsCase>();
             var urn = 456;
             var updateRequest = Builder<ConcernCaseRequest>.CreateNew()
                 .With(cr => cr.RatingId = 123)
                 .Build();
-            
+
             var concernsCaseResponse = Builder<ConcernsCaseResponse>
                 .CreateNew().Build();
 
@@ -172,8 +172,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
             var controller = new ConcernsCaseController(
                 mockLogger.Object,
-                null, 
-                null, 
+                null,
+                null,
                 null,
                 updateConcernsCase.Object,
                 null,
@@ -183,31 +183,31 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null,
                 null
             );
-            
-            var result = controller.Update(urn, updateRequest);
-           
+
+            var result = await controller.Update(urn, updateRequest);
+
             var expected = new ApiSingleResponseV2<ConcernsCaseResponse>(concernsCaseResponse);
-            
+
             result.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
-        
+
         [Fact]
-        public void UpdateConcernsCase_Returns404NotFound_WhenNoConcernsCaseIsFound()
+        public async Task UpdateConcernsCase_Returns404NotFound_WhenNoConcernsCaseIsFound()
         {
             var updateConcernsCase = new Mock<IUpdateConcernsCase>();
             var urn = 7;
             var updateRequest = Builder<ConcernCaseRequest>.CreateNew()
                 .With(cr => cr.RatingId = 123)
                 .Build();
-            
+
 
             updateConcernsCase.Setup(a => a.Execute(urn, updateRequest))
                 .Returns(() => null);
 
             var controller = new ConcernsCaseController(
                 mockLogger.Object,
-                null, 
-                null, 
+                null,
+                null,
                 null,
                 updateConcernsCase.Object,
                 null,
@@ -217,14 +217,14 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null,
                 null
             );
-            
-            var result = controller.Update(urn, updateRequest);
+
+            var result = await controller.Update(urn, updateRequest);
 
             result.Result.Should().BeEquivalentTo(new NotFoundResult());
         }
-        
+
         [Fact]
-        public void GetConcernsCaseByOwnerId_ReturnsCaseResponses_WhenConcernsCasesAreFound()
+        public async Task GetConcernsCaseByOwnerId_ReturnsCaseResponses_WhenConcernsCasesAreFound()
         {
             var getConcernsCaseByOwnerId = new Mock<IGetConcernsCasesByOwnerId>();
             var ownerId = "567";
@@ -236,8 +236,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
             var controller = new ConcernsCaseController(
                 mockLogger.Object,
-                null, 
-                null, 
+                null,
+                null,
                 null,
                 null,
                 getConcernsCaseByOwnerId.Object,
@@ -247,8 +247,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
                 null,
                 null
             );
-            var result = controller.GetByOwnerId(ownerId, statusId, 1, 50);
-            
+            var result = await controller.GetByOwnerId(ownerId, statusId, 1, 50);
+
             var expectedPagingResponse = new PagingResponse
             {
                 Page = 1,
@@ -258,7 +258,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
             var expected = new ApiResponseV2<ConcernsCaseResponse>(response, expectedPagingResponse);
             result.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
-        
+
         [Fact]
         public async Task GetActiveConcernsCaseSummariesByTeamMemberId_ReturnsCaseSummaryResponses_WhenConcernsCasesAreFound()
         {
@@ -271,8 +271,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
 	        var controller = new ConcernsCaseController(
 		        mockLogger.Object,
-		        null, 
-		        null, 
+		        null,
+		        null,
 		        null,
 		        null,
 		        null,
@@ -283,11 +283,11 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null
 	        );
 	        var response = await controller.GetActiveSummariesForUsersTeam(ownerId, CancellationToken.None);
-  
+
 	        var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
-                
+
         [Fact]
         public async Task GetActiveConcernsCaseSummariesByTeamMemberId_ReturnsEmptyList_WhenNoConcernsCasesAreFound()
         {
@@ -300,8 +300,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
 	        var controller = new ConcernsCaseController(
 		        mockLogger.Object,
-		        null, 
-		        null, 
+		        null,
+		        null,
 		        null,
 		        null,
 		        null,
@@ -312,11 +312,11 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null
 	        );
 	        var response = await controller.GetActiveSummariesForUsersTeam(ownerId, CancellationToken.None);
-  
+
 	        var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
-           
+
         [Fact]
         public async Task GetActiveConcernsCaseSummariesByOwnerId_ReturnsCaseSummaryResponses_WhenConcernsCasesAreFound()
         {
@@ -329,8 +329,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
 	        var controller = new ConcernsCaseController(
 		        mockLogger.Object,
-		        null, 
-		        null, 
+		        null,
+		        null,
 		        null,
 		        null,
 		        null,
@@ -341,11 +341,11 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        mockService.Object
 	        );
 	        var response = await controller.GetActiveSummariesForUser(ownerId, CancellationToken.None);
-  
+
 	        var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
-                
+
         [Fact]
         public async Task GetActiveConcernsCaseSummariesByOwnerId_ReturnsEmptyList_WhenNoConcernsCasesAreFound()
         {
@@ -358,8 +358,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
 	        var controller = new ConcernsCaseController(
 		        mockLogger.Object,
-		        null, 
-		        null, 
+		        null,
+		        null,
 		        null,
 		        null,
 		        null,
@@ -370,7 +370,7 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        mockService.Object
 	        );
 	        var response = await controller.GetActiveSummariesForUser(ownerId, CancellationToken.None);
-  
+
 	        var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
@@ -387,8 +387,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
 	        var controller = new ConcernsCaseController(
 		        mockLogger.Object,
-		        null, 
-		        null, 
+		        null,
+		        null,
 		        null,
 		        null,
 		        null,
@@ -398,12 +398,12 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 				null,
 		        null
 	        );
-	        var response = await controller.GetActiveSummariesByTrust(trustPrn);
-  
+	        var response = await controller.GetActiveSummariesByTrust(trustPrn, CancellationToken.None);
+
 	        var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
-                
+
         [Fact]
         public async Task GetActiveConcernsCaseSummariesByTrust_ReturnsEmptyList_WhenNoConcernsCasesAreFound()
         {
@@ -416,8 +416,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
 	        var controller = new ConcernsCaseController(
 		        mockLogger.Object,
-		        null, 
-		        null, 
+		        null,
+		        null,
 		        null,
 		        null,
 		        null,
@@ -427,12 +427,12 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null
 	        );
-	        var response = await controller.GetActiveSummariesByTrust(trustPrn);
-  
+	        var response = await controller.GetActiveSummariesByTrust(trustPrn, CancellationToken.None);
+
 	        var expected = new ApiResponseV2<ActiveCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
-                
+
         [Fact]
         public async Task GetClosedConcernsCaseSummariesByOwnerId_ReturnsCaseSummaryResponses_WhenConcernsCasesAreFound()
         {
@@ -445,8 +445,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
 	        var controller = new ConcernsCaseController(
 		        mockLogger.Object,
-		        null, 
-		        null, 
+		        null,
+		        null,
 		        null,
 		        null,null,
 		        mockService.Object,
@@ -455,12 +455,12 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null
 	        );
-	        var response = await controller.GetClosedSummariesByOwnerId(ownerId);
-  
+	        var response = await controller.GetClosedSummariesByOwnerId(ownerId, CancellationToken.None);
+
 	        var expected = new ApiResponseV2<ClosedCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
-                
+
         [Fact]
         public async Task GetClosedConcernsCaseSummariesByOwnerId_ReturnsEmptyList_WhenNoConcernsCasesAreFound()
         {
@@ -473,8 +473,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
 	        var controller = new ConcernsCaseController(
 		        mockLogger.Object,
-		        null, 
-		        null, 
+		        null,
+		        null,
 		        null,
 		        null,
 		        null,
@@ -484,12 +484,12 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null
 	        );
-	        var response = await controller.GetClosedSummariesByOwnerId(ownerId);
-  
+	        var response = await controller.GetClosedSummariesByOwnerId(ownerId, CancellationToken.None);
+
 	        var expected = new ApiResponseV2<ClosedCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
-        
+
         [Fact]
         public async Task GetClosedConcernsCaseSummariesByTrust_ReturnsCaseSummaryResponses_WhenConcernsCasesAreFound()
         {
@@ -502,8 +502,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
 	        var controller = new ConcernsCaseController(
 		        mockLogger.Object,
-		        null, 
-		        null, 
+		        null,
+		        null,
 		        null,
 		        null,
 		        null,
@@ -513,12 +513,12 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null
 	        );
-	        var response = await controller.GetClosedSummariesByTrust(trustPrn);
-  
+	        var response = await controller.GetClosedSummariesByTrust(trustPrn, CancellationToken.None);
+
 	        var expected = new ApiResponseV2<ClosedCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
-                
+
         [Fact]
         public async Task GetClosedConcernsCaseSummariesByTrust_ReturnsEmptyList_WhenNoConcernsCasesAreFound()
         {
@@ -531,8 +531,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 
 	        var controller = new ConcernsCaseController(
 		        mockLogger.Object,
-		        null, 
-		        null, 
+		        null,
+		        null,
 		        null,
 		        null,
 		        null,
@@ -542,8 +542,8 @@ namespace ConcernsCaseWork.API.Tests.Controllers
 		        null,
 		        null
 	        );
-	        var response = await controller.GetClosedSummariesByTrust(ownerId);
-  
+	        var response = await controller.GetClosedSummariesByTrust(ownerId, CancellationToken.None);
+
 	        var expected = new ApiResponseV2<ClosedCaseSummaryResponse>(data, null);
 	        response.Result.Should().BeEquivalentTo(new OkObjectResult(expected));
         }
